@@ -38,18 +38,10 @@ var extract_addresses = function(model, store) {
 };
 
 let extract_location_level = (model, store, location_level_deserializer) => {
-    let location_level_pk = model.location_level.id || model.location_level;//Tickets return location level as id and Location Detail returns LL as object
+    let location_level_pk = model.location_level;
     let existing_location_level = store.find('location-level', location_level_pk);
-    if (existing_location_level.get('content')) {
-        let locations = existing_location_level.get('locations') || [];//bootstrapped location levels will not have locations
-        store.push('location-level', {id: location_level_pk, locations: locations.concat(model.id).uniq()});
-        // existing_location_level.set('locations', locations.concat(model.id).uniq());
-    } else {
-        //if no location level
-        model.location_level.locations = [model.id];
-        let location_level_push = store.push('location-level', model.location_level); 
-        location_level_deserializer.deserialize(model.location_level, model.location_level.id);
-    }
+    let locations = existing_location_level.get('locations') || [];
+    store.push('location-level', {id: location_level_pk, locations: locations.concat(model.id).uniq()});
     //get old location level from location already in store if only a different location level than current
     let existing_location = store.find('location', model.id); 
     let old_location_level_fk = existing_location.get('location_level_fk');
@@ -94,7 +86,7 @@ var extract_parents = function(model, store, location_deserializer) {
         if(location_parents.length === 0) {
             const pk = Ember.uuid();
             server_sum.push(pk);
-            location_deserializer.deserialize(parent, parent.id);
+            store.push('location', parent);
             store.push('location-parents', {id: pk, location_pk: model.id, parent_pk: parent.id});
         }else{
             prevented_duplicate_m2m.push(location_parents[0].get('id'));

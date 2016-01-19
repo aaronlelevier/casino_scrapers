@@ -99,6 +99,10 @@ input[type="text"]:disabled {
 			}
 
 		}
+		.ember-power-select-trigger-multiple-input{
+			height: 22px;
+			padding: 3px;
+		}
 	}
 }
 #ember-basic-dropdown-wormhole,
@@ -244,4 +248,8 @@ fieldset[disabled] .form-control,
 		background-color: $orange;
 		color: $white;
 	}
+}
+.ember-modal-overlay{
+	background-color: $dark;
+	opacity: 0.3;
 }

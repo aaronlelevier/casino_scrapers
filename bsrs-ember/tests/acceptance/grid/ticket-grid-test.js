@@ -160,11 +160,11 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
 });
 
 test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', function(assert) {
-    var sort_two = PREFIX + BASE_URL + '/?page=1&related_ordering=request,priority__name';
+    var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=request,priority__name';
     xhr(sort_two ,"GET",null,{},200,TF.sorted('request,priority'));
-    var page_two = PREFIX + BASE_URL + '/?page=2&related_ordering=priority__name';
+    var page_two = PREFIX + BASE_URL + '/?page=2&ordering=priority__name';
     xhr(page_two ,"GET",null,{},200,TF.sorted('priority'));
-    var sort_one = PREFIX + BASE_URL + '/?page=1&related_ordering=priority__name';
+    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority__name';
     xhr(sort_one ,"GET",null,{},200,TF.sorted('priority'));
     visit(TICKET_URL);
     andThen(() => {
@@ -254,9 +254,9 @@ test('typing a search will reset page to 1 and require an additional xhr and res
 });
 
 test('multiple sort options appear in the query string as expected', function(assert) {
-    var sort_two = PREFIX + BASE_URL + '/?page=1&related_ordering=request,priority__name';
+    var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=request,priority__name';
     xhr(sort_two ,"GET",null,{},200,TF.sorted('request,priority'));
-    var sort_one = PREFIX + BASE_URL + '/?page=1&related_ordering=priority__name';
+    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority__name';
     xhr(sort_one ,"GET",null,{},200,TF.sorted('priority'));
     visit(TICKET_URL);
     andThen(() => {
@@ -279,13 +279,13 @@ test('multiple sort options appear in the query string as expected', function(as
 });
 
 test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', function(assert) {
-    var sort_four = PREFIX + BASE_URL + '/?page=1&related_ordering=priority__name,request';
+    var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=priority__name,request';
     xhr(sort_four ,"GET",null,{},200,TF.sorted('priority,request'));
-    var sort_three = PREFIX + BASE_URL + '/?page=1&related_ordering=-priority__name,request';
+    var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-priority__name,request';
     xhr(sort_three ,"GET",null,{},200,TF.sorted('-priority,request'));
-    var sort_two = PREFIX + BASE_URL + '/?page=1&related_ordering=request,priority__name';
+    var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=request,priority__name';
     xhr(sort_two ,"GET",null,{},200,TF.sorted('request,priority'));
-    var sort_one = PREFIX + BASE_URL + '/?page=1&related_ordering=priority__name';
+    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority__name';
     xhr(sort_one ,"GET",null,{},200,TF.sorted('priority'));
     visit(TICKET_URL);
     andThen(() => {
@@ -376,7 +376,7 @@ test('full text search will filter down the result set and query django accordin
 });
 
 test('loading screen shown before any xhr and hidden after', function(assert) {
-    var sort_one = PREFIX + BASE_URL + '/?page=1&related_ordering=priority__name';
+    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority__name';
     xhr(sort_one ,"GET",null,{},200,TF.sorted('priority'));
     visitSync(TICKET_URL);
     Ember.run.later(function() {
@@ -440,9 +440,9 @@ test('full text searched columns will have a special on css class when active', 
 
 //todo-update to searched related before we commit
 test('after you reset the grid the filter model will also be reset', function(assert) {
-    let option_three = PREFIX + BASE_URL + '/?page=1&related_ordering=priority__name&search=4&priority__name__icontains=4';
+    let option_three = PREFIX + BASE_URL + '/?page=1&ordering=priority__name&search=4&priority__name__icontains=4';
     xhr(option_three ,'GET',null,{},200,TF.sorted('priority:4'));
-    let option_two = PREFIX + BASE_URL + '/?page=1&related_ordering=priority__name&search=4';
+    let option_two = PREFIX + BASE_URL + '/?page=1&ordering=priority__name&search=4';
     xhr(option_two ,'GET',null,{},200,TF.sorted('priority:4'));
     let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
     xhr(option_one ,'GET',null,{},200,TF.searched('4', 'id'));
@@ -569,7 +569,7 @@ test(`starting with a page size greater than ${PAGE_SIZE} will set the selected`
 });
 
 test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
-    var sort_one = PREFIX + BASE_URL + '/?page=1&related_ordering=priority__name';
+    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority__name';
     xhr(sort_one ,'GET',null,{},200,TF.sorted('priority'));
     visit(TICKET_URL);
     click(SORT_PRIORITY_DIR);
@@ -585,12 +585,12 @@ test('when a save filterset modal is selected the input inside the modal is focu
 
 test('save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
     random.uuid = function() { return UUID.value; };
-    var sort_one = PREFIX + BASE_URL + '/?page=1&related_ordering=priority__name';
+    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority__name';
     xhr(sort_one ,'GET',null,{},200,TF.sorted('priority'));
     let name = 'foobar';
     let routePath = 'tickets.index';
     let url = window.location.toString();
-    let query = url.slice(url.indexOf('?'));
+    let query = '?sort=priority.translated_name';
     let section = '.t-grid-wrap';
     let navigation = '.t-filterset-wrap li';
     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
@@ -633,7 +633,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
 });
 
 test('save filterset button only available when a dynamic filter is present', function(assert) {
-    var sort_one = PREFIX + BASE_URL + '/?page=1&related_ordering=priority__name';
+    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority__name';
     xhr(sort_one ,'GET',null,{},200,TF.sorted('priority'));
     visit(TICKET_URL);
     andThen(() => {
@@ -646,11 +646,11 @@ test('save filterset button only available when a dynamic filter is present', fu
 });
 
 test('status.translated_name is a functional related filter', function(assert) {
-    let option_four = PREFIX + BASE_URL + '/?page=1&related_ordering=-status__name&status__name__icontains=rr';
+    let option_four = PREFIX + BASE_URL + '/?page=1&ordering=-status__name&status__name__icontains=rr';
     xhr(option_four,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
-    let option_three = PREFIX + BASE_URL + '/?page=1&related_ordering=-status__name';
+    let option_three = PREFIX + BASE_URL + '/?page=1&ordering=-status__name';
     xhr(option_three,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
-    let option_two = PREFIX + BASE_URL + '/?page=1&related_ordering=status__name';
+    let option_two = PREFIX + BASE_URL + '/?page=1&ordering=status__name';
     xhr(option_two,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
     let option_one = PREFIX + BASE_URL + '/?page=1&search=rr';
     xhr(option_one,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
@@ -701,11 +701,11 @@ test('status.translated_name is a functional related filter', function(assert) {
 });
 
 test('location.name is a functional related filter', function(assert) {
-    let option_four = PREFIX + BASE_URL + '/?page=1&related_ordering=-location__name&location__name__icontains=ow';
+    let option_four = PREFIX + BASE_URL + '/?page=1&ordering=-location__name&location__name__icontains=ow';
     xhr(option_four,'GET',null,{},200,TF.searched_related(TD.locationTwoId, 'location'));
-    let option_three = PREFIX + BASE_URL + '/?page=1&related_ordering=-location__name';
+    let option_three = PREFIX + BASE_URL + '/?page=1&ordering=-location__name';
     xhr(option_three,'GET',null,{},200,TF.searched_related(TD.locationTwoId, 'location'));
-    let option_two = PREFIX + BASE_URL + '/?page=1&related_ordering=location__name';
+    let option_two = PREFIX + BASE_URL + '/?page=1&ordering=location__name';
     xhr(option_two,'GET',null,{},200,TF.searched_related(TD.locationTwoId, 'location'));
     let option_one = PREFIX + BASE_URL + '/?page=1&search=ow';
     xhr(option_one,'GET',null,{},200,TF.searched_related(TD.locationTwoId, 'location'));
@@ -756,11 +756,11 @@ test('location.name is a functional related filter', function(assert) {
 });
 
 test('assignee.fullname is a functional related filter', function(assert) {
-    let option_four = PREFIX + BASE_URL + '/?page=1&related_ordering=-assignee__fullname&assignee__fullname__icontains=ra';
+    let option_four = PREFIX + BASE_URL + '/?page=1&ordering=-assignee__fullname&assignee__fullname__icontains=ra';
     xhr(option_four,'GET',null,{},200,TF.searched_related(TD.assigneeTwoId, 'assignee'));
-    let option_three = PREFIX + BASE_URL + '/?page=1&related_ordering=-assignee__fullname';
+    let option_three = PREFIX + BASE_URL + '/?page=1&ordering=-assignee__fullname';
     xhr(option_three,'GET',null,{},200,TF.searched_related(TD.assigneeTwoId, 'assignee'));
-    let option_two = PREFIX + BASE_URL + '/?page=1&related_ordering=assignee__fullname';
+    let option_two = PREFIX + BASE_URL + '/?page=1&ordering=assignee__fullname';
     xhr(option_two,'GET',null,{},200,TF.searched_related(TD.assigneeTwoId, 'assignee'));
     let option_one = PREFIX + BASE_URL + '/?page=1&search=ra';
     xhr(option_one,'GET',null,{},200,TF.searched_related(TD.assigneeTwoId, 'assignee'));

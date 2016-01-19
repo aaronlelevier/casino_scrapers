@@ -31,7 +31,7 @@ moduleForComponent('location-level', 'integration: location-level test', {
         var json = translations.generate('en');
         loadTranslations(service, json);
         location_level_repo = repository.initialize(this.container, this.registry, 'location-level');
-        location_level_repo.peek = (filter) => { return store.find('location-level', filter, ['id']); };
+        location_level_repo.peek = (filter) => { return store.find('location-level', filter); };
     }
 });
 

@@ -76,7 +76,6 @@ var extract_role = function(model, store) {
     let existing_people = role.get('people') || [];
     if (role.get('content') && existing_people.indexOf(model.id) === -1) {
         store.push('role', {id: role.get('id'), people: existing_people.concat(model.id)});
-        // role.set('people', existing_people.concat([model.id]));
     }
     delete model.role;
     return [role_pk, location_level_fk];
@@ -113,15 +112,14 @@ var extract_person_location = function(model, store, location_level_fk, location
     }
 };
 
-var extract_locale = function(model, store) {
-    if(model.locale){
-        let locale_pk = model.locale;
-        let locale = store.find('locale', model.locale);
-        model.locale = locale.get('locale');
-        return locale_pk;
-    }else{
-        return '';
-    }
+var extract_locale = (model, store) => {
+    const locale_id = model.locale || store.find('person', model.id).get('locale_fk');
+    const locale = store.find('locale', locale_id);
+    let existing_people = locale.get('people') || [];
+    existing_people = existing_people.indexOf(model.id) > -1 ? existing_people : existing_people.concat(model.id);
+    store.push('locale', {id: locale.get('id'), people: existing_people});
+    model.locale_fk = locale.get('id');
+    delete model.locale;
 };
 
 var PersonDeserializer = Ember.Object.extend({
@@ -144,7 +142,7 @@ var PersonDeserializer = Ember.Object.extend({
             model.address_fks = extract_addresses(model, store);
             [model.role_fk, location_level_fk] = extract_role(model, store);
             extract_person_location(model, store, location_level_fk, location_deserializer);
-            model.locale_fk = extract_locale(model, store);
+            extract_locale(model, store);
             extract_status(model, store);
             let person = store.push('person', model);
             person.save();

@@ -67,7 +67,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             {{#form-group title="admin.person.label.location" for="location"}}
-                            {{person-locations-select person=model}}
+                            {{people/person-locations-select person=model}}
                             {{/form-group}}
                         </div>
                     </div>
@@ -88,7 +88,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             {{#form-group title="admin.person.label.language" for="locale"}}
-                            {{language-select model=model locales=locales field="locale" localeChanged="localeChanged"}}
+                            {{language-select person=model locales=locales field="locale"}}
                             {{/form-group}}
                         </div>
                     </div>
@@ -106,7 +106,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             {{#form-group title="admin.person.label.status" for="status"}}
-                            {{person-status-select person=model statuses=statuses}}
+                            {{people/person-status-select person=model statuses=statuses}}
                             {{/form-group}}
                         </div>
                     </div>

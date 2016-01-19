@@ -15,18 +15,23 @@ export default Ember.Component.extend({
             }
         },
         upload(e) {
+            var repoUpload = (i, files) => {
+                let uuid = this.get('uuid');
+                let id = uuid.v4();
+                let model = this.get('model');
+                let repository = this.get('repository');
+                repository.upload(id, files[i], model).then(() => {
+                    model.get('attachments').findBy('id', id).set('percent', 100);
+                });
+            };
             let files = e.target.files;
-            let model = this.get('model');
-            let uuid = this.get('uuid');
-            let repository = this.get('repository');
             if (files && files[0]) {
                 for (let i = 0; i < files.length; i++) {
-                    let id = uuid.v4();
-                    repository.upload(id, files[i], model).then(() => {
-                        model.get('attachments').findBy('id', id).set('percent', 100);
-                    });
+                    repoUpload(i, files);
                 }
             }
+        },
+        repoUpload(i, files) {
         }
     }
 });

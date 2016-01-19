@@ -43,7 +43,8 @@ var GridViewRoute = Ember.Route.extend({
         const person = this.get('personCurrent').get('model').get('person');
         let model = repository.findWithQuery(query.page, query.sort, query.search, query.find, query.page_size, person);
         const count = repository.findCount();
-        return {count, model, requested, filtersets};
+        const routeName = this.get('routeName');
+        return {count, model, requested, filtersets, routeName};
     },
     setupController: function(controller, hash) {
         controller.set('count', hash.count);
@@ -51,6 +52,7 @@ var GridViewRoute = Ember.Route.extend({
         controller.set('requested', hash.requested);
         controller.set('filterModel', this.filterModel);
         controller.set('filtersets', hash.filtersets);
+        controller.set('routeName', hash.routeName);
     }
 });
 

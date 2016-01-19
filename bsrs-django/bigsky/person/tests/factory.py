@@ -146,7 +146,8 @@ def update_admin(person):
     ``location.location_level == person.role.location_level``
     And all Parent Categories, so they can view all Tickets.
     """
-    add_all_locations(person)
+    update_login_person(person)
+    add_top_level_location(person)
     add_all_parent_categores(person)
 
 
@@ -171,10 +172,22 @@ def update_admin_location(person):
     """
     add_all_parent_categores(person)
 
-    for location in person.locations.all():
-        person.locations.remove(location)
+    remove_all_locations(person)
 
     location = Location.objects.filter(location_level=person.role.location_level)[0]
+    person.locations.add(location)
+
+
+def add_top_level_location(person):
+    """
+    `person.Role.location_level` must match `Location.location_level`
+    """
+    remove_all_locations(person)
+    
+    location = Location.objects.create_top_level()
+    person.role.location_level = location.location_level
+    person.role.save()
+    
     person.locations.add(location)
 
 
@@ -188,6 +201,10 @@ def add_all_parent_categores(person):
         person.role.categories.add(category)
 
 
+def remove_all_locations(person):
+    [person.locations.remove(x) for x in person.locations.all()]
+
+
 """
 Boilerplate create in shell code:
 
@@ -196,7 +213,7 @@ create_all_people()
 """
 def create_all_people():
 
-    if not Location.objects.first():
+    if not Location.objects.filter(name=settings.LOCATION_TOP_LEVEL_NAME):
         create_locations()
 
     # initial Roles

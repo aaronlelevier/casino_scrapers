@@ -43,11 +43,17 @@ test('clicking between person detail and ticket detail will not dirty the active
     visit(PEOPLE_DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_DETAIL_URL);
+        person = store.find('person', PD.idOne);
+        assert.ok(person.get('localeIsNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
     ajax(`${PREFIX}${BASEURLS.base_tickets_url}/?page=1`, 'GET', null, {}, 200, TF.list());
     visit(TICKET_LIST_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_LIST_URL);
+        person = store.find('person', PD.idOne);
+        assert.ok(person.get('localeIsNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
     ajax(`${PREFIX}${TICKET_DETAIL_URL}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
     ajax(TOP_LEVEL_CATEGORIES_URL, 'GET', null, {}, 200, CF.top_level());
@@ -55,7 +61,8 @@ test('clicking between person detail and ticket detail will not dirty the active
     click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), TICKET_DETAIL_URL);
-        person = store.find('person', PD.id);
+        person = store.find('person', PD.idOne);
+        assert.ok(person.get('localeIsNotDirty'));
         assert.equal(person.get('isDirtyOrRelatedDirty'), false);
         ticket = store.find('ticket', TD.idOne);
         assert.equal(ticket.get('isDirtyOrRelatedDirty'), false);
@@ -63,7 +70,7 @@ test('clicking between person detail and ticket detail will not dirty the active
     click('.t-tab:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_DETAIL_URL);
-        person = store.find('person', PD.id);
+        person = store.find('person', PD.idOne);
         assert.equal(person.get('isDirtyOrRelatedDirty'), false);
         ticket = store.find('ticket', TD.idOne);
         assert.equal(ticket.get('isDirtyOrRelatedDirty'), false);
@@ -71,7 +78,7 @@ test('clicking between person detail and ticket detail will not dirty the active
     click('.t-tab:eq(1)');
     andThen(() => {
         assert.equal(currentURL(), TICKET_DETAIL_URL);
-        person = store.find('person', PD.id);
+        person = store.find('person', PD.idOne);
         assert.equal(person.get('isDirtyOrRelatedDirty'), false);
         ticket = store.find('ticket', TD.idOne);
         assert.equal(ticket.get('isDirtyOrRelatedDirty'), false);

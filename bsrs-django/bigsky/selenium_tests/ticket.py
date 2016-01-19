@@ -97,7 +97,6 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         self.wait_for_xhr_request("t-sort-request-dir").click()
         tickets = ticket_page.find_list_data()
         tickets[0].click()
-        
         # Detail View
         # File 1
         attach_file_btn = self.driver.find_element_by_xpath("//input[@type='file']")
@@ -111,31 +110,22 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
             "media/test_in/jp.csv"
         ))
-
         # Go to Ticket Area
         self.nav_page.find_ticket_link().click()
-
         tab = self.driver_wait.find_element_by_class_name("t-tab-close")
         tab.click()
-
         self.wait_for_xhr_request("application-modal", debounce=True).click()
         # self.driver_wait.find_element_by_class_name("application-modal")
-
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "modal-title"))
         )
-
-        # # click "rollback button"
         # rollback_btn = self.wait_for_xhr_request("t-modal-rollback-btn", debounce=True)
         # rollback_btn.click()
-
         # # revisit page
         # tickets = ticket_page.find_list_data()
         # tickets[0].click()
-
         # # no more attachments on page
         # self.driver.refresh()
-
         # with self.assertRaises(InvalidSelectorException):
         #     self.driver.find_elements_by_class_name("progress active")
 
@@ -216,6 +206,28 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         self.driver.find_element_by_class_name("t-ticket-request").clear()
         ticket = InputHelper(ticket_request=ticket_request_two)
         self._fill_in_using_class(ticket)
+        ticket_priority_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-priority-select ')]/div")
+        ticket_priority_input.click()
+        priority_option = self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]/li[2]")
+        priority_option.click()
+        ticket_status_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-status-select ')]/div")
+        ticket_status_input.click()
+        status_option = self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]/li[2]")
+        status_option.click()
+        ticket_cc_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-ticket-cc-select-trigger')])[last()]")
+        ticket_cc_input.send_keys("a")
+        cc_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
+        cc_option.click()
+        ticket_cc_input.send_keys("l")
+        cc_option_2 = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
+        cc_option_2.click()
+        ticket_location = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-location-select ')]/div")
+        ticket_location.click()
+        ticket_location_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-search ')]/input")
+        ticket_location_input.send_keys("c")
+        self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]", debounce=True)
+        location_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[2]")
+        location_option.click()
         self.gen_elem_page.click_save_btn()
         # # List view contains new request
         ticket_page.find_list_data()
@@ -228,6 +240,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
             raise e("new ticket not found")
         ### DELETE
         # Go to Ticket Detail view click Delete
+        ticket_page.find_wait_and_assert_elem("t-ticket-request", ticket_request_two)
         self.gen_elem_page.click_dropdown_delete()
         self.gen_elem_page.click_delete_btn()
         # check Ticket is deleted

@@ -9,7 +9,6 @@ var multi_new_put_payload = {
     emails: [],
     phone_numbers: [],
     addresses: [],
-    locale: ''
 };
 
 export {multi_new_put_payload};

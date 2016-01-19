@@ -4,6 +4,7 @@ import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
+import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import LF from 'bsrs-ember/vendor/location_fixtures';
@@ -28,10 +29,15 @@ const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_locations_url;
 const LOCATION_URL = `${BASE_URL}/index`;
 const DETAIL_URL = BASE_URL + '/' + LD.idOne;
+const LOCATION_PUT_URL = PREFIX + DETAIL_URL + '/';
 
 let application, store, endpoint, list_xhr, url, original_uuid, run = Ember.run;
 
-module('Acceptance | detail-test', {
+const CHILDREN = '.t-location-children-select > .ember-basic-dropdown-trigger';
+const CHILDREN_DROPDOWN = '.t-location-children-select-dropdown > .ember-power-select-options';
+const CHILDREN_SEARCH = '.ember-power-select-trigger-multiple-input';
+
+module('Acceptance | location detail-test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -761,3 +767,231 @@ test('when you deep link to the location detail view you can change the address 
         assert.ok(location.get('addresses').objectAt(0).get('isNotDirty'));
     });
 });
+
+/*LOCATION TO CHILDREN M2M*/
+test('clicking and typing into power select for location will fire off xhr request for all location', (assert) => {
+    page.visitDetail();
+    andThen(() => {
+        let location = store.find('location', LD.idOne);
+        assert.equal(location.get('children').get('length'), 2);
+        assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
+        assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
+    });
+    let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/?name__icontains=a`;
+    let response = LF.search();
+    response.results.push(LF.get(LD.unusedId, LD.apple));
+    xhr(location_endpoint, 'GET', null, {}, 200, response);
+    page.childrenClickDropdown();
+    //testing filter out new flag in repo
+    run(() => {
+        store.push('location', {id: 'testingNewFilter', name: 'watA', new: true});
+    });
+    fillIn(`${CHILDREN_SEARCH}`, 'a');
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
+        assert.equal(page.childrenOptionLength(), 2);
+        assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(1)`).text().trim(), LD.apple);
+    });
+    page.childrenClickApple();
+    andThen(() => {
+        let location = store.find('location', LD.idOne);
+        assert.equal(location.get('children').get('length'), 3);
+        assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
+        assert.equal(location.get('children').objectAt(1).get('name'), LD.storeNameThree);
+        assert.equal(location.get('children').objectAt(2).get('name'), LD.apple);
+        assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
+        assert.equal(page.childrenTwoSelected().indexOf(LD.storeNameThree), 2);
+        assert.equal(page.childrenThreeSelected().indexOf(LD.apple), 2);
+        assert.ok(location.get('isDirtyOrRelatedDirty'));
+    });
+    page.childrenClickDropdown();
+    fillIn(`${CHILDREN_SEARCH}`, '');
+    andThen(() => {
+        assert.equal(page.childrenOptionLength(), 1);
+        assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
+    });
+    fillIn(`${CHILDREN_SEARCH}`, 'a');
+    andThen(() => {
+        let location = store.find('location', LD.idOne);
+        assert.equal(location.get('children').get('length'), 3);
+        assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
+        assert.equal(location.get('children').objectAt(1).get('name'), LD.storeNameThree);
+        assert.equal(location.get('children').objectAt(2).get('name'), LD.apple);
+        assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
+        assert.equal(page.childrenTwoSelected().indexOf(LD.storeNameThree), 2);
+        assert.equal(page.childrenThreeSelected().indexOf(LD.apple), 2);
+        assert.ok(location.get('isDirtyOrRelatedDirty'));
+    });
+    //search specific children
+    page.childrenClickDropdown();
+    let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/?name__icontains=BooNdocks`;
+    let response_2 = LF.list();
+    response_2.results.push(LF.get('abc123', LD.boondocks));
+    xhr(location_endpoint_2, 'GET', null, {}, 200, response_2);
+    fillIn(`${CHILDREN_SEARCH}`, 'BooNdocks');
+    andThen(() => {
+        assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
+        assert.equal(page.childrenOptionLength(), 1);
+        assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), LD.boondocks);
+        let location = store.find('location', LD.idOne);
+        assert.equal(location.get('children').get('length'), 3);
+        assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
+        assert.equal(location.get('children').objectAt(1).get('name'), LD.storeNameThree);
+        assert.equal(location.get('children').objectAt(2).get('name'), LD.apple);
+        assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
+        assert.equal(page.childrenTwoSelected().indexOf(LD.storeNameThree), 2);
+        assert.equal(page.childrenThreeSelected().indexOf(LD.apple), 2);
+        assert.ok(location.get('isDirtyOrRelatedDirty'));
+    });
+    page.childrenClickOptionOne();
+    andThen(() => {
+        let location = store.find('location', LD.idOne);
+        assert.equal(location.get('children').get('length'), 4);
+        assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
+        assert.equal(location.get('children').objectAt(1).get('name'), LD.storeNameThree);
+        assert.equal(location.get('children').objectAt(2).get('name'), LD.apple);
+        assert.equal(location.get('children').objectAt(3).get('name'), LD.boondocks);
+        assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
+        assert.equal(page.childrenTwoSelected().indexOf(LD.storeNameThree), 2);
+        assert.equal(page.childrenThreeSelected().indexOf(LD.apple), 2);
+        assert.equal(page.childrenFourSelected().indexOf(LD.boondocks), 2);
+        assert.ok(location.get('isDirtyOrRelatedDirty'));
+    });
+    let response_put = LF.detail(LD.idOne);
+    let payload = LF.put({id: LD.idOne, children: [LD.idTwo, LD.idThree, LD.unusedId, 'abc123']});
+    xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response_put);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_URL);
+    });
+});
+
+// test('can remove and add back same children and save empty children', (assert) => {
+//     page.visitDetail();
+//     andThen(() => {
+//         let location = store.find('location', LD.idOne);
+//         assert.equal(location.get('children').get('length'), 1);
+//         assert.ok(location.get('childrenIsNotDirty'));
+//         assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+//     });
+//     page.childrenOneRemove();
+//     andThen(() => {
+//         let location = store.find('location', LD.idOne);
+//         assert.equal(location.get('children').get('length'), 0);
+//         assert.ok(location.get('childrenIsDirty'));
+//         assert.ok(location.get('isDirtyOrRelatedDirty'));
+//     });
+//     let location_endpoint = PREFIX + '/admin/location/?fullname__icontains=a';
+//     xhr(location_endpoint, 'GET', null, {}, 200, LF.list());
+//     page.childrenClickDropdown();//don't know why I have to do this
+//     fillIn(`${CHILDREN_SEARCH}`, 'a');
+//     andThen(() => {
+//         assert.equal(page.childrenOptionLength(), 1);
+//         let location = store.find('location', LD.idOne);
+//         assert.equal(location.get('location_location_fks').length, 1);
+//         assert.equal(location.get('children').get('length'), 0);
+//         assert.ok(location.get('childrenIsDirty'));
+//         assert.ok(location.get('isDirtyOrRelatedDirty'));
+//     });
+//     page.childrenClickDonald();
+//     andThen(() => {
+//         let location = store.find('location', LD.idOne);
+//         assert.equal(location.get('location_location_fks').length, 1);
+//         assert.equal(location.get('children').get('length'), 1);
+//         assert.ok(location.get('childrenIsDirty'));
+//         assert.ok(location.get('isDirtyOrRelatedDirty'));
+//     });
+//     page.childrenOneRemove();
+//     andThen(() => {
+//         let location = store.find('location', LD.idOne);
+//         assert.equal(location.get('children').get('length'), 0);
+//         assert.ok(location.get('childrenIsDirty'));
+//         assert.ok(location.get('isDirtyOrRelatedDirty'));
+//     });
+//     let location_endpoint_two = PREFIX + '/admin/location/?fullname__icontains=Mel';
+//     xhr(location_endpoint_two, 'GET', null, {}, 200, LF.list());
+//     page.childrenClickDropdown();//don't know why I have to do this
+//     fillIn(`${CHILDREN_SEARCH}`, 'Mel');
+//     page.childrenClickMel();
+//     andThen(() => {
+//         let location = store.find('location', LD.idOne);
+//         assert.equal(location.get('children').get('length'), 1);
+//         //TODO @toranb 12/31 talk with Scott about this (we get another MelG user in the list now)
+//         // assert.ok(location.get('childrenIsNotDirty'));
+//         // assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+//     });
+//     let payload = LF.put({id: LD.idOne, children: [PD.idOne]});
+//     xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
+//     generalPage.save();
+//     andThen(() => {
+//         assert.equal(currentURL(), LOCATION_URL);
+//     });
+// });
+
+// test('starting with multiple children, can remove all children (while not populating options) and add back', (assert) => {
+//     detail_data.children = [...detail_data.children, LF.get(PD.idTwo)];
+//     detail_data.children[1].fullname = PD.fullname + 'i';
+//     page.visitDetail();
+//     andThen(() => {
+//         let location = store.find('location', LD.idOne);
+//         assert.equal(location.get('children').get('length'), 2);
+//         assert.equal(location.get('location_location_fks').length, 2);
+//         assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+//         assert.equal(page.childrenSelected(), 2);
+//     });
+//     page.childrenTwoRemove();
+//     andThen(() => {
+//         let location = store.find('location', LD.idOne);
+//         assert.equal(location.get('children').get('length'), 1);
+//         assert.ok(location.get('isDirtyOrRelatedDirty'));
+//         assert.equal(page.childrenSelected(), 1);
+//     });
+//     page.childrenOneRemove();
+//     andThen(() => {
+//         let location = store.find('location', LD.idOne);
+//         assert.equal(location.get('children').get('length'), 0);
+//         assert.ok(location.get('isDirtyOrRelatedDirty'));
+//         assert.equal(page.childrenSelected(), 0);
+//     });
+//     let location_endpoint = PREFIX + '/admin/location/?fullname__icontains=Mel';
+//     ajax(location_endpoint, 'GET', null, {}, 200, LF.list());
+//     page.childrenClickDropdown();
+//     fillIn(`${CHILDREN_SEARCH}`, 'Mel');
+//     andThen(() => {
+//         let location = store.find('location', LD.idOne);
+//         assert.equal(location.get('children').get('length'), 0);
+//         assert.ok(location.get('isDirtyOrRelatedDirty'));
+//     });
+//     page.childrenClickMel();
+//     andThen(() => {
+//         let location = store.find('location', LD.idOne);
+//         assert.equal(location.get('children').get('length'), 2); //TODO @toranb 12/31 talk w/ Scott about this
+//         assert.ok(location.get('isDirtyOrRelatedDirty'));
+//         assert.equal(page.childrenSelected(), 2); //TODO @toranb 12/31 talk w/ Scott about this
+//     });
+//     let payload = LF.put({id: LD.idOne, children: [PD.idOne, LD.idTwo]});
+//     ajax(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
+//     generalPage.save();
+//     andThen(() => {
+//         assert.equal(currentURL(), LOCATION_URL);
+//     });
+// });
+
+// test('clicking and typing into power select for location will not filter if spacebar pressed', (assert) => {
+//     page.visitDetail();
+//     page.childrenClickDropdown();
+//     fillIn(`${CHILDREN_SEARCH}`, ' ');
+//     andThen(() => {
+//         assert.equal(page.childrenelected().indexOf(LD.storeName), 2);
+//         assert.equal(page.childrenOptionLength(), 1);
+//         assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.no_results);
+//     });
+//     let response = LF.detail(LD.idOne);
+//     let payload = LF.put({id: LD.idOne, children: [PD.idOne]});
+//     xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
+//     generalPage.save();
+//     andThen(() => {
+//         assert.equal(currentURL(), LOCATION_URL);
+//     });
+// });

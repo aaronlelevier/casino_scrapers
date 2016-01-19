@@ -127,7 +127,7 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
             this.setProperties({page: 1, page_size: page_size});
         },
         resetGrid() {
-            this.setProperties({page: 1, sort: undefined, find: undefined, search: undefined});
+            this.setProperties({page: 1, sort: undefined, find: undefined, search: undefined, page_size: undefined});
         },
         toggleSaveFilterSetModal() {
             this.toggleProperty('savingFilter');

@@ -36,7 +36,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
         if (sort && sort !== 'id' && sort.indexOf('.') < 0) {
             endpoint = endpoint + '&ordering=' + sort;
         }else if (sort && sort !== 'id'){
-            endpoint = endpoint + '&related_ordering=' + sort.replace(/\./g, '__').replace(/translated_name/g, 'name');
+            endpoint = endpoint + '&ordering=' + sort.replace(/\./g, '__').replace(/translated_name/g, 'name');
         }
         if (search && search !== '') {
             endpoint = endpoint + '&search=' + encodeURIComponent(search);

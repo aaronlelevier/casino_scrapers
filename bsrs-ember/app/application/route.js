@@ -55,7 +55,7 @@ var ApplicationRoute = Ember.Route.extend({
         for (let key in currency_list) {
             store.push('currency', currency_list[key]);
         }
-        const location_level_list = Ember.$('[data-preload-location-levels]').data('configuration');
+        const location_level_list = Ember.$.extend(true, [], Ember.$('[data-preload-location-levels]').data('configuration'));
         location_level_list.forEach((model) => {
             model.children_fks = model.children || [];
             model.parent_fks = model.parents || [];
@@ -63,7 +63,7 @@ var ApplicationRoute = Ember.Route.extend({
             delete model.parents;
             store.push('location-level', model);
         });
-        const role_list = Ember.$('[data-preload-roles]').data('configuration');
+        const role_list = Ember.$.extend(true, [], Ember.$('[data-preload-roles]').data('configuration'));
         const role_deserializer = this.get('RoleDeserializer');
         role_list.forEach((model) => {
             role_deserializer.deserialize(model, model.id);
@@ -115,7 +115,8 @@ var ApplicationRoute = Ember.Route.extend({
             // LocationLevel - setup relationship
             var location_level_fk = location.location_level_fk;
             store.push('location', {id: location.id, name: location.name, location_level_fk: location_level_fk, person_location_fks: [person_location_pk]});
-            store.push('location-level', {id: location_level_fk, locations: [location.id]});
+            const existing_locations = store.find('location-level', location_level_fk).get('locations') || [];
+            store.push('location-level', {id: location_level_fk, locations: existing_locations.concat(location.id)});
             // Location
             person_location_pks.push(person_location_pk);
         });
@@ -126,7 +127,7 @@ var ApplicationRoute = Ember.Route.extend({
             username: person_current.username,
             title: person_current.title,
             role_fk: person_current.role,
-            locale: current_locale.get('locale'),
+            locale_fk: current_locale.get('id'),
             person_location_fks: person_location_pks
         });
         // Set the current user's time zone

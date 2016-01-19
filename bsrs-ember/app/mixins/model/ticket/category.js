@@ -42,7 +42,7 @@ var CategoriesMixin = Ember.Mixin.create({
             let category_pks = this.mapBy('category_pk');
             return Ember.$.inArray(category.get('id'), category_pks) > -1;
         };
-        return this.get('store').find('category', filter.bind(ticket_categories), []);
+        return this.get('store').find('category', filter.bind(ticket_categories));
     }),
     ticket_categories_ids: Ember.computed('ticket_categories.[]', function() {
         return this.get('ticket_categories').mapBy('id'); 
@@ -105,18 +105,16 @@ var CategoriesMixin = Ember.Mixin.create({
                 store.push('ticket-category', {id: matching_m2m.get('id'), removed: undefined});
             });
         }else{
-            const uuid = this.get('uuid');
             run(function() {
-                store.push('ticket-category', {id: uuid.v4(), ticket_pk: ticket_pk, category_pk: category_pk});
+                store.push('ticket-category', {id: Ember.uuid(), ticket_pk: ticket_pk, category_pk: category_pk});
             });
         }
     },
     add_category(category_pk) {
         const ticket_pk = this.get('id');
-        const uuid = this.get('uuid');
         const store = this.get('store');
         run(function() {
-            store.push('ticket-category', {id: uuid.v4(), ticket_pk: ticket_pk, category_pk: category_pk});
+            store.push('ticket-category', {id: Ember.uuid(), ticket_pk: ticket_pk, category_pk: category_pk});
         });
     },
     remove_category(category_pk) {

@@ -94,6 +94,11 @@ class SelfReferencingQuerySet(models.query.QuerySet):
         master_set = set()
 
         for obj in self.all():
+
+            if obj.name == settings.LOCATION_TOP_LEVEL_NAME:
+                master_set.update(type(obj).objects.values_list("id", flat=True))
+                continue
+
             # parent
             master_set.add(obj.id)
             # children
@@ -116,6 +121,10 @@ class SelfReferencingManager(BaseManager):
 
     def objects_and_their_children(self):
         return self.get_queryset().objects_and_their_children()
+
+    def create_top_level(self):
+        obj, _ = self.get_or_create(name=settings.LOCATION_TOP_LEVEL_NAME)
+        return obj
 
 
 class SelfRefrencingBaseModel(models.Model):
@@ -207,22 +216,15 @@ class LocationType(BaseNameModel):
 class LocationQuerySet(SelfReferencingQuerySet):
     ''' '''
 
-    def get_level_children(self, location, level_id):
+    def get_level_children(self, location):
         '''
-        Includes error handling that the level_id is valid.
-
-        :location: Parent ``Location``
-        :level_id: 
-            ``LocationLevel.id`` of the ``Child Locations`` 
-            to return.
+        :location: Parent ``Location`` to find one all of the locations one llevel deep
         '''
         try:
             child_levels = LocationLevel.objects.get_all_children(location.location_level)
-            location_level = LocationLevel.objects.filter(
-                id__in=child_levels.values_list('id', flat=True)).get(id=level_id)
         except ObjectDoesNotExist:
             raise
-        return self.filter(location_level=location_level)
+        return self.filter(location_level__in=child_levels)
 
     def get_level_parents(self, location, level_id):
         '''
@@ -246,9 +248,8 @@ class LocationQuerySet(SelfReferencingQuerySet):
             Q(name__icontains=keyword) | \
             Q(number__icontains=keyword) | \
             Q(addresses__city__icontains=keyword) | \
-            Q(addresses__address1__icontains=keyword) | \
-            Q(addresses__address2__icontains=keyword) | \
-            Q(addresses__zip__icontains=keyword)
+            Q(addresses__address__icontains=keyword) | \
+            Q(addresses__postal_code__icontains=keyword)
         )
 
 
@@ -257,11 +258,11 @@ class LocationManager(SelfReferencingManager):
     def get_queryset(self):
         return LocationQuerySet(self.model, self._db).filter(deleted__isnull=True)
         
-    def get_level_children(self, location, level_id):
+    def get_level_children(self, location):
         '''
         Get all child Locations at a specific LocationLevel.
         '''
-        return self.get_queryset().get_level_children(location, level_id)
+        return self.get_queryset().get_level_children(location)
 
     def get_level_parents(self, location, level_id):
         '''
@@ -271,6 +272,11 @@ class LocationManager(SelfReferencingManager):
 
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
+
+    def create_top_level(self):
+        location_level = LocationLevel.objects.create_top_level()
+        obj, _ = self.get_or_create(name=settings.LOCATION_TOP_LEVEL_NAME, location_level=location_level)
+        return obj
 
 
 class Location(SelfRefrencingBaseModel, BaseModel):

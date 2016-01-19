@@ -193,15 +193,19 @@ class UpdateAdminTests(TestCase):
         self.assertEqual(self.client.session['_auth_user_id'], person.pk)
 
     def test_update_admin(self):
+        top_level_location = Location.objects.create_top_level()
+        top_level_location_level = LocationLevel.objects.create_top_level()
         person = factory.create_single_person()
 
         factory.update_admin(person)
 
-        # Locations
+        # django-admin access attrs
+        self.assertTrue(person.is_superuser)
+        self.assertTrue(person.is_superuser)
+        # Locations - 'admin' belongs to the top level
         person_locations = person.locations.values_list('id', flat=True)
-        for location in (Location.objects.filter(location_level=person.role.location_level)
-                                         .values_list('id', flat=True)):
-            self.assertIn(location, person_locations)
+        self.assertIn(top_level_location.id, person_locations)
+        self.assertEqual(person.role.location_level, top_level_location_level)
         # Categories
         person_role_categories = person.role.categories.values_list('id', flat=True)
         for category in Category.objects.filter(parent__isnull=True).values_list('id', flat=True):
@@ -234,6 +238,42 @@ class UpdateAdminTests(TestCase):
         person_role_categories = person.role.categories.values_list('id', flat=True)
         for category in Category.objects.filter(parent__isnull=True).values_list('id', flat=True):
             self.assertIn(category, person_role_categories)
+
+    def test_add_top_level_location(self):
+        person = factory.create_single_person()
+        top_level_location = Location.objects.create_top_level()
+
+        factory.add_top_level_location(person)
+
+        self.assertEqual(person.locations.count(), 1)
+        self.assertEqual(person.locations.first(), top_level_location)
+        self.assertEqual(person.role.location_level, top_level_location.location_level)
+
+    def test_add_all_locations(self):
+        create_locations()
+        person = factory.create_single_person()
+
+        factory.add_all_locations(person)
+
+        for location in Location.objects.filter(location_level=person.role.location_level):
+            self.assertIn(location, person.locations.all())
+
+    def test_remove_all_locations(self):
+        create_locations()
+        person = factory.create_single_person()
+
+        factory.remove_all_locations(person)
+
+        self.assertEqual(person.locations.count(), 0)
+
+    def test_add_all_parent_categores(self):
+        create_locations()
+        person = factory.create_single_person()
+
+        factory.add_all_parent_categores(person)
+
+        for category in Category.objects.filter(parent__isnull=True):
+            self.assertIn(category, person.role.categories.all())
 
 
 class CreateAllPeopleTests(TestCase):

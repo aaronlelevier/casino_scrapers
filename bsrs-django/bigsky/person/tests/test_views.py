@@ -330,23 +330,20 @@ class PersonDetailTests(TestCase):
 
         location = Location.objects.get(id=self.data['locations'][0]['id'])
         location_level = LocationLevel.objects.get(
-            id=self.data['locations'][0]['location_level']['id'])
+            id=self.data['locations'][0]['location_level'])
 
         self.assertEqual(self.data['locations'][0]['id'], str(location.id))
         self.assertEqual(self.data['locations'][0]['name'], location.name)
         self.assertEqual(self.data['locations'][0]['number'], location.number)
-        self.assertEqual(self.data['locations'][0]['location_level']['id'],
+        self.assertEqual(self.data['locations'][0]['location_level'],
             str(location.location_level.id))
-        self.assertEqual(self.data['locations'][0]['location_level']['name'],
-            location.location_level.name)
 
     def test_data_emails(self):
         self.assertTrue(self.data['emails'])
         email = Email.objects.get(id=self.data['emails'][0]['id'])
         
         self.assertEqual(self.data['emails'][0]['id'], str(email.id))
-        self.assertEqual(self.data['emails'][0]['type']['id'], str(email.type.id))
-        self.assertEqual(self.data['emails'][0]['type']['name'], email.type.name)
+        self.assertEqual(self.data['emails'][0]['type'], str(email.type.id))
         self.assertEqual(self.data['emails'][0]['email'], email.email)
 
     def test_data_phone_numbers(self):
@@ -365,12 +362,11 @@ class PersonDetailTests(TestCase):
         address_data = self.data['addresses'][0]
         self.assertEqual(address_data['id'], str(address.id))
         self.assertEqual(address_data['type'], str(address.type.id))
-        self.assertEqual(address_data['address1'], address.address1)
-        self.assertEqual(address_data['address2'], address.address2)
+        self.assertEqual(address_data['address'], address.address)
         self.assertEqual(address_data['city'], address.city)
         self.assertEqual(address_data['state'], address.state)
         self.assertEqual(address_data['country'], address.country)
-        self.assertEqual(address_data['zip'], address.zip)
+        self.assertEqual(address_data['postal_code'], address.postal_code)
 
     def test_person_fk(self):
         self.assertIn(
@@ -714,7 +710,7 @@ class PersonSearchTests(APITransactionTestCase):
         self.role = create_role()
         create_all_people()
         # Login
-        self.person = Person.objects.first()
+        self.person = Person.objects.get(username='admin')
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):

@@ -13,11 +13,36 @@ var FilterSet = Ember.Object.extend({
         return query;
     }),
     params: Ember.computed('query', function() {
+        var reset = {find: undefined, sort: undefined, search: undefined, page: 1};
+        var query = Ember.$.extend(true, {}, this.get('query'));
+        var queryParams = Ember.$.extend(reset, query);
         return Ember.Object.create({
             isQueryParams: true,
-            values: this.get('query')
+            values: queryParams
         });
-    })
+    }),
+    filter_exists: function(path, incoming) {
+        var query = this.get('query');
+        var endpoint = this.get('endpoint_name');
+        if(path !== endpoint) {
+            return false;
+        }
+        for(var i in incoming){
+            if(incoming.hasOwnProperty(i)){
+                if(incoming[i] !== query[i]){
+                    return false;
+                }
+            }
+        }
+        for(var q in query){
+            if(query.hasOwnProperty(q)){
+                if(incoming[q] !== query[q]){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 });
 
 export default FilterSet;

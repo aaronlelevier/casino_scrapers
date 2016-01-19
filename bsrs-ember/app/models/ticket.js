@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
-import injectUUID from 'bsrs-ember/utilities/uuid';
 //start-non-standard
 import computed from 'ember-computed-decorators';
 //end-non-standard
@@ -16,7 +15,6 @@ var run = Ember.run;
 
 var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocationMixin, DateFormatMixin, {
     store: inject('main'),
-    uuid: injectUUID('uuid'),
     number: attr(''),
     request: attr(''),
     requester: attr(''),

@@ -19,6 +19,7 @@ class SelfReferencingManagerTests(TestCase):
         self.district = mommy.make(LocationLevel, name='district')
         self.store1 = mommy.make(LocationLevel, name='store1')
         self.store2 = mommy.make(LocationLevel, name='store2')
+        self.store3 = mommy.make(LocationLevel, name='wat')
 
         # test that ``get_all_children()`` traverses multiple levels, and
         # doesn't just get the ``children`` for a single ``LocationLevel``
@@ -83,6 +84,11 @@ class LocationLevelManagerTests(TestCase):
         self.district.children.add(self.store2)
         self.assertEqual(self.district.parents.count(), 1)
 
+    def test_create_top_level(self):
+        ret = LocationLevel.objects.create_top_level()
+        self.assertIsInstance(ret, LocationLevel)
+        self.assertEqual(ret.name, settings.LOCATION_TOP_LEVEL_NAME)
+
 
 class LocationLevelTests(TestCase):
 
@@ -122,11 +128,10 @@ class LocationManagerTests(TestCase):
 
     def test_get_level_children(self):
         # setup
-        location = Location.objects.get(name='east')
-        location_level = LocationLevel.objects.get(name='store')
+        location = Location.objects.get(name='ca')
         # test
-        children = Location.objects.get_level_children(location, location_level.id)
-        self.assertEqual(children.count(), 2)
+        children = Location.objects.get_level_children(location)
+        self.assertEqual(children.count(), 3)
 
     def test_get_level_parents(self):
         # 'ca' is a 'distrinct' that now has 2 parents at the 'region' ``LocationLevel``
@@ -147,11 +152,26 @@ class LocationManagerTests(TestCase):
         person.locations.add(east)
         self.assertEqual(person.locations.count(), 1)
         self.assertEqual(person.locations.first().children.count(), 2)
+        ret = person.locations.objects_and_their_children()
+        self.assertEqual(len(ret), 5)
+        self.assertIn(person.locations.first().id, ret)
+
+    def test_objects_and_their_children__top_level(self):
+        # All Locations should be returned if the 'person' has the 'top level location'
+        person = create_single_person()
+        [person.locations.remove(x) for x in person.locations.all()]
+        company = Location.objects.create_top_level()
+        person.locations.add(company)
 
         ret = person.locations.objects_and_their_children()
 
-        self.assertEqual(len(ret), 5)
-        self.assertIn(person.locations.first().id, ret)
+        self.assertEqual(len(ret), Location.objects.count())
+
+    def test_create_top_level(self):
+        ret = Location.objects.create_top_level()
+        self.assertIsInstance(ret, Location)
+        self.assertEqual(ret.name, settings.LOCATION_TOP_LEVEL_NAME)
+        self.assertEqual(ret.location_level.name, settings.LOCATION_TOP_LEVEL_NAME)
 
 
 class LocationTests(TestCase):

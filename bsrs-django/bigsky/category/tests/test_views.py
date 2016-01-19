@@ -2,7 +2,7 @@ import json
 import uuid
 
 from model_mommy import mommy
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APITransactionTestCase
 
 from category.models import Category
 from category.serializers import CategorySerializer
@@ -66,6 +66,7 @@ class CategoryListTests(APITestCase):
         self.assertEqual(data['cost_amount'], str(category.cost_amount))
         self.assertEqual(data['cost_currency'], str(category.cost_currency.id))
         self.assertEqual(data['cost_code'], category.cost_code)
+        self.assertEqual(data['level'], category.level)
         self.assertNotIn('parent', data)
         self.assertNotIn('children', data)
 
@@ -102,6 +103,7 @@ class CategoryDetailTests(APITestCase):
         self.assertEqual(data['cost_amount'], str(category.cost_amount))
         self.assertEqual(data['cost_currency'], str(category.cost_currency.id))
         self.assertEqual(data['cost_code'], category.cost_code)
+        self.assertEqual(data['level'], category.level)
 
     def test_data_parent(self):
         category = Category.objects.filter(label='issue').first()
@@ -326,7 +328,7 @@ class CategoryCreateTests(APITestCase):
         self.assertIn(str(new_sub_category.id), data['children'])
 
 
-class CategoryFilterTests(APITestCase):
+class CategoryFilterTests(APITransactionTestCase):
 
     # NOTE: These tests are testing the ``FilterRelatedMixin`` with Categories
     # needed API endpoints

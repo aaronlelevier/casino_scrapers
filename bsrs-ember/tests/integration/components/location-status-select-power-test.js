@@ -32,7 +32,7 @@ test('should render a selectbox with bound options (defaulted to open on new tem
     status_one.set('locations', [LD.idOne]);
     this.set('location', location_one);
     this.set('all_statuses', all_statuses);
-    this.render(hbs`{{location-status-select location=location all_statuses=all_statuses}}`);
+    this.render(hbs`{{locations/location-status-select location=location all_statuses=all_statuses}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(LDS.openName));
     clickTrigger();
@@ -47,7 +47,7 @@ test('should be able to select same status when location already has a status', 
     status_one.set('locations', [LD.idOne]);
     this.set('location', location_one);
     this.set('all_statuses', all_statuses);
-    this.render(hbs`{{location-status-select location=location all_statuses=all_statuses}}`);
+    this.render(hbs`{{locations/location-status-select location=location all_statuses=all_statuses}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(LDS.openName));
     clickTrigger();
@@ -68,7 +68,7 @@ test('should be able to select new status when location already has a status', f
     status_one.set('locations', [LD.idOne]);
     this.set('location', location_one);
     this.set('all_statuses', all_statuses);
-    this.render(hbs`{{location-status-select location=location all_statuses=all_statuses}}`);
+    this.render(hbs`{{locations/location-status-select location=location all_statuses=all_statuses}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(LDS.openName));
     clickTrigger();

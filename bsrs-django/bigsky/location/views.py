@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import detail_route, list_route
 from rest_framework.exceptions import MethodNotAllowed
 
 from location.models import Location, LocationLevel, LocationStatus, LocationType
@@ -108,7 +108,7 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
        Will return all *Child Locations* for a given *LocationLevel*
        
-       URL: `/api/admin/locations/{pk}/get-level-children/{level_id}/`
+       URL: `/api/admin/locations/{pk}/get-level-children/{level_id}/?name__icontains={x}`
 
        Location ID: `{pk}`
 
@@ -154,7 +154,7 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
     @property
     def _all_related_serializer(self):
-        return ls.LocationDetailSerializer
+        return ls.LocationListSerializer
 
     def get_queryset(self):
         queryset = super(LocationViewSet, self).get_queryset()
@@ -165,16 +165,19 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
         return queryset
 
-    @detail_route(methods=['GET'], url_path=r'get-level-children/(?P<level_id>[\w\-]+)')
-    def get_level_children(self, request, pk=None, level_id=None):
+    @list_route(methods=['GET'], url_path=r'get-level-children/(?P<pk>[\w\-]+)')
+    def get_level_children(self, request, pk=None):
         instance = get_object_or_404(self.model, pk=pk)
-        related_instances = Location.objects.get_level_children(instance, level_id)
-        serializer = self._all_related_serializer(related_instances, many=True)
-        return Response(serializer.data)
+        queryset = Location.objects.get_level_children(instance)
+        queryset = self.filter_by_query_params(queryset)
+        page = self.paginate_queryset(queryset)
+        serializer = self._all_related_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     @detail_route(methods=['GET'], url_path=r'get-level-parents/(?P<level_id>[\w\-]+)')
     def get_level_parents(self, request, pk=None, level_id=None):
         instance = get_object_or_404(self.model, pk=pk)
-        related_instances = Location.objects.get_level_parents(instance, level_id)
-        serializer = self._all_related_serializer(related_instances, many=True)
+        queryset = Location.objects.get_level_parents(instance, level_id)
+        queryset = self.filter_by_query_params(queryset)
+        serializer = self._all_related_serializer(queryset, many=True)
         return Response(serializer.data)

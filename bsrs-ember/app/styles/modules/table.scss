@@ -30,7 +30,11 @@ div.rowTable {
                         color: $darkGray;
                         text-decoration: none;
                         &:hover{
+                            cursor: pointer;
                             text-decoration: none;
+                            border-color: $hoverColor;
+                            background-color: $hoverColor;
+                            color: $white;
                         }
                         &.active{
                             border-color: $activeColor;

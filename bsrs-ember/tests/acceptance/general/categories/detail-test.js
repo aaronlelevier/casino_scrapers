@@ -410,7 +410,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     });
 });
 
-test('amk when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
     page.nameFill(CD.nameTwo);
     page.subLabelFill(CD.subCatLabelOne);

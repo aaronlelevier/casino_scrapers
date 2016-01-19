@@ -258,10 +258,10 @@ class LocationListTests(APITestCase):
 
     def test_data_location_level(self):
         location_level = LocationLevel.objects.get(
-            id=self.data['results'][0]['location_level']['id'])
+            id=self.data['results'][0]['location_level'])
 
-        self.assertEqual(self.data['results'][0]['location_level']['name'],
-            location_level.name)
+        self.assertEqual(self.data['results'][0]['location_level'],
+            str(location_level.id))
 
     def test_filter_by_can_create_tickets(self):
         location = Location.objects.get(name='nv')
@@ -356,14 +356,16 @@ class LocationDetailTests(APITestCase):
     def test_get_level_children(self):
         # SetUp
         location = Location.objects.get(name='east')
-        location_level = LocationLevel.objects.get(name='store')
         # Test
-        response = self.client.get('/api/admin/locations/{pk}/get-level-children/{level_id}/'.format(
-            pk=location.id, level_id=location_level.id))
+        response = self.client.get('/api/admin/locations/get-level-children/{pk}/'.format(
+            pk=location.id))
         data = json.loads(response.content.decode('utf8'))
-        store1 = Location.objects.filter(location_level=location_level).first()
-        self.assertIn(str(store1.id), response.content.decode('utf8'))
-        self.assertEqual(len(data), 2)
+        self.assertIn('results', data)
+        data = data['results']
+        child = Location.objects.get(name='ca')
+        self.assertIn(str(child.id), [loc['id'] for loc in data])
+        self.assertNotIn(str(location.id), [loc['id'] for loc in data])
+        self.assertEqual(len(data), 6)
 
     def test_get_level_parents(self):
         # SetUp
@@ -379,6 +381,39 @@ class LocationDetailTests(APITestCase):
         region1 = Location.objects.filter(location_level=location_level).first()
         self.assertIn(str(region1.id), response.content.decode('utf8'))
         self.assertEqual(len(data), 2)
+
+    ### DETAIL ROUTES - FILTERED
+
+    def test_get_level_children__filtered(self):
+        location = Location.objects.get(name='east')
+        location_level = LocationLevel.objects.get(name='store')
+        keyword = 'san_die'
+        response = self.client.get(
+            '/api/admin/locations/get-level-children/{pk}/?name__icontains={name}'
+            .format(pk=location.id, name=keyword))
+        data = json.loads(response.content.decode('utf8'))
+        data = data['results']
+        self.assertEqual(
+            len(data),
+            Location.objects.filter(location_level=location_level, name__icontains=keyword).count()
+        )
+
+    def test_get_level_parents__filtered(self):
+        location = Location.objects.get(name='ca')
+        location_level = LocationLevel.objects.get(name='region')
+        east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
+        east_lp.children.add(location)
+        keyword = 'east_l'
+
+        response = self.client.get(
+            '/api/admin/locations/{pk}/get-level-parents/{level_id}/?name__icontains={name}'
+            .format(pk=location.id, level_id=location_level.id, name=keyword))
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(
+            len(data),
+            Location.objects.filter(location_level=location_level, name__icontains=keyword).count()
+        )
 
 
 class LocationCreateTests(APITestCase):
@@ -701,9 +736,9 @@ class LocationSearchTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())
 
-    def test_search_address_address1(self):
+    def test_search_address_address(self):
         keyword = create._generate_chars()
-        address = mommy.make(Address, address1=keyword, content_object=self.location,
+        address = mommy.make(Address, address=keyword, content_object=self.location,
             object_id=self.location.id)
 
         response = self.client.get('/api/admin/locations/?search={}'.format(keyword))
@@ -711,19 +746,9 @@ class LocationSearchTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())
 
-    def test_search_address_address2(self):
+    def test_search_address_postal_code(self):
         keyword = create._generate_chars()
-        address = mommy.make(Address, address2=keyword, content_object=self.location,
-            object_id=self.location.id)
-
-        response = self.client.get('/api/admin/locations/?search={}'.format(keyword))
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())
-
-    def test_search_address_zip(self):
-        keyword = create._generate_chars()
-        address = mommy.make(Address, zip=keyword, content_object=self.location,
+        address = mommy.make(Address, postal_code=keyword, content_object=self.location,
             object_id=self.location.id)
 
         response = self.client.get('/api/admin/locations/?search={}'.format(keyword))

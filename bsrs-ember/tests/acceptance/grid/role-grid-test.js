@@ -20,6 +20,8 @@ const ROLE_URL = BASE_URL + '/index';
 const NUMBER_ONE = {keyCode: 49};
 const NUMBER_FOUR = {keyCode: 52};
 const BACKSPACE = {keyCode: 8};
+const SORT_NAME_DIR = '.t-sort-name-dir';
+const SAVE_FILTERSET_MODAL = '.t-show-save-filterset-modal';
 
 var application, store, endpoint, list_xhr, original_uuid;
 
@@ -543,7 +545,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
     xhr(sort_one ,'GET',null,{},200,RF.sorted('name'));
     visit(ROLE_URL);
     click('.t-sort-name-dir');
-    click('.t-show-save-filterset-modal');
+    click(SAVE_FILTERSET_MODAL);
     andThen(() => {
         isFocused('.ember-modal-dialog input:first');
     });
@@ -560,13 +562,13 @@ test('save filterset will fire off xhr and add item to the sidebar navigation', 
     let name = 'foobar';
     let routePath = 'admin.roles.index';
     let url = window.location.toString();
-    let query = url.slice(url.indexOf('?'));
+    let query = '?sort=name';
     let section = '.t-grid-wrap';
     let navigation = '.t-filterset-wrap li';
     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
     visit(ROLE_URL);
     click('.t-sort-name-dir');
-    click('.t-show-save-filterset-modal');
+    click(SAVE_FILTERSET_MODAL);
     xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
     saveFilterSet(name, routePath);
     andThen(() => {
@@ -607,10 +609,142 @@ test('save filterset button only available when a dynamic filter is present', fu
     xhr(sort_one ,'GET',null,{},200,RF.sorted('name'));
     visit(ROLE_URL);
     andThen(() => {
-        assert.equal(find('.t-show-save-filterset-modal').length, 0);
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
     });
     click('.t-sort-name-dir');
     andThen(() => {
-        assert.equal(find('.t-show-save-filterset-modal').length, 1);
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 1);
+    });
+});
+
+//this test is specifically for filterset it just happens to use this module and the role fixture data
+test('save filterset button is not available when page size or page is altered and only sort/find/search are persisted', function(assert) {
+    const updated_pg_size = PAGE_SIZE*2;
+    ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
+    visit(ROLE_URL);
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=2`, 'GET',null,{},200,RF.list_two());
+    click('.t-page:eq(1) a');
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1&page_size=${updated_pg_size}`, 'GET',null,{},200,RF.paginated(PAGE_SIZE));
+    alterPageSize('.t-page-size', updated_pg_size);
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1&ordering=name&page_size=${updated_pg_size}` ,'GET',null,{},200,RF.paginated(updated_pg_size));
+    click(SORT_NAME_DIR);
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 1);
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
+    click('.t-reset-grid');
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1&name__icontains=xav` ,'GET',null,{},200,RF.list());
+    filterGrid('name', 'xav');
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 1);
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1&page_size=${updated_pg_size}&name__icontains=xav`, 'GET',null,{},200,RF.paginated(updated_pg_size));
+    alterPageSize('.t-page-size', updated_pg_size);
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 1);
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1&ordering=name&page_size=${updated_pg_size}&name__icontains=xav`, 'GET',null,{},200,RF.paginated(PAGE_SIZE));
+    click(SORT_NAME_DIR);
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 1);
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1&ordering=name&page_size=${PAGE_SIZE}&name__icontains=xav`, 'GET',null,{},200,RF.paginated(PAGE_SIZE));
+    alterPageSize('.t-page-size', PAGE_SIZE);
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 1);
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=2&ordering=name&page_size=${PAGE_SIZE}&name__icontains=xav`, 'GET',null,{},200,RF.paginated(PAGE_SIZE));
+    click('.t-page:eq(1) a');
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 1);
+    });
+    let query = '?find=name%3Axav&sort=name';
+    let payload = {id: 'abc123', name: 'example', endpoint_name: 'admin.roles.index', endpoint_uri: query};
+    patchRandomAsync(0);
+    click(SAVE_FILTERSET_MODAL);
+    ajax('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
+    saveFilterSet('example', 'admin.roles.index');
+    andThen(() => {
+        const filterset = store.find('filterset', 'abc123');
+        assert.equal(filterset.get('endpoint_uri'), query);
+    });
+});
+
+//this test is specifically for applying saved filtersets ... it just happens to use this module and the role fixture data
+test('applying a saved filterset will reset the page to 1 by default', function(assert) {
+    const filter_name = 'foobar';
+    const updated_pg_size = PAGE_SIZE*2;
+    Ember.run(function() {
+        store.push('filterset', {id: 'def456', name: filter_name, endpoint_name: 'admin.roles.index', endpoint_uri: '?find=name%3Axav&sort=name'});
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
+    visit(ROLE_URL);
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
+        assert.equal(find('.t-filterset-wrap li:eq(0) a').text().trim(), filter_name);
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=2`, 'GET',null,{},200,RF.list_two());
+    click('.t-page:eq(1) a');
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1&ordering=name&name__icontains=xav` ,'GET',null,{},200,RF.paginated(updated_pg_size));
+    click('.t-filterset-wrap li:eq(0) a');
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
+        assert.equal(currentURL(), '/admin/roles/index?find=name%3Axav&sort=name');
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 2);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
+        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+        assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
+    });
+});
+
+//this test is specifically for applying saved filtersets ... it just happens to use this module and the role fixture data
+test('each time you apply a saved filterset the query params are reset to reflect only the currently active filterset', function(assert) {
+    const filter_one = 'foobar';
+    const filter_two = 'adminOnly';
+    Ember.run(function() {
+        store.push('filterset', {id: 'def456', name: filter_one, endpoint_name: 'admin.roles.index', endpoint_uri: '?find=name%3Axav&search=zap'});
+        store.push('filterset', {id: 'ghi789', name: filter_two, endpoint_name: 'admin.roles.index', endpoint_uri: '?search=admin&sort=name'});
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
+    visit(ROLE_URL);
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
+        assert.equal(find('.t-filterset-wrap li:eq(0) a').text().trim(), filter_one);
+        assert.equal(find('.t-filterset-wrap li:eq(1) a').text().trim(), filter_two);
+        assert.ok(!find('.t-filterset-wrap li:eq(0) a').hasClass('active'));
+        assert.ok(!find('.t-filterset-wrap li:eq(1) a').hasClass('active'));
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1&search=zap&name__icontains=xav` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
+    click('.t-filterset-wrap li:eq(0) a');
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
+        assert.equal(currentURL(), '/admin/roles/index?find=name%3Axav&search=zap');
+        assert.ok(find('.t-filterset-wrap li:eq(0) a').hasClass('active'));
+        assert.ok(!find('.t-filterset-wrap li:eq(1) a').hasClass('active'));
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1&ordering=name&search=admin` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
+    click('.t-filterset-wrap li:eq(1) a');
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
+        assert.equal(currentURL(), '/admin/roles/index?search=admin&sort=name');
+        assert.ok(!find('.t-filterset-wrap li:eq(0) a').hasClass('active'));
+        assert.ok(find('.t-filterset-wrap li:eq(1) a').hasClass('active'));
     });
 });

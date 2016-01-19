@@ -2,6 +2,7 @@ import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import CurrencyDefaults from 'bsrs-ember/vendor/defaults/currencies';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import LOCALED from 'bsrs-ember/vendor/defaults/locale';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import RD from 'bsrs-ember/vendor/defaults/role';
@@ -21,9 +22,9 @@ var store, uuid, person, role, run = Ember.run;
 
 module('unit: person test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency', 'model:phonenumber', 'model:address', 'model:location', 'model:location-level', 'model:person-location', 'service:currency','service:person-current','service:translations-fetcher','service:i18n', 'model:uuid', 'model:status', 'model:email']);
+        store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency', 'model:phonenumber', 'model:address', 'model:location', 'model:location-level', 'model:person-location', 'service:currency','service:person-current','service:translations-fetcher','service:i18n', 'model:uuid', 'model:status', 'model:email', 'model:locale']);
         run(function() {
-            person = store.push('person', {id: PD.idOne, first_name: PD.first_name, last_name: PD.last_name, role_fk: RD.idOne, status_fk: SD.activeId});
+            person = store.push('person', {id: PD.idOne, first_name: PD.first_name, last_name: PD.last_name, role_fk: RD.idOne, status_fk: SD.activeId, locale_fk: LOCALED.idOne});
             role = store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.idOne]});
         });
     }
@@ -45,6 +46,62 @@ test('related phone numbers are not dirty when no phone numbers present', (asser
 test('related addresses are not dirty when no addresses present', (assert) => {
     let address = store.push('address', {id: AD.idOne, type: ATD.officeId, model_fk: PD.unusedId});
     assert.ok(person.get('addressesIsNotDirty'));
+});
+
+/* LOCALE */
+test('related locale should return one locale for a person', (assert) => {
+    let locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne}); 
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(person.get('localeIsNotDirty'));
+});
+
+test('change_locale will update the persons locale and dirty the model', (assert) => {
+    let locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]}); 
+    let inactive_locale = store.push('locale', {id: LOCALED.idTwo, name: LOCALED.nameTwo, people: []}); 
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(person.get('locale_fk'), LOCALED.idOne); 
+    assert.equal(person.get('locale.id'), LOCALED.idOne); 
+    person.change_locale(inactive_locale.get('id'));
+    assert.equal(person.get('locale_fk'), LOCALED.idOne); 
+    assert.equal(person.get('locale.id'), LOCALED.idTwo); 
+    assert.ok(person.get('isDirtyOrRelatedDirty')); 
+    assert.ok(person.get('localeIsDirty')); 
+});
+
+test('save person will set locale_fk to current locale id', (assert) => {
+    let locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
+    let inactive_locale = store.push('locale', {id: LOCALED.idTwo, name: LOCALED.nameTwo, people: []});
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(person.get('locale_fk'), LOCALED.idOne); 
+    assert.equal(person.get('locale.id'), LOCALED.idOne); 
+    person.change_locale(inactive_locale.get('id'));
+    assert.equal(person.get('locale_fk'), LOCALED.idOne); 
+    assert.equal(person.get('locale.id'), LOCALED.idTwo); 
+    assert.ok(person.get('isDirtyOrRelatedDirty')); 
+    assert.ok(person.get('localeIsDirty')); 
+    person.saveRelated();
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty')); 
+    assert.ok(!person.get('localeIsDirty')); 
+    assert.equal(person.get('locale_fk'), LOCALED.idTwo); 
+    assert.equal(person.get('locale.id'), LOCALED.idTwo); 
+});
+
+test('rollback person will set locale to current locale_fk', (assert) => {
+    let locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]}); 
+    let inactive_locale = store.push('locale', {id: LOCALED.idTwo, name: LOCALED.nameTwo, people: []}); 
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(person.get('locale_fk'), LOCALED.idOne); 
+    assert.equal(person.get('locale.id'), LOCALED.idOne); 
+    person.change_locale(inactive_locale.get('id'));
+    assert.equal(person.get('locale_fk'), LOCALED.idOne); 
+    assert.equal(person.get('locale.id'), LOCALED.idTwo); 
+    assert.ok(person.get('isDirtyOrRelatedDirty')); 
+    assert.ok(person.get('localeIsDirty')); 
+    person.rollbackRelated();
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty')); 
+    assert.ok(!person.get('localeIsDirty')); 
+    assert.equal(person.get('locale.id'), LOCALED.idOne); 
+    assert.equal(person.get('locale_fk'), LOCALED.idOne); 
 });
 
 /* STATUS */

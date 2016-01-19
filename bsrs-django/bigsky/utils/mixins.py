@@ -1,4 +1,5 @@
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import FieldDoesNotExist, ObjectDoesNotExist
+from django.db.models import CharField, TextField
 
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
@@ -85,8 +86,12 @@ class OrderingQuerySetMixin(object):
 
         for param in ordering.split(','):
             field, asc = self._get_field(param)
-            select_dict[self._get_key(field)] = self._get_value(field)
-            order_by_list.append(self._get_asc_desc_value(field, asc))
+
+            if self._is_str_field(field):
+                select_dict[self._get_key(field)] = self._get_value(field)
+                order_by_list.append(self._get_asc_desc_value(field, asc))
+            else:
+                order_by_list.append(param)
 
         return queryset.extra(select=select_dict).order_by(*order_by_list)
 
@@ -99,6 +104,19 @@ class OrderingQuerySetMixin(object):
         else:
             return (param, True)
 
+    def _is_str_field(self, param):
+        """
+        Only return `True` for str fields on the model.
+        Return `False` for non-str fields, and related fields.
+        """
+        try:
+            model_field = self.model._meta.get_field(param)
+        except FieldDoesNotExist:
+            return False
+
+        if isinstance(model_field, (CharField, TextField,)):
+            return True
+
     def _get_key(self, field):
         return "lower_{}".format(field)
 
@@ -107,24 +125,6 @@ class OrderingQuerySetMixin(object):
 
     def _get_asc_desc_value(self, field, asc):
         return "{}{}".format("" if asc else "-", self._get_key(field))
-
-
-class RelatedOrderingQuerySetMixin(object):
-    """
-    Return a case-sensitive ordered queryset for Related Fields.
-
-    :param: related_ordering
-    """
-    def get_queryset(self):
-        queryset = super(RelatedOrderingQuerySetMixin, self).get_queryset()
-
-        ordering = self.request.query_params.get('related_ordering', None)
-
-        if ordering:
-            params = ordering.split(',')
-            queryset = queryset.order_by(*params)
-
-        return queryset
 
 
 class FilterRelatedMixin(object):
@@ -140,7 +140,10 @@ class FilterRelatedMixin(object):
 
     def get_queryset(self):
         queryset = super(FilterRelatedMixin, self).get_queryset()
+        queryset = self.filter_by_query_params(queryset)
+        return queryset
 
+    def filter_by_query_params(self, queryset):
         if self.filter_fields:
             kwargs = {}
 
@@ -153,6 +156,5 @@ class FilterRelatedMixin(object):
 
                     kwargs.update({param: value})
 
-            queryset = queryset.filter(**kwargs)
-
+            return queryset.filter(**kwargs)
         return queryset
