@@ -34,7 +34,7 @@
           <div class="row">
             <div class="col-sm-12">
               {{#form-group title="admin.third_party.label.status" for="status"}}
-                {{person-status-select person=model statuses=statuses}}
+                {{people/person-status-select person=model statuses=statuses}}
               {{#validation-error-field submitted=submitted field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}{{t "validation.invalid"}} {{t "admin.third_party.label.status"}}{{/validation-error-field}}
               {{/form-group}}
             </div>

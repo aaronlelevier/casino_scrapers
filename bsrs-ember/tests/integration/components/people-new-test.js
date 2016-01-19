@@ -25,7 +25,7 @@ test('filling in invalid username reveal validation messages', function(assert) 
     run(() => {
         this.set('model', store.push('person', {}));
     });
-    this.render(hbs`{{person-new model=model}}`);
+    this.render(hbs`{{people/person-new model=model}}`);
     var $component = this.$('.t-username-validation-error');
     assert.ok($component.is(':hidden'));
     var save_btn = this.$('.t-save-btn');
@@ -39,7 +39,7 @@ test('filling in invalid password reveal validation messages', function(assert) 
     run(() => {
         this.set('model', store.push('person', {}));
     });
-    this.render(hbs`{{person-new model=model}}`);
+    this.render(hbs`{{people/person-new model=model}}`);
     var $component = this.$('.t-password-validation-error');
     assert.ok($component);
     var save_btn = this.$('.t-save-btn');
@@ -48,4 +48,3 @@ test('filling in invalid password reveal validation messages', function(assert) 
     this.$('.t-person-password').val('a').trigger('change');
     assert.ok($component.is(':hidden'));
 });
-

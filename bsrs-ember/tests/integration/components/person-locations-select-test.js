@@ -45,7 +45,7 @@ moduleForComponent('person-locations-select', 'integration: person-locations-sel
 test('should render a selectbox when with no options (initial state)', function(assert) {
     let person_locations_children = Ember.A([]);
     this.set('person', person);
-    this.render(hbs`{{person-locations-select person=person}}`);
+    this.render(hbs`{{people/person-locations-select person=person}}`);
     let $component = this.$(`${COMPONENT}`);
     clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
@@ -57,7 +57,7 @@ test('should render a selectbox when with no options (initial state)', function(
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
     let person_locations_children = store.find('location');
     this.set('person', person);
-    this.render(hbs`{{person-locations-select person=person}}`);
+    this.render(hbs`{{people/person-locations-select person=person}}`);
     let $component = this.$(`${COMPONENT}`);
     run(() => { typeInSearch('a'); });
     return waitFor().
