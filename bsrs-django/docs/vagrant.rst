@@ -80,6 +80,7 @@ Scott Note's for new vagrant setup
     # node.js and symlink yourself
     wget [right click on link to url for node js linux tarball] #https://nodejs.org/en/download/
     tar xvzf node-v4.1.2-linux-x86.tar.gz
+    # tar xvfJ is xz file
     rm -rf node-v4.1.2-linux-x86.tar.gz
     mv node-v4.1.2-linux-x86 node
     cd /usr/bin
@@ -95,7 +96,7 @@ Scott Note's for new vagrant setup
     wget [url for python verson] #sourced tarball https://www.python.org/downloads/release/python-343/ 
     tar -xvzf Python-3.4.3.tgz
     rm -rf Python-3.4.3.tgz
-    cd Python-3.4.3.tgz
+    cd Python-3.4.3
 
     sudo mkdir /opt/python
     sudo chown -R vagrant:vagrant /opt/python
@@ -110,12 +111,12 @@ Scott Note's for new vagrant setup
     sudo apt-get install nginx 
 
     # setup github
+    sudo apt-get install git
     cd 
     cd ..ssh
     ssh-keygen -t rsa -C "vagrant@snewcomer.com"
     ls -la .ssh
     cat .ssh/id_rsa.pub
-    sudo apt-get install git
     git clone git@github.com:bigskytech/bsrs.git
 
     # setup virtualenv
