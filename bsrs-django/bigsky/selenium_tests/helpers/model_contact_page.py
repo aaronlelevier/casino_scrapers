@@ -17,6 +17,11 @@ class ModelContactPage(ModelPage):
         self.list_name = list_name
         self.list_data = list_data
 
+    def assert_children(self, child_one):
+        first_loc = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-children-select-trigger ')]/span")
+        text = first_loc.text
+        assert child_one in text
+
     def find_ph_new_entry_send_keys(self, phone_num):
         first_phone_number_input = self.driver.find_element_by_class_name("t-new-entry")
         first_phone_number_input.send_keys(phone_num)
