@@ -120,7 +120,8 @@ var ApplicationRoute = Ember.Route.extend({
                 location_level_fk = location.location_level;
             }
             store.push('location', {id: location.id, name: location.name, location_level_fk: location_level_fk, person_location_fks: [person_location_pk]});
-            store.push('location-level', {id: location_level_fk, locations: [location.id]});
+            const existing_locations = store.find('location-level', location_level_fk).get('locations') || [];
+            store.push('location-level', {id: location_level_fk, locations: existing_locations.concat(location.id)});
             // Location
             person_location_pks.push(person_location_pk);
         });
