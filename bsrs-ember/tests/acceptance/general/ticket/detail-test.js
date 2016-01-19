@@ -471,7 +471,7 @@ test('starting with multiple cc, can remove all ccs (while not populating option
     andThen(() => {
         let ticket = store.find('ticket', TD.idOne);
         assert.equal(ticket.get('cc').get('length'), 2); //TODO @toranb 12/31 talk w/ Scott about this
-        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
         assert.equal(page.ccsSelected(), 2); //TODO @toranb 12/31 talk w/ Scott about this
     });
     let payload = TF.put({id: TD.idOne, cc: [PD.idOne, PD.idTwo]});
