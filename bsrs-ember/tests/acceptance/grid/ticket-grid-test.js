@@ -109,7 +109,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     });
 });
 
-test('aaron clicking first,last,next and previous will request page 1 and 2 correctly', function(assert) {
+test('clicking first,last,next and previous will request page 1 and 2 correctly', function(assert) {
     var page_two = PREFIX + BASE_URL + '/?page=2';
     xhr(page_two ,"GET",null,{},200,TF.list_two());
     visit(TICKET_URL);
@@ -122,7 +122,6 @@ test('aaron clicking first,last,next and previous will request page 1 and 2 corr
         isNotDisabledElement('.t-last');
     });
     click('.t-next a');
-    debugger;
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);

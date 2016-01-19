@@ -175,7 +175,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     });
 });
 
-test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
+test('aaron typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
     var search_two = PREFIX + BASE_URL + '/?page=1&ordering=number&search=14';
     xhr(search_two ,"GET",null,{},200,LF.searched('14', 'number'));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=number';

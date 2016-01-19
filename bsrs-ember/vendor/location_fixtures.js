@@ -37,11 +37,15 @@ var BSRS_LOCATION_FACTORY = (function() {
             var uuid = '232z46cf-9fbb-456z-4hc3-59728vu3099';
             if (i < page_size) {
                 uuid = uuid + '0' + i;
-            } else{
+            } else {
                 uuid = uuid + i;
             }
             var location = this.generate(uuid);
-            location.name = location.name + i;
+            if (i === 0) {
+                location.name = location_defaults.storeName;
+            } else {
+                location.name = location.name + i;
+            }
             location.number = location.number + i;
             location.status = this.location_status_defaults.openId;
             response.push(location);
