@@ -416,15 +416,14 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     });
     let people_endpoint_two = PREFIX + '/admin/people/?fullname__icontains=Mel';
     xhr(people_endpoint_two, 'GET', null, {}, 200, PF.list());
-    page.ccClickDropdown();//don't know why I have to do this
+    page.ccClickDropdown();
     fillIn(`${CC_SEARCH}`, 'Mel');
     page.ccClickMel();
     andThen(() => {
         let ticket = store.find('ticket', TD.idOne);
         assert.equal(ticket.get('cc').get('length'), 1);
-        //TODO @toranb 12/31 talk with Scott about this (we get another MelG user in the list now)
-        // assert.ok(ticket.get('ccIsNotDirty'));
-        // assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+        assert.ok(ticket.get('ccIsNotDirty'));
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     });
     let payload = TF.put({id: TD.idOne, cc: [PD.idOne]});
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);

@@ -303,6 +303,19 @@ test('when cc is changed dirty tracking works as expected (removing)', (assert) 
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
 
+test('add_person will add back old join model after it was removed and dirty the model (multiple)', (assert) => {
+    const ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne, TPD.idTwo]});
+    const person_two = store.push('person', {id: PD.idTwo});
+    const person_three = store.push('person', {id: PD.idThree});
+    store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.idTwo});
+    store.push('ticket-person', {id: TPD.idTwo, ticket_pk: TD.idOne, person_pk: PD.idThree});
+    ticket.remove_person(person_three.get('id'));
+    assert.equal(ticket.get('cc').get('length'), 1);
+    ticket.add_person(person_three.get('id'));
+    assert.equal(ticket.get('cc').get('length'), 2);
+    assert.ok(ticket.get('ccIsNotDirty'));
+});
+
 test('multiple ticket\'s with same cc will rollback correctly', (assert) => {
     store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
     store.push('ticket-person', {id: TPD.idTwo, ticket_pk: TD.idTwo, person_pk: PD.id});
