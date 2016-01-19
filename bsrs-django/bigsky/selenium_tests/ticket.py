@@ -216,10 +216,10 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         status_option.click()
         ticket_cc_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-ticket-cc-select-trigger')])[last()]")
         ticket_cc_input.send_keys("a")
-        cc_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
+        cc_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
         cc_option.click()
         ticket_cc_input.send_keys("l")
-        cc_option_2 = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
+        cc_option_2 = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
         cc_option_2.click()
         ticket_location = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-location-select ')]/div")
         ticket_location.click()
@@ -240,6 +240,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
             raise e("new ticket not found")
         ### DELETE
         # Go to Ticket Detail view click Delete
+        ticket_page.find_wait_and_assert_elem("t-ticket-request", ticket_request_two)
         self.gen_elem_page.click_dropdown_delete()
         self.gen_elem_page.click_delete_btn()
         # check Ticket is deleted

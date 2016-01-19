@@ -188,12 +188,12 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.assertEqual(self.lorem[-1], usernames[1].text)
         # Save FilterSet
         search_name = str(uuid.uuid4())[:5]
-        modal = self.wait_for_xhr_request("t-show-save-filterset-modal")
-        modal.click()
-        modal_input = self.wait_for_xhr_request("t-filterset-name-input")
-        modal_input.send_keys(search_name)
-        self.wait_for_xhr_request("t-filterset-save-btn").click()
-        self.driver.find_element_by_link_text(search_name)
+        # modal = self.wait_for_xhr_request("t-show-save-filterset-modal")
+        # modal.click()
+        # modal_input = self.wait_for_xhr_request("t-filterset-name-input")
+        # modal_input.send_keys(search_name)
+        # self.wait_for_xhr_request("t-filterset-save-btn").click()
+        # self.driver.find_element_by_link_text(search_name)
 
         # TODO: not currenly showing: "t-reset-grid").
         # Reset Grid - Hard refresh OK b/c saved in the DB
