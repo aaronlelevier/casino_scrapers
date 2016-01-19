@@ -224,7 +224,7 @@ test('on boot we should fetch and load the location level configuration', functi
     });
 });
 
-test('aaron on boot we should fetch and load the person-current, logged in Person, configuration', function(assert) {
+test('on boot we should fetch and load the person-current, logged in Person, configuration', function(assert) {
     visit(HOME_URL);
     andThen(() => {
         var person_current = store.findOne('person-current');
@@ -233,7 +233,8 @@ test('aaron on boot we should fetch and load the person-current, logged in Perso
         assert.equal(person_current.get('last_name'), PERSON_CURRENT.last_name);
         assert.equal(person_current.get('username'), PERSON_CURRENT.username);
         assert.equal(person_current.get('title'), PERSON_CURRENT.title);
-        assert.equal(person_current.get('role'), store.find('person', PERSON_CURRENT.id).get('role').get('id'));
+        assert.equal(person_current.get('role'), store.find('person', PERSON_CURRENT.id).get('role'));
+        assert.equal(person_current.get('locale'), store.find('person', PERSON_CURRENT.id).get('locale'));
         // Location
         let person = person_current.get('person');
         assert.equal(person.get('locations').get('length'), 1);

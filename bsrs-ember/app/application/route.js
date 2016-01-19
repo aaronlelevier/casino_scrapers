@@ -120,16 +120,11 @@ var ApplicationRoute = Ember.Route.extend({
             // Location
             person_location_pks.push(person_location_pk);
         });
-        store.push('person', {
-            id: person_current.id,
-            first_name: person_current.first_name,
-            last_name: person_current.last_name,
-            username: person_current.username,
-            title: person_current.title,
-            role_fk: person_current.role,
-            locale_fk: current_locale.get('id'),
-            person_location_fks: person_location_pks
-        });
+        // push in 'logged in' Person
+        person_current.locale_fk = current_locale.get('id');
+        person_current.person_location_fks = person_location_pks;
+        store.push('person', person_current);
+
         // Set the current user's time zone
         // TODO: use moment.tz.guess() when it becomes available - https://github.com/moment/moment-timezone/pull/220
         // TODO: allow timezone to be overridden at the system/role/user level
