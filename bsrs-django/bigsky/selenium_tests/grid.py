@@ -182,26 +182,30 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
 
     def test_save_filter(self):
         # Sort DESC
-        self.wait_for_xhr_request("t-sort-username-dir").click()
-        self.wait_for_xhr_request("t-sort-username-dir").click()
-        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual(self.lorem[-1], usernames[1].text)
-        # Save FilterSet
         search_name = str(uuid.uuid4())[:5]
-        # modal = self.wait_for_xhr_request("t-show-save-filterset-modal")
-        # modal.click()
-        # modal_input = self.wait_for_xhr_request("t-filterset-name-input")
-        # modal_input.send_keys(search_name)
-        # self.wait_for_xhr_request("t-filterset-save-btn").click()
-        # self.driver.find_element_by_link_text(search_name)
+        self.wait_for_xhr_request("t-sort-username-dir", debounce=True).click()
+        self.wait_for_xhr_request("t-filter-title", debounce=True).click()
+        title_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
+        title_fulltext_search.send_keys("a")
+        title_fulltext_search.send_keys(Keys.RETURN)
+        self.wait_for_xhr_request("t-sort-username-dir", debounce=True).click()
+        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
+        self.assertEqual(self.lorem[-1], usernames[0].text)
 
-        # TODO: not currenly showing: "t-reset-grid").
+        # Save FilterSet
+        modal = self.wait_for_xhr_request("t-show-save-filterset-modal", debounce=True)
+        modal.click()
+        modal_input = self.wait_for_xhr_request("t-filterset-name-input")
+        modal_input.send_keys(search_name)
+        self.wait_for_xhr_request("t-filterset-save-btn").click()
+        self.driver.find_element_by_link_text(search_name)
+
         # Reset Grid - Hard refresh OK b/c saved in the DB
-        # self.driver.refresh()
-        # self.wait_for_xhr_request("t-reset-grid").click()
-        # self.driver.find_element_by_link_text(search_name).click()
-        # usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        # self.assertEqual(self.lorem[-1], usernames[0].text)
+        self.driver.refresh()
+        self.wait_for_xhr_request("t-reset-grid").click()
+        self.driver.find_element_by_link_text(search_name).click()
+        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
+        self.assertEqual(self.lorem[-1], usernames[0].text)
 
 
 if __name__ == "__main__":
