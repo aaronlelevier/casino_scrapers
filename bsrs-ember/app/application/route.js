@@ -131,7 +131,7 @@ var ApplicationRoute = Ember.Route.extend({
             username: person_current.username,
             title: person_current.title,
             role_fk: person_current.role,
-            locale: current_locale.get('locale'),
+            locale_fk: current_locale.get('id'),
             person_location_fks: person_location_pks
         });
         // Set the current user's time zone

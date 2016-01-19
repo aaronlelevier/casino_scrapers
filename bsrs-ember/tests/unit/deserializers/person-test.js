@@ -1,14 +1,15 @@
 import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
-import RD from 'bsrs-ember/vendor/defaults/role';
 import PND from 'bsrs-ember/vendor/defaults/phone-number';
 import PNF from 'bsrs-ember/vendor/phone_number_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import SD from 'bsrs-ember/vendor/defaults/status';
+import RD from 'bsrs-ember/vendor/defaults/role';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import PERSON_LD from 'bsrs-ember/vendor/defaults/person-location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import LOCALED from 'bsrs-ember/vendor/defaults/locale';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import ED from 'bsrs-ember/vendor/defaults/email';
 import EF from 'bsrs-ember/vendor/email_fixtures';
@@ -18,20 +19,66 @@ import LocationDeserializer from 'bsrs-ember/deserializers/location';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-var store, personProxy, subject, personCurrent, uuid, location_deserializer, location_level_deserializer, status, person, role, run = Ember.run;
+var store, personProxy, subject, personCurrent, uuid, location_deserializer, location_level_deserializer, status, locale, person, role, run = Ember.run;
 
 module('unit: person deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:random','model:uuid','model:person', 'model:role','model:person-location','model:location','model:location-level','model:email','model:phonenumber','model:address','model:address-type','service:person-current','service:translations-fetcher','service:i18n', 'model:status', 'model:location-status']);
+        store = module_registry(this.container, this.registry, ['model:random','model:uuid','model:person', 'model:role','model:person-location','model:location','model:location-level','model:email','model:phonenumber','model:address','model:address-type','service:person-current','service:translations-fetcher','service:i18n', 'model:status', 'model:location-status', 'model:locale']);
         uuid = this.container.lookup('model:uuid');
         location_level_deserializer = LocationLevelDeserializer.create({store: store});
         location_deserializer = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
         subject = PersonDeserializer.create({store: store, uuid: uuid, LocationDeserializer: location_deserializer});
         run(function() {
             status = store.push('status', {id: SD.activeId, name: SD.activeName});
-            person = store.push('person', {id: PD.idOne, status_fk: SD.activeId});
+            store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.idOne], location_level_fk: LLD.idOne});
+            store.push('location-level', {id: LLD.idOne, name: LLD.nameOne, roles: [RD.idOne]});
+            person = store.push('person', {id: PD.idOne, status_fk: SD.activeId, locale_fk: LOCALED.idOne, role_fk: PD.role});
         });
     }
+});
+
+/* LOCALE */
+test('person setup correct locale fk with bootstrapped data (detail)', (assert) => {
+    let response = PF.generate(PD.idOne);
+    locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne});
+    run(function() {
+        subject.deserialize(response, PD.idOne);
+    });
+    assert.equal(person.get('locale_fk'), locale.get('id'));
+    assert.equal(person.get('locale').get('id'), locale.get('id'));
+    assert.deepEqual(locale.get('people'), [PD.idOne]);
+    assert.ok(person.get('isNotDirty'));
+});
+
+test('person setup correct locale fk with existing locale pointer to person', (assert) => {
+    let response = PF.generate(PD.idOne);
+    locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
+    run(function() {
+        subject.deserialize(response, PD.idOne);
+    });
+    assert.equal(person.get('locale_fk'), locale.get('id'));
+    assert.equal(person.get('locale').get('id'), locale.get('id'));
+    assert.equal(locale.get('people').length, 1);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('localeIsNotDirty'));
+    assert.ok(person.get('roleIsNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('will check for previous person in store for locale_id as well', (assert) => {
+    let response = PF.generate(PD.idOne);
+    response.locale = undefined;
+    locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
+    run(function() {
+        subject.deserialize(response, PD.idOne);
+    });
+    assert.equal(person.get('locale_fk'), locale.get('id'));
+    assert.equal(person.get('locale').get('id'), locale.get('id'));
+    assert.equal(locale.get('people').length, 1);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('localeIsNotDirty'));
+    assert.ok(person.get('roleIsNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 /* STATUS */
@@ -73,6 +120,7 @@ test('person setup correct status fk with bootstrapped data (list)', (assert) =>
     assert.ok(person.get('isNotDirty'));
 });
 
+/* PH and ADDRESSES and EMAILS*/
 test('person will setup the correct relationship with phone numbers when deserialize_single is invoked with relationship already in place', (assert) => {
     let location_level, phonenumber;
     let response = PF.generate(PD.id);
@@ -92,7 +140,6 @@ test('person will setup the correct relationship with phone numbers when deseria
     assert.ok(!person.get('roleIsDirty'));
 });
 
-/* PH and ADDRESSES and EMAILS*/
 test('person will setup the correct relationship with phone emails when deserialize_single is invoked with no relationship in place', (assert) => {
     let location_level, email;
     let response = PF.generate(PD.id);

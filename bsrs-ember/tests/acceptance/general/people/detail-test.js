@@ -16,6 +16,7 @@ import PF from 'bsrs-ember/vendor/people_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import PD_PUT from 'bsrs-ember/vendor/defaults/person-put';
 import PERSON_CURRENT_DEFAULTS from 'bsrs-ember/vendor/defaults/person-current';
+import LOCALED from 'bsrs-ember/vendor/defaults/locale';
 import ED from 'bsrs-ember/vendor/defaults/email';
 import EF from 'bsrs-ember/vendor/email_fixtures';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
@@ -82,6 +83,7 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
 
 test('when you deep link to the person detail view you get bound attrs', (assert) => {
     visit(DETAIL_URL);
+    page.localeClickDropdown();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         var person = store.find('person', PD.idOne);
@@ -122,10 +124,10 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), AD.zipTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), AD.countryTwo);
         assert.equal(page.statusInput(), SD.activeName);
-        assert.equal(find('.t-locale-select').find('.t-locale-option:eq(0)').val(), "");
-        assert.equal(find('.t-locale-select').find('.t-locale-option:eq(1)').val(), "en");
-        assert.equal(find('.t-locale-select').find('.t-locale-option:eq(2)').val(), "es");
-        assert.equal(find(".t-locale-select option:selected").val(), PD.locale);
+        assert.equal(page.localeInput(), PD.localeFull);
+        assert.equal(page.localeOptionLength(), 2);
+        assert.equal(page.localeOne(), PD.localeFull);
+        assert.equal(page.localeTwo(), PD.localeTwoFull);
         assert.equal(page.roleInput(), RD.nameOne);
         assert.equal(find('.t-amount').val(), PD.auth_amount);
         assert.equal(find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol);
@@ -142,7 +144,6 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     fillIn('.t-person-title', PD_PUT.title);
     fillIn('.t-person-employee_id', PD_PUT.employee_id);
     fillIn('.t-amount', PD_PUT.auth_amount);
-    fillIn('.t-locale-select', PD_PUT.locale);
     andThen(() => {
         var person = store.find('person', PD.idOne);
         assert.ok(person.get('isDirty'));
@@ -900,22 +901,6 @@ test('when you deep link to the person detail view you can alter the role and ch
     });
 });
 
-test('when changing the locale for a user (not current user), the language is not updated on the site', (assert) => {
-    clearxhr(list_xhr);
-    visit(DETAIL_URL);
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        var person = store.find('person', PD.idOne);
-        assert.ok(person.get('id') !== PERSON_CURRENT_DEFAULTS.id);
-        assert.equal(find('.t-person-first-name').val(), PD.first_name);
-        assert.equal(find('.t-locale-select option:selected').val(), PD.locale);
-        assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
-        fillIn('.t-locale-select', PD.locale2);
-        andThen(() => {
-            assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
-        });
-    });
-});
 
 
 test('when you change a related role it will change the related locations as well', (assert) => {
@@ -1219,5 +1204,54 @@ test('can change status to inactive for person and save (power select)', (assert
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
+    });
+});
+
+/* LOCALE */
+test('can change locale to inactive for person and save (power select)', (assert) => {
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(page.localeInput(), PD.localeFull);
+    });
+    page.localeClickDropdown();
+    andThen(() => {
+        assert.equal(page.localeOptionLength(), 2);
+        assert.equal(page.localeOne(), PD.localeFull);
+        assert.equal(page.localeTwo(), PD.localeTwoFull);
+        const person = store.find('person', PD.idOne);
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    });
+    page.localeClickOptionTwo();
+    andThen(() => {
+        const person = store.find('person', PD.idOne);
+        assert.equal(person.get('locale_fk'), LOCALED.idOne);
+        assert.equal(person.get('locale.id'), LOCALED.idTwo);
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
+        assert.equal(page.localeInput(), PD.localeTwoFull);
+    });
+    let url = PREFIX + DETAIL_URL + '/';
+    let payload = PF.put({id: PD.idOne, locale: LOCALED.idTwo});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+    });
+});
+
+test('when changing the locale for a user (not current user), the language is not updated on the site', (assert) => {
+    clearxhr(list_xhr);
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        var person = store.find('person', PD.idOne);
+        assert.ok(person.get('id') !== PERSON_CURRENT_DEFAULTS.id);
+        assert.equal(find('.t-person-first-name').val(), PD.first_name);
+        assert.equal(page.localeInput(), PD.localeFull);
+        assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
+    });
+    page.localeClickDropdown();
+    page.localeClickOptionTwo();
+    andThen(() => {
+        assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
     });
 });
