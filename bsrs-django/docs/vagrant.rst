@@ -148,3 +148,9 @@ Scott Note's for new vagrant setup
 
 
     ./node_modules/ember-cli/bin/ember test -s
+    
+    # Other 
+    sudo apt-get install python3-dev
+    sudo apt-get install libevent-dev
+    sudo apt-get install python-dev libjpeg-dev libfreetype6-dev zlib1g-dev
+    sudo apt-get install postgresql-9.4-postgis-2.0
