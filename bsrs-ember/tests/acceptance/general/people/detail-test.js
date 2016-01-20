@@ -125,7 +125,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-state').val(), AD.stateTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), AD.zipTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), AD.countryTwo);
-        assert.equal(page.statusInput(), SD.activeName);
+        assert.equal(page.statusInput(), t(SD.activeName));
         assert.equal(page.localeInput(), PD.localeFull);
         assert.equal(page.localeOptionLength(), 3);
         assert.equal(page.localeOne(), PD.localeFull);
@@ -1181,14 +1181,14 @@ test('when you deep link to the person detail view you can alter the locations a
 test('can change status to inactive for person and save (power select)', (assert) => {
     page.visitDetail();
     andThen(() => {
-        assert.equal(page.statusInput(), SD.activeName);
+        assert.equal(page.statusInput(), t(SD.activeName));
     });
     page.statusClickDropdown();
     andThen(() => {
         assert.equal(page.statusOptionLength(), 3);
-        assert.equal(page.statusOne(), SD.activeName);
-        assert.equal(page.statusTwo(), SD.inactiveName);
-        assert.equal(page.statusThree(), SD.expiredName);
+        assert.equal(page.statusOne(), t(SD.activeName));
+        assert.equal(page.statusTwo(), t(SD.inactiveName));
+        assert.equal(page.statusThree(), t(SD.expiredName));
         const person = store.find('person', PD.idOne);
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
@@ -1198,7 +1198,7 @@ test('can change status to inactive for person and save (power select)', (assert
         assert.equal(person.get('status_fk'), SD.activeId);
         assert.equal(person.get('status.id'), SD.inactiveId);
         assert.ok(person.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.statusInput(), SD.inactiveName);
+        assert.equal(page.statusInput(), t(SD.inactiveName));
     });
     let url = PREFIX + DETAIL_URL + '/';
     let payload = PF.put({id: PD.idOne, status: SD.inactiveId});

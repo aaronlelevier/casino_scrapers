@@ -25,7 +25,7 @@ const DJANGO_DETAIL_URL = PREFIX + DJANGO_LOCATION_URL + LD.idOne + '/';
 
 let application, store, payload, list_xhr, original_uuid;
 
-module('Acceptance | amk location-new', {
+module('Acceptance | location-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');

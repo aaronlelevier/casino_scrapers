@@ -24,6 +24,13 @@
                             <div class="form-photo location-photo">{{fa-icon "building"}}</div>
                         </div>
                     </div>
+
+                </section>
+
+            </div>
+
+            <div class="col-md-8">
+                <section>
                     <div class="row">
                         <div class="col-md-12">
                             {{#form-group title="admin.location.label.name" for="name"}}
@@ -56,11 +63,12 @@
                         </div>
                     </div>
                 </section>
-
             </div>
-
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <section>
+                    <div class="row card-title">
+                        <h2 class="col-md-12">{{t "admin.location.label.contact"}}</h2>
+                    </div>
                     <div class="row">
                         <div class="col-md-12">
                             {{#form-group title="admin.location.label.phone_number.other"}}
@@ -69,20 +77,6 @@
                                     model=model.phone_numbers
                                     types=phone_number_types
                                     default_type=default_phone_number_type
-                                    related_pk=model.id
-                                }}
-                            {{/form-group}}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{#form-group title="admin.location.label.address.other"}}
-                                {{input-multi-address
-                                    model=model.addresses
-                                    state_list=state_list
-                                    countries=countries
-                                    types=address_types
-                                    default_type=default_address_type
                                     related_pk=model.id
                                 }}
                             {{/form-group}}
@@ -103,15 +97,39 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            {{#form-group title="admin.location.label.children-name" for="location_children"}}
-                                {{location-children-select location=model}}
+                            {{#form-group title="admin.location.label.address.other"}}
+                                {{input-multi-address
+                                    model=model.addresses
+                                    state_list=state_list
+                                    countries=countries
+                                    types=address_types
+                                    default_type=default_address_type
+                                    related_pk=model.id
+                                }}
                             {{/form-group}}
                         </div>
+                    </div>
+                </section>
+            </div>
+            <div class="col-md-12">
+                <section>
+                    <div class="row card-title">
+                        <h2 class="col-md-12">{{t "admin.location.label.parents-name"}}</h2>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
                             {{#form-group title="admin.location.label.parents-name" for="location_parents"}}
                                 {{location-parent-select location=model}}
+                            {{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row card-title">
+                        <h2 class="col-md-12">{{t "admin.location.label.children-name"}}</h2>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.location.label.children-name" for="location_children"}}
+                                {{location-children-select location=model}}
                             {{/form-group}}
                         </div>
                     </div>

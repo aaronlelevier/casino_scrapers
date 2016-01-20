@@ -35,11 +35,18 @@
                     </div>
                     <div class="row">
             			<div class="col-sm-12">
-            				{{#form-group title="admin.person.label.role" for="role"}}
-                      {{role-select model=model options=roles}}
+            				{{#form-group title="admin.person.label.role-name" for="role"}}
+                                {{role-select model=model options=roles}}
             				{{/form-group}}
             			</div>
 					</div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.person.label.language" for="locale"}}
+                            {{language-select person=model locales=locales field="locale"}}
+                            {{/form-group}}
+                        </div>
+                    </div>
 				</section>
 
 			</div>
