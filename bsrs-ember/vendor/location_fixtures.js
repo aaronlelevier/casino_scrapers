@@ -27,7 +27,7 @@ var BSRS_LOCATION_FACTORY = (function() {
             status: this.location_defaults.status,
             location_level: this.location_level_fixtures.detail().id,
             children: [this.get(this.location_defaults.idTwo, this.location_defaults.storeNameTwo), this.get(this.location_defaults.idThree, this.location_defaults.storeNameThree)],
-            parents: [],
+            parents: [this.get(this.location_defaults.idParent, this.location_defaults.storeNameParent),this.get(this.location_defaults.idParentTwo, this.location_defaults.storeNameParentTwo) ],
         }
     };
     factory.prototype.list = function() {
@@ -87,6 +87,9 @@ var BSRS_LOCATION_FACTORY = (function() {
         response.phone_numbers = this.phone_numbers.get();
         response.addresses = this.addresses.get();
         response.children = response.children.map(function(map) {
+            return map.id;
+        });
+        response.parents = response.parents.map(function(map) {
             return map.id;
         });
         for(var key in location) {

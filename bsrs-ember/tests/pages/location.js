@@ -26,6 +26,14 @@ const CHILDREN_THREE = `${CHILDRENS}:eq(2)`;
 const CHILDREN_FOUR = `${CHILDRENS}:eq(3)`;
 const CHILDREN_DROPDOWN = '.t-location-children-select-dropdown > .ember-power-select-options';
 
+const PARENT = '.t-location-parent-select > .ember-basic-dropdown-trigger';
+const PARENTS = `${PARENT} > .ember-power-select-multiple-option`;
+const PARENTS_ONE = `${PARENTS}:eq(0)`;
+const PARENTS_TWO = `${PARENTS}:eq(1)`;
+const PARENTS_THREE = `${PARENTS}:eq(2)`;
+const PARENTS_FOUR = `${PARENTS}:eq(3)`;
+const PARENTS_DROPDOWN = '.t-location-parent-select-dropdown > .ember-power-select-options';
+
 export default PageObject.create({
   visit: visitable('/'),
   visitDetail: visitable(DETAIL_URL),
@@ -59,4 +67,24 @@ export default PageObject.create({
   // childrenClickMel: clickable(`${CHILDREN_DROPDOWN} > .ember-power-select-option:contains(${LD.nameMel})`),
   childrenOptionLength: count(`${CHILDREN_DROPDOWN} > li`),
   // childrensSelected: count(CHILDRENS),
+
+  parentsClickDropdown: clickable(PARENT),
+  // parentsInput: text(PARENTS),
+  parentsSelected: text(PARENTS_ONE),
+  parentsOneRemove: clickable(`${PARENTS_ONE} > .ember-power-select-multiple-remove-btn`),
+  parentsTwoRemove: clickable(`${PARENTS_TWO} > .ember-power-select-multiple-remove-btn`),
+  parentsTwoSelected: text(PARENTS_TWO),
+  parentsThreeSelected: text(PARENTS_THREE),
+  parentsFourSelected: text(PARENTS_FOUR),
+  parentsClickApple: clickable(`${PARENTS_DROPDOWN} > .ember-power-select-option:contains(${LD.apple})`),
+  parentsClickOptionOne: clickable(`${PARENTS_DROPDOWN} > .ember-power-select-option:contains(${LD.boondocks})`),
+  parentsClickOptionStoreNameOne: clickable(`${PARENTS_DROPDOWN} > .ember-power-select-option:contains(${LD.baseStoreName})`),
+  parentsClickOptionStoreNameFirst: clickable(`${PARENTS_DROPDOWN} > .ember-power-select-option:contains(${LD.storeNameParent})`),
+  parentsClickOptionStoreNameTwo: clickable(`${PARENTS_DROPDOWN} > .ember-power-select-option:contains(${LD.storeNameParentTwo})`),
+  parentsClickOptionStoreNameThree: clickable(`${PARENTS_DROPDOWN} > .ember-power-select-option:contains(${LD.storeNameThree})`),
+  // parentsClickOptionTwo: clickable(`${PARENTS_DROPDOWN} > .ember-power-select-option:contains(${LD.nameThree})`),
+  // parentsClickMel: clickable(`${PARENTS_DROPDOWN} > .ember-power-select-option:contains(${LD.nameMel})`),
+  parentsOptionLength: count(`${PARENTS_DROPDOWN} > li`),
+  // parentssSelected: count(PARENTSS),
 });
+
