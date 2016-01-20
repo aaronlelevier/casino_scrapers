@@ -1,8 +1,9 @@
+from collections import namedtuple
 import random
 
 from category.models import Category, CATEGORY_STATUSES, CategoryStatus
 from utils.create import random_lorem
-from utils.helpers import generate_uuid
+from utils.helpers import generate_uuid, generate_uuid_from_model
 
 
 CATEGORY_BASE_ID = "24f530c4-ce6c-4724-9cfd-37a16e787"
@@ -23,44 +24,94 @@ def create_single_category(name=None, parent=None):
         parent=parent
     )
 
-    
-def create_categories(_many=None):
+
+# id, name, label, subcategory_label, parent_id
+CATEGORIES = [
+    [1, 'Repair', 'Type', 'Trade', None],
+    [2, 'Appliances', 'Trade', 'Issue', 1],
+    [3, 'Microwave', 'Issue', 'Sub-Issue', 2],
+    [4, 'Broken', 'Sub-Issue', '', 3],
+    [5, 'Replace', 'Sub-Issue', '', 3],
+    [6, 'Refrigerator', 'Issue', 'Sub-Issue', 2],
+    [7, 'Broken', 'Sub-Issue', '', 6],
+    [8, 'Replace', 'Sub-Issue', '', 6],
+    [9, 'Stove', 'Issue', 'Sub-Issue', 2],
+    [10, 'Broken', 'Sub-Issue', '', 9],
+    [11, 'Replace', 'Sub-Issue', '', 9],
+    [12, 'Doors', 'Trade', 'Issue', 1],
+    [13, 'Manual Door', 'Issue', 'Sub-Issue', 12],
+    [14, 'Hinges', 'Sub-Issue', '', 13],
+    [15, 'Knobs', 'Sub-Issue', '', 13],
+    [16, 'Locks', 'Sub-Issue', '', 13],
+    [17, 'Automatic Door', 'Issue', 'Sub-Issue', 12],
+    [18, 'Sensors', 'Sub-Issue', '', 17],
+    [19, 'Pads', 'Sub-Issue', '', 17],
+    [20, 'Tracks', 'Sub-Issue', '', 17],
+    [21, 'Electrical', 'Trade', 'Issue', 1],
+    [22, 'Outlets', 'Issue', 'Sub-Issue', 21],
+    [23, 'Wiring', 'Issue', 'Sub-Issue', 21],
+    [24, 'Surge Protector', 'Issue', 'Sub-Issue', 21],
+    [25, 'Fire', 'Trade', 'Issue', 1],
+    [26, 'Extinguisher', 'Issue', 'Sub-Issue', 25],
+    [27, 'Smoke Detector', 'Issue', 'Sub-Issue', 25],
+    [28, 'Alarm', 'Issue', 'Sub-Issue', 25],
+    [29, 'Gutters', 'Trade', 'Issue', 1],
+    [30, 'HVAC', 'Trade', 'Issue', 1],
+    [31, 'Thermostats', 'Issue', 'Sub-Issue', 30],
+    [32, 'Too Hot', 'Issue', 'Sub-Issue', 30],
+    [33, 'Too Cold', 'Issue', 'Sub-Issue', 30],
+    [34, 'Janitorial', 'Trade', 'Issue', 1],
+    [35, 'Cleaning', 'Issue', 'Sub-Issue', 34],
+    [36, 'Disaster Recovery', 'Issue', 'Sub-Issue', 34],
+    [37, 'Parking Lot', 'Trade', 'Issue', 1],
+    [38, 'Potholes', 'Issue', 'Sub-Issue', 37],
+    [39, 'Repaving', 'Issue', 'Sub-Issue', 37],
+    [40, 'Striping', 'Issue', 'Sub-Issue', 37],
+    [41, 'Plumbing', 'Trade', 'Issue', 1],
+    [42, 'Toilet', 'Issue', 'Sub-Issue', 41],
+    [43, 'Sink', 'Issue', 'Sub-Issue', 41],
+    [44, 'Water Heater', 'Issue', 'Sub-Issue', 41],
+    [45, 'Urinals', 'Issue', 'Sub-Issue', 41],
+    [46, 'Pipes', 'Issue', 'Sub-Issue', 41],
+    [47, 'Signage', 'Trade', 'Issue', 1],
+    [48, 'Channel Lighting', 'Issue', 'Sub-Issue', 47],
+    [49, 'Brand Signage', 'Issue', 'Sub-Issue', 47],
+    [50, 'Pylon', 'Issue', 'Sub-Issue', 47],
+    [51, 'Monument', 'Issue', 'Sub-Issue', 47],
+    [52, 'Lettering', 'Issue', 'Sub-Issue', 47],
+    [53, 'New', 'Sub-Issue', '', 52],
+    [54, 'Replace', 'Sub-Issue', '', 52],
+]
+
+
+def create_categories():
     statuses = create_category_statuses()
-    top_levels = TOP_LEVEL_CATEGORIES
-    top_level_children = [['plumbing','electrical'], ['Alarm', 'Carpet'], ['Computer', 'Monitor'], ['HR', 'Loss Prevention']]
-    for i, name in enumerate(top_levels):
-        incr = Category.objects.count()
-        Category.objects.create(
-            id=generate_uuid(CATEGORY_BASE_ID, incr),
-            name=name,
-            subcategory_label='trade',
-            status=random.choice(statuses)
-        )
 
-    for i, name_arr in enumerate(top_level_children):
-        for x, name in enumerate(name_arr):
-            incr = Category.objects.count()
-            Category.objects.create(
-                id=generate_uuid(CATEGORY_BASE_ID, incr),
-                name=name,
-                subcategory_label='issue',
-                parent=Category.objects.filter(name=top_levels[i]).first(),
-                status=random.choice(statuses)
-            )
+    for x in CATEGORIES:
+        CategoryData = namedtuple('CategoryData', ['id', 'name', 'label', 'subcategory_label', 'parent_id'])
+        data = CategoryData._make(x)._asdict()
 
-    # Issue
-    for category in Category.objects.filter(subcategory_label='issue'):
-        for i in range(random.randrange(2, 7)):
-            name = random_lorem(2)
-            status = random.choice(statuses)
-            incr = Category.objects.count()
+        if data['parent_id'] is None:
             Category.objects.create(
-                id=generate_uuid(CATEGORY_BASE_ID, incr+1),
-                name=name,
-                subcategory_label='sub_issue',
-                parent=category,
-                status=status
+                id=generate_uuid_from_model(Category, CATEGORY_BASE_ID),
+                description=str(data['id']),
+                name=data['name'],
+                label=data['label'],
+                subcategory_label=data['subcategory_label']
             )
+        else:
+            try:
+                Category.objects.get(name=data['name'], label=data['label'])
+            except Category.DoesNotExist:
+                parent = Category.objects.get(description=data['parent_id']) # data['4] == parent_id
+                Category.objects.create(
+                    id=generate_uuid_from_model(Category, CATEGORY_BASE_ID),
+                    description=str(data['id']),
+                    name=data['name'],
+                    label=data['label'],
+                    subcategory_label=data['subcategory_label'],
+                    parent=parent
+                )
 
     return Category.objects.all()
 

@@ -219,7 +219,7 @@ CORS_ORIGIN_REGEX_WHITELIST = (r'^https?://(\w+\.)?bs-webdev03.bigskytech\.com:8
 ################
 
 ### CATEGORY
-TOP_LEVEL_CATEGORY_LABEL = 'type'
+TOP_LEVEL_CATEGORY_LABEL = 'Type'
 
 ### GENERIC
 ATTACHMENTS_DIRECTORY = os.path.join(MEDIA_ROOT, "attachments")

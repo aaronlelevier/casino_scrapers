@@ -1,5 +1,6 @@
-from django.test import TestCase, TransactionTestCase
+from django.conf import settings
 from django.contrib.auth.models import ContentType
+from django.test import TestCase, TransactionTestCase
 
 from model_mommy import mommy
 
@@ -106,20 +107,56 @@ class CategoryTests(TransactionTestCase):
         self.assertEqual(ret.name, name)
 
 
-class CategoryTestsForMethod(TransactionTestCase):
+class CreateCategoriesTests(TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         factory.create_categories()
 
-    def tearDown(self):
+    @classmethod
+    def tearDownClass(cls):
         ContentType.objects.clear_cache()
 
-    def test_with_four_top_levels(self):
-        self.assertEqual(
-            Category.objects.filter(parent=None).count(),
-            len(factory.TOP_LEVEL_CATEGORIES)
-        )
-        self.assertEqual(
-            Category.objects.filter(parent=None).order_by('name').first().name,
-            sorted(factory.TOP_LEVEL_CATEGORIES)[0]
-        )
+    def test_type(self):
+        raw_data = factory.CATEGORIES[0]
+
+        category = Category.objects.get(name=raw_data[1], label=raw_data[2])
+
+        self.assertIsInstance(category, Category)
+        self.assertEqual(raw_data[0], int(category.description))
+        self.assertEqual(raw_data[1], category.name)
+        self.assertEqual(raw_data[2], category.label)
+        self.assertEqual(raw_data[3], category.subcategory_label)
+        self.assertEqual(raw_data[4], category.parent)
+
+    def test_trade(self):
+        raw_data = factory.CATEGORIES[1]
+
+        category = Category.objects.get(name=raw_data[1], label=raw_data[2])
+
+        self.assertIsInstance(category, Category)
+        self.assertEqual(raw_data[0], int(category.description))
+        self.assertEqual(raw_data[1], category.name)
+        self.assertEqual(raw_data[2], category.label)
+        self.assertEqual(raw_data[3], category.subcategory_label)
+        self.assertEqual(Category.objects.get(description=raw_data[4]), category.parent)
+
+    def test_issue(self):
+        raw_data = factory.CATEGORIES[2]
+
+        category = Category.objects.get(name=raw_data[1], label=raw_data[2])
+
+        self.assertIsInstance(category, Category)
+        self.assertEqual(raw_data[0], int(category.description))
+        self.assertEqual(raw_data[1], category.name)
+        self.assertEqual(raw_data[2], category.label)
+        self.assertEqual(raw_data[3], category.subcategory_label)
+        self.assertEqual(Category.objects.get(description=raw_data[4]), category.parent)
+
+    def test_sub_issue(self):
+        raw_names = [x[1] for x in factory.CATEGORIES]
+
+        db_names = Category.objects.values_list('name', flat=True)
+
+        for name in raw_names:
+            self.assertIn(name, db_names)

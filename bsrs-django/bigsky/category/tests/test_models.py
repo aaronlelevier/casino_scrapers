@@ -13,9 +13,9 @@ class CategorySetupMixin(object):
 
     def setUp(self):
         factory.create_categories()
-        self.type = Category.objects.filter(subcategory_label='trade').first()
-        self.trade = Category.objects.filter(label='trade').first()
-        self.child = Category.objects.filter(subcategory_label='sub_issue').first()
+        self.type = Category.objects.filter(subcategory_label='Trade').first()
+        self.trade = Category.objects.filter(label='Trade').first()
+        self.child = Category.objects.filter(subcategory_label='Sub-Issue').first()
         # Category Status
         self.statuses = CategoryStatus.objects.all()
 

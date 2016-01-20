@@ -6,7 +6,7 @@ from rest_framework.test import APITestCase, APITransactionTestCase
 
 from category.models import Category
 from category.serializers import CategorySerializer
-from category.tests.factory import  create_categories
+from category.tests.factory import create_single_category, create_categories
 from person.tests.factory import PASSWORD, create_person
 
 
@@ -19,7 +19,7 @@ class CategoryListTests(APITestCase):
         self.person = create_person()
         # Category
         create_categories()
-        self.top_level = Category.objects.filter(name="repair").first()
+        self.top_level = Category.objects.filter(name="Repair").first()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -41,8 +41,7 @@ class CategoryListTests(APITestCase):
 
     def test_list_endpoint_returns_data_including_id(self):
         Category.objects.all().delete()
-        create_categories(_many=1)
-        first = Category.objects.filter(name="repair").first()
+        first = create_single_category()
 
         response = self.client.get('/api/admin/categories/?page_size=1000')
 
@@ -78,8 +77,8 @@ class CategoryDetailTests(APITestCase):
         self.person = create_person()
         # Category
         create_categories()
-        self.type = Category.objects.filter(subcategory_label='trade').first()
-        self.trade = Category.objects.filter(label='trade').first()
+        self.type = Category.objects.filter(subcategory_label='Trade').first()
+        self.trade = Category.objects.filter(label='Trade').first()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -106,7 +105,7 @@ class CategoryDetailTests(APITestCase):
         self.assertEqual(data['level'], category.level)
 
     def test_data_parent(self):
-        category = Category.objects.filter(label='issue').first()
+        category = Category.objects.filter(label='Issue').first()
         self.assertIsNotNone(category.parent)
 
         response = self.client.get('/api/admin/categories/{}/'.format(category.id))
@@ -171,7 +170,7 @@ class CategorySerializerDataTests(APITestCase):
         self.person = create_person()
         # Category
         self.category = (Category.objects.exclude(parent__isnull=True)
-                                         .filter(label='trade').first())
+                                         .filter(label='Trade').first())
         # Data
         serializer = CategorySerializer(self.category)
         self.data = serializer.data
@@ -221,8 +220,8 @@ class CategoryUpdateTests(APITestCase):
         self.password = PASSWORD
         self.person = create_person()
         # Category
-        self.type = Category.objects.filter(subcategory_label='trade').first()
-        self.trade = Category.objects.filter(label='trade').first()
+        self.type = Category.objects.filter(subcategory_label='Trade').first()
+        self.trade = Category.objects.filter(label='Trade').first()
         # Data
         serializer = CategorySerializer(self.trade)
         self.data = serializer.data
@@ -279,8 +278,8 @@ class CategoryCreateTests(APITestCase):
         self.person = create_person()
         # Category
         create_categories()
-        self.type = Category.objects.filter(subcategory_label='trade').first()
-        self.trade = Category.objects.filter(label='trade').first()
+        self.type = Category.objects.filter(subcategory_label='Trade').first()
+        self.trade = Category.objects.filter(label='Trade').first()
         # Data
         serializer = CategorySerializer(self.trade)
         self.data = serializer.data
@@ -338,8 +337,8 @@ class CategoryFilterTests(APITransactionTestCase):
         self.person = create_person()
         # Category
         create_categories()
-        self.type = Category.objects.filter(subcategory_label='trade').first()
-        self.trade = Category.objects.filter(label='trade').first()
+        self.type = Category.objects.filter(subcategory_label='Trade').first()
+        self.trade = Category.objects.filter(label='Trade').first()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 

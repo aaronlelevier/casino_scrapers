@@ -15,3 +15,10 @@ def choices_to_json(model):
 
 def generate_uuid(base_id, incr=0):
     return "{}{:03d}".format(base_id, incr)
+
+
+def generate_uuid_from_model(model, base_id, incr=0):
+    if not incr:
+        incr = model.objects.count()
+
+    return "{}{:03d}".format(base_id, incr)
