@@ -134,7 +134,7 @@ class LocationManagerTests(TestCase):
         self.assertEqual(children.count(), 3)
 
     def test_get_level_parents(self):
-        # 'ca' is a 'distrinct' that now has 2 parents at the 'region' ``LocationLevel``
+        # 'ca' is a 'district' that now has 3 parents at the 'region'(2) and Company(1) ``LocationLevel``
         # setup
         location = Location.objects.get(name='ca')
         location_level = LocationLevel.objects.get(name='region')
@@ -142,8 +142,8 @@ class LocationManagerTests(TestCase):
         east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
         east_lp.children.add(location)
         # Test
-        parents = Location.objects.get_level_parents(location, location_level.id)
-        self.assertEqual(parents.count(), 2)
+        parents = Location.objects.get_level_parents(location)
+        self.assertEqual(parents.count(), 3)
 
     def test_objects_and_their_children(self):
         person = create_single_person()

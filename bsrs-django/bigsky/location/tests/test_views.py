@@ -351,7 +351,7 @@ class LocationDetailTests(APITestCase):
     def test_contact_type_nested(self):
         self.assertTrue(self.data['phone_numbers'][0]['type'])
 
-    ### DETAIL ROUTES
+    # ### DETAIL ROUTES
 
     def test_get_level_children(self):
         # SetUp
@@ -375,12 +375,14 @@ class LocationDetailTests(APITestCase):
         east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
         east_lp.children.add(location)
         # Test
-        response = self.client.get('/api/admin/locations/{pk}/get-level-parents/{level_id}/'.format(
-            pk=location.id, level_id=location_level.id))
+        response = self.client.get('/api/admin/locations/get-level-parents/{pk}/'.format(
+            pk=location.id))
         data = json.loads(response.content.decode('utf8'))
+        self.assertIn('results', data)
+        data = data['results']
         region1 = Location.objects.filter(location_level=location_level).first()
         self.assertIn(str(region1.id), response.content.decode('utf8'))
-        self.assertEqual(len(data), 2)
+        self.assertEqual(len(data), 3)
 
     ### DETAIL ROUTES - FILTERED
 
@@ -404,12 +406,11 @@ class LocationDetailTests(APITestCase):
         east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
         east_lp.children.add(location)
         keyword = 'east_l'
-
         response = self.client.get(
-            '/api/admin/locations/{pk}/get-level-parents/{level_id}/?name__icontains={name}'
-            .format(pk=location.id, level_id=location_level.id, name=keyword))
+            '/api/admin/locations/get-level-parents/{pk}/?name__icontains={name}'
+            .format(pk=location.id, name=keyword))
         data = json.loads(response.content.decode('utf8'))
-
+        data = data['results']
         self.assertEqual(
             len(data),
             Location.objects.filter(location_level=location_level, name__icontains=keyword).count()
