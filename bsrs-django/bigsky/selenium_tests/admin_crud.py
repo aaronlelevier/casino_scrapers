@@ -361,6 +361,19 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         person_page.find_address_new_entry_send_keys(1, new_street_one, new_city_one, new_zip_one)
         add_address_btn.click()
         person_page.find_address_new_entry_send_keys(2, new_street_two, new_city_two, new_zip_two)
+
+        # # Fill in Locations
+        # location_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-person-locations-select')])[last()]")
+        # location_input.send_keys("a")
+        # location_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
+        # location_option.click()
+
+        # Select different locale
+        locale_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-locale-select ')]/div")
+        locale_input.click()
+        locale_option = self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
+        locale_option.click()
+
         # b/c first save won't work if the 'password' is still attached to the person.
         self.gen_elem_page.click_save_btn()
         person_page.find_list_data()
@@ -380,6 +393,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         person_page.assert_address_inputs(2, new_street_two, new_city_two, new_zip_two)
         self.driver.refresh()
         person_page.find_wait_and_assert_elem("t-person-username", username)
+        assert self.driver.find_element_by_class_name("t-locale-select-trigger").text == "ja - ja"
         person_page.find_and_assert_elems(username=username, first_name=first_name,
             middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
         ### DELETE
