@@ -2,6 +2,15 @@ import GridViewComponent from 'bsrs-ember/components/grid-view/component';
 
 export default GridViewComponent.extend({
     layoutName: 'components/grid-view',
-    searchable: ['priority.translated_name', 'status.translated_name', 'formatted_date', 'location.name', 'assignee.fullname', 'categories[name]', 'request'],
-    nonsearchable: ['number']
+    version: 'vNext', //TODO: remove this after the grid-view upgrade is complete
+    columns: [
+        {field: 'priority.translated_name', headerLabel: 'Priority', isSortable: true, isFilterable: true, isSearchable: true},
+        {field: 'status.translated_name', headerLabel: 'Status', isSortable: true, isFilterable: true, isSearchable: true},
+        {field: 'formatted_date', headerLabel: 'Created', isSortable: true, isFilterable: true, isSearchable: true},
+        {field: 'location.name', headerLabel: 'Location', isSortable: true, isFilterable: true, isSearchable: true},
+        {field: 'assignee.fullname', headerLabel: 'Assignee', isSortable: true, isFilterable: true, isSearchable: true},
+        {field: 'category_names', headerLabel: 'Categories'},
+        {field: 'request', headerLabel: 'Request', isSortable: true, isFilterable: true, isSearchable: true},
+        {field: 'number', headerLabel: 'Ticket Number'}
+    ]
 });

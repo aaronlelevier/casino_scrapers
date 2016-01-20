@@ -66,10 +66,10 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-title').text(), 'Tickets');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority-translated_name').text(), TD.priorityOne);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority-translated_name').text().trim(), TD.priorityOne);
         const time = moment(new Date()).format('h:mm a');
-        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-formatted_date').text(), `${TD.createdFormattedToday} ${time}`);
+        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-formatted_date').text().trim(), `${TD.createdFormattedToday} ${time}`);
         const pagination = find('.t-pages');
         // assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -87,7 +87,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestLastGrid);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -99,7 +99,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -170,25 +170,25 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     });
     click(SORT_PRIORITY_DIR);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL + '?sort=priority.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'sub');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'sub');
     });
     click('.t-page:eq(1) a');
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL + '?page=2&sort=priority.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
     });
     click('.t-sort-request-dir');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?sort=request%2Cpriority.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
     });
 });
 
@@ -207,35 +207,35 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     });
     fillIn('.t-grid-search-input', '5');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=5');
         // assert.equal(find('.t-grid-data').length, 2);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'sub');
-        // assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text()), 'ape');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'sub');
+        // assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text().trim()), 'ape');
     });
     click('.t-sort-request-dir');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=5&sort=request');
         // assert.equal(find('.t-grid-data').length, 2);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text()), 'sub');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text().trim()), 'sub');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=&sort=request');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
     });
     click('.t-page:eq(1) a');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?page=2&search=&sort=request');
         // assert.equal(find('.t-grid-data').length, 22);//firefox discerepency
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'sub');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'sub');
     });
     fillIn('.t-grid-search-input', '14');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_ONE);
@@ -243,13 +243,13 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=14&sort=request');
         assert.equal(find('.t-grid-data').length, 1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), 'ape14');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), 'ape14');
     });
     click('.t-reset-grid');
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     });
 });
 
@@ -262,19 +262,19 @@ test('multiple sort options appear in the query string as expected', function(as
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     });
     click(SORT_PRIORITY_DIR);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?sort=priority.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), 'sub1');
+        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), 'sub1');
     });
     click('.t-sort-request-dir');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?sort=request%2Cpriority.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
     });
 });
 
@@ -293,7 +293,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find(SORT_PRIORITY_DIR).hasClass('fa-sort'));
         assert.ok(find('.t-sort-request-dir').hasClass('fa-sort'));
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
         assert.equal(find('.t-reset-grid').length, 0);
     });
     click(SORT_PRIORITY_DIR);
@@ -302,7 +302,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find(SORT_PRIORITY_DIR).hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-request-dir').hasClass('fa-sort'));
-        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), 'sub13');
+        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), 'sub13');
     });
     click('.t-sort-request-dir');
     andThen(() => {
@@ -310,7 +310,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-request-dir').hasClass('fa-sort-asc'));
         assert.ok(find(SORT_PRIORITY_DIR).hasClass('fa-sort-asc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestLastGrid);
     });
     click(SORT_PRIORITY_DIR);
     andThen(() => {
@@ -318,7 +318,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-request-dir').hasClass('fa-sort-asc'));
         assert.ok(find(SORT_PRIORITY_DIR).hasClass('fa-sort-desc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestLastGrid);
     });
     click(SORT_PRIORITY_DIR);
     andThen(() => {
@@ -326,13 +326,13 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-request-dir').hasClass('fa-sort-asc'));
         assert.ok(find(SORT_PRIORITY_DIR).hasClass('fa-sort-asc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     });
     click('.t-reset-grid');
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     });
 });
 
@@ -347,31 +347,31 @@ test('full text search will filter down the result set and query django accordin
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     });
     filterGrid('request', 'ape');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?find=request%3Aape');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestLastGrid);
     });
     filterGrid('request', '');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?find=request%3A');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     });
     filterGrid('priority.translated_name', 'h');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?find=request%3A%2Cpriority.translated_name%3Ah');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestLastGrid);
     });
     click('.t-reset-grid');
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     });
 });
 
@@ -658,45 +658,45 @@ test('status.translated_name is a functional related filter', function(assert) {
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text(), t(TD.statusOneKey));
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text().trim(), t(TD.statusOneKey));
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     });
     fillIn('.t-grid-search-input', 'rr');
     triggerEvent('.t-grid-search-input', 'keyup', LETTER_R);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=rr');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text(), t(TD.statusTwoKey));
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text().trim(), t(TD.statusTwoKey));
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=');
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text(), t(TD.statusOneKey));
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text().trim(), t(TD.statusOneKey));
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     });
     click(SORT_STATUS_DIR);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=&sort=status.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text(), t(TD.statusTwoKey));
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text().trim(), t(TD.statusTwoKey));
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
     });
     click(SORT_STATUS_DIR);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=&sort=-status.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text(), t(TD.statusOneKey));
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'sub');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text().trim(), t(TD.statusOneKey));
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'sub');
     });
     filterGrid('status.translated_name', 'rr');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?find=status.translated_name%3Arr&search=&sort=-status.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text(), t(TD.statusTwoKey));
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text().trim(), t(TD.statusTwoKey));
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
     });
 });
 
@@ -713,45 +713,45 @@ test('location.name is a functional related filter', function(assert) {
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text(), LD.storeName);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text().trim(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     });
     fillIn('.t-grid-search-input', 'ow');
     triggerEvent('.t-grid-search-input', 'keyup', LETTER_O);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=ow');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text(), TD.locationTwo);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text().trim(), TD.locationTwo);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=');
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text(), LD.storeName);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text().trim(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     });
     click(SORT_LOCATION_DIR);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=&sort=location.name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text(), LD.storeName);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'sub');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text().trim(), LD.storeName);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'sub');
     });
     click(SORT_LOCATION_DIR);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=&sort=-location.name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text(), TD.locationTwo);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text().trim(), TD.locationTwo);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
     });
     filterGrid('location.name', 'ow');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?find=location.name%3Aow&search=&sort=-location.name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text(), TD.locationTwo);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text().trim(), TD.locationTwo);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
     });
 });
 
@@ -768,81 +768,56 @@ test('assignee.fullname is a functional related filter', function(assert) {
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), PD.fullname);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text().trim(), PD.fullname);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     });
     fillIn('.t-grid-search-input', 'ra');
     triggerEvent('.t-grid-search-input', 'keyup', LETTER_R);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=ra');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), `${TD.assigneeTwo} ${TD.assigneeTwo}`);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text().trim(), `${TD.assigneeTwo} ${TD.assigneeTwo}`);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=');
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), PD.fullname);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text().trim(), PD.fullname);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     });
     click(SORT_ASSIGNEE_DIR);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=&sort=assignee.fullname');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), PD.fullname);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'sub');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text().trim(), PD.fullname);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'sub');
     });
     click(SORT_ASSIGNEE_DIR);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=&sort=-assignee.fullname');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), `${TD.assigneeTwo} ${TD.assigneeTwo}`);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text().trim(), `${TD.assigneeTwo} ${TD.assigneeTwo}`);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
     });
     filterGrid('assignee.fullname', 'ra');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?find=assignee.fullname%3Ara&search=&sort=-assignee.fullname');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), `${TD.assigneeTwo} ${TD.assigneeTwo}`);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text().trim(), `${TD.assigneeTwo} ${TD.assigneeTwo}`);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
     });
 });
 
-test('category.name is a functional related filter (search only)', function(assert) {
-    let option_four = PREFIX + BASE_URL + '/?page=1&categories__name__icontains=x';
-    xhr(option_four,'GET',null,{},200,TF.searched_related_array(TD.categoryRandomId, 'categories'));
-    let option_one = PREFIX + BASE_URL + '/?page=1&search=x';
-    xhr(option_one,'GET',null,{},200,TF.searched_related_array(TD.categoryRandomId, 'categories'));
+test('category_names is not sortable/filterable/searchable (display only)', function(assert) {
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-categories\\[name\\]').text(), 'Plumbing • Repair • Toilet Leak');
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
-    });
-    fillIn('.t-grid-search-input', 'x');
-    triggerEvent('.t-grid-search-input', 'keyup', LETTER_X);
-    andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?search=x');
-        assert.equal(find('.t-grid-data').length, PAGE_SIZE - 1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-categories\\[name\\]').text(), 'x');
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
-    });
-    fillIn('.t-grid-search-input', '');
-    triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
-    andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?search=');
-        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-categories\\[name\\]').text(), 'Plumbing • Repair • Toilet Leak');
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
-    });
-    filterGrid('categories[name]', 'x');
-    andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?find=categories%5Bname%5D%3Ax&search=');
-        assert.equal(find('.t-grid-data').length, PAGE_SIZE - 1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-categories\\[name\\]').text(), 'x');
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-category_names').text().trim(), 'Repair • Plumbing • Toilet Leak');
+        assert.equal(find('.t-sort-category-names').length, 0);
+        assert.equal(find('.t-sort-category-names-dir').length, 0);
+        assert.equal(find('.t-filter-category-names').length, 0);
     });
 });

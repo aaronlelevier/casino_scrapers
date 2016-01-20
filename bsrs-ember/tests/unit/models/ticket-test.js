@@ -676,6 +676,29 @@ test('rollback categories will also restore the category tree (when leaf node ch
     // assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
 });
 
+test('category names computed will return a string of each category name in order of priority', (assert) => {
+    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
+    store.push('ticket-category', {id: TCD.idThree, ticket_pk: TD.idOne, category_pk: CD.idThree});
+    store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
+    store.push('ticket-category', {id: TCD.idTwo, ticket_pk: TD.idOne, category_pk: CD.idTwo});
+    store.push('ticket-category', {id: 998, ticket_pk: TD.idTwo, category_pk: CD.unusedId});
+    store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo, children_fks: []});
+    store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId, children_fks: [CD.idOne]});
+    store.push('category', {id: CD.idThree, name: CD.nameThree, parent_id: null, children_fks: [CD.idTwo]});
+    store.push('category', {id: CD.unusedId, name: 'unused', parent_id: null, children_fks: []});
+    assert.equal(ticket.get('categories.length'), 3);
+    assert.equal(ticket.get('sorted_categories').objectAt(0).get('id'), CD.idThree);
+    assert.equal(ticket.get('sorted_categories').objectAt(1).get('id'), CD.idTwo);
+    assert.equal(ticket.get('sorted_categories').objectAt(2).get('id'), CD.idOne);
+    assert.equal(ticket.get('top_level_category').get('id'), CD.idThree);
+    assert.equal(ticket.get('category_names'), 'Loss Prevention &#8226; Electrical &#8226; Repair');
+    ticket.change_category_tree(CD.unusedId);
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.equal(ticket.get('sorted_categories').get('length'), 1);
+    assert.equal(ticket.get('top_level_category').get('id'), CD.unusedId);
+    assert.equal(ticket.get('category_names'), 'unused');
+});
+
 /*TICKET TO CATEGORIES M2M*/
 test('categories property only returns the single matching item even when multiple people (categories) exist', (assert) => {
     store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idTwo});

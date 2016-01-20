@@ -3,11 +3,21 @@ import Ember from 'ember';
 var run = Ember.run;
 
 var CategoriesMixin = Ember.Mixin.create({
+    category_names: Ember.computed('sorted_categories.[]', function() {
+        const sorted_categories = this.get('sorted_categories') || [];
+        const names = sorted_categories.map((category) => {
+            return category.get('name');
+        }).join(' &#8226; ');
+        return Ember.String.htmlSafe(names);
+    }),
     construct_category_tree(category, child_nodes=[]) {
         child_nodes.push(category);
         const children = category ? category.get('has_many_children') : [];
-        if(children.get('length') === 0) {
+        if(children.get('length') === 0 && child_nodes.get('length') > 1) {
             return;
+        }
+        if(children.get('length') === 0) {
+            return child_nodes.objectAt(0) ? child_nodes : undefined;
         }
         const children_ids = children.mapBy('id');
         const index = this.get('categories_ids').reduce((found, category_pk) => {
