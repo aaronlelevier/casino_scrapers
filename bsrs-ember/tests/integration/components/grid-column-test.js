@@ -1,7 +1,7 @@
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 
-moduleForComponent('grid-column', 'integration: amk grid-column', {
+moduleForComponent('grid-column', 'integration: grid-column', {
     integration: true
 });
 
