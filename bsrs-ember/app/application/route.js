@@ -9,6 +9,7 @@ var ApplicationRoute = Ember.Route.extend({
     repository: injectRepo('person'),
     RoleDeserializer: injectDeserializer('role'),
     LocationDeserializer: injectDeserializer('location'),
+    PersonDeserializer: injectDeserializer('person'),
     store: injectStore('main'),
     translationsFetcher: inject.service(),
     i18n: inject.service(),
@@ -110,6 +111,7 @@ var ApplicationRoute = Ember.Route.extend({
         store.push('person-current', person_current);
 
         var location_deserializer = this.get('LocationDeserializer');
+        var person_deserializer = this.get('PersonDeserializer');
 
         var person_location_pks = [];
         person_current.all_locations_and_children.forEach(function(location) {
@@ -119,9 +121,9 @@ var ApplicationRoute = Ember.Route.extend({
             location_deserializer.deserialize(location, location.id);
         });
         // push in 'logged in' Person
-        person_current.locale_fk = current_locale.get('id');
+        person_current.locale = current_locale;
         person_current.person_location_fks = person_location_pks;
-        store.push('person', person_current);
+        person_deserializer.deserialize(person_current, person_current.id);
 
         // Set the current user's time zone
         // TODO: use moment.tz.guess() when it becomes available - https://github.com/moment/moment-timezone/pull/220

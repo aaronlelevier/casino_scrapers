@@ -233,8 +233,7 @@ test('on boot we should fetch and load the person-current, logged in Person, con
         assert.equal(person_current.get('last_name'), PERSON_CURRENT.last_name);
         assert.equal(person_current.get('username'), PERSON_CURRENT.username);
         assert.equal(person_current.get('title'), PERSON_CURRENT.title);
-        assert.equal(person_current.get('role'), store.find('person', PERSON_CURRENT.id).get('role'));
-        assert.equal(person_current.get('locale'), store.find('person', PERSON_CURRENT.id).get('locale'));
+        assert.equal(person_current.get('role'), store.find('person', PERSON_CURRENT.id).get('role').get('id'));
         // Location
         let person = person_current.get('person');
         assert.equal(person.get('locations').get('length'), 1);

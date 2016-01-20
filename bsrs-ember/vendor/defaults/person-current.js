@@ -6,10 +6,14 @@ var BSRS_PERSON_CURRENT_DEFAULTS_OBJECT = (function() {
         this.location_level_defaults = location_level_defaults;
     };
     factory.prototype.defaults = function() {
+        var first_name = 'Donald';
+        var last_name = 'Trump';
+
         return {
             id: 'b783a238-5631-4623-8d24-81a672bb4ea0',
-            first_name: 'Donald',
-            last_name: 'Trump',
+            first_name: first_name,
+            last_name: last_name,
+            fullname: first_name + ' ' + last_name,
             username: this.person_defaults.nameOne,
             role: this.role_defaults.idOne,
             employee_id: '1',
