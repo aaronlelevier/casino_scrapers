@@ -196,6 +196,11 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         location_children_input.send_keys("a")
         child_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
         child_option.click()
+        # Fill in Parents
+        # location_parents_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-location-parent-select')])[last()]")
+        # location_parents_input.send_keys("a")
+        # parent_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
+        # parent_option.click()
         # Fill in Contact data
         add_phone_number_btn = self.gen_elem_page.find_add_btn()
         add_phone_number_btn.click()
