@@ -69,10 +69,12 @@ class Category(BaseModel):
         return super(Category, self).save(*args, **kwargs)
 
     def _update_defalts(self):
-        if not self.parent:
-            self.label = settings.TOP_LEVEL_CATEGORY_LABEL
-        else:
-            self.label = self.parent.subcategory_label
+        if not self.label:
+            if self.parent and self.parent.subcategory_label:
+                self.label = self.parent.subcategory_label
+            else:
+                self.label = settings.TOP_LEVEL_CATEGORY_LABEL
+
         if not self.status:
             self.status = CategoryStatus.objects.default()
 
