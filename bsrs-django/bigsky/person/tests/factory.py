@@ -59,14 +59,18 @@ def create_roles():
         create_locations()
 
     for location_level in LocationLevel.objects.all():
-        if location_level.name != settings.DEFAULT_LOCATION_LEVEL:
-            role = mommy.make(Role, name='{}-role'.format(location_level.name),
-                location_level=location_level)
-        else:
-            role = mommy.make(Role, name=settings.DEFAULT_ROLE, location_level=location_level)
 
-        if category:
-            role.categories.add(category)
+        if location_level.name == settings.LOCATION_TOP_LEVEL_NAME:
+            name = settings.DEFAULT_ROLE
+        else:
+            name = '{}-role'.format(location_level.name)
+
+        try:
+            Role.objects.get(name=name, location_level=location_level)
+        except Role.DoesNotExist:
+            role = mommy.make(Role, name=name, location_level=location_level)
+            if category:
+                role.categories.add(category)
 
     return Role.objects.all()
 
@@ -99,8 +103,7 @@ def create_single_person(name=None, role=None, location=None):
             title=name,
             role=role
         )
-
-    person.locations.add(location)
+        person.locations.add(location)
 
     return person
 
@@ -151,33 +154,6 @@ def update_admin(person):
     add_all_parent_categores(person)
 
 
-def update_admin_repair(person):
-    """
-    Update person with a single Category 'repair' and all Locations where:
-    ``location.location_level == person.role.location_level``
-    """
-    add_all_locations(person)
-
-    try:
-        category = Category.objects.get(name='repair')
-    except Category.DoesNotExist:
-        category = create_single_category(name='repair')
-    finally:
-        person.role.categories.add(category)
-
-
-def update_admin_location(person):
-    """
-    Update Person with all Parent Categories, but only a single Location.
-    """
-    add_all_parent_categores(person)
-
-    remove_all_locations(person)
-
-    location = Location.objects.filter(location_level=person.role.location_level)[0]
-    person.locations.add(location)
-
-
 def add_top_level_location(person):
     """
     `person.Role.location_level` must match `Location.location_level`
@@ -185,8 +161,8 @@ def add_top_level_location(person):
     remove_all_locations(person)
     
     location = Location.objects.create_top_level()
-    person.role.location_level = location.location_level
-    person.role.save()
+    person.role = Role.objects.get(location_level__name=settings.LOCATION_TOP_LEVEL_NAME)
+    person.save()
     
     person.locations.add(location)
 
@@ -202,7 +178,8 @@ def add_all_parent_categores(person):
 
 
 def remove_all_locations(person):
-    [person.locations.remove(x) for x in person.locations.all()]
+    for x in person.locations.all():
+        person.locations.remove(x)
 
 
 """
@@ -218,7 +195,6 @@ def create_all_people():
 
     # initial Roles
     create_roles()
-    roles = Role.objects.all()
 
     # other Persons for Grid View
     names = sorted(create.LOREM_IPSUM_WORDS.split())
@@ -227,18 +203,12 @@ def create_all_people():
         for ea in ['username', 'first_name', 'last_name', 'title']:
             kwargs[ea] = name
 
-        role = random.choice(roles)
-        locations = Location.objects.filter(location_level=role.location_level)
-        location = random.choice(locations)
+        # role = Role.objects.exclude(location_level__name=settings.LOCATION_TOP_LEVEL_NAME).order_by("?")[0]
+        location = Location.objects.order_by("?")[0]
+        role = Role.objects.filter(location_level=location.location_level).order_by("?")[0]
         # create
-        create_single_person(name=name, role=role, location=location)
+        person = create_single_person(name=name, role=role, location=location)
 
-    # Update Persons to login as
+    # # Update Persons to login as
     person = Person.objects.get(username='admin')
     update_admin(person)
-
-    person = Person.objects.get(username='admin-repair')
-    update_admin_repair(person)
-
-    person = Person.objects.get(username='admin-location')
-    update_admin_location(person)

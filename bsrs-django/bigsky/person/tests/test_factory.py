@@ -43,11 +43,9 @@ class DistrictManagerFactoryTests(TestCase):
         self.assertEqual(self.dm.role.categories.first().name, "Repair")
 
 
-class FactoryTests(TestCase):
+class CreateRoleTests(TestCase):
 
-    # create_role
-
-    def test_create_role(self):
+    def test_standard(self):
         init_count = Role.objects.count()
         role = factory.create_role()
         self.assertIsInstance(role, Role)
@@ -55,44 +53,63 @@ class FactoryTests(TestCase):
         self.assertEqual(init_count+1, Role.objects.count())
         self.assertEqual(role.location_level.name, factory.LOCATION_LEVEL)
 
-    def test_create_role__with_name(self):
+    def test_with_name(self):
         name = "Admin"
         role = factory.create_role(name=name)
         self.assertIsInstance(role, Role)
         self.assertEqual(role.name, name)
 
-    def test_create_role__with_location_level(self):
+    def test_with_location_level(self):
         location_level = mommy.make(LocationLevel)
 
         role = factory.create_role(location_level=location_level)
 
         self.assertEqual(role.location_level.name, location_level.name)
 
-    def test_create_role__explicit_category(self):
+    def test_explicit_category(self):
         category = create_single_category('foo')
         role = factory.create_role(category=category)
 
         self.assertEqual(role.categories.count(), 1)
         self.assertEqual(role.categories.first().name, category.name)
 
-    def test_create_role__default_category(self):
+    def test_default_category(self):
         role = factory.create_role()
 
         self.assertEqual(role.categories.count(), 1)
 
-    # create_roles
 
-    def test_create_roles(self):
+class CreateRolesTests(TestCase):
+
+    def setUp(self):
+        create_single_category()
         factory.create_roles()
+
+    def test_count(self):
         self.assertEqual(
             Role.objects.count(),
             LocationLevel.objects.count()
         )
-        self.assertEqual(settings.DEFAULT_ROLE, Role.objects.get(name=settings.DEFAULT_ROLE).name)
 
-    # create_single_person
+    def test_default_role(self):
+        default_role = Role.objects.get(name=settings.DEFAULT_ROLE)
+        self.assertEqual(settings.DEFAULT_ROLE, default_role.name)
+        self.assertEqual(default_role.location_level, LocationLevel.objects.create_top_level())
 
-    def test_create_single_person(self):
+    def test_other_roles(self):
+        for role in Role.objects.all():
+            if role.name == settings.DEFAULT_ROLE:
+                self.assertEqual(role.location_level.name, settings.LOCATION_TOP_LEVEL_NAME)
+            else:
+                self.assertNotEqual(role.location_level.name, settings.LOCATION_TOP_LEVEL_NAME)
+                self.assertEqual(role.name, '{}-role'.format(role.location_level.name))
+
+            self.assertEqual(role.categories.count(), 1)
+
+
+class CreateSinglePersonTests(TestCase):
+
+    def test_standard(self):
         person = factory.create_single_person()
 
         self.assertIsInstance(person, Person)
@@ -102,7 +119,7 @@ class FactoryTests(TestCase):
         location = person.locations.first()
         self.assertEqual(person.role.location_level, location.location_level)
 
-    def test_create_single_person__with_role(self):
+    def test_with_role_and_location(self):
         username = 'bob'
         role = factory.create_role()
         location = create_location(location_level=role.location_level)
@@ -112,9 +129,11 @@ class FactoryTests(TestCase):
         self.assertIsInstance(person, Person)
         self.assertEqual(person.username, username)
         self.assertEqual(person.role, role)
-        self.assertIsInstance(person.locations.first(), Location)
+        self.assertEqual(person.locations.count(), 1)
+        person_location = person.locations.first()
+        self.assertEqual(person.role.location_level, person_location.location_level)
 
-    def test_create_single_person__generate_uuid(self):
+    def test_generate_uuid(self):
         incr = Person.objects.count()
 
         person = factory.create_single_person()
@@ -125,7 +144,7 @@ class FactoryTests(TestCase):
             generate_uuid(factory.PERSON_BASE_ID, incr+1)
         )
 
-    def test_create_single_person__validator_only_role(self):
+    def test_validator_only_role(self):
         """
         ``role`` and ``location`` must both be passed in as "kwargs", or 
         not used. If one or the other is sent, it can lead to validation 
@@ -136,7 +155,7 @@ class FactoryTests(TestCase):
         with self.assertRaises(ValidationError):
             factory.create_single_person(role=role)
 
-    def test_create_single_person__validator_only_location(self):
+    def test_validator_only_location(self):
         """
         ``role`` and ``location`` must both be passed in as "kwargs", or 
         not used. If one or the other is sent, it can lead to validation 
@@ -147,7 +166,8 @@ class FactoryTests(TestCase):
         with self.assertRaises(ValidationError):
             factory.create_single_person(location=location)
 
-    # create_person
+
+class CreatePersonTests(TestCase):
 
     def test_create_person(self):
         person = factory.create_person()
@@ -178,6 +198,9 @@ class UpdateAdminTests(TestCase):
     def setUp(self):
         create_locations()
         create_categories()
+        # company
+        location_level = LocationLevel.objects.get(name=settings.LOCATION_TOP_LEVEL_NAME)
+        factory.create_role(name=settings.DEFAULT_ROLE, location_level=location_level)
 
     def test_update_login_person(self):
         person = factory.create_person()
@@ -206,34 +229,6 @@ class UpdateAdminTests(TestCase):
         person_locations = person.locations.values_list('id', flat=True)
         self.assertIn(top_level_location.id, person_locations)
         self.assertEqual(person.role.location_level, top_level_location_level)
-        # Categories
-        person_role_categories = person.role.categories.values_list('id', flat=True)
-        for category in Category.objects.filter(parent__isnull=True).values_list('id', flat=True):
-            self.assertIn(category, person_role_categories)
-
-    def test_update_admin_repair(self):
-        person = factory.create_single_person()
-
-        factory.update_admin_repair(person)
-
-        # Locations check
-        person_locations = person.locations.values_list('id', flat=True)
-        for location in (Location.objects.filter(location_level=person.role.location_level)
-                                         .values_list('id', flat=True)):
-            self.assertIn(location, person_locations)
-        # Category 'repair'
-        person_role_categories = person.role.categories.values_list('id', flat=True)
-        category = Category.objects.get(name='repair')
-        self.assertIn(category.id, person_role_categories)
-
-    def test_update_admin_location(self):
-        person = factory.create_single_person()
-
-        factory.update_admin_location(person)
-
-        # Locations
-        self.assertEqual(person.locations.count(), 1)
-        self.assertEqual(person.locations.first().location_level, person.role.location_level)
         # Categories
         person_role_categories = person.role.categories.values_list('id', flat=True)
         for category in Category.objects.filter(parent__isnull=True).values_list('id', flat=True):
@@ -287,7 +282,7 @@ class CreateAllPeopleTests(TestCase):
         factory.create_all_people()
 
         people = Person.objects.all()
-        self.assertEqual(people.count(), 189)
+        self.assertEqual(people.count(), 187)
         # Roles
         self.assertTrue(Role.objects.filter(name=settings.DEFAULT_ROLE).exists())
         # At least some people are assigned to Location(s)
@@ -295,3 +290,14 @@ class CreateAllPeopleTests(TestCase):
         # Locations
         post_location_count = Location.objects.count()
         self.assertEqual(init_location_count, post_location_count)
+
+        x = False
+        for person in Person.objects.all():
+            try:
+                person.save()
+            except ValidationError:
+                x = True
+            self.assertIsInstance(person, Person)
+
+        if x:
+            self.fail()

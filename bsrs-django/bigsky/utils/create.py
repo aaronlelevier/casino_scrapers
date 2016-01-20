@@ -8,7 +8,7 @@ from utils.permissions import perms_map
 
 
 LOREM_IPSUM_WORDS = u'''\
-admin admin-repair admin-location
+admin
 a ac accumsan ad adipiscing aenean aliquam aliquet amet ante aptent arcu at
 auctor augue bibendum blandit class commodo condimentum congue consectetuer
 consequat conubia convallis cras cubilia cum curabitur curae cursus dapibus
