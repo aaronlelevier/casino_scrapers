@@ -8,6 +8,8 @@ const { Route, inject } = Ember;
 var ApplicationRoute = Ember.Route.extend({
     repository: injectRepo('person'),
     RoleDeserializer: injectDeserializer('role'),
+    LocationDeserializer: injectDeserializer('location'),
+    PersonDeserializer: injectDeserializer('person'),
     store: injectStore('main'),
     translationsFetcher: inject.service(),
     i18n: inject.service(),
@@ -97,7 +99,7 @@ var ApplicationRoute = Ember.Route.extend({
             store.push('locale', model);
         });
 
-        const person_current = Ember.$('[data-preload-person-current]').data('configuration');
+        const person_current = Ember.$.extend(true, [], Ember.$('[data-preload-person-current]').data('configuration'));
         const person_current_role = store.find('role', person_current.role);
         person_current_role.set('people', [person_current.id]);
         //save so not dirty
@@ -108,28 +110,21 @@ var ApplicationRoute = Ember.Route.extend({
 
         store.push('person-current', person_current);
 
+        var location_deserializer = this.get('LocationDeserializer');
+        var person_deserializer = this.get('PersonDeserializer');
+
         var person_location_pks = [];
         person_current.all_locations_and_children.forEach(function(location) {
             const person_location_pk = Ember.uuid();
             store.push('person-location', {id: person_location_pk, person_pk: person_current.id, location_pk: location.id});
-            // LocationLevel - setup relationship
-            var location_level_fk = location.location_level_fk;
-            store.push('location', {id: location.id, name: location.name, location_level_fk: location_level_fk, person_location_fks: [person_location_pk]});
-            const existing_locations = store.find('location-level', location_level_fk).get('locations') || [];
-            store.push('location-level', {id: location_level_fk, locations: existing_locations.concat(location.id)});
-            // Location
             person_location_pks.push(person_location_pk);
+            location_deserializer.deserialize(location, location.id);
         });
-        store.push('person', {
-            id: person_current.id,
-            first_name: person_current.first_name,
-            last_name: person_current.last_name,
-            username: person_current.username,
-            title: person_current.title,
-            role_fk: person_current.role,
-            locale_fk: current_locale.get('id'),
-            person_location_fks: person_location_pks
-        });
+        // push in 'logged in' Person
+        person_current.locale = current_locale;
+        person_current.person_location_fks = person_location_pks;
+        person_deserializer.deserialize(person_current, person_current.id);
+
         // Set the current user's time zone
         // TODO: use moment.tz.guess() when it becomes available - https://github.com/moment/moment-timezone/pull/220
         // TODO: allow timezone to be overridden at the system/role/user level

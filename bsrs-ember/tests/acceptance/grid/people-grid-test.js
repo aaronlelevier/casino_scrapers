@@ -13,6 +13,7 @@ import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
 import random from 'bsrs-ember/models/random';
+import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -45,10 +46,10 @@ test('initial load should only show first 10 records ordered by id with correct 
         assert.equal(currentURL(),PEOPLE_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PD.sorted_username);
-        assert.equal(find('.t-grid-data:eq(0) .t-person-fullname').text(), 'Donald Trump');
-        assert.equal(find('.t-grid-data:eq(0) .t-person-title').text(), 'Wanker Extrodinare');
+        assert.equal(find('.t-grid-data:eq(0) .t-person-fullname').text(), PERSON_CURRENT.fullname);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-title').text(), PERSON_CURRENT.title);
         assert.equal(find('.t-grid-data:eq(0) .t-person-role-name').text(), RD.nameOne);
-        assert.equal(find('.t-grid-data:eq(0) .t-person-employee_id').text(), '');
+        assert.equal(find('.t-grid-data:eq(0) .t-person-employee_id').text(), PERSON_CURRENT.employee_id);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, PAGE_SIZE/5);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -664,7 +665,7 @@ test('typing a search will search on related', function(assert) {
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-person-role-name').text(), RD.nameOne);
+        assert.equal(find('.t-grid-data:eq(1) .t-person-role-name').text(), RD.nameOne);
     });
     fillIn('.t-grid-search-input', 'manager');
     triggerEvent('.t-grid-search-input', 'keyup', LETTER_M);

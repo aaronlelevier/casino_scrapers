@@ -224,7 +224,7 @@ test('on boot we should fetch and load the location level configuration', functi
     });
 });
 
-test('aaron on boot we should fetch and load the person-current, logged in Person, configuration', function(assert) {
+test('on boot we should fetch and load the person-current, logged in Person, configuration', function(assert) {
     visit(HOME_URL);
     andThen(() => {
         var person_current = store.findOne('person-current');

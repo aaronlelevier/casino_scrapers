@@ -142,15 +142,16 @@ test('clicking on a new model from the grid view will not dirty the original tab
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
     });
-    const donald_detail_data = PF.detail(PD.idDonald);
-    detail_xhr = xhr(`${endpoint}${PD.idDonald}/`, 'GET', null, {}, 200, donald_detail_data);
-    click('.t-grid-data:eq(0)');
+    const secondId = PD.idOne+0;
+    const donald_detail_data = PF.detail(secondId);
+    detail_xhr = xhr(`${endpoint}${secondId}/`, 'GET', null, {}, 200, donald_detail_data);
+    click('.t-grid-data:eq(2)');
     andThen(() => {
-        assert.equal(currentURL(), `/admin/people/${PD.idDonald}`);
+        assert.equal(currentURL(), `/admin/people/${secondId}`);
         let person = store.find('person', PD.idOne);
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         assert.ok(person.get('locationsIsNotDirty'));
-        let person_two = store.find('person', PD.idDonald);
+        let person_two = store.find('person', secondId);
         assert.ok(person_two.get('isNotDirtyOrRelatedNotDirty'));
     });
 });

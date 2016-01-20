@@ -81,6 +81,8 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
     });
 });
 
+// can change locale to inactive for person and save (power select)
+
 test('when you deep link to the person detail view you get bound attrs', (assert) => {
     visit(DETAIL_URL);
     page.localeClickDropdown();
@@ -125,7 +127,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), AD.countryTwo);
         assert.equal(page.statusInput(), SD.activeName);
         assert.equal(page.localeInput(), PD.localeFull);
-        assert.equal(page.localeOptionLength(), 2);
+        assert.equal(page.localeOptionLength(), 3);
         assert.equal(page.localeOne(), PD.localeFull);
         assert.equal(page.localeTwo(), PD.localeTwoFull);
         assert.equal(page.roleInput(), RD.nameOne);
@@ -1215,7 +1217,7 @@ test('can change locale to inactive for person and save (power select)', (assert
     });
     page.localeClickDropdown();
     andThen(() => {
-        assert.equal(page.localeOptionLength(), 2);
+        assert.equal(page.localeOptionLength(), 3);
         assert.equal(page.localeOne(), PD.localeFull);
         assert.equal(page.localeTwo(), PD.localeTwoFull);
         const person = store.find('person', PD.idOne);

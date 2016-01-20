@@ -100,19 +100,16 @@ test('filter tickets by their location matching the logged in Persons location',
         assert.equal(currentURL(), PEOPLE_DONALD_DETAIL_URL);
         const person = store.find('person', PD.idDonald);
         assert.equal(person.get('locations').get('length'), 1);
-        const current_person = store.findOne('person-current');
-        assert.equal(current_person.get('person.locations').get('length'), 1);
     });
     click('.t-tab:eq(0)');
     click(`${LOCATION}:eq(0) .ember-power-select-multiple-remove-btn`);
     andThen(() => {
         const person = store.find('person', PD.idDonald);
         assert.equal(person.get('locations').get('length'), 0);
-        const current_person = store.findOne('person-current');
-        assert.equal(current_person.get('person.locations').get('length'), 0);
     });
     let payload = PF.put({id: PD.idDonald});
     payload.locations = [];
+    // return pauseTest();
     ajax(`${PREFIX}${BASEURLS.base_people_url}/${PD.idDonald}/`, 'PUT', JSON.stringify(payload), {}, 200, {});
     ajax(`${PREFIX}${BASEURLS.base_people_url}/?page=1`, 'GET', null, {}, 200, PF.list());
     click('.t-save-btn');
