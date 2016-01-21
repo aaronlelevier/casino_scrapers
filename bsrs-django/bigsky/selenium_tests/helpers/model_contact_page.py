@@ -57,9 +57,8 @@ class ModelContactPage(ModelPage):
         assert zip_input.get_attribute("value") == new_zip
 
     def find_email_new_entry_send_keys(self, email):
-        assert self.driver.find_element_by_class_name("t-input-multi-email")
-        # first_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
-        # first_email_input.send_keys(email)
+        first_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
+        first_email_input.send_keys(email)
 
     def find_second_email_new_entry_send_keys(self, email):
         second_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/following-sibling::*[1]/input")
@@ -69,7 +68,7 @@ class ModelContactPage(ModelPage):
         first_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
         second_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/following-sibling::*[1]/input")
         assert first_email_input.get_attribute("value") == email_two or first_email_input.get_attribute("value") == email_one
-        assert second_email_input.get_attribute("value") == email_one or second_email_input.get_attribute("value") == email_one == email_two
+        assert second_email_input.get_attribute("value") == email_one or second_email_input.get_attribute("value") == email_two
 
     def assert_name_not_in_list(self, name, new_model):
         pagination = self.driver.find_element_by_class_name("t-pages")
