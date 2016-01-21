@@ -43,7 +43,6 @@
                         <div class="col-md-12">
                             {{#form-group title="admin.category.label.label" for="category_label"}}
                             {{input type="text" placeholder=(t "admin.category.label.label") value=model.label class="form-control t-category-label" id="category_label"}}
-                            {{#validation-error-field submitted=submitted field="label" className="validation validation-under t-label-validation-error" model=model validation=labelValidation}}{{t "validation.invalid"}} {{t "admin.category.label.label"}}{{/validation-error-field}}
                             {{/form-group}}
                         </div>
                     </div>
@@ -51,7 +50,6 @@
                         <div class="col-md-12">
                             {{#form-group title="admin.category.label.subcategory_label" for="subcategory_label"}}
                             {{input type="text" value=model.subcategory_label placeholder=(t "admin.category.label.subcategory_label") class="form-control t-category-subcategory-label" id="subcategory_label"}}
-                            {{#validation-error-field submitted=submitted field="subcategory_label" className="validation validation-under t-subcategory-label-validation-error" model=model validation=subCategoryLabelValidation}}{{t "validation.invalid"}} {{t "admin.category.label.subcategory_label"}}{{/validation-error-field}}
                             {{/form-group}}
                         </div>
                     </div>
