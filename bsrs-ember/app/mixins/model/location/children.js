@@ -25,8 +25,10 @@ var ChildrenMixin = Ember.Mixin.create({
         };
         return this.get('store').find('location-children', filter);
     }),
-    add_child(child_id) {
+    add_child(child) {
         const store = this.get('store'); 
+        const new_location = store.push('location', child);
+        const child_id = new_location.get('id');
         const location_children = store.find('location-children').toArray();
         //check existing
         let existing = location_children.filter((m2m) => {

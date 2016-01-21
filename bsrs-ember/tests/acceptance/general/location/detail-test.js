@@ -766,18 +766,18 @@ test('clicking and typing into power select for location will fire off xhr reque
     });
     let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/?name__icontains=a`;
     let response = LF.search();
-    response.results.push(LF.get(LD.unusedId, LD.apple));
+    response.results.push(...[LF.get(LD.unusedId, LD.apple), LF.get(LD.idParent, LD.storeNameParent), LF.get(LD.idParentTwo, LD.storeNameParentTwo)]);
     xhr(location_endpoint, 'GET', null, {}, 200, response);
     page.childrenClickDropdown();
-    //testing filter out new flag in repo
-    run(() => {
-        store.push('location', {id: 'testingNewFilter', name: 'watA', new: true});
-    });
+    // //testing filter out new flag in repo
+    // run(() => {
+    //     store.push('location', {id: 'testingNewFilter', name: 'watA', new: true});
+    // });
     fillIn(`${CHILDREN_SEARCH}`, 'a');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
-        assert.equal(page.childrenOptionLength(), 4);
+        assert.equal(page.childrenOptionLength(), 3);
         assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(1)`).text().trim(), LD.storeNameParent);
     });
     page.childrenClickApple();
@@ -870,7 +870,9 @@ test('can remove and add back same children and save empty children', (assert) =
         assert.ok(location.get('isDirtyOrRelatedDirty'));
     });
     let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/?name__icontains=a`;
-    xhr(location_endpoint, 'GET', null, {}, 200, LF.search());
+    let response = LF.search();
+    response.results.push(...[LF.get(LD.unusedId, LD.baseStoreName), LF.get(LD.idParent, LD.storeNameParent), LF.get(LD.idParentTwo, LD.storeNameParentTwo)]);
+    xhr(location_endpoint, 'GET', null, {}, 200, response);
     fillIn(`${CHILDREN_SEARCH}`, 'a');
     andThen(() => {
         assert.equal(page.childrenOptionLength(), 3);
@@ -888,7 +890,7 @@ test('can remove and add back same children and save empty children', (assert) =
         assert.ok(location.get('childrenIsDirty'));
         assert.ok(location.get('isDirtyOrRelatedDirty'));
     });
-    page.childrenOneRemove();
+    page.childrenTwoRemove();
     andThen(() => {
         let location = store.find('location', LD.idOne);
         assert.equal(location.get('children').get('length'), 1);
@@ -947,7 +949,9 @@ test('starting with multiple children, can remove all children (while not popula
         assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
     });
     location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/?name__icontains=g`;
-    xhr(location_endpoint, 'GET', null, {}, 200, LF.search());
+    const response = LF.search();
+    response.results.push(LF.get(LD.idThree, LD.storeNameThree));
+    xhr(location_endpoint, 'GET', null, {}, 200, response);
     fillIn(`${CHILDREN_SEARCH}`, 'g');
     page.childrenClickOptionStoreNameThree();
     andThen(() => {
