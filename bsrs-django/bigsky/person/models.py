@@ -345,7 +345,7 @@ class Person(BaseModel, AbstractUser):
             'employee_id': self.employee_id,
             'locale': str(self.locale.id if self.locale else self._get_locale(locale)),
             'role': str(self.role.id),
-            'all_locations_and_children': [{'id': str(x.id), 'name': x.name}
+            'all_locations_and_children': [{'id': str(x.id), 'name': x.name, 'location_level': str(x.location_level.id), 'status': str(x.status.id) }
                                           for x in self.all_locations_and_children()],
             'all_role_categories_and_children': self.all_role_categories_and_children(),
         }
