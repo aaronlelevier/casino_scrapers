@@ -4,7 +4,7 @@ from contact.serializers import (PhoneNumberSerializer, EmailSerializer, Address
 from location.models import LocationLevel, LocationStatus, LocationType, Location
 from location.validators import LocationParentChildValidator
 from person.serializers_leaf import PersonSimpleSerializer
-from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin
+from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin, NestedCreateContactSerializerMixin
 from utils.validators import UniqueForActiveValidator
 
 
@@ -96,15 +96,7 @@ class LocationDetailSerializer(serializers.ModelSerializer):
             'parents', 'children', 'emails', 'phone_numbers', 'addresses',)
 
 
-class LocationCreateSerializer(BaseCreateSerializer):
-
-    class Meta:
-        model = Location
-        validators = [UniqueForActiveValidator(Location, ['number'])]
-        fields = ('id', 'name', 'number', 'status', 'location_level',)
-
-
-class LocationUpdateSerializer(NestedContactSerializerMixin, serializers.ModelSerializer):
+class LocationUpdateSerializer(NestedCreateContactSerializerMixin, NestedContactSerializerMixin, serializers.ModelSerializer):
 
     emails = EmailSerializer(required=False, many=True)
     phone_numbers = PhoneNumberSerializer(required=False, many=True)

@@ -108,21 +108,19 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
        Will return all *Child Locations* for a given *LocationLevel*
        
-       URL: `/api/admin/locations/{pk}/get-level-children/{level_id}/?name__icontains={x}`
+       URL: `/api/admin/locations/get-level-children/{pk}/?name__icontains={x}`
 
        Location ID: `{pk}`
 
-       LocationLevel ID of the given *LocationLevel* to filter: `{level_id}`
 
     **4. get_level_parents:**
 
        Will return all *Parent Locations* `{pk}` for a given *LocationLevel* `{level_id}`
        
-       URL: `/api/admin/locations/{pk}/get-level-parents/{level_id}/`
+       URL: `/api/admin/locations/get-level-parents/{pk}/`
 
        Location ID: `{pk}`
 
-       LocationLevel ID of the given *LocationLevel* to filter: `{level_id}`
 
     **5. Filter for location_level:**
 
@@ -145,9 +143,7 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
             return ls.LocationListSerializer
         elif self.action == 'retrieve':
             return ls.LocationDetailSerializer
-        elif self.action == 'create': 
-            return ls.LocationCreateSerializer
-        elif self.action in ('update', 'partial_update'):
+        elif self.action in ('create', 'update', 'partial_update'):
             return ls.LocationUpdateSerializer
         else:
             raise MethodNotAllowed(method=self.action)
@@ -174,10 +170,11 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
         serializer = self._all_related_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-    @detail_route(methods=['GET'], url_path=r'get-level-parents/(?P<level_id>[\w\-]+)')
-    def get_level_parents(self, request, pk=None, level_id=None):
+    @list_route(methods=['GET'], url_path=r'get-level-parents/(?P<pk>[\w\-]+)')
+    def get_level_parents(self, request, pk=None):
         instance = get_object_or_404(self.model, pk=pk)
-        queryset = Location.objects.get_level_parents(instance, level_id)
+        queryset = Location.objects.get_level_parents(instance)
         queryset = self.filter_by_query_params(queryset)
-        serializer = self._all_related_serializer(queryset, many=True)
-        return Response(serializer.data)
+        page = self.paginate_queryset(queryset)
+        serializer = self._all_related_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)

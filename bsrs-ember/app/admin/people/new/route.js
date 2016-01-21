@@ -17,12 +17,14 @@ var PersonNew = TabNewRoute.extend({
         }
         return {
             model: model,
-            roles: roles
+            roles: roles,
+            locales: this.get('store').find('locale')
         };
     },
     setupController(controller, hash) {
         controller.set('model', hash.model);
         controller.set('roles', hash.roles);
+        controller.set('locales', hash.locales);
     },
     actions: {
         editPerson() {

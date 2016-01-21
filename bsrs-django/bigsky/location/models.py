@@ -226,22 +226,17 @@ class LocationQuerySet(SelfReferencingQuerySet):
             raise
         return self.filter(location_level__in=child_levels)
 
-    def get_level_parents(self, location, level_id):
+    def get_level_parents(self, location):
         '''
-        Includes error handling that the level_id is valid.
-        
         :location: Child ``Location``
-        :level_id: 
             ``LocationLevel.id`` of the ``Parent Locations`` 
             to return.
         '''
         try:
             parent_levels = LocationLevel.objects.get_all_parents(location.location_level)
-            location_level = LocationLevel.objects.filter(
-                id__in=parent_levels.values_list('id', flat=True)).get(id=level_id)
         except ObjectDoesNotExist:
             raise
-        return self.filter(location_level=location_level)
+        return self.filter(location_level__in=parent_levels)
 
     def search_multi(self, keyword):
         return self.filter(
@@ -264,11 +259,11 @@ class LocationManager(SelfReferencingManager):
         '''
         return self.get_queryset().get_level_children(location)
 
-    def get_level_parents(self, location, level_id):
+    def get_level_parents(self, location):
         '''
         Get all Parent Locations at a specific LocationLevel.
         '''
-        return self.get_queryset().get_level_parents(location, level_id)
+        return self.get_queryset().get_level_parents(location)
 
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)

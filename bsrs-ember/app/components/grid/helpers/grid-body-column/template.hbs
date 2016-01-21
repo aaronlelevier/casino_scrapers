@@ -1,0 +1,5 @@
+{{#if column.templateName}}
+  {{component column.templateName item=item column=column}}
+{{else}}
+  {{if column.isTranslatable (t (get item column.field)) (get item column.field)}}
+{{/if}}

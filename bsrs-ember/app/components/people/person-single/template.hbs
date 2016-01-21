@@ -98,28 +98,24 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-12">
                 <section>
                     <div class="row card-title">
                         <h2 class="col-md-12">{{t "admin.person.label.credentials"}}</h2>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-4">
                             {{#form-group title="admin.person.label.status" for="status"}}
                             {{people/person-status-select person=model statuses=statuses}}
                             {{/form-group}}
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-4">
                             {{#form-group title="admin.person.label.username" for="username"}}
                             {{input type="text" placeholder=(t "admin.person.label.username") value=model.username class="form-control t-person-username" id="username"}}
                             {{#validation-error-field submitted=submitted field="username" className="t-username-validation-error" model=model validation=usernameValidation}}invalid username{{/validation-error-field}}
                             {{/form-group}}
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-4">
                             {{#form-group title="admin.person.label.password" for="password"}}
                             {{#if changingPassword}}
                             {{input-focus type="password" placeholder=(t "admin.person.label.password") value=model.password class="form-control t-person-password" id="password"}}
@@ -133,7 +129,9 @@
                     </div>
                 </section>
             </div>
-            <div class="col-md-8">
+        </div>
+        <div class="row">
+            <div class="col-md-12">
                 <section>
                     <div class="row card-title">
                         <h2 class="col-md-12">{{t "admin.person.label.contact"}}</h2>
@@ -152,6 +150,19 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
+                      {{#form-group title="admin.person.label.email"}}
+                        {{input-multi-email
+                            placeholder=(t "admin.person.label.email.one")
+                            model=model.emails
+                            types=email_types
+                            default_type=default_email_type
+                            related_pk=model.id
+                        }}
+                      {{/form-group}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         {{#form-group title="admin.person.label.address"}}
                         {{input-multi-address
                             model=model.addresses
@@ -164,19 +175,7 @@
                         {{/form-group}}
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                      {{#form-group title="admin.person.label.email.other"}}
-                        {{input-multi-email
-                            placeholder=(t "admin.person.label.email.one")
-                            model=model.emails
-                            types=email_types
-                            default_type=default_email_type
-                            related_pk=model.id
-                        }}
-                      {{/form-group}}
-                    </div>
-                </div>
+
             </section>
         </div>
     </div>
