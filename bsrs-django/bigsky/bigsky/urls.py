@@ -76,23 +76,23 @@ custom_router.register('tickets', tickets_views.TicketActivityViewSet)
 
 
 # API
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^api/', include(custom_router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-)
+]
 
 
 # No Requirement
-urlpatterns += patterns('',
+urlpatterns += [
     url(r'^404/$', bigsky_views.handler404, name='404'),
     url(r'^500/$', bigsky_views.handler500, name='500'),
-) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Logout Required
 urlpatterns += required(
     logout_required,
-    patterns('',
+    [
         url(r'^login/', auth_views.login,
             {'template_name': 'form.html',
             'authentication_form': BsAuthenticationForm,
@@ -101,7 +101,7 @@ urlpatterns += required(
                 }
             },
             name='login'),
-    )
+    ]
 )
 
 
@@ -114,7 +114,7 @@ if settings.DEBUG:
 # Login Required
 urlpatterns += required(
     login_required,
-    patterns('',
+    [
         url(r'^password-change/$', auth_views.password_change,
             {'template_name': 'form.html',
             'password_change_form': forms.PasswordChangeForm,
@@ -127,7 +127,7 @@ urlpatterns += required(
         # This URL must be the last Django URL defined, or else the URLs defined
         # below it won't resolve, and this URL will catch the URL request.
         url(r'^.*$', bigsky_views.IndexView.as_view(), name='index'),
-    )
+    ]
 )
 
 handler404 = 'bigsky.views.handler404'
