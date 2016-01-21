@@ -103,50 +103,33 @@ test('validation works and when hit save, we do same post', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
         assert.ok(find('.t-name-validation-error').is(':hidden'));
-        assert.ok(find('.t-label-validation-error').is(':hidden'));
-        assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
         assert.ok(find('.t-name-validation-error').is(':visible'));
-        assert.ok(find('.t-label-validation-error').is(':visible'));
-        assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
-    });
-    fillIn('.t-category-name', CD.nameOne);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), CATEGORY_NEW_URL);
-        assert.ok(find('.t-name-validation-error').is(':hidden'));
-        assert.ok(find('.t-label-validation-error').is(':visible'));
-        assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
     });
     fillIn('.t-category-description', CD.descriptionMaintenance);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
-        assert.ok(find('.t-name-validation-error').is(':hidden'));
-        assert.ok(find('.t-label-validation-error').is(':visible'));
-        assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
+        assert.ok(find('.t-name-validation-error').is(':visible'));
     });
     fillIn('.t-category-cost-code', CD.costCodeOne);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
-        assert.ok(find('.t-name-validation-error').is(':hidden'));
-        assert.ok(find('.t-label-validation-error').is(':visible'));
-        assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
+        assert.ok(find('.t-name-validation-error').is(':visible'));
     });
     fillIn('.t-category-label', CD.labelOne);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
-        assert.ok(find('.t-name-validation-error').is(':hidden'));
-        assert.ok(find('.t-label-validation-error').is(':hidden'));
-        assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
+        assert.ok(find('.t-name-validation-error').is(':visible'));
     });
     fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
     fillIn('.t-amount', CD.costAmountOne);
+    fillIn('.t-category-name', CD.nameOne);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);

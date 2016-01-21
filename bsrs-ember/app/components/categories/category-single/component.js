@@ -8,8 +8,6 @@ import NewTabMixin from 'bsrs-ember/mixins/components/tab/new';
 var CategorySingleComponent = Ember.Component.extend(TabMixin, NewTabMixin, EditMixin, ValidationMixin, {
     repository: inject('category'),
     nameValidation: validate('model.name'),
-    labelValidation: validate('model.label'),
-    subCategoryLabelValidation: validate('model.subcategory_label'),
     actions: {
         save() {
             this.set('submitted', true);
