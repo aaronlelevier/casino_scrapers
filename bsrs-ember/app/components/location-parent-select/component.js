@@ -10,8 +10,8 @@ var LocationParentMulti = Ember.Component.extend({
             const old_parent_ids = location.get('parents_ids');
             const new_parent_ids = new_parent_selection.mapBy('id');
             new_parent_selection.forEach((parent) => {
-                if (Ember.$.inArray(parent.get('id'), old_parent_ids) < 0) {
-                    location.add_parent(parent.get('id'));
+                if (Ember.$.inArray(parent.id, old_parent_ids) < 0) {
+                    location.add_parent(parent);
                 }
             });
             old_parent_selection.forEach((old_parent) => {

@@ -27,12 +27,10 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
             url += `?name__icontains=${search_criteria}`;
         }
         return PromiseMixin.xhr(url, 'GET').then((response) => {
-            // this.get('LocationDeserializer').deserialize(response);
             return response.results.filter((location) => {
                 const name = location.name;
                 return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1;
             });
-            // return this.get('store').find('location', filterFunc);
         });
     },
     findLocationParents(id, search_criteria) {
@@ -42,12 +40,10 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
             url += `?name__icontains=${search_criteria}`;
         }
         return PromiseMixin.xhr(url, 'GET').then((response) => {
-            this.get('LocationDeserializer').deserialize(response);
-            const filterFunc = function(location) {
-                const name = location.get('name');
-                return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1 && !location.get('new');
-            };
-            return this.get('store').find('location', filterFunc);
+            return response.results.filter((location) => {
+                const name = location.name;
+                return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1;
+            });
         });
     },
     findTicket(search_criteria) {

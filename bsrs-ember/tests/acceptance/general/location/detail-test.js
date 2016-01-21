@@ -997,18 +997,18 @@ test('clicking and typing into power select for location will fire off xhr reque
     });
     let location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LD.idOne}/?name__icontains=a`;
     let response = LF.search();
-    response.results.push(LF.get(LD.unusedId, LD.apple));
+    response.results.push(...[LF.get(LD.unusedId, LD.apple), LF.get(LD.idParent, LD.storeNameParent), LF.get(LD.idParentTwo, LD.storeNameParentTwo)]);
     xhr(location_endpoint, 'GET', null, {}, 200, response);
     page.parentsClickDropdown();
-    //testing filter out new flag in repo
-    run(() => {
-        store.push('location', {id: 'testingNewFilter', name: 'watA', new: true});
-    });
+    // //testing filter out new flag in repo
+    // run(() => {
+    //     store.push('location', {id: 'testingNewFilter', name: 'watA', new: true});
+    // });
     fillIn(`${PARENTS_SEARCH}`, 'a');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(page.parentsSelected().indexOf(LD.storeNameParent), 2);
-        assert.equal(page.parentsOptionLength(), 4);
+        assert.equal(page.parentsOptionLength(), 3);
         assert.equal(find(`${PARENTS_DROPDOWN} > li:eq(1)`).text().trim(), LD.storeNameParent);
     });
     page.parentsClickApple();
@@ -1101,7 +1101,9 @@ test('can remove and add back same parents and save empty parents', (assert) => 
         assert.ok(location.get('isDirtyOrRelatedDirty'));
     });
     let location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LD.idOne}/?name__icontains=a`;
-    xhr(location_endpoint, 'GET', null, {}, 200, LF.search());
+    let response = LF.search();
+    response.results.push(...[LF.get(LD.unusedId, LD.baseStoreName), LF.get(LD.idParent, LD.storeNameParent), LF.get(LD.idParentTwo, LD.storeNameParentTwo)]);
+    xhr(location_endpoint, 'GET', null, {}, 200, response);
     fillIn(`${PARENTS_SEARCH}`, 'a');
     andThen(() => {
         assert.equal(page.parentsOptionLength(), 3);
@@ -1119,7 +1121,7 @@ test('can remove and add back same parents and save empty parents', (assert) => 
         assert.ok(location.get('parentsIsDirty'));
         assert.ok(location.get('isDirtyOrRelatedDirty'));
     });
-    page.parentsOneRemove();
+    page.parentsTwoRemove();
     andThen(() => {
         let location = store.find('location', LD.idOne);
         assert.equal(location.get('parents').get('length'), 1);
@@ -1127,7 +1129,9 @@ test('can remove and add back same parents and save empty parents', (assert) => 
         assert.ok(location.get('isDirtyOrRelatedDirty'));
     });
     location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LD.idOne}/?name__icontains=p`;
-    xhr(location_endpoint, 'GET', null, {}, 200, LF.search());
+    response = LF.search();
+    response.results.push(...[LF.get(LD.unusedId, LD.baseStoreName), LF.get(LD.idParent, LD.storeNameParent), LF.get(LD.idParentTwo, LD.storeNameParentTwo)]);
+    xhr(location_endpoint, 'GET', null, {}, 200, response);
     fillIn(`${PARENTS_SEARCH}`, 'p');
     page.parentsClickOptionStoreNameTwo();
     andThen(() => {
@@ -1168,7 +1172,9 @@ test('starting with multiple parents, can remove all parents (while not populati
         assert.ok(location.get('isDirtyOrRelatedDirty'));
     });
     let location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LD.idOne}/?name__icontains=p`;
-    xhr(location_endpoint, 'GET', null, {}, 200, LF.search());
+    let response = LF.search();
+    response.results.push(...[LF.get(LD.unusedId, LD.baseStoreName), LF.get(LD.idParent, LD.storeNameParent), LF.get(LD.idParentTwo, LD.storeNameParentTwo)]);
+    xhr(location_endpoint, 'GET', null, {}, 200, response);
     fillIn(`${PARENTS_SEARCH}`, 'p');
     page.parentsClickOptionStoreNameTwo();
     andThen(() => {
