@@ -295,6 +295,7 @@ test('newly added email without a valid name are ignored and removed when user n
     generalPage.cancel();
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(store.find('email').get('length'), 2);
     });
 });
 
@@ -315,6 +316,7 @@ test('newly added phone numbers without a valid number are ignored and removed w
     generalPage.cancel();
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(store.find('phonenumber').get('length'), 2);
     });
 });
 
@@ -335,7 +337,7 @@ test('newly added addresses without a valid name are ignored and removed when us
     generalPage.cancel();
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
-        assert.equal(store.find('address').get('length'), 3);
+        assert.equal(store.find('address').get('length'), 2);
     });
 });
 

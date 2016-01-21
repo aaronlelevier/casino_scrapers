@@ -40,7 +40,7 @@ const PARENTS = '.t-location-parent-select > .ember-basic-dropdown-trigger';
 const PARENTS_DROPDOWN = '.t-location-parent-select-dropdown > .ember-power-select-options';
 const PARENTS_SEARCH = '.t-location-parent-select-trigger > .ember-power-select-trigger-multiple-input';
 
-module('Acceptance | location detail-test', {
+module('scott Acceptance | location detail-test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -257,6 +257,9 @@ test('changing location level will update related location level locations array
 /* PHONE NUMBER AND ADDRESS */
 test('newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
     visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(store.find('phonenumber').get('length'), 2);
+    });
     click('.t-add-btn:eq(0)');
     andThen(() => {
         assert.equal(store.find('phonenumber').get('length'), 3);
@@ -272,6 +275,7 @@ test('newly added phone numbers without a valid number are ignored and removed w
     generalPage.cancel();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
+        assert.equal(store.find('phonenumber').get('length'), 2);
     });
 });
 
@@ -292,6 +296,7 @@ test('newly added email without a valid email are ignored and removed when user 
     generalPage.cancel();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
+        assert.equal(store.find('email').get('length'), 2);
     });
 });
 
@@ -312,7 +317,7 @@ test('newly added addresses without a valid name are ignored and removed when us
     generalPage.cancel();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
-        assert.equal(store.find('address').get('length'), 3);
+        assert.equal(store.find('address').get('length'), 2);
     });
 });
 
@@ -375,27 +380,6 @@ test('emails without a valid email are ignored and removed on save', (assert) =>
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(store.find('email').get('length'), 2);
-    });
-});
-
-test('newly added addresses without a valid name are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-    visit(DETAIL_URL);
-    click('.t-add-address-btn:eq(0)');
-    andThen(() => {
-        assert.equal(store.find('address').get('length'), 3);
-        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-        assert.equal(visible_errors.length, 0);
-    });
-    fillIn('.t-address-address:eq(2)', '34');
-    andThen(() => {
-        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-        assert.equal(visible_errors.length, 1);
-    });
-    fillIn('.t-address-address:eq(2)', '');
-    generalPage.cancel();
-    andThen(() => {
-        assert.equal(currentURL(), LOCATION_URL);
-        assert.equal(store.find('address').get('length'), 3);
     });
 });
 
@@ -462,7 +446,7 @@ test('when you change a related phone numbers type it will be persisted correctl
     });
 });
 
-test('when you change a related phone numbers type it will be persisted correctly', (assert) => {
+test('when you change a related emails type it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
     var emails = EF.put({id: ED.idOne, type: ETD.personalId});
     var payload = LF.put({id: LD.idOne, emails: emails});
