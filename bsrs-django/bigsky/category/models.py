@@ -50,8 +50,8 @@ class Category(BaseModel):
     label = models.CharField(max_length=100, editable=False, blank=True, null=True,
         help_text="This field cannot be set directly.  It is either set from "
                   "a system setting, or defaulted from the Parent Category.")
-    subcategory_label = models.CharField(max_length=100)
-    cost_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
+    subcategory_label = models.CharField(max_length=100, blank=True)
+    cost_amount = models.DecimalField(max_digits=15, decimal_places=4, default=0, blank=True, null=True)
     cost_currency = models.ForeignKey(Currency, blank=True, null=True)
     cost_code = models.CharField(max_length=100, blank=True, null=True)
     parent = models.ForeignKey("self", related_name="children", blank=True, null=True)

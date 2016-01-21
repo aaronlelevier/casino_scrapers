@@ -247,6 +247,20 @@ class CategoryUpdateTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertNotEqual(self.trade.name, data['name'])
 
+    def test_name_update_only(self):
+        self.data['name'] = 'new category name'
+        fields = [x.name for x in Category._meta.get_fields()]
+        for field in fields:
+            if field not in ['id', 'name']:
+                self.data.pop(field, None)
+
+        response = self.client.put('/api/admin/categories/{}/'.format(self.trade.id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertNotEqual(self.trade.name, data['name'])
+
     def test_change_parent(self):
         new_category = mommy.make(Category, name='hvac', subcategory_label='issue', parent=self.type)
         self.data['parent'] = str(new_category.id)

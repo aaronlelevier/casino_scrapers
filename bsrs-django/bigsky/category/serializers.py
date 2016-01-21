@@ -1,3 +1,5 @@
+from rest_framework import serializers
+
 from category.models import Category
 from utils.serializers import BaseCreateSerializer
 
@@ -71,6 +73,9 @@ class CategoryDetailSerializer(BaseCreateSerializer):
 
 
 class CategorySerializer(BaseCreateSerializer):
+
+    children = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(), many=True, required=False)
 
     class Meta:
         model = Category
