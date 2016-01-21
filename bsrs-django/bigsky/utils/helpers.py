@@ -1,4 +1,10 @@
 import json
+import uuid
+
+from django.contrib.auth.models import ContentType
+
+
+BASE_UUID = "530c4-ce6c-4724-9cfd-37a16e787"
 
 
 def model_to_json(model):
@@ -13,12 +19,15 @@ def choices_to_json(model):
     return json.dumps([m[0] for m in model])
 
 
-def generate_uuid(base_id, incr=0):
-    return "{}{:03d}".format(base_id, incr)
+def get_content_type_number(model):
+    model_name = model.__name__.lower()
+    content_type = ContentType.objects.get(model=model_name)
+    return "{:03d}".format(content_type.id)
 
 
-def generate_uuid_from_model(model, base_id, incr=0):
-    if not incr:
-        incr = model.objects.count()
-
-    return "{}{:03d}".format(base_id, incr)
+def generate_uuid(model):
+    model_number = get_content_type_number(model)
+    number = "{:03d}".format(model.objects.count()+1)
+    return uuid.UUID("{model_number}{base_id}{number}".format(model_number=model_number,
+                                                              base_id=BASE_UUID,
+                                                              number=number))
