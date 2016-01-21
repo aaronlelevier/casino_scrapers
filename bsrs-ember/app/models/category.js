@@ -25,11 +25,12 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     serialize() {
+        const cost_amount = this.get('cost_amount') || null;
         return {
             id: this.get('id'),
             name: this.get('name'),
             description: this.get('description'),
-            cost_amount: this.get('cost_amount'),
+            cost_amount: cost_amount,
             cost_currency: this.get('cost_currency'),
             cost_code: this.get('cost_code'),
             label: this.get('label'),

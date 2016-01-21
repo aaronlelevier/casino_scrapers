@@ -222,6 +222,25 @@ test('validation works and when hit save, we do same post', (assert) => {
     });
 });
 
+test('cost_amount - is not required', (assert) => {
+    visit(DETAIL_URL);
+    page.nameFill(CD.nameOne);
+    page.descriptionFill(CD.descriptionMaintenance);
+    page.labelFill(CD.labelOne);
+    page.amountFill('');
+    page.costCodeFill(CD.costCodeOne);
+    page.subLabelFill(CD.subCatLabelTwo);
+    let url = PREFIX + DETAIL_URL + '/';
+    let response = CF.detail(CD.idOne);
+    let payload = CF.put({id: CD.idOne, name: CD.nameOne, description: CD.descriptionMaintenance,
+    label: CD.labelOne, subcategory_label: CD.subCatLabelTwo, cost_amount: null, cost_code: CD.costCodeOne});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});
+
 /* CATEGORY TO CHILDREN */
 test('clicking and typing into power select for categories children will fire off xhr request for all categories', (assert) => {
     visit(DETAIL_URL);
