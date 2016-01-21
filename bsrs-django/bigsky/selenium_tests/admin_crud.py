@@ -194,6 +194,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # Fill in Children
         location_children_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-location-children-select')])[last()]")
         location_children_input.send_keys("a")
+        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         child_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
         child_option.click()
         # Fill in Parents
