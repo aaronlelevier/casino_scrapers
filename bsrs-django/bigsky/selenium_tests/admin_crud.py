@@ -396,11 +396,11 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         add_address_btn.click()
         person_page.find_address_new_entry_send_keys(2, new_street_two, new_city_two, new_zip_two)
 
-        # # Fill in Locations
-        # location_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-person-locations-select')])[last()]")
-        # location_input.send_keys("a")
-        # location_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
-        # location_option.click()
+        # Fill in Location
+        location_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-person-locations-select')])[last()]")
+        location_input.send_keys("a")
+        loc_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
+        loc_option.click()
 
         # Select different locale
         locale_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-locale-select ')]/div")
