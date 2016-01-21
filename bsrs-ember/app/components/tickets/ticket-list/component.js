@@ -5,7 +5,7 @@ export default GridViewComponent.extend({
     columns: [
         {field: 'priority.translated_name', headerLabel: 'Priority', isSortable: true, isFilterable: true, isSearchable: true},
         {field: 'status.translated_name', headerLabel: 'Status', isSortable: true, isFilterable: true, isSearchable: true},
-        {field: 'formatted_date', headerLabel: 'Created', isSortable: true, isFilterable: true, isSearchable: true},
+        {field: 'created', formattedField: 'formatted_date', headerLabel: 'Created', isSortable: true, isFilterable: true, isSearchable: true},
         {field: 'location.name', headerLabel: 'Location', isSortable: true, isFilterable: true, isSearchable: true},
         {field: 'assignee.fullname', headerLabel: 'Assignee', isSortable: true, isFilterable: true, isSearchable: true},
         {field: 'category_names', headerLabel: 'Categories'},
