@@ -143,9 +143,7 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
             return ls.LocationListSerializer
         elif self.action == 'retrieve':
             return ls.LocationDetailSerializer
-        elif self.action == 'create': 
-            return ls.LocationCreateSerializer
-        elif self.action in ('update', 'partial_update'):
+        elif self.action in ('create', 'update', 'partial_update'):
             return ls.LocationUpdateSerializer
         else:
             raise MethodNotAllowed(method=self.action)

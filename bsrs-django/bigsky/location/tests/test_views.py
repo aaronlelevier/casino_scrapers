@@ -5,12 +5,12 @@ import uuid
 from rest_framework.test import APITestCase
 from model_mommy import mommy
 
-from contact.models import Address, PhoneNumber, PhoneNumberType
+from contact.models import Address, PhoneNumber, PhoneNumberType, Email
 from contact.tests.factory import create_contact, create_contacts
-from location.tests.factory import create_location_levels, create_locations
+from location.tests.factory import (create_location_levels, create_locations, 
+    LOS_ANGELES, SAN_DIEGO)
 from location.models import Location, LocationLevel, LocationStatus
-from location.serializers import (LocationCreateSerializer,
-    LocationUpdateSerializer)
+from location.serializers import LocationUpdateSerializer
 from person.tests.factory import create_person, create_single_person, create_role, PASSWORD
 from utils import create
 
@@ -422,11 +422,16 @@ class LocationCreateTests(APITestCase):
     def setUp(self):
         create_locations()
         self.location = Location.objects.get(name='ca')
+        self.san_diego = Location.objects.get(name=SAN_DIEGO)
+        self.los_angeles = Location.objects.get(name=LOS_ANGELES)
+        self.ph = create_contact(PhoneNumber, self.location)
+        self.address = create_contact(Address, self.location)
+        self.email = create_contact(Email, self.location)
         # Login
         self.person = create_person()
         self.client.login(username=self.person.username, password=PASSWORD)
         # Data: base data to update unique fields on and POST to test CREATEs
-        serializer = LocationCreateSerializer(self.location)
+        serializer = LocationUpdateSerializer(self.location)
         self.data = serializer.data
 
     def tearDown(self):
@@ -439,6 +444,15 @@ class LocationCreateTests(APITestCase):
         })
         response = self.client.post('/api/admin/locations/', self.data, format='json')
         self.assertEqual(response.status_code, 201)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['phone_numbers'][0]['id'], self.ph.id)
+        self.assertEqual(data['phone_numbers'][0]['number'], self.ph.number)
+        self.assertEqual(data['emails'][0]['id'], self.email.id)
+        self.assertEqual(data['emails'][0]['email'], self.email.email)
+        self.assertEqual(data['addresses'][0]['id'], self.address.id)
+        self.assertEqual(data['children'][1], str(self.san_diego.id))
+        self.assertEqual(data['children'][0], str(self.los_angeles.id))
+        self.assertTrue(data['parents'])
 
     def test_create_unique_for_active_active(self):
         self.assertTrue(self.data['number'])
@@ -588,7 +602,7 @@ class LocationDeleteTests(APITestCase):
         create_locations()
         self.region_location = Location.objects.get(name='east')
         self.district_location = Location.objects.get(name='ca')
-        self.store_location = Location.objects.get(name='san_diego')
+        self.store_location = Location.objects.get(name=SAN_DIEGO)
         # Login
         self.person = create_person()
         self.client.login(username=self.person.username, password=PASSWORD)

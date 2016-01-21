@@ -17,27 +17,25 @@ class BaseCreateSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=False)
 
 
-class NestedContactSerializerMixin(object):
+class NestedCreateContactSerializerMixin(object):
     """
     Updates nested Contact records on a PUT request for a Model.  The Model 
     is generic here because Contacts use a Generic ForeignKey, so doesn't 
     have to be a Person.
     """
-
-    def update(self, instance, validated_data):
+    def create(self, validated_data):
         phone_numbers = validated_data.pop('phone_numbers', [])
         addresses = validated_data.pop('addresses', [])
         emails = validated_data.pop('emails', [])
+        instance = super(NestedCreateContactSerializerMixin, self).create(validated_data)
         # Update Person
         instance = create.update_model(instance, validated_data)
-
         # Create/Update PhoneNumbers
         for contacts, model in [(phone_numbers, PhoneNumber), (addresses, Address),
             (emails, Email)]:
             # Set of all Contact Id's for the Person.  If not in the set() sent 
             # over, will remove the FK reference from the Contact Model of that type.
             contact_ids = set()
-
             for c in contacts:
                 c = copy.copy(c)
                 contact_ids.update([c['id']])
@@ -48,12 +46,44 @@ class NestedContactSerializerMixin(object):
                     create.update_model(contact, c)
                 except model.DoesNotExist:
                     new_contact = model.objects.create(content_object=instance, **c)
-
             # Remove FK Reference if not in Nested Contact Payload
             for m in (model.objects.filter(object_id=instance.id)
                                    .exclude(id__in=[x for x in contact_ids])):
                 m.delete()
+        return instance
 
+class NestedContactSerializerMixin(object):
+    """
+    Updates nested Contact records on a PUT request for a Model.  The Model 
+    is generic here because Contacts use a Generic ForeignKey, so doesn't 
+    have to be a Person.
+    """
+    def update(self, instance, validated_data):
+        phone_numbers = validated_data.pop('phone_numbers', [])
+        addresses = validated_data.pop('addresses', [])
+        emails = validated_data.pop('emails', [])
+        # Update Person
+        instance = create.update_model(instance, validated_data)
+        # Create/Update PhoneNumbers
+        for contacts, model in [(phone_numbers, PhoneNumber), (addresses, Address),
+            (emails, Email)]:
+            # Set of all Contact Id's for the Person.  If not in the set() sent 
+            # over, will remove the FK reference from the Contact Model of that type.
+            contact_ids = set()
+            for c in contacts:
+                c = copy.copy(c)
+                contact_ids.update([c['id']])
+                try:
+                    contact = model.objects.get(id=c['id'])
+                    # Add back ``Person`` and update Contact
+                    c.update({'content_object': instance})
+                    create.update_model(contact, c)
+                except model.DoesNotExist:
+                    new_contact = model.objects.create(content_object=instance, **c)
+            # Remove FK Reference if not in Nested Contact Payload
+            for m in (model.objects.filter(object_id=instance.id)
+                                   .exclude(id__in=[x for x in contact_ids])):
+                m.delete()
         return instance
 
 

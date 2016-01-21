@@ -5,6 +5,11 @@ from model_mommy import mommy
 from location.models import Location, LocationLevel
 from utils.create import _generate_chars
 
+
+SAN_DIEGO = 'san_diego'
+LOS_ANGELES = 'los_angeles'
+
+
 def create_location_levels():
     '''
     ``district_lp`` = district loss prevention
@@ -45,8 +50,8 @@ def create_locations():
     nv = mommy.make(Location, number=_generate_chars(), location_level=district_ll, name='nv')
     # Stores
     store_ll = LocationLevel.objects.get(name='store')
-    san_diego = mommy.make(Location, number=_generate_chars(), location_level=store_ll, name='san_diego')
-    los_angeles = mommy.make(Location, number=_generate_chars(), location_level=store_ll, name='los_angeles')
+    san_diego = mommy.make(Location, number=_generate_chars(), location_level=store_ll, name=SAN_DIEGO)
+    los_angeles = mommy.make(Location, number=_generate_chars(), location_level=store_ll, name=LOS_ANGELES)
     # JOIN's
     company.children.add(east)
     east.children.add(ca)
