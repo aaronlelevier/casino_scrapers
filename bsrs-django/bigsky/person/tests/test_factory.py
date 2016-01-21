@@ -12,7 +12,6 @@ from location.models import Location, LocationLevel
 from location.tests.factory import create_location, create_locations
 from person.models import Person, Role
 from person.tests import factory
-from utils.helpers import generate_uuid
 
 
 class DistrictManagerFactoryTests(TestCase):
@@ -133,17 +132,6 @@ class CreateSinglePersonTests(TestCase):
         person_location = person.locations.first()
         self.assertEqual(person.role.location_level, person_location.location_level)
 
-    def test_generate_uuid(self):
-        incr = Person.objects.count()
-
-        person = factory.create_single_person()
-
-        self.assertIsInstance(person, Person)
-        self.assertEqual(
-            str(person.id),
-            generate_uuid(factory.PERSON_BASE_ID, incr+1)
-        )
-
     def test_validator_only_role(self):
         """
         ``role`` and ``location`` must both be passed in as "kwargs", or 
@@ -213,7 +201,7 @@ class UpdateAdminTests(TestCase):
         response = self.client.post(reverse('login'), {'username': person.username,
             'password': new_password})
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.client.session['_auth_user_id'], person.pk)
+        self.assertEqual(self.client.session['_auth_user_id'], str(person.id))
 
     def test_update_admin(self):
         top_level_location = Location.objects.create_top_level()

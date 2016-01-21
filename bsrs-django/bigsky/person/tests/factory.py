@@ -75,9 +75,6 @@ def create_roles():
     return Role.objects.all()
 
 
-PERSON_BASE_ID = "30f530c4-ce6c-4724-9cfd-37a16e787"
-
-
 def create_single_person(name=None, role=None, location=None):
     args_required_together = [role, location]
     if not all(args_required_together) and any(args_required_together):
@@ -87,8 +84,8 @@ def create_single_person(name=None, role=None, location=None):
     role = role or create_role()
     location = location or create_location(location_level=role.location_level)
 
-    incr = Person.objects.count()
-    id = generate_uuid(PERSON_BASE_ID, incr+1)
+    # incr = Person.objects.count()
+    id = generate_uuid(Person)
 
     try:
         person = Person.objects.get(username=name)

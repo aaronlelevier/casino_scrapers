@@ -7,11 +7,6 @@ from contact.models import (PhoneNumber, PhoneNumberType, Email, EmailType,
 from utils.helpers import generate_uuid
 
 
-PHONE_NUMBER_BASE_ID = "21f530c4-ce6c-4724-9cfd-37a16e787"
-ADDRESS_BASE_ID = "22f530c4-ce6c-4724-9cfd-37a16e787"
-EMAIL_BASE_ID = "23f530c4-ce6c-4724-9cfd-37a16e787"
-
-
 def create_contact(model, content_object):
     """
     `object_id` is a UUID, which `model_mommy` doesn't know how to make,
@@ -35,17 +30,17 @@ def create_contacts(content_object):
 
 def get_create_contact_method(model):
     if model == PhoneNumber:
-        return load_create_contact(model, PHONE_NUMBER_BASE_ID)
+        return load_create_contact(model)
     elif model == Address:
-        return load_create_contact(model, ADDRESS_BASE_ID)
+        return load_create_contact(model)
     elif model == Email:
-        return load_create_contact(model, EMAIL_BASE_ID)
+        return load_create_contact(model)
 
 
-def load_create_contact(model, uuid):
+def load_create_contact(model):
     def create_contact_instance(instance):
         incr = model.objects.count()
-        id = generate_uuid(uuid, incr)
+        id = generate_uuid(model)
         return mommy.make(model, id=id, content_object=instance,
                           object_id=instance.id, _fill_optional=['type'])
     return create_contact_instance

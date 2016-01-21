@@ -1,13 +1,15 @@
 import json
+import uuid
 
+from django.contrib.auth.models import ContentType
 from django.conf import settings
 from django.test import TestCase
 
 from person.models import Role
 from person.tests.factory import create_role
 from utils import choices
-from utils.helpers import (model_to_json, model_to_json_select_related, choices_to_json,
-    generate_uuid)
+from utils.helpers import (BASE_UUID, model_to_json, model_to_json_select_related,
+     choices_to_json, generate_uuid, get_content_type_number)
 
 
 class ModelToJsonTests(TestCase):
@@ -48,26 +50,36 @@ class ModelToJsonTests(TestCase):
 class GenerateUuidTests(TestCase):
 
     def setUp(self):
-        self.id = "27f530c4-ce6c-4724-9cfd-37a16e787000"
-        self.base_id = "27f530c4-ce6c-4724-9cfd-37a16e787"
+        self.id = uuid.UUID("27f"+BASE_UUID+"000")
+        self.model_number = "27f"
         self.init_number = "000"
 
     def test_setup(self):
         self.assertEqual(
-            "{}{}".format(self.base_id, self.init_number),
-            self.id
+            self.id,
+            uuid.UUID("{model_number}{base_id}{init_number}"
+                      .format(model_number=self.model_number, base_id=BASE_UUID,
+                              init_number=self.init_number))
         )
 
-    def test_generate_uuid__first_id(self):
-        # should return ``self.id`` b/c not incrementing it, just returning
-        # the concatenated UUID
-        ret = generate_uuid(self.base_id)
+    def test_get_content_type_number(self):
+        instance = ContentType.objects.get(model='role')
+        raw_number = "{:03d}".format(instance.id)
 
-        self.assertEqual(ret, self.id)
+        ret = get_content_type_number(Role)
 
-    def test_generate_uuid__incr(self):
-        incr = 10
+        self.assertEqual(raw_number, ret)
 
-        ret = generate_uuid(self.base_id, incr=incr)
+    def test_generate_uuid(self):
+        model = Role
+        model_number = get_content_type_number(model)
+        number = "{:03d}".format(model.objects.count()+1)
 
-        self.assertEqual(ret, "{}{:03d}".format(self.base_id, incr))
+        ret = generate_uuid(Role)
+
+        self.assertEqual(
+            uuid.UUID("{model_number}{base_id}{init_number}"
+                      .format(model_number=model_number, base_id=BASE_UUID,
+                              init_number=number)),
+            ret
+        )

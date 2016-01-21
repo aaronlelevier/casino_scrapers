@@ -18,10 +18,6 @@ class FactoryTests(TestCase):
         email = factory.create_contact(Email, person)
 
         self.assertIsInstance(email, Email)
-        self.assertEqual(
-            str(email.id),
-            generate_uuid(factory.EMAIL_BASE_ID)
-        )
         self.assertEqual(str(email.content_object.id), str(person.id))
 
     def test_create_contacts(self):
@@ -49,46 +45,34 @@ class FactoryTests(TestCase):
         self.assertTrue(mock_call.was_called)
 
     def test_create_phone_number(self):
-        incr = 0
-        self.assertEqual(PhoneNumber.objects.count(), incr)
+        self.assertEqual(PhoneNumber.objects.count(), 0)
         person = create_person()
-        base_id = factory.PHONE_NUMBER_BASE_ID
 
         ret = factory.create_contact(PhoneNumber, person)
 
-        self.assertEqual(PhoneNumber.objects.count(), incr+1)
-        self.assertEqual(
-            str(ret.id),
-            generate_uuid(base_id, incr)
-        )
+        self.assertEqual(PhoneNumber.objects.count(), 1)
+        self.assertIsInstance(ret, PhoneNumber)
+        self.assertEqual(ret.content_object, person)
 
     def test_create_address(self):
-        incr = 0
-        self.assertEqual(Address.objects.count(), incr)
+        self.assertEqual(Address.objects.count(), 0)
         person = create_person()
-        base_id = factory.ADDRESS_BASE_ID
 
         ret = factory.create_contact(Address, person)
 
-        self.assertEqual(Address.objects.count(), incr+1)
-        self.assertEqual(
-            str(ret.id),
-            generate_uuid(base_id, incr)
-        )
+        self.assertEqual(Address.objects.count(), 1)
+        self.assertIsInstance(ret, Address)
+        self.assertEqual(ret.content_object, person)
 
     def test_create_email(self):
-        incr = 0
-        self.assertEqual(Email.objects.count(), incr)
+        self.assertEqual(Email.objects.count(), 0)
         person = create_person()
-        base_id = factory.EMAIL_BASE_ID
 
         ret = factory.create_contact(Email, person)
 
-        self.assertEqual(Email.objects.count(), incr+1)
-        self.assertEqual(
-            str(ret.id),
-            generate_uuid(base_id, incr)
-        )
+        self.assertEqual(Email.objects.count(), 1)
+        self.assertIsInstance(ret, Email)
+        self.assertEqual(ret.content_object, person)
 
     def test_create_phone_number_type(self):
         ret = factory.create_phone_number_type()

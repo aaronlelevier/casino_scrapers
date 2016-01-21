@@ -194,7 +194,7 @@ class TicketActivityTests(TestCase):
 
         self.assertIsInstance(ticket_activity, TicketActivity)
         self.assertEqual(ticket_activity.ticket.id, self.ticket.id)
-        self.assertEqual(ticket_activity.content['0'], self.person.id)
+        self.assertEqual(ticket_activity.content['0'], str(self.person.id))
 
 
 class TicketCategoryOrderingTests(TicketCategoryOrderingSetupMixin, TestCase):

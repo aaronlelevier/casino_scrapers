@@ -3,12 +3,7 @@ import random
 
 from category.models import Category, CATEGORY_STATUSES, CategoryStatus
 from utils.create import random_lorem
-from utils.helpers import generate_uuid, generate_uuid_from_model
-
-
-CATEGORY_BASE_ID = "24f530c4-ce6c-4724-9cfd-37a16e787"
-
-TOP_LEVEL_CATEGORIES = ['repair', 'Building', 'IT', 'Store Operations']
+from utils.helpers import generate_uuid
 
 
 def create_single_category(name=None, parent=None):
@@ -93,7 +88,7 @@ def create_categories():
 
         if data['parent_id'] is None:
             Category.objects.create(
-                id=generate_uuid_from_model(Category, CATEGORY_BASE_ID),
+                id=generate_uuid(Category),
                 description=str(data['id']),
                 name=data['name'],
                 label=data['label'],
@@ -105,7 +100,7 @@ def create_categories():
             except Category.DoesNotExist:
                 parent = Category.objects.get(description=data['parent_id']) # data['4] == parent_id
                 Category.objects.create(
-                    id=generate_uuid_from_model(Category, CATEGORY_BASE_ID),
+                    id=generate_uuid(Category),
                     description=str(data['id']),
                     name=data['name'],
                     label=data['label'],
@@ -116,14 +111,11 @@ def create_categories():
     return Category.objects.all()
 
 
-CATEGORY_STATUS_BASE_ID = "20f530c4-ce6c-4724-9cfd-37a16e787"
-
-
 def create_category_statuses():
     statuses = []
 
-    for i, status in enumerate(CATEGORY_STATUSES):
-        id = generate_uuid(CATEGORY_STATUS_BASE_ID, incr=i)
+    for status in CATEGORY_STATUSES:
+        id = generate_uuid(CategoryStatus)
         
         try:
             cs = CategoryStatus.objects.get(name=status)

@@ -23,8 +23,6 @@ def construct_tree(category, tree):
     return tree
 
 
-TICKET_BASE_ID = "40f530c4-ce6c-4724-9cfd-37a16e787"
-
 def _create_ticket(request=None, assignee=None):
     people = Person.objects.all()
 
@@ -43,8 +41,7 @@ def _create_ticket(request=None, assignee=None):
     if 'test' in sys.argv:
         id = uuid.uuid4()
     else:
-        incr = Ticket.objects.count()
-        id = generate_uuid(TICKET_BASE_ID, incr+1)
+        id = generate_uuid(Ticket)
 
     ticket = Ticket.objects.create(id=id, **kwargs)
     cc = random.choice(people)
@@ -95,12 +92,8 @@ def create_extra_ticket_with_categories():
     seven.categories.add(a_locks)
 
 
-TICKET_STATUS_BASE_ID = "def11673-d4ab-41a6-a37f-0c6846b96"
-
-
 def create_ticket_status(name=None):
-    incr = TicketStatus.objects.count()
-    id = generate_uuid(TICKET_STATUS_BASE_ID, incr+1)
+    id = generate_uuid(TicketStatus)
 
     if not name:
         name = random.choice(TICKET_STATUSES)
@@ -117,12 +110,8 @@ def create_ticket_statuses():
     return [create_ticket_status(s) for s in TICKET_STATUSES]
 
 
-TICKET_PRIORITY_BASE_ID = "def21673-d4ab-41a6-a37f-0c6846b96"
-
-
 def create_ticket_priority(name=None):
-    incr = TicketPriority.objects.count()
-    id = generate_uuid(TICKET_PRIORITY_BASE_ID, incr+1)
+    id = generate_uuid(TicketPriority)
 
     if not name:
         name = random.choice(TICKET_PRIORITIES)

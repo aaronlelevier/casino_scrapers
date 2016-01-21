@@ -40,18 +40,16 @@ class CategoryTests(TransactionTestCase):
     def setUp(self):
         self.statuses = factory.create_category_statuses()
 
-        incr = Category.objects.count()
         self.type = mommy.make(
             Category,
-            id=generate_uuid(factory.CATEGORY_BASE_ID, incr),
+            id=generate_uuid(Category),
             name='repair',
             subcategory_label='trade'
         )
 
-        incr = Category.objects.count()
         self.trade = mommy.make(
             Category,
-            id=generate_uuid(factory.CATEGORY_BASE_ID, incr+1),
+            id=generate_uuid(Category),
             name='plumbing',
             subcategory_label='issue',
             parent=self.type
@@ -69,14 +67,6 @@ class CategoryTests(TransactionTestCase):
 
     def test_children(self):
         self.assertTrue(self.trade.children)
-
-    def test_category_status_base_id(self):
-        incr = 1
-
-        self.assertEqual(
-            str(self.statuses[incr].id),
-            generate_uuid(factory.CATEGORY_STATUS_BASE_ID, incr)
-        )
 
     def test_create_category_statuses(self):
         statuses = factory.create_category_statuses()
