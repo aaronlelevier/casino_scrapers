@@ -303,14 +303,20 @@ class PersonTests(TestCase):
         Tests that a full Location object is being returned, which will later 
         be used by a DRF serializer in the Person-Current Bootstrapped data.
         """
-        locations = self.person.all_locations_and_children()
-        location = locations[0]
-        self.assertIsInstance(location, Location)
+        data = self.person.all_locations_and_children()
+        self.assertIsInstance(data[0], dict)
+        db_location = Location.objects.get(id=data[0]['id'])
+        self.assertEqual(str(db_location.id), data[0]['id'])
+        self.assertEqual(db_location.name, data[0]['name'])
+        self.assertEqual(str(db_location.location_level.id), data[0]['location_level'])
+        self.assertEqual(str(db_location.status.id), data[0]['status'])
 
     def test_all_role_categories_and_children(self):
-        ret = self.person.all_role_categories_and_children()
-        self.assertIsInstance(ret[0], str)
-        self.assertIsInstance(Category.objects.get(id=ret[0]), Category)
+        data = self.person.all_role_categories_and_children()
+        self.assertIsInstance(data[0], dict)
+        db_category = Category.objects.get(id=data[0]['id'])
+        self.assertEqual(str(db_category.id), data[0]['id'])
+        self.assertEqual(db_category.name, data[0]['name'])
 
 
 ### PASSWORD

@@ -355,8 +355,7 @@ class Person(BaseModel, AbstractUser):
             'employee_id': self.employee_id,
             'locale': str(self.locale.id if self.locale else self._get_locale(locale)),
             'role': str(self.role.id),
-            'all_locations_and_children': [{'id': str(x.id), 'name': x.name, 'location_level': str(x.location_level.id), 'status': str(x.status.id) }
-                                          for x in self.all_locations_and_children()],
+            'all_locations_and_children': self.all_locations_and_children(),
             'all_role_categories_and_children': self.all_role_categories_and_children(),
         }
 
@@ -452,10 +451,13 @@ class Person(BaseModel, AbstractUser):
 
     def all_locations_and_children(self):
         ids = self.locations.objects_and_their_children()
-        return Location.objects.filter(id__in=ids)
+        return [{'id': str(x.id), 'name': x.name, 'location_level': str(x.location_level.id), 'status': str(x.status.id)}
+               for x in Location.objects.filter(id__in=ids)]
 
     def all_role_categories_and_children(self):
-        return [str(x) for x in self.role.categories.objects_and_their_children()]
+        ids = self.role.categories.objects_and_their_children()
+        return [{'id': str(x.id), 'name': x.name}
+               for x in Category.objects.filter(id__in=ids)]
 
 
 @receiver(post_save, sender=Person)
