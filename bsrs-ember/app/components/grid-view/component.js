@@ -26,7 +26,7 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
     searched_content: Ember.computed('find', 'sort', 'page', 'search', 'model.[]', function() {
         const search = this.get('search') ? this.get('search').trim() : '';
         const regex = new RegExp(search);
-        const columns = this.get('searchable') || this.get('columns').filter(function(c) {
+        const columns = this.get('columns').filter(function(c) {
             return c.isSearchable;
         }).map(function(c) {
             return c.field;
