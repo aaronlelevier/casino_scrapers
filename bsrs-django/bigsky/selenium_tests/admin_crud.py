@@ -153,34 +153,35 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         ll_option = self.driver.find_element_by_class_name("ember-power-select-option--highlighted")
         ll_option.click()
 
-        old_phone_one = "222-999-7878"
-        old_phone_two = "222-999-7899"
-        old_street_one = "001 Tourmaline St"
-        old_street_two = "32 Bunny Road"
-        old_city_one = "London"
-        old_city_two = "Washington DC"
-        old_zip_one = "45322"
-        old_zip_two = "34332-4545"
-        old_email_one = "andy@wat.com"
-        old_email_two = "wat@foo.com"
-        # Fill in Contact data
-        add_phone_number_btn = self.gen_elem_page.find_add_btn()
-        add_phone_number_btn.click()
-        location_page.find_ph_new_entry_send_keys(old_phone_one)
-        add_phone_number_btn.click()
-        all_phone_number_inputs = location_page.find_all_ph_new_entries()
-        last_phone_number_input = all_phone_number_inputs[1]
-        last_phone_number_input.send_keys(old_phone_two)
-        add_location_email_btn = self.gen_elem_page.find_add_email_btn()
-        add_location_email_btn.click()
-        location_page.find_email_new_entry_send_keys(old_email_one)
-        add_location_email_btn.click()
-        location_page.find_second_email_new_entry_send_keys(old_email_two)
-        add_address_btn = self.gen_elem_page.find_add_address_btn()
-        add_address_btn.click()
-        location_page.find_address_new_entry_send_keys(1, old_street_one, old_city_one, old_zip_one)
-        add_address_btn.click()
-        location_page.find_address_new_entry_send_keys(2, old_street_two, old_city_two, old_zip_two)
+        # old_phone_one = "222-999-7878"
+        # old_phone_two = "222-999-7899"
+        # old_street_one = "001 Tourmaline St"
+        # old_street_two = "32 Bunny Road"
+        # old_city_one = "London"
+        # old_city_two = "Washington DC"
+        # old_zip_one = "45322"
+        # old_zip_two = "34332-4545"
+        # old_email_one = "andy@wat.com"
+        # old_email_two = "wat@foo.com"
+        # # Fill in Contact data
+        # add_phone_number_btn = self.gen_elem_page.find_add_btn()
+        # add_phone_number_btn.click()
+        # location_page.find_ph_new_entry_send_keys(old_phone_one)
+        # add_phone_number_btn.click()
+        # all_phone_number_inputs = location_page.find_all_ph_new_entries()
+        # last_phone_number_input = all_phone_number_inputs[1]
+        # last_phone_number_input.send_keys(old_phone_two)
+        # add_location_email_btn = self.gen_elem_page.find_add_email_btn()
+        # add_location_email_btn.click()
+        # location_page.find_email_new_entry_send_keys(old_email_one)
+        # add_location_email_btn.click()
+        # location_page.find_second_email_new_entry_send_keys(old_email_two)
+        # add_address_btn = self.gen_elem_page.find_add_address_btn()
+        # add_address_btn.click()
+        # location_page.find_address_new_entry_send_keys(1, old_street_one, old_city_one, old_zip_one)
+        # add_address_btn.click()
+        # location_page.find_address_new_entry_send_keys(2, old_street_two, old_city_two, old_zip_two)
+
         # location_level_input = Select(self.driver.find_element_by_id("location_location_level_select"))
         # location_level_input.select_by_index(1)
         self.gen_elem_page.click_save_btn()
