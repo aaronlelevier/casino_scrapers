@@ -58,10 +58,10 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.wait_for_xhr_request("t-sort-username-dir").click()
         self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual(self.lorem[-1], usernames[1].text)
+        self.assertEqual(self.lorem[0], usernames[0].text)
         self.wait_for_xhr_request("t-sort-username-dir").click()
         titles = self.wait_for_xhr_request("t-person-title", plural=True)
-        self.assertEqual(self.lorem[0], titles[0].text)
+        self.assertEqual(self.lorem[-1], titles[1].text)
 
     def test_search_input(self):
         people = self.wait_for_xhr_request("t-grid-data", plural=True)
