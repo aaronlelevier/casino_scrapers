@@ -121,12 +121,12 @@ class PersonDetailSerializer(serializers.ModelSerializer):
 class PersonCurrentSerializer(PersonDetailSerializer):
 
     all_locations_and_children = LocationIdNameOnlySerializer(many=True)
-    all_role_categories_and_children = CategoryIDNameOnlySerializer(many=True)
+    categories = CategoryIDNameOnlySerializer(many=True)
 
     class Meta:
         model = Person
         fields = PERSON_DETAIL_FIELDS + ('all_locations_and_children',
-                                         'all_role_categories_and_children',)
+                                         'categories',)
 
 
 class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSerializerMixin,

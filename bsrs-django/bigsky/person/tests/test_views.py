@@ -398,14 +398,14 @@ class PersonDetailTests(TestCase):
             [str(x['id']) for x in data['all_locations_and_children']]
         )
 
-    def test_current__all_role_categories_and_children(self):
+    def test_categories(self):
         parent_category = self.person.role.categories.first()
 
         response = self.client.get('/api/admin/people/current/'.format(self.person.id))
         data = json.loads(response.content.decode('utf8'))
 
-        self.assertEqual(1, len(data['all_role_categories_and_children']))
-        category_data = data['all_role_categories_and_children'][0]
+        self.assertEqual(1, len(data['categories']))
+        category_data = data['categories'][0]
         self.assertEqual(category_data['id'], str(parent_category.id))
         self.assertEqual(category_data['name'], parent_category.name)
 

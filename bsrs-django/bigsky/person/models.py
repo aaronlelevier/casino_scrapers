@@ -356,7 +356,7 @@ class Person(BaseModel, AbstractUser):
             'locale': str(self.locale.id if self.locale else self._get_locale(locale)),
             'role': str(self.role.id),
             'all_locations_and_children': self.all_locations_and_children(),
-            'all_role_categories_and_children': self.all_role_categories_and_children(),
+            'categories': self.categories(),
         }
 
     def to_simple_dict(self):
@@ -454,10 +454,8 @@ class Person(BaseModel, AbstractUser):
         return [{'id': str(x.id), 'name': x.name, 'location_level': str(x.location_level.id), 'status': str(x.status.id)}
                for x in Location.objects.filter(id__in=ids)]
 
-    def all_role_categories_and_children(self):
-        ids = self.role.categories.objects_and_their_children()
-        return [{'id': str(x.id), 'name': x.name}
-               for x in Category.objects.filter(id__in=ids)]
+    def categories(self):
+        return [{'id': str(x.id), 'name': x.name} for x in self.role.categories.all()]
 
 
 @receiver(post_save, sender=Person)

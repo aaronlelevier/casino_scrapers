@@ -311,8 +311,14 @@ class PersonTests(TestCase):
         self.assertEqual(str(db_location.location_level.id), data[0]['location_level'])
         self.assertEqual(str(db_location.status.id), data[0]['status'])
 
-    def test_all_role_categories_and_children(self):
-        data = self.person.all_role_categories_and_children()
+    def test_categories(self):
+        # also confirms no child categories are being returned
+        category = self.person.role.categories.first()
+        create_single_category(parent=category)
+
+        data = self.person.categories()
+
+        self.assertEqual(1, len(data))
         self.assertIsInstance(data[0], dict)
         db_category = Category.objects.get(id=data[0]['id'])
         self.assertEqual(str(db_category.id), data[0]['id'])
