@@ -16,6 +16,7 @@ module('unit: parent-ticket-category-select component test', {
     }
 });
 
+//TODO: change_category_tree should just pass plain JS object
 test('component is not valid when the only category (on the ticket model) has children', (assert) => {
     ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
     category_one = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent_id: CATEGORY_DEFAULTS.idTwo, children_fks: []});
@@ -25,15 +26,15 @@ test('component is not valid when the only category (on the ticket model) has ch
     assert.equal(ticket.get('categories').get('length'), 0);
     let valid = subject.get('valid');
     assert.equal(valid, false);
-    ticket.change_category_tree(category_three.get('id'));
+    ticket.change_category_tree(category_three);
     assert.equal(ticket.get('categories').get('length'), 1);
     valid = subject.get('valid');
     assert.equal(valid, false);
-    ticket.change_category_tree(category_two.get('id'));
+    ticket.change_category_tree(category_two);
     assert.equal(ticket.get('categories').get('length'), 2);
     valid = subject.get('valid');
     assert.equal(valid, false);
-    ticket.change_category_tree(category_one.get('id'));
+    ticket.change_category_tree(category_one);
     assert.equal(ticket.get('categories').get('length'), 3);
     assert.equal(category_three.get('has_many_children').get('length'), 1);
     assert.equal(category_two.get('has_many_children').get('length'), 1);
@@ -51,16 +52,16 @@ test('sorted categories will start with the parent and end with the leaf child c
     assert.equal(ticket.get('categories').get('length'), 0);
     let valid = subject.get('valid');
     assert.equal(valid, false);
-    ticket.change_category_tree(category_three.get('id'));
+    ticket.change_category_tree(category_three);
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.equal(ticket.get('sorted_categories').get('length'), 1);
     assert.equal(ticket.get('sorted_categories').objectAt(0).get('id'), category_three.get('id'));
-    ticket.change_category_tree(category_two.get('id'));
+    ticket.change_category_tree(category_two);
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.equal(ticket.get('sorted_categories').get('length'), 2);
     assert.equal(ticket.get('sorted_categories').objectAt(0).get('id'), category_three.get('id'));
     assert.equal(ticket.get('sorted_categories').objectAt(1).get('id'), category_two.get('id'));
-    ticket.change_category_tree(category_one.get('id'));
+    ticket.change_category_tree(category_one);
     assert.equal(ticket.get('categories').get('length'), 3);
     assert.equal(ticket.get('sorted_categories').get('length'), 3);
     assert.equal(ticket.get('sorted_categories').objectAt(0).get('id'), category_three.get('id'));

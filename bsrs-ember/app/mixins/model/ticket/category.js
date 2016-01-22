@@ -94,16 +94,18 @@ var CategoriesMixin = Ember.Mixin.create({
             });
         });
     },
-    change_category_tree(category_pk) {
-        let parent_ids = this.find_parent_nodes(category_pk);
+    change_category_tree(category) {
         const store = this.get('store');
+        const pushed_category = store.push('category', category);
+        const category_pk = pushed_category.get('id');
+        const parent_ids = this.find_parent_nodes(category_pk);
         const ticket_pk = this.get('id');
         //remove all m2m join models that don't relate to this category pk
         const m2m_models = this.get('ticket_categories').filter((m2m) => {
             return m2m.get('ticket_pk') === ticket_pk && Ember.$.inArray(m2m.get('category_pk'), parent_ids) === -1;
         });
         m2m_models.forEach((m2m) => {
-            run(function() {
+            run(() => {
                 store.push('ticket-category', {id: m2m.get('id'), removed: true});
             });
         });
@@ -111,11 +113,11 @@ var CategoriesMixin = Ember.Mixin.create({
             return m2m.get('ticket_pk') === ticket_pk && category_pk === m2m.get('category_pk') && m2m.get('removed') === true;
         }).objectAt(0); 
         if (matching_m2m) {
-            run(function() {
+            run(() => {
                 store.push('ticket-category', {id: matching_m2m.get('id'), removed: undefined});
             });
         }else{
-            run(function() {
+            run(() => {
                 store.push('ticket-category', {id: Ember.uuid(), ticket_pk: ticket_pk, category_pk: category_pk});
             });
         }
@@ -123,7 +125,7 @@ var CategoriesMixin = Ember.Mixin.create({
     add_category(category_pk) {
         const ticket_pk = this.get('id');
         const store = this.get('store');
-        run(function() {
+        run(() => {
             store.push('ticket-category', {id: Ember.uuid(), ticket_pk: ticket_pk, category_pk: category_pk});
         });
     },
@@ -132,7 +134,7 @@ var CategoriesMixin = Ember.Mixin.create({
         let m2m_pk = this.get('ticket_categories').filter((m2m) => {
             return m2m.get('category_pk') === category_pk;
         }).objectAt(0).get('id');
-        run(function() {
+        run(() => {
             store.push('ticket-category', {id: m2m_pk, removed: true});
         });
     },

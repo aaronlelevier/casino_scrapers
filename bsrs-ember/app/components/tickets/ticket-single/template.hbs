@@ -24,7 +24,7 @@
                                     <span class="create-date" title="{{moment-format model.created 'dddd, MMMM Do YYYY, h:mm:ss a z'}}">{{t 'ticket.created' requester=model.requester timestamp=(moment-from-now model.created)}}</span>
                                 </div>
                                 <div class="col-md-12">
-                                    {{#parent-ticket-category-select ticket=model top_level_category_options=top_level_category_options as |child_valid|}}
+                                    {{#parent-ticket-category-select ticket=model as |child_valid|}}
                                     <span class="validation validation-under category-validation-error t-category-validation-error {{child-validation submitted child_valid}}">invalid category</span>
                                     {{/parent-ticket-category-select}}
                                 </div>

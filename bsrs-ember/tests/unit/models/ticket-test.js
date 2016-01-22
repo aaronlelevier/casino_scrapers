@@ -523,13 +523,13 @@ test('changing top level category will reset category tree', (assert) => {
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
-    store.push('category', {id: CD.unusedId, parent_id: null});
+    const unused = {id: CD.unusedId, parent_id: null};
     ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
     assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
-    ticket.change_category_tree(CD.unusedId);
+    ticket.change_category_tree(unused);
     assert.equal(ticket.get('categories.length'), 1);
     assert.equal(ticket.get('top_level_category').get('id'), CD.unusedId);
 });
@@ -594,7 +594,7 @@ test('rollback categories will also restore the category tree (when top node cha
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
-    store.push('category', {id: CD.unusedId, parent_id: null});
+    const unused = {id: CD.unusedId, parent_id: null};
     ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
@@ -602,7 +602,7 @@ test('rollback categories will also restore the category tree (when top node cha
     assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    ticket.change_category_tree(CD.unusedId);
+    ticket.change_category_tree(unused);
     assert.equal(ticket.get('categories.length'), 1);
     assert.equal(ticket.get('top_level_category').get('id'), CD.unusedId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
@@ -622,7 +622,7 @@ test('rollback categories will also restore the category tree (when middle node 
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
-    store.push('category', {id: CD.unusedId, parent_id: CD.idTwo});
+    const unused = {id: CD.unusedId, parent_id: CD.idTwo};
     ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
@@ -630,7 +630,7 @@ test('rollback categories will also restore the category tree (when middle node 
     assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    ticket.change_category_tree(CD.unusedId);
+    ticket.change_category_tree(unused);
     assert.equal(ticket.get('categories.length'), 2);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idTwo);
@@ -652,7 +652,7 @@ test('rollback categories will also restore the category tree (when leaf node ch
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
-    store.push('category', {id: CD.unusedId, parent_id: CD.idOne});
+    const unused = {id: CD.unusedId, parent_id: CD.idOne};
     ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
@@ -660,7 +660,7 @@ test('rollback categories will also restore the category tree (when leaf node ch
     assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    ticket.change_category_tree(CD.unusedId);
+    ticket.change_category_tree(unused);
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idOne);
@@ -685,14 +685,14 @@ test('category names computed will return a string of each category name in orde
     store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo, children_fks: []});
     store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId, children_fks: [CD.idOne]});
     store.push('category', {id: CD.idThree, name: CD.nameThree, parent_id: null, children_fks: [CD.idTwo]});
-    store.push('category', {id: CD.unusedId, name: 'unused', parent_id: null, children_fks: []});
+    const unused = {id: CD.unusedId, name: 'unused', parent_id: null, children_fks: []};
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('sorted_categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('sorted_categories').objectAt(1).get('id'), CD.idTwo);
     assert.equal(ticket.get('sorted_categories').objectAt(2).get('id'), CD.idOne);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idThree);
     assert.equal(ticket.get('category_names'), 'Loss Prevention &#8226; Electrical &#8226; Repair');
-    ticket.change_category_tree(CD.unusedId);
+    ticket.change_category_tree(unused);
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.equal(ticket.get('sorted_categories').get('length'), 1);
     assert.equal(ticket.get('top_level_category').get('id'), CD.unusedId);

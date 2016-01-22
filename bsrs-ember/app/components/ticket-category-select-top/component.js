@@ -21,17 +21,29 @@ var TicketCategories = Ember.Component.extend({
         }
     }),
     options: Ember.computed('ticket_category_options.[]', function() {
-        let options = this.get('ticket_category_options');
+        const options = this.get('ticket_category_options');
         if (options && options.get('length') > 0) {
             return options;
         }
     }),
     actions: {
         selected(category) {
-            let ticket = this.get('ticket');
+            const ticket = this.get('ticket');
+            const category_id = category.id;
+            //TODO: need to prevent select same b/c plain JS vs hydrated obj
+            if(category_id === ticket.get('top_level_category.id')){ 
+                return;
+            }
             ticket.change_category_tree(category);
-            this.sendAction('selected_category', category);
+            this.sendAction('selected_category_top', category);
         },
+        handleOpen() {
+            const url = CATEGORY_URL + 'parents/';
+            const _this = this;
+            PromiseMixin.xhr(url, 'GET').then((response) => {
+                _this.set('options', response.results);
+            });
+        }
     }
 });
 

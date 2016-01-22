@@ -1,4 +1,4 @@
-{{ticket-category-select ticket=ticket selection=ticket.top_level_category ticket_category_options=top_level_category_options selected_category="selected_category"}}
+{{ticket-category-select-top ticket=ticket selection=ticket.top_level_category selected_category_top="selected_category_top"}}
 
 {{#each ticket.sorted_categories as |category index|}}
   {{#if category.has_many_children}}

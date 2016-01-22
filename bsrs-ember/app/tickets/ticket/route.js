@@ -39,7 +39,6 @@ var TicketSingleRoute = TabRoute.extend({
         let ticket = repository.fetch(pk);
         const statuses = this.get('statuses');
         const priorities = this.get('priorities');
-        const top_level_category_options = this.get('top_level_category_options');
         if (!ticket.get('content') || ticket.get('isNotDirtyOrRelatedNotDirty')) { 
             //NOTE: if not dirty on search change, then will bring in new data
             ticket = repository.findById(pk);
@@ -49,7 +48,6 @@ var TicketSingleRoute = TabRoute.extend({
             model: ticket,
             statuses: statuses,
             priorities: priorities,
-            top_level_category_options: top_level_category_options,
             activities: activities
         };
     },
@@ -57,7 +55,6 @@ var TicketSingleRoute = TabRoute.extend({
         controller.set('model', hash.model);
         controller.set('statuses', hash.statuses);
         controller.set('priorities', hash.priorities);
-        controller.set('top_level_category_options', hash.top_level_category_options);
         controller.set('activities', hash.activities);
     },
 });

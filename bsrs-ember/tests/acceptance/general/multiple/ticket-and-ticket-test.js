@@ -38,7 +38,6 @@ test('rolling back should have no effect on another open tickets dirty status', 
         assert.equal(currentURL(), TICKET_LIST_URL);
     });
     ajax(`${PREFIX}${TICKET_ONE_DETAIL_URL}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
-    ajax(TOP_LEVEL_CATEGORIES_URL, 'GET', null, {}, 200, CF.top_level());
     ajax(TICKET_ACTIVITIES_ONE_URL, 'GET', null, {}, 200, TA_FIXTURES.empty());
     click('.t-grid-data:eq(0)');
     andThen(() => {

@@ -30,16 +30,13 @@ test('categories_selected will always return the correct category object based o
     let subject_one = TicketCategories.create({ticket: ticket, index: undefined});
     let subject_two = TicketCategories.create({ticket: ticket, index: 1});
     let subject_three = TicketCategories.create({ticket: ticket, index: 2});
-
     assert.equal(ticket.get('categories').get('length'), 0);
     assert.equal(subject_one.get('categories_selected'), undefined);
     assert.equal(subject_two.get('categories_selected'), undefined);
     assert.equal(subject_three.get('categories_selected'), undefined);
     assert.equal(ticket.get('ticket_categories').get('length'), 0);
     assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 0);
-
-    ticket.change_category_tree(category_top_level.get('id'));
-
+    ticket.change_category_tree(category_top_level);
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.equal(ticket.get('sorted_categories').get('length'), 1);
     assert.equal(ticket.get('sorted_categories').objectAt(0).get('id'), category_top_level.get('id'));
@@ -48,9 +45,7 @@ test('categories_selected will always return the correct category object based o
     assert.equal(subject_three.get('categories_selected'), undefined);
     assert.equal(ticket.get('ticket_categories').get('length'), 1);
     assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 1);
-
-    ticket.change_category_tree(category_two.get('id'));
-
+    ticket.change_category_tree(category_two);
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.equal(ticket.get('sorted_categories').get('length'), 2);
     assert.equal(ticket.get('sorted_categories').objectAt(0).get('id'), category_top_level.get('id'));
@@ -60,9 +55,7 @@ test('categories_selected will always return the correct category object based o
     assert.equal(subject_three.get('categories_selected'), undefined);
     assert.equal(ticket.get('ticket_categories').get('length'), 2);
     assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 2);
-
-    ticket.change_category_tree(category_one.get('id'));
-
+    ticket.change_category_tree(category_one);
     assert.equal(ticket.get('categories').get('length'), 3);
     assert.equal(ticket.get('sorted_categories').get('length'), 3);
     assert.equal(ticket.get('sorted_categories').objectAt(0).get('id'), category_top_level.get('id'));
@@ -73,10 +66,8 @@ test('categories_selected will always return the correct category object based o
     assert.equal(subject_three.get('categories_selected').get('id'), category_one.get('id'));
     assert.equal(ticket.get('ticket_categories').get('length'), 3);
     assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 3);
-
     //select rando in place of category_two
-    ticket.change_category_tree(category_rando.get('id'));
-
+    ticket.change_category_tree(category_rando);
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.equal(ticket.get('sorted_categories').get('length'), 2);
     assert.equal(ticket.get('sorted_categories').objectAt(0).get('id'), category_top_level.get('id'));
@@ -86,9 +77,7 @@ test('categories_selected will always return the correct category object based o
     assert.equal(subject_three.get('categories_selected'), undefined);
     assert.equal(ticket.get('ticket_categories').get('length'), 2);
     assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 4);
-
-    ticket.change_category_tree(category_two.get('id'));
-
+    ticket.change_category_tree(category_two);
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.equal(ticket.get('sorted_categories').get('length'), 2);
     assert.equal(ticket.get('sorted_categories').objectAt(0).get('id'), category_top_level.get('id'));

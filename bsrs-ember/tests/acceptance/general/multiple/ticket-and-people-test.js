@@ -56,7 +56,6 @@ test('clicking between person detail and ticket detail will not dirty the active
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
     ajax(`${PREFIX}${TICKET_DETAIL_URL}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
-    ajax(TOP_LEVEL_CATEGORIES_URL, 'GET', null, {}, 200, CF.top_level());
     ajax(TICKET_ACTIVITIES_URL, 'GET', null, {}, 200, TA_FIXTURES.empty());
     click('.t-grid-data:eq(0)');
     andThen(() => {

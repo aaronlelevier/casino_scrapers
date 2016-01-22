@@ -44,8 +44,6 @@ module('Acceptance | ticket activity test', {
         endpoint = `${PREFIX}${BASE_URL}/`;
         detail_data = TF.detail(TD.idOne);
         detail_xhr = ajax(endpoint + TD.idOne + '/', 'GET', null, {}, 200, detail_data);
-        let top_level_categories_endpoint = `${PREFIX}/admin/categories/parents/`;
-        top_level_xhr = ajax(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
     },
     afterEach() {
         Ember.run(application, 'destroy');
