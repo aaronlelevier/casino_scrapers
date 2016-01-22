@@ -548,21 +548,6 @@ class PersonPutTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertIn(str(location.id), [l for l in data['locations']])
 
-    def test_location_level_not_equal_init_role(self):
-        # create separate LocationLevel
-        location_level = mommy.make(LocationLevel)
-        location = mommy.make(Location, location_level=location_level)
-        self.assertNotEqual(self.person.role.location_level, location_level)
-        # Adding a non authorized LocationLevel Location raises an error
-        self.data['locations'].append(str(location.id))
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
-            self.data, format='json')
-        self.assertEqual(response.status_code, 400)
-        self.assertNotIn(
-            location.id,
-            Person.objects.get(id=self.data['id']).locations.values_list('id', flat=True)
-            )
-
     def test_location_level_equal_new_role(self):
         # create separate LocationLevel
         location_level = mommy.make(LocationLevel)
@@ -577,22 +562,6 @@ class PersonPutTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(data['locations'])
         self.assertIn(
-            location.id,
-            Person.objects.get(id=self.data['id']).locations.values_list('id', flat=True)
-            )
-
-    def test_location_level_not_equal_new_role(self):
-        location = mommy.make(Location, location_level=self.person.role.location_level)
-        self.data['locations'].append(str(location.id))
-        # Assign new Role w/ a different LocationLevel
-        location_level = mommy.make(LocationLevel)
-        new_role = mommy.make(Role, name='new', location_level=location_level)
-        self.data['role'] = str(new_role.id)
-        # Adding a non authorized LocationLevel Location raises an error
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
-            self.data, format='json')
-        self.assertEqual(response.status_code, 400)
-        self.assertNotIn(
             location.id,
             Person.objects.get(id=self.data['id']).locations.values_list('id', flat=True)
             )
