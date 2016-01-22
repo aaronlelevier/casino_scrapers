@@ -281,7 +281,7 @@ test('multiple sort options appear in the query string as expected', function(as
 });
 
 test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', function(assert) {
-    var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=priority__name,request';
+    var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=request';
     xhr(sort_four ,"GET",null,{},200,TF.sorted('priority,request'));
     var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-priority__name,request';
     xhr(sort_three ,"GET",null,{},200,TF.sorted('-priority,request'));
@@ -324,11 +324,11 @@ test('clicking the same sort option over and over will flip the direction and re
     });
     click(SORT_PRIORITY_DIR);
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?sort=priority.translated_name%2Crequest');
+        assert.equal(currentURL(),TICKET_URL + '?sort=request');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-request-dir').hasClass('fa-sort-asc'));
-        assert.ok(find(SORT_PRIORITY_DIR).hasClass('fa-sort-asc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
+        assert.ok(!find(SORT_PRIORITY_DIR).hasClass('fa-sort-asc'));
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestLastGrid);
     });
     click('.t-reset-grid');
     andThen(() => {
