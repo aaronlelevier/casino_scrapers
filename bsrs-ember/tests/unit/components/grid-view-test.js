@@ -147,11 +147,20 @@ test('searched content allows you to look through searchable keys and filter acc
     assert.equal(people.get('length'), 2);
     assert.equal(people.objectAt(0).get('id'), 2);
     assert.equal(people.objectAt(1).get('id'), 3);
-    // subject.set('search', 'n ');  //TRIM!
-    // people = subject.get('searched_content');
-    // assert.equal(people.get('length'), 2);
-    // assert.equal(people.objectAt(0).get('id'), 2);
-    // assert.equal(people.objectAt(1).get('id'), 3);
+    subject.set('search', 'n ');
+    people = subject.get('searched_content');
+    assert.equal(people.get('length'), 4);
+    assert.equal(people.objectAt(0).get('id'), 4);
+    assert.equal(people.objectAt(1).get('id'), 1);
+    assert.equal(people.objectAt(2).get('id'), 2);
+    assert.equal(people.objectAt(3).get('id'), 3);
+    subject.set('search', 'N');
+    people = subject.get('searched_content');
+    assert.equal(people.get('length'), 4);
+    assert.equal(people.objectAt(0).get('id'), 4);
+    assert.equal(people.objectAt(1).get('id'), 1);
+    assert.equal(people.objectAt(2).get('id'), 2);
+    assert.equal(people.objectAt(3).get('id'), 3);
 });
 
 test('found content allows you to look through searchable keys and filter accordingly', (assert) => {
