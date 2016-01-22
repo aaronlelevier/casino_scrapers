@@ -12,6 +12,13 @@ CATEGORY_FIELDS = ('id', 'name', 'description', 'label',
 
 # Leaf Node
 
+class CategoryIDNameOnlySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name',)
+
+
 class CategoryIDNameSerializerTicket(BaseCreateSerializer):
 
     class Meta:

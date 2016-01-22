@@ -400,12 +400,14 @@ class PersonDetailTests(TestCase):
 
     def test_current__all_role_categories_and_children(self):
         parent_category = self.person.role.categories.first()
-        child_category = create_single_category(parent=parent_category)
 
         response = self.client.get('/api/admin/people/current/'.format(self.person.id))
         data = json.loads(response.content.decode('utf8'))
 
-        self.assertIn(str(child_category.id), data['all_role_categories_and_children'])
+        self.assertEqual(1, len(data['all_role_categories_and_children']))
+        category_data = data['all_role_categories_and_children'][0]
+        self.assertEqual(category_data['id'], str(parent_category.id))
+        self.assertEqual(category_data['name'], parent_category.name)
 
 
 class PersonPutTests(APITestCase):

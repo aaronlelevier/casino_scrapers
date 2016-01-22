@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from contact.serializers import (PhoneNumberSerializer, EmailSerializer, AddressSerializer)
 from location.serializers import LocationSerializer, LocationIdNameOnlySerializer
-from category.serializers import CategoryRoleSerializer
+from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer
 from person.models import Person, Role
 from person.validators import RoleLocationValidator
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
@@ -121,9 +121,7 @@ class PersonDetailSerializer(serializers.ModelSerializer):
 class PersonCurrentSerializer(PersonDetailSerializer):
 
     all_locations_and_children = LocationIdNameOnlySerializer(many=True)
-    all_role_categories_and_children = serializers.ListField(
-        child=serializers.UUIDField(),
-    )
+    all_role_categories_and_children = CategoryIDNameOnlySerializer(many=True)
 
     class Meta:
         model = Person
