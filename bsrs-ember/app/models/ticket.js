@@ -320,7 +320,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
             status: this.get('status.id'),
             priority: this.get('priority.id'),
             cc: this.get('cc_ids'),
-            categories: this.get('categories_ids'),
+            categories: this.get('sorted_categories').mapBy('id'),
             requester: this.get('requester'),
             assignee: this.get('assignee.id'),
             location: this.get('location.id'),
