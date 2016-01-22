@@ -49,7 +49,7 @@ var TicketPage = PageObject.create({
   ccOptionLength: count(`${CC_DROPDOWN} > li`),
   ccsSelected: count(CCS),
 
-  selectizeComponents: count('.t-ticket-category-select'),
+  powerSelectComponents: count('.t-ticket-category-select'),
   categoryOneClickDropdown: clickable(CATEGORY_ONE),
   categoryOneInput: text(CATEGORY_ONE),
   categoryOneClickOptionOne: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CD.nameOne})`),

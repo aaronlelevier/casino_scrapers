@@ -247,7 +247,7 @@ test('visiting detail should set the category even when it has no children', (as
     visit(BASE_URL + '/' + TD.idTwo);
     andThen(() => {
         assert.equal(currentURL(), BASE_URL + '/' + TD.idTwo);
-        let components = page.selectizeComponents();
+        let components = page.powerSelectComponents();
         assert.equal(components, 1);
         assert.equal(page.categoryOneInput(), CD.nameSolo);
     });
@@ -520,7 +520,7 @@ test('power select options are rendered immediately when enter detail route and 
     xhr(top_level_categories_endpoint, 'GET', null, {}, 200, top_level_data);
     page.visitDetail();
     andThen(() => {
-        let components = page.selectizeComponents();
+        let components = page.powerSelectComponents();
         assert.equal(components, 3);
         let ticket = store.find('ticket', TD.idOne);
         assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
@@ -551,7 +551,7 @@ test('power select options are rendered immediately when enter detail route and 
     page.categoryOneClickDropdown();
     page.categoryOneClickOptionTwo();
     andThen(() => {
-        let components = page.selectizeComponents();
+        let components = page.powerSelectComponents();
         assert.equal(components, 2);
         let ticket = store.find('ticket', TD.idOne);
         assert.equal(ticket.get('top_level_category').get('id'), CD.idThree);
@@ -585,7 +585,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
     andThen(() => {
         //override electrical to have children
         store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.idOne, children_fks: [CD.idChild]});
-        let components = page.selectizeComponents();
+        let components = page.powerSelectComponents();
         assert.equal(store.find('category').get('length'), 5);
         let ticket = store.find('ticket', TD.idOne);
         assert.equal(ticket.get('categories').get('length'), 3);
@@ -597,7 +597,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
     page.categoryOneClickDropdown();
     page.categoryOneClickOptionOne();
     andThen(() => {
-        let components = page.selectizeComponents();
+        let components = page.powerSelectComponents();
         assert.equal(store.find('ticket').get('length'), 1);
         let ticket = store.find('ticket', TD.idOne);
         assert.equal(ticket.get('categories').get('length'), 3);
@@ -616,7 +616,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionElectrical();
     andThen(() => {
-        let components = page.selectizeComponents();
+        let components = page.powerSelectComponents();
         let ticket = store.find('ticket', TD.idOne);
         assert.equal(store.find('category').get('length'), 6);
         assert.equal(ticket.get('categories').get('length'), 2);
@@ -642,7 +642,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.ok(generalPage.modalIsHidden());
-            let components = page.selectizeComponents();
+            let components = page.powerSelectComponents();
             let tickets = store.find('ticket');
             assert.equal(store.find('category').get('length'), 6);
             assert.equal(tickets.get('length'), 1);
@@ -686,7 +686,7 @@ test('changing tree and reverting tree should not show as dirty', (assert) => {
     page.categoryOneClickDropdown();
     page.categoryOneClickOptionOne();
     andThen(() => {
-        let components = page.selectizeComponents();
+        let components = page.powerSelectComponents();
         let ticket = store.find('ticket', TD.idOne);
         assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
         assert.ok(ticket.get('categoriesIsNotDirty'));
@@ -733,7 +733,7 @@ test('selecting and removing a top level category will remove children categorie
     clearxhr(list_xhr);
     page.visitDetail();
     andThen(() => {
-        let components = page.selectizeComponents();
+        let components = page.powerSelectComponents();
         assert.equal(store.find('category').get('length'), 5);
         let tickets = store.find('ticket');
     });
@@ -742,7 +742,7 @@ test('selecting and removing a top level category will remove children categorie
     page.categoryOneClickOptionTwo();
 
     andThen(() => {
-        let components = page.selectizeComponents();
+        let components = page.powerSelectComponents();
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 1);
@@ -759,7 +759,7 @@ test('when selecting a new parent category it should remove previously selected 
         let ticket = store.findOne('ticket');
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
         assert.equal(ticket.get('categories').get('length'), 2);
-        let components = page.selectizeComponents();
+        let components = page.powerSelectComponents();
         assert.equal(components, 2);
     });
     page.categoryOneClickDropdown();
@@ -768,7 +768,7 @@ test('when selecting a new parent category it should remove previously selected 
         let ticket = store.findOne('ticket');
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
         assert.equal(ticket.get('categories').get('length'), 1);
-        let components = page.selectizeComponents();
+        let components = page.powerSelectComponents();
         assert.equal(components, 1);
     });
     let category_two = {id: CD.idTwo, name: CD.nameTwo, parent: {id: CD.idOne}, children_fks: [CD.idChild]};
