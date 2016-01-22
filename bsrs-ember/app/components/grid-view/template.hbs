@@ -56,7 +56,7 @@
                             {{/unless}}
                         </h1>
                         <div class="col-md-4 text-center search-wrap pull-right">
-                            {{grid-search-input placeholder=search_placeholder keyup=(action "keyup")}}
+                            {{grid-search-input value=search placeholder=search_placeholder keyup=(action "keyup")}}
                         </div>
                         <div class="col-md-12 filtersets t-filterset-wrap">
                             {{filterset-navigation filtersets=filtersets route=routeName}}
