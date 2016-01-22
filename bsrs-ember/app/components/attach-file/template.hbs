@@ -1,8 +1,0 @@
-<span class="btn btn-default btn-file">{{fa-icon 'paperclip'}} {{t "button.upload"}}<input type="file" multiple="multiple" onchange={{action "upload"}}></span>
-{{#each model.attachments as |attachment|}}
-  {{#if attachment.new}}
-    <div class="progress active" role="progressbar" aria-valuemin="100" aria-valuemax="100" aria-valuenow="0">
-      <div class={{attach-file-progress attachment.percent}} style={{attachment.progress}}>{{t "upload.progress"}}: {{attachment.percent}}% <i class="fa fa-minus-circle t-remove-attachment" aria-hidden="true" {{action "removeAttachment" attachment.id}}></i></div>
-    </div>
-  {{/if}}
-{{/each}}

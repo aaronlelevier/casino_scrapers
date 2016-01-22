@@ -21,11 +21,6 @@ var TicketSingleRoute = TabRoute.extend({
     /*start-non-standard*/ @computed /*end-non-standard*/
     templateModelField() { return 'categories'; },
     /*start-non-standard*/ @computed /*end-non-standard*/
-    top_level_category_options() {
-        const categoryRepo = this.get('categoryRepository');
-        return categoryRepo.findTopLevelCategories();
-    },
-    /*start-non-standard*/ @computed /*end-non-standard*/
     priorities() {
         return this.get('priorityRepository').fetch();
     },

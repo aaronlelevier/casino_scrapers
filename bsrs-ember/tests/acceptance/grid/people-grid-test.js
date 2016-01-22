@@ -271,7 +271,7 @@ test('multiple sort options appear in the query string as expected', function(as
 });
 
 test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', function(assert) {
-    var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=username,title';
+    var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=title';
     xhr(sort_four ,"GET",null,{},200,PF.sorted('username,title'));
     var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-username,title';
     xhr(sort_three ,"GET",null,{},200,PF.sorted('-username,title'));
@@ -314,10 +314,10 @@ test('clicking the same sort option over and over will flip the direction and re
     });
     click('.t-sort-username-dir');
     andThen(() => {
-        assert.equal(currentURL(),PEOPLE_URL + '?sort=username%2Ctitle');
+        assert.equal(currentURL(),PEOPLE_URL + '?sort=title');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-title-dir').hasClass('fa-sort-asc'));
-        assert.ok(find('.t-sort-username-dir').hasClass('fa-sort-asc'));
+        assert.ok(!find('.t-sort-username-dir').hasClass('fa-sort-asc'));
         assert.equal(find('.t-grid-data:eq(0) .t-person-username').text().trim(), PD.username);
     });
     click('.t-reset-grid');

@@ -1,10 +1,16 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import injectUUID from 'bsrs-ember/utilities/uuid';
+import ChildValidationComponent from 'bsrs-ember/mixins/validation/child';
+import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-export default Ember.Component.extend({
+export default ChildValidationComponent.extend(ValidationMixin, {
+    tagName: 'div',
+    classNames: ['col-md-12'],
     uuid: injectUUID('uuid'),
     repository: inject('attachment'),
+    priorityValidation: validate('model.priority'),
+    statusValidation: validate('model.status'),
     actions: {
         removeAttachment(attachment_id) {
             let model = this.get('model');

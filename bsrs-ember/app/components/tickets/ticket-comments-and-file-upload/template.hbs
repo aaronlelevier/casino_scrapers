@@ -1,0 +1,36 @@
+<section>
+    <div class="row">
+        <div class="col-md-12">
+            {{comment-save model=model}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ticket-actions">
+                <div class="ticket-action save">
+                    <span {{action 'save'}} class="btn btn-default add-btn">{{fa-icon 'check-circle'}} Save</span>
+                </div>
+                <div class="ticket-action attach">
+                    <span class="btn btn-default btn-file">{{fa-icon 'paperclip'}} {{t "button.upload"}}<input type="file" multiple="multiple" onchange={{action "upload"}}></span>
+                </div>
+                <div class="ticket-action priority">
+                    {{ticket-priority-select ticket=model priorities=priorities}}
+                    {{#validation-error-field field="priority" className="validation validation-under t-priority-validation-error" model=model validation=priorityValidation}}invalid priority{{/validation-error-field}}
+                </div>
+                <div class="ticket-action status">
+                    {{ticket-status-select ticket=model statuses=statuses}}
+                    {{#validation-error-field field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        {{#each model.attachments as |attachment|}}
+          {{#if attachment.new}}
+            <div class="progress active" role="progressbar" aria-valuemin="100" aria-valuemax="100" aria-valuenow="0">
+              <div class={{attach-file-progress attachment.percent}} style={{attachment.progress}}>{{t "upload.progress"}}: {{attachment.percent}}% <i class="fa fa-minus-circle t-remove-attachment" aria-hidden="true" {{action "removeAttachment" attachment.id}}></i></div>
+            </div>
+          {{/if}}
+        {{/each}}
+    </div>
+</section>
