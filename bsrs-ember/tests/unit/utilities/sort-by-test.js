@@ -33,7 +33,7 @@ test('will return correct array if pass in three fields to sort by', function(as
     result = subject.run('-title,role,username', 'username');
     assert.deepEqual(result, ['-username', '-title', 'role']);
     result = subject.run('-username,-title,role', 'title');
-    assert.deepEqual(result, ['title', '-username', 'role']);
+    assert.deepEqual(result, ['-username', 'role']);
 });
 
 test('will return correct array if pass in a field that is sorted descending', function(assert) {
@@ -52,4 +52,32 @@ test('sort with existing currentSort (with multiple) will reverse direction of s
     let subject = new FakeComponent();
     let result = subject.run('title,username', 'title');
     assert.deepEqual(result, ['-title', 'username']);
+});
+
+test('sorting the same field three times in a row will result in no sort (single field)', function(assert) {
+    let subject = new FakeComponent();
+    let result = subject.run('', 'username');
+    assert.deepEqual(result, ['username']);
+    result = subject.run('username', 'username');
+    assert.deepEqual(result, ['-username']);
+    result = subject.run('-username', 'username');
+    assert.deepEqual(result, []);
+});
+
+test('sorting the same field three times in a row will result in no sort (multiple fields)', function(assert) {
+    let subject = new FakeComponent();
+    let result = subject.run('title,username', 'title');
+    assert.deepEqual(result, ['-title', 'username']);
+    result = subject.run('-title,username', 'role');
+    assert.deepEqual(result, ['role', '-title', 'username']);
+    result = subject.run('role,-title,username', 'username');
+    assert.deepEqual(result, ['-username', 'role', '-title']);
+    result = subject.run('-username,role,-title', 'role');
+    assert.deepEqual(result, ['-role', '-username', '-title']);
+    result = subject.run('-role,-username,-title', 'username');
+    assert.deepEqual(result, ['-role', '-title']);
+    result = subject.run('-role,-title', 'title');
+    assert.deepEqual(result, ['-role']);
+    result = subject.run('-role', 'role');
+    assert.deepEqual(result, []);
 });

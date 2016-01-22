@@ -20,7 +20,7 @@ var SortBy = Ember.Mixin.create({
             }else if(!column.match(/[-]/)) {
                 existing = Ember.$.inArray('-' + column, sorted);
                 if(existing > -1) {
-                    sorted = remove_and_shift(sorted, column, existing);
+                    sorted.splice(existing, 1);
                 }
             }
         }
