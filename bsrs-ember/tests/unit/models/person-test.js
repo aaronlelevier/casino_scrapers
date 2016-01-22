@@ -1073,10 +1073,10 @@ test('locations property returns multiple matching items when multiple locations
 
 test('locations property will update when the m2m array suddenly has the person pk (starting w/ empty array)', (assert) => {
     person = store.push('person', {id: PD.idOne, person_location_fks: []});
-    let location = store.push('location', {id: LD.idOne, person_location_fks: []});
+    let location = {id: LD.idOne, person_location_fks: []};
     store.push('location', {id: LD.idTwo, person_location_fks: []});
     assert.equal(person.get('locations').get('length'), 0);
-    person.add_locations(LD.idOne);
+    person.add_locations(location);
     assert.equal(person.get('locations').get('length'), 1);
     assert.equal(person.get('locations').objectAt(0).get('id'), LD.idOne);
 });
@@ -1085,9 +1085,9 @@ test('locations property will update when the m2m array suddenly has the person 
     store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
     person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne]});
     let location = store.push('location', {id: LD.idOne, person_location_fks: [PERSON_LD.idOne]});
-    let location_two = store.push('location', {id: LD.idTwo, person_location_fks: []});
+    let location_two = {id: LD.idTwo, person_location_fks: []};
     assert.equal(person.get('locations').get('length'), 1);
-    person.add_locations(LD.idTwo);
+    person.add_locations(location_two);
     assert.equal(person.get('locations').get('length'), 2);
     assert.equal(person.get('locations').objectAt(0).get('id'), LD.idOne);
     assert.equal(person.get('locations').objectAt(1).get('id'), LD.idTwo);
@@ -1126,26 +1126,26 @@ test('when location is changed dirty tracking works as expected', (assert) => {
 });
 
 test('when location is suddently assigned it shows as a dirty relationship (starting undefined)', (assert) => {
-    let location = store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: undefined});
+    let location = {id: LD.idOne, name: LD.storeName, person_location_fks: undefined};
     person = store.push('person', {id: PD.idOne, person_location_fks: undefined});
     assert.equal(person.get('locations').get('length'), 0);
     assert.ok(person.get('locationsIsNotDirty'));
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    person.add_locations(LD.idOne);
+    person.add_locations(location);
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
 });
 
-test('when location is suddently assigned it shows as a dirty relationship (starting with an empty array)', (assert) => {
-    let location = store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: []});
+test('when location is suddenly assigned it shows as a dirty relationship (starting with an empty array)', (assert) => {
+    let location = {id: LD.idOne, name: LD.storeName, person_location_fks: []};
     person = store.push('person', {id: PD.idOne, person_location_fks: []});
     assert.equal(person.get('locations').get('length'), 0);
     assert.ok(person.get('locationsIsNotDirty'));
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    person.add_locations(LD.idOne);
+    person.add_locations(location);
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -1155,12 +1155,12 @@ test('when location is suddently assigned it shows as a dirty relationship (star
     store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
     person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne]});
     let location = store.push('location', {id: LD.idOne, person_location_fks: [PERSON_LD.idOne]});
-    let location_two = store.push('location', {id: LD.idTwo, person_location_fks: []});
+    let location_two = {id: LD.idTwo, person_location_fks: []};
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('locationsIsNotDirty'));
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    person.add_locations(LD.idTwo);
+    person.add_locations(location_two);
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -1230,8 +1230,8 @@ test('rollback location will reset the previous locations when switching from on
     person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne, PERSON_LD.idTwo]});
     let location = store.push('location', {id: LD.idOne, person_location_fks: [PERSON_LD.idOne]});
     let location_two = store.push('location', {id: LD.idTwo, person_location_fks: [PERSON_LD.idTwo]});
-    let location_three = store.push('location', {id: LD.unusedId, person_location_fks: [PERSON_LD.idThree]});
-    let location_four = store.push('location', {id: LD.anotherId, person_location_fks: [PERSON_LD.idFour]});
+    let location_three = {id: LD.unusedId, person_location_fks: [PERSON_LD.idThree]};
+    let location_four = {id: LD.anotherId, person_location_fks: [PERSON_LD.idFour]};
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -1250,7 +1250,7 @@ test('rollback location will reset the previous locations when switching from on
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    person.add_locations(LD.unusedId);
+    person.add_locations(location_three);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     person.save();
@@ -1267,7 +1267,7 @@ test('rollback location will reset the previous locations when switching from on
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(person.get('locations').get('length'), 1);
-    person.add_locations(LD.anotherId);
+    person.add_locations(location_four);
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));

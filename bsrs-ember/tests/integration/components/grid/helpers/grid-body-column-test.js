@@ -7,6 +7,11 @@ import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 
 const TRANSLATION_KEY = 'admin.person.one';
 const TRANSLATION_VALUE = 'Person';
+const FakeModel = Ember.Object.extend({
+    nice_hat: Ember.computed('hat', function() {
+        return `${this.get('hat')} !!`;
+    })
+});
 
 moduleForComponent('grid/helpers/grid-body-column', 'integration: grid-body-column', {
     integration: true,
@@ -15,7 +20,7 @@ moduleForComponent('grid/helpers/grid-body-column', 'integration: grid-body-colu
         const trans = this.container.lookup('service:i18n');
         loadTranslations(trans, translations.generate('en'));
         translation.initialize(this);
-        this.set('item', Ember.Object.create({hat: TRANSLATION_KEY}));
+        this.set('item', FakeModel.create({hat: TRANSLATION_KEY}));
     }
 });
 
@@ -109,4 +114,15 @@ test('htmlbars will blow up when component is not found', function(assert) {
     } catch(e) {
         assert.ok(e.message.indexOf('Could not find component') > -1);
     }
+});
+
+test('formattedField will be the actual value shown in the td element when present', function(assert) {
+    this.set('column', {
+        field: 'hat',
+        formattedField: 'nice_hat'
+    });
+    this.render(hbs`{{grid/helpers/grid-body-column noun=noun item=item column=column}}`);
+    let $component = this.$('td');
+    assert.equal($component.length, 1);
+    assert.equal($component.text().trim(), `${TRANSLATION_KEY} !!`);
 });

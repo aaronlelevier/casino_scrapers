@@ -70,12 +70,15 @@ en,admin.general.one,General Setting,General Setting,,"'admin.general.one':'Gene
 en,admin.general.other,General Settings,General Settings,,"'admin.general.other':'General Settings',",General Settings,General Settings
 en,admin.location.label.address.one,Address,Address,,"'admin.location.label.address.one':'Address',",Address,Address
 en,admin.location.label.address.other,Addresses,Addresses,,"'admin.location.label.address.other':'Addresses',",Addresses,Addresses
+en,admin.location.label.children-name,Child Locations,Child Locations,,"'admin.location.label.children-name':'Child Locations',",Child Locations,Child Locations
+en,admin.location.label.contact,Contact,Contact,,"'admin.location.label.contact':'Contact',",Contact,Contact
 en,admin.location.label.email.one,Email,Email,,"'admin.location.label.email.one':'Email',",Email,Email
 en,admin.location.label.email.other,Email,Email,,"'admin.location.label.email.other':'Email',",Email,Email
 en,admin.location.label.general,General,General,,"'admin.location.label.general':'General',",General,General
 en,admin.location.label.location_level,Organization,Organization,,"'admin.location.label.location_level':'Organization',",Organization,Organization
 en,admin.location.label.name,Name,Name,,"'admin.location.label.name':'Name',",Name,Name
 en,admin.location.label.number,Number,Number,,"'admin.location.label.number':'Number',",Number,Number
+en,admin.location.label.parents-name,Parent Locations,Parent Locations,,"'admin.location.label.parents-name':'Parent Locations',",Parent Locations,Parent Locations
 en,admin.location.label.phone_number.one,Phone Number,Phone Number,,"'admin.location.label.phone_number.one':'Phone Number',",Phone Number,Phone Number
 en,admin.location.label.phone_number.other,Phone Numbers,Phone Numbers,,"'admin.location.label.phone_number.other':'Phone Numbers',",Phone Numbers,Phone Numbers
 en,admin.location.label.status-name,Status,Status,,"'admin.location.label.status-name':'Status',",Status,Status
@@ -179,6 +182,8 @@ en,crud.save.error,Error saving {{model}}.,Error saving {{model}}.,,"'crud.save.
 en,crud.save.success,{{model}} saved successfully.,{{model}} saved successfully.,,"'crud.save.success':'{{model}} saved successfully.',",{{model_var_ saved successfully.,_model_var_ saved successfully.
 en,crud.titles.edit,Edit {{model}},Edit {{model}},,"'crud.titles.edit':'Edit {{model}}',",Edit {{model_var_,Edit _model_var_
 en,crud.titles.new,New {{model}},New {{model}},,"'crud.titles.new':'New {{model}}',",New {{model_var_,New _model_var_
+en,grid.filter,Filter,Filter,,"'grid.filter':'Filter',",Filter,Filter
+en,grid.filterset_name,Name your filter,Name your filter,,"'grid.filterset_name':'Name your filter',",Name your filter,Name your filter
 en,grid.per_page,{{size}} per page,{{size}} per page,,"'grid.per_page':'{{size}} per page',",{{size_var_ per page,_size_var_ per page
 en,grid.reset_all_options,Reset All Options,Reset All Options,,"'grid.reset_all_options':'Reset All Options',",Reset All Options,Reset All Options
 en,grid.save_filter,Save Filter,Save Filter,,"'grid.save_filter':'Save Filter',",Save Filter,Save Filter

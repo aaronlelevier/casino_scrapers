@@ -14,8 +14,8 @@ var PersonLocationsSelect = Ember.Component.extend({
             const old_location_ids = person.get('location_ids');
             const new_location_ids = new_location_selection.mapBy('id');
             new_location_selection.forEach((location) => {
-                if (Ember.$.inArray(location.get('id'), old_location_ids) < 0) {
-                    person.add_locations(location.get('id'));
+                if (Ember.$.inArray(location.id, old_location_ids) < 0) {
+                    person.add_locations(location);
                 }
             });
             old_location_selection.forEach((old_location) => {

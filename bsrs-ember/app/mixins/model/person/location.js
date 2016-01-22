@@ -30,10 +30,12 @@ var LocationMixin = Ember.Mixin.create({
         };
         return store.find('person-location', filter);
     }),
-    add_locations(location_pk) {
+    add_locations(location) {
         const pk = this.get('id');
         const store = this.get('store');
-        run(function() {
+        const new_location = store.push('location', location);
+        const location_pk = new_location.get('id');
+        run(() => {
             store.push('person-location', {id: Ember.uuid(), person_pk: pk, location_pk: location_pk});
         });
     },
@@ -42,7 +44,7 @@ var LocationMixin = Ember.Mixin.create({
         let m2m_pk = this.get('person_locations').filter((m2m) => {
             return m2m.get('location_pk') === location_pk;
         }).objectAt(0).get('id');
-        run(function() {
+        run(() => {
             store.push('person-location', {id: m2m_pk, removed: true});
         });
     },
