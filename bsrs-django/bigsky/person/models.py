@@ -126,6 +126,7 @@ class Role(BaseModel):
     def save(self, *args, **kwargs):
         self._update_defaults()
         self._update_password_history_length()
+        self._validate_related_categories()
         return super(Role, self).save(*args, **kwargs)
 
     @property
@@ -215,6 +216,15 @@ class Role(BaseModel):
         )
 
     # Password Validators: end
+
+    def _validate_related_categories(self):
+        child_categories = []
+        for category in self.categories.exclude(parent__isnull=True):
+            child_categories.append(category.name)
+
+        if child_categories:
+            raise ValidationError("Role can't have related child categories: {}."
+                                 .format(', '.join(child_categories)))
 
 
 class ProxyRole(BaseModel):

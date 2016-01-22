@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 from model_mommy import mommy
 
 from category.models import Category
+from category.tests.factory import create_single_category
 from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
@@ -38,6 +39,14 @@ class RoleTests(TestCase):
             self.role.to_dict()["location_level"],
             str(self.role.location_level.id)
         )
+
+    def test_related_categories_can_only_be_top_level(self):
+        parent = create_single_category()
+        child = create_single_category(parent=parent)
+
+        with self.assertRaises(ValidationError):
+            self.role.categories.add(child)
+            self.role.save()
 
 
 class RolePasswordTests(TestCase):
