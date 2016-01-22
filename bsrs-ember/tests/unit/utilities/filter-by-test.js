@@ -20,7 +20,7 @@ test('will update filter field/placeholder/target/toggle properties on calling e
     assert.equal(subject.get('filterField'), 'fullname');
     assert.equal(subject.get('toggleFilter'), true);
     assert.equal(subject.get('targetFilter'), '.t-filter-fullname');
-    assert.equal(subject.get('filterPlaceholder'), 'Search fullname');
+    assert.equal(subject.get('filterPlaceholder'), 'fullname');
 });
 
 test('will toggle filter off when no column name incoming', function(assert) {
@@ -31,7 +31,7 @@ test('will toggle filter off when no column name incoming', function(assert) {
     assert.equal(subject.get('toggleFilter'), false);
     assert.equal(subject.get('filterField'), undefined);
     assert.equal(subject.get('targetFilter'), '.t-filter-');
-    assert.equal(subject.get('filterPlaceholder'), 'Search undefined');
+    assert.equal(subject.get('filterPlaceholder'), undefined);
 });
 
 test('will toggle filter off the current column name incoming', function(assert) {
@@ -50,7 +50,7 @@ test('will toggle filter off but then back on when another column name incoming'
     result = subject.run('title');
     assert.equal(subject.get('filterField'), 'title');
     assert.equal(subject.get('targetFilter'), '.t-filter-title');
-    assert.equal(subject.get('filterPlaceholder'), 'Search title');
+    assert.equal(subject.get('filterPlaceholder'), 'title');
     setTimeout(function() {
         assert.equal(subject.get('toggleFilter'), true);
         done();
@@ -71,7 +71,7 @@ test('related column name will set each field correctly', function(assert) {
     let result = subject.run('priority.translated_name');
     assert.equal(subject.get('filterField'), 'priority.translated_name');
     assert.equal(subject.get('targetFilter'), '.t-filter-priority-translated-name');
-    assert.equal(subject.get('filterPlaceholder'), 'Search priority.translated_name');
+    assert.equal(subject.get('filterPlaceholder'), 'priority.translated_name');
 });
 
 test('array column name will set each field correctly', function(assert) {
@@ -79,5 +79,5 @@ test('array column name will set each field correctly', function(assert) {
     let result = subject.run('categories[name]');
     assert.equal(subject.get('filterField'), 'categories[name]');
     assert.equal(subject.get('targetFilter'), '.t-filter-categories[name]');
-    assert.equal(subject.get('filterPlaceholder'), 'Search categories[name]');
+    assert.equal(subject.get('filterPlaceholder'), 'categories[name]');
 });

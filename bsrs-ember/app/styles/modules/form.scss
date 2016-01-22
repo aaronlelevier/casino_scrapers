@@ -142,6 +142,7 @@ textarea.ticket-request{
 	text-transform: uppercase;
 	margin: 0 8px 0 0;
 	position: relative;
+	white-space: nowrap;
 	&.ticket-status-new{
 		background: $lightGreen;
 		border-color: $lightGreen;

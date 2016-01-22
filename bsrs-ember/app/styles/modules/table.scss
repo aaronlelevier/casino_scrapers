@@ -76,6 +76,15 @@ div.rowTable {
                     cursor: pointer;
                 }
             }
+            //table column widths
+            td, th{
+                &.ticket-priority{
+                    width: 120px;
+                }
+                &.ticket-status{
+                    width: 120px;
+                }
+            }
         }
     }
     footer{

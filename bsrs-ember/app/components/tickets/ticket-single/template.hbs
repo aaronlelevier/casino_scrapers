@@ -9,7 +9,6 @@
                     delete="delete"
                 }}
             </header>
-
             <section class="docSection container-fluid">
                 <div class="row">
                     <div class="col-md-12">
@@ -20,8 +19,8 @@
                                     <small>#{{model.number}}</small>
                                 </h1>
                                 <div class="col-md-12 meta-data">
-                                    <span class="tag {{model.priority_class}}">{{fa-icon 'exclamation-triangle'}} {{t model.priority.name}}</span>
-                                    <span class="tag {{model.status_class}}">{{fa-icon 'clock-o'}} {{t model.status.name}}</span>
+                                    {{tickets/ticket-priority-tag item=model}}
+                                    {{tickets/ticket-status-tag item=model}}
                                     <span class="create-date" title="{{moment-format model.created 'dddd, MMMM Do YYYY, h:mm:ss a z'}}">{{t 'ticket.created' requester=model.requester timestamp=(moment-from-now model.created)}}</span>
                                 </div>
                                 <div class="col-md-12">
