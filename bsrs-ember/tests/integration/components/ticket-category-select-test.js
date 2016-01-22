@@ -46,6 +46,7 @@ test('should render a selectbox when the options are empty (initial state of pow
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal(this.$('.ember-power-select-placeholder').text(), GLOBALMSG.category_power_select);
     assert.equal($('.ember-power-select-options > li').length, 1);
+    assert.notOk($('.ember-power-select-search').text());
 });
 
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
