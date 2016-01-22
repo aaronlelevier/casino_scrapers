@@ -12,6 +12,14 @@ CATEGORY_FIELDS = ('id', 'name', 'description', 'label',
 
 # Leaf Node
 
+class CategoryIDNameSerializerTicket(BaseCreateSerializer):
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name', 'level',)
+
+
+#TODO: check if can use above serializer
 class CategoryIDNameSerializer(BaseCreateSerializer):
 
     class Meta:
@@ -22,13 +30,6 @@ class CategoryIDNameSerializer(BaseCreateSerializer):
         data = super(CategoryIDNameSerializer, self).to_representation(obj)
         data['children_fks'] = data.pop('children', [])
         return data
-
-
-class CategoryFlatSerializer(BaseCreateSerializer):
-
-    class Meta:
-        model = Category
-        fields = ('id', 'name', 'parent', 'children',)
 
 
 class CategoryRoleSerializer(BaseCreateSerializer):

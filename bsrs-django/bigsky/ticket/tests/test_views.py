@@ -89,8 +89,6 @@ class TicketListTests(TicketSetupMixin, APITestCase):
 
         self.assertIn('id', category)
         self.assertIn('name', category)
-        self.assertIn('parent', category)
-        self.assertIn('children_fks', category)
         self.assertIn('level', category)
 
     def test_data_assignee(self):
@@ -193,8 +191,7 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
 
         self.assertIn('id', category)
         self.assertIn('name', category)
-        self.assertIn('parent', category)
-        self.assertIn('children_fks', category)
+        self.assertIn('level', category)
 
     def test_cc(self):
         response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
