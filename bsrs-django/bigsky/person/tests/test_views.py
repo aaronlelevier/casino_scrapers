@@ -11,7 +11,6 @@ from model_mommy import mommy
 
 from accounting.models import Currency
 from category.models import Category
-from category.tests.factory import create_single_category
 from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
 from contact.tests.factory import create_contact, create_contacts
@@ -19,7 +18,7 @@ from location.models import Location, LocationLevel
 from location.tests.factory import create_location
 from person.models import Person, Role
 from person.serializers import (PersonUpdateSerializer, RoleSerializer,
-    RoleUpdateSerializer)
+    RoleCreateSerializer)
 from person.tests.factory import (PASSWORD, create_single_person, create_role, create_roles,
     create_single_person, create_all_people)
 from translation.models import Locale
@@ -92,7 +91,7 @@ class RoleViewSetTests(APITestCase):
 
     def test_update(self):
         category = mommy.make(Category)
-        serializer = RoleUpdateSerializer(self.role)
+        serializer = RoleCreateSerializer(self.role)
         self.data = serializer.data
         role_data = self.data
         role_data['name'] = 'new name here'

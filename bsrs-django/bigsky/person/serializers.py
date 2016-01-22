@@ -4,7 +4,7 @@ from contact.serializers import (PhoneNumberSerializer, EmailSerializer, Address
 from location.serializers import LocationSerializer, LocationIdNameOnlySerializer
 from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer
 from person.models import Person, Role
-from person.validators import RoleLocationValidator
+from person.validators import RoleLocationValidator, RoleCategoryValidator
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
     RemovePasswordSerializerMixin)
 
@@ -24,14 +24,7 @@ class RoleCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Role
-        fields = ('id', 'name', 'role_type', 'location_level', 'categories')
-
-
-class RoleUpdateSerializer(BaseCreateSerializer):
-    "Serializer used for update ``Role`` API Endpoint operations."
-
-    class Meta:
-        model = Role
+        validators = [RoleCategoryValidator()]
         fields = ('id', 'name', 'role_type', 'location_level', 'categories')
 
 
