@@ -122,11 +122,13 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.assertEqual(_username_matches[0], usernames[0].text)
         # TITLE
         # setup
-        _title = "m"
+        _title = "tt"
         _title_matches = [x for x in _username_matches if _title in x]
         # test
         self.wait_for_xhr_request("t-filter-fullname").click()
         title_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
+        self.assertEqual(title_fulltext_search.get_attribute("value"), _title)
+        title_fulltext_search.clear()
         title_fulltext_search.send_keys(_title)
         people = self.wait_for_xhr_request("t-grid-data", plural=True, debounce=True)
         self.assertEqual(len(people), len(_title_matches))
@@ -146,7 +148,6 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.wait_for_xhr_request("t-grid-data", plural=True, just_refreshed=True)
         self.driver.find_element_by_class_name("t-filter-fullname").click()
         title_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
-        self.assertEqual(title_fulltext_search.get_attribute("value"), _title)
 
     def test_full_text_search_hidden_on_enter_and_escape(self):
         self.wait_for_xhr_request("t-filter-username").click()
