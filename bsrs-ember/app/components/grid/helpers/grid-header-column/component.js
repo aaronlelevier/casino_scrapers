@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+    i18n: Ember.inject.service(),
     tagName: 'th',
     classNameBindings: ['className'],
     className: Ember.computed(function() {
@@ -32,8 +33,11 @@ export default Ember.Component.extend({
         sortBy(field) {
             this.attrs.sortBy(field);
         },
-        toggleFilterModal(field) {
-            this.attrs.toggleFilterModal(field);
+        toggleFilterModal(placeholder) {
+            // if(this.get('column.headerIsTranslatable')){
+            //     placeholder = this.get('i18n').t(placeholder);
+            // }
+            this.attrs.toggleFilterModal(placeholder);
         }
     }
 });
