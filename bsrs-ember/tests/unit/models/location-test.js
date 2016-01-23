@@ -1096,6 +1096,33 @@ test('clicking save will make location model children not dirty with existing', 
     assert.ok(location.get('childrenIsNotDirty'));
 });
 
+test('rollback children resets children', (assert) => {
+    const location = store.push('location', {id: LD.idOne, location_children_fks: [LCD.idOne]});
+    const location_two = store.push('location', {id: LD.idTwo});
+    const location_three = store.push('location', {id: LD.idThree});
+    const location_four = store.push('location', {id: LD.idFour});
+    store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
+    assert.deepEqual(location.get('location_children_fks'), [LCD.idOne]);
+    location.add_child(location_three);
+    assert.ok(location.get('isNotDirty'));
+    assert.ok(location.get('isDirtyOrRelatedDirty'));
+    location.save();
+    location.saveRelated();
+    assert.ok(location.get('isNotDirty'));
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    location.add_child(location_four);
+    assert.ok(location.get('isNotDirty'));
+    assert.ok(location.get('isDirtyOrRelatedDirty'));
+    assert.deepEqual(location.get('location_children_fks').length, 2);
+    assert.equal(location.get('children').get('length'), 3);
+    location.rollback();
+    location.rollbackRelated();
+    assert.deepEqual(location.get('location_children_fks').length, 2);
+    assert.equal(location.get('children').get('length'), 2);
+    assert.ok(location.get('isNotDirty'));
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+});
+
 /*PARENT*/
 test('add_parent correctly adds parent when none exists', (assert) => {
     const location = store.push('location', {id: LD.idOne, location_parents_fks: []});
@@ -1183,4 +1210,31 @@ test('clicking save will make location model parents not dirty with existing', (
     location.saveParents();
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(location.get('parentsIsNotDirty'));
+});
+
+test('rollback parents resets parents', (assert) => {
+    const location = store.push('location', {id: LD.idOne, location_parents_fks: [LPD.idOne]});
+    const location_two = store.push('location', {id: LD.idTwo});
+    const location_three = store.push('location', {id: LD.idThree});
+    const location_four = store.push('location', {id: LD.idFour});
+    store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parent_pk: LD.idTwo});
+    assert.deepEqual(location.get('location_parents_fks'), [LPD.idOne]);
+    location.add_parent(location_three);
+    assert.ok(location.get('isNotDirty'));
+    assert.ok(location.get('isDirtyOrRelatedDirty'));
+    location.save();
+    location.saveRelated();
+    assert.ok(location.get('isNotDirty'));
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    location.add_parent(location_four);
+    assert.ok(location.get('isNotDirty'));
+    assert.ok(location.get('isDirtyOrRelatedDirty'));
+    assert.deepEqual(location.get('location_parents_fks').length, 2);
+    assert.equal(location.get('parents').get('length'), 3);
+    location.rollback();
+    location.rollbackRelated();
+    assert.deepEqual(location.get('location_parents_fks').length, 2);
+    assert.equal(location.get('parents').get('length'), 2);
+    assert.ok(location.get('isNotDirty'));
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
 });

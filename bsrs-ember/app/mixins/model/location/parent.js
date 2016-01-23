@@ -67,6 +67,25 @@ var ParentMixin = Ember.Mixin.create({
             } 
         }
     },
+    rollbackParents() {
+        const store = this.get('store');
+        const previous_m2m_fks = this.get('location_parents_fks') || [];
+        const m2m_array = store.find('location-parents').toArray();
+        const m2m_to_throw_out = m2m_array.filter((join_model) => {
+            return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed') && this.get('id') === join_model.get('location_pk');
+        });
+        run(() => {
+            m2m_to_throw_out.forEach((join_model) => {
+                store.push('ticket-person', {id: join_model.get('id'), removed: true});
+            });
+            previous_m2m_fks.forEach((pk) => {
+                var m2m_to_keep = store.find('location-parents', pk);
+                if (m2m_to_keep.get('id')) {
+                    store.push('location-parents', {id: pk, removed: undefined});
+                }
+            });
+        });
+    }
 });
 
 export default ParentMixin;

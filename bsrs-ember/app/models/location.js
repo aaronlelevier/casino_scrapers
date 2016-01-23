@@ -81,12 +81,13 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, StatusMixin, ParentMixin, 
         this.saveParents();
     },
     rollbackRelated() {
-        //TODO: parent and child rollback
         this.rollbackLocationLevel();
         this.rollbackStatus();
         this.rollbackEmails();
         this.rollbackPhoneNumbers();
         this.rollbackAddresses();
+        this.rollbackChildren();
+        this.rollbackParents();
     },
     serialize() {
         var emails = this.get('emails').filter(function(email) {
