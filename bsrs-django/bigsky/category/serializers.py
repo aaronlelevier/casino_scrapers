@@ -23,7 +23,7 @@ class CategoryIDNameSerializerTicket(BaseCreateSerializer):
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'level', 'children', 'parent')
+        fields = ('id', 'name', 'level', 'children', 'parent', 'label', 'subcategory_label')
 
     def to_representation(self, obj):
         data = super(CategoryIDNameSerializerTicket, self).to_representation(obj)

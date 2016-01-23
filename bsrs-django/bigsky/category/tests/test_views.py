@@ -393,6 +393,8 @@ class CategoryFilterTests(APITransactionTestCase):
         self.assertIn('parent_id', data['results'][0])
         self.assertIn('level', data['results'][0])
         self.assertIn('name', data['results'][0])
+        self.assertIn('label', data['results'][0])
+        self.assertIn('subcategory_label', data['results'][0])
 
     def test_filter_by_name(self):
         mommy.make(Category, name="cat")
