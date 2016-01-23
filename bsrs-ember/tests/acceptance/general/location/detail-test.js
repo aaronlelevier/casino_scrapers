@@ -39,6 +39,7 @@ const CHILDREN_SEARCH = '.t-location-children-select-trigger > .ember-power-sele
 const PARENTS = '.t-location-parent-select > .ember-basic-dropdown-trigger';
 const PARENTS_DROPDOWN = '.t-location-parent-select-dropdown > .ember-power-select-options';
 const PARENTS_SEARCH = '.t-location-parent-select-trigger > .ember-power-select-trigger-multiple-input';
+const PARENTS_MULTIPLE_OPTION = '.t-location-parent-select-trigger > .ember-power-select-multiple-option';
 
 module('Acceptance | location detail-test', {
     beforeEach() {
@@ -221,7 +222,7 @@ test('when click delete, location is deleted and removed from store', (assert) =
     });
 });
 
-test('changing location level will update related location level locations array', (assert) => {
+test('changing location level will update related location level locations array and clear out parent and children power selects', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
         let location = store.find('location', LD.idOne);
@@ -231,6 +232,7 @@ test('changing location level will update related location level locations array
         assert.equal(location.get('location_level_fk'), LLD.idOne);
         assert.deepEqual(location_level.get('locations'), [LD.idOne]);
         assert.equal(page.locationLevelInput().split(' +')[0].trim().split(' ')[0], LLD.nameCompany);
+        assert.equal(find(PARENTS_MULTIPLE_OPTION).length, 2);
     });
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionTwo();
@@ -239,14 +241,17 @@ test('changing location level will update related location level locations array
         let location_level = store.find('location-level', LLD.idOne);
         let location = store.find('location', LD.idOne);
         assert.equal(location.get('location_level_fk'), LLD.idOne);
-        // assert.deepEqual(location_level_two.get('locations'), [LD.idOne]);
+        assert.deepEqual(location_level_two.get('locations'), [LD.idOne]);
         assert.deepEqual(location_level.get('locations'), []);
         assert.ok(location.get('isDirtyOrRelatedDirty'));
         assert.ok(location_level.get('isNotDirtyOrRelatedNotDirty'));
         assert.ok(location_level_two.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(location.get('parents').get('length'), 0);
+        assert.equal(location.get('children').get('length'), 0);
+        assert.equal(find(PARENTS_MULTIPLE_OPTION).length, 0);
     });
     let response = LF.detail(LD.idOne);
-    let payload = LF.put({location_level: LLD.idLossRegion});
+    let payload = LF.put({location_level: LLD.idLossRegion, parents: [], children: []});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {

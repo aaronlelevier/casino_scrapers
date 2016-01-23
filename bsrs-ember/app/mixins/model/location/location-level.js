@@ -12,7 +12,30 @@ var LocationLevelMixin = Ember.Mixin.create({
         };
         return this.get('store').find('location-level', filter);
     }),
+    remove_children_parents() {
+        const id = this.get('id');
+        const store = this.get('store');
+        const location_children = this.get('location_children');
+        const location_parents = this.get('location_parents');
+        const m2m_children_to_remove = location_children.reduce((arr, m2m) => {
+            return m2m.get('location_pk') === id ? arr.concat(m2m.get('id')) : false
+        }, []);
+        const m2m_parents_to_remove = location_parents.reduce((arr, m2m) => {
+            return m2m.get('location_pk') === id ? arr.concat(m2m.get('id')) : false
+        }, []);
+        m2m_children_to_remove.forEach((child) => {
+            run(() => {
+                store.push('location-children', {id: child, removed: true});
+            });
+        });
+        m2m_parents_to_remove.forEach((child) => {
+            run(() => {
+                store.push('location-parents', {id: child, removed: true});
+            });
+        });
+    },
     change_location_level(new_location_level_id) {
+        this.remove_children_parents();
         const location_id = this.get('id');
         const store = this.get('store');
         const old_location_level = this.get('location_level');

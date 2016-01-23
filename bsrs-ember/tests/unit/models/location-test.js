@@ -140,6 +140,36 @@ test('rollback location-level will reset the previously used location-level when
     assert.ok(admin_location_level.get('isNotDirty'));
 });
 
+test('parent and child locations will be removed when change llevel', (assert) => {
+    const location = store.push('location', {id: LD.idOne, location_children_fks: [LCD.idOne, LCD.idTwo], location_parents_fks: [LPD.idOne]});
+    let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameDistrict, locations: [LD.unusedId]});
+    store.push('location', {id: LD.idTwo});
+    store.push('location', {id: LD.idThree});
+    store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
+    store.push('location-children', {id: LCD.idTwo, location_pk: LD.idOne, child_pk: LD.idThree});
+    store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parent_pk: LD.idTwo});
+    assert.equal(location.get('location_children').get('length'), 2);
+    assert.equal(location.get('location_children').objectAt(0).get('id'), LCD.idOne);
+    assert.equal(location.get('location_children').objectAt(1).get('id'), LCD.idTwo);
+    assert.equal(location.get('children').get('length'), 2);
+    assert.equal(location.get('children').objectAt(0).get('id'), LD.idTwo);
+    assert.equal(location.get('children').objectAt(1).get('id'), LD.idThree);
+    assert.equal(location.get('location_parents').get('length'), 1);
+    assert.equal(location.get('location_parents').objectAt(0).get('id'), LPD.idOne);
+    assert.equal(location.get('parents').get('length'), 1);
+    assert.equal(location.get('parents').objectAt(0).get('id'), LD.idTwo);
+    assert.ok(location.get('isNotDirty'));
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    location.change_location_level(location_level.get('id'));
+    assert.ok(location.get('isNotDirty'));
+    assert.ok(location.get('isDirtyOrRelatedDirty'));
+    assert.equal(location.get('children').get('length'), 0);
+    assert.equal(location.get('parents').get('length'), 0);
+    location.saveRelated();
+    assert.ok(location.get('isNotDirty'));
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+});
+
 /*LOCATION TO STATUS*/
 test('location is dirty or related is dirty when existing status is altered', (assert) => {
     let location = store.push('location', {id: LD.idOne, status_fk: LDS.openId});

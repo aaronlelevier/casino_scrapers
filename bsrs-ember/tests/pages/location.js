@@ -69,7 +69,6 @@ export default PageObject.create({
   // childrensSelected: count(CHILDRENS),
 
   parentsClickDropdown: clickable(PARENT),
-  // parentsInput: text(PARENTS),
   parentsSelected: text(PARENTS_ONE),
   parentsOneRemove: clickable(`${PARENTS_ONE} > .ember-power-select-multiple-remove-btn`),
   parentsTwoRemove: clickable(`${PARENTS_TWO} > .ember-power-select-multiple-remove-btn`),
