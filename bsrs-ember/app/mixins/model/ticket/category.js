@@ -74,7 +74,8 @@ var CategoriesMixin = Ember.Mixin.create({
     find_parent_nodes(child_pk, parent_ids=[]) {
         if (!child_pk) { return; }
         let child = this.get('store').find('category', child_pk);
-        let parent_id = child.get('parent.id');
+        //TODO: check to see if only need to check for parent_id
+        let parent_id = child.get('parent.id') || child.get('parent_id');
         if (parent_id) {
             parent_ids.push(parent_id);
         }

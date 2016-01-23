@@ -1,6 +1,8 @@
 import Ember from 'ember';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
+var run = Ember.run;
+
 var extract_attachments = function(model, store) {
     model.attachments.forEach((attachment_id) => {
         store.push('attachment', {id: attachment_id});
@@ -19,8 +21,11 @@ var extract_categories = function(model, store, category_deserializer) {
         if(ticket_categories.length === 0) {
             const pk = Ember.uuid();
             server_sum.push(pk);
-            store.push('ticket-category', {id: pk, ticket_pk: model.id, category_pk: category.id});  
-            category_deserializer.deserialize(category, category.id);
+            run(() => {
+                store.push('ticket-category', {id: pk, ticket_pk: model.id, category_pk: category.id});  
+                store.push('category', category);
+            });
+            // category_deserializer.deserialize(category, category.id);
         }else{
             prevented_duplicate_m2m.push(ticket_categories[0].get('id'));
         }

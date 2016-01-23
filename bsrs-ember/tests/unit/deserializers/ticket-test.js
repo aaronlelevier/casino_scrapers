@@ -524,7 +524,6 @@ test('ticket-category m2m is set up correctly using deserialize single (starting
     assert.equal(categories.objectAt(1).get('id'), CD.idPlumbing);
     assert.equal(categories.objectAt(1).get('name'), CD.nameRepairChild);
     assert.equal(categories.objectAt(1).get('parent_id'), CD.idOne);
-    assert.equal(categories.objectAt(1).get('parent').get('name'), CD.nameOne);
     assert.equal(store.find('ticket-category').get('length'), 3);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
@@ -548,7 +547,6 @@ test('ticket-category m2m is set up correctly using deserialize list (starting w
     assert.equal(categories.objectAt(1).get('id'), CD.idPlumbing);
     assert.equal(categories.objectAt(1).get('name'), CD.nameRepairChild);
     assert.equal(categories.objectAt(1).get('parent_id'), CD.idOne);
-    assert.equal(categories.objectAt(1).get('parent').get('name'), CD.nameOne);
     assert.equal(store.find('ticket-category').get('length'), 3);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
