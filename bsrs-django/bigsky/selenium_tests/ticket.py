@@ -175,7 +175,6 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         # Select 3 Categories for this Ticket
         # one
         ticket_category_input = self.wait_for_xhr_request_xpath("(//*[contains(@class, 't-ticket-category-select-trigger')])[last()]")
-        ticket_category_input.send_keys("a")
         category_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
         category_option.click()
         # two
