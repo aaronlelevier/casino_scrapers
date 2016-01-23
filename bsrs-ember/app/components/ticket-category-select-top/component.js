@@ -35,7 +35,6 @@ var TicketCategories = Ember.Component.extend({
                 return;
             }
             ticket.change_category_tree(category);
-            this.sendAction('selected_category_top', category);
         },
         handleOpen() {
             const url = CATEGORY_URL + 'parents/';

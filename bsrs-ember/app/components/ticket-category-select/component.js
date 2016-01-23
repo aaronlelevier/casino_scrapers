@@ -30,8 +30,14 @@ var TicketCategories = Ember.Component.extend({
         selected(category) {
             let ticket = this.get('ticket');
             ticket.change_category_tree(category);
-            this.sendAction('selected_category', category);
         },
+        handleOpen(category_parent_id) {
+            const url = `${CATEGORY_URL}?parent=${category_parent_id}`;
+            const _this = this;
+            PromiseMixin.xhr(url, 'GET').then((response) => {
+                _this.set('options', response.results);
+            });
+        }
     }
 });
 
