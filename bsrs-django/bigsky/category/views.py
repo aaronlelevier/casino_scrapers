@@ -26,7 +26,7 @@ class CategoryViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
 
         `/api/admin/categories/?parent=id`
 
-    3. Get all categories for selectize input
+    3. Get all categories for power select input
         `/api/admin/categories/?name__icontains={x}&page_size=25`
     '''
     model = Category
@@ -39,7 +39,9 @@ class CategoryViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
         """
         set the serializer based on the method
         """
-        if self.action == 'list':
+        if 'parent' in self.request.query_params.dict():
+            return cs.CategoryIDNameSerializerTicket
+        elif self.action == 'list':
             return cs.CategoryListSerializer
         elif self.action == 'retrieve':
             return cs.CategoryDetailSerializer

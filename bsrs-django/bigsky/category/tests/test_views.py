@@ -369,13 +369,11 @@ class CategoryFilterTests(APITransactionTestCase):
 
     def test_filter_top_level_has_children(self):
         response = self.client.get('/api/admin/categories/parents/')
-
         # data
         data = json.loads(response.content.decode('utf8'))
         data = data['results'][0]
         # db object
         category = Category.objects.filter(parent__isnull=True).first()
-
         self.assertIsInstance(data['children'], list)
         child = data['children'][0]
         self.assertIsInstance(child, dict)
@@ -390,6 +388,10 @@ class CategoryFilterTests(APITransactionTestCase):
         response = self.client.get('/api/admin/categories/?parent={}'.format(self.trade.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], self.trade.children.count())
+        self.assertIn('children_fks', data['results'][0])
+        self.assertIn('parent_id', data['results'][0])
+        self.assertIn('level', data['results'][0])
+        self.assertIn('name', data['results'][0])
 
     def test_filter_by_name(self):
         mommy.make(Category, name="cat")
