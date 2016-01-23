@@ -202,7 +202,7 @@ test('removing a ticket-person will mark the ticket as dirty and reduce the asso
 test('replacing a ticket-person with some other ticket-person still shows the ticket model as dirty', (assert) => {
     store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
     store.push('person', {id: PD.id});
-    store.push('person', {id: PD.idTwo});
+    const person_two = {id: PD.idTwo};
     ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne]});
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
@@ -211,7 +211,7 @@ test('replacing a ticket-person with some other ticket-person still shows the ti
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     assert.equal(ticket.get('cc').get('length'), 0);
-    ticket.add_person(PD.idTwo);
+    ticket.add_person(person_two);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     assert.equal(ticket.get('cc').get('length'), 1);
@@ -221,9 +221,9 @@ test('replacing a ticket-person with some other ticket-person still shows the ti
 /*TICKET TO PEOPLE M2M*/
 test('cc property only returns the single matching item even when multiple people (cc) exist', (assert) => {
     store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.idTwo});
-    store.push('person', {id: PD.idTwo});
+    const person_two = {id: PD.idTwo};
     ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne]});
-    ticket.add_person(PD.idTwo);
+    ticket.add_person(person_two);
     let cc = ticket.get('cc');
     assert.equal(cc.get('length'), 1);
     assert.equal(cc.objectAt(0).get('id'), PD.idTwo);
@@ -243,11 +243,11 @@ test('cc property returns multiple matching items when multiple people (cc) exis
 
 test('cc property will update when the m2m array suddenly has the person pk (starting w/ empty array)', (assert) => {
     ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: []});
-    let person = store.push('person', {id: PD.id});
+    let person = {id: PD.idOne};
     assert.equal(ticket.get('cc').get('length'), 0);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    ticket.add_person(PD.id);
+    ticket.add_person(person);
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.equal(ticket.get('cc').objectAt(0).get('id'), PD.id);
     assert.ok(ticket.get('ccIsDirty'));
@@ -258,11 +258,11 @@ test('cc property will update when the m2m array suddenly has the person pk', (a
     store.push('ticket-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
     ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne]});
     let person = store.push('person', {id: PD.id});
-    let person_two = store.push('person', {id: PD.idTwo});
+    let person_two = {id: PD.idTwo};
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    ticket.add_person(PD.idTwo);
+    ticket.add_person(person_two);
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.equal(ticket.get('cc').objectAt(0).get('id'), PD.id);
     assert.equal(ticket.get('cc').objectAt(1).get('id'), PD.idTwo);
@@ -311,7 +311,7 @@ test('add_person will add back old join model after it was removed and dirty the
     store.push('ticket-person', {id: TPD.idTwo, ticket_pk: TD.idOne, person_pk: PD.idThree});
     ticket.remove_person(person_three.get('id'));
     assert.equal(ticket.get('cc').get('length'), 1);
-    ticket.add_person(person_three.get('id'));
+    ticket.add_person(person_three);
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.ok(ticket.get('ccIsNotDirty'));
 });
@@ -354,14 +354,14 @@ test('multiple ticket\'s with same cc will rollback correctly', (assert) => {
 test('when cc is changed dirty tracking works as expected (replacing)', (assert) => {
     store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
     store.push('person', {id: PD.id});
-    store.push('person', {id: PD.idTwo});
+    const person_two = {id: PD.idTwo};
     ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne]});
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     ticket.remove_person(PD.id);
     assert.ok(ticket.get('ccIsDirty'));
     assert.equal(ticket.get('cc').get('length'), 0);
-    ticket.add_person(PD.idTwo);
+    ticket.add_person(person_two);
     assert.ok(ticket.get('ccIsDirty'));
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.equal(ticket.get('cc').objectAt(0).get('id'), PD.idTwo);
@@ -370,7 +370,7 @@ test('when cc is changed dirty tracking works as expected (replacing)', (assert)
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     ticket.remove_person(PD.id);
-    ticket.add_person(PD.idTwo);
+    ticket.add_person(person_two);
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
@@ -428,7 +428,7 @@ test('rollback ticket will reset the previously used people (cc) when switching 
 test('rollback cc will reset the previous people (cc) when switching from one person to another and saving in between each step', (assert) => {
     store.push('person', {id: PD.id});
     store.push('person', {id: PD.idTwo});
-    store.push('person', {id: PD.unusedId});
+    const person_unused = {id: PD.unusedId};
     store.push('ticket-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
     store.push('ticket-person', {id: TPD.idTwo, person_pk: PD.idTwo, ticket_pk: TD.idOne});
     ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne, TPD.idTwo]});
@@ -443,7 +443,7 @@ test('rollback cc will reset the previous people (cc) when switching from one pe
     assert.ok(ticket.get('isNotDirty'));
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    ticket.add_person(PD.unusedId);
+    ticket.add_person(person_unused);
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));

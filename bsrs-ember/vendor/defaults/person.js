@@ -61,6 +61,7 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
             sorted_username: BSRS_PERSON_SORTED_USERNAME,
 
             donald_first_name: 'Donald',
+            donald_last_name: 'Trump',
             donald: 'Donald Trump',
             nameOne: 'wanker',
             nameTwo: 'bonker',

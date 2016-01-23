@@ -517,7 +517,9 @@ test('clicking and typing into power select for people will fire off xhr request
         assert.ok(!ticket.get('cc.length'));
     });
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
-    xhr(people_endpoint, 'GET', null, {}, 200, PF.list());
+    const payload = PF.list();
+    payload.results.push(PF.get(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
+    ajax(people_endpoint, 'GET', null, {}, 200, payload);
     page.ccClickDropdown();
     fillIn(`${CC_SEARCH}`, 'a');
     andThen(() => {
@@ -579,7 +581,9 @@ test('can remove and add back same cc and save empty cc', (assert) => {
         assert.ok(!ticket.get('cc.length'));
     });
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
-    xhr(people_endpoint, 'GET', null, {}, 200, PF.list());
+    const payload = PF.list();
+    payload.results.push(PF.get(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
+    ajax(people_endpoint, 'GET', null, {}, 200, payload);
     page.ccClickDropdown();
     fillIn(`${CC_SEARCH}`, 'a');
     andThen(() => {

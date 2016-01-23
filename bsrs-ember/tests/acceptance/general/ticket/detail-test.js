@@ -297,12 +297,10 @@ test('clicking and typing into power select for people will fire off xhr request
         assert.equal(page.ccSelected().indexOf(PD.first_name), 2);
     });
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
-    xhr(people_endpoint, 'GET', null, {}, 200, PF.list());
+    const payload = PF.list();
+    payload.results.push(PF.get(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
+    xhr(people_endpoint, 'GET', null, {}, 200, payload);
     page.ccClickDropdown();
-    //testing filter out new flag in repo
-    run(function() {
-        store.push('person', {id: 'testingNewFilter', fullname: 'watA', new: true});
-    });
     fillIn(`${CC_SEARCH}`, 'a');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -364,8 +362,8 @@ test('clicking and typing into power select for people will fire off xhr request
     });
     let response_put = TF.detail(TD.idOne);
     response_put.cc = {id: PD.idThree, name: PD.storeNameThree};
-    let payload = TF.put({id: TD.idOne, cc: [PD.idDonald, PD.idOne, PD.idBoy]});
-    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response_put);
+    const payload_two = TF.put({id: TD.idOne, cc: [PD.idDonald, PD.idOne, PD.idBoy]});
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload_two), {}, 200, response_put);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
@@ -388,7 +386,9 @@ test('can remove and add back same cc and save empty cc', (assert) => {
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     });
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
-    xhr(people_endpoint, 'GET', null, {}, 200, PF.list());
+    let payload = PF.list();
+    payload.results.push(PF.get(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
+    xhr(people_endpoint, 'GET', null, {}, 200, payload);
     page.ccClickDropdown();//don't know why I have to do this
     fillIn(`${CC_SEARCH}`, 'a');
     andThen(() => {
@@ -425,7 +425,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
         assert.ok(ticket.get('ccIsNotDirty'));
         assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     });
-    let payload = TF.put({id: TD.idOne, cc: [PD.idOne]});
+    payload = TF.put({id: TD.idOne, cc: [PD.idOne]});
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
@@ -435,7 +435,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
 
 test('starting with multiple cc, can remove all ccs (while not populating options) and add back', (assert) => {
     detail_data.cc = [...detail_data.cc, PF.get(PD.idTwo)];
-    detail_data.cc[1].fullname = PD.fullname + 'i';
+    detail_data.cc[1].first_name = PD.first_name + 'i';
     page.visitDetail();
     andThen(() => {
         let ticket = store.find('ticket', TD.idOne);
@@ -470,11 +470,11 @@ test('starting with multiple cc, can remove all ccs (while not populating option
     page.ccClickMel();
     andThen(() => {
         let ticket = store.find('ticket', TD.idOne);
-        assert.equal(ticket.get('cc').get('length'), 2);
-        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(page.ccsSelected(), 2);
+        assert.equal(ticket.get('cc').get('length'), 1);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        assert.equal(page.ccsSelected(), 1);
     });
-    let payload = TF.put({id: TD.idOne, cc: [PD.idOne, PD.idTwo]});
+    let payload = TF.put({id: TD.idOne, cc: [PD.idOne]});
     ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {

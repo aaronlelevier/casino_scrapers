@@ -24,9 +24,11 @@ var CCMixin = Ember.Mixin.create({
         };
         return this.get('store').find('ticket-person', filter);
     }),
-    add_person(person_pk) {
+    add_person(person) {
         const ticket_pk = this.get('id');
         const store = this.get('store');
+        const new_person = store.push('person', person);
+        const person_pk = new_person.get('id');
         //check for existing
         const ticket_people = store.find('ticket-person').toArray();
         let existing = ticket_people.filter((m2m) => {

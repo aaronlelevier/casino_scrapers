@@ -6,5 +6,5 @@
   searchField="name"
   as |person|
 }}
-  {{person.fullname}}
+  {{concat-name person.first_name person.last_name}}
 {{/power-select-multiple}}

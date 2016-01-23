@@ -10,8 +10,8 @@ var TicketPeopleMulti = Ember.Component.extend({
             const old_cc_ids = ticket.get('cc_ids');
             const new_cc_ids = new_cc_selection.mapBy('id');
             new_cc_selection.forEach((cc) => {
-                if (Ember.$.inArray(cc.get('id'), old_cc_ids) < 0) {
-                    ticket.add_person(cc.get('id'));
+                if (Ember.$.inArray(cc.id, old_cc_ids) < 0) {
+                    ticket.add_person(cc);
                 }
             });
             old_cc_selection.forEach((old_cc) => {
