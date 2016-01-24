@@ -170,10 +170,10 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
         serializer = self._all_related_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-    @list_route(methods=['GET'], url_path=r'get-level-parents/(?P<pk>[\w\-]+)')
-    def get_level_parents(self, request, pk=None):
+    @list_route(methods=['GET'], url_path=r'get-level-parents/(?P<pk>[\w\-]+)/(?P<llevel_id>[\w\-]+)')
+    def get_level_parents(self, request, pk=None, llevel_id=None):
         instance = get_object_or_404(self.model, pk=pk)
-        queryset = Location.objects.get_level_parents(instance)
+        queryset = Location.objects.get_level_parents(instance, llevel_id)
         queryset = self.filter_by_query_params(queryset)
         page = self.paginate_queryset(queryset)
         serializer = self._all_related_serializer(page, many=True)
