@@ -27,7 +27,7 @@ var LocationParentMulti = Ember.Component.extend({
             return new Ember.RSVP.Promise((resolve, reject) => {
                 Ember.run.later(() => {
                     if (Ember.isBlank(search)) { return resolve([]); }
-                    resolve(repo.findLocationParents(id, search));
+                    resolve(repo.findLocationParents(id, llevel_id, search));
                 }, 300);
             });
         }
