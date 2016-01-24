@@ -64,7 +64,7 @@ export default GridViewComponent.extend({
             headerLabel: 'ticket.label.numberSymbol',
             headerIsTranslatable: true,
             isSortable: true,
-            isSearchable: true
+            // isSearchable: true
         }
     ]
 });
