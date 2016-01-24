@@ -181,7 +181,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         location_page.find_address_new_entry_send_keys(1, old_street_one, old_city_one, old_zip_one)
         add_address_btn.click()
         location_page.find_address_new_entry_send_keys(2, old_street_two, old_city_two, old_zip_two)
-
         # location_level_input = Select(self.driver.find_element_by_id("location_location_level_select"))
         # location_level_input.select_by_index(1)
         self.gen_elem_page.click_save_btn()
@@ -220,12 +219,11 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self._fill_in(location)
         location_level_select = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-level-select ')]/div")
         location_level_select.click()
-        ll_option = self.driver.find_element_by_class_name("ember-power-select-option--highlighted")
+        ll_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-level-select-dropdown ')]/ul/li[text()='district_lp']")
         ll_option.click()
         # Fill in Children
         location_children_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-location-children-select')])[last()]")
         location_children_input.send_keys("a")
-        # self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         child_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
         child_option.click()
         # Fill in Parents
