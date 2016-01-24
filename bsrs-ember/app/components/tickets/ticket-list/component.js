@@ -28,9 +28,7 @@ export default GridViewComponent.extend({
             formattedField: 'formatted_date',
             headerLabel: 'ticket.label.created',
             headerIsTranslatable: true,
-            isSortable: true,
-            isFilterable: true,
-            isSearchable: true
+            isSortable: true
         },
         {
             field: 'location.name',
@@ -63,8 +61,10 @@ export default GridViewComponent.extend({
         },
         {
             field: 'number',
-            headerLabel: 'ticket.label.number',
-            headerIsTranslatable: true
+            headerLabel: 'ticket.label.numberSymbol',
+            headerIsTranslatable: true,
+            isSortable: true,
+            isSearchable: true
         }
     ]
 });

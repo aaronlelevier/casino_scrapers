@@ -84,6 +84,13 @@ div.rowTable {
                 &.ticket-status{
                     width: 120px;
                 }
+                &.selector{
+                    width: 28px;
+                    .dirty{
+                        font-size: 1.2rem;
+                        color: $lightGreen;
+                    }
+                }
             }
         }
     }

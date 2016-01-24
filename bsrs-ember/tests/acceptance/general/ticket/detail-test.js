@@ -995,3 +995,21 @@ test('textarea autoresize working for the request field', (assert) => {
     });
 
 });
+test('making a ticket dirty causes the dirty indicator do show in the grid', (assert) => {
+    page.visit();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+        assert.equal(find('.t-grid-data:eq(0) .dirty').length, 0);
+    });
+    click('.t-grid-data:eq(0)');
+    andThen(() => {
+        let ticket = store.find('ticket', TD.idOne);
+        assert.equal(currentURL(), DETAIL_URL);
+        fillIn(find('.t-ticket-request'), 'this\nthat\nthis\nthat\nthis\n');
+    });
+    page.visit();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+        assert.equal(find('.t-grid-data:eq(0) .dirty').length, 1);
+    });
+});

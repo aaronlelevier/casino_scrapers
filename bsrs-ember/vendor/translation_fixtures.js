@@ -217,6 +217,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'ticket.label.formatted_date':'Created',
                     'ticket.label.location-name':'Location',
                     'ticket.label.number':'Ticket Number',
+                    'ticket.label.numberSymbol':'#',
                     'ticket.label.priority-name':'Priority',
                     'ticket.label.request':'Request',
                     'ticket.label.requester':'Requester',
