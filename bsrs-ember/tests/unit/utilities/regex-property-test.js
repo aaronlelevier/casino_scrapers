@@ -18,6 +18,13 @@ test('will return true when regex is a match for single property (LOWERCASE)', f
     assert.equal(regex_property(object, property, regex), true);
 });
 
+test('will return true when regex is a match for number (not string type))', function(assert) {
+    const object = Ember.Object.create({number: 1});
+    const property = 'number';
+    const regex = new RegExp('1');
+    assert.equal(regex_property(object, property, regex), true);
+});
+
 test('will return true when regex is a match for single property (UPPERCASE)', function(assert) {
     const object = Ember.Object.create({name: 'XYZ'});
     const property = 'name';
