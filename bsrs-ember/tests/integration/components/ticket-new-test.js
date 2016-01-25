@@ -18,8 +18,6 @@ moduleForComponent('tickets/ticket-new', 'integration: ticket-new test', {
     setup() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status']);
         translation.initialize(this);
-        category_repo = repository.initialize(this.container, this.registry, 'category');
-        category_repo.findTopLevelCategories = function() { return store.find('category'); };
         run(function() {
             m2m = store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne});
             m2m_two = store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idTwo});
