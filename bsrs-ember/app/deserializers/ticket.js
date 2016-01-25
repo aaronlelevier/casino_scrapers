@@ -23,6 +23,7 @@ var extract_categories = function(model, store, category_deserializer) {
             server_sum.push(pk);
             run(() => {
                 store.push('ticket-category', {id: pk, ticket_pk: model.id, category_pk: category.id});  
+                category.previous_children_fks = category.children_fks;
                 store.push('category', category);
             });
             // category_deserializer.deserialize(category, category.id);

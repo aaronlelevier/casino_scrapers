@@ -1150,7 +1150,7 @@ test('can remove and add back same parents and save empty parents', (assert) => 
     });
 });
 
-test('scott starting with multiple parents, can remove all parents (while not populating options) and add back', (assert) => {
+test('starting with multiple parents, can remove all parents (while not populating options) and add back', (assert) => {
     page.visitDetail();
     andThen(() => {
         let location = store.find('location', LD.idOne);
