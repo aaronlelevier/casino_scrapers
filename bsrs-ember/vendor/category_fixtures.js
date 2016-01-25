@@ -31,6 +31,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
             cost_code: this.category_defaults.costCodeOne,
             label: this.category_defaults.labelOne,
             subcategory_label: this.category_defaults.subCatLabelOne,
+            parent: null
             // status: this.category_defaults.statusOne
         }
     },
