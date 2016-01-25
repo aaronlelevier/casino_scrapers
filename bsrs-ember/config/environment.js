@@ -36,7 +36,8 @@ module.exports = function(environment) {
             // Here you can pass flags/options to your application instance
             // when it is created
         },
-        DEFAULT_LOCATION_LEVEL: 'Company'
+        DEFAULT_LOCATION_LEVEL: 'Company',
+        DEBOUNCE_TIMEOUT_INTERVAL: 300
     };
 
     ENV.APP.NAMESPACE = '/api';
@@ -52,6 +53,7 @@ module.exports = function(environment) {
 
     if (environment === 'test') {
         // Testem prefers this...
+        ENV.DEBOUNCE_TIMEOUT_INTERVAL = 0;
         ENV.baseURL = '/';
         ENV.locationType = 'none';
         ENV.APP.emberModalDialog = {

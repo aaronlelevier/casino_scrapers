@@ -118,7 +118,10 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
     notLast: Ember.computed.not('last'),
     actions: {
         keyup(search) {
-            this.setProperties({page: 1, search: search});
+            Ember.run.scheduleOnce('actions', this, function() {
+                this.set('page', 1);
+                this.set('search', search);
+            }.bind(this));
         },
         sortBy(column) {
             const current = this.get('sort');
