@@ -284,6 +284,22 @@ class CategoryUpdateTests(APITestCase):
         self.assertIn(str(new_sub_category.id), data['children'])
         self.assertTrue(self.trade.children.filter(id=new_sub_category.id).exists())
 
+    def test_child_added_level_reflects_change(self):
+        new_sub_category = create_single_category()
+        self.assertEqual(new_sub_category.level, 0)
+        serializer = CategorySerializer(self.type)
+        data = serializer.data
+        data['children'] = [new_sub_category.id]
+
+        response = self.client.put('/api/admin/categories/{}/'.format(self.type.id),
+            data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(1, len(data['children']))
+        child = Category.objects.get(id=data['children'][0])
+        self.assertEqual(1, child.level)
+
 
 class CategoryCreateTests(APITestCase):
 
