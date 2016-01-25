@@ -210,6 +210,7 @@ es,ticket.label.created,Created,Created,Created,Creado,Creado,Creado,Creado,"'ti
 es,ticket.label.formatted_date,Created,Created,Created,Creado,Creado,Creado,Creado,"'ticket.label.formatted_date':'Creado',",
 es,ticket.label.location-name,Location,Location,Location,Localización,Localización,Localización,Localización,"'ticket.label.location-name':'Localización',",
 es,ticket.label.number,Ticket Number,Ticket Number,Ticket Number,Numero de ticket,Numero de ticket,Numero de ticket,Numero de ticket,"'ticket.label.number':'Numero de ticket',",
+es,ticket.label.numberSymbol,#,#,#,#,#,#,#,"'ticket.label.numberSymbol':'#',",
 es,ticket.label.priority-name,Priority,Priority,Priority,Prioridad,Prioridad,Prioridad,Prioridad,"'ticket.label.priority-name':'Prioridad',",
 es,ticket.label.request,Request,Request,Request,Petición,Petición,Petición,Petición,"'ticket.label.request':'Petición',",
 es,ticket.label.requester,Requester,Requester,Requester,Solicitante,Solicitante,Solicitante,Solicitante,"'ticket.label.requester':'Solicitante',",
@@ -233,4 +234,4 @@ es,ticket.status.unsatisfactory_completion,Unsatisfactory Completion,Unsatisfact
 es,upload.progress,Progress,Progress,Progress,Progreso,Progreso,Progreso,Progreso,"'upload.progress':'Progreso',",
 es,validation.invalid,Invalid,Invalid,Invalid,Inválido,Inválido,Inválido,Inválido,"'validation.invalid':'Inválido',",
 es,validation.valid,Valid,Valid,Valid,Válido,Válido,Válido,Válido,"'validation.valid':'Válido',",
-es,welcome,Hello,Hello,Hello,Hola,Hola,Hola,Hola,"'welcome':'Hola',",
+es,welcome,Hello,Hello,Hello,Hola,Hola,Hola,Hola,,

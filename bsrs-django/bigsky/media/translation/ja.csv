@@ -210,6 +210,7 @@ ja,ticket.label.created,Created,Created,Created,作成,作成,作成,作成,"'ti
 ja,ticket.label.formatted_date,Created,Created,Created,作成,作成,作成,作成,"'ticket.label.formatted_date':'作成',",
 ja,ticket.label.location-name,Location,Location,Location,ロケーション,ロケーション,ロケーション,ロケーション,"'ticket.label.location-name':'ロケーション',",
 ja,ticket.label.number,Ticket Number,Ticket Number,Ticket Number,チケット番号,チケット番号,チケット番号,チケット番号,"'ticket.label.number':'チケット番号',",
+ja,ticket.label.numberSymbol,#,#,#,＃,＃,＃,＃,"'ticket.label.numberSymbol':'＃',",
 ja,ticket.label.priority-name,Priority,Priority,Priority,優先,優先,優先,優先,"'ticket.label.priority-name':'優先',",
 ja,ticket.label.request,Request,Request,Request,要求,要求,要求,要求,"'ticket.label.request':'要求',",
 ja,ticket.label.requester,Requester,Requester,Requester,リクエスタ,リクエスタ,リクエスタ,リクエスタ,"'ticket.label.requester':'リクエスタ',",
@@ -233,4 +234,4 @@ ja,ticket.status.unsatisfactory_completion,Unsatisfactory Completion,Unsatisfact
 ja,upload.progress,Progress,Progress,Progress,進捗,進捗,進捗,進捗,"'upload.progress':'進捗',",
 ja,validation.invalid,Invalid,Invalid,Invalid,無効,無効,無効,無効,"'validation.invalid':'無効',",
 ja,validation.valid,Valid,Valid,Valid,正当な,正当な,正当な,正当な,"'validation.valid':'正当な',",
-ja,welcome,Hello,Hello,Hello,こんにちは,こんにちは,こんにちは,こんにちは,"'welcome':'こんにちは',",
+ja,welcome,Hello,Hello,Hello,こんにちは,こんにちは,こんにちは,こんにちは,,

@@ -210,6 +210,7 @@ en,ticket.label.created,Created,Created,,"'ticket.label.created':'Created',",Cre
 en,ticket.label.formatted_date,Created,Created,,"'ticket.label.formatted_date':'Created',",Created,Created
 en,ticket.label.location-name,Location,Location,,"'ticket.label.location-name':'Location',",Location,Location
 en,ticket.label.number,Ticket Number,Ticket Number,,"'ticket.label.number':'Ticket Number',",Ticket Number,Ticket Number
+en,ticket.label.numberSymbol,#,#,,"'ticket.label.numberSymbol':'#',",#,#
 en,ticket.label.priority-name,Priority,Priority,,"'ticket.label.priority-name':'Priority',",Priority,Priority
 en,ticket.label.request,Request,Request,,"'ticket.label.request':'Request',",Request,Request
 en,ticket.label.requester,Requester,Requester,,"'ticket.label.requester':'Requester',",Requester,Requester
