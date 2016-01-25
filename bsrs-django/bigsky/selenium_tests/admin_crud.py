@@ -171,11 +171,11 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         all_phone_number_inputs = location_page.find_all_ph_new_entries()
         last_phone_number_input = all_phone_number_inputs[1]
         last_phone_number_input.send_keys(old_phone_two)
-        # add_location_email_btn = self.gen_elem_page.find_add_email_btn()
-        # add_location_email_btn.click()
-        # location_page.find_email_new_entry_send_keys(old_email_one)
-        # add_location_email_btn.click()
-        # location_page.find_second_email_new_entry_send_keys(old_email_two)
+        add_location_email_btn = self.gen_elem_page.find_add_email_btn()
+        add_location_email_btn.click()
+        location_page.find_email_new_entry_send_keys(old_email_one)
+        add_location_email_btn.click()
+        location_page.find_second_email_new_entry_send_keys(old_email_two)
         add_address_btn = self.gen_elem_page.find_add_address_btn()
         add_address_btn.click()
         location_page.find_address_new_entry_send_keys(1, old_street_one, old_city_one, old_zip_one)
@@ -225,7 +225,10 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         location_children_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-location-children-select')])[last()]")
         location_children_input.send_keys("a")
         child_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
-        child_option.click()
+        try:
+            child_option.click()
+        except AttributeError as e:
+            raise e("child not found")
         # Fill in Parents
         location_parents_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-location-parent-select')])[last()]")
         location_parents_input.send_keys("a")
