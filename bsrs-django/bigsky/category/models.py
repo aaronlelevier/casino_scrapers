@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 
 from accounting.models import Currency
-from location.models import SelfRefrencingQuerySet, SelfRefrencingManager
+from location.models import SelfReferencingQuerySet, SelfReferencingManager
 from utils.models import BaseModel, BaseManager, BaseNameModel
 
 
@@ -27,11 +27,11 @@ class CategoryStatus(BaseNameModel):
         verbose_name_plural = "Category Statuses"
 
 
-class CategoryQuerySet(SelfRefrencingQuerySet):
+class CategoryQuerySet(SelfReferencingQuerySet):
     pass
 
 
-class CategoryManager(SelfRefrencingManager):
+class CategoryManager(SelfReferencingManager):
 
     def get_queryset(self):
         return CategoryQuerySet(self.model, self._db).filter(deleted__isnull=True)
@@ -50,13 +50,14 @@ class Category(BaseModel):
     label = models.CharField(max_length=100, editable=False, blank=True, null=True,
         help_text="This field cannot be set directly.  It is either set from "
                   "a system setting, or defaulted from the Parent Category.")
-    subcategory_label = models.CharField(max_length=100)
-    cost_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
+    subcategory_label = models.CharField(max_length=100, blank=True)
+    cost_amount = models.DecimalField(max_digits=15, decimal_places=4, default=0, blank=True, null=True)
     cost_currency = models.ForeignKey(Currency, blank=True, null=True)
     cost_code = models.CharField(max_length=100, blank=True, null=True)
     parent = models.ForeignKey("self", related_name="children", blank=True, null=True)
     status = models.ForeignKey(CategoryStatus, blank=True, null=True)
-    level = models.IntegerField(blank=True, default=0)
+    level = models.IntegerField(blank=True, default=0,
+        help_text="A count of how many parent categories that this Category has.")
 
     objects = CategoryManager()
 
@@ -68,10 +69,12 @@ class Category(BaseModel):
         return super(Category, self).save(*args, **kwargs)
 
     def _update_defalts(self):
-        if not self.parent:
-            self.label = settings.TOP_LEVEL_CATEGORY_LABEL
-        else:
-            self.label = self.parent.subcategory_label
+        if not self.label:
+            if self.parent and self.parent.subcategory_label:
+                self.label = self.parent.subcategory_label
+            else:
+                self.label = settings.TOP_LEVEL_CATEGORY_LABEL
+
         if not self.status:
             self.status = CategoryStatus.objects.default()
 
@@ -117,5 +120,6 @@ class Category(BaseModel):
         return {
             'id': str(self.id),
             'name': self.name,
-            'parent': str(self.parent.id) if self.parent else None
+            'parent': str(self.parent.id) if self.parent else None,
+            'level': self.level
         }

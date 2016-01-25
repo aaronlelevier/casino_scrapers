@@ -12,7 +12,7 @@ var FilterBy = Ember.Mixin.create({
         }
         this.set('filterField', column);
         this.toggleProperty('toggleFilter');
-        this.set('filterPlaceholder', 'Search ' + column);
+        this.set('filterPlaceholder', column);
         this.set('targetFilter', '.t-filter-' + css_column);
         this.set('page', 1);
     }

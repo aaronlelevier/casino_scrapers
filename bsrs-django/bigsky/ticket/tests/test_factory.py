@@ -168,8 +168,8 @@ class CreateTicketsTests(TestCase):
         ret = factory.create_ticket()
 
         self.assertEqual(
-            str(ret.id),
-            generate_uuid(factory.TICKET_BASE_ID, incr+1)
+            str(ret.id)[:-1],
+            str(generate_uuid(Ticket))[:-1]
         )
 
 class CreateTicketsWithSingleCategory(TestCase):
@@ -205,25 +205,9 @@ class CreateStatusTests(TestCase):
         self.assertEqual(TicketStatus.objects.all()[3].name, 'ticket.status.deferred')
         self.assertEqual(TicketStatus.objects.all()[4].name, 'ticket.status.denied')
         self.assertEqual(TicketStatus.objects.all()[5].name, 'ticket.status.problem_solved')
-        self.assertEqual(TicketStatus.objects.all()[6].name, 'ticket.status.completed')
+        self.assertEqual(TicketStatus.objects.all()[6].name, 'ticket.status.complete')
         self.assertEqual(TicketStatus.objects.all()[7].name, 'ticket.status.closed')
         self.assertEqual(TicketStatus.objects.last().name, 'ticket.status.unsatisfactory_completion')
-
-    def test_generate_uuid(self):
-        """
-        'test' is removed from ``sys.argv`` in order to trigger the static
-        generator for UUIDs.
-        """
-        global sys
-        sys.argv = ''
-        incr = TicketStatus.objects.count()
-
-        ret = factory.create_ticket_status()
-
-        self.assertEqual(
-            str(ret.id),
-            generate_uuid(factory.TICKET_STATUS_BASE_ID, incr+1)
-        )
 
 
 class CreatePriorityTests(TestCase):
@@ -234,28 +218,12 @@ class CreatePriorityTests(TestCase):
         self.assertIn(obj.name, TICKET_PRIORITIES)
 
     def test_multiple(self):
-        factory.create_ticket_priorites()
+        factory.create_ticket_priorities()
         self.assertTrue(TicketPriority.objects.all())
         self.assertEqual(TicketPriority.objects.first().name, 'ticket.priority.emergency')
         self.assertEqual(TicketPriority.objects.all()[1].name, 'ticket.priority.high')
         self.assertEqual(TicketPriority.objects.all()[2].name, 'ticket.priority.medium')
         self.assertEqual(TicketPriority.objects.last().name, 'ticket.priority.low')
-
-    def test_generate_uuid(self):
-        """
-        'test' is removed from ``sys.argv`` in order to trigger the static
-        generator for UUIDs.
-        """
-        global sys
-        sys.argv = ''
-        incr = TicketPriority.objects.count()
-
-        ret = factory.create_ticket_priority()
-
-        self.assertEqual(
-            str(ret.id),
-            generate_uuid(factory.TICKET_PRIORITY_BASE_ID, incr+1)
-        )
 
 
 class CreateTicketActivityTests(TestCase):

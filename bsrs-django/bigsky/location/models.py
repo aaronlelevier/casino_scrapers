@@ -28,7 +28,7 @@ class Country(BaseNameModel):
 
 ### SELF REFERENCING BASE
 
-class SelfRefrencingQuerySet(models.query.QuerySet):
+class SelfReferencingQuerySet(models.query.QuerySet):
     "Query Parent / Child relationships for all SelfRefrencing Objects."
 
     def get_all_children(self, parent, all_children=None):
@@ -94,6 +94,11 @@ class SelfRefrencingQuerySet(models.query.QuerySet):
         master_set = set()
 
         for obj in self.all():
+
+            if obj.name == settings.LOCATION_TOP_LEVEL_NAME:
+                master_set.update(type(obj).objects.values_list("id", flat=True))
+                continue
+
             # parent
             master_set.add(obj.id)
             # children
@@ -103,10 +108,10 @@ class SelfRefrencingQuerySet(models.query.QuerySet):
         return master_set
 
 
-class SelfRefrencingManager(BaseManager):
+class SelfReferencingManager(BaseManager):
     
     def get_queryset(self):
-        return SelfRefrencingQuerySet(self.model, self._db).filter(deleted__isnull=True)
+        return SelfReferencingQuerySet(self.model, self._db).filter(deleted__isnull=True)
         
     def get_all_children(self, parent, all_children=None):
         return self.get_queryset().get_all_children(parent, all_children)
@@ -116,6 +121,10 @@ class SelfRefrencingManager(BaseManager):
 
     def objects_and_their_children(self):
         return self.get_queryset().objects_and_their_children()
+
+    def create_top_level(self):
+        obj, _ = self.get_or_create(name=settings.LOCATION_TOP_LEVEL_NAME)
+        return obj
 
 
 class SelfRefrencingBaseModel(models.Model):
@@ -129,7 +138,7 @@ class SelfRefrencingBaseModel(models.Model):
         symmetrical=False, related_name='parents')
 
     # Manager
-    objects = SelfRefrencingManager()
+    objects = SelfReferencingManager()
 
     class Meta:
         abstract = True
@@ -204,73 +213,66 @@ class LocationType(BaseNameModel):
 
 ### LOCATION
 
-class LocationQuerySet(SelfRefrencingQuerySet):
+class LocationQuerySet(SelfReferencingQuerySet):
     ''' '''
 
     def get_level_children(self, location, level_id):
         '''
-        Includes error handling that the level_id is valid.
-
-        :location: Parent ``Location``
-        :level_id: 
-            ``LocationLevel.id`` of the ``Child Locations`` 
-            to return.
+        :location: Parent ``Location`` to find one all of the locations one llevel deep
         '''
         try:
-            child_levels = LocationLevel.objects.get_all_children(location.location_level)
-            location_level = LocationLevel.objects.filter(
-                id__in=child_levels.values_list('id', flat=True)).get(id=level_id)
+            new_llevel = LocationLevel.objects.get(id=level_id)
+            child_levels = LocationLevel.objects.get_all_children(new_llevel)
         except ObjectDoesNotExist:
             raise
-        return self.filter(location_level=location_level)
+        return self.filter(location_level__in=child_levels)
 
     def get_level_parents(self, location, level_id):
         '''
-        Includes error handling that the level_id is valid.
-        
         :location: Child ``Location``
-        :level_id: 
-            ``LocationLevel.id`` of the ``Parent Locations`` 
-            to return.
+            level_id might be different than whats stored in the db
         '''
         try:
-            parent_levels = LocationLevel.objects.get_all_parents(location.location_level)
-            location_level = LocationLevel.objects.filter(
-                id__in=parent_levels.values_list('id', flat=True)).get(id=level_id)
+            new_llevel = LocationLevel.objects.get(id=level_id)
+            parent_levels = LocationLevel.objects.get_all_parents(new_llevel)
         except ObjectDoesNotExist:
             raise
-        return self.filter(location_level=location_level)
+        return self.filter(location_level__in=parent_levels)
 
     def search_multi(self, keyword):
         return self.filter(
             Q(name__icontains=keyword) | \
             Q(number__icontains=keyword) | \
             Q(addresses__city__icontains=keyword) | \
-            Q(addresses__address1__icontains=keyword) | \
-            Q(addresses__address2__icontains=keyword) | \
-            Q(addresses__zip__icontains=keyword)
+            Q(addresses__address__icontains=keyword) | \
+            Q(addresses__postal_code__icontains=keyword)
         )
 
 
-class LocationManager(SelfRefrencingManager):
+class LocationManager(SelfReferencingManager):
     
     def get_queryset(self):
         return LocationQuerySet(self.model, self._db).filter(deleted__isnull=True)
         
-    def get_level_children(self, location, level_id):
+    def get_level_children(self, location, llevel_id):
         '''
         Get all child Locations at a specific LocationLevel.
         '''
-        return self.get_queryset().get_level_children(location, level_id)
+        return self.get_queryset().get_level_children(location, llevel_id)
 
-    def get_level_parents(self, location, level_id):
+    def get_level_parents(self, location, llevel_id):
         '''
         Get all Parent Locations at a specific LocationLevel.
         '''
-        return self.get_queryset().get_level_parents(location, level_id)
+        return self.get_queryset().get_level_parents(location, llevel_id)
 
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
+
+    def create_top_level(self):
+        location_level = LocationLevel.objects.create_top_level()
+        obj, _ = self.get_or_create(name=settings.LOCATION_TOP_LEVEL_NAME, location_level=location_level)
+        return obj
 
 
 class Location(SelfRefrencingBaseModel, BaseModel):

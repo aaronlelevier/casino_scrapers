@@ -1,9 +1,9 @@
 from rest_framework import viewsets
 
 from utils.mixins import (CheckIdCreateMixin, DestroyModelMixin, OrderingQuerySetMixin,
-    FilterRelatedMixin, RelatedOrderingQuerySetMixin)
+    FilterRelatedMixin)
 
 
 class BaseModelViewSet(CheckIdCreateMixin, DestroyModelMixin, FilterRelatedMixin,
-    OrderingQuerySetMixin, RelatedOrderingQuerySetMixin, viewsets.ModelViewSet):
+    OrderingQuerySetMixin, viewsets.ModelViewSet):
     pass

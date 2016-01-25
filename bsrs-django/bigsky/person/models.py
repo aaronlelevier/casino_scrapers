@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import UserManager, Group, AbstractUser
 from django.contrib.auth.hashers import make_password, identify_hasher
 from django.contrib.contenttypes.fields import GenericRelation
-from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -112,8 +112,6 @@ class Role(BaseModel):
     msg_copy_default = models.BooleanField(blank=True, default=False)
     msg_stored_link = models.BooleanField(blank=True, default=False)
 
-    settings = JSONField(blank=True, default={})
-
     __original_values = {}
 
     def __init__(self, *args, **kwargs):
@@ -128,6 +126,7 @@ class Role(BaseModel):
     def save(self, *args, **kwargs):
         self._update_defaults()
         self._update_password_history_length()
+        self._validate_related_categories()
         return super(Role, self).save(*args, **kwargs)
 
     @property
@@ -158,24 +157,6 @@ class Role(BaseModel):
 
         if not self.default_auth_currency:
             self.default_auth_currency = Currency.objects.default()
-
-        self._update_settings()
-
-    def _update_settings(self):
-        default_settings_keys = self.default_settings.keys()
-        explicit_settings_keys = self.settings.keys()
-
-        settings_needed = set(default_settings_keys) - set(explicit_settings_keys)
-
-        for s in settings_needed:
-            self.settings[s] = self.default_settings.get(s)
-
-    @property
-    def default_settings(self):
-        return {
-            'login_grace': 1,
-            'proj_preapprove': False
-        }
 
     def _update_password_history_length(self):
         """
@@ -235,6 +216,15 @@ class Role(BaseModel):
         )
 
     # Password Validators: end
+
+    def _validate_related_categories(self):
+        child_categories = []
+        for category in self.categories.exclude(parent__isnull=True):
+            child_categories.append(category.name)
+
+        if child_categories:
+            raise ValidationError("Role can't have related child categories: {}."
+                                 .format(', '.join(child_categories)))
 
 
 class ProxyRole(BaseModel):
@@ -365,8 +355,8 @@ class Person(BaseModel, AbstractUser):
             'employee_id': self.employee_id,
             'locale': str(self.locale.id if self.locale else self._get_locale(locale)),
             'role': str(self.role.id),
-            'all_locations_and_children': [str(x) for x in self.all_locations_and_children()],
-            'all_role_categories_and_children': [str(x) for x in self.all_role_categories_and_children()],
+            'all_locations_and_children': self.all_locations_and_children(),
+            'categories': self.categories(),
         }
 
     def to_simple_dict(self):
@@ -446,10 +436,7 @@ class Person(BaseModel, AbstractUser):
     def _validate_locations(self):
         """
         Remove invalid Locations from the Person based on
-        their Role.location_level
-
-        TODO: Change this to raise an ``Exception`` here, so can debug easier if 
-        ``locations`` are getting silenty removed from the ``Person``
+        their Role.location_level.
         """
         for l in self.locations.all():
             if l.location_level != self.role.location_level:
@@ -463,10 +450,12 @@ class Person(BaseModel, AbstractUser):
                 self.password_history[len(self.password_history)-settings.MAX_PASSWORDS_STORED:])
 
     def all_locations_and_children(self):
-        return self.locations.objects_and_their_children()
+        ids = self.locations.objects_and_their_children()
+        return [{'id': str(x.id), 'name': x.name, 'location_level': str(x.location_level.id), 'status': str(x.status.id)}
+               for x in Location.objects.filter(id__in=ids)]
 
-    def all_role_categories_and_children(self):
-        return self.role.categories.objects_and_their_children()
+    def categories(self):
+        return [{'id': str(x.id), 'name': x.name} for x in self.role.categories.all()]
 
 
 @receiver(post_save, sender=Person)

@@ -10,6 +10,8 @@ var BSRS_GLOBAL_MESSAGE_DEFAULTS_OBJECT = (function() {
             location_power_select: '',
             power_search: 'Type to search',
             no_results: 'No Matches',
+            invalid_ph: 'invalid phone number',
+            invalid_email: 'invalid email',
         };
     };
     return factory;

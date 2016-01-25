@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from category.serializers import CategoryIDNameSerializer
+from category.serializers import CategoryIDNameSerializerTicket
 from generic.serializers import Attachment
 from location.serializers import LocationSerializer
 from person.serializers import PersonTicketSerializer
@@ -27,7 +27,7 @@ class TicketCreateSerializer(BaseCreateSerializer):
 class TicketListSerializer(serializers.ModelSerializer):
 
     location = LocationSerializer()
-    categories = CategoryIDNameSerializer(many=True)
+    categories = CategoryIDNameSerializerTicket(many=True)
     assignee = PersonTicketSerializer(required=False)
 
     class Meta:
@@ -45,7 +45,7 @@ class TicketSerializer(serializers.ModelSerializer):
 
     location = LocationSerializer()
     assignee = PersonTicketSerializer(required=False)
-    categories = CategoryIDNameSerializer(many=True)
+    categories = CategoryIDNameSerializerTicket(many=True)
     cc = PersonTicketSerializer(many=True)
 
     class Meta:

@@ -16,6 +16,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/person';
 import random from 'bsrs-ember/models/random';
+import {multi_new_put_payload} from 'bsrs-ember/tests/helpers/payloads/person';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
@@ -201,5 +202,39 @@ test('can change default role', (assert) => {
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
+    });
+});
+
+test('adding a new person should allow for another new person to be created after the first is persisted', (assert) => {
+    clearxhr(detail_xhr);
+    let person_count;
+    random.uuid = original_uuid;
+    payload.id = 'abc123';
+    patchRandomAsync(0);
+    visit(NEW_URL);
+    fillIn('.t-person-username', PD.username);
+    fillIn('.t-person-password', PD.password);
+    ajax(`${PREFIX}${BASE_PEOPLE_URL}/`, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
+    ajax(`${PREFIX}${BASE_PEOPLE_URL}/abc123/`, 'GET', null, {}, 200, people_detail_data);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), `${BASE_PEOPLE_URL}/abc123`);
+        person_count = store.find('person').get('length');
+    });
+    page.roleClickDropdown();
+    page.roleClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
+    ajax(`${PREFIX}${BASE_PEOPLE_URL}/abc123/`, 'PUT', JSON.stringify(multi_new_put_payload), {}, 200, {});
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(store.find('person').get('length'), person_count);
+    });
+    click('.t-add-new');
+    andThen(() => {
+        assert.equal(currentURL(), NEW_URL);
+        assert.equal(store.find('person').get('length'), person_count + 1);
+        assert.equal(find('.t-person-username').val(), '');
     });
 });

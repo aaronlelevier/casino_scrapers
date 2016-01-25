@@ -202,7 +202,7 @@ test('removing a ticket-person will mark the ticket as dirty and reduce the asso
 test('replacing a ticket-person with some other ticket-person still shows the ticket model as dirty', (assert) => {
     store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
     store.push('person', {id: PD.id});
-    store.push('person', {id: PD.idTwo});
+    const person_two = {id: PD.idTwo};
     ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne]});
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
@@ -211,7 +211,7 @@ test('replacing a ticket-person with some other ticket-person still shows the ti
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     assert.equal(ticket.get('cc').get('length'), 0);
-    ticket.add_person(PD.idTwo);
+    ticket.add_person(person_two);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     assert.equal(ticket.get('cc').get('length'), 1);
@@ -221,9 +221,9 @@ test('replacing a ticket-person with some other ticket-person still shows the ti
 /*TICKET TO PEOPLE M2M*/
 test('cc property only returns the single matching item even when multiple people (cc) exist', (assert) => {
     store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.idTwo});
-    store.push('person', {id: PD.idTwo});
+    const person_two = {id: PD.idTwo};
     ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne]});
-    ticket.add_person(PD.idTwo);
+    ticket.add_person(person_two);
     let cc = ticket.get('cc');
     assert.equal(cc.get('length'), 1);
     assert.equal(cc.objectAt(0).get('id'), PD.idTwo);
@@ -243,11 +243,11 @@ test('cc property returns multiple matching items when multiple people (cc) exis
 
 test('cc property will update when the m2m array suddenly has the person pk (starting w/ empty array)', (assert) => {
     ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: []});
-    let person = store.push('person', {id: PD.id});
+    let person = {id: PD.idOne};
     assert.equal(ticket.get('cc').get('length'), 0);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    ticket.add_person(PD.id);
+    ticket.add_person(person);
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.equal(ticket.get('cc').objectAt(0).get('id'), PD.id);
     assert.ok(ticket.get('ccIsDirty'));
@@ -258,11 +258,11 @@ test('cc property will update when the m2m array suddenly has the person pk', (a
     store.push('ticket-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
     ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne]});
     let person = store.push('person', {id: PD.id});
-    let person_two = store.push('person', {id: PD.idTwo});
+    let person_two = {id: PD.idTwo};
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    ticket.add_person(PD.idTwo);
+    ticket.add_person(person_two);
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.equal(ticket.get('cc').objectAt(0).get('id'), PD.id);
     assert.equal(ticket.get('cc').objectAt(1).get('id'), PD.idTwo);
@@ -303,6 +303,19 @@ test('when cc is changed dirty tracking works as expected (removing)', (assert) 
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
 
+test('add_person will add back old join model after it was removed and dirty the model (multiple)', (assert) => {
+    const ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne, TPD.idTwo]});
+    const person_two = store.push('person', {id: PD.idTwo});
+    const person_three = store.push('person', {id: PD.idThree});
+    store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.idTwo});
+    store.push('ticket-person', {id: TPD.idTwo, ticket_pk: TD.idOne, person_pk: PD.idThree});
+    ticket.remove_person(person_three.get('id'));
+    assert.equal(ticket.get('cc').get('length'), 1);
+    ticket.add_person(person_three);
+    assert.equal(ticket.get('cc').get('length'), 2);
+    assert.ok(ticket.get('ccIsNotDirty'));
+});
+
 test('multiple ticket\'s with same cc will rollback correctly', (assert) => {
     store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
     store.push('ticket-person', {id: TPD.idTwo, ticket_pk: TD.idTwo, person_pk: PD.id});
@@ -341,14 +354,14 @@ test('multiple ticket\'s with same cc will rollback correctly', (assert) => {
 test('when cc is changed dirty tracking works as expected (replacing)', (assert) => {
     store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
     store.push('person', {id: PD.id});
-    store.push('person', {id: PD.idTwo});
+    const person_two = {id: PD.idTwo};
     ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne]});
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     ticket.remove_person(PD.id);
     assert.ok(ticket.get('ccIsDirty'));
     assert.equal(ticket.get('cc').get('length'), 0);
-    ticket.add_person(PD.idTwo);
+    ticket.add_person(person_two);
     assert.ok(ticket.get('ccIsDirty'));
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.equal(ticket.get('cc').objectAt(0).get('id'), PD.idTwo);
@@ -357,7 +370,7 @@ test('when cc is changed dirty tracking works as expected (replacing)', (assert)
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     ticket.remove_person(PD.id);
-    ticket.add_person(PD.idTwo);
+    ticket.add_person(person_two);
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
@@ -415,7 +428,7 @@ test('rollback ticket will reset the previously used people (cc) when switching 
 test('rollback cc will reset the previous people (cc) when switching from one person to another and saving in between each step', (assert) => {
     store.push('person', {id: PD.id});
     store.push('person', {id: PD.idTwo});
-    store.push('person', {id: PD.unusedId});
+    const person_unused = {id: PD.unusedId};
     store.push('ticket-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
     store.push('ticket-person', {id: TPD.idTwo, person_pk: PD.idTwo, ticket_pk: TD.idOne});
     ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne, TPD.idTwo]});
@@ -430,7 +443,7 @@ test('rollback cc will reset the previous people (cc) when switching from one pe
     assert.ok(ticket.get('isNotDirty'));
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    ticket.add_person(PD.unusedId);
+    ticket.add_person(person_unused);
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
@@ -510,13 +523,13 @@ test('changing top level category will reset category tree', (assert) => {
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
-    store.push('category', {id: CD.unusedId, parent_id: null});
+    const unused = {id: CD.unusedId, parent_id: null};
     ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
     assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
-    ticket.change_category_tree(CD.unusedId);
+    ticket.change_category_tree(unused);
     assert.equal(ticket.get('categories.length'), 1);
     assert.equal(ticket.get('top_level_category').get('id'), CD.unusedId);
 });
@@ -581,7 +594,7 @@ test('rollback categories will also restore the category tree (when top node cha
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
-    store.push('category', {id: CD.unusedId, parent_id: null});
+    const unused = {id: CD.unusedId, parent_id: null};
     ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
@@ -589,7 +602,7 @@ test('rollback categories will also restore the category tree (when top node cha
     assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    ticket.change_category_tree(CD.unusedId);
+    ticket.change_category_tree(unused);
     assert.equal(ticket.get('categories.length'), 1);
     assert.equal(ticket.get('top_level_category').get('id'), CD.unusedId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
@@ -609,7 +622,7 @@ test('rollback categories will also restore the category tree (when middle node 
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
-    store.push('category', {id: CD.unusedId, parent_id: CD.idTwo});
+    const unused = {id: CD.unusedId, parent_id: CD.idTwo};
     ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
@@ -617,7 +630,7 @@ test('rollback categories will also restore the category tree (when middle node 
     assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    ticket.change_category_tree(CD.unusedId);
+    ticket.change_category_tree(unused);
     assert.equal(ticket.get('categories.length'), 2);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idTwo);
@@ -639,7 +652,7 @@ test('rollback categories will also restore the category tree (when leaf node ch
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
-    store.push('category', {id: CD.unusedId, parent_id: CD.idOne});
+    const unused = {id: CD.unusedId, parent_id: CD.idOne};
     ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
@@ -647,7 +660,7 @@ test('rollback categories will also restore the category tree (when leaf node ch
     assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    ticket.change_category_tree(CD.unusedId);
+    ticket.change_category_tree(unused);
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idOne);
@@ -661,6 +674,29 @@ test('rollback categories will also restore the category tree (when leaf node ch
     // assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     // assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
     // assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
+});
+
+test('category names computed will return a string of each category name in order of priority', (assert) => {
+    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
+    store.push('ticket-category', {id: TCD.idThree, ticket_pk: TD.idOne, category_pk: CD.idThree});
+    store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
+    store.push('ticket-category', {id: TCD.idTwo, ticket_pk: TD.idOne, category_pk: CD.idTwo});
+    store.push('ticket-category', {id: 998, ticket_pk: TD.idTwo, category_pk: CD.unusedId});
+    store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo, children_fks: []});
+    store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId, children_fks: [CD.idOne]});
+    store.push('category', {id: CD.idThree, name: CD.nameThree, parent_id: null, children_fks: [CD.idTwo]});
+    const unused = {id: CD.unusedId, name: 'unused', parent_id: null, children_fks: []};
+    assert.equal(ticket.get('categories.length'), 3);
+    assert.equal(ticket.get('sorted_categories').objectAt(0).get('id'), CD.idThree);
+    assert.equal(ticket.get('sorted_categories').objectAt(1).get('id'), CD.idTwo);
+    assert.equal(ticket.get('sorted_categories').objectAt(2).get('id'), CD.idOne);
+    assert.equal(ticket.get('top_level_category').get('id'), CD.idThree);
+    assert.equal(ticket.get('category_names'), 'Loss Prevention &#8226; Electrical &#8226; Repair');
+    ticket.change_category_tree(unused);
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.equal(ticket.get('sorted_categories').get('length'), 1);
+    assert.equal(ticket.get('top_level_category').get('id'), CD.unusedId);
+    assert.equal(ticket.get('category_names'), 'unused');
 });
 
 /*TICKET TO CATEGORIES M2M*/

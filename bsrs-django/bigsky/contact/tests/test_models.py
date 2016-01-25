@@ -58,7 +58,7 @@ class AddressTests(TestCase):
 
         self.assertEqual(
             Address.objects.first().id,
-            Address.objects.order_by('address1').first().id
+            Address.objects.order_by('address').first().id
         )
 
 

@@ -219,7 +219,7 @@ CORS_ORIGIN_REGEX_WHITELIST = (r'^https?://(\w+\.)?bs-webdev03.bigskytech\.com:8
 ################
 
 ### CATEGORY
-TOP_LEVEL_CATEGORY_LABEL = 'type'
+TOP_LEVEL_CATEGORY_LABEL = 'Type'
 
 ### GENERIC
 ATTACHMENTS_DIRECTORY = os.path.join(MEDIA_ROOT, "attachments")
@@ -244,6 +244,7 @@ DEFAULT_ROLE = 'Administrator'
 DEFAULT_LOCATION_STATUS = 'admin.location.status.open'
 DEFAULT_LOCATION_TYPE = 'big_store'
 DEFAULT_LOCATION_LEVEL = 'Company'
+LOCATION_TOP_LEVEL_NAME = DEFAULT_LOCATION_LEVEL
 
 ### PERSON
 PASSWORD_EXPIRE_DAYS = 90
@@ -256,7 +257,8 @@ THIRD_PARTY_STATUS_DEFAULT = "active"
 ### TICKETS
 ACTIVITY_DEFAULT_WEIGHT = 4
 DEFAULTS_TICKET_STATUS = "ticket.status.new"
-TICKET_FILTERING_ON = False
+# Enables Permission filtering on Ticket API data
+TICKET_FILTERING_ON = True
 
 ### WORK ORDER
 DEFAULTS_WORKORDER_STATUS = "work_order.status.new" 

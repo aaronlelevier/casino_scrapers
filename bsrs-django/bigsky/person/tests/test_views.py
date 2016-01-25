@@ -11,7 +11,6 @@ from model_mommy import mommy
 
 from accounting.models import Currency
 from category.models import Category
-from category.tests.factory import create_single_category
 from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
 from contact.tests.factory import create_contact, create_contacts
@@ -19,7 +18,7 @@ from location.models import Location, LocationLevel
 from location.tests.factory import create_location
 from person.models import Person, Role
 from person.serializers import (PersonUpdateSerializer, RoleSerializer,
-    RoleUpdateSerializer)
+    RoleCreateSerializer)
 from person.tests.factory import (PASSWORD, create_single_person, create_role, create_roles,
     create_single_person, create_all_people)
 from translation.models import Locale
@@ -74,9 +73,6 @@ class RoleViewSetTests(APITestCase):
         self.assertIn('name', data['categories'][0])
         self.assertIn('status', data['categories'][0])
         self.assertIn('parent', data['categories'][0])
-        # default settings
-        self.assertEqual(data['settings']['login_grace'], 1)
-        self.assertEqual(data['settings']['proj_preapprove'], False)
 
     def test_create(self):
         role_data = {
@@ -95,7 +91,7 @@ class RoleViewSetTests(APITestCase):
 
     def test_update(self):
         category = mommy.make(Category)
-        serializer = RoleUpdateSerializer(self.role)
+        serializer = RoleCreateSerializer(self.role)
         self.data = serializer.data
         role_data = self.data
         role_data['name'] = 'new name here'
@@ -333,23 +329,20 @@ class PersonDetailTests(TestCase):
 
         location = Location.objects.get(id=self.data['locations'][0]['id'])
         location_level = LocationLevel.objects.get(
-            id=self.data['locations'][0]['location_level']['id'])
+            id=self.data['locations'][0]['location_level'])
 
         self.assertEqual(self.data['locations'][0]['id'], str(location.id))
         self.assertEqual(self.data['locations'][0]['name'], location.name)
         self.assertEqual(self.data['locations'][0]['number'], location.number)
-        self.assertEqual(self.data['locations'][0]['location_level']['id'],
+        self.assertEqual(self.data['locations'][0]['location_level'],
             str(location.location_level.id))
-        self.assertEqual(self.data['locations'][0]['location_level']['name'],
-            location.location_level.name)
 
     def test_data_emails(self):
         self.assertTrue(self.data['emails'])
         email = Email.objects.get(id=self.data['emails'][0]['id'])
         
         self.assertEqual(self.data['emails'][0]['id'], str(email.id))
-        self.assertEqual(self.data['emails'][0]['type']['id'], str(email.type.id))
-        self.assertEqual(self.data['emails'][0]['type']['name'], email.type.name)
+        self.assertEqual(self.data['emails'][0]['type'], str(email.type.id))
         self.assertEqual(self.data['emails'][0]['email'], email.email)
 
     def test_data_phone_numbers(self):
@@ -368,12 +361,11 @@ class PersonDetailTests(TestCase):
         address_data = self.data['addresses'][0]
         self.assertEqual(address_data['id'], str(address.id))
         self.assertEqual(address_data['type'], str(address.type.id))
-        self.assertEqual(address_data['address1'], address.address1)
-        self.assertEqual(address_data['address2'], address.address2)
+        self.assertEqual(address_data['address'], address.address)
         self.assertEqual(address_data['city'], address.city)
         self.assertEqual(address_data['state'], address.state)
         self.assertEqual(address_data['country'], address.country)
-        self.assertEqual(address_data['zip'], address.zip)
+        self.assertEqual(address_data['postal_code'], address.postal_code)
 
     def test_person_fk(self):
         self.assertIn(
@@ -395,21 +387,26 @@ class PersonDetailTests(TestCase):
 
     def test_current__all_locations_and_children(self):
         child_location = mommy.make(Location)
-        self.location.children.add(child_location)
+        self.person.locations.first().children.add(child_location)
 
         response = self.client.get('/api/admin/people/current/'.format(self.person.id))
         data = json.loads(response.content.decode('utf8'))
 
-        self.assertIn(str(child_location.id), data['all_locations_and_children'])
+        self.assertIn(
+            str(child_location.id),
+            [str(x['id']) for x in data['all_locations_and_children']]
+        )
 
-    def test_current__all_role_categories_and_children(self):
+    def test_categories(self):
         parent_category = self.person.role.categories.first()
-        child_category = create_single_category(parent=parent_category)
 
         response = self.client.get('/api/admin/people/current/'.format(self.person.id))
         data = json.loads(response.content.decode('utf8'))
 
-        self.assertIn(str(child_category.id), data['all_role_categories_and_children'])
+        self.assertEqual(1, len(data['categories']))
+        category_data = data['categories'][0]
+        self.assertEqual(category_data['id'], str(parent_category.id))
+        self.assertEqual(category_data['name'], parent_category.name)
 
 
 class PersonPutTests(APITestCase):
@@ -551,21 +548,6 @@ class PersonPutTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertIn(str(location.id), [l for l in data['locations']])
 
-    def test_location_level_not_equal_init_role(self):
-        # create separate LocationLevel
-        location_level = mommy.make(LocationLevel)
-        location = mommy.make(Location, location_level=location_level)
-        self.assertNotEqual(self.person.role.location_level, location_level)
-        # Adding a non authorized LocationLevel Location raises an error
-        self.data['locations'].append(str(location.id))
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
-            self.data, format='json')
-        self.assertEqual(response.status_code, 400)
-        self.assertNotIn(
-            location.id,
-            Person.objects.get(id=self.data['id']).locations.values_list('id', flat=True)
-            )
-
     def test_location_level_equal_new_role(self):
         # create separate LocationLevel
         location_level = mommy.make(LocationLevel)
@@ -580,22 +562,6 @@ class PersonPutTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(data['locations'])
         self.assertIn(
-            location.id,
-            Person.objects.get(id=self.data['id']).locations.values_list('id', flat=True)
-            )
-
-    def test_location_level_not_equal_new_role(self):
-        location = mommy.make(Location, location_level=self.person.role.location_level)
-        self.data['locations'].append(str(location.id))
-        # Assign new Role w/ a different LocationLevel
-        location_level = mommy.make(LocationLevel)
-        new_role = mommy.make(Role, name='new', location_level=location_level)
-        self.data['role'] = str(new_role.id)
-        # Adding a non authorized LocationLevel Location raises an error
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
-            self.data, format='json')
-        self.assertEqual(response.status_code, 400)
-        self.assertNotIn(
             location.id,
             Person.objects.get(id=self.data['id']).locations.values_list('id', flat=True)
             )
@@ -714,7 +680,7 @@ class PersonSearchTests(APITransactionTestCase):
         self.role = create_role()
         create_all_people()
         # Login
-        self.person = Person.objects.first()
+        self.person = Person.objects.get(username='admin')
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):

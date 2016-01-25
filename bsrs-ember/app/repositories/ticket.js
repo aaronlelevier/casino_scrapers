@@ -14,11 +14,38 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
     url: Ember.computed(function() { return TICKET_URL; }),
     TicketDeserializer: inject('ticket'),
     deserializer: Ember.computed.alias('TicketDeserializer'),
+    findFiltered(person) {
+        const locations = person.get('locations');
+        const location_names = locations.mapBy('name');
+        if (Ember.$.inArray(config.DEFAULT_LOCATION_LEVEL, location_names) > -1) {
+            return this.get('store').find('ticket');
+        } else {
+            const filterFunc = function(ticket) {
+                var location_id = ticket.get('location.id');
+                var location_ids = locations.mapBy('id');
+                return Ember.$.inArray(location_id, location_ids) > -1;
+            };
+            return this.get('store').find('ticket', filterFunc);
+        }
+    },
+    findFilteredbyCategory(person) {
+        const role_category_ids = person.get('role').get('categories').mapBy('id');
+        const filterFunc = function(ticket) {
+            var ticket_category_ids = ticket.get('categories').mapBy('id');
+            var result = false;
+            ticket_category_ids.forEach((cid) => {
+                var temp_result = Ember.$.inArray(cid, role_category_ids) > -1;
+                result = result || temp_result;
+            });
+            return result;
+        };
+        return this.get('store').find('ticket', filterFunc);
+    },
     update(model) {
         return PromiseMixin.xhr(TICKET_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
             model.saveRelated();
-        });   
+        });
     },
     find() {
         PromiseMixin.xhr(TICKET_URL, 'GET').then((response) => {

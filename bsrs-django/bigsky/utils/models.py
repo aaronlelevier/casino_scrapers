@@ -4,7 +4,6 @@ should be Abstract.
 """
 import uuid
 
-from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
@@ -143,7 +142,7 @@ class BaseSettingModel(BaseModel):
     ``Setting`` records will be either Standard or Custom. and be set 
     at levels. ex - Location, Role, User.
     '''
-    settings = JSONField(blank=True, default={})
+    settings = models.CharField(max_length=1000, blank=True)
 
     class Meta:
         abstract = True

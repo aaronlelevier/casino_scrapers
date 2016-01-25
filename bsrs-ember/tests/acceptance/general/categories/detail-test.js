@@ -70,7 +70,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
     });
     let url = PREFIX + DETAIL_URL + '/';
     let response = CF.detail(CD.idOne);
-    let payload = CF.put({id: CD.idOne, name: CD.nameTwo, description: CD.descriptionMaintenance, 
+    let payload = CF.put({id: CD.idOne, name: CD.nameTwo, description: CD.descriptionMaintenance,
     label: CD.labelTwo, cost_amount: CD.costAmountTwo, cost_code: CD.costCodeTwo});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     page.nameFill(CD.nameTwo);
@@ -88,7 +88,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
     list.results[0].label = CD.labelTwo;
     list.results[0].cost_amount = CD.costAmountTwo;
     list.results[0].cost_code = CD.costCodeTwo;
-    //just leaving here until I can figure out how to do destructuring w/o jshint blowing up on me. 
+    //just leaving here until I can figure out how to do destructuring w/o jshint blowing up on me.
     // let results = list.results[0];
     // ({nameTwo: results.name, descriptionMaintenance: results.description, labelTwo: results.label, costAmountTwo: results.cost_amount, costCodeTwo: results.cost_code} = CD);
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
@@ -123,7 +123,8 @@ test('when editing the category name to invalid, it checks for validation', (ass
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-name-validation-error').text().trim(), 'invalid name');
+        assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid Name');
+        assert.ok(find('.t-name-validation-error').hasClass('validation'));
     });
     page.nameFill(CD.nameTwo);
     page.descriptionFill(CD.descriptionRepair);
@@ -174,48 +175,36 @@ test('validation works and when hit save, we do same post', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-name-validation-error').is(':hidden'));
-        assert.ok(find('.t-label-validation-error').is(':hidden'));
-        assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
     page.nameFill('');
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-name-validation-error').is(':visible'));
-        assert.ok(find('.t-label-validation-error').is(':hidden'));
-        assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
     page.descriptionFill('');
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-name-validation-error').is(':visible'));
-        assert.ok(find('.t-label-validation-error').is(':hidden'));
-        assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
     page.costCodeFill('');
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-name-validation-error').is(':visible'));
-        assert.ok(find('.t-label-validation-error').is(':hidden'));
-        assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
     page.labelFill('');
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-name-validation-error').is(':visible'));
-        assert.ok(find('.t-label-validation-error').is(':visible'));
-        assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
     page.subLabelFill('');
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-name-validation-error').is(':visible'));
-        assert.ok(find('.t-label-validation-error').is(':visible'));
-        assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
     });
     page.nameFill(CD.nameOne);
     page.descriptionFill(CD.descriptionMaintenance);
@@ -224,8 +213,27 @@ test('validation works and when hit save, we do same post', (assert) => {
     page.subLabelFill(CD.subCatLabelTwo);
     let url = PREFIX + DETAIL_URL + '/';
     let response = CF.detail(CD.idOne);
-    let payload = CF.put({id: CD.idOne, name: CD.nameOne, description: CD.descriptionMaintenance, 
+    let payload = CF.put({id: CD.idOne, name: CD.nameOne, description: CD.descriptionMaintenance,
     label: CD.labelOne, subcategory_label: CD.subCatLabelTwo, cost_amount: CD.costAmountOne, cost_code: CD.costCodeOne});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});
+
+test('cost_amount - is not required', (assert) => {
+    visit(DETAIL_URL);
+    page.nameFill(CD.nameOne);
+    page.descriptionFill(CD.descriptionMaintenance);
+    page.labelFill(CD.labelOne);
+    page.amountFill('');
+    page.costCodeFill(CD.costCodeOne);
+    page.subLabelFill(CD.subCatLabelTwo);
+    let url = PREFIX + DETAIL_URL + '/';
+    let response = CF.detail(CD.idOne);
+    let payload = CF.put({id: CD.idOne, name: CD.nameOne, description: CD.descriptionMaintenance,
+    label: CD.labelOne, subcategory_label: CD.subCatLabelTwo, cost_amount: null, cost_code: CD.costCodeOne});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
@@ -412,6 +420,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
     page.nameFill(CD.nameTwo);
+    page.subLabelFill(CD.subCatLabelOne);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -425,6 +434,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(currentURL(), CATEGORIES_URL);
             let category = store.find('category', CD.idOne);
             assert.equal(category.get('name'), CD.nameOne);
+            assert.equal(category.get('subcategory_label'), CD.subCatLabelOne);
         });
     });
 });

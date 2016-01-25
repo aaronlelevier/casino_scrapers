@@ -1,4 +1,10 @@
-<option value="" class="t-locale-option">-</option>
-{{#each locales as |locale|}}
-<option value={{locale.locale}} class="t-locale-option" selected={{is-equal current locale.locale}}>{{locale.name}} - {{locale.native_name}}</option>
-{{/each}}
+{{#power-select
+  class="t-locale-select"
+  options=locales
+  selected=person.locale
+  onchange=(action "selected")
+  searchEnabled=false
+  as |locale|
+}}
+  {{locale.name}} - {{locale.native_name}}
+{{/power-select}}

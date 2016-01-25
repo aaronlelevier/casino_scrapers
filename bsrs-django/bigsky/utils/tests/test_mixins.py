@@ -4,12 +4,12 @@ import random
 from django.db.models.functions import Lower
 
 from model_mommy import mommy
-from rest_framework.test import APITestCase, APITransactionTestCase
+from rest_framework.test import APITestCase
 
 from accounting.models import Currency
 from accounting.serializers import CurrencySerializer
 from location.models import LocationLevel
-from location.tests.factory import create_location
+from location.tests.factory import create_location, create_location_level
 from person.models import Person
 from person.tests.factory import create_single_person, create_role, create_roles, PASSWORD
 from utils import create
@@ -70,7 +70,7 @@ class DestroyModelMixinTests(APITestCase):
             Person.objects_all.get(id=self.person2.id)
 
 
-class OrderingQuerySetMixinTests(APITransactionTestCase):
+class OrderingQuerySetMixinTests(APITestCase):
 
     def setUp(self):
         # Role
@@ -151,8 +151,32 @@ class OrderingQuerySetMixinTests(APITransactionTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['results'][0]['first_name'], self._get_name(10))
 
+    def test_ordering_data_type__date(self):
+        create_single_person()
+        create_single_person()
+        raw_qs_first = Person.objects.order_by('created').first()
 
-class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
+        response = self.client.get('/api/admin/people/?ordering=created')
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(str(raw_qs_first.id), data['results'][0]['id'])
+
+    def test_ordering_data_type__int(self):
+        person = create_single_person()
+        person.auth_amount = 1
+        person.save()
+        person_two = create_single_person()
+        person_two.auth_amount = 2
+        person.save()
+        raw_qs_first = Person.objects.order_by('-auth_amount').first()
+
+        response = self.client.get('/api/admin/people/?ordering=-auth_amount')
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(str(raw_qs_first.id), data['results'][0]['id'])
+
+
+class RelatedOrderingTests(APITestCase):
 
     def setUp(self):
         # Role
@@ -183,7 +207,7 @@ class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
 
     def test_list(self):
         params = ["role__name"]
-        response = self.client.get('/api/admin/people/?related_ordering={}'
+        response = self.client.get('/api/admin/people/?ordering={}'
             .format(','.join(params)))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -194,7 +218,7 @@ class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
 
     def test_list_reverse(self):
         params = ["-role__name"]
-        response = self.client.get('/api/admin/people/?related_ordering={}'
+        response = self.client.get('/api/admin/people/?ordering={}'
             .format(','.join(params)))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -205,7 +229,7 @@ class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
 
     def test_list_multiple(self):
         params = ["role__name", "role__location_level__name"]
-        response = self.client.get('/api/admin/people/?related_ordering={}'
+        response = self.client.get('/api/admin/people/?ordering={}'
             .format(','.join(params)))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -216,18 +240,20 @@ class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
 
     def test_list_multiple_with_non_related(self):
         params = ["username", "role__location_level__name"]
-        response = self.client.get('/api/admin/people/?related_ordering={}'
+        response = self.client.get('/api/admin/people/?ordering={}'
             .format(','.join(params)))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['results'][0]['role'],
-            str(Person.objects.order_by(*params).first().role.id)
+            str(Person.objects.extra(select={'lower_username': 'lower(username)'})
+                              .order_by("lower_username", "role__location_level__name")
+                              .first().role.id)
         )
 
     def test_list_reverse_multiple(self):
         params = ["-role__name", "role__location_level__name"]
-        response = self.client.get('/api/admin/people/?related_ordering={}'
+        response = self.client.get('/api/admin/people/?ordering={}'
             .format(','.join(params)))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -236,8 +262,26 @@ class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
             str(Person.objects.order_by(*params).first().role.id)
         )
 
+    def test_list_related__date(self):
+        raw_qs_first = Person.objects.order_by('role__created').first()
 
-class FilterRelatedMixinMixin(APITransactionTestCase):
+        response = self.client.get('/api/admin/people/?ordering=role__created')
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(str(raw_qs_first.role.id), data['results'][0]['role'])
+
+    def test_list_related__int(self):
+        # assumes this is the highest, so 'desc' will return 1st
+        self.role_admin.password_min_length = 100
+        self.role_admin.save()
+
+        response = self.client.get('/api/admin/people/?ordering=-role__password_min_length')
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(str(self.role_admin.id), data['results'][0]['role'])
+
+
+class FilterRelatedMixinMixin(APITestCase):
 
     def setUp(self):
         self.person = create_single_person()

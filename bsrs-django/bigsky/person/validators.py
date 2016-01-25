@@ -2,6 +2,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from rest_framework.exceptions import ValidationError
 
+from category.models import Category
 from location.models import Location
 from person.models import Role
 
@@ -33,3 +34,16 @@ class RoleLocationValidator(object):
         """Determine the existing instance, prior to the validation 
         call being made."""
         self.instance = getattr(serializer, 'instance', None)
+
+
+class RoleCategoryValidator(object):
+    """A Role's related Categories can on be top-level Categories."""
+
+    message = _("Role can only have top-level related categories.")
+
+    def __call__(self, kwargs):
+        categories = kwargs.get('categories', None)
+        if categories:
+            for category in categories:
+                if category.parent:
+                    raise ValidationError(self.message)

@@ -1,0 +1,10 @@
+{{#power-select
+  class="t-person-status-select"
+  options=statuses
+  selected=person.status
+  onchange=(action "selected")
+  searchEnabled=false
+  as |status|
+}}
+  {{t status.name}}
+{{/power-select}}

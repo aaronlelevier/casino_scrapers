@@ -64,8 +64,7 @@ class ThirdPartyTests(APITestCase):
         email = Email.objects.get(id=data['emails'][0]['id'])
 
         self.assertEqual(data['emails'][0]['id'], str(email.id))
-        self.assertEqual(data['emails'][0]['type']['id'], str(email.type.id))
-        self.assertEqual(data['emails'][0]['type']['name'], email.type.name)
+        self.assertEqual(data['emails'][0]['type'], str(email.type.id))
         self.assertEqual(data['emails'][0]['email'], email.email)
 
     def test_data_phone_numbers(self):
@@ -88,12 +87,11 @@ class ThirdPartyTests(APITestCase):
         address_data = data['addresses'][0]
         self.assertEqual(address_data['id'], str(address.id))
         self.assertEqual(address_data['type'], str(address.type.id))
-        self.assertEqual(address_data['address1'], address.address1)
-        self.assertEqual(address_data['address2'], address.address2)
+        self.assertEqual(address_data['address'], address.address)
         self.assertEqual(address_data['city'], address.city)
         self.assertEqual(address_data['state'], address.state)
         self.assertEqual(address_data['country'], address.country)
-        self.assertEqual(address_data['zip'], address.zip)
+        self.assertEqual(address_data['postal_code'], address.postal_code)
 
     def test_detail_contact(self):
         response = self.client.get('/api/admin/third-parties/{}/'.format(self.third_party.id))
@@ -107,7 +105,7 @@ class ThirdPartyTests(APITestCase):
         response = self.client.get('/api/admin/third-parties/{}/'.format(self.third_party.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(
-            EmailType.objects.get(id=data['emails'][0]['type']['id']),
+            EmailType.objects.get(id=data['emails'][0]['type']),
             EmailType
         )
 
@@ -121,7 +119,7 @@ class ThirdPartyTests(APITestCase):
         email = create_contact(Email, self.third_party)
         response = self.client.get('/api/admin/third-parties/{}/'.format(self.third_party.id))
         data = json.loads(response.content.decode('utf8'))
-        self.assertTrue(data['emails'][0]['type']['id'])
+        self.assertTrue(data['emails'][0]['type'])
 
     ### UPDATE
 
@@ -179,11 +177,10 @@ class ThirdPartyTests(APITestCase):
         self.data['addresses'] = [{
             'id': id,
             'type': str(address_type.id),
-            'address1': '123 My St.',
-            'address2': 'Ste 140',
+            'address': '123 My St.',
             'city': 'Omaha',
             'state': 'NE',
-            'zip': '92126',
+            'postal_code': '92126',
             'country': 'United States',
         }]
 
@@ -194,11 +191,10 @@ class ThirdPartyTests(APITestCase):
         self.assertTrue(data['addresses'])
         self.assertEqual(data['addresses'][0]['id'], self.data['addresses'][0]['id'])
         self.assertEqual(data['addresses'][0]['type'], self.data['addresses'][0]['type'])
-        self.assertEqual(data['addresses'][0]['address1'], self.data['addresses'][0]['address1'])
-        self.assertEqual(data['addresses'][0]['address2'], self.data['addresses'][0]['address2'])
+        self.assertEqual(data['addresses'][0]['address'], self.data['addresses'][0]['address'])
         self.assertEqual(data['addresses'][0]['city'], self.data['addresses'][0]['city'])
         self.assertEqual(data['addresses'][0]['state'], self.data['addresses'][0]['state'])
-        self.assertEqual(data['addresses'][0]['zip'], self.data['addresses'][0]['zip'])
+        self.assertEqual(data['addresses'][0]['postal_code'], self.data['addresses'][0]['postal_code'])
         self.assertEqual(data['addresses'][0]['country'], self.data['addresses'][0]['country'])
 
     def test_update_create_phone_number(self):

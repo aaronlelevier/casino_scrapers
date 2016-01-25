@@ -25,6 +25,8 @@ const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
 const LOCATION_TWO = `${LOCATIONS}:eq(1)`;
 const ROLE = '.t-person-role-select > .ember-basic-dropdown-trigger';
 const ROLE_DROPDOWN = '.t-person-role-select-dropdown > .ember-power-select-options';
+const LOCALE = '.t-locale-select > .ember-basic-dropdown-trigger';
+const LOCALE_DROPDOWN = '.t-locale-select-dropdown > .ember-power-select-options';
 
 
 export default PageObject.create({
@@ -32,8 +34,8 @@ export default PageObject.create({
   visitDetail: visitable(DETAIL_URL),
   statusInput: text(STATUS),
   statusClickDropdown: clickable(STATUS),
-  statusClickOptionOne: clickable(`${STATUS_DROPDOWN} > .ember-power-select-option:contains(${SD.activeName})`),
-  statusClickOptionTwo: clickable(`${STATUS_DROPDOWN} > .ember-power-select-option:contains(${SD.inactiveName})`),
+  statusClickOptionOne: clickable(`${STATUS_DROPDOWN} > .ember-power-select-option:contains(${SD.activeNameTranslated})`),
+  statusClickOptionTwo: clickable(`${STATUS_DROPDOWN} > .ember-power-select-option:contains(${SD.inactiveNameTranslated})`),
   statusOptionLength: count(`${STATUS_DROPDOWN} > li`),
   statusOne: text(`${STATUS_DROPDOWN} > li:eq(0)`),
   statusTwo: text(`${STATUS_DROPDOWN} > li:eq(1)`),
@@ -52,4 +54,14 @@ export default PageObject.create({
   roleClickDropdown: clickable(ROLE),
   roleClickOptionOne: clickable(`${ROLE_DROPDOWN} > .ember-power-select-option:contains(${RD.nameOne})`),
   roleClickOptionTwo: clickable(`${ROLE_DROPDOWN} > .ember-power-select-option:contains(${RD.nameTwo})`),
+
+  localeInput: text(LOCALE),
+  localeClickDropdown: clickable(LOCALE),
+  // localeClickOptionOne: clickable(`${LOCALE_DROPDOWN} > .ember-power-select-option:contains(${PD.localeOne})`),
+  localeClickOptionTwo: clickable(`${LOCALE_DROPDOWN} > .ember-power-select-option:contains(${PD.localeTwo})`),
+  localeOne: text(`${LOCALE_DROPDOWN} > li:eq(0)`),
+  localeTwo: text(`${LOCALE_DROPDOWN} > li:eq(1)`),
+  // localeThree: text(`${LOCALE_DROPDOWN} > li:eq(2)`),
+  // localeFour: text(`${LOCALE_DROPDOWN} > li:eq(3)`),
+  localeOptionLength: count(`${LOCALE_DROPDOWN} > li`),
 });

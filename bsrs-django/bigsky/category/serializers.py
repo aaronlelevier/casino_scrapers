@@ -1,3 +1,5 @@
+from rest_framework import serializers
+
 from category.models import Category
 from utils.serializers import BaseCreateSerializer
 
@@ -8,6 +10,28 @@ CATEGORY_FIELDS = ('id', 'name', 'description', 'label',
     'cost_amount', 'cost_currency', 'cost_code',)
 
 
+# Leaf Node
+
+class CategoryIDNameOnlySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name',)
+
+
+class CategoryIDNameSerializerTicket(BaseCreateSerializer):
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name', 'level', 'children', 'parent', 'label', 'subcategory_label')
+
+    def to_representation(self, obj):
+        data = super(CategoryIDNameSerializerTicket, self).to_representation(obj)
+        data['children_fks'] = data.pop('children', [])
+        data['parent_id'] = data.pop('parent', [])
+        return data
+
+#TODO: check if can use above serializer
 class CategoryIDNameSerializer(BaseCreateSerializer):
 
     class Meta:
@@ -20,25 +44,11 @@ class CategoryIDNameSerializer(BaseCreateSerializer):
         return data
 
 
-class CategoryFlatSerializer(BaseCreateSerializer):
-
-    class Meta:
-        model = Category
-        fields = ('id', 'name', 'parent', 'children',)
-
-
 class CategoryRoleSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Category
         fields = ('id', 'name', 'status', 'parent',)
-
-
-class CategoryListSerializer(BaseCreateSerializer):
-
-    class Meta:
-        model = Category
-        fields = CATEGORY_FIELDS
 
 
 class CategoryParentSerializer(BaseCreateSerializer):
@@ -51,6 +61,15 @@ class CategoryParentSerializer(BaseCreateSerializer):
         fields = CATEGORY_FIELDS + ('parent', 'children',)
 
 
+# Main
+
+class CategoryListSerializer(BaseCreateSerializer):
+
+    class Meta:
+        model = Category
+        fields = CATEGORY_FIELDS + ('level',)
+
+
 class CategoryDetailSerializer(BaseCreateSerializer):
 
     parent = CategoryIDNameSerializer(read_only=True)
@@ -58,7 +77,7 @@ class CategoryDetailSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Category
-        fields = CATEGORY_FIELDS + ('subcategory_label', 'parent', 'children',)
+        fields = CATEGORY_FIELDS + ('level', 'subcategory_label', 'parent', 'children',)
 
     @staticmethod
     def eager_load(queryset):
@@ -67,6 +86,9 @@ class CategoryDetailSerializer(BaseCreateSerializer):
 
 
 class CategorySerializer(BaseCreateSerializer):
+
+    children = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(), many=True, required=False)
 
     class Meta:
         model = Category

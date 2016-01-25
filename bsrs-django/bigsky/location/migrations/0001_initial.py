@@ -14,10 +14,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Country',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
+                ('deleted', models.DateTimeField(help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True, null=True)),
                 ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={
@@ -27,13 +27,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Location',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
+                ('deleted', models.DateTimeField(help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True, null=True)),
                 ('name', models.CharField(max_length=1000)),
-                ('number', models.CharField(blank=True, max_length=1000, null=True)),
-                ('children', models.ManyToManyField(related_name='parents', to='location.Location', blank=True)),
+                ('number', models.CharField(null=True, blank=True, max_length=1000)),
+                ('children', models.ManyToManyField(blank=True, to='location.Location', related_name='parents')),
             ],
             options={
                 'ordering': ('name', 'number'),
@@ -42,12 +42,18 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='LocationLevel',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
+                ('deleted', models.DateTimeField(help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True, null=True)),
                 ('name', models.CharField(unique=True, max_length=100)),
-                ('children', models.ManyToManyField(related_name='parents', to='location.LocationLevel', blank=True)),
+                ('contact', models.BooleanField(help_text='Defines whether locations in this type will have related Contact models.', default=True)),
+                ('can_create_tickets', models.BooleanField(help_text='Can Tickets be assigned to this Location', default=True)),
+                ('landlord', models.BooleanField(default=True)),
+                ('warranty', models.BooleanField(default=True)),
+                ('catalog_categories', models.BooleanField(default=True)),
+                ('assets', models.BooleanField(default=True)),
+                ('children', models.ManyToManyField(blank=True, to='location.LocationLevel', related_name='parents')),
             ],
             options={
                 'abstract': False,
@@ -56,10 +62,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='LocationStatus',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
+                ('deleted', models.DateTimeField(help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True, null=True)),
                 ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={
@@ -69,10 +75,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='LocationType',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
+                ('deleted', models.DateTimeField(help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True, null=True)),
                 ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={
@@ -82,10 +88,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='State',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
+                ('deleted', models.DateTimeField(help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True, null=True)),
                 ('name', models.CharField(unique=True, max_length=100)),
                 ('abbr', models.CharField(max_length=2)),
             ],
@@ -101,11 +107,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='location',
             name='status',
-            field=models.ForeignKey(to='location.LocationStatus', blank=True, related_name='locations', null=True),
+            field=models.ForeignKey(to='location.LocationStatus', related_name='locations', blank=True, null=True),
         ),
         migrations.AddField(
             model_name='location',
             name='type',
-            field=models.ForeignKey(to='location.LocationType', blank=True, related_name='locations', null=True),
+            field=models.ForeignKey(to='location.LocationType', related_name='locations', blank=True, null=True),
         ),
     ]

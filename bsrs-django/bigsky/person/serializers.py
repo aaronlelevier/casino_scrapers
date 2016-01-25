@@ -1,13 +1,10 @@
 from rest_framework import serializers
 
-from contact.serializers import   (
-    PhoneNumberFlatSerializer, PhoneNumberSerializer,
-    EmailFlatSerializer, EmailSerializer,
-    AddressFlatSerializer, AddressSerializer)
-from location.serializers import LocationIdNameSerializer
-from category.serializers import CategoryRoleSerializer
+from contact.serializers import (PhoneNumberSerializer, EmailSerializer, AddressSerializer)
+from location.serializers import LocationSerializer, LocationIdNameOnlySerializer
+from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer
 from person.models import Person, Role
-from person.validators import RoleLocationValidator
+from person.validators import RoleLocationValidator, RoleCategoryValidator
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
     RemovePasswordSerializerMixin)
 
@@ -27,14 +24,7 @@ class RoleCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Role
-        fields = ('id', 'name', 'role_type', 'location_level', 'categories')
-
-
-class RoleUpdateSerializer(BaseCreateSerializer):
-    "Serializer used for update ``Role`` API Endpoint operations."
-
-    class Meta:
-        model = Role
+        validators = [RoleCategoryValidator()]
         fields = ('id', 'name', 'role_type', 'location_level', 'categories')
 
 
@@ -44,8 +34,7 @@ class RoleDetailSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Role
-        fields = ('id', 'name', 'role_type', 'location_level', 'categories',
-                  'settings',)
+        fields = ('id', 'name', 'role_type', 'location_level', 'categories',)
 
     @staticmethod
     def eager_load(queryset):
@@ -106,7 +95,7 @@ class PersonTicketSerializer(serializers.ModelSerializer):
 
 class PersonDetailSerializer(serializers.ModelSerializer):
 
-    locations = LocationIdNameSerializer(many=True)
+    locations = LocationSerializer(many=True)
     emails = EmailSerializer(required=False, many=True)
     phone_numbers = PhoneNumberSerializer(required=False, many=True)
     addresses = AddressSerializer(required=False, many=True)
@@ -124,17 +113,13 @@ class PersonDetailSerializer(serializers.ModelSerializer):
 
 class PersonCurrentSerializer(PersonDetailSerializer):
 
-    all_locations_and_children = serializers.ListField(
-        child=serializers.UUIDField(),
-    )
-    all_role_categories_and_children = serializers.ListField(
-        child=serializers.UUIDField(),
-    )
+    all_locations_and_children = LocationIdNameOnlySerializer(many=True)
+    categories = CategoryIDNameOnlySerializer(many=True)
 
     class Meta:
         model = Person
         fields = PERSON_DETAIL_FIELDS + ('all_locations_and_children',
-                                         'all_role_categories_and_children',)
+                                         'categories',)
 
 
 class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSerializerMixin,
@@ -149,9 +134,9 @@ class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSeriali
 
     '''
     password = serializers.CharField(required=False, style={'input_type': 'password'})
-    emails = EmailFlatSerializer(required=False, many=True)
-    phone_numbers = PhoneNumberFlatSerializer(required=False, many=True)
-    addresses = AddressFlatSerializer(required=False, many=True)
+    emails = EmailSerializer(required=False, many=True)
+    phone_numbers = PhoneNumberSerializer(required=False, many=True)
+    addresses = AddressSerializer(required=False, many=True)
 
     class Meta:
         model = Person

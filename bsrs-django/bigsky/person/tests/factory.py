@@ -59,20 +59,20 @@ def create_roles():
         create_locations()
 
     for location_level in LocationLevel.objects.all():
-        if location_level.name != settings.DEFAULT_LOCATION_LEVEL:
-            role = mommy.make(Role, name='{}-role'.format(location_level.name),
-                location_level=location_level)
-        else:
-            role = mommy.make(Role, name=settings.DEFAULT_ROLE, location_level=location_level)
 
-        if category:
-            role.categories.add(category)
+        if location_level.name == settings.LOCATION_TOP_LEVEL_NAME:
+            name = settings.DEFAULT_ROLE
+        else:
+            name = '{}-role'.format(location_level.name)
+
+        try:
+            Role.objects.get(name=name, location_level=location_level)
+        except Role.DoesNotExist:
+            role = mommy.make(Role, name=name, location_level=location_level)
+            if category:
+                role.categories.add(category)
 
     return Role.objects.all()
-
-
-PERSON_BASE_ID = "30f530c4-ce6c-4724-9cfd-37a16e787"
-
 
 
 def create_single_person(name=None, role=None, location=None):
@@ -84,8 +84,8 @@ def create_single_person(name=None, role=None, location=None):
     role = role or create_role()
     location = location or create_location(location_level=role.location_level)
 
-    incr = Person.objects.count()
-    id = generate_uuid(PERSON_BASE_ID, incr+1)
+    # incr = Person.objects.count()
+    id = generate_uuid(Person)
 
     try:
         person = Person.objects.get(username=name)
@@ -100,18 +100,9 @@ def create_single_person(name=None, role=None, location=None):
             title=name,
             role=role
         )
-
-    person.locations.add(location)
+        person.locations.add(location)
 
     return person
-
-
-def update_login_person(person, new_password=None):
-    person.is_superuser = True
-    person.is_staff = True
-    if new_password:
-        person.set_password(new_password)
-    person.save()
 
 
 def create_person(username=None, _many=1):
@@ -138,6 +129,56 @@ def create_person(username=None, _many=1):
     return user
 
 
+def update_login_person(person, new_password=None):
+    """
+    Will allow 'person' to login to Django admin.
+    """
+    person.is_superuser = True
+    person.is_staff = True
+    if new_password:
+        person.set_password(new_password)
+    person.save()
+
+
+def update_admin(person):
+    """
+    Update the Person with all Locations where:
+    ``location.location_level == person.role.location_level``
+    And all Parent Categories, so they can view all Tickets.
+    """
+    update_login_person(person)
+    add_top_level_location(person)
+    add_all_parent_categores(person)
+
+
+def add_top_level_location(person):
+    """
+    `person.Role.location_level` must match `Location.location_level`
+    """
+    remove_all_locations(person)
+    
+    location = Location.objects.create_top_level()
+    person.role = Role.objects.get(location_level__name=settings.LOCATION_TOP_LEVEL_NAME)
+    person.save()
+    
+    person.locations.add(location)
+
+
+def add_all_locations(person):
+    for location in Location.objects.filter(location_level=person.role.location_level):
+        person.locations.add(location)
+
+
+def add_all_parent_categores(person):
+    for category in Category.objects.filter(parent__isnull=True):
+        person.role.categories.add(category)
+
+
+def remove_all_locations(person):
+    for x in person.locations.all():
+        person.locations.remove(x)
+
+
 """
 Boilerplate create in shell code:
 
@@ -146,12 +187,11 @@ create_all_people()
 """
 def create_all_people():
 
-    if not Location.objects.first():
+    if not Location.objects.filter(name=settings.LOCATION_TOP_LEVEL_NAME):
         create_locations()
 
     # initial Roles
     create_roles()
-    roles = Role.objects.all()
 
     # other Persons for Grid View
     names = sorted(create.LOREM_IPSUM_WORDS.split())
@@ -160,12 +200,12 @@ def create_all_people():
         for ea in ['username', 'first_name', 'last_name', 'title']:
             kwargs[ea] = name
 
-        role = random.choice(roles)
-        locations = Location.objects.filter(location_level=role.location_level)
-        location = random.choice(locations)
+        # role = Role.objects.exclude(location_level__name=settings.LOCATION_TOP_LEVEL_NAME).order_by("?")[0]
+        location = Location.objects.order_by("?")[0]
+        role = Role.objects.filter(location_level=location.location_level).order_by("?")[0]
         # create
-        create_single_person(name=name, role=role, location=location)
+        person = create_single_person(name=name, role=role, location=location)
 
-    # Person used to Login (so needs a 'password' set here)
-    aaron = Person.objects.get(username="aaron")
-    update_login_person(aaron, new_password='tango')
+    # # Update Persons to login as
+    person = Person.objects.get(username='admin')
+    update_admin(person)

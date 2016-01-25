@@ -29,9 +29,7 @@ class RoleViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
         """
         if self.action == 'retrieve':
             return ps.RoleDetailSerializer
-        elif self.action == ('update' or 'partial_update'):
-            return ps.RoleUpdateSerializer
-        elif self.action == ('create'):
+        elif self.action in ('create', 'update', 'partial_update'):
             return ps.RoleCreateSerializer
         else:
             return ps.RoleSerializer

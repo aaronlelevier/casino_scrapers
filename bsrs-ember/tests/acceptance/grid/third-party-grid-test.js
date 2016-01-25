@@ -58,9 +58,9 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
         assert.equal(currentURL(), TP_URL);
         assert.equal(find('.t-grid-title').text(), t('admin.third_party'));
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
-        // assert.equal(find(`${GRID_DATA_0} .t-status`).text(), TPD.third-partyTypeGeneral);
-        // assert.equal(find(`${GRID_DATA_0} .t-third-party-location_level`).text(), TPD.locationLevelNameOne);
+        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
+        // assert.equal(find(`${GRID_DATA_0} .t-status`).text().trim(), TPD.third-partyTypeGeneral);
+        // assert.equal(find(`${GRID_DATA_0} .t-third-party-location_level`).text().trim(), TPD.locationLevelNameOne);
         var pagination = find(`${PAGES}`);
         assert.equal(pagination.find(`${PAGE}`).length, 2);
         assert.equal(pagination.find(`${PAGE}:eq(0) a`).text(), '1');
@@ -77,7 +77,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         assert.equal(currentURL(), TP_URL + '?page=2');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-        assert.equal(substring_up_to_num(find(`${GRID_DATA_0} .t-third-party-name`).text()), 'ABC');
+        assert.equal(substring_up_to_num(find(`${GRID_DATA_0} .t-third-party-name`).text().trim()), 'ABC');
         var pagination = find(`${PAGES}`);
         assert.equal(pagination.find(`${PAGE}`).length, 2);
         assert.equal(pagination.find(`${PAGE}:eq(0) a`).text(), '1');
@@ -89,7 +89,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         assert.equal(currentURL(),TP_URL);
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
         var pagination = find(`${PAGES}`);
         assert.equal(pagination.find(`${PAGE}`).length, 2);
         assert.equal(pagination.find(`${PAGE}:eq(0) a`).text(), '1');
@@ -160,25 +160,25 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     andThen(() => {
         assert.equal(currentURL(), TP_URL);
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
     });
     click('.t-sort-name-dir');
     andThen(() => {
         assert.equal(currentURL(), TP_URL + '?sort=name');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
     });
     click(`${PAGE}:eq(1) a`);
     andThen(() => {
         assert.equal(currentURL(), TP_URL + '?page=2&sort=name');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne + '9');
+        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne + '9');
     });
     // click(SORT_DIR);
     // andThen(() => {
     //     assert.equal(currentURL(),TP_URL + '?sort=status.name%2Cname');
     //     assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-    //     assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameTwo);
+    //     assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameTwo);
     // });
 });
 
@@ -197,35 +197,35 @@ test('clicking header will sort by given property and reset page to 1 (also requ
 //     andThen(() => {
 //         assert.equal(currentURL(), TP_URL);
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
 //     });
 //     fillIn(`${SEARCH_INPUT}`, '4');
 //     triggerEvent(`${SEARCH_INPUT}`, 'keyup', NUMBER_FOUR);
 //     andThen(() => {
 //         assert.equal(currentURL(),TP_URL + '?search=4');
 //         assert.equal(find(GRID_DATA_ALL).length, 2);
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameGrid);
-//         assert.equal(find('.t-grid-data:eq(1) .t-third-party-name').text(), TPD.nameGrid4);
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameGrid);
+//         assert.equal(find('.t-grid-data:eq(1) .t-third-party-name').text().trim(), TPD.nameGrid4);
 //     });
 //     click(SORT_DIR);
 //     andThen(() => {
 //         assert.equal(currentURL(),TP_URL + '?search=4&sort=status.name');
 //         assert.equal(find(GRID_DATA_ALL).length, 2);
-//         // assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameGrid);
-//         // assert.equal(find('.t-grid-data:eq(1) .t-third-party-name').text(), TPD.nameGridXav);
+//         // assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameGrid);
+//         // assert.equal(find('.t-grid-data:eq(1) .t-third-party-name').text().trim(), TPD.nameGridXav);
 //     });
 //     fillIn(`${SEARCH_INPUT}`, '');
 //     triggerEvent(`${SEARCH_INPUT}`, 'keyup', BACKSPACE);
 //     andThen(() => {
 //         assert.equal(currentURL(),TP_URL + '?search=&sort=status.name');
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-//         // assert.equal(find(`${GRID_DATA_0} .t-third-party-name').text(), TPD.nameGridTen); //admin instead?
+//         // assert.equal(find(`${GRID_DATA_0} .t-third-party-name').text().trim(), TPD.nameGridTen); //admin instead?
 //     });
 //     click(`${PAGE}:eq(1) a`);
 //     andThen(() => {
 //         assert.equal(currentURL(),`${TP_URL}?page=2&search=&sort=status.name`);
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE-1);
-//         // assert.equal(find(`${GRID_DATA_0} .t-third-party-name').text(), TPD.nameGridXav); //12?
+//         // assert.equal(find(`${GRID_DATA_0} .t-third-party-name').text().trim(), TPD.nameGridXav); //12?
 //     });
 //     fillIn(`${SEARCH_INPUT}`, '14');
 //     triggerEvent(`${SEARCH_INPUT}`, 'keyup', NUMBER_ONE);
@@ -233,13 +233,13 @@ test('clicking header will sort by given property and reset page to 1 (also requ
 //     andThen(() => {
 //         assert.equal(currentURL(),TP_URL + '?search=14&sort=status.name');
 //         assert.equal(find(GRID_DATA_ALL).length, 1);
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameGrid);
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameGrid);
 //     });
 //     click(`${RESET_GRID}`);
 //     andThen(() => {
 //         assert.equal(currentURL(), TP_URL);
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
 //     });
 // });
 
@@ -253,31 +253,31 @@ test('clicking header will sort by given property and reset page to 1 (also requ
 //     andThen(() => {
 //         assert.equal(currentURL(), TP_URL);
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
-//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
-//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'2');
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'1');
+//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text().trim(), TPD.nameOne+'2');
 //     });
 //     click('.t-sort-name-dir');
 //     andThen(() => {
 //         assert.equal(currentURL(),TP_URL + '?sort=name');
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
-//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
-//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'10');
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'1');
+//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text().trim(), TPD.nameOne+'10');
 //     });
 //     click(SORT_DIR);
 //     andThen(() => {
 //         assert.equal(currentURL(),TP_URL + '?sort=status.name%2Cname');
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
-//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
-//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'10');
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'1');
+//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text().trim(), TPD.nameOne+'10');
 //     });
 // });
 
 // test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', (assert) => {
 //     random.uuid = function() { return UUID.value; };
-//     var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=name,status.name';
+//     var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=status.name';
 //     xhr(sort_four,'GET',null,{},200,TPF.sorted('name,status.name'));
 //     var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-name,status.name';
 //     xhr(sort_three,'GET',null,{},200,TPF.sorted('-name,status.name'));
@@ -291,7 +291,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
 //         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort'));
 //         assert.ok(find(SORT_DIR).hasClass('fa-sort'));
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
 //         assert.equal(find(`${RESET_GRID}`).length, 0);
 //     });
 //     click('.t-sort-name-dir');
@@ -300,9 +300,9 @@ test('clicking header will sort by given property and reset page to 1 (also requ
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
 //         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
 //         assert.ok(find(SORT_DIR).hasClass('fa-sort'));
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
-//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
-//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'10');
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'1');
+//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text().trim(), TPD.nameOne+'10');
 //     });
 //     click(SORT_DIR);
 //     andThen(() => {
@@ -310,9 +310,9 @@ test('clicking header will sort by given property and reset page to 1 (also requ
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
 //         assert.ok(find(SORT_DIR).hasClass('fa-sort-asc'));
 //         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
-//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
-//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'10');
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'1');
+//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text().trim(), TPD.nameOne+'10');
 //     });
 //     click('.t-sort-name-dir');
 //     andThen(() => {
@@ -320,25 +320,25 @@ test('clicking header will sort by given property and reset page to 1 (also requ
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
 //         assert.ok(find(SORT_DIR).hasClass('fa-sort-asc'));
 //         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-desc'));
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameGridBase+'8');
-//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameGridBase+'7');
-//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameGridBase+'6');
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameGridBase+'8');
+//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameGridBase+'7');
+//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text().trim(), TPD.nameGridBase+'6');
 //     });
 //     click('.t-sort-name-dir');
 //     andThen(() => {
-//         assert.equal(currentURL(),TP_URL + '?sort=name%2Cstatus.name');
+//         assert.equal(currentURL(),TP_URL + '?sort=status.name');
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
 //         assert.ok(find(SORT_DIR).hasClass('fa-sort-asc'));
-//         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
-//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
-//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'10');
+//         assert.ok(!find('.t-sort-name-dir').hasClass('fa-sort-asc'));
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'1');
+//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text().trim(), TPD.nameOne+'10');
 //     });
 //     click(RESET_GRID);
 //     andThen(() => {
 //         assert.equal(currentURL(), TP_URL);
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
 //     });
 // });
 
@@ -351,25 +351,25 @@ test('clicking header will sort by given property and reset page to 1 (also requ
 //     andThen(() => {
 //         assert.equal(currentURL(), TP_URL);
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
 //     });
 //     filterGrid('status.name', 'i');
 //     andThen(() => {
 //         assert.equal(currentURL(),TP_URL + '?find=status%3Ai');
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
 //     });
 //     filterGrid('name', 'vzoname');
 //     andThen(() => {
 //         assert.equal(currentURL(),TP_URL + '?find=status%3Ai%2Cname%3Avzoname');
 //         assert.equal(find(GRID_DATA_ALL).length, 8);
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameGridBase+'1');
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameGridBase+'1');
 //     });
 //     click(RESET_GRID);
 //     andThen(() => {
 //         assert.equal(currentURL(), TP_URL);
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
 //     });
 // });
 
@@ -586,7 +586,7 @@ test('save filterset will fire off xhr and add item to the sidebar navigation', 
     let name = 'foobar';
     let routePath = 'admin.third-parties.index';
     let url = window.location.toString();
-    let query = url.slice(url.indexOf('?'));
+    let query = '?sort=name';
     let section = '.t-grid-wrap';
     let navigation = '.t-filterset-wrap li';
     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};

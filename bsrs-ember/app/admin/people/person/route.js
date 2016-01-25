@@ -62,13 +62,6 @@ var PersonRoute = TabRoute.extend(ContactRouteMixin, {
         controller.set('roles', hash.roles);
         controller.set('locales', hash.locales);
         controller.set('role_change', hash.role_change);
-    },
-    actions: {
-        localeChanged(locale){
-            let model = this.currentModel.model;
-            model.set('locale', locale);
-            model.changeLocale();
-        }
     }
 });
 

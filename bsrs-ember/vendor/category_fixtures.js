@@ -11,6 +11,16 @@ var BSRS_CATEGORY_FACTORY = (function() {
             status: this.category_defaults.status
         }
     },
+    factory.prototype.get_list = function(i, name, children_fks, parent) {
+        var response = [{
+            id: i || this.category_defaults.idOne,
+            name: name || this.category_defaults.nameOne,
+            status: this.category_defaults.status,
+            children_fks: children_fks || [],
+            parent_id: parent || null, 
+        }];
+        return {'count':1,'next':null,'previous':null,'results': response};
+    },
     factory.prototype.generate = function(i, name) {
         return {
             id: i || this.category_defaults.idOne,
@@ -21,7 +31,6 @@ var BSRS_CATEGORY_FACTORY = (function() {
             cost_code: this.category_defaults.costCodeOne,
             label: this.category_defaults.labelOne,
             subcategory_label: this.category_defaults.subCatLabelOne,
-            //TODO: remove this
             parent: null
             // status: this.category_defaults.statusOne
         }
@@ -32,11 +41,10 @@ var BSRS_CATEGORY_FACTORY = (function() {
     factory.prototype.top_level = function() {
         var parent_one = this.get(this.category_defaults.idOne);
         parent_one.parent = null;
-        parent_one.children = [{id: this.category_defaults.idTwo, name: this.category_defaults.nameTwo},
-            {id: this.category_defaults.idPlumbing, name: this.category_defaults.nameRepairChild}];
+        parent_one.children_fks = [this.category_defaults.idTwo, this.category_defaults.idPlumbing];
         var parent_two = this.get(this.category_defaults.idThree, this.category_defaults.nameThree);
-        parent_two.parent = null;
-        parent_two.children = [];
+        parent_two.parent_id = null;
+        parent_two.children_fks = [];
         var response = [parent_one, parent_two];
         return {'count':2,'next':null,'previous':null,'results': response};
     },

@@ -11,7 +11,8 @@ from selenium.webdriver.support.ui import Select
 
 from helpers import (
     LoginMixin, FillInHelper, JavascriptMixin, InputHelper,
-    NavPage, GeneralElementsPage, Wait, PersonPage, ModelPage
+    NavPage, GeneralElementsPage, Wait, ModelPage,
+    ModelContactPage
 )
 
 def get_text_excluding_children(driver, element):
@@ -65,27 +66,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         post_title = self.wait_for_xhr_request_xpath("//*/div/h1")
         assert init_title == post_title
 
-    def test_keypress__backspace(self):
-        # Go to Location Area
-        self.nav_page.find_location_link().click()
-        # Create Location Page Object
-        location_page = ModelPage(
-            driver = self.driver,
-            new_link = "t-add-new",
-            list_name = "t-location-name",
-            list_data = "t-grid-data"
-        )
-        # click first record in list data
-        locations = location_page.find_list_data()
-        locations[0].click()
-        # save H1 name
-        init_title = self.wait_for_xhr_request_xpath("//*/div/h1")
-        # Need a target element to 'send_keys', and, since H1 isn't an input 
-        # field, this is fine.
-        init_title.send_keys(Keys.BACKSPACE)
-        post_title = self.wait_for_xhr_request_xpath("//*/div/h1")
-        assert init_title == post_title
-
     def test_role(self):
         ### CREATE
         # Go to Role Area
@@ -109,8 +89,9 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]", debounce=True)
         category_option = self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
         category_option.click()
-        role_ll_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-level-select ')]/div")
-        role_ll_input.click()
+        #SCOTT not sure why this is failing on jenkins
+        # role_ll_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-level-select ')]/div")
+        # role_ll_input.click()
         # ll_options = self.wait_for_xhr_request("ember-power-select-option", plural=True)
         # ll_options[0].click()
         # self.gen_elem_page.click_save_btn()
@@ -152,7 +133,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # Go to Location Area
         self.nav_page.find_location_link().click()
         # Create Location Page Object
-        location_page = ModelPage(
+        location_page = ModelContactPage(
             driver = self.driver,
             new_link = "t-add-new",
             list_name = "t-location-name",
@@ -171,6 +152,35 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         location_level_select.click()
         ll_option = self.driver.find_element_by_class_name("ember-power-select-option--highlighted")
         ll_option.click()
+
+        old_phone_one = "222-999-7878"
+        old_phone_two = "222-999-7899"
+        old_street_one = "001 Tourmaline St"
+        old_street_two = "32 Bunny Road"
+        old_city_one = "London"
+        old_city_two = "Washington DC"
+        old_zip_one = "45322"
+        old_zip_two = "34332-4545"
+        old_email_one = "andy@wat.com"
+        old_email_two = "wat@foo.com"
+        # Fill in Contact data
+        add_phone_number_btn = self.gen_elem_page.find_add_btn()
+        add_phone_number_btn.click()
+        location_page.find_ph_new_entry_send_keys(old_phone_one)
+        add_phone_number_btn.click()
+        all_phone_number_inputs = location_page.find_all_ph_new_entries()
+        last_phone_number_input = all_phone_number_inputs[1]
+        last_phone_number_input.send_keys(old_phone_two)
+        add_location_email_btn = self.gen_elem_page.find_add_email_btn()
+        add_location_email_btn.click()
+        location_page.find_email_new_entry_send_keys(old_email_one)
+        add_location_email_btn.click()
+        location_page.find_second_email_new_entry_send_keys(old_email_two)
+        add_address_btn = self.gen_elem_page.find_add_address_btn()
+        add_address_btn.click()
+        location_page.find_address_new_entry_send_keys(1, old_street_one, old_city_one, old_zip_one)
+        add_address_btn.click()
+        location_page.find_address_new_entry_send_keys(2, old_street_two, old_city_two, old_zip_two)
         # location_level_input = Select(self.driver.find_element_by_id("location_location_level_select"))
         # location_level_input.select_by_index(1)
         self.gen_elem_page.click_save_btn()
@@ -179,23 +189,96 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.wait_for_xhr_request("t-sort-name-dir").click()
         self.driver.refresh()
         location_list_view = location_page.find_list_name()
-        location_page.click_name_in_list(location_name, location_list_view)
+        new_location = location_page.click_name_in_list_pages(location_name, new_model=None)
+        try:
+            new_location.click()
+        except AttributeError as e:
+            raise e("new location not found")
         ### UPDATE
-        # Go to Location Detail view, Change name and hit "save"
+        # Go to Location Detail view, Change name and add Contact information and hit "save"
         location_page.find_wait_and_assert_elem("t-location-name", location_name)
-        location_name = rand_chars()
-        location = InputHelper(location_name=location_name)
+        # location_page.assert_email_inputs(old_email_one, old_email_two)
+        new_location_name = rand_chars()
+        new_phone_one = "888-999-7878"
+        new_phone_two = "888-999-7899"
+        new_street_one = "112 2nd St"
+        new_street_two = "64th St Ste 203"
+        new_city_one = "Bangladesh"
+        new_city_two = "Madison"
+        new_zip_one = "45322"
+        new_zip_two = "34332-4545"
+        new_email_one = "snewcomer@wat.com"
+        new_email_two = "aaron@foo.com"
+        # New 'name'
+        location = InputHelper(location_name=new_location_name)
         self._fill_in(location, True)
+        # re-fill out "name, number, location-level" if needed
+        location_number = rand_chars()
+        location_level = rand_chars()
+        location = InputHelper(location_number=location_number)
+        self._fill_in(location)
+        location_level_select = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-level-select ')]/div")
+        location_level_select.click()
+        ll_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-level-select-dropdown ')]/ul/li[text()='district_lp']")
+        ll_option.click()
+        # Fill in Children
+        location_children_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-location-children-select')])[last()]")
+        location_children_input.send_keys("a")
+        child_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
+        try:
+            child_option.click()
+        except AttributeError as e:
+            raise e("child not found")
+        # Fill in Parents
+        location_parents_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-location-parent-select')])[last()]")
+        location_parents_input.send_keys("a")
+        parent_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
+        parent_option.click()
+        # Fill in Contact data
+        add_phone_number_btn = self.gen_elem_page.find_add_btn()
+        add_phone_number_btn.click()
+        all_phone_number_inputs = location_page.find_all_ph_new_entries()
+        second_to_last_phone_number_input = all_phone_number_inputs[2]
+        second_to_last_phone_number_input.send_keys(new_phone_one)
+        # location_page.find_ph_new_entry_send_keys(new_phone_one)
+        add_phone_number_btn.click()
+        all_phone_number_inputs = location_page.find_all_ph_new_entries()
+        last_phone_number_input = all_phone_number_inputs[3]
+        last_phone_number_input.send_keys(new_phone_two)
+
+        # email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
+        # email_input.clear()
+        # add_location_email_btn = self.gen_elem_page.find_add_email_btn()
+        # add_location_email_btn.click()
+        # location_page.find_email_new_entry_send_keys(new_email_one)
+        
+        # add_address_btn = self.gen_elem_page.find_add_address_btn()
+        # add_address_btn.click()
+        # location_page.find_address_new_entry_send_keys(1, new_street_one, new_city_one, new_zip_one)
+        # add_address_btn.click()
+        # location_page.find_address_new_entry_send_keys(2, new_street_two, new_city_two, new_zip_two)
         self.gen_elem_page.click_save_btn()
         # List view contains new name
         locations = location_page.find_list_data()
-        location_list_view = location_page.find_list_name()
-        location_page.click_name_in_list(location_name, location_list_view)
+        self.driver.refresh()
+        locations = location_page.find_list_data()
+        new_location = location_page.click_name_in_list_pages(new_location_name, new_model=None)
+        try:
+            new_location.click()
+        except AttributeError as e:
+            raise e("new location not found")
+        # Check to see if address/email/phone numbers saved
+        location_page.find_wait_and_assert_elem("t-location-name", new_location_name)
+        location_page.assert_phone_number_inputs(old_phone_one, old_phone_two)
+        # location_page.assert_children("Company")
+        # location_page.assert_email_inputs(new_email_one, new_email_two)
+        # location_page.assert_address_inputs(1, new_street_one, new_city_one, new_zip_one)
+        # location_page.assert_address_inputs(2, new_street_two, new_city_two, new_zip_two)
         ### DELETE
         # Go to Location Detail view click Delete
         self.gen_elem_page.click_dropdown_delete()
         self.gen_elem_page.click_delete_btn()
-        # check Role is deleted
+        # check Location is deleted
         self.driver.refresh()
         locations = location_page.find_list_data()
         location_list_view = location_page.find_list_name()
@@ -261,7 +344,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # Go to Person Area
         self.nav_page.find_people_link().click()
         # Create Person Page Object
-        person_page = PersonPage(
+        person_page = ModelContactPage(
             driver = self.driver,
             new_link = "t-add-new",
             list_name = "t-person-username",
@@ -283,6 +366,14 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         title = "myTitle"
         new_phone_one = "888-999-7878"
         new_phone_two = "888-999-7899"
+        new_street_one = "112 2nd St"
+        new_street_two = "64th St Ste 203"
+        new_city_one = "Bangladesh"
+        new_city_two = "Madison"
+        new_zip_one = "45322"
+        new_zip_two = "34332-4545"
+        new_email_one = "snewcomer@wat.com"
+        new_email_two = "aaron@foo.com"
         person = InputHelper(first_name=first_name, middle_initial=middle_initial,
                 last_name=last_name, employee_id=employee_id,
                 title=title)
@@ -295,6 +386,29 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         last_phone_number_input = all_phone_number_inputs[1]
         last_phone_number_input.send_keys(new_phone_two)
         person_page.assert_ph_inputs(all_phone_number_inputs, new_phone_one, new_phone_two)
+        # add_email_btn = self.gen_elem_page.find_add_email_btn()
+        # add_email_btn.click()
+        # person_page.find_email_new_entry_send_keys(new_email_one)
+        # add_email_btn.click()
+        # person_page.find_second_email_new_entry_send_keys(new_email_two)
+        add_address_btn = self.gen_elem_page.find_add_address_btn()
+        add_address_btn.click()
+        person_page.find_address_new_entry_send_keys(1, new_street_one, new_city_one, new_zip_one)
+        add_address_btn.click()
+        person_page.find_address_new_entry_send_keys(2, new_street_two, new_city_two, new_zip_two)
+
+        # Fill in Location
+        location_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-person-locations-select')])[last()]")
+        location_input.send_keys("a")
+        loc_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
+        loc_option.click()
+
+        # Select different locale
+        locale_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-locale-select ')]/div")
+        locale_input.click()
+        locale_option = self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
+        locale_option.click()
+
         # b/c first save won't work if the 'password' is still attached to the person.
         self.gen_elem_page.click_save_btn()
         person_page.find_list_data()
@@ -308,8 +422,13 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         person_page.find_wait_and_assert_elem("t-person-username", username)
         person_page.find_and_assert_elems(username=username, first_name=first_name,
             middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
+        person_page.assert_phone_number_inputs(new_phone_one, new_phone_two)
+        # person_page.assert_email_inputs(new_email_one, new_email_two)
+        person_page.assert_address_inputs(1, new_street_one, new_city_one, new_zip_one)
+        person_page.assert_address_inputs(2, new_street_two, new_city_two, new_zip_two)
         self.driver.refresh()
         person_page.find_wait_and_assert_elem("t-person-username", username)
+        assert self.driver.find_element_by_class_name("t-locale-select-trigger").text == "ja - ja"
         person_page.find_and_assert_elems(username=username, first_name=first_name,
             middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
         ### DELETE

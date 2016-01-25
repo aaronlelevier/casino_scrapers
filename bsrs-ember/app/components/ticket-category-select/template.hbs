@@ -4,6 +4,8 @@
   options=options
   class="category-select t-ticket-category-select"
   onchange=(action "selected")
+  onopen=(action "handleOpen" category.id)
+  searchEnabled=false
   as |category|
 }}
   {{category.name}}

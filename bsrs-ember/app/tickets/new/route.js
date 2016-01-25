@@ -21,7 +21,6 @@ var TicketNewRoute = TabNewRoute.extend({
         const new_pk = parseInt(params.new_id, 10);
         const statuses = this.get('statuses');
         const priorities = this.get('priorities');
-        const top_level_category_options = this.get('categoryRepository').findTopLevelCategories() || [];
         let model = this.get('store').find('ticket', {new_pk: new_pk}).objectAt(0);
         if(!model){
             model = this.get('repository').create(new_pk);
@@ -30,14 +29,12 @@ var TicketNewRoute = TabNewRoute.extend({
             model: model,
             statuses: statuses,
             priorities: priorities,
-            top_level_category_options: top_level_category_options,
         };
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
         controller.set('statuses', hash.statuses);
         controller.set('priorities', hash.priorities);
-        controller.set('top_level_category_options', hash.top_level_category_options);
     }
 });
 

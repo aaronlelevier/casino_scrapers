@@ -10,11 +10,17 @@ var BSRS_LOCATION_DEFAULTS_OBJECT = (function() {
             idTwo: '232543cf-cfby-129a-3fc9-1t771c372509',
             idThree: '232543cf-cfby-129a-3fc9-1t771c372510',
             idFour: '232543cf-cfby-129a-3fc9-1t771c372511',
+            idParent: '232543cf-cfby-129a-3fc9-1t771c372622',
+            idParentTwo: '232543cf-cfby-129a-3fc9-1t771c372623',
             baseStoreName: 'ABC123',
-            storeName: 'ABC1231',
+            storeName: 'Company',
+            storeNameOne: 'ABC1231',
             storeNameTwo: 'DEF456',
             storeNameThree: 'GHI789',
             storeNameFour: 'ZXY863',
+            storeNameFive: 'ABC1234',
+            storeNameParent: 'Parent Location',
+            storeNameParentTwo: 'Parent Two Location',
             storeNumber: '123zz',
             storeNumberTwo: '456zz',
             status: this.location_status.openId,
@@ -23,6 +29,8 @@ var BSRS_LOCATION_DEFAULTS_OBJECT = (function() {
             anotherId: 'zcreb4ba-a533-44e0-ab1f-57cc1b056789',
             gridTwoId: '232z46cf-9fbb-456z-4hc3-59728vu309902',
             gridLocSelect: '232z46cf-9fbb-456z-4hc3-59728vu309904',
+            apple: 'apple',
+            boondocks: 'Boondocks',
         };
     };
     return factory;

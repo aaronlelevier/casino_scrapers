@@ -1,20 +1,21 @@
 from datetime import date
 
-from django.test import TestCase, TransactionTestCase
+from django.test import TestCase
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, Group
 from django.core.exceptions import ValidationError
 
 from model_mommy import mommy
 
+from category.models import Category
+from category.tests.factory import create_single_category
 from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
-from person.tests.factory import PASSWORD, create_person, create_role
+from person.tests.factory import PASSWORD, create_person, create_role, create_single_person
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from utils import create
-from utils.models import MainSetting
 from utils.tests.test_validators import (DIGITS, NO_DIGITS, UPPER_CHARS, NO_UPPER_CHARS,
     LOWER_CHARS, NO_LOWER_CHARS, SPECIAL_CHARS, NO_SPECIAL_CHARS)
 
@@ -38,21 +39,13 @@ class RoleTests(TestCase):
             str(self.role.location_level.id)
         )
 
+    def test_related_categories_can_only_be_top_level(self):
+        parent = create_single_category()
+        child = create_single_category(parent=parent)
 
-class RoleSettingsTests(TestCase):
-
-    def setUp(self):
-        self.role = create_role()
-
-    def test_settings(self):
-        self.role.settings = {'login_grace': 2}
-        self.role.save()
-
-        self.assertEqual(self.role.settings.get('login_grace'), 2)
-
-    def test_settings__defualts(self):
-        self.assertEqual(self.role.settings.get('login_grace'), 1)
-        self.assertEqual(self.role.settings.get('proj_preapprove'), False)
+        with self.assertRaises(ValidationError):
+            self.role.categories.add(child)
+            self.role.save()
 
 
 class RolePasswordTests(TestCase):
@@ -172,7 +165,7 @@ class PersonTests(TestCase):
     def setUp(self):
         create_locations()
         self.password = PASSWORD
-        self.person = create_person()
+        self.person = create_single_person()
 
     def test_person_is_user_subclass(self):
         self.assertIsInstance(self.person, AbstractUser)
@@ -303,6 +296,32 @@ class PersonTests(TestCase):
             self.person._get_locale(None),
             str(Locale.objects.system_default().id)
         )
+
+    def test_all_locations_and_children(self):
+        """
+        Tests that a full Location object is being returned, which will later 
+        be used by a DRF serializer in the Person-Current Bootstrapped data.
+        """
+        data = self.person.all_locations_and_children()
+        self.assertIsInstance(data[0], dict)
+        db_location = Location.objects.get(id=data[0]['id'])
+        self.assertEqual(str(db_location.id), data[0]['id'])
+        self.assertEqual(db_location.name, data[0]['name'])
+        self.assertEqual(str(db_location.location_level.id), data[0]['location_level'])
+        self.assertEqual(str(db_location.status.id), data[0]['status'])
+
+    def test_categories(self):
+        # also confirms no child categories are being returned
+        category = self.person.role.categories.first()
+        create_single_category(parent=category)
+
+        data = self.person.categories()
+
+        self.assertEqual(1, len(data))
+        self.assertIsInstance(data[0], dict)
+        db_category = Category.objects.get(id=data[0]['id'])
+        self.assertEqual(str(db_category.id), data[0]['id'])
+        self.assertEqual(db_category.name, data[0]['name'])
 
 
 ### PASSWORD

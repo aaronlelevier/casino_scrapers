@@ -6,7 +6,7 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 
 let store, run = Ember.run;
 
-moduleForComponent('attach-file', 'integration: attach-file', {
+moduleForComponent('tickets/ticket-comments-and-file-upload', 'integration: upload file progress test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:attachment']);
@@ -21,7 +21,7 @@ test('progress bar should transform from green to blue once upload is complete',
         ticket = store.push('ticket', {id: TD.idOne, ticket_attachments_fks: [7], previous_attachments_fks: []});
     });
     this.set('model', ticket);
-    this.render(hbs`{{attach-file model=model}}`);
+    this.render(hbs`{{tickets/ticket-comments-and-file-upload model=model}}`);
     let $component = this.$('.progress-bar');
     assert.equal($component.length, 1);
     assert.ok($component.hasClass('progress-bar-success'));

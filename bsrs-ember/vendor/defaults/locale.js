@@ -4,17 +4,17 @@ var BSRS_LOCALE_DEFAULTS_OBJECT = (function() {
         return {
             // one
             idOne: 'a7ae2835-ee7c-4604-92f7-045f3994936e',
-            native_nameOne: 'Español',
-            localeOne: 'es',
-            nameOne: 'Spanish',
-            presentation_nameOne: 'Español',
+            native_nameOne: '',
+            localeOne: 'en',
+            nameOne: 'English',
+            presentation_nameOne: '',
             rtlOne: false,
             // two
             idTwo: '51905ba8-024f-4739-ae5c-2d90ffc3f726',
-            native_nameTwo: '',
-            localeTwo: 'en',
-            nameTwo: 'English',
-            presentation_nameTwo: '',
+            native_nameTwo: 'Español',
+            localeTwo: 'es',
+            nameTwo: 'Spanish',
+            presentation_nameTwo: 'Español',
             rtlTwo: false,
             // three
             idThree: '7f3afd8b-8f2b-43e0-879a-3b60f81388aa',

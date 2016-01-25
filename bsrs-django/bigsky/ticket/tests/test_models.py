@@ -62,14 +62,14 @@ class TicketManagerTests(TestCase):
         self.assertEqual(ret, raw_qs_count)
 
     def test_filter_on_categories_and_location(self):
-        raw_qs_count = Ticket.objects.filter(
-            categories__id__in=self.person.role.categories.values_list('id', flat=True),
-            location__id__in=self.person.locations.values_list('id', flat=True)
-        ).count()
+        raw_qs = Ticket.objects.filter(
+            Q(categories__id__in=self.person.role.categories.values_list('id', flat=True)) &
+            Q(location__id__in=self.person.locations.values_list('id', flat=True))
+        ).distinct().values_list('id', flat=True)
 
-        ret = Ticket.objects.filter_on_categories_and_location(self.person).count()
+        ret = Ticket.objects.filter_on_categories_and_location(self.person).values_list('id', flat=True)
 
-        self.assertEqual(ret, raw_qs_count)
+        self.assertEqual(sorted(ret), sorted(raw_qs))
 
 
 class TicketTests(TestCase):
@@ -194,7 +194,7 @@ class TicketActivityTests(TestCase):
 
         self.assertIsInstance(ticket_activity, TicketActivity)
         self.assertEqual(ticket_activity.ticket.id, self.ticket.id)
-        self.assertEqual(ticket_activity.content['0'], self.person.id)
+        self.assertEqual(ticket_activity.content['0'], str(self.person.id))
 
 
 class TicketCategoryOrderingTests(TicketCategoryOrderingSetupMixin, TestCase):

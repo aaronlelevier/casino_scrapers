@@ -43,7 +43,7 @@ test('initial load should only show first PAGE_SIZE records ordered by id with c
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(find('.t-grid-title').text(), 'Location Levels');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LLD.lossPreventionDistrict);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.lossPreventionDistrict);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -61,7 +61,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text()), 'Company-tsiname');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), 'Company-tsiname');
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -73,7 +73,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         assert.equal(currentURL(),LOCATION_LEVEL_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LLD.lossPreventionDistrict);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.lossPreventionDistrict);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -142,23 +142,25 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LLD.lossPreventionDistrict);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.lossPreventionDistrict);
     });
     click('.t-sort-name-dir');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL + '?sort=name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LLD.nameCompany);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameCompany);
     });
     click('.t-page:eq(1) a');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL + '?page=2&sort=name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LLD.nameCompany+'10');
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameCompany+'10');
     });
 });
 
 test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
+    var search_three = PREFIX + BASE_URL + '/?page=2&ordering=name&search=19';
+    xhr(search_three,"GET",null,{},200,LLF.searched('19', 'name'));
     var search_two = PREFIX+BASE_URL + '/?page=1&ordering=name&search=19';
     xhr(search_two ,"GET",null,{},200,LLF.searched('19', 'name'));
     var page_two = PREFIX+BASE_URL + '/?page=2&ordering=name';
@@ -173,35 +175,35 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LLD.lossPreventionDistrict);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.lossPreventionDistrict);
     });
     fillIn('.t-grid-search-input', '9');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_NINE);
     andThen(() => {
         assert.equal(currentURL(),LOCATION_LEVEL_URL + '?search=9');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE/5);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text()), LLD.nameCompany);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-location-level-name').text()), 'Company-tsiname');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), LLD.nameCompany);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-location-level-name').text().trim()), 'Company-tsiname');
     });
     click('.t-sort-name-dir');
     andThen(() => {
         assert.equal(currentURL(),LOCATION_LEVEL_URL + '?search=9&sort=name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE/5);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text()), 'Company-tsiname');
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-location-level-name').text()), LLD.nameCompany);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), 'Company-tsiname');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-location-level-name').text().trim()), LLD.nameCompany);
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
         assert.equal(currentURL(),LOCATION_LEVEL_URL + '?search=&sort=name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LLD.nameCompany);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameCompany);
     });
     click('.t-page:eq(1) a');
     andThen(() => {
         assert.equal(currentURL(),LOCATION_LEVEL_URL + '?page=2&search=&sort=name');
         assert.equal(find('.t-grid-data').length, 9);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text()), LLD.nameCompany);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), LLD.nameCompany);
     });
     fillIn('.t-grid-search-input', '19');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_ONE);
@@ -209,13 +211,13 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(),LOCATION_LEVEL_URL + '?search=19&sort=name');
         assert.equal(find('.t-grid-data').length, 1);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text()), 'Company-tsiname');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), 'Company-tsiname');
     });
     click('.t-reset-grid');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LLD.lossPreventionDistrict);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.lossPreventionDistrict);
     });
 });
 
@@ -228,19 +230,19 @@ test('multiple sort options appear in the query string as expected', function(as
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LLD.lossPreventionDistrict);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.lossPreventionDistrict);
     });
     click('.t-sort-name-dir');
     andThen(() => {
         assert.equal(currentURL(),LOCATION_LEVEL_URL + '?sort=name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LLD.nameCompany);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameCompany);
     });
     // click('.t-sort-number-dir');
     // andThen(() => {
     //     assert.equal(currentURL(),LOCATION_LEVEL_URL + '?sort=number%2Cname');
     //     assert.equal(find('.t-grid-data').length, 10);
-    //     assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LLD.nameGrid);
+    //     assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameGrid);
     // });
 });
 
@@ -254,7 +256,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort'));
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LLD.lossPreventionDistrict);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.lossPreventionDistrict);
         assert.equal(find('.t-reset-grid').length, 0);
     });
     click('.t-sort-name-dir');
@@ -262,20 +264,20 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(currentURL(),LOCATION_LEVEL_URL + '?sort=name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LLD.nameCompany);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameCompany);
     });
     click('.t-sort-name-dir');
     andThen(() => {
         assert.equal(currentURL(),LOCATION_LEVEL_URL + '?sort=-name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-desc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LLD.nameStore);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameStore);
     });
     click('.t-reset-grid');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LLD.lossPreventionDistrict);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.lossPreventionDistrict);
     });
 });
 
@@ -288,19 +290,19 @@ test('full text search will filter down the result set and query django accordin
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LLD.lossPreventionDistrict);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.lossPreventionDistrict);
     });
     filterGrid('name', 'tsi');
     andThen(() => {
         assert.equal(currentURL(),LOCATION_LEVEL_URL + '?find=name%3Atsi');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text()), 'Company-tsiname');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), 'Company-tsiname');
     });
     click('.t-reset-grid');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LLD.lossPreventionDistrict);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.lossPreventionDistrict);
     });
 });
 
@@ -504,7 +506,7 @@ test('save filterset will fire off xhr and add item to the sidebar navigation', 
     let name = 'foobar';
     let routePath = 'admin.location-levels.index';
     let url = window.location.toString();
-    let query = url.slice(url.indexOf('?'));
+    let query = '?sort=name';
     let section = '.t-grid-wrap';
     let navigation = '.t-filterset-wrap li';
     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};

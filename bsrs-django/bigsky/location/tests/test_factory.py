@@ -31,7 +31,16 @@ class LocationLevelTests(TestCase):
 
 class LocationTests(TestCase):
 
-    def test_create_locations(self):
+    def test_create_locations__company(self):
+        factory.create_locations()
+
+        company = Location.objects.get(name=settings.LOCATION_TOP_LEVEL_NAME)
+
+        self.assertIsInstance(company, Location)
+        self.assertEqual(company.children.count(), 1)
+        self.assertEqual(company.children.first().location_level.name, 'region')
+
+    def test_create_locations__region(self):
         factory.create_locations()
         # District
         ca = Location.objects.get(name='ca')

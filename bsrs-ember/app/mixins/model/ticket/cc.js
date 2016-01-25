@@ -19,25 +19,24 @@ var CCMixin = Ember.Mixin.create({
     }),
     ticket_cc: Ember.computed(function() {
         const ticket_pk = this.get('id');
-        const filter = function(join_model) {
+        const filter = (join_model) => {
             return join_model.get('ticket_pk') === ticket_pk && !join_model.get('removed');
         };
         return this.get('store').find('ticket-person', filter);
     }),
-    add_person(person_pk) {
+    add_person(person) {
         const ticket_pk = this.get('id');
-        const uuid = this.get('uuid');
         const store = this.get('store');
-        const id = uuid.v4();
+        const new_person = store.push('person', person);
+        const person_pk = new_person.get('id');
         //check for existing
         const ticket_people = store.find('ticket-person').toArray();
-        run(function() {
-            ticket_people.forEach((tp) => {
-                if (tp.get('person_pk') === person_pk) {
-                    store.push('ticket-person', {id: tp.get('id'), removed: undefined});
-                }
-            });
-            store.push('ticket-person', {id: id, ticket_pk: ticket_pk, person_pk: person_pk});
+        let existing = ticket_people.filter((m2m) => {
+            return m2m.get('person_pk') === person_pk;
+        }).objectAt(0);
+        run(() => {
+            if(existing){ store.push('ticket-person', {id: existing.get('id'), removed: undefined}); }
+            else{ store.push('ticket-person', {id: Ember.uuid(), ticket_pk: this.get('id'), person_pk: person_pk}); }
         });
     },
     remove_person(person_pk) {
@@ -45,7 +44,7 @@ var CCMixin = Ember.Mixin.create({
         const m2m_pk = this.get('ticket_cc').filter((m2m) => {
             return m2m.get('person_pk') === person_pk;
         }).objectAt(0).get('id');
-        run(function() {
+        run(() => {
             store.push('ticket-person', {id: m2m_pk, removed: true});
         });
     },

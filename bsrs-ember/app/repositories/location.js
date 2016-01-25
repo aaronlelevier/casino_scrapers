@@ -20,6 +20,32 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
             model.saveRelated();
         });
     },
+    findLocationChildren(id, llevel, search_criteria) {
+        let url = `${LOCATION_URL}get-level-children/${id}/${llevel}/`;
+        // search_criteria = search_criteria ? search_criteria.trim() : search_criteria;
+        if (search_criteria) {
+            url += `?name__icontains=${search_criteria}`;
+        }
+        return PromiseMixin.xhr(url, 'GET').then((response) => {
+            return response.results.filter((location) => {
+                const name = location.name;
+                return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1;
+            });
+        });
+    },
+    findLocationParents(id, llevel, search_criteria) {
+        let url = `${LOCATION_URL}get-level-parents/${id}/${llevel}/`;
+        // search_criteria = search_criteria ? search_criteria.trim() : search_criteria;
+        if (search_criteria) {
+            url += `?name__icontains=${search_criteria}`;
+        }
+        return PromiseMixin.xhr(url, 'GET').then((response) => {
+            return response.results.filter((location) => {
+                const name = location.name;
+                return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1;
+            });
+        });
+    },
     findTicket(search_criteria) {
         let url = LOCATION_URL;
         search_criteria = search_criteria ? search_criteria.trim() : search_criteria;
@@ -31,24 +57,22 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
                     let name = location.get('name');
                     return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1 && !location.get('new');
                 };
-                return this.get('store').find('location', filterFunc, ['id']);
+                return this.get('store').find('location', filterFunc);
             });
         }
         return Ember.A([]);
     },
     findLocationSelect(filter, search_criteria) {
         let url = this.format_url(filter);
+        // search_criteria = search_criteria ? search_criteria.trim() : search_criteria;
         if (search_criteria) {
             url += `&name__icontains=${search_criteria}`;
         }
         return PromiseMixin.xhr(url, 'GET').then((response) => {
-            this.get('LocationDeserializer').deserialize(response);
-            let filterFunc = function(location) {
-                let location_level_fk = location.get('location_level').get('id');
+            return response.results.filter((location) => {
+                const location_level_fk = location.location_level;
                 return location_level_fk === filter.location_level;
-            };
-            //TODO: this will return those locations with a certain location level but doesn't include the search parameters
-            return this.get('store').find('location', filterFunc, ['id', 'location_level']);
+            });
         });
     },
     find(filter) {

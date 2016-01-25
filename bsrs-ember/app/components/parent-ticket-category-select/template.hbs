@@ -1,8 +1,8 @@
-{{ticket-category-select ticket=ticket selection=ticket.top_level_category ticket_category_options=top_level_category_options selected_category="selected_category"}}
+{{ticket-category-select-top ticket=ticket selection=ticket.top_level_category ticket_category_options=category.has_many_children}}
 
 {{#each ticket.sorted_categories as |category index|}}
-  {{#if category.has_many_children}}
-  {{ticket-category-select ticket=ticket index=(plus-one index) category=category ticket_category_options=category.has_many_children selected_category="selected_category"}}
+  {{#if category.children_fks}}
+  {{ticket-category-select ticket=ticket index=(plus-one index) category=category ticket_category_options=category.has_many_children}}
   {{/if}}
 {{/each}}
 

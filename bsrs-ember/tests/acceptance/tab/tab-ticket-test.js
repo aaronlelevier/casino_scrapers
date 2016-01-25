@@ -40,8 +40,6 @@ module('Acceptance | tab ticket test', {
         endpoint = PREFIX + BASE_TICKET_URL + '/';
         ticket_detail_data = TF.detail(TD.idOne);
         detail_xhr = xhr(endpoint + TD.idOne + '/', 'GET', null, {}, 200, ticket_detail_data);
-        let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
-        xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
         activity_one = xhr(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
         original_uuid = random.uuid;
     },
@@ -84,6 +82,30 @@ test('deep linking the ticket detail url should push a tab into the tab store wi
         assert.equal(tab.get('newModel'), false);
     });
 });
+
+//TODO: update once get click category children components
+// test('scott changing the categories should update the tab title', (assert) => {
+//     visit(DETAIL_URL);
+//     andThen(() => {
+//         assert.equal(currentURL(), DETAIL_URL);
+//         let tabs = store.find('tab');
+//         assert.equal(tabs.get('length'), 1);
+//         const tab = store.find('tab', TD.idOne);
+//         const ticket = store.find('ticket', TD.idOne);
+//         const sorted_cat = ticket.get('sorted_categories');
+//         assert.equal(find(TAB_TITLE).text(), `#${ticket.get('number')} - ${sorted_cat[sorted_cat.length-1].get('name')}`);
+//     });
+//     page.categoryTwoClickDropdown();
+//     page.categoryTwoClickOptionElectrical();
+//     andThen(() => {
+//         let tabs = store.find('tab');
+//         assert.equal(tabs.get('length'), 1);
+//         const tab = store.find('tab', TD.idOne);
+//         const ticket = store.find('ticket', TD.idOne);
+//         const sorted_cat = ticket.get('sorted_categories');
+//         assert.equal(find(TAB_TITLE).text(), `#${ticket.get('number')} - ${sorted_cat[sorted_cat.length-1].get('name')}`);
+//     });
+// });
 
 test('visiting the ticket detail url from the list url should push a tab into the tab store', (assert) => {
     let ticket_list_data = TF.list();

@@ -1,4 +1,9 @@
 import Ember from 'ember';
+import config from 'bsrs-ember/config/environment';
+import PromiseMixin from 'ember-promise/mixins/promise';
+
+const PREFIX = config.APP.NAMESPACE;
+const CATEGORY_URL = PREFIX + '/admin/categories/';
 
 var TicketCategories = Ember.Component.extend({
     classNames: ['ticket-category-wrap'],
@@ -24,9 +29,14 @@ var TicketCategories = Ember.Component.extend({
     actions: {
         selected(category) {
             let ticket = this.get('ticket');
-            let category_id = category.get('id');
-            ticket.change_category_tree(category_id);
-            this.sendAction('selected_category', category);
+            ticket.change_category_tree(category);
+        },
+        handleOpen(category_parent_id) {
+            const url = `${CATEGORY_URL}?parent=${category_parent_id}`;
+            const _this = this;
+            PromiseMixin.xhr(url, 'GET').then((response) => {
+                _this.set('options', response.results);
+            });
         }
     }
 });

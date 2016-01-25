@@ -1,6 +1,8 @@
 from .base import *
 
 
+TICKET_FILTERING_ON = False
+
 CI_APPS = [
     'nose',
     'django_nose',
@@ -13,7 +15,6 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [
     '--nologcapture',
-    '--with-coverage',
     '--exclude-dir={}'.format(os.path.join(BASE_DIR, "utils_transform/tlocation/tests")),
     '--cover-package=accounting,bigsky,category,contact,generic,location,order,person,session,\
 third_party,ticket,translation,utils,work_request',

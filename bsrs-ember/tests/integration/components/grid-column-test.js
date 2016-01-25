@@ -12,9 +12,9 @@ test('related property name with underscore will have the correct filterClass, s
     let $component = this.$('th');
     assert.equal($component.length, 1);
     assert.equal($component.find('span').length, 3);
-    assert.ok($component.find('span:eq(0)').hasClass('t-filter-priority-translated-name'));
-    assert.ok($component.find('span:eq(1)').hasClass('t-sort-priority-translated-name-dir'));
-    assert.ok($component.find('span:eq(2)').hasClass('t-sort-priority-translated-name'));
+    assert.ok($component.find('span:eq(0)').hasClass('t-sort-priority-translated-name'));
+    assert.ok($component.find('span:eq(1)').hasClass('t-filter-priority-translated-name'));
+    assert.ok($component.find('span:eq(2)').hasClass('t-sort-priority-translated-name-dir'));
 });
 
 test('array based column will have the correct filterClass, sortByClass and sortClass', function(assert) {
@@ -24,7 +24,7 @@ test('array based column will have the correct filterClass, sortByClass and sort
     let $component = this.$('th');
     assert.equal($component.length, 1);
     assert.equal($component.find('span').length, 3);
-    assert.ok($component.find('span:eq(0)').hasClass('t-filter-categories[name]'));
-    assert.ok($component.find('span:eq(1)').hasClass('t-sort-categories[name]-dir'));
-    assert.ok($component.find('span:eq(2)').hasClass('t-sort-categories[name]'));
+    assert.ok($component.find('span:eq(0)').hasClass('t-sort-categories[name]'));
+    assert.ok($component.find('span:eq(1)').hasClass('t-filter-categories[name]'));
+    assert.ok($component.find('span:eq(2)').hasClass('t-sort-categories[name]-dir'));
 });

@@ -12,14 +12,14 @@ var BSRS_TICKET_FACTORY = (function() {
         var id = i || this.ticket.idOne;
 
         var child_category = this.category_fixtures.generate(this.category_defaults.idPlumbing, this.category_defaults.nameRepairChild);
-        var child_child_category = {id: this.category_defaults.idPlumbingChild, name: this.category_defaults.namePlumbingChild, parent: child_category.id, label: this.category_defaults.labelThree, children_fks: []};
+        var child_child_category = {id: this.category_defaults.idPlumbingChild, name: this.category_defaults.namePlumbingChild, parent_id: child_category.id, label: this.category_defaults.labelThree, children_fks: []};
         child_category.children_fks = [this.category_defaults.idPlumbingChild];
-        child_category.parent = this.category_defaults.idOne;
+        child_category.parent_id = this.category_defaults.idOne;
         child_category.label = this.category_defaults.labelTwo;
 
         var parent_category = this.category_fixtures.generate(this.category_defaults.idOne, this.category_defaults.nameOne);
         parent_category.children_fks = [this.category_defaults.idPlumbing, this.category_defaults.idTwo];
-        parent_category.parent = null;
+        parent_category.parent_id = null;
 
         delete parent_category.status;
         delete child_category.status;
@@ -31,8 +31,8 @@ var BSRS_TICKET_FACTORY = (function() {
             request: this.ticket.requestOne,
             status: this.ticket.statusOneId,
             priority: this.ticket.priorityOneId,
-            cc: [{id: this.people_defaults.idOne, fullname: this.people_defaults.fullname, email: this.people_defaults.emails, role: this.people_defaults.role}],
-            categories: [child_category, parent_category, child_child_category],
+            cc: [{id: this.people_defaults.idOne, fullname: this.people_defaults.fullname, email: this.people_defaults.emails, role: this.people_defaults.role, status: this.people_defaults.status}],
+            categories: [parent_category, child_category, child_child_category],
             assignee: this.people_fixtures.get(),
             location: this.location_fixtures.get(),
             attachments: [],
@@ -83,6 +83,35 @@ var BSRS_TICKET_FACTORY = (function() {
             response.push(ticket);
         }
         return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
+    };
+    factory.prototype.list_three_diff_locations = function() {
+        var response = [];
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
+        for (var i=1; i <= page_size; i++) {
+            var uuid = 'bf2b9c85-f6bd-4345-9834-c5d51de53d';
+            if (i < page_size) {
+                uuid = uuid + '0' + i;
+            } else{
+                uuid = uuid + i;
+            }
+            var ticket = this.generate(uuid);
+            ticket.number = 'bye' + i;
+            ticket.request = 'sub' + i;
+            delete ticket.cc;
+            delete ticket.attachments;
+            if (i % 2 == 0) {
+                ticket.location = this.location_fixtures.get(this.ticket.locationOneId, this.ticket.locationOne);
+            }
+            else {
+                ticket.location = this.location_fixtures.get(this.ticket.locationTwoId, this.ticket.locationTwo);
+            }
+            response.push(ticket);
+        }
+        //we do a reverse order sort here to verify a real sort occurs in the component
+        var sorted = response.sort(function(a,b) {
+            return b.id - a.id;
+        });
+        return {'count':page_size*2-1,'next':null,'previous':null,'results': sorted};
     };
     factory.prototype.detail = function(i) {
         var pk = i || this.ticket.idOne;

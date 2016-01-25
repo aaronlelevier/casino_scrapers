@@ -9,7 +9,6 @@
                     delete="delete"
                 }}
             </header>
-
             <section class="docSection container-fluid">
                 <div class="row">
                     <div class="col-md-12">
@@ -17,15 +16,15 @@
                             <div class="row card-title">
                                 <h1 class="col-md-12 t-ticket-header">
                                     {{model.sorted_categories.lastObject.name}}
-                                    <small>#{{model.number}}</small>
+                                    <small>{{t 'ticket.label.numberSymbol'}}{{model.number}}</small>
                                 </h1>
                                 <div class="col-md-12 meta-data">
-                                    <span class="tag {{model.priority_class}}">{{fa-icon 'exclamation-triangle'}} {{t model.priority.name}}</span>
-                                    <span class="tag {{model.status_class}}">{{fa-icon 'clock-o'}} {{t model.status.name}}</span>
+                                    {{tickets/ticket-priority-tag item=model}}
+                                    {{tickets/ticket-status-tag item=model}}
                                     <span class="create-date" title="{{moment-format model.created 'dddd, MMMM Do YYYY, h:mm:ss a z'}}">{{t 'ticket.created' requester=model.requester timestamp=(moment-from-now model.created)}}</span>
                                 </div>
                                 <div class="col-md-12">
-                                    {{#parent-ticket-category-select ticket=model top_level_category_options=top_level_category_options as |child_valid|}}
+                                    {{#parent-ticket-category-select ticket=model as |child_valid|}}
                                     <span class="validation validation-under category-validation-error t-category-validation-error {{child-validation submitted child_valid}}">invalid category</span>
                                     {{/parent-ticket-category-select}}
                                 </div>
@@ -37,36 +36,8 @@
                             </div>
                         </section>
                     </div>
-                    <div class="col-md-12">
-                        <section>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    {{comment-save model=model}}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="ticket-actions">
-                                        <div class="ticket-action save">
-                                            <span {{action 'save'}} class="btn btn-default add-btn">{{fa-icon 'check-circle'}} Save</span>
-                                        </div>
-                                        <div class="ticket-action attach">
-                                            {{attach-file model=model}}
-                                        </div>
-                                        <div  class="ticket-action priority">
-                                            {{ticket-priority-select ticket=model priorities=priorities}}
-                                            {{#validation-error-field submitted=submitted field="priority" className="validation validation-under t-priority-validation-error" model=model validation=priorityValidation}}invalid priority{{/validation-error-field}}
-                                        </div>
-                                        <div class="ticket-action status">
-                                            {{ticket-status-select ticket=model statuses=statuses}}
-                                            {{#validation-error-field submitted=submitted field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                </div>
+                    {{tickets/ticket-comments-and-file-upload model=model priorities=priorities statuses=statuses save=(action "save")}}
+                  </div>
                 {{activity-list model=activities}}
             </section>
         </div>

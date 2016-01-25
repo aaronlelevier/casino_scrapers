@@ -1,7 +1,7 @@
 import regex_core from 'bsrs-ember/utilities/array/regex-core';
 
 var get_value = function(object, property) {
-    return object.get(property) ? object.get(property).toLowerCase() : null;
+    return object.get(property) ? object.get(property).toString().toLowerCase() : null;
 };
 
 var array_func = function(object, property, regex) {

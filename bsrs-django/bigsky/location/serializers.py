@@ -1,13 +1,10 @@
 from rest_framework import serializers
 
-from contact.serializers import   (
-    PhoneNumberFlatSerializer, PhoneNumberSerializer,
-    EmailFlatSerializer, EmailSerializer,
-    AddressFlatSerializer, AddressSerializer)
+from contact.serializers import (PhoneNumberSerializer, EmailSerializer, AddressSerializer)
 from location.models import LocationLevel, LocationStatus, LocationType, Location
 from location.validators import LocationParentChildValidator
 from person.serializers_leaf import PersonSimpleSerializer
-from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin
+from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin, NestedCreateContactSerializerMixin
 from utils.validators import UniqueForActiveValidator
 
 
@@ -61,18 +58,16 @@ class LocationTypeSerializer(BaseCreateSerializer):
 
 ### LOCATION
 
-class LocationIdNameSerializer(BaseCreateSerializer):
-    """Leaf node serializer for PersonDetailSerializer."""
-
-    location_level = LocationLevelSerializer()
+class LocationIdNameOnlySerializer(serializers.ModelSerializer):
+    """Leaf node serializer for Person-Current Bootstrapped data."""
 
     class Meta:
         model = Location
-        fields = ('id', 'name', 'number', 'location_level')
+        fields = ('id', 'name',)
 
 
 class LocationSerializer(serializers.ModelSerializer):
-    """Leaf node serializer for LocationDetailSerializer."""
+    """Leaf node serializer for LocationDetailSerializer and PersonDetailSerializer"""
 
     class Meta:
         model = Location
@@ -80,8 +75,6 @@ class LocationSerializer(serializers.ModelSerializer):
 
         
 class LocationListSerializer(serializers.ModelSerializer):
-    
-    location_level = LocationLevelSerializer()
     
     class Meta:
         model = Location
@@ -103,19 +96,11 @@ class LocationDetailSerializer(serializers.ModelSerializer):
             'parents', 'children', 'emails', 'phone_numbers', 'addresses',)
 
 
-class LocationCreateSerializer(BaseCreateSerializer):
+class LocationUpdateSerializer(NestedCreateContactSerializerMixin, NestedContactSerializerMixin, serializers.ModelSerializer):
 
-    class Meta:
-        model = Location
-        validators = [UniqueForActiveValidator(Location, ['number'])]
-        fields = ('id', 'name', 'number', 'status', 'location_level',)
-
-
-class LocationUpdateSerializer(NestedContactSerializerMixin, serializers.ModelSerializer):
-
-    emails = EmailFlatSerializer(required=False, many=True)
-    phone_numbers = PhoneNumberFlatSerializer(required=False, many=True)
-    addresses = AddressFlatSerializer(required=False, many=True)
+    emails = EmailSerializer(required=False, many=True)
+    phone_numbers = PhoneNumberSerializer(required=False, many=True)
+    addresses = AddressSerializer(required=False, many=True)
 
     class Meta:
         model = Location

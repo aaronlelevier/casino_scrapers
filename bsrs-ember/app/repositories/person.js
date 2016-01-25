@@ -16,7 +16,7 @@ export default Ember.Object.extend(GridRepositoryMixin, {
     PersonDeserializer: inject('person'),
     deserializer: Ember.computed.alias('PersonDeserializer'),
     create(new_pk) {
-        let pk = this.get('uuid').v4();
+        const pk = this.get('uuid').v4();
         const store = this.get('store');
         const role = this.get('store').find('role').filter((role) => {
             return role.get('default') ? true : false;
@@ -53,7 +53,7 @@ export default Ember.Object.extend(GridRepositoryMixin, {
                     let fullname = person.get('fullname');
                     return fullname.toLowerCase().indexOf(search.toLowerCase()) > -1 && !person.get('new');
                 };
-                return this.get('store').find('person', filterFunc, ['id']);
+                return this.get('store').find('person', filterFunc);
             });
         }
     },
@@ -64,12 +64,10 @@ export default Ember.Object.extend(GridRepositoryMixin, {
         if (search) {
             url += `?fullname__icontains=${search}`;
             return PromiseMixin.xhr(url, 'GET').then((response) => {
-                this.get('PersonDeserializer').deserialize(response);
-                let filterFunc = function(person) {
-                    let fullname = person.get('fullname');
-                    return fullname.toLowerCase().indexOf(search.toLowerCase()) > -1 && !person.get('new');
-                };
-                return this.get('store').find('person', filterFunc, ['id']);
+                return response.results.filter((person) => {
+                    const fullname = `${person.first_name} ${person.last_name}`;
+                    return fullname.toLowerCase().indexOf(search.toLowerCase()) > -1;
+                });
             });
         }
     },

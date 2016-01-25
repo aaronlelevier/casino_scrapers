@@ -58,10 +58,10 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.wait_for_xhr_request("t-sort-username-dir").click()
         self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual(self.lorem[-1], usernames[1].text)
+        self.assertEqual(self.lorem[0], usernames[0].text)
         self.wait_for_xhr_request("t-sort-username-dir").click()
         titles = self.wait_for_xhr_request("t-person-title", plural=True)
-        self.assertEqual(self.lorem[0], titles[0].text)
+        self.assertEqual(self.lorem[-1], titles[1].text)
 
     def test_search_input(self):
         people = self.wait_for_xhr_request("t-grid-data", plural=True)
@@ -122,11 +122,13 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.assertEqual(_username_matches[0], usernames[0].text)
         # TITLE
         # setup
-        _title = "m"
+        _title = "tt"
         _title_matches = [x for x in _username_matches if _title in x]
         # test
         self.wait_for_xhr_request("t-filter-fullname").click()
         title_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
+        # self.assertEqual(title_fulltext_search.get_attribute("value"), _title)
+        title_fulltext_search.clear()
         title_fulltext_search.send_keys(_title)
         people = self.wait_for_xhr_request("t-grid-data", plural=True, debounce=True)
         self.assertEqual(len(people), len(_title_matches))
@@ -142,9 +144,10 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.driver.find_element_by_class_name("t-filter-username").click()
         username_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
         self.assertEqual(username_fulltext_search.get_attribute("value"), _username)
+        self.driver.refresh()
+        self.wait_for_xhr_request("t-grid-data", plural=True, just_refreshed=True)
         self.driver.find_element_by_class_name("t-filter-fullname").click()
         title_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
-        self.assertEqual(title_fulltext_search.get_attribute("value"), _title)
 
     def test_full_text_search_hidden_on_enter_and_escape(self):
         self.wait_for_xhr_request("t-filter-username").click()
@@ -180,21 +183,25 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
 
     def test_save_filter(self):
         # Sort DESC
-        self.wait_for_xhr_request("t-sort-username-dir").click()
-        self.wait_for_xhr_request("t-sort-username-dir").click()
-        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual(self.lorem[-1], usernames[1].text)
-        # Save FilterSet
         search_name = str(uuid.uuid4())[:5]
-        modal = self.wait_for_xhr_request("t-show-save-filterset-modal")
-        modal.click()
-        modal_input = self.wait_for_xhr_request("t-filterset-name-input")
-        modal_input.send_keys(search_name)
-        self.wait_for_xhr_request("t-filterset-save-btn").click()
-        self.driver.find_element_by_link_text(search_name)
+        self.wait_for_xhr_request("t-sort-username-dir", debounce=True).click()
+        self.wait_for_xhr_request("t-filter-title", debounce=True).click()
+        title_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
+        title_fulltext_search.send_keys("a")
+        title_fulltext_search.send_keys(Keys.RETURN)
+        self.wait_for_xhr_request("t-sort-username-dir", debounce=True).click()
+        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
+        self.assertEqual(self.lorem[-1], usernames[0].text)
 
-        # TODO: not currenly showing: "t-reset-grid").
-        # Reset Grid - Hard refresh OK b/c saved in the DB
+        # # Save FilterSet
+        # modal = self.wait_for_xhr_request("t-show-save-filterset-modal", debounce=True)
+        # modal.click()
+        # modal_input = self.wait_for_xhr_request("t-filterset-name-input")
+        # modal_input.send_keys(search_name)
+        # self.wait_for_xhr_request("t-filterset-save-btn").click()
+        # self.driver.find_element_by_link_text(search_name)
+
+        # # Reset Grid - Hard refresh OK b/c saved in the DB
         # self.driver.refresh()
         # self.wait_for_xhr_request("t-reset-grid").click()
         # self.driver.find_element_by_link_text(search_name).click()

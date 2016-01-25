@@ -30,7 +30,11 @@ div.rowTable {
                         color: $darkGray;
                         text-decoration: none;
                         &:hover{
+                            cursor: pointer;
                             text-decoration: none;
+                            border-color: $hoverColor;
+                            background-color: $hoverColor;
+                            color: $white;
                         }
                         &.active{
                             border-color: $activeColor;
@@ -70,6 +74,22 @@ div.rowTable {
                 .fa-sort-asc,
                 .fa-sort-desc{
                     cursor: pointer;
+                }
+            }
+            //table column widths
+            td, th{
+                &.ticket-priority{
+                    width: 120px;
+                }
+                &.ticket-status{
+                    width: 120px;
+                }
+                &.selector{
+                    width: 28px;
+                    .dirty{
+                        font-size: 1.2rem;
+                        color: $lightGreen;
+                    }
                 }
             }
         }

@@ -14,6 +14,7 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
     name: attr(''),
     description: attr(''),
     label: attr(''),
+    subcategory_label: attr(''),
     cost_amount: attr(''),
     cost_code: attr(''),
     parent_id: undefined,
@@ -24,11 +25,12 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     serialize() {
+        const cost_amount = this.get('cost_amount') || null;
         return {
             id: this.get('id'),
             name: this.get('name'),
             description: this.get('description'),
-            cost_amount: this.get('cost_amount'),
+            cost_amount: cost_amount,
             cost_currency: this.get('cost_currency'),
             cost_code: this.get('cost_code'),
             label: this.get('label'),
@@ -54,7 +56,7 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
         return this.get('store').find('category', filter);
     }),
     child_ids: Ember.computed('has_many_children.[]', function() {
-        return this.get('has_many_children').mapBy('id'); 
+        return this.get('has_many_children').mapBy('id');
     }),
     parent: Ember.computed.alias('parent_belongs_to.firstObject'),
     parent_belongs_to: Ember.computed('parent_id', function() {
@@ -72,7 +74,7 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
     remove_child(child_pk) {
         let related_fks = this.get('children_fks');
         let updated_fks = related_fks.filter((fk) => {
-            return fk !== child_pk; 
+            return fk !== child_pk;
         });
         this.set('children_fks', updated_fks);
     },
@@ -85,11 +87,11 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
         let children_fks = this.get('children_fks');
         let prev_children_fks = this.get('previous_children_fks');
         children_fks.forEach((id) => {
-            this.remove_child(id); 
-        }); 
+            this.remove_child(id);
+        });
         prev_children_fks.forEach((id) => {
-            this.add_child(id); 
-        }); 
+            this.add_child(id);
+        });
     },
     saveChildren() {
         this.set('previous_children_fks', this.get('children_fks'));
@@ -98,7 +100,7 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
         this.rollbackChildren();
     },
     saveRelated() {
-        this.saveChildren();    
+        this.saveChildren();
     }
 });
 

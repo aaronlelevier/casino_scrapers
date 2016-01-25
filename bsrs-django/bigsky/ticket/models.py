@@ -19,7 +19,7 @@ TICKET_STATUSES = [
     'ticket.status.deferred',
     'ticket.status.denied',
     'ticket.status.problem_solved',
-    'ticket.status.completed',
+    'ticket.status.complete',
     'ticket.status.closed',
     'ticket.status.unsatisfactory_completion'
 ]
@@ -89,9 +89,9 @@ class TicketQuerySet(BaseQuerySet):
 
     def filter_on_categories_and_location(self, person):
         return self.filter(
-            categories__id__in=person.role.categories.objects_and_their_children(),
-            location__id__in=person.locations.objects_and_their_children()
-        )
+            Q(categories__id__in=person.role.categories.objects_and_their_children()) &
+            Q(location__id__in=person.locations.objects_and_their_children())
+        ).distinct()
 
 
 class TicketManager(BaseManager):

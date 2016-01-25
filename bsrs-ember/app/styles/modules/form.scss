@@ -142,6 +142,7 @@ textarea.ticket-request{
 	text-transform: uppercase;
 	margin: 0 8px 0 0;
 	position: relative;
+	white-space: nowrap;
 	&.ticket-status-new{
 		background: $lightGreen;
 		border-color: $lightGreen;
@@ -183,9 +184,6 @@ label.small-label{
 	border: $borderStyle;
 	color: $medGray !important;
 	padding: 0 12px;
-	&:after{
-		content: ":";
-	}
 }
 .ember-power-select.ember-basic-dropdown--opened input[type="search"]{
 	padding: 0 7px;
@@ -206,6 +204,7 @@ label.small-label{
 	    .ember-power-select-trigger{
 	        font-size: 1.2rem;
 	        min-height: 26px;
+			min-width: 120px;
 	        height: 26px;
 	        line-height: 24px;
 	        border-radius: 0;

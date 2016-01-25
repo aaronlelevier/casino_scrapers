@@ -8,6 +8,8 @@ const { Route, inject } = Ember;
 var ApplicationRoute = Ember.Route.extend({
     repository: injectRepo('person'),
     RoleDeserializer: injectDeserializer('role'),
+    LocationDeserializer: injectDeserializer('location'),
+    PersonDeserializer: injectDeserializer('person'),
     store: injectStore('main'),
     translationsFetcher: inject.service(),
     i18n: inject.service(),
@@ -55,7 +57,7 @@ var ApplicationRoute = Ember.Route.extend({
         for (let key in currency_list) {
             store.push('currency', currency_list[key]);
         }
-        const location_level_list = Ember.$('[data-preload-location-levels]').data('configuration');
+        const location_level_list = Ember.$.extend(true, [], Ember.$('[data-preload-location-levels]').data('configuration'));
         location_level_list.forEach((model) => {
             model.children_fks = model.children || [];
             model.parent_fks = model.parents || [];
@@ -63,7 +65,7 @@ var ApplicationRoute = Ember.Route.extend({
             delete model.parents;
             store.push('location-level', model);
         });
-        const role_list = Ember.$('[data-preload-roles]').data('configuration');
+        const role_list = Ember.$.extend(true, [], Ember.$('[data-preload-roles]').data('configuration'));
         const role_deserializer = this.get('RoleDeserializer');
         role_list.forEach((model) => {
             role_deserializer.deserialize(model, model.id);
@@ -97,7 +99,7 @@ var ApplicationRoute = Ember.Route.extend({
             store.push('locale', model);
         });
 
-        const person_current = Ember.$('[data-preload-person-current]').data('configuration');
+        const person_current = Ember.$.extend(true, [], Ember.$('[data-preload-person-current]').data('configuration'));
         const person_current_role = store.find('role', person_current.role);
         person_current_role.set('people', [person_current.id]);
         //save so not dirty
@@ -107,15 +109,21 @@ var ApplicationRoute = Ember.Route.extend({
         config.i18n.currentLocale = current_locale.get('locale');
 
         store.push('person-current', person_current);
-        store.push('person', {
-            id: person_current.id,
-            first_name: person_current.first_name,
-            last_name: person_current.last_name,
-            username: person_current.username,
-            title: person_current.title,
-            role_fk: person_current.role,
-            locale: current_locale.get('locale')
+
+        var location_deserializer = this.get('LocationDeserializer');
+        var person_deserializer = this.get('PersonDeserializer');
+
+        var person_location_pks = [];
+        person_current.all_locations_and_children.forEach(function(location) {
+            const person_location_pk = Ember.uuid();
+            store.push('person-location', {id: person_location_pk, person_pk: person_current.id, location_pk: location.id});
+            person_location_pks.push(person_location_pk);
+            location_deserializer.deserialize(location, location.id);
         });
+        // push in 'logged in' Person
+        person_current.locale = current_locale;
+        person_current.person_location_fks = person_location_pks;
+        person_deserializer.deserialize(person_current, person_current.id);
 
         // Set the current user's time zone
         // TODO: use moment.tz.guess() when it becomes available - https://github.com/moment/moment-timezone/pull/220
@@ -149,6 +157,7 @@ var ApplicationRoute = Ember.Route.extend({
                 this.trx.attemptedTransitionModel = model;
                 this.trx.attemptedAction = 'closeTabMaster';
             } else {
+                model.rollbackRelated();//clean up invalid contact info
                 Ember.$('.t-modal').modal('hide');
                 let temp = this.router.generate(this.controller.currentPath);
                 temp = temp.split('/').pop();

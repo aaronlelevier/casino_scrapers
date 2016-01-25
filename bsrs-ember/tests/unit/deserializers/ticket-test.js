@@ -22,7 +22,7 @@ let store, subject, uuid, person_deserializer, location_level_deserializer, loca
 
 module('unit: ticket deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-person', 'model:ticket-category', 'model:ticket-status', 'model:ticket-priority', 'model:status', 'model:location', 'model:person-location', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:attachment', 'model:location-status', 'service:person-current','service:translations-fetcher','service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-person', 'model:ticket-category', 'model:ticket-status', 'model:ticket-priority', 'model:status', 'model:location', 'model:person-location', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:attachment', 'model:location-status', 'service:person-current','service:translations-fetcher','service:i18n', 'model:locale']);
         uuid = this.container.lookup('model:uuid');
         location_level_deserializer = LocationLevelDeserializer.create({store: store});
         location_deserializer = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
@@ -44,7 +44,7 @@ test('ticket assignee will be deserialized into its own store when deserialize d
     run(function() {
         subject.deserialize(json, json.id);
     });
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('assignee').get('id'), PD.id);
 });
@@ -69,7 +69,7 @@ test('ticket assignee will be deserialized into its own store when deserialize d
     run(function() {
         subject.deserialize(response);
     });
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('assignee').get('id'), PD.id);
 });
@@ -130,7 +130,7 @@ test('ticket location will be deserialized into its own store when deserialize l
     });
     let location = store.findOne('location'); 
     assert.deepEqual(location.get('tickets'), [TD.idOne]);
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirty'));
     assert.equal(ticket.get('location.id'), LD.idOne);
 });
@@ -157,7 +157,7 @@ test('ticket location will be deserialized into its own store when deserialize d
     });
     let location = store.findOne('location'); 
     assert.deepEqual(location.get('tickets'), [TD.idOne]);
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirty'));
     assert.equal(ticket.get('location.id'), LD.idOne);
 });
@@ -233,7 +233,7 @@ test('ticket priority will be deserialized into its own store when deserialize l
         subject.deserialize(response);
     });
     assert.deepEqual(ticket_priority.get('tickets'), [TD.idOne]);
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirty'));
     assert.equal(ticket.get('priority.id'), TD.priorityOneId);
 });
@@ -255,7 +255,7 @@ test('ticket priority will be deserialized into its own store when deserialize d
         subject.deserialize(json, TD.idOne);
     });
     assert.deepEqual(ticket_priority.get('tickets'), [TD.idOne]);
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirty'));
     assert.equal(ticket.get('priority.id'), TD.priorityOneId);
 });
@@ -274,7 +274,7 @@ test('ticket priority will be deserialized into its own store when deserialize d
 });
 
 test('ticket priority will be updated when server returns different priority (list)', (assert) => {
-    let ticket, ticket_status, ticket_priority, ticket_priority_two;
+    let ticket_status, ticket_priority, ticket_priority_two;
     ticket = store.push('ticket', {id: TD.idOne, priority_fk: TD.priorityOneId});
     ticket_status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
     ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne]});
@@ -392,7 +392,7 @@ test('newly inserted ticket will have non dirty status when deserialize list exe
     });
     assert.deepEqual(ticket_status.get('tickets'), []);
     assert.deepEqual(ticket_status_two.get('tickets'), [TD.idOne]);
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     assert.equal(ticket.get('status.id'), TD.statusTwoId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('status_fk'), TD.statusTwoId);
@@ -472,19 +472,19 @@ test('ticket-category m2m added including parent id for categories without a fat
     run(function() {
         subject.deserialize(response, TD.idOne);
     });
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(store.find('ticket-person').get('length'), 1);
     assert.equal(store.find('ticket-category').get('length'), 3);
     let categories = ticket.get('categories');
     assert.equal(categories.get('length'), 3);
-    assert.equal(categories.objectAt(1).get('id'), CD.idOne);
-    assert.equal(categories.objectAt(1).get('parent_id'), null);
-    assert.deepEqual(categories.objectAt(1).get('children_fks'), [CD.idPlumbing, CD.idTwo]);
-    assert.equal(categories.objectAt(0).get('id'), CD.idPlumbing);
-    assert.equal(categories.objectAt(0).get('parent_id'), CD.idOne);
-    assert.deepEqual(categories.objectAt(0).get('children_fks'), [CD.idPlumbingChild]);
+    assert.equal(categories.objectAt(0).get('id'), CD.idOne);
+    assert.equal(categories.objectAt(0).get('parent_id'), null);
+    assert.deepEqual(categories.objectAt(0).get('children_fks'), [CD.idPlumbing, CD.idTwo]);
+    assert.equal(categories.objectAt(1).get('id'), CD.idPlumbing);
+    assert.equal(categories.objectAt(1).get('parent_id'), CD.idOne);
+    assert.deepEqual(categories.objectAt(1).get('children_fks'), [CD.idPlumbingChild]);
     assert.equal(categories.objectAt(2).get('id'), CD.idPlumbingChild);
     assert.equal(categories.objectAt(2).get('parent_id'), CD.idPlumbing);
     assert.deepEqual(categories.objectAt(2).get('children_fks'), []);
@@ -497,7 +497,7 @@ test('ticket-person m2m added even when ticket did not exist before the deserial
     run(function() {
         subject.deserialize(response, TD.idOne);
     });
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     let cc = ticket.get('cc');
     assert.equal(cc.get('length'), 1);
     assert.equal(cc.objectAt(0).get('id'), PD.id);
@@ -518,13 +518,12 @@ test('ticket-category m2m is set up correctly using deserialize single (starting
     let original = store.find('ticket', TD.idOne);
     categories = original.get('categories');
     assert.equal(categories.get('length'), 3);
-    assert.equal(categories.objectAt(1).get('id'), CD.idOne);
-    assert.equal(categories.objectAt(1).get('name'), CD.nameOne);
-    assert.ok(!categories.objectAt(1).get('parent_id'));
-    assert.equal(categories.objectAt(0).get('id'), CD.idPlumbing);
-    assert.equal(categories.objectAt(0).get('name'), CD.nameRepairChild);
-    assert.equal(categories.objectAt(0).get('parent_id'), CD.idOne);
-    assert.equal(categories.objectAt(0).get('parent').get('name'), CD.nameOne);
+    assert.equal(categories.objectAt(0).get('id'), CD.idOne);
+    assert.equal(categories.objectAt(0).get('name'), CD.nameOne);
+    assert.ok(!categories.objectAt(0).get('parent_id'));
+    assert.equal(categories.objectAt(1).get('id'), CD.idPlumbing);
+    assert.equal(categories.objectAt(1).get('name'), CD.nameRepairChild);
+    assert.equal(categories.objectAt(1).get('parent_id'), CD.idOne);
     assert.equal(store.find('ticket-category').get('length'), 3);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
@@ -542,13 +541,12 @@ test('ticket-category m2m is set up correctly using deserialize list (starting w
     let original = store.find('ticket', TD.idOne);
     categories = original.get('categories');
     assert.equal(categories.get('length'), 3);
-    assert.equal(categories.objectAt(1).get('id'), CD.idOne);
-    assert.equal(categories.objectAt(1).get('name'), CD.nameOne);
-    assert.ok(!categories.objectAt(1).get('parent_id'));
-    assert.equal(categories.objectAt(0).get('id'), CD.idPlumbing);
-    assert.equal(categories.objectAt(0).get('name'), CD.nameRepairChild);
-    assert.equal(categories.objectAt(0).get('parent_id'), CD.idOne);
-    assert.equal(categories.objectAt(0).get('parent').get('name'), CD.nameOne);
+    assert.equal(categories.objectAt(0).get('id'), CD.idOne);
+    assert.equal(categories.objectAt(0).get('name'), CD.nameOne);
+    assert.ok(!categories.objectAt(0).get('parent_id'));
+    assert.equal(categories.objectAt(1).get('id'), CD.idPlumbing);
+    assert.equal(categories.objectAt(1).get('name'), CD.nameRepairChild);
+    assert.equal(categories.objectAt(1).get('parent_id'), CD.idOne);
     assert.equal(store.find('ticket-category').get('length'), 3);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
@@ -654,10 +652,10 @@ test('ticket-category m2m added even when ticket did not exist before the deseri
     run(function() {
         subject.deserialize(response, TD.idOne);
     });
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     let categories = ticket.get('categories');
     assert.equal(categories.get('length'), 2);
-    assert.equal(categories.objectAt(0).get('id'), CD.idPlumbing);
+    assert.equal(categories.objectAt(0).get('id'), CD.idOne);
     assert.equal(categories.objectAt(1).get('id'), CD.idPlumbingChild);
     assert.ok(ticket.get('isNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -671,10 +669,10 @@ test('ticket-category m2m added even when ticket did not exist before the deseri
     run(function() {
         subject.deserialize(response);
     });
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     let categories = ticket.get('categories');
     assert.equal(categories.get('length'), 2);
-    assert.equal(categories.objectAt(0).get('id'), CD.idPlumbing);
+    assert.equal(categories.objectAt(0).get('id'), CD.idOne);
     assert.equal(categories.objectAt(1).get('id'), CD.idPlumbingChild);
     assert.ok(ticket.get('isNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -687,7 +685,7 @@ test('attachment added for each attachment on ticket', (assert) => {
     run(function() {
         subject.deserialize(json, json.id);
     });
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     let attachments = ticket.get('attachments');
     assert.equal(attachments.get('length'), 1);
     assert.equal(attachments.objectAt(0).get('id'), TD.attachmentOneId);
@@ -706,7 +704,7 @@ test('attachment added for each attachment on ticket (when ticket has existing a
     run(function() {
         subject.deserialize(json, json.id);
     });
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     let attachments = ticket.get('attachments');
     assert.equal(attachments.get('length'), 2);
     assert.equal(attachments.objectAt(0).get('id'), TD.attachmentTwoId);

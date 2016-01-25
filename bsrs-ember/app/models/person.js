@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
-import injectUUID from 'bsrs-ember/utilities/uuid';
 import CopyMixin from 'bsrs-ember/mixins/model/copy';
 import EmailMixin from 'bsrs-ember/mixins/model/email';
 import PhoneNumberMixin from 'bsrs-ember/mixins/model/phone_number';
@@ -9,14 +8,14 @@ import AddressMixin from 'bsrs-ember/mixins/model/address';
 import RoleMixin from 'bsrs-ember/mixins/model/person/role';
 import LocationMixin from 'bsrs-ember/mixins/model/person/location';
 import StatusMixin from 'bsrs-ember/mixins/model/status';
+import LocaleMixin from 'bsrs-ember/mixins/model/person/locale';
 import config from 'bsrs-ember/config/environment';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 
 var run = Ember.run;
 
-var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, StatusMixin, NewMixin, {
+var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, StatusMixin, LocaleMixin, NewMixin, {
     type: 'person',
-    uuid: injectUUID('uuid'),
     store: inject('main'),
     username: attr(''),
     password: attr(''),
@@ -26,7 +25,7 @@ var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin,
     title: attr(''),
     employee_id: attr(''),
     auth_amount: attr(''),
-    locale: attr(''),
+    locale_fk: '',
     role_fk: undefined,
     status_fk: '',
     phone_number_fks: [],
@@ -42,7 +41,7 @@ var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin,
         const personCurrent = this.get('personCurrent');
         const personCurrentId = personCurrent.get('model.id');
         if(personCurrentId === this.get('id')){
-            config.i18n.currentLocale = this.get('locale');
+            config.i18n.currentLocale = this.get('locale').get('locale');
             return this.get('translationsFetcher').fetch().then(function(){
                 this.get('i18n').set('locale', config.i18n.currentLocale);
             }.bind(this));
@@ -53,8 +52,8 @@ var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin,
         const last_name = this.get('last_name');
         return first_name + ' ' + last_name;
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'emailsIsDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'roleIsDirty', 'locationsIsDirty', 'statusIsDirty', function() {
-        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty') || this.get('statusIsDirty') || this.get('emailsIsDirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'emailsIsDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'roleIsDirty', 'locationsIsDirty', 'statusIsDirty', 'localeIsDirty', function() {
+        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty') || this.get('statusIsDirty') || this.get('emailsIsDirty') || this.get('localeIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     clearPassword() {
@@ -68,6 +67,7 @@ var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin,
         this.saveLocations();
         this.clearPassword();
         this.saveStatus();
+        this.saveLocale();
     },
     rollbackRelated() {
         this.changeLocale();
@@ -77,6 +77,7 @@ var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin,
         this.rollbackRole();
         this.rollbackLocations();
         this.rollbackStatus();
+        this.rollbackLocale();
     },
     createSerialize() {
         return {
@@ -112,8 +113,6 @@ var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin,
         }).map(function(address) {
             return address.serialize();
         });
-        const locale = store.find('locale', {locale: this.get('locale')});
-        const locale_fk = locale.objectAt(0) ? locale.objectAt(0).get('id') : '';
 
         var payload = {
             id: this.get('id'),
@@ -130,7 +129,7 @@ var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin,
             emails: emails,
             phone_numbers: phone_numbers,
             addresses: addresses,
-            locale: locale_fk,
+            locale: this.get('locale.id'),
             password: this.get('password'),
         };
         if (!this.get('password')) {

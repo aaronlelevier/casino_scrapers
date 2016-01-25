@@ -89,8 +89,6 @@ class TicketListTests(TicketSetupMixin, APITestCase):
 
         self.assertIn('id', category)
         self.assertIn('name', category)
-        self.assertIn('parent', category)
-        self.assertIn('children_fks', category)
         self.assertIn('level', category)
 
     def test_data_assignee(self):
@@ -193,8 +191,7 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
 
         self.assertIn('id', category)
         self.assertIn('name', category)
-        self.assertIn('parent', category)
-        self.assertIn('children_fks', category)
+        self.assertIn('level', category)
 
     def test_cc(self):
         response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
@@ -507,9 +504,9 @@ class TicketActivityViewSetReponseTests(APITestCase):
 
         # Add additional 'child' Category to Ticket and Role.
         # These are needed to correct test the 'from'/'to' category change for the 'parent' key
-        child_category = Category.objects.exclude(parent__isnull=True)[0]
-        self.person.role.categories.add(child_category)
-        self.ticket.categories.add(child_category)
+        self.child_category = Category.objects.exclude(parent__isnull=True)[0]
+        self.person.role.categories.add(self.child_category)
+        self.ticket.categories.add(self.child_category)
 
         # TicketActivityTypes
         create_ticket_activity_types()
@@ -605,23 +602,35 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['results'][0]['content']['to'], str(to_priority.id))
 
     def test_categories(self):
+        child_child_category = Category.objects.filter(parent=str(self.child_category.id))[0]
+        self.ticket.categories.add(child_child_category)
         from_category = self.ticket.categories.exclude(parent__isnull=True).first()
         to_category = (Category.objects.exclude(id=from_category.id)
                                        .exclude(parent__isnull=True).first())
+        to_child_category = Category.objects.filter(parent=str(to_category.id))[0]
         ticket_activity = create_ticket_activity(ticket=self.ticket, type='categories',
-            content={'from_0': str(from_category.id), 'to_0': str(to_category.id)})
-
+                content={'from_0': str(from_category.id), 'from_1': str(child_child_category.id), 'to_0': str(to_category.id), 
+                    'to_1': str(to_child_category.id)})
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
-
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
         self.assertEqual(data['results'][0]['content']['from'][0]['id'], str(from_category.id))
         self.assertEqual(data['results'][0]['content']['from'][0]['parent'], str(from_category.parent.id))
         self.assertEqual(data['results'][0]['content']['from'][0]['name'], from_category.name)
+        self.assertEqual(data['results'][0]['content']['from'][0]['level'], from_category.level)
+        self.assertEqual(data['results'][0]['content']['from'][1]['id'], str(child_child_category.id))
+        self.assertEqual(data['results'][0]['content']['from'][1]['parent'], str(child_child_category.parent.id))
+        self.assertEqual(data['results'][0]['content']['from'][1]['name'], child_child_category.name)
+        self.assertEqual(data['results'][0]['content']['from'][1]['level'], child_child_category.level)
         self.assertEqual(data['results'][0]['content']['to'][0]['id'], str(to_category.id))
         self.assertEqual(data['results'][0]['content']['to'][0]['parent'], str(to_category.parent.id))
         self.assertEqual(data['results'][0]['content']['to'][0]['name'], to_category.name)
+        self.assertEqual(data['results'][0]['content']['to'][0]['level'], to_category.level)
+        self.assertEqual(data['results'][0]['content']['to'][1]['id'], str(to_child_category.id))
+        self.assertEqual(data['results'][0]['content']['to'][1]['parent'], str(to_child_category.parent.id))
+        self.assertEqual(data['results'][0]['content']['to'][1]['name'], to_child_category.name)
+        self.assertEqual(data['results'][0]['content']['to'][1]['level'], to_child_category.level)
         # old keys gone
         with self.assertRaises(KeyError):
             data['results'][0]['content']['from_0']
@@ -1010,6 +1019,10 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
             ticket.location = child_location
             ticket.save()
             self.assertIn(ticket.location.id, self.person.locations.objects_and_their_children())
+            # Category must also match
+            child_category = create_single_category(parent=self.person.role.categories.first())
+            [self.ticket.categories.remove(c) for c in self.ticket.categories.all()]
+            self.ticket.categories.add(child_category)
 
             response = self.client.get('/api/tickets/')
             data = json.loads(response.content.decode('utf8'))

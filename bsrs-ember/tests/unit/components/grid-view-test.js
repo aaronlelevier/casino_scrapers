@@ -14,6 +14,19 @@ var proxy = function() {
     });
 };
 
+var columns = [
+    {field: 'fullname', headerLabel: 'Name', isSortable: true, isFilterable: true, isSearchable: true},
+    {field: 'username', headerLabel: 'Username', isSortable: true, isFilterable: true, isSearchable: true},
+    {field: 'title', headerLabel: 'Title', isSortable: true, isFilterable: true, isSearchable: true}
+];
+
+var columns_with_role = [
+    {field: 'fullname', headerLabel: 'Name', isSortable: true, isFilterable: true, isSearchable: true},
+    {field: 'username', headerLabel: 'Username', isSortable: true, isFilterable: true, isSearchable: true},
+    {field: 'title', headerLabel: 'Title', isSortable: true, isFilterable: true, isSearchable: true},
+    {field: 'role.name', headerLabel: 'Role', isSortable: true, isFilterable: true, isSearchable: true}
+];
+
 var store, eventbus, requested;
 
 module('unit: grid-view test', {
@@ -26,7 +39,7 @@ module('unit: grid-view test', {
 
 test('knows how to sort a list of people even when sortable column is null', (assert) => {
     store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: PEOPLE_DEFAULTS.username, title: PEOPLE_DEFAULTS.title});
-    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns});
     var people = subject.get('searched_content');
     assert.equal(people.get('length'), 1);
     store.push('person', {id: 1, username: 'wat', title: PEOPLE_DEFAULTS.title});
@@ -41,7 +54,7 @@ test('sorted content is sorted by the defaultSort provided if no other value is 
     store.push('person', {id: 3, username: 'abc', first_name: PEOPLE_DEFAULTS.first_name, last_name: ''});
     store.push('person', {id: 1, username: 'def', title: PEOPLE_DEFAULTS.title});
     store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: 'zzz', title: PEOPLE_DEFAULTS.title});
-    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, defaultSort: ['id'], searchable: ['fullname', 'username', 'title']});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, defaultSort: ['id'], columns: columns});
     var people = subject.get('sorted_content');
     assert.equal(people.objectAt(0).get('id'), 1);
     assert.equal(people.objectAt(1).get('id'), 2);
@@ -66,7 +79,7 @@ test('given a list of people and page number, should only return those people on
     var model = store.find('person');
     model.set('count', 3);
     requested.pushObject(1);
-    var subject = GridViewComponent.create({requested: requested, model: model, page_size: 2, eventbus: eventbus, defaultSort: ['id'], searchable: ['fullname', 'username', 'title']});
+    var subject = GridViewComponent.create({requested: requested, model: model, page_size: 2, eventbus: eventbus, defaultSort: ['id'], columns: columns});
     var people = subject.get('paginated_content');
     assert.equal(subject.get('page'), undefined);
     assert.equal(people.get('length'), 2);
@@ -87,7 +100,7 @@ test('given a list of people and page number, should only return those people on
     var model = store.find('person');
     model.set('count', 4);
     requested.pushObject(1);
-    var subject = GridViewComponent.create({requested: requested, model: model, page_size: 2, eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
+    var subject = GridViewComponent.create({requested: requested, model: model, page_size: 2, eventbus: eventbus, columns: columns});
     var pages = subject.get('pages');
     assert.equal(pages.get('length'), 2);
     model.set('count', 5);
@@ -100,9 +113,8 @@ test('searched content allows you to look through searchable keys and filter acc
     store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer'});
     store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups'});
     store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier'});
-    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns});
     var people = subject.get('searched_content');
-    assert.deepEqual(subject.get('searchable'), ['fullname', 'username', 'title']);
     assert.equal(people.get('length'), 3);
     subject.set('search', 'scot'); 
     people = subject.get('searched_content');
@@ -135,18 +147,27 @@ test('searched content allows you to look through searchable keys and filter acc
     assert.equal(people.get('length'), 2);
     assert.equal(people.objectAt(0).get('id'), 2);
     assert.equal(people.objectAt(1).get('id'), 3);
-    // subject.set('search', 'n ');  //TRIM!
-    // people = subject.get('searched_content');
-    // assert.equal(people.get('length'), 2);
-    // assert.equal(people.objectAt(0).get('id'), 2);
-    // assert.equal(people.objectAt(1).get('id'), 3);
+    subject.set('search', 'n ');
+    people = subject.get('searched_content');
+    assert.equal(people.get('length'), 4);
+    assert.equal(people.objectAt(0).get('id'), 4);
+    assert.equal(people.objectAt(1).get('id'), 1);
+    assert.equal(people.objectAt(2).get('id'), 2);
+    assert.equal(people.objectAt(3).get('id'), 3);
+    subject.set('search', 'N');
+    people = subject.get('searched_content');
+    assert.equal(people.get('length'), 4);
+    assert.equal(people.objectAt(0).get('id'), 4);
+    assert.equal(people.objectAt(1).get('id'), 1);
+    assert.equal(people.objectAt(2).get('id'), 2);
+    assert.equal(people.objectAt(3).get('id'), 3);
 });
 
 test('found content allows you to look through searchable keys and filter accordingly', (assert) => {
     store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'azd', title: 'scott newcomer'});
     store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'yzq', title: 'toran billups'});
     store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'zed', title: 'aaron lelevier'});
-    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns});
     var people = subject.get('found_content');
     assert.equal(people.get('length'), 3);
     subject.set('find', 'title:sco');
@@ -174,7 +195,7 @@ test('found will filter out null objects when that column is searched on explici
     store.push('person', {id: 6, first_name: '', last_name: '', username: 'pariatur', title: null});
     store.push('person', {id: 7, first_name: '', last_name: '', username: 'voluptate', title: null});
     store.push('person', {id: 8, first_name: '', last_name: '', username: 'adipisicing', title: null});
-    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns});
     subject.set('find', 'username:a');
     var people = subject.get('found_content');
     assert.equal(people.get('length'), 8);
@@ -198,7 +219,7 @@ test('found filter will only match those exactly in all columns', (assert) => {
     store.push('person', {id: 6, foo: 'babcde', username: 'xyyv2', title: 'deaabc'});
     store.push('person', {id: 7, foo: 'babcde', username: 'xyyv3', title: 'deaabcd'});
     store.push('person', {id: 8, foo: 'babcdeq', username: 'xyyv4', title: 'deaabcde'});
-    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns});
     subject.set('find', 'username:x');
     var people = subject.get('found_content');
     assert.equal(people.get('length'), 8);
@@ -238,7 +259,7 @@ test('rolling pagination shows only ten records at a time', (assert) => {
     }
     let model = store.find('person');
     model.set('count', 179);
-    let subject = GridViewComponent.create({page: 1, model: model, eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
+    let subject = GridViewComponent.create({page: 1, model: model, eventbus: eventbus, columns: columns});
     let current = subject.get('page');
     assert.equal(current, 1);
     let pages = subject.get('pages');
@@ -317,7 +338,7 @@ test('given a dynamic list of people and page number, should return the correct 
     var model = store.find('person');
     model.set('count', 187);
     requested.pushObject(3);
-    var subject = GridViewComponent.create({requested: requested, model: model, page_size: 10, page: 3, eventbus: eventbus, defaultSort: ['id'], searchable: ['fullname', 'username', 'title']});
+    var subject = GridViewComponent.create({requested: requested, model: model, page_size: 10, page: 3, eventbus: eventbus, defaultSort: ['id'], columns: columns});
     var content = subject.get('paginated_content');
     assert.equal(content.get('length'), 10);
     assert.equal(content.objectAt(0).get('id'), 11);
@@ -355,7 +376,7 @@ test('given another dynamic list of people and page number, should return the co
     var model = store.find('person');
     model.set('count', 187);
     requested.pushObject(5);
-    var subject = GridViewComponent.create({requested: requested, model: model, page_size: 10, page: 5, eventbus: eventbus, defaultSort: ['id'], searchable: ['fullname', 'username', 'title']});
+    var subject = GridViewComponent.create({requested: requested, model: model, page_size: 10, page: 5, eventbus: eventbus, defaultSort: ['id'], columns: columns});
     var content = subject.get('paginated_content');
     assert.equal(content.get('length'), 10);
     assert.equal(content.objectAt(0).get('id'), 21);
@@ -410,7 +431,7 @@ test('requesting pages in order still returns the correct results even when the 
     var model = store.find('person');
     model.set('count', 187);
     requested.pushObject(1);
-    var subject = GridViewComponent.create({requested: requested, model: model, page_size: 10, page: 1, eventbus: eventbus, defaultSort: ['id'], searchable: ['fullname', 'username', 'title']});
+    var subject = GridViewComponent.create({requested: requested, model: model, page_size: 10, page: 1, eventbus: eventbus, defaultSort: ['id'], columns: columns});
     var content = subject.get('paginated_content');
     assert.equal(content.get('length'), 10);
     assert.equal(content.objectAt(0).get('id'), 1);
@@ -542,9 +563,8 @@ test('searched content allows you to look through related models', (assert) => {
     store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer', role_fk: 1});
     store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups', role_fk: 1});
     store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier', role_fk: 2});
-    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title', 'role.name']});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns_with_role});
     var people = subject.get('searched_content');
-    assert.deepEqual(subject.get('searchable'), ['fullname', 'username', 'title', 'role.name']);
     assert.equal(people.get('length'), 3);
     subject.set('search', '1'); 
     people = subject.get('searched_content');
@@ -562,7 +582,7 @@ test('found content allows you to look through related models', (assert) => {
     store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer', role_fk: 1});
     store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups', role_fk: 1});
     store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier', role_fk: 2});
-    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title', 'role.name']});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns_with_role});
     var people = subject.get('found_content');
     assert.equal(people.get('length'), 3);
     subject.set('find', 'role.name:2');
@@ -577,7 +597,7 @@ test('sorted content is sorted related models', (assert) => {
     store.push('person', {id: 3, username: 'abc', first_name: PEOPLE_DEFAULTS.first_name, last_name: '', role_fks: 1});
     store.push('person', {id: 1, username: 'def', title: PEOPLE_DEFAULTS.title, role_fk: 1});
     store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: 'zzz', title: PEOPLE_DEFAULTS.title, role_fk: 2});
-    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, defaultSort: ['id'], searchable: ['fullname', 'username', 'title', 'role.name']});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, defaultSort: ['id'], columns: columns_with_role});
     var people = subject.get('sorted_content');
     assert.equal(people.objectAt(0).get('id'), 1);
     assert.equal(people.objectAt(1).get('id'), 2);

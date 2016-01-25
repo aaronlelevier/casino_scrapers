@@ -15,29 +15,6 @@ Python 3.4
     # This will install pip3.4 already
 
 
-PostgreSQL
-==========
-
-.. code-block::
-
-    # pre-requisite for "psycopg2" or else will get this error:
-    # * Error: pg_config executable not found. *
-    sudo yum install postgresql postgresql-devel
-
-    # create separate DB for persistent deploy
-    createdb persistent -U bsdev -O bsdev
-
-    # enable ``Django`` settings/persistent.py
-    export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
-
-    # run initial migrations (no data loaded at this point)
-    ./manage.py migrate
-
-    # initial data (only required for initial setup)
-    ./manage.py loaddata fixtures/jenkins.json
-    ./manage.py loaddata fixtures/jenkins_custom.json
-
-
 Virtualenv
 ==========
 

@@ -15,44 +15,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Attachment',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
-                ('filename', models.CharField(max_length=100, blank=True)),
+                ('deleted', models.DateTimeField(help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True, null=True)),
+                ('filename', models.CharField(blank=True, max_length=100)),
                 ('is_image', models.BooleanField(default=False)),
-                ('file', models.FileField(blank=True, upload_to=generic.models.upload_to, null=True)),
-                ('image_full', models.ImageField(blank=True, upload_to=generic.models.upload_to, null=True)),
-                ('image_medium', models.ImageField(blank=True, upload_to=generic.models.upload_to_images_medium, null=True)),
-                ('image_thumbnail', models.ImageField(blank=True, upload_to=generic.models.upload_to_images_thumbnail, null=True)),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='CustomSetting',
-            fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
-                ('settings', models.TextField(help_text='JSON Dict saved as a string in DB', blank=True)),
-                ('object_id', models.UUIDField()),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='MainSetting',
-            fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
-                ('settings', models.TextField(help_text='JSON Dict saved as a string in DB', blank=True)),
-                ('object_id', models.UUIDField()),
+                ('file', models.FileField(null=True, blank=True, upload_to=generic.models.upload_to)),
+                ('image_full', models.ImageField(null=True, blank=True, upload_to=generic.models.upload_to)),
+                ('image_medium', models.ImageField(null=True, blank=True, upload_to=generic.models.upload_to_images_medium)),
+                ('image_thumbnail', models.ImageField(null=True, blank=True, upload_to=generic.models.upload_to_images_thumbnail)),
             ],
             options={
                 'abstract': False,
@@ -61,17 +33,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SavedSearch',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
-                ('name', models.CharField(max_length=254, help_text='name of the saved search that the Person designates.')),
-                ('endpoint_name', models.CharField(max_length=254, help_text="the Ember List API route name. i.e. 'admin.people.index'.")),
-                ('endpoint_uri', models.CharField(max_length=2048, help_text='API Endpoint that this search is saved for. With all keywords ordering, and filters, etc...')),
+                ('deleted', models.DateTimeField(help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True, null=True)),
+                ('name', models.CharField(help_text='name of the saved search that the Person designates.', max_length=254)),
+                ('endpoint_name', models.CharField(help_text="the Ember List API route name. i.e. 'admin.people.index'.", max_length=254)),
+                ('endpoint_uri', models.CharField(help_text='API Endpoint that this search is saved for. With all keywords ordering, and filters, etc...', max_length=2048)),
             ],
             options={
-                'verbose_name_plural': 'Saved Searches',
                 'ordering': ('-modified',),
+                'verbose_name_plural': 'Saved Searches',
             },
         ),
     ]

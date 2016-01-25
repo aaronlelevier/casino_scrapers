@@ -1,0 +1,12 @@
+<label class="small-label t-ticket-category-label">{{categories_selected.label}}</label>
+{{#power-select
+  selected=categories_selected
+  options=options
+  class="category-select t-ticket-category-select"
+  onchange=(action "selected")
+  onopen=(action "handleOpen")
+  searchEnabled=false
+  as |category|
+}}
+  {{category.name}}
+{{/power-select}}

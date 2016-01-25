@@ -44,7 +44,7 @@ test('initial load should only show first PAGE_SIZE records ordered by id with c
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
         assert.equal(find('.t-grid-title').text(), 'Translations');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').length, 1);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
@@ -63,7 +63,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text()), 'home.welcome');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim()), 'home.welcome');
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -75,7 +75,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         assert.equal(currentURL(),ADMIN_TRANSLATION_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -144,23 +144,25 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
     });
     click('.t-sort-key-dir');
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL + '?sort=key');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
     });
     click('.t-page:eq(1) a');
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL + '?page=2&sort=key');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text()), 'home.welcome');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim()), 'home.welcome');
     });
 });
 
 test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
+    var search_three = PREFIX + BASE_URL + '/?page=2&ordering=key&search=14';
+    xhr(search_three,"GET",null,{},200,ADMIN_TRANSLATION_FIXTURES.searched('14', 'key'));
     var search_two = PREFIX + BASE_URL + '/?page=1&ordering=key&search=14';
     xhr(search_two ,"GET",null,{},200,ADMIN_TRANSLATION_FIXTURES.searched('14', 'key'));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=key';
@@ -175,33 +177,33 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
     });
     fillIn('.t-grid-search-input', '4');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=4');
         assert.equal(find('.t-grid-data').length, 2);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), "home.welcome14");
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), "home.welcome14");
     });
     click('.t-sort-key-dir');
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=4&sort=key');
         assert.equal(find('.t-grid-data').length, 2);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), "home.welcome14");
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), "home.welcome14");
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=&sort=key');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
     });
     click('.t-page:eq(1) a');
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?page=2&search=&sort=key');
         // assert.equal(find('.t-grid-data').length, 22);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text()), 'home.welcome');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim()), 'home.welcome');
     });
     fillIn('.t-grid-search-input', '14');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_ONE);
@@ -209,13 +211,13 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=14&sort=key');
         assert.equal(find('.t-grid-data').length, 1);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), 'home.welcome14');
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), 'home.welcome14');
     });
     click('.t-reset-grid');
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
     });
 });
 
@@ -226,13 +228,13 @@ test('multiple sort options appear in the query string as expected', function(as
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
     });
     click('.t-sort-key-dir');
     andThen(() => {
         assert.equal(currentURL(),ADMIN_TRANSLATION_URL + '?sort=key');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
     });
 });
 
@@ -244,7 +246,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-key-dir').hasClass('fa-sort'));
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
         assert.equal(find('.t-reset-grid').length, 0);
     });
     click('.t-sort-key-dir');
@@ -252,7 +254,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(currentURL(),ADMIN_TRANSLATION_URL + '?sort=key');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-key-dir').hasClass('fa-sort-asc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
     });
 
     click('.t-reset-grid');
@@ -260,7 +262,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-key-dir').hasClass('fa-sort'));
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
     });
 });
 
@@ -271,20 +273,20 @@ test('full text search will filter down the result set and query django accordin
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
     });
     filterGrid('key', '7');
     andThen(() => {
         assert.equal(currentURL(),ADMIN_TRANSLATION_URL + '?find=key%3A7');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE/5);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text()), 'home.welcome');
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-translation-key:eq(0)').text()), 'home.welcome');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim()), 'home.welcome');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-translation-key:eq(0)').text().trim()), 'home.welcome');
     });
     click('.t-reset-grid');
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
     });
 });
 
@@ -488,7 +490,7 @@ test('save filterset will fire off xhr and add item to the sidebar navigation', 
     let name = 'foobar';
     let routePath = 'admin.translations.index';
     let url = window.location.toString();
-    let query = url.slice(url.indexOf('?'));
+    let query = '?sort=key';
     let section = '.t-grid-wrap';
     let navigation = '.t-filterset-wrap li';
     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};

@@ -74,6 +74,7 @@ wait
 ../venv/bin/python manage.py loaddata fixtures/location.State.json
 ../venv/bin/python manage.py loaddata fixtures/translation.json
 ../venv/bin/python manage.py loaddata fixtures/accounting.Currency.json
+../venv/bin/python manage.py loaddata fixtures/contact.EmailType.json
 ../venv/bin/python manage.py loaddata fixtures/contact.PhoneNumberType.json
 ../venv/bin/python manage.py loaddata fixtures/contact.AddressType.json
 ../venv/bin/python manage.py loaddata fixtures/category.json
@@ -125,6 +126,9 @@ echo "DJANGO - COLLECTSTATIC"
 ../venv/bin/python manage.py collectstatic --noinput
 TEST=$?; if [ "$TEST" == 1 ]; then echo "django collectstatic failed"; exit $TEST; fi
 
+wait
+echo "COPY MEDIA ASSETS TO JENKINS LOCATION"
+cp -r media/* /var/www/media/deploy/
 
 echo "RELOAD SERVER SCRIPTS"
 

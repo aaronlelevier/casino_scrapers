@@ -21,17 +21,16 @@ function attrs(mixin) {
 
 var CustomValidMixin = Ember.Mixin.create({
     valid: Ember.computed(function() {
-        let self = this;
         let result = true;
-        attrs(this).forEach(function(attr) {
-            let index = parseInt(attr.match(/\d+/), 10);
-            let complexName = attr.split(index)[0];
-            let capitalLetter = complexName.match(/[A-Z]/);
-            let attrName = complexName.split(capitalLetter)[0];
-            let attrValue = self.get('model').objectAt(index).get(attrName);
-            let hasValue = attrValue ? attrValue.trim().length > 0 : false;
+        attrs(this).forEach((attr) => {
+            const index = parseInt(attr.match(/\d+/), 10);
+            const complexName = attr.split(index)[0];
+            const capitalLetter = complexName.match(/[A-Z]/);
+            const attrName = complexName.split(capitalLetter)[0];
+            const attrValue = this.get('model').objectAt(index).get(attrName);
+            const hasValue = attrValue ? attrValue.trim().length > 0 : false;
             if(hasValue) {
-                result = self.get(attr) && result;
+                result = this.get(attr) && result;
             }
         });
         return result;

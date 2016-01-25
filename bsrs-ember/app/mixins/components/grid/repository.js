@@ -25,7 +25,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
         }).get('length');
         return count+1;
     },
-    findWithQuery(page, sort, search, find, page_size) {
+    findWithQuery(page, sort, search, find, page_size, person) {
         let type = this.get('type');
         let url = this.get('url');
         let store = this.get('store');
@@ -36,7 +36,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
         if (sort && sort !== 'id' && sort.indexOf('.') < 0) {
             endpoint = endpoint + '&ordering=' + sort;
         }else if (sort && sort !== 'id'){
-            endpoint = endpoint + '&related_ordering=' + sort.replace(/\./g, '__').replace(/translated_name/g, 'name');
+            endpoint = endpoint + '&ordering=' + sort.replace(/\./g, '__').replace(/translated_name/g, 'name');
         }
         if (search && search !== '') {
             endpoint = endpoint + '&search=' + encodeURIComponent(search);
@@ -54,7 +54,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
                 endpoint = endpoint + '&' + field + '__icontains=' + encodeURIComponent(value);
             });
         }
-        let all = store.find(type);
+        const all = this.findFiltered ? this.findFiltered(person) : store.find(type);
         PromiseMixin.xhr(endpoint).then((response) => {
             all.set('isLoaded', true);
             all.set('count', response.count);

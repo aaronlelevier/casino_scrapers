@@ -54,11 +54,15 @@ var RoleModel = Model.extend(NewMixin, {
     }),
     categoryIsNotDirty: Ember.computed.not('categoryIsDirty'),
     add_category(category_pk) {
-        let role_pk = this.get('id');
-        let uuid = this.get('uuid');
-        let store = this.get('store');
-        run(function() {
-            store.push('role-category', {id: uuid.v4(), role_fk: role_pk, category_fk: category_pk});
+        const store = this.get('store'); 
+        const role_categories = store.find('role-category').toArray();
+        //check existing
+        let existing = role_categories.filter((m2m) => {
+            return m2m.get('category_fk') === category_pk;
+        }).objectAt(0);
+        run(() => {
+            if(existing){ store.push('role-category', {id: existing.get('id'), removed: undefined}); }
+            else{ store.push('role-category', {id: Ember.uuid(), role_fk: this.get('id'), category_fk: category_pk}); }
         });
     },
     remove_category(category_pk) {
