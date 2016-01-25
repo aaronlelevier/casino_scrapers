@@ -823,3 +823,55 @@ test('category_names is not sortable/filterable/searchable (display only)', func
         assert.equal(find('.t-filter-category-names').length, 0);
     });
 });
+
+//this test is one of a kind because it does not verify configuration. Instead it covers a single reset function in grid-view.js
+test('picking a different number of pages will alter the query string and xhr and reset will not remove page_size from queryParams', function(assert) {
+    const updated_pg_size = PAGE_SIZE*2;
+    let sort_one = PREFIX + BASE_URL + `/?page=1&ordering=priority__name&page_size=${updated_pg_size}`;
+    xhr(sort_one ,'GET',null,{},200,TF.sorted('priority'));
+    let option_one = PREFIX + BASE_URL + `/?page=1&page_size=${updated_pg_size}`;
+    xhr(option_one, 'GET',null,{},200,TF.paginated(updated_pg_size));
+    let page_two = PREFIX + BASE_URL + '/?page=2';
+    xhr(page_two, 'GET',null,{},200,TF.list_two());
+    visit(TICKET_URL);
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.equal(find('.t-page-size option:selected').text(), `${PAGE_SIZE} per page`);
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 2);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
+        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+        assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
+    });
+    click('.t-page:eq(1) a');
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL + '?page=2');
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 2);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
+        assert.ok(!pagination.find('.t-page:eq(0) a').hasClass('active'));
+        assert.ok(pagination.find('.t-page:eq(1) a').hasClass('active'));
+    });
+    alterPageSize('.t-page-size', updated_pg_size);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + `?page_size=${updated_pg_size}`);
+        assert.equal(find('.t-grid-data').length, updated_pg_size-1);
+        assert.equal(find('.t-page-size option:selected').text(), `${updated_pg_size} per page`);
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 1);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+    });
+    click(SORT_PRIORITY_DIR);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + `?page_size=${updated_pg_size}&sort=priority.translated_name`);
+    });
+    click('.t-reset-grid');
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + `?page_size=${updated_pg_size}`);
+    });
+});
