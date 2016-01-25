@@ -59,6 +59,15 @@ div.rowTable {
                     display: inline-block;
                     height: 18px;
                     line-height: 18px;
+                    vertical-align: bottom;
+                    &.title{
+                        float: left;
+                        max-width: 80%;
+                        margin-right: 5%;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                    }
                 }
                 .fa-sort,
                 .fa-filter{
@@ -83,6 +92,24 @@ div.rowTable {
                 }
                 &.ticket-status{
                     width: 120px;
+                }
+                &.ticket-number{
+                    width: 80px;
+                }
+                &.ticket-created{
+                    width: 130px;
+                }
+                &.ticket-location{
+                    width: 180px;
+                }
+                &.ticket-assignee{
+                    width: 180px;
+                }
+                &.ticket-location{
+                    width: 180px;
+                }
+                &.ticket-category{
+                    width: 300px;
                 }
                 &.selector{
                     width: 28px;

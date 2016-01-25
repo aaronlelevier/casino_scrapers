@@ -17,7 +17,7 @@ export default Ember.Component.extend({
     sortClass: Ember.computed(function() {
         let isSortable = this.get('column.isSortable');
         let actionClass = this.get('actionClass');
-        return isSortable ? `t-sort-${actionClass}` : '';
+        return isSortable ? `title t-sort-${actionClass}` : '';
     }),
     sortByClass: Ember.computed(function() {
         let isSortable = this.get('column.isSortable');

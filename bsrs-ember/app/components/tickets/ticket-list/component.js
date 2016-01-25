@@ -24,11 +24,20 @@ export default GridViewComponent.extend({
             classNames: ['ticket-status']
         },
         {
+            field: 'number',
+            headerLabel: 'ticket.label.numberSymbol',
+            headerIsTranslatable: true,
+            isSortable: true,
+            isSearchable: true,
+            classNames: ['ticket-number']
+        },
+        {
             field: 'created',
             formattedField: 'formatted_date',
             headerLabel: 'ticket.label.created',
             headerIsTranslatable: true,
-            isSortable: true
+            isSortable: true,
+            classNames: ['ticket-created']
         },
         {
             field: 'location.name',
@@ -36,7 +45,8 @@ export default GridViewComponent.extend({
             headerIsTranslatable: true,
             isSortable: true,
             isFilterable: true,
-            isSearchable: true
+            isSearchable: true,
+            classNames: ['ticket-location']
         },
         {
             field: 'assignee.fullname',
@@ -44,12 +54,14 @@ export default GridViewComponent.extend({
             headerIsTranslatable: true,
             isSortable: true,
             isFilterable: true,
-            isSearchable: true
+            isSearchable: true,
+            classNames: ['ticket-assignee']
         },
         {
             field: 'category_names',
             headerLabel: 'ticket.label.category-name',
-            headerIsTranslatable: true
+            headerIsTranslatable: true,
+            classNames: ['ticket-category']
         },
         {
             field: 'request',
@@ -57,14 +69,8 @@ export default GridViewComponent.extend({
             headerIsTranslatable: true,
             isSortable: true,
             isFilterable: true,
-            isSearchable: true
-        },
-        {
-            field: 'number',
-            headerLabel: 'ticket.label.numberSymbol',
-            headerIsTranslatable: true,
-            isSortable: true,
-            isSearchable: true
+            isSearchable: true,
+            classNames: ['ticket-request']
         }
     ]
 });
