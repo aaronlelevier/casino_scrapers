@@ -66,9 +66,7 @@ class TicketActivityToRepresentation(object):
             self.data['content'].pop('{}_{}'.format(key,i))
 
         if 'from' in self.data['content']:
-            sorted_categories_from = self.data['content']['from']
-            sorted_categories_from.sort(key=lambda x: x['level'])
+            sorted_categories_from = self.data['content']['from'].sort(key=lambda x: x['level'])
         if 'to' in self.data['content']:
-            sorted_categories_from = self.data['content']['to']
-            sorted_categories_from.sort(key=lambda x: x['level'])
+            sorted_categories_from = self.data['content']['to'].sort(key=lambda x: x['level'])
 
