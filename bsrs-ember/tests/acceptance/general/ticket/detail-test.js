@@ -88,6 +88,25 @@ test('clicking a tickets will redirect to the given detail view and can save to 
     });
 });
 
+test('clicking alternate save button will redirect to the given detail view as if the primary save was invoked', (assert) => {
+    page.visit();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+    });
+    click('.t-grid-data:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(page.ccSelected().indexOf(PD.first_name), 2);
+        assert.equal(find('.t-ticket-header').text().trim().split('  ')[0].trim(), 'Toilet Leak');
+    });
+    let response = TF.detail(TD.idOne);
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail), {}, 200, response);
+    click('.t-ticket-action-save');
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+    });
+});
+
 test('you can add a comment and post it while not updating created property', (assert) => {
     let iso;
     clearxhr(list_xhr);
