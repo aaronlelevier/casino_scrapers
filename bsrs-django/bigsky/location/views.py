@@ -117,7 +117,7 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
        Will return all *Parent Locations* `{pk}` for a given *LocationLevel* `{level_id}`
        
-       URL: `/api/admin/locations/get-level-parents/{pk}/`
+       URL: `/api/admin/locations/get-level-parents/{pk}/{level_id}}`
 
        Location ID: `{pk}`
 
@@ -161,10 +161,10 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
         return queryset
 
-    @list_route(methods=['GET'], url_path=r'get-level-children/(?P<pk>[\w\-]+)')
-    def get_level_children(self, request, pk=None):
+    @list_route(methods=['GET'], url_path=r'get-level-children/(?P<pk>[\w\-]+)/(?P<llevel_id>[\w\-]+)')
+    def get_level_children(self, request, pk=None, llevel_id=None):
         instance = get_object_or_404(self.model, pk=pk)
-        queryset = Location.objects.get_level_children(instance)
+        queryset = Location.objects.get_level_children(instance, llevel_id)
         queryset = self.filter_by_query_params(queryset)
         page = self.paginate_queryset(queryset)
         serializer = self._all_related_serializer(page, many=True)
