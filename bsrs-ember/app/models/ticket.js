@@ -10,6 +10,7 @@ import CategoriesMixin from 'bsrs-ember/mixins/model/ticket/category';
 import TicketLocationMixin from 'bsrs-ember/mixins/model/ticket/location';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import DateFormatMixin from 'bsrs-ember/mixins/model/date-format';
+import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-ember/utilities/belongs-to';
 
 var run = Ember.run;
 
@@ -59,25 +60,9 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
         return this.get('store').find('person', filter);
     },
     priority: Ember.computed.alias('belongs_to_priority.firstObject'),
-    /*start-non-standard*/ @computed /*end-non-standard*/
-    belongs_to_priority() {
-        const ticket_id = this.get('id');
-        const filter = function(status) {
-            const tickets = status.get('tickets');
-            return Ember.$.inArray(ticket_id, tickets) > -1;
-        };
-        return this.get('store').find('ticket-priority', filter);
-    },
+    belongs_to_priority: belongs_to('tickets', 'ticket-priority'),
     status: Ember.computed.alias('belongs_to.firstObject'),
-    /*start-non-standard*/ @computed /*end-non-standard*/
-    belongs_to() {
-        const ticket_id = this.get('id');
-        const filter = function(status) {
-            const tickets = status.get('tickets');
-            return Ember.$.inArray(ticket_id, tickets) > -1;
-        };
-        return this.get('store').find('ticket-status', filter);
-    },
+    belongs_to: belongs_to('tickets', 'ticket-status'),
     /*start-non-standard*/ @computed('status') /*end-non-standard*/
     status_class(status){
         const name = this.get('status.name');
@@ -87,25 +72,13 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
         const name = this.get('priority.name');
         return name ? name.replace(/\./g, '-') : '';
     }),
-    rollbackStatus() {
-        const status = this.get('status');
-        const status_fk = this.get('status_fk');
-        if(status && status.get('id') !== status_fk) {
-            this.change_status(status_fk);
-        }
-    },
+    rollbackStatus: belongs_to_rollback('status_fk', 'status', 'change_status'),
+    rollbackPriority: belongs_to_rollback('priority_fk', 'priority', 'change_priority'),
     rollbackAssignee() {
         const assignee = this.get('assignee');
         const assignee_fk = this.get('assignee_fk');
         if(assignee && assignee.get('id') !== assignee_fk) {
             this.change_assignee(assignee_fk);
-        }
-    },
-    rollbackPriority() {
-        const priority = this.get('priority');
-        const priority_fk = this.get('priority_fk');
-        if(priority && priority.get('id') !== priority_fk) {
-            this.change_priority(priority_fk);
         }
     },
     rollbackAttachments() {
@@ -118,16 +91,8 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
             this.add_attachment(id);
         });
     },
-    saveStatus() {
-        const store = this.get('store');
-        const ticket_pk = this.get('id');
-        const status = this.get('status');
-        if (status) {
-            run(function() {
-                store.push('ticket', {id: ticket_pk, status_fk: status.get('id')});
-            });
-        }
-    },
+    saveStatus: belongs_to_save('ticket', 'status', 'status_fk'),
+    savePriority: belongs_to_save('ticket', 'priority', 'priority_fk'),
     saveAssignee() {
         let store = this.get('store');
         let ticket_pk = this.get('id');
@@ -149,26 +114,8 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
             attachment.save();
         });
     },
-    savePriority() {
-        const store = this.get('store');
-        const ticket_pk = this.get('id');
-        const priority = this.get('priority');
-        if (priority) {
-            run(function() {
-                store.push('ticket', {id: ticket_pk, priority_fk: priority.get('id')});
-            });
-        }
-    },
-    statusIsDirty: Ember.computed('status', 'status_fk', function() {
-        const status = this.get('status');
-        const status_fk = this.get('status_fk');
-        if (status) {
-            return status.get('id') === status_fk ? false : true;
-        }
-        if(!status && status_fk) {
-            return true;
-        }
-    }),
+    statusIsDirty: belongs_to_dirty('status_fk', 'status'),
+    priorityIsDirty: belongs_to_dirty('priority_fk', 'priority'),
     assigneeIsDirty: Ember.computed('assignee', 'assignee_fk', function() {
         const assignee = this.get('assignee');
         const assignee_fk = this.get('assignee_fk');
@@ -176,17 +123,6 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
             return assignee.get('id') === assignee_fk ? false : true;
         }
         if(!assignee && assignee_fk) {
-            return true;
-        }
-    }),
-    priorityIsDirty: Ember.computed('priority', 'priority_fk', function() {
-        const priority = this.get('priority');
-        const priority_fk = this.get('priority_fk');
-        if (priority) {
-            return priority.get('id') === priority_fk ? false : true;
-        }
-        //need if else rather than ternary b/c if neither priority or priority fk, then not dirty (new template)
-        if(!priority && priority_fk) {
             return true;
         }
     }),
@@ -229,25 +165,8 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
             store.push('person', {id: new_assignee.get('id'), assigned_tickets: new_assignee_tickets.concat(ticket_id)});
         });
     },
-    change_priority(new_priority_id) {
-        const ticket_id = this.get('id');
-        const store = this.get('store');
-        const old_priority = this.get('priority');
-        if(old_priority) {
-            const old_priority_tickets = old_priority.get('tickets') || [];
-            const updated_old_priority_tickets = old_priority_tickets.filter((id) => {
-                return id !== ticket_id;
-            });
-            run(function() {
-                store.push('ticket-priority', {id: old_priority.get('id'), tickets: updated_old_priority_tickets});
-            });
-        }
-        const new_priority = store.find('ticket-priority', new_priority_id);
-        const new_priority_tickets = new_priority.get('tickets') || [];
-        run(function() {
-            store.push('ticket-priority', {id: new_priority.get('id'), tickets: new_priority_tickets.concat(ticket_id)});
-        });
-    },
+    change_priority: change_belongs_to('tickets', 'ticket-priority', 'priority'),
+    change_status: change_belongs_to('tickets', 'ticket-status', 'status'),
     attachmentsIsNotDirty: Ember.computed.not('attachmentsIsDirty'),
     attachmentsIsDirty: Ember.computed('attachment_ids.[]', 'previous_attachments_fks.[]', function() {
         const attachment_ids = this.get('attachment_ids') || [];
@@ -289,27 +208,6 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
         run(function() {
             store.push('ticket', {id: ticket_id, ticket_attachments_fks: current_fks.concat(attachment_id).uniq()});
         });
-    },
-    change_status(new_status_id) {
-        const ticket_id = this.get('id');
-        const store = this.get('store');
-        const old_status = this.get('status');
-        if(old_status) {
-            const old_status_tickets = old_status.get('tickets') || [];
-            const updated_old_status_tickets = old_status_tickets.filter((id) => {
-                return id !== ticket_id;
-            });
-            run(function() {
-                store.push('ticket-status', {id: old_status.get('id'), tickets: updated_old_status_tickets});
-            });
-        }
-        const new_status = store.find('ticket-status', new_status_id);
-        const new_status_tickets = new_status.get('tickets') || [];
-        if (new_status_tickets) {
-            run(function() {
-                store.push('ticket-status', {id: new_status.get('id'), tickets: new_status_tickets.concat(ticket_id)});
-            });
-        }
     },
     serialize() {
         const ticket_pk = this.get('id');
