@@ -11,6 +11,7 @@ import StatusMixin from 'bsrs-ember/mixins/model/status';
 import LocaleMixin from 'bsrs-ember/mixins/model/person/locale';
 import config from 'bsrs-ember/config/environment';
 import NewMixin from 'bsrs-ember/mixins/model/new';
+import { belongs_to_save } from 'bsrs-ember/utilities/belongs-to';
 
 var run = Ember.run;
 
@@ -59,6 +60,7 @@ var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin,
     clearPassword() {
         this.set('password', '');
     },
+    saveStatus: belongs_to_save('person', 'status', 'status_fk'),
     saveRelated() {
         this.saveEmails();
         this.savePhoneNumbers();

@@ -41,7 +41,7 @@ var change_belongs_to = function(...args) {
 
 var belongs_to_dirty = function(...args) {
     const [has_many_fk, name] = args;
-    return Ember.computed(name,has_many_fk, function() {
+    return Ember.computed(name, has_many_fk, function() {
         const has_many = this.get(name);
         const fk = this.get(has_many_fk);
         if (has_many) {

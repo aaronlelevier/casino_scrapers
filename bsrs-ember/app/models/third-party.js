@@ -3,6 +3,7 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import StatusMixin from 'bsrs-ember/mixins/model/status';
 import NewMixin from 'bsrs-ember/mixins/model/new';
+import { belongs_to_save } from 'bsrs-ember/utilities/belongs-to';
 
 var run = Ember.run;
 
@@ -16,6 +17,7 @@ var ThirdPartyModel = Model.extend(NewMixin, StatusMixin, {
         return this.get('isDirty') || this.get('statusIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+    saveStatus: belongs_to_save('third-party', 'status', 'status_fk'),
     saveRelated() {
         this.saveStatus();
     },

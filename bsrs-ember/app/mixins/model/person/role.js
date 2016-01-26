@@ -1,17 +1,11 @@
 import Ember from 'ember';
+import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-ember/utilities/belongs-to';
 
 var run = Ember.run;
 
 var RoleMixin = Ember.Mixin.create({
     role: Ember.computed.alias('belongs_to.firstObject'),
-    belongs_to: Ember.computed(function() {
-        let pk = this.get('id');
-        let filter = function(role) {
-            let people_pks = role.get('people') || [];
-            return Ember.$.inArray(pk, people_pks) > -1;
-        };
-        return this.get('store').find('role', filter);
-    }),
+    belongs_to: belongs_to('people', 'role'),
     change_role(new_role) {
         const old_role = this.get('role');
         const store = this.get('store');
@@ -59,28 +53,9 @@ var RoleMixin = Ember.Mixin.create({
             });
         });
     },
-    roleIsDirty: Ember.computed('belongs_to.[].isDirty', 'role_fk', function() {
-        const role_id = this.get('role.id');
-        const role_fk = this.get('role_fk');
-        if(role_id) {
-            return role_id === role_fk ? false : true;
-        }
-        if(!role_id && role_fk) {
-            return true;
-        }
-    }),
+    roleIsDirty: belongs_to_dirty('role_fk', 'role'),
     roleIsNotDirty: Ember.computed.not('roleIsDirty'),
-    saveRole() {
-        const pk = this.get('id');
-        const store = this.get('store');
-        const role = this.get('role');
-        if(role) {
-            role.save();
-            run(function() {
-                store.push('person', {id: pk, role_fk: role.get('id')});
-            });
-        }
-    },
+    saveRole: belongs_to_save('person', 'role', 'role_fk'),
     rollbackRole() {
         var person_id = this.get('id');
         var store = this.get('store');

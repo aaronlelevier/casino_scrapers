@@ -1,26 +1,11 @@
 import Ember from 'ember';
+import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-ember/utilities/belongs-to';
 
 var run = Ember.run;
 
 var LocaleMixin = Ember.Mixin.create({
-    rollbackLocale() {
-        let locale = this.get('locale');
-        let locale_fk = this.get('locale_fk');
-        if(locale && locale.get('id') !== locale_fk) {
-            this.change_locale(locale_fk);
-        }
-    },
-    saveLocale() {
-        const type = this.get('type');
-        const store = this.get('store');
-        const pk = this.get('id');
-        const locale = this.get('locale');
-        if (locale) {
-            run(function() {
-                store.push(type, {id: pk, locale_fk: locale.get('id')});
-            });
-        }
-    },
+    rollbackLocale: belongs_to_rollback('locale_fk', 'locale', 'change_locale'),
+    saveLocale: belongs_to_save('person', 'locale', 'locale_fk'),
     localeIsDirty: Ember.computed('locale', 'locale_fk', function() {
         let locale = this.get('locale');
         let locale_fk = this.get('locale_fk');
@@ -29,6 +14,7 @@ var LocaleMixin = Ember.Mixin.create({
         }
     }),
     localeIsNotDirty: Ember.computed.not('localeIsDirty'),
+    // change_locale: change_belongs_to('people', 'locale'),
     change_locale(locale_id) {
         const store = this.get('store');
         const id = this.get('id');
@@ -50,13 +36,7 @@ var LocaleMixin = Ember.Mixin.create({
         this.changeLocale();
     },
     locale: Ember.computed.alias('belongs_to_locale.firstObject'),
-    belongs_to_locale: Ember.computed(function() {
-        const id = this.get('id');
-        const filter = (locale) => {
-            return Ember.$.inArray(id, locale.get('people')) > -1;
-        };
-        return this.get('store').find('locale', filter);
-    }),
+    belongs_to_locale: belongs_to('people', 'locale'),
 });
 
 export default LocaleMixin;
