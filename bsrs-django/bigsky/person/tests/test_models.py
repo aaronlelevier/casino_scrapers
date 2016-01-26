@@ -12,6 +12,7 @@ from category.tests.factory import create_single_category
 from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
+from person.settings import DEFAULT_ROLE_SETTINGS
 from person.tests.factory import PASSWORD, create_person, create_role, create_single_person
 from translation.models import Locale
 from translation.tests.factory import create_locales
@@ -47,15 +48,10 @@ class RoleTests(TestCase):
             self.role.categories.add(child)
             self.role.save()
 
-    def test_settings(self):
-        dashboard_text = "Hello world"
+    def test_settings_default(self):
+        role = create_role()
 
-        self.role.settings.update({
-            'general': {'dashboard_text': dashboard_text}
-        })
-
-        self.assertTrue(hasattr(self.role, 'settings'))
-        self.assertEqual(self.role.settings['general']['dashboard_text'], dashboard_text)
+        self.assertEqual(role.settings, DEFAULT_ROLE_SETTINGS)
 
 
 class RolePasswordTests(TestCase):

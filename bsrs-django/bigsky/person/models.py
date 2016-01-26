@@ -1,5 +1,5 @@
-import re
 from datetime import timedelta
+import re
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -21,6 +21,7 @@ from contact.models import PhoneNumber, Address, Email
 from location.models import LocationLevel, Location
 from category.models import Category
 from person import helpers
+from person.settings import DEFAULT_ROLE_SETTINGS
 from translation.models import Locale
 from utils import choices
 from utils.models import BaseModel, BaseStatusModel, BaseStatusManager
@@ -111,7 +112,7 @@ class Role(BaseModel):
     msg_copy_email = models.BooleanField(blank=True, default=False)
     msg_copy_default = models.BooleanField(blank=True, default=False)
     msg_stored_link = models.BooleanField(blank=True, default=False)
-    settings = JSONField(blank=True, default={})
+    settings = JSONField(blank=True, default=DEFAULT_ROLE_SETTINGS)
 
     __original_values = {}
 
