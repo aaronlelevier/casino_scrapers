@@ -47,6 +47,16 @@ class RoleTests(TestCase):
             self.role.categories.add(child)
             self.role.save()
 
+    def test_settings(self):
+        dashboard_text = "Hello world"
+
+        self.role.settings.update({
+            'general': {'dashboard_text': dashboard_text}
+        })
+
+        self.assertTrue(hasattr(self.role, 'settings'))
+        self.assertEqual(self.role.settings['general']['dashboard_text'], dashboard_text)
+
 
 class RolePasswordTests(TestCase):
 

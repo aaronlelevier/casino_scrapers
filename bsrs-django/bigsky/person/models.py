@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import UserManager, Group, AbstractUser
 from django.contrib.auth.hashers import make_password, identify_hasher
 from django.contrib.contenttypes.fields import GenericRelation
-from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField, JSONField
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -111,6 +111,7 @@ class Role(BaseModel):
     msg_copy_email = models.BooleanField(blank=True, default=False)
     msg_copy_default = models.BooleanField(blank=True, default=False)
     msg_stored_link = models.BooleanField(blank=True, default=False)
+    settings = JSONField(blank=True, default={})
 
     __original_values = {}
 
