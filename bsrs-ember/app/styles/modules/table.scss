@@ -87,6 +87,7 @@ div.rowTable {
             }
             //table column widths
             td, th{
+                font-size: 1.2rem;
                 &.ticket-priority{
                     width: 120px;
                 }
@@ -98,6 +99,7 @@ div.rowTable {
                 }
                 &.ticket-created{
                     width: 130px;
+                    white-space: nowrap;
                 }
                 &.ticket-location{
                     width: 180px;
