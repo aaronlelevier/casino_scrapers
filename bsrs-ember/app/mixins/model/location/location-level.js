@@ -1,17 +1,11 @@
 import Ember from 'ember';
+import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-ember/utilities/belongs-to';
 
 var run = Ember.run;
 
 var LocationLevelMixin = Ember.Mixin.create({
     location_level: Ember.computed.alias('location_levels.firstObject'),
-    location_levels: Ember.computed(function() {
-        const pk = this.get('id');
-        let filter = (location_level) => {
-            let location_pks = location_level.get('locations') || [];
-            return Ember.$.inArray(pk, location_pks) > -1;
-        };
-        return this.get('store').find('location-level', filter);
-    }),
+    location_levels: belongs_to('locations', 'location-level'),
     remove_children_parents() {
         const id = this.get('id');
         const store = this.get('store');
@@ -34,6 +28,7 @@ var LocationLevelMixin = Ember.Mixin.create({
             });
         });
     },
+    // change_location_level: change_belongs_to('locations', 'location-level'),
     change_location_level(new_location_level_id) {
         this.remove_children_parents();
         const location_id = this.get('id');
@@ -60,23 +55,25 @@ var LocationLevelMixin = Ember.Mixin.create({
             // new_location_level.set('locations', new_locations.concat(location_id));
         }
     },
-    saveLocationLevel() {
-        const pk = this.get('id');
-        const store = this.get('store');
-        const location_level = this.get('location_level');
-        if (location_level) {
-            location_level.save();
-            run(function() {
-                store.push('location', {id: pk, location_level_fk: location_level.get('id')});
-            });
-            // this.set('location_level_fk', this.get('location_level').get('id'));
-        } else {
-            run(function() {
-                store.push('location', {id: pk, location_level_fk: undefined});
-            });
-            // this.set('location_level_fk', undefined);
-        }
-    },
+    saveLocationLevel: belongs_to_save('location', 'location_level', 'location_level_fk'),
+    // saveLocationLevel() {
+    //     const pk = this.get('id');
+    //     const store = this.get('store');
+    //     const location_level = this.get('location_level');
+    //     if (location_level) {
+    //         location_level.save();
+    //         run(function() {
+    //             store.push('location', {id: pk, location_level_fk: location_level.get('id')});
+    //         });
+    //         // this.set('location_level_fk', this.get('location_level').get('id'));
+    //     } else {
+    //         run(function() {
+    //             store.push('location', {id: pk, location_level_fk: undefined});
+    //         });
+    //         // this.set('location_level_fk', undefined);
+    //     }
+    // },
+    // rollbackLocationLevel: belongs_to_rollback('location_level_fk', 'location_level', 'change_location_level'),
     rollbackLocationLevel() {
         const location_level = this.get('location_level');
         const location_level_fk = this.get('location_level_fk');

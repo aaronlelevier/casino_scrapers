@@ -14,7 +14,7 @@ module('unit: third-party test', {
 
 /* STATUS */
 test('related status should return one status for a third_party', (assert) => {
-    status = store.push('status', {id: SD.activeId, name: SD.activeName}); 
+    status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [TPD.idOne]}); 
     third_party = store.push('third-party', {id: TPD.idOne, status_fk: SD.activeId});
     assert.ok(third_party.get('isNotDirtyOrRelatedNotDirty'));
 });

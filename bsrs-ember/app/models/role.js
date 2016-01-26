@@ -115,16 +115,6 @@ var RoleModel = Model.extend(NewMixin, {
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     locationLevelIsDirty: belongs_to_dirty('location_level_fk', 'location_level'),
-    // locationLevelIsDirty: Ember.computed('location_levels.@each.isDirty', 'location_levels.[]', 'location_level_fk', function() {//TODO: remove dirty cache breaking
-    //     const location_level = this.get('location_level');
-    //     const location_level_fk = this.get('location_level_fk');
-    //     if(location_level) {
-    //         return location_level.get('id') === location_level_fk ? false : true;
-    //     }
-    //     if(!location_level && location_level_fk) {
-    //         return true;
-    //     }
-    // }),
     locationLevelIsNotDirty: Ember.computed.not('locationLevelIsDirty'),
     serialize() {
         const location_level = this.get('location_level');

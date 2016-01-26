@@ -16,6 +16,9 @@ module.exports = function(defaults) {
     },
     babel: {
         optional: ['es7.decorators']
+    },
+    minifyJS: {
+        enabled: false
     }
   });
   app.import('vendor/defaults/uuid.js');

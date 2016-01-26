@@ -11,6 +11,7 @@ import StatusMixin from 'bsrs-ember/mixins/model/status';
 import LocaleMixin from 'bsrs-ember/mixins/model/person/locale';
 import config from 'bsrs-ember/config/environment';
 import NewMixin from 'bsrs-ember/mixins/model/new';
+import { belongs_to_save } from 'bsrs-ember/utilities/belongs-to';
 
 var run = Ember.run;
 
@@ -34,6 +35,9 @@ var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin,
     person_location_fks: [],
     isModelDirty: false,
     changingPassword: false,
+    //models are leaf nodes and should be given a set of data and encapsulate and work on that data
+    //tightly coupled.  Ideally, route would get services or hand off to another service to collect them all
+    //and hands all information.  Person owns locale, so how do you rollback locale
     personCurrent: Ember.inject.service('person-current'),
     translationsFetcher: Ember.inject.service('translations-fetcher'),
     i18n: Ember.inject.service(),
@@ -59,6 +63,7 @@ var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin,
     clearPassword() {
         this.set('password', '');
     },
+    saveStatus: belongs_to_save('person', 'status', 'status_fk'),
     saveRelated() {
         this.saveEmails();
         this.savePhoneNumbers();
