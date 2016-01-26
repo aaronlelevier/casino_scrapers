@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import config from 'bsrs-ember/config/environment';
 import inject from 'bsrs-ember/utilities/inject';
 
 var LocationParentMulti = Ember.Component.extend({
@@ -28,7 +29,7 @@ var LocationParentMulti = Ember.Component.extend({
                 Ember.run.later(() => {
                     if (Ember.isBlank(search)) { return resolve([]); }
                     resolve(repo.findLocationParents(id, llevel_id, search));
-                }, 300);
+                }, config.DEBOUNCE_TIMEOUT_INTERVAL);
             });
         }
     }

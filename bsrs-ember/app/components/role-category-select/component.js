@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import config from 'bsrs-ember/config/environment';
 import inject from 'bsrs-ember/utilities/inject';
 
 var RoleCategorySelect = Ember.Component.extend({
@@ -30,7 +31,7 @@ var RoleCategorySelect = Ember.Component.extend({
                 Ember.run.later(() => {
                     if (Ember.isBlank(search)) { return resolve([]); }
                     resolve(repo.findCategoryChildren(search));
-                }, 300);
+                }, config.DEBOUNCE_TIMEOUT_INTERVAL);
             });
         }
     }

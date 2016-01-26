@@ -40,12 +40,9 @@ test('input has a debouce that prevents each keystroke from publishing a message
     assert.equal(this.$('input:first').val(), 'x');
     assert.equal(stub.hits(), 0);
     setTimeout(function() {
-        assert.equal(stub.hits(), 0);
-        setTimeout(function() {
-            assert.equal(stub.hits(), 1);
-            done();
-        }, 11);
-    }, 290);
+        assert.equal(stub.hits(), 1);
+        done();
+    }, 100);
 });
 
 // test('input will pass along empty string value', function(assert) {

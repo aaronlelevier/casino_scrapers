@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import config from 'bsrs-ember/config/environment';
 import inject from 'bsrs-ember/utilities/inject';
 
 var PersonLocationsSelect = Ember.Component.extend({
@@ -31,7 +32,7 @@ var PersonLocationsSelect = Ember.Component.extend({
                 Ember.run.later(() => {
                     if (Ember.isBlank(search)) { return resolve([]); }
                     resolve(repo.findLocationSelect({location_level: model.get('location_level_pk')}, search));
-                }, 300);
+                }, config.DEBOUNCE_TIMEOUT_INTERVAL);
             });
         }
     }

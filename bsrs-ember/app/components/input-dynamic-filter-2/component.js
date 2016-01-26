@@ -1,11 +1,12 @@
 import Ember from 'ember';
+import config from 'bsrs-ember/config/environment';
 import KeyCodes from 'bsrs-ember/utilities/key-codes';
 import InputDynamic from 'bsrs-ember/components/input-dynamic/component';
 
 export default InputDynamic.extend({
     eventbus: Ember.inject.service(),
     observeValid: Ember.observer('value', function() {
-        Ember.run.debounce(this, this.valueUpdated, 300, false);
+        Ember.run.debounce(this, this.valueUpdated, config.DEBOUNCE_TIMEOUT_INTERVAL, false);
     }),
     valueUpdated() {
         let prop = this.get('prop');
