@@ -253,3 +253,17 @@ fieldset[disabled] .form-control,
 	background-color: $dark;
 	opacity: 0.3;
 }
+
+//file upload
+.progress{
+	border-radius: $borderRadius;
+	background-color: $light;
+	.progress-bar{
+		background-color: $lightBlue;
+		text-align: right;
+		padding: 0 10px;
+		text-overflow: ellipsis;
+	    overflow: hidden;
+	    white-space: nowrap;
+	}
+}

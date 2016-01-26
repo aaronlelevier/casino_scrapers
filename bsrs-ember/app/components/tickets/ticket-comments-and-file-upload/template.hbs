@@ -26,11 +26,19 @@
     </div>
     <div class="row">
         {{#each model.attachments as |attachment|}}
-          {{#if attachment.new}}
-            <div class="progress active" role="progressbar" aria-valuemin="100" aria-valuemax="100" aria-valuenow="0">
-              <div class={{attach-file-progress attachment.percent}} style={{attachment.progress}}>{{t "upload.progress"}}: {{attachment.percent}}% <i class="fa fa-minus-circle t-remove-attachment" aria-hidden="true" {{action "removeAttachment" attachment.id}}></i></div>
+            {{#if attachment.new}}
+            <div class="col-md-12 progress-wrap">
+                <div class="progress active {{attachment.complete_class}}" role="progressbar" aria-valuemin="100" aria-valuemax="100" aria-valuenow="0">
+                    <div class={{attach-file-progress attachment.percent}} style={{attachment.progress}}>
+                        <span class="attachment-title">{{attachment.title}}</span>
+                        {{#unless attachment.complete}}
+                        <span class="attachment-progress"> - {{t "upload.progress"}}: {{attachment.percent}}%</span>
+                        {{/unless}}
+                        <i class="fa fa-minus-circle remove-attachment t-remove-attachment" aria-hidden="true" {{action "removeAttachment" attachment.id}}></i>
+                    </div>
+                </div>
             </div>
-          {{/if}}
+            {{/if}}
         {{/each}}
     </div>
 </section>
