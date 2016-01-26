@@ -1,10 +1,11 @@
-from category import serializers as cs
-from category.models import Category
-from utils.views import BaseModelViewSet
-
 from rest_framework.decorators import list_route
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+from category import serializers as cs
+from category.models import Category
 from utils.mixins import EagerLoadQuerySetMixin
+from utils.views import BaseModelViewSet
 
 
 class CategoryViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
@@ -39,7 +40,7 @@ class CategoryViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
         """
         set the serializer based on the method
         """
-        if 'parent' in self.request.query_params.dict():
+        if 'parent' in self.request.query_params:
             return cs.CategoryIDNameSerializerTicket
         elif self.action == 'list':
             return cs.CategoryListSerializer
@@ -47,6 +48,23 @@ class CategoryViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
             return cs.CategoryDetailSerializer
         else:
             return cs.CategorySerializer
+
+    def update(self, request, *args, **kwargs):
+        """
+        Need to explicity call `save()` on each child, so the `level` attr, which
+        counts the number of parents that the child has, is updated.
+        """
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        # custom: start
+        for child_id in serializer.data['children']:
+            child = self.model.objects.get(id=child_id)
+            child.save()
+        # custom: end
+        return Response(serializer.data)
 
     @list_route(methods=['GET'])
     def parents(self, request):

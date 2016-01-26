@@ -135,16 +135,10 @@ class TicketUpdateLogger(object):
         """
         Returns a list() of previously logged attachments ids.
         """
-        activities = self.instance.activities.filter(type__name='attachment_add',
-                                                     content__values__contains=attachment_ids)
-        values = []
-        for activity in activities:
-            try:
-                values.append([v for k,v in activity.content.items()])
-            except TypeError:
-                pass
+        activities = (self.instance.activities.filter(type__name='attachment_add')
+                                              .values_list('content', flat=True))
 
-        return itertools.chain(*values)
+        return itertools.chain(*[x.values() for x in activities])
 
     def log_ticket_activity(self, type, content):
         TicketActivity.objects.create(

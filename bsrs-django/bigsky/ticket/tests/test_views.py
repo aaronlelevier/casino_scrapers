@@ -1020,9 +1020,8 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
             ticket.save()
             self.assertIn(ticket.location.id, self.person.locations.objects_and_their_children())
             # Category must also match
-            child_category = create_single_category(parent=self.person.role.categories.first())
-            [self.ticket.categories.remove(c) for c in self.ticket.categories.all()]
-            self.ticket.categories.add(child_category)
+            category = self.person.role.categories.first()
+            self.ticket.categories.add(category)
 
             response = self.client.get('/api/tickets/')
             data = json.loads(response.content.decode('utf8'))
