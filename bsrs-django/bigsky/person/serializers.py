@@ -1,10 +1,14 @@
+import copy
+
 from rest_framework import serializers
 
 from contact.serializers import (PhoneNumberSerializer, EmailSerializer, AddressSerializer)
 from location.serializers import LocationSerializer, LocationIdNameOnlySerializer
 from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer
 from person.models import Person, Role
-from person.validators import RoleLocationValidator, RoleCategoryValidator
+from person.settings import DEFAULT_ROLE_SETTINGS
+from person.validators import (RoleLocationValidator, RoleCategoryValidator,
+    RoleSettingsValidator,)
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
     RemovePasswordSerializerMixin)
 
@@ -24,8 +28,35 @@ class RoleCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Role
-        validators = [RoleCategoryValidator()]
-        fields = ('id', 'name', 'role_type', 'location_level', 'categories')
+        validators = [RoleCategoryValidator(), RoleSettingsValidator()]
+        fields = ('id', 'name', 'role_type', 'location_level', 'categories',
+            'settings',)
+
+    def create(self, validated_data):
+        validated_data = self._validate_and_update_settings(validated_data)
+        return super(RoleCreateSerializer, self).create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data = self._validate_and_update_settings(validated_data)
+        return super(RoleCreateSerializer, self).update(instance, validated_data)
+
+    def _validate_and_update_settings(self, validated_data):
+        final_settings = copy.copy(DEFAULT_ROLE_SETTINGS)
+
+        for k,v in final_settings.items():
+            try:
+                new_value = validated_data['settings'][k].get('value')
+                # to defend agains key's w/ no values that don't match the req'd type
+                if new_value:
+                    final_settings[k]['value'] = new_value
+            except KeyError:
+                # Silently pass b/c if a 'value' isn't being posted for
+                # a Role setting, we're going to use the default.
+                pass
+        else:
+            validated_data.update({'settings': final_settings})
+
+        return validated_data
 
 
 class RoleDetailSerializer(BaseCreateSerializer):
@@ -34,7 +65,8 @@ class RoleDetailSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Role
-        fields = ('id', 'name', 'role_type', 'location_level', 'categories',)
+        fields = ('id', 'name', 'role_type', 'location_level', 'categories',
+            'settings',)
 
     @staticmethod
     def eager_load(queryset):

@@ -9,7 +9,6 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
 from model_mommy import mommy
 
-from accounting.models import Currency
 from category.models import Category
 from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
@@ -17,10 +16,11 @@ from contact.tests.factory import create_contact, create_contacts
 from location.models import Location, LocationLevel
 from location.tests.factory import create_location
 from person.models import Person, Role
-from person.serializers import (PersonUpdateSerializer, RoleSerializer,
-    RoleCreateSerializer)
+from person.serializers import PersonUpdateSerializer, RoleCreateSerializer
+from person.settings import DEFAULT_ROLE_SETTINGS
 from person.tests.factory import (PASSWORD, create_single_person, create_role, create_roles,
-    create_single_person, create_all_people)
+    create_all_people)
+from person.tests.mixins import RoleSetupMixin
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from utils import create, choices
@@ -28,25 +28,7 @@ from utils import create, choices
 
 ### ROLE ###
 
-class RoleViewSetTests(APITestCase):
-
-    def setUp(self):
-        self.person = create_single_person()
-        self.location = self.person.locations.first()
-        self.categories = mommy.make(Category, _quantity=2)
-        self.currency = Currency.objects.default()
-        # Role
-        self.role = self.person.role
-        self.role.categories_ids = [str(c.id) for c in self.role.categories.all()]
-        self.role.save()
-        # Login
-        self.client.login(username=self.person.username, password=PASSWORD)
-        # data
-        serializer = RoleSerializer(self.role)
-        self.data = serializer.data
-
-    def tearDown(self):
-        self.client.logout()
+class RoleListTests(RoleSetupMixin, APITestCase):
 
     def test_list(self):
         response = self.client.get('/api/admin/roles/')
@@ -58,6 +40,9 @@ class RoleViewSetTests(APITestCase):
         self.assertEqual(role['role_type'], self.role.role_type)
         self.assertEqual(role['location_level'], str(self.location.location_level.id))
 
+
+class RoleDetailTests(RoleSetupMixin, APITestCase):
+
     def test_detail(self):
         response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -66,6 +51,7 @@ class RoleViewSetTests(APITestCase):
         self.assertEqual(data['name'], self.role.name)
         self.assertEqual(data['role_type'], self.role.role_type)
         self.assertEqual(data['location_level'], str(self.location.location_level.id))
+        self.assertEqual(data['settings'], DEFAULT_ROLE_SETTINGS)
         self.assertIn(
             data['categories'][0]['id'],
             [str(c.id) for c in self.role.categories.all()]
@@ -73,6 +59,9 @@ class RoleViewSetTests(APITestCase):
         self.assertIn('name', data['categories'][0])
         self.assertIn('status', data['categories'][0])
         self.assertIn('parent', data['categories'][0])
+
+
+class RoleCreateTests(RoleSetupMixin, APITestCase):
 
     def test_create(self):
         role_data = {
@@ -82,12 +71,67 @@ class RoleViewSetTests(APITestCase):
             "location_level": str(self.location.location_level.id),
             "categories": self.role.categories_ids
         }
+
         response = self.client.post('/api/admin/roles/', role_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], role_data['id'])
         self.assertIsInstance(Role.objects.get(id=role_data['id']), Role)
         self.assertEqual(sorted(data['categories']), sorted(role_data['categories']))
+
+    def test_create__settings(self):
+        role_data = {
+            "id": str(uuid.uuid4()),
+            "name": "Admin",
+            "settings": {
+                "dashboard_text": {"value": "Hello world"}
+            }
+        }
+
+        response = self.client.post('/api/admin/roles/', role_data, format='json')
+
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['id'], role_data['id'])
+        self.assertEqual(data['settings']['dashboard_text']['value'], role_data['settings']['dashboard_text']['value'])
+        self.assertEqual(data['settings']['dashboard_text']['type'], 'str')
+        self.assertEqual(data['settings']['dashboard_text']['required'], False)
+        # other defaults should be returned as well
+        self.assertEqual(data['settings']['create_all']['value'], DEFAULT_ROLE_SETTINGS['create_all']['value'])
+        self.assertEqual(data['settings']['create_all']['type'], 'bool')
+        self.assertEqual(data['settings']['create_all']['required'], True)
+        self.assertEqual(data['settings']['modules']['value'], DEFAULT_ROLE_SETTINGS['modules']['value'])
+        self.assertEqual(data['settings']['modules']['type'], 'list')
+        self.assertEqual(data['settings']['modules']['required'], True)
+        self.assertEqual(data['settings']['login_grace']['value'], DEFAULT_ROLE_SETTINGS['login_grace']['value'])
+        self.assertEqual(data['settings']['login_grace']['type'], 'int')
+        self.assertEqual(data['settings']['login_grace']['required'], True)
+
+    def test_create__settings__required_value_missing(self):
+        """
+        If the a required settings value is missing, use the default setting.
+        """
+        role_data = {
+            "id": str(uuid.uuid4()),
+            "name": "Admin",
+            "settings": {
+                "create_all": {}
+            }
+        }
+
+        response = self.client.post('/api/admin/roles/', role_data, format='json')
+
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['id'], role_data['id'])
+        role = Role.objects.get(id=role_data['id'])
+        self.assertEqual(role.settings['create_all']['value'], DEFAULT_ROLE_SETTINGS['create_all']['value'])
+        self.assertEqual(role.settings['create_all']['type'], 'bool')
+        self.assertEqual(role.settings['create_all']['required'], True)
+
+
+class RoleUpdateTests(RoleSetupMixin, APITestCase):
 
     def test_update(self):
         category = mommy.make(Category)
@@ -96,9 +140,11 @@ class RoleViewSetTests(APITestCase):
         role_data = self.data
         role_data['name'] = 'new name here'
         role_data['categories'].append(str(category.id))
+
         response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
             role_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['name'], role_data['name'])
         self.assertEqual(data['id'], str(self.role.id))
@@ -121,6 +167,35 @@ class RoleViewSetTests(APITestCase):
             role_data['location_level'],
             str(Role.objects.get(id=self.data['id']).location_level.id)
         )
+
+    def test_update_settings_defaults(self):
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(data['settings']['dashboard_text']['value'], DEFAULT_ROLE_SETTINGS['dashboard_text']['value'])
+        self.assertEqual(data['settings']['create_all']['value'], DEFAULT_ROLE_SETTINGS['create_all']['value'])
+        self.assertEqual(data['settings']['modules']['value'], DEFAULT_ROLE_SETTINGS['modules']['value'])
+        self.assertEqual(data['settings']['login_grace']['value'], DEFAULT_ROLE_SETTINGS['login_grace']['value'])
+
+    def test_update_settings_custom_values(self):
+        role = create_role()
+        serializer = RoleCreateSerializer(role)
+        orig_data = serializer.data
+        role_data = copy.copy(orig_data)
+        dashboard_text = 'hey foo'
+
+        role_data['settings'] = {'dashboard_text': {'value': dashboard_text}}
+        response = self.client.put('/api/admin/roles/{}/'.format(role.id), role_data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings']['dashboard_text']['value'], dashboard_text)
+        self.assertEqual(data['settings']['create_all']['value'], DEFAULT_ROLE_SETTINGS['create_all']['value'])
+        self.assertEqual(data['settings']['modules']['value'], DEFAULT_ROLE_SETTINGS['modules']['value'])
+        self.assertEqual(data['settings']['login_grace']['value'], DEFAULT_ROLE_SETTINGS['login_grace']['value'])
 
 
 ### PERSON ###
