@@ -3,7 +3,7 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import StatusMixin from 'bsrs-ember/mixins/model/status';
 import NewMixin from 'bsrs-ember/mixins/model/new';
-import { belongs_to_save } from 'bootstrap-config/attrs/belongs-to';
+import { belongs_to_save } from 'bsrs-components/attr/belongs-to';
 
 var run = Ember.run;
 

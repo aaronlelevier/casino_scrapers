@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bootstrap-config/attrs/belongs-to';
+import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
 
 var StatusMixin = Ember.Mixin.create({
     status: Ember.computed.alias('belongs_to.firstObject'),
