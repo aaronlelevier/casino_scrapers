@@ -20,7 +20,7 @@ import LLD from 'bsrs-ember/vendor/defaults/location-level';
 
 var store, uuid, person, role, run = Ember.run;
 
-module('unit: person test', {
+module('scott unit: person test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency', 'model:phonenumber', 'model:address', 'model:location', 'model:location-level', 'model:person-location', 'service:currency','service:person-current','service:translations-fetcher','service:i18n', 'model:uuid', 'model:status', 'model:email', 'model:locale']);
         run(function() {

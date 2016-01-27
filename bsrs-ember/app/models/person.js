@@ -11,7 +11,7 @@ import StatusMixin from 'bsrs-ember/mixins/model/status';
 import LocaleMixin from 'bsrs-ember/mixins/model/person/locale';
 import config from 'bsrs-ember/config/environment';
 import NewMixin from 'bsrs-ember/mixins/model/new';
-import { belongs_to_save } from 'bsrs-ember/utilities/belongs-to';
+import { belongs_to_save } from 'bootstrap-config/attrs/belongs-to';
 
 var run = Ember.run;
 
