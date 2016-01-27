@@ -2,13 +2,14 @@ import os
 
 from django.db import models
 from django.conf import settings
+from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError as DjangoValidationError
 
 from PIL import Image
 from rest_framework.exceptions import ValidationError
 
 from ticket.models import Ticket
-from utils.models import BaseModel, BaseManager
+from utils.models import BaseModel, BaseManager, BaseNameModel
 
 
 ### SAVED SEARCHES
@@ -191,3 +192,16 @@ class Attachment(BaseModel):
             "file": str(self.file),
             "image_thumbnail": str(self.image_thumbnail)
         }
+
+
+### SETTINGS
+
+class Setting(BaseNameModel):
+    '''
+    ``Setting`` records will be either Standard or Custom. and be set
+    at levels. ex - Location, Role, User.
+    '''
+    settings = JSONField(blank=True, default={})
+
+    def __str__(self):
+        return {self.name: self.settings}

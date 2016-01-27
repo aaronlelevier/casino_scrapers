@@ -41,6 +41,7 @@ router.register(r'admin/email-types', contact_views.EmailTypeViewSet)
 # GENERIC
 router.register(r'admin/saved-searches', generic_views.SavedSearchViewSet)
 router.register(r'admin/attachments', generic_views.AttachmentViewSet)
+router.register(r'admin/settings', generic_views.SettingViewSet)
 # LOCATION
 router.register(r'admin/locations', location_views.LocationViewSet)
 router.register(r'admin/location-levels', location_views.LocationLevelViewSet)
