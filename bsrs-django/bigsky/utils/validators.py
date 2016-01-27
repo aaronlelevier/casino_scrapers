@@ -46,6 +46,52 @@ class UniqueForActiveValidator(object):
         self.instance = getattr(serializer, 'instance', None)
 
 
+class SettingsValidator(object):
+    """Validate that a Settings are the right type."""
+
+    message = _("Must be a {type}")
+
+    def __init__(self, model):
+        self.model = model
+
+    def __call__(self, kwargs):
+        name = kwargs.get('name')
+        default_settings = self.model._get_settings_file(name)
+        errors = {}
+
+        settings = kwargs.get('settings', None)
+        if settings:
+            for k,v in default_settings.items():
+                try:
+                    new_value = settings[k]['value']
+                except KeyError:
+                    # Silently pass because, if a 'value' isn't being posted
+                    # for the setting, we're going to use the default.
+                    pass
+                else:
+                    type_str = default_settings[k]['type']
+                    required_type = self.get_required_type(type_str)
+
+                    if not isinstance(new_value, required_type):
+                        errors[k] = self.message.format(type=type_str)
+            else:
+                if errors:
+                    raise ValidationError(errors)
+
+    @staticmethod
+    def get_required_type(t):
+        if t == 'bool':
+            return bool
+        elif t == 'str':
+            return str
+        elif t == 'int':
+            return int
+        elif t == 'float':
+            return float
+        elif t == 'list':
+            return list
+
+
 ### REGEX VALIDATORS
 
 def regex_check_contains(regex, chars):

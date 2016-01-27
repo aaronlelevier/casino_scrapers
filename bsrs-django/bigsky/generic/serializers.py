@@ -1,6 +1,6 @@
 from generic.models import SavedSearch, Attachment, Setting
-from generic.settings import DEFAULT_GENERAL_SETTINGS
 from utils.serializers import BaseCreateSerializer, SettingSerializerMixin
+from utils.validators import SettingsValidator
 
 
 class SavedSearchSerializer(BaseCreateSerializer):
@@ -28,11 +28,5 @@ class SettingSerializer(SettingSerializerMixin, BaseCreateSerializer):
 
     class Meta:
         model = Setting
+        validators = [SettingsValidator(model)]
         fields = ('id', 'name', 'settings',)
-
-    @staticmethod
-    def _get_settings_file(name):
-        if name == 'general':
-            return DEFAULT_GENERAL_SETTINGS
-        else:
-            return {}

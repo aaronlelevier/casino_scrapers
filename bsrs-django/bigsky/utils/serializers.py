@@ -96,6 +96,12 @@ class RemovePasswordSerializerMixin(object):
 
 
 class SettingSerializerMixin(object):
+    """
+    Uses the 'name' in the `validated_data` to set the settings file
+    for the model.
+
+    `_get_settings_file` must be set as a classmethod on the model.
+    """
 
     def create(self, validated_data):
         validated_data = self._validate_and_update_settings(validated_data)
@@ -106,7 +112,8 @@ class SettingSerializerMixin(object):
         return super(SettingSerializerMixin, self).update(instance, validated_data)
 
     def _validate_and_update_settings(self, validated_data):
-        default_settings = self._get_settings_file(validated_data['name'])
+        name = validated_data.get('name')
+        default_settings = self.Meta.model._get_settings_file(name)
         final_settings = copy.copy(default_settings)
 
         for k,v in final_settings.items():
@@ -123,10 +130,6 @@ class SettingSerializerMixin(object):
             validated_data.update({'settings': final_settings})
 
         return validated_data
-
-    @staticmethod
-    def _get_settings_file(name):
-        raise NotImplementedError('`_get_settings_file()` must be implemented.')
 
 
 ### Fields

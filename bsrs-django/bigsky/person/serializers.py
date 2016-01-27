@@ -6,11 +6,10 @@ from contact.serializers import (PhoneNumberSerializer, EmailSerializer, Address
 from location.serializers import LocationSerializer, LocationIdNameOnlySerializer
 from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer
 from person.models import Person, Role
-from person.settings import DEFAULT_ROLE_SETTINGS
-from person.validators import (RoleLocationValidator, RoleCategoryValidator,
-    RoleSettingsValidator,)
+from person.validators import RoleLocationValidator, RoleCategoryValidator
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
     RemovePasswordSerializerMixin, SettingSerializerMixin)
+from utils.validators import SettingsValidator
 
 
 ### ROLE ###
@@ -28,13 +27,9 @@ class RoleCreateSerializer(SettingSerializerMixin, BaseCreateSerializer):
 
     class Meta:
         model = Role
-        validators = [RoleCategoryValidator(), RoleSettingsValidator()]
+        validators = [RoleCategoryValidator(), SettingsValidator(model)]
         fields = ('id', 'name', 'role_type', 'location_level', 'categories',
             'settings',)
-
-    @staticmethod
-    def _get_settings_file(name):
-        return DEFAULT_ROLE_SETTINGS
 
 
 class RoleDetailSerializer(BaseCreateSerializer):

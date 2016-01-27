@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from PIL import Image
 from rest_framework.exceptions import ValidationError
 
+from generic.settings import DEFAULT_GENERAL_SETTINGS
 from ticket.models import Ticket
 from utils.models import BaseModel, BaseManager, BaseNameModel
 
@@ -205,3 +206,10 @@ class Setting(BaseNameModel):
 
     def __str__(self):
         return {self.name: self.settings}
+
+    @classmethod
+    def _get_settings_file(cls, name):
+        if name == 'general':
+            return DEFAULT_GENERAL_SETTINGS
+        else:
+            return {}
