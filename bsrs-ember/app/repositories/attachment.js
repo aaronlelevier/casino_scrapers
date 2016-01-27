@@ -36,11 +36,8 @@ var AttachmentRepo = Ember.Object.extend({
     },
     didProgress(e, id){
         let store = this.get('store');
-        let attachment = store.find('attachment', {id: id});
-        run(() => {
-            //attachment.set('percent', e.loaded / e.total * 100);
-            store.push('attachment', { id:id, percent: e.loaded / e.total * 100 });
-        });
+        let attachment = store.find('attachment', id);
+        attachment.set('percent', Math.round(e.loaded / e.total * 100));
     },
     upload(id, file, model) {
         let self = this;

@@ -102,6 +102,9 @@
                         font-size: 1rem;
                         font-weight: normal;
                         margin: 15px 15px 5px 0;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
                         a{
                             font-weight: normal;
                             &:hover{

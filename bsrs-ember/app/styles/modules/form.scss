@@ -159,6 +159,14 @@ textarea.ticket-request{
 		background: $orange;
 		border-color: $orange;
 	}
+	&.ticket-priority-meduim{
+		background: $darkYellow;
+		border-color: $darkYellow;
+	}
+	&.ticket-priority-low{
+		background: $yellow;
+		border-color: $yellow;
+	}
 }
 .form-photo{
 	border: $borderStyle;
