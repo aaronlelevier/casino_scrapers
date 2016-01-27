@@ -8,6 +8,15 @@
     <section class="docSection container-fluid">
         <div class="row">
             <div class="col-md-12">
+              <span class="t-ajax-error {{if ajaxError '' 'hidden'}}">
+                {{#each ajaxError as |error|}}
+                  <span>{{error.value}}</span>
+                {{/each}}
+              </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
                 <section style="padding-bottom: 0">
                     <div class="row card-title">
                         <h1 class="col-md-12">

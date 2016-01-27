@@ -11,6 +11,14 @@ var EditMixin = Ember.Mixin.create({
                 let tab = this.tab();
                 tab.set('saveModel', persisted);
                 this.sendAction('close', tab);
+            }, (xhr) => {
+                if(xhr.status === 400) {
+                    var response = JSON.parse(xhr.responseText), errors = [];
+                    Object.keys(response).forEach(function(key) {
+                        errors.push({name: key, value: response[key].toString()});
+                    });
+                    this.set('ajaxError', errors);
+                }
             });
         },
         delete() {
