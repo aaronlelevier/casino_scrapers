@@ -58,7 +58,9 @@ var GridRepositoryMixin = Ember.Mixin.create({
         PromiseMixin.xhr(endpoint).then((response) => {
             all.set('isLoaded', true);
             all.set('count', response.count);
-            deserializer.deserialize(response);
+            Ember.run(function() {
+                deserializer.deserialize(response);
+            });
         });
         return all;
     }
