@@ -1,17 +1,19 @@
 import Ember from 'ember';
+import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-ember/utilities/belongs-to';
 
 var run = Ember.run;
 
 var TicketLocationMixin = Ember.Mixin.create({
     location: Ember.computed.alias('belongs_to_location.firstObject'),
-    belongs_to_location: Ember.computed('location_fk', function() {
-        let ticket_id = this.get('id');
-        let filter = function(location) {
-            let tickets = location.get('tickets');
-            return Ember.$.inArray(ticket_id, tickets) > -1;
-        };
-        return this.get('store').find('location', filter);
-    }),
+    belongs_to_location: belongs_to('tickets', 'location'),
+    // belongs_to_location: Ember.computed('location_fk', function() {
+    //     let ticket_id = this.get('id');
+    //     let filter = function(location) {
+    //         let tickets = location.get('tickets');
+    //         return Ember.$.inArray(ticket_id, tickets) > -1;
+    //     };
+    //     return this.get('store').find('location', filter);
+    // }),
     remove_location() {
         let ticket_id = this.get('id');
         let store = this.get('store');
@@ -36,23 +38,25 @@ var TicketLocationMixin = Ember.Mixin.create({
             store.push('location', {id: new_location.get('id'), tickets: new_location_tickets.concat(ticket_id)});
         });
     },
-    saveLocation() {
-        const ticket_pk = this.get('id');
-        const store = this.get('store');
-        const location = this.get('location');
-        if (location) {
-            run(function() {
-                store.push('ticket', {id: ticket_pk, location_fk: location.get('id')});
-            });
-        }
-    },
-    rollbackLocation() {
-        let location = this.get('location');
-        let location_fk = this.get('location_fk');
-        if(location && location.get('id') !== location_fk) {
-            this.change_location(location_fk);
-        }
-    },
+    saveLocation: belongs_to_save('ticket', 'location', 'location_fk'),
+    // saveLocation() {
+    //     const ticket_pk = this.get('id');
+    //     const store = this.get('store');
+    //     const location = this.get('location');
+    //     if (location) {
+    //         run(function() {
+    //             store.push('ticket', {id: ticket_pk, location_fk: location.get('id')});
+    //         });
+    //     }
+    // },
+    rollbackLocation: belongs_to_rollback('location_fk', 'location', 'change_location'),
+    // rollbackLocation() {
+    //     let location = this.get('location');
+    //     let location_fk = this.get('location_fk');
+    //     if(location && location.get('id') !== location_fk) {
+    //         this.change_location(location_fk);
+    //     }
+    // },
 });
 
 export default TicketLocationMixin;

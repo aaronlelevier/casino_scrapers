@@ -134,7 +134,7 @@ var PersonDeserializer = Ember.Object.extend({
     },
     deserialize_single(model, id, location_deserializer) {
         let store = this.get('store');
-        let person_check = store.find('person', id);
+        const person_check = store.find('person', id);
         let location_level_fk;
         if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
             model.email_fks = extract_emails(model, store);
@@ -151,7 +151,7 @@ var PersonDeserializer = Ember.Object.extend({
     deserialize_list(response) {
         let store = this.get('store');
         response.results.forEach((model) => {
-            let person_check = store.find('person', model.id);
+            const person_check = store.find('person', model.id);
             if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
                 [model.role_fk] = extract_role(model, store);
                 extract_status(model, store);

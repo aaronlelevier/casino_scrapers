@@ -56,30 +56,8 @@ var RoleMixin = Ember.Mixin.create({
     roleIsDirty: belongs_to_dirty('role_fk', 'role'),
     roleIsNotDirty: Ember.computed.not('roleIsDirty'),
     saveRole: belongs_to_save('person', 'role', 'role_fk'),
-    rollbackRole() {
-        var person_id = this.get('id');
-        var store = this.get('store');
-        var previous_role_fk = this.get('role_fk');
-        var current_role = this.get('role');
-        if(current_role) {
-            var current_role_people = current_role.get('people') || [];
-            var updated_current_role_people = current_role_people.filter((old_role_person_pk) => {
-                return old_role_person_pk !== this.get('id');
-            });
-            run(function() {
-                store.push('role', {id: current_role.get('id'), people: updated_current_role_people});
-            });
-            current_role.save();
-        }
-        var new_role = store.find('role', previous_role_fk);
-        if(new_role.get('id')) {
-            var role_people = new_role.get('people') || [];
-            run(function() {
-                store.push('role', {id: new_role.get('id'), people: role_people.concat([person_id])});
-            });
-            new_role.save();
-        }
-    },
+    rollbackRole: belongs_to_rollback('role_fk', 'role', 'rollbackChangeRole'),
+    rollbackChangeRole: change_belongs_to('people', 'role'),
 });
 
 export default RoleMixin;

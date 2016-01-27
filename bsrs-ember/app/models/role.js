@@ -5,6 +5,7 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 import equal from 'bsrs-ember/utilities/equal';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-ember/utilities/belongs-to';
+import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-ember/utilities/many-to-many';
 
 var run = Ember.run;
 
@@ -37,23 +38,10 @@ var RoleModel = Model.extend(NewMixin, {
     role_categories_ids: Ember.computed('role_categories.[]', function() {
         return this.get('role_categories').mapBy('id'); 
     }),
-    role_categories: Ember.computed(function() {
-        const pk = this.get('id');
-        const filter = (join_model) => {
-            return join_model.get('role_fk') === pk && !join_model.get('removed');
-        };
-        return this.get('store').find('role-category', filter);
-    }),
-    categoryIsDirty: Ember.computed('role_category_fks.[]', 'categories.[]', function() {
-        const categories = this.get('categories');
-        const role_categories_ids = this.get('role_categories_ids');
-        const previous_m2m_fks = this.get('role_category_fks') || [];
-        if(categories.get('length') !== previous_m2m_fks.length) {
-            return equal(role_categories_ids, previous_m2m_fks) ? false : true;
-        }
-        return equal(role_categories_ids, previous_m2m_fks) ? false : true;
-    }),
+    role_categories: many_to_many('role-category', 'role_fk'),
+    categoryIsDirty: many_to_many_dirty('categories', 'role_categories_ids', 'role_category_fks'),
     categoryIsNotDirty: Ember.computed.not('categoryIsDirty'),
+    // add_category: add_many_to_many('role-category', 'categories', 'category_fk', 'role_fk'),
     add_category(category_pk) {
         const store = this.get('store'); 
         const role_categories = store.find('role-category').toArray();
@@ -66,16 +54,7 @@ var RoleModel = Model.extend(NewMixin, {
             else{ store.push('role-category', {id: Ember.uuid(), role_fk: this.get('id'), category_fk: category_pk}); }
         });
     },
-    remove_category(category_pk) {
-        const uuid = this.get('uuid');
-        const store = this.get('store');
-        let m2m_pk = this.get('role_categories').filter((m2m) => {
-            return m2m.get('category_fk') === category_pk;
-        }).objectAt(0).get('id');
-        run(function() {
-            store.push('role-category', {id: m2m_pk, removed: true});
-        });
-    },
+    remove_category: remove_many_to_many('role-category', 'category_fk', 'role_categories'),
     location_level: Ember.computed.alias('location_levels.firstObject'),
     location_levels: Ember.computed(function() {
         const pk = this.get('id');

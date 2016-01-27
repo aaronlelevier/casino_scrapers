@@ -26,6 +26,7 @@ module('unit: person test', {
         run(function() {
             person = store.push('person', {id: PD.idOne, first_name: PD.first_name, last_name: PD.last_name, role_fk: RD.idOne, status_fk: SD.activeId, locale_fk: LOCALED.idOne});
             role = store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.idOne]});
+            store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]}); 
         });
     }
 });
@@ -50,7 +51,7 @@ test('related addresses are not dirty when no addresses present', (assert) => {
 
 /* LOCALE */
 test('related locale should return one locale for a person', (assert) => {
-    let locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne}); 
+    let locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]}); 
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(person.get('localeIsNotDirty'));
 });
@@ -288,7 +289,7 @@ test('related address model is dirty when address is dirty (and address is not n
 
 test('person is dirty or related is dirty when model has been updated', (assert) => {
     store.clear('person');
-    person = store.push('person', {id: PD.idOne, username: PD.username, phone_number_fks: [PND.idOne], address_fks: [AD.idOne], email_fks: [ED.idOne], role_fk: RD.idOne});
+    person = store.push('person', {id: PD.idOne, username: PD.username, phone_number_fks: [PND.idOne], address_fks: [AD.idOne], email_fks: [ED.idOne], locale_fk: LOCALED.idOne, role_fk: RD.idOne});
     let phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PNTD.officeId, model_fk: PD.idOne});
     let address = store.push('address', {id: AD.idOne, type: ATD.officeId, model_fk: PD.idOne});
     let email = store.push('email', {id: ED.idOne, type: ETD.workId, model_fk: PD.idOne});
