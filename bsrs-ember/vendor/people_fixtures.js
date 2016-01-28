@@ -19,9 +19,9 @@ var BSRS_PEOPLE_FACTORY = (function() {
             id: i || this.person_defaults.id,
             first_name: first_name || this.person_defaults.first_name,
             last_name: last_name || this.person_defaults.last_name,
-            email: this.person_defaults.emails,
-            role: this.person_defaults.role,
-            status: this.person_defaults.status
+            // email: this.person_defaults.emails,
+            // role: this.person_defaults.role,
+            // status: this.person_defaults.status
         }
     },
     factory.prototype.generate = function(i) {

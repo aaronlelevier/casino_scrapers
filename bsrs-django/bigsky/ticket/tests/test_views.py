@@ -101,8 +101,6 @@ class TicketListTests(TicketSetupMixin, APITestCase):
         self.assertEqual(assignee['first_name'], self.ticket.assignee.first_name)
         self.assertEqual(assignee['middle_initial'], self.ticket.assignee.middle_initial)
         self.assertEqual(assignee['last_name'], self.ticket.assignee.last_name)
-        self.assertEqual(assignee['title'], self.ticket.assignee.title)
-        self.assertEqual(assignee['role'], str(self.ticket.assignee.role.id))
 
     # Ticket specific "filter" tests
 
@@ -179,9 +177,6 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
         self.assertEqual(assignee['first_name'], self.ticket.assignee.first_name)
         self.assertEqual(assignee['middle_initial'], self.ticket.assignee.middle_initial)
         self.assertEqual(assignee['last_name'], self.ticket.assignee.last_name)
-        self.assertEqual(assignee['title'], self.ticket.assignee.title)
-        self.assertEqual(assignee['role'], str(self.ticket.assignee.role.id))
-        self.assertEqual(assignee['status'], str(self.ticket.assignee.status.id))
 
     def test_data_categories(self):
         response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
@@ -204,8 +199,6 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
         self.assertEqual(data_cc['first_name'], cc.first_name)
         self.assertEqual(data_cc['middle_initial'], cc.middle_initial)
         self.assertEqual(data_cc['last_name'], cc.last_name)
-        self.assertEqual(data_cc['title'], cc.title)
-        self.assertEqual(data_cc['role'], str(cc.role.id))
 
 
 class TicketUpdateTests(TicketSetupMixin, APITestCase):

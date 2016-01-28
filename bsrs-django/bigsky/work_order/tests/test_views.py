@@ -57,8 +57,6 @@ class WorkOrderListTests(APITestCase):
         self.assertEqual(assignee['first_name'], self.wo.assignee.first_name)
         self.assertEqual(assignee['middle_initial'], self.wo.assignee.middle_initial)
         self.assertEqual(assignee['last_name'], self.wo.assignee.last_name)
-        self.assertEqual(assignee['title'], self.wo.assignee.title)
-        self.assertEqual(assignee['role'], str(self.wo.assignee.role.id))
 
 
 class WorkOrderDetailTests(APITestCase):

@@ -9,7 +9,7 @@ var StatusMixin = Ember.Mixin.create({
     statusIsDirty: Ember.computed('status', 'status_fk', function() {
         let status = this.get('status');
         let status_fk = this.get('status_fk');
-        if (status) {
+        if (typeof status === 'object') {
             return status.get('id') === status_fk ? false : true;
         }
     }),

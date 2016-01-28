@@ -8,34 +8,34 @@ var BSRS_TICKET_FACTORY = (function() {
         this.category_defaults = category_defaults.default || category_defaults;
         this.config = config;
     };
-    factory.prototype.generate = function(i) {
-        var id = i || this.ticket.idOne;
-
+    factory.prototype.categories = function() {
         var child_category = this.category_fixtures.generate(this.category_defaults.idPlumbing, this.category_defaults.nameRepairChild);
         var child_child_category = {id: this.category_defaults.idPlumbingChild, name: this.category_defaults.namePlumbingChild, parent_id: child_category.id, label: this.category_defaults.labelThree, children_fks: []};
         child_category.children_fks = [this.category_defaults.idPlumbingChild];
         child_category.parent_id = this.category_defaults.idOne;
         child_category.label = this.category_defaults.labelTwo;
-
         var parent_category = this.category_fixtures.generate(this.category_defaults.idOne, this.category_defaults.nameOne);
         parent_category.children_fks = [this.category_defaults.idPlumbing, this.category_defaults.idTwo];
         parent_category.parent_id = null;
-
         delete parent_category.status;
         delete child_category.status;
         delete child_child_category.status;
-
+        return [parent_category, child_category, child_child_category];
+    };
+    factory.prototype.generate = function(i) {
+        var id = i || this.ticket.idOne;
+        var categories = this.categories();
         return {
             id: id,
             number: this.ticket.numberOne,
             request: this.ticket.requestOne,
             status: this.ticket.statusOneId,
             priority: this.ticket.priorityOneId,
-            cc: [{id: this.people_defaults.idOne, fullname: this.people_defaults.fullname, email: this.people_defaults.emails, role: this.people_defaults.role, status: this.people_defaults.status}],
-            categories: [parent_category, child_category, child_child_category],
+            cc: [{id: this.people_defaults.idOne, fullname: this.people_defaults.fullname}],
+            categories: [categories[0], categories[1], categories[2]],
             assignee: this.people_fixtures.get(),
             location: this.location_fixtures.get(),
-            attachments: [],
+            attachments: []
         }
     };
     factory.prototype.list = function() {

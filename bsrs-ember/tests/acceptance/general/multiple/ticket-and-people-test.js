@@ -62,6 +62,7 @@ test('clicking between person detail and ticket detail will not dirty the active
         assert.equal(currentURL(), TICKET_DETAIL_URL);
         person = store.find('person', PD.idOne);
         assert.ok(person.get('localeIsNotDirty'));
+        assert.ok(person.get('statusIsNotDirty'));
         assert.equal(person.get('isDirtyOrRelatedDirty'), false);
         ticket = store.find('ticket', TD.idOne);
         assert.equal(ticket.get('isDirtyOrRelatedDirty'), false);

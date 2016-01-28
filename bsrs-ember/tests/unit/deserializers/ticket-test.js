@@ -22,7 +22,7 @@ let store, subject, uuid, person_deserializer, location_level_deserializer, loca
 
 module('unit: ticket deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-person', 'model:ticket-category', 'model:ticket-status', 'model:ticket-priority', 'model:status', 'model:location', 'model:person-location', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:attachment', 'model:location-status', 'service:person-current','service:translations-fetcher','service:i18n', 'model:locale']);
+        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-person', 'model:ticket-category', 'model:ticket-status', 'model:ticket-priority', 'model:status', 'model:location', 'model:person-location', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:attachment', 'model:location-status', 'service:person-current','service:translations-fetcher','service:i18n', 'model:locale', 'model:role']);
         uuid = this.container.lookup('model:uuid');
         location_level_deserializer = LocationLevelDeserializer.create({store: store});
         location_deserializer = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
@@ -65,6 +65,7 @@ test('ticket assignee will be deserialized into its own store when deserialize d
 
 test('ticket assignee will be deserialized into its own store when deserialize detail is invoked (with no existing assignee)(list)', (assert) => {
     let json = TF.generate(TD.idOne);
+    delete json.cc;
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     run(function() {
         subject.deserialize(response);
@@ -81,6 +82,7 @@ test('ticket assignee will be deserialized into its own store when deserialize d
     assert.equal(ticket.get('assignee').get('id'), PD.unusedId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     let json = TF.generate(TD.idOne);
+    delete json.cc;
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     run(function() {
         subject.deserialize(response);
@@ -112,6 +114,7 @@ test('ticket location will be deserialized into its own store when deserialize l
     let location;
     location = store.push('location', {id: LD.idOne, name: LD.storeName});
     let json = TF.generate(TD.idOne);
+    delete json.cc;
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     run(function() {
@@ -124,6 +127,7 @@ test('ticket location will be deserialized into its own store when deserialize l
 
 test('ticket location will be deserialized into its own store when deserialize list is invoked (when ticket did not exist before)', (assert) => {
     let json = TF.generate(TD.idOne);
+    delete json.cc;
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     run(function() {
         subject.deserialize(response);
@@ -531,6 +535,7 @@ test('ticket-category m2m is set up correctly using deserialize single (starting
 
 test('ticket-category m2m is set up correctly using deserialize list (starting with no m2m relationship)', (assert) => {
     let json = TF.generate(TD.idOne);
+    delete json.cc;
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     let categories = ticket.get('categories');
     assert.equal(categories.get('length'), 0);
@@ -583,6 +588,7 @@ test('ticket-status m2m is added after deserialize list (starting with existing 
     category = store.push('category', {id: CD.idOne, name: CD.nameOne});
     assert.equal(ticket.get('categories.length'), 1);
     let json = TF.generate(TD.idOne);
+    delete json.cc;
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     run(function() {
@@ -630,6 +636,7 @@ test('ticket-category m2m is removed when server payload no longer reflects what
     category = store.push('category', {id: CD.idOne, name: CD.nameOne});
     assert.equal(ticket.get('categories').get('length'), 1);
     let json = TF.generate(TD.id);
+    delete json.cc;
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     run(function() {
@@ -664,6 +671,7 @@ test('ticket-category m2m added even when ticket did not exist before the deseri
 
 test('ticket-category m2m added even when ticket did not exist before the deserializer executes (list)', (assert) => {
     let json = TF.generate(TD.idOne);
+    delete json.cc;
     delete json.categories[1];
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     run(function() {

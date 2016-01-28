@@ -45,7 +45,8 @@ var extract_categories = function(model, store, category_deserializer) {
 var extract_assignee = function(assignee_json, store, person_deserializer, ticket_model) {
     let assignee_id = assignee_json.id;
     if(ticket_model.get('assignee.id') !== assignee_id) {
-        person_deserializer.deserialize(assignee_json, assignee_id);
+        // person_deserializer.deserialize(assignee_json, assignee_id);
+        store.push('person', assignee_json);
         ticket_model.change_assignee(assignee_id);
         store.push('ticket', {id: ticket_model.get('id'), assignee_fk: assignee_id});
     }
@@ -65,7 +66,8 @@ var extract_cc = function(model, store, person_deserializer) {
             const pk = Ember.uuid();
             server_sum.push(pk);
             store.push('ticket-person', {id: pk, ticket_pk: model.id, person_pk: cc.id});  
-            person_deserializer.deserialize(cc, cc.id);
+            store.push('person', cc);
+            // person_deserializer.deserialize(cc, cc.id);
         }else{
             //check 
             prevented_duplicate_m2m.push(ticket_people[0].get('id'));
