@@ -31,7 +31,7 @@ const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 let application, store, list_xhr, endpoint, detail_data, url, run = Ember.run;
 
-module('Acceptance | role-detail', {
+module('Acceptance | amk role-detail', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -51,7 +51,7 @@ module('Acceptance | role-detail', {
 
 //TODO: ask how grid is presented in what order
 // test('xxxx clicking a role name will redirect to the given detail view', (assert) => {
-//     store.push('role', {id: RD.idOne+'0', name: 'zap000'}); 
+//     store.push('role', {id: RD.idOne+'0', name: 'zap000'});
 //     visit(ROLE_URL);
 //     andThen(() => {
 //         assert.equal(currentURL(), ROLE_URL);
@@ -67,7 +67,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let role = store.find('role').objectAt(0);  
+        let role = store.find('role').objectAt(0);
         assert.ok(role.get('isNotDirty'));
         assert.equal(role.get('location_level').get('id'), LLD.idOne);
         assert.equal(page.roleTypeInput(), RD.roleTypeGeneral);
@@ -84,7 +84,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionTwo();
     andThen(() => {
-        let role = store.find('role').objectAt(0);  
+        let role = store.find('role').objectAt(0);
         assert.ok(role.get('isDirty'));
     });
     let list = RF.list();
@@ -95,7 +95,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
-        let role = store.find('role').objectAt(0);  
+        let role = store.find('role').objectAt(0);
         assert.ok(role.get('isNotDirty'));
     });
 });
@@ -188,8 +188,8 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-role-name', RD.nameTwo);
-    page.locationLevelClickDropdown(); 
-    page.locationLevelClickOptionTwo(); 
+    page.locationLevelClickDropdown();
+    page.locationLevelClickOptionTwo();
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -234,7 +234,7 @@ test('clicking and typing into power select for categories will fire off xhr req
     });
     fillIn(CATEGORY_SEARCH, 'a');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), PAGE_SIZE+3); 
+        assert.equal(page.categoryOptionLength(), PAGE_SIZE+3);
         assert.equal(page.categoriesSelected(), 1);
         const role = store.find('role', RD.idOne);
         assert.equal(role.get('role_category_fks').length, 1);

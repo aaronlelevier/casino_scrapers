@@ -13,7 +13,7 @@ const ROLE_URL = BASE_URL + '/index';
 
 let application;
 
-module('Acceptance | role-list', {
+module('Acceptance | amk role-list', {
     beforeEach() {
         application = startApp();
         let endpoint = PREFIX + BASE_URL + '/';

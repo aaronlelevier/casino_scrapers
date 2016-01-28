@@ -20,7 +20,7 @@ const DROPDOWN = '.ember-power-select-dropdown';
 const COMPONENT = '.t-role-category-select';
 const OPTION = 'li.ember-power-select-option';
 
-moduleForComponent('role-category-select', 'integration: role-category-select test', {
+moduleForComponent('role-category-select', 'integration: amk role-category-select test', {
     integration: true,
     setup() {
         translation.initialize(this);
@@ -45,7 +45,7 @@ moduleForComponent('role-category-select', 'integration: role-category-select te
 test('should render a selectbox when with no options (initial state)', function(assert) {
     let categories_children = Ember.A([]);
     this.set('role', role);
-    this.render(hbs`{{role-category-select role=role}}`);
+    this.render(hbs`{{roles/role-category-select role=role}}`);
     let $component = this.$(`${COMPONENT}`);
     clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
@@ -57,7 +57,7 @@ test('should render a selectbox when with no options (initial state)', function(
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
     let categories_children = store.find('category');
     this.set('role', role);
-    this.render(hbs`{{role-category-select role=role}}`);
+    this.render(hbs`{{roles/role-category-select role=role}}`);
     let $component = this.$(`${COMPONENT}`);
     run(() => { typeInSearch('a'); });
     return waitFor().
@@ -71,4 +71,3 @@ test('should render a selectbox with bound options after type ahead for search',
             assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains(${CD.nameOne})`));
         });
 });
-

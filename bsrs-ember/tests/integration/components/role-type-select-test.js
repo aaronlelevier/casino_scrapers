@@ -13,7 +13,7 @@ const PowerSelect = '.ember-power-select-trigger';
 const COMPONENT = '.t-role-role-type';
 const DROPDOWN = '.ember-power-select-dropdown';
 
-moduleForComponent('role-role-type-select', 'integration: role-role-type-select test', {
+moduleForComponent('role-role-type-select', 'integration: amk role-role-type-select test', {
     integration: true,
     setup() {
         trans = this.container.lookup('service:i18n');
@@ -35,7 +35,7 @@ test('should render a selectbox when role type options are empty (initial state 
     let all_role_types = Ember.A([]);
     this.set('role', role);
     this.set('all_role_types', all_role_types);
-    this.render(hbs`{{role-type-select role=role all_role_types=all_role_types}}`);
+    this.render(hbs`{{roles/role-type-select role=role all_role_types=all_role_types}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), '');
     clickTrigger();
@@ -50,7 +50,7 @@ test('should render a selectbox when role type options are empty (initial state 
 test('should render a selectbox with bound options', function(assert) {
     this.set('role', role);
     this.set('all_role_types', all_role_types);
-    this.render(hbs`{{role-type-select role=role all_role_types=all_role_types}}`);
+    this.render(hbs`{{roles/role-type-select role=role all_role_types=all_role_types}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), '');
     clickTrigger();
@@ -62,7 +62,7 @@ test('should render a selectbox with bound options', function(assert) {
 test('should be able to select new role_type when one doesnt exist', function(assert) {
     this.set('role', role);
     this.set('all_role_types', all_role_types);
-    this.render(hbs`{{role-type-select role=role all_role_types=all_role_types}}`);
+    this.render(hbs`{{roles/role-type-select role=role all_role_types=all_role_types}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), '');
     clickTrigger();
@@ -85,7 +85,7 @@ test('should be able to select same role_type when role already has a role_type'
     });
     this.set('role', role);
     this.set('all_role_types', all_role_types);
-    this.render(hbs`{{role-type-select role=role all_role_types=all_role_types}}`);
+    this.render(hbs`{{roles/role-type-select role=role all_role_types=all_role_types}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), RD.roleTypeGeneral);
     clickTrigger();
@@ -109,7 +109,7 @@ test('should be able to select new role_type when role already has a role_type',
     let all_role_types = store.find('role-type');
     this.set('role', role);
     this.set('all_role_types', all_role_types);
-    this.render(hbs`{{role-type-select role=role all_role_types=all_role_types}}`);
+    this.render(hbs`{{roles/role-type-select role=role all_role_types=all_role_types}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), RD.roleTypeGeneral);
     clickTrigger();

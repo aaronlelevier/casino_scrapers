@@ -29,7 +29,7 @@ const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 let application, store, payload, list_xhr, original_uuid, url, counter, run = Ember.run;
 
-module('Acceptance | role-new', {
+module('Acceptance | amk role-new', {
     beforeEach() {
         payload = {
             id: UUID.value,
