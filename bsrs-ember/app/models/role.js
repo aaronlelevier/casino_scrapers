@@ -39,7 +39,7 @@ var RoleModel = Model.extend(NewMixin, {
         return this.get('role_categories').mapBy('id'); 
     }),
     role_categories: many_to_many('role-category', 'role_fk'),
-    categoryIsDirty: many_to_many_dirty('categories', 'role_categories_ids', 'role_category_fks'),
+    categoryIsDirty: many_to_many_dirty('role_categories_ids', 'role_category_fks'),
     categoryIsNotDirty: Ember.computed.not('categoryIsDirty'),
     // add_category: add_many_to_many('role-category', 'categories', 'category_fk', 'role_fk'),
     add_category(category_pk) {

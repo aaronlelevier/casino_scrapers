@@ -24,7 +24,7 @@
     "broccoli-asset-rev": "^2.2.0",
     "broccoli-funnel": "^1.0.0",
     "bsrs-bootstrap-config": "git+ssh://git@github.com:bigskytech/bsrs-bootstrap-config.git#0.2.43",
-    "bsrs-components": "git+ssh://git@github.com:bigskytech/bsrs-components.git#0.0.5",
+    "bsrs-components": "git+ssh://git@github.com:bigskytech/bsrs-components.git#0.0.6",
     "ember-autoresize": "0.5.14",
     "ember-cli": "1.13.14",
     "ember-cli-app-version": "^1.0.0",
