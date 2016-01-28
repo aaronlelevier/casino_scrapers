@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
-import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
+import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import ROLE_CD from 'bsrs-ember/vendor/defaults/role-category';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import RF from 'bsrs-ember/vendor/role_fixtures';
@@ -23,15 +23,15 @@ module('unit: role deserializer test', {
 
 test('category and location level will not be deserialized into its own store when deserialize list is invoked', (assert) => {
     let location_level, category;
-    role = store.push('role', {id: RD.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
-    location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [RD.idOne]});
+    role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne});
+    location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     category = store.push('category', {id: CD.idOne, name: CD.nameOne});
     let json = RF.generate_single_for_list(RD.unusedId);
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     run(() => {
         subject.deserialize(response);
     });
-    let original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+    let original = store.find('location-level', LLD.idOne);
     assert.deepEqual(original.get('roles'), [RD.idOne, RD.unusedId]);
     assert.ok(original.get('isNotDirty'));
     let role_two = store.find('role', RD.unusedId);
@@ -42,13 +42,14 @@ test('category and location level will not be deserialized into its own store wh
 
 test('location level and category will correctly be deserialized into its own store with a foreign key on role (single)', (assert) => {
     let location_level;
-    role = store.push('role', {id: RD.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
-    location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [RD.idOne]});
+    role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne});
+    assert.ok(role.get('categoryIsNotDirty'));
+    location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     let response = RF.generate(RD.unusedId);
     run(() => {
         subject.deserialize(response, RD.unusedId);
     });
-    let original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+    let original = store.find('location-level', LLD.idOne);
     assert.deepEqual(original.get('roles'), [RD.idOne, RD.unusedId]);
     assert.ok(original.get('isNotDirty'));
     let category = store.find('category', CD.idOne);
@@ -65,27 +66,27 @@ test('location level and category will correctly be deserialized into its own st
 
 test('role location level will not be duplicated and correctly be deserialized into its own store with a foreign key on role (single)', (assert) => {
     let location_level;
-    role = store.push('role', {id: RD.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
-    location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [RD.idOne]});
+    role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne});
+    location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     let response = RF.generate(RD.idOne);
     run(() => {
         subject.deserialize(response, RD.idOne);
     });
-    let original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+    let original = store.find('location-level', LLD.idOne);
     assert.deepEqual(original.get('roles'), [RD.idOne]);
     assert.ok(original.get('isNotDirty'));
 });
 
 test('role location level will correctly be deserialized when server returns role without a location_level (single)', (assert) => {
     let location_level;
-    role = store.push('role', {id: RD.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
-    location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [RD.idOne]});
+    role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne});
+    location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     let response = RF.generate(RD.idOne);
     response.location_level = undefined;
     run(() => {
         subject.deserialize(response, RD.idOne);
     });
-    let original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+    let original = store.find('location-level', LLD.idOne);
     assert.deepEqual(original.get('roles'), []);
     assert.ok(original.get('isNotDirty'));
     assert.ok(role.get('isNotDirty'));
@@ -94,14 +95,14 @@ test('role location level will correctly be deserialized when server returns rol
 
 test('role location level will correctly be deserialized (with many roles) when server returns role without a location_level (single)', (assert) => {
     let location_level;
-    role = store.push('role', {id: RD.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
-    location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [RD.idOne, RD.unusedId]});
+    role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne});
+    location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne, RD.unusedId]});
     let response = RF.generate(RD.idOne);
     response.location_level = undefined;
     run(() => {
         subject.deserialize(response, RD.idOne);
     });
-    let original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+    let original = store.find('location-level', LLD.idOne);
     assert.deepEqual(original.get('roles'), [RD.unusedId]);
     assert.ok(original.get('isNotDirty'));
     assert.ok(role.get('isNotDirty'));
@@ -110,20 +111,21 @@ test('role location level will correctly be deserialized (with many roles) when 
 
 test('role location level will correctly be deserialized when server returns role without a location_level (list)', (assert) => {
     let location_level;
-    role = store.push('role', {id: RD.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
-    location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [RD.idOne]});
+    role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne});
+    location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     let json = RF.generate_single_for_list(RD.idOne);
     json.location_level = undefined;
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     run(() => {
         subject.deserialize(response);
     });
-    let original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+    let original = store.find('location-level', LLD.idOne);
     assert.deepEqual(original.get('roles'), []);
     assert.ok(original.get('isNotDirty'));
     assert.ok(role.get('isNotDirty'));
 });
 
+/*LL and CATEGORIES*/
 test('role category will correctly be deserialized when server returns role without a location_level and without a category (single)', (assert) => {
     let role_category, category;
     role = store.push('role', {id: RD.idOne, name: RD.nameOne, role_category_fks: [ROLE_CD.idOne]});
@@ -195,3 +197,72 @@ test('role category will correctly be deserialized when server returns role with
     });
     assert.ok(role.get('isNotDirty'));
 });
+
+/*ROLE CATEGORY M2M*/
+test('role-category m2m is set up correctly using deserialize single (starting with no m2m relationship)', (assert) => {
+    run(() => {
+        store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
+        role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne});
+    });
+    let response = RF.generate(RD.idOne);
+    let categories = role.get('categories');
+    assert.equal(categories.get('length'), 0);
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(role.get('categoryIsNotDirty'));
+    assert.ok(role.get('locationLevelIsNotDirty'));
+    run(() => {
+        subject.deserialize(response, RD.idOne);
+    });
+    let original = store.find('role', RD.idOne);
+    categories = original.get('categories');
+    assert.equal(categories.objectAt(0).get('id'), CD.idOne);
+    assert.equal(categories.objectAt(0).get('name'), CD.nameOne);
+    assert.equal(store.find('role-category').get('length'), 1);
+    assert.ok(original.get('isNotDirty'));
+    assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('role-category m2m is set up correctly using deserialize single (starting with a m2m relationship)', (assert) => {
+    let m2m, category;
+    run(() => {
+        store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
+        role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne});
+        store.push('category', {id: CD.idTwo, name: CD.nameTwo});
+    });
+    role.set('role_category_fks', [ROLE_CD.idOne]);
+    role.save();
+    m2m = store.push('role-category', {id: ROLE_CD.idOne, role_fk: RD.idOne, category_fk: CD.idTwo});
+    assert.equal(role.get('categories').get('length'), 1);
+    let response = RF.generate(RD.idOne);
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    run(() => {
+        subject.deserialize(response, RD.idOne);
+    });
+    let role = store.find('role', RD.idOne);
+    let categories = role.get('categories');
+    assert.equal(categories.get('length'), 1);
+    assert.equal(categories.objectAt(0).get('id'), CD.idOne);
+    assert.ok(role.get('isNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(store.find('role-category').get('length'), 2);
+});
+
+test('role-category m2m is removed when server payload no longer reflects what server has for m2m relationship', (assert) => {
+    run(() => {
+        store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
+        role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne});
+    });
+    let response = RF.generate(RD.idOne);
+    delete response.categories[0];
+    run(() => {
+        subject.deserialize(response, RD.idOne);
+    });
+    role = store.find('role', RD.idOne);
+    let categories = role.get('categories');
+    assert.equal(categories.get('length'), 0);
+    assert.equal(categories.objectAt(0), undefined);
+    assert.ok(role.get('isNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(store.find('role-category').get('length'), 0);
+});
+
