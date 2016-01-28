@@ -1,3 +1,4 @@
+import copy
 import os
 from os.path import dirname, join
 
@@ -10,7 +11,9 @@ from model_mommy import mommy
 from rest_framework.exceptions import ValidationError
 
 from category.tests.factory import create_categories
-from generic.models import Attachment, SavedSearch
+from generic.models import Attachment, SavedSearch, Setting
+from generic.settings import DEFAULT_GENERAL_SETTINGS
+from person.models import Role
 from person.tests.factory import create_single_person
 from ticket.tests.factory import create_ticket
 from utils.tests.helpers import remove_attachment_test_files
@@ -143,3 +146,21 @@ class AttachmentModelTests(TestCase):
             self.assertEqual(ret['filename'], attachment.filename)
             self.assertEqual(ret['file'], str(attachment.file))
             self.assertEqual(ret['image_thumbnail'], str(attachment.image_thumbnail))
+
+
+class SettingTests(TestCase):
+
+    def test_get_settings_file(self):
+        self.assertEqual({}, Setting.get_settings_file())
+
+    def test_get_settings_file__general(self):
+        self.assertEqual(DEFAULT_GENERAL_SETTINGS, Setting.get_settings_file('general'))
+
+    def test_get_combined_settings_file(self):
+        role_settings = Role.get_settings_file()
+        combined_settings = copy.copy(DEFAULT_GENERAL_SETTINGS)
+        combined_settings.update(role_settings)
+
+        ret = Setting.get_combined_settings_file('general', role_settings)
+
+        self.assertEqual(combined_settings, ret)

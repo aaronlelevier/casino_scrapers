@@ -11,3 +11,8 @@ class SavedSearchAdmin(admin.ModelAdmin):
 @admin.register(models.Attachment)
 class AttachmentAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(models.Setting)
+class SettingAdmin(admin.ModelAdmin):
+    pass

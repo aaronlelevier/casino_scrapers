@@ -1,3 +1,6 @@
+import json
+import uuid
+
 from django.test import TestCase
 
 from rest_framework.test import APITestCase
@@ -5,7 +8,7 @@ from rest_framework.test import APITestCase
 from location.tests.factory import create_locations
 from location.models import Location
 from location.serializers import LocationUpdateSerializer
-from person.tests.factory import create_person, PASSWORD
+from person.tests.factory import create_person, create_single_person, PASSWORD
 from utils.validators import (regex_check_contains, contains_digit, contains_upper_char,
     contains_lower_char, contains_special_char, contains_no_whitespaces)
 
@@ -43,6 +46,37 @@ class UniqueForActiveValidatorTests(APITestCase):
         response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
             self.data, format='json')
         self.assertEqual(response.status_code, 200)
+
+
+class SettingsValidatorTests(APITestCase):
+
+    def setUp(self):
+        self.person = create_single_person()
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_create__settings__value_wrong_type(self):
+        # the supplied values are all the wrong type
+        role_data = {
+            "id": str(uuid.uuid4()),
+            "name": "Admin",
+            "settings": {
+                "create_all": {'value': 0},
+                "dashboard_text": {'value': 0},
+                "login_grace": {'value': 'foo'},
+                "modules": {'value': 0}
+            }
+        }
+
+        response = self.client.post('/api/admin/roles/', role_data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(json.loads(response.content.decode('utf8'))['create_all'], ['Must be a bool'])
+        self.assertEqual(json.loads(response.content.decode('utf8'))['dashboard_text'], ['Must be a str'])
+        self.assertEqual(json.loads(response.content.decode('utf8'))['login_grace'], ['Must be a int'])
+        self.assertEqual(json.loads(response.content.decode('utf8'))['modules'], ['Must be a list'])
 
 
 DIGITS = "Bobby123"

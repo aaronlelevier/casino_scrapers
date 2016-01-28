@@ -133,27 +133,3 @@ class BaseStatusModel(BaseNameModel):
         be loaded into the `Boostrap` data under a single Array of Statuses.
         """
         return True
-
-
-### SETTINGS
-
-class BaseSettingModel(BaseModel):
-    '''
-    ``Setting`` records will be either Standard or Custom. and be set 
-    at levels. ex - Location, Role, User.
-    '''
-    settings = models.CharField(max_length=1000, blank=True)
-
-    class Meta:
-        abstract = True
-
-    def __str__(self):
-        return self.settings
-
-
-class MainSetting(BaseSettingModel):
-    pass
-
-
-class CustomSetting(BaseSettingModel):
-    pass

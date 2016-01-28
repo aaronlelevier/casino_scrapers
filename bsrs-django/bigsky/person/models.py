@@ -228,6 +228,10 @@ class Role(BaseModel):
             raise ValidationError("Role can't have related child categories: {}."
                                  .format(', '.join(child_categories)))
 
+    @classmethod
+    def get_settings_file(cls, name=None):
+        return DEFAULT_ROLE_SETTINGS
+
 
 class ProxyRole(BaseModel):
 

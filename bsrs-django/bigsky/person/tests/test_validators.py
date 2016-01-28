@@ -96,34 +96,3 @@ class RoleCategoryValidatorTests(APITestCase):
             self.data, format='json')
 
         self.assertEqual(response.status_code, 400)
-
-
-class RoleSettingsValidatorTests(APITestCase):
-
-    def setUp(self):
-        self.person = create_single_person()
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def tearDown(self):
-        self.client.logout()
-
-    def test_create__settings__value_wrong_type(self):
-        # the supplied values are all the wrong type
-        role_data = {
-            "id": str(uuid.uuid4()),
-            "name": "Admin",
-            "settings": {
-                "create_all": {'value': 0},
-                "dashboard_text": {'value': 0},
-                "login_grace": {'value': 'foo'},
-                "modules": {'value': 0}
-            }
-        }
-
-        response = self.client.post('/api/admin/roles/', role_data, format='json')
-
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(json.loads(response.content.decode('utf8'))['create_all'], ['Must be a bool'])
-        self.assertEqual(json.loads(response.content.decode('utf8'))['dashboard_text'], ['Must be a str'])
-        self.assertEqual(json.loads(response.content.decode('utf8'))['login_grace'], ['Must be a int'])
-        self.assertEqual(json.loads(response.content.decode('utf8'))['modules'], ['Must be a list'])

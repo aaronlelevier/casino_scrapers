@@ -1,14 +1,17 @@
+import copy
 import os
 
 from django.db import models
 from django.conf import settings
+from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError as DjangoValidationError
 
 from PIL import Image
 from rest_framework.exceptions import ValidationError
 
+from generic.settings import DEFAULT_GENERAL_SETTINGS
 from ticket.models import Ticket
-from utils.models import BaseModel, BaseManager
+from utils.models import BaseModel, BaseManager, BaseNameModel
 
 
 ### SAVED SEARCHES
@@ -191,3 +194,35 @@ class Attachment(BaseModel):
             "file": str(self.file),
             "image_thumbnail": str(self.image_thumbnail)
         }
+
+
+### SETTINGS
+
+class Setting(BaseNameModel):
+    '''
+    ``Setting`` records will be either Standard or Custom. and be set
+    at levels. ex - Location, Role, User.
+    '''
+    settings = JSONField(blank=True, default={})
+
+    def __str__(self):
+        return {self.name: self.settings}
+
+    @classmethod
+    def get_settings_file(cls, name=None):
+        if name == 'general':
+            return DEFAULT_GENERAL_SETTINGS
+        else:
+            return {}
+
+    @classmethod
+    def get_combined_settings_file(cls, base_name, *args):
+        """
+        :base_name: the 'str' name of the base `Settings` dict.
+        :args: the other settings files to override the base in order of precedence.
+        """
+        base = cls.get_settings_file(base_name)
+        combined = copy.copy(base)
+        for a in args:
+            combined.update(a)
+        return combined

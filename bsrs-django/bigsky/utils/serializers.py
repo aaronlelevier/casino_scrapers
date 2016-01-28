@@ -95,6 +95,43 @@ class RemovePasswordSerializerMixin(object):
         return data
 
 
+class SettingSerializerMixin(object):
+    """
+    Uses the 'name' in the `validated_data` to set the settings file
+    for the model.
+
+    `get_settings_file` must be set as a classmethod on the model.
+    """
+
+    def create(self, validated_data):
+        validated_data = self._validate_and_update_settings(validated_data)
+        return super(SettingSerializerMixin, self).create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data = self._validate_and_update_settings(validated_data)
+        return super(SettingSerializerMixin, self).update(instance, validated_data)
+
+    def _validate_and_update_settings(self, validated_data):
+        name = validated_data.get('name')
+        default_settings = self.Meta.model.get_settings_file(name)
+        final_settings = copy.copy(default_settings)
+
+        for k,v in final_settings.items():
+            try:
+                new_value = validated_data['settings'][k].get('value')
+                # to defend agains key's w/ no values that don't match the req'd type
+                if new_value:
+                    final_settings[k]['value'] = new_value
+            except KeyError:
+                # Silently pass b/c if a 'value' isn't being posted for
+                # a Role setting, we're going to use the default.
+                pass
+        else:
+            validated_data.update({'settings': final_settings})
+
+        return validated_data
+
+
 ### Fields
 
 class UpperCaseSerializerField(serializers.CharField):
