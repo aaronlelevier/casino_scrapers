@@ -100,7 +100,7 @@ class SettingSerializerMixin(object):
     Uses the 'name' in the `validated_data` to set the settings file
     for the model.
 
-    `_get_settings_file` must be set as a classmethod on the model.
+    `get_settings_file` must be set as a classmethod on the model.
     """
 
     def create(self, validated_data):
@@ -113,7 +113,7 @@ class SettingSerializerMixin(object):
 
     def _validate_and_update_settings(self, validated_data):
         name = validated_data.get('name')
-        default_settings = self.Meta.model._get_settings_file(name)
+        default_settings = self.Meta.model.get_settings_file(name)
         final_settings = copy.copy(default_settings)
 
         for k,v in final_settings.items():

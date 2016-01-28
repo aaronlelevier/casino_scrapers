@@ -13,6 +13,7 @@ from category.models import Category
 from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
 from contact.tests.factory import create_contact, create_contacts
+from generic.models import Setting
 from location.models import Location, LocationLevel
 from location.tests.factory import create_location
 from person.models import Person, Role
@@ -45,13 +46,13 @@ class RoleDetailTests(RoleSetupMixin, APITestCase):
 
     def test_detail(self):
         response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.role.pk))
         self.assertEqual(data['name'], self.role.name)
         self.assertEqual(data['role_type'], self.role.role_type)
         self.assertEqual(data['location_level'], str(self.location.location_level.id))
-        self.assertEqual(data['settings'], DEFAULT_ROLE_SETTINGS)
         self.assertIn(
             data['categories'][0]['id'],
             [str(c.id) for c in self.role.categories.all()]
@@ -59,6 +60,18 @@ class RoleDetailTests(RoleSetupMixin, APITestCase):
         self.assertIn('name', data['categories'][0])
         self.assertIn('status', data['categories'][0])
         self.assertIn('parent', data['categories'][0])
+
+    def test_detail__settings(self):
+        general_settings = Setting.get_settings_file('general')
+        role_settings = Role.get_settings_file()
+        combined_settings = copy.copy(general_settings)
+        combined_settings.update(role_settings)
+
+        response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings'], combined_settings)
 
 
 class RoleCreateTests(RoleSetupMixin, APITestCase):

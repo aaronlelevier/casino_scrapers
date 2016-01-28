@@ -229,7 +229,7 @@ class Role(BaseModel):
                                  .format(', '.join(child_categories)))
 
     @classmethod
-    def _get_settings_file(cls, name):
+    def get_settings_file(cls, name=None):
         return DEFAULT_ROLE_SETTINGS
 
 

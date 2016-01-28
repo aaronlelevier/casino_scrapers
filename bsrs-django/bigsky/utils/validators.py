@@ -20,7 +20,6 @@ class UniqueForActiveValidator(object):
         self.keys = keys
 
     def __call__(self, kwargs):
-        # value = kwargs.get(self.key, None)
         values = {key: kwargs.get(key, None) for key in self.keys}
 
         if values:
@@ -56,7 +55,7 @@ class SettingsValidator(object):
 
     def __call__(self, kwargs):
         name = kwargs.get('name')
-        default_settings = self.model._get_settings_file(name)
+        default_settings = self.model.get_settings_file(name)
         errors = {}
 
         settings = kwargs.get('settings', None)

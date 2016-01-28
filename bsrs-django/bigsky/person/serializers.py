@@ -5,6 +5,7 @@ from rest_framework import serializers
 from contact.serializers import (PhoneNumberSerializer, EmailSerializer, AddressSerializer)
 from location.serializers import LocationSerializer, LocationIdNameOnlySerializer
 from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer
+from generic.models import Setting
 from person.models import Person, Role
 from person.validators import RoleLocationValidator, RoleCategoryValidator
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
@@ -44,6 +45,15 @@ class RoleDetailSerializer(BaseCreateSerializer):
     @staticmethod
     def eager_load(queryset):
         return queryset.prefetch_related('categories')
+
+    def to_representation(self, instance):
+        """
+        GeneralSettings > RoleSettings = CombinedSettings
+        """
+        data = super(RoleDetailSerializer, self).to_representation(instance)
+        combined_settings = Setting.get_combined_settings_file('general', data['settings'])
+        data['settings'] = combined_settings
+        return data
 
 
 class RoleIdNameSerializer(serializers.ModelSerializer):

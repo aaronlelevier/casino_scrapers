@@ -1,3 +1,4 @@
+import copy
 import os
 
 from django.db import models
@@ -208,8 +209,20 @@ class Setting(BaseNameModel):
         return {self.name: self.settings}
 
     @classmethod
-    def _get_settings_file(cls, name):
+    def get_settings_file(cls, name=None):
         if name == 'general':
             return DEFAULT_GENERAL_SETTINGS
         else:
             return {}
+
+    @classmethod
+    def get_combined_settings_file(cls, base_name, *args):
+        """
+        :base_name: the 'str' name of the base `Settings` dict.
+        :args: the other settings files to override the base in order of precedence.
+        """
+        base = cls.get_settings_file(base_name)
+        combined = copy.copy(base)
+        for a in args:
+            combined.update(a)
+        return combined
