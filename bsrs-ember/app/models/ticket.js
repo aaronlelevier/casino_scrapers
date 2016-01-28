@@ -11,6 +11,7 @@ import TicketLocationMixin from 'bsrs-ember/mixins/model/ticket/location';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import DateFormatMixin from 'bsrs-ember/mixins/model/date-format';
 import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
+import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
 
 var run = Ember.run;
 
@@ -27,27 +28,9 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
     priority_fk: undefined,
     location_fk: undefined,
     assignee_fk: undefined,
-    /*start-non-standard*/ @computed('categories.[]', 'categories_ids.[]', 'ticket_categories_fks.[]') /*end-non-standard*/
-    categoriesIsDirty(categories, categories_ids, ticket_categories_fks) {
-        const ticket_categories = this.get('categories');
-        const ticket_categories_ids = this.get('ticket_categories_ids');
-        const previous_m2m_fks = this.get('ticket_categories_fks') || [];
-        if(ticket_categories.get('length') !== previous_m2m_fks.length) {
-            return equal(ticket_categories_ids, previous_m2m_fks) ? false : true;
-        }
-        return equal(ticket_categories_ids, previous_m2m_fks) ? false : true;
-    },
+    categoriesIsDirty: many_to_many_dirty('ticket_categories_ids', 'ticket_categories_fks'),
     categoriesIsNotDirty: Ember.computed.not('categoriesIsDirty'),
-    /*start-non-standard*/ @computed('cc.[]', 'cc_ids.[]', 'ticket_people_fks.[]') /*end-non-standard*/
-    ccIsDirty(cc, cc_ids, ticket_people_fks) {
-        const ticket_cc = this.get('cc');
-        const ticket_cc_ids = this.get('ticket_cc_ids');
-        const previous_m2m_fks = this.get('ticket_people_fks') || [];
-        if(ticket_cc.get('length') !== previous_m2m_fks.length) {
-            return equal(ticket_cc_ids, previous_m2m_fks) ? false : true;
-        }
-        return equal(ticket_cc_ids, previous_m2m_fks) ? false : true;
-    },
+    ccIsDirty: many_to_many_dirty('ticket_cc_ids', 'ticket_people_fks'),
     ccIsNotDirty: Ember.computed.not('ccIsDirty'),
     assignee: Ember.computed.alias('belongs_to_assignee.firstObject'),
     /*start-non-standard*/ @computed /*end-non-standard*/
