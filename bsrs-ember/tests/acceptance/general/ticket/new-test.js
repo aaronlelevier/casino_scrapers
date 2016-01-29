@@ -176,7 +176,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
     clearxhr(location_xhr);
     andThen(() => {
         let components = page.powerSelectComponents();
-        assert.equal(store.find('category').get('length'), 0);
+        assert.equal(store.find('category').get('length'), 1); //count of bootstrapped categories
         let tickets = store.find('ticket');
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 0);
         assert.ok(tickets.objectAt(0).get('isNotDirtyOrRelatedNotDirty'));

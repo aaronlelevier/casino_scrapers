@@ -184,14 +184,20 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
+    let categories;
     clearxhr(children_xhr);
-    visit(CATEGORY_NEW_URL);
+    visit(CATEGORIES_URL);
     andThen(() => {
-        assert.equal(store.find('category').get('length'), 2);
+        categories = store.find('category').get('length');
+    });
+    click('.t-add-new');
+    andThen(() => {
+        assert.equal(store.find('category').get('length'), categories+1);
+
     });
     generalPage.cancel();
     andThen(() => {
-        assert.equal(store.find('category').get('length'), 1);
+        assert.equal(store.find('category').get('length'), categories);
     });
 });
 
