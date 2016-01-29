@@ -656,15 +656,10 @@ test('ticket-category m2m is removed when server payload no longer reflects what
 });
 
 test('if existing category is dirty, it will not push it into the store', (assert) => {
-    let m2m, category;
-    ticket.set('ticket_categories_fks', [TICKET_CD.idOne]);
-    ticket.save();
-    m2m = store.push('ticket-category', {id: TICKET_CD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
-    category = store.push('category', {id: CD.idOne, name: CD.nameOne});
+    const category = store.push('category', {id: CD.idOne, name: CD.nameOne});
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
     category.set('name', 'wwwwhat');
     assert.ok(category.get('isDirtyOrRelatedDirty'));
-    assert.equal(ticket.get('categories').get('length'), 1);
     let json = TF.generate(TD.idOne);
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
