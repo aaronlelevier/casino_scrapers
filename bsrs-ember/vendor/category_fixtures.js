@@ -41,7 +41,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
     },
     factory.prototype.top_level = function() {
         var parent_one = this.get(this.category_defaults.idOne);
-        parent_one.parent = null;
+        parent_one.parent_id = null;
         parent_one.children_fks = [this.category_defaults.idTwo, this.category_defaults.idPlumbing];
         parent_one.level = 0;
         var parent_two = this.get(this.category_defaults.idThree, this.category_defaults.nameThree);

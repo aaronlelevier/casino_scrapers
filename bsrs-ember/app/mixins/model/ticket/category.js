@@ -12,6 +12,7 @@ var CategoriesMixin = Ember.Mixin.create({
         return Ember.String.htmlSafe(names);
     }),
     construct_category_tree(category, child_nodes=[]) {
+        //this method is used for on the fly validation check to see if at end of cat tree
         child_nodes.push(category);
         const children = category ? category.get('has_many_children') : [];
         if(children.get('length') === 0 && child_nodes.get('length') > 1) {
@@ -78,8 +79,12 @@ var CategoriesMixin = Ember.Mixin.create({
     },
     change_category_tree(category) {
         const store = this.get('store');
+        category.previous_children_fks = category.children_fks;
         const pushed_category = store.push('category', category);
-        const category_pk = pushed_category.get('id');
+        if(pushed_category.get('isNotDirtyOrRelatedDirty')){
+            pushed_category.save();
+        }
+        const category_pk = category.id;
         const parent_ids = this.find_parent_nodes(category_pk);
         const ticket_pk = this.get('id');
         //remove all m2m join models that don't relate to this category pk

@@ -532,8 +532,7 @@ test('categories are in order based on text', (assert) => {
 
 test('power select options are rendered immediately when enter detail route and can save different top level category', (assert) => {
     let top_level_data = CF.top_level();
-    top_level_data.results[1] = {id: CD.idThree, name: CD.nameThree, parent: null, children_fks: [CD.idLossPreventionChild], level: 0};
-    top_level_data.results[1].children = [{id: CD.idLossPreventionChild, name: CD.nameLossPreventionChild, children_fks: []}];
+    top_level_data.results[1] = {id: CD.idThree, name: CD.nameThree, parent_id: null, children_fks: [CD.idLossPreventionChild], level: 0};
     page.visitDetail();
     andThen(() => {
         let components = page.powerSelectComponents();
@@ -562,7 +561,6 @@ test('power select options are rendered immediately when enter detail route and 
         assert.equal(page.categoryThreeInput(), CD.namePlumbingChild);
         assert.equal(page.categoryThreeOptionLength(), 1);
     });
-    let category = {id: CD.idThree, name: CD.nameThree, parent: null, children_fks: [CD.idLossPreventionChild], parent_id: null};
     page.categoryThreeClickDropdown();
     //click loss prevention
     page.categoryOneClickDropdown();
@@ -579,15 +577,15 @@ test('power select options are rendered immediately when enter detail route and 
     andThen(() => {
         assert.equal(page.categoryOneInput(), CD.nameThree);
         assert.equal(page.categoryOneOptionLength(), 2);
-        page.categoryOneClickDropdown();
-        const security = CF.get_list(CD.idLossPreventionChild, CD.nameLossPreventionChild, [], CD.idThree, 1);
-        ajax(`${PREFIX}/admin/categories/?parent=${CD.idThree}`, 'GET', null, {}, 200, security);
-        page.categoryTwoClickDropdown();
     });
+    page.categoryOneClickDropdown();
+    const security = CF.get_list(CD.idLossPreventionChild, CD.nameLossPreventionChild, [], CD.idThree, 1);
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idThree}`, 'GET', null, {}, 200, security);
+    page.categoryTwoClickDropdown();
     andThen(() => {
         assert.equal(page.categoryTwoOptionLength(), 1);
-        page.categoryTwoClickOptionSecurity();
     });
+    page.categoryTwoClickOptionSecurity();
     andThen(() => {
         assert.equal(page.categoryTwoInput(), CD.nameLossPreventionChild);
     });
