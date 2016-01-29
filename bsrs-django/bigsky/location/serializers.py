@@ -106,8 +106,8 @@ class LocationUpdateSerializer(NestedCreateContactSerializerMixin, NestedContact
         model = Location
         validators = [
             UniqueForActiveValidator(Location, ['number']),
-            LocationParentChildValidator('location_level', 'parents'),
-            LocationParentChildValidator('location_level', 'children')
+            LocationParentChildValidator('parents'),
+            LocationParentChildValidator('children')
         ]
         fields = ('id', 'name', 'number', 'status', 'location_level',
             'parents', 'children', 'emails', 'phone_numbers', 'addresses',)

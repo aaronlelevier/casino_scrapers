@@ -10,8 +10,7 @@ class LocationParentChildValidator(object):
     message = _("The {key}'s LocationLevels: {values} can't be the "
                 "same as the Location's LocationLevel: {location_level}.")
 
-    def __init__(self, location_level, key, *args, **kwargs):
-        self.location_level = location_level
+    def __init__(self, key, *args, **kwargs):
         self.key = key
 
     def __call__(self, kwargs):
@@ -20,7 +19,7 @@ class LocationParentChildValidator(object):
         :location_level: the location_level FK of the Location
         """
         values = kwargs.get(self.key, None)
-        location_level = kwargs.get(self.location_level, None)
+        location_level = kwargs.get('location_level', None)
         try:
             for v in values:
                 if location_level == v.location_level:
