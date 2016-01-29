@@ -79,15 +79,16 @@ var CategoriesMixin = Ember.Mixin.create({
     },
     change_category_tree(category) {
         const store = this.get('store');
-        category.previous_children_fks = category.children_fks;
-        const pushed_category = store.push('category', category);
-        if(pushed_category.get('isNotDirtyOrRelatedDirty')){
+        let pushed_category = store.find('category', category.id);
+        if(!pushed_category.get('content') || pushed_category.get('isNotDirtyOrRelatedDirty')){
+            category.previous_children_fks = category.children_fks;
+            pushed_category = store.push('category', category);
             pushed_category.save();
         }
         const category_pk = category.id;
         const parent_ids = this.find_parent_nodes(category_pk);
         const ticket_pk = this.get('id');
-        //remove all m2m join models that don't relate to this category pk
+        //remove all m2m join models that don't relate to this category pk down the tree
         const m2m_models = this.get('ticket_categories').filter((m2m) => {
             return m2m.get('ticket_pk') === ticket_pk && Ember.$.inArray(m2m.get('category_pk'), parent_ids) === -1;
         });

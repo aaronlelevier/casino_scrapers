@@ -607,15 +607,42 @@ test('ticket-status m2m is added after deserialize list (starting with existing 
 
 test('ticket-category m2m is removed when server payload no longer reflects what server has for m2m relationship', (assert) => {
     let m2m, category;
+    ticket.set('ticket_categories_fks', [TICKET_CD.idThree]);
+    ticket.save();
+    const m2m_unused = store.push('ticket-category', {id: TICKET_CD.idThree, ticket_pk: TD.idOne, category_pk: CD.unusedId});
+    category = store.push('category', {id: CD.idOne, name: CD.nameOne});
+    store.push('category', {id: CD.unusedId, name: CD.nameUnused});
+    assert.equal(ticket.get('categories').get('length'), 1);
+    let response = TF.generate(TD.id);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(ticket.get('categoriesIsNotDirty'));
+    run(function() {
+        subject.deserialize(response, TD.idOne);
+    });
+    let original = store.find('ticket', TD.idOne);
+    let categories = original.get('categories');
+    assert.equal(categories.get('length'), 3);
+    assert.equal(categories.objectAt(0).get('id'), CD.idOne);
+    assert.equal(categories.objectAt(1).get('id'), CD.idPlumbing);
+    assert.equal(categories.objectAt(2).get('id'), CD.idPlumbingChild);
+    assert.ok(original.get('isNotDirty'));
+    assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(store.find('ticket-category').get('length'), 4);
+    assert.ok(m2m_unused.get('removed'));
+});
+
+test('ticket-category m2m is removed when server payload no longer reflects what server has for m2m relationship (list)', (assert) => {
+    let m2m, category;
     ticket.set('ticket_categories_fks', [TICKET_CD.idOne]);
     ticket.save();
     m2m = store.push('ticket-category', {id: TICKET_CD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
     category = store.push('category', {id: CD.idOne, name: CD.nameOne});
     assert.equal(ticket.get('categories').get('length'), 1);
-    let response = TF.generate(TD.id);
+    let json = TF.generate(TD.idOne);
+    let response = {'count':1,'next':null,'previous':null,'results': [json]};
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     run(function() {
-        subject.deserialize(response, TD.idOne);
+        subject.deserialize(response);
     });
     let original = store.find('ticket', TD.idOne);
     let categories = original.get('categories');
@@ -628,15 +655,17 @@ test('ticket-category m2m is removed when server payload no longer reflects what
     assert.equal(store.find('ticket-category').get('length'), 3);
 });
 
-test('ticket-category m2m is removed when server payload no longer reflects what server has for m2m relationship (list)', (assert) => {
+test('if existing category is dirty, it will not push it into the store', (assert) => {
     let m2m, category;
     ticket.set('ticket_categories_fks', [TICKET_CD.idOne]);
     ticket.save();
     m2m = store.push('ticket-category', {id: TICKET_CD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
     category = store.push('category', {id: CD.idOne, name: CD.nameOne});
+    assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
+    category.set('name', 'wwwwhat');
+    assert.ok(category.get('isDirtyOrRelatedDirty'));
     assert.equal(ticket.get('categories').get('length'), 1);
-    let json = TF.generate(TD.id);
-    delete json.cc;
+    let json = TF.generate(TD.idOne);
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     run(function() {
@@ -646,6 +675,8 @@ test('ticket-category m2m is removed when server payload no longer reflects what
     let categories = original.get('categories');
     assert.equal(categories.get('length'), 3);
     assert.equal(categories.objectAt(0).get('id'), CD.idOne);
+    assert.equal(categories.objectAt(0).get('name'), 'wwwwhat');
+    assert.ok(categories.objectAt(0).get('isDirtyOrRelatedDirty'));
     assert.equal(categories.objectAt(1).get('id'), CD.idPlumbing);
     assert.equal(categories.objectAt(2).get('id'), CD.idPlumbingChild);
     assert.ok(original.get('isNotDirty'));
