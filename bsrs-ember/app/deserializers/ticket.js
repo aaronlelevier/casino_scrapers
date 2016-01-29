@@ -24,9 +24,12 @@ var extract_categories = function(model, store, category_deserializer) {
             run(() => {
                 store.push('ticket-category', {id: pk, ticket_pk: model.id, category_pk: category.id});  
                 category.previous_children_fks = category.children_fks;
-                store.push('category', category);
+                const existing_category = store.find('category', category.id);
+                if (!existing_category.get('id') || existing_category.get('isNotDirtyOrRelatedNotDirty')){
+                    var store_category = store.push('category', category);
+                    store_category.save();
+                }
             });
-            // category_deserializer.deserialize(category, category.id);
         }else{
             prevented_duplicate_m2m.push(ticket_categories[0].get('id'));
         }

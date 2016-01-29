@@ -243,6 +243,10 @@ test('on boot we should fetch and load the person-current, logged in Person, con
         assert.equal(person.get('locations').objectAt(0).get('location_level_fk'), person_location.location_level_fk);
         let location_level_fk = person.get('locations').objectAt(0).get('location_level_fk');
         assert.equal(store.find('location-level', location_level_fk).get('locations').get('length'), 1);
+        // Category
+        let role = store.find('person', PERSON_CURRENT.id).get('role');
+        assert.equal(role.get('categories').get('length'), 1);
+        assert.equal(role.get('categories').objectAt(0).get('id'), CD.idOne);
     });
 });
 

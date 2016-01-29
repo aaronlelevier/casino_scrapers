@@ -31,7 +31,7 @@ const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 let application, store, list_xhr, endpoint, detail_data, url, run = Ember.run;
 
-module('Acceptance | amk role-detail', {
+module('Acceptance | role-detail', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -234,7 +234,7 @@ test('clicking and typing into power select for categories will fire off xhr req
     });
     fillIn(CATEGORY_SEARCH, 'a');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), PAGE_SIZE+3);
+        assert.equal(page.categoryOptionLength(), PAGE_SIZE+2);
         assert.equal(page.categoriesSelected(), 1);
         const role = store.find('role', RD.idOne);
         assert.equal(role.get('role_category_fks').length, 1);

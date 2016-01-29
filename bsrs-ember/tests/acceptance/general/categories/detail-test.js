@@ -49,7 +49,7 @@ test('clicking a categories name will redirect to the given detail view', (asser
     });
     const detail_data = CF.detail(CD.idGridOne);
     xhr(endpoint + CD.idGridOne + '/', 'GET', null, {}, 200, detail_data);
-    click('.t-grid-data:eq(0)');
+    click('.t-grid-data:eq(1)');
     andThen(() => {
         assert.equal(currentURL(), GRID_DETAIL_URL);
     });
@@ -331,7 +331,7 @@ test('starting with multiple categories, can remove all categories (while not po
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'a');
-    page.categoryClickOptionOneEq();
+    page.categoryClickOptionTwoEq();
     andThen(() => {
         let category = store.find('category', CD.idOne);
         assert.equal(category.get('has_many_children').get('length'), 1);
@@ -385,7 +385,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     });
     const detail_data = CF.detail(CD.idGridOne);
     xhr(endpoint + CD.idGridOne + '/', 'GET', null, {}, 200, detail_data);
-    click('.t-grid-data:eq(0)');
+    click('.t-grid-data:eq(1)');
     andThen(() => {
         assert.equal(currentURL(), GRID_DETAIL_URL);
     });
