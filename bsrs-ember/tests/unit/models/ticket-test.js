@@ -541,20 +541,20 @@ test('if category is dirty, it will not save the pushed in category', (assert) =
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
-    const unused = store.push('category', {id: CD.unusedId, parent_id: null});
-    const unused_json = {id: CD.unusedId, parent_id: null};
+    const unused = store.push('category', {id: CD.unusedId, name: CD.nameUnused, parent_id: null});
+    const unused_json = {id: CD.unusedId, name: 'who', parent_id: null};
     assert.ok(unused.get('isNotDirtyOrRelatedNotDirty'));
-    unused.set('name', 'who');
-    assert.ok(unused.get('isDirtyOrRelatedDirty'));
     ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
     assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
     ticket.change_category_tree(unused_json);
+    assert.ok(unused.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('categories.length'), 1);
     assert.equal(ticket.get('top_level_category').get('id'), CD.unusedId);
-    assert.ok(ticket.get('top_level_category').get('isDirtyOrRelatedDirty'));
+    assert.equal(ticket.get('top_level_category').get('name'), 'who');
+    assert.ok(ticket.get('top_level_category').get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('if no existing category, it will save the pushed in category', (assert) => {

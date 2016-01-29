@@ -80,9 +80,11 @@ var CategoriesMixin = Ember.Mixin.create({
     change_category_tree(category) {
         const store = this.get('store');
         let pushed_category = store.find('category', category.id);
-        if(!pushed_category.get('content') || pushed_category.get('isNotDirtyOrRelatedDirty')){
-            category.previous_children_fks = category.children_fks;
-            pushed_category = store.push('category', category);
+        if(!pushed_category.get('content') || pushed_category.get('isNotDirtyOrRelatedNotDirty')){
+            Ember.set(category, 'previous_children_fks', category.children_fks);
+            run(() => {
+                pushed_category = store.push('category', category);
+            });
             pushed_category.save();
         }
         const category_pk = category.id;

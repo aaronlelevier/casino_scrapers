@@ -16,8 +16,11 @@ import page from 'bsrs-ember/tests/pages/tickets';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
+const TICKET_LIST = `${PREFIX}${BASEURLS.base_tickets_url}/?page=1`;
 const TICKET_LIST_URL = `${BASEURLS.base_tickets_url}/index`;
 const TICKET_DETAIL_URL = `${BASEURLS.base_tickets_url}/${TD.idOne}`;
+const CATEGORY_LIST = `${PREFIX}${BASEURLS.base_categories_url}/`;
+const CATEGORY_LIST_URL = `${BASEURLS.base_categories_url}/index`;
 const CATEGORY_DETAIL_URL = `${BASEURLS.base_categories_url}/${CD.idOne}`;
 const CATEGORY_DONALD_DETAIL_URL = `${BASEURLS.base_category_url}/${CD.idDonald}`;
 const TOP_LEVEL_CATEGORIES_URL = `${PREFIX}/admin/categories/parents/`;
@@ -42,7 +45,7 @@ test('clicking between category detail and ticket detail will not dirty the acti
     ajax(TICKET_ACTIVITIES_URL, 'GET', null, {}, 200, TA_FIXTURES.empty());
     ajax(`${PREFIX}${BASEURLS.base_tickets_url}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail());
     visit(TICKET_DETAIL_URL);
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [], CD.idOne));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [], CD.idOne, 1));
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionOne();
     andThen(() => {
@@ -53,6 +56,29 @@ test('clicking between category detail and ticket detail will not dirty the acti
     visit(CATEGORY_DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_DETAIL_URL);
+        category = store.find('category', CD.idOne);
+        assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+test('clicking between category list and ticket detail allow to select new categories', (assert) => {
+    ajax(CATEGORY_LIST + '?page=1', 'GET', null, {}, 200, CF.list());
+    visit(CATEGORY_LIST_URL);
+    ajax(TICKET_LIST,'GET', null, {}, 200, TF.list());
+    visit(TICKET_LIST_URL);
+    // return pauseTest();
+    ajax(TICKET_ACTIVITIES_URL, 'GET', null, {}, 200, TA_FIXTURES.empty());
+    ajax(`${PREFIX}${BASEURLS.base_tickets_url}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail());
+    click('.t-grid-data:eq(0)');
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [], CD.idOne, 1));
+    page.categoryTwoClickDropdown();
+    page.categoryTwoClickOptionOne();
+    andThen(() => {
+        category = store.find('category', CD.idOne);
+        assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
+    });
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_DETAIL_URL);
         category = store.find('category', CD.idOne);
         assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
     });
