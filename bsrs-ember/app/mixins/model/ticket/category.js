@@ -41,9 +41,7 @@ var CategoriesMixin = Ember.Mixin.create({
     }),
     categories_ids: many_models_ids('categories'),
     sorted_categories: Ember.computed('categories.[]', 'top_level_category', function() {
-        const top_level_category = this.get('top_level_category');
-        const categories = this.construct_category_tree(top_level_category);
-        return categories;
+        return this.get('categories').sortBy('level');
     }),
     categories: many_models('ticket_categories', 'category_pk', 'category'),
     ticket_categories_ids: many_to_many_ids('ticket_categories'),
@@ -52,8 +50,7 @@ var CategoriesMixin = Ember.Mixin.create({
         let filter = function(join_model) {
             return join_model.get('ticket_pk') === this.get('id');
         };
-        let store = this.get('store');
-        return store.find('ticket-category', filter.bind(this));
+        return this.get('store').find('ticket-category', filter.bind(this));
     }),
     find_parent_nodes(child_pk, parent_ids=[]) {
         if (!child_pk) { return; }
@@ -94,6 +91,7 @@ var CategoriesMixin = Ember.Mixin.create({
                 store.push('ticket-category', {id: m2m.get('id'), removed: true});
             });
         });
+        //find old m2m models that might exist
         const matching_m2m = this.get('ticket_categories_with_removed').filter((m2m) => {
             return m2m.get('ticket_pk') === ticket_pk && category_pk === m2m.get('category_pk') && m2m.get('removed') === true;
         }).objectAt(0); 
