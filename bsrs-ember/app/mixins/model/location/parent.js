@@ -24,7 +24,7 @@ var ParentMixin = Ember.Mixin.create({
             store.push('location-parents', {id: m2m_pk, removed: true});
         });
     },
-    saveParents: many_to_many_save('location_parents', 'location_parents_ids', 'location_parents_fks'),
+    saveParents: many_to_many_save('location', 'location_parents', 'location_parents_ids', 'location_parents_fks'),
     rollbackParents: many_to_many_rollback('location-parents', 'location_parents_fks', 'location_pk'),
 });
 

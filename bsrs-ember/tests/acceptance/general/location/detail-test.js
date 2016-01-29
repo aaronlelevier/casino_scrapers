@@ -988,7 +988,7 @@ test('clicking and typing into power select for location will not filter if spac
 });
 
 /*PARENTS*/
-test('clicking and typing into power select for location will fire off xhr request for all location', (assert) => {
+test('clicking and typing into power select for location will fire off xhr request for all location parents', (assert) => {
     page.visitDetail();
     andThen(() => {
         let location = store.find('location', LD.idOne);

@@ -25,30 +25,12 @@ let extract_category = (model, store, role_existing, category_deserializer) => {
         }
     });
     server_sum_category_fks.push(...prevented_duplicate_m2m);
-    let m2m_to_remove = all_filtered_models.filter((m2m) => {
+    let m2m_to_remove = all_join_models.filter((m2m) => {
         return Ember.$.inArray(m2m.get('id'), server_sum_category_fks) < 0 && m2m.get('role_fk') === model.id;
     });
     m2m_to_remove.forEach((m2m) => {
         store.push('role-category', {id: m2m.get('id'), removed: true});
     });
-    //check for join models not returned from server with no categories
-    all_join_models.forEach((join_model) => {
-        if (Ember.$.inArray(join_model.get('id'), server_sum_category_fks) === -1) {
-            store.push('role-category', {id: join_model.get('id'), removed: true});
-        }
-    });
-    // //check for join models not returned from server with categories
-    // all_filtered_models.forEach((join_model) => {
-    //     if (Ember.$.inArray(join_model.get('id'), server_sum_category_fks) === -1) {
-    //         store.push('role-category', {id: join_model.get('id'), removed: true});
-    //     }
-    // });
-    // //check for join models not returned from server with no categories
-    // all_join_models.forEach((join_model) => {
-    //     if (Ember.$.inArray(join_model.get('id'), server_sum_category_fks) === -1) {
-    //         store.push('role-category', {id: join_model.get('id'), removed: true});
-    //     }
-    // });
     delete model.categories;
     return server_sum_category_fks;
 };

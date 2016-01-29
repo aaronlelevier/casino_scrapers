@@ -15,7 +15,7 @@ var ChildrenMixin = Ember.Mixin.create({
     location_children: many_to_many('location-children', 'location_pk'),
     add_child: add_many_to_many('location-children', 'location', 'child_pk', 'location_pk'),
     remove_child: remove_many_to_many('location-children', 'child_pk', 'location_children'),
-    saveChildren: many_to_many_save('location_children', 'location_children_ids', 'location_children_fks'),
+    saveChildren: many_to_many_save('location', 'location_children', 'location_children_ids', 'location_children_fks'),
     rollbackChildren: many_to_many_rollback('location-children', 'location_children_fks', 'location_pk'),
 });
 
