@@ -679,7 +679,7 @@ test('clicking and typing into power select for location will fire off xhr reque
     });
 });
 
-test('scott starting with multiple parents, can remove all parents (while not populating options) and add back', (assert) => {
+test('starting with multiple parents, can remove all parents (while not populating options) and add back', (assert) => {
     page.visitNew();
     andThen(() => {
         let location = store.find('location',UUID.value);

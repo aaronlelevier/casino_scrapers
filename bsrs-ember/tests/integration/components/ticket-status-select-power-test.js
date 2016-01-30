@@ -117,3 +117,24 @@ test('should be able to select new status when ticket already has a status', fun
     assert.deepEqual(status_one.get('tickets'), []);
     assert.deepEqual(status_two.get('tickets'), [TD.idOne]);
 });
+
+test('each status shows up as a valid select option', function(assert) {
+    run(() => {
+        store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey, tickets: [TD.idOne]});
+        store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwoKey});
+        ticket = store.push('ticket', {id: TD.idOne, status_fk: TD.statusOneId});
+    });
+    let statuses = store.find('ticket-status');
+    this.set('model', ticket);
+    this.set('statuses', statuses);
+    this.render(hbs`{{tickets/ticket-single model=model statuses=statuses}}`);
+    assert.ok(this.$('.tag:eq(1)').hasClass('ticket-status-new'));
+    let $component = this.$('.t-ticket-status-select');
+    assert.equal($component.length, 1);
+    this.$('.t-ticket-status-select-trigger').mousedown();
+    assert.equal($(DROPDOWN).length, 1);
+    run(() => {
+        $(`.ember-power-select-option:contains(${TD.statusTwoKey})`).mouseup();
+    });
+    assert.ok(this.$('.tag:eq(1)').hasClass('ticket-status-deferred'));
+});
