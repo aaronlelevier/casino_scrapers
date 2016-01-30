@@ -41,7 +41,7 @@ const PARENTS_DROPDOWN = '.t-location-parent-select-dropdown > .ember-power-sele
 const PARENTS_SEARCH = '.t-location-parent-select-trigger > .ember-power-select-trigger-multiple-input';
 const PARENTS_MULTIPLE_OPTION = '.t-location-parent-select-trigger > .ember-power-select-multiple-option';
 
-module('scott Acceptance | location detail-test', {
+module('Acceptance | location detail-test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');

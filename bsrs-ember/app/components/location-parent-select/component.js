@@ -22,7 +22,7 @@ var LocationParentMulti = Ember.Component.extend({
             }); 
         },
         update_filter(search) {
-            const llevel_id = this.get('location.location_level.id');
+            const llevel_id = this.get('location.location_level.id') ? this.get('location.location_level.id') : this.get('location.top_location_level.id');
             const repo = this.get('repository');
             return new Ember.RSVP.Promise((resolve, reject) => {
                 Ember.run.later(() => {
