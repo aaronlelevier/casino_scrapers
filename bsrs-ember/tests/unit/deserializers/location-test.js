@@ -66,14 +66,14 @@ test('location deserializer returns correct data with no current location_level 
     assert.ok(original.get('isNotDirty'));
 });
 
-test('location deserializer returns correct data with already present location_level (detail)', (assert) => {
+test('(2) location deserializer returns correct data with already present location_level (detail)', (assert) => {
     let location;
     let json = LF.generate(LD.unusedId);
     location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
     run(() => {
         subject.deserialize(json, LD.unusedId);
     });
-    assert.deepEqual(location_level.get('locations'), [LD.idOne, LD.unusedId]);
+    assert.deepEqual(location_level.get('locations'), [LD.idOne, LD.unusedId, LD.idTwo, LD.idThree, LD.idParent, LD.idParentTwo]);
     assert.ok(location_level.get('isNotDirty'));
     let loc = store.find('location', LD.idOne);
     assert.equal(loc.get('location_level_fk'), LLD.idOne);
@@ -88,7 +88,7 @@ test('location deserializer returns correct data with no current location_level 
         subject.deserialize(json, LD.unusedId);
     });
     let original = store.find('location-level', LLD.idOne);
-    assert.deepEqual(original.get('locations'), [LD.idOne, LD.unusedId]);
+    assert.deepEqual(location_level.get('locations'), [LD.idOne, LD.unusedId, LD.idTwo, LD.idThree, LD.idParent, LD.idParentTwo]);
     assert.ok(original.get('isNotDirty'));
     assert.equal(store.find('location', LD.unusedId).get('location_level.name'), LLD.nameCompany);
 });
@@ -101,7 +101,7 @@ test('location array in location level will not be duplicated and deserializer r
         subject.deserialize(json, LD.idOne);
     });
     let original = store.find('location-level', LLD.idOne);
-    assert.deepEqual(original.get('locations'), [LD.idOne]);
+    assert.deepEqual(location_level.get('locations'), [LD.idOne, LD.idTwo, LD.idThree, LD.idParent, LD.idParentTwo]);
     let loc = store.find('location', LD.idOne);
     assert.equal(loc.get('location_level_fk'), LLD.idOne);
     assert.ok(original.get('isNotDirty'));
