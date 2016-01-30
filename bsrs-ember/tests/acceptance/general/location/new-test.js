@@ -9,6 +9,12 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LDS from 'bsrs-ember/vendor/defaults/location-status';
+import ED from 'bsrs-ember/vendor/defaults/email';
+import EF from 'bsrs-ember/vendor/email_fixtures';
+import ETD from 'bsrs-ember/vendor/defaults/email-type';
+import PNF from 'bsrs-ember/vendor/phone_number_fixtures';
+import PND from 'bsrs-ember/vendor/defaults/phone-number';
+import PNTD from 'bsrs-ember/vendor/defaults/phone-number-type';
 import AD from 'bsrs-ember/vendor/defaults/address';
 import AF from 'bsrs-ember/vendor/address_fixtures';
 import ATD from 'bsrs-ember/vendor/defaults/address-type';
@@ -19,7 +25,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/location';
 import random from 'bsrs-ember/models/random';
-import {address_put_payload, new_put_payload} from 'bsrs-ember/tests/helpers/payloads/location';
+import {email_payload, phone_number_payload, address_put_payload, new_put_payload} from 'bsrs-ember/tests/helpers/payloads/location';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_locations_url;
@@ -28,6 +34,13 @@ const LOCATION_NEW_URL = BASE_URL + '/new/1';
 const DJANGO_LOCATION_URL = PREFIX + '/admin/locations/';
 const DETAIL_URL = BASE_URL + '/' + LD.idOne;
 const DJANGO_LOCATION_NEW_URL = PREFIX + DJANGO_LOCATION_URL + LD.idOne + '/';
+const CHILDREN = '.t-location-children-select > .ember-basic-dropdown-trigger';
+const CHILDREN_DROPDOWN = '.t-location-children-select-dropdown > .ember-power-select-options';
+const CHILDREN_SEARCH = '.t-location-children-select-trigger > .ember-power-select-trigger-multiple-input';
+const PARENTS = '.t-location-parent-select > .ember-basic-dropdown-trigger';
+const PARENTS_DROPDOWN = '.t-location-parent-select-dropdown > .ember-power-select-options';
+const PARENTS_SEARCH = '.t-location-parent-select-trigger > .ember-power-select-trigger-multiple-input';
+const PARENTS_MULTIPLE_OPTION = '.t-location-parent-select-trigger > .ember-power-select-multiple-option';
 
 let application, store, payload, list_xhr, original_uuid;
 
@@ -35,7 +48,7 @@ module('Acceptance | location-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        list_xhr = xhr(DJANGO_LOCATION_URL + '?page=1', "GET", null, {}, 200, LOCATION_FIXTURES.empty());
+        list_xhr = xhr(DJANGO_LOCATION_URL + '?page=1', "GET", null, {}, 201, LOCATION_FIXTURES.empty());
         payload = {
             id: UUID.value,
             name: LD.storeName,
@@ -136,7 +149,7 @@ test('validation works and when hit save, we do same post', (assert) => {
 
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
     clearxhr(list_xhr);
-    visit(LOCATION_NEW_URL);
+    page.visitNew();
     fillIn('.t-location-name', LD.storeName);
     generalPage.cancel();
     andThen(() => {
@@ -157,7 +170,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
 });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
-    visit(LOCATION_NEW_URL);
+    page.visitNew();
     fillIn('.t-location-name', LD.storeName);
     generalPage.cancel();
     andThen(() => {
@@ -180,7 +193,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
-    visit(LOCATION_NEW_URL);
+    page.visitNew();
     generalPage.cancel();
     andThen(() => {
         assert.equal(store.find('location').get('length'), 1);
@@ -214,7 +227,7 @@ test('adding a new location should allow for another new location to be created 
 
 /* PHONE NUMBER AND ADDRESS */
 test('newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-    visit(LOCATION_NEW_URL);
+    page.visitNew();
     click('.t-add-btn:eq(0)');
     andThen(() => {
         assert.equal(store.find('phonenumber').get('length'), 1);
@@ -235,7 +248,7 @@ test('newly added phone numbers without a valid number are ignored and removed w
 });
 
 test('newly added email without a valid email are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-    visit(LOCATION_NEW_URL);
+    page.visitNew();
     click('.t-add-email-btn:eq(0)');
     andThen(() => {
         assert.equal(store.find('email').get('length'), 1);
@@ -256,7 +269,7 @@ test('newly added email without a valid email are ignored and removed when user 
 });
 
 test('newly added addresses without a valid name are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-    visit(LOCATION_NEW_URL);
+    page.visitNew();
     click('.t-add-address-btn:eq(0)');
     andThen(() => {
         assert.equal(store.find('address').get('length'), 1);
@@ -277,7 +290,7 @@ test('newly added addresses without a valid name are ignored and removed when us
 });
 
 test('phone numbers without a valid number are ignored and removed on save', (assert) => {
-    visit(LOCATION_NEW_URL);
+    page.visitNew();
     fillIn('.t-location-name', LD.storeName);
     fillIn('.t-location-number', LD.storeNumber);
     page.locationLevelClickDropdown();
@@ -311,7 +324,7 @@ test('phone numbers without a valid number are ignored and removed on save', (as
 });
 
 test('emails without a valid email are ignored and removed on save', (assert) => {
-    visit(LOCATION_NEW_URL);
+    page.visitNew();
     fillIn('.t-location-name', LD.storeName);
     fillIn('.t-location-number', LD.storeNumber);
     page.locationLevelClickDropdown();
@@ -344,7 +357,7 @@ test('emails without a valid email are ignored and removed on save', (assert) =>
 });
 
 test('newly added addresses without a valid name are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-    visit(LOCATION_NEW_URL);
+    page.visitNew();
     click('.t-add-address-btn:eq(0)');
     andThen(() => {
         assert.equal(store.find('address').get('length'), 1);
@@ -365,7 +378,7 @@ test('newly added addresses without a valid name are ignored and removed when us
 });
 
 test('address without a valid address or zip code are ignored and removed on save', (assert) => {
-    visit(LOCATION_NEW_URL);
+    page.visitNew();
     fillIn('.t-location-name', LD.storeName);
     fillIn('.t-location-number', LD.storeNumber);
     page.locationLevelClickDropdown();
@@ -417,32 +430,39 @@ test('address without a valid address or zip code are ignored and removed on sav
     });
 });
 
-// test('when you change a related phone numbers type it will be persisted correctly', (assert) => {
-//     visit(LOCATION_NEW_URL);
-//     var phone_numbers = PNF.put({id: PND.idOne, type: PNTD.mobileId});
-//     var payload = LF.put({id: LD.idOne, phone_numbers: phone_numbers});
-//     fillIn('.t-multi-phone-type:eq(0)', PNTD.mobileId);
-//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(),LOCATION_URL);
-//     });
-// });
+test('when you change a related phone numbers type it will be persisted correctly', (assert) => {
+    page.visitNew();
+    fillIn('.t-location-name', LD.storeName);
+    fillIn('.t-location-number', LD.storeNumber);
+    page.locationLevelClickDropdown();
+    page.locationLevelClickOptionOne();
+    var phone_numbers = PNF.put({id: PND.idOne, type: PNTD.officeId});
+    click('.t-add-btn:eq(0)');
+    fillIn('.t-new-entry:eq(0)', PND.numberOne);
+    xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(phone_number_payload), {}, 201);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL);
+    });
+});
 
-// test('when you change a related emails type it will be persisted correctly', (assert) => {
-//     visit(LOCATION_NEW_URL);
-//     var emails = EF.put({id: ED.idOne, type: ETD.personalId});
-//     var payload = LF.put({id: LD.idOne, emails: emails});
-//     fillIn('.t-multi-email-type:eq(0)', ETD.personalId);
-//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(),LOCATION_URL);
-//     });
-// });
+test('when you change a related emails type it will be persisted correctly', (assert) => {
+    page.visitNew();
+    fillIn('.t-location-name', LD.storeName);
+    fillIn('.t-location-number', LD.storeNumber);
+    page.locationLevelClickDropdown();
+    page.locationLevelClickOptionOne();
+    click('.t-add-email-btn:eq(0)');
+    fillIn('.t-new-entry:eq(0)', ED.emailOne);
+    xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(email_payload), {}, 201);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL);
+    });
+});
 
 test('when you change a related address type it will be persisted correctly', (assert) => {
-    visit(LOCATION_NEW_URL);
+    page.visitNew();
     fillIn('.t-location-name', LD.storeName);
     fillIn('.t-location-number', LD.storeNumber);
     page.locationLevelClickDropdown();
@@ -457,234 +477,97 @@ test('when you change a related address type it will be persisted correctly', (a
     });
 });
 
-// test('when user changes an attribute on phonenumber and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-//     visit(LOCATION_NEW_URL);
-//     fillIn('.t-multi-phone-type:eq(0)', PNTD.mobileId);
-//     generalPage.cancel();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), LOCATION_NEW_URL);
-//             assert.ok(generalPage.modalIsVisible());
-//         });
-//     });
-//     generalPage.clickModalRollback();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), LOCATION_URL);
-//             var location = store.find('location', LD.idOne);
-//             var phone_numbers = store.find('phonenumber', LD.idOne);
-//             assert.equal(phone_numbers.source[0].get('type'), PNTD.officeId);
-//         });
-//     });
-// });
-
-// test('when user changes an attribute on email and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-//     visit(LOCATION_NEW_URL);
-//     fillIn('.t-multi-email-type:eq(0)', ETD.personalId);
-//     generalPage.cancel();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), LOCATION_NEW_URL);
-//             assert.ok(generalPage.modalIsVisible());
-//         });
-//     });
-//     generalPage.clickModalRollback();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), LOCATION_URL);
-//             var location = store.find('location', LD.idOne);
-//             var email = store.find('email', LD.idOne);
-//             assert.equal(email.source[0].get('type'), ETD.workId);
-//         });
-//     });
-// });
-
-// test('when user changes an attribute on address and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-//     visit(LOCATION_NEW_URL);
-//     fillIn('.t-address-type:eq(0)', ATD.shippingId);
-//     generalPage.cancel();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), LOCATION_NEW_URL);
-//             assert.ok(generalPage.modalIsVisible());
-//         });
-//     });
-//     generalPage.clickModalRollback();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), LOCATION_URL);
-//             var location = store.find('location', LD.idOne);
-//             var addresses = store.find('address', LD.idOne);
-//             assert.equal(addresses.source[0].get('type'), ATD.officeId);
-//         });
-//     });
-// });
-
-// test('when user removes a phone number clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-//     visit(LOCATION_NEW_URL);
-//     click('.t-del-btn:eq(0)');
-//     generalPage.cancel();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), LOCATION_NEW_URL);
-//             assert.ok(generalPage.modalIsVisible());
-//         });
-//     });
-//     generalPage.clickModalRollback();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), LOCATION_URL);
-//             var location = store.find('location', LD.idOne);
-//             var phone_numbers = store.find('phonenumber', LD.idOne);
-//             assert.equal(phone_numbers.source[0].get('type'), PNTD.officeId);
-//         });
-//     });
-// });
-
-// test('when user removes a email clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-//     visit(LOCATION_NEW_URL);
-//     click('.t-del-email-btn:eq(0)');
-//     generalPage.cancel();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), LOCATION_NEW_URL);
-//             assert.ok(generalPage.modalIsVisible());
-//         });
-//     });
-//     generalPage.clickModalRollback();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), LOCATION_URL);
-//             var location = store.find('location', LD.idOne);
-//             var emails = store.find('email', LD.idOne);
-//             assert.equal(emails.source[0].get('type'), ETD.workId);
-//         });
-//     });
-// });
-
-// test('when user removes an address clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-//     visit(LOCATION_NEW_URL);
-//     click('.t-del-address-btn:eq(0)');
-//     generalPage.cancel();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), LOCATION_NEW_URL);
-//             assert.ok(generalPage.modalIsVisible());
-//         });
-//     });
-//     generalPage.clickModalRollback();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), LOCATION_URL);
-//             var location = store.find('location', LD.idOne);
-//             var addresses = store.find('address', LD.idOne);
-//             assert.equal(addresses.source[0].get('type'), ATD.officeId);
-//         });
-//     });
-// });
-
-
 // /*LOCATION TO CHILDREN M2M*/
-// test('clicking and typing into power select for location will fire off xhr request for all location', (assert) => {
-//     page.visitDetail();
-//     andThen(() => {
-//         let location = store.find('location', LD.idOne);
-//         assert.equal(location.get('children').get('length'), 2);
-//         assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
-//         assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
-//     });
+// test('scott clicking and typing into power select for location will fire off xhr request for all children locations', (assert) => {
+//     page.visitNew();
 //     let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/?name__icontains=a`;
 //     let response = LF.search();
 //     response.results.push(LF.get(LD.unusedId, LD.apple));
-//     xhr(location_endpoint, 'GET', null, {}, 200, response);
+//     xhr(location_endpoint, 'GET', null, {}, 201, response);
 //     page.childrenClickDropdown();
-//     //testing filter out new flag in repo
-//     run(() => {
-//         store.push('location', {id: 'testingNewFilter', name: 'watA', new: true});
-//     });
 //     fillIn(`${CHILDREN_SEARCH}`, 'a');
 //     andThen(() => {
 //         assert.equal(currentURL(), LOCATION_NEW_URL);
-//         assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
-//         assert.equal(page.childrenOptionLength(), 4);
-//         assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(1)`).text().trim(), LD.storeNameParent);
+//         // assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
+//         // assert.equal(page.childrenOptionLength(), 4);
+//         // assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(1)`).text().trim(), LD.storeNameParent);
 //     });
-//     page.childrenClickApple();
-//     andThen(() => {
-//         let location = store.find('location', LD.idOne);
-//         assert.equal(location.get('children').get('length'), 3);
-//         assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
-//         assert.equal(location.get('children').objectAt(1).get('name'), LD.storeNameThree);
-//         assert.equal(location.get('children').objectAt(2).get('name'), LD.apple);
-//         assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
-//         assert.equal(page.childrenTwoSelected().indexOf(LD.storeNameThree), 2);
-//         assert.equal(page.childrenThreeSelected().indexOf(LD.apple), 2);
-//         assert.ok(location.get('isDirtyOrRelatedDirty'));
-//     });
-//     page.childrenClickDropdown();
-//     fillIn(`${CHILDREN_SEARCH}`, '');
-//     andThen(() => {
-//         assert.equal(page.childrenOptionLength(), 1);
-//         assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
-//     });
-//     fillIn(`${CHILDREN_SEARCH}`, 'a');
-//     andThen(() => {
-//         let location = store.find('location', LD.idOne);
-//         assert.equal(location.get('children').get('length'), 3);
-//         assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
-//         assert.equal(location.get('children').objectAt(1).get('name'), LD.storeNameThree);
-//         assert.equal(location.get('children').objectAt(2).get('name'), LD.apple);
-//         assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
-//         assert.equal(page.childrenTwoSelected().indexOf(LD.storeNameThree), 2);
-//         assert.equal(page.childrenThreeSelected().indexOf(LD.apple), 2);
-//         assert.ok(location.get('isDirtyOrRelatedDirty'));
-//     });
-//     //search specific children
-//     page.childrenClickDropdown();
-//     let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/?name__icontains=BooNdocks`;
-//     let response_2 = LF.list();
-//     response_2.results.push(LF.get('abc123', LD.boondocks));
-//     xhr(location_endpoint_2, 'GET', null, {}, 200, response_2);
-//     fillIn(`${CHILDREN_SEARCH}`, 'BooNdocks');
-//     andThen(() => {
-//         assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
-//         assert.equal(page.childrenOptionLength(), 1);
-//         assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), LD.boondocks);
-//         let location = store.find('location', LD.idOne);
-//         assert.equal(location.get('children').get('length'), 3);
-//         assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
-//         assert.equal(location.get('children').objectAt(1).get('name'), LD.storeNameThree);
-//         assert.equal(location.get('children').objectAt(2).get('name'), LD.apple);
-//         assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
-//         assert.equal(page.childrenTwoSelected().indexOf(LD.storeNameThree), 2);
-//         assert.equal(page.childrenThreeSelected().indexOf(LD.apple), 2);
-//         assert.ok(location.get('isDirtyOrRelatedDirty'));
-//     });
-//     page.childrenClickOptionOne();
-//     andThen(() => {
-//         let location = store.find('location', LD.idOne);
-//         assert.equal(location.get('children').get('length'), 4);
-//         assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
-//         assert.equal(location.get('children').objectAt(1).get('name'), LD.storeNameThree);
-//         assert.equal(location.get('children').objectAt(2).get('name'), LD.apple);
-//         assert.equal(location.get('children').objectAt(3).get('name'), LD.boondocks);
-//         assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
-//         assert.equal(page.childrenTwoSelected().indexOf(LD.storeNameThree), 2);
-//         assert.equal(page.childrenThreeSelected().indexOf(LD.apple), 2);
-//         assert.equal(page.childrenFourSelected().indexOf(LD.boondocks), 2);
-//         assert.ok(location.get('isDirtyOrRelatedDirty'));
-//     });
-//     let response_put = LF.detail(LD.idOne);
-//     let payload = LF.put({id: LD.idOne, children: [LD.idTwo, LD.idThree, LD.unusedId, 'abc123']});
-//     xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response_put);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), LOCATION_URL);
-//     });
+//     // page.childrenClickApple();
+//     // andThen(() => {
+//     //     let location = store.find('location', LD.idOne);
+//     //     assert.equal(location.get('children').get('length'), 3);
+//     //     assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
+//     //     assert.equal(location.get('children').objectAt(1).get('name'), LD.storeNameThree);
+//     //     assert.equal(location.get('children').objectAt(2).get('name'), LD.apple);
+//     //     assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
+//     //     assert.equal(page.childrenTwoSelected().indexOf(LD.storeNameThree), 2);
+//     //     assert.equal(page.childrenThreeSelected().indexOf(LD.apple), 2);
+//     //     assert.ok(location.get('isDirtyOrRelatedDirty'));
+//     // });
+//     // page.childrenClickDropdown();
+//     // fillIn(`${CHILDREN_SEARCH}`, '');
+//     // andThen(() => {
+//     //     assert.equal(page.childrenOptionLength(), 1);
+//     //     assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
+//     // });
+//     // fillIn(`${CHILDREN_SEARCH}`, 'a');
+//     // andThen(() => {
+//     //     let location = store.find('location', LD.idOne);
+//     //     assert.equal(location.get('children').get('length'), 3);
+//     //     assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
+//     //     assert.equal(location.get('children').objectAt(1).get('name'), LD.storeNameThree);
+//     //     assert.equal(location.get('children').objectAt(2).get('name'), LD.apple);
+//     //     assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
+//     //     assert.equal(page.childrenTwoSelected().indexOf(LD.storeNameThree), 2);
+//     //     assert.equal(page.childrenThreeSelected().indexOf(LD.apple), 2);
+//     //     assert.ok(location.get('isDirtyOrRelatedDirty'));
+//     // });
+//     // //search specific children
+//     // page.childrenClickDropdown();
+//     // let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/?name__icontains=BooNdocks`;
+//     // let response_2 = LF.list();
+//     // response_2.results.push(LF.get('abc123', LD.boondocks));
+//     // xhr(location_endpoint_2, 'GET', null, {}, 201, response_2);
+//     // fillIn(`${CHILDREN_SEARCH}`, 'BooNdocks');
+//     // andThen(() => {
+//     //     assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
+//     //     assert.equal(page.childrenOptionLength(), 1);
+//     //     assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), LD.boondocks);
+//     //     let location = store.find('location', LD.idOne);
+//     //     assert.equal(location.get('children').get('length'), 3);
+//     //     assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
+//     //     assert.equal(location.get('children').objectAt(1).get('name'), LD.storeNameThree);
+//     //     assert.equal(location.get('children').objectAt(2).get('name'), LD.apple);
+//     //     assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
+//     //     assert.equal(page.childrenTwoSelected().indexOf(LD.storeNameThree), 2);
+//     //     assert.equal(page.childrenThreeSelected().indexOf(LD.apple), 2);
+//     //     assert.ok(location.get('isDirtyOrRelatedDirty'));
+//     // });
+//     // page.childrenClickOptionOne();
+//     // andThen(() => {
+//     //     let location = store.find('location', LD.idOne);
+//     //     assert.equal(location.get('children').get('length'), 4);
+//     //     assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
+//     //     assert.equal(location.get('children').objectAt(1).get('name'), LD.storeNameThree);
+//     //     assert.equal(location.get('children').objectAt(2).get('name'), LD.apple);
+//     //     assert.equal(location.get('children').objectAt(3).get('name'), LD.boondocks);
+//     //     assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
+//     //     assert.equal(page.childrenTwoSelected().indexOf(LD.storeNameThree), 2);
+//     //     assert.equal(page.childrenThreeSelected().indexOf(LD.apple), 2);
+//     //     assert.equal(page.childrenFourSelected().indexOf(LD.boondocks), 2);
+//     //     assert.ok(location.get('isDirtyOrRelatedDirty'));
+//     // });
+//     // let response_put = LF.detail(LD.idOne);
+//     // let payload = LF.put({id: LD.idOne, children: [LD.idTwo, LD.idThree, LD.unusedId, 'abc123']});
+//     // xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response_put);
+//     // generalPage.save();
+//     // andThen(() => {
+//     //     assert.equal(currentURL(), LOCATION_URL);
+//     // });
 // });
 
 // test('can remove and add back same children and save empty children', (assert) => {
-//     page.visitDetail();
+//     page.visitNew();
 //     andThen(() => {
 //         let location = store.find('location', LD.idOne);
 //         assert.equal(location.get('children').get('length'), 2);
@@ -699,7 +582,7 @@ test('when you change a related address type it will be persisted correctly', (a
 //         assert.ok(location.get('isDirtyOrRelatedDirty'));
 //     });
 //     let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/?name__icontains=a`;
-//     xhr(location_endpoint, 'GET', null, {}, 200, LF.search());
+//     xhr(location_endpoint, 'GET', null, {}, 201, LF.search());
 //     fillIn(`${CHILDREN_SEARCH}`, 'a');
 //     andThen(() => {
 //         assert.equal(page.childrenOptionLength(), 3);
@@ -725,7 +608,7 @@ test('when you change a related address type it will be persisted correctly', (a
 //         assert.ok(location.get('isDirtyOrRelatedDirty'));
 //     });
 //     location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/?name__icontains=d`;
-//     xhr(location_endpoint, 'GET', null, {}, 200, LF.search());
+//     xhr(location_endpoint, 'GET', null, {}, 201, LF.search());
 //     fillIn(`${CHILDREN_SEARCH}`, 'd');
 //     page.childrenClickOptionStoreNameTwo();
 //     andThen(() => {
@@ -736,7 +619,7 @@ test('when you change a related address type it will be persisted correctly', (a
 //         assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
 //     });
 //     let payload = LF.put({id: LD.idOne, children: [LD.idTwo, LD.idThree]});
-//     xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
+//     xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201);
 //     generalPage.save();
 //     andThen(() => {
 //         assert.equal(currentURL(), LOCATION_URL);
@@ -744,7 +627,7 @@ test('when you change a related address type it will be persisted correctly', (a
 // });
 
 // test('starting with multiple children, can remove all children (while not populating options) and add back', (assert) => {
-//     page.visitDetail();
+//     page.visitNew();
 //     andThen(() => {
 //         let location = store.find('location', LD.idOne);
 //         assert.equal(location.get('children').get('length'), 2);
@@ -766,7 +649,7 @@ test('when you change a related address type it will be persisted correctly', (a
 //         assert.ok(location.get('isDirtyOrRelatedDirty'));
 //     });
 //     let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/?name__icontains=d`;
-//     xhr(location_endpoint, 'GET', null, {}, 200, LF.search());
+//     xhr(location_endpoint, 'GET', null, {}, 201, LF.search());
 //     fillIn(`${CHILDREN_SEARCH}`, 'd');
 //     page.childrenClickOptionStoreNameTwo();
 //     andThen(() => {
@@ -776,7 +659,7 @@ test('when you change a related address type it will be persisted correctly', (a
 //         assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
 //     });
 //     location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/?name__icontains=g`;
-//     xhr(location_endpoint, 'GET', null, {}, 200, LF.search());
+//     xhr(location_endpoint, 'GET', null, {}, 201, LF.search());
 //     fillIn(`${CHILDREN_SEARCH}`, 'g');
 //     page.childrenClickOptionStoreNameThree();
 //     andThen(() => {
@@ -786,7 +669,7 @@ test('when you change a related address type it will be persisted correctly', (a
 //         assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
 //     });
 //     let payload = LF.put({id: LD.idOne, children: [LD.idTwo, LD.idThree]});
-//     ajax(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
+//     ajax(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201);
 //     generalPage.save();
 //     andThen(() => {
 //         assert.equal(currentURL(), LOCATION_URL);
@@ -794,7 +677,7 @@ test('when you change a related address type it will be persisted correctly', (a
 // });
 
 // test('clicking and typing into power select for location will not filter if spacebar pressed', (assert) => {
-//     page.visitDetail();
+//     page.visitNew();
 //     page.childrenClickDropdown();
 //     fillIn(`${CHILDREN_SEARCH}`, ' ');
 //     andThen(() => {
@@ -804,7 +687,7 @@ test('when you change a related address type it will be persisted correctly', (a
 //     });
 //     let response = LF.detail(LD.idOne);
 //     let payload = LF.put({id: LD.idOne, children: [LD.idTwo, LD.idThree]});
-//     xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
+//     xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response);
 //     generalPage.save();
 //     andThen(() => {
 //         assert.equal(currentURL(), LOCATION_URL);
@@ -813,7 +696,7 @@ test('when you change a related address type it will be persisted correctly', (a
 
 // /*PARENTS*/
 // test('clicking and typing into power select for location will fire off xhr request for all location', (assert) => {
-//     page.visitDetail();
+//     page.visitNew();
 //     andThen(() => {
 //         let location = store.find('location', LD.idOne);
 //         assert.equal(location.get('parents').get('length'), 2);
@@ -823,7 +706,7 @@ test('when you change a related address type it will be persisted correctly', (a
 //     let location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LD.idOne}/?name__icontains=a`;
 //     let response = LF.search();
 //     response.results.push(LF.get(LD.unusedId, LD.apple));
-//     xhr(location_endpoint, 'GET', null, {}, 200, response);
+//     xhr(location_endpoint, 'GET', null, {}, 201, response);
 //     page.parentsClickDropdown();
 //     //testing filter out new flag in repo
 //     run(() => {
@@ -871,7 +754,7 @@ test('when you change a related address type it will be persisted correctly', (a
 //     let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-parents/${LD.idOne}/?name__icontains=BooNdocks`;
 //     let response_2 = LF.list();
 //     response_2.results.push(LF.get('abc123', LD.boondocks));
-//     xhr(location_endpoint_2, 'GET', null, {}, 200, response_2);
+//     xhr(location_endpoint_2, 'GET', null, {}, 201, response_2);
 //     fillIn(`${PARENTS_SEARCH}`, 'BooNdocks');
 //     andThen(() => {
 //         assert.equal(page.parentsSelected().indexOf(LD.storeNameParent), 2);
@@ -903,7 +786,7 @@ test('when you change a related address type it will be persisted correctly', (a
 //     });
 //     let response_put = LF.detail(LD.idOne);
 //     let payload = LF.put({id: LD.idOne, parents: [LD.idParent, LD.idParentTwo, LD.unusedId, 'abc123']});
-//     xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response_put);
+//     xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response_put);
 //     generalPage.save();
 //     andThen(() => {
 //         assert.equal(currentURL(), LOCATION_URL);
@@ -911,7 +794,7 @@ test('when you change a related address type it will be persisted correctly', (a
 // });
 
 // test('can remove and add back same parents and save empty parents', (assert) => {
-//     page.visitDetail();
+//     page.visitNew();
 //     andThen(() => {
 //         let location = store.find('location', LD.idOne);
 //         assert.equal(location.get('parents').get('length'), 2);
@@ -926,7 +809,7 @@ test('when you change a related address type it will be persisted correctly', (a
 //         assert.ok(location.get('isDirtyOrRelatedDirty'));
 //     });
 //     let location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LD.idOne}/?name__icontains=a`;
-//     xhr(location_endpoint, 'GET', null, {}, 200, LF.search());
+//     xhr(location_endpoint, 'GET', null, {}, 201, LF.search());
 //     fillIn(`${PARENTS_SEARCH}`, 'a');
 //     andThen(() => {
 //         assert.equal(page.parentsOptionLength(), 3);
@@ -952,7 +835,7 @@ test('when you change a related address type it will be persisted correctly', (a
 //         assert.ok(location.get('isDirtyOrRelatedDirty'));
 //     });
 //     location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LD.idOne}/?name__icontains=p`;
-//     xhr(location_endpoint, 'GET', null, {}, 200, LF.search());
+//     xhr(location_endpoint, 'GET', null, {}, 201, LF.search());
 //     fillIn(`${PARENTS_SEARCH}`, 'p');
 //     page.parentsClickOptionStoreNameTwo();
 //     andThen(() => {
@@ -963,7 +846,7 @@ test('when you change a related address type it will be persisted correctly', (a
 //         assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
 //     });
 //     let payload = LF.put({id: LD.idOne, parents: [LD.idParent, LD.idParentTwo]});
-//     xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
+//     xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201);
 //     generalPage.save();
 //     andThen(() => {
 //         assert.equal(currentURL(), LOCATION_URL);
@@ -971,7 +854,7 @@ test('when you change a related address type it will be persisted correctly', (a
 // });
 
 // test('starting with multiple parents, can remove all parents (while not populating options) and add back', (assert) => {
-//     page.visitDetail();
+//     page.visitNew();
 //     andThen(() => {
 //         let location = store.find('location', LD.idOne);
 //         assert.equal(location.get('parents').get('length'), 2);
@@ -993,7 +876,7 @@ test('when you change a related address type it will be persisted correctly', (a
 //         assert.ok(location.get('isDirtyOrRelatedDirty'));
 //     });
 //     let location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LD.idOne}/?name__icontains=p`;
-//     xhr(location_endpoint, 'GET', null, {}, 200, LF.search());
+//     xhr(location_endpoint, 'GET', null, {}, 201, LF.search());
 //     fillIn(`${PARENTS_SEARCH}`, 'p');
 //     page.parentsClickOptionStoreNameTwo();
 //     andThen(() => {
@@ -1011,7 +894,7 @@ test('when you change a related address type it will be persisted correctly', (a
 //         assert.equal(page.parentsSelected().indexOf(LD.storeNameParent), 2);
 //     });
 //     let payload = LF.put({id: LD.idOne, parents: [LD.idParent, LD.idParentTwo]});
-//     ajax(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
+//     ajax(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201);
 //     generalPage.save();
 //     andThen(() => {
 //         assert.equal(currentURL(), LOCATION_URL);
@@ -1019,7 +902,7 @@ test('when you change a related address type it will be persisted correctly', (a
 // });
 
 // test('clicking and typing into power select for location will not filter if spacebar pressed', (assert) => {
-//     page.visitDetail();
+//     page.visitNew();
 //     page.parentsClickDropdown();
 //     fillIn(`${PARENTS_SEARCH}`, ' ');
 //     andThen(() => {
@@ -1029,7 +912,7 @@ test('when you change a related address type it will be persisted correctly', (a
 //     });
 //     let response = LF.detail(LD.idOne);
 //     let payload = LF.put({id: LD.idOne, parents: [LD.idParent, LD.idParentTwo]});
-//     xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
+//     xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response);
 //     generalPage.save();
 //     andThen(() => {
 //         assert.equal(currentURL(), LOCATION_URL);

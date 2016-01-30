@@ -227,7 +227,7 @@ class LocationQuerySet(SelfReferencingQuerySet):
             raise
         return self.filter(location_level__in=child_levels)
 
-    def get_level_parents(self, location, level_id):
+    def get_level_parents(self, level_id):
         '''
         :location: Child ``Location``
             level_id might be different than whats stored in the db
@@ -260,11 +260,11 @@ class LocationManager(SelfReferencingManager):
         '''
         return self.get_queryset().get_level_children(location, llevel_id)
 
-    def get_level_parents(self, location, llevel_id):
+    def get_level_parents(self, llevel_id):
         '''
         Get all Parent Locations at a specific LocationLevel.
         '''
-        return self.get_queryset().get_level_parents(location, llevel_id)
+        return self.get_queryset().get_level_parents(llevel_id)
 
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
