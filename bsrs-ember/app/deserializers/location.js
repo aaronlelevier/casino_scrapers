@@ -1,5 +1,6 @@
 import Ember from 'ember';
-import injectDeserializer from 'bsrs-ember/utilities/deserializer';
+
+var run = Ember.run;
 
 var extract_emails = function(model, store) {
     let email_fks = [];
@@ -7,7 +8,9 @@ var extract_emails = function(model, store) {
     emails.forEach((email) => {
         email_fks.push(email.id);
         email.model_fk = model.id;
-        store.push('email', email);
+        run(() => {
+            store.push('email', email);
+        });
     });
     delete model.emails;
     return email_fks;
@@ -19,7 +22,9 @@ var extract_phone_numbers = function(model, store) {
     phone_numbers.forEach((phone_number) => {
         phone_number_fks.push(phone_number.id);
         phone_number.model_fk = model.id;
-        store.push('phonenumber', phone_number);
+        run(() => {
+            store.push('phonenumber', phone_number);
+        });
     });
     delete model.phone_numbers;
     return phone_number_fks;
@@ -37,7 +42,7 @@ var extract_addresses = function(model, store) {
     return address_fks;
 };
 
-let extract_location_level = (model, store, location_level_deserializer) => {
+let extract_location_level = (model, store) => {
     let location_level_pk = model.location_level;
     let existing_location_level = store.find('location-level', location_level_pk);
     let locations = existing_location_level.get('locations') || [];
@@ -49,8 +54,9 @@ let extract_location_level = (model, store, location_level_deserializer) => {
         let old_location_level = store.find('location-level', old_location_level_fk);
         let locations = old_location_level.get('locations');
         if (locations.indexOf(model.id) > -1) { locations.removeObject(model.id); }
-        store.push('location-level', {id: old_location_level_fk, locations: locations});
-        // old_location_level.set('locations', locations);
+        run(() => {
+            store.push('location-level', {id: old_location_level_fk, locations: locations});
+        });
         old_location_level.save();
     }
     delete model.location_level;
@@ -67,8 +73,9 @@ var extract_location_status = function(model, store) {
         let new_status = store.find('location-status', status_id);
         let new_status_locations = new_status.get('locations') || [];
         let updated_new_status_locations = new_status_locations.concat(model.id).uniq();
-        store.push('location-status', {id: status_id, locations: updated_new_status_locations});
-        // new_status.set('locations', updated_new_status_locations);
+        run(() => {
+            store.push('location-status', {id: status_id, locations: updated_new_status_locations});
+        });
     }
     delete model.status;
     return status_id;
@@ -86,8 +93,12 @@ var extract_parents = function(model, store, location_deserializer) {
         if(location_parents.length === 0) {
             const pk = Ember.uuid();
             server_sum.push(pk);
-            store.push('location', parent);
-            store.push('location-parents', {id: pk, location_pk: model.id, parent_pk: parent.id});
+            const parent_llevel_pk = extract_location_level(parent, store);
+            Ember.set(parent, 'location_level_fk', parent_llevel_pk);
+            run(() => {
+                store.push('location', parent);
+                store.push('location-parents', {id: pk, location_pk: model.id, parent_pk: parent.id});
+            });
         }else{
             prevented_duplicate_m2m.push(location_parents[0].get('id'));
         }
@@ -97,7 +108,9 @@ var extract_parents = function(model, store, location_deserializer) {
         return Ember.$.inArray(m2m.get('id'), server_sum) < 0 && m2m.get('location_pk') === model.id;
     });
     m2m_to_remove.forEach((m2m) => {
-        store.push('location-parents', {id: m2m.get('id'), removed: true});
+        run(() => {
+            store.push('location-parents', {id: m2m.get('id'), removed: true});
+        });
     });
     delete model.parents;
     return server_sum;
@@ -115,8 +128,12 @@ var extract_children = function(model, store, location_deserializer) {
         if(location_children.length === 0) {
             const pk = Ember.uuid();
             server_sum.push(pk);
-            store.push('location', child);
-            store.push('location-children', {id: pk, location_pk: model.id, child_pk: child.id});
+            const child_llevel_pk = extract_location_level(child, store);
+            Ember.set(child, 'location_level_fk', child_llevel_pk);
+            run(() => {
+                store.push('location', child);
+                store.push('location-children', {id: pk, location_pk: model.id, child_pk: child.id});
+            });
         }else{
             prevented_duplicate_m2m.push(location_children[0].get('id'));
         }
@@ -126,23 +143,23 @@ var extract_children = function(model, store, location_deserializer) {
         return Ember.$.inArray(m2m.get('id'), server_sum) < 0 && m2m.get('location_pk') === model.id;
     });
     m2m_to_remove.forEach((m2m) => {
-        store.push('location-children', {id: m2m.get('id'), removed: true});
+        run(() => {
+            store.push('location-children', {id: m2m.get('id'), removed: true});
+        });
     });
     delete model.children;
     return server_sum;
 };
 
 var LocationDeserializer = Ember.Object.extend({
-    LocationLevelDeserializer: injectDeserializer('location-level'),
     deserialize(response, options) {
-        let location_level_deserializer = this.get('LocationLevelDeserializer');
         if (typeof options === 'undefined') {
-            this.deserialize_list(response, location_level_deserializer);
+            this.deserialize_list(response);
         } else {
-            this.deserialize_single(response, options, location_level_deserializer);
+            this.deserialize_single(response, options);
         }
     },
-    deserialize_single(response, id, location_level_deserializer) {
+    deserialize_single(response, id) {
         const store = this.get('store');
         const existing = store.find('location', id);
         const location_deserializer = this;
@@ -151,11 +168,13 @@ var LocationDeserializer = Ember.Object.extend({
             response.phone_number_fks = extract_phone_numbers(response, store);
             response.address_fks = extract_addresses(response, store);
             response.status_fk = extract_location_status(response, store);
-            response.location_level_fk = extract_location_level(response, store, location_level_deserializer);
+            response.location_level_fk = extract_location_level(response, store);
             response.location_children_fks = extract_children(response, store, location_deserializer);
             response.location_parents_fks = extract_parents(response, store, location_deserializer);
-            let location = store.push('location', response);
-            location.save();
+            run(() => {
+                let location = store.push('location', response);
+                location.save();
+            });
         }
     },
     deserialize_list(response, location_level_deserializer) {
@@ -164,9 +183,11 @@ var LocationDeserializer = Ember.Object.extend({
             const existing = store.find('location', model.id);
             if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
                 model.status_fk = extract_location_status(model, store);
-                model.location_level_fk = extract_location_level(model, store, location_level_deserializer);
-                let location = store.push('location', model);
-                location.save();
+                model.location_level_fk = extract_location_level(model, store);
+                run(() => {
+                    let location = store.push('location', model);
+                    location.save();
+                });
             }
         });
     }

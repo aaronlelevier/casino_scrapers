@@ -312,19 +312,23 @@ test('children are deserialized correctly (detail)', (assert) => {
     const location = store.find('location', LD.idOne);
     assert.equal(location.get('children').get('length'), 1); 
     assert.equal(location.get('children').objectAt(0).get('id'), LD.idTwo); 
+    assert.equal(location.get('children').objectAt(0).get('location_level.id'), LLD.idOne); 
+    assert.equal(location.get('children').objectAt(0).get('location_level_fk'), LLD.idOne); 
     assert.equal(location.get('location_children').get('length'), 1); 
     assert.equal(location.get('location_children_fks').length, 1);
 });
 
 test('parents are deserialized correctly (detail)', (assert) => {
     const response = LF.generate(LD.idOne);
-    response.parents = [LF.get(LD.idTwo)];
+    response.parents = [LF.get(LD.idParent)];
     run(() => {
         subject.deserialize(response, LD.idOne);
     });
     const location = store.find('location', LD.idOne);
     assert.equal(location.get('parents').get('length'), 1); 
-    assert.equal(location.get('parents').objectAt(0).get('id'), LD.idTwo); 
+    assert.equal(location.get('parents').objectAt(0).get('id'), LD.idParent); 
+    assert.equal(location.get('parents').objectAt(0).get('location_level.id'), LLD.idOne); 
+    assert.equal(location.get('parents').objectAt(0).get('location_level_fk'), LLD.idOne); 
     assert.equal(location.get('location_parents').get('length'), 1); 
 });
 

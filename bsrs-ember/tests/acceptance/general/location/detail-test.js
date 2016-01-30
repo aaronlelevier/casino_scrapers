@@ -259,7 +259,7 @@ test('changing location level will update related location level locations array
     });
 });
 
-/* PHONE NUMBER AND ADDRESS */
+/* PHONE NUMBER AND ADDRESS AND EMAILS*/
 test('newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
