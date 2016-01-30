@@ -216,7 +216,7 @@ class LocationType(BaseNameModel):
 class LocationQuerySet(SelfReferencingQuerySet):
     ''' '''
 
-    def get_level_children(self, location, level_id):
+    def get_level_children(self, level_id):
         '''
         :location: Parent ``Location`` to find one all of the locations one llevel deep
         '''
@@ -254,11 +254,11 @@ class LocationManager(SelfReferencingManager):
     def get_queryset(self):
         return LocationQuerySet(self.model, self._db).filter(deleted__isnull=True)
         
-    def get_level_children(self, location, llevel_id):
+    def get_level_children(self, llevel_id):
         '''
         Get all child Locations at a specific LocationLevel.
         '''
-        return self.get_queryset().get_level_children(location, llevel_id)
+        return self.get_queryset().get_level_children(llevel_id)
 
     def get_level_parents(self, llevel_id):
         '''

@@ -128,9 +128,7 @@ class LocationManagerTests(TestCase):
 
     def test_get_level_children(self):
         # setup
-        location = Location.objects.get(name='ca')
-        # test
-        children = Location.objects.get_level_children(location, location.location_level.id)
+        children = Location.objects.get_level_children(location.location_level.id)
         self.assertEqual(children.count(), 3)
 
     def test_get_level_parents(self):

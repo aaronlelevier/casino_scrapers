@@ -769,7 +769,7 @@ test('clicking and typing into power select for location will fire off xhr reque
         assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
         assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
     });
-    let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/${LLD.idOne}/?name__icontains=a`;
+    let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/?name__icontains=a`;
     let response = LF.search();
     response.results.push(...[LF.get(LD.unusedId, LD.apple), LF.get(LD.idParent, LD.storeNameParent), LF.get(LD.idParentTwo, LD.storeNameParentTwo)]);
     xhr(location_endpoint, 'GET', null, {}, 200, response);
@@ -813,7 +813,7 @@ test('clicking and typing into power select for location will fire off xhr reque
     });
     //search specific children
     page.childrenClickDropdown();
-    let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/${LLD.idOne}/?name__icontains=BooNdocks`;
+    let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/?name__icontains=BooNdocks`;
     let response_2 = LF.list();
     response_2.results.push(LF.get('abc123', LD.boondocks));
     xhr(location_endpoint_2, 'GET', null, {}, 200, response_2);
@@ -870,7 +870,7 @@ test('can remove and add back same children and save empty children', (assert) =
         assert.ok(location.get('childrenIsDirty'));
         assert.ok(location.get('isDirtyOrRelatedDirty'));
     });
-    let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/${LLD.idOne}/?name__icontains=a`;
+    let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/?name__icontains=a`;
     let response = LF.search();
     response.results.push(...[LF.get(LD.unusedId, LD.baseStoreName), LF.get(LD.idParent, LD.storeNameParent), LF.get(LD.idParentTwo, LD.storeNameParentTwo)]);
     xhr(location_endpoint, 'GET', null, {}, 200, response);
@@ -898,7 +898,7 @@ test('can remove and add back same children and save empty children', (assert) =
         assert.ok(location.get('childrenIsDirty'));
         assert.ok(location.get('isDirtyOrRelatedDirty'));
     });
-    location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/${LLD.idOne}/?name__icontains=d`;
+    location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/?name__icontains=d`;
     xhr(location_endpoint, 'GET', null, {}, 200, LF.search());
     fillIn(`${CHILDREN_SEARCH}`, 'd');
     page.childrenClickOptionStoreNameTwo();
@@ -939,7 +939,7 @@ test('starting with multiple children, can remove all children (while not popula
         assert.equal(location.get('children').get('length'), 0);
         assert.ok(location.get('isDirtyOrRelatedDirty'));
     });
-    let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/${LLD.idOne}/?name__icontains=d`;
+    let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/?name__icontains=d`;
     xhr(location_endpoint, 'GET', null, {}, 200, LF.search());
     fillIn(`${CHILDREN_SEARCH}`, 'd');
     page.childrenClickOptionStoreNameTwo();
@@ -949,7 +949,7 @@ test('starting with multiple children, can remove all children (while not popula
         assert.ok(location.get('isDirtyOrRelatedDirty'));
         assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
     });
-    location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/${LLD.idOne}/?name__icontains=g`;
+    location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/?name__icontains=g`;
     const response = LF.search();
     response.results.push(LF.get(LD.idThree, LD.storeNameThree));
     xhr(location_endpoint, 'GET', null, {}, 200, response);
