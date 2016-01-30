@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 var TicketPriorityTag = Ember.Component.extend({
     tagName: 'span',
-    className: Ember.computed(function(){
+    className: Ember.computed('item.priority', function(){
         let tagClass = this.get('item.priority_class');
         return `tag ${tagClass}`;
     }),
