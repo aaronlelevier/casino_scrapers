@@ -230,7 +230,7 @@ test('changing location level will update related location level locations array
         let location_level_two = store.find('location-level', LLD.idThree);
         assert.deepEqual(location_level_two.get('locations'), []);
         assert.equal(location.get('location_level_fk'), LLD.idOne);
-        assert.deepEqual(location_level.get('locations'), [LD.idOne]);
+        assert.deepEqual(location_level.get('locations'), [LD.idOne, LD.idTwo, LD.idThree, LD.idParent, LD.idParentTwo]);
         assert.equal(page.locationLevelInput().split(' +')[0].trim().split(' ')[0], LLD.nameCompany);
         assert.equal(find(PARENTS_MULTIPLE_OPTION).length, 2);
     });
@@ -242,7 +242,7 @@ test('changing location level will update related location level locations array
         let location = store.find('location', LD.idOne);
         assert.equal(location.get('location_level_fk'), LLD.idOne);
         assert.deepEqual(location_level_two.get('locations'), [LD.idOne]);
-        assert.deepEqual(location_level.get('locations'), []);
+        assert.deepEqual(location_level.get('locations'), [LD.idTwo, LD.idThree, LD.idParent, LD.idParentTwo]);
         assert.ok(location.get('isDirtyOrRelatedDirty'));
         assert.ok(location_level.get('isNotDirtyOrRelatedNotDirty'));
         assert.ok(location_level_two.get('isNotDirtyOrRelatedNotDirty'));
