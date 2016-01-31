@@ -6,14 +6,6 @@ var run = Ember.run;
 var TicketLocationMixin = Ember.Mixin.create({
     location: Ember.computed.alias('belongs_to_location.firstObject'),
     belongs_to_location: belongs_to('tickets', 'location'),
-    // belongs_to_location: Ember.computed('location_fk', function() {
-    //     let ticket_id = this.get('id');
-    //     let filter = function(location) {
-    //         let tickets = location.get('tickets');
-    //         return Ember.$.inArray(ticket_id, tickets) > -1;
-    //     };
-    //     return this.get('store').find('location', filter);
-    // }),
     remove_location() {
         let ticket_id = this.get('id');
         let store = this.get('store');
@@ -39,24 +31,7 @@ var TicketLocationMixin = Ember.Mixin.create({
         });
     },
     saveLocation: belongs_to_save('ticket', 'location', 'location_fk'),
-    // saveLocation() {
-    //     const ticket_pk = this.get('id');
-    //     const store = this.get('store');
-    //     const location = this.get('location');
-    //     if (location) {
-    //         run(function() {
-    //             store.push('ticket', {id: ticket_pk, location_fk: location.get('id')});
-    //         });
-    //     }
-    // },
     rollbackLocation: belongs_to_rollback('location_fk', 'location', 'change_location'),
-    // rollbackLocation() {
-    //     let location = this.get('location');
-    //     let location_fk = this.get('location_fk');
-    //     if(location && location.get('id') !== location_fk) {
-    //         this.change_location(location_fk);
-    //     }
-    // },
 });
 
 export default TicketLocationMixin;
