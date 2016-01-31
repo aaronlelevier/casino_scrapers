@@ -23,11 +23,9 @@ const OPTION = 'li.ember-power-select-option';
 moduleForComponent('ticket-cc-power-select', 'integration: ticket-cc-power-select test', {
     integration: true,
     setup() {
-
         trans = this.container.lookup('service:i18n');
         loadTranslations(trans, translations.generate('en'));
         translation.initialize(this);
-
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:ticket-person']);
         run(function() {
             m2m = store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});

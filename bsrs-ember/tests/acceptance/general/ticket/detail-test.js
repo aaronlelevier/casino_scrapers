@@ -771,8 +771,18 @@ test('selecting and removing a top level category will remove children categorie
     });
 });
 
-test('when selecting a new parent category it should remove previously selected child category', (assert) => {
+test('when selecting a new parent category it should remove previously selected child category but if select same, it wont clear tree', (assert) => {
     page.visitDetail();
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [CD.idChild], CD.idOne, 1));
+    page.categoryTwoClickDropdown();
+    page.categoryTwoClickOptionPlumbing();
+    andThen(() => {
+        let ticket = store.findOne('ticket');
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(ticket.get('categories').get('length'), 3);
+        let components = page.powerSelectComponents();
+        assert.equal(components, 3);
+    });
     ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne, 1));
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionElectrical();
