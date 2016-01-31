@@ -1,8 +1,10 @@
+{{log isDisabled}}
 {{#power-select-multiple
   selected=location.children
   search=(action "update_filter")
   onchange=(action "change_children")
   class="t-location-children-select"
+  disabled=isDisabled
   searchField="name"
   as |location|
 }}

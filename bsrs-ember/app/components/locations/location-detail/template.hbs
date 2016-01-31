@@ -128,7 +128,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             {{#form-group title="admin.location.label.parents-name" for="location_parents"}}
-                                {{location-parent-select location=model}}
+                                {{location-parent-select location=model isDisabled=isDisabled}}
                             {{/form-group}}
                         </div>
                     </div>
@@ -138,7 +138,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             {{#form-group title="admin.location.label.children-name" for="location_children"}}
-                                {{location-children-select location=model}}
+                                {{location-children-select location=model isDisabled=isDisabled}}
                             {{/form-group}}
                         </div>
                     </div>

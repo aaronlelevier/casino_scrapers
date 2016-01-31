@@ -14,7 +14,6 @@ const DROPDOWN = '.ember-power-select-dropdown';
 moduleForComponent('ticket-status-select', 'integration: ticket-status-select test', {
     integration: true,
     setup() {
-
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status']);
         run(function() {
             ticket = store.push('ticket', {id: TD.idOne, status_fk: TD.statusOneId});
