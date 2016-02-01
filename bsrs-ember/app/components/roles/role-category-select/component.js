@@ -1,9 +1,11 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
-import inject from 'bsrs-ember/utilities/inject';
+import PromiseMixin from 'ember-promise/mixins/promise';
+
+const PREFIX = config.APP.NAMESPACE;
+const CATEGORY_URL = PREFIX + '/admin/categories/';
 
 var RoleCategorySelect = Ember.Component.extend({
-    repository: inject('category'),
     categories_selected: Ember.computed('role.role_categories.[]', function() {
         let role = this.get('role');
         return role.get('categories');
@@ -15,8 +17,8 @@ var RoleCategorySelect = Ember.Component.extend({
             const old_category_ids = role.get('categories_ids');
             const new_category_ids = new_categories.mapBy('id');
             new_categories.forEach((cat) => {
-                if (Ember.$.inArray(cat.get('id'), old_category_ids) < 0) {
-                    role.add_category(cat.get('id'));
+                if (Ember.$.inArray(cat.id, old_category_ids) < 0) {
+                    role.add_category(cat);
                 }
             });
             old_categories.forEach((cat) => {
@@ -25,13 +27,11 @@ var RoleCategorySelect = Ember.Component.extend({
                 }
             });
         },
-        update_filter(search) {
-            const repo = this.get('repository');
-            return new Ember.RSVP.Promise((resolve, reject) => {
-                Ember.run.later(() => {
-                    if (Ember.isBlank(search)) { return resolve([]); }
-                    resolve(repo.findCategoryChildren(search));
-                }, config.DEBOUNCE_TIMEOUT_INTERVAL);
+        handleOpen() {
+            const url = `${CATEGORY_URL}parents/`;
+            const _this = this;
+            PromiseMixin.xhr(url, 'GET').then((response) => {
+                _this.set('options', response.results);
             });
         }
     }

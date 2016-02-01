@@ -51,6 +51,20 @@ var BSRS_CATEGORY_FACTORY = (function() {
         var response = [parent_one, parent_two];
         return {'count':2,'next':null,'previous':null,'results': response};
     },
+    factory.prototype.top_level_role = function() {
+        var parent_one = this.get(this.category_defaults.idOne);
+        delete parent_one.status;
+        // parent_one.parent_id = null;
+        // parent_one.children_fks = [this.category_defaults.idTwo, this.category_defaults.idPlumbing];
+        // parent_one.level = 0;
+        var parent_two = this.get(this.category_defaults.idThree, this.category_defaults.nameThree);
+        delete parent_two.status;
+        // parent_two.parent_id = null;
+        // parent_two.children_fks = [];
+        // parent_two.level = 0;
+        var response = [parent_one, parent_two];
+        return {'count':2,'next':null,'previous':null,'results': response};
+    },
     factory.prototype.list = function() {
         var response = [];
         var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;

@@ -160,9 +160,9 @@ test('rollback location level will reset the previously used location level when
 /*ROLE TO CATEGORY M2M*/
 test('categories property only returns the single matching item even when multiple categories exist', (assert) => {
     store.push('role-category', {id: ROLE_CD.idOne, role_fk: RD.idOne, category_fk: CD.idTwo});
-    store.push('category', {id: CD.idTwo});
+    const cat_two = {id: CD.idTwo};
     role = store.push('role', {id: RD.idOne, role_category_fks: [ROLE_CD.idOne]});
-    role.add_category(CD.idTwo);
+    role.add_category(cat_two);
     let categories = role.get('categories');
     assert.equal(categories.get('length'), 1);
     assert.equal(categories.objectAt(0).get('id'), CD.idTwo);
@@ -182,11 +182,11 @@ test('categories property returns multiple matching items when multiple categori
 
 test('categories property will update when add category is invoked and add new m2m join model (starting w/ empty array)', (assert) => {
     role = store.push('role', {id: RD.idOne, role_category_fks: []});
-    let category = store.push('category', {id: CD.idOne});
+    const category = {id: CD.idOne};
     assert.equal(role.get('categories').get('length'), 0);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    role.add_category(CD.idOne);
+    role.add_category(category);
     assert.equal(role.get('categories').get('length'), 1);
     assert.equal(role.get('categories').objectAt(0).get('id'), CD.idOne);
     assert.ok(role.get('categoryIsDirty'));
@@ -197,11 +197,11 @@ test('categories property will update when add category is invoked and add new m
     store.push('role-category', {id: ROLE_CD.idOne, category_fk: CD.idOne, role_fk: RD.idOne});
     role = store.push('role', {id: RD.idOne, role_category_fks: [ROLE_CD.idOne]});
     let category = store.push('category', {id: CD.idOne});
-    let category_two = store.push('category', {id: CD.idTwo});
+    const category_two = {id: CD.idTwo};
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    role.add_category(CD.idTwo);
+    role.add_category(category_two);
     assert.equal(role.get('categories').get('length'), 2);
     assert.equal(role.get('categories').objectAt(0).get('id'), CD.idOne);
     assert.equal(role.get('categories').objectAt(1).get('id'), CD.idTwo);
@@ -243,7 +243,8 @@ test('add_category will add back old join model after it was removed and dirty t
     store.push('role-category', {id: ROLE_CD.idTwo, role_fk: RD.idOne, category_fk: CD.idThree});
     role.remove_category(category_three.get('id'));
     assert.equal(role.get('categories').get('length'), 1);
-    role.add_category(category_three.get('id'));
+    const category_three_json = {id: CD.idThree};
+    role.add_category(category_three_json);
     assert.equal(role.get('categories').get('length'), 2);
     assert.ok(role.get('categoryIsNotDirty'));
 });
@@ -275,14 +276,14 @@ test('when categories is changed dirty tracking works as expected (removing)', (
 test('when categories is changed dirty tracking works as expected (replacing)', (assert) => {
     store.push('role-category', {id: ROLE_CD.idOne, role_fk: RD.idOne, category_fk: CD.idOne});
     store.push('category', {id: CD.idOne});
-    store.push('category', {id: CD.idTwo});
+    const category_two = {id: CD.idTwo};
     role = store.push('role', {id: RD.idOne, role_category_fks: [ROLE_CD.idOne]});
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsNotDirty'));
     role.remove_category(CD.idOne);
     assert.ok(role.get('categoryIsDirty'));
     assert.equal(role.get('categories').get('length'), 0);
-    role.add_category(CD.idTwo);
+    role.add_category(category_two);
     assert.ok(role.get('categoryIsDirty'));
     assert.equal(role.get('categories').get('length'), 1);
     assert.equal(role.get('categories').objectAt(0).get('id'), CD.idTwo);
@@ -292,7 +293,7 @@ test('when categories is changed dirty tracking works as expected (replacing)', 
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(role.get('categories').objectAt(0).get('id'), CD.idOne);
     role.remove_category(CD.idOne);
-    role.add_category(CD.idTwo);
+    role.add_category(category_two);
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
@@ -336,7 +337,7 @@ test('rollback role will reset the previously used people (categories) when swit
 test('rollback categories will reset the previous people (categories) when switching from one category to another and saving in between each step', (assert) => {
     store.push('category', {id: CD.idOne});
     store.push('category', {id: CD.idTwo});
-    store.push('category', {id: CD.unusedId});
+    const unused = {id: CD.unusedId};
     store.push('role-category', {id: ROLE_CD.idOne, category_fk: CD.idOne, role_fk: RD.idOne});
     store.push('role-category', {id: ROLE_CD.idTwo, category_fk: CD.idTwo, role_fk: RD.idOne});
     role = store.push('role', {id: RD.idOne, role_category_fks: [ROLE_CD.idOne, ROLE_CD.idTwo]});
@@ -351,7 +352,7 @@ test('rollback categories will reset the previous people (categories) when switc
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    role.add_category(CD.unusedId);
+    role.add_category(unused);
     assert.equal(role.get('categories').get('length'), 2);
     assert.ok(role.get('categoryIsDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));

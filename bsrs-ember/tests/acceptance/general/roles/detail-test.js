@@ -27,7 +27,6 @@ const LETTER_R = {keyCode: 82};
 const SPACEBAR = {keyCode: 32};
 const CATEGORY = '.t-role-category-select > .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-select-options';
-const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 let application, store, list_xhr, endpoint, detail_data, url, run = Ember.run;
 
@@ -48,19 +47,6 @@ module('Acceptance | role-detail', {
         Ember.run(application, 'destroy');
     }
 });
-
-//TODO: ask how grid is presented in what order
-// test('xxxx clicking a role name will redirect to the given detail view', (assert) => {
-//     store.push('role', {id: RD.idOne+'0', name: 'zap000'});
-//     visit(ROLE_URL);
-//     andThen(() => {
-//         assert.equal(currentURL(), ROLE_URL);
-//     });
-//     click('.t-grid-data:eq(7)');
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//     });
-// });
 
 test('when you deep link to the role detail view you get bound attrs', (assert) => {
     clearxhr(list_xhr);
@@ -107,7 +93,6 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-role-category-validation-error').is(':hidden'));
     });
     fillIn('.t-role-name', '');
-    //TODO: need to do removal and add different m2m in ticket and location detail tests
     page.categoryOneRemove();
     generalPage.save();
     andThen(() => {
@@ -120,16 +105,14 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
         assert.ok(find('.t-role-category-validation-error').is(':visible'));
     });
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=2z&page_size=25';
-    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+    xhr(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
     page.categoryClickDropdown();
-    fillIn(CATEGORY_SEARCH, '2z');
-    page.categoryClickOptionTwo();
+    page.categoryClickOptionOneEq();
     andThen(() => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
         assert.ok(find('.t-role-category-validation-error').is(':hidden'));
     });
-    let payload = RF.put({id: RD.idOne, categories: [CD.idTwo+'2z']});
+    let payload = RF.put({id: RD.idOne, categories: [CD.idOne]});
     let response = Ember.$.extend(true, {}, payload);
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
@@ -149,20 +132,20 @@ test('when you change a related location level it will be persisted correctly', 
     });
 });
 
-// test('clicking cancel button will take from detail view to list view', (assert) => {
-//     visit(ROLE_URL);
-//     andThen(() => {
-//         assert.equal(currentURL(), ROLE_URL);
-//     });
-//     click('.t-grid-data:eq(7)');
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//     });
-//     generalPage.cancel();
-//     andThen(() => {
-//         assert.equal(currentURL(), ROLE_URL);
-//     });
-// });
+test('clicking cancel button will take from detail view to list view', (assert) => {
+    visit(ROLE_URL);
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+    });
+    click('.t-grid-data:eq(7)');
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+    generalPage.cancel();
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+    });
+});
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
     clearxhr(list_xhr);
@@ -219,76 +202,32 @@ test('when click delete, role is deleted and removed from store', (assert) => {
 });
 
 /*ROLE TO CATEGORY M2M*/
-test('clicking and typing into power select for categories will fire off xhr request for all categories', (assert) => {
+test('clicking select for categories will fire off xhr request for all parent categories', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
         let role = store.find('role', RD.idOne);
         assert.equal(role.get('role_category_fks').length, 1);
         assert.equal(page.categoriesSelected(), 1);
     });
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
-    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+    let category_children_endpoint = PREFIX + '/admin/categories/parents/';
+    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.top_level_role());
     page.categoryClickDropdown();
-    //test filter out new
-    run(function() {
-        store.push('category', {id: 'testingNewFilter', name: 'wataA', new: true});
-    });
-    fillIn(CATEGORY_SEARCH, 'a');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), PAGE_SIZE+2);
+        assert.equal(page.categoryOptionLength(), 2);
         assert.equal(page.categoriesSelected(), 1);
         const role = store.find('role', RD.idOne);
         assert.equal(role.get('role_category_fks').length, 1);
         assert.equal(role.get('categories').get('length'), 1);
     });
-    page.categoryClickOptionThree();
+    page.categoryClickOptionTwoEq();
     andThen(() => {
-        let role = store.find('role', RD.idOne);
+        const role = store.find('role', RD.idOne);
         assert.equal(role.get('role_category_fks').length, 1);
         assert.equal(role.get('categories').get('length'), 2);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(page.categoriesSelected(), 2);
     });
-    let category = CF.put({id: CD.idOne, name: CD.nameOne});
-    let payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: [category.id, CD.idSelected]});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), ROLE_URL);
-    });
-});
-
-test('can remove and add back same category', (assert) => {
-    visit(DETAIL_URL);
-    page.categoryOneRemove();
-    andThen(() => {
-        let role = store.find('role', RD.idOne);
-        assert.equal(role.get('role_category_fks').length, 1);
-        assert.equal(role.get('categories').get('length'), 0);
-        assert.equal(page.categoriesSelected(), 0);
-    });
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=2z&page_size=25';
-    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
-    page.categoryClickDropdown();
-    fillIn(CATEGORY_SEARCH, '2z');
-    page.categoryClickOptionTwo();
-    andThen(() => {
-        let role = store.find('role', RD.idOne);
-        assert.equal(role.get('role_category_fks').length, 1);
-        let join_model_id = role.get('role_category_fks')[0];
-        let join_model = store.find('role-category', join_model_id);
-        assert.equal(join_model.get('removed'), true);
-        assert.equal(role.get('categories').get('length'), 1);
-        assert.ok(role.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.categoriesSelected(), 1);
-    });
-    page.categoryOneRemove();
-    category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=Re&page_size=25';
-    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
-    page.categoryClickDropdown();
-    fillIn(CATEGORY_SEARCH, 'Re');
-    page.categoryClickOptionTwoEq();
-    let payload = RF.put({id: RD.idOne, categories: [CD.idOne]});
+    const payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: [CD.idOne, CD.idThree]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
@@ -297,8 +236,7 @@ test('can remove and add back same category', (assert) => {
 });
 
 test('starting with multiple categories, can remove all categories (while not populating options) and add back', (assert) => {
-    detail_data.categories = [...detail_data.categories, CF.get(CD.idTwo)];
-    detail_data.categories[1].name = CD.nameOne + 'i';
+    detail_data.categories = [...detail_data.categories, CF.get(CD.idThree, CD.nameThree)];
     visit(DETAIL_URL);
     andThen(() => {
         let role = store.find('role', RD.idOne);
@@ -310,10 +248,9 @@ test('starting with multiple categories, can remove all categories (while not po
     andThen(() => {
         assert.equal(page.categoriesSelected(), 0);
     });
-    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1&page_size=25';
-    xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
+    let category_endpoint = PREFIX + '/admin/categories/parents/';
+    xhr(category_endpoint, 'GET', null, {}, 200, CF.top_level_role());
     page.categoryClickDropdown();
-    fillIn(CATEGORY_SEARCH, 'repair1');
     andThen(() => {
         let role = store.find('role', RD.idOne);
         assert.equal(role.get('role_category_fks').length, 2);
@@ -322,14 +259,16 @@ test('starting with multiple categories, can remove all categories (while not po
         assert.equal(page.categoryOptionLength(), 2);
     });
     page.categoryClickOptionOneEq();
+    page.categoryClickDropdown();
+    page.categoryClickOptionTwoEq();
     andThen(() => {
         let role = store.find('role', RD.idOne);
         assert.equal(role.get('role_category_fks').length, 2);
-        assert.equal(role.get('categories').get('length'), 1);
-        assert.ok(role.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.categoriesSelected(), 1);
+        assert.equal(role.get('categories').get('length'), 2);
+        assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(page.categoriesSelected(), 2);
     });
-    let payload = RF.put({id: RD.idOne, categories: [CD.idGridOne]});
+    let payload = RF.put({id: RD.idOne, categories: [CD.idOne, CD.idThree]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
@@ -351,12 +290,11 @@ test('search will filter down on categories in store correctly by removing and a
     andThen(() => {
         assert.equal(page.categoriesSelected(), 1);
     });
-    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1&page_size=25';
+    let category_endpoint = PREFIX + '/admin/categories/parents/';
     xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
-    fillIn(CATEGORY_SEARCH, 'repair1');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), 2);
+        assert.equal(page.categoryOptionLength(), 10);
     });
     page.categoryClickOptionOneEq();
     andThen(() => {
@@ -369,24 +307,6 @@ test('search will filter down on categories in store correctly by removing and a
     });
     let payload = RF.put({id: RD.idOne, categories: ['abc123', CD.idGridOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), ROLE_URL);
-    });
-});
-
-test('clicking and typing into power select for categories will not filter if spacebar pressed', (assert) => {
-    visit(DETAIL_URL);
-    page.categoryClickDropdown();
-    fillIn(CATEGORY_SEARCH, ' ');
-    andThen(() => {
-        assert.equal(page.categoriesSelected(), 1);
-        assert.equal(page.categoryOptionLength(), 1);
-        assert.equal(find(`${CATEGORY_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.no_results);
-    });
-    let response = RF.detail(RD.idOne);
-    let payload = RF.put({id: RD.idOne, categories: [CD.idOne]});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);

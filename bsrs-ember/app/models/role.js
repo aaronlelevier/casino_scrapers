@@ -42,12 +42,14 @@ var RoleModel = Model.extend(NewMixin, {
     categoryIsDirty: many_to_many_dirty('role_categories_ids', 'role_category_fks'),
     categoryIsNotDirty: Ember.computed.not('categoryIsDirty'),
     // add_category: add_many_to_many('role-category', 'categories', 'category_fk', 'role_fk'),
-    add_category(category_pk) {
+    add_category(category) {
         const store = this.get('store'); 
+        const new_category = store.push('category', category);
+        const category_pk = new_category.get('id');
         const role_categories = store.find('role-category').toArray();
         //check existing
         let existing = role_categories.filter((m2m) => {
-            return m2m.get('category_fk') === category_pk;
+            return m2m.get('category_fk') === category_pk && m2m.get('role_fk') === this.get('id');
         }).objectAt(0);
         run(() => {
             if(existing){ store.push('role-category', {id: existing.get('id'), removed: undefined}); }

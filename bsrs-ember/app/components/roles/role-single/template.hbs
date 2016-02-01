@@ -50,7 +50,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             {{#form-group title="admin.role.label.category" for="category"}}
-                            {{roles/role-category-select role=model categories_children=categories_children}}
+                            {{roles/role-category-select role=model options=categories_children}}
                             {{#validation-error-field submitted=submitted field="categories" className="validation validation-under t-role-category-validation-error" model=model validation=categoryValidation}}{{t "validation.invalid"}} {{t "admin.role.label.categories"}}{{/validation-error-field}}
                             {{/form-group}}
                         </div>
