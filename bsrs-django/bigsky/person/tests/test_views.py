@@ -194,8 +194,8 @@ class RoleSettingsTests(RoleSetupMixin, APITestCase):
 class PersonAccessTests(TestCase):
 
     def setUp(self):
-        self.person = create_single_person()
         create_person_statuses()
+        self.person = create_single_person()
 
     def test_access_user(self):
         # verify we can access user records correctly as a super user
@@ -745,8 +745,8 @@ class PersonSearchTests(APITransactionTestCase):
 
     def setUp(self):
         self.role = create_role()
-        create_all_people()
         create_person_statuses()
+        create_all_people()
         # Login
         self.person = Person.objects.get(username='admin')
         self.client.login(username=self.person.username, password=PASSWORD)
