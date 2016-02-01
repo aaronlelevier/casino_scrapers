@@ -346,3 +346,12 @@ class SettingCreateTests(APITestCase):
         # db check
         db_setting = Setting.objects.get(id=data['id'])
         self.assertEqual({}, db_setting.settings)
+
+    def test_get_welcome_text(self):
+        settings = create_general_setting()
+
+        response = self.client.get('/api/admin/settings/{}/'.format(settings.id))
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual("Welcome", data['settings']['welcome_text']['value'])
