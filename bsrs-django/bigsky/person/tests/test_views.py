@@ -158,7 +158,7 @@ class RoleSettingsTests(RoleSetupMixin, APITestCase):
         raw_data = {
             'id': str(uuid.uuid4()),
             'name': 'new role yall',
-            'settings': {'dashboard_text': {'value': 'new dashboard text'}}
+            'settings': {'welcome_text': {'value': 'new dashboard text'}}
         }
 
         response = self.client.post('/api/admin/roles/', raw_data, format='json')
@@ -167,16 +167,16 @@ class RoleSettingsTests(RoleSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(DEFAULT_ROLE_SETTINGS), len(data['settings']))
         self.assertEqual(
-            raw_data['settings']['dashboard_text']['value'],
-            data['settings']['dashboard_text']['value']
+            raw_data['settings']['welcome_text']['value'],
+            data['settings']['welcome_text']['value']
         )
 
     def test_update(self):
         role = create_role()
         serializer = RoleCreateSerializer(role)
         raw_data = serializer.data
-        settings = {'dashboard_text': {'value': 'new dashboard text'}}
-        raw_data['settings'] = {'dashboard_text': {'value': 'new dashboard text'}}
+        settings = {'welcome_text': {'value': 'new dashboard text'}}
+        raw_data['settings'] = {'welcome_text': {'value': 'new dashboard text'}}
 
         response = self.client.put('/api/admin/roles/{}/'.format(role.id), raw_data, format='json')
 
@@ -184,8 +184,8 @@ class RoleSettingsTests(RoleSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(DEFAULT_ROLE_SETTINGS), len(data['settings']))
         self.assertEqual(
-            raw_data['settings']['dashboard_text']['value'],
-            data['settings']['dashboard_text']['value']
+            raw_data['settings']['welcome_text']['value'],
+            data['settings']['welcome_text']['value']
         )
 
 

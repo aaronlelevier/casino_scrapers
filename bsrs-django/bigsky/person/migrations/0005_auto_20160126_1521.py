@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='role',
             name='settings',
-            field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, default={'create_all': {'required': True, 'type': 'bool', 'value': True}, 'dashboard_text': {'required': False, 'type': 'str', 'value': ''}, 'login_grace': {'required': True, 'type': 'int', 'value': 0}, 'modules': {'required': True, 'type': 'list', 'value': []}}),
+            field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, default={'create_all': {'required': True, 'type': 'bool', 'value': True}, 'welcome_text': {'required': False, 'type': 'str', 'value': ''}, 'login_grace': {'required': True, 'type': 'int', 'value': 0}, 'modules': {'required': True, 'type': 'list', 'value': []}}),
         ),
     ]

@@ -65,7 +65,7 @@
         "value": 0,
         "type": "int"
       },
-      "dashboard_text": {
+      "welcome_text": {
         "required": false,
         "value": "",
         "type": "str"
@@ -147,7 +147,7 @@
         "value": 0,
         "type": "int"
       },
-      "dashboard_text": {
+      "welcome_text": {
         "required": false,
         "value": "",
         "type": "str"
@@ -229,7 +229,7 @@
         "value": 0,
         "type": "int"
       },
-      "dashboard_text": {
+      "welcome_text": {
         "required": false,
         "value": "",
         "type": "str"
@@ -311,7 +311,7 @@
         "value": 0,
         "type": "int"
       },
-      "dashboard_text": {
+      "welcome_text": {
         "required": false,
         "value": "",
         "type": "str"
@@ -393,7 +393,7 @@
         "value": 0,
         "type": "int"
       },
-      "dashboard_text": {
+      "welcome_text": {
         "required": false,
         "value": "",
         "type": "str"
@@ -475,7 +475,7 @@
         "value": 0,
         "type": "int"
       },
-      "dashboard_text": {
+      "welcome_text": {
         "required": false,
         "value": "",
         "type": "str"

@@ -64,7 +64,7 @@ class SettingsValidatorTests(APITestCase):
             "name": "Admin",
             "settings": {
                 "create_all": {'value': 0},
-                "dashboard_text": {'value': 0},
+                "welcome_text": {'value': 0},
                 "login_grace": {'value': 'foo'},
                 "modules": {'value': 0}
             }
@@ -74,7 +74,7 @@ class SettingsValidatorTests(APITestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(json.loads(response.content.decode('utf8'))['create_all'], ['Must be a bool'])
-        self.assertEqual(json.loads(response.content.decode('utf8'))['dashboard_text'], ['Must be a str'])
+        self.assertEqual(json.loads(response.content.decode('utf8'))['welcome_text'], ['Must be a str'])
         self.assertEqual(json.loads(response.content.decode('utf8'))['login_grace'], ['Must be a int'])
         self.assertEqual(json.loads(response.content.decode('utf8'))['modules'], ['Must be a list'])
 

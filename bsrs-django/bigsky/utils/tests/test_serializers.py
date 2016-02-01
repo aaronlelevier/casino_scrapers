@@ -18,7 +18,7 @@ class SettingSerializerMixinTests(RoleSetupMixin, APITestCase):
             "id": str(uuid.uuid4()),
             "name": "Admin",
             "settings": {
-                "dashboard_text": {"value": "Hello world"}
+                "welcome_text": {"value": "Hello world"}
             }
         }
 
@@ -27,9 +27,9 @@ class SettingSerializerMixinTests(RoleSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], role_data['id'])
-        self.assertEqual(data['settings']['dashboard_text']['value'], role_data['settings']['dashboard_text']['value'])
-        self.assertEqual(data['settings']['dashboard_text']['type'], 'str')
-        self.assertEqual(data['settings']['dashboard_text']['required'], False)
+        self.assertEqual(data['settings']['welcome_text']['value'], role_data['settings']['welcome_text']['value'])
+        self.assertEqual(data['settings']['welcome_text']['type'], 'str')
+        self.assertEqual(data['settings']['welcome_text']['required'], False)
         # other defaults should be returned as well
         self.assertEqual(data['settings']['create_all']['value'], DEFAULT_ROLE_SETTINGS['create_all']['value'])
         self.assertEqual(data['settings']['create_all']['type'], 'bool')
@@ -70,7 +70,7 @@ class SettingSerializerMixinTests(RoleSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
 
-        self.assertEqual(data['settings']['dashboard_text']['value'], DEFAULT_ROLE_SETTINGS['dashboard_text']['value'])
+        self.assertEqual(data['settings']['welcome_text']['value'], DEFAULT_ROLE_SETTINGS['welcome_text']['value'])
         self.assertEqual(data['settings']['create_all']['value'], DEFAULT_ROLE_SETTINGS['create_all']['value'])
         self.assertEqual(data['settings']['modules']['value'], DEFAULT_ROLE_SETTINGS['modules']['value'])
         self.assertEqual(data['settings']['login_grace']['value'], DEFAULT_ROLE_SETTINGS['login_grace']['value'])
@@ -80,14 +80,14 @@ class SettingSerializerMixinTests(RoleSetupMixin, APITestCase):
         serializer = RoleCreateSerializer(role)
         orig_data = serializer.data
         role_data = copy.copy(orig_data)
-        dashboard_text = 'hey foo'
+        welcome_text = 'hey foo'
 
-        role_data['settings'] = {'dashboard_text': {'value': dashboard_text}}
+        role_data['settings'] = {'welcome_text': {'value': welcome_text}}
         response = self.client.put('/api/admin/roles/{}/'.format(role.id), role_data, format='json')
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings']['dashboard_text']['value'], dashboard_text)
+        self.assertEqual(data['settings']['welcome_text']['value'], welcome_text)
         self.assertEqual(data['settings']['create_all']['value'], DEFAULT_ROLE_SETTINGS['create_all']['value'])
         self.assertEqual(data['settings']['modules']['value'], DEFAULT_ROLE_SETTINGS['modules']['value'])
         self.assertEqual(data['settings']['login_grace']['value'], DEFAULT_ROLE_SETTINGS['login_grace']['value'])
