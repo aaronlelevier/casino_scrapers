@@ -5,7 +5,7 @@ CURRENCY_CHOICES = (
 )
 
 PERSON_STATUS_CHOICES = (
-    ('active', 'active'),
+    ('Active', 'Active'),
     ('two', 'two'),
 )
 
