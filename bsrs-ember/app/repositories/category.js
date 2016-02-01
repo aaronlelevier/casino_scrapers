@@ -21,9 +21,10 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
         });   
     },
     findCategoryChildren(search) {
+        let url = CATEGORY_URL;
         search = search ? search.trim() : search;
         if (search) {  
-            const url = `${CATEGORY_URL}/parents/`;
+            url += `?name__icontains=${search}&page_size=25`;
             return PromiseMixin.xhr(url, 'GET').then((response) => {
                 return response.results.filter((category) => {
                     return category.name.toLowerCase().indexOf(search.toLowerCase()) > -1;

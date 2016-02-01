@@ -15,8 +15,8 @@ var CategoryChildrenSelect = Ember.Component.extend({
             const old_children_ids = old_children.mapBy('id');
             const new_children_ids = new_categories.mapBy('id');
             new_categories.forEach((cat) => {
-                if (Ember.$.inArray(cat.get('id'), old_children_ids) < 0) {
-                    category.add_child(cat.get('id'));
+                if (Ember.$.inArray(cat.id, old_children_ids) < 0) {
+                    category.add_child(cat);
                 } 
             });
             old_children.forEach((old_cat) => {

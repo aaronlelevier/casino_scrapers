@@ -3,7 +3,7 @@ import { test } from 'qunit';
 import module from "bsrs-ember/tests/helpers/module";
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
-import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
+import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
@@ -43,9 +43,9 @@ module('Acceptance | category-new', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         let endpoint = PREFIX + BASE_URL + '/';
-        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, CATEGORY_FIXTURES.empty());
-        let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=2z&page_size=25';
-        children_xhr = xhr(category_children_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
+        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, CF.empty());
+        let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a&page_size=25';
+        children_xhr = xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
         run(function() {
             store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
         });
@@ -204,7 +204,7 @@ test('when user enters new form and doesnt enter data, the record is correctly r
 /* CATEGORY TO CHILDREN */
 test('clicking and typing into power select for categories children will fire off xhr request for all categories', (assert) => {
     let payload_new = Ember.$.extend(true, {}, payload);
-    payload_new.children = [CD.idTwo+'2z'];
+    payload_new.children = [CD.idGridOne];
     let response = Ember.$.extend(true, {}, payload_new);
     xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload_new), {}, 201, response);
     visit(CATEGORY_NEW_URL);
@@ -221,8 +221,8 @@ test('clicking and typing into power select for categories children will fire of
     fillIn('.t-amount', CD.costAmountOne);
     fillIn('.t-category-cost-code', CD.costCodeOne);
     page.categoryClickDropdown();
-    fillIn(`${CATEGORY_SEARCH}`, '2z');
-    page.categoryClickOptionTwo();
+    fillIn(`${CATEGORY_SEARCH}`, 'a');
+    page.categoryClickOptionOneEq();
     andThen(() => {
         let category = store.find('category', UUID.value);
         assert.equal(category.get('children_fks').get('length'), 1);
@@ -283,14 +283,14 @@ test('you can add and remove child from category', (assert) => {
     fillIn('.t-amount', CD.costAmountOne);
     fillIn('.t-category-cost-code', CD.costCodeOne);
     page.categoryClickDropdown();
-    fillIn(`${CATEGORY_SEARCH}`, '2z');
+    fillIn(`${CATEGORY_SEARCH}`, 'a');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), 1);
+        assert.equal(page.categoryOptionLength(), 10);
         const category = store.find('category', UUID.value);
         assert.equal(category.get('has_many_children').get('length'), 0);
         assert.equal(category.get('children_fks').get('length'), 0);
     });
-    page.categoryClickOptionTwo();
+    page.categoryClickOptionOneEq();
     andThen(() => {
         const category = store.find('category', UUID.value);
         assert.equal(category.get('has_many_children').get('length'), 1);

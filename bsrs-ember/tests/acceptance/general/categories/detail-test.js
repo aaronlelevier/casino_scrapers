@@ -255,9 +255,9 @@ test('clicking and typing into power select for categories children will fire of
     page.categoryClickDropdown();
     fillIn(`${CATEGORY_SEARCH}`, 'a');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), PAGE_SIZE+2);
+        assert.equal(page.categoryOptionLength(), PAGE_SIZE);
     });
-    page.categoryClickOptionThree();
+    page.categoryClickOptionOneEq();
     andThen(() => {
         let category = store.find('category', CD.idOne);
         assert.equal(category.get('children_fks').get('length'), 2);
@@ -273,7 +273,7 @@ test('clicking and typing into power select for categories children will fire of
     });
     let url = PREFIX + DETAIL_URL + '/';
     let response = CF.detail(CD.idOne);
-    let payload = CF.put({id: CD.idOne, children: [CD.idChild, CD.idSelected]});
+    let payload = CF.put({id: CD.idOne, children: [CD.idChild, CD.idGridOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
@@ -299,10 +299,10 @@ test('when you deep link to the category detail can remove child from category a
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(`${CATEGORY_SEARCH}`, 'a');
-    page.categoryClickOptionThree();
+    page.categoryClickOptionOneEq();
     let url = PREFIX + DETAIL_URL + '/';
     let response = CF.detail(CD.idOne);
-    let payload = CF.put({id: CD.idOne, children: [CD.idSelected]});
+    let payload = CF.put({id: CD.idOne, children: [CD.idGridOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
@@ -327,10 +327,13 @@ test('starting with multiple categories, can remove all categories (while not po
         assert.equal(category.get('has_many_children').get('length'), 0);
         assert.ok(category.get('isDirtyOrRelatedDirty'));
     });
-    let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a&page_size=25';
-    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+    let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=e&page_size=25';
+    const payload_cats = CF.list();
+    payload_cats.results.unshift(CF.get(CD.idTwo, CD.nameTwo));
+    payload_cats.results.unshift(CF.get(CD.idThree, CD.nameThree));
+    xhr(category_children_endpoint, 'GET', null, {}, 200, payload_cats);
     page.categoryClickDropdown();
-    fillIn(CATEGORY_SEARCH, 'a');
+    fillIn(CATEGORY_SEARCH, 'e');
     page.categoryClickOptionTwoEq();
     andThen(() => {
         let category = store.find('category', CD.idOne);
@@ -338,8 +341,17 @@ test('starting with multiple categories, can remove all categories (while not po
         assert.equal(page.categorySelected().indexOf(`${CD.nameTwo}`), 2);
         assert.ok(category.get('isDirtyOrRelatedDirty'));
     });
+    page.categoryClickDropdown();
+    fillIn(CATEGORY_SEARCH, 'e');
+    page.categoryClickOptionOneEq();
+    andThen(() => {
+        let category = store.find('category', CD.idOne);
+        assert.equal(category.get('has_many_children').get('length'), 2);
+        //TODO: implement attrs for category
+        // assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
+    });
     let url = PREFIX + DETAIL_URL + "/";
-    let payload = CF.put({id: CD.idOne, children: [CD.idChild]});
+    let payload = CF.put({id: CD.idOne, children: [CD.idTwo, CD.idThree]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {

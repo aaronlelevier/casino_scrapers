@@ -61,7 +61,9 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
         };
         return store.find('category', filter);
     }),
-    add_child(child_pk) {
+    add_child(child) {
+        const cat = this.get('store').push('category', child);
+        const child_pk = cat.get('id');
         let related_fks = this.get('children_fks');
         this.set('children_fks', related_fks.concat(child_pk).uniq());
     },
@@ -77,6 +79,7 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
             this.get('store').remove('category', this.get('id'));
         });
     },
+    //TODO: need to use attrs from bootstrap file
     rollbackChildren() {
         let children_fks = this.get('children_fks');
         let prev_children_fks = this.get('previous_children_fks');
@@ -84,7 +87,9 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
             this.remove_child(id);
         });
         prev_children_fks.forEach((id) => {
-            this.add_child(id);
+            const store = this.get('store');
+            const child = {id: id};
+            this.add_child(child);
         });
     },
     saveChildren() {
