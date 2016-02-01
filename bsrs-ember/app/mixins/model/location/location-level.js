@@ -37,9 +37,7 @@ var LocationLevelMixin = Ember.Mixin.create({
     },
     // change_location_level: change_belongs_to('locations', 'location-level'),
     change_location_level(new_location_level_id) {
-        if(!this.get('new')){
-            this.remove_children_parents();
-        }
+        this.remove_children_parents();
         const location_id = this.get('id');
         const store = this.get('store');
         const old_location_level = this.get('location_level');
