@@ -20,7 +20,7 @@ from person.models import Person, Role
 from person.serializers import PersonUpdateSerializer, RoleCreateSerializer
 from person.settings import DEFAULT_ROLE_SETTINGS
 from person.tests.factory import (PASSWORD, create_single_person, create_role, create_roles,
-    create_all_people)
+    create_all_people, create_person_statuses)
 from person.tests.mixins import RoleSetupMixin
 from translation.models import Locale
 from translation.tests.factory import create_locales
@@ -195,6 +195,7 @@ class PersonAccessTests(TestCase):
 
     def setUp(self):
         self.person = create_single_person()
+        create_person_statuses()
 
     def test_access_user(self):
         # verify we can access user records correctly as a super user
@@ -745,6 +746,7 @@ class PersonSearchTests(APITransactionTestCase):
     def setUp(self):
         self.role = create_role()
         create_all_people()
+        create_person_statuses()
         # Login
         self.person = Person.objects.get(username='admin')
         self.client.login(username=self.person.username, password=PASSWORD)

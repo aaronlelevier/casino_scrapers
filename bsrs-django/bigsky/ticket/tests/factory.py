@@ -94,15 +94,12 @@ def create_extra_ticket_with_categories():
 
 def create_ticket_status(name=None):
     id = generate_uuid(TicketStatus)
-
     if not name:
         name = random.choice(TICKET_STATUSES)
-
     try:
         obj = TicketStatus.objects.get(name=name)
     except TicketStatus.DoesNotExist:
         obj = TicketStatus.objects.create(id=id, name=name)
-
     return obj
 
 

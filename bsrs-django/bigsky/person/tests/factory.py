@@ -10,7 +10,7 @@ from category.models import Category
 from category.tests.factory import create_single_category
 from location.models import LocationLevel, Location
 from location.tests.factory import create_location, create_locations
-from person.models import Person, Role
+from person.models import Person, Role, PersonStatus
 from utils import create
 from utils.helpers import generate_uuid
 
@@ -18,6 +18,11 @@ from utils.helpers import generate_uuid
 PASSWORD = '1234'
 LOCATION_LEVEL = 'region'
 CATEGORY = 'repair'
+PERSON_STATUSES = [
+    'admin.person.status.active',
+    'admin.person.status.inactive',
+    'admin.person.status.expired',
+]
 
 
 class DistrictManager(object):
@@ -75,13 +80,14 @@ def create_roles():
     return Role.objects.all()
 
 
-def create_single_person(name=None, role=None, location=None):
+def create_single_person(name=None, role=None, location=None, status=None):
     args_required_together = [role, location]
     if not all(args_required_together) and any(args_required_together):
         raise ValidationError("These arguments must all be passed together")
 
     name = name or random.choice(create.LOREM_IPSUM_WORDS.split())
     role = role or create_role()
+    status = status or create_person_status(random.choice(PERSON_STATUSES))
     location = location or create_location(location_level=role.location_level)
 
     # incr = Person.objects.count()
@@ -98,7 +104,8 @@ def create_single_person(name=None, role=None, location=None):
             first_name=name,
             last_name=name,
             title=name,
-            role=role
+            role=role,
+            status=status
         )
         person.locations.add(location)
 
@@ -202,10 +209,24 @@ def create_all_people():
 
         # role = Role.objects.exclude(location_level__name=settings.LOCATION_TOP_LEVEL_NAME).order_by("?")[0]
         location = Location.objects.order_by("?")[0]
+        status = PersonStatus.objects.order_by("?")[0]
         role = Role.objects.filter(location_level=location.location_level).order_by("?")[0]
         # create
-        person = create_single_person(name=name, role=role, location=location)
+        person = create_single_person(name=name, role=role, location=location, status=status)
 
     # # Update Persons to login as
     person = Person.objects.get(username='admin')
     update_admin(person)
+
+def create_person_status(name=None):
+    id = generate_uuid(PersonStatus)
+    if not name:
+        name = random.choice(PERSON_STATUSES)
+    try:
+        obj = PersonStatus.objects.get(name=name)
+    except PersonStatus.DoesNotExist:
+        obj = PersonStatus.objects.create(id=id, name=name)
+    return obj
+
+def create_person_statuses():
+    return [create_person_status(s) for s in PERSON_STATUSES]

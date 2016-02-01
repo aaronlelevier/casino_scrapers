@@ -121,13 +121,15 @@ class CreateSinglePersonTests(TestCase):
     def test_with_role_and_location(self):
         username = 'bob'
         role = factory.create_role()
+        status = factory.create_person_status()
         location = create_location(location_level=role.location_level)
 
-        person = factory.create_single_person('bob', role, location)
+        person = factory.create_single_person('bob', role, location, status=status)
 
         self.assertIsInstance(person, Person)
         self.assertEqual(person.username, username)
         self.assertEqual(person.role, role)
+        self.assertEqual(person.status, status)
         self.assertEqual(person.locations.count(), 1)
         person_location = person.locations.first()
         self.assertEqual(person.role.location_level, person_location.location_level)
@@ -265,6 +267,7 @@ class CreateAllPeopleTests(TestCase):
         # the ``create_all_people`` function should only create objects in the 
         # ``person`` app, not any extra Locations
         create_locations()
+        factory.create_person_statuses()
         init_location_count = Location.objects.count()
 
         factory.create_all_people()
