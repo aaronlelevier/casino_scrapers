@@ -216,7 +216,7 @@ class LocationType(BaseNameModel):
 class LocationQuerySet(SelfReferencingQuerySet):
     ''' '''
 
-    def get_level_children(self, level_id):
+    def get_level_children(self, level_id, pk):
         '''
         :location: Parent ``Location`` to find one all of the locations one llevel deep
         '''
@@ -225,9 +225,9 @@ class LocationQuerySet(SelfReferencingQuerySet):
             child_levels = LocationLevel.objects.get_all_children(new_llevel)
         except ObjectDoesNotExist:
             raise
-        return self.filter(location_level__in=child_levels)
+        return self.filter(location_level__in=child_levels).exclude(id=pk)
 
-    def get_level_parents(self, level_id):
+    def get_level_parents(self, level_id, pk):
         '''
         :location: Child ``Location``
             level_id might be different than whats stored in the db
@@ -237,7 +237,7 @@ class LocationQuerySet(SelfReferencingQuerySet):
             parent_levels = LocationLevel.objects.get_all_parents(new_llevel)
         except ObjectDoesNotExist:
             raise
-        return self.filter(location_level__in=parent_levels)
+        return self.filter(location_level__in=parent_levels).exclude(id=pk)
 
     def search_multi(self, keyword):
         return self.filter(
@@ -254,17 +254,17 @@ class LocationManager(SelfReferencingManager):
     def get_queryset(self):
         return LocationQuerySet(self.model, self._db).filter(deleted__isnull=True)
         
-    def get_level_children(self, llevel_id):
+    def get_level_children(self, llevel_id, pk):
         '''
         Get all child Locations at a specific LocationLevel.
         '''
-        return self.get_queryset().get_level_children(llevel_id)
+        return self.get_queryset().get_level_children(llevel_id, pk)
 
-    def get_level_parents(self, llevel_id):
+    def get_level_parents(self, llevel_id, pk):
         '''
         Get all Parent Locations at a specific LocationLevel.
         '''
-        return self.get_queryset().get_level_parents(llevel_id)
+        return self.get_queryset().get_level_parents(llevel_id, pk)
 
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)

@@ -161,17 +161,17 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
         return queryset
 
-    @list_route(methods=['GET'], url_path=r'get-level-children/(?P<llevel_id>[\w\-]+)')
-    def get_level_children(self, request, llevel_id=None):
-        queryset = Location.objects.get_level_children(llevel_id)
+    @list_route(methods=['GET'], url_path=r'get-level-children/(?P<llevel_id>[\w\-]+)/(?P<pk>[\w\-]+)')
+    def get_level_children(self, request, llevel_id=None, pk=None):
+        queryset = Location.objects.get_level_children(llevel_id, pk)
         queryset = self.filter_by_query_params(queryset)
         page = self.paginate_queryset(queryset)
         serializer = self._all_related_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-    @list_route(methods=['GET'], url_path=r'get-level-parents/(?P<llevel_id>[\w\-]+)')
-    def get_level_parents(self, request, llevel_id=None):
-        queryset = Location.objects.get_level_parents(llevel_id)
+    @list_route(methods=['GET'], url_path=r'get-level-parents/(?P<llevel_id>[\w\-]+)/(?P<pk>[\w\-]+)')
+    def get_level_parents(self, request, llevel_id=None, pk=None):
+        queryset = Location.objects.get_level_parents(llevel_id, pk)
         queryset = self.filter_by_query_params(queryset)
         page = self.paginate_queryset(queryset)
         serializer = self._all_related_serializer(page, many=True)

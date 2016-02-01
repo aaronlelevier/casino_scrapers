@@ -130,8 +130,16 @@ class LocationManagerTests(TestCase):
         # setup
         location = Location.objects.get(name='ca')
         # test
-        children = Location.objects.get_level_children(location.location_level.id)
+        children = Location.objects.get_level_children(location.location_level.id, location.id)
         self.assertEqual(children.count(), 3)
+
+    def test_get_level_children_exclude(self):
+        # setup
+        location = Location.objects.get(name='ca')
+        location_level_updated = LocationLevel.objects.get(name='Company')
+        # test
+        children = Location.objects.get_level_children(location_level_updated.id, location.id)
+        self.assertEqual(children.count(), 6)
 
     def test_get_level_parents(self):
         # 'ca' is a 'district' that now has 3 parents at the 'region'(2) and Company(1) ``LocationLevel``
@@ -142,8 +150,28 @@ class LocationManagerTests(TestCase):
         east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
         east_lp.children.add(location)
         # Test
-        parents = Location.objects.get_level_parents(location.location_level.id)
+        parents = Location.objects.get_level_parents(location.location_level.id, location.id)
         self.assertEqual(parents.count(), 3)
+
+    def test_get_level_parents_excludee(self):
+        # user may change location level so need to make sure location is not passed down as parent
+        # 'ca' is a 'district' that now has 3 parents at the 'region'(2) and Company(1) ``LocationLevel``
+        # setup
+        location = Location.objects.get(name='ca')
+        location_level = LocationLevel.objects.get(name='region')
+        location_level_updated = LocationLevel.objects.get(name='department')
+        # New Parent Location at "region" Level
+        east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
+        east_lp.children.add(location)
+        # Test
+        parents = Location.objects.get_level_parents(location_level_updated.id, location.id)
+        self.assertEqual(parents.count(), 6)
+        self.assertEqual(parents[0].name, 'Company')
+        self.assertEqual(parents[1].name, 'east')
+        self.assertEqual(parents[2].name, 'east_lp')
+        self.assertEqual(parents[3].name, 'los_angeles')
+        self.assertEqual(parents[4].name, 'nv')
+        self.assertEqual(parents[5].name, 'san_diego')
 
     def test_objects_and_their_children(self):
         person = create_single_person()
