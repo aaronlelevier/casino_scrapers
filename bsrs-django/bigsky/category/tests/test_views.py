@@ -380,8 +380,6 @@ class CategoryFilterTests(APITransactionTestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], Category.objects.filter(parent__isnull=True).count())
         self.assertIn('results', data)
-        self.assertIn('parent', data['results'][0])
-        self.assertEqual(data['results'][0]['parent'], None)
 
     #TODO: bring this back
     # def test_filter_top_level_has_children(self):
