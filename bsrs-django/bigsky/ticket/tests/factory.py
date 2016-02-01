@@ -4,10 +4,10 @@ import uuid
 
 from model_mommy import mommy
 
-from person.models import Person
 from category.models import Category
 from location.models import Location
 from location.tests.factory import create_locations
+from person.models import Person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
 from utils.create import _generate_chars

@@ -86,27 +86,22 @@ def create_categories():
         CategoryData = namedtuple('CategoryData', ['id', 'name', 'label', 'subcategory_label', 'parent_id'])
         data = CategoryData._make(x)._asdict()
 
-        if data['parent_id'] is None:
+        try:
+            parent = Category.objects.get(description=data['parent_id'])
+        except Category.DoesNotExist:
+            parent = None
+
+        try:
+            Category.objects.get(name=data['name'], label=data['label'])
+        except Category.DoesNotExist:
             Category.objects.create(
                 id=generate_uuid(Category),
                 description=str(data['id']),
                 name=data['name'],
                 label=data['label'],
-                subcategory_label=data['subcategory_label']
+                subcategory_label=data['subcategory_label'],
+                parent=parent
             )
-        else:
-            try:
-                Category.objects.get(name=data['name'], label=data['label'])
-            except Category.DoesNotExist:
-                parent = Category.objects.get(description=data['parent_id']) # data['4] == parent_id
-                Category.objects.create(
-                    id=generate_uuid(Category),
-                    description=str(data['id']),
-                    name=data['name'],
-                    label=data['label'],
-                    subcategory_label=data['subcategory_label'],
-                    parent=parent
-                )
 
     return Category.objects.all()
 
