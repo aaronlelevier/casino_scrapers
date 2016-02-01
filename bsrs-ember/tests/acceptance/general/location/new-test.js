@@ -482,7 +482,7 @@ test('clicking and typing into power select for location will fire off xhr reque
     page.visitNew();
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
-    let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/?name__icontains=a`;
+    let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${UUID.value}/?name__icontains=a`;
     let response = LF.search();
     response.results.push(LF.get(LD.unusedId, LD.apple));
     ajax(location_endpoint, 'GET', null, {}, 201, response);
@@ -509,7 +509,7 @@ test('clicking and typing into power select for location will fire off xhr reque
     });
     //search specific children
     page.childrenClickDropdown();
-    let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/?name__icontains=BooNdocks`;
+    let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${UUID.value}/?name__icontains=BooNdocks`;
     let response_2 = LF.list();
     response_2.results.push(LF.get('abc123', LD.boondocks));
     xhr(location_endpoint_2, 'GET', null, {}, 201, response_2);
@@ -551,7 +551,7 @@ test('can add and remove all children (while not populating options) and add bac
         assert.equal(location.get('children').get('length'), 0);
         assert.equal(location.get('location_children_fks').length, 0);
     });
-    let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/?name__icontains=a`;
+    let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${UUID.value}/?name__icontains=a`;
     let response = LF.search();
     response.results.push(LF.get(LD.unusedId, LD.apple));
     ajax(location_endpoint, 'GET', null, {}, 201, response);
@@ -565,7 +565,7 @@ test('can add and remove all children (while not populating options) and add bac
     page.childrenClickApple();
     //search specific children
     page.childrenClickDropdown();
-    let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/?name__icontains=BooNdocks`;
+    let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${UUID.value}/?name__icontains=BooNdocks`;
     let response_2 = LF.list();
     response_2.results.push(LF.get('abc123', LD.boondocks));
     xhr(location_endpoint_2, 'GET', null, {}, 201, response_2);

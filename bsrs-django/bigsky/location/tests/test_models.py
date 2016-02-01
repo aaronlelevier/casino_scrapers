@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.conf import settings
 from django.test import TestCase
@@ -140,6 +141,14 @@ class LocationManagerTests(TestCase):
         # test
         children = Location.objects.get_level_children(location_level_updated.id, location.id)
         self.assertEqual(children.count(), 6)
+
+    def test_get_level_children_exclude_not_relevant_pk(self):
+        # setup
+        location = Location.objects.get(name='ca')
+        location_level_updated = LocationLevel.objects.get(name='Company')
+        # test
+        children = Location.objects.get_level_children(location_level_updated.id, str(uuid.uuid4()))
+        self.assertEqual(children.count(), 7)
 
     def test_get_level_parents(self):
         # 'ca' is a 'district' that now has 3 parents at the 'region'(2) and Company(1) ``LocationLevel``
