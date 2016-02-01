@@ -201,6 +201,10 @@ class BootstrappedDataTests(TestCase):
         self.assertIn(str(self.person.role.id), [c["id"] for c in configuration])
         self.assertIn(str(self.person.role.name), [c["name"] for c in configuration])
         self.assertIn(str(self.person.role.location_level.id), [c["location_level"] for c in configuration])
+        # related Categories
+        category = Category.objects.get(id=configuration[0]['categories'][0]['id'])
+        self.assertEqual(category.name, configuration[0]['categories'][0]['name'])
+        # role (non-default)
         role = Role.objects.first()
         role.location_level = None
         role.save()
@@ -216,6 +220,19 @@ class BootstrappedDataTests(TestCase):
         # the model id shows in the context
         self.assertEqual("Internal", configuration[0])
         self.assertEqual("Third Party", configuration[1])
+
+    def test_role__default_name_bool_and_location_level(self):
+        [r.delete() for r in Role.objects.all()]
+        role = mommy.make(Role, name='foo')
+        self.assertIsNone(role.location_level)
+        self.assertNotEqual(role.name, settings.DEFAULT_ROLE)
+
+        response = self.client.get(reverse('index'))
+        data = json.loads(response.context['role_config'])
+
+        self.assertEqual(1, len(data))
+        self.assertFalse(data[0]['default'])
+        self.assertIsNone(data[0]['location_level'])
 
     def test_person_statuses(self):
         configuration = json.loads(self.response.context['person_status_config'])
