@@ -1,12 +1,15 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
+import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import translations from "bsrs-ember/vendor/translation_fixtures";
 import LF from "bsrs-ember/vendor/location_fixtures";
+import LLF from "bsrs-ember/vendor/location_level_fixtures";
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
 import waitFor from 'ember-test-helpers/wait';
 
@@ -64,6 +67,24 @@ test('filling in invalid name reveal validation messages', function(assert) {
     save_btn.trigger('click').trigger('change');
     $component = this.$('.t-name-validation-error');
     assert.equal($component.length, 1);
+});
+
+test('filling in location level on location new template will set diabled to false for children and parents', function(assert) {
+    run(() => {
+        this.model = store.push('location', {id: UUID.value, new: true});
+        store.push('location-level', LLF.generate(LLD.idOne));
+        store.push('location-level', LLF.generate(LLD.idTwo, LLD.nameDistrict));
+    });
+    this.all_location_levels = store.find('location-level');
+    this.render(hbs`{{locations/location-detail model=model all_location_levels=all_location_levels}}`);
+    assert.equal(this.$('.t-location-children-select-trigger > input').attr('disabled'), 'disabled');
+    assert.equal(this.$('.t-location-parent-select-trigger > input').attr('disabled'), 'disabled');
+    this.$('.t-location-level-select-trigger').mousedown();
+    run(() => {
+        $(`.ember-power-select-option:contains(${LLD.nameDistrict})`).mouseup();
+    });
+    assert.equal(this.$('.t-location-children-select-trigger > input').attr('disabled'), undefined);
+    assert.equal(this.$('.t-location-parent-select-trigger > input').attr('disabled'), undefined);
 });
 
 test('filling in invalid phone number reveal validation messages', function(assert) {

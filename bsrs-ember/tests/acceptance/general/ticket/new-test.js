@@ -141,7 +141,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.equal(find('.t-category-validation-error').length, 1);
         assert.ok(find('.t-category-validation-error').is(':visible'));
     });
-    const payload = CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne);
+    const payload = CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne, 1);
     ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, payload);
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionOne();
@@ -150,7 +150,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.equal(find('.t-category-validation-error').length, 1);
         assert.ok(find('.t-category-validation-error').is(':visible'));
     });
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
     page.categoryThreeClickDropdown();
     page.categoryThreeClickOptionOne();
     andThen(() => {
@@ -198,7 +198,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
         assert.ok(tickets.objectAt(0).get('categoriesIsDirty'));
         assert.equal(components, 2);
     });
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [], CD.idOne));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [], CD.idOne, 1));
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionOne();
     andThen(() => {
@@ -276,7 +276,7 @@ test('selecting category tree and removing a top level category will remove chil
         assert.equal(components, 2);
     });
     //second select
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne, 1));
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionOne();
     andThen(() => {
@@ -287,7 +287,7 @@ test('selecting category tree and removing a top level category will remove chil
         assert.equal(components, 3);
     });
     //third select
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
     page.categoryThreeClickDropdown();
     page.categoryThreeClickOptionOne();
     andThen(() => {
@@ -298,7 +298,7 @@ test('selecting category tree and removing a top level category will remove chil
         assert.equal(components, 3);
     });
     //change second with same children as electrical (outlet);
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.unusedId, CD.nameUnused, [CD.idChild], CD.idOne));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.unusedId, CD.nameUnused, [CD.idChild], CD.idOne, 1));
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionTwo();
     andThen(() => {
@@ -306,7 +306,7 @@ test('selecting category tree and removing a top level category will remove chil
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 2);
-        assert.equal(components, 2);
+        assert.equal(components, 3);
     });
     //change top level
     page.categoryOneClickDropdown();
@@ -344,7 +344,7 @@ test('when selecting a new parent cateogry it should remove previously selected 
         assert.equal(components, 2);
     });
     //second select
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne, 1));
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionOne();
     andThen(() => {
@@ -355,7 +355,7 @@ test('when selecting a new parent cateogry it should remove previously selected 
         assert.equal(components, 3);
     });
     //third select
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
     page.categoryThreeClickDropdown();
     page.categoryThreeClickOptionOne();
     andThen(() => {
@@ -365,7 +365,7 @@ test('when selecting a new parent cateogry it should remove previously selected 
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 3);
         assert.equal(components, 3);
     });
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.unusedId, CD.nameUnused, [CD.idChild], CD.idOne));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.unusedId, CD.nameUnused, [CD.idChild], CD.idOne, 1));
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionTwo();
     andThen(() => {
@@ -373,8 +373,7 @@ test('when selecting a new parent cateogry it should remove previously selected 
         assert.ok(!ticket.get('location'));
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
         let components = page.powerSelectComponents();
-        //TODO: test that it actually appears
-        assert.equal(components, 2);
+        assert.equal(components, 3);
     });
     page.categoryOneClickDropdown();
     page.categoryOneClickOptionTwo();
@@ -651,9 +650,9 @@ test('all required fields persist correctly when the user submits a new ticket f
     page.locationClickOptionTwo();
     let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
     xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne));
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne));
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne, 1));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne, 1));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
     page.categoryOneClickDropdown();
     page.categoryOneClickOptionOne();
     page.categoryTwoClickDropdown();
@@ -700,9 +699,9 @@ test('adding a new ticket should allow for another new ticket to be created afte
     page.locationClickOptionTwo();
     let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
     xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne));
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne));
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne, 1));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne, 1));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
     page.categoryOneClickDropdown();
     page.categoryOneClickOptionOne();
     page.categoryTwoClickDropdown();

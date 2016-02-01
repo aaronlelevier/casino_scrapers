@@ -357,8 +357,8 @@ class LocationDetailTests(APITestCase):
         # SetUp
         location = Location.objects.get(name='east')
         # Test
-        response = self.client.get('/api/admin/locations/get-level-children/{pk}/{llevel_id}/'.format(
-            pk=location.id, llevel_id=location.location_level.id))
+        response = self.client.get('/api/admin/locations/get-level-children/{llevel_id}/'.format(
+            llevel_id=location.location_level.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertIn('results', data)
         data = data['results']
@@ -375,8 +375,8 @@ class LocationDetailTests(APITestCase):
         east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
         east_lp.children.add(location)
         # Test
-        response = self.client.get('/api/admin/locations/get-level-parents/{pk}/{llevel_id}/'.format(
-            pk=location.id, llevel_id=location.location_level.id))
+        response = self.client.get('/api/admin/locations/get-level-parents/{llevel_id}/'.format(
+            llevel_id=location.location_level.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertIn('results', data)
         data = data['results']
@@ -391,8 +391,8 @@ class LocationDetailTests(APITestCase):
         location_level = LocationLevel.objects.get(name='store')
         keyword = 'san_die'
         response = self.client.get(
-            '/api/admin/locations/get-level-children/{pk}/{llevel_id}/?name__icontains={name}'
-            .format(pk=location.id, llevel_id=location.location_level.id, name=keyword))
+            '/api/admin/locations/get-level-children/{llevel_id}/?name__icontains={name}'
+            .format(llevel_id=location.location_level.id, name=keyword))
         data = json.loads(response.content.decode('utf8'))
         data = data['results']
         self.assertEqual(
@@ -407,8 +407,8 @@ class LocationDetailTests(APITestCase):
         east_lp.children.add(location)
         keyword = 'east_l'
         response = self.client.get(
-            '/api/admin/locations/get-level-parents/{pk}/{llevel_id}/?name__icontains={name}'
-            .format(pk=location.id, llevel_id=location.location_level.id, name=keyword))
+            '/api/admin/locations/get-level-parents/{llevel_id}/?name__icontains={name}'
+            .format(llevel_id=location.location_level.id, name=keyword))
         data = json.loads(response.content.decode('utf8'))
         data = data['results']
         self.assertEqual(

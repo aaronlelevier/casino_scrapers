@@ -361,6 +361,7 @@ class Person(BaseModel, AbstractUser):
             'employee_id': self.employee_id,
             'locale': str(self.locale.id if self.locale else self._get_locale(locale)),
             'role': str(self.role.id),
+            'status': str(self.status.id),
             'all_locations_and_children': self.all_locations_and_children(),
             'categories': self.categories(),
         }

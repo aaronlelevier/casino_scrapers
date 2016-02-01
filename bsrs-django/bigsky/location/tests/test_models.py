@@ -130,7 +130,7 @@ class LocationManagerTests(TestCase):
         # setup
         location = Location.objects.get(name='ca')
         # test
-        children = Location.objects.get_level_children(location, location.location_level.id)
+        children = Location.objects.get_level_children(location.location_level.id)
         self.assertEqual(children.count(), 3)
 
     def test_get_level_parents(self):
@@ -142,7 +142,7 @@ class LocationManagerTests(TestCase):
         east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
         east_lp.children.add(location)
         # Test
-        parents = Location.objects.get_level_parents(location, location.location_level.id)
+        parents = Location.objects.get_level_parents(location.location_level.id)
         self.assertEqual(parents.count(), 3)
 
     def test_objects_and_their_children(self):

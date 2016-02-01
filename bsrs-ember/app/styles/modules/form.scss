@@ -159,11 +159,12 @@ textarea.ticket-request{
 		background: $orange;
 		border-color: $orange;
 	}
-	&.ticket-priority-meduim{
+	&.ticket-priority-medium{
 		background: $darkYellow;
 		border-color: $darkYellow;
 	}
 	&.ticket-priority-low{
+		color: $darkGray;
 		background: $yellow;
 		border-color: $yellow;
 	}

@@ -280,6 +280,7 @@ class BootstrappedDataTests(TestCase):
         self.assertEqual(data['employee_id'], self.person.employee_id)
         self.assertEqual(data['locale'], str(Locale.objects.get(locale='en').id))
         self.assertEqual(data['role'], str(self.person.role.id))
+        self.assertEqual(data['status'], str(self.person.status.id))
         self.assertIn('all_locations_and_children', data)
         self.assertEqual(len(data['all_locations_and_children']), 1)
         self.assertEqual(data['all_locations_and_children'][0]['id'], str(self.person.locations.first().id))

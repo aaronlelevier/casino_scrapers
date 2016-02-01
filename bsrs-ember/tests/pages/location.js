@@ -13,6 +13,7 @@ let {
 
 const BASE_URL = BASEURLS.base_locations_url;
 const DETAIL_URL = BASE_URL + '/' + LD.idOne;
+const NEW_URL = BASE_URL + '/new/1';
 const LOCATIONLEVEL = '.t-location-level-select > .ember-basic-dropdown-trigger';
 const LOCATIONLEVEL_DROPDOWN = '.t-location-level-select-dropdown > .ember-power-select-options';
 const STATUS = '.t-location-status-select > .ember-basic-dropdown-trigger';
@@ -37,6 +38,7 @@ const PARENTS_DROPDOWN = '.t-location-parent-select-dropdown > .ember-power-sele
 export default PageObject.create({
   visit: visitable('/'),
   visitDetail: visitable(DETAIL_URL),
+  visitNew: visitable(NEW_URL),
 
   locationLevelInput: text(LOCATIONLEVEL),
   locationLevelClickDropdown: clickable(LOCATIONLEVEL),

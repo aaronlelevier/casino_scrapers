@@ -107,6 +107,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-role-category-validation-error').is(':hidden'));
     });
     fillIn('.t-role-name', '');
+    //TODO: need to do removal and add different m2m in ticket and location detail tests
     page.categoryOneRemove();
     generalPage.save();
     andThen(() => {

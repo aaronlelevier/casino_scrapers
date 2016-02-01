@@ -142,50 +142,8 @@ var RoleModel = Model.extend(NewMixin, {
         const location_level_fk = this.get('location_level_fk');
         this.change_location_level(location_level_fk);
     },
-    saveCategories() {
-        const role_id = this.get('id');
-        const store = this.get('store');
-        const role_categories = this.get('role_categories');
-        const role_categories_ids = this.get('role_categories_ids');
-        const previous_m2m_fks = this.get('role_category_fks');
-        //add
-        run(function() {
-            role_categories.forEach((join_model) => {
-                if (Ember.$.inArray(join_model.get('id'), previous_m2m_fks) === -1) {
-                    store.push('role', {id: role_id, role_category_fks: previous_m2m_fks.concat(join_model.get('id'))});
-                    // this.set('role_category_fks', previous_m2m_fks.concat(join_model.get('id')));
-                } 
-            });
-        });
-        //remove
-        const previous_m2m_fks_updated = this.get('role_category_fks');
-        for (let i=previous_m2m_fks_updated.length-1; i>=0; i--) {
-            if (Ember.$.inArray(previous_m2m_fks_updated[i], role_categories_ids) === -1) {
-                previous_m2m_fks_updated.removeObject(previous_m2m_fks_updated[i]); //this might be leaking state ...
-            }
-        }
-    },
-    rollbackCategories() {
-        const store = this.get('store');
-        const previous_m2m_fks = this.get('role_category_fks') || [];
-        const m2m_array = store.find('role-category').toArray();
-        const m2m_to_throw_out = m2m_array.filter(function(join_model) {
-            return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
-        });
-        run(function() {
-            m2m_to_throw_out.forEach(function(join_model) {
-                store.push('role-category', {id: join_model.get('id'), removed: true});
-                // join_model.set('removed', true);
-            });
-            previous_m2m_fks.forEach(function(pk) {
-                store.push('role-category', {id: pk, removed: undefined});
-                // const m2m_to_keep = store.find('role-category', pk);
-                // if (m2m_to_keep.get('id')) {
-                //     m2m_to_keep.set('removed', undefined);
-                // }
-            });
-        });
-    },
+    saveCategories: many_to_many_save('role', 'role_categories', 'role_categories_ids', 'role_category_fks'),
+    rollbackCategories: many_to_many_rollback('role-category', 'role_category_fks', 'role_fk'),
     toString: function() {
         const name = this.get('name');
         return name ? name : '';

@@ -28,8 +28,11 @@ var TicketCategories = Ember.Component.extend({
     }),
     actions: {
         selected(category) {
-            let ticket = this.get('ticket');
-            ticket.change_category_tree(category);
+            const ticket = this.get('ticket');
+            const cat_ids = ticket.get('categories_ids');
+            if(Ember.$.inArray(category.id, cat_ids) === -1){
+                ticket.change_category_tree(category);
+            }
         },
         handleOpen(category_parent_id) {
             const url = `${CATEGORY_URL}?parent=${category_parent_id}`;

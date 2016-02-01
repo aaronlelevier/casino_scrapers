@@ -532,8 +532,7 @@ test('categories are in order based on text', (assert) => {
 
 test('power select options are rendered immediately when enter detail route and can save different top level category', (assert) => {
     let top_level_data = CF.top_level();
-    top_level_data.results[1] = {id: CD.idThree, name: CD.nameThree, parent: null, children_fks: [CD.idLossPreventionChild]};
-    top_level_data.results[1].children = [{id: CD.idLossPreventionChild, name: CD.nameLossPreventionChild, children_fks: []}];
+    top_level_data.results[1] = {id: CD.idThree, name: CD.nameThree, parent_id: null, children_fks: [CD.idLossPreventionChild], level: 0};
     page.visitDetail();
     andThen(() => {
         let components = page.powerSelectComponents();
@@ -562,7 +561,6 @@ test('power select options are rendered immediately when enter detail route and 
         assert.equal(page.categoryThreeInput(), CD.namePlumbingChild);
         assert.equal(page.categoryThreeOptionLength(), 1);
     });
-    let category = {id: CD.idThree, name: CD.nameThree, parent: null, children_fks: [CD.idLossPreventionChild], parent_id: null};
     page.categoryThreeClickDropdown();
     //click loss prevention
     page.categoryOneClickDropdown();
@@ -579,15 +577,15 @@ test('power select options are rendered immediately when enter detail route and 
     andThen(() => {
         assert.equal(page.categoryOneInput(), CD.nameThree);
         assert.equal(page.categoryOneOptionLength(), 2);
-        page.categoryOneClickDropdown();
-        const security = CF.get_list(CD.idLossPreventionChild, CD.nameLossPreventionChild, [], CD.idThree);
-        ajax(`${PREFIX}/admin/categories/?parent=${CD.idThree}`, 'GET', null, {}, 200, security);
-        page.categoryTwoClickDropdown();
     });
+    page.categoryOneClickDropdown();
+    const security = CF.get_list(CD.idLossPreventionChild, CD.nameLossPreventionChild, [], CD.idThree, 1);
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idThree}`, 'GET', null, {}, 200, security);
+    page.categoryTwoClickDropdown();
     andThen(() => {
         assert.equal(page.categoryTwoOptionLength(), 1);
-        page.categoryTwoClickOptionSecurity();
     });
+    page.categoryTwoClickOptionSecurity();
     andThen(() => {
         assert.equal(page.categoryTwoInput(), CD.nameLossPreventionChild);
     });
@@ -603,7 +601,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
     page.visitDetail();
     andThen(() => {
         //override electrical to have children
-        store.push('category', {id: CD.idTwo, name: CD.nameTwo, children_fks: [CD.idChild], parent_id: CD.idOne});
+        store.push('category', {id: CD.idTwo, name: CD.nameTwo, children_fks: [CD.idChild], parent_id: CD.idOne, level: 1});
         let components = page.powerSelectComponents();
         assert.equal(store.find('category').get('length'), 4);
         let ticket = store.find('ticket', TD.idOne);
@@ -631,7 +629,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
         assert.equal(components, 3);
     });
     //select electrical from second level
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne, 1));
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionElectrical();
     andThen(() => {
@@ -646,7 +644,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
         assert.ok(ticket.get('categoriesIsDirty'));
         assert.equal(components, 3);
     });
-    const payload = CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo);
+    const payload = CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2);
     ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, payload);
     page.categoryThreeClickDropdown();
     page.categoryThreeClickOptionOne();
@@ -700,7 +698,7 @@ test('changing tree and reverting tree should not show as dirty', (assert) => {
     page.visitDetail();
     andThen(() => {
         //override electrical to have children
-        store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.idOne, children_fks: [CD.idChild]});
+        store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.idOne, children_fks: [CD.idChild], level: 1});
         let ticket = store.find('ticket', TD.idOne);
         assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
         assert.ok(ticket.get('categoriesIsNotDirty'));
@@ -715,7 +713,7 @@ test('changing tree and reverting tree should not show as dirty', (assert) => {
         assert.ok(ticket.get('categoriesIsNotDirty'));
     });
     //select electrical from second level
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne, 1));
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionElectrical();
     andThen(() => {
@@ -723,7 +721,7 @@ test('changing tree and reverting tree should not show as dirty', (assert) => {
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
         assert.ok(ticket.get('categoriesIsDirty'));
     });
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
     page.categoryThreeClickDropdown();
     page.categoryThreeClickOptionOne();
     andThen(() => {
@@ -731,7 +729,7 @@ test('changing tree and reverting tree should not show as dirty', (assert) => {
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
         assert.ok(ticket.get('categoriesIsDirty'));
     });
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [CD.idPlumbingChild], CD.idOne));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [CD.idPlumbingChild], CD.idOne, 1));
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionPlumbing();
     andThen(() => {
@@ -739,7 +737,7 @@ test('changing tree and reverting tree should not show as dirty', (assert) => {
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
         assert.ok(ticket.get('categoriesIsDirty'));
     });
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idPlumbing}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbingChild, CD.namePlumbingChild, [], CD.idPlumbing));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idPlumbing}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbingChild, CD.namePlumbingChild, [], CD.idPlumbing, 2));
     page.categoryThreeClickDropdown();
     //reset tree back to original
     page.categoryThreeClickOptionToilet();
@@ -773,9 +771,19 @@ test('selecting and removing a top level category will remove children categorie
     });
 });
 
-test('when selecting a new parent category it should remove previously selected child category', (assert) => {
+test('when selecting a new parent category it should remove previously selected child category but if select same, it wont clear tree', (assert) => {
     page.visitDetail();
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [CD.idChild], CD.idOne, 1));
+    page.categoryTwoClickDropdown();
+    page.categoryTwoClickOptionPlumbing();
+    andThen(() => {
+        let ticket = store.findOne('ticket');
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(ticket.get('categories').get('length'), 3);
+        let components = page.powerSelectComponents();
+        assert.equal(components, 3);
+    });
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne, 1));
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionElectrical();
     andThen(() => {
@@ -798,7 +806,7 @@ test('when selecting a new parent category it should remove previously selected 
     });
     page.categoryOneClickDropdown();
     page.categoryOneClickOptionOne();
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionOne();
     page.categoryThreeClickDropdown();
@@ -824,7 +832,7 @@ test('location component shows location for ticket and will fire off xhr to fetc
         assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
     });
     // <check category tree>
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [CD.idPlumbingChild], CD.idOne));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [CD.idPlumbingChild], CD.idOne, 1));
     page.categoryOneClickDropdown();
     andThen(() => {
         assert.equal(page.categoryOneInput(), CD.nameOne);
@@ -838,7 +846,7 @@ test('location component shows location for ticket and will fire off xhr to fetc
         assert.equal(page.categoryTwoInput(), CD.nameRepairChild);
         // assert.equal(page.categoryTwoOptionLength(), 1);//fetch data will change this to 2 once implemented
     });
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idPlumbing}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbingChild, CD.namePlumbingChild, [], CD.idPlumbing));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idPlumbing}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbingChild, CD.namePlumbingChild, [], CD.idPlumbing, 2));
     page.categoryTwoClickDropdown();
     page.categoryThreeClickDropdown();
     andThen(() => {

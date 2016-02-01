@@ -11,7 +11,7 @@ var CCMixin = Ember.Mixin.create({
     add_person: add_many_to_many('ticket-person', 'person', 'person_pk', 'ticket_pk'),
     remove_person: remove_many_to_many('ticket-person', 'person_pk', 'ticket_cc'),
     rollbackCC: many_to_many_rollback('ticket-person', 'ticket_people_fks', 'ticket_pk'),
-    saveCC: many_to_many_save('ticket_cc', 'ticket_cc_ids', 'ticket_people_fks'),
+    saveCC: many_to_many_save('ticket', 'ticket_cc', 'ticket_cc_ids', 'ticket_people_fks'),
 });
 
 export default CCMixin;

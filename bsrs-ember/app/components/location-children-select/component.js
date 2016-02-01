@@ -22,13 +22,12 @@ var LocationChildrenMulti = Ember.Component.extend({
             }); 
         },
         update_filter(search) {
-            const id = this.get('location.id');
-            const llevel_id = this.get('location.location_level.id');
+            const llevel_id = this.get('location.location_level.id') ? this.get('location.location_level.id') : this.get('location.top_location_level.id');
             const repo = this.get('repository');
             return new Ember.RSVP.Promise((resolve, reject) => {
                 Ember.run.later(() => {
                     if (Ember.isBlank(search)) { return resolve([]); }
-                    resolve(repo.findLocationChildren(id, llevel_id, search));
+                    resolve(repo.findLocationChildren(llevel_id, search));
                 }, config.DEBOUNCE_TIMEOUT_INTERVAL);
             });
         }

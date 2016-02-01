@@ -5,6 +5,7 @@ import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import TranslationMixin from 'bsrs-ember/mixins/model/translation';
+import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
 
 var run = Ember.run;
 
@@ -39,14 +40,7 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
             children: this.get('children_fks')
         };
     },
-    childrenIsDirty: Ember.computed('children_fks.[]', 'previous_children_fks.[]', function() {
-        let child_ids = this.get('child_ids') || [];
-        let previous_children_fks = this.get('previous_children_fks') || [];
-        if(child_ids.get('length') !== previous_children_fks.get('length')) {
-            return true;
-        }
-        return equal(child_ids, previous_children_fks) ? false : true;
-    }),
+    childrenIsDirty: many_to_many_dirty('children_fks', 'previous_children_fks'),
     childrenIsNotDirty: Ember.computed.not('childrenIsDirty'),
     has_many_children: Ember.computed('children_fks.[]', function() {
         const related_fks = this.get('children_fks');

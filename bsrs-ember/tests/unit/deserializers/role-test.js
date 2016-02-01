@@ -266,3 +266,30 @@ test('role-category m2m is removed when server payload no longer reflects what s
     assert.equal(store.find('role-category').get('length'), 0);
 });
 
+test('role-category m2m does not delete other role-category m2m models', (assert) => {
+    let m2m, m2m_2, category, role_two;
+    run(() => {
+        store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
+        role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne});
+        role_two = store.push('role', {id: RD.idTwo, location_level_fk: LLD.idOne});
+        store.push('category', {id: CD.idTwo, name: CD.nameTwo});
+        m2m = store.push('role-category', {id: ROLE_CD.idOne, role_fk: RD.idOne, category_fk: CD.idTwo});
+        m2m_2 = store.push('role-category', {id: ROLE_CD.idTwo, role_fk: RD.idTwo, category_fk: CD.idTwo});
+    });
+    role.set('role_category_fks', [ROLE_CD.idOne]);
+    role.save();
+    assert.equal(role.get('categories').get('length'), 1);
+    let response = RF.generate(RD.idOne);
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    run(() => {
+        subject.deserialize(response, RD.idOne);
+    });
+    let role = store.find('role', RD.idOne);
+    let categories = role.get('categories');
+    assert.equal(categories.get('length'), 1);
+    assert.equal(categories.objectAt(0).get('id'), CD.idOne);
+    assert.ok(role.get('isNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(store.find('role-category').get('length'), 3);
+    assert.equal(role_two.get('role_categories').get('length'), 1);
+});
