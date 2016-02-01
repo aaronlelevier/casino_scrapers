@@ -61,18 +61,6 @@ class RoleDetailTests(RoleSetupMixin, APITestCase):
         self.assertIn('status', data['categories'][0])
         self.assertIn('parent', data['categories'][0])
 
-    def test_detail__settings(self):
-        general_settings = Setting.get_settings_file('general')
-        role_settings = Role.get_settings_file()
-        combined_settings = copy.copy(general_settings)
-        combined_settings.update(role_settings)
-
-        response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
-
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings'], combined_settings)
-
 
 class RoleCreateTests(RoleSetupMixin, APITestCase):
 
@@ -130,6 +118,76 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
             role_data['location_level'],
             str(Role.objects.get(id=self.data['id']).location_level.id)
         )
+
+
+class RoleSettingsTests(RoleSetupMixin, APITestCase):
+
+    def test_list(self):
+        response = self.client.get('/api/admin/roles/')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertNotIn('settings', data['results'][0])
+
+    def test_detail(self):
+        general_settings = Setting.get_settings_file('general')
+        role_settings = Role.get_settings_file()
+        combined_settings = copy.copy(general_settings)
+        combined_settings.update(role_settings)
+
+        response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings'], combined_settings)
+
+    def test_create(self):
+        raw_data = {
+            'id': str(uuid.uuid4()),
+            'name': 'new role yall'
+        }
+
+        response = self.client.post('/api/admin/roles/', raw_data, format='json')
+
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings'], DEFAULT_ROLE_SETTINGS)
+
+    def test_create__with_custom(self):
+        raw_data = {
+            'id': str(uuid.uuid4()),
+            'name': 'new role yall',
+            'settings': {'dashboard_text': {'value': 'new dashboard text'}}
+        }
+
+        response = self.client.post('/api/admin/roles/', raw_data, format='json')
+
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(DEFAULT_ROLE_SETTINGS), len(data['settings']))
+        self.assertEqual(
+            raw_data['settings']['dashboard_text']['value'],
+            data['settings']['dashboard_text']['value']
+        )
+
+    def test_update(self):
+        role = create_role()
+        serializer = RoleCreateSerializer(role)
+        raw_data = serializer.data
+        settings = {'dashboard_text': {'value': 'new dashboard text'}}
+        raw_data['settings'] = {'dashboard_text': {'value': 'new dashboard text'}}
+
+        response = self.client.put('/api/admin/roles/{}/'.format(role.id), raw_data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(DEFAULT_ROLE_SETTINGS), len(data['settings']))
+        self.assertEqual(
+            raw_data['settings']['dashboard_text']['value'],
+            data['settings']['dashboard_text']['value']
+        )
+
 
 ### PERSON ###
 
