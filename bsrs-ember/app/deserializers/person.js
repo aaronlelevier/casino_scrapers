@@ -1,6 +1,8 @@
 import Ember from 'ember';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
+var run = Ember.run;
+
 var extract_status = (model, store) => {
     const status = store.find('status', model.status);
     let existing_people = status.get('people') || [];
@@ -95,7 +97,9 @@ var extract_person_location = function(model, store, location_level_fk, location
                 const pk = Ember.uuid();
                 server_locations_sum.push(pk);
                 location_deserializer.deserialize(location_json, location_json.id);
-                store.push('person-location', {id: pk, person_pk: model.id, location_pk: location_json.id});
+                run(() => {
+                    store.push('person-location', {id: pk, person_pk: model.id, location_pk: location_json.id});
+                });
             }else{
                 prevented_duplicate_m2m.push(person_locations[0].get('id'));
             }
@@ -105,7 +109,9 @@ var extract_person_location = function(model, store, location_level_fk, location
             return Ember.$.inArray(m2m.get('id'), server_locations_sum) < 0 && m2m.get('person_pk') === model.id;
         });
         m2m_to_remove.forEach(function(m2m) {
-            store.push('person-location', {id: m2m.get('id'), removed: true});
+            run(() => {
+                store.push('person-location', {id: m2m.get('id'), removed: true});
+            });
         });
         delete model.locations;
         model.person_location_fks = server_locations_sum;

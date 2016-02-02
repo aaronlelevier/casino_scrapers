@@ -39,7 +39,9 @@ var extract_categories = function(model, store, category_deserializer) {
         return Ember.$.inArray(m2m.get('id'), server_sum) < 0 && m2m.get('ticket_pk') === model.id;
     });
     m2m_to_remove.forEach((m2m) => {
-        store.push('ticket-category', {id: m2m.get('id'), removed: true});
+        run(() => {
+            store.push('ticket-category', {id: m2m.get('id'), removed: true});
+        });
     });
     delete model.categories;
     return server_sum;
