@@ -109,7 +109,7 @@ class CreateCategoriesTests(TestCase):
     def test_type(self):
         raw_data = factory.CATEGORIES[0]
 
-        category = Category.objects.get(name=raw_data[1], label=raw_data[2])
+        category = Category.objects.get(name=raw_data[1], label=raw_data[2], description=raw_data[0])
 
         self.assertIsInstance(category, Category)
         self.assertEqual(raw_data[0], int(category.description))
@@ -121,7 +121,7 @@ class CreateCategoriesTests(TestCase):
     def test_trade(self):
         raw_data = factory.CATEGORIES[1]
 
-        category = Category.objects.get(name=raw_data[1], label=raw_data[2])
+        category = Category.objects.get(name=raw_data[1], label=raw_data[2], description=raw_data[0])
 
         self.assertIsInstance(category, Category)
         self.assertEqual(raw_data[0], int(category.description))
@@ -133,7 +133,7 @@ class CreateCategoriesTests(TestCase):
     def test_issue(self):
         raw_data = factory.CATEGORIES[2]
 
-        category = Category.objects.get(name=raw_data[1], label=raw_data[2])
+        category = Category.objects.get(name=raw_data[1], label=raw_data[2], description=raw_data[0])
 
         self.assertIsInstance(category, Category)
         self.assertEqual(raw_data[0], int(category.description))
@@ -149,3 +149,39 @@ class CreateCategoriesTests(TestCase):
 
         for name in raw_names:
             self.assertIn(name, db_names)
+
+    def test_maintenance__type(self):
+        raw_data = next(c for c in factory.CATEGORIES if c[0] == 55)
+
+        category = Category.objects.get(name=raw_data[1], label=raw_data[2], description=raw_data[0])
+
+        self.assertIsInstance(category, Category)
+        self.assertEqual(raw_data[0], int(category.description))
+        self.assertEqual(raw_data[1], category.name)
+        self.assertEqual(raw_data[2], category.label)
+        self.assertEqual(raw_data[3], category.subcategory_label)
+        self.assertEqual(raw_data[4], category.parent)
+
+    def test_maintenance__trade(self):
+        raw_data = next(c for c in factory.CATEGORIES if c[0] == 56)
+
+        category = Category.objects.get(name=raw_data[1], label=raw_data[2], description=raw_data[0])
+
+        self.assertIsInstance(category, Category)
+        self.assertEqual(raw_data[0], int(category.description))
+        self.assertEqual(raw_data[1], category.name)
+        self.assertEqual(raw_data[2], category.label)
+        self.assertEqual(raw_data[3], category.subcategory_label)
+        self.assertEqual(Category.objects.get(description=raw_data[4]), category.parent)
+
+    def test_maintenance__issue(self):
+        raw_data = next(c for c in factory.CATEGORIES if c[0] == 57)
+
+        category = Category.objects.get(name=raw_data[1], label=raw_data[2], description=raw_data[0])
+
+        self.assertIsInstance(category, Category)
+        self.assertEqual(raw_data[0], int(category.description))
+        self.assertEqual(raw_data[1], category.name)
+        self.assertEqual(raw_data[2], category.label)
+        self.assertEqual(raw_data[3], category.subcategory_label)
+        self.assertEqual(Category.objects.get(description=raw_data[4]), category.parent)

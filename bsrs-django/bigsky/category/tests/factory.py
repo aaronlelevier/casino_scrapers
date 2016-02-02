@@ -76,6 +76,17 @@ CATEGORIES = [
     [52, 'Lettering', 'Issue', 'Sub-Issue', 47],
     [53, 'New', 'Sub-Issue', '', 52],
     [54, 'Replace', 'Sub-Issue', '', 52],
+    [55, 'Maintenance', 'Type', 'Trade', None],
+    [56, 'Parking Lot', 'Trade', 'Issue', 55],
+    [57, 'Potholes', 'Issue', 'Sub-Issue', 56],
+    [58, 'Repaving', 'Issue', 'Sub-Issue', 56],
+    [59, 'Striping', 'Issue', 'Sub-Issue', 56],
+    [60, 'Plumbing', 'Trade', 'Issue', 55],
+    [61, 'Toilet', 'Issue', 'Sub-Issue', 60],
+    [62, 'Sink', 'Issue', 'Sub-Issue', 60],
+    [63, 'Water Heater', 'Issue', 'Sub-Issue', 60],
+    [64, 'Urinals', 'Issue', 'Sub-Issue', 60],
+    [65, 'Pipes', 'Issue', 'Sub-Issue', 60]
 ]
 
 
@@ -92,7 +103,7 @@ def create_categories():
             parent = None
 
         try:
-            Category.objects.get(name=data['name'], label=data['label'])
+            Category.objects.get(name=data['name'], label=data['label'], description=data['id'])
         except Category.DoesNotExist:
             Category.objects.create(
                 id=generate_uuid(Category),
