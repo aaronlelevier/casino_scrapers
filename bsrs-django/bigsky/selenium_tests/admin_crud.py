@@ -225,7 +225,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         try:
             child_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
             child_option.click()
-        except AttributeError as e:
+        except (AttributeError, NoSuchElementException) as e:
             raise e("child not found")
         # Fill in Parents
         location_parents_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-location-parent-select')])[last()]")
