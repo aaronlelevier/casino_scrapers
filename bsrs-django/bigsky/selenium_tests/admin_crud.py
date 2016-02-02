@@ -150,7 +150,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         location_level_select.click()
         ll_option = self.driver.find_element_by_class_name("ember-power-select-option--highlighted")
         ll_option.click()
-
         old_phone_one = "222-999-7878"
         old_phone_two = "222-999-7899"
         old_street_one = "001 Tourmaline St"
@@ -169,11 +168,11 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         all_phone_number_inputs = location_page.find_all_ph_new_entries()
         last_phone_number_input = all_phone_number_inputs[1]
         last_phone_number_input.send_keys(old_phone_two)
-        # add_location_email_btn = self.gen_elem_page.find_add_email_btn()
-        # add_location_email_btn.click()
-        # location_page.find_email_new_entry_send_keys(old_email_one)
-        # add_location_email_btn.click()
-        # location_page.find_second_email_new_entry_send_keys(old_email_two)
+        add_location_email_btn = self.gen_elem_page.find_add_email_btn()
+        add_location_email_btn.click()
+        location_page.find_email_new_entry_send_keys(old_email_one)
+        add_location_email_btn.click()
+        location_page.find_second_email_new_entry_send_keys(old_email_two)
         add_address_btn = self.gen_elem_page.find_add_address_btn()
         add_address_btn.click()
         location_page.find_address_new_entry_send_keys(1, old_street_one, old_city_one, old_zip_one)
@@ -195,7 +194,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         ### UPDATE
         # Go to Location Detail view, Change name and add Contact information and hit "save"
         location_page.find_wait_and_assert_elem("t-location-name", location_name)
-        # location_page.assert_email_inputs(old_email_one, old_email_two)
+        location_page.assert_email_inputs(old_email_one, old_email_two)
         new_location_name = rand_chars()
         new_phone_one = "888-999-7878"
         new_phone_two = "888-999-7899"
