@@ -12,6 +12,8 @@ from location.models import Location, LocationLevel
 from location.tests.factory import create_location, create_locations
 from person.models import Person, Role
 from person.tests import factory
+from translation.models import Locale
+from translation.tests.factory import create_locales
 
 
 class DistrictManagerFactoryTests(TestCase):
@@ -112,7 +114,7 @@ class CreateSinglePersonTests(TestCase):
         person = factory.create_single_person()
 
         self.assertIsInstance(person, Person)
-        self.assertIsInstance(person.role, Role)
+        self.assertIsInstance(person.locale, Locale)
         # person's location
         self.assertEqual(person.locations.count(), 1)
         location = person.locations.first()
@@ -208,6 +210,7 @@ class UpdateAdminTests(TestCase):
     def test_update_admin(self):
         top_level_location = Location.objects.create_top_level()
         top_level_location_level = LocationLevel.objects.create_top_level()
+        create_locales()
         person = factory.create_single_person()
 
         factory.update_admin(person)
@@ -267,6 +270,7 @@ class CreateAllPeopleTests(TestCase):
         # the ``create_all_people`` function should only create objects in the 
         # ``person`` app, not any extra Locations
         create_locations()
+        create_locales()
         factory.create_person_statuses()
         init_location_count = Location.objects.count()
 

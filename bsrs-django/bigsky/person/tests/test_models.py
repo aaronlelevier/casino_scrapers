@@ -256,48 +256,38 @@ class PersonTests(TestCase):
         person = Person.objects.get(id=person.id)
         self.assertEqual(person.groups.count(), 1)
 
-    def test_to_dict(self):
-        default_locale = Locale.objects.system_default()
-        self.assertEqual(
-            self.person.to_dict(None)['locale'],
-            str(default_locale.id)
-        )
-
     def test_to_simple_dict(self):
         ret = self.person.to_simple_dict()
         self.assertEqual(len(ret), 4)
         self.assertEqual(ret['id'], str(self.person.id))
 
-    def test_get_locale_user(self):
-        # setup
-        create_locales()
-        person_locale = Locale.objects.order_by("-name").first()
-        # Confirm that the ``system_default`` is not equal to the Locale
-        # that we are about to assign to the ``Person``
-        self.assertNotEqual(
-            Locale.objects.system_default(),
-            person_locale
-        )
-        # test
-        self.person.locale = person_locale
-        self.person.save()
-        # ``person.to_dict(_)`` will return the ``person.locale`` first
-        # if it exists, not ``person._get_locale``
-        self.assertEqual(
-            self.person.to_dict(None)['locale'],
-            str(self.person.locale.id)
-        )
+    # def test_get_locale_user(self):
+    #     # setup
+    #     person_locale = Locale.objects.order_by("-name").first()
+    #     # Confirm that the ``system_default`` is not equal to the Locale
+    #     # that we are about to assign to the ``Person``
+    #     self.assertNotEqual(
+    #         Locale.objects.system_default(),
+    #         person_locale
+    #     )
+    #     # test
+    #     self.person.locale = person_locale
+    #     self.person.save()
+    #     # ``person.to_dict(_)`` will return the ``person.locale`` first
+    #     # if it exists, not ``person._get_locale``
+    #     self.assertEqual(
+    #         self.person.to_dict(None)['locale'],
+    #         str(self.person.locale.id)
+    #     )
 
     def test_get_locale_accept_language_header(self):
         # setup
-        create_locales()
         self.assertIn(
             self.person._get_locale("es,en-US;q=0.8"),
             [str(x) for x in Locale.objects.values_list('id', flat=True)]
         )
 
     def test_get_locale_system(self):
-        self.assertIsNone(self.person.locale)
         self.assertEqual(
             self.person._get_locale(None),
             str(Locale.objects.system_default().id)

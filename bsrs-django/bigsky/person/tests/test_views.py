@@ -363,10 +363,6 @@ class PersonDetailTests(TestCase):
         self.assertIsInstance(Role.objects.get(id=self.data['role']), Role)
 
     def test_locale(self):
-        # setup
-        self.assertFalse(self.data['locale'])
-        self.person.locale = self.locale
-        self.person.save()
         # test
         response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
         data = json.loads(response.content.decode('utf8'))
@@ -557,7 +553,6 @@ class PersonPutTests(APITestCase):
 
     def test_locale(self):
         # setup
-        self.assertFalse(self.data['locale'])
         self.data['locale'] = str(self.locale.id)
         # test
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
@@ -746,6 +741,7 @@ class PersonSearchTests(APITransactionTestCase):
     def setUp(self):
         self.role = create_role()
         create_person_statuses()
+        create_locales()
         create_all_people()
         # Login
         self.person = Person.objects.get(username='admin')

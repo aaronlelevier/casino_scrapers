@@ -5,6 +5,7 @@ from utils.create import random_lorem
 
 
 ### FACTORIES
+LOCALES =['en', 'en-us', 'zh-cn', 'ja', 'es', 'fr']
 
 def create_locales():
     locales = [

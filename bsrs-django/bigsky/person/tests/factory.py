@@ -11,6 +11,8 @@ from category.tests.factory import create_single_category
 from location.models import LocationLevel, Location
 from location.tests.factory import create_location, create_locations
 from person.models import Person, Role, PersonStatus
+from translation.tests.factory import create_locale, LOCALES
+from translation.models import Locale
 from utils import create
 from utils.helpers import generate_uuid
 
@@ -80,7 +82,7 @@ def create_roles():
     return Role.objects.all()
 
 
-def create_single_person(name=None, role=None, location=None, status=None):
+def create_single_person(name=None, role=None, location=None, status=None, locale=None):
     args_required_together = [role, location]
     if not all(args_required_together) and any(args_required_together):
         raise ValidationError("These arguments must all be passed together")
@@ -89,6 +91,7 @@ def create_single_person(name=None, role=None, location=None, status=None):
     role = role or create_role()
     status = status or create_person_status(random.choice(PERSON_STATUSES))
     location = location or create_location(location_level=role.location_level)
+    locale = locale or Locale.objects.first() or create_locale(random.choice(LOCALES))
 
     # incr = Person.objects.count()
     id = generate_uuid(Person)
@@ -105,7 +108,8 @@ def create_single_person(name=None, role=None, location=None, status=None):
             last_name=name,
             title=name,
             role=role,
-            status=status
+            status=status,
+            locale=locale
         )
         person.locations.add(location)
 
@@ -156,6 +160,12 @@ def update_admin(person):
     update_login_person(person)
     add_top_level_location(person)
     add_all_parent_categores(person)
+    update_locale(person)
+
+
+def update_locale(person):
+    person.locale = Locale.objects.get(locale='en')
+    person.save()
 
 
 def add_top_level_location(person):
