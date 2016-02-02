@@ -15,22 +15,22 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
     TicketDeserializer: inject('ticket'),
     deserializer: Ember.computed.alias('TicketDeserializer'),
     findFiltered(person) {
-        const locations = person.get('locations');
-        const location_names = locations.mapBy('name');
+        // const locations = person.get('locations');
+        // const location_names = locations.mapBy('name');
         const role_category_ids = person.get('role').get('categories').mapBy('id');
-
         const filterFunc = function(ticket) {
-            const topLevelLocation = function(ticket) {
-                if (Ember.$.inArray(config.DEFAULT_LOCATION_LEVEL, location_names) > -1) {
-                    return true;
-                }
-            };
-            const ticketLocation = function(ticket) {
-                var location_id = ticket.get('location.id');
-                var location_ids = locations.mapBy('id');
-                return Ember.$.inArray(location_id, location_ids) > -1;
-            };
-            if (topLevelLocation(ticket) || ticketLocation(ticket)) {
+            // const topLevelLocation = function(ticket) {
+            //     if (Ember.$.inArray(config.DEFAULT_LOCATION_LEVEL, location_names) > -1) {
+            //         return true;
+            //     }
+            // };
+            // const ticketLocation = function(ticket) {
+            //     var location_id = ticket.get('location.id');
+            //     var location_ids = locations.mapBy('id');
+            //     return Ember.$.inArray(location_id, location_ids) > -1;
+            // };
+            // if (ticketLocation(ticket)) {
+            // if (topLevelLocation(ticket) || ticketLocation(ticket)) {
                 var ticket_category_ids = ticket.get('categories').mapBy('id');
                 var result = false;
                 ticket_category_ids.forEach((cid) => {
@@ -38,9 +38,10 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
                     result = result || temp_result;
                 });
                 return result;
-            } else {
-                return false;
-            }
+            // }
+            // } else {
+                // return false;
+            // }
         };
         return this.get('store').find('ticket', filterFunc);
     },
