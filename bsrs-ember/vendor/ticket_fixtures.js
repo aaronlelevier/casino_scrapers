@@ -64,7 +64,7 @@ var BSRS_TICKET_FACTORY = (function() {
         return {'count':page_size*2-1,'next':null,'previous':null,'results': sorted};
     };
     factory.prototype.list_two = function() {
-        var unused_category = this.category_fixtures.get(this.category_defaults.idRandom, this.category_defaults.nameRandom);
+        var unused_category = this.category_fixtures.get(this.category_defaults.idOne, this.category_defaults.nameOne);
         unused_category.children_fks = [];
         unused_category.parent = null;
 
