@@ -1141,17 +1141,19 @@ test('location property returns associated object or undefined', (assert) => {
 test('change_location will append the ticket id to the new location tickets array', function(assert) {
     ticket = store.push('ticket', {id: TD.idOne});
     let location = store.push('location', {id: LD.idOne});
-    let location_two = store.push('location', {id: LD.idTwo});
-    ticket.change_location(LD.idTwo);
+    let location_two = {id: LD.idTwo};
+    ticket.change_location(location_two);
     assert.deepEqual(location.get('tickets'), []);
-    assert.deepEqual(location_two.get('tickets'), [TD.idOne]);
+    let location_two_pushed = store.find('location', LD.idTwo);
+    assert.deepEqual(location_two_pushed.get('tickets'), [TD.idOne]);
+    assert.ok(location_two_pushed.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('change_location will remove the ticket id from the prev location tickets array', function(assert) {
     ticket = store.push('ticket', {id: TD.idOne});
     let location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [9, TD.idOne]});
-    store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, tickets: []});
-    ticket.change_location(LD.idTwo);
+    let location_two = {id: LD.idTwo};
+    ticket.change_location(location_two);
     assert.deepEqual(location.get('tickets'), [9]);
 });
 
@@ -1181,20 +1183,20 @@ test('location will save correctly as undefined', (assert) => {
 test('ticket is dirty or related is dirty when existing location is altered', (assert) => {
     ticket = store.push('ticket', {id: TD.idOne, location_fk: LD.idOne});
     store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
-    store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, tickets: []});
+    const location_two = {id: LD.idTwo, name: LD.storeNameTwo, tickets: []};
     assert.equal(ticket.get('location.id'), LD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    ticket.change_location(LD.idTwo);
+    ticket.change_location(location_two);
     assert.equal(ticket.get('location.id'), LD.idTwo);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 });
 
 test('ticket is dirty or related is dirty when existing location is altered (starting w/ nothing)', (assert) => {
     ticket = store.push('ticket', {id: TD.idOne, location_fk: undefined});
-    store.push('location', {id: LD.idTwo, name: LD.storeName, tickets: []});
+    const location_two = {id: LD.idTwo, name: LD.storeName, tickets: []};
     assert.equal(ticket.get('location'), undefined);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    ticket.change_location(LD.idTwo);
+    ticket.change_location(location_two);
     assert.equal(ticket.get('location.id'), LD.idTwo);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 });
@@ -1202,16 +1204,16 @@ test('ticket is dirty or related is dirty when existing location is altered (sta
 test('rollback location will revert and reboot the dirty location to clean', (assert) => {
     ticket = store.push('ticket', {id: TD.idOne, location_fk: LD.idOne});
     store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
-    store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, tickets: []});
+    let location_two = {id: LD.idTwo};
     assert.equal(ticket.get('location.id'), LD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    ticket.change_location(LD.idTwo);
+    ticket.change_location(location_two);
     assert.equal(ticket.get('location.id'), LD.idTwo);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     ticket.rollbackRelated();
     assert.equal(ticket.get('location.id'), LD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    ticket.change_location(LD.idTwo);
+    ticket.change_location(location_two);
     assert.equal(ticket.get('location.id'), LD.idTwo);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     ticket.saveRelated();

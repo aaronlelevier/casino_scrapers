@@ -52,15 +52,11 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
         if (search_criteria) {
             url += `?name__icontains=${search_criteria}`;
             return PromiseMixin.xhr(url, 'GET').then((response) => {
-                this.get('LocationDeserializer').deserialize(response);
-                let filterFunc = function(location) {
-                    let name = location.get('name');
-                    return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1 && !location.get('new');
-                };
-                return this.get('store').find('location', filterFunc);
+                return response.results.filter((location) => {
+                    return location.name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1;
+                });
             });
         }
-        return Ember.A([]);
     },
     findLocationSelect(filter, search_criteria) {
         let url = this.format_url(filter);

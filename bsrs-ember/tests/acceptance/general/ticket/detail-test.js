@@ -856,10 +856,6 @@ test('location component shows location for ticket and will fire off xhr to fetc
     // </check category tree>
     xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
     page.locationClickDropdown();
-    //test filter out new models in repo
-    run(function() {
-        store.push('location', {id: 'testFilterOutNew6', name: 'Wat6', new: true});
-    });
     fillIn(`${SEARCH}`, '6');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
