@@ -7,7 +7,7 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
-import {ticket_payload, ticket_payload_with_comment, required_ticket_payload, ticket_payload_detail, ticket_payload_detail_one_category} from 'bsrs-ember/tests/helpers/payloads/ticket';
+import {ticket_payload, ticket_payload_with_comment, required_ticket_payload, ticket_payload_detail_with_assignee, ticket_payload_detail, ticket_payload_detail_one_category} from 'bsrs-ember/tests/helpers/payloads/ticket';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import PEOPLE_CURRENT_DEFAULTS from 'bsrs-ember/vendor/defaults/person-current';
 import PF from 'bsrs-ember/vendor/people_fixtures';
@@ -208,15 +208,15 @@ test('validation works for non required fields and when hit save, we do same pos
         assert.ok(find('.t-assignee-validation-error').is(':visible'));
     });
     //assignee
-    xhr(`${PREFIX}/admin/people/?fullname__icontains=Mel`, 'GET', null, {}, 200, PF.search());
+    xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy1`, 'GET', null, {}, 200, PF.search());
     page.assigneeClickDropdown();
-    fillIn(`${SEARCH}`, 'Mel');
+    fillIn(`${SEARCH}`, 'Boy1');
     page.assigneeClickOptionOne();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });
     generalPage.save();
-    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail_with_assignee), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
     });
@@ -941,11 +941,10 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     fillIn(`${SEARCH}`, 'b');
     andThen(() => {
         assert.equal(page.assigneeInput(), PD.fullname);
-        assert.equal(page.assigneeOptionLength(), 11);
-        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), PD.fullname);
-        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(1)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+        assert.equal(page.assigneeOptionLength(), 10);
+        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
     });
-    page.assigneeClickOptionTwo();
+    page.assigneeClickOptionOne();
     andThen(() => {
         assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
     });
@@ -958,31 +957,10 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     fillIn(`${SEARCH}`, 'b');
     andThen(() => {
         assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-        assert.equal(page.assigneeOptionLength(), 11);
-        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), PD.fullname);
-        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(1)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+        assert.equal(page.assigneeOptionLength(), 10);
+        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
     });
     page.assigneeClickOptionTwo();
-    andThen(() => {
-        assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-        let ticket = store.find('ticket', TD.idOne);
-        assert.equal(ticket.get('assignee.id'), PD.idBoy);
-        assert.equal(ticket.get('assignee_fk'), PD.idOne);
-        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-        //ensure categories has not changed
-        assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
-        assert.equal(ticket.get('categories').get('length'), 3);
-    });
-    //search specific assignee
-    xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy2`, 'GET', null, {}, 200, PF.search());
-    page.assigneeClickDropdown();
-    fillIn(`${SEARCH}`, 'Boy2');
-    andThen(() => {
-        assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-        assert.equal(page.assigneeOptionLength(), 1);
-        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
-    });
-    page.assigneeClickOptionOne();
     andThen(() => {
         assert.equal(page.assigneeInput(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
         let ticket = store.find('ticket', TD.idOne);
@@ -993,9 +971,29 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
         assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
         assert.equal(ticket.get('categories').get('length'), 3);
     });
+    //search specific assignee
+    xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy1`, 'GET', null, {}, 200, PF.search());
+    page.assigneeClickDropdown();
+    fillIn(`${SEARCH}`, 'Boy1');
+    andThen(() => {
+        assert.equal(page.assigneeInput(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
+        assert.equal(page.assigneeOptionLength(), 2);
+        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+    });
+    page.assigneeClickOptionOne();
+    andThen(() => {
+        assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+        let ticket = store.find('ticket', TD.idOne);
+        assert.equal(ticket.get('assignee.id'), PD.idBoy);
+        assert.equal(ticket.get('assignee_fk'), PD.idOne);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        //ensure categories has not changed
+        assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
+        assert.equal(ticket.get('categories').get('length'), 3);
+    });
     let response_put = TF.detail(TD.idOne);
-    response_put.assignee = {id: PD.idSearch, first_name: PD.nameBoy2};
-    let payload = TF.put({id: TD.idOne, assignee: PD.idSearch});
+    response_put.assignee = {id: PD.idBoy, first_name: PD.nameBoy};
+    let payload = TF.put({id: TD.idOne, assignee: PD.idBoy});
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response_put);
     generalPage.save();
     andThen(() => {

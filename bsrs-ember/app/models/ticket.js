@@ -61,7 +61,8 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
         const assignee = this.get('assignee');
         const assignee_fk = this.get('assignee_fk');
         if(assignee && assignee.get('id') !== assignee_fk) {
-            this.change_assignee(assignee_fk);
+            const assignee_object = {id: assignee_fk};
+            this.change_assignee(assignee_object);
         }
     },
     rollbackAttachments() {
@@ -138,14 +139,15 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
             });
         }
     },
-    change_assignee: function(new_assignee_id) {
-        const ticket_id = this.get('id');
+    change_assignee: function(new_assignee) {
         const store = this.get('store');
+        const pushed_assignee = store.push('person', new_assignee);
+        const ticket_id = this.get('id');
         this.remove_assignee();
-        const new_assignee = store.find('person', new_assignee_id);
-        const new_assignee_tickets = new_assignee.get('assigned_tickets') || [];
-        run(function() {
-            store.push('person', {id: new_assignee.get('id'), assigned_tickets: new_assignee_tickets.concat(ticket_id)});
+        // const new_assignee = store.find('person', new_assignee_id);
+        const new_assignee_tickets = pushed_assignee.get('assigned_tickets') || [];
+        run(() => {
+            store.push('person', {id: pushed_assignee.get('id'), assigned_tickets: new_assignee_tickets.concat(ticket_id)});
         });
     },
     change_priority: change_belongs_to('tickets', 'ticket-priority', 'priority'),

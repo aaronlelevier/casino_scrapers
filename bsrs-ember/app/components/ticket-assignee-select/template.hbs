@@ -4,7 +4,6 @@
   search=(action "update_filter")
   onchange=(action "selected")
   as |assignee|
-
 }}
-  {{assignee.fullname}}
+  {{concat-name assignee.first_name assignee.last_name}}
 {{/power-select}}

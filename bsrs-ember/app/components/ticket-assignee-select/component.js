@@ -8,7 +8,7 @@ var TicketAssignee = Ember.Component.extend({
         selected(person) {
             let ticket = this.get('ticket');
             if (person) {
-                ticket.change_assignee(person.get('id'));
+                ticket.change_assignee(person);
             } else {
                 ticket.remove_assignee();
             }
