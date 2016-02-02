@@ -17,27 +17,30 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
     findFiltered(person) {
         const locations = person.get('locations');
         const location_names = locations.mapBy('name');
-        if (Ember.$.inArray(config.DEFAULT_LOCATION_LEVEL, location_names) > -1) {
-            return this.get('store').find('ticket');
-        } else {
-            const filterFunc = function(ticket) {
+        const role_category_ids = person.get('role').get('categories').mapBy('id');
+
+        const filterFunc = function(ticket) {
+            const topLevelLocation = function(ticket) {
+                if (Ember.$.inArray(config.DEFAULT_LOCATION_LEVEL, location_names) > -1) {
+                    return true;
+                }
+            };
+            const ticketLocation = function(ticket) {
                 var location_id = ticket.get('location.id');
                 var location_ids = locations.mapBy('id');
                 return Ember.$.inArray(location_id, location_ids) > -1;
             };
-            return this.get('store').find('ticket', filterFunc);
-        }
-    },
-    findFilteredbyCategory(person) {
-        const role_category_ids = person.get('role').get('categories').mapBy('id');
-        const filterFunc = function(ticket) {
-            var ticket_category_ids = ticket.get('categories').mapBy('id');
-            var result = false;
-            ticket_category_ids.forEach((cid) => {
-                var temp_result = Ember.$.inArray(cid, role_category_ids) > -1;
-                result = result || temp_result;
-            });
-            return result;
+            if (topLevelLocation(ticket) || ticketLocation(ticket)) {
+                var ticket_category_ids = ticket.get('categories').mapBy('id');
+                var result = false;
+                ticket_category_ids.forEach((cid) => {
+                    var temp_result = Ember.$.inArray(cid, role_category_ids) > -1;
+                    result = result || temp_result;
+                });
+                return result;
+            } else {
+                return false;
+            }
         };
         return this.get('store').find('ticket', filterFunc);
     },
