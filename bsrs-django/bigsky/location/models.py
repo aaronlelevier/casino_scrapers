@@ -123,7 +123,7 @@ class SelfReferencingManager(BaseManager):
         return self.get_queryset().objects_and_their_children()
 
     def create_top_level(self):
-        obj, _ = self.get_or_create(name=settings.LOCATION_TOP_LEVEL_NAME)
+        obj, _ = self.get_or_create(name=settings.DEFAULT_LOCATION_LEVEL)
         return obj
 
 

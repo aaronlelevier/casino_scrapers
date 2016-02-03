@@ -67,7 +67,7 @@ def create_roles():
 
     for location_level in LocationLevel.objects.all():
 
-        if location_level.name == settings.LOCATION_TOP_LEVEL_NAME:
+        if location_level.name == settings.DEFAULT_LOCATION_LEVEL:
             name = settings.DEFAULT_ROLE
         else:
             name = '{}-role'.format(location_level.name)
@@ -175,7 +175,7 @@ def add_top_level_location(person):
     remove_all_locations(person)
     
     location = Location.objects.create_top_level()
-    person.role = Role.objects.get(location_level__name=settings.LOCATION_TOP_LEVEL_NAME)
+    person.role = Role.objects.get(location_level__name=settings.DEFAULT_LOCATION_LEVEL)
     person.save()
     
     person.locations.add(location)

@@ -88,7 +88,7 @@ class LocationLevelManagerTests(TestCase):
     def test_create_top_level(self):
         ret = LocationLevel.objects.create_top_level()
         self.assertIsInstance(ret, LocationLevel)
-        self.assertEqual(ret.name, settings.LOCATION_TOP_LEVEL_NAME)
+        self.assertEqual(ret.name, settings.DEFAULT_LOCATION_LEVEL)
 
 
 class LocationLevelTests(TestCase):
@@ -137,7 +137,7 @@ class LocationManagerTests(TestCase):
     def test_get_level_children_exclude(self):
         # setup
         location = Location.objects.get(name='ca')
-        location_level_updated = LocationLevel.objects.get(name='Company')
+        location_level_updated = LocationLevel.objects.get(name=settings.DEFAULT_LOCATION_LEVEL)
         # test
         children = Location.objects.get_level_children(location_level_updated.id, location.id)
         self.assertEqual(children.count(), 6)
@@ -145,13 +145,13 @@ class LocationManagerTests(TestCase):
     def test_get_level_children_exclude_not_relevant_pk(self):
         # setup
         location = Location.objects.get(name='ca')
-        location_level_updated = LocationLevel.objects.get(name='Company')
+        location_level_updated = LocationLevel.objects.get(name=settings.DEFAULT_LOCATION_LEVEL)
         # test
         children = Location.objects.get_level_children(location_level_updated.id, str(uuid.uuid4()))
         self.assertEqual(children.count(), 7)
 
     def test_get_level_parents(self):
-        # 'ca' is a 'district' that now has 3 parents at the 'region'(2) and Company(1) ``LocationLevel``
+        # 'ca' is a 'district' that now has 3 parents at the 'region'(2) and company(1) ``LocationLevel``
         # setup
         location = Location.objects.get(name='ca')
         location_level = LocationLevel.objects.get(name='region')
@@ -164,7 +164,7 @@ class LocationManagerTests(TestCase):
 
     def test_get_level_parents_excludee(self):
         # user may change location level so need to make sure location is not passed down as parent
-        # 'ca' is a 'district' that now has 3 parents at the 'region'(2) and Company(1) ``LocationLevel``
+        # 'ca' is a 'district' that now has 3 parents at the 'region'(2) and company(1) ``LocationLevel``
         # setup
         location = Location.objects.get(name='ca')
         location_level = LocationLevel.objects.get(name='region')
@@ -175,7 +175,7 @@ class LocationManagerTests(TestCase):
         # Test
         parents = Location.objects.get_level_parents(location_level_updated.id, location.id)
         self.assertEqual(parents.count(), 6)
-        self.assertEqual(parents[0].name, 'Company')
+        self.assertEqual(parents[0].name, settings.LOCATION_TOP_LEVEL_NAME)
         self.assertEqual(parents[1].name, 'east')
         self.assertEqual(parents[2].name, 'east_lp')
         self.assertEqual(parents[3].name, 'los_angeles')
@@ -208,7 +208,7 @@ class LocationManagerTests(TestCase):
         ret = Location.objects.create_top_level()
         self.assertIsInstance(ret, Location)
         self.assertEqual(ret.name, settings.LOCATION_TOP_LEVEL_NAME)
-        self.assertEqual(ret.location_level.name, settings.LOCATION_TOP_LEVEL_NAME)
+        self.assertEqual(ret.location_level.name, settings.DEFAULT_LOCATION_LEVEL)
 
 
 class LocationTests(TestCase):

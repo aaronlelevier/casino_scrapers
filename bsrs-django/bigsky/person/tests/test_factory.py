@@ -100,7 +100,7 @@ class CreateRolesTests(TestCase):
     def test_other_roles(self):
         for role in Role.objects.all():
             if role.name == settings.DEFAULT_ROLE:
-                self.assertEqual(role.location_level.name, settings.LOCATION_TOP_LEVEL_NAME)
+                self.assertEqual(role.location_level.name, settings.DEFAULT_LOCATION_LEVEL)
             else:
                 self.assertNotEqual(role.location_level.name, settings.LOCATION_TOP_LEVEL_NAME)
                 self.assertEqual(role.name, '{}-role'.format(role.location_level.name))
@@ -191,7 +191,7 @@ class UpdateAdminTests(TestCase):
         create_locations()
         create_categories()
         # company
-        location_level = LocationLevel.objects.get(name=settings.LOCATION_TOP_LEVEL_NAME)
+        location_level = LocationLevel.objects.get(name=settings.DEFAULT_LOCATION_LEVEL)
         factory.create_role(name=settings.DEFAULT_ROLE, location_level=location_level)
 
     def test_update_login_person(self):
