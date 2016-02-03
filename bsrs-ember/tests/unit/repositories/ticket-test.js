@@ -14,8 +14,7 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import ROLE_CD from 'bsrs-ember/vendor/defaults/role-category';
 import CD from 'bsrs-ember/vendor/defaults/category';
 
-var store, original_xhr, subject, run = Ember.run, person_location, person_location_two, location, location_two, person, role, role_category,
-category, category_two, ticket_category, ticket_category_two, ticket, ticket_two;
+var store, original_xhr, subject, run = Ember.run, person_location, person_location_two, locationzz, location_two, person, role, role_category, category, category_two, ticket_category, ticket_category_two, ticket, ticket_two;
 
 module('unit: ticket repository test', {
     beforeEach() {
@@ -31,7 +30,7 @@ module('unit: ticket repository test', {
             // Location
             person_location = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
             person_location_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idTwo, location_pk: LD.idTwo});
-            location = store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idOne], tickets: [TD.idOne]});
+            locationzz= store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idOne], tickets: [TD.idOne]});
             location_two = store.push('location', {id: LD.idTwo, person_location_fks: [PERSON_LD.idTwo], tickets: [TD.idTwo]});
             person = store.push('person', {id: PD.idOne});
             store.push('person', {id: PD.idTwo});
@@ -60,13 +59,13 @@ test('DEFAULT_LOCATION', (assert) => {
 test('findFiltered - by Location and Category', (assert) => {
     let locations = person.get('locations');
     assert.equal(person.get('locations').get('length'), 1);
-    assert.equal(person.get('locations').objectAt(0).get('id'), location.get('id'));
+    assert.equal(person.get('locations').objectAt(0).get('id'), locationzz.get('id'));
     assert.equal(person.get('role').get('categories').get('length'), 1);
     assert.equal(person.get('role').get('categories').objectAt(0).get('id'), category.get('id'));
     let tickets = store.find('ticket');
     assert.equal(tickets.get('length'), 2);
     assert.equal(tickets.objectAt(0).get('id'), ticket.get('id'));
-    assert.equal(tickets.objectAt(0).get('location').get('id'), location.get('id'));
+    assert.equal(tickets.objectAt(0).get('location').get('id'), locationzz.get('id'));
     assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('id'), category.get('id'));
     // filter test
     let ticket_array_proxy = subject.findFiltered(person);
@@ -77,14 +76,14 @@ test('findFiltered - by Location and Category', (assert) => {
 test('findFiltered returns multiple tickets', (assert) => {
     let locations = person.get('locations');
     assert.equal(person.get('locations').get('length'), 1);
-    assert.equal(person.get('locations').objectAt(0).get('id'), location.get('id'));
+    assert.equal(person.get('locations').objectAt(0).get('id'), locationzz.get('id'));
     ticket_category_two = store.push('ticket-category', {id: TCD.idTwo, ticket_pk: TD.idTwo, category_pk: CD.idOne});
     assert.equal(person.get('role').get('categories').get('length'), 1);
     assert.equal(person.get('role').get('categories').objectAt(0).get('id'), category.get('id'));
     let tickets = store.find('ticket');
     assert.equal(tickets.get('length'), 2);
     assert.equal(tickets.objectAt(0).get('id'), ticket.get('id'));
-    assert.equal(tickets.objectAt(0).get('location').get('id'), location.get('id'));
+    assert.equal(tickets.objectAt(0).get('location').get('id'), locationzz.get('id'));
     assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('id'), category.get('id'));
     // filter test
     let ticket_array_proxy = subject.findFiltered(person);
@@ -95,7 +94,7 @@ test('findFiltered returns multiple tickets', (assert) => {
 
 test('findFiltered returns false', (assert) => {
     assert.equal(person.get('locations').get('length'), 1);
-    assert.equal(person.get('locations').objectAt(0).get('id'), location.get('id'));
+    assert.equal(person.get('locations').objectAt(0).get('id'), locationzz.get('id'));
     let role_category = store.push('role-category', {id: ROLE_CD.idOne, role_fk: RD.idOne, category_fk: CD.idTwo});
     let category_three = store.push('category', {id: CD.idThree});
     let ticket_category_two = store.push('ticket-category', {id: TCD.idTwo, ticket_pk: TD.idTwo, category_pk: CD.idThree});
@@ -104,7 +103,7 @@ test('findFiltered returns false', (assert) => {
     let tickets = store.find('ticket');
     assert.equal(tickets.get('length'), 2);
     assert.equal(tickets.objectAt(0).get('id'), ticket.get('id'));
-    assert.equal(tickets.objectAt(0).get('location').get('id'), location.get('id'));
+    assert.equal(tickets.objectAt(0).get('location').get('id'), locationzz.get('id'));
     assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('id'), category.get('id'));
     // filter test
     let ticket_array_proxy = subject.findFiltered(person);
