@@ -154,8 +154,8 @@ function loadFixtures {
 }
 
 function runSeleniumTests {
+    echo $(firefox -v)
     python run_selenium.py
-    echo firefox -v
     SELENIUM_TEST=$?
     if [ "$SELENIUM_TEST" == 1 ]; then
       echo "selenium test failed"
