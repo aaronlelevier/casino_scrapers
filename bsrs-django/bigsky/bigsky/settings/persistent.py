@@ -11,3 +11,4 @@ DATABASES['default'] = {
 }
 
 MEDIA_ROOT = "/var/www/media/persistent/"
+STATIC_ROOT = "/var/www/static/persistent/"
