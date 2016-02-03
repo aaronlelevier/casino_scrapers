@@ -169,7 +169,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         last_phone_number_input = all_phone_number_inputs[1]
         last_phone_number_input.send_keys(old_phone_two)
         add_location_email_btn = self.gen_elem_page.find_add_email_btn()
-        print(add_location_email_btn.text)
+        self.driver.execute_script('arguments[0].scrollTop = arguments[0].scrollHeight', add_location_email_btn)
         add_location_email_btn.click()
         add_location_email_btn.click()
         location_page.find_email_new_entry_send_keys(old_email_one)
