@@ -24,7 +24,7 @@
     {{#if savingFilter}}
     {{#tether-dialog close='toggleSaveFilterSetModal' containerClassNames='save-filterset-dialog' hasOverlay=true clickOutsideToClose=true}}
     <div class="form-group input-group">
-        {{input value=filtersetName class="form-control input-md t-filterset-name-input" placeholder=(t 'grid.filterset_name')}}
+        {{input value=filtersetName class="form-control input-md t-filterset-name-input" action='invokeSaveFilterSet' placeholder=(t 'grid.filterset_name')}}
         <div class="input-group-btn">
             <button class="btn btn-primary btn-sm t-filterset-save-btn" {{action "invokeSaveFilterSet"}}>{{t 'grid.save_filter'}}</button>
         </div>
