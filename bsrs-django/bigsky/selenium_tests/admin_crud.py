@@ -171,6 +171,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         add_location_email_btn = self.gen_elem_page.find_add_email_btn()
         self.driver.execute_script('arguments[0].scrollTop = arguments[0].scrollHeight', add_location_email_btn)
         add_location_email_btn.send_keys("\n")
+        add_location_email_btn.click()
         location_page.find_email_new_entry_send_keys(old_email_one)
         # add_location_email_btn.click()
         # location_page.find_second_email_new_entry_send_keys(old_email_two)
