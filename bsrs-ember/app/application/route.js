@@ -100,29 +100,18 @@ var ApplicationRoute = Ember.Route.extend({
         });
 
         const person_current = Ember.$.extend(true, [], Ember.$('[data-preload-person-current]').data('configuration'));
-        const person_current_role = store.find('role', person_current.role);
-        person_current_role.set('people', [person_current.id]);
-        //save so not dirty
-        person_current_role.save();
+        // const person_current_role = store.find('role', person_current.role);
+        // person_current_role.set('people', [person_current.id]);
+        // //save so not dirty
+        // person_current_role.save();
 
         let current_locale = store.find('locale', person_current.locale);
         config.i18n.currentLocale = current_locale.get('locale');
-
+        //Sets current user 
         store.push('person-current', person_current);
-
-        var location_deserializer = this.get('LocationDeserializer');
         var person_deserializer = this.get('PersonDeserializer');
-
-        var person_location_pks = [];
-        person_current.all_locations_and_children.forEach(function(location) {
-            const person_location_pk = Ember.uuid();
-            store.push('person-location', {id: person_location_pk, person_pk: person_current.id, location_pk: location.id});
-            person_location_pks.push(person_location_pk);
-            location_deserializer.deserialize(location, location.id);
-        });
         // push in 'logged in' Person
         person_current.locale = current_locale;
-        person_current.person_location_fks = person_location_pks;
         person_deserializer.deserialize(person_current, person_current.id);
 
         // Set the current user's time zone

@@ -227,26 +227,13 @@ test('on boot we should fetch and load the location level configuration', functi
 test('on boot we should fetch and load the person-current, logged in Person, configuration', function(assert) {
     visit(HOME_URL);
     andThen(() => {
-        var person_current = store.findOne('person-current');
+        var person_current = store.findOne('person');
         assert.equal(person_current.get('id'), PERSON_CURRENT.id);
         assert.equal(person_current.get('first_name'), PERSON_CURRENT.first_name);
         assert.equal(person_current.get('last_name'), PERSON_CURRENT.last_name);
         assert.equal(person_current.get('username'), PERSON_CURRENT.username);
         assert.equal(person_current.get('title'), PERSON_CURRENT.title);
-        assert.equal(person_current.get('role'), store.find('person', PERSON_CURRENT.id).get('role').get('id'));
-        // Location
-        let person = person_current.get('person');
-        assert.equal(person.get('locations').get('length'), 1);
-        let person_location = PERSON_CURRENT.all_locations_and_children[0];
-        assert.equal(person.get('locations').objectAt(0).get('id'), person_location.id);
-        assert.equal(person.get('locations').objectAt(0).get('name'), person_location.name);
-        assert.equal(person.get('locations').objectAt(0).get('location_level_fk'), person_location.location_level_fk);
-        let location_level_fk = person.get('locations').objectAt(0).get('location_level_fk');
-        assert.equal(store.find('location-level', location_level_fk).get('locations').get('length'), 1);
-        // Category
-        let role = store.find('person', PERSON_CURRENT.id).get('role');
-        assert.equal(role.get('categories').get('length'), 1);
-        assert.equal(role.get('categories').objectAt(0).get('id'), CD.idOne);
+        assert.equal(person_current.get('role.id'), store.find('person', PERSON_CURRENT.id).get('role').get('id'));
     });
 });
 

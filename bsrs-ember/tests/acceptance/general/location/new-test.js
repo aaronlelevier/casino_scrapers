@@ -75,7 +75,7 @@ test('visiting /location/new', (assert) => {
     click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_NEW_URL);
-        assert.equal(store.find('location').get('length'), 2);
+        assert.equal(store.find('location').get('length'), 1);
         const location = store.find('location', UUID.value);
         assert.ok(location.get('new'));
         assert.notOk(location.get('name'));
@@ -93,7 +93,6 @@ test('visiting /location/new', (assert) => {
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
-        assert.equal(store.find('location').get('length'), 2);
         let location = store.find('location', UUID.value);
         assert.equal(location.get('new'), undefined);
         assert.equal(location.get('name'), LD.storeName);
@@ -178,7 +177,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(currentURL(), LOCATION_NEW_URL);
             assert.equal(find('.t-modal').is(':visible'), true);
             let locations = store.find('location');
-            assert.equal(locations.get('length'), 2);
+            assert.equal(locations.get('length'), 1);
         });
     });
     click('.t-modal-footer .t-modal-rollback-btn');
@@ -186,8 +185,8 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_URL);
             let locations = store.find('location');
-            assert.equal(locations.get('length'), 1);
-            assert.equal(find('tr.t-grid-data').length, 1);
+            assert.equal(locations.get('length'), 0);
+            assert.equal(find('tr.t-grid-data').length, 0);
         });
     });
 });
@@ -196,7 +195,7 @@ test('when user enters new form and doesnt enter data, the record is correctly r
     page.visitNew();
     generalPage.cancel();
     andThen(() => {
-        assert.equal(store.find('location').get('length'), 1);
+        assert.equal(store.find('location').get('length'), 0);
     });
 });
 

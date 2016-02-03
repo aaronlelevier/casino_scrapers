@@ -1231,6 +1231,7 @@ test('rollback location will revert and reboot the dirty location to clean', (as
     assert.equal(ticket.get('location.id'), LD.idTwo);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     ticket.saveRelated();
+    //note: tickets are cleared if dirty on save
     // assert.equal(ticket.get('location.id'), LD.idTwo);
     // assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });

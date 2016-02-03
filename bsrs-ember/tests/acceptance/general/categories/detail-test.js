@@ -49,7 +49,7 @@ test('clicking a categories name will redirect to the given detail view', (asser
     });
     const detail_data = CF.detail(CD.idGridOne);
     xhr(endpoint + CD.idGridOne + '/', 'GET', null, {}, 200, detail_data);
-    click('.t-grid-data:eq(1)');
+    click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), GRID_DETAIL_URL);
     });
@@ -397,7 +397,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     });
     const detail_data = CF.detail(CD.idGridOne);
     xhr(endpoint + CD.idGridOne + '/', 'GET', null, {}, 200, detail_data);
-    click('.t-grid-data:eq(1)');
+    click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), GRID_DETAIL_URL);
     });

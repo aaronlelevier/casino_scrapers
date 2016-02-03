@@ -40,8 +40,7 @@ var GridViewRoute = Ember.Route.extend({
         let repository = this.get('repository');
         let requested = this.get('pagination').requested(name, page);
         set_filter_model_attrs(this.filterModel, query.find);
-        const person = this.get('personCurrent').get('model').get('person');
-        let model = repository.findWithQuery(query.page, query.sort, query.search, query.find, query.page_size, person);
+        let model = repository.findWithQuery(query.page, query.sort, query.search, query.find, query.page_size);
         const search = query.search;
         const count = repository.findCount();
         const routeName = this.get('routeName');
