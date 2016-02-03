@@ -154,7 +154,6 @@ function loadFixtures {
 }
 
 function runSeleniumTests {
-    echo $(firefox -v)
     python run_selenium.py
     SELENIUM_TEST=$?
     if [ "$SELENIUM_TEST" == 1 ]; then

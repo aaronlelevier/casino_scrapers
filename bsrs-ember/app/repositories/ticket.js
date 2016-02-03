@@ -15,6 +15,7 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
     TicketDeserializer: inject('ticket'),
     deserializer: Ember.computed.alias('TicketDeserializer'),
     findFiltered(person) {
+        //get parent tree of a ticket's locations and then current user has only top location
         //perf issue
         const locations = person.get('locations');
         //perf issue
