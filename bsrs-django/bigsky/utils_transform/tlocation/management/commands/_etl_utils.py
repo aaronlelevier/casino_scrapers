@@ -37,16 +37,19 @@ def create_address(domino_location, related_instance):
     address_type = AddressType.objects.get(name='location')
 
     address = {
-        'address1': domino_location.address1,
-        'address2': domino_location.address2,
+        'address': domino_location.address1+' '+domino_location.address2,
         'city': domino_location.city,
         'state': domino_location.state,
-        'zip': domino_location.zip,
+        'postal_code': domino_location.zip,
         'country': domino_location.country
     }
     if any(address.values()):
         Address.objects.create(content_object=related_instance,
             object_id=related_instance.id, type=address_type, **address)
+
+
+def join_company_to_region(company, related_instance):
+    company.children.add(related_instance)
 
 
 def join_region_to_district(domino_location, related_instance):

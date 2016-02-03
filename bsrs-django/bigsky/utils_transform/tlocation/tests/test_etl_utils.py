@@ -6,8 +6,8 @@ from location.models import Location, LocationLevel
 from utils_transform.tlocation.tests.factory import (
     create_location_region, create_location_district, create_location_store)
 from utils_transform.tlocation.management.commands._etl_utils import (
-    create_phone_numbers, create_email, create_address, join_region_to_district,
-    join_district_to_store)
+    create_phone_numbers, create_email, create_address, join_company_to_region,
+    join_region_to_district, join_district_to_store)
 
 
 class LocationRegionTests(TestCase):
@@ -19,6 +19,7 @@ class LocationRegionTests(TestCase):
     fixtures = ['location_levels.json', 'contact_types.json']
 
     def setUp(self):
+        self.company = Location.objects.create_top_level()
         self.location_region = create_location_region()
 
         # Next-Gen: Location / LocationLevel
@@ -74,11 +75,10 @@ class LocationRegionTests(TestCase):
 
     def test_create_address(self):
         address = {
-            'address1': self.location_region.address1,
-            'address2': self.location_region.address2,
+            'address': self.location_region.address1+' '+self.location_region.address2,
             'city': self.location_region.city,
             'state': self.location_region.state,
-            'zip': self.location_region.zip,
+            'postal_code': self.location_region.zip,
             'country': self.location_region.country
         }
 
@@ -86,6 +86,15 @@ class LocationRegionTests(TestCase):
 
         self.assertEqual(ret.content_object, self.location)
         self.assertEqual(ret.object_id, self.location.id)
+
+    def test_join_company_to_region(self):
+        company = Location.objects.create_top_level()
+        self.assertEqual(self.company.children.count(), 0)
+
+        join_company_to_region(company, self.location)
+
+        self.assertEqual(self.company.children.count(), 1)
+        self.assertEqual(self.company.children.first(), self.location)
 
 
 class LocationDistrictTests(TestCase):

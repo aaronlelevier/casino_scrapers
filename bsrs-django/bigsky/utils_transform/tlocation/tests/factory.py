@@ -8,7 +8,7 @@ from utils_transform.tlocation.models import (LocationRegion, LocationDistrict,
 
 
 DOMINO_LOCATION_FIELDS = ('name', 'number', 'telephone', 'carphone',
-    'fax', 'email', 'address1', 'address2', 'city','state', 'country',)
+    'fax', 'email', 'address1', 'address2', 'zip', 'city','state', 'country',)
 
 
 def get_random_data():

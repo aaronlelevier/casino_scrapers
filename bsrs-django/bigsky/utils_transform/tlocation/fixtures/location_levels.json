@@ -1,35 +1,70 @@
 [
 {
   "model": "location.locationlevel",
-  "pk": "83fef95a-22a9-43fb-8ccb-9ae647d6175b",
+  "pk": "0403939b-cfae-49a0-8623-a53d531254e8",
   "fields": {
-    "children": [],
+    "created": "2016-02-03T19:53:23.566Z",
+    "modified": "2016-02-03T19:53:23.566Z",
     "deleted": null,
-    "modified": "2015-12-11T18:22:03.389Z",
+    "name": "company",
+    "contact": true,
+    "can_create_tickets": true,
+    "landlord": true,
+    "warranty": true,
+    "catalog_categories": true,
+    "assets": true,
+    "children": []
+  }
+},
+{
+  "model": "location.locationlevel",
+  "pk": "04f3182a-8ad7-4328-b0d9-3684f036e6a8",
+  "fields": {
+    "created": "2016-02-03T19:53:23.570Z",
+    "modified": "2016-02-03T19:53:23.570Z",
+    "deleted": null,
     "name": "district",
-    "created": "2015-12-11T18:22:03.389Z"
+    "contact": true,
+    "can_create_tickets": true,
+    "landlord": true,
+    "warranty": true,
+    "catalog_categories": true,
+    "assets": true,
+    "children": []
   }
 },
 {
   "model": "location.locationlevel",
-  "pk": "8c552043-07fa-461c-9a2c-429251750ccf",
+  "pk": "bdb71fbf-9379-46e0-96ce-78ed6c395895",
   "fields": {
-    "children": [],
+    "created": "2016-02-03T19:53:23.569Z",
+    "modified": "2016-02-03T19:53:23.569Z",
     "deleted": null,
-    "modified": "2015-12-11T18:22:03.392Z",
-    "name": "store",
-    "created": "2015-12-11T18:22:03.392Z"
-  }
-},
-{
-  "model": "location.locationlevel",
-  "pk": "ebc70963-e655-4ac5-9f53-4ff3c22c0cdf",
-  "fields": {
-    "children": [],
-    "deleted": null,
-    "modified": "2015-12-11T18:22:03.387Z",
     "name": "region",
-    "created": "2015-12-11T18:22:03.387Z"
+    "contact": true,
+    "can_create_tickets": true,
+    "landlord": true,
+    "warranty": true,
+    "catalog_categories": true,
+    "assets": true,
+    "children": []
+  }
+},
+{
+  "model": "location.locationlevel",
+  "pk": "be963d6b-1c51-4969-b3fa-ce36a1ed88e3",
+  "fields": {
+    "created": "2016-02-03T19:53:23.572Z",
+    "modified": "2016-02-03T19:53:23.572Z",
+    "deleted": null,
+    "name": "store",
+    "contact": true,
+    "can_create_tickets": true,
+    "landlord": true,
+    "warranty": true,
+    "catalog_categories": true,
+    "assets": true,
+    "children": []
   }
 }
 ]
