@@ -118,7 +118,6 @@ function runSeleniumTests {
 }
 
 cd bsrs-ember
-echo $(firefox -v)
 
 echo $(date -u) "NPM INSTALL"
 npmInstall
