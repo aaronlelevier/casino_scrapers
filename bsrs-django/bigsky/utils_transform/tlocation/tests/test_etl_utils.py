@@ -42,21 +42,21 @@ class LocationRegionTests(TestCase):
     # create_phone_number
 
     def test_telephone(self):
-        ph = PhoneNumber.objects.get(type__name='telephone',
+        ph = PhoneNumber.objects.get(type__name='admin.phonenumbertype.telephone',
             number=self.location_region.telephone)
 
         self.assertEqual(ph.content_object, self.location)
         self.assertEqual(ph.object_id, self.location.id)
 
     def test_carphone(self):
-        ph = PhoneNumber.objects.get(type__name='cell',
+        ph = PhoneNumber.objects.get(type__name='admin.phonenumbertype.cell',
             number=self.location_region.carphone)
 
         self.assertEqual(ph.content_object, self.location)
         self.assertEqual(ph.object_id, self.location.id)
 
     def test_fax(self):
-        ph = PhoneNumber.objects.get(type__name='fax',
+        ph = PhoneNumber.objects.get(type__name='admin.phonenumbertype.fax',
             number=self.location_region.fax)
 
         self.assertEqual(ph.content_object, self.location)
@@ -65,11 +65,17 @@ class LocationRegionTests(TestCase):
     # create_email
 
     def test_create_email(self):
-        email = Email.objects.get(type__name='location',
+        email = Email.objects.get(type__name='admin.emailtype.location',
             email=self.location_region.email)
 
         self.assertEqual(email.content_object, self.location)
         self.assertEqual(email.object_id, self.location.id)
+
+    def test_create_email__isinstance(self):
+        ret = create_email(self.location_region, self.location)
+
+        self.assertIsInstance(ret, Email)
+
 
     # create_address
 
@@ -82,10 +88,19 @@ class LocationRegionTests(TestCase):
             'country': self.location_region.country
         }
 
-        ret = Address.objects.get(type__name='location', **address)
+        ret = Address.objects.get(type__name='admin.address_type.location', **address)
 
         self.assertEqual(ret.content_object, self.location)
         self.assertEqual(ret.object_id, self.location.id)
+
+    def test_create_address__address1_is_none(self):
+        self.location_region.address1 = None
+        self.location_region.save()
+
+        ret = create_address(self.location_region, self.location)
+
+        self.assertIsInstance(ret, Address)
+
 
     def test_join_company_to_region(self):
         company = Location.objects.create_top_level()

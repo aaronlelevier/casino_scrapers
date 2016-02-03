@@ -28,7 +28,7 @@ def create_phone_numbers(domino_location, related_instance):
 def create_email(domino_location, related_instance):
     email_type = EmailType.objects.get(name='admin.emailtype.location')
 
-    Email.objects.create(content_object=related_instance,
+    return Email.objects.create(content_object=related_instance,
         object_id=related_instance.id, email=domino_location.email,
         type=email_type)
 
@@ -36,15 +36,18 @@ def create_email(domino_location, related_instance):
 def create_address(domino_location, related_instance):
     address_type = AddressType.objects.get(name='admin.address_type.location')
 
+    def _resolve_none_str(s):
+        return s if s else ''
+
     address = {
-        'address': domino_location.address1+' '+domino_location.address2,
+        'address': _resolve_none_str(domino_location.address1)+' '+_resolve_none_str(domino_location.address2),
         'city': domino_location.city,
         'state': domino_location.state,
         'postal_code': domino_location.zip,
         'country': domino_location.country
     }
     if any(address.values()):
-        Address.objects.create(content_object=related_instance,
+        return Address.objects.create(content_object=related_instance,
             object_id=related_instance.id, type=address_type, **address)
 
 

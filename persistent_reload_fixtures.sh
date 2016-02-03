@@ -4,9 +4,12 @@ export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
 
 cd bsrs-django/bigsky
 
-dropdb persistent
+DB_NAME="persistent"
+export PGPASSWORD=tango
 wait
-createdb persistent
+dropdb $DB_NAME -U bsdev
+wait
+createdb $DB_NAME -U bsdev -O bsdev
 wait
 ../venv/bin/python manage.py migrate
 wait
@@ -25,5 +28,3 @@ wait
 ../venv/bin/python manage.py etl_location_region
 ../venv/bin/python manage.py etl_location_district
 ../venv/bin/python manage.py etl_location_store
-wait
-./manage.py dumpdata --indent=2 > fixtures/persistent/persistent.json
