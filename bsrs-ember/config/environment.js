@@ -36,7 +36,7 @@ module.exports = function(environment) {
             // Here you can pass flags/options to your application instance
             // when it is created
         },
-        DEFAULT_LOCATION_LEVEL: 'Company',
+        DEFAULT_LOCATION: 'Company',
         DEBOUNCE_TIMEOUT_INTERVAL: 300
     };
 

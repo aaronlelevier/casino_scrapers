@@ -48,7 +48,7 @@ module('Acceptance | ticket grid test', {
         original_uuid = random.uuid;
         // person-current
         // andThen(() => {
-        //     BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.all_locations_and_children[0].name = config.DEFAULT_LOCATION_LEVEL; // 'Company' Location name!
+        //     BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.all_locations_and_children[0].name = config.DEFAULT_LOCATION; // 'Company' Location name!
         //     store.clear('person-current');
         //     store.push('person-current', BSRS_PERSON_CURRENT_DEFAULTS_OBJECT);
         // });
