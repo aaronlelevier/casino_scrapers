@@ -239,14 +239,27 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
         this.rollbackAssignee();
         this.rollbackAttachments();
     },
+    saveRelatedNew() {
+        this.saveStatus();
+        this.savePriority();
+        this.saveCC();
+        this.saveAssignee();
+        this.saveAttachments();
+        this.saveCategories();
+        this.saveLocation();
+    },
     saveRelated() {
         this.saveStatus();
         this.savePriority();
-        this.saveLocation();
         this.saveCC();
-        this.saveCategories();
         this.saveAssignee();
         this.saveAttachments();
+        if(this.get('categoriesIsDirty') || this.get('locationIsDirty')){
+            this.removeRecord();
+        }else{
+            this.saveCategories();
+            this.saveLocation();
+        }
     }
 });
 

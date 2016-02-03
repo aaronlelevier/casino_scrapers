@@ -85,42 +85,42 @@ test('clicking between person detail and ticket detail will not dirty the active
     });
 });
 
-test('filter tickets by their location matching the logged in Persons location', (assert) => {
-    // Tickets - are all viewable
-    ajax(`${PREFIX}${BASEURLS.base_tickets_url}/?page=1`, 'GET', null, {}, 200, TF.list());
-    visit(TICKET_LIST_URL);
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_LIST_URL);
-        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    });
-    // Person - remove Locations
-    ajax(`${PREFIX}${PEOPLE_DONALD_DETAIL_URL}/`, 'GET', null, {}, 200, PF.detail(PD.idDonald));
-    visit(PEOPLE_DONALD_DETAIL_URL);
-    andThen(() => {
-        assert.equal(currentURL(), PEOPLE_DONALD_DETAIL_URL);
-        const person = store.find('person', PD.idDonald);
-        assert.equal(person.get('locations').get('length'), 1);
-    });
-    click('.t-tab:eq(0)');
-    click(`${LOCATION}:eq(0) .ember-power-select-multiple-remove-btn`);
-    andThen(() => {
-        const person = store.find('person', PD.idDonald);
-        assert.equal(person.get('locations').get('length'), 0);
-    });
-    let payload = PF.put({id: PD.idDonald});
-    payload.locations = [];
-    // return pauseTest();
-    ajax(`${PREFIX}${BASEURLS.base_people_url}/${PD.idDonald}/`, 'PUT', JSON.stringify(payload), {}, 200, {});
-    ajax(`${PREFIX}${BASEURLS.base_people_url}/?page=1`, 'GET', null, {}, 200, PF.list());
-    click('.t-save-btn');
-    andThen(() => {
-        assert.equal(currentURL(), `${BASEURLS.base_people_url}/index`);
-    });
-    // Tickets - no longer viewable b/c Person has no matching Locations to Ticket.locations
-    ajax(`${PREFIX}${BASEURLS.base_tickets_url}/?page=1`, 'GET', null, {}, 200, TF.list());
-    visit(TICKET_LIST_URL);
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_LIST_URL);
-        // assert.equal(find('.t-grid-data').length, 0);
-    });
-});
+// test('filter tickets by their location matching the logged in Persons location', (assert) => {
+//     // Tickets - are all viewable
+//     ajax(`${PREFIX}${BASEURLS.base_tickets_url}/?page=1`, 'GET', null, {}, 200, TF.list());
+//     visit(TICKET_LIST_URL);
+//     andThen(() => {
+//         assert.equal(currentURL(), TICKET_LIST_URL);
+//         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+//     });
+//     // Person - remove Locations
+//     ajax(`${PREFIX}${PEOPLE_DONALD_DETAIL_URL}/`, 'GET', null, {}, 200, PF.detail(PD.idDonald));
+//     visit(PEOPLE_DONALD_DETAIL_URL);
+//     andThen(() => {
+//         assert.equal(currentURL(), PEOPLE_DONALD_DETAIL_URL);
+//         const person = store.find('person', PD.idDonald);
+//         assert.equal(person.get('locations').get('length'), 1);
+//     });
+//     click('.t-tab:eq(0)');
+//     click(`${LOCATION}:eq(0) .ember-power-select-multiple-remove-btn`);
+//     andThen(() => {
+//         const person = store.find('person', PD.idDonald);
+//         assert.equal(person.get('locations').get('length'), 0);
+//     });
+//     let payload = PF.put({id: PD.idDonald});
+//     payload.locations = [];
+//     // return pauseTest();
+//     ajax(`${PREFIX}${BASEURLS.base_people_url}/${PD.idDonald}/`, 'PUT', JSON.stringify(payload), {}, 200, {});
+//     ajax(`${PREFIX}${BASEURLS.base_people_url}/?page=1`, 'GET', null, {}, 200, PF.list());
+//     click('.t-save-btn');
+//     andThen(() => {
+//         assert.equal(currentURL(), `${BASEURLS.base_people_url}/index`);
+//     });
+//     // Tickets - no longer viewable b/c Person has no matching Locations to Ticket.locations
+//     ajax(`${PREFIX}${BASEURLS.base_tickets_url}/?page=1`, 'GET', null, {}, 200, TF.list());
+//     visit(TICKET_LIST_URL);
+//     andThen(() => {
+//         assert.equal(currentURL(), TICKET_LIST_URL);
+//         // assert.equal(find('.t-grid-data').length, 0);
+//     });
+// });

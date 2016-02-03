@@ -3,9 +3,9 @@ import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import ParentTicketCategorySelect from 'bsrs-ember/components/parent-ticket-category-select/component';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
-import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
-import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
-import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
+import CD from 'bsrs-ember/vendor/defaults/category';
+import TICKET_CD from 'bsrs-ember/vendor/defaults/ticket-category';
 
 var store, eventbus, ticket, category_one, category_two, category_three, run = Ember.run;
 
@@ -18,10 +18,10 @@ module('unit: parent-ticket-category-select component test', {
 
 //TODO: change_category_tree should just pass plain JS object
 test('component is not valid when the only category (on the ticket model) has children', (assert) => {
-    ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
-    category_one = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent_id: CATEGORY_DEFAULTS.idTwo, children_fks: []});
-    category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent_id: CATEGORY_DEFAULTS.unusedId, children_fks: [CATEGORY_DEFAULTS.idOne]});
-    category_three = store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameThree, parent_id: null, children_fks: [CATEGORY_DEFAULTS.idTwo]});
+    ticket = store.push('ticket', {id: TD.idOne});
+    category_one = store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo, children_fks: []});
+    category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId, children_fks: [CD.idOne]});
+    category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: null, children_fks: [CD.idTwo]});
     let subject = ParentTicketCategorySelect.create({ticket: ticket, eventbus: eventbus});
     assert.equal(ticket.get('categories').get('length'), 0);
     let valid = subject.get('valid');
@@ -43,11 +43,13 @@ test('component is not valid when the only category (on the ticket model) has ch
     assert.equal(valid, true);
 });
 
+
+
 test('sorted categories will start with the parent and end with the leaf child category', (assert) => {
-    ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
-    category_one = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent_id: CATEGORY_DEFAULTS.idTwo, children_fks: [], level: 2});
-    category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent_id: CATEGORY_DEFAULTS.unusedId, children_fks: [CATEGORY_DEFAULTS.idOne], level: 1});
-    category_three = store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameThree, parent_id: null, children_fks: [CATEGORY_DEFAULTS.idTwo], level: 0});
+    ticket = store.push('ticket', {id: TD.idOne});
+    category_one = store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo, children_fks: [], level: 2});
+    category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId, children_fks: [CD.idOne], level: 1});
+    category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: null, children_fks: [CD.idTwo], level: 0});
     let subject = ParentTicketCategorySelect.create({ticket: ticket, eventbus: eventbus});
     assert.equal(ticket.get('categories').get('length'), 0);
     let valid = subject.get('valid');

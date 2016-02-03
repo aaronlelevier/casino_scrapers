@@ -125,9 +125,9 @@ var CategoriesMixin = Ember.Mixin.create({
     rollbackCategories: many_to_many_rollback('ticket-category', 'ticket_categories_fks', 'ticket_pk'),
     // saveCategories: many_to_many_save('ticket_categories', 'ticket_categories_ids', 'ticket_categories'),
     saveCategories() {
-        let ticket_pk = this.get('id');
+        const ticket_pk = this.get('id');
         let saved_m2m_pks = [];
-        let store = this.get('store');
+        const store = this.get('store');
         let categories = this.get('categories');
         categories.forEach((category) => {
             let m2m_array = store.find('ticket-category').toArray();
@@ -141,7 +141,7 @@ var CategoriesMixin = Ember.Mixin.create({
                 saved_m2m_pks.push(join_model.get('id'));
             });
         });
-        run(function() {
+        run(() => {
             store.push('ticket', {id: ticket_pk, ticket_categories_fks: saved_m2m_pks});
         });
     },

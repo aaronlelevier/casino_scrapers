@@ -14,46 +14,16 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
     url: Ember.computed(function() { return TICKET_URL; }),
     TicketDeserializer: inject('ticket'),
     deserializer: Ember.computed.alias('TicketDeserializer'),
-    findFiltered(person) {
-        //get parent tree of a ticket's locations and then current user has only top location
-        //perf issue
-        const locations = person.get('locations');
-        //perf issue
-        const location_names = locations.mapBy('name');
-        const role_category_ids = person.get('role').get('categories').mapBy('id');
-        const filterFunc = function(ticket) {
-            const topLocation = function() {
-                //perf issue
-                if (Ember.$.inArray(config.DEFAULT_LOCATION, location_names) > -1) {
-                    return true;
-                }
-            };
-            const ticketLocation = function(ticket) {
-                var location_id = ticket.get('location.id');
-                //perf issue
-                var location_ids = locations.mapBy('id');
-                //perf issue
-                return Ember.$.inArray(location_id, location_ids) > -1;
-            };
-            if (topLocation() || ticketLocation(ticket)) {
-                var ticket_category_ids = ticket.get('categories').mapBy('id');
-                var result = false;
-                if(person.get('locations').get('length') === 0){ 
-                    return result; 
-                }
-                ticket_category_ids.forEach((cid) => {
-                    var temp_result = Ember.$.inArray(cid, role_category_ids) > -1;
-                    result = result || temp_result;
-                });
-                return result;
-            }
-        };
-        return this.get('store').find('ticket', filterFunc);
-    },
     update(model) {
         return PromiseMixin.xhr(TICKET_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
             model.saveRelated();
+        });
+    },
+    insert(model) {
+        return PromiseMixin.xhr(this.get('url'), 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
+            model.save();
+            model.saveRelatedNew();
         });
     },
     find() {
