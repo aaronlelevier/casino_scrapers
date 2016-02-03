@@ -57,12 +57,12 @@ class ModelContactPage(ModelPage):
         assert zip_input.get_attribute("value") == new_zip
 
     def find_email_new_entry_send_keys(self, email):
-        import time; time.sleep(2)
+        print('find_email_new_entry!')
         print(self.driver.find_element_by_class_name("t-input-multi-email"))
         print(self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]"))
         print(self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div"))
-        import time; time.sleep(2)
         first_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
+        print('found!')
         print(first_email_input.location)
         print(first_email_input.id)
         print(first_email_input.is_displayed)
