@@ -14,6 +14,7 @@ class GeneralElementsPage(object):
     def find_add_email_btn(self):
         print("finding button")
         print(self.driver.find_element_by_class_name("t-add-email-btn"))
+        print(self.driver.find_element_by_class_name("t-add-email-btn").text)
         return self.driver.find_element_by_class_name("t-add-email-btn")
 
     def click_save_btn(self):

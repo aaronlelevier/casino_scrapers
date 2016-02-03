@@ -171,6 +171,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         add_location_email_btn = self.gen_elem_page.find_add_email_btn()
         print(add_location_email_btn.text)
         add_location_email_btn.click()
+        add_location_email_btn.click()
         location_page.find_email_new_entry_send_keys(old_email_one)
         # add_location_email_btn.click()
         # location_page.find_second_email_new_entry_send_keys(old_email_two)
