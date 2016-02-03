@@ -58,6 +58,10 @@ class ModelContactPage(ModelPage):
 
     def find_email_new_entry_send_keys(self, email):
         first_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
+        print(first_email_input.location)
+        print(first_email_input.id)
+        print(first_email_input.is_displayed)
+        print(bool(first_email_input.is_displayed))
         first_email_input.send_keys(email)
 
     def find_second_email_new_entry_send_keys(self, email):
