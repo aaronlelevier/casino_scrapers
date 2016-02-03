@@ -1,24 +1,57 @@
 [
 {
   "model": "contact.phonenumbertype",
+  "pk": "113b3a31-4560-46c0-a3cd-2399c04808fe",
   "fields": {
-    "created": "2015-07-28T21:59:23.843Z",
-    "order": 1,
-    "name": "admin.phonenumbertype.mobile",
-    "modified": "2015-07-28T21:59:23.843Z",
-    "deleted": null
-  },
-  "pk": "3ab97a52-9623-44a9-a8a7-087ad2e2e9e2"
+    "created": "2016-02-03T22:47:19.408Z",
+    "modified": "2016-02-03T22:47:19.408Z",
+    "deleted": null,
+    "name": "admin.phonenumbertype.cell",
+    "order": 0
+  }
 },
 {
   "model": "contact.phonenumbertype",
+  "pk": "3bd0290c-a3d9-4f40-9b11-2cc33abd6a33",
   "fields": {
-    "created": "2015-07-28T21:58:23.843Z",
-    "order": 0,
+    "created": "2016-02-03T22:47:19.410Z",
+    "modified": "2016-02-03T22:47:19.410Z",
+    "deleted": null,
     "name": "admin.phonenumbertype.office",
-    "modified": "2015-07-28T21:58:23.843Z",
-    "deleted": null
-  },
-  "pk": "44008afd-4c85-42e1-8754-a1f6d9fc9d05"
+    "order": 0
+  }
+},
+{
+  "model": "contact.phonenumbertype",
+  "pk": "4812b381-719b-4316-9354-ca3bc65b12a0",
+  "fields": {
+    "created": "2016-02-03T22:47:19.411Z",
+    "modified": "2016-02-03T22:47:19.411Z",
+    "deleted": null,
+    "name": "admin.phonenumbertype.mobile",
+    "order": 0
+  }
+},
+{
+  "model": "contact.phonenumbertype",
+  "pk": "5c13add8-5b9e-44b3-ab15-dd0f3835d50b",
+  "fields": {
+    "created": "2016-02-03T22:47:19.405Z",
+    "modified": "2016-02-03T22:47:19.405Z",
+    "deleted": null,
+    "name": "admin.phonenumbertype.telephone",
+    "order": 0
+  }
+},
+{
+  "model": "contact.phonenumbertype",
+  "pk": "b8e63a54-8a5d-48d2-b17e-880baeed7d91",
+  "fields": {
+    "created": "2016-02-03T22:47:19.407Z",
+    "modified": "2016-02-03T22:47:19.407Z",
+    "deleted": null,
+    "name": "admin.phonenumbertype.fax",
+    "order": 0
+  }
 }
 ]

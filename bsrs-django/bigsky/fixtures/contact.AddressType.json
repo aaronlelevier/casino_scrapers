@@ -1,24 +1,35 @@
 [
 {
-  "pk": "2cf6a49f-c702-44d4-86f2-938260b8895c",
+  "model": "contact.addresstype",
+  "pk": "47723727-a837-4380-84c6-4e9bb4d8407e",
   "fields": {
-    "order": 0,
-    "modified": "2015-08-31T16:51:35.702Z",
+    "created": "2016-02-03T22:43:05.051Z",
+    "modified": "2016-02-03T22:43:05.051Z",
+    "deleted": null,
     "name": "admin.address_type.shipping",
-    "created": "2015-08-31T16:51:35.702Z",
-    "deleted": null
-  },
-  "model": "contact.addresstype"
+    "order": 0
+  }
 },
 {
-  "pk": "f32bd7b4-d199-4ca0-8194-5b18a31f1e60",
+  "model": "contact.addresstype",
+  "pk": "53d3ebdd-841d-436f-93b3-1217443572a5",
   "fields": {
-    "order": 0,
-    "modified": "2015-08-31T16:51:35.699Z",
+    "created": "2016-02-03T22:43:05.049Z",
+    "modified": "2016-02-03T22:43:05.049Z",
+    "deleted": null,
     "name": "admin.address_type.office",
-    "created": "2015-08-31T16:51:35.699Z",
-    "deleted": null
-  },
-  "model": "contact.addresstype"
+    "order": 0
+  }
+},
+{
+  "model": "contact.addresstype",
+  "pk": "ac782c7b-104a-4a17-9c89-1db0d34e44cf",
+  "fields": {
+    "created": "2016-02-03T22:43:05.046Z",
+    "modified": "2016-02-03T22:43:05.046Z",
+    "deleted": null,
+    "name": "admin.address_type.location",
+    "order": 0
+  }
 }
 ]

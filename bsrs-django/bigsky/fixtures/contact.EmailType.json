@@ -1,10 +1,10 @@
 [
 {
   "model": "contact.emailtype",
-  "pk": "62ce6280-9ad5-4795-bdd6-a63aa68b4bd2",
+  "pk": "3c917b15-2122-4d12-8039-4cf541d5403a",
   "fields": {
-    "created": "2016-01-02T06:46:25.959Z",
-    "modified": "2016-01-02T06:46:25.959Z",
+    "created": "2016-02-03T22:43:05.058Z",
+    "modified": "2016-02-03T22:43:05.058Z",
     "deleted": null,
     "name": "admin.emailtype.personal",
     "order": 0
@@ -12,12 +12,23 @@
 },
 {
   "model": "contact.emailtype",
-  "pk": "a316556b-92bd-4df0-8b13-aa9e64a43deb",
+  "pk": "8bd84038-6135-4f8f-bf32-633cec3ec037",
   "fields": {
-    "created": "2016-01-02T06:46:25.950Z",
-    "modified": "2016-01-02T06:46:25.950Z",
+    "created": "2016-02-03T22:43:05.055Z",
+    "modified": "2016-02-03T22:43:05.055Z",
     "deleted": null,
     "name": "admin.emailtype.work",
+    "order": 0
+  }
+},
+{
+  "model": "contact.emailtype",
+  "pk": "b720283a-ef34-4997-8518-038e2b8e6c69",
+  "fields": {
+    "created": "2016-02-03T22:43:05.053Z",
+    "modified": "2016-02-03T22:43:05.053Z",
+    "deleted": null,
+    "name": "admin.emailtype.location",
     "order": 0
   }
 }

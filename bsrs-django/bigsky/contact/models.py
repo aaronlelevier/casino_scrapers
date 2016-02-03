@@ -22,9 +22,11 @@ class BaseContactModel(BaseModel):
 
 
 PHONE_NUMBER_TYPES = [
-    'telephone',
-    'fax',
-    'cell'
+    'admin.phonenumbertype.telephone',
+    'admin.phonenumbertype.fax',
+    'admin.phonenumbertype.cell',
+    'admin.phonenumbertype.office',
+    'admin.phonenumbertype.mobile',
 ]
 
 class PhoneNumberType(BaseNameOrderModel):
@@ -45,7 +47,9 @@ class PhoneNumber(BaseContactModel):
 
 
 ADDRESS_TYPES = [
-    'location'
+    'admin.address_type.location',
+    'admin.address_type.office',
+    'admin.address_type.shipping',
 ]
 
 class AddressType(BaseNameOrderModel):
@@ -72,6 +76,7 @@ class Address(BaseContactModel):
 
 
 EMAIL_TYPES = [
+    'admin.emailtype.location',
     'admin.emailtype.work',
     'admin.emailtype.personal',
 ]
