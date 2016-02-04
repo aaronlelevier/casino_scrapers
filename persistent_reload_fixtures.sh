@@ -4,8 +4,11 @@ export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
 
 cd bsrs-django/bigsky
 
-DB_NAME="persistent"
+DB_NAME='persistent'
 export PGPASSWORD=tango
+wait
+psql -U bsdev -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity \
+WHERE pg_stat_activity.datname = $DB_NAME AND pid <> pg_backend_pid();"
 wait
 dropdb $DB_NAME -U bsdev
 wait

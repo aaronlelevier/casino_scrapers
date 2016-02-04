@@ -39,8 +39,11 @@ def create_address(domino_location, related_instance):
     def _resolve_none_str(s):
         return s if s else ''
 
+    combined = _resolve_none_str(domino_location.address1)+' '+_resolve_none_str(domino_location.address2)
+    address = combined if combined.strip() else None
+
     address = {
-        'address': _resolve_none_str(domino_location.address1)+' '+_resolve_none_str(domino_location.address2),
+        'address': address,
         'city': domino_location.city,
         'state': domino_location.state,
         'postal_code': domino_location.zip,

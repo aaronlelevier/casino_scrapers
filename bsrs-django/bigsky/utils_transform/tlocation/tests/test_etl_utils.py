@@ -1,13 +1,16 @@
 from django.test import TestCase
 
+from model_mommy import mommy
+
 from contact.models import PhoneNumber, Email, Address
 from contact.tests.factory import create_phone_number_types
 from location.models import Location, LocationLevel
-from utils_transform.tlocation.tests.factory import (
-    create_location_region, create_location_district, create_location_store)
 from utils_transform.tlocation.management.commands._etl_utils import (
     create_phone_numbers, create_email, create_address, join_company_to_region,
     join_region_to_district, join_district_to_store)
+from utils_transform.tlocation.models import LocationRegion
+from utils_transform.tlocation.tests.factory import (
+    create_location_region, create_location_district, create_location_store)
 
 
 class LocationRegionTests(TestCase):
@@ -76,7 +79,6 @@ class LocationRegionTests(TestCase):
 
         self.assertIsInstance(ret, Email)
 
-
     # create_address
 
     def test_create_address(self):
@@ -101,6 +103,18 @@ class LocationRegionTests(TestCase):
 
         self.assertIsInstance(ret, Address)
 
+    def test_create_address__empty(self):
+        """
+        If all fields are None, shouldn't create an Address.
+        """
+        d = mommy.make(LocationRegion, name='a')
+        self.assertFalse(any([d.address1, d.address2, d.city, d.state, d.zip, d.country]))
+
+        ret = create_address(d, self.location)
+
+        self.assertIsNone(ret)
+
+    # join_company_to_region
 
     def test_join_company_to_region(self):
         company = Location.objects.create_top_level()
