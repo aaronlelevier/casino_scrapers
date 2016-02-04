@@ -2,8 +2,8 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from contact.models import (PhoneNumber, PhoneNumberType,
-    Address, AddressType, Email, EmailType)
+from contact.models import (State, Country, PhoneNumber, PhoneNumberType,
+    Address, AddressType, Email)
 from contact.tests.factory import create_contact
 from location.models import Location
 from person.models import Person
@@ -60,6 +60,22 @@ class AddressTests(TestCase):
             Address.objects.first().id,
             Address.objects.order_by('address').first().id
         )
+
+    def test_create(self):
+        state = mommy.make(State, name='California')
+        country = mommy.make(Country, name='U.S.')
+        address_type = mommy.make(AddressType)
+
+        address = Address.objects.create(
+            content_object=self.person, object_id=self.person.id,
+            type=address_type, address='123 St.', city='San Diego',
+            state=state, postal_code='92123', country=country
+        )
+
+        self.assertIsInstance(address, Address)
+        self.assertIsInstance(address.state, State)
+        self.assertEqual(address.state, state)
+        self.assertEqual(address.country, country)
 
 
 class EmailTests(TestCase):

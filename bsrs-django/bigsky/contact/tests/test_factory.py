@@ -7,7 +7,6 @@ from contact.models import (PhoneNumber, PhoneNumberType, Email, EmailType,
 from contact.tests import factory
 from person.models import Person
 from person.tests.factory import create_person
-from utils.helpers import generate_uuid
 
 
 class FactoryTests(TestCase):

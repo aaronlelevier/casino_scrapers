@@ -8,24 +8,6 @@ from contact.models import PhoneNumber, Address, Email
 from utils.models import BaseNameModel, BaseModel, BaseManager
 
 
-### SUPPORT MODELS
-
-class State(BaseNameModel):
-    abbr = models.CharField(max_length=2)
-
-    def to_dict(self):
-        return {
-            'id': str(self.id),
-            'name': self.name,
-            'abbr': self.abbr
-        }
-
-class Country(BaseNameModel):
-
-    class Meta:
-        verbose_name_plural = 'Countries'
-
-
 ### SELF REFERENCING BASE
 
 class SelfReferencingQuerySet(models.query.QuerySet):

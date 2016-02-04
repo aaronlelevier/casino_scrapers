@@ -2,7 +2,23 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 
 from utils.fields import MyGenericForeignKey
-from utils.models import BaseNameOrderModel, BaseModel
+from utils.models import BaseNameModel, BaseNameOrderModel, BaseModel
+
+
+class State(BaseNameModel):
+    abbr = models.CharField(max_length=2)
+
+    def to_dict(self):
+        return {
+            'id': str(self.id),
+            'name': self.name,
+            'abbr': self.abbr
+        }
+
+class Country(BaseNameModel):
+
+    class Meta:
+        verbose_name_plural = 'Countries'
 
 
 class BaseContactModel(BaseModel):
@@ -67,9 +83,9 @@ class Address(BaseContactModel):
     type = models.ForeignKey(AddressType, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
     city = models.TextField(blank=True, null=True)
-    state = models.TextField(blank=True, null=True)
+    state = models.ForeignKey(State, blank=True, null=True)
     postal_code = models.TextField(blank=True, null=True)
-    country = models.TextField(blank=True, null=True)
+    country = models.ForeignKey(Country, blank=True, null=True)
 
     class Meta:
         ordering = ('address',)

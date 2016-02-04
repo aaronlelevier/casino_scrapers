@@ -3,6 +3,16 @@ from django.contrib import admin
 from contact import models
 
 
+@admin.register(models.State)
+class StateAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'abbr',)
+
+
+@admin.register(models.Country)
+class CountryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name',)
+
+
 @admin.register(models.PhoneNumberType)
 class PhoneNumberTypeAdmin(admin.ModelAdmin):
     pass

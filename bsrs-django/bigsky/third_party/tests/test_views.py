@@ -4,8 +4,8 @@ import uuid
 from rest_framework.test import APITestCase
 from model_mommy import mommy
 
-from contact.models import (Email, EmailType, PhoneNumber, PhoneNumberType,
-    Address, AddressType)
+from contact.models import (State, Country, Email, EmailType,
+    PhoneNumber, PhoneNumberType, Address, AddressType)
 from contact.tests.factory import create_contact
 from person.tests.factory import PASSWORD, create_person, create_single_person
 from third_party.models import ThirdParty
@@ -174,14 +174,16 @@ class ThirdPartyTests(APITestCase):
     def test_update_create_address(self):
         address_type = mommy.make(AddressType)
         id = str(uuid.uuid4())
+        state = mommy.make(State)
+        country = mommy.make(Country)
         self.data['addresses'] = [{
             'id': id,
             'type': str(address_type.id),
             'address': '123 My St.',
             'city': 'Omaha',
-            'state': 'NE',
+            'state': str(state.id),
             'postal_code': '92126',
-            'country': 'United States',
+            'country': str(country.id),
         }]
 
         response = self.client.put('/api/admin/third-parties/{}/'.format(self.third_party.id),
