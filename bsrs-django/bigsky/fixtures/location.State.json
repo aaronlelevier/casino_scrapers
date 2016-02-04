@@ -46,7 +46,7 @@
 {
   "model": "location.state",
   "fields": {
-    "name": "Kansa",
+    "name": "Kansas",
     "modified": "2015-08-31T17:25:06.940Z",
     "created": "2015-08-31T17:25:06.940Z",
     "abbr": "KS",
