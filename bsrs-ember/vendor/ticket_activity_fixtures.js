@@ -9,12 +9,13 @@ var TICKET_ACTIVITY_FACTORY = (function() {
     factory.prototype.empty = function() {
         return {'count':0,'next':null,'previous':null,'results': []};
     };
-    factory.prototype.get_comment = function(i, ticket_pk) {
+    factory.prototype.get_comment = function(i, ticket_pk, name) {
         var d = new Date();
         var ticket_id = ticket_pk || this.td.idOne;
         var activity = {id: i, type: 'comment', created: d.setDate(d.getDate()-120), ticket: ticket_id};
         activity.person = {id: this.pd.idOne, fullname: this.pd.fullname};
-        activity.content = {'comment': this.td.commentOne};
+        var name_override = name || this.td.commentOne;
+        activity.content = {'comment': name_override};
         return activity;
     },
     factory.prototype.get_category = function(i, ticket_pk) {
@@ -178,12 +179,12 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         delete activity.content;
         return activity;
     },
-    factory.prototype.comment_only = function(ticket_pk, count) {
+    factory.prototype.comment_only = function(ticket_pk, count, comment) {
         var response = [];
         var count = count || 1;
         for (var i=1; i<=count; i++) {
             var uuid = '549447cc-1a19-4d8d-829b-bfb81cb5ecw';
-            var activity = this.get_comment(uuid+i, ticket_pk);
+            var activity = this.get_comment(uuid+i, ticket_pk, comment);
             response.push(activity);
         }
         return {'count':count,'next':null,'previous':null,'results': response};

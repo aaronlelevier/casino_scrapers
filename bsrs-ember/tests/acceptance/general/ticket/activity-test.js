@@ -429,6 +429,16 @@ test('ticket detail shows the activity comment', (assert) => {
     });
 });
 
+test('ticket detail shows the activity comment with break', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.comment_only(TD.idOne, 1, TD.commentOneWithBreak));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0) p`).html().trim(), 'yeah commments are cool <strong>and so is this</strong> and so is this <em>and so is this</em>');
+    });
+});
+
 test('ticket detail shows the activity comment (multiple activities with comments)', (assert) => {
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.comment_only(TD.idOne, 2));
     page.visitDetail();

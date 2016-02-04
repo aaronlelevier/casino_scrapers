@@ -64,6 +64,7 @@
     "es5-shim": "^4.1.10",
     "express": "^4.13.3",
     "glob": "^4.5.3",
+    "markdown-code-highlighting": "0.0.6",
     "morgan": "^1.6.1",
     "object-assign": "^4.0.1"
   }

@@ -10,6 +10,7 @@ var BSRS_TICKET_DEFAULTS_OBJECT = (function() {
             requesterOne: 'Winnie the Pooh',
             requestOne: 'working',
             commentOne: 'yeah commments are cool',
+            commentOneWithBreak: 'yeah commments are cool **and so is this** and so is this *and so is this*',
             commentTwo: 'yeah commmentTwo is awesome',
             numberTwo: '456zz',
             subjectOne: 'Plumbing Fixtures',
