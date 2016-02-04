@@ -17,7 +17,7 @@ wait
 ../venv/bin/python manage.py migrate
 wait
 ../venv/bin/python manage.py loaddata fixtures/contact.Country.json
-../venv/bin/python manage.py loaddata fixtures/country.State.json
+../venv/bin/python manage.py loaddata fixtures/contact.State.json
 ../venv/bin/python manage.py loaddata fixtures/translation.json
 ../venv/bin/python manage.py loaddata fixtures/accounting.Currency.json
 ../venv/bin/python manage.py loaddata fixtures/contact.EmailType.json
