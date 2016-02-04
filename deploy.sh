@@ -71,7 +71,8 @@ TEST=$?; if [ "$TEST" == 1 ]; then echo "migrate failed"; exit $TEST; fi
 
 echo "AFTER MIGRATIONS, LOAD LATEST FIXTURE DATA."
 wait
-../venv/bin/python manage.py loaddata fixtures/location.State.json
+../venv/bin/python manage.py loaddata fixtures/contact.Country.json
+../venv/bin/python manage.py loaddata fixtures/contact.State.json
 ../venv/bin/python manage.py loaddata fixtures/translation.json
 ../venv/bin/python manage.py loaddata fixtures/accounting.Currency.json
 ../venv/bin/python manage.py loaddata fixtures/contact.EmailType.json

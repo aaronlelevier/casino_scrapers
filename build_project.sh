@@ -30,17 +30,7 @@ wait
 ./manage.py migrate
 
 echo "LOAD FIXTURE DATA"
-
-wait
-./manage.py loaddata fixtures/location.State.json
-./manage.py loaddata fixtures/translation.json
-./manage.py loaddata fixtures/accounting.Currency.json
-./manage.py loaddata fixtures/contact.EmailType.json
-./manage.py loaddata fixtures/contact.PhoneNumberType.json
-./manage.py loaddata fixtures/contact.AddressType.json
-./manage.py loaddata fixtures/category.json
-./manage.py loaddata fixtures/third_party.json
-./manage.py loaddata fixtures/auth.json
-./manage.py loaddata fixtures/location.json
-./manage.py loaddata fixtures/person.json
-./manage.py loaddata fixtures/ticket.json
+cd ../../
+DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+. "$DIR/_load_fixtures.sh"
