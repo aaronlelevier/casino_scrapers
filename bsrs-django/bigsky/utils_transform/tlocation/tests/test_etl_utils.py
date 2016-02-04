@@ -2,12 +2,12 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from contact.models import PhoneNumber, Email, Address
+from contact.models import State, Country, PhoneNumber, Email, Address
 from contact.tests.factory import create_phone_number_types
 from location.models import Location, LocationLevel
 from utils_transform.tlocation.management.commands._etl_utils import (
-    create_phone_numbers, create_email, create_address, join_company_to_region,
-    join_region_to_district, join_district_to_store)
+    create_phone_numbers, create_email, create_address, _resolve_none_str, _resolve_state,
+    _resolve_country, join_company_to_region, join_region_to_district, join_district_to_store)
 from utils_transform.tlocation.models import LocationRegion
 from utils_transform.tlocation.tests.factory import (
     create_location_region, create_location_district, create_location_store)
@@ -85,9 +85,7 @@ class LocationRegionTests(TestCase):
         address = {
             'address': self.location_region.address1+' '+self.location_region.address2,
             'city': self.location_region.city,
-            'state': self.location_region.state,
-            'postal_code': self.location_region.zip,
-            'country': self.location_region.country
+            'postal_code': self.location_region.zip
         }
 
         ret = Address.objects.get(type__name='admin.address_type.location', **address)
@@ -113,6 +111,90 @@ class LocationRegionTests(TestCase):
         ret = create_address(d, self.location)
 
         self.assertIsNone(ret)
+
+    def test_create_address__state_n_country(self):
+        domino_region = mommy.make(LocationRegion, name='a', state='CA', country='U.S.')
+        init_count = State.objects.count()
+        init_count_country = Country.objects.count()
+
+        ret = create_address(domino_region, self.location)
+
+        self.assertIsInstance(ret.state, State)
+        self.assertEqual(State.objects.count(), init_count+1)
+        self.assertIsInstance(ret.country, Country)
+        self.assertEqual(Country.objects.count(), init_count_country+1)
+
+    # _resolve_none_str
+
+    def test_resolve_none_str__none(self):
+        s = None
+        ret = _resolve_none_str(s)
+        self.assertEqual('', ret)
+
+    def test_resolve_none_str__string(self):
+        s = 'foo'
+        ret = _resolve_none_str(s)
+        self.assertEqual(s, ret)
+
+    # _resolve_state
+
+    def test_resolve_state__none(self):
+        ret = _resolve_state(None)
+        self.assertIsNone(ret)
+
+    def test_resolve_state__create(self):
+        init_count = State.objects.count()
+        # arbitrary state 'abbr' to force a State create
+        self.location_region.state = 'XX'
+        self.location_region.save()
+
+        ret = _resolve_state(self.location_region.state)
+
+        self.assertEqual(State.objects.count(), init_count+1)
+        self.assertIsInstance(ret, State)
+
+    def test_resolve_state__get(self):
+        abbr = "NY"
+        state = mommy.make(State, abbr=abbr)
+        init_count = State.objects.count()
+        self.location_region.state = abbr
+        self.location_region.save()
+        self.assertEqual(self.location_region.state, state.abbr)
+
+        ret = _resolve_state(self.location_region.state)
+
+        self.assertEqual(State.objects.count(), init_count)
+        self.assertIsInstance(ret, State)
+
+    # _resolve_country
+
+    def test_resolve_country__none(self):
+        ret = _resolve_country(None)
+        self.assertIsNone(ret)
+
+    def test_resolve_country__create(self):
+        init_count = Country.objects.count()
+        # arbitrary country 'name' to force a Country create
+        self.location_region.country = 'XX'
+        self.location_region.save()
+
+        ret = _resolve_country(self.location_region.country)
+
+        self.assertEqual(Country.objects.count(), init_count+1)
+        self.assertIsInstance(ret, Country)
+
+    def test_resolve_country__get(self):
+        name = "U.S"
+        country = mommy.make(Country, name=name)
+        init_count = Country.objects.count()
+        self.location_region.country = name
+        self.location_region.save()
+        self.assertEqual(self.location_region.country, country.name)
+
+        ret = _resolve_country(self.location_region.country)
+
+        self.assertEqual(Country.objects.count(), init_count)
+        self.assertIsInstance(ret, Country)
 
     # join_company_to_region
 

@@ -1,5 +1,5 @@
-from contact.models import (PhoneNumber, PhoneNumberType, Email, EmailType,
-    Address, AddressType)
+from contact.models import (State, Country, PhoneNumber, PhoneNumberType,
+    Email, EmailType, Address, AddressType)
 from location.models import Location
 
 import logging
@@ -36,22 +36,46 @@ def create_email(domino_location, related_instance):
 def create_address(domino_location, related_instance):
     address_type = AddressType.objects.get(name='admin.address_type.location')
 
-    def _resolve_none_str(s):
-        return s if s else ''
-
     combined = _resolve_none_str(domino_location.address1)+' '+_resolve_none_str(domino_location.address2)
     address = combined if combined.strip() else None
+
+    state = _resolve_state(domino_location.state)
+    country = _resolve_country(domino_location.country)
 
     address = {
         'address': address,
         'city': domino_location.city,
-        'state': domino_location.state,
+        'state': state,
         'postal_code': domino_location.zip,
-        'country': domino_location.country
+        'country': country
     }
     if any(address.values()):
         return Address.objects.create(content_object=related_instance,
             object_id=related_instance.id, type=address_type, **address)
+
+
+def _resolve_none_str(s):
+    return s if s else ''
+
+
+def _resolve_state(domino_abbr):
+    domino_abbr = domino_abbr.strip() if domino_abbr else None
+    if domino_abbr:
+        try:
+            state = State.objects.get(abbr=domino_abbr)
+        except State.DoesNotExist:
+            state = State.objects.create(name=domino_abbr, abbr=domino_abbr)
+        return state
+
+
+def _resolve_country(country):
+    country = country.strip() if country else None
+    if country:
+        try:
+            country = Country.objects.get(name=country)
+        except Country.DoesNotExist:
+            country = Country.objects.create(name=country)
+        return country
 
 
 def join_company_to_region(company, related_instance):
