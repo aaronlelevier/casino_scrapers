@@ -33,9 +33,8 @@ var MultiAddressComponent = ChildValidationComponent.extend(ValidationMixin, Cus
                 this.get('model').push({id: entry.get('id'), removed: true});
             });
         },
-        changeState(state, val) {
-            const state_id = parseInt(val, 10);
-            state.set('state', state_id);
+        changeState(address, val) {
+            address.set('state', val);
         },
         changeCountry(country, val) {
             country.set('country', val);
