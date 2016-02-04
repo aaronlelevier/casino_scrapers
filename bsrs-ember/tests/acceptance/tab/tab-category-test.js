@@ -29,7 +29,7 @@ const DOC_TYPE = 'category';
 
 let application, store, list_xhr, category_detail_data, endpoint, detail_xhr, original_uuid;
 
-module('scott Acceptance | tab category test', {
+module('Acceptance | tab category test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');

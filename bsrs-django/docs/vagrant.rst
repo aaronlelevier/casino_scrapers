@@ -154,3 +154,13 @@ Scott Note's for new vagrant setup
     sudo apt-get install libevent-dev
     sudo apt-get install python-dev libjpeg-dev libfreetype6-dev zlib1g-dev
     sudo apt-get install postgresql-9.4-postgis-2.0
+
+
+
+
+
+.. code-block::
+    https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-centos-7
+
+
+
