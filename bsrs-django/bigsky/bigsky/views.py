@@ -13,7 +13,7 @@ from django.utils import timezone
 from accounting.models import Currency
 from category.models import Category
 from contact.models import PhoneNumberType, AddressType, EmailType, State, Country
-from generic.models import SavedSearch
+from generic.models import SavedSearch, Setting
 from person.models import Role, PersonStatus
 from ticket.models import TicketStatus, TicketPriority
 from location.models import Location, LocationLevel, LocationStatus
@@ -62,6 +62,7 @@ class IndexView(TemplateView):
             'default_model_ordering': settings.default_model_ordering,
             'saved_search': json.dumps(
                 SavedSearch.objects.person_saved_searches(self.request.user)),
+            'settings': model_to_json(Setting),
             'ticket_statuses': model_to_json(TicketStatus),
             'ticket_priorities': model_to_json(TicketPriority),
         })

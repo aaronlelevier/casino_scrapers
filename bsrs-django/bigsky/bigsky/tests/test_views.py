@@ -14,6 +14,7 @@ from category.models import Category
 from category.tests.factory import create_categories
 from contact.models import State, Country, PhoneNumberType, AddressType, EmailType
 from generic.models import SavedSearch
+from generic.tests.factory import create_general_setting
 from location.models import LocationLevel, LocationStatus
 from person.models import PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_single_person, create_role
@@ -142,9 +143,10 @@ class BootstrappedDataTests(TestCase):
         self.child_category = categories[1]
         self.child_category.parent = self.parent_category
         self.child_category.save()
-        
+
         self.saved_search = mommy.make(SavedSearch, person=self.person, name="foo",
             endpoint_name="admin.people.index")
+        self.settings = create_general_setting()
 
         mommy.make(EmailType)
         mommy.make(AddressType)
@@ -310,6 +312,13 @@ class BootstrappedDataTests(TestCase):
         self.assertEqual(saved_search.name, data[0]['name'])
         self.assertEqual(saved_search.endpoint_name, data[0]['endpoint_name'])
         self.assertEqual(saved_search.endpoint_uri, data[0]['endpoint_uri'])
+
+    def test_settings(self):
+        data = json.loads(self.response.context['settings'])
+
+        self.assertEqual(1, len(data))
+        self.assertEqual(str(self.settings.id), data[0]['id'])
+        self.assertEqual(self.settings.name, data[0]['name'])
 
     def test_ticket_statuses(self):
         data = json.loads(self.response.context['ticket_statuses'])
