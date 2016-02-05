@@ -71,19 +71,10 @@ TEST=$?; if [ "$TEST" == 1 ]; then echo "migrate failed"; exit $TEST; fi
 
 echo "AFTER MIGRATIONS, LOAD LATEST FIXTURE DATA."
 wait
-../venv/bin/python manage.py loaddata fixtures/contact.Country.json
-../venv/bin/python manage.py loaddata fixtures/contact.State.json
-../venv/bin/python manage.py loaddata fixtures/translation.json
-../venv/bin/python manage.py loaddata fixtures/accounting.Currency.json
-../venv/bin/python manage.py loaddata fixtures/contact.EmailType.json
-../venv/bin/python manage.py loaddata fixtures/contact.PhoneNumberType.json
-../venv/bin/python manage.py loaddata fixtures/contact.AddressType.json
-../venv/bin/python manage.py loaddata fixtures/category.json
-../venv/bin/python manage.py loaddata fixtures/third_party.json
-../venv/bin/python manage.py loaddata fixtures/auth.json
-../venv/bin/python manage.py loaddata fixtures/location.json
-../venv/bin/python manage.py loaddata fixtures/person.json
-../venv/bin/python manage.py loaddata fixtures/ticket.json
+cd ../../
+DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+. "$DIR/_load_fixtures_from_env.sh"
 TEST=$?; if [ "$TEST" == 1 ]; then echo "load fixtures failed"; exit $TEST; fi
 
 
