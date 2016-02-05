@@ -11,13 +11,13 @@ export default Ember.Component.extend({
         }
         return 0;
     }),
-    allCounts: Ember.computed('model', function() {
+    allCounts: Ember.computed(function() {
         return this.get('model').get('length');
     }),
-    commentCounts: Ember.computed('model', function() {
+    commentCounts: Ember.computed(function() {
         return this.get('model').filterBy('type', 'comment').get('length');
     }),
-    statusCounts: Ember.computed('model', function() {
+    statusCounts: Ember.computed(function() {
         return this.get('model').filterBy('type', 'status').get('length');
     }),
     actions: {
