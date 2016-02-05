@@ -201,9 +201,6 @@ class BootstrappedDataTests(TestCase):
         self.assertIn(str(self.person.role.id), [c["id"] for c in configuration])
         self.assertIn(str(self.person.role.name), [c["name"] for c in configuration])
         self.assertIn(str(self.person.role.location_level.id), [c["location_level"] for c in configuration])
-        # related Categories
-        category = Category.objects.get(id=configuration[0]['categories'][0]['id'])
-        self.assertEqual(category.name, configuration[0]['categories'][0]['name'])
         # role (non-default)
         role = Role.objects.first()
         role.location_level = None

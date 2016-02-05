@@ -140,9 +140,7 @@ class Role(BaseModel):
             "id": str(self.id),
             "name": self.name,
             "default": True if self.name == settings.DEFAULT_ROLE else False,
-            "location_level": str(self.location_level.id) if self.location_level else None,
-            "categories" : [{'id': str(x['id']), 'name': x['name']}
-                           for x in self.categories.values('id', 'name')]
+            "location_level": str(self.location_level.id) if self.location_level else None
         }
 
     def _update_defaults(self):
