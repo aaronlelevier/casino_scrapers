@@ -158,4 +158,8 @@ test('activity list can be filtered to show comments or status updates', functio
     this.$(`${ALL_TAB}`).click();
     $component = this.$(`${ACTIVITY_ITEMS}`).filter(':visible');
     assert.equal($component.length, 8);
+    // total activities count
+    assert.equal(parseInt(this.$(`${'.activity-all-counts'}`).text()), 8);
+    assert.equal(parseInt(this.$(`${'.activity-comment-counts'}`).text()), 1);
+    assert.equal(parseInt(this.$(`${'.activity-status-counts'}`).text()), 1);
 });

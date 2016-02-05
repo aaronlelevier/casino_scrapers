@@ -11,6 +11,15 @@ export default Ember.Component.extend({
         }
         return 0;
     }),
+    allCounts: Ember.computed('model', function() {
+        return this.get('model').get('length');
+    }),
+    commentCounts: Ember.computed('model', function() {
+        return this.get('model').filterBy('type', 'comment').get('length');
+    }),
+    statusCounts: Ember.computed('model', function() {
+        return this.get('model').filterBy('type', 'status').get('length');
+    }),
     actions: {
         filter(filterType, event){
             Ember.$('.activity-list-tabs li').removeClass('active');

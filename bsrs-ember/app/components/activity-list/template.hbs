@@ -1,9 +1,9 @@
 <div class="activity-list-wrap row">
     <menu class="activity-list-tabs">
         <ul>
-            <li class="active t-activity-tab-all_updates" onclick={{action 'filter' 'all_updates'}}>{{t 'activity.tabs.all_updates'}}</li>
-            <li class="t-activity-tab-comments" onclick={{action 'filter' 'comments'}}>{{t 'activity.tabs.comments'}}</li>
-            <li class="t-activity-tab-status_updates" onclick={{action 'filter' 'status_updates'}}>{{t 'activity.tabs.status_updates'}}</li>
+            <li class="active t-activity-tab-all_updates" onclick={{action 'filter' 'all_updates'}}>{{t 'activity.tabs.all_updates'}} <span class="activity-all-counts badge">{{ allCounts }}</span></li>
+            <li class="t-activity-tab-comments" onclick={{action 'filter' 'comments'}}>{{t 'activity.tabs.comments'}} <span class="activity-comment-counts badge">{{ commentCounts }}</span></li>
+            <li class="t-activity-tab-status_updates" onclick={{action 'filter' 'status_updates'}}>{{t 'activity.tabs.status_updates'}} <span class="activity-status-counts badge">{{ statusCounts }}</span></li>
         </ul>
     </menu>
     <div class="activity-list">
