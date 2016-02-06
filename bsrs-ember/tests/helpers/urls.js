@@ -9,7 +9,8 @@ var BASEURLS = {
     base_third_parties_url: '/admin/third-parties',
     base_admin_translations_url: '/admin/translations',
     base_tickets_url: '/tickets',
-    base_wos_url: '/work-orders'
+    base_wos_url: '/work-orders',
+    base_setting_url: '/admin/settings'
 };
 
 

@@ -4,7 +4,7 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
         return {
             id: 'b783a238-1131-4623-8d24-81a672bb4e00',
             name: 'general',
-            'settings': {
+            settings: {
                 'login_grace': {
                     'required': true,
                     'type': 'int',
@@ -34,7 +34,7 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
 if (typeof window === 'undefined') {
     module.exports = new DEFAULT_GENERIAL_SETTINGS().defaults();
 } else {
-    define('bsrs-ember/vendor/defaults/setting', ['exports', ],
+    define('bsrs-ember/vendor/defaults/setting', ['exports'],
         function(exports) {
             'use strict';
             return new DEFAULT_GENERIAL_SETTINGS().defaults();

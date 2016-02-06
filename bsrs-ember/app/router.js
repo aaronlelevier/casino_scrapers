@@ -11,7 +11,7 @@ Router.map(function() {
         this.route('location-types');
         this.route('category-types');
         this.route('contractors');
-        this.route('general');
+        this.route('settings', {path: '/settings/:id'});
         this.route('contractor-assignments');
         this.route('locations', function() {
             this.route('index');

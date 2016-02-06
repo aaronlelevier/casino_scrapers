@@ -36,6 +36,7 @@ module.exports = function(defaults) {
       app.import('vendor/people_fixtures.js');
       app.import('vendor/phone_number_fixtures.js');
       app.import('vendor/role_fixtures.js');
+      app.import('vendor/setting_fixtures.js');
       app.import('vendor/third_party_fixtures.js');
       app.import('vendor/ticket_fixtures.js');
       app.import('vendor/ticket_activity_fixtures.js');
