@@ -9,7 +9,7 @@ var GridViewController = Ember.Controller.extend({
     find: undefined,
     search: undefined,
     repository: inject('filterset'),
-    application: Ember.inject.controller(),
+    application: Ember.inject.controller(),//SCOTT: what is this for? 
     queryParams: ['page', 'sort', 'search', 'find'],
     hasActiveFilterSet: Ember.computed('filtersets.[]', 'sort', 'find', 'search', function() {
         let filtersets = this.get('filtersets');

@@ -24,6 +24,7 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Edit
     repository: inject('person'),
     child_components: ['input-multi-phone', 'input-multi-address', 'input-multi-email'],
     classNames: ['wrapper', 'form'],
+    //TODO: what is this used for?
     attemptedTransition: '',
     usernameValidation: validate('model.username'),
     middleInitialValidation: validate('model.middle_initial', validateSingleChar),

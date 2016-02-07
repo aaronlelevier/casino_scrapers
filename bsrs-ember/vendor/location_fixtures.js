@@ -69,6 +69,7 @@ var BSRS_LOCATION_FACTORY = (function() {
             location.name = 'vzoname' + i;
             location.number = 'sconumber' + i;
             location.status = this.location_status_defaults.closedId;
+            location.location_level = this.location_level_defaults.idTwo;
             response.push(location);
         }
         return {'count':page_size*2-1,'next':null,'previous':null,'results': response};

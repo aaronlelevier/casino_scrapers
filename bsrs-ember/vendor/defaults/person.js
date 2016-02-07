@@ -60,6 +60,7 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
             anotherId: '8aef1a27-f1c5-4721-83c0-9f1fceabd263',
             sorted_username: BSRS_PERSON_SORTED_USERNAME,
 
+            scott_username: 'scott11',
             donald_first_name: 'Donald',
             donald_last_name: 'Trump',
             donald: 'Donald Trump',

@@ -37,8 +37,10 @@ let extract_category = (model, store, role_existing, category_deserializer) => {
 
 let extract_location_level = (model, store) => {
     const location_level_pk = model.location_level;
+    const existing_location_level = store.find('location-level', location_level_pk);
     if (!location_level_pk) {
         const role = store.find('role', model.id);
+        const llevel = role.get('location_level');
         if (role.get('location_level')) {
             store.push('role', {id: role.get('id'), location_level_fk: undefined});
             const location_level = role.get('location_level');
@@ -46,15 +48,18 @@ let extract_location_level = (model, store) => {
             const mutated_array = role_array.filter((role) => {
                 return role !== model.id;
             });
-            store.push('location-level', {id: location_level.get('id'), roles: mutated_array});
-            location_level.save();
+            //TODO: test this in unit test
+            if(llevel.get('isNotDirtyOrRelatedNotDirty')){
+                store.push('location-level', {id: location_level.get('id'), roles: mutated_array});
+                location_level.save();
+            }
         }
         return undefined;
     }
     if(location_level_pk) {
         const location_level = store.find('location-level', location_level_pk);
         const existing_roles = location_level.get('roles') || [];
-        if (location_level.get('content') && existing_roles.indexOf(model.id) === -1) {
+        if (location_level.get('content') && existing_roles.indexOf(model.id) === -1 && location_level.get('isNotDirtyOrRelatedNotDirty')) {
             store.push('location-level', {id: location_level.get('id'), roles: existing_roles.concat(model.id)});
             location_level.save();
         }
@@ -69,7 +74,7 @@ var RoleDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         let category_deserializer = this.get('CategoryDeserializer');
         if (typeof options === 'undefined') {
-            this.deserialize_list(response);
+            return this.deserialize_list(response);
         } else {
             this.deserialize_single(response, options, category_deserializer);
         }
@@ -80,20 +85,27 @@ var RoleDeserializer = Ember.Object.extend({
         if (!role_existing.get('id') || role_existing.get('isNotDirtyOrRelatedNotDirty')) {
             response.location_level_fk = extract_location_level(response, store);
             response.role_category_fks = extract_category(response, store, role_existing, category_deserializer);
+            response.detail = true;
             let originalRole = store.push('role', response);
             originalRole.save();
         }
     },
     deserialize_list(response) {
+        const store = this.get('store');
+        let return_array = Ember.A();
         response.results.forEach((model) => {
-            let store = this.get('store');
-            let role_check = store.find('role', model.id);
-            if (!role_check.get('id') || role_check.get('isNotDirtyOrRelatedNotDirty')) {
+            let existing = store.find('role', model.id);
+            if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
                 model.location_level_fk = extract_location_level(model, store);
+                model.grid = true;
                 let originalRole = this.get('store').push('role', model);
                 originalRole.save();
+                return_array.pushObject(originalRole);
+            }else{
+                return_array.pushObject(existing);
             }
         });
+        return return_array;
     }
 });
 

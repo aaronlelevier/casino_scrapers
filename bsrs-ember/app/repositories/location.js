@@ -10,6 +10,8 @@ var LOCATION_URL = PREFIX + '/admin/locations/';
 
 var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'location'; }),
+    type_related: Ember.computed(function() { return ['location-children', 'location-parent']; }),
+    related_pk_mapping: Ember.computed(function() { return 'location_pk'; }),
     url: Ember.computed(function() { return LOCATION_URL; }),
     uuid: injectUUID('uuid'),
     LocationDeserializer: inject('location'),
@@ -84,10 +86,6 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
             this.get('LocationDeserializer').deserialize(response, id);
         });
         return model;
-    },
-    delete(id) {
-        PromiseMixin.xhr(LOCATION_URL + id + '/', 'DELETE');
-        this.get('store').remove('location', id);
     },
     format_url(filter) {
         let url = LOCATION_URL;

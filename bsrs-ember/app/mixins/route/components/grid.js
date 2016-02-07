@@ -39,12 +39,16 @@ var GridViewRoute = Ember.Route.extend({
         let page = parseInt(query.page, 10) || 1;
         let repository = this.get('repository');
         let requested = this.get('pagination').requested(name, page);
-        set_filter_model_attrs(this.filterModel, query.find);
-        let model = repository.findWithQuery(query.page, query.sort, query.search, query.find, query.page_size);
         const search = query.search;
         const count = repository.findCount();
         const routeName = this.get('routeName');
-        return {count, model, requested, filtersets, routeName, search};
+        set_filter_model_attrs(this.filterModel, query.find);
+        return new Ember.RSVP.Promise((resolve) => {
+            repository.findWithQuery(query.page, query.sort, query.search, query.find, query.page_size).then((storeFind) => {
+                const model = storeFind;
+                resolve({count, model, requested, filtersets, routeName, search});
+            });
+        });
     },
     setupController: function(controller, hash) {
         controller.set('count', hash.count);

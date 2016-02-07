@@ -159,7 +159,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(currentURL(), PEOPLE_URL);
             var person = store.find('person', {id: UUID.value});
             assert.equal(person.get('length'), 0);
-            assert.equal(find('tr.t-grid-data').length, 1);
         });
     });
 });

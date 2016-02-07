@@ -46,7 +46,7 @@ test('clicking on a location levels name will redirect them to the detail view',
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
     });
-    click('.t-grid-data:eq(2)');
+    click('.t-grid-data:eq(1)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -147,7 +147,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
     });
-    click('.t-grid-data:eq(2)');
+    click('.t-grid-data:eq(1)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });

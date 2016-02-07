@@ -41,8 +41,4 @@ export default Ember.Object.extend(GridRepositoryMixin, {
         });
         return model;
     },
-    delete(id) {
-        PromiseMixin.xhr(TRANSLATION_URL + id + '/', 'DELETE');
-        this.get('store').remove('translation', id);
-    }
 });

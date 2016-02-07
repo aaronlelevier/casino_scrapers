@@ -18,6 +18,9 @@ var GridRepositoryMixin = Ember.Mixin.create({
             model.saveRelated();
         });
     },
+    delete(id) {
+       return PromiseMixin.xhr(this.get('url') + id + '/', 'DELETE');
+    },
     findCount() {
         var count_array = this.get('store').find(this.get('type')).toArray();
         var count = count_array.filter(function(m) {
@@ -27,6 +30,8 @@ var GridRepositoryMixin = Ember.Mixin.create({
     },
     findWithQuery(page, sort, search, find, page_size) {
         let type = this.get('type');
+        let type_related = this.get('type_related') || [];
+        const related_pk_mapping = this.get('related_pk_mapping');
         let url = this.get('url');
         let store = this.get('store');
         let deserializer = this.get('deserializer');
@@ -54,15 +59,30 @@ var GridRepositoryMixin = Ember.Mixin.create({
                 endpoint = endpoint + '&' + field + '__icontains=' + encodeURIComponent(value);
             });
         }
-        const all = store.find(type);
-        PromiseMixin.xhr(endpoint).then((response) => {
-            all.set('isLoaded', true);
-            all.set('count', response.count);
-            Ember.run(function() {
-                deserializer.deserialize(response);
+        return PromiseMixin.xhr(endpoint).then((response) => {
+            //TODO: turn this into a service
+            const all = store.find(type);
+            const clean_cache = all.filter((model) => {
+                return model.get('grid') && !model.get('detail') && model.get('isNotDirtyOrRelatedNotDirty');
             });
+            clean_cache.forEach((model) => {
+                type_related.forEach((type) => {
+                    const relateds = store.find(type_related);
+                    const related_clear = relateds.filter((related_model) => {
+                        return related_model.get(related_pk_mapping) === model.get('id');
+                    });
+                    related_clear.forEach((related) => {
+                        related.removeRecord(); 
+                    });
+                }); 
+                const found_model = store.find(type, model.get('id'));
+                if(found_model){ found_model.removeRecord(); }
+            });
+            const grid = deserializer.deserialize(response);
+            grid.set('isLoaded', true);
+            grid.set('count', response.count);
+            return grid;
         });
-        return all;
     }
 });
 

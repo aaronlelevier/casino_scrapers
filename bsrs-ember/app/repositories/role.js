@@ -43,10 +43,6 @@ var RoleRepo = Ember.Object.extend(GridRepositoryMixin, {
         });
         return role;
     },
-    delete(id) {
-       PromiseMixin.xhr(ROLE_URL + id + '/', 'DELETE');
-       this.get('store').remove('role', id);
-    },
     get_default() {
         return this.get('store').find('role');
     }

@@ -75,7 +75,7 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
     });
-    click('.t-grid-data:eq(1)');
+    click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -268,8 +268,12 @@ test('currency helper displays correct currency format', (assert) => {
 });
 
 test('when click delete, person is deleted and removed from store', (assert) => {
+    clearxhr(list_xhr);
     visit(DETAIL_URL);
     xhr(PREFIX + BASE_PEOPLE_URL + '/' + PD.idOne + '/', 'DELETE', null, {}, 204, {});
+    var people_list_data = PF.list();
+    people_list_data.results.splice(0,1);
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
     generalPage.delete();
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
@@ -764,7 +768,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
     });
-    click('.t-grid-data:eq(1)');
+    click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         const person = store.find('person', PD.idOne);

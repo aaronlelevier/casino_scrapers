@@ -47,10 +47,6 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
         });
         return model;
     },
-    delete(id) {
-       PromiseMixin.xhr(CATEGORY_URL + id + '/', 'DELETE');
-       this.get('store').remove('category', id);
-    },
 });
 
 export default CategoryRepo;

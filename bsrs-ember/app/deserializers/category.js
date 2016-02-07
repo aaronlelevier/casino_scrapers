@@ -24,7 +24,7 @@ var extract_tree = function(model, store) {
 var CategoryDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         if (typeof options === 'undefined') {
-            this.deserialize_list(response);
+            return this.deserialize_list(response);
         } else {
             this.deserialize_single(response, options);
         }
@@ -39,22 +39,27 @@ var CategoryDeserializer = Ember.Object.extend({
                 //if no children, check if only children_fks was passed down
                 response.children_fks = temp;
             }
+            response.detail = true;
             let category = store.push('category', response);
             store.push('category', {id: category.get('id'), children_fks: response.children_fks, previous_children_fks: response.children_fks});
-            // category.set('children_fks', response.children_fks);
-            // category.set('previous_children_fks', response.children_fks);
             category.save();
         }
     },
     deserialize_list(response) {
         let store = this.get('store');
+        let return_array = Ember.A();
         response.results.forEach((model) => {
-            let existing_category = store.find('category', model.id);
-            if (!existing_category.get('id') || existing_category.get('isNotDirtyOrRelatedNotDirty')) {
+            let existing = store.find('category', model.id);
+            if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
+                model.grid = true;
                 let category = store.push('category', model);
                 category.save();
+                return_array.pushObject(category);
+            }else{
+                return_array.pushObject(existing);
             }
         });
+        return return_array;
     }
 });
 

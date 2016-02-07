@@ -17,7 +17,7 @@ var extract_locale_translation = function(model, store) {
 var TranslationDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         if (typeof options === 'undefined') {
-            this.deserialize_list(response);
+            return this.deserialize_list(response);
         } else {
             this.deserialize_single(response, options);
         }
@@ -27,16 +27,20 @@ var TranslationDeserializer = Ember.Object.extend({
         let trans_check = store.find('translation', id);
         if (!trans_check.get('id') || trans_check.get('isNotDirtyOrRelatedNotDirty')) {
             extract_locale_translation(model, store);
+            model.detail = true;
             let trans = store.push('translation', model);
             trans.save();
         }
     },
     deserialize_list(response) {
         let store = this.get('store');
+        const return_array = Ember.A();
         response.results.forEach((json) => {
-            let trans = store.push('translation', {id: json});
+            let trans = store.push('translation', {id: json, grid: true});
             trans.save();
+            return_array.pushObject(trans);
         });
+        return return_array;
     }
 });
 

@@ -42,7 +42,7 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
             {id: this.idThree, name : this.nameRegion}
         ];
         var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
-        for (var i=9; i <= page_size; i++) {
+        for (var i=1; i <= page_size; i++) {
             var uuid = '8854f6c5-58c7-4849-971f-e8df9e15e55';
             if (i < page_size) {
                 uuid = uuid + '0' + i;

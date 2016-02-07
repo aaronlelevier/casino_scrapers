@@ -37,10 +37,6 @@ var ThirdPartyRepo = Ember.Object.extend(GridRepositoryMixin, {
         });
         return model;
     },
-    delete(id) {
-        PromiseMixin.xhr(THIRD_PARTY_URL + id + '/', 'DELETE');
-        this.get('store').remove('third-party', id);
-    }
 });
 
 export default ThirdPartyRepo;

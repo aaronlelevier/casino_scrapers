@@ -20,7 +20,7 @@ const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const ROLE_URL = BASE_ROLE_URL + '/index';
 const NEW_URL = BASE_ROLE_URL + '/new/1';
 const NEW_URL_2 = BASE_ROLE_URL + '/new/2';
-const DETAIL_URL = BASE_ROLE_URL + '/' + RD.idGridTen;
+const DETAIL_URL = BASE_ROLE_URL + '/' + RD.idGridOne;
 const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
 const NEW_ROUTE = 'admin.roles.new';
 const INDEX_ROUTE = 'admin.roles.index';
@@ -34,11 +34,11 @@ module('Acceptance | tab role test', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + BASE_ROLE_URL + '/';
-        role_detail_data = RF.detail(RD.idGridTen);
-        detail_xhr = xhr(endpoint + RD.idGridTen + '/', 'GET', null, {}, 200, role_detail_data);
+        role_detail_data = RF.detail(RD.idGridOne, RD.nameGrid);
+        detail_xhr = xhr(endpoint + RD.idGridOne + '/', 'GET', null, {}, 200, role_detail_data);
         original_uuid = random.uuid;
         run(function() {
-            store.push('role', {id: RD.idGridTen, name: 'wat', categories: [CF.detail()]});
+            store.push('role', {id: RD.idGridOne, name: 'wat', categories: [CF.detail()]});
         });
     },
     afterEach() {
@@ -69,8 +69,8 @@ test('deep linking the role detail url should push a tab into the tab store with
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        let tab = store.find('tab', RD.idGridTen);
-        assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameOne);
+        let tab = store.find('tab', RD.idGridOne);
+        assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameGrid);
         assert.equal(tab.get('doc_type'), DOC_TYPE);
         assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
         assert.equal(tab.get('redirect'), INDEX_ROUTE);
@@ -92,8 +92,8 @@ test('visiting the role detail url from the list url should push a tab into the 
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        let tab = store.find('tab', RD.idGridTen);
-        assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameOne);
+        let tab = store.find('tab', RD.idGridOne);
+        assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameGrid);
         assert.equal(tab.get('doc_type'), DOC_TYPE);
         assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
         assert.equal(tab.get('redirect'), INDEX_ROUTE);
@@ -113,11 +113,11 @@ test('clicking on a tab that is not dirty from the list url should take you to t
     click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let role = store.find('role', RD.idGridTen);
+        let role = store.find('role', RD.idGridOne);
         assert.equal(role.get('isDirtyOrRelatedDirty'), false);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameOne);
+        assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameGrid);
     });
     visit(ROLE_URL);
     andThen(() => {
@@ -125,7 +125,7 @@ test('clicking on a tab that is not dirty from the list url should take you to t
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let role = store.find('role', RD.idGridTen);
+        let role = store.find('role', RD.idGridOne);
         assert.equal(role.get('isDirtyOrRelatedDirty'), false);
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -194,7 +194,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     fillIn('.t-role-name', RD.nameTwo);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let role = store.find('role', RD.idGridTen);
+        let role = store.find('role', RD.idGridOne);
         assert.equal(role.get('name'), RD.nameTwo);
         assert.equal(role.get('isDirtyOrRelatedDirty'), true);
         let tabs = store.find('tab');
@@ -209,7 +209,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let role = store.find('role', RD.idGridTen);
+        let role = store.find('role', RD.idGridOne);
         assert.equal(role.get('name'), RD.nameTwo);
         assert.equal(role.get('isDirtyOrRelatedDirty'), true);
         assert.equal(currentURL(), DETAIL_URL);
@@ -229,7 +229,7 @@ test('clicking on a tab that is dirty from the role url (or any non related page
     fillIn('.t-role-name', RD.nameTwo);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let role = store.find('role', RD.idGridTen);
+        let role = store.find('role', RD.idGridOne);
         assert.equal(role.get('name'), RD.nameTwo);
         assert.equal(role.get('isDirtyOrRelatedDirty'), true);
         let tabs = store.find('tab');
@@ -242,7 +242,7 @@ test('clicking on a tab that is dirty from the role url (or any non related page
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let role = store.find('role', RD.idGridTen);
+        let role = store.find('role', RD.idGridOne);
         assert.equal(role.get('name'), RD.nameTwo);
         assert.equal(role.get('isDirtyOrRelatedDirty'), true);
         assert.equal(currentURL(), DETAIL_URL);
@@ -260,10 +260,10 @@ test('clicking on a tab that is not dirty from the people url (or any non relate
     click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let role = store.find('role', RD.idGridTen);
+        let role = store.find('role', RD.idGridOne);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameOne);
+        assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameGrid);
     });
     let people_list_data = PF.list();
     let people_endpoint = PREFIX + BASE_PEOPLE_URL + '/';
@@ -274,7 +274,7 @@ test('clicking on a tab that is not dirty from the people url (or any non relate
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let role = store.find('role', RD.idGridTen);
+        let role = store.find('role', RD.idGridOne);
         assert.equal(role.get('isDirtyOrRelatedDirty'), false);
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -287,7 +287,7 @@ test('a dirty model should add the dirty class to the tab close icon', (assert) 
         assert.equal(find('.dirty').length, 0);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameOne);
+        assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameGrid);
     });
     fillIn('.t-role-name', RD.nameTwo);
     andThen(() => {
@@ -303,7 +303,7 @@ test('closing a document should close it\'s related tab', (assert) => {
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameOne);
+        assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameGrid);
     });
     click('.t-cancel-btn:eq(0)');
     andThen(() => {
@@ -341,7 +341,7 @@ test('opening a tab, navigating away and closing the tab should remove the tab',
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameOne);
+        assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameGrid);
         visit(ROLE_URL);
     });
     click('.t-tab-close:eq(0)');
@@ -360,7 +360,7 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameOne);
+        assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameGrid);
     });
     fillIn('.t-role-name', RD.nameTwo);
     andThen(() => {

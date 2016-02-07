@@ -18,8 +18,8 @@ const BASE_ROLE_URL = BASEURLS.base_roles_url;
 const LOCATION_LEVEL_URL = BASE_URL + '/index';
 const NEW_URL = BASE_URL + '/new/1';
 const NEW_URL_2 = BASE_URL + '/new/2';
-const DJANGO_DETAIL_URL = PREFIX + BASE_URL + '/' + LLD.idLossDistrict + '/';
-const DETAIL_URL = BASE_URL + '/' + LLD.idLossDistrict;
+const DJANGO_DETAIL_URL = PREFIX + BASE_URL + '/' + LLD.idOne + '/';
+const DETAIL_URL = BASE_URL + '/' + LLD.idOne;
 const SUBMIT_BTN = '.submit_btn';
 const ROLE_URL = BASE_ROLE_URL + '/index';
 const NEW_ROUTE = 'admin.location-levels.new';
@@ -34,8 +34,7 @@ module('Acceptance | tab location-level test', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + BASE_URL + '/';
-        location_detail_data = LLF.detail(LLD.idLossDistrict);
-        location_detail_data.name = LLD.lossPreventionDistrict;
+        location_detail_data = LLF.detail(LLD.idOne);
         detail_xhr = xhr(DJANGO_DETAIL_URL, 'GET', null, {}, 200, location_detail_data);
         original_uuid = random.uuid;
     },
@@ -67,8 +66,8 @@ test('deep linking the location-level detail url should push a tab into the tab 
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        let tab = store.find('tab', LLD.idLossDistrict);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.lossPreventionDistrict);
+        let tab = store.find('tab', LLD.idOne);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.nameCompany);
         assert.equal(tab.get('doc_type'), DOC_TYPE);
         assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
         assert.equal(tab.get('redirect'), INDEX_ROUTE);
@@ -85,13 +84,13 @@ test('visiting the location detail url from the list url should push a tab into 
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
-    click('.t-grid-data:eq(0)');
+    click('.t-grid-data:eq(1)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        let tab = store.find('tab', LLD.idLossDistrict);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.lossPreventionDistrict);
+        let tab = store.find('tab', LLD.idOne);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.nameCompany);
         assert.equal(tab.get('doc_type'), DOC_TYPE);
         assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
         assert.equal(tab.get('redirect'), INDEX_ROUTE);
@@ -108,14 +107,14 @@ test('clicking on a tab that is not dirty from the list url should take you to t
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
-    click('.t-grid-data:eq(0)');
+    click('.t-grid-data:eq(1)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let location = store.find('location-level', LLD.idLossDistrict);
+        let location = store.find('location-level', LLD.idOne);
         assert.equal(location.get('isDirtyOrRelatedDirty'), false);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.lossPreventionDistrict);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.nameCompany);
     });
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
@@ -123,7 +122,7 @@ test('clicking on a tab that is not dirty from the list url should take you to t
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let location = store.find('location-level', LLD.idLossDistrict);
+        let location = store.find('location-level', LLD.idOne);
         assert.equal(location.get('isDirtyOrRelatedDirty'), false);
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -188,16 +187,16 @@ test('clicking on a tab that is dirty from the list url should take you to the d
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
-    click('.t-grid-data:eq(0)');
-    fillIn('.t-location-level-name', LLD.nameCompany);
+    click('.t-grid-data:eq(1)');
+    fillIn('.t-location-level-name', LLD.nameDistrict);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let location = store.find('location-level', LLD.idLossDistrict);
-        assert.equal(location.get('name'), LLD.nameCompany);
+        let location = store.find('location-level', LLD.idOne);
+        assert.equal(location.get('name'), LLD.nameDistrict);
         assert.equal(location.get('isDirtyOrRelatedDirty'), true);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.nameCompany);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.nameDistrict);
     });
     andThen(() => {
         visit(LOCATION_LEVEL_URL);
@@ -207,8 +206,8 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let location = store.find('location-level', LLD.idLossDistrict);
-        assert.equal(location.get('name'), LLD.nameCompany);
+        let location = store.find('location-level', LLD.idOne);
+        assert.equal(location.get('name'), LLD.nameDistrict);
         assert.equal(location.get('isDirtyOrRelatedDirty'), true);
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -223,29 +222,32 @@ test('clicking on a tab that is dirty from the role url (or any non related page
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
-    click('.t-grid-data:eq(0)');
-    fillIn('.t-location-level-name', LLD.nameCompany);
+    click('.t-grid-data:eq(1)');
+    fillIn('.t-location-level-name', LLD.nameDistrict);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let location = store.find('location-level', LLD.idLossDistrict);
-        assert.equal(location.get('name'), LLD.nameCompany);
+        let location = store.find('location-level', LLD.idOne);
+        assert.equal(location.get('name'), LLD.nameDistrict);
         assert.equal(location.get('isDirtyOrRelatedDirty'), true);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.nameCompany);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.nameDistrict);
     });
     andThen(() => {
         let endpoint = PREFIX + BASE_ROLE_URL + '/';
         xhr(endpoint + '?page=1','GET',null,{},200,RF.list());
-        visit(ROLE_URL);
-        andThen(() => {
-            assert.equal(currentURL(), ROLE_URL);
-        });
+    });
+    visit(ROLE_URL);
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+        let location = store.find('location-level', LLD.idOne);
+        assert.equal(location.get('name'), LLD.nameDistrict);
+        assert.equal(location.get('isDirtyOrRelatedDirty'), true);
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let location = store.find('location-level', LLD.idLossDistrict);
-        assert.equal(location.get('name'), LLD.nameCompany);
+        let location = store.find('location-level', LLD.idOne);
+        assert.equal(location.get('name'), LLD.nameDistrict);
         assert.equal(location.get('isDirtyOrRelatedDirty'), true);
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -259,13 +261,13 @@ test('clicking on a tab that is not dirty from the role url (or any non related 
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
-    click('.t-grid-data:eq(0)');
+    click('.t-grid-data:eq(1)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let location = store.find('location-level', LLD.idLossDistrict);
+        let location = store.find('location-level', LLD.idOne);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.lossPreventionDistrict);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.nameCompany);
     });
     let role_endpoint = PREFIX + BASE_ROLE_URL + '/';
     xhr(role_endpoint + '?page=1','GET',null,{},200, RF.list());
@@ -275,7 +277,7 @@ test('clicking on a tab that is not dirty from the role url (or any non related 
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let location = store.find('location-level', LLD.idLossDistrict);
+        let location = store.find('location-level', LLD.idOne);
         assert.equal(location.get('isDirtyOrRelatedDirty'), false);
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -288,9 +290,9 @@ test('a dirty model should add the dirty class to the tab close icon', (assert) 
         assert.equal(find('.dirty').length, 0);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.lossPreventionDistrict);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.nameCompany);
     });
-    fillIn('.t-location-level-name', LLD.nameCompany);
+    fillIn('.t-location-level-name', LLD.nameDistrict);
     andThen(() => {
         assert.equal(find('.dirty').length, 1);
     });
@@ -304,7 +306,7 @@ test('closing a document should close it\'s related tab', (assert) => {
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.lossPreventionDistrict);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.nameCompany);
         click('.t-cancel-btn:eq(0)');
         andThen(() => {
             assert.equal(tabs.get('length'), 0);
@@ -340,7 +342,7 @@ test('opening a tab, navigating away and closing the tab should remove the tab',
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.lossPreventionDistrict);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.nameCompany);
         visit(LOCATION_LEVEL_URL);
     });
     click('.t-tab-close:eq(0)');
@@ -359,12 +361,12 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.lossPreventionDistrict);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.nameCompany);
     });
-    fillIn('.t-location-level-name', LLD.nameCompany);
+    fillIn('.t-location-level-name', LLD.nameDistrict);
     andThen(() => {
         assert.equal(find('.dirty').length, 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), `${LLD.nameCompany}`);
+        assert.equal(find('.t-tab-title:eq(0)').text(), `${LLD.nameDistrict}`);
     });
     visit(LOCATION_LEVEL_URL);
     click('.t-tab-close:eq(0)');

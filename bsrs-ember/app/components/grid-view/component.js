@@ -60,7 +60,8 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
         return searched_content;
     }),
     sorted_content: Ember.computed('found_content.[]', function() {
-        const sort = this.get('sort') || '';
+        let sort = this.get('sort') || '';
+        sort = Ember.$.isArray(sort) && sort.length > 0 ? sort[0] : sort;
         let options = sort.length > 0 ? sort.split(',') : this.get('defaultSort');
         const found_content = this.get('found_content');
         return MultiSort.run(found_content, options);
@@ -71,7 +72,12 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
         const page_size = parseInt(this.get('page_size')) || PAGE_SIZE;
         const pages = requested.toArray().sort((a,b) => { return a-b; }).uniq();
         const max = (pages.indexOf(page) + 1) * page_size;
-        return this.get('sorted_content').slice(max-page_size, max);
+        const sorted_content = this.get('sorted_content');
+        if(sorted_content.objectAt(0) && !sorted_content.objectAt(0).get('grid')){
+            return sorted_content.slice(max-page_size, max);
+        }else{
+            return sorted_content.slice(0, Math.max(page_size, 10));
+        }
     }),
     pages: Ember.computed('model.count', function() {
         const pages = [];

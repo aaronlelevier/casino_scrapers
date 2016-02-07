@@ -2,8 +2,8 @@ import Ember from 'ember';
 
 var LocationLevelController = Ember.Controller.extend({
     actions: {
-        closeTab(tab, callback) {
-            this.send('closeTabMaster', tab, callback);
+        closeTab(tab) {
+            this.send('closeTabMaster', tab);
         }
     }
 });

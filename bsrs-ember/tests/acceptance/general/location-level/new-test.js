@@ -143,7 +143,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(currentURL(), LOCATION_LEVEL_URL);
             let location_level = store.find('location-level', {id: UUID.value});
             assert.equal(location_level.get('length'), 0);
-            assert.equal(find('.t-grid-data').length, 8);
         });
     });
 });

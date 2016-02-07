@@ -15,6 +15,7 @@ var BSRS_LOCATION_DEFAULTS_OBJECT = (function() {
             baseStoreName: 'ABC123',
             storeName: 'Company',
             storeNameOne: 'ABC1231',
+            storeNameOneLast: 'ABC12310',
             storeNameTwo: 'DEF456',
             storeNameThree: 'GHI789',
             storeNameFour: 'ZXY863',

@@ -35,10 +35,6 @@ var LocationLevelRepo = Ember.Object.extend(GridRepositoryMixin, {
             this.get('LocationLevelDeserializer').deserialize(response, id);
         });
         return model;
-    },
-    delete(id) {
-        PromiseMixin.xhr(LOCATION_LEVEL_URL + id + '/', 'DELETE');
-        this.get('store').remove('location-level', id);
     }
 });
 

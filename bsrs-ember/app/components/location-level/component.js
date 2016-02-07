@@ -20,6 +20,14 @@ var LocationLevelComponent = Ember.Component.extend({
         });
         return name_arr;
     }),
+    actions: {
+        close(tab) {
+            this.sendAction('close', tab);
+        },
+        delete(tab, callback, id) {
+            this.sendAction('delete', tab, callback, id);
+        }
+    }
 });
 
 export default LocationLevelComponent;

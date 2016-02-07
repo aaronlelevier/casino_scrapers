@@ -133,7 +133,7 @@ var PersonDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         let location_deserializer = this.get('LocationDeserializer');
         if (typeof options === 'undefined') {
-            this.deserialize_list(response);
+            return this.deserialize_list(response);
         } else {
             this.deserialize_single(response, options, location_deserializer);
         }
@@ -150,21 +150,28 @@ var PersonDeserializer = Ember.Object.extend({
             extract_person_location(model, store, location_level_fk, location_deserializer);
             extract_locale(model, store);
             extract_status(model, store);
+            model.detail = true;
             const person = store.push('person', model);
             person.save();
         }
     },
     deserialize_list(response) {
         let store = this.get('store');
+        let return_array = Ember.A();
         response.results.forEach((model) => {
             const person_check = store.find('person', model.id);
             if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
                 [model.role_fk] = extract_role(model, store);
                 extract_status(model, store);
+                model.grid = true;
                 let person = store.push('person', model);
                 person.save();
+                return_array.pushObject(person);
+            }else{
+                return_array.pushObject(person_check);
             }
         });
+        return return_array;
     }
 });
 

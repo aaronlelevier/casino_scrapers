@@ -69,6 +69,11 @@ var TranslationModel = Model.extend(NewMixin, {
             locales: locales
         };
     },
+    removeRecord() {
+        run(() => {
+            this.get('store').remove('translation', this.get('id'));
+        });
+    },
 });
 
 export default TranslationModel;

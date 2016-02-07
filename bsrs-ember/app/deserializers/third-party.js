@@ -13,7 +13,7 @@ var extract_status = function(model, store) {
 var ThirdPartyDeserializer = Ember.Object.extend({
     deserialize(model, options) {
         if (typeof options === 'undefined') {
-            this.deserialize_list(model);
+            return this.deserialize_list(model);
         } else {
             this.deserialize_single(model, options);
         }
@@ -23,20 +23,27 @@ var ThirdPartyDeserializer = Ember.Object.extend({
         let existing_third_party = store.find('third-party', id);
         if (!existing_third_party.get('id') || existing_third_party.get('isNotDirtyOrRelatedNotDirty')) {
             extract_status(model, store);
+            model.detail = true;
             let third_party = store.push('third-party', model);
             third_party.save();
         }
     },
     deserialize_list(model) {
         const store = this.get('store');
+        let return_array = Ember.A();
         model.results.forEach((model) => {
-            let existing_third_party = store.find('third-party', model.id);
-            if (!existing_third_party.get('id') || existing_third_party.get('isNotDirtyOrRelatedNotDirty')) {
+            const existing = store.find('third-party', model.id);
+            if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
                 extract_status(model, store);
+                model.grid = true;
                 let third_party = store.push('third-party', model);
                 third_party.save();
+                return_array.pushObject(third_party);
+            }else{
+                return_array.pushObject(existing);
             }
         });
+        return return_array;
     }
 });
 

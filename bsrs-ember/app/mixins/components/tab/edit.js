@@ -25,9 +25,9 @@ var EditMixin = Ember.Mixin.create({
             let id = this.get('model').get('id');
             let repository = this.get('repository');
             let callback = function() {
-                repository.delete(id);
+                return repository.delete(id);
             };
-            this.sendAction('close', this.tab(), callback);
+            this.sendAction('delete', this.tab(), callback, id);
         }
     }
 });

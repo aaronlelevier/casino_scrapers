@@ -5,10 +5,10 @@ var BSRS_ROLE_FACTORY = (function() {
         this.location_level_fixtures = location_level_fixtures.default || location_level_fixtures;
         this.config = config;
     };
-    factory.prototype.generate = function(i) {
+    factory.prototype.generate = function(i, name) {
         return {
             id: i,
-            name: this.role_defaults.nameOne,
+            name: name || this.role_defaults.nameOne,
             role_type: this.role_defaults.roleTypeGeneral,
             location_level: this.location_level_fixtures.detail().id,
             categories: [this.category_fixtures.detail()]
@@ -54,12 +54,13 @@ var BSRS_ROLE_FACTORY = (function() {
             var role = this.generate(uuid + i);
             delete role.categories;
             role.name = 'xav' + i;
+            role.role_type = this.role_defaults.roleTypeContractor;
             response.push(role);
         }
         return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
     };
-    factory.prototype.detail = function(i) {
-        var role = this.generate(i);
+    factory.prototype.detail = function(i, name) {
+        var role = this.generate(i, name);
         return role;
     };
     factory.prototype.put = function(role) {

@@ -11,6 +11,7 @@ var PEOPLE_URL = PREFIX + '/admin/people/';
 
 export default Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'person'; }),
+    type_related: Ember.computed(function() { return ['phonenumber', 'email', 'address']; }),
     url: Ember.computed(function() { return PEOPLE_URL; }),
     uuid: injectUUID('uuid'),
     PersonDeserializer: inject('person'),
@@ -83,8 +84,4 @@ export default Ember.Object.extend(GridRepositoryMixin, {
         });
         return model;
     },
-    delete(id) {
-        PromiseMixin.xhr(PEOPLE_URL + id + '/', 'DELETE');
-        this.get('store').remove('person', id);
-    }
 });

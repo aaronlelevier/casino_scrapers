@@ -110,6 +110,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
             return true;
         }
     }),
+    // locationIsDirty: belongs_to_dirty('location_fk', 'location'),
     locationIsDirty: Ember.computed('location', 'location_fk', function() {
         const location = this.get('location');
         const location_fk = this.get('location_fk');

@@ -18,6 +18,7 @@ var BSRS_LOCATION_LEVEL_DEFAULTS_OBJECT = (function() {
             nameDistrict: 'District',
             lossPreventionDistrict: 'Loss Prevention District',
             nameDepartment: 'Department',
+            nameGridOne: 'Company-tsiname11',
             nameGrid: 'Company-tsiname16',
             nameStore: 'Store',
             nameStoreUn: 'Store',

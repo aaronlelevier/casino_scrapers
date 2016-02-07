@@ -154,7 +154,7 @@ var extract_children = function(model, store, location_deserializer) {
 var LocationDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         if (typeof options === 'undefined') {
-            this.deserialize_list(response);
+            return this.deserialize_list(response);
         } else {
             this.deserialize_single(response, options);
         }
@@ -172,24 +172,29 @@ var LocationDeserializer = Ember.Object.extend({
             response.location_children_fks = extract_children(response, store, location_deserializer);
             response.location_parents_fks = extract_parents(response, store, location_deserializer);
             run(() => {
+                response.detail = true;
                 let location = store.push('location', response);
                 location.save();
             });
         }
     },
-    deserialize_list(response, location_level_deserializer) {
+    deserialize_list(response) {
         const store = this.get('store');
+        let return_array = Ember.A();
         response.results.forEach((model) => {
             const existing = store.find('location', model.id);
             if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
                 model.status_fk = extract_location_status(model, store);
                 model.location_level_fk = extract_location_level(model, store);
-                run(() => {
-                    let location = store.push('location', model);
-                    location.save();
-                });
+                model.grid = true;
+                let location = store.push('location', model);
+                location.save();
+                return_array.pushObject(location);
+            }else{
+                return_array.pushObject(existing);
             }
         });
+        return return_array;
     }
 });
 
