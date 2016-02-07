@@ -23,9 +23,11 @@ const DJANGO_LOCATION_URL = '/admin/locations/';
 const NUMBER_ONE = {keyCode: 49};
 const NUMBER_FOUR = {keyCode: 52};
 const LETTER_R = {keyCode: 82};
+const LETTER_O = {keyCode: 79};
 const LETTER_C = {keyCode: 67};
 const BACKSPACE = {keyCode: 8};
 const SORT_STATUS_DIR = '.t-sort-status-translated-name-dir';
+const SORT_LLEVEL_DIR = '.t-sort-location-level-name-dir';
 
 var application, store, endpoint, list_xhr, original_uuid;
 
@@ -49,10 +51,10 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-title').text(), 'Locations');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        // assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), LD.storeNameOne);
         assert.equal(find('.t-grid-data:eq(1) .t-location-number').text().trim(), LD.storeNumber + '2');
-        // // assert.equal(find('.t-grid-data:eq(0) .t-location-status').text().trim(), LD.status);//put back once get grid v2 out
-        assert.equal(find('.t-grid-data:eq(0) .t-location-location_level').text().trim(), LLD.nameCompany);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-status-translated_name').text().trim(), t(LDS.openName));
+        assert.equal(find('.t-grid-data:eq(0) .t-location-location_level-name').text().trim(), LLD.nameCompany);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -666,5 +668,56 @@ test('status.translated_name is a functional related filter', function(assert) {
         assert.equal(currentURL(),LOCATION_URL + '?find=status.translated_name%3Acl&search=&sort=-status.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         assert.equal(find('.t-grid-data:eq(0) .t-location-status-translated_name').text().trim(), t(LDS.closedName));
+    });
+});
+
+test('location level name is a functional related filter', function(assert) {
+    clearxhr(list_xhr);
+    const location_list = LF.list();
+    location_list.results[1].location_level = LLD.idTwo;
+    xhr(endpoint ,"GET",null,{},200,location_list);
+    let option_four = PREFIX + BASE_URL + '/?page=1&ordering=-location_level__name&location_level__name__icontains=d';
+    xhr(option_four,'GET',null,{},200,LF.searched_related(LLD.locationTwoId, 'location'));
+    let option_three = PREFIX + BASE_URL + '/?page=1&ordering=-location_level__name';
+    xhr(option_three,'GET',null,{},200,LF.searched_related(LLD.idTwo, 'location_level'));
+    let option_two = PREFIX + BASE_URL + '/?page=1&ordering=location_level__name';
+    xhr(option_two,'GET',null,{},200,LF.searched_related(LLD.idTwo, 'location_level'));
+    let option_one = PREFIX + BASE_URL + '/?page=1&search=o';
+    xhr(option_one,'GET',null,{},200,LF.searched_related(LLD.idTwo, 'location_level'));
+    visit(LOCATION_URL);
+    fillIn('.t-grid-search-input', 'o');
+    triggerEvent('.t-grid-search-input', 'keyup', LETTER_O);
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL + '?search=o');
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-location_level-name').text().trim(), LLD.nameCompany);
+        assert.equal(find('.t-grid-data:eq(1) .t-location-location_level-name').text().trim(), LLD.nameDepartment);
+    });
+    fillIn('.t-grid-search-input', '');
+    triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL + '?search=');
+        assert.equal(find('.t-grid-data:eq(0) .t-location-location_level-name').text().trim(), LLD.nameCompany);
+        assert.equal(find('.t-grid-data:eq(1) .t-location-location_level-name').text().trim(), LLD.nameDepartment);
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    });
+    click(SORT_LLEVEL_DIR);
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL + '?search=&sort=location_level.name');
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-location_level-name').text().trim(), LLD.nameCompany);
+        assert.equal(find('.t-grid-data:eq(1) .t-location-location_level-name').text().trim(), LLD.nameCompany);
+    });
+    click(SORT_LLEVEL_DIR);
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL + '?search=&sort=-location_level.name');
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-location_level-name').text().trim(), LLD.nameDepartment);
+    });
+    filterGrid('location_level.name', 'd');
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL + '?find=location_level.name%3Ad&search=&sort=-location_level.name');
+        assert.equal(find('.t-grid-data').length, 1);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-location_level-name').text().trim(), LLD.nameDepartment);
     });
 });

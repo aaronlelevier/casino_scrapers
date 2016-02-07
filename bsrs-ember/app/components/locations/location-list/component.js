@@ -26,7 +26,7 @@ export default GridViewComponent.extend({
             isSearchable: true
         },
         {
-            field: 'location_level',
+            field: 'location_level.name',
             headerLabel: 'Organization',
             isSortable: true,
             isFilterable: true,
