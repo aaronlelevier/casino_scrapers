@@ -57,6 +57,10 @@ var ApplicationRoute = Ember.Route.extend({
         for (let key in currency_list) {
             store.push('currency', currency_list[key]);
         }
+        const setting_list = Ember.$('[data-preload-settings]').data('configuration');
+        setting_list.forEach((model) =>  {
+            store.push('setting', model);
+        });
         const location_level_list = Ember.$.extend(true, [], Ember.$('[data-preload-location-levels]').data('configuration'));
         location_level_list.forEach((model) => {
             model.children_fks = model.children || [];

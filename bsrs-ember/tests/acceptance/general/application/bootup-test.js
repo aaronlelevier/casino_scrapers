@@ -16,6 +16,7 @@ import LD from 'bsrs-ember/vendor/defaults/ticket';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
+import SD from 'bsrs-ember/vendor/defaults/setting';
 
 const HOME_URL = '/';
 
@@ -254,5 +255,15 @@ test('on boot we should fetch and load the saved filterset configuration', funct
         assert.equal(filtersets.get('length'), 3);
         assert.equal(filtersets.objectAt(0).get('endpoint_name'), 'admin.people.index');
         assert.deepEqual(filtersets.objectAt(0).get('endpoint_uri'), '?sort=title');
+    });
+});
+
+test('setting - load id,name of setting model on boot', (assert) => {
+    visit(HOME_URL);
+    andThen(() => {
+        var settings = store.find('setting');
+        assert.equal(settings.get('length'), 1);
+        assert.equal(settings.objectAt(0).get('id'), SD.id);
+        assert.equal(settings.objectAt(0).get('name'), SD.name);
     });
 });
