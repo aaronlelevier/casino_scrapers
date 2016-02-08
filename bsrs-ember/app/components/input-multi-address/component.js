@@ -6,7 +6,7 @@ import {ValidationMixin, validateEach} from 'ember-cli-simple-validation/mixins/
 import addressNameValidation from 'bsrs-ember/validation/address_name';
 import postalCodeValidation from 'bsrs-ember/validation/postal_code';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var MultiAddressComponent = ChildValidationComponent.extend(ValidationMixin, CustomValidMixin, {
     uuid: inject('uuid'),

@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import PromiseMixin from 'ember-promise/mixins/promise';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var GridRepositoryMixin = Ember.Mixin.create({
     create(new_pk) {

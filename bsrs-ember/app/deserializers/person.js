@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var extract_status = (model, store) => {
     const status = store.find('status', model.status);

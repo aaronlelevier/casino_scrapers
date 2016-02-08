@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var extract_emails = function(model, store) {
     let email_fks = [];

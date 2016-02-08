@@ -12,7 +12,7 @@ import ParentMixin from 'bsrs-ember/mixins/model/location/parent';
 import StatusMixin from 'bsrs-ember/mixins/model/location/status';
 import LocationLevelMixin from 'bsrs-ember/mixins/model/location/location-level';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var LocationModel = Model.extend(CopyMixin, NewMixin, StatusMixin, ParentMixin, ChildrenMixin, LocationLevelMixin, AddressMixin, PhoneNumberMixin, EmailMixin, {
     store: inject('main'),

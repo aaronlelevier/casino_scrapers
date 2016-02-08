@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var PhoneNumberMixin = Ember.Mixin.create({
     phone_numbers_all: Ember.computed(function() {

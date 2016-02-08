@@ -1,7 +1,6 @@
 import Ember from 'ember';
+const { run } = Ember;
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
-
-var run = Ember.run;
 
 let extract_category = (model, store, role_existing, category_deserializer) => {
     let server_sum_category_fks = [];

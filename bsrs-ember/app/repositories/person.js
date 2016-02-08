@@ -5,7 +5,7 @@ import inject from 'bsrs-ember/utilities/deserializer';
 import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 
-var run = Ember.run;
+const { run } = Ember;
 var PREFIX = config.APP.NAMESPACE;
 var PEOPLE_URL = PREFIX + '/admin/people/';
 

@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var AddressMixin = Ember.Mixin.create({
     addresses_all: Ember.computed(function() {

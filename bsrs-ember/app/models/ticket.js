@@ -13,7 +13,7 @@ import DateFormatMixin from 'bsrs-ember/mixins/model/date-format';
 import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
 import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocationMixin, DateFormatMixin, {
     store: inject('main'),
@@ -33,6 +33,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
     ccIsDirty: many_to_many_dirty('ticket_cc_ids', 'ticket_people_fks'),
     ccIsNotDirty: Ember.computed.not('ccIsDirty'),
     assignee: Ember.computed.alias('belongs_to_assignee.firstObject'),
+    // belongs_to_assingee: belongs_to('tickets', 'person'),
     /*start-non-standard*/ @computed /*end-non-standard*/
     belongs_to_assignee() {
         const ticket_id = this.get('id');

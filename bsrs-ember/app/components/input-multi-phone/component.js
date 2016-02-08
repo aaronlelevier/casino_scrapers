@@ -5,7 +5,7 @@ import CustomValidMixin from 'bsrs-ember/mixins/validation/custom';
 import {ValidationMixin, validateEach} from 'ember-cli-simple-validation/mixins/validate';
 import { phoneIsAllowedRegion, phoneIsValidFormat } from 'bsrs-ember/validation/phone';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var InputMultiPhone = ChildValidationComponent.extend(ValidationMixin, CustomValidMixin, {
     uuid: inject('uuid'),

@@ -91,7 +91,7 @@ rm -rf translation.json
 ##### LOCATION
 1. Open repopulate_jenkins_json.sh and comment out loaddata of fixtures/location.json
 2. run bash repopulate_jenkins_json.sh
-3. ./manage.py dumpdata translation --indent=2 > fixtures/watt.json
+3. ./manage.py dumpdata location --indent=2 > fixtures/watt.json
 4. Remove location.states and copy into location.State.json
 5. uncomment out loaddata of fixtures/location.json and run bash repopulate_jenkins_json.sh
 

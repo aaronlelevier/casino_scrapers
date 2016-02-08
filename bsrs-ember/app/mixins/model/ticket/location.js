@@ -1,7 +1,7 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { belongs_to, change_belongs_to, change_belongs_to_simple, belongs_to_dirty, belongs_to_rollback, belongs_to_rollback_simple, belongs_to_save } from 'bsrs-components/attr/belongs-to';
 
-var run = Ember.run;
 
 var TicketLocationMixin = Ember.Mixin.create({
     location: Ember.computed.alias('belongs_to_location.firstObject'),

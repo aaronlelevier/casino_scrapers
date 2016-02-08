@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var EmailMixin = Ember.Mixin.create({
     emails_all: Ember.computed(function() {

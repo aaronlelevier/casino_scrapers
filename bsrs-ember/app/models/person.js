@@ -13,7 +13,7 @@ import config from 'bsrs-ember/config/environment';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import { belongs_to_save } from 'bsrs-components/attr/belongs-to';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, StatusMixin, LocaleMixin, NewMixin, {
     type: 'person',

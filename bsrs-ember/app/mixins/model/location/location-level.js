@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var LocationLevelMixin = Ember.Mixin.create({
     location_level: Ember.computed.alias('location_levels.firstObject'),

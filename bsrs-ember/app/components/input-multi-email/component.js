@@ -5,7 +5,7 @@ import CustomValidMixin from 'bsrs-ember/mixins/validation/custom';
 import {ValidationMixin, validateEach} from 'ember-cli-simple-validation/mixins/validate';
 import { emailIsValidFormat } from 'bsrs-ember/validation/email';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var InputMultiEmail = ChildValidationComponent.extend(ValidationMixin, CustomValidMixin, {
     uuid: inject('uuid'),

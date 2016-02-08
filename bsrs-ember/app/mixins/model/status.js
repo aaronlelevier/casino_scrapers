@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var StatusMixin = Ember.Mixin.create({
     rollbackStatus: belongs_to_rollback('status_fk', 'status', 'change_status'),

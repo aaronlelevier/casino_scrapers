@@ -7,7 +7,7 @@ import NewMixin from 'bsrs-ember/mixins/model/new';
 import TranslationMixin from 'bsrs-ember/mixins/model/translation';
 import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
     store: inject('main'),

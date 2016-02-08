@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var ChildrenMixin = Ember.Mixin.create({
     location_children_fks: [],

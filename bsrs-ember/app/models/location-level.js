@@ -3,7 +3,7 @@ import inject from 'bsrs-ember/utilities/store';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import { attr, Model } from 'ember-cli-simple-store/model';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var LocationLevel = Model.extend(NewMixin, {
     store: inject('main'),

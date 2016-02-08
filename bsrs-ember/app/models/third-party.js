@@ -5,7 +5,7 @@ import StatusMixin from 'bsrs-ember/mixins/model/status';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import { belongs_to_save } from 'bsrs-components/attr/belongs-to';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var ThirdPartyModel = Model.extend(NewMixin, StatusMixin, {
     type: 'third-party',

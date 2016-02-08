@@ -4,7 +4,7 @@ import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 
-var run = Ember.run;
+const { run } = Ember;
 var PREFIX = config.APP.NAMESPACE;
 var SETTING_URL = PREFIX + '/admin/settings/';
 

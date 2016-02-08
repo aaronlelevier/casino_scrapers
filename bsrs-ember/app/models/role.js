@@ -7,7 +7,7 @@ import NewMixin from 'bsrs-ember/mixins/model/new';
 import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
 import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
 
-var run = Ember.run;
+const { run } = Ember;
 
 var RoleModel = Model.extend(NewMixin, {
     store: inject('main'),
