@@ -2,15 +2,26 @@ import Ember from 'ember';
 import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
+import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
+import config from 'bsrs-ember/config/environment';
+import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import SD from 'bsrs-ember/vendor/defaults/setting';
+import SF from 'bsrs-ember/vendor/setting_fixtures';
 
 const ADMIN_URL = '/admin';
-
-var application;
+const PREFIX = config.APP.NAMESPACE;
+const SETTING_URL = BASEURLS.base_setting_url + '/' + SD.id;
 const ADMINPANEL = '.t-side-menu';
+
+var application, store, endpoint, setting_data, detail_xhr;
 
 module('Acceptance | admin layout test', {
     beforeEach() {
         application = startApp();
+        store = application.__container__.lookup('store:main');
+        endpoint = PREFIX + SETTING_URL + '/';
+        setting_data = SF.detail();
+        detail_xhr = xhr(endpoint, 'GET', null, {}, 200, setting_data);
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -18,6 +29,7 @@ module('Acceptance | admin layout test', {
 });
 
 test('admin panel displays correct headers and section headers', function(assert) {
+    clearxhr(detail_xhr);
     visit(ADMIN_URL);
     andThen(() => {
         assert.equal(find(ADMINPANEL + ' > section').length, 5);
@@ -29,14 +41,13 @@ test('admin panel displays correct headers and section headers', function(assert
     });
 });
 
-// test('admin panel shows bootstrapped filter set as links into the application for a given section', function(assert) {
-//     visit(ADMIN_URL);
-//     andThen(() => {
-//         let people_section = find(ADMINPANEL + ' > section:eq(1)');
-//         assert.equal(people_section.find('.t-admin-people-index-navigation li').length, 2);
-//         assert.equal(people_section.find('.t-admin-people-index-navigation li:eq(0) a').prop('href').slice(21), '/admin/people/index?sort=title');
-//         assert.equal(people_section.find('.t-admin-people-index-navigation li:eq(1) a').prop('href').slice(21), '/admin/people/index?find=username%3Awa');
-//         assert.equal(people_section.find('.t-admin-roles-index-navigation li').length, 1);
-//         assert.equal(people_section.find('.t-admin-roles-index-navigation li:eq(0) a').prop('href').slice(21), '/admin/roles/index?page_size=25');
-//     });
-// });
+test('click and enter general settings', function(assert) {
+    visit(ADMIN_URL);
+    andThen(() => {
+        assert.equal(currentURL(), ADMIN_URL);
+    });
+    click('.t-general-settings');
+    andThen(() => {
+        assert.equal(currentURL(), SETTING_URL);
+    });
+});
