@@ -11,7 +11,7 @@ from rest_framework.exceptions import ValidationError
 
 from generic.settings import DEFAULT_GENERAL_SETTINGS
 from ticket.models import Ticket
-from utils.models import BaseModel, BaseManager, BaseNameModel
+from utils.models import BaseModel, BaseManager, BaseNameModel, SettingMixin
 
 
 ### SAVED SEARCHES
@@ -198,7 +198,7 @@ class Attachment(BaseModel):
 
 ### SETTINGS
 
-class Setting(BaseNameModel):
+class Setting(SettingMixin, BaseNameModel):
     '''
     ``Setting`` records will be either Standard or Custom. and be set
     at levels. ex - Location, Role, User.
@@ -207,30 +207,3 @@ class Setting(BaseNameModel):
 
     def __str__(self):
         return {self.name: self.settings}
-
-    @classmethod
-    def get_settings_file(cls, name=None):
-        if name == 'general':
-            return DEFAULT_GENERAL_SETTINGS
-        else:
-            return {}
-
-    @classmethod
-    def get_combined_settings_file(cls, base_name, *settings):
-        """
-        :base_name: the 'str' name of the base `Settings` dict.
-        :settings: the other settings files to override the base in order of precedence.
-        """
-        base = cls.get_settings_file(base_name)
-        combined = copy.copy(base)
-
-        for setting in settings:
-            for k,v in combined.items():
-                try:
-                    setting[k]
-                except KeyError:
-                    combined[k]['inherited'] = True
-
-            combined.update(setting)
-
-        return combined

@@ -1,3 +1,5 @@
+import copy
+
 from django.test import TestCase, TransactionTestCase
 from django.utils import timezone
 from django.contrib.auth.models import ContentType, Permission
@@ -5,10 +7,13 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from model_mommy import mommy
 
-from person.models import PersonStatus
+from generic.models import Setting
+from generic.settings import DEFAULT_GENERAL_SETTINGS
+from person.models import PersonStatus, Role
+from person.settings import DEFAULT_ROLE_SETTINGS
 from person.tests.factory import create_single_person, create_role
 from utils import create
-from utils.models import Tester
+from utils.models import Tester, SettingMixin
 from utils.permissions import perms_map
 
 
@@ -100,3 +105,42 @@ class BaseStatusModelTests(TestCase):
 
         status2 = PersonStatus.objects.get(id=status2.id)
         self.assertFalse(status2.default)
+
+
+class SettingMixinTests(TestCase):
+
+    def test_get_class_default_settings(self):
+        ret = SettingMixin.get_class_default_settings()
+        self.assertEqual({}, ret)
+
+    def test_get_class_default_settings__general(self):
+        ret = SettingMixin.get_class_default_settings('general')
+        self.assertEqual(DEFAULT_GENERAL_SETTINGS, ret)
+
+    def test_get_class_default_settings__role(self):
+        ret = SettingMixin.get_class_default_settings('role')
+        self.assertEqual(DEFAULT_ROLE_SETTINGS, ret)
+
+    def test_get_combined_settings_file(self):
+        role_settings = SettingMixin.get_class_default_settings('role')
+        combined_settings = copy.copy(DEFAULT_GENERAL_SETTINGS)
+        combined_settings.update(role_settings)
+
+        ret = Setting.get_class_combined_settings('general', role_settings)
+
+        self.assertEqual(combined_settings, ret)
+        # exists in 'general' but not in 'role'
+        self.assertTrue(ret['company_name']['inherited'])
+        # exists in both, so since 'role' overrides 'general', it is not inherited
+        self.assertFalse(ret['welcome_text']['inherited'])
+        # only exists in 'role'
+        self.assertFalse(ret['modules']['inherited'])
+
+    def test_get_all_class_settings(self):
+        with self.assertRaises(NotImplementedError):
+            SettingMixin.get_all_class_settings()
+
+    def test_get_all_instance_settings(self):
+        setting_mixin = SettingMixin()
+        with self.assertRaises(NotImplementedError):
+            setting_mixin.get_all_instance_settings()

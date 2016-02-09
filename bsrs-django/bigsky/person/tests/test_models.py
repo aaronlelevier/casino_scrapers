@@ -50,8 +50,14 @@ class RoleTests(TestCase):
 
     def test_settings_default(self):
         role = create_role()
-
         self.assertEqual(role.settings, DEFAULT_ROLE_SETTINGS)
+
+    def test_get_combined_settings_file(self):
+        raw_combined_settings = Role.get_class_combined_settings('general', self.role.settings)
+
+        ret = self.role.get_all_instance_settings()
+
+        self.assertEqual(ret, raw_combined_settings)
 
 
 class RolePasswordTests(TestCase):

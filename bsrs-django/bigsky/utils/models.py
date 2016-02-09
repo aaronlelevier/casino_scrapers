@@ -2,11 +2,15 @@
 All Model, Manager, and QuerySet definitions in this module 
 should be Abstract.
 """
+import copy
 import uuid
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
+
+from generic.settings import DEFAULT_GENERAL_SETTINGS
+from person.settings import DEFAULT_ROLE_SETTINGS
 
 
 ########
@@ -133,3 +137,46 @@ class BaseStatusModel(BaseNameModel):
         be loaded into the `Boostrap` data under a single Array of Statuses.
         """
         return True
+
+
+class SettingMixin(object):
+    """
+    Settings interface mixin for models with 'settings' JSONField's.
+    """
+    @classmethod
+    def get_class_default_settings(cls, name=None):
+        if name == 'general':
+            return DEFAULT_GENERAL_SETTINGS
+        elif name == 'role':
+            return DEFAULT_ROLE_SETTINGS
+        else:
+            return {}
+
+    @classmethod
+    def get_class_combined_settings(cls, base_name, *settings):
+        """
+        :base_name: the 'str' name of the base `Settings` dict.
+        :settings: the other settings files to override the base in order of precedence.
+        """
+        base = cls.get_class_default_settings(base_name)
+        combined = copy.copy(base)
+
+        for setting in settings:
+            for k,v in combined.items():
+                try:
+                    setting[k]
+                except KeyError:
+                    combined[k]['inherited'] = True
+
+            combined.update(setting)
+
+        return combined
+
+    @classmethod
+    def get_all_class_settings(cls):
+        raise NotImplementedError("Must implent 'get_all_class_settings' on the concrete \
+class because these are specific to the class.")
+
+    def get_all_instance_settings(self):
+        raise NotImplementedError("Must implent 'get_all_instance_settings', so the \
+model instance has access to all if it's inherited and concrete settings.")

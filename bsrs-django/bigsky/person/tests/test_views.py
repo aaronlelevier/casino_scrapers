@@ -136,7 +136,7 @@ class RoleSettingsTests(RoleSetupMixin, APITestCase):
 
     def test_detail(self):
         general_settings = Setting.get_settings_file('general')
-        role_settings = Role.get_settings_file()
+        role_settings = Role.get_settings_file('role')
         combined_settings = copy.copy(general_settings)
         combined_settings.update(role_settings)
 
@@ -208,6 +208,7 @@ class RoleSettingsTests(RoleSetupMixin, APITestCase):
         response = self.client.get('/api/admin/roles/{}/'.format(role.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(data['settings']['company_name']['inherited'])
+        self.assertNotEqual(data['settings']['company_name']['value'], new_company_name)
         # PUT
         serializer = RoleCreateSerializer(role)
         raw_data = serializer.data

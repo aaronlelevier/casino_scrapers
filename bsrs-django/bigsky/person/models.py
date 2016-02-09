@@ -24,13 +24,13 @@ from person import helpers
 from person.settings import DEFAULT_ROLE_SETTINGS
 from translation.models import Locale
 from utils import choices
-from utils.models import BaseModel, BaseStatusModel, BaseStatusManager
+from utils.models import BaseModel, BaseStatusModel, BaseStatusManager, SettingMixin
 from utils.validators import (contains_digit, contains_upper_char, contains_lower_char,
     contains_special_char, contains_no_whitespaces)
 from work_order.models import WorkOrderStatus
 
 
-class Role(BaseModel):
+class Role(SettingMixin, BaseModel):
     # keys
     group = models.OneToOneField(Group, blank=True, null=True)
     location_level = models.ForeignKey(LocationLevel, null=True, blank=True)
@@ -222,9 +222,8 @@ class Role(BaseModel):
             raise ValidationError("Role can't have related child categories: {}."
                                  .format(', '.join(child_categories)))
 
-    @classmethod
-    def get_settings_file(cls, name=None):
-        return DEFAULT_ROLE_SETTINGS
+    def get_all_instance_settings(self):
+        return type(self).get_class_combined_settings('general', self.settings)
 
 
 class ProxyRole(BaseModel):

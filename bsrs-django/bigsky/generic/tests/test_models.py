@@ -146,21 +146,3 @@ class AttachmentModelTests(TestCase):
             self.assertEqual(ret['filename'], attachment.filename)
             self.assertEqual(ret['file'], str(attachment.file))
             self.assertEqual(ret['image_thumbnail'], str(attachment.image_thumbnail))
-
-
-class SettingTests(TestCase):
-
-    def test_get_settings_file(self):
-        self.assertEqual({}, Setting.get_settings_file())
-
-    def test_get_settings_file__general(self):
-        self.assertEqual(DEFAULT_GENERAL_SETTINGS, Setting.get_settings_file('general'))
-
-    def test_get_combined_settings_file(self):
-        role_settings = Role.get_settings_file()
-        combined_settings = copy.copy(DEFAULT_GENERAL_SETTINGS)
-        combined_settings.update(role_settings)
-
-        ret = Setting.get_combined_settings_file('general', role_settings)
-
-        self.assertEqual(combined_settings, ret)
