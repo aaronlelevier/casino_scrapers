@@ -216,13 +216,21 @@ class Setting(BaseNameModel):
             return {}
 
     @classmethod
-    def get_combined_settings_file(cls, base_name, *args):
+    def get_combined_settings_file(cls, base_name, *settings):
         """
         :base_name: the 'str' name of the base `Settings` dict.
-        :args: the other settings files to override the base in order of precedence.
+        :settings: the other settings files to override the base in order of precedence.
         """
         base = cls.get_settings_file(base_name)
         combined = copy.copy(base)
-        for a in args:
-            combined.update(a)
+
+        for setting in settings:
+            for k,v in combined.items():
+                try:
+                    setting[k]
+                except KeyError:
+                    combined[k]['inherited'] = True
+
+            combined.update(setting)
+
         return combined

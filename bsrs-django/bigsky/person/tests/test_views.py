@@ -122,6 +122,10 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
 
 class RoleSettingsTests(RoleSetupMixin, APITestCase):
 
+    def setUp(self):
+        super(RoleSettingsTests, self).setUp()
+        self.maxDiff = None
+
     def test_list(self):
         response = self.client.get('/api/admin/roles/')
 
@@ -140,7 +144,17 @@ class RoleSettingsTests(RoleSetupMixin, APITestCase):
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings'], combined_settings)
+        # values
+        self.assertEqual(data['settings']['company_name']['value'], combined_settings['company_name']['value'])
+        self.assertEqual(data['settings']['welcome_text']['value'], combined_settings['welcome_text']['value'])
+        self.assertEqual(data['settings']['create_all']['value'], combined_settings['create_all']['value'])
+        self.assertEqual(data['settings']['login_grace']['value'], combined_settings['login_grace']['value'])
+        self.assertEqual(data['settings']['modules']['value'], combined_settings['modules']['value'])
+        # settings
+        for k,v in data['settings'].items():
+            self.assertIn('inherited', v)
+        self.assertTrue(data['settings']['company_name']['inherited'])
+        self.assertFalse(data['settings']['modules']['inherited'])
 
     def test_create(self):
         raw_data = {
@@ -175,7 +189,6 @@ class RoleSettingsTests(RoleSetupMixin, APITestCase):
         role = create_role()
         serializer = RoleCreateSerializer(role)
         raw_data = serializer.data
-        settings = {'welcome_text': {'value': 'new dashboard text'}}
         raw_data['settings'] = {'welcome_text': {'value': 'new dashboard text'}}
 
         response = self.client.put('/api/admin/roles/{}/'.format(role.id), raw_data, format='json')
@@ -187,6 +200,26 @@ class RoleSettingsTests(RoleSetupMixin, APITestCase):
             raw_data['settings']['welcome_text']['value'],
             data['settings']['welcome_text']['value']
         )
+
+    def test_update_settings(self):
+        new_company_name = 'foo'
+        role = create_role()
+        # initial Detail
+        response = self.client.get('/api/admin/roles/{}/'.format(role.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(data['settings']['company_name']['inherited'])
+        # PUT
+        serializer = RoleCreateSerializer(role)
+        raw_data = serializer.data
+        raw_data['settings'] = {'company_name': {'value': new_company_name}}
+        response = self.client.put('/api/admin/roles/{}/'.format(role.id), raw_data, format='json')
+
+        response = self.client.get('/api/admin/roles/{}/'.format(role.id))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings']['company_name']['value'], new_company_name)
+        self.assertFalse(data['settings']['company_name']['inherited'])
 
 
 ### PERSON ###

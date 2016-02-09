@@ -51,8 +51,7 @@ class RoleDetailSerializer(BaseCreateSerializer):
         GeneralSettings > RoleSettings = CombinedSettings
         """
         data = super(RoleDetailSerializer, self).to_representation(instance)
-        combined_settings = Setting.get_combined_settings_file('general', data['settings'])
-        data['settings'] = combined_settings
+        data['settings'] = Setting.get_combined_settings_file('general', data['settings'])
         return data
 
 
