@@ -173,8 +173,8 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         add_location_email_btn.send_keys("\n")
         add_location_email_btn.click()
         location_page.find_email_new_entry_send_keys(old_email_one)
-        # add_location_email_btn.click()
-        # location_page.find_second_email_new_entry_send_keys(old_email_two)
+        add_location_email_btn.click()
+        location_page.find_second_email_new_entry_send_keys(old_email_two)
         add_address_btn = self.gen_elem_page.find_add_address_btn()
         add_address_btn.click()
         location_page.find_address_new_entry_send_keys(1, old_street_one, old_city_one, old_zip_one)
@@ -196,7 +196,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         ### UPDATE
         # Go to Location Detail view, Change name and add Contact information and hit "save"
         location_page.find_wait_and_assert_elem("t-location-name", location_name)
-        # location_page.assert_email_inputs(old_email_one, old_email_two)
+        location_page.assert_email_inputs(old_email_one, old_email_two)
         new_location_name = rand_chars()
         new_phone_one = "888-999-7878"
         new_phone_two = "888-999-7899"
@@ -233,30 +233,28 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         location_parents_input.send_keys("a")
         parent_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
         parent_option.click()
-        # Fill in Contact data
+        # Fill in More Contact data
         add_phone_number_btn = self.gen_elem_page.find_add_btn()
         add_phone_number_btn.click()
         all_phone_number_inputs = location_page.find_all_ph_new_entries()
         second_to_last_phone_number_input = all_phone_number_inputs[2]
         second_to_last_phone_number_input.send_keys(new_phone_one)
-        # location_page.find_ph_new_entry_send_keys(new_phone_one)
         add_phone_number_btn.click()
         all_phone_number_inputs = location_page.find_all_ph_new_entries()
         last_phone_number_input = all_phone_number_inputs[3]
         last_phone_number_input.send_keys(new_phone_two)
 
-        # email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
-        # email_input.clear()
-        # add_location_email_btn = self.gen_elem_page.find_add_email_btn()
-        # add_location_email_btn.click()
-        # location_page.find_email_new_entry_send_keys(new_email_one)
+        email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
+        email_input.clear()
+        location_page.find_email_new_entry_send_keys(new_email_one)
         
-        # add_address_btn = self.gen_elem_page.find_add_address_btn()
-        # add_address_btn.click()
-        # location_page.find_address_new_entry_send_keys(1, new_street_one, new_city_one, new_zip_one)
-        # add_address_btn.click()
-        # location_page.find_address_new_entry_send_keys(2, new_street_two, new_city_two, new_zip_two)
+        add_address_btn = self.gen_elem_page.find_add_address_btn()
+        add_address_btn.click()
+        location_page.find_address_new_entry_send_keys(1, new_street_one, new_city_one, new_zip_one)
+        add_address_btn.click()
+        location_page.find_address_new_entry_send_keys(2, new_street_two, new_city_two, new_zip_two)
         self.gen_elem_page.click_save_btn()
+
         # List view contains new name
         locations = location_page.find_list_data()
         self.driver.refresh()
@@ -270,7 +268,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         location_page.find_wait_and_assert_elem("t-location-name", new_location_name)
         location_page.assert_phone_number_inputs(old_phone_one, old_phone_two)
         # location_page.assert_children("Company")
-        # location_page.assert_email_inputs(new_email_one, new_email_two)
+        location_page.assert_email_inputs(new_email_one, old_email_two)
         # location_page.assert_address_inputs(1, new_street_one, new_city_one, new_zip_one)
         # location_page.assert_address_inputs(2, new_street_two, new_city_two, new_zip_two)
         ### DELETE
@@ -278,10 +276,9 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.gen_elem_page.click_dropdown_delete()
         self.gen_elem_page.click_delete_btn()
         # check Location is deleted
-        import time; time.sleep(2)
         self.driver.refresh()
-        import time; time.sleep(2)
-        locations = location_page.find_list_data()
+        # import time; time.sleep(2)
+        # locations = location_page.find_list_data()
         # location_list_view = location_page.find_list_name()
         # self.assertNotIn(
         #     location_name,
