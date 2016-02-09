@@ -20,8 +20,8 @@ def run_selenium_tests():
     os.environ['browser'] = 'firefox'
 
     run_selenium_test(['python', 'selenium_tests/admin_crud.py', 'SeleniumTests.test_location'])
-    run_selenium_test(['python', 'selenium_tests/grid.py'])
-    run_selenium_test(['python', 'selenium_tests/ticket.py'])
+    # run_selenium_test(['python', 'selenium_tests/grid.py'])
+    # run_selenium_test(['python', 'selenium_tests/ticket.py'])
 
 
 def run_selenium_test(args):
