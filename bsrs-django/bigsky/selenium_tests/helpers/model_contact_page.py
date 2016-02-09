@@ -21,6 +21,11 @@ class ModelContactPage(ModelPage):
         first_loc = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-children-select-trigger ')]/span")
         text = first_loc.text
         assert child_one in text
+    
+    def assert_locations(self, child_one):
+        first_loc = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-person-locations-select-trigger ')]/span")
+        text = first_loc.text
+        assert child_one in text
 
     def find_ph_new_entry_send_keys(self, phone_num):
         first_phone_number_input = self.driver.find_element_by_class_name("t-new-entry")

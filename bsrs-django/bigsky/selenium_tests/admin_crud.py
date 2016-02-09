@@ -390,13 +390,12 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         person_page.find_address_new_entry_send_keys(1, new_street_one, new_city_one, new_zip_one)
         add_address_btn.click()
         person_page.find_address_new_entry_send_keys(2, new_street_two, new_city_two, new_zip_two)
-        # Need to fix isDirty problem first
-        # # Fill in Location
-        # location_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-person-locations-select')])[last()]")
-        # location_input.send_keys("a")
-        # loc_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
-        # loc_option.click()
-
+        # Fill in Location
+        location_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-person-locations-select')])[last()]")
+        location_input.send_keys("a")
+        loc_option = self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class ,' '), ' ember-power-select-options ')]/li", debounce=True)
+        loc_option_name = loc_option.text
+        loc_option.click()
         # Select different locale
         locale_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-locale-select ')]/div")
         locale_input.click()
@@ -420,6 +419,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         person_page.assert_email_inputs(new_email_one, new_email_two)
         person_page.assert_address_inputs(1, new_street_one, new_city_one, new_zip_one)
         person_page.assert_address_inputs(2, new_street_two, new_city_two, new_zip_two)
+        person_page.assert_locations(loc_option_name)
         self.driver.refresh()
         person_page.find_wait_and_assert_elem("t-person-username", username)
         assert self.driver.find_element_by_class_name("t-locale-select-trigger").text == "ja - ja"
