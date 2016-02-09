@@ -15,7 +15,11 @@ class TicketPriorityAdmin(admin.ModelAdmin):
 
 @admin.register(models.Ticket)
 class TicketAdmin(admin.ModelAdmin):
-    pass
+
+    list_display = ('id', 'location', 'category_names',)
+
+    def category_names(self, obj):
+        return "\n".join([x for x in obj.categories.values_list('name', flat=True)])
 
 
 @admin.register(models.TicketActivityType)
