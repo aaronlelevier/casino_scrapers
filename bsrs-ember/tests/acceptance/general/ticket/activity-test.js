@@ -132,6 +132,16 @@ test('ticket detail does not show the activity list without a matching ticket fo
     });
 });
 
+test('ticket detail counts are not shown unless they are greater than 0', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.created_only());
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${'.t-activity-comment-counts'}`).text(), '');
+        assert.equal(find(`${'.t-activity-status-counts'}`).text(), '');
+    });
+});
+
 test('ticket detail shows the activity list including event data (status)', (assert) => {
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.status_only());
     page.visitDetail();
@@ -141,7 +151,7 @@ test('ticket detail shows the activity list including event data (status)', (ass
         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
         assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
         assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
-        assert.equal(parseInt(find(`${'.activity-status-counts'}`).text()), 3);
+        assert.equal(parseInt(find(`${'.t-activity-status-counts'}`).text()), 3);
     });
 });
 
@@ -163,7 +173,7 @@ test('ticket detail shows the activity list including event data (priority)', (a
         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
         assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
         assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim(), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
-        assert.equal(parseInt(find(`${'.activity-all-counts'}`).text()), 3);
+        assert.equal(parseInt(find(`${'.t-activity-all-counts'}`).text()), 3);
     });
 });
 
@@ -428,7 +438,7 @@ test('ticket detail shows the activity comment', (assert) => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} commented 4 months ago ${TD.commentOne}`);
-        assert.equal(parseInt(find(`${'.activity-comment-counts'}`).text()), 1);
+        assert.equal(parseInt(find(`${'.t-activity-comment-counts'}`).text()), 1);
     });
 });
 

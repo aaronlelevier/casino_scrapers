@@ -1,9 +1,24 @@
 <div class="activity-list-wrap row">
     <menu class="activity-list-tabs">
         <ul>
-            <li class="active t-activity-tab-all_updates" onclick={{action 'filter' 'all_updates'}}>{{t 'activity.tabs.all_updates'}} <span class="activity-all-counts badge">{{ allCounts }}</span></li>
-            <li class="t-activity-tab-comments" onclick={{action 'filter' 'comments'}}>{{t 'activity.tabs.comments'}} <span class="activity-comment-counts badge">{{ commentCounts }}</span></li>
-            <li class="t-activity-tab-status_updates" onclick={{action 'filter' 'status_updates'}}>{{t 'activity.tabs.status_updates'}} <span class="activity-status-counts badge">{{ statusCounts }}</span></li>
+            <li class="active t-activity-tab-all_updates" onclick={{action 'filter' 'all_updates'}}>
+                {{t 'activity.tabs.all_updates'}}
+                {{#if allCounts}}
+                    <span class="t-activity-all-counts badge">{{ allCounts }}</span>
+                {{/if}}
+            </li>
+            <li class="t-activity-tab-comments" onclick={{action 'filter' 'comments'}}>
+                {{t 'activity.tabs.comments'}}
+                {{#if commentCounts}}
+                    <span class="t-activity-comment-counts badge">{{ commentCounts }}</span>
+                {{/if}}
+            </li>
+            <li class="t-activity-tab-status_updates" onclick={{action 'filter' 'status_updates'}}>
+                {{t 'activity.tabs.status_updates'}}
+                {{#if statusCounts}}
+                    <span class="t-activity-status-counts badge">{{ statusCounts }}</span>
+                {{/if}}
+            </li>
         </ul>
     </menu>
     <div class="activity-list">

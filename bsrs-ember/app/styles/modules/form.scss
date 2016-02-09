@@ -160,6 +160,7 @@ textarea.ticket-request{
 		border-color: $orange;
 	}
 	&.ticket-priority-medium{
+		color: $darkGray;
 		background: $darkYellow;
 		border-color: $darkYellow;
 	}
