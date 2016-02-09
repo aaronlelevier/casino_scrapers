@@ -30,8 +30,6 @@ var GridRepositoryMixin = Ember.Mixin.create({
     },
     findWithQuery(page, sort, search, find, page_size) {
         let type = this.get('type');
-        let type_related = this.get('type_related') || [];
-        const related_pk_mapping = this.get('related_pk_mapping');
         let url = this.get('url');
         let store = this.get('store');
         let deserializer = this.get('deserializer');
@@ -59,6 +57,10 @@ var GridRepositoryMixin = Ember.Mixin.create({
                 endpoint = endpoint + '&' + field + '__icontains=' + encodeURIComponent(value);
             });
         }
+        let type_related_m2m = this.get('type_related_m2m') || [];
+        let type_related_join = this.get('type_related_join') || [];
+        const related_m2m_pk_mapping = this.get('related_m2m_pk_mapping');
+        const related_join_pk_mapping = this.get('related_join_pk_mapping');
         return PromiseMixin.xhr(endpoint).then((response) => {
             //TODO: turn this into a service
             const all = store.find(type);
@@ -66,15 +68,27 @@ var GridRepositoryMixin = Ember.Mixin.create({
                 return model.get('grid') && !model.get('detail') && model.get('isNotDirtyOrRelatedNotDirty');
             });
             clean_cache.forEach((model) => {
-                type_related.forEach((type) => {
+                //m2m
+                type_related_m2m.forEach((type) => {
                     const relateds = store.find(type);
                     const related_clear = relateds.filter((related_model) => {
-                        return related_model.get(related_pk_mapping) === model.get('id');
+                        return related_model.get(related_m2m_pk_mapping) === model.get('id');
                     });
                     related_clear.forEach((related) => {
                         related.removeRecord(); 
                     });
                 }); 
+                //join
+                type_related_join.forEach((type) => {
+                    const relateds = store.find(type);
+                    const related_clear = relateds.filter((related_model) => {
+                        return Ember.$.inArray(model.get('id'), related_model.get(related_join_pk_mapping)) > -1; 
+                    });
+                    related_clear.forEach((related) => {
+                        //pass remove_ belongs to method if applicable
+                        related.removeTypeFromArray(model.get('id'), related, type, related_join_pk_mapping); 
+                    });
+                });
                 const found_model = store.find(type, model.get('id'));
                 if(found_model){ found_model.removeRecord(); }
             });
