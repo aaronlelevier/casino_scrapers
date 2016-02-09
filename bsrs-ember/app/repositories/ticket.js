@@ -11,7 +11,7 @@ var TICKET_URL = PREFIX + '/tickets/';
 var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
     uuid: injectUUID('uuid'),
     type: Ember.computed(function() { return 'ticket'; }),
-    type_related: Ember.computed(function() { return ['ticket-person', '']; }),
+    type_related: Ember.computed(function() { return ['ticket-person', 'ticket-category']; }),
     related_pk_mapping: Ember.computed(function() { return 'ticket_pk'; }),
     url: Ember.computed(function() { return TICKET_URL; }),
     TicketDeserializer: inject('ticket'),

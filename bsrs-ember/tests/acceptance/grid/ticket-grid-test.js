@@ -16,7 +16,6 @@ import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/
 import random from 'bsrs-ember/models/random';
 import timemachine from 'vendor/timemachine';
 import moment from 'moment';
-import BSRS_PERSON_CURRENT_DEFAULTS_OBJECT from 'bsrs-ember/vendor/defaults/person-current';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;

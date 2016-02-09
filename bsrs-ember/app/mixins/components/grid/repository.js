@@ -67,7 +67,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
             });
             clean_cache.forEach((model) => {
                 type_related.forEach((type) => {
-                    const relateds = store.find(type_related);
+                    const relateds = store.find(type);
                     const related_clear = relateds.filter((related_model) => {
                         return related_model.get(related_pk_mapping) === model.get('id');
                     });
