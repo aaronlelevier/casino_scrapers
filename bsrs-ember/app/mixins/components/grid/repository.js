@@ -62,7 +62,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
         const related_m2m_pk_mapping = this.get('related_m2m_pk_mapping');
         const related_join_pk_mapping = this.get('related_join_pk_mapping');
         return PromiseMixin.xhr(endpoint).then((response) => {
-            //TODO: turn this into a service
+            //TODO: turn this into a service and unit test.  Only acceptance tests right now
             const all = store.find(type);
             const clean_cache = all.filter((model) => {
                 return model.get('grid') && !model.get('detail') && model.get('isNotDirtyOrRelatedNotDirty');

@@ -72,6 +72,28 @@ test('sorted content is sorted by the defaultSort provided if no other value is 
     assert.equal(people.objectAt(3).get('id'), 2);
 });
 
+test('sort property may be an array (introduced when removing optimized rendering in grid)', (assert) => {
+    store.push('person', {id: 3, username: 'abc', first_name: PEOPLE_DEFAULTS.first_name, last_name: ''});
+    store.push('person', {id: 1, username: 'def', title: PEOPLE_DEFAULTS.title});
+    store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: 'zzz', title: PEOPLE_DEFAULTS.title});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, defaultSort: ['id'], columns: columns});
+    var people = subject.get('sorted_content');
+    assert.equal(people.objectAt(0).get('id'), 1);
+    assert.equal(people.objectAt(1).get('id'), 2);
+    assert.equal(people.objectAt(2).get('id'), 3);
+    subject.set('sort', ['username']);
+    people = subject.get('sorted_content');
+    assert.equal(people.objectAt(0).get('id'), 3);
+    assert.equal(people.objectAt(1).get('id'), 1);
+    assert.equal(people.objectAt(2).get('id'), 2);
+    store.push('person', {id: 4, username: 'babel', first_name: PEOPLE_DEFAULTS.first_name});
+    people = subject.get('sorted_content');
+    assert.equal(people.objectAt(0).get('id'), 3);
+    assert.equal(people.objectAt(1).get('id'), 4);
+    assert.equal(people.objectAt(2).get('id'), 1);
+    assert.equal(people.objectAt(3).get('id'), 2);
+});
+
 test('given a list of people and page number, should only return those people on that page', (assert) => {
     store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
     store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
