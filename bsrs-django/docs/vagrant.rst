@@ -155,6 +155,21 @@ Scott Note's for new vagrant setup
     sudo apt-get install python-dev libjpeg-dev libfreetype6-dev zlib1g-dev
     sudo apt-get install postgresql-9.4-postgis-2.0
 
+    # free up memory
+        touch Customfile #at folder level of Vagrantfile
+            config.vm.provider :virtualbox do |v|
+              v.customize ["modifyvm", :id, "--memory", 2048]
+            end
+        free -m #see physical vs swap
+        sudo swapon -s
+        cat /proc/meminfo
+        sudo fallocate -l 2G /swapfile
+        sudo mkswap /swapfile
+        sudo swapon -s
+        ls -lh /swapfile
+        sudo chmod 600 /swapfile
+        swap file
+        sudo nano /etc/fstab
 
 
 
@@ -238,6 +253,9 @@ Scott Note's for new vagrant setup
     # cd project django level
     virtualenv -p /usr/local/bin/3.4 venv
     source venv/bin/activate
+
+    # free up memory
+        swap file
 
     
 
