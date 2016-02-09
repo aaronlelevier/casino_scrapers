@@ -154,8 +154,8 @@ test('scott navigating between ticket and people and locations and category will
             assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
         });
     });
-    var page_two = `${PREFIX}${BASE_PEOPLE_URL}/?page=2`;
-    xhr(page_two,"GET",null,{},200,PF.list_two());
+    var page_two_people = `${PREFIX}${BASE_PEOPLE_URL}/?page=2`;
+    xhr(page_two_people,"GET",null,{},200,PF.list_two());
     click('.t-page:eq(1) a');
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL + '?page=2');
@@ -213,8 +213,8 @@ test('scott navigating between ticket and people and locations and category will
             assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
         });
     });
-    var page_two = `${PREFIX}${BASE_CATEGORY_URL}/?page=2`;
-    xhr(page_two,"GET",null,{},200,CF.list_two());
+    var page_two_cat = `${PREFIX}${BASE_CATEGORY_URL}/?page=2`;
+    xhr(page_two_cat,"GET",null,{},200,CF.list_two());
     click('.t-page:eq(1) a');
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_URL + '?page=2');
