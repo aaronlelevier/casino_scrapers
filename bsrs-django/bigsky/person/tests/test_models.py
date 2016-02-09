@@ -1,3 +1,4 @@
+import copy
 from datetime import date
 
 from django.test import TestCase
@@ -9,6 +10,7 @@ from model_mommy import mommy
 
 from category.models import Category
 from category.tests.factory import create_single_category
+from generic.settings import DEFAULT_GENERAL_SETTINGS
 from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
@@ -27,6 +29,7 @@ class RoleTests(TestCase):
 
     def setUp(self):
         self.role = create_role()
+        self.maxDiff = None
 
     def test_group(self):
         self.assertIsInstance(self.role.group, Group)
@@ -52,7 +55,25 @@ class RoleTests(TestCase):
         role = create_role()
         self.assertEqual(role.settings, DEFAULT_ROLE_SETTINGS)
 
-    def test_get_combined_settings_file(self):
+    # JSON settings
+
+    def test_get_class_default_settings(self):
+        ret = Role.get_class_default_settings()
+        self.assertEqual(ret, DEFAULT_ROLE_SETTINGS)
+
+    def test_get_class_default_settings__general(self):
+        ret = Role.get_class_default_settings('general')
+        self.assertEqual(ret, DEFAULT_GENERAL_SETTINGS)
+
+    def test_get_all_class_settings(self):
+        combined = copy.copy(DEFAULT_GENERAL_SETTINGS)
+        combined.update(DEFAULT_ROLE_SETTINGS)
+
+        ret = Role.get_all_class_settings()
+
+        self.assertEqual(ret, combined)
+
+    def test_get_all_instance_settings(self):
         raw_combined_settings = Role.get_class_combined_settings('general', self.role.settings)
 
         ret = self.role.get_all_instance_settings()

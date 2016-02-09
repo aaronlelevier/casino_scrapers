@@ -145,6 +145,8 @@ class SettingMixin(object):
     """
     @classmethod
     def get_class_default_settings(cls, name=None):
+        name = name or cls.__name__.lower()
+
         if name == 'general':
             return DEFAULT_GENERAL_SETTINGS
         elif name == 'role':

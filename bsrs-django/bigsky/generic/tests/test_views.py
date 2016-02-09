@@ -342,33 +342,34 @@ class SettingTests(APITestCase):
         self.assertEqual({}, db_setting.settings)
 
     def test_create__override_a_default(self):
+        company_name = "Aaron's Pianos"
         raw_data = {
             'id': str(uuid.uuid4()),
             'name': 'general',
-            'settings': {'company_name': {'value': "Aaron's Pianos"}}
+            'settings': {'company_name': {'value': company_name}}
         }
 
         response = self.client.post('/api/admin/settings/', raw_data, format='json')
         data = json.loads(response.content.decode('utf8'))
 
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(data['settings']['company_name']['value'], raw_data['settings']['company_name']['value'])
+        self.assertEqual(data['settings']['company_name']['value'], company_name)
         self.assertEqual(data['settings']['welcome_text']['value'], DEFAULT_GENERAL_SETTINGS['welcome_text']['value'])
         self.assertEqual(data['settings']['create_all']['value'], DEFAULT_GENERAL_SETTINGS['create_all']['value'])
         self.assertEqual(data['settings']['login_grace']['value'], DEFAULT_GENERAL_SETTINGS['login_grace']['value'])
 
     def test_update(self):
+        new_company_name = "Bob's Pianos"
         general_setting = create_general_setting()
-
         serializer = SettingSerializer(general_setting)
         raw_data = serializer.data
-        raw_data['settings'] = {'company_name': {'value': "Bob's Pianos"}}
+        raw_data['settings'] = {'company_name': {'value': new_company_name}}
 
         response = self.client.put('/api/admin/settings/{}/'.format(general_setting.id), raw_data, format='json')
         data = json.loads(response.content.decode('utf8'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['settings']['company_name']['value'], raw_data['settings']['company_name']['value'])
+        self.assertEqual(data['settings']['company_name']['value'], new_company_name)
         self.assertEqual(data['settings']['welcome_text']['value'], DEFAULT_GENERAL_SETTINGS['welcome_text']['value'])
         self.assertEqual(data['settings']['create_all']['value'], DEFAULT_GENERAL_SETTINGS['create_all']['value'])
         self.assertEqual(data['settings']['login_grace']['value'], DEFAULT_GENERAL_SETTINGS['login_grace']['value'])

@@ -135,8 +135,8 @@ class RoleSettingsTests(RoleSetupMixin, APITestCase):
         self.assertNotIn('settings', data['results'][0])
 
     def test_detail(self):
-        general_settings = Setting.get_settings_file('general')
-        role_settings = Role.get_settings_file('role')
+        general_settings = Setting.get_class_default_settings('general')
+        role_settings = Role.get_class_default_settings()
         combined_settings = copy.copy(general_settings)
         combined_settings.update(role_settings)
 
@@ -184,6 +184,24 @@ class RoleSettingsTests(RoleSetupMixin, APITestCase):
             raw_data['settings']['welcome_text']['value'],
             data['settings']['welcome_text']['value']
         )
+        self.assertNotIn('company_name', data['settings'])
+
+    def test_create__override_general_setting(self):
+        company_name = 'foo'
+        raw_data = {
+            'id': str(uuid.uuid4()),
+            'name': 'new role yall',
+            'settings': {'company_name': {'value': company_name}}
+        }
+
+        response = self.client.post('/api/admin/roles/', raw_data, format='json')
+
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            raw_data['settings']['company_name']['value'],
+            data['settings']['company_name']['value']
+        )
 
     def test_update(self):
         role = create_role()
@@ -201,8 +219,8 @@ class RoleSettingsTests(RoleSetupMixin, APITestCase):
             data['settings']['welcome_text']['value']
         )
 
-    def test_update_settings(self):
-        new_company_name = 'foo'
+    def test_update__general_settings(self):
+        new_company_name = 'bar'
         role = create_role()
         # initial Detail
         response = self.client.get('/api/admin/roles/{}/'.format(role.id))

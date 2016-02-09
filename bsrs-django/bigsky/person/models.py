@@ -1,3 +1,4 @@
+import copy
 from datetime import timedelta
 import re
 
@@ -17,9 +18,10 @@ from django.dispatch import receiver
 from django.utils import timezone
 
 from accounting.models import Currency
-from contact.models import PhoneNumber, Address, Email
-from location.models import LocationLevel, Location
 from category.models import Category
+from contact.models import PhoneNumber, Address, Email
+from generic.settings import DEFAULT_GENERAL_SETTINGS
+from location.models import LocationLevel, Location
 from person import helpers
 from person.settings import DEFAULT_ROLE_SETTINGS
 from translation.models import Locale
@@ -221,6 +223,20 @@ class Role(SettingMixin, BaseModel):
         if child_categories:
             raise ValidationError("Role can't have related child categories: {}."
                                  .format(', '.join(child_categories)))
+
+    # JSON settings
+
+    @classmethod
+    def get_class_default_settings(cls, name=None):
+        if name == 'general':
+            return DEFAULT_GENERAL_SETTINGS
+        return DEFAULT_ROLE_SETTINGS
+
+    @classmethod
+    def get_all_class_settings(cls):
+        role_settings = cls.get_class_default_settings()
+        combined_settings = cls.get_class_combined_settings('general', role_settings)
+        return combined_settings
 
     def get_all_instance_settings(self):
         return type(self).get_class_combined_settings('general', self.settings)

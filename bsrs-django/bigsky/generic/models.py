@@ -207,3 +207,10 @@ class Setting(SettingMixin, BaseNameModel):
 
     def __str__(self):
         return {self.name: self.settings}
+
+    @classmethod
+    def get_all_class_settings(cls):
+        return cls.get_class_default_settings('general')
+
+    def get_all_instance_settings(self):
+        return self.settings

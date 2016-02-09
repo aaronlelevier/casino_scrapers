@@ -2,10 +2,10 @@ import copy
 
 from rest_framework import serializers
 
-from contact.serializers import (PhoneNumberSerializer, EmailSerializer, AddressSerializer)
-from location.serializers import LocationSerializer, LocationIdNameOnlySerializer
 from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer
+from contact.serializers import PhoneNumberSerializer, EmailSerializer, AddressSerializer
 from generic.models import Setting
+from location.serializers import LocationSerializer, LocationIdNameOnlySerializer
 from person.models import Person, Role
 from person.validators import RoleLocationValidator, RoleCategoryValidator
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
@@ -51,7 +51,7 @@ class RoleDetailSerializer(BaseCreateSerializer):
         GeneralSettings > RoleSettings = CombinedSettings
         """
         data = super(RoleDetailSerializer, self).to_representation(instance)
-        data['settings'] = Setting.get_combined_settings_file('general', data['settings'])
+        data['settings'] = Setting.get_class_combined_settings('general', data['settings'])
         return data
 
 
