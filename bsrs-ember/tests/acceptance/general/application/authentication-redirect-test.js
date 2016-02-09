@@ -36,6 +36,7 @@ module('Acceptance | application redirect test', {
 });
 
 test('403 response code will redirect to login page', (assert) => {
+    //TODO: bring back this test
     visit(PEOPLE_URL);
     andThen(() => {
         assert.equal(1,1);

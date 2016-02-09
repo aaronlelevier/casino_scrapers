@@ -53,14 +53,13 @@ Node
 `DO tutorial <https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-a-centos-7-server>`_
 
 .. code-block::
-
     # also needed
     sudo npm install - g bower
     sudo npm install - g phantomjs
 
     # w/ Py3 SSL didn't work so did this:
     sudo yum install python-{requests,urllib3,six}
-    sudo yum in stall openssl-devel
+    sudo yum install openssl-devel
 
 
 Logs

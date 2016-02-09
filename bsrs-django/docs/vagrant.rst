@@ -160,7 +160,86 @@ Scott Note's for new vagrant setup
 
 
 .. code-block::
-    https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-centos-7
+    # CENTOS setup
+    sudo yum -y update
+    yum groupinstall "Development tools"
+    sudo yum install wget
+    # Python
+    wget https://www.python.org/ftp/python/3.4.3/Python-3.4.3.tgz
+    tar -xvf Py..
+    cd Pytho..
+    ./configure
+    sudo make
+    sudo make altinstall
+        # do this if fails
+        sudo yum install python-{requests,urllib3,six}
+        sudo yum install openssl-devel
+        sudo yum install python-devel
+    # headless
+    sudo yum install vim 
+    sudo yum install firefox 
+    sudo yum install xorg-X11-server-Xvfb
+    # Postgresql
+    # https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-centos-7
+    rpm -Uvh http://yum.postgresql.org/9.4/redhat/rhel-7-x86_64/pgdg-centos94-9.4-1.noarch.rpm
+    sudo yum install postgresql94-server postgresql94-contrib
+    sudo /usr/pgsql-9.4/bin/postgresql94-setup initdb
+    sudo systemctl enable postgresql-9.4
+    sudo systemctl start postgresql-9.4
+    sudo -i -u postgres (or sudo su postgres)
+        CREATE ROLE bsdev WITH PASSWORD 'tango' CREATEDB SUPERUSER LOGIN;
+        CREATE DATABASE ci OWNER bsdev;
+        CREATE USER vagrant WITH PASSWORD 'vagrant';
+        GRANT ALL PRIVILEGES ON DATABASE ci to vagrant;
+        \q
+    ctl d (logout of postgres and don't spawn new user instances)
+    sudo vim /var/lib/pgsql/data/pg_hba.conf
+        #change ident to md5
+        sudo systemctl enable postgresql-9.4
+        sudo systemctl start postgresql-9.4
+    or 
+        sudo /usr/pgsql-9.4/bin/postgresql94-setup initdb
+        sudo systemctl enable postgresql-9.4
+        sudo systemctl start postgresql-9.4
+            # if asks to delete data/ then will lose role and users setup previously
+            # need to set chmod 700 on data directory, not 777
+            # sudo passwd postgres to change password if prompted ## not working
+            # sudo systemctl status postgresql-9.4.service for logs
+    # Other notes
+        psql foo
+            ALTER DATABASE ci OWNER TO vagrant; 
+            ALTER USER vagrant superuser createdb replication;
+        ctrl d (logout postgres user instance)
+    # Node
+    wget <https://github.com/creationix/nvm>
+    source ~/.bash_profile
+    nvm install v5.0.0 (or whatever version you need)
+    sudo yum -y update
+    # github
+    sudo yum install git
+    eval "$(ssh-agent -s)"
+    sudo pip install virtualenv
+    sudo pip install --upgrade virtualenv
+    which python3
+    virtualenv -p /usr/local/bin/python3.4 venv
+    source venv/bin/activate
+    sudo yum install postgresql-libs
+    sudo yum install postgresql-devel
+    sudo yum install libevent-devel
+    sudo yum install libjpeg-devel zlib-devel
+    # pip install
+    wget https://bootstrap.pypa.io/ez_setup.py -O - | sudo python
+    unzip setup_tools...
+    cd setup_tools
+    ## sudo chmod 777 /usr/local/bin/
+    python3.4 setup.py install
+    easy_install pip
+    pip install virtualenv
+    # cd project django level
+    virtualenv -p /usr/local/bin/3.4 venv
+    source venv/bin/activate
 
+    
 
+    
 
