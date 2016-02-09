@@ -27,6 +27,9 @@ Set up Centos w/ Python
     sudo make
     sudo make install
 
+    # NOTES
+    yum list installed to check vagrant vs jenkins.k
+
 Processes
 ---------
 
