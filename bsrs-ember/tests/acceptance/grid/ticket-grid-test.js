@@ -186,11 +186,10 @@ test('clicking header will sort by given property and reset page to 1 (also requ
 });
 
 test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
-    //TODO: bring back these tests
-    // var search_two = PREFIX + BASE_URL + '/?page=1&ordering=request&search=14';
-    // xhr(search_two ,"GET",null,{},200,TF.searched('14', 'request'));
-    // var page_two = PREFIX + BASE_URL + '/?page=2&ordering=request';
-    // xhr(page_two ,"GET",null,{},200,TF.searched('', 'request', 2));
+    var search_two = PREFIX + BASE_URL + '/?page=1&ordering=request&search=14';
+    xhr(search_two ,"GET",null,{},200,TF.searched('14', 'request'));
+    var page_two = PREFIX + BASE_URL + '/?page=2&ordering=request';
+    xhr(page_two ,"GET",null,{},200,TF.searched('', 'request', 2));
     var page_one = PREFIX + BASE_URL + '/?page=1&ordering=request';
     xhr(page_one ,"GET",null,{},200,TF.searched('', 'request'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=request&search=5';
@@ -225,26 +224,26 @@ test('typing a search will reset page to 1 and require an additional xhr and res
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
     });
-    // click('.t-page:eq(1) a');
-    // andThen(() => {
-    //     assert.equal(currentURL(),TICKET_URL + '?page=2&search=&sort=request');
-    //     // assert.equal(find('.t-grid-data').length, 22);//firefox discerepency
-    //     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'sub');
-    // });
-    // fillIn('.t-grid-search-input', '14');
-    // triggerEvent('.t-grid-search-input', 'keyup', NUMBER_ONE);
-    // triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
-    // andThen(() => {
-    //     assert.equal(currentURL(),TICKET_URL + '?search=14&sort=request');
-    //     assert.equal(find('.t-grid-data').length, 1);
-    //     assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), 'ape14');
-    // });
-    // click('.t-reset-grid');
-    // andThen(() => {
-    //     assert.equal(currentURL(), TICKET_URL);
-    //     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    //     assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
-    // });
+    click('.t-page:eq(1) a');
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?page=2&search=&sort=request');
+        // assert.equal(find('.t-grid-data').length, 22);//firefox discerepency
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'sub');
+    });
+    fillIn('.t-grid-search-input', '14');
+    triggerEvent('.t-grid-search-input', 'keyup', NUMBER_ONE);
+    triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=14&sort=request');
+        assert.equal(find('.t-grid-data').length, 1);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), 'ape14');
+    });
+    click('.t-reset-grid');
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
+    });
 });
 
 test('multiple sort options appear in the query string as expected', function(assert) {
@@ -536,10 +535,9 @@ test('picking a different number of pages will alter the query string and xhr', 
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-page-size option:selected').text(), `${PAGE_SIZE} per page`);
         var pagination = find('.t-pages');
-        //TODO: figure this out
-        // assert.equal(pagination.find('.t-page').length, 2);
+        assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
-        // assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
+        assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
         assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
         assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
     });
