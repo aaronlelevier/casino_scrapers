@@ -156,6 +156,7 @@ Scott Note's for new vagrant setup
     sudo apt-get install postgresql-9.4-postgis-2.0
 
     # free up memory
+    https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-centos-7
         touch Customfile #at folder level of Vagrantfile
             config.vm.provider :virtualbox do |v|
               v.customize ["modifyvm", :id, "--memory", 2048]
