@@ -30,9 +30,6 @@ var application, store, ticket_endpoint, ticket_list_xhr, people_endpoint, peopl
 
 module('Acceptance | multiple grid test', {
     beforeEach() {
-        // timemachine.config({
-        //     dateString: 'December 25, 2014 13:12:59'
-        // });
         application = startApp();
         store = application.__container__.lookup('store:main');
         ticket_endpoint = `${PREFIX}${BASE_TICKET_URL}/?page=1`;
@@ -44,11 +41,10 @@ module('Acceptance | multiple grid test', {
     afterEach() {
         random.uuid = original_uuid;
         Ember.run(application, 'destroy');
-        // timemachine.reset();
     }
 });
 
-test('scott navigating between ticket and people and locations and category will not dirty models and will clear m2m models (categories only)', function(assert) {
+test('navigating between ticket and people and locations and category will not dirty models and will clear m2m models (categories only)', function(assert) {
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
