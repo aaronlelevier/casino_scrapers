@@ -28,6 +28,8 @@ wait
 ./manage.py create_all_people
 wait
 ./manage.py dumpdata person --indent=2 > fixtures/person.json
+./manage.py dumpdata auth --indent=2 > fixtures/auth.json
+
 wait
 ./manage.py create_tickets
 wait
