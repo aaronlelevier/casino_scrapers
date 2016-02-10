@@ -10,4 +10,4 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         create_ticket_statuses()
         create_ticket_priorities()
-        create_tickets(51)
+        create_tickets(100)

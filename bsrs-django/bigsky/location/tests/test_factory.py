@@ -52,6 +52,18 @@ class LocationTests(TestCase):
         for x in LocationLevel.objects.all():
             self.assertTrue(Location.objects.filter(location_level=x).exists())
 
+    def test_create_locations__many(self):
+        _many = 25
+        factory.create_locations(_many)
+
+        self.assertEqual(Location.objects.count(), _many)
+
+    def test_create_locations__many__no_affect_if_less_than_current_count(self):
+        _many = 1
+        factory.create_locations(_many)
+
+        self.assertTrue(Location.objects.count() > _many)
+
     def test_create_location(self):
         ret = factory.create_location()
 

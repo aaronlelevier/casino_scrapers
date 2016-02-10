@@ -38,7 +38,7 @@ def create_location_level(name=None):
     return obj
 
 
-def create_locations():
+def create_locations(_many=None):
     create_location_levels()
     company = Location.objects.create_top_level()
     # Region
@@ -64,6 +64,12 @@ def create_locations():
         if not Location.objects.filter(location_level=x).exists():
             mommy.make(Location, name=_generate_chars(), number=_generate_chars(),
                 location_level=x)
+
+    count = Location.objects.count()
+    if _many and _many > count:
+        additional = _many - count
+        for x in range(additional):
+            mommy.make(Location, number=_generate_chars(), location_level=store_ll, name=_generate_chars())
 
 
 def create_location(location_level=None):
