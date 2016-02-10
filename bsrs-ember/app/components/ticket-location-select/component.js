@@ -8,6 +8,9 @@ var TicketLocation = Ember.Component.extend({
         selected(location) {
             let ticket = this.get('ticket');
             if (location) {
+                //TODO: test this
+                location.status_fk = location.status;
+                delete location.status;
                 ticket.change_location(location);
             }else{
                 ticket.remove_location();

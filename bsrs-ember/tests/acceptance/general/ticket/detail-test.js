@@ -445,7 +445,8 @@ test('can remove and add back same cc and save empty cc', (assert) => {
         assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     });
     payload = TF.put({id: TD.idOne, cc: [PD.idOne]});
-    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
+    const response = Ember.$.extend(true, {}, payload);
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);

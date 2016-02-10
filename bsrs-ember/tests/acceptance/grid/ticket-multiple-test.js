@@ -19,12 +19,6 @@ const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const PEOPLE_URL = `${BASE_PEOPLE_URL}/index`;
 const BASE_CATEGORY_URL = BASEURLS.base_categories_url;
 const CATEGORY_URL = `${BASE_CATEGORY_URL}/index`;
-// const BACKSPACE = {keyCode: 8};
-// const SORT_PRIORITY_DIR = '.t-sort-priority-translated-name-dir';
-// const SORT_STATUS_DIR = '.t-sort-status-translated-name-dir';
-// const SORT_LOCATION_DIR = '.t-sort-location-name-dir';
-// const SORT_ASSIGNEE_DIR = '.t-sort-assignee-fullname-dir';
-// const FILTER_PRIORITY = '.t-filter-priority-translated-name';
 
 var application, store, ticket_endpoint, ticket_list_xhr, people_endpoint, people_list_xhr, category_endpoint, category_list_xhr, original_uuid;
 
