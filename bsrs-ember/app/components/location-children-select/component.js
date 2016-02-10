@@ -12,6 +12,8 @@ var LocationChildrenMulti = Ember.Component.extend({
             const new_children_ids = new_children_selection.mapBy('id');
             new_children_selection.forEach((children) => {
                 if (Ember.$.inArray(children.id, old_children_ids) < 0) {
+                    children.status_fk = children.status;
+                    delete children.status;
                     location.add_child(children);
                 }
             });

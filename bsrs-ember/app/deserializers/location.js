@@ -96,6 +96,8 @@ var extract_parents = function(model, store, location_deserializer) {
             const parent_llevel_pk = extract_location_level(parent, store);
             Ember.set(parent, 'location_level_fk', parent_llevel_pk);
             run(() => {
+                parent.status_fk = parent.status;
+                delete parent.status;
                 store.push('location', parent);
                 store.push('location-parents', {id: pk, location_pk: model.id, parent_pk: parent.id});
             });
@@ -131,6 +133,9 @@ var extract_children = function(model, store, location_deserializer) {
             const child_llevel_pk = extract_location_level(child, store);
             Ember.set(child, 'location_level_fk', child_llevel_pk);
             run(() => {
+                //TODO: test this
+                child.status_fk = child.status;
+                delete child.status;
                 store.push('location', child);
                 store.push('location-children', {id: pk, location_pk: model.id, child_pk: child.id});
             });

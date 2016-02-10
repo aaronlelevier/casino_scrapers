@@ -151,9 +151,9 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
         let pushed_person;
         run(() => {
             pushed_person = store.push('person', person_json);
-            pushed_person.change_role(role);
-            pushed_person.change_status(person_json.status_fk);
         });
+        pushed_person.change_role(role);
+        pushed_person.change_status(person_json.status_fk);
         return pushed_person;
     },
     change_assignee: function(new_assignee) {
