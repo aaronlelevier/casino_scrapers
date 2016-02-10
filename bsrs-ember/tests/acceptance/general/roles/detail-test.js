@@ -137,7 +137,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
     });
-    click('.t-grid-data:eq(7)');
+    click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });

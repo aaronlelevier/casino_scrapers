@@ -79,11 +79,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
             person.title = i + ' MVP';
             response.push(person);
         }
-        //we do a reverse order sort here to verify a real sort occurs in the component
-        var sorted = response.sort(function(a,b) {
-            return b.id - a.id;
-        });
-        return {'count':page_size*2-2,'next':null,'previous':null,'results': sorted};
+        return {'count':page_size*2-2,'next':null,'previous':null,'results': response};
     };
     factory.prototype.list_two = function() {
         var response = [];

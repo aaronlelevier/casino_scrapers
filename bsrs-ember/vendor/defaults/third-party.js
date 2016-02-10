@@ -15,6 +15,7 @@ var BSRS_THIRD_PARTY_DEFAULTS_OBJECT = (function() {
             numberOne: '123zz',
             numberTwo: '456zz',
             nameGridBase: 'vzoname1',
+            nameVz: 'vzoname11',
             nameGrid: 'vzoname14',
             nameGrid4: 'ABC1231 Contractor4',
             statusActive: this.third_party_status.active,

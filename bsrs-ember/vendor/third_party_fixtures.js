@@ -35,10 +35,6 @@ var BSRS_THIRD_PARTY_FACTORY = (function() {
             third_party.number = third_party.number + i;
             response.push(third_party);
         }
-        //we do a reverse order sort here to verify a real sort occurs in the component
-        var sorted = response.sort(function(a,b) {
-            return b.id - a.id;
-        });
         return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
     };
     factory.prototype.list_two = function() {

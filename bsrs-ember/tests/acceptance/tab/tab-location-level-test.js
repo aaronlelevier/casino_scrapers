@@ -84,7 +84,7 @@ test('visiting the location detail url from the list url should push a tab into 
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
-    click('.t-grid-data:eq(1)');
+    click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
@@ -107,7 +107,7 @@ test('clicking on a tab that is not dirty from the list url should take you to t
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
-    click('.t-grid-data:eq(1)');
+    click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let location = store.find('location-level', LLD.idOne);
@@ -187,7 +187,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
-    click('.t-grid-data:eq(1)');
+    click('.t-grid-data:eq(0)');
     fillIn('.t-location-level-name', LLD.nameDistrict);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -222,7 +222,7 @@ test('clicking on a tab that is dirty from the role url (or any non related page
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
-    click('.t-grid-data:eq(1)');
+    click('.t-grid-data:eq(0)');
     fillIn('.t-location-level-name', LLD.nameDistrict);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -261,7 +261,7 @@ test('clicking on a tab that is not dirty from the role url (or any non related 
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
-    click('.t-grid-data:eq(1)');
+    click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let location = store.find('location-level', LLD.idOne);

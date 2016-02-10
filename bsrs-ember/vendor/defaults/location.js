@@ -24,6 +24,7 @@ var BSRS_LOCATION_DEFAULTS_OBJECT = (function() {
             storeNameParentTwo: 'Parent Two Location',
             storeNumber: '123zz',
             storeNumberTwo: '456zz',
+            storeVz: 'vzoname11',
             status: this.location_status.openId,
             location_level: this.location_level_fixtures.detail(),
             unusedId: 'cadba3ba-a533-44e0-ab1f-57cc1b056789',

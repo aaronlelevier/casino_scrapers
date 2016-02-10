@@ -149,11 +149,10 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
 });
 
 test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', (assert) => {
-    random.uuid = function() { return UUID.value; };
-    // var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=status.name,name';
-    // xhr(sort_two ,'GET',null,{},200,TPF.sorted('status,name'));
+    var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=-name';
+    xhr(sort_two ,'GET',null,{},200,TPF.sorted('status,name'));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=name';
-    xhr(page_two ,'GET',null,{},200,TPF.sorted('name'));
+    xhr(page_two ,'GET',null,{},200,TPF.sorted_page_two('name'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,'GET',null,{},200,TPF.sorted('name'));
     visit(TP_URL);
@@ -166,20 +165,20 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     andThen(() => {
         assert.equal(currentURL(), TP_URL + '?sort=name');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
+        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameVz);
     });
     click(`${PAGE}:eq(1) a`);
     andThen(() => {
         assert.equal(currentURL(), TP_URL + '?page=2&sort=name');
-        assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
+        assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE-1);
+        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameVz);
     });
-    // click(SORT_DIR);
-    // andThen(() => {
-    //     assert.equal(currentURL(),TP_URL + '?sort=status.name%2Cname');
-    //     assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-    //     assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameTwo);
-    // });
+    click('.t-sort-name-dir');
+    andThen(() => {
+        assert.equal(currentURL(),TP_URL + '?sort=-name');
+        assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
+        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameVz);
+    });
 });
 
 // test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', (assert) => {
@@ -470,7 +469,7 @@ test('after you reset the grid the filter model will also be reset', (assert) =>
 
 test('count is shown and updated as the user filters down the list from django', (assert) => {
     let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
-    xhr(option_one ,'GET',null,{},200,TPF.searched('4', 'id'));
+    xhr(option_one ,'GET',null,{},200,TPF.searched('4', 'name'));
     visit(TP_URL);
     andThen(() => {
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);

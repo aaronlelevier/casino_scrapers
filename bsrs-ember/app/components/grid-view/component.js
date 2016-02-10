@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
-import MultiSort from 'bsrs-ember/utilities/sort';
 import SortBy from 'bsrs-ember/mixins/sort-by';
 import FilterBy from 'bsrs-ember/mixins/filter-by';
 import UpdateFind from 'bsrs-ember/mixins/update-find';
@@ -59,24 +58,17 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
         }
         return searched_content;
     }),
-    sorted_content: Ember.computed('found_content.[]', function() {
-        let sort = this.get('sort') || '';
-        sort = Ember.$.isArray(sort) && sort.length > 0 ? sort[0] : sort;
-        let options = sort.length > 0 ? sort.split(',') : this.get('defaultSort');
-        const found_content = this.get('found_content');
-        return MultiSort.run(found_content, options);
-    }),
-    paginated_content: Ember.computed('sorted_content.[]', function() {
+    paginated_content: Ember.computed('found_content.[]', function() {
         const requested = this.get('requested');
         const page = parseInt(this.get('page')) || 1;
         const page_size = parseInt(this.get('page_size')) || PAGE_SIZE;
         const pages = requested.toArray().sort((a,b) => { return a-b; }).uniq();
         const max = (pages.indexOf(page) + 1) * page_size;
-        const sorted_content = this.get('sorted_content');
-        if(sorted_content.objectAt(0) && !sorted_content.objectAt(0).get('grid')){
-            return sorted_content.slice(max-page_size, max);
+        const found_content = this.get('found_content');
+        if(found_content.objectAt(0) && !found_content.objectAt(0).get('grid')){
+            return found_content.slice(max-page_size, max);
         }else{
-            return sorted_content.slice(0, Math.max(page_size, 10));
+            return found_content.slice(0, Math.max(page_size, 10));
         }
     }),
     pages: Ember.computed('model.count', function() {

@@ -43,7 +43,7 @@ test('initial load should only show first PAGE_SIZE records ordered by id with c
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(find('.t-grid-title').text(), 'Location Levels');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameDistrict);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameCompany);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -73,7 +73,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         assert.equal(currentURL(),LOCATION_LEVEL_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameDistrict);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameCompany);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -161,37 +161,36 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     var page_one = PREFIX+BASE_URL + '/?page=1&ordering=name';
     xhr(page_one ,"GET",null,{},200,LLF.searched('', 'name'));
     var sort_one = PREFIX+BASE_URL + '/?page=1&ordering=name&search=9';
-    xhr(sort_one ,"GET",null,{},200,LLF.searched('9', 'name'));
+    xhr(sort_one ,"GET",null,{},200,LLF.sorted('name'));
     var search_one = PREFIX+BASE_URL + '/?page=1&search=9';
-    xhr(search_one ,"GET",null,{},200,LLF.searched('9', 'id'));
+    xhr(search_one ,"GET",null,{},200,LLF.searched('9', 'name'));
     visit(LOCATION_LEVEL_URL);
     fillIn('.t-grid-search-input', '9');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_NINE);
     andThen(() => {
         assert.equal(currentURL(),LOCATION_LEVEL_URL + '?search=9');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE/5);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), LLD.nameCompany);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-location-level-name').text().trim()), 'Company-tsiname');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), 'Company-tsiname');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-location-level-name').text().trim()), 'Company');
     });
     click('.t-sort-name-dir');
     andThen(() => {
         assert.equal(currentURL(),LOCATION_LEVEL_URL + '?search=9&sort=name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE/5);
-        // assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), 'Company-tsiname');
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-location-level-name').text().trim()), LLD.nameCompany);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), 'Company-tsiname');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
         assert.equal(currentURL(),LOCATION_LEVEL_URL + '?search=&sort=name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameCompany);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), 'Company-tsiname');
     });
     click('.t-page:eq(1) a');
     andThen(() => {
         assert.equal(currentURL(),LOCATION_LEVEL_URL + '?page=2&search=&sort=name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        // assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), 'Company-tsiname');
+        // assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), 'Company');
     });
     fillIn('.t-grid-search-input', '19');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_ONE);
@@ -205,13 +204,11 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameDistrict);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameCompany);
     });
 });
 
 test('multiple sort options appear in the query string as expected', function(assert) {
-    // var sort_two = PREFIX+BASE_URL + '/?page=1&ordering=number,name';
-    // xhr(sort_two ,"GET",null,{},200,LLF.sorted('number,name'));
     var sort_one = PREFIX+BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,"GET",null,{},200,LLF.sorted('name'));
     visit(LOCATION_LEVEL_URL);
@@ -219,14 +216,8 @@ test('multiple sort options appear in the query string as expected', function(as
     andThen(() => {
         assert.equal(currentURL(),LOCATION_LEVEL_URL + '?sort=name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameCompany);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), 'Company-tsiname');
     });
-    // click('.t-sort-number-dir');
-    // andThen(() => {
-    //     assert.equal(currentURL(),LOCATION_LEVEL_URL + '?sort=number%2Cname');
-    //     assert.equal(find('.t-grid-data').length, 10);
-    //     assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameGrid);
-    // });
 });
 
 test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', function(assert) {
@@ -245,20 +236,20 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(currentURL(),LOCATION_LEVEL_URL + '?sort=name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameCompany);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), 'Company-tsiname');
     });
     click('.t-sort-name-dir');
     andThen(() => {
         assert.equal(currentURL(),LOCATION_LEVEL_URL + '?sort=-name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-desc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameRegion);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), 'Company-tsiname');
     });
     click('.t-reset-grid');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameDistrict);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameCompany);
     });
 });
 
@@ -278,7 +269,7 @@ test('full text search will filter down the result set and query django accordin
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameDistrict);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameCompany);
     });
 });
 
@@ -365,7 +356,7 @@ test('after you reset the grid the filter model will also be reset', function(as
 
 test('count is shown and updated as the user filters down the list from django', function(assert) {
     let option_one = PREFIX+BASE_URL + '/?page=1&search=9';
-    xhr(option_one ,'GET',null,{},200,LLF.searched('9', 'id'));
+    xhr(option_one ,'GET',null,{},200,LLF.searched('9', 'name'));
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);

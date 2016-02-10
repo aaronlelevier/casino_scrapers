@@ -38,6 +38,7 @@ var BSRS_TICKET_FACTORY = (function() {
             assignee: this.people_fixtures.get(),
             location: this.location_fixtures.get(),
             attachments: []
+
         }
     };
     factory.prototype.list = function() {
@@ -57,11 +58,7 @@ var BSRS_TICKET_FACTORY = (function() {
             delete ticket.attachments;
             response.push(ticket);
         }
-        //we do a reverse order sort here to verify a real sort occurs in the component
-        var sorted = response.sort(function(a,b) {
-            return b.id - a.id;
-        });
-        return {'count':page_size*2-1,'next':null,'previous':null,'results': sorted};
+        return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
     };
     factory.prototype.list_two = function() {
         var unused_category = this.category_fixtures.get(this.category_defaults.idOne, this.category_defaults.nameOne);

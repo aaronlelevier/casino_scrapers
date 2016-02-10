@@ -86,6 +86,7 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
             emailOne: 'snewco@gmail.com',
             emailTwo: 'tbillups@gmail.com',
             emailThree: 'alevier@aol.com',
+            personListTwo: '139543cf-8fea-426a-8bc3-09778cd79902' 
         };
     };
     return factory;

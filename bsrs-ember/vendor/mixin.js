@@ -143,9 +143,9 @@ var BSRS_LIST_FIXTURE_MIXIN = (function() {
         var sorted = response.sort(function(a,b) {
             return a[column] - b[column];
         });
-        var regex = new RegExp(search);
+        var regex = new RegExp(search, 'i');
         var searched = sorted.filter(function(object) {
-            var value = object.name || object.username || object.request || object[column] || object;
+            var value = object[column] || object.name || object.username || object.request || object;
             return regex.test(value);
         });
         var paged;

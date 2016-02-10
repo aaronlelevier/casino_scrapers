@@ -142,7 +142,7 @@ test('clicking on a new model from the grid view will not dirty the original tab
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
     });
-    const secondId = PD.idOne+0;
+    const secondId = PD.personListTwo;
     const donald_detail_data = PF.detail(secondId);
     detail_xhr = xhr(`${endpoint}${secondId}/`, 'GET', null, {}, 200, donald_detail_data);
     click('.t-grid-data:eq(1)');

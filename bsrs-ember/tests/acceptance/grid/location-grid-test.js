@@ -155,13 +155,13 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        // assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), LD.storeNameOne);
     });
     click('.t-sort-name-dir');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL + '?sort=name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        // assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), `vzoname${PAGE_SIZE+1}`);
     });
     click('.t-page:eq(1) a');
     andThen(() => {
@@ -173,7 +173,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?sort=number%2Cname');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), LD.storeNameOne);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), `vzoname${PAGE_SIZE+1}`);
     });
 });
 
@@ -187,7 +187,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=number&search=4';
     xhr(sort_one ,"GET",null,{},200,LF.searched('4', 'number'));
     var search_one = PREFIX + BASE_URL + '/?page=1&search=4';
-    xhr(search_one ,"GET",null,{},200,LF.searched('4', 'id'));
+    xhr(search_one ,"GET",null,{},200,LF.searched('4', 'name'));
     visit(LOCATION_URL);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
@@ -199,15 +199,15 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?search=4');
         assert.equal(find('.t-grid-data').length, 2);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-name').text().trim()), 'ABC');
-        assert.equal(find('.t-grid-data:eq(1) .t-location-name').text().trim(), 'vzoname14');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-name').text().trim()), 'vzoname');
+        assert.equal(find('.t-grid-data:eq(1) .t-location-name').text().trim(), LD.storeNameFive);
     });
     click('.t-sort-number-dir');
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?search=4&sort=number');
         assert.equal(find('.t-grid-data').length, 2);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-name').text().trim()), 'ABC');
-        assert.equal(find('.t-grid-data:eq(1) .t-location-name').text().trim(), 'vzoname14');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-name').text().trim()), 'vzoname');
+        assert.equal(find('.t-grid-data:eq(1) .t-location-name').text().trim(), LD.storeNameFive);
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
@@ -278,7 +278,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort'));
         assert.ok(find('.t-sort-number-dir').hasClass('fa-sort'));
-        // assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), LD.storeNameOne);
         assert.equal(find('.t-reset-grid').length, 0);
     });
     click('.t-sort-name-dir');
@@ -287,7 +287,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-number-dir').hasClass('fa-sort'));
-        // assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), LD.storeVz);
     });
     click('.t-sort-number-dir');
     andThen(() => {
@@ -295,7 +295,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-number-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
-        // assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), LD.storeVz);
     });
     click('.t-sort-name-dir');
     andThen(() => {
@@ -303,7 +303,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-number-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-desc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), `vzoname${PAGE_SIZE*2-1}`);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), LD.storeVz);
     });
     click('.t-sort-name-dir');
     andThen(() => {
@@ -311,7 +311,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-number-dir').hasClass('fa-sort-asc'));
         assert.ok(!find('.t-sort-name-dir').hasClass('fa-sort-asc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), LD.storeNameOne);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text().trim(), LD.storeVz);
     });
     click('.t-reset-grid');
     andThen(() => {
@@ -450,7 +450,7 @@ test('after you reset the grid the filter model will also be reset', function(as
 
 test('count is shown and updated as the user filters down the list from django', function(assert) {
     let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
-    xhr(option_one ,'GET',null,{},200,LF.searched('4', 'id'));
+    xhr(option_one ,'GET',null,{},200,LF.searched('4', 'name'));
     visit(LOCATION_URL);
     andThen(() => {
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);

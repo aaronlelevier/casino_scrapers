@@ -87,7 +87,7 @@ test('visiting the role detail url from the list url should push a tab into the 
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
-    click('.t-grid-data:eq(0)');
+    click('.t-grid-data:eq(3)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
@@ -110,7 +110,7 @@ test('clicking on a tab that is not dirty from the list url should take you to t
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
-    click('.t-grid-data:eq(0)');
+    click('.t-grid-data:eq(3)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let role = store.find('role', RD.idGridOne);
@@ -190,7 +190,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
-    click('.t-grid-data:eq(0)');
+    click('.t-grid-data:eq(3)');
     fillIn('.t-role-name', RD.nameTwo);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -225,7 +225,7 @@ test('clicking on a tab that is dirty from the role url (or any non related page
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
-    click('.t-grid-data:eq(0)');
+    click('.t-grid-data:eq(3)');
     fillIn('.t-role-name', RD.nameTwo);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -257,7 +257,7 @@ test('clicking on a tab that is not dirty from the people url (or any non relate
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
-    click('.t-grid-data:eq(0)');
+    click('.t-grid-data:eq(3)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let role = store.find('role', RD.idGridOne);
