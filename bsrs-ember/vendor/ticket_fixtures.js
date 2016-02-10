@@ -33,7 +33,7 @@ var BSRS_TICKET_FACTORY = (function() {
             request: this.ticket.requestOne,
             status: this.ticket.statusOneId,
             priority: this.ticket.priorityOneId,
-            cc: [{id: this.people_defaults.idOne, fullname: this.people_defaults.fullname}],
+            cc: [this.people_fixtures.get()],
             categories: [categories[0], categories[1], categories[2]],
             assignee: this.people_fixtures.get(),
             location: this.location_fixtures.get(),
