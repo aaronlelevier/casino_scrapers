@@ -51,7 +51,7 @@ const categories = '.categories-power-select-search input';
 
 let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, original_uuid, category_one_xhr, category_two_xhr, category_three_xhr, counter, activity_one, run = Ember.run;
 
-module('Acceptance | ticket detail test', {
+module('Acceptance | ticket detail', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');

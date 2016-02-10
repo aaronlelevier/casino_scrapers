@@ -28,7 +28,7 @@ const CATEGORY_URL = `${BASE_CATEGORY_URL}/index`;
 
 var application, store, ticket_endpoint, ticket_list_xhr, people_endpoint, people_list_xhr, category_endpoint, category_list_xhr, original_uuid;
 
-module('Acceptance | multiple grid test', {
+module('Acceptance | ticket multiple grid test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
