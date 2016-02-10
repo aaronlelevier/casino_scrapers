@@ -63,7 +63,7 @@ class TicketManagerTests(TestCase):
 
     def test_filter_on_categories_and_location(self):
         raw_qs = Ticket.objects.filter(
-            Q(categories__id__in=self.person.role.categories.values_list('id', flat=True)) &
+            Q(categories__id__in=self.person.role.categories.filter(parent__isnull=True).values_list('id', flat=True)) &
             Q(location__id__in=self.person.locations.values_list('id', flat=True))
         ).distinct().values_list('id', flat=True)
 

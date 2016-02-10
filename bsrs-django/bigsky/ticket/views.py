@@ -23,7 +23,7 @@ class TicketQuerySetFilters(object):
         return queryset
 
 
-class TicketViewSet(TicketQuerySetFilters, CreateTicketModelMixin,
+class TicketViewSet(EagerLoadQuerySetMixin, TicketQuerySetFilters, CreateTicketModelMixin,
     UpdateTicketModelMixin, BaseModelViewSet):
 
     model = Ticket

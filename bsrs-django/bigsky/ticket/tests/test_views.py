@@ -1062,7 +1062,7 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
             response = self.client.get('/api/tickets/')
             data = json.loads(response.content.decode('utf8'))
 
-            self.assertIn(
+            self.assertNotIn(
                 str(self.ticket_two.id),
                 [x['id'] for x in data['results']]
             )
