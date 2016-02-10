@@ -1,0 +1,47 @@
+<form {{action "return false" this on="submit"}}>
+    {{base-component
+        model=model
+        save="save"
+        cancel="cancel"
+    }}
+    <section class="docSection container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+              <span class="t-ajax-error {{if ajaxError '' 'hidden'}}">
+                {{#each ajaxError as |error|}}
+                  <span>{{error.value}}</span>
+                {{/each}}
+              </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <section style="padding-bottom: 0">
+                    <div class="row card-title">
+                        <h1 class="col-md-12 t-settings-title">
+                            {{t 'admin.general.other'}}
+                        </h1>
+                    </div>
+                </section>
+            </div>
+            <div class="col-md-12">
+                <section>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.setting.welcome_text" for="welcome_text"}}
+                                {{input type="text" placeholder=(t "admin.setting.welcome_text") value=model.welcome_text class="form-control t-settings-welcome" id="welcome_text" required="required"}}
+                                {{#validation-error-field submitted=submitted field="welcome_text" className="validation validation-under t-welcome-text-validation-error" model=model validation=welcomeTextValidation}}{{t "validation.invalid"}} {{t "admin.setting.welcome_text"}}{{/validation-error-field}}
+                            {{/form-group}}
+                        </div>
+                    </div>
+                    <!--
+                    {{#each-in model.settings as |key setting|}}
+                        <p class="t-settings-{{key}}">{{setting.value}}</p>
+                    {{/each-in}}
+                    -->
+                </section>
+
+            </div>
+        </div>
+    </section>
+</form>

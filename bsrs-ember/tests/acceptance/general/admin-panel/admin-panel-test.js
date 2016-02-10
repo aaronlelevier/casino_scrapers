@@ -20,7 +20,7 @@ module('Acceptance | admin layout test', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + SETTING_URL + '/';
-        setting_data = SF.detail();
+        setting_data = SF.detail_raw();
         detail_xhr = xhr(endpoint, 'GET', null, {}, 200, setting_data);
     },
     afterEach() {

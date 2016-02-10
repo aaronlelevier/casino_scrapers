@@ -12,7 +12,8 @@ var TabRoute = Ember.Route.extend({
             this.get('templateModelField'),
             this.get('redirectRoute'),
             false,
-            this.transitionCallback.bind(this));
+            this.transitionCallback.bind(this)
+        );
     }
 });
 

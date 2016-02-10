@@ -33,4 +33,3 @@ var EditMixin = Ember.Mixin.create({
 });
 
 export default EditMixin;
-

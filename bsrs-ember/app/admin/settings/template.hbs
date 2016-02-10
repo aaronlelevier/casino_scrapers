@@ -1,5 +1,4 @@
-<h1 class="t-settings-title">{{model.id}}</h1>
-<h2 class="t-settings-name">{{model.name}}</h2>
-{{#each-in model.settings as |key setting|}}
-    <p class="t-settings-{{key}}">{{setting.value}}</p>
-{{/each-in}}
+{{settings/general-settings
+    model=model
+    close="closeTabMaster"
+}}

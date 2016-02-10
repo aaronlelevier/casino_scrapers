@@ -243,7 +243,8 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'upload.progress':'Progress',
                     'validation.invalid':'Invalid',
                     'validation.valid':'Valid',
-                    'welcome':'Hello'
+                    'welcome':'Hello',
+                    'admin.setting.welcome_text':'Welcome Text'
                 }
             }
             break;

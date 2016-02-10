@@ -4,6 +4,8 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
         return {
             id: 'b783a238-1131-4623-8d24-81a672bb4e00',
             name: 'general',
+            title: 'admin.general.other',
+            welcome_text: 'Welcome',
             settings: {
                 'login_grace': {
                     'required': true,
