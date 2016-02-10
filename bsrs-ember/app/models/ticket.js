@@ -133,20 +133,34 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
         const old_assignee = this.get('assignee');
         if(old_assignee) {
             const old_assignee_tickets = old_assignee.get('assigned_tickets') || [];
-            const updated_old_assignee_tickets = old_assignee_tickets.filter(function(id) {
+            const updated_old_assignee_tickets = old_assignee_tickets.filter((id) => {
                 return id !== ticket_id;
             });
-            run(function() {
+            run(() => {
                 store.push('person', {id: old_assignee.get('id'), assigned_tickets: updated_old_assignee_tickets});
             });
         }
     },
+    person_status_role_setup(person_json) {
+        const store = this.get('store');
+        const role = store.find('role', person_json.role);
+        delete person_json.role;
+        person_json.role_fk = role.get('id');
+        person_json.status_fk = person_json.status;
+        delete person_json.status;
+        let pushed_person;
+        run(() => {
+            pushed_person = store.push('person', person_json);
+            pushed_person.change_role(role);
+            pushed_person.change_status(person_json.status_fk);
+        });
+        return pushed_person;
+    },
     change_assignee: function(new_assignee) {
         const store = this.get('store');
-        const pushed_assignee = store.push('person', new_assignee);
+        const pushed_assignee = this.person_status_role_setup(new_assignee);
         const ticket_id = this.get('id');
         this.remove_assignee();
-        // const new_assignee = store.find('person', new_assignee_id);
         const new_assignee_tickets = pushed_assignee.get('assigned_tickets') || [];
         run(() => {
             store.push('person', {id: pushed_assignee.get('id'), assigned_tickets: new_assignee_tickets.concat(ticket_id)});

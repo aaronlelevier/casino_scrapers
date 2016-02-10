@@ -13,17 +13,17 @@ var RoleMixin = Ember.Mixin.create({
         const new_role_people = new_role.get('people') || [];
         //set people for role
         if(new_role.get('id')) {
-            run(function() {
+            run(() => {
                 store.push('role', {id: new_role.get('id'), people: new_role_people.concat([person_id])});
             });
             new_role.save();
         }
-        if(old_role) {
+        if(typeof old_role === 'object') {
             const old_role_people = old_role.get('people') || [];
             const updated_old_role_people = old_role_people.filter((old_role_person_pk) => {
                 return old_role_person_pk !== person_id;
             });
-            run(function() {
+            run(() => {
                 store.push('role', {id: old_role.get('id'), people: updated_old_role_people});
             });
             old_role.save();

@@ -1,9 +1,12 @@
 import Ember from 'ember';
+const { run } = Ember;
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TICKET_PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-person';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/ticket-category';
 import PERSON_LD from 'bsrs-ember/vendor/defaults/person-location';
+import SD from 'bsrs-ember/vendor/defaults/status';
+import RD from 'bsrs-ember/vendor/defaults/role';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import LD from 'bsrs-ember/vendor/defaults/location';
@@ -18,7 +21,7 @@ import LocationDeserializer from 'bsrs-ember/deserializers/location';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-let store, subject, uuid, person_deserializer, location_level_deserializer, location_deserializer, category_deserializer, ticket_priority, ticket_status, ticket, location_level, run = Ember.run;
+let store, subject, uuid, person_deserializer, location_level_deserializer, location_deserializer, category_deserializer, ticket_priority, ticket_status, ticket, location_level, status;
 
 module('unit: ticket deserializer test', {
     beforeEach() {
@@ -35,6 +38,8 @@ module('unit: ticket deserializer test', {
             ticket_status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: [TD.idOne]});
             ticket = store.push('ticket', {id: TD.idOne, priority_fk: TD.priorityOneId, status_fk: TD.statusOneId});
             location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, locations: [LD.idOne]});
+            store.push('status', {id: SD.activeId, name: SD.activeName});
+            store.push('role', {id: RD.idOne, name: RD.nameOne, location_level_fk: LLD.idOne});
         });
     }
 });
@@ -56,7 +61,7 @@ test('ticket assignee will be deserialized into its own store when deserialize d
     assert.equal(ticket.get('assignee').get('id'), PD.unusedId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     let json = TF.generate(TD.idOne);
-    run(function() {
+    run(() => {
         subject.deserialize(json, json.id);
     });
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -67,12 +72,15 @@ test('ticket assignee will be deserialized into its own store when deserialize d
     let json = TF.generate(TD.idOne);
     delete json.cc;
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    run(function() {
+    run(() => {
         subject.deserialize(response);
     });
     ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('assignee').get('id'), PD.id);
+    assert.ok(ticket.get('assignee').get('statusIsNotDirty'));
+    assert.equal(ticket.get('assignee').get('status_fk'), SD.activeId);
+    assert.equal(ticket.get('assignee').get('role_fk'), PD.role);
 });
 
 test('ticket assignee will be deserialized into its own store when deserialize detail is invoked (with existing assignee)(list)', (assert) => {
@@ -473,12 +481,13 @@ test('ticket-category m2m added including parent id for categories without a fat
     store.clear('ticket');
     let response = TF.generate(TD.idOne);
     response.cc = [PF.get()];
-    run(function() {
+    run(() => {
         subject.deserialize(response, TD.idOne);
     });
     ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(ticket.get('ccIsNotDirty'));
     assert.equal(store.find('ticket-person').get('length'), 1);
     assert.equal(store.find('ticket-category').get('length'), 3);
     let categories = ticket.get('categories');

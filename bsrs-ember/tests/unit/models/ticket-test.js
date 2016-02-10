@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
@@ -7,12 +8,20 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import TPD from 'bsrs-ember/vendor/defaults/ticket-person';
 import TCD from 'bsrs-ember/vendor/defaults/ticket-category';
+import SD from 'bsrs-ember/vendor/defaults/status';
+import RD from 'bsrs-ember/vendor/defaults/role';
+import LLD from 'bsrs-ember/vendor/defaults/location-level';
 
-var store, ticket, uuid, run = Ember.run;
+
+var store, ticket, uuid;
 
 module('unit: ticket test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:location', 'model:ticket-person', 'model:ticket-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'model:attachment']);
+        store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:location', 'model:ticket-person', 'model:ticket-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'model:attachment', 'model:status', 'model:role']);
+        run(() => {
+            store.push('status', {id: SD.activeId, name: SD.activeName});
+            store.push('role', {id: RD.idOne, name: RD.nameOne, location_level_fk: LLD.idOne});
+        });
     }
 });
 

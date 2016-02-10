@@ -50,8 +50,6 @@ var extract_categories = function(model, store, category_deserializer) {
 var extract_assignee = function(assignee_json, store, person_deserializer, ticket_model) {
     let assignee_id = assignee_json.id;
     if(ticket_model.get('assignee.id') !== assignee_id) {
-        // person_deserializer.deserialize(assignee_json, assignee_id);
-        // store.push('person', assignee_json);
         ticket_model.change_assignee(assignee_json);
         store.push('ticket', {id: ticket_model.get('id'), assignee_fk: assignee_id});
     }else{
@@ -59,22 +57,21 @@ var extract_assignee = function(assignee_json, store, person_deserializer, ticke
     }
 };
 
-var extract_cc = function(model, store, person_deserializer) {
+var extract_cc = function(cc_json, store, person_deserializer, ticket) {
     let server_sum = [];
     let prevented_duplicate_m2m = [];
     let all_ticket_people = store.find('ticket-person');
-    model.cc.forEach((cc) => {
+    cc_json.forEach((cc) => {
         //find one ticket-person model from store
         let ticket_people = all_ticket_people.filter((m2m) => {
-            return m2m.get('person_pk') === cc.id && m2m.get('ticket_pk') === model.id;
+            return m2m.get('person_pk') === cc.id && m2m.get('ticket_pk') === ticket.get('id');
         });
         //push new one in
         if(ticket_people.length === 0) {
             const pk = Ember.uuid();
             server_sum.push(pk);
-            store.push('ticket-person', {id: pk, ticket_pk: model.id, person_pk: cc.id});  
-            store.push('person', cc);
-            // person_deserializer.deserialize(cc, cc.id);
+            store.push('ticket-person', {id: pk, ticket_pk: ticket.get('id'), person_pk: cc.id});  
+            ticket.person_status_role_setup(cc);
         }else{
             //check 
             prevented_duplicate_m2m.push(ticket_people[0].get('id'));
@@ -82,13 +79,12 @@ var extract_cc = function(model, store, person_deserializer) {
     });
     server_sum.push(...prevented_duplicate_m2m);
     let m2m_to_remove = all_ticket_people.filter((m2m) => {
-        return Ember.$.inArray(m2m.get('id'), server_sum) < 0 && m2m.get('ticket_pk') === model.id;
+        return Ember.$.inArray(m2m.get('id'), server_sum) < 0 && m2m.get('ticket_pk') === ticket.get('id');
     });
     m2m_to_remove.forEach((m2m) => {
         store.push('ticket-person', {id: m2m.get('id'), removed: true});
     });
-    delete model.cc;
-    return server_sum;
+    store.push('ticket', {id: ticket.get('id'), ticket_people_fks: server_sum});
 };
 
 var extract_ticket_location = function(model, store, location_deserializer) {
@@ -105,7 +101,6 @@ var extract_ticket_location = function(model, store, location_deserializer) {
             store.push('location', {id: location.get('id'), tickets: mutated_array});
         }
     }
-
     if(location_pk) {
         let location = store.find('location', model.location.id);
         let existing_tickets = location.get('tickets') || [];
@@ -172,8 +167,10 @@ var TicketDeserializer = Ember.Object.extend({
             response.status_fk = extract_ticket_status(response, store);
             response.priority_fk = extract_ticket_priority(response, store);
             response.location_fk = extract_ticket_location(response, store, location_deserializer);
-            response.ticket_people_fks = extract_cc(response, store, person_deserializer);
+            // response.ticket_people_fks = extract_cc(response, store, person_deserializer);
             response.ticket_categories_fks = extract_categories(response, store, category_deserializer);
+            let cc_json = response.cc;
+            delete response.cc;
             let assignee_json = response.assignee;
             delete response.assignee;
             response.ticket_attachments_fks = extract_attachments(response, store);
@@ -181,6 +178,9 @@ var TicketDeserializer = Ember.Object.extend({
             delete response.attachments;
             response.detail = true;
             let ticket = store.push('ticket', response);
+            if (cc_json) {
+                extract_cc(cc_json, store, person_deserializer, ticket);
+            }
             if (assignee_json) {
                 extract_assignee(assignee_json, store, person_deserializer, ticket);
             }
