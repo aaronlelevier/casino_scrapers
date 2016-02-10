@@ -112,6 +112,7 @@ class SettingSerializerMixin(object):
         name = validated_data.get('name')
         default_settings = self.Meta.model.get_class_default_settings(name)
         final_settings = copy.copy(default_settings)
+        default_settings_inherited_from = self._settings_inherited_from(default_settings)
 
         for k,v in all_settings.items():
             try:
@@ -121,7 +122,8 @@ class SettingSerializerMixin(object):
                     final_settings[k] = all_settings[k]
                     final_settings[k].update({
                         'value': new_value,
-                        'inherited': False
+                        'inherited': False,
+                        'inherited_from': default_settings_inherited_from
                     })
             except KeyError:
                 # Silently pass b/c if a 'value' isn't being posted for
@@ -132,6 +134,15 @@ class SettingSerializerMixin(object):
 
         return validated_data
 
+    @staticmethod
+    def _settings_inherited_from(dct):
+        try:
+            return next(dct[d]['inherited_from'] for d in dct if dct[d]['inherited'] == False)
+        except StopIteration:
+            # not found, so return None.
+            # TODO: We should add logging for this in the future b/c this is an Error that we
+            # should never hit if the Default Settings are correctly configured in the models.
+            return
 
 ### Fields
 

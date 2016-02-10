@@ -306,9 +306,18 @@ class SettingTests(APITestCase):
         self.assertEqual(data['settings'], general_setting.settings)
         # single 'setting' key:value structure
         self.assertEqual(data['settings']['company_name']['value'], DEFAULT_GENERAL_SETTINGS['company_name']['value'])
+        self.assertEqual(data['settings']['company_name']['type'], DEFAULT_GENERAL_SETTINGS['company_name']['type'])
+        self.assertEqual(data['settings']['company_name']['required'], DEFAULT_GENERAL_SETTINGS['company_name']['required'])
+        self.assertEqual(data['settings']['company_name']['inherited'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited'])
+        self.assertEqual(data['settings']['company_name']['inherited_from'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited_from'])
+        # others explicit
         self.assertEqual(data['settings']['welcome_text']['value'], DEFAULT_GENERAL_SETTINGS['welcome_text']['value'])
         self.assertEqual(data['settings']['create_all']['value'], DEFAULT_GENERAL_SETTINGS['create_all']['value'])
         self.assertEqual(data['settings']['login_grace']['value'], DEFAULT_GENERAL_SETTINGS['login_grace']['value'])
+        # loop through all
+        for key in DEFAULT_GENERAL_SETTINGS.keys():
+            for field in ['value', 'type', 'required', 'inherited', 'inherited_from']:
+                self.assertEqual(data['settings'][key][field], DEFAULT_GENERAL_SETTINGS[key][field])
 
     def test_create__general_defaults(self):
         raw_data = {
@@ -353,7 +362,13 @@ class SettingTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
 
         self.assertEqual(response.status_code, 201)
+        # override default 'value', but other keys in the 'company_name' stay the same
         self.assertEqual(data['settings']['company_name']['value'], company_name)
+        self.assertEqual(data['settings']['company_name']['type'], DEFAULT_GENERAL_SETTINGS['company_name']['type'])
+        self.assertEqual(data['settings']['company_name']['required'], DEFAULT_GENERAL_SETTINGS['company_name']['required'])
+        self.assertEqual(data['settings']['company_name']['inherited'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited'])
+        self.assertEqual(data['settings']['company_name']['inherited_from'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited_from'])
+        # others
         self.assertEqual(data['settings']['welcome_text']['value'], DEFAULT_GENERAL_SETTINGS['welcome_text']['value'])
         self.assertEqual(data['settings']['create_all']['value'], DEFAULT_GENERAL_SETTINGS['create_all']['value'])
         self.assertEqual(data['settings']['login_grace']['value'], DEFAULT_GENERAL_SETTINGS['login_grace']['value'])
@@ -369,7 +384,13 @@ class SettingTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
 
         self.assertEqual(response.status_code, 200)
+        # override default 'value', but other keys in the 'company_name' stay the same
         self.assertEqual(data['settings']['company_name']['value'], new_company_name)
+        self.assertEqual(data['settings']['company_name']['type'], DEFAULT_GENERAL_SETTINGS['company_name']['type'])
+        self.assertEqual(data['settings']['company_name']['required'], DEFAULT_GENERAL_SETTINGS['company_name']['required'])
+        self.assertEqual(data['settings']['company_name']['inherited'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited'])
+        self.assertEqual(data['settings']['company_name']['inherited_from'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited_from'])
+        # others
         self.assertEqual(data['settings']['welcome_text']['value'], DEFAULT_GENERAL_SETTINGS['welcome_text']['value'])
         self.assertEqual(data['settings']['create_all']['value'], DEFAULT_GENERAL_SETTINGS['create_all']['value'])
         self.assertEqual(data['settings']['login_grace']['value'], DEFAULT_GENERAL_SETTINGS['login_grace']['value'])

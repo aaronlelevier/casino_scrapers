@@ -14,6 +14,7 @@ from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
 from contact.tests.factory import create_contact, create_contacts
 from generic.models import Setting
+from generic.settings import DEFAULT_GENERAL_SETTINGS
 from location.models import Location, LocationLevel
 from location.tests.factory import create_location
 from person.models import Person, Role
@@ -120,10 +121,10 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
         )
 
 
-class RoleSettingsTests(RoleSetupMixin, APITestCase):
+class RoleSettingTests(RoleSetupMixin, APITestCase):
 
     def setUp(self):
-        super(RoleSettingsTests, self).setUp()
+        super(RoleSettingTests, self).setUp()
         self.maxDiff = None
 
     def test_list(self):
@@ -144,13 +145,23 @@ class RoleSettingsTests(RoleSetupMixin, APITestCase):
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        # values
-        self.assertEqual(data['settings']['company_name']['value'], combined_settings['company_name']['value'])
+        # inherited settings
+        self.assertEqual(data['settings']['company_name']['value'], DEFAULT_GENERAL_SETTINGS['company_name']['value'])
+        self.assertEqual(data['settings']['company_name']['type'], DEFAULT_GENERAL_SETTINGS['company_name']['type'])
+        self.assertEqual(data['settings']['company_name']['required'], DEFAULT_GENERAL_SETTINGS['company_name']['required'])
+        self.assertEqual(data['settings']['company_name']['inherited'], True)
+        self.assertEqual(data['settings']['company_name']['inherited_from'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited_from'])
+        # role setting
         self.assertEqual(data['settings']['welcome_text']['value'], combined_settings['welcome_text']['value'])
+        self.assertEqual(data['settings']['welcome_text']['type'], DEFAULT_GENERAL_SETTINGS['welcome_text']['type'])
+        self.assertEqual(data['settings']['welcome_text']['required'], DEFAULT_GENERAL_SETTINGS['welcome_text']['required'])
+        self.assertEqual(data['settings']['welcome_text']['inherited'], False)
+        self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_ROLE_SETTINGS['welcome_text']['inherited_from'])
+        # others
         self.assertEqual(data['settings']['create_all']['value'], combined_settings['create_all']['value'])
         self.assertEqual(data['settings']['login_grace']['value'], combined_settings['login_grace']['value'])
         self.assertEqual(data['settings']['modules']['value'], combined_settings['modules']['value'])
-        # settings
+        # inherited explicit
         for k,v in data['settings'].items():
             self.assertIn('inherited', v)
         self.assertTrue(data['settings']['company_name']['inherited'])
@@ -198,10 +209,11 @@ class RoleSettingsTests(RoleSetupMixin, APITestCase):
 
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(
-            raw_data['settings']['company_name']['value'],
-            data['settings']['company_name']['value']
-        )
+        self.assertEqual(data['settings']['company_name']['value'], company_name)
+        self.assertEqual(data['settings']['company_name']['type'], DEFAULT_GENERAL_SETTINGS['company_name']['type'])
+        self.assertEqual(data['settings']['company_name']['required'], DEFAULT_GENERAL_SETTINGS['company_name']['required'])
+        self.assertEqual(data['settings']['company_name']['inherited'], False)
+        self.assertEqual(data['settings']['company_name']['inherited_from'], 'role')
 
     def test_update(self):
         role = create_role()
@@ -238,7 +250,10 @@ class RoleSettingsTests(RoleSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['settings']['company_name']['value'], new_company_name)
-        self.assertFalse(data['settings']['company_name']['inherited'])
+        self.assertEqual(data['settings']['company_name']['type'], DEFAULT_GENERAL_SETTINGS['company_name']['type'])
+        self.assertEqual(data['settings']['company_name']['required'], DEFAULT_GENERAL_SETTINGS['company_name']['required'])
+        self.assertEqual(data['settings']['company_name']['inherited'], False)
+        self.assertEqual(data['settings']['company_name']['inherited_from'], 'role')
 
 
 ### PERSON ###
