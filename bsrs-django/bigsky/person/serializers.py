@@ -104,7 +104,7 @@ class PersonTicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = ('id', 'first_name', 'middle_initial', 'last_name')
+        fields = ('id', 'first_name', 'middle_initial', 'last_name', 'status', 'role')
 
 
 class PersonDetailSerializer(serializers.ModelSerializer):
