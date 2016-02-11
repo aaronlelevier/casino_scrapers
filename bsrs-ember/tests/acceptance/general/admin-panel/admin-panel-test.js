@@ -15,12 +15,12 @@ const ADMINPANEL = '.t-side-menu';
 
 var application, store, endpoint, setting_data, detail_xhr;
 
-module('Acceptance | admin layout test', {
+module('Acceptance | admin settings layout test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + SETTING_URL + '/';
-        setting_data = SF.detail_raw();
+        setting_data = SF.detail();
         detail_xhr = xhr(endpoint, 'GET', null, {}, 200, setting_data);
     },
     afterEach() {

@@ -3,7 +3,10 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 
 var SettingModel = Model.extend({
     i18n: Ember.inject.service(),
-    welcome_text: attr(),
+    login_grace: attr(''),
+    welcome_text: attr(''),
+    company_name: attr(''),
+    create_all: attr(''),
     translated_title: Ember.computed('title', function(){
         return this.get('title') ? this.get('i18n').t(this.get('title')) : '';
     }),
@@ -17,28 +20,10 @@ var SettingModel = Model.extend({
             id: this.get('id'),
             name: this.get('name'),
             title: this.get('title'),
-            settings: {
-                'login_grace': {
-                    'required':true,
-                    'type':'int',
-                    'value':1
-                },
-                'welcome_text':{
-                    'required':false,
-                    'type':'str',
-                    'value':this.get('welcome_text')
-                },
-                'company_name':{
-                    'required':false,
-                    'type':'str',
-                    'value':'Andys Pianos'
-                },
-                'create_all':{
-                    'required':true,
-                    'type':'bool',
-                    'value':true
-                }
-            }
+            login_grace: parseInt(this.get('login_grace')),
+            welcome_text: this.get('welcome_text'),
+            company_name: this.get('company_name'),
+            create_all: this.get('create_all')
         };
     }
 });

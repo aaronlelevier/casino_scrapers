@@ -5,7 +5,9 @@ var SettingDeserializer = Ember.Object.extend({
         let store = this.get('store');
         let existing_setting = store.find('setting', id);
         if (!existing_setting.get('id') || existing_setting.get('isNotDirtyOrRelatedNotDirty')) {
-            response.welcome_text = response.settings.welcome_text.value;
+            for (var key in response.settings) {
+                response[key] = response.settings[key].value;
+            }
             delete response.settings;
             let setting = store.push('setting', response);
             setting.save();

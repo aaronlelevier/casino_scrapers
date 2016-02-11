@@ -5,7 +5,7 @@ module.exports = function(app) {
     var adminSettingsRouter = express.Router();
 
     adminSettingsRouter.get('/:id', function(req, res) {
-        res.send(SETTING_FIXTURES.detail_raw(req.params.id));
+        res.send(SETTING_FIXTURES.detail(req.params.id));
     });
 
     adminSettingsRouter.put('/:id', function(req, res) {

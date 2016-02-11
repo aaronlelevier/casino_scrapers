@@ -8,7 +8,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import SD from 'bsrs-ember/vendor/defaults/setting';
 import SF from 'bsrs-ember/vendor/setting_fixtures';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import {setting_payload, setting_payload_welcome_text} from 'bsrs-ember/tests/helpers/payloads/general-settings';
+import {setting_payload, setting_payload_other} from 'bsrs-ember/tests/helpers/payloads/general-settings';
 
 
 const PREFIX = config.APP.NAMESPACE;
@@ -23,7 +23,7 @@ module('Acceptance | general settings', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + DETAIL_URL + '/';
-        setting_data = SF.detail_raw();
+        setting_data = SF.detail();
         detail_xhr = xhr(endpoint, 'GET', null, {}, 200, setting_data);
         url = `${PREFIX}${DETAIL_URL}/`;
     },
@@ -37,16 +37,22 @@ test('general settings title and fields populated correctly', function(assert) {
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-settings-title').text().trim(), t(setting_data.title));
-        assert.equal(find('.t-settings-welcome').val(), setting_data.settings.welcome_text.value);
+        assert.equal(find('.t-settings-welcome').val(), SD.welcome_text);
     });
-    fillIn('.t-settings-welcome', '1234');
+    fillIn('.t-settings-welcome', SD.welcome_textOther);
+    fillIn('.t-settings-login_grace', SD.login_graceOther);
+    fillIn('.t-settings-company_name', SD.company_nameOther);
+    click('.t-settings-create_all');
     andThen(() => {
         let setting = store.find('setting', SD.id);
-        assert.equal(setting.get('welcome_text'), '1234');
+        assert.equal(setting.get('welcome_text'), SD.welcome_textOther);
+        assert.equal(setting.get('login_grace'), SD.login_graceOther);
+        assert.equal(setting.get('company_name'), SD.company_nameOther);
+        assert.equal(setting.get('create_all'), SD.create_allOther);
         assert.ok(setting.get('isDirty'));
         assert.ok(setting.get('isDirtyOrRelatedDirty'));
     });
-    xhr(url, 'PUT', JSON.stringify(setting_payload_welcome_text), {}, 200, {});
+    xhr(url, 'PUT', JSON.stringify(setting_payload_other), {}, 200, {});
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), '/' + BASE_ADMIN_URL);

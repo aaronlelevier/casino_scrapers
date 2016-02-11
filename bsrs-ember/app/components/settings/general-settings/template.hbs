@@ -33,12 +33,25 @@
                                 {{#validation-error-field submitted=submitted field="welcome_text" className="validation validation-under t-welcome-text-validation-error" model=model validation=welcomeTextValidation}}{{t "validation.invalid"}} {{t "admin.setting.welcome_text"}}{{/validation-error-field}}
                             {{/form-group}}
                         </div>
+                        <div class="col-md-12">
+                            {{#form-group title="admin.setting.login_grace" for="login_grace"}}
+                                {{input type="number" placeholder=(t "admin.setting.login_grace") value=model.login_grace class="form-control t-settings-login_grace" id="login_grace" required="required"}}
+                            {{/form-group}}
+                        </div>
+                        <div class="col-md-12">
+                            {{#form-group title="admin.setting.company_name" for="company_name"}}
+                                {{input type="text" placeholder=(t "admin.setting.company_name") value=model.company_name class="form-control t-settings-company_name" id="company_name" required="required"}}
+                            {{/form-group}}
+                        </div>
+                        <div class="col-md-12">
+                            <div class="checkbox form-group">
+                                <label>
+                                    {{input type="checkbox" checked=model.create_all class="form-control t-settings-create_all" id="create_all" required="required"}}
+                                    <span>{{t "admin.setting.create_all"}}</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                    <!--
-                    {{#each-in model.settings as |key setting|}}
-                        <p class="t-settings-{{key}}">{{setting.value}}</p>
-                    {{/each-in}}
-                    -->
                 </section>
 
             </div>

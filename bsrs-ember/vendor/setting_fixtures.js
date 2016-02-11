@@ -5,22 +5,14 @@ var BSRS_SETTING_FACTORY = (function() {
     factory.prototype.generate = function(i) {
         var id = i || this.setting_defaults.id;
         return {
-            'id': id,
-            'name': this.setting_defaults.name,
-            'title': this.setting_defaults.title,
-            'settings': this.setting_defaults.settings
+            id: id,
+            name: this.setting_defaults.name,
+            title: this.setting_defaults.title,
+            settings: this.setting_defaults.settings
         }
-    };
-    factory.prototype.detail_raw = function() {
-        return this.generate();
     };
     factory.prototype.detail = function() {
-        return {
-            'id': this.setting_defaults.id,
-            'name': this.setting_defaults.name,
-            'title': this.setting_defaults.title,
-            'welcome_text': this.setting_defaults.welcome_text
-        }
+        return this.generate();
     };
     factory.prototype.put = function(id) {
         return this.generate();

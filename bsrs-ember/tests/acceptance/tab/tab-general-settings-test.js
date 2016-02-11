@@ -28,7 +28,7 @@ module('Acceptance | tab general settings test', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + BASE_SETTINGS_URL + '/';
-        settings_data = SF.detail_raw();
+        settings_data = SF.detail();
         detail_xhr = xhr(endpoint + SD.id + '/', 'GET', null, {}, 200, settings_data);
         original_uuid = random.uuid;
     },

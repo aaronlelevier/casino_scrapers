@@ -7,7 +7,7 @@ import SettingDeserializer from 'bsrs-ember/deserializers/setting';
 
 var store, setting, run = Ember.run, deserializer;
 
-module('unit: setting deserializer test', {
+module('unit: settings deserializer test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:setting', 'service:i18n']);
         deserializer = SettingDeserializer.create({store: store});
@@ -18,10 +18,13 @@ module('unit: setting deserializer test', {
 });
 
 test('setting correctly deserialized settings object', (assert) => {
-    let json = SF.detail_raw();
+    let json = SF.detail();
     run(()=>{
         deserializer.deserialize(json, SD.id);
     });
-    assert.equal(setting.get('welcome_text'), SD.settings.welcome_text.value);
+    assert.equal(setting.get('welcome_text'), SD.welcome_text);
+    assert.equal(setting.get('login_grace'), SD.login_grace);
+    assert.equal(setting.get('company_name'), SD.company_name);
+    assert.equal(setting.get('create_all'), SD.create_all);
     assert.notOk(setting.get('settings'));
 });
