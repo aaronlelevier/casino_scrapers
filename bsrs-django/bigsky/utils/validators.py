@@ -61,7 +61,7 @@ class SettingsValidator(object):
         if settings:
             for k,v in default_settings.items():
                 try:
-                    new_value = settings[k]['value']
+                    new_value = settings[k]
                 except KeyError:
                     # Silently pass because, if a 'value' isn't being posted
                     # for the setting, we're going to use the default.

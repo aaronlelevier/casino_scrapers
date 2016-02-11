@@ -31,8 +31,8 @@ class SettingSerializerMixinTests(RoleSetupMixin, APITestCase):
         orig_data = serializer.data
         role_data = copy.copy(orig_data)
         welcome_text = 'hey foo'
+        role_data['settings'] = {'welcome_text': welcome_text}
 
-        role_data['settings'] = {'welcome_text': {'value': welcome_text}}
         response = self.client.put('/api/admin/roles/{}/'.format(role.id), role_data, format='json')
 
         self.assertEqual(response.status_code, 200)

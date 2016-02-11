@@ -110,10 +110,12 @@ class SettingSerializerMixin(object):
         default_settings_inherited_from = self._settings_inherited_from(default_settings)
 
         for k,v in all_settings.items():
+
             try:
-                new_value = validated_data['settings'][k].get('value')
+                new_value = validated_data['settings'][k]
                 # to defend agains key's w/ no values that don't match the req'd type
-                if new_value:
+                # allow 'False' b/c still want to catch Boolean False's
+                if new_value is not None:
                     final_settings[k] = all_settings[k]
                     final_settings[k].update({
                         'value': new_value,

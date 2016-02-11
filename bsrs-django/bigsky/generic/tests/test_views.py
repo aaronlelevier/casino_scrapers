@@ -335,10 +335,18 @@ class SettingTests(APITestCase):
 
     def test_update(self):
         new_company_name = "Bob's Pianos"
+        new_welcome_text = "Bueno"
+        new_create_all = False
+        new_login_grace = 3
         general_setting = create_general_setting()
         serializer = SettingSerializer(general_setting)
         raw_data = serializer.data
-        raw_data['settings'] = {'company_name': {'value': new_company_name}}
+        raw_data['settings'] = {
+            'company_name': new_company_name,
+            'welcome_text': new_welcome_text,
+            'create_all': new_create_all,
+            'login_grace':new_login_grace
+        }
 
         response = self.client.put('/api/admin/settings/{}/'.format(general_setting.id), raw_data, format='json')
         data = json.loads(response.content.decode('utf8'))
@@ -351,6 +359,6 @@ class SettingTests(APITestCase):
         self.assertEqual(data['settings']['company_name']['inherited'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited'])
         self.assertEqual(data['settings']['company_name']['inherited_from'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited_from'])
         # others
-        self.assertEqual(data['settings']['welcome_text']['value'], DEFAULT_GENERAL_SETTINGS['welcome_text']['value'])
-        self.assertEqual(data['settings']['create_all']['value'], DEFAULT_GENERAL_SETTINGS['create_all']['value'])
-        self.assertEqual(data['settings']['login_grace']['value'], DEFAULT_GENERAL_SETTINGS['login_grace']['value'])
+        self.assertEqual(data['settings']['welcome_text']['value'], new_welcome_text)
+        self.assertEqual(data['settings']['create_all']['value'], new_create_all)
+        self.assertEqual(data['settings']['login_grace']['value'], new_login_grace)
