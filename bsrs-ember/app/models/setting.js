@@ -20,10 +20,12 @@ var SettingModel = Model.extend({
             id: this.get('id'),
             name: this.get('name'),
             title: this.get('title'),
-            login_grace: parseInt(this.get('login_grace')),
-            welcome_text: this.get('welcome_text'),
-            company_name: this.get('company_name'),
-            create_all: this.get('create_all')
+            settings: {
+                login_grace: parseInt(this.get('login_grace')),
+                welcome_text: this.get('welcome_text'),
+                company_name: this.get('company_name'),
+                create_all: this.get('create_all')
+            }
         };
     }
 });

@@ -46,14 +46,14 @@ test('serialize', (assert) => {
     setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, welcome_text: SD.welcome_text, login_grace: SD.login_grace});
     var serialize = setting.serialize();
     // welcome_text
-    assert.equal(serialize.welcome_text, setting.get('welcome_text'));
+    assert.equal(serialize.settings.welcome_text, setting.get('welcome_text'));
     setting.set('welcome_text', 'x');
     serialize = setting.serialize();
-    assert.equal(serialize.welcome_text, 'x');
+    assert.equal(serialize.settings.welcome_text, 'x');
     // login_grace
-    setting.set('login_grace', serialize.login_grace);
-    assert.equal(serialize.login_grace, setting.get('login_grace'));
+    setting.set('login_grace', serialize.settings.login_grace);
+    assert.equal(serialize.settings.login_grace, setting.get('login_grace'));
     setting.set('login_grace', 2);
     serialize = setting.serialize();
-    assert.equal(serialize.login_grace, 2);
+    assert.equal(serialize.settings.login_grace, 2);
 });
