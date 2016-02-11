@@ -156,7 +156,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
         pushed_person.change_status(person_json.status_fk);
         return pushed_person;
     },
-    change_assignee: function(new_assignee) {
+    change_assignee(new_assignee) {
         const store = this.get('store');
         const pushed_assignee = this.person_status_role_setup(new_assignee);
         const ticket_id = this.get('id');

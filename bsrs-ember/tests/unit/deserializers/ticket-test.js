@@ -207,6 +207,10 @@ test('ticket location will be updated when server returns different location (li
     });
     assert.deepEqual(location.get('tickets'), []);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(location.get('tickets').length, 0);
+    const location_two = store.find('location', LD.idTwo);
+    assert.equal(location_two.get('tickets').length, 1);
+    assert.equal(ticket.get('location_fk'), LD.idTwo);
     assert.equal(ticket.get('location.id'), LD.idTwo);
     assert.equal(ticket.get('location.location_level.id'), LLD.idOne);
 });

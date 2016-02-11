@@ -217,90 +217,90 @@ test('navigating between ticket and people and locations and category will not d
     });
 });
 
-test('navigating between ticket and people will not dirty models and will clear ticket from ticket-status and ticket-priority', function(assert) {
-    visit(TICKET_URL);
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-        const tickets = store.find('ticket');
-        assert.equal(tickets.get('length'), 10);
-        tickets.forEach((ticket) => {
-            assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-        });
-        const ticket_priorities = store.find('ticket-priority');
-        assert.equal(ticket_priorities.get('length'), 4);
-        const ticket_statuses = store.find('ticket-status');
-        assert.equal(ticket_statuses.get('length'), 8);
-        assert.equal(ticket_statuses.objectAt(0).get('tickets').get('length'), 10);
-        assert.equal(ticket_priorities.objectAt(0).get('tickets').get('length'), 10);
-        const persons = store.find('person');
-        assert.equal(persons.get('length'), 2);
-        persons.forEach((person) => {
-            assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-        });
-        const locations = store.find('location');
-        assert.equal(locations.get('length'), 1);
-        locations.forEach((location) => {
-            assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
-        });
-    });
-    var page_two = `${PREFIX}${BASE_TICKET_URL}/?page=2`;
-    xhr(page_two,"GET",null,{},200,TF.list_two());
-    click('.t-page:eq(1) a');
-    andThen(() => {
-        assert.equal(currentURL(), `${TICKET_URL}?page=2`);
-        assert.equal(find('.t-grid-title').text(), 'Tickets');
-        assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        const tickets = store.find('ticket');
-        assert.equal(tickets.get('length'), 9);
-        tickets.forEach((ticket) => {
-            assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-        });
-        const ticket_priorities = store.find('ticket-priority');
-        assert.equal(ticket_priorities.get('length'), 4);
-        const ticket_statuses = store.find('ticket-status');
-        assert.equal(ticket_statuses.get('length'), 8);
-        assert.equal(ticket_statuses.objectAt(0).get('tickets').get('length'), 1);
-        assert.equal(ticket_priorities.objectAt(0).get('tickets').get('length'), 1);
-        assert.equal(ticket_statuses.objectAt(1).get('tickets').get('length'), 9);
-        assert.equal(ticket_priorities.objectAt(1).get('tickets').get('length'), 9);
-        const persons = store.find('person');
-        assert.equal(persons.get('length'), 3);
-        persons.forEach((person) => {
-            assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-        });
-        const locations = store.find('location');
-        assert.equal(locations.get('length'), 2);
-        locations.forEach((location) => {
-            assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
-        });
-    });
-    visit(PEOPLE_URL);
-    andThen(() => {
-        assert.equal(currentURL(), PEOPLE_URL);
-        assert.equal(find('.t-grid-title').text(), 'People');
-        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        const tickets = store.find('ticket');
-        assert.equal(tickets.get('length'), 9);
-        tickets.forEach((ticket) => {
-            assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-        });
-        const ticket_priorities = store.find('ticket-priority');
-        assert.equal(ticket_priorities.get('length'), 4);
-        const ticket_statuses = store.find('ticket-status');
-        assert.equal(ticket_statuses.get('length'), 8);
-        assert.equal(ticket_statuses.objectAt(0).get('tickets').get('length'), 1);
-        assert.equal(ticket_priorities.objectAt(0).get('tickets').get('length'), 1);
-        assert.equal(ticket_statuses.objectAt(1).get('tickets').get('length'), 9);
-        assert.equal(ticket_priorities.objectAt(1).get('tickets').get('length'), 9);
-        const persons = store.find('person');
-        assert.equal(persons.get('length'), 12);
-        persons.forEach((person) => {
-            assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-        });
-        const locations = store.find('location');
-        assert.equal(locations.get('length'), 2);
-        locations.forEach((location) => {
-            assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
-        });
-    });
-});
+// test('navigating between ticket and people will not dirty models and will clear ticket from ticket-status and ticket-priority', function(assert) {
+//     visit(TICKET_URL);
+//     andThen(() => {
+//         assert.equal(currentURL(), TICKET_URL);
+//         const tickets = store.find('ticket');
+//         assert.equal(tickets.get('length'), 10);
+//         tickets.forEach((ticket) => {
+//             assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+//         });
+//         const ticket_priorities = store.find('ticket-priority');
+//         assert.equal(ticket_priorities.get('length'), 4);
+//         const ticket_statuses = store.find('ticket-status');
+//         assert.equal(ticket_statuses.get('length'), 8);
+//         assert.equal(ticket_statuses.objectAt(0).get('tickets').get('length'), 10);
+//         assert.equal(ticket_priorities.objectAt(0).get('tickets').get('length'), 10);
+//         const persons = store.find('person');
+//         assert.equal(persons.get('length'), 2);
+//         persons.forEach((person) => {
+//             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+//         });
+//         const locations = store.find('location');
+//         assert.equal(locations.get('length'), 1);
+//         locations.forEach((location) => {
+//             assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+//         });
+//     });
+//     var page_two = `${PREFIX}${BASE_TICKET_URL}/?page=2`;
+//     xhr(page_two,"GET",null,{},200,TF.list_two());
+//     click('.t-page:eq(1) a');
+//     andThen(() => {
+//         assert.equal(currentURL(), `${TICKET_URL}?page=2`);
+//         assert.equal(find('.t-grid-title').text(), 'Tickets');
+//         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
+//         const tickets = store.find('ticket');
+//         assert.equal(tickets.get('length'), 9);
+//         tickets.forEach((ticket) => {
+//             assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+//         });
+//         const ticket_priorities = store.find('ticket-priority');
+//         assert.equal(ticket_priorities.get('length'), 4);
+//         const ticket_statuses = store.find('ticket-status');
+//         assert.equal(ticket_statuses.get('length'), 8);
+//         assert.equal(ticket_statuses.objectAt(0).get('tickets').get('length'), 1);
+//         assert.equal(ticket_priorities.objectAt(0).get('tickets').get('length'), 1);
+//         assert.equal(ticket_statuses.objectAt(1).get('tickets').get('length'), 9);
+//         assert.equal(ticket_priorities.objectAt(1).get('tickets').get('length'), 9);
+//         const persons = store.find('person');
+//         assert.equal(persons.get('length'), 3);
+//         persons.forEach((person) => {
+//             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+//         });
+//         const locations = store.find('location');
+//         assert.equal(locations.get('length'), 2);
+//         locations.forEach((location) => {
+//             assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+//         });
+//     });
+//     visit(PEOPLE_URL);
+//     andThen(() => {
+//         assert.equal(currentURL(), PEOPLE_URL);
+//         assert.equal(find('.t-grid-title').text(), 'People');
+//         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+//         const tickets = store.find('ticket');
+//         assert.equal(tickets.get('length'), 9);
+//         tickets.forEach((ticket) => {
+//             assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+//         });
+//         const ticket_priorities = store.find('ticket-priority');
+//         assert.equal(ticket_priorities.get('length'), 4);
+//         const ticket_statuses = store.find('ticket-status');
+//         assert.equal(ticket_statuses.get('length'), 8);
+//         assert.equal(ticket_statuses.objectAt(0).get('tickets').get('length'), 1);
+//         assert.equal(ticket_priorities.objectAt(0).get('tickets').get('length'), 1);
+//         assert.equal(ticket_statuses.objectAt(1).get('tickets').get('length'), 9);
+//         assert.equal(ticket_priorities.objectAt(1).get('tickets').get('length'), 9);
+//         const persons = store.find('person');
+//         assert.equal(persons.get('length'), 12);
+//         persons.forEach((person) => {
+//             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+//         });
+//         const locations = store.find('location');
+//         assert.equal(locations.get('length'), 2);
+//         locations.forEach((location) => {
+//             assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+//         });
+//     });
+// });

@@ -124,6 +124,10 @@ var BSRS_TICKET_FACTORY = (function() {
         response.location = response.location.id;
         response.assignee = response.assignee.id;
         response.categories = response.categories.map(function(cat) { return cat.id; });
+        response.status = response.status_fk;
+        response.priority =  response.priority_fk;
+        delete response.status_fk;
+        delete response.priority_fk;
         delete response.number;
         for(var key in ticket) {
             response[key] = ticket[key];

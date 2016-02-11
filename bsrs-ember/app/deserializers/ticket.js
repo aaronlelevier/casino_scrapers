@@ -81,32 +81,25 @@ var extract_cc = function(cc_json, store, ticket) {
     store.push('ticket', {id: ticket.get('id'), ticket_people_fks: server_sum});
 };
 
-var extract_ticket_location = function(model, store, location_deserializer) {
-    let location_pk = model.location.id;
-    let ticket = store.find('ticket', model.id);
-    if (ticket.get('location')) {
-        //TODO: use change_location function
-        store.push('ticket', {id: ticket.get('id'), location_fk: undefined});
-        let location = ticket.get('location');
-        if (location) {
-            let mutated_array = location.get('tickets').filter((ticket) => {
-                return ticket !== model.id;
-            });
-            run(() => { store.push('location', {id: location.get('id'), tickets: mutated_array}); });
+var extract_ticket_location = function(location_json, store, ticket) {
+    let location_pk = location_json.id;
+    const location_level_fk = location_json.location_level;
+    delete location_json.location_level;
+    let old_location_id = ticket.get('location.id');
+    //if current location in store and doesn't have same id as payload
+    if (ticket.get('location.id') && location_pk !== old_location_id) {
+        ticket.change_location(location_json);
+    }else{
+        //if location in store already and need to add to tickets array
+        let location = store.find('location', location_json.id);
+        if(!location.get('id')) { 
+            store.push('location', {id: location_json.id, location_level_fk: location_level_fk});
         }
-    }
-    if(location_pk) {
-        let location = store.find('location', model.location.id);
         let existing_tickets = location.get('tickets') || [];
-        if (location.get('content') && existing_tickets.indexOf(model.id) === -1) {
-            store.push('location', {id: location.get('id'), tickets: existing_tickets.concat(model.id)});
-        } else {
-            location_deserializer.deserialize(model.location, model.location.id);
-            run(() => { store.push('location', {id: location.get('id'), tickets: [model.id]}); });
-        }
-        delete model.location;
-        model.location_fk = location_pk;
+        store.push('location', {id: location.get('id'), tickets: existing_tickets.concat(ticket.get('id')).uniq()});
     }
+    const location = store.find('location', location_pk);
+    location.change_location_level(location_level_fk);
     return location_pk;
 };
 
@@ -145,13 +138,15 @@ var TicketDeserializer = Ember.Object.extend({
             this.deserialize_single(response, options, category_deserializer, location_deserializer);
         }
     },
-    deserialize_single(response, id, category_deserializer, location_deserializer) {
+    deserialize_single(response, id, category_deserializer) {
         let store = this.get('store');
         let existing_ticket = store.find('ticket', id);
         let m2m_categories = [];
         let categories = [];
         if (!existing_ticket.get('id') || existing_ticket.get('isNotDirtyOrRelatedNotDirty')) {
-            response.location_fk = extract_ticket_location(response, store, location_deserializer);
+            let location_json = response.location;
+            response.location_fk = location_json.id;
+            delete response.location;
             let cc_json = response.cc;
             delete response.cc;
             let assignee_json = response.assignee;
@@ -166,6 +161,7 @@ var TicketDeserializer = Ember.Object.extend({
             delete response.categories;
             response.detail = true;
             let ticket = store.push('ticket', response);
+            const location_fk = extract_ticket_location(location_json, store, ticket);
             const status = extract_ticket_status(response.status_fk, store, ticket);
             const priority = extract_ticket_priority(response.priority_fk, store, ticket);
             if (cc_json) {
@@ -192,19 +188,22 @@ var TicketDeserializer = Ember.Object.extend({
             });
         }
     },
-    deserialize_list(response, category_deserializer, location_deserializer) {
+    deserialize_list(response, category_deserializer) {
         let store = this.get('store');
         let return_array = Ember.A();
         let m2m_categories = [];
         let categories = [];
         let server_sum;
+        let location_fk;
         let tickets = [];
         let priorities = [];
         let statuses = [];
         response.results.forEach((model) => {
             const existing = store.find('ticket', model.id);
             if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
-                model.location_fk = extract_ticket_location(model, store, location_deserializer);
+                let location_json = model.location;
+                model.location_fk = location_json.id;
+                delete model.location;
                 let assignee_json = model.assignee;
                 //TODO: deserialize test this
                 model.assignee_fk = model.assignee.id;
@@ -213,6 +212,7 @@ var TicketDeserializer = Ember.Object.extend({
                 delete model.categories;
                 model.grid = true;
                 let ticket = store.push('ticket', model);
+                location_fk = extract_ticket_location(location_json, store, ticket);
                 priorities.push(extract_ticket_priority(model.priority_fk, store, ticket));
                 statuses.push(extract_ticket_status(model.status_fk, store, ticket));
                 extract_assignee(assignee_json, store, ticket);
@@ -225,7 +225,7 @@ var TicketDeserializer = Ember.Object.extend({
             }else{
                 return_array.pushObject(existing);
             }
-            tickets.push({id: model.id, ticket_categories_fks: server_sum}); 
+            tickets.push({id: model.id, ticket_categories_fks: server_sum, location_fk: location_fk}); 
         });
         run(() => {
             tickets.forEach((ticket) => {
