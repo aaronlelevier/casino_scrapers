@@ -40,6 +40,12 @@ class TicketListSerializer(serializers.ModelSerializer):
                                         'priority')
                         .prefetch_related('categories', 'categories__children'))
 
+    def to_representation(self, obj):
+        data = super(TicketListSerializer, self).to_representation(obj)
+        data['status_fk'] = data.pop('status', [])
+        data['priority_fk'] = data.pop('priority', [])
+        return data
+
 
 class TicketSerializer(serializers.ModelSerializer):
 
@@ -59,6 +65,11 @@ class TicketSerializer(serializers.ModelSerializer):
                         .prefetch_related('cc', 'categories', 'attachments',
                                           'categories__children'))
 
+    def to_representation(self, obj):
+        data = super(TicketSerializer, self).to_representation(obj)
+        data['status_fk'] = data.pop('status', [])
+        data['priority_fk'] = data.pop('priority', [])
+        return data
 
 class TicketActivitySerializer(serializers.ModelSerializer):
 
