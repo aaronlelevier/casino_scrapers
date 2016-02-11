@@ -477,7 +477,7 @@ test('ticket-person m2m is removed when server payload no longer reflects what s
     assert.equal(store.find('ticket-person').get('length'), 3);
 });
 
-test('ticket-category m2m added including parent id for categories without a fat parent model', (assert) => {
+test('icket-category m2m added including parent id for categories without a fat parent model', (assert) => {
     store.clear('ticket');
     let response = TF.generate(TD.idOne);
     response.cc = [PF.get()];
@@ -490,7 +490,7 @@ test('ticket-category m2m added including parent id for categories without a fat
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.equal(store.find('ticket-person').get('length'), 1);
     assert.equal(store.find('ticket-category').get('length'), 3);
-    let categories = ticket.get('categories');
+    let categories = ticket.get('sorted_categories');
     assert.equal(categories.get('length'), 3);
     assert.equal(categories.objectAt(0).get('id'), CD.idOne);
     assert.equal(categories.objectAt(0).get('parent_id'), null);
@@ -529,7 +529,7 @@ test('ticket-category m2m is set up correctly using deserialize single (starting
         subject.deserialize(response, TD.idOne);
     });
     let original = store.find('ticket', TD.idOne);
-    categories = original.get('categories');
+    categories = original.get('sorted_categories');
     assert.equal(categories.get('length'), 3);
     assert.equal(categories.objectAt(0).get('id'), CD.idOne);
     assert.equal(categories.objectAt(0).get('name'), CD.nameOne);
@@ -553,7 +553,7 @@ test('ticket-category m2m is set up correctly using deserialize list (starting w
         subject.deserialize(response);
     });
     let original = store.find('ticket', TD.idOne);
-    categories = original.get('categories');
+    categories = original.get('sorted_categories');
     assert.equal(categories.get('length'), 3);
     assert.equal(categories.objectAt(0).get('id'), CD.idOne);
     assert.equal(categories.objectAt(0).get('name'), CD.nameOne);
@@ -579,13 +579,17 @@ test('ticket-status m2m is added after deserialize single (starting with existin
         subject.deserialize(response, TD.idOne);
     });
     let original = store.find('ticket', TD.idOne);
-    let categories = original.get('categories');
+    let categories = original.get('sorted_categories');
     assert.equal(categories.get('length'), 3);
     assert.equal(categories.objectAt(0).get('name'), CD.nameOne);
     assert.equal(categories.objectAt(1).get('name'), CD.nameRepairChild);
     assert.equal(categories.objectAt(2).get('name'), CD.namePlumbingChild);
     assert.ok(original.get('isNotDirty'));
+    original = store.find('ticket', TD.idOne);
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(original.get('categoriesIsNotDirty'));
+    assert.equal(original.get('ticket_categories_fks').length, 3);
+    assert.equal(original.get('ticket_categories_ids').length, 3);
     assert.equal(store.find('ticket-category').get('length'), 3);
 });
 
@@ -604,7 +608,7 @@ test('ticket-status m2m is added after deserialize list (starting with existing 
         subject.deserialize(response);
     });
     let original = store.find('ticket', TD.idOne);
-    let categories = original.get('categories');
+    let categories = original.get('sorted_categories');
     assert.equal(categories.get('length'), 3);
     assert.equal(categories.objectAt(0).get('name'), CD.nameOne);
     assert.equal(categories.objectAt(1).get('name'), CD.nameRepairChild);
@@ -629,7 +633,7 @@ test('ticket-category m2m is removed when server payload no longer reflects what
         subject.deserialize(response, TD.idOne);
     });
     let original = store.find('ticket', TD.idOne);
-    let categories = original.get('categories');
+    let categories = original.get('sorted_categories');
     assert.equal(categories.get('length'), 3);
     assert.equal(categories.objectAt(0).get('id'), CD.idOne);
     assert.equal(categories.objectAt(1).get('id'), CD.idPlumbing);
@@ -654,7 +658,7 @@ test('ticket-category m2m is removed when server payload no longer reflects what
         subject.deserialize(response);
     });
     let original = store.find('ticket', TD.idOne);
-    let categories = original.get('categories');
+    let categories = original.get('sorted_categories');
     assert.equal(categories.get('length'), 3);
     assert.equal(categories.objectAt(0).get('id'), CD.idOne);
     assert.equal(categories.objectAt(1).get('id'), CD.idPlumbing);
@@ -676,7 +680,7 @@ test('if existing category is dirty, it will not push it into the store', (asser
         subject.deserialize(response);
     });
     let original = store.find('ticket', TD.idOne);
-    let categories = original.get('categories');
+    let categories = original.get('sorted_categories');
     assert.equal(categories.get('length'), 3);
     assert.equal(categories.objectAt(0).get('id'), CD.idOne);
     assert.equal(categories.objectAt(0).get('name'), 'wwwwhat');
@@ -690,15 +694,15 @@ test('if existing category is dirty, it will not push it into the store', (asser
 
 test('ticket-category m2m added even when ticket did not exist before the deserializer executes (single)', (assert) => {
     let response = TF.generate(TD.idOne);
-    delete response.categories[1];
+    response.categories.splice(1, 1);
     run(function() {
         subject.deserialize(response, TD.idOne);
     });
     ticket = store.find('ticket', TD.idOne);
     let categories = ticket.get('categories');
     assert.equal(categories.get('length'), 2);
-    assert.equal(categories.objectAt(0).get('id'), CD.idOne);
-    assert.equal(categories.objectAt(1).get('id'), CD.idPlumbingChild);
+    assert.equal(categories.objectAt(1).get('id'), CD.idOne);
+    assert.equal(categories.objectAt(0).get('id'), CD.idPlumbingChild);
     assert.ok(ticket.get('isNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(store.find('ticket-category').get('length'), 2);
@@ -707,13 +711,13 @@ test('ticket-category m2m added even when ticket did not exist before the deseri
 test('ticket-category m2m added even when ticket did not exist before the deserializer executes (list)', (assert) => {
     let json = TF.generate(TD.idOne);
     delete json.cc;
-    delete json.categories[1];
+    json.categories.splice(1, 1);
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     run(function() {
         subject.deserialize(response);
     });
     ticket = store.find('ticket', TD.idOne);
-    let categories = ticket.get('categories');
+    let categories = ticket.get('sorted_categories');
     assert.equal(categories.get('length'), 2);
     assert.equal(categories.objectAt(0).get('id'), CD.idOne);
     assert.equal(categories.objectAt(1).get('id'), CD.idPlumbingChild);

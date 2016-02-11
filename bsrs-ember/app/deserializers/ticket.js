@@ -10,41 +10,75 @@ var extract_attachments = function(model, store) {
     return model.attachments;
 };
 
-var extract_categories = function(model, store, category_deserializer) {
+var extract_categories = function(category_json, store, category_deserializer, ticket) {
     let server_sum = [];
-    let prevented_duplicate_m2m = [];
-    let all_ticket_categories = store.find('ticket-category');
-    model.categories.forEach((category) => {
-        let ticket_categories = all_ticket_categories.filter((m2m) => {
-            return m2m.get('category_pk') === category.id && m2m.get('ticket_pk') === model.id;
-        });
-        if(ticket_categories.length === 0) {
-            const pk = Ember.uuid();
-            server_sum.push(pk);
-            run(() => {
-                store.push('ticket-category', {id: pk, ticket_pk: model.id, category_pk: category.id});  
-                category.previous_children_fks = category.children_fks;
-                const check_category = store.find('category', category.id);
-                if(!check_category.get('content') || check_category.get('isNotDirtyOrRelatedNotDirty')){
-                    const new_category = store.push('category', category);
-                    new_category.save();
-                }
-            });
-        }else{
-            prevented_duplicate_m2m.push(ticket_categories[0].get('id'));
+    let to_push = [];
+    const category_ids = category_json.mapBy('id');
+    const ticket_categories = ticket.get('ticket_categories') || [];
+    const ticket_categories_pks = ticket_categories.mapBy('category_pk');
+    const ticket_id = ticket.get('id');
+    for (let i = category_json.length-1; i >= 0; i--){
+        const pk = Ember.uuid();
+        const cat = category_json[i];
+        cat.previous_children_fks = cat.children_fks;
+        let category;
+        const existing_category = store.find('category', cat.id);
+        if(!existing_category.get('content') || existing_category.get('isNotDirtyOrRelatedNotDirty')){
+            category = store.push('category', cat);
+            category.save();
         }
-    });
-    server_sum.push(...prevented_duplicate_m2m);
-    let m2m_to_remove = all_ticket_categories.filter((m2m) => {
-        return Ember.$.inArray(m2m.get('id'), server_sum) < 0 && m2m.get('ticket_pk') === model.id;
-    });
-    m2m_to_remove.forEach((m2m) => {
-        run(() => {
-            store.push('ticket-category', {id: m2m.get('id'), removed: true});
+        if(Ember.$.inArray(cat.id, ticket_categories_pks) < 0){
+            to_push.push({id: pk, ticket_pk: ticket_id, category_pk: cat.id});
+        }
+    }
+    run(() => {
+        ticket_categories.forEach((m2m) => {
+            if(Ember.$.inArray(m2m.get('category_pk'), category_ids) > -1){
+                server_sum.push(m2m.id);
+                return;
+            }else if(Ember.$.inArray(m2m.get('category_pk'), category_ids) < 0){
+               store.push('ticket-category', {id: m2m.get('id'), removed: true}); 
+            }
         });
+        to_push.forEach((m2m) => {
+            store.push('ticket-category', m2m);
+            server_sum.push(m2m.id);
+        });
+        store.push('ticket', {id: ticket.get('id'), ticket_categories_fks: server_sum});
     });
-    delete model.categories;
-    return server_sum;
+    // model.categories.forEach((category) => {
+    //     //find all join models for this ticket
+    //     let ticket_categories = all_ticket_categories.filter((m2m) => {
+    //         return m2m.get('category_pk') === category.id && m2m.get('ticket_pk') === model.id;
+    //     });
+    //     //if not in store, setup join models and assign fks to previous children_fks
+    //     if(ticket_categories.length === 0) {
+    //         const pk = Ember.uuid();
+    //         server_sum.push(pk);
+    //         run(() => {
+    //             store.push('ticket-category', {id: pk, ticket_pk: model.id, category_pk: category.id});  
+    //             category.previous_children_fks = category.children_fks;
+    //             const check_category = store.find('category', category.id);
+    //             if(!check_category.get('content') || check_category.get('isNotDirtyOrRelatedNotDirty')){
+    //                 const new_category = store.push('category', category);
+    //                 new_category.save();
+    //             }
+    //         });
+    //     }else{
+    //         prevented_duplicate_m2m.push(ticket_categories[0].get('id'));
+    //     }
+    // });
+    // server_sum.push(...prevented_duplicate_m2m);
+    // let m2m_to_remove = all_ticket_categories.filter((m2m) => {
+    //     return Ember.$.inArray(m2m.get('id'), server_sum) < 0 && m2m.get('ticket_pk') === model.id;
+    // });
+    // m2m_to_remove.forEach((m2m) => {
+    //     run(() => {
+    //         store.push('ticket-category', {id: m2m.get('id'), removed: true});
+    //     });
+    // });
+    // delete model.categories;
+    // return server_sum;
 };
 
 var extract_assignee = function(assignee_json, store, ticket_model) {
@@ -169,7 +203,7 @@ var TicketDeserializer = Ember.Object.extend({
             response.priority_fk = extract_ticket_priority(response, store);
             response.location_fk = extract_ticket_location(response, store, location_deserializer);
             // response.ticket_people_fks = extract_cc(response, store);
-            response.ticket_categories_fks = extract_categories(response, store, category_deserializer);
+            // response.ticket_categories_fks = extract_categories(response, store, category_deserializer);
             let cc_json = response.cc;
             delete response.cc;
             let assignee_json = response.assignee;
@@ -177,6 +211,8 @@ var TicketDeserializer = Ember.Object.extend({
             response.ticket_attachments_fks = extract_attachments(response, store);
             response.previous_attachments_fks = response.ticket_attachments_fks;
             delete response.attachments;
+            const categories_json = response.categories;
+            delete response.categories;
             response.detail = true;
             let ticket = store.push('ticket', response);
             if (cc_json) {
@@ -185,6 +221,7 @@ var TicketDeserializer = Ember.Object.extend({
             if (assignee_json) {
                 extract_assignee(assignee_json, store, ticket);
             }
+            extract_categories(categories_json, store, category_deserializer, ticket);
             ticket.save();
         }
     },
@@ -197,14 +234,16 @@ var TicketDeserializer = Ember.Object.extend({
                 model.status_fk = extract_ticket_status(model, store);
                 model.priority_fk = extract_ticket_priority(model, store);
                 model.location_fk = extract_ticket_location(model, store, location_deserializer);
-                model.ticket_categories_fks = extract_categories(model, store, category_deserializer);
                 let assignee_json = model.assignee;
                 //TODO: deserialize test this
                 model.assignee_fk = model.assignee.id;
                 delete model.assignee;
+                const categories_json = model.categories;
+                delete model.categories;
                 model.grid = true;
                 let ticket = store.push('ticket', model);
                 extract_assignee(assignee_json, store, ticket);
+                extract_categories(categories_json, store, category_deserializer, ticket);
                 ticket.save();
                 return_array.pushObject(ticket);
             }else{
