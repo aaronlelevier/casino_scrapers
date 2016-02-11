@@ -24,6 +24,14 @@ class SettingListSerializer(BaseCreateSerializer):
         fields = ('id', 'name',)
 
 
+class SettingCreateSerializer(BaseCreateSerializer):
+
+    class Meta:
+        model = Setting
+        validators = [SettingsValidator(model)]
+        fields = ('id', 'name',)
+
+
 class SettingSerializer(SettingSerializerMixin, BaseCreateSerializer):
 
     class Meta:

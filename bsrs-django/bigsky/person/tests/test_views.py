@@ -123,10 +123,6 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
 
 class RoleSettingTests(RoleSetupMixin, APITestCase):
 
-    def setUp(self):
-        super(RoleSettingTests, self).setUp()
-        self.maxDiff = None
-
     def test_list(self):
         response = self.client.get('/api/admin/roles/')
 
@@ -174,46 +170,10 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         }
 
         response = self.client.post('/api/admin/roles/', raw_data, format='json')
-
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings'], DEFAULT_ROLE_SETTINGS)
 
-    def test_create__with_custom(self):
-        raw_data = {
-            'id': str(uuid.uuid4()),
-            'name': 'new role yall',
-            'settings': {'welcome_text': {'value': 'new dashboard text'}}
-        }
-
-        response = self.client.post('/api/admin/roles/', raw_data, format='json')
-
-        self.assertEqual(response.status_code, 201)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(DEFAULT_ROLE_SETTINGS), len(data['settings']))
-        self.assertEqual(
-            raw_data['settings']['welcome_text']['value'],
-            data['settings']['welcome_text']['value']
-        )
-        self.assertNotIn('company_name', data['settings'])
-
-    def test_create__override_general_setting(self):
-        company_name = 'foo'
-        raw_data = {
-            'id': str(uuid.uuid4()),
-            'name': 'new role yall',
-            'settings': {'company_name': {'value': company_name}}
-        }
-
-        response = self.client.post('/api/admin/roles/', raw_data, format='json')
-
-        self.assertEqual(response.status_code, 201)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings']['company_name']['value'], company_name)
-        self.assertEqual(data['settings']['company_name']['type'], DEFAULT_GENERAL_SETTINGS['company_name']['type'])
-        self.assertEqual(data['settings']['company_name']['required'], DEFAULT_GENERAL_SETTINGS['company_name']['required'])
-        self.assertEqual(data['settings']['company_name']['inherited'], False)
-        self.assertEqual(data['settings']['company_name']['inherited_from'], 'role')
+        self.assertNotIn('settings', data)
 
     def test_update(self):
         role = create_role()

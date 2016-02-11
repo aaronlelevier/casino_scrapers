@@ -1,5 +1,3 @@
-import copy
-
 from rest_framework import serializers
 
 from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer
@@ -23,7 +21,16 @@ class RoleSerializer(BaseCreateSerializer):
         fields = ('id', 'name', 'role_type', 'location_level')
 
 
-class RoleCreateSerializer(SettingSerializerMixin, BaseCreateSerializer):
+class RoleCreateSerializer(BaseCreateSerializer):
+    "Serializer used for create ``Role`` API Endpoint operations."
+
+    class Meta:
+        model = Role
+        validators = [RoleCategoryValidator(), SettingsValidator(model)]
+        fields = ('id', 'name', 'role_type', 'location_level', 'categories',)
+
+
+class RoleUpdateSerializer(SettingSerializerMixin, BaseCreateSerializer):
     "Serializer used for create ``Role`` API Endpoint operations."
 
     class Meta:

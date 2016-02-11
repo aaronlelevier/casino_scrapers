@@ -1,10 +1,9 @@
 from django.test import TestCase
 
-from generic.models import Attachment, Setting
+from generic.models import Setting
 from generic.settings import DEFAULT_GENERAL_SETTINGS
 from generic.tests import factory
 from person.tests.factory import create_single_person
-from ticket.tests.factory import create_ticket
 
 
 class FactoryTests(TestCase):

@@ -17,7 +17,6 @@ from person.models import Person, PersonStatus, Role
 from person.settings import DEFAULT_ROLE_SETTINGS
 from person.tests.factory import PASSWORD, create_person, create_role, create_single_person
 from translation.models import Locale
-from translation.tests.factory import create_locales
 from utils import create
 from utils.tests.test_validators import (DIGITS, NO_DIGITS, UPPER_CHARS, NO_UPPER_CHARS,
     LOWER_CHARS, NO_LOWER_CHARS, SPECIAL_CHARS, NO_SPECIAL_CHARS)

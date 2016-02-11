@@ -19,7 +19,7 @@ from rest_framework.views import APIView
 
 from generic.models import SavedSearch, Attachment, Setting
 from generic.serializers import (SavedSearchSerializer, AttachmentSerializer,
-    SettingSerializer, SettingListSerializer)
+    SettingSerializer, SettingCreateSerializer, SettingListSerializer)
 from utils.views import BaseModelViewSet
 
 
@@ -129,5 +129,7 @@ class SettingViewSet(BaseModelViewSet):
         """
         if self.action == 'list':
             return SettingListSerializer
+        elif self.action == 'create':
+            return SettingCreateSerializer
         else:
             return SettingSerializer

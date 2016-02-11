@@ -1,4 +1,3 @@
-import json
 import uuid
 
 from model_mommy import mommy
@@ -10,7 +9,6 @@ from location.tests.factory import create_location
 from person.models import Person
 from person.serializers import RoleCreateSerializer, PersonUpdateSerializer
 from person.tests.factory import PASSWORD, create_single_person, create_role
-from person.tests.mixins import RoleSetupMixin
 
 
 class RoleLocationValidatorTests(APITestCase):

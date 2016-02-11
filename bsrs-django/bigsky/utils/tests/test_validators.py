@@ -8,6 +8,7 @@ from rest_framework.test import APITestCase
 from location.tests.factory import create_locations
 from location.models import Location
 from location.serializers import LocationUpdateSerializer
+from person.serializers import RoleUpdateSerializer
 from person.tests.factory import create_person, create_single_person, PASSWORD
 from utils.validators import (regex_check_contains, contains_digit, contains_upper_char,
     contains_lower_char, contains_special_char, contains_no_whitespaces)
@@ -52,6 +53,7 @@ class SettingsValidatorTests(APITestCase):
 
     def setUp(self):
         self.person = create_single_person()
+        self.role = self.person.role
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
@@ -59,18 +61,17 @@ class SettingsValidatorTests(APITestCase):
 
     def test_create__settings__value_wrong_type(self):
         # the supplied values are all the wrong type
-        role_data = {
-            "id": str(uuid.uuid4()),
-            "name": "Admin",
-            "settings": {
-                "create_all": {'value': 0},
-                "welcome_text": {'value': 0},
-                "login_grace": {'value': 'foo'},
-                "modules": {'value': 0}
-            }
+        serializer = RoleUpdateSerializer(self.role)
+        role_data = serializer.data
+        role_data["settings"] = {
+            "create_all": {'value': 0},
+            "welcome_text": {'value': 0},
+            "login_grace": {'value': 'foo'},
+            "modules": {'value': 0}
         }
 
-        response = self.client.post('/api/admin/roles/', role_data, format='json')
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
+            role_data, format='json')
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(json.loads(response.content.decode('utf8'))['create_all'], ['Must be a bool'])

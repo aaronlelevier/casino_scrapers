@@ -1,10 +1,9 @@
 from django.utils.translation import ugettext_lazy as _
 
-from rest_framework.exceptions import APIException, ValidationError
+from rest_framework.exceptions import ValidationError
 
 from location.models import Location
 from person.models import Role
-from person.settings import DEFAULT_ROLE_SETTINGS
 
 
 class RoleLocationValidator(object):

@@ -13,56 +13,6 @@ from person.tests.mixins import RoleSetupMixin
 
 class SettingSerializerMixinTests(RoleSetupMixin, APITestCase):
 
-    def test_create__settings(self):
-        role_data = {
-            "id": str(uuid.uuid4()),
-            "name": "Admin",
-            "settings": {
-                "welcome_text": {"value": "Hello world"}
-            }
-        }
-
-        response = self.client.post('/api/admin/roles/', role_data, format='json')
-
-        self.assertEqual(response.status_code, 201)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['id'], role_data['id'])
-        self.assertEqual(data['settings']['welcome_text']['value'], role_data['settings']['welcome_text']['value'])
-        self.assertEqual(data['settings']['welcome_text']['type'], 'str')
-        self.assertEqual(data['settings']['welcome_text']['required'], False)
-        # other defaults should be returned as well
-        self.assertEqual(data['settings']['create_all']['value'], DEFAULT_ROLE_SETTINGS['create_all']['value'])
-        self.assertEqual(data['settings']['create_all']['type'], 'bool')
-        self.assertEqual(data['settings']['create_all']['required'], True)
-        self.assertEqual(data['settings']['modules']['value'], DEFAULT_ROLE_SETTINGS['modules']['value'])
-        self.assertEqual(data['settings']['modules']['type'], 'list')
-        self.assertEqual(data['settings']['modules']['required'], True)
-        self.assertEqual(data['settings']['login_grace']['value'], DEFAULT_ROLE_SETTINGS['login_grace']['value'])
-        self.assertEqual(data['settings']['login_grace']['type'], 'int')
-        self.assertEqual(data['settings']['login_grace']['required'], True)
-
-    def test_create__settings__required_value_missing(self):
-        """
-        If the a required settings value is missing, use the default setting.
-        """
-        role_data = {
-            "id": str(uuid.uuid4()),
-            "name": "Admin",
-            "settings": {
-                "create_all": {}
-            }
-        }
-
-        response = self.client.post('/api/admin/roles/', role_data, format='json')
-
-        self.assertEqual(response.status_code, 201)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['id'], role_data['id'])
-        role = Role.objects.get(id=role_data['id'])
-        self.assertEqual(role.settings['create_all']['value'], DEFAULT_ROLE_SETTINGS['create_all']['value'])
-        self.assertEqual(role.settings['create_all']['type'], 'bool')
-        self.assertEqual(role.settings['create_all']['required'], True)
-
     def test_update_settings_defaults(self):
         response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
             self.data, format='json')

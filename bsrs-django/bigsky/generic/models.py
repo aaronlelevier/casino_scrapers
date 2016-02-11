@@ -1,4 +1,3 @@
-import copy
 import os
 
 from django.db import models
@@ -9,7 +8,6 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from PIL import Image
 from rest_framework.exceptions import ValidationError
 
-from generic.settings import DEFAULT_GENERAL_SETTINGS
 from ticket.models import Ticket
 from utils.models import BaseModel, BaseManager, BaseNameModel, SettingMixin
 

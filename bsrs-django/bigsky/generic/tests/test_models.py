@@ -1,4 +1,3 @@
-import copy
 import os
 from os.path import dirname, join
 
@@ -11,9 +10,7 @@ from model_mommy import mommy
 from rest_framework.exceptions import ValidationError
 
 from category.tests.factory import create_categories
-from generic.models import Attachment, SavedSearch, Setting
-from generic.settings import DEFAULT_GENERAL_SETTINGS
-from person.models import Role
+from generic.models import Attachment, SavedSearch
 from person.tests.factory import create_single_person
 from ticket.tests.factory import create_ticket
 from utils.tests.helpers import remove_attachment_test_files

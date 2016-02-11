@@ -98,11 +98,6 @@ class RemovePasswordSerializerMixin(object):
 
 class SettingSerializerMixin(object):
 
-    def create(self, validated_data):
-        all_settings = self.Meta.model.get_all_class_settings()
-        validated_data = self._validate_and_update_settings(all_settings, validated_data)
-        return super(SettingSerializerMixin, self).create(validated_data)
-
     def update(self, instance, validated_data):
         all_settings = instance.get_all_instance_settings()
         validated_data = self._validate_and_update_settings(all_settings, validated_data)

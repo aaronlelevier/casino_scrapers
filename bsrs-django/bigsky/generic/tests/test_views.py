@@ -11,7 +11,7 @@ from django.apps import apps
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
-from generic.models import SavedSearch, Attachment, Setting
+from generic.models import SavedSearch, Attachment
 from generic.serializers import SavedSearchSerializer, SettingSerializer
 from generic.settings import DEFAULT_GENERAL_SETTINGS
 from generic.tests.factory import create_general_setting
@@ -319,7 +319,7 @@ class SettingTests(APITestCase):
             for field in ['value', 'type', 'required', 'inherited', 'inherited_from']:
                 self.assertEqual(data['settings'][key][field], DEFAULT_GENERAL_SETTINGS[key][field])
 
-    def test_create__general_defaults(self):
+    def test_create__does_not_have_settings(self):
         raw_data = {
             'id': str(uuid.uuid4()),
             'name': 'general'
@@ -331,47 +331,7 @@ class SettingTests(APITestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(raw_data['id'], data['id'])
         self.assertEqual(raw_data['name'], data['name'])
-        self.assertEqual(DEFAULT_GENERAL_SETTINGS, data['settings'])
-
-    def test_create__defaults_not_found(self):
-        raw_data = {
-            'id': str(uuid.uuid4()),
-            'name': 'random name that does not have pre-configured settings'
-        }
-
-        response = self.client.post('/api/admin/settings/', raw_data, format='json')
-        data = json.loads(response.content.decode('utf8'))
-
-        self.assertEqual(response.status_code, 201)
-        self.assertEqual(raw_data['id'], data['id'])
-        self.assertEqual(raw_data['name'], data['name'])
-        self.assertEqual({}, data['settings'])
-        # db check
-        db_setting = Setting.objects.get(id=data['id'])
-        self.assertEqual({}, db_setting.settings)
-
-    def test_create__override_a_default(self):
-        company_name = "Aaron's Pianos"
-        raw_data = {
-            'id': str(uuid.uuid4()),
-            'name': 'general',
-            'settings': {'company_name': {'value': company_name}}
-        }
-
-        response = self.client.post('/api/admin/settings/', raw_data, format='json')
-        data = json.loads(response.content.decode('utf8'))
-
-        self.assertEqual(response.status_code, 201)
-        # override default 'value', but other keys in the 'company_name' stay the same
-        self.assertEqual(data['settings']['company_name']['value'], company_name)
-        self.assertEqual(data['settings']['company_name']['type'], DEFAULT_GENERAL_SETTINGS['company_name']['type'])
-        self.assertEqual(data['settings']['company_name']['required'], DEFAULT_GENERAL_SETTINGS['company_name']['required'])
-        self.assertEqual(data['settings']['company_name']['inherited'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited'])
-        self.assertEqual(data['settings']['company_name']['inherited_from'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited_from'])
-        # others
-        self.assertEqual(data['settings']['welcome_text']['value'], DEFAULT_GENERAL_SETTINGS['welcome_text']['value'])
-        self.assertEqual(data['settings']['create_all']['value'], DEFAULT_GENERAL_SETTINGS['create_all']['value'])
-        self.assertEqual(data['settings']['login_grace']['value'], DEFAULT_GENERAL_SETTINGS['login_grace']['value'])
+        self.assertNotIn('settings', data)
 
     def test_update(self):
         new_company_name = "Bob's Pianos"
