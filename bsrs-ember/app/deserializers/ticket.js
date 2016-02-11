@@ -28,7 +28,10 @@ var extract_categories = function(category_json, store, category_deserializer, t
             category.save();
         }
         if(Ember.$.inArray(cat.id, ticket_categories_pks) < 0){
-            to_push.push({id: pk, ticket_pk: ticket_id, category_pk: cat.id});
+            server_sum.push(pk);
+            run(() => {
+                store.push('ticket-category', {id: pk, ticket_pk: ticket_id, category_pk: cat.id});
+            });
         }
     }
     run(() => {
@@ -40,11 +43,7 @@ var extract_categories = function(category_json, store, category_deserializer, t
                store.push('ticket-category', {id: m2m.get('id'), removed: true}); 
             }
         });
-        to_push.forEach((m2m) => {
-            store.push('ticket-category', m2m);
-            server_sum.push(m2m.id);
-        });
-        store.push('ticket', {id: ticket.get('id'), ticket_categories_fks: server_sum});
+        store.push('ticket', {id: ticket.get('id'), ticket_categories_fks: server_sum.uniq()});
     });
     // model.categories.forEach((category) => {
     //     //find all join models for this ticket
