@@ -296,7 +296,7 @@ test('ticket priority will be updated when server returns different priority (li
     ticket_priority_two = store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityOne, tickets: []});
     let json = TF.generate(TD.idOne);
     delete json.cc;
-    json.priority = TD.priorityTwoId;
+    json.priority_fk = TD.priorityTwoId;
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     run(function() {
@@ -313,7 +313,7 @@ test('ticket priority will be updated when server returns different priority (de
     let ticket_priority_two;
     ticket_priority_two = store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityOne, tickets: []});
     let json = TF.generate(TD.idOne);
-    json.priority = TD.priorityTwoId;
+    json.priority_fk = TD.priorityTwoId;
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     run(function() {
         subject.deserialize(json, ticket.get('id'));
@@ -379,7 +379,7 @@ test('ticket status will be updated when server returns different status (list)'
     ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne]});
     let json = TF.generate(TD.idOne);
     delete json.cc;
-    json.status = TD.statusTwoId;
+    json.status_fk = TD.statusTwoId;
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     run(function() {
@@ -400,7 +400,7 @@ test('newly inserted ticket will have non dirty status when deserialize list exe
     ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne]});
     let json = TF.generate(TD.idOne);
     delete json.cc;
-    json.status = TD.statusTwoId;
+    json.status_fk = TD.statusTwoId;
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     run(function() {
         subject.deserialize(response);

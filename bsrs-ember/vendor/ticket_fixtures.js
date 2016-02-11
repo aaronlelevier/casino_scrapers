@@ -31,8 +31,8 @@ var BSRS_TICKET_FACTORY = (function() {
             id: id,
             number: this.ticket.numberOne,
             request: this.ticket.requestOne,
-            status: this.ticket.statusOneId,
-            priority: this.ticket.priorityOneId,
+            status_fk: this.ticket.statusOneId,
+            priority_fk: this.ticket.priorityOneId,
             cc: [this.people_fixtures.get()],
             categories: [categories[0], categories[1], categories[2]],
             assignee: this.people_fixtures.get(),
@@ -72,8 +72,8 @@ var BSRS_TICKET_FACTORY = (function() {
             var ticket = this.generate(uuid + i);
             ticket.number = 'gone' + i;
             ticket.request = 'ape' + i;
-            ticket.priority = this.ticket.priorityTwoId;
-            ticket.status = this.ticket.statusTwoId;
+            ticket.priority_fk = this.ticket.priorityTwoId;
+            ticket.status_fk = this.ticket.statusTwoId;
             ticket.location = this.location_fixtures.get(this.ticket.locationTwoId, this.ticket.locationTwo);
             ticket.assignee = this.people_fixtures.get(this.ticket.assigneeTwoId, this.ticket.assigneeTwo, this.ticket.assigneeTwo);
             ticket.categories = [unused_category];

@@ -165,10 +165,6 @@ var TicketDeserializer = Ember.Object.extend({
             const categories_json = response.categories;
             delete response.categories;
             response.detail = true;
-            response.priority_fk = response.priority;
-            delete response.priority;
-            response.status_fk = response.status;
-            delete response.status;
             let ticket = store.push('ticket', response);
             const status = extract_ticket_status(response.status_fk, store, ticket);
             const priority = extract_ticket_priority(response.priority_fk, store, ticket);
@@ -211,10 +207,6 @@ var TicketDeserializer = Ember.Object.extend({
                 model.location_fk = extract_ticket_location(model, store, location_deserializer);
                 let assignee_json = model.assignee;
                 //TODO: deserialize test this
-                model.priority_fk = model.priority;
-                delete model.priority;
-                model.status_fk = model.status;
-                delete model.status;
                 model.assignee_fk = model.assignee.id;
                 delete model.assignee;
                 const categories_json = model.categories;
