@@ -191,7 +191,24 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
             data['settings']['welcome_text']['value']
         )
 
-    def test_update__general_settings(self):
+    def test_update__general_settings_no_change(self):
+        role = create_role()
+        serializer = RoleCreateSerializer(role)
+        raw_data = serializer.data
+        raw_data['settings'] = {'company_name': DEFAULT_GENERAL_SETTINGS['company_name']['value']}
+        response = self.client.put('/api/admin/roles/{}/'.format(role.id), raw_data, format='json')
+
+        response = self.client.get('/api/admin/roles/{}/'.format(role.id))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings']['company_name']['value'], DEFAULT_GENERAL_SETTINGS['company_name']['value'])
+        self.assertEqual(data['settings']['company_name']['type'], DEFAULT_GENERAL_SETTINGS['company_name']['type'])
+        self.assertEqual(data['settings']['company_name']['required'], DEFAULT_GENERAL_SETTINGS['company_name']['required'])
+        self.assertEqual(data['settings']['company_name']['inherited'], True)
+        self.assertEqual(data['settings']['company_name']['inherited_from'], 'general')
+
+    def test_update__override_general_settings(self):
         new_company_name = 'bar'
         role = create_role()
         # initial Detail

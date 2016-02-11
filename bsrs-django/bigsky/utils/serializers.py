@@ -115,7 +115,7 @@ class SettingSerializerMixin(object):
                 new_value = validated_data['settings'][k]
                 # to defend agains key's w/ no values that don't match the req'd type
                 # allow 'False' b/c still want to catch Boolean False's
-                if new_value is not None:
+                if new_value is not None and new_value != all_settings[k]['value']:
                     final_settings[k] = all_settings[k]
                     final_settings[k].update({
                         'value': new_value,
