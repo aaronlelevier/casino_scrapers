@@ -51,6 +51,9 @@ test('ticket assignee will be deserialized into its own store when deserialize d
     });
     ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(ticket.get('categoriesIsNotDirty'));
+    assert.equal(ticket.get('assigneeIsNotDirty'));
+    assert.ok(ticket.get('assignee_fk'));
     assert.equal(ticket.get('assignee').get('id'), PD.id);
 });
 
@@ -530,14 +533,22 @@ test('ticket-category m2m is set up correctly using deserialize single (starting
     });
     let original = store.find('ticket', TD.idOne);
     categories = original.get('sorted_categories');
+    let m2m_categories = original.get('ticket_categories');
+    let m2m_fks = original.get('ticket_categories_fks');
+    let m2m_ids = original.get('ticket_categories_ids');
     assert.equal(categories.get('length'), 3);
+    assert.equal(m2m_categories.get('length'), 3);
+    assert.equal(m2m_fks.get('length'), 3);
+    assert.equal(m2m_ids.get('length'), 3);
     assert.equal(categories.objectAt(0).get('id'), CD.idOne);
     assert.equal(categories.objectAt(0).get('name'), CD.nameOne);
     assert.ok(!categories.objectAt(0).get('parent_id'));
     assert.equal(categories.objectAt(1).get('id'), CD.idPlumbing);
     assert.equal(categories.objectAt(1).get('name'), CD.nameRepairChild);
     assert.equal(categories.objectAt(1).get('parent_id'), CD.idOne);
-    assert.equal(store.find('ticket-category').get('length'), 3);
+    assert.equal(categories.objectAt(2).get('id'), CD.idPlumbingChild);
+    const ticket_cat = store.find('ticket-category');
+    assert.equal(ticket_cat.get('length'), 3);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
 });
