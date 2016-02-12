@@ -93,7 +93,7 @@ var extract_ticket_location = function(location_json, store, ticket) {
         //if location in store already and need to add to tickets array
         let location = store.find('location', location_json.id);
         if(!location.get('id')) { 
-            store.push('location', {id: location_json.id, location_level_fk: location_level_fk});
+            store.push('location', location_json);
         }
         let existing_tickets = location.get('tickets') || [];
         store.push('location', {id: location.get('id'), tickets: existing_tickets.concat(ticket.get('id')).uniq()});
@@ -150,10 +150,8 @@ var TicketDeserializer = Ember.Object.extend({
             let cc_json = response.cc;
             delete response.cc;
             let assignee_json = response.assignee;
-            if(assignee_json){
-                response.assignee_fk = response.assignee.id;
-                delete response.assignee;
-            }
+            response.assignee_fk = response.assignee ? response.assignee.id : undefined;
+            delete response.assignee;
             response.ticket_attachments_fks = extract_attachments(response, store);
             response.previous_attachments_fks = response.ticket_attachments_fks;
             delete response.attachments;

@@ -11,7 +11,7 @@ var TICKET_URL = PREFIX + '/tickets/';
 var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
     uuid: injectUUID('uuid'),
     type: Ember.computed(function() { return 'ticket'; }),
-    type_related_m2m: Ember.computed(function() { return ['ticket-person', 'ticket-category']; }),
+    type_related_m2m: Ember.computed(function() { return ['ticket-category']; }),
     // type_related_join: Ember.computed(function() { return ['ticket-status', 'ticket-priority']; }),
     // related_join_pk_mapping: Ember.computed(function() { return 'tickets'; }),
     related_m2m_pk_mapping: Ember.computed(function() { return 'ticket_pk'; }),

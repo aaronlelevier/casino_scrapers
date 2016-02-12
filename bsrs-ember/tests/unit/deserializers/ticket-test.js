@@ -51,10 +51,8 @@ test('ticket assignee will be deserialized into its own store when deserialize d
     });
     ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    assert.ok(ticket.get('categoriesIsNotDirty'));
-    assert.equal(ticket.get('assigneeIsNotDirty'));
-    assert.ok(ticket.get('assignee_fk'));
-    assert.equal(ticket.get('assignee').get('id'), PD.id);
+    assert.equal(ticket.get('assignee_fk'), PD.idOne);
+    assert.equal(ticket.get('assignee').get('id'), PD.idOne);
 });
 
 test('ticket assignee will be deserialized into its own store when deserialize detail is invoked (with existing assignee)(detail)', (assert) => {
