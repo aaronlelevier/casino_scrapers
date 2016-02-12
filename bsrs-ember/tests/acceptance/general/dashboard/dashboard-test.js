@@ -7,7 +7,7 @@ import config from 'bsrs-ember/config/environment';
 
 var application, store, endpoint;
 
-module('Acceptance | admin settings layout test', {
+module('Acceptance | dashboard', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -17,6 +17,9 @@ module('Acceptance | admin settings layout test', {
     }
 });
 
-test('aaron admin panel displays correct headers and section headers', function(assert) {
-    assert.equal(find('.t-admin-h1').text(), 'Welcome');
+test('welcome h1 header', function(assert) {
+    visit('/dashboard');
+    andThen(() => {
+        assert.equal(find('.t-admin-h1').text(), 'Welcome');
+    });
 });

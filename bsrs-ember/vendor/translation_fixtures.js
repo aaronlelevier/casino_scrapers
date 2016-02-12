@@ -187,8 +187,8 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'crud.delete.button':'Delete',
                     'crud.delete.confirm':'Are you sure you want to delete {{model}} \'{{record}}\'?',
                     'crud.delete.error':'Error deleting {{model}}.',
-                    'crud.discard_changes':'Abandon Changes',
                     'crud.discard_changes_confirm':'You have unsaved changes. Are you sure?',
+                    'crud.discard_changes':'Abandon Changes',
                     'crud.no':'No',
                     'crud.restore.button':'Restore',
                     'crud.restore.error':'Error restoring {{model}}',
@@ -199,6 +199,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'crud.titles.edit':'Edit {{model}}',
                     'crud.titles.new':'New {{model}}',
                     'crud.yes':'Yes',
+                    'dashboard.welcome':'Welcome',
                     'grid.filter':'Filter',
                     'grid.filterset_name':'Name your filter',
                     'grid.per_page':'{{size}} per page',
@@ -250,7 +251,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'ticket.status.unsatisfactory_completion':'Unsatisfactory Completion',
                     'upload.progress':'Progress',
                     'validation.invalid':'Invalid',
-                    'validation.valid':'Valid'
+                    'validation.valid':'Valid',
                 }
             }
             break;

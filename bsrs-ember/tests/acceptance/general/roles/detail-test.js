@@ -15,6 +15,8 @@ import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/role';
+import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
+import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -28,7 +30,7 @@ const SPACEBAR = {keyCode: 32};
 const CATEGORY = '.t-role-category-select > .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-select-options';
 
-let application, store, list_xhr, endpoint, detail_data, url, run = Ember.run;
+let application, store, list_xhr, endpoint, detail_data, url, translations, run = Ember.run;
 
 module('Acceptance | role-detail', {
     beforeEach() {
@@ -42,6 +44,7 @@ module('Acceptance | role-detail', {
         run(function() {
             store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
         });
+        translations = BSRS_TRANSLATION_FACTORY.generate('en')['en'];
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -338,5 +341,15 @@ test('settings update and redirected to list with clean model', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
         assert.ok(!role.get('isDirty'));
+    });
+});
+
+test('aaron settings - translation keys', (assert) => {
+    clearxhr(list_xhr);
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(getLabelText('welcome_text'), translations['admin.setting.welcome_text']);
+        assert.equal(getLabelText('login_grace'), translations['admin.setting.login_grace']);
+        assert.ok(find(`span:contains('${translations['admin.settings.create_all']}')`));
     });
 });

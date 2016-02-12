@@ -9,14 +9,15 @@ import SD from 'bsrs-ember/vendor/defaults/setting';
 import SF from 'bsrs-ember/vendor/setting_fixtures';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import {setting_payload, setting_payload_other} from 'bsrs-ember/tests/helpers/payloads/general-settings';
-
+import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
+import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_ADMIN_URL = 'admin';
 const BASE_SETTINGS_URL = BASEURLS.base_setting_url;
 const DETAIL_URL = BASE_SETTINGS_URL + '/' + SD.id;
 
-var application, store, endpoint, setting_data, detail_xhr, url;
+var application, store, endpoint, setting_data, detail_xhr, url, translations;
 
 module('Acceptance | general settings', {
     beforeEach() {
@@ -26,6 +27,7 @@ module('Acceptance | general settings', {
         setting_data = SF.detail();
         detail_xhr = xhr(endpoint, 'GET', null, {}, 200, setting_data);
         url = `${PREFIX}${DETAIL_URL}/`;
+        translations = BSRS_TRANSLATION_FACTORY.generate('en')['en'];
     },
     afterEach() {
        Ember.run(application, 'destroy');
@@ -58,5 +60,15 @@ test('general settings title and fields populated correctly', function(assert) {
         assert.equal(currentURL(), '/' + BASE_ADMIN_URL);
         let setting = store.find('setting', SD.id);
         assert.ok(setting.get('isNotDirty'));
+    });
+});
+
+test('translations - for labels', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(getLabelText('welcome_text'), translations['admin.setting.welcome_text']);
+        assert.equal(getLabelText('login_grace'), translations['admin.setting.login_grace']);
+        assert.equal(getLabelText('company_name'), translations['admin.setting.company_name']);
+        assert.ok(find(`span:contains('${translations['admin.settings.create_all']}')`));
     });
 });
