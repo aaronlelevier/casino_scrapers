@@ -11,6 +11,9 @@ var CategoriesMixin = Ember.Mixin.create({
         }).join(' &#8226; ');
         return Ember.String.htmlSafe(names);
     }),
+    category_names_no_filter: Ember.computed(function() {
+        return this.get('category_names'); 
+    }),
     construct_category_tree(category, child_nodes=[]) {
         //this method is used for on the fly validation check to see if at end of cat tree
         child_nodes.push(category);

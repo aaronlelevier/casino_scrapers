@@ -58,7 +58,7 @@ export default GridViewComponent.extend({
             classNames: ['ticket-assignee']
         },
         {
-            field: 'category_names',
+            field: 'category_names_no_filter',
             headerLabel: 'ticket.label.category-name',
             headerIsTranslatable: true,
             classNames: ['ticket-category']
