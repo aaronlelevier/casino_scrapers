@@ -401,11 +401,13 @@ test('settings', (assert) => {
     var welcome_text = 'hi';
     var create_all = true;
     var login_grace = 2;
-    role = store.push('role', {id: RD.idOne, welcome_text, create_all, login_grace});
+    var company_name = "Andys Piano";
+    role = store.push('role', {id: RD.idOne, welcome_text, create_all, login_grace, company_name});
     var settings = role.get('settings');
     assert.equal(settings.welcome_text, welcome_text);
     assert.equal(settings.create_all, create_all);
     assert.equal(settings.login_grace, login_grace);
+    assert.equal(settings.company_name, company_name);
 });
 
 test('serialize', (assert) => {

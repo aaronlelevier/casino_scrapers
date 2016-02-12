@@ -30,7 +30,7 @@ const SPACEBAR = {keyCode: 32};
 const CATEGORY = '.t-role-category-select > .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-select-options';
 
-let application, store, list_xhr, endpoint, detail_data, url, translations, run = Ember.run;
+let application, store, list_xhr, detail_xhr, endpoint, detail_data, url, translations, run = Ember.run;
 
 module('Acceptance | role-detail', {
     beforeEach() {
@@ -39,7 +39,7 @@ module('Acceptance | role-detail', {
         endpoint = PREFIX + BASE_URL + '/';
         detail_data = RF.detail(RD.idOne);
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, RF.list());
-        xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
+        detail_xhr = xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
         url = `${PREFIX}${DETAIL_URL}/`;
         run(function() {
             store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
@@ -344,12 +344,25 @@ test('settings update and redirected to list with clean model', (assert) => {
     });
 });
 
-test('aaron settings - translation keys', (assert) => {
+test('settings - translation keys', (assert) => {
     clearxhr(list_xhr);
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(getLabelText('welcome_text'), translations['admin.setting.welcome_text']);
         assert.equal(getLabelText('login_grace'), translations['admin.setting.login_grace']);
         assert.ok(find(`span:contains('${translations['admin.settings.create_all']}')`));
+    });
+});
+
+test('settings - inherited placeholder text', (assert) => {
+    clearxhr(list_xhr);
+    clearxhr(detail_xhr);
+    var company_name = 'foo';
+    detail_data = RF.detail(RD.idOne, null, {company_name: company_name});
+    xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
+    visit(DETAIL_URL);
+    andThen(() => {
+        return pauseTest();
+        assert.equal(find('.t-settings-company_name').get(0)['placeholder'], `Default General Setting: ${company_name}`);
     });
 });

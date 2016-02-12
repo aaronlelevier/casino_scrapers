@@ -5,13 +5,14 @@ var BSRS_ROLE_FACTORY = (function() {
         this.location_level_fixtures = location_level_fixtures.default || location_level_fixtures;
         this.config = config;
     };
-    factory.prototype.generate = function(i, name) {
+    factory.prototype.generate = function(i, name, settings) {
         return {
             id: i,
             name: name || this.role_defaults.nameOne,
             role_type: this.role_defaults.roleTypeGeneral,
             location_level: this.location_level_fixtures.detail().id,
-            categories: [this.category_fixtures.detail()]
+            categories: [this.category_fixtures.detail()],
+            settings: settings || {}
         }
     };
     factory.prototype.generate_single_for_list = function(i) {
@@ -55,8 +56,8 @@ var BSRS_ROLE_FACTORY = (function() {
         }
         return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
     };
-    factory.prototype.detail = function(i, name) {
-        var role = this.generate(i, name);
+    factory.prototype.detail = function(i, name, settings) {
+        var role = this.generate(i, name, settings);
         return role;
     };
     factory.prototype.put = function(role) {

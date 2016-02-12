@@ -68,6 +68,16 @@ let extract_location_level = (model, store) => {
     return location_level_pk;
 };
 
+var copySettingsToFirstLevel = (obj) => {
+  var keys = obj.settings !== undefined ? Object.keys(obj.settings) : {};
+  var newState = {};
+  for(var i=0; i < keys.length; i++) {
+    var key = keys[i];
+    newState[key] = obj.settings[key];
+  }
+  return Object.assign({}, obj, newState);
+};
+
 var RoleDeserializer = Ember.Object.extend({
     CategoryDeserializer: injectDeserializer('category'),
     deserialize(response, options) {
@@ -85,6 +95,7 @@ var RoleDeserializer = Ember.Object.extend({
             response.location_level_fk = extract_location_level(response, store);
             response.role_category_fks = extract_category(response, store, role_existing, category_deserializer);
             response.detail = true;
+            response = copySettingsToFirstLevel(response);
             let originalRole = store.push('role', response);
             originalRole.save();
         }

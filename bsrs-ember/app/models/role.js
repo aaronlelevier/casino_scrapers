@@ -20,11 +20,13 @@ var RoleModel = Model.extend(NewMixin, {
     welcome_text: attr(''),
     create_all: attr(),
     login_grace: attr(''),
+    company_name: attr(''),
     settings: Ember.computed(function() {
         return {
             welcome_text: this.get('welcome_text'),
             create_all: this.get('create_all'),
-            login_grace: parseInt(this.get('login_grace')) || undefined
+            login_grace: parseInt(this.get('login_grace')) || undefined,
+            company_name: this.get('company_name')
         };
     }),
     // Categories

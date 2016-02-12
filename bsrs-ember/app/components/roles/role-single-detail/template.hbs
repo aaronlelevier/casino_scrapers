@@ -77,6 +77,11 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            {{#form-group title="admin.setting.company_name" for="company_name"}}
+                                {{input type="text" placeholder=(concat "Default General Setting: " model.company_name) value=model.company_name class="form-control t-settings-company_name" id="company_name" required="required"}}
+                            {{/form-group}}
+                        </div>
                     </div>
                 </section>
             </div>

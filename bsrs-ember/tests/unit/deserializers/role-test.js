@@ -293,3 +293,14 @@ test('role-category m2m does not delete other role-category m2m models', (assert
     assert.equal(store.find('role-category').get('length'), 3);
     assert.equal(role_two.get('role_categories').get('length'), 1);
 });
+
+test('settings copySettingsToFirstLevel', (assert) => {
+    let company_name = 'foo';
+    let response = RF.generate(RD.idOne, null, {company_name: company_name});
+    run(() => {
+        subject.deserialize(response, RD.idOne);
+    });
+    let role = store.find('role', RD.idOne);
+    assert.equal(role.get('settings').company_name, company_name);
+    assert.equal(role.get('company_name'), company_name);
+});
