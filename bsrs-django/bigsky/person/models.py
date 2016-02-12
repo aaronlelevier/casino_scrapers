@@ -113,7 +113,7 @@ class Role(SettingMixin, BaseModel):
     msg_copy_email = models.BooleanField(blank=True, default=False)
     msg_copy_default = models.BooleanField(blank=True, default=False)
     msg_stored_link = models.BooleanField(blank=True, default=False)
-    settings = JSONField(blank=True, default=DEFAULT_ROLE_SETTINGS)
+    settings = JSONField(blank=True, default={})
 
     __original_values = {}
 
@@ -154,6 +154,9 @@ class Role(SettingMixin, BaseModel):
 
         if not self.default_auth_currency:
             self.default_auth_currency = Currency.objects.default()
+
+        if not self.settings:
+            self.settings = DEFAULT_ROLE_SETTINGS
 
     def _update_password_history_length(self):
         """
