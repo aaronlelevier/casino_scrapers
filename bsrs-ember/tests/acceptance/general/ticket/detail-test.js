@@ -231,7 +231,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.ok(generalPage.modalIsVisible());
-            assert.equal(find('.t-modal-body').text().trim(), GLOBALMSG.modal_unsaved_msg);
+            assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
         });
     });
     generalPage.clickModalCancel();
@@ -597,7 +597,7 @@ test('power select options are rendered immediately when enter detail route and 
     });
 });
 
-test('scott selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
+test('selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
     page.visitDetail();
     andThen(() => {
         //override electrical to have children
@@ -653,7 +653,7 @@ test('scott selecting a top level category will alter the url and can cancel/dis
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.ok(generalPage.modalIsVisible());
-            assert.equal(find('.t-modal-body').text().trim(), GLOBALMSG.modal_unsaved_msg);
+            assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
         });
     });
     generalPage.clickModalCancel();
@@ -680,7 +680,7 @@ test('scott selecting a top level category will alter the url and can cancel/dis
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.ok(generalPage.modalIsVisible());
-            assert.equal(find('.t-modal-body').text().trim(), GLOBALMSG.modal_unsaved_msg);
+            assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
         });
     });
     generalPage.clickModalRollback();

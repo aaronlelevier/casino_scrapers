@@ -3,14 +3,14 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Abandon changes?</h4>
+        <h4 class="modal-title">{{t 'crud.discard_changes'}}</h4>
       </div>
       <div class="modal-body t-modal-body">
-        <p>You have unsaved changes. Are you sure?</p>
+        <p>{{t 'crud.discard_changes_confirm'}}</p>
       </div>
       <div class="modal-footer t-modal-footer">
-        <button type="button" class="btn btn-default t-modal-cancel-btn" {{action "cancel_modal"}}>No</button>
-        <button type="button" class="btn btn-primary t-modal-rollback-btn" {{action "rollback_model"}}>Yes</button>
+        <button type="button" class="btn btn-default t-modal-cancel-btn" {{action "cancel_modal"}}>{{t 'crud.no'}}</button>
+        <button type="button" class="btn btn-primary t-modal-rollback-btn" {{action "rollback_model"}}>{{t 'crud.yes'}}</button>
       </div>
     </div>
   </div>

@@ -147,7 +147,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.ok(generalPage.modalIsVisible());
-            assert.equal(find('.t-modal-body').text().trim(), GLOBALMSG.modal_unsaved_msg);
+            assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
         });
     });
     generalPage.clickModalCancel();
@@ -416,7 +416,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.ok(generalPage.modalIsVisible());
-            assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
+            assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
         });
     });
     generalPage.clickModalCancel();

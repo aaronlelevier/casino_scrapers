@@ -225,7 +225,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.ok(generalPage.modalIsVisible());
-            assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
+            assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
         });
     });
     generalPage.clickModalCancel();
@@ -1052,7 +1052,7 @@ test('can remove and add back same location', (assert) => {
     });
     let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=a`;
     const response = LF.list();
-    response.results.push(LF.get(LD.idOne, LD.storeName)); 
+    response.results.push(LF.get(LD.idOne, LD.storeName));
     xhr(locations_endpoint, 'GET', null, {}, 200, response);
     fillIn(LOCATION_SEARCH, 'a');
     page.locationClickOptionOne();

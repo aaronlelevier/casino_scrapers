@@ -155,7 +155,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_NEW_URL);
             assert.equal(find('.t-modal').is(':visible'), true);
-            assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
+            assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
         });
     });
     click('.t-modal-footer .t-modal-cancel-btn');

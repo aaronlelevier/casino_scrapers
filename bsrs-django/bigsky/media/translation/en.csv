@@ -125,6 +125,7 @@ en,admin.person.label.role-name,Role,Role,,"'admin.person.label.role-name':'Role
 en,admin.person.label.status,Status,Status,,"'admin.person.label.status':'Status',",Status,Status
 en,admin.person.label.title,Title,Title,,"'admin.person.label.title':'Title',",Title,Title
 en,admin.person.label.username,Username,Username,,"'admin.person.label.username':'Username',",Username,Username
+en,admin.person.new,New Person,New Person,,"'admin.person.new':'New Person',",New Person,New Person
 en,admin.person.one,Person,Person,,"'admin.person.one':'Person',",Person,Person
 en,admin.person.other,People,People,,"'admin.person.other':'People',",People,People
 en,admin.person.search,Search People,Search People,,"'admin.person.search':'Search People',",Search People,Search People
@@ -146,14 +147,19 @@ en,admin.role.label.location_level,Location Organization,Location Organization,,
 en,admin.role.label.name,Role Name,Role Name,,"'admin.role.label.name':'Role Name',",Role Name,Role Name
 en,admin.role.label.number_users,# of People,# of People,,"'admin.role.label.number_users':'# of People',",# of People,# of People
 en,admin.role.label.role_type,Role Type,Role Type,,"'admin.role.label.role_type':'Role Type',",Role Type,Role Type
+en,admin.role.new,New Role,New Role,,"'admin.role.new':'New Role',",New Role,New Role
 en,admin.role.one,Role,Role,,"'admin.role.one':'Role',",Role,Role
 en,admin.role.other,Roles,Roles,,"'admin.role.other':'Roles',",Roles,Roles
 en,admin.role.regional_manager,Reginal Manager,Reginal Manager,,"'admin.role.regional_manager':'Reginal Manager',",Reginal Manager,Reginal Manager
 en,admin.role.search,Search Role,Search Role,,"'admin.role.search':'Search Role',",Search Role,Search Role
 en,admin.role.store_manager,Store Manager,Store Manager,,"'admin.role.store_manager':'Store Manager',",Store Manager,Store Manager
 en,admin.role.system_administrator,Administrator,Administrator,,"'admin.role.system_administrator':'Administrator',",Administrator,Administrator
+en,admin.setting.company_name,Company Name,Company Name,,"'admin.setting.company_name':'Company Name',",Company Name,Company Name
+en,admin.setting.create_all,Create All,Create All,,"'admin.setting.create_all':'Create All',",Create All,Create All
+en,admin.setting.login_grace,Login Grace,Login Grace,,"'admin.setting.login_grace':'Login Grace',",Login Grace,Login Grace
 en,admin.setting.one,Setting,Setting,,"'admin.setting.one':'Setting',",Setting,Setting
 en,admin.setting.other,Settings,Settings,,"'admin.setting.other':'Settings',",Settings,Settings
+en,admin.setting.welcome_text,Welcome Message,Welcome Message,,"'admin.setting.welcome_text':'Welcome Message',",Welcome Message,Welcome Message
 en,admin.template.one,Template,Template,,"'admin.template.one':'Template',",Template,Template
 en,admin.template.other,Templates,Templates,,"'admin.template.other':'Templates',",Templates,Templates
 en,admin.third_party.label.name,Name,Name,,"'admin.third_party.label.name':'Name',",Name,Name
@@ -174,6 +180,9 @@ en,crud.create.success,{{model}} created successfully.,{{model}} created success
 en,crud.delete.button,Delete,Delete,,"'crud.delete.button':'Delete',",Delete,Delete
 en,crud.delete.confirm,Are you sure you want to delete {{model}} \'{{record}}\'?,Are you sure you want to delete {{model}} \'{{record}}\'?,,"'crud.delete.confirm':'Are you sure you want to delete {{model}} \'{{record}}\'?',",Are you sure you want to delete {{model_var_ \'{{record_var_\'?,Are you sure you want to delete _model_var_ \'_record_var_\'?
 en,crud.delete.error,Error deleting {{model}}.,Error deleting {{model}}.,,"'crud.delete.error':'Error deleting {{model}}.',",Error deleting {{model_var_.,Error deleting _model_var_.
+en,crud.discard_changes,Abandon Changes,Abandon Changes,,"'crud.discard_changes':'Abandon Changes',",Abandon Changes,Abandon Changes
+en,crud.discard_changes_confirm,You have unsaved changes. Are you sure?,You have unsaved changes. Are you sure?,,"'crud.discard_changes_confirm':'You have unsaved changes. Are you sure?',",You have unsaved changes. Are you sure?,You have unsaved changes. Are you sure?
+en,crud.no,No,No,,"'crud.no':'No',",No,No
 en,crud.restore.button,Restore,Restore,,"'crud.restore.button':'Restore',",Restore,Restore
 en,crud.restore.error,Error restoring {{model}},Error restoring {{model}},,"'crud.restore.error':'Error restoring {{model}}',",Error restoring {{model_var_,Error restoring _model_var_
 en,crud.restore.success,{{model}} restored successfully.,{{model}} restored successfully.,,"'crud.restore.success':'{{model}} restored successfully.',",{{model_var_ restored successfully.,_model_var_ restored successfully.
@@ -182,6 +191,7 @@ en,crud.save.error,Error saving {{model}}.,Error saving {{model}}.,,"'crud.save.
 en,crud.save.success,{{model}} saved successfully.,{{model}} saved successfully.,,"'crud.save.success':'{{model}} saved successfully.',",{{model_var_ saved successfully.,_model_var_ saved successfully.
 en,crud.titles.edit,Edit {{model}},Edit {{model}},,"'crud.titles.edit':'Edit {{model}}',",Edit {{model_var_,Edit _model_var_
 en,crud.titles.new,New {{model}},New {{model}},,"'crud.titles.new':'New {{model}}',",New {{model_var_,New _model_var_
+en,crud.yes,Yes,Yes,,"'crud.yes':'Yes',",Yes,Yes
 en,grid.filter,Filter,Filter,,"'grid.filter':'Filter',",Filter,Filter
 en,grid.filterset_name,Name your filter,Name your filter,,"'grid.filterset_name':'Name your filter',",Name your filter,Name your filter
 en,grid.per_page,{{size}} per page,{{size}} per page,,"'grid.per_page':'{{size}} per page',",{{size_var_ per page,_size_var_ per page
@@ -234,4 +244,3 @@ en,ticket.status.unsatisfactory_completion,Unsatisfactory Completion,Unsatisfact
 en,upload.progress,Progress,Progress,,"'upload.progress':'Progress',",Progress,Progress
 en,validation.invalid,Invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid,Invalid
 en,validation.valid,Valid,Valid,,"'validation.valid':'Valid',",Valid,Valid
-en,welcome,Hello,Hello,,"'welcome':'Hello',",Hello,Hello
