@@ -18,7 +18,6 @@ var ApplicationRoute = Ember.Route.extend({
     beforeModel() {
         let store = this.get('store');
         const email_types = Ember.$('[data-preload-email_types]').data('configuration');
-        debugger;
         email_types.forEach((model) => {
             store.push('email-type', model);
         });
