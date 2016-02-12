@@ -33,11 +33,13 @@ var TicketLocationMixin = Ember.Mixin.create({
         delete location_json.location_level;
         if(location_json.status_fk){
             this.location_status_setup(location_json);
-        };
+        }
         this.change_location_container(location_json);
         let location = this.get('store').find('location', location_json.id);
-        location.change_location_level(location_json.location_level_fk);
-        location.save();
+        if(location.get('id')){
+            location.change_location_level(location_json.location_level_fk);
+            location.save();
+        }
     },
     change_location_container: change_belongs_to_simple('tickets', 'location'),
     saveLocation: belongs_to_save('ticket', 'location', 'location_fk'),

@@ -19,6 +19,16 @@ var BSRS_LOCATION_FACTORY = (function() {
             status: this.location_status_defaults.openId
         }
     },
+    factory.prototype.get_fk = function(i, name) {
+        var name = name || this.location_defaults.storeName;
+        return {
+            id: i || this.location_defaults.idOne,
+            name: name,
+            number: this.location_defaults.storeName,
+            location_level: this.location_level_fixtures.detail().id,
+            status_fk: this.location_status_defaults.openId
+        }
+    },
     factory.prototype.generate = function(i) {
         var id = i || this.location_defaults.idOne;
         return {
@@ -100,8 +110,8 @@ var BSRS_LOCATION_FACTORY = (function() {
         return response;
     };
     factory.prototype.search = function() {
-        var location_one = this.get(this.location_defaults.idFour, this.location_defaults.storeNameFour);
-        var location_two = this.get(this.location_defaults.idTwo, this.location_defaults.storeNameTwo);
+        var location_one = this.get_fk(this.location_defaults.idFour, this.location_defaults.storeNameFour);
+        var location_two = this.get_fk(this.location_defaults.idTwo, this.location_defaults.storeNameTwo);
         var response = [location_one, location_two];
         //we do a reverse order sort here to verify a real sort occurs in the component
         var sorted = response.sort(function(a,b) {
