@@ -964,20 +964,6 @@ test('ticket_categories_ids computed returns a flat list of ids for each categor
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.deepEqual(ticket.get('ticket_categories_ids'), [TCD.idTwo]);
 });
-
-test('change category tree should wipe out all tickets in store after save if change category', (assert) => {
-    ticket = store.push('ticket', {id: TD.idOne});
-    store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo, children_fks: []});
-    store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId, children_fks: [CD.idOne]});
-    const category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: null, children_fks: [CD.idTwo]});
-    assert.equal(ticket.get('categories').get('length'), 0);
-    ticket.change_category_tree(category_three);
-    assert.ok(ticket.get('categoriesIsDirty'));
-    let tickets = store.find('ticket');
-    assert.equal(tickets.get('length'), 1);
-    ticket.saveRelated();
-    assert.equal(tickets.get('length'), 0);
-});
 /*END TICKET CATEGORY M2M*/
 
 /*TICKET to PRIORITY*/
@@ -1243,18 +1229,6 @@ test('rollback location will revert and reboot the dirty location to clean', (as
     //note: tickets are cleared if dirty on save
     // assert.equal(ticket.get('location.id'), LD.idTwo);
     // assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-});
-
-test('change location should wipe out all tickets in store after save if location', (assert) => {
-    ticket = store.push('ticket', {id: TD.idOne, location_fk: LD.idOne});
-    let location = store.push('location', {id: LD.idOne, tickets: [TD.idOne]});
-    let location_two = {id: LD.idTwo};
-    assert.equal(ticket.get('location.id'), LD.idOne);
-    ticket.change_location(location_two);
-    assert.ok(ticket.get('locationIsDirty'));
-    ticket.saveRelated();
-    const tickets = store.find('ticket');
-    assert.equal(tickets.get('length'), 0);
 });
 
 test('there is no leaky state when instantiating ticket (set)', (assert) => {

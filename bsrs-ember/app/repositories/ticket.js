@@ -24,12 +24,6 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
             model.saveRelated();
         });
     },
-    insert(model) {
-        return PromiseMixin.xhr(this.get('url'), 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
-            model.save();
-            model.saveRelatedNew();
-        });
-    },
     find() {
         PromiseMixin.xhr(TICKET_URL, 'GET').then((response) => {
             this.get('TicketDeserializer').deserialize(response);

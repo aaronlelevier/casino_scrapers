@@ -232,7 +232,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
         this.rollbackAssignee();
         this.rollbackAttachments();
     },
-    saveRelatedNew() {
+    saveRelated() {
         this.saveStatus();
         this.savePriority();
         this.saveCC();
@@ -241,19 +241,6 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
         this.saveCategories();
         this.saveLocation();
     },
-    saveRelated() {
-        this.saveStatus();
-        this.savePriority();
-        this.saveCC();
-        this.saveAssignee();
-        this.saveAttachments();
-        if(this.get('categoriesIsDirty') || this.get('locationIsDirty')){
-            this.removeRecord();
-        }else{
-            this.saveCategories();
-            this.saveLocation();
-        }
-    }
 });
 
 export default TicketModel;
