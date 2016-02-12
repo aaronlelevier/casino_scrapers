@@ -71,7 +71,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
             ancillary_processing.forEach((type) => {
                 const ancillary_gc = store.find(type);
                 const remove_ancillary = ancillary_gc.filter((model) => {
-                    return model.get('grid') && !model.get('detail')
+                    return model.get('grid') && !model.get('detail');
                 });
                 remove_ancillary.forEach((model) => {
                     model.removeRecord(); 

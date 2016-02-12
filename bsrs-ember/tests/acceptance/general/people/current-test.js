@@ -52,7 +52,7 @@ test('when changing the locale for the current user, the language is updated on 
     page.localeClickDropdown();
     page.localeClickOptionTwo();
     andThen(() => {
-        assert.equal(find('.t-person-first-name').prop("placeholder"), "Nombre");
+        assert.equal(find('.t-person-first-name').prop("placeholder"), "Nombre de pila");
     });
 });
 
@@ -68,7 +68,7 @@ test('when rolling back the locale the current locale is also changed back', (as
     page.localeClickDropdown();
     page.localeClickOptionTwo();
     andThen(() => {
-        assert.equal(find('.t-person-first-name').prop("placeholder"), "Nombre");
+        assert.equal(find('.t-person-first-name').prop("placeholder"), "Nombre de pila");
     });
     click('.t-cancel-btn');
     andThen(() => {
