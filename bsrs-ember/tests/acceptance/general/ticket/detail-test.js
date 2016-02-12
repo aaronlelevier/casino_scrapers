@@ -652,7 +652,7 @@ test('scott selecting a top level category will alter the url and can cancel/dis
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            // assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible());
             assert.equal(find('.t-modal-body').text().trim(), GLOBALMSG.modal_unsaved_msg);
         });
     });

@@ -11,8 +11,23 @@ var CategoriesMixin = Ember.Mixin.create({
         }).join(' &#8226; ');
         return Ember.String.htmlSafe(names);
     }),
-    category_names_no_filter: Ember.computed(function() {
-        return this.get('category_names'); 
+    category_names_grid: Ember.computed(function() {
+        const store = this.get('store');
+        let m2ms = store.find('ticket-category');
+        const new_m2m = m2ms.filter((m2m) => {
+            return m2m.get('ticket_pk') === this.get('id'); 
+        }).filter((many) => {
+            return Ember.$.inArray(many.get('category_pk'), this.get('category_ids')) > -1;
+        });
+        const m2m_categories = new_m2m.mapBy('category_pk');
+        const all_categories = store.find('category');
+        const filtered_cats = all_categories.filter((cat) => {
+            return Ember.$.inArray(cat.get('id'), m2m_categories) > -1;
+        });
+        const names = filtered_cats.sortBy('level').map((category) => {
+            return category.get('name'); 
+        }).join(' &#8226 ');
+        return Ember.String.htmlSafe(names);
     }),
     construct_category_tree(category, child_nodes=[]) {
         //this method is used for on the fly validation check to see if at end of cat tree

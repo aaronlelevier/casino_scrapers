@@ -39,7 +39,7 @@ var extract_categories = function(category_json, store, category_deserializer, t
            m2m_categories.push({id: m2m.get('id'), removed: true});
         }
     });
-    return [m2m_categories, categories, server_sum];
+    return [m2m_categories, categories, server_sum, category_ids];
 };
 
 var extract_assignee = function(assignee_json, store, ticket_model) {
@@ -184,6 +184,7 @@ var TicketDeserializer = Ember.Object.extend({
         let statuses = [];
         response.results.forEach((model) => {
             const existing = store.find('ticket', model.id);
+            let category_ids;
             if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
                 let location_json = model.location;
                 model.location_fk = location_json.id;
@@ -202,14 +203,14 @@ var TicketDeserializer = Ember.Object.extend({
                 extract_assignee(assignee_json, store, ticket);
                 let categories_arr;
                 let m2m_categories_arr;
-                [m2m_categories_arr, categories_arr, server_sum] = extract_categories(categories_json, store, category_deserializer, ticket);
+                [m2m_categories_arr, categories_arr, server_sum, category_ids] = extract_categories(categories_json, store, category_deserializer, ticket);
                 categories.push(...categories_arr);
                 m2m_categories.push(...m2m_categories_arr);
                 return_array.pushObject(ticket);
             }else{
                 return_array.pushObject(existing);
             }
-            tickets.push({id: model.id, ticket_categories_fks: server_sum, location_fk: location_fk}); 
+            tickets.push({id: model.id, ticket_categories_fks: server_sum, location_fk: location_fk, category_ids: category_ids}); 
         });
         run(() => {
             tickets.forEach((ticket) => {

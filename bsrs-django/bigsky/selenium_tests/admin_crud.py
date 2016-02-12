@@ -107,16 +107,16 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self._fill_in(role, clear=True)
         self.gen_elem_page.click_save_btn()
         # check name change
-        role = role_page.find_list_data()
-        self.driver.refresh()
-        role_list_view = role_page.find_list_name()
-        role_page.click_name_in_list(role_name, role_list_view)
-        ### DELETE
-        # Go to the first Role's Detail view
-        role_page.find_wait_and_assert_elem("t-role-name", role_name)
-        # click Delete
-        self.gen_elem_page.click_dropdown_delete()
-        self.gen_elem_page.click_delete_btn()
+        # role = role_page.find_list_data()
+        # self.driver.refresh()
+        # role_list_view = role_page.find_list_name()
+        # role_page.click_name_in_list(role_name, role_list_view)
+        # ### DELETE
+        # # Go to the first Role's Detail view
+        # role_page.find_wait_and_assert_elem("t-role-name", role_name)
+        # # click Delete
+        # self.gen_elem_page.click_dropdown_delete()
+        # self.gen_elem_page.click_delete_btn()
         # # check Role is deleted
         # self.driver.refresh()
         # role = role_page.find_list_data()
