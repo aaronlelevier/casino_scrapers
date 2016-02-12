@@ -10,6 +10,38 @@ var extract_attachments = function(model, store) {
     return model.attachments;
 };
 
+var extract_categories_list = function(category_json, store, category_deserializer, ticket) {
+    let server_sum = [];
+    let m2m_categories = [];
+    let categories = [];
+    const category_ids = category_json.mapBy('id');
+    const ticket_categories = ticket.get('ticket_categories_no_filter') || [];
+    const ticket_categories_pks = ticket_categories.mapBy('category_pk');
+    const ticket_id = ticket.get('id');
+    for (let i = category_json.length-1; i >= 0; i--){
+        const pk = Ember.uuid();
+        const cat = category_json[i];
+        cat.previous_children_fks = cat.children_fks;
+        const existing_category = store.find('category', cat.id);
+        if(!existing_category.get('content')){
+            categories.push(cat);
+        }
+        if(Ember.$.inArray(cat.id, ticket_categories_pks) < 0){
+            server_sum.push(pk);
+            m2m_categories.push({id: pk, ticket_pk: ticket_id, category_pk: cat.id});
+        }
+    }
+    ticket_categories.forEach((m2m) => {
+        if(Ember.$.inArray(m2m.get('category_pk'), category_ids) > -1){
+            server_sum.push(m2m.id);
+            return;
+        }else if(Ember.$.inArray(m2m.get('category_pk'), category_ids) < 0){
+           m2m_categories.push({id: m2m.get('id'), removed: true});
+        }
+    });
+    return [m2m_categories, categories, server_sum, category_ids];
+};
+
 var extract_categories = function(category_json, store, category_deserializer, ticket) {
     let server_sum = [];
     let m2m_categories = [];
@@ -85,9 +117,9 @@ var extract_ticket_location = function(location_json, store, ticket) {
     let location_pk = location_json.id;
     location_json.grid = true;
     if (ticket.get('location.id') !== location_pk) {
-        ticket.change_location(location_json);
+        return [location_pk, location_json];
     }
-    return location_pk;
+    return [location_pk];
 };
 
 var extract_ticket_priority = function(priority_id, store, ticket) {
@@ -146,7 +178,7 @@ var TicketDeserializer = Ember.Object.extend({
             delete response.categories;
             response.detail = true;
             let ticket = store.push('ticket', response);
-            const location_fk = extract_ticket_location(location_json, store, ticket);
+            const [location_fk, ticket_location_json] = extract_ticket_location(location_json, store, ticket);
             const status = extract_ticket_status(response.status_fk, store, ticket);
             const priority = extract_ticket_priority(response.priority_fk, store, ticket);
             if (cc_json) {
@@ -160,6 +192,9 @@ var TicketDeserializer = Ember.Object.extend({
             [m2m_categories, categories_arr, server_sum] = extract_categories(categories_json, store, category_deserializer, ticket);
             categories.push(...categories_arr);
             run(() => {
+                if(ticket_location_json){
+                ticket.change_location(ticket_location_json);
+                }
                 categories.forEach((cat) => {
                     store.push('category', cat); 
                 });
@@ -180,9 +215,11 @@ var TicketDeserializer = Ember.Object.extend({
         let categories = [];
         let server_sum;
         let location_fk;
+        let ticket_location_json;
         let tickets = [];
         let priorities = [];
         let statuses = [];
+        let location_jsons = [];
         response.results.forEach((model) => {
             const existing = store.find('ticket', model.id);
             let category_ids;
@@ -198,13 +235,16 @@ var TicketDeserializer = Ember.Object.extend({
                 delete model.categories;
                 model.grid = true;
                 let ticket = store.push('ticket', model);
-                location_fk = extract_ticket_location(location_json, store, ticket);
+                [location_fk, ticket_location_json] = extract_ticket_location(location_json, store, ticket);
+                if(ticket_location_json){
+                    location_jsons.push({ticket: ticket, json: ticket_location_json});
+                }
                 priorities.push(extract_ticket_priority(model.priority_fk, store, ticket));
                 statuses.push(extract_ticket_status(model.status_fk, store, ticket));
                 extract_assignee(assignee_json, store, ticket);
                 let categories_arr;
                 let m2m_categories_arr;
-                [m2m_categories_arr, categories_arr, server_sum, category_ids] = extract_categories(categories_json, store, category_deserializer, ticket);
+                [m2m_categories_arr, categories_arr, server_sum, category_ids] = extract_categories_list(categories_json, store, category_deserializer, ticket);
                 categories.push(...categories_arr);
                 m2m_categories.push(...m2m_categories_arr);
                 return_array.pushObject(ticket);
@@ -217,6 +257,9 @@ var TicketDeserializer = Ember.Object.extend({
             tickets.forEach((ticket) => {
                 const pushed_ticket = store.push('ticket', ticket); 
                 pushed_ticket.save();
+            });
+            location_jsons.forEach((obj) => {
+                obj['ticket'].change_location(obj['json']); 
             });
             categories.forEach((cat) => {
                 store.push('category', cat); 

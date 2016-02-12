@@ -44,6 +44,27 @@ module('unit: ticket deserializer test', {
     }
 });
 
+test('ticket has appropriate detail tag', (assert) => {
+    let json = TF.generate(TD.idOne);
+    run(() => {
+        subject.deserialize(json, json.id);
+    });
+    ticket = store.find('ticket', TD.idOne);
+    assert.ok(!ticket.get('grid'));
+    assert.ok(ticket.get('detail'));
+});
+
+test('ticket has appropriate grid tag', (assert) => {
+    let json = TF.generate(TD.idOne);
+    let response = {'count':1,'next':null,'previous':null,'results': [json]};
+    run(() => {
+        subject.deserialize(response);
+    });
+    ticket = store.find('ticket', TD.idOne);
+    assert.ok(ticket.get('grid'));
+    assert.ok(!ticket.get('detail'));
+});
+
 test('ticket assignee will be deserialized into its own store when deserialize detail is invoked (with no existing assignee)(detail)', (assert) => {
     let json = TF.generate(TD.idOne);
     run(function() {
@@ -133,6 +154,7 @@ test('ticket location will be deserialized into its own store when deserialize l
     assert.deepEqual(location.get('tickets'), [TD.idOne]);
     assert.ok(ticket.get('isNotDirty'));
     assert.equal(ticket.get('location.id'), LD.idOne);
+    assert.ok(ticket.get('location').get('grid'));
 });
 
 test('ticket location will be deserialized into its own store when deserialize list is invoked (when ticket did not exist before)', (assert) => {

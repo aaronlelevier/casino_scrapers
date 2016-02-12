@@ -29,6 +29,9 @@ var CategoriesMixin = Ember.Mixin.create({
         }).join(' &#8226 ');
         return Ember.String.htmlSafe(names);
     }),
+    ticket_categories_no_filter: Ember.computed(function() {
+        return this.get('store').find('ticket-category').filterBy('ticket_pk', this.get('id'));
+    }),
     construct_category_tree(category, child_nodes=[]) {
         //this method is used for on the fly validation check to see if at end of cat tree
         child_nodes.push(category);
