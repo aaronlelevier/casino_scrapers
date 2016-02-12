@@ -27,6 +27,9 @@ var BSRS_TICKET_FACTORY = (function() {
     factory.prototype.generate = function(i) {
         var id = i || this.ticket.idOne;
         var categories = this.categories();
+        var location = this.location_fixtures.get();
+        location.status_fk = location.status;
+        delete location.status;
         return {
             id: id,
             number: this.ticket.numberOne,
@@ -36,7 +39,7 @@ var BSRS_TICKET_FACTORY = (function() {
             cc: [this.people_fixtures.get()],
             categories: [categories[0], categories[1], categories[2]],
             assignee: this.people_fixtures.get(),
-            location: this.location_fixtures.get(),
+            location: location,
             attachments: []
 
         }
@@ -64,7 +67,9 @@ var BSRS_TICKET_FACTORY = (function() {
         var unused_category = this.category_fixtures.get(this.category_defaults.idOne, this.category_defaults.nameOne);
         unused_category.children_fks = [];
         unused_category.parent = null;
-
+        var location = this.location_fixtures.get(this.ticket.locationTwoId, this.ticket.locationTwo);
+        location.status_fk = location.status;
+        delete location.status;
         var response = [];
         var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=page_size+1; i <= page_size*2-1; i++) {
@@ -74,7 +79,7 @@ var BSRS_TICKET_FACTORY = (function() {
             ticket.request = 'ape' + i;
             ticket.priority_fk = this.ticket.priorityTwoId;
             ticket.status_fk = this.ticket.statusTwoId;
-            ticket.location = this.location_fixtures.get(this.ticket.locationTwoId, this.ticket.locationTwo);
+            ticket.location = location;
             ticket.assignee = this.people_fixtures.get(this.ticket.assigneeTwoId, this.ticket.assigneeTwo, this.ticket.assigneeTwo);
             ticket.categories = [unused_category];
             delete ticket.cc;

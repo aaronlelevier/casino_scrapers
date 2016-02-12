@@ -20,7 +20,26 @@ var TicketLocationMixin = Ember.Mixin.create({
             });
         }
     },
-    change_location: change_belongs_to_simple('tickets', 'location'),
+    location_status_setup(location_json) {
+        let pushed_location;
+        run(() => {
+            pushed_location = this.get('store').push('location', location_json);
+        });
+        pushed_location.change_status(location_json.status_fk);
+        return pushed_location;
+    },
+    change_location(location_json){
+        location_json.location_level_fk = location_json.location_level;
+        delete location_json.location_level;
+        if(location_json.status_fk){
+            this.location_status_setup(location_json);
+        };
+        this.change_location_container(location_json);
+        let location = this.get('store').find('location', location_json.id);
+        location.change_location_level(location_json.location_level_fk);
+        location.save();
+    },
+    change_location_container: change_belongs_to_simple('tickets', 'location'),
     saveLocation: belongs_to_save('ticket', 'location', 'location_fk'),
     rollbackLocation: belongs_to_rollback_simple('location_fk', 'location', 'change_location'),
 });

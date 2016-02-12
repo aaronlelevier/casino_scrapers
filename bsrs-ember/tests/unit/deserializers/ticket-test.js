@@ -129,6 +129,7 @@ test('ticket location will be deserialized into its own store when deserialize l
     run(function() {
         subject.deserialize(response);
     });
+    location = store.find('location', LD.idOne);
     assert.deepEqual(location.get('tickets'), [TD.idOne]);
     assert.ok(ticket.get('isNotDirty'));
     assert.equal(ticket.get('location.id'), LD.idOne);

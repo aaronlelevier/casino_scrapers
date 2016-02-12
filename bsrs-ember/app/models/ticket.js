@@ -140,7 +140,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
     },
     change_assignee_container: change_belongs_to('assigned_tickets', 'person', 'assignee'),
     change_assignee(new_assignee) {
-        const pushed_assignee = this.person_status_role_setup(new_assignee);
+        this.person_status_role_setup(new_assignee);
         this.change_assignee_container(new_assignee.id);
     },
     change_priority: change_belongs_to('tickets', 'ticket-priority', 'priority'),

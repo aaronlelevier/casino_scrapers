@@ -83,23 +83,9 @@ var extract_cc = function(cc_json, store, ticket) {
 
 var extract_ticket_location = function(location_json, store, ticket) {
     let location_pk = location_json.id;
-    const location_level_fk = location_json.location_level;
-    delete location_json.location_level;
-    let old_location_id = ticket.get('location.id');
-    //if current location in store and doesn't have same id as payload
-    if (ticket.get('location.id') && location_pk !== old_location_id) {
+    if (ticket.get('location.id') !== location_pk) {
         ticket.change_location(location_json);
-    }else{
-        //if location in store already and need to add to tickets array
-        let location = store.find('location', location_json.id);
-        if(!location.get('id')) { 
-            store.push('location', location_json);
-        }
-        let existing_tickets = location.get('tickets') || [];
-        store.push('location', {id: location.get('id'), tickets: existing_tickets.concat(ticket.get('id')).uniq()});
     }
-    const location = store.find('location', location_pk);
-    location.change_location_level(location_level_fk);
     return location_pk;
 };
 
