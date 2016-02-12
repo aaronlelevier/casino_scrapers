@@ -15,7 +15,19 @@ var RoleModel = Model.extend(NewMixin, {
     name: attr(''),
     people: [],
     role_type: attr(),
-    location_level_fk: undefined, 
+    location_level_fk: undefined,
+    // Settings
+    welcome_text: attr(''),
+    create_all: attr(),
+    login_grace: attr(''),
+    settings: Ember.computed(function() {
+        return {
+            welcome_text: this.get('welcome_text'),
+            create_all: this.get('create_all'),
+            login_grace: parseInt(this.get('login_grace')) || undefined
+        };
+    }),
+    // Categories
     role_category_fks: [],
     categories_ids: Ember.computed('categories.[]', function() {
         return this.get('categories').mapBy('id').uniq();
@@ -108,7 +120,8 @@ var RoleModel = Model.extend(NewMixin, {
             name: this.get('name'),
             role_type: this.get('role_type'),
             location_level: location_level_id || null,
-            categories: this.get('categories_ids') 
+            categories: this.get('categories_ids'),
+            settings: this.get('settings')
         };
     },
     removeRecord() {

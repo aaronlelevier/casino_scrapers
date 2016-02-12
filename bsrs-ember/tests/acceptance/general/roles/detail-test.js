@@ -312,3 +312,31 @@ test('search will filter down on categories in store correctly by removing and a
         assert.equal(currentURL(), ROLE_URL);
     });
 });
+
+// Role Settings
+
+test('settings update and redirected to list with clean model', (assert) => {
+    let role;
+    role = store.find('role', RD.idOne);
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+    var welcome_text = 'hi';
+    var login_grace = 3;
+    var create_all = true;
+    fillIn('.t-settings-welcome_text', welcome_text);
+    fillIn('.t-settings-login_grace', login_grace);
+    click('.t-settings-create_all');
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.ok(role.get('isDirtyOrRelatedDirty'));
+    });
+    let payload = RF.put({id: RD.idOne, categories: [CD.idOne], settings: {welcome_text, login_grace, create_all}});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+        assert.ok(!role.get('isDirty'));
+    });
+});

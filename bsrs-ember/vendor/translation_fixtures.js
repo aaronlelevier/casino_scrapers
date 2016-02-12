@@ -161,8 +161,12 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'admin.role.search':'Search Role',
                     'admin.role.store_manager':'Store Manager',
                     'admin.role.system_administrator':'Administrator',
+                    'admin.setting.company_name':'Company Name',
+                    'admin.setting.create_all':'Create All',
+                    'admin.setting.login_grace':'Login Grace',
                     'admin.setting.one':'Setting',
                     'admin.setting.other':'Settings',
+                    'admin.setting.welcome_text':'Welcome Message',
                     'admin.template.one':'Template',
                     'admin.template.other':'Templates',
                     'admin.third_party.label.name':'Name',
@@ -242,9 +246,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'ticket.status.unsatisfactory_completion':'Unsatisfactory Completion',
                     'upload.progress':'Progress',
                     'validation.invalid':'Invalid',
-                    'validation.valid':'Valid',
-                    'welcome':'Hello',
-                    'admin.setting.welcome_text':'Welcome Text'
+                    'validation.valid':'Valid'
                 }
             }
             break;

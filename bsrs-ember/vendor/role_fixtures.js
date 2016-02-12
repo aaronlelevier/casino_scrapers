@@ -63,6 +63,7 @@ var BSRS_ROLE_FACTORY = (function() {
         var response = this.generate(role.id);
         response.location_level = this.location_level_fixtures.detail().id;
         response.categories = [response.categories[0].id];
+        response.settings = {};
         for (var key in role) {
             response[key] = role[key];
         }

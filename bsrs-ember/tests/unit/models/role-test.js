@@ -389,3 +389,37 @@ test('role_categories_ids computed returns a flat list of ids for each category'
     assert.equal(role.get('categories').get('length'), 1);
     assert.deepEqual(role.get('role_categories_ids'), [ROLE_CD.idTwo]);
 });
+
+test('welcome_text isDirty test', (assert) => {
+    role = store.push('role', {id: RD.idOne, name: RD.nameOne, role_type: RD.roleTypeGeneral});
+    assert.notOk(role.get('isDirty'));
+    role.set('welcome_text', 'foo');
+    assert.ok(role.get('isDirty'));
+});
+
+test('settings', (assert) => {
+    var welcome_text = 'hi';
+    var create_all = true;
+    var login_grace = 2;
+    role = store.push('role', {id: RD.idOne, welcome_text, create_all, login_grace});
+    var settings = role.get('settings');
+    assert.equal(settings.welcome_text, welcome_text);
+    assert.equal(settings.create_all, create_all);
+    assert.equal(settings.login_grace, login_grace);
+});
+
+test('serialize', (assert) => {
+    store.push('location-level', {id: LLD.idOne, name: LLD.nameRegion, roles: [RD.idOne]});
+    store.push('category', {id: CD.idOne});
+    store.push('role-category', {id: ROLE_CD.idOne, category_fk: CD.idOne, role_fk: RD.idOne});
+    role = store.push('role', {id: RD.idOne, name: RD.nameOne, role_type: RD.roleTypeGeneral});
+
+    var serialize = role.serialize();
+
+    assert.equal(serialize.id, role.get('id'));
+    assert.equal(serialize.name, role.get('name'));
+    assert.equal(serialize.role_type, role.get('role_type'));
+    assert.equal(serialize.location_level, role.get('location_level.id'));
+    assert.equal(serialize.categories, role.get('categories_ids'));
+    assert.equal(serialize.settings, role.get('settings'));
+});
