@@ -57,15 +57,25 @@ var GridRepositoryMixin = Ember.Mixin.create({
                 endpoint = endpoint + '&' + field + '__icontains=' + encodeURIComponent(value);
             });
         }
+        let ancillary_processing = this.get('ancillary_processing') || [];
         let type_related_m2m = this.get('type_related_m2m') || [];
         let type_related_join = this.get('type_related_join') || [];
         const related_m2m_pk_mapping = this.get('related_m2m_pk_mapping');
-        const related_join_pk_mapping = this.get('related_join_pk_mapping');
         return PromiseMixin.xhr(endpoint).then((response) => {
             //TODO: turn this into a service and unit test.  Only acceptance tests right now
             const all = store.find(type);
             const clean_cache = all.filter((model) => {
                 return model.get('grid') && !model.get('detail') && model.get('isNotDirtyOrRelatedNotDirty');
+            });
+            //clear models that are still around from previous grid so they are not dirty
+            ancillary_processing.forEach((type) => {
+                const ancillary_gc = store.find(type);
+                const remove_ancillary = ancillary_gc.filter((model) => {
+                    return model.get('grid') && !model.get('detail')
+                });
+                remove_ancillary.forEach((model) => {
+                    model.removeRecord(); 
+                });
             });
             clean_cache.forEach((model) => {
                 //m2m
@@ -82,11 +92,10 @@ var GridRepositoryMixin = Ember.Mixin.create({
                 type_related_join.forEach((type) => {
                     const relateds = store.find(type);
                     const related_clear = relateds.filter((related_model) => {
-                        return Ember.$.inArray(model.get('id'), related_model.get(related_join_pk_mapping)) > -1; 
+                        return related_model.get('grid') && !related_model.get('detail'); 
                     });
                     related_clear.forEach((related) => {
-                        //pass remove_ belongs to method if applicable
-                        related.removeTypeFromArray(model.get('id'), related, type, related_join_pk_mapping); 
+                        related.removeRecord(); 
                     });
                 });
                 const found_model = store.find(type, model.get('id'));

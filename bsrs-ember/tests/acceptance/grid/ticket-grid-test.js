@@ -640,13 +640,13 @@ test('save filterset button only available when a dynamic filter is present', fu
 
 test('status.translated_name is a functional related filter', function(assert) {
     let option_four = PREFIX + BASE_URL + '/?page=1&ordering=-status__name&status__name__icontains=rr';
-    xhr(option_four,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
+    xhr(option_four,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status_fk'));
     let option_three = PREFIX + BASE_URL + '/?page=1&ordering=-status__name';
-    xhr(option_three,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
+    xhr(option_three,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status_fk'));
     let option_two = PREFIX + BASE_URL + '/?page=1&ordering=status__name';
-    xhr(option_two,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
-    let option_one = PREFIX + BASE_URL + '/?page=1&search=rr';
-    xhr(option_one,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
+    xhr(option_two,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status_fk'));
+    let option_one = PREFIX + BASE_URL + '/?page=1&search=r';
+    xhr(option_one,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status_fk'));
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
@@ -654,10 +654,10 @@ test('status.translated_name is a functional related filter', function(assert) {
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text().trim(), t(TD.statusOneKey));
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     });
-    fillIn('.t-grid-search-input', 'rr');
+    fillIn('.t-grid-search-input', 'r');
     triggerEvent('.t-grid-search-input', 'keyup', LETTER_R);
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?search=rr');
+        assert.equal(currentURL(),TICKET_URL + '?search=r');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text().trim(), t(TD.statusTwoKey));
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
@@ -808,7 +808,7 @@ test('category_names is not sortable/filterable/searchable (display only)', func
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-category_names').text().trim(), 'Repair • Plumbing • Toilet Leak');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-category_names_grid').text().trim(), 'Repair • Plumbing • Toilet Leak');
         assert.equal(find('.t-sort-category-names').length, 0);
         assert.equal(find('.t-sort-category-names-dir').length, 0);
         assert.equal(find('.t-filter-category-names').length, 0);
