@@ -115,6 +115,7 @@ var extract_cc = function(cc_json, store, ticket) {
 
 var extract_ticket_location = function(location_json, store, ticket) {
     let location_pk = location_json.id;
+    location_json.detail = true;
     if (ticket.get('_location.id') !== location_pk) {
         return [location_pk, location_json];
     }

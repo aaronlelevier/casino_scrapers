@@ -52,6 +52,7 @@ test('ticket has appropriate detail tag', (assert) => {
     ticket = store.find('ticket', TD.idOne);
     assert.ok(!ticket.get('grid'));
     assert.ok(ticket.get('detail'));
+    assert.ok(ticket.get('location').get('detail'));
 });
 
 test('ticket has appropriate grid tag', (assert) => {
@@ -62,6 +63,7 @@ test('ticket has appropriate grid tag', (assert) => {
     });
     ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('grid'));
+    assert.ok(ticket.get('location').get('grid'));
     assert.ok(!ticket.get('detail'));
 });
 

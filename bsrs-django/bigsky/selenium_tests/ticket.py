@@ -57,9 +57,9 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
             "media/test_in/es.csv"
         ))
-        self.gen_elem_page.click_save_btn()
-        # List View
-        tickets = ticket_page.find_list_data()
+        # self.gen_elem_page.click_save_btn()
+        # # List View
+        # tickets = ticket_page.find_list_data()
 
     def test_image_upload(self):
         # Create Ticket Page Object
