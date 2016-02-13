@@ -4,27 +4,33 @@ import { belongs_to, change_belongs_to, change_belongs_to_simple, belongs_to_dir
 
 
 var TicketLocationMixin = Ember.Mixin.create({
-    location: Ember.computed.alias('belongs_to_location.firstObject'),
+    location: Ember.computed(function() {
+        const store = this.get('store'); 
+        const locations = store.find('location');
+        const location_pk = this.get('location_fk');
+        // return locations.filterBy('id', 
+        return locations.filter((location) => {
+            return location.get('id') === location_pk; 
+        }).objectAt(0);
+    }),
+    _location: Ember.computed.alias('belongs_to_location.firstObject'),
     belongs_to_location: belongs_to('tickets', 'location'),
     remove_location() {
         let ticket_id = this.get('id');
         let store = this.get('store');
-        let old_location = this.get('location');
+        let old_location = this.get('_location');
         if(old_location) {
             let old_location_tickets = old_location.get('tickets') || [];
-            let updated_old_location_tickets = old_location_tickets.filter(function(id) {
+            let updated_old_location_tickets = old_location_tickets.filter((id) => {
                 return id !== ticket_id;
             });
-            run(function() {
+            run(() => {
                 store.push('location', {id: old_location.get('id'), tickets: updated_old_location_tickets});
             });
         }
     },
     location_status_setup(location_json) {
-        let pushed_location;
-        run(() => {
-            pushed_location = this.get('store').push('location', location_json);
-        });
+        const pushed_location = this.get('store').push('location', location_json);
         pushed_location.change_status(location_json.status_fk);
         return pushed_location;
     },
@@ -41,9 +47,9 @@ var TicketLocationMixin = Ember.Mixin.create({
             location.save();
         }
     },
-    change_location_container: change_belongs_to_simple('tickets', 'location'),
-    saveLocation: belongs_to_save('ticket', 'location', 'location_fk'),
-    rollbackLocation: belongs_to_rollback_simple('location_fk', 'location', 'change_location'),
+    change_location_container: change_belongs_to_simple('tickets', 'location', '_location'),
+    saveLocation: belongs_to_save('ticket', '_location', 'location_fk'),
+    rollbackLocation: belongs_to_rollback_simple('location_fk', '_location', 'change_location'),
 });
 
 export default TicketLocationMixin;

@@ -94,8 +94,11 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
     priorityIsDirty: belongs_to_dirty('priority_fk', 'priority'),
     assigneeIsDirty: belongs_to_dirty('assignee_fk', 'assignee'),
     // locationIsDirty: belongs_to_dirty('location_fk', 'location'),
-    locationIsDirty: Ember.computed('location', 'location_fk', function() {
-        const location = this.get('location');
+    locationIsDirty: Ember.computed('_location', 'location_fk', function() {
+        if(this.get('grid') && !this.get('detail')){
+            return false;
+        }
+        const location = this.get('_location');
         const location_fk = this.get('location_fk');
         if (location) {
             return location.get('id') === location_fk ? false : true;
@@ -199,7 +202,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
             categories: this.get('sorted_categories').mapBy('id'),
             requester: this.get('requester'),
             assignee: this.get('assignee.id'),
-            location: this.get('location.id'),
+            location: this.get('_location.id'),
             attachments: this.get('attachment_ids'),
         };
         if (this.get('comment')) {

@@ -13,7 +13,7 @@ var TicketNewComponent = ParentValidationComponent.extend(StrictMixin, TabMixin,
     statusValidation: validate('model.status'),
     priorityValidation: validate('model.priority'),
     assigneeValidation: validate('model.assignee'),
-    locationValidation: validate('model.location'),
+    locationValidation: validate('model._location'),
     actions: {
         changed_status(new_status_id) {
             const ticket = this.get('model');

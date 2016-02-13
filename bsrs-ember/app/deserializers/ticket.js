@@ -10,37 +10,37 @@ var extract_attachments = function(model, store) {
     return model.attachments;
 };
 
-var extract_categories_list = function(category_json, store, category_deserializer, ticket) {
-    let server_sum = [];
-    let m2m_categories = [];
-    let categories = [];
-    const category_ids = category_json.mapBy('id');
-    const ticket_categories = ticket.get('ticket_categories_no_filter') || [];
-    const ticket_categories_pks = ticket_categories.mapBy('category_pk');
-    const ticket_id = ticket.get('id');
-    for (let i = category_json.length-1; i >= 0; i--){
-        const pk = Ember.uuid();
-        const cat = category_json[i];
-        cat.previous_children_fks = cat.children_fks;
-        const existing_category = store.find('category', cat.id);
-        if(!existing_category.get('content')){
-            categories.push(cat);
-        }
-        if(Ember.$.inArray(cat.id, ticket_categories_pks) < 0){
-            server_sum.push(pk);
-            m2m_categories.push({id: pk, ticket_pk: ticket_id, category_pk: cat.id});
-        }
-    }
-    ticket_categories.forEach((m2m) => {
-        if(Ember.$.inArray(m2m.get('category_pk'), category_ids) > -1){
-            server_sum.push(m2m.id);
-            return;
-        }else if(Ember.$.inArray(m2m.get('category_pk'), category_ids) < 0){
-           m2m_categories.push({id: m2m.get('id'), removed: true});
-        }
-    });
-    return [m2m_categories, categories, server_sum, category_ids];
-};
+// var extract_categories_list = function(category_json, store, category_deserializer, ticket) {
+//     let server_sum = [];
+//     let m2m_categories = [];
+//     let categories = [];
+//     const category_ids = category_json.mapBy('id');
+//     const ticket_categories = ticket.get('ticket_categories_no_filter') || [];
+//     const ticket_categories_pks = ticket_categories.mapBy('category_pk');
+//     const ticket_id = ticket.get('id');
+//     for (let i = category_json.length-1; i >= 0; i--){
+//         const pk = Ember.uuid();
+//         const cat = category_json[i];
+//         cat.previous_children_fks = cat.children_fks;
+//         const existing_category = store.find('category', cat.id);
+//         if(!existing_category.get('content')){
+//             categories.push(cat);
+//         }
+//         if(Ember.$.inArray(cat.id, ticket_categories_pks) < 0){
+//             server_sum.push(pk);
+//             m2m_categories.push({id: pk, ticket_pk: ticket_id, category_pk: cat.id});
+//         }
+//     }
+//     ticket_categories.forEach((m2m) => {
+//         if(Ember.$.inArray(m2m.get('category_pk'), category_ids) > -1){
+//             server_sum.push(m2m.id);
+//             return;
+//         }else if(Ember.$.inArray(m2m.get('category_pk'), category_ids) < 0){
+//            m2m_categories.push({id: m2m.get('id'), removed: true});
+//         }
+//     });
+//     return [m2m_categories, categories, server_sum, category_ids];
+// };
 
 var extract_categories = function(category_json, store, category_deserializer, ticket) {
     let server_sum = [];
@@ -115,8 +115,7 @@ var extract_cc = function(cc_json, store, ticket) {
 
 var extract_ticket_location = function(location_json, store, ticket) {
     let location_pk = location_json.id;
-    location_json.grid = true;
-    if (ticket.get('location.id') !== location_pk) {
+    if (ticket.get('_location.id') !== location_pk) {
         return [location_pk, location_json];
     }
     return [location_pk];
@@ -152,7 +151,7 @@ var TicketDeserializer = Ember.Object.extend({
         let category_deserializer = this.get('CategoryDeserializer');
         let location_deserializer = this.get('LocationDeserializer');
         if (typeof options === 'undefined') {
-            return this.deserialize_list(response, category_deserializer, location_deserializer);
+            return this.deserialize_list(response);
         } else {
             this.deserialize_single(response, options, category_deserializer, location_deserializer);
         }
@@ -193,7 +192,7 @@ var TicketDeserializer = Ember.Object.extend({
             categories.push(...categories_arr);
             run(() => {
                 if(ticket_location_json){
-                ticket.change_location(ticket_location_json);
+                    ticket.change_location(ticket_location_json);
                 }
                 categories.forEach((cat) => {
                     store.push('category', cat); 
@@ -208,74 +207,117 @@ var TicketDeserializer = Ember.Object.extend({
             });
         }
     },
-    deserialize_list(response, category_deserializer) {
-        let store = this.get('store');
-        let return_array = Ember.A();
-        let m2m_categories = [];
-        let categories = [];
-        let server_sum;
-        let location_fk;
-        let ticket_location_json;
-        let tickets = [];
-        let priorities = [];
-        let statuses = [];
-        let location_jsons = [];
+    deserialize_list(response) {
+        const store = this.get('store');
+        const tickets = [];
+        const priorities = [];
+        const statuses = [];
+        const return_array = [];
         response.results.forEach((model) => {
             const existing = store.find('ticket', model.id);
-            let category_ids;
             if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
-                let location_json = model.location;
-                model.location_fk = location_json.id;
-                delete model.location;
-                let assignee_json = model.assignee;
-                //TODO: deserialize test this
-                model.assignee_fk = model.assignee.id;
-                delete model.assignee;
-                const categories_json = model.categories;
-                delete model.categories;
                 model.grid = true;
-                let ticket = store.push('ticket', model);
-                [location_fk, ticket_location_json] = extract_ticket_location(location_json, store, ticket);
-                if(ticket_location_json){
-                    location_jsons.push({ticket: ticket, json: ticket_location_json});
-                }
+                const category_json = model.categories;
+                model.category_ids = category_json.mapBy('id');
+                category_json.forEach((category) => {
+                    store.push('category', category); 
+                });
+                const location_json = model.location;
+                location_json.grid = true;
+                delete location_json.location_level;
+                store.push('location', location_json);
+                model.location_fk = model.location.id;
+                const assignee_json = model.assignee;
+                model.assignee_fk = model.assignee.id;
+                delete model.categories;
+                delete model.location;
+                delete model.assignee;
+                const ticket = store.push('ticket', model);
+                ticket.save();
                 priorities.push(extract_ticket_priority(model.priority_fk, store, ticket));
                 statuses.push(extract_ticket_status(model.status_fk, store, ticket));
                 extract_assignee(assignee_json, store, ticket);
-                let categories_arr;
-                let m2m_categories_arr;
-                [m2m_categories_arr, categories_arr, server_sum, category_ids] = extract_categories_list(categories_json, store, category_deserializer, ticket);
-                categories.push(...categories_arr);
-                m2m_categories.push(...m2m_categories_arr);
-                return_array.pushObject(ticket);
+                return_array.push(ticket);
             }else{
                 return_array.pushObject(existing);
             }
-            tickets.push({id: model.id, ticket_categories_fks: server_sum, location_fk: location_fk, category_ids: category_ids}); 
         });
-        run(() => {
-            tickets.forEach((ticket) => {
-                const pushed_ticket = store.push('ticket', ticket); 
-                pushed_ticket.save();
-            });
-            location_jsons.forEach((obj) => {
-                obj['ticket'].change_location(obj['json']); 
-            });
-            categories.forEach((cat) => {
-                store.push('category', cat); 
-            });
-            m2m_categories.forEach((m2m) => {
-                store.push('ticket-category', m2m);
-            });
-            priorities.forEach((priority) => {
-                if(priority){ store.push('ticket-priority', priority); }
-            });
-            statuses.forEach((status) => {
-                if(status){ store.push('ticket-status', status); }
-            });
+        priorities.forEach((priority) => {
+            if(priority){ store.push('ticket-priority', priority); }
+        });
+        statuses.forEach((status) => {
+            if(status){ store.push('ticket-status', status); }
         });
         return return_array;
     }
+    // deserialize_list(response, category_deserializer) {
+    //     let store = this.get('store');
+    //     let return_array = Ember.A();
+    //     let m2m_categories = [];
+    //     let categories = [];
+    //     let server_sum;
+    //     let location_fk;
+    //     let ticket_location_json;
+    //     let tickets = [];
+    //     let priorities = [];
+    //     let statuses = [];
+    //     let location_jsons = [];
+    //     response.results.forEach((model) => {
+    //         const existing = store.find('ticket', model.id);
+    //         let category_ids;
+    //         if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
+    //             let location_json = model.location;
+    //             model.location_fk = location_json.id;
+    //             delete model.location;
+    //             let assignee_json = model.assignee;
+    //             //TODO: deserialize test this
+    //             model.assignee_fk = model.assignee.id;
+    //             delete model.assignee;
+    //             const categories_json = model.categories;
+    //             delete model.categories;
+    //             model.grid = true;
+    //             let ticket = store.push('ticket', model);
+    //             [location_fk, ticket_location_json] = extract_ticket_location(location_json, store, ticket);
+    //             if(ticket_location_json){
+    //                 location_jsons.push({ticket: ticket, json: ticket_location_json});
+    //             }
+    //             priorities.push(extract_ticket_priority(model.priority_fk, store, ticket));
+    //             statuses.push(extract_ticket_status(model.status_fk, store, ticket));
+    //             extract_assignee(assignee_json, store, ticket);
+    //             let categories_arr;
+    //             let m2m_categories_arr;
+    //             [m2m_categories_arr, categories_arr, server_sum, category_ids] = extract_categories_list(categories_json, store, category_deserializer, ticket);
+    //             categories.push(...categories_arr);
+    //             m2m_categories.push(...m2m_categories_arr);
+    //             return_array.pushObject(ticket);
+    //         }else{
+    //             return_array.pushObject(existing);
+    //         }
+    //         tickets.push({id: model.id, ticket_categories_fks: server_sum, location_fk: location_fk, category_ids: category_ids}); 
+    //     });
+    //     run(() => {
+    //         tickets.forEach((ticket) => {
+    //             const pushed_ticket = store.push('ticket', ticket); 
+    //             pushed_ticket.save();
+    //         });
+    //         location_jsons.forEach((obj) => {
+    //             obj['ticket'].change_location(obj['json']); 
+    //         });
+    //         categories.forEach((cat) => {
+    //             store.push('category', cat); 
+    //         });
+    //         m2m_categories.forEach((m2m) => {
+    //             store.push('ticket-category', m2m);
+    //         });
+    //         priorities.forEach((priority) => {
+    //             if(priority){ store.push('ticket-priority', priority); }
+    //         });
+    //         statuses.forEach((status) => {
+    //             if(status){ store.push('ticket-status', status); }
+    //         });
+    //     });
+    //     return return_array;
+    // }
 });
 
 export default TicketDeserializer;

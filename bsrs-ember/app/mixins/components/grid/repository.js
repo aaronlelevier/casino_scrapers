@@ -65,7 +65,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
             //TODO: turn this into a service and unit test.  Only acceptance tests right now
             const all = store.find(type);
             const clean_cache = all.filter((model) => {
-                return model.get('grid') && !model.get('detail') && model.get('isNotDirtyOrRelatedNotDirty');
+                return model.get('grid') && !model.get('detail');
             });
             //clear models that are still around from previous grid so they are not dirty
             ancillary_processing.forEach((type) => {
