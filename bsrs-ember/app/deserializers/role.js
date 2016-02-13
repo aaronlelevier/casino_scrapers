@@ -69,12 +69,23 @@ let extract_location_level = (model, store) => {
 };
 
 var copySettingsToFirstLevel = (obj) => {
-  var keys = obj.settings !== undefined ? Object.keys(obj.settings) : {};
   var newState = {};
-  for(var i=0; i < keys.length; i++) {
-    var key = keys[i];
-    newState[key] = obj.settings[key];
+  var settings = obj.settings || {};
+  
+  for(var s in settings) {
+    var setting = settings[s];
+    var keys = Object.keys(setting);
+    
+    for(var i=0; i < keys.length; i++) {
+      var key = keys[i];
+      if(key === 'value') {
+        newState[s] = obj.settings[s][key];
+      } else {
+        newState[s.concat('_'+key)] = obj.settings[s][key];
+      }
+    }
   }
+  delete obj.settings;
   return Object.assign({}, obj, newState);
 };
 

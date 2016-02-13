@@ -354,15 +354,47 @@ test('settings - translation keys', (assert) => {
     });
 });
 
-test('settings - inherited placeholder text', (assert) => {
+test('settings - inherited value from parent', (assert) => {
     clearxhr(list_xhr);
     clearxhr(detail_xhr);
-    var company_name = 'foo';
-    detail_data = RF.detail(RD.idOne, null, {company_name: company_name});
+    let value = 'foo';
+    let inherited = true;
+    let inherited_from = 'general';
+    detail_data = RF.detail(RD.idOne, null, {company_name: {value, inherited, inherited_from}});
     xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
     visit(DETAIL_URL);
     andThen(() => {
-        return pauseTest();
-        assert.equal(find('.t-settings-company_name').get(0)['placeholder'], `Default General Setting: ${company_name}`);
+        assert.equal(find('.t-settings-company_name').get(0)['placeholder'], `Default ${inherited_from} Setting: ${value}`);
+        assert.equal(find('.t-settings-company_name').val(), '');
+    });
+});
+
+test('settings - has a value, and is not inherited', (assert) => {
+    clearxhr(list_xhr);
+    clearxhr(detail_xhr);
+    let value = 'foo';
+    let inherited = false;
+    let inherited_from = 'general';
+    detail_data = RF.detail(RD.idOne, null, {company_name: {value, inherited, inherited_from}});
+    xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(find('.t-settings-company_name').get(0)['placeholder'], translations['admin.setting.company_name']);
+        assert.equal(find('.t-settings-company_name').val(), value);
+    });
+});
+
+test('settings - no value, and not inherited', (assert) => {
+    clearxhr(list_xhr);
+    clearxhr(detail_xhr);
+    let value = null;
+    let inherited = false;
+    let inherited_from = 'general';
+    detail_data = RF.detail(RD.idOne, null, {company_name: {value, inherited, inherited_from}});
+    xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(find('.t-settings-company_name').get(0)['placeholder'], translations['admin.setting.company_name']);
+        assert.equal(find('.t-settings-company_name').val(), translations['admin.setting.company_name']);
     });
 });

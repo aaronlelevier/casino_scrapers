@@ -295,12 +295,15 @@ test('role-category m2m does not delete other role-category m2m models', (assert
 });
 
 test('settings copySettingsToFirstLevel', (assert) => {
-    let company_name = 'foo';
-    let response = RF.generate(RD.idOne, null, {company_name: company_name});
+    let value = 'foo';
+    let inherited = true;
+    let inherited_from = 'general';
+    let response = RF.generate(RD.idOne, null, {company_name: {value, inherited, inherited_from}});
     run(() => {
         subject.deserialize(response, RD.idOne);
     });
     let role = store.find('role', RD.idOne);
-    assert.equal(role.get('settings').company_name, company_name);
-    assert.equal(role.get('company_name'), company_name);
+    assert.equal(role.get('company_name'), value);
+    assert.equal(role.get('company_name_inherited'), inherited);
+    assert.equal(role.get('company_name_inherited_from'), inherited_from);
 });

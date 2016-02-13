@@ -79,7 +79,11 @@
                         </div>
                         <div class="col-md-12">
                             {{#form-group title="admin.setting.company_name" for="company_name"}}
-                                {{input type="text" placeholder=(concat "Default General Setting: " model.company_name) value=model.company_name class="form-control t-settings-company_name" id="company_name" required="required"}}
+                                {{settings/input-settings
+                                  value=model.company_name
+                                  inherited=model.company_name_inherited
+                                  inherited_from=model.company_name_inherited_from
+                                }}
                             {{/form-group}}
                         </div>
                     </div>

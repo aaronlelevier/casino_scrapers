@@ -21,7 +21,7 @@ var RoleModel = Model.extend(NewMixin, {
     create_all: attr(),
     login_grace: attr(''),
     company_name: attr(''),
-    settings: Ember.computed(function() {
+    settings:  Ember.computed(function() {
         return {
             welcome_text: this.get('welcome_text'),
             create_all: this.get('create_all'),
