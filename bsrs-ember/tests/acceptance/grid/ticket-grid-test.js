@@ -79,6 +79,8 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     visit(TICKET_URL);
     click('.t-page:eq(1) a');
     andThen(() => {
+        const tickets_all = store.find('ticket-list');
+        assert.equal(tickets_all.get('length'), 9);
         assert.equal(currentURL(), TICKET_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestLastGrid);
@@ -91,6 +93,8 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     });
     click('.t-page:eq(0) a');
     andThen(() => {
+        const tickets_all = store.find('ticket-list');
+        assert.equal(tickets_all.get('length'), 10);
         assert.equal(currentURL(),TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
@@ -640,13 +644,13 @@ test('save filterset button only available when a dynamic filter is present', fu
 
 test('status.translated_name is a functional related filter', function(assert) {
     let option_four = PREFIX + BASE_URL + '/?page=1&ordering=-status__name&status__name__icontains=rr';
-    xhr(option_four,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status_fk'));
+    xhr(option_four,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
     let option_three = PREFIX + BASE_URL + '/?page=1&ordering=-status__name';
-    xhr(option_three,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status_fk'));
+    xhr(option_three,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
     let option_two = PREFIX + BASE_URL + '/?page=1&ordering=status__name';
-    xhr(option_two,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status_fk'));
+    xhr(option_two,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
     let option_one = PREFIX + BASE_URL + '/?page=1&search=r';
-    xhr(option_one,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status_fk'));
+    xhr(option_one,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);

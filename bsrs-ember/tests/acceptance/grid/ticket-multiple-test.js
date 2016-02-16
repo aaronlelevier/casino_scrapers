@@ -49,7 +49,7 @@ test('navigating between ticket and people and locations and category will not d
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority-translated_name').text().trim(), TD.priorityOne);
-        const tickets = store.find('ticket');
+        const tickets = store.find('ticket-list');
         assert.equal(tickets.get('length'), 10);
         tickets.forEach((ticket) => {
             assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -61,9 +61,11 @@ test('navigating between ticket and people and locations and category will not d
         // categorys.forEach((category) => {
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
-        const persons = store.find('person');
-        assert.equal(persons.get('length'), 2);
-        persons.forEach((person) => {
+        const persons = store.find('person-list');
+        assert.equal(persons.get('length'), 1);
+        const people = store.find('person');
+        assert.equal(people.get('length'), 1);
+        people.forEach((person) => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         });
         // const locations = store.find('location');
@@ -79,7 +81,7 @@ test('navigating between ticket and people and locations and category will not d
         assert.equal(currentURL(), `${TICKET_URL}?page=2`);
         assert.equal(find('.t-grid-title').text(), 'Tickets');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        const tickets = store.find('ticket');
+        const tickets = store.find('ticket-list');
         assert.equal(tickets.get('length'), 9);
         tickets.forEach((ticket) => {
             assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -91,9 +93,11 @@ test('navigating between ticket and people and locations and category will not d
         // categorys.forEach((category) => {
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
-        const persons = store.find('person');
-        assert.equal(persons.get('length'), 3);
-        persons.forEach((person) => {
+        const persons = store.find('person-list');
+        assert.equal(persons.get('length'), 1);
+        const people = store.find('person');
+        assert.equal(people.get('length'), 1);
+        people.forEach((person) => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         });
         // const locations = store.find('location');
@@ -107,7 +111,7 @@ test('navigating between ticket and people and locations and category will not d
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(find('.t-grid-title').text(), 'People');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        const tickets = store.find('ticket');
+        const tickets = store.find('ticket-list');
         assert.equal(tickets.get('length'), 9);
         tickets.forEach((ticket) => {
             assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -120,7 +124,7 @@ test('navigating between ticket and people and locations and category will not d
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
         const persons = store.find('person');
-        assert.equal(persons.get('length'), 12);
+        assert.equal(persons.get('length'), 11);
         persons.forEach((person) => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         });
@@ -136,7 +140,7 @@ test('navigating between ticket and people and locations and category will not d
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-2);
-        const tickets = store.find('ticket');
+        const tickets = store.find('ticket-list');
         assert.equal(tickets.get('length'), 9);
         tickets.forEach((ticket) => {
             assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -149,7 +153,7 @@ test('navigating between ticket and people and locations and category will not d
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
         const persons = store.find('person');
-        assert.equal(persons.get('length'), 10);
+        assert.equal(persons.get('length'), 19);
         persons.forEach((person) => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         });
@@ -166,7 +170,7 @@ test('navigating between ticket and people and locations and category will not d
         assert.equal(currentURL(), CATEGORY_URL);
         assert.equal(find('.t-grid-title').text(), 'Categories');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        const tickets = store.find('ticket');
+        const tickets = store.find('ticket-list');
         assert.equal(tickets.get('length'), 9);
         tickets.forEach((ticket) => {
             assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -179,7 +183,7 @@ test('navigating between ticket and people and locations and category will not d
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
         const persons = store.find('person');
-        assert.equal(persons.get('length'), 10);
+        assert.equal(persons.get('length'), 19);
         persons.forEach((person) => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         });
@@ -195,7 +199,7 @@ test('navigating between ticket and people and locations and category will not d
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        const tickets = store.find('ticket');
+        const tickets = store.find('ticket-list');
         assert.equal(tickets.get('length'), 9);
         tickets.forEach((ticket) => {
             assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -208,7 +212,7 @@ test('navigating between ticket and people and locations and category will not d
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
         const persons = store.find('person');
-        assert.equal(persons.get('length'), 10);
+        assert.equal(persons.get('length'), 19);
         persons.forEach((person) => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         });
@@ -225,8 +229,8 @@ test('navigating between ticket and people and locations and category will not d
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-title').text(), 'Locations');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        const tickets = store.find('ticket');
-        assert.equal(tickets.get('length'), 0);
+        const tickets = store.find('ticket-list');
+        assert.equal(tickets.get('length'), 9);
         // const ticket_cats = store.find('ticket-category');
         // assert.equal(ticket_cats.get('length'), 9);
         // const categorys = store.find('category');
@@ -235,7 +239,7 @@ test('navigating between ticket and people and locations and category will not d
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
         const persons = store.find('person');
-        assert.equal(persons.get('length'), 10);
+        assert.equal(persons.get('length'), 19);
         persons.forEach((person) => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         });
@@ -251,8 +255,8 @@ test('navigating between ticket and people and locations and category will not d
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        const tickets = store.find('ticket');
-        assert.equal(tickets.get('length'), 0);
+        const tickets = store.find('ticket-list');
+        assert.equal(tickets.get('length'), 9);
         tickets.forEach((ticket) => {
             assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
         });
@@ -264,7 +268,7 @@ test('navigating between ticket and people and locations and category will not d
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
         const persons = store.find('person');
-        assert.equal(persons.get('length'), 10);
+        assert.equal(persons.get('length'), 19);
         persons.forEach((person) => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         });
@@ -281,7 +285,7 @@ test('navigating between ticket and people and locations and category will not d
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority-translated_name').text().trim(), TD.priorityOne);
-        const tickets = store.find('ticket');
+        const tickets = store.find('ticket-list');
         assert.equal(tickets.get('length'), 10);
         tickets.forEach((ticket) => {
             assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -294,7 +298,7 @@ test('navigating between ticket and people and locations and category will not d
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
         const persons = store.find('person');
-        assert.equal(persons.get('length'), 11);
+        assert.equal(persons.get('length'), 19);
         persons.forEach((person) => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         });

@@ -826,7 +826,7 @@ test('location component shows location for ticket and will fire off xhr to fetc
     andThen(() => {
         assert.equal(page.locationInput(), LD.storeName);
         let ticket = store.find('ticket', TD.idOne);
-        assert.equal(ticket.get('_location.id'), LD.idOne);
+        assert.equal(ticket.get('location.id'), LD.idOne);
         assert.equal(ticket.get('location_fk'), LD.idOne);
         assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
         assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
@@ -885,7 +885,7 @@ test('location component shows location for ticket and will fire off xhr to fetc
     andThen(() => {
         assert.equal(page.locationInput(), LD.storeNameTwo);
         let ticket = store.find('ticket', TD.idOne);
-        assert.equal(ticket.get('_location.id'), LD.idTwo);
+        assert.equal(ticket.get('location.id'), LD.idTwo);
         assert.equal(ticket.get('location_fk'), LD.idOne);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
         //ensure categories has not changed
@@ -905,7 +905,7 @@ test('location component shows location for ticket and will fire off xhr to fetc
     andThen(() => {
         assert.equal(page.locationInput(), LD.storeNameThree);
         let ticket = store.find('ticket', TD.idOne);
-        assert.equal(ticket.get('_location.id'), LD.idThree);
+        assert.equal(ticket.get('location.id'), LD.idThree);
         assert.equal(ticket.get('location_fk'), LD.idOne);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
         //ensure categories has not changed

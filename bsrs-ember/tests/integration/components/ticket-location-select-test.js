@@ -50,7 +50,7 @@ test('should render a selectbox when location options are empty (initial state o
     assert.equal($('.ember-power-select-options > li').length, 1);
     assert.equal($('li.ember-power-select-option').text(), GLOBALMSG.power_search);
     assert.equal(this.$('.ember-power-select-placeholder').text(), GLOBALMSG.location_power_select);
-    assert.ok(!ticket.get('_location'));
+    assert.ok(!ticket.get('location'));
 });
 
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
@@ -87,7 +87,7 @@ test('should be able to select new location when one doesnt exist', function(ass
                 $(`.ember-power-select-option:contains(${LOCATION_DEFAULTS.storeName})`).mouseup();
             });
             assert.equal($component.find(`${PowerSelect}`).text().trim(), LOCATION_DEFAULTS.storeName);
-            assert.equal(ticket.get('_location').get('id'), LOCATION_DEFAULTS.idOne);
+            assert.equal(ticket.get('location').get('id'), LOCATION_DEFAULTS.idOne);
         });
 });
 
@@ -111,7 +111,7 @@ test('should be able to select new location when ticket already has a location',
             assert.equal($('.ember-basic-dropdown-content').length, 0);
             assert.equal($('.ember-power-select-options > li').length, 0);
             assert.equal($component.find(`${PowerSelect}`).text().trim(), LOCATION_DEFAULTS.storeNameTwo);
-            assert.equal(ticket.get('_location').get('id'), LOCATION_DEFAULTS.idTwo);
+            assert.equal(ticket.get('location').get('id'), LOCATION_DEFAULTS.idTwo);
             assert.deepEqual(location_one.get('tickets'), []);
             assert.deepEqual(location_two.get('tickets'), [TICKET_DEFAULTS.idOne]);
         });

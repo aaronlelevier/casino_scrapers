@@ -479,7 +479,7 @@ test('location new component shows location for ticket and will fire off xhr to 
     andThen(() => {
         assert.equal(page.locationInput(), LD.storeNameTwo);
         let ticket = store.find('ticket');
-        assert.equal(ticket.objectAt(0).get('_location.id'), LD.idTwo);
+        assert.equal(ticket.objectAt(0).get('location.id'), LD.idTwo);
         assert.equal(ticket.objectAt(0).get('location_fk'), undefined);
         assert.ok(ticket.objectAt(0).get('isDirtyOrRelatedDirty'));
     });
@@ -672,8 +672,8 @@ test('all required fields persist correctly when the user submits a new ticket f
         assert.equal(persisted.get('new'), undefined);
         assert.equal(persisted.get('assignee.id'), PD.idSearch);
         assert.equal(persisted.get('request'), TD.requestOneGrid);
-        assert.ok(persisted.get('_location'));
-        assert.equal(persisted.get('_location.id'), LD.idTwo);
+        assert.ok(persisted.get('location'));
+        assert.equal(persisted.get('location.id'), LD.idTwo);
         assert.equal(persisted.get('status.id'), TD.statusOneId);
         assert.ok(persisted.get('isNotDirty'));
         assert.ok(persisted.get('isNotDirtyOrRelatedNotDirty'));

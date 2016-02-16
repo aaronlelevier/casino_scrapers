@@ -25,14 +25,17 @@ if [  -d "${PROJECT_DIR}/persistent/bsrs" ];
     then
         echo "BSRS REPO EXISTS"
         cd bsrs
-        git checkout .
         git checkout master
+        git checkout gridTesting
         git pull
     else
         echo "BSRS REPO DOES NOT EXIST"
         git clone git@github.com:bigskytech/bsrs.git
         cd bsrs
-        git checkout v0.1.2
+        git checkout master
+        git pull --all
+        git checkout gridTesting
+        # git checkout v0.1.2
 fi
 TEST=$?; if [ "$TEST" == 1 ]; then echo "git pull/clone failed"; exit $TEST; fi
 

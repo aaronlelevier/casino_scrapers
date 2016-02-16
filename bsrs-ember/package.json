@@ -24,6 +24,7 @@
     "broccoli-asset-rev": "^2.2.0",
     "broccoli-funnel": "^1.0.0",
     "bsrs-components": "git+ssh://git@github.com:bigskytech/bsrs-components.git#0.0.19",
+    "ember-ajax": "0.7.1",
     "ember-autoresize": "0.5.14",
     "ember-cli": "2.3.0-beta.2",
     "ember-cli-app-version": "^1.0.0",
@@ -52,6 +53,7 @@
     "ember-disable-proxy-controllers": "^1.0.1",
     "ember-export-application-global": "^1.0.4",
     "ember-i18n": "4.2.0",
+    "ember-load-initializers": "^0.5.0",
     "ember-modal-dialog": "0.8.2",
     "ember-moment": "5.0.1",
     "ember-power-select": "^0.8.0-beta.7",
@@ -64,11 +66,10 @@
     "es5-shim": "^4.1.10",
     "express": "^4.13.3",
     "glob": "^4.5.3",
+    "liquid-fire": "0.23.0",
+    "loader.js": "^4.0.0",
     "markdown-code-highlighting": "0.0.6",
     "morgan": "^1.6.1",
-    "object-assign": "^4.0.1",
-    "ember-ajax" : "0.7.1",
-    "loader.js": "^4.0.0",
-    "ember-load-initializers": "^0.5.0"
+    "object-assign": "^4.0.1"
   }
 }

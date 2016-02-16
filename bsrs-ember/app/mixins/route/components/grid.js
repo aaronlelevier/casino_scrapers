@@ -44,7 +44,7 @@ var GridViewRoute = Ember.Route.extend({
         const routeName = this.get('routeName');
         set_filter_model_attrs(this.filterModel, query.find);
         return new Ember.RSVP.Promise((resolve) => {
-            repository.findWithQuery(query.page, query.sort, query.search, query.find, query.page_size).then((storeFind) => {
+            repository.findWithQuery(query.page, query.sort, query.search, query.find, query.page_size).then((storeFind) =>{
                 const model = storeFind;
                 resolve({count, model, requested, filtersets, routeName, search});
             });

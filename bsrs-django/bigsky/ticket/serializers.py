@@ -6,13 +6,26 @@ from location.serializers import LocationSerializer, LocationTicketSerializer
 from person.serializers import PersonTicketSerializer
 from person.serializers_leaf import PersonSimpleSerializer
 from ticket.helpers import TicketActivityToRepresentation
-from ticket.models import Ticket, TicketActivity, TicketStatus, TicketPriority
+from ticket.models import Ticket, TicketActivity, TicketPriority, TicketStatus
 from utils.serializers import BaseCreateSerializer
 
 
 TICKET_FIELDS = ('id', 'location', 'status', 'priority', 'assignee',
     'requester', 'categories', 'request')
 
+
+class TicketPrioritySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TicketPriority
+        fields = ('id', 'name')
+
+
+class TicketStatusSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TicketStatus
+        fields = ('id', 'name')
 
 class TicketCreateSerializer(BaseCreateSerializer):
 
@@ -33,6 +46,8 @@ class TicketListSerializer(serializers.ModelSerializer):
     location = LocationTicketSerializer()
     categories = CategoryIDNameSerializerTicket(many=True)
     assignee = PersonTicketSerializer(required=False)
+    status = TicketStatusSerializer(required=False)
+    priority = TicketPrioritySerializer(required=False)
 
     class Meta:
         model = Ticket
@@ -43,12 +58,6 @@ class TicketListSerializer(serializers.ModelSerializer):
         return (queryset.select_related('location', 'assignee', 'status',
                                         'priority')
                         .prefetch_related('categories', 'categories__children'))
-
-    def to_representation(self, obj):
-        data = super(TicketListSerializer, self).to_representation(obj)
-        data['status_fk'] = data.pop('status', [])
-        data['priority_fk'] = data.pop('priority', [])
-        return data
 
 
 class TicketSerializer(serializers.ModelSerializer):

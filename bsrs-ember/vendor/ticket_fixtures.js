@@ -24,6 +24,14 @@ var BSRS_TICKET_FACTORY = (function() {
         delete child_child_category.status;
         return [parent_category, child_category, child_child_category];
     };
+    factory.prototype.generate_list = function(i) {
+        var ticket = this.generate(i);
+        delete ticket.status_fk;
+        delete ticket.priority_fk;
+        ticket.status = {id: this.ticket.statusOneId, name: this.ticket.statusOneKey}
+        ticket.priority = {id: this.ticket.priorityOneId, name: this.ticket.priorityOneKey}
+        return ticket;
+    };
     factory.prototype.generate = function(i) {
         var id = i || this.ticket.idOne;
         var categories = this.categories();
@@ -34,6 +42,7 @@ var BSRS_TICKET_FACTORY = (function() {
             id: id,
             number: this.ticket.numberOne,
             request: this.ticket.requestOne,
+            //TODO: change this back to status && priority
             status_fk: this.ticket.statusOneId,
             priority_fk: this.ticket.priorityOneId,
             cc: [this.people_fixtures.get()],
@@ -57,6 +66,10 @@ var BSRS_TICKET_FACTORY = (function() {
             var ticket = this.generate(uuid);
             ticket.number = 'bye' + i;
             ticket.request = 'sub' + i;
+            ticket.status = {id: this.ticket.statusOneId, name: this.ticket.statusOneKey}
+            ticket.priority = {id: this.ticket.priorityOneId, name: this.ticket.priorityOneKey}
+            delete ticket.status_fk;
+            delete ticket.priority_fk;
             delete ticket.cc;
             delete ticket.attachments;
             response.push(ticket);
@@ -77,8 +90,10 @@ var BSRS_TICKET_FACTORY = (function() {
             var ticket = this.generate(uuid + i);
             ticket.number = 'gone' + i;
             ticket.request = 'ape' + i;
-            ticket.priority_fk = this.ticket.priorityTwoId;
-            ticket.status_fk = this.ticket.statusTwoId;
+            ticket.status = {id: this.ticket.statusTwoId, name: this.ticket.statusTwoKey}
+            ticket.priority = {id: this.ticket.priorityTwoId, name: this.ticket.priorityTwoKey}
+            delete ticket.status_fk;
+            delete ticket.priority_fk;
             ticket.location = location;
             ticket.assignee = this.people_fixtures.get(this.ticket.assigneeTwoId, this.ticket.assigneeTwo, this.ticket.assigneeTwo);
             ticket.categories = [unused_category];

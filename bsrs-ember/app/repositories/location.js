@@ -10,7 +10,7 @@ var LOCATION_URL = PREFIX + '/admin/locations/';
 
 var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'location'; }),
-    ancillary_processing: Ember.computed(function() { return ['ticket']; }),
+    // ancillary_processing: Ember.computed(function() { return ['ticket']; }),
     type_related_m2m: Ember.computed(function() { return ['location-children', 'location-parent']; }),
     related_m2m_pk_mapping: Ember.computed(function() { return 'location_pk'; }),
     url: Ember.computed(function() { return LOCATION_URL; }),

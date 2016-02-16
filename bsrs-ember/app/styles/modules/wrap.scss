@@ -9,7 +9,12 @@ section.wrap{
     border-width: 1px 0 0 1px;
     background: $white;
     font-size: 1.3rem;
-
+    .liquid-container{
+        height: 100%;
+        .liquid-child{
+            height: 100%;
+        }
+    }
     aside.side-panel{
         position: absolute;
         top: 0;

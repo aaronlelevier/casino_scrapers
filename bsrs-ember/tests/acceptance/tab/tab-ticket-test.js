@@ -247,7 +247,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
 });
 
 //TODO: fix after fix ticket location deserializer
-// test('scott clicking on a new model from the grid view will not dirty the original tab', (assert) => {
+// test('cott clicking on a new model from the grid view will not dirty the original tab', (assert) => {
 //     let ticket_list_data = TF.list();
 //     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
 //     visit(TICKET_URL);

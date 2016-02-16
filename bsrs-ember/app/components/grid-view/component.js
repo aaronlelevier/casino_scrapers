@@ -32,6 +32,7 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
         });
         let filter = columns.map((property) => {
             return this.get('model').filter((object) => {
+                //TODO: n+1 problem?  debugger here on list view will show this
                 return regex_property(object, property, regex);
             });
         }.bind(this));

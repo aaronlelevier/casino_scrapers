@@ -81,6 +81,13 @@ var extract_assignee = function(assignee_json, store, ticket_model) {
     }
 };
 
+var extract_assignee_list = function(assignee_json, store, ticket) {
+    const existing_person = store.find('person-list', assignee_json.id);
+    const person_tickets = existing_person.get('tickets') || [];
+    const updated_person_tickets = person_tickets.concat(ticket.get('id')).uniq();
+    store.push('person-list', {id: assignee_json.id, first_name: assignee_json.first_name, last_name: assignee_json.last_name, tickets: updated_person_tickets});
+};
+
 var extract_cc = function(cc_json, store, ticket) {
     let server_sum = [];
     let prevented_duplicate_m2m = [];
@@ -115,32 +122,31 @@ var extract_cc = function(cc_json, store, ticket) {
 
 var extract_ticket_location = function(location_json, store, ticket) {
     let location_pk = location_json.id;
-    location_json.detail = true;
-    if (ticket.get('_location.id') !== location_pk) {
+    if (ticket.get('location.id') !== location_pk) {
         return [location_pk, location_json];
     }
     return [location_pk];
 };
 
-var extract_ticket_priority = function(priority_id, store, ticket) {
-    if (ticket.get('id') && ticket.get('priority.id') !== priority_id) {
-        ticket.change_priority(priority_id);
+var extract_ticket_priority = function(priority, store, ticket) {
+    if (ticket.get('detail') && ticket.get('priority.id') !== priority) {
+        ticket.change_priority(priority);
     }else{
-        let priority = store.find('ticket-priority', priority_id);
-        let priority_tickets = priority.get('tickets') || [];
-        let updated_priority_tickets = priority_tickets.concat(ticket.get('id')).uniq();
-        return {id: priority.get('id'), tickets: updated_priority_tickets};
+        const priority_list = store.find('ticket-priority-list', priority.id);
+        const priority_tickets = priority_list.get('tickets') || [];
+        const updated_priority_tickets = priority_tickets.concat(ticket.get('id')).uniq();
+        store.push('ticket-priority-list', {id: priority.id, name: priority.name, tickets: updated_priority_tickets});
     }
 };
 
-var extract_ticket_status = function(status_id, store, ticket) {
-    if (ticket.get('id') && ticket.get('status.id') !== status_id) {
-        ticket.change_status(status_id);
-    } else {
-        let status = store.find('ticket-status', status_id);
-        let status_tickets = status.get('tickets') || [];
-        let updated_status_tickets = status_tickets.concat(ticket.get('id')).uniq();
-        return {id: status.get('id'), tickets: updated_status_tickets};
+var extract_ticket_status = function(status, store, ticket) {
+    if (ticket.get('detail') && ticket.get('status.id') !== status) {
+        ticket.change_status(status);
+    }else{
+        const status_list = store.find('ticket-status-list', status.id);
+        const status_tickets = status_list.get('tickets') || [];
+        const updated_status_tickets = status_tickets.concat(ticket.get('id')).uniq();
+        store.push('ticket-status-list', {id: status.id, name: status.name, tickets: updated_status_tickets});
     }
 };
 
@@ -154,7 +160,7 @@ var TicketDeserializer = Ember.Object.extend({
         if (typeof options === 'undefined') {
             return this.deserialize_list(response);
         } else {
-            this.deserialize_single(response, options, category_deserializer, location_deserializer);
+            return this.deserialize_single(response, options, category_deserializer, location_deserializer);
         }
     },
     deserialize_single(response, id, category_deserializer) {
@@ -162,6 +168,7 @@ var TicketDeserializer = Ember.Object.extend({
         let existing_ticket = store.find('ticket', id);
         let m2m_categories = [];
         let categories = [];
+        let return_ticket = existing_ticket;
         if (!existing_ticket.get('id') || existing_ticket.get('isNotDirtyOrRelatedNotDirty')) {
             let location_json = response.location;
             response.location_fk = location_json.id;
@@ -206,17 +213,15 @@ var TicketDeserializer = Ember.Object.extend({
                 const pushed_ticket = store.push('ticket', {id: response.id, ticket_categories_fks: server_sum}); 
                 pushed_ticket.save();
             });
+            return_ticket = ticket;
         }
+        return return_ticket;
     },
     deserialize_list(response) {
         const store = this.get('store');
-        const tickets = [];
-        const priorities = [];
-        const statuses = [];
         const return_array = [];
         response.results.forEach((model) => {
             const existing = store.find('ticket', model.id);
-            if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
                 model.grid = true;
                 const category_json = model.categories;
                 model.category_ids = category_json.mapBy('id');
@@ -224,7 +229,6 @@ var TicketDeserializer = Ember.Object.extend({
                     store.push('category', category); 
                 });
                 const location_json = model.location;
-                location_json.grid = true;
                 delete location_json.location_level;
                 store.push('location', location_json);
                 model.location_fk = model.location.id;
@@ -233,92 +237,19 @@ var TicketDeserializer = Ember.Object.extend({
                 delete model.categories;
                 delete model.location;
                 delete model.assignee;
-                const ticket = store.push('ticket', model);
+                const status_json = model.status;
+                delete model.status;
+                const priority_json = model.priority;
+                delete model.priority;
+                const ticket = store.push('ticket-list', model);
                 ticket.save();
-                priorities.push(extract_ticket_priority(model.priority_fk, store, ticket));
-                statuses.push(extract_ticket_status(model.status_fk, store, ticket));
-                extract_assignee(assignee_json, store, ticket);
+                extract_ticket_priority(priority_json, store, ticket);
+                extract_ticket_status(status_json, store, ticket);
+                extract_assignee_list(assignee_json, store, ticket);
                 return_array.push(ticket);
-            }else{
-                return_array.pushObject(existing);
-            }
-        });
-        priorities.forEach((priority) => {
-            if(priority){ store.push('ticket-priority', priority); }
-        });
-        statuses.forEach((status) => {
-            if(status){ store.push('ticket-status', status); }
         });
         return return_array;
     }
-    // deserialize_list(response, category_deserializer) {
-    //     let store = this.get('store');
-    //     let return_array = Ember.A();
-    //     let m2m_categories = [];
-    //     let categories = [];
-    //     let server_sum;
-    //     let location_fk;
-    //     let ticket_location_json;
-    //     let tickets = [];
-    //     let priorities = [];
-    //     let statuses = [];
-    //     let location_jsons = [];
-    //     response.results.forEach((model) => {
-    //         const existing = store.find('ticket', model.id);
-    //         let category_ids;
-    //         if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
-    //             let location_json = model.location;
-    //             model.location_fk = location_json.id;
-    //             delete model.location;
-    //             let assignee_json = model.assignee;
-    //             //TODO: deserialize test this
-    //             model.assignee_fk = model.assignee.id;
-    //             delete model.assignee;
-    //             const categories_json = model.categories;
-    //             delete model.categories;
-    //             model.grid = true;
-    //             let ticket = store.push('ticket', model);
-    //             [location_fk, ticket_location_json] = extract_ticket_location(location_json, store, ticket);
-    //             if(ticket_location_json){
-    //                 location_jsons.push({ticket: ticket, json: ticket_location_json});
-    //             }
-    //             priorities.push(extract_ticket_priority(model.priority_fk, store, ticket));
-    //             statuses.push(extract_ticket_status(model.status_fk, store, ticket));
-    //             extract_assignee(assignee_json, store, ticket);
-    //             let categories_arr;
-    //             let m2m_categories_arr;
-    //             [m2m_categories_arr, categories_arr, server_sum, category_ids] = extract_categories_list(categories_json, store, category_deserializer, ticket);
-    //             categories.push(...categories_arr);
-    //             m2m_categories.push(...m2m_categories_arr);
-    //             return_array.pushObject(ticket);
-    //         }else{
-    //             return_array.pushObject(existing);
-    //         }
-    //         tickets.push({id: model.id, ticket_categories_fks: server_sum, location_fk: location_fk, category_ids: category_ids}); 
-    //     });
-    //     run(() => {
-    //         tickets.forEach((ticket) => {
-    //             const pushed_ticket = store.push('ticket', ticket); 
-    //             pushed_ticket.save();
-    //         });
-    //         location_jsons.forEach((obj) => {
-    //             obj['ticket'].change_location(obj['json']); 
-    //         });
-    //         categories.forEach((cat) => {
-    //             store.push('category', cat); 
-    //         });
-    //         m2m_categories.forEach((m2m) => {
-    //             store.push('ticket-category', m2m);
-    //         });
-    //         priorities.forEach((priority) => {
-    //             if(priority){ store.push('ticket-priority', priority); }
-    //         });
-    //         statuses.forEach((status) => {
-    //             if(status){ store.push('ticket-status', status); }
-    //         });
-    //     });
-    //     return return_array;
-    // }
 });
 
 export default TicketDeserializer;

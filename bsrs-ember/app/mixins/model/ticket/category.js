@@ -11,17 +11,6 @@ var CategoriesMixin = Ember.Mixin.create({
         }).join(' &#8226; ');
         return Ember.String.htmlSafe(names);
     }),
-    category_names_grid: Ember.computed(function() {
-        const store = this.get('store');
-        const categories = store.find('category');
-        const filtered_categories = categories.filter((cat) => {
-            return Ember.$.inArray(cat.get('id'), this.get('category_ids')) > -1;
-        });
-        const names = filtered_categories.sortBy('level').map((category) => {
-            return category.get('name'); 
-        }).join(' &#8226 ');
-        return Ember.String.htmlSafe(names);
-    }),
     ticket_categories_no_filter: Ember.computed(function() {
         return this.get('store').find('ticket-category').filterBy('ticket_pk', this.get('id'));
     }),
