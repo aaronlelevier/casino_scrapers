@@ -322,6 +322,20 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
             list(ticket.attachments.values_list('id', flat=True)))
         self.assertEqual(data['request'], ticket.request)
 
+    def test_status_and_priority_required(self):
+        self.data.pop('cc', None)
+        self.data.update({
+            'id': str(uuid.uuid4()),
+            'status': None,
+            'priority': None
+        })
+
+        response = self.client.post('/api/tickets/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(json.loads(response.content.decode('utf8'))['status'], ['This field may not be null.'])
+        self.assertEqual(json.loads(response.content.decode('utf8'))['priority'], ['This field may not be null.'])
+
 
 class TicketSearchTests(TicketSetupMixin, APITestCase):
 

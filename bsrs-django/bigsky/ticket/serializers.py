@@ -6,7 +6,7 @@ from location.serializers import LocationSerializer, LocationTicketSerializer
 from person.serializers import PersonTicketSerializer
 from person.serializers_leaf import PersonSimpleSerializer
 from ticket.helpers import TicketActivityToRepresentation
-from ticket.models import Ticket, TicketActivity
+from ticket.models import Ticket, TicketActivity, TicketStatus, TicketPriority
 from utils.serializers import BaseCreateSerializer
 
 
@@ -16,6 +16,10 @@ TICKET_FIELDS = ('id', 'location', 'status', 'priority', 'assignee',
 
 class TicketCreateSerializer(BaseCreateSerializer):
 
+    status = serializers.PrimaryKeyRelatedField(
+        queryset=TicketStatus.objects.all(), required=True)
+    priority = serializers.PrimaryKeyRelatedField(
+        queryset=TicketPriority.objects.all(), required=True)
     attachments = serializers.PrimaryKeyRelatedField(
         queryset=Attachment.objects.all(), many=True, required=False)
 
