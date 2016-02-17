@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import { belongs_to_extract } from 'bsrs-components/repository/belongs-to';
 
 const { run } = Ember;
 
@@ -61,17 +62,6 @@ let extract_location_level = (model, store) => {
     }
     delete model.location_level;
     return location_level_pk;
-};
-
-var extract_location_status = function(status, store, location) {
-    if (location.get('detail') && location.get('status.id') !== status) {
-        location.change_status(status);
-    }else{
-        const status_list = store.find('location-status-list', status.id);
-        const status_locations = status_list.get('locations') || [];
-        const updated_status_locations = status_locations.concat(location.get('id')).uniq();
-        store.push('location-status-list', {id: status.id, name: status.name, locations: updated_status_locations});
-    }
 };
 
 var extract_parents = function(model, store, location_deserializer) {
@@ -172,7 +162,7 @@ var LocationDeserializer = Ember.Object.extend({
             response.detail = true;
             location = store.push('location', response);
             location.save();
-            extract_location_status(response.status_fk, store, location);
+            belongs_to_extract(response.status_fk, store, location, 'status', 'location');
         }
         return location;
     },
@@ -184,7 +174,7 @@ var LocationDeserializer = Ember.Object.extend({
             const status_json = model.status;
             delete model.status;
             const location = store.push('location-list', model);
-            extract_location_status(status_json, store, location);
+            belongs_to_extract(status_json, store, location, 'status', 'location');
             return_array.push(location);
         });
         return return_array;

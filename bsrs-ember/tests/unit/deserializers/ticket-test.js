@@ -337,7 +337,7 @@ test('ticket priority will be updated when server returns different priority (de
     let json = TF.generate(TD.idOne);
     json.priority_fk = TD.priorityTwoId;
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
+    run(() => {
         subject.deserialize(json, ticket.get('id'));
     });
     assert.deepEqual(ticket_priority.get('tickets'), []);
@@ -345,6 +345,22 @@ test('ticket priority will be updated when server returns different priority (de
     assert.equal(ticket.get('priority.id'), TD.priorityTwoId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('priority_fk'), TD.priorityTwoId);
+});
+
+test('ticket status will be updated when server returns different status (detail)', (assert) => {
+    let ticket_status_two;
+    ticket_status_two = store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusOne, tickets: []});
+    let json = TF.generate(TD.idOne);
+    json.status_fk = TD.statusTwoId;
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    run(() => {
+        subject.deserialize(json, ticket.get('id'));
+    });
+    assert.deepEqual(ticket_status.get('tickets'), []);
+    assert.deepEqual(ticket_status_two.get('tickets'), [TD.idOne]);
+    assert.equal(ticket.get('status.id'), TD.statusTwoId);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('status_fk'), TD.statusTwoId);
 });
 
 test('ticket status will be deserialized into its own store when deserialize list is invoked', (assert) => {
@@ -372,20 +388,20 @@ test('ticket status will be deserialized into its own store when deserialize det
     assert.equal(ticket.get('status.id'), TD.statusOneId);
 });
 
-test('ticket status will be updated when server returns same status (list)', (assert) => {
-    let json = TF.generate_list(TD.idOne);
-    delete json.cc;
-    let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        subject.deserialize(response);
-    });
-    ticket = store.find('ticket-list', TD.idOne);
-    ticket_status = store.find('ticket-status-list', TD.statusOneId);
-    assert.deepEqual(ticket_status.get('tickets'), [TD.idOne]);
-    assert.ok(ticket.get('isNotDirty'));
-    assert.equal(ticket.get('status.id'), TD.statusOneId);
-});
+// test('ticket status will be updated when server returns same status (list)', (assert) => {
+//     let json = TF.generate_list(TD.idOne);
+//     delete json.cc;
+//     let response = {'count':1,'next':null,'previous':null,'results': [json]};
+//     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+//     run(function() {
+//         subject.deserialize(response);
+//     });
+//     ticket = store.find('ticket-list', TD.idOne);
+//     ticket_status = store.find('ticket-status-list', TD.statusOneId);
+//     assert.deepEqual(ticket_status.get('tickets'), [TD.idOne]);
+//     assert.ok(ticket.get('isNotDirty'));
+//     assert.equal(ticket.get('status.id'), TD.statusOneId);
+// });
 
 test('ticket status will be updated when server returns same status (single)', (assert) => {
     let json = TF.generate(TD.idOne);

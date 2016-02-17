@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
+import { belongs_to_extract } from 'bsrs-components/repository/belongs-to';
 
 const { run } = Ember;
 
@@ -9,38 +10,6 @@ var extract_attachments = function(model, store) {
     });
     return model.attachments;
 };
-
-// var extract_categories_list = function(category_json, store, category_deserializer, ticket) {
-//     let server_sum = [];
-//     let m2m_categories = [];
-//     let categories = [];
-//     const category_ids = category_json.mapBy('id');
-//     const ticket_categories = ticket.get('ticket_categories_no_filter') || [];
-//     const ticket_categories_pks = ticket_categories.mapBy('category_pk');
-//     const ticket_id = ticket.get('id');
-//     for (let i = category_json.length-1; i >= 0; i--){
-//         const pk = Ember.uuid();
-//         const cat = category_json[i];
-//         cat.previous_children_fks = cat.children_fks;
-//         const existing_category = store.find('category', cat.id);
-//         if(!existing_category.get('content')){
-//             categories.push(cat);
-//         }
-//         if(Ember.$.inArray(cat.id, ticket_categories_pks) < 0){
-//             server_sum.push(pk);
-//             m2m_categories.push({id: pk, ticket_pk: ticket_id, category_pk: cat.id});
-//         }
-//     }
-//     ticket_categories.forEach((m2m) => {
-//         if(Ember.$.inArray(m2m.get('category_pk'), category_ids) > -1){
-//             server_sum.push(m2m.id);
-//             return;
-//         }else if(Ember.$.inArray(m2m.get('category_pk'), category_ids) < 0){
-//            m2m_categories.push({id: m2m.get('id'), removed: true});
-//         }
-//     });
-//     return [m2m_categories, categories, server_sum, category_ids];
-// };
 
 var extract_categories = function(category_json, store, category_deserializer, ticket) {
     let server_sum = [];
@@ -135,28 +104,6 @@ var extract_ticket_location = function(location_json, store, ticket) {
     return [location_pk];
 };
 
-var extract_ticket_priority = function(priority, store, ticket) {
-    if (ticket.get('detail') && ticket.get('priority.id') !== priority) {
-        ticket.change_priority(priority);
-    }else{
-        const priority_list = store.find('ticket-priority-list', priority.id);
-        const priority_tickets = priority_list.get('tickets') || [];
-        const updated_priority_tickets = priority_tickets.concat(ticket.get('id')).uniq();
-        store.push('ticket-priority-list', {id: priority.id, name: priority.name, tickets: updated_priority_tickets});
-    }
-};
-
-var extract_ticket_status = function(status, store, ticket) {
-    if (ticket.get('detail') && ticket.get('status.id') !== status) {
-        ticket.change_status(status);
-    }else{
-        const status_list = store.find('ticket-status-list', status.id);
-        const status_tickets = status_list.get('tickets') || [];
-        const updated_status_tickets = status_tickets.concat(ticket.get('id')).uniq();
-        store.push('ticket-status-list', {id: status.id, name: status.name, tickets: updated_status_tickets});
-    }
-};
-
 var TicketDeserializer = Ember.Object.extend({
     PersonDeserializer: injectDeserializer('person'),
     CategoryDeserializer: injectDeserializer('category'),
@@ -193,8 +140,10 @@ var TicketDeserializer = Ember.Object.extend({
             response.detail = true;
             let ticket = store.push('ticket', response);
             const [location_fk, ticket_location_json] = extract_ticket_location(location_json, store, ticket);
-            extract_ticket_status(response.status_fk, store, ticket);
-            extract_ticket_priority(response.priority_fk, store, ticket);
+            belongs_to_extract(response.status_fk, store, ticket, 'status', 'ticket', ticket.change_status);
+            belongs_to_extract(response.priority_fk, store, ticket, 'priority', 'ticket', ticket.change_priority);
+            // extract_ticket_status(response.status_fk, store, ticket);
+            // extract_ticket_priority(response.priority_fk, store, ticket);
             //TODO: do I need these if statements
             if (cc_json) {
                 extract_cc(cc_json, store, ticket);
@@ -248,8 +197,8 @@ var TicketDeserializer = Ember.Object.extend({
             delete model.priority;
             const ticket = store.push('ticket-list', model);
             ticket.save();
-            extract_ticket_priority(priority_json, store, ticket);
-            extract_ticket_status(status_json, store, ticket);
+            belongs_to_extract(status_json, store, ticket, 'status', 'ticket', ticket.change_status);
+            belongs_to_extract(priority_json, store, ticket, 'priority', 'ticket', ticket.change_priority);
             extract_assignee_list(assignee_json, store, ticket);
             extract_location_list(location_json, store, ticket);
             return_array.push(ticket);
