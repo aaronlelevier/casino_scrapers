@@ -40,7 +40,7 @@ class LocationLevelCreateSerializer(BaseCreateSerializer):
 
 ### LOCATION STATUS
 
-class LocationStatusSerializer(BaseCreateSerializer):
+class LocationStatusSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LocationStatus
@@ -95,6 +95,8 @@ class LocationTicketSerializer(serializers.ModelSerializer):
 
         
 class LocationListSerializer(serializers.ModelSerializer):
+
+    status = LocationStatusSerializer(required=False)
     
     class Meta:
         model = Location

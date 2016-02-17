@@ -252,9 +252,9 @@ class LocationListTests(APITestCase):
         self.assertEqual(self.data['results'][0]['number'], location.number)
 
     def test_data_status(self):
-        status = LocationStatus.objects.get(
-            id=self.data['results'][0]['status'])
-        self.assertEqual(self.data['results'][0]['status'], str(status.id))
+        status = LocationStatus.objects.get(id=self.data['results'][0]['status']['id'])
+        self.assertEqual(self.data['results'][0]['status']['id'], str(status.id))
+        self.assertEqual(self.data['results'][0]['status']['name'], status.name)
 
     def test_data_location_level(self):
         location_level = LocationLevel.objects.get(
