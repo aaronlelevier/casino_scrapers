@@ -1,3 +1,6 @@
+TRANSFORM_APPS = ('tcategory', 'tlocation')
+
+
 class TransformRouter(object):
     """
     A router to control all database operations on models in the
@@ -7,7 +10,7 @@ class TransformRouter(object):
         """
         Attempts to read 'transforms' models go to 'transforms' database.
         """
-        if model._meta.app_label == 'tlocation':
+        if model._meta.app_label in TRANSFORM_APPS:
             return 'transforms'
         return None
 
@@ -15,7 +18,7 @@ class TransformRouter(object):
         """
         Attempts to write 'transforms' models go to 'transforms' database.
         """
-        if model._meta.app_label == 'tlocation':
+        if model._meta.app_label in TRANSFORM_APPS:
             return 'transforms'
         return None
 
@@ -23,8 +26,8 @@ class TransformRouter(object):
         """
         Allow relations if a model in the 'tlocation' app is involved.
         """
-        if obj1._meta.app_label == 'tlocation' or \
-           obj2._meta.app_label == 'tlocation':
+        if obj1._meta.app_label in TRANSFORM_APPS or \
+           obj2._meta.app_label in TRANSFORM_APPS:
            return True
         return None
 
@@ -33,7 +36,7 @@ class TransformRouter(object):
         Make sure the 'tlocation' app only appears in the 'transforms'
         database.
         """
-        if app_label == 'tlocation':
+        if app_label in TRANSFORM_APPS:
             return db == 'transforms'
         return None
 
