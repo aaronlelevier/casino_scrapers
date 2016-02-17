@@ -2,6 +2,7 @@ import Ember from 'ember';
 import { Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 
+//TODO: does this need to be a model
 export default Model.extend({
     store: inject('main'),
     ticket: Ember.computed(function() {
@@ -44,7 +45,7 @@ export default Model.extend({
     }),
     location: Ember.computed(function() {
         const store = this.get('store'); 
-        const locations = store.find('location');
+        const locations = store.find('location-list');
         const location_pk = this.get('location_fk');
         return locations.filter((location) => {
             return location.get('id') === location_pk; 
