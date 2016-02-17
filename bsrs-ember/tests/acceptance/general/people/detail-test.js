@@ -1072,7 +1072,7 @@ test('can remove and add back same location', (assert) => {
 });
 
 test('starting with multiple locations, can remove all locations (while not populating options) and add back', (assert) => {
-    people_detail_data.locations = [...people_detail_data.locations, LF.get(LD.idTwo)];
+    people_detail_data.locations = [...people_detail_data.locations, LF.get_fk(LD.idTwo)];
     people_detail_data.locations[1].name = LD.storeNameTwo;
     visit(DETAIL_URL);
     andThen(() => {

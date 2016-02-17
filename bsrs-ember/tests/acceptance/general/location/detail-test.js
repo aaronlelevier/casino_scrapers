@@ -207,7 +207,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_URL);
             let location = store.find('location', LD.idOne);
-            assert.equal(location.get('name'), LD.storeNameOne);
+            assert.equal(location.get('name'), LD.baseStoreName);
         });
     });
 });

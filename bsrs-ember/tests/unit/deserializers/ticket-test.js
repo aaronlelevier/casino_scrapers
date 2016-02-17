@@ -25,7 +25,7 @@ let store, subject, uuid, person_deserializer, location_level_deserializer, loca
 
 module('unit: ticket deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-list', 'model:person-list', 'model:ticket-person', 'model:ticket-category', 'model:ticket-status', 'model:ticket-priority', 'model:status', 'model:location', 'model:person-location', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:attachment', 'model:location-status', 'service:person-current','service:translations-fetcher','service:i18n', 'model:locale', 'model:role', 'model:ticket-status-list', 'model:ticket-priority-list']);
+        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-list', 'model:person-list', 'model:ticket-person', 'model:ticket-category', 'model:ticket-status', 'model:ticket-priority', 'model:status', 'model:location', 'model:location-list','model:person-location', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:attachment', 'model:location-status', 'service:person-current','service:translations-fetcher','service:i18n', 'model:locale', 'model:role', 'model:ticket-status-list', 'model:ticket-priority-list']);
         uuid = this.container.lookup('model:uuid');
         location_level_deserializer = LocationLevelDeserializer.create({store: store});
         location_deserializer = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
@@ -52,17 +52,6 @@ test('ticket has appropriate detail tag', (assert) => {
     ticket = store.find('ticket', TD.idOne);
     assert.ok(!ticket.get('grid'));
     assert.ok(ticket.get('detail'));
-});
-
-test('ticket has appropriate grid tag', (assert) => {
-    let json = TF.generate_list(TD.idOne);
-    let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    run(() => {
-        subject.deserialize(response);
-    });
-    ticket = store.find('ticket-list', TD.idOne);
-    assert.ok(ticket.get('grid'));
-    assert.ok(!ticket.get('detail'));
 });
 
 test('ticket assignee will be deserialized into its own store when deserialize detail is invoked (with no existing assignee)(detail)', (assert) => {
@@ -151,8 +140,8 @@ test('ticket location will be deserialized into its own store when deserialize l
         subject.deserialize(response);
     });
     ticket = store.find('ticket-list', TD.idOne);
-    location = store.find('location', LD.idOne);
-    // assert.deepEqual(location.get('tickets'), [TD.idOne]);
+    location = store.find('location-list', LD.idOne);
+    assert.deepEqual(location.get('tickets'), [TD.idOne]);
     assert.ok(ticket.get('isNotDirty'));
     assert.equal(ticket.get('location.id'), LD.idOne);
 });
@@ -164,8 +153,8 @@ test('ticket location will be deserialized into its own store when deserialize l
     run(function() {
         subject.deserialize(response);
     });
-    let location = store.findOne('location'); 
-    // assert.deepEqual(location.get('tickets'), [TD.idOne]);
+    let location = store.findOne('location-list'); 
+    assert.deepEqual(location.get('tickets'), [TD.idOne]);
     ticket = store.find('ticket-list', TD.idOne);
     assert.ok(ticket.get('isNotDirty'));
     assert.equal(ticket.get('location.id'), LD.idOne);

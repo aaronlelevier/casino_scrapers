@@ -197,11 +197,9 @@ test('clicking on a tab that is dirty from the list url should take you to the d
         assert.equal(tabs.get('length'), 1);
         assert.equal(find('.t-tab-title:eq(0)').text(), LD.storeName);
     });
+    visit(LOCATION_URL);
     andThen(() => {
-        visit(LOCATION_URL);
-        andThen(() => {
-            assert.equal(currentURL(), LOCATION_URL);
-        });
+        assert.equal(currentURL(), LOCATION_URL);
     });
     click('.t-tab:eq(0)');
     andThen(() => {

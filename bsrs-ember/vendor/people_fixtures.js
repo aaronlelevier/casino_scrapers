@@ -110,7 +110,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         person.emails = this.emails.get();
         person.phone_numbers = this.phone_number_fixtures.get();
         person.addresses = this.address_fixtures.get();
-        person.locations = [this.location_fixtures.get()];
+        person.locations = [this.location_fixtures.get_fk()];
         person.status = this.person_defaults.status;
         return person;
     };

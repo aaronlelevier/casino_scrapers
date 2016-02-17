@@ -699,7 +699,7 @@ test('location level name is a functional related filter', function(assert) {
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?search=');
         assert.equal(find('.t-grid-data:eq(0) .t-location-location_level-name').text().trim(), LLD.nameCompany);
-        assert.equal(find('.t-grid-data:eq(1) .t-location-location_level-name').text().trim(), LLD.nameDepartment);
+        assert.equal(find('.t-grid-data:eq(1) .t-location-location_level-name').text().trim(), LLD.nameCompany);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     });
     click(SORT_LLEVEL_DIR);

@@ -88,6 +88,13 @@ var extract_assignee_list = function(assignee_json, store, ticket) {
     store.push('person-list', {id: assignee_json.id, first_name: assignee_json.first_name, last_name: assignee_json.last_name, tickets: updated_person_tickets});
 };
 
+var extract_location_list = function(location_json, store, ticket) {
+    const existing_location = store.find('location-list', location_json.id);
+    const location_tickets = existing_location.get('tickets') || [];
+    const updated_location_tickets = location_tickets.concat(ticket.get('id')).uniq();
+    store.push('location-list', {id: location_json.id, name: location_json.name, tickets: updated_location_tickets});
+};
+
 var extract_cc = function(cc_json, store, ticket) {
     let server_sum = [];
     let prevented_duplicate_m2m = [];
@@ -186,8 +193,9 @@ var TicketDeserializer = Ember.Object.extend({
             response.detail = true;
             let ticket = store.push('ticket', response);
             const [location_fk, ticket_location_json] = extract_ticket_location(location_json, store, ticket);
-            const status = extract_ticket_status(response.status_fk, store, ticket);
-            const priority = extract_ticket_priority(response.priority_fk, store, ticket);
+            extract_ticket_status(response.status_fk, store, ticket);
+            extract_ticket_priority(response.priority_fk, store, ticket);
+            //TODO: do I need these if statements
             if (cc_json) {
                 extract_cc(cc_json, store, ticket);
             }
@@ -208,8 +216,8 @@ var TicketDeserializer = Ember.Object.extend({
                 m2m_categories.forEach((m2m) => {
                     store.push('ticket-category', m2m);
                 });
-                if(priority){ store.push('ticket-priority', priority); }
-                if(status){ store.push('ticket-status', status); }
+                // if(priority){ store.push('ticket-priority', priority); }
+                // if(status){ store.push('ticket-status', status); }
                 const pushed_ticket = store.push('ticket', {id: response.id, ticket_categories_fks: server_sum}); 
                 pushed_ticket.save();
             });
@@ -221,32 +229,30 @@ var TicketDeserializer = Ember.Object.extend({
         const store = this.get('store');
         const return_array = [];
         response.results.forEach((model) => {
-            const existing = store.find('ticket', model.id);
-                model.grid = true;
-                const category_json = model.categories;
-                model.category_ids = category_json.mapBy('id');
-                category_json.forEach((category) => {
-                    store.push('category', category); 
-                });
-                const location_json = model.location;
-                delete location_json.location_level;
-                store.push('location', location_json);
-                model.location_fk = model.location.id;
-                const assignee_json = model.assignee;
-                model.assignee_fk = model.assignee.id;
-                delete model.categories;
-                delete model.location;
-                delete model.assignee;
-                const status_json = model.status;
-                delete model.status;
-                const priority_json = model.priority;
-                delete model.priority;
-                const ticket = store.push('ticket-list', model);
-                ticket.save();
-                extract_ticket_priority(priority_json, store, ticket);
-                extract_ticket_status(status_json, store, ticket);
-                extract_assignee_list(assignee_json, store, ticket);
-                return_array.push(ticket);
+            const category_json = model.categories;
+            model.category_ids = category_json.mapBy('id');
+            category_json.forEach((category) => {
+                store.push('category', category); 
+            });
+            const location_json = model.location;
+            model.location_fk = model.location.id;
+            const assignee_json = model.assignee;
+            model.assignee_fk = model.assignee.id;
+            delete model.categories;
+            delete model.location;
+            delete model.assignee;
+            delete model.location;
+            const status_json = model.status;
+            delete model.status;
+            const priority_json = model.priority;
+            delete model.priority;
+            const ticket = store.push('ticket-list', model);
+            ticket.save();
+            extract_ticket_priority(priority_json, store, ticket);
+            extract_ticket_status(status_json, store, ticket);
+            extract_assignee_list(assignee_json, store, ticket);
+            extract_location_list(location_json, store, ticket);
+            return_array.push(ticket);
         });
         return return_array;
     }

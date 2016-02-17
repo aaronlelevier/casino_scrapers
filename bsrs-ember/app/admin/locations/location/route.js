@@ -9,27 +9,25 @@ var LocationRoute = TabRoute.extend(ContactRouteMixin, {
     modelName: Ember.computed(function() { return 'location'; }),
     templateModelField: Ember.computed(function() { return 'name'; }),
     model(params) {
-        let location_pk = params.location_id;
-        let all_location_levels = this.get('store').find('location-level');
-        let all_statuses = this.get('store').find('location-status');
-        let repository = this.get('repository');
-        let location = this.get('store').find('location', location_pk);
-        if (!location.get('length') || location.get('isNotDirtyOrRelatedNotDirty')) { 
-            location = repository.findById(location_pk);
-        }
-        return {
-            model: location,
-            all_location_levels: all_location_levels,
-            all_statuses: all_statuses,
-            email_types: this.email_type_repo.find(),
-            default_email_type: this.email_type_repo.get_default(),
-            phone_number_types: this.phone_number_type_repo.find(),
-            default_phone_number_type: this.phone_number_type_repo.get_default(),
-            address_types: this.address_type_repo.find(),
-            default_address_type: this.address_type_repo.get_default(),
-            countries: this.country_repo.find(),
-            state_list: this.state_repo.find(),
-        };
+        const pk = params.location_id;
+        const repository = this.get('repository');
+        let location = repository.fetch(pk);
+        const all_location_levels = this.get('store').find('location-level');
+        const all_statuses = this.get('store').find('location-status');
+        const email_types = this.email_type_repo.find();
+        const default_email_type = this.email_type_repo.get_default();
+        const phone_number_types = this.phone_number_type_repo.find();
+        const default_phone_number_type = this.phone_number_type_repo.get_default();
+        const address_types = this.address_type_repo.find();
+        const default_address_type = this.address_type_repo.get_default();
+        const countries = this.country_repo.find();
+        const state_list = this.state_repo.find();
+        return new Ember.RSVP.Promise((resolve) => {
+            repository.findById(pk).then((model) => {
+                location = model;
+                resolve({ model: location, all_statuses, all_location_levels, email_types, default_email_type, phone_number_types, default_phone_number_type, address_types, default_address_type, state_list, countries });
+            });
+        });
 
     },
     setupController: function(controller, hash) {

@@ -21,7 +21,7 @@ var store, location_unused, location_level_deserializer, subject, location_statu
 
 module('unit: location deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:location', 'model:location-level', 'model:location-status', 'model:location-children', 'model:location-parents', 'model:address', 'model:phonenumber', 'model:email', 'service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:location', 'model:location-list', 'model:location-status-list', 'model:location-level', 'model:location-status', 'model:location-children', 'model:location-parents', 'model:address', 'model:phonenumber', 'model:email', 'service:i18n']);
         location_level_deserializer = LocationLevelDeserializer.create({store: store});
         subject = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
         run(function() {
@@ -34,7 +34,7 @@ module('unit: location deserializer test', {
 
 test('location deserializer returns correct data with already present location_level (list)', (assert) => {
     let location;
-    let json = [LF.generate(LD.idOne), LF.generate(LD.unusedId)];
+    let json = [LF.generate_list(LD.idOne), LF.generate_list(LD.unusedId)];
     let response = {'count':2,'next':null,'previous':null,'results': json};
     location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
     location_unused = store.push('location', {id: LD.unusedId, name: LD.storeName, number: '988', location_level_fk: LLD.idOne});
@@ -55,7 +55,7 @@ test('location deserializer returns correct data with already present location_l
 
 test('location deserializer returns correct data with no current location_level (list)', (assert) => {
     let location;
-    let json = [LF.generate(LD.unusedId)];
+    let json = [LF.generate_list(LD.unusedId)];
     let response = {'count':1,'next':null,'previous':null,'results': json};
     location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
     run(() => {
@@ -116,21 +116,8 @@ test('location status will be deserialized into its own store when deserialize d
     // assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(location.get('statusIsNotDirty'));
     assert.ok(location.get('locationLevelIsNotDirty'));
-    subject.deserialize(json, location.get('id'));
-    assert.deepEqual(location_status.get('locations'), [LD.idOne]);
-    assert.ok(location.get('isNotDirty'));
-    assert.equal(location.get('status.id'), LDS.openId);
-});
-
-test('location status will be updated when server returns same status (list)', (assert) => {
-    let location;
-    let json = LF.generate(LD.idOne);
-    delete json.cc;
-    let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
-    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
     run(() => {
-        subject.deserialize(response);
+        subject.deserialize(json, location.get('id'));
     });
     assert.deepEqual(location_status.get('locations'), [LD.idOne]);
     assert.ok(location.get('isNotDirty'));
@@ -148,44 +135,6 @@ test('location status will be updated when server returns same status (single)',
     assert.deepEqual(location_status.get('locations'), [LD.idOne]);
     assert.ok(location.get('isNotDirty'));
     assert.equal(location.get('status.id'), LDS.openId);
-});
-
-test('location status will be updated when server returns different status (list)', (assert) => {
-    let location;
-    location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
-    let json = LF.generate(LD.idOne);
-    delete json.cc;
-    json.status = LDS.closedId;
-    let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
-    run(() => {
-        subject.deserialize(response);
-    });
-    assert.deepEqual(location_status.get('locations'), []);
-    assert.deepEqual(location_status_two.get('locations'), [LD.idOne]);
-    assert.equal(location.get('status.id'), LDS.closedId);
-    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
-    assert.equal(location.get('status_fk'), LDS.closedId);
-});
-
-test('newly inserted location will have non dirty status when deserialize list executes', (assert) => {
-    let location;
-    location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
-    store.clear('location');
-    location_status.set('locations', []);
-    let json = LF.generate(LD.idOne);
-    delete json.cc;
-    json.status = LDS.openId;
-    let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    run(() => {
-        subject.deserialize(response);
-    });
-    assert.deepEqual(location_status.get('locations'), [LD.idOne]);
-    assert.deepEqual(location_status_two.get('locations'), []);
-    location = store.find('location', LD.idOne);
-    assert.equal(location.get('status.id'), LDS.openId);
-    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
-    assert.equal(location.get('status_fk'), LDS.openId);
 });
 
 test('can push in location with location level as an object', (assert) => {

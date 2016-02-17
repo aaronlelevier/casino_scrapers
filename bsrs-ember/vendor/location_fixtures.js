@@ -29,13 +29,19 @@ var BSRS_LOCATION_FACTORY = (function() {
             status_fk: this.location_status_defaults.openId
         }
     },
+    factory.prototype.generate_list = function(i) {
+        var location = this.generate(i);
+        delete location.status_fk;
+        location.status = {id: this.location_status_defaults.openId, name: this.location_status_defaults.openName};
+        return location;
+    };
     factory.prototype.generate = function(i) {
         var id = i || this.location_defaults.idOne;
         return {
             id: id,
             name : this.location_defaults.baseStoreName,
             number : this.location_defaults.storeNumber,
-            status: this.location_defaults.status,
+            status_fk: this.location_defaults.status,
             location_level: this.location_level_fixtures.detail().id,
             children: [this.get(this.location_defaults.idTwo, this.location_defaults.storeNameTwo), this.get(this.location_defaults.idThree, this.location_defaults.storeNameThree)],
             parents: [this.get(this.location_defaults.idParent, this.location_defaults.storeNameParent),this.get(this.location_defaults.idParentTwo, this.location_defaults.storeNameParentTwo) ],
@@ -51,7 +57,7 @@ var BSRS_LOCATION_FACTORY = (function() {
             } else {
                 uuid = uuid + i;
             }
-            var location = this.generate(uuid);
+            var location = this.generate_list(uuid);
             delete location.children;//to be consistent with API
             delete location.parents;
             if (i === 0) {
@@ -60,7 +66,7 @@ var BSRS_LOCATION_FACTORY = (function() {
                 location.name = location.name + i;
             }
             location.number = location.number + i;
-            location.status = this.location_status_defaults.openId;
+            location.status = {id: this.location_status_defaults.openId, name: this.location_status_defaults.openName};
             response.push(location);
         }
         //we do a reverse order sort here to verify a real sort occurs in the component
@@ -74,12 +80,12 @@ var BSRS_LOCATION_FACTORY = (function() {
         var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=page_size+1; i <= page_size*2-1; i++) {
             var uuid = '232z46cf-9fbb-456z-4hc3-59728vu3099';
-            var location = this.generate(uuid + i);
+            var location = this.generate_list(uuid + i);
             delete location.children;
             delete location.parents;
             location.name = 'vzoname' + i;
             location.number = 'sconumber' + i;
-            location.status = this.location_status_defaults.closedId;
+            location.status = {id: this.location_status_defaults.closedId, name: this.location_status_defaults.closedName};
             location.location_level = this.location_level_defaults.idTwo;
             response.push(location);
         }
@@ -94,6 +100,8 @@ var BSRS_LOCATION_FACTORY = (function() {
     };
     factory.prototype.put = function(location) {
         var response = this.generate(location.id);
+        response.status = response.status_fk;
+        delete response.status_fk;
         response.location_level = this.location_level_fixtures.detail().id;
         response.emails = this.emails.get();
         response.phone_numbers = this.phone_numbers.get();

@@ -66,11 +66,12 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
         const pages = requested.toArray().sort((a,b) => { return a-b; }).uniq();
         const max = (pages.indexOf(page) + 1) * page_size;
         const found_content = this.get('found_content');
-        if(found_content.objectAt(0) && !found_content.objectAt(0).get('grid')){
-            return found_content.slice(max-page_size, max);
-        }else{
+        //TODO: refactor this method
+        // if(found_content.objectAt(0) && !found_content.objectAt(0).get('grid')){
+        //     return found_content.slice(max-page_size, max);
+        // }else{
             return found_content.slice(0, Math.max(page_size, 10));
-        }
+        // }
     }),
     pages: Ember.computed('model.count', function() {
         const pages = [];

@@ -9,7 +9,7 @@ import CD from 'bsrs-ember/vendor/defaults/category';
 
 var store, ticket, ticket_detail;
 
-module('scott unit: ticket list test', {
+module('unit: ticket list test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-list', 'model:person-list', 'model:location-list', 'model:ticket-status-list', 'model:ticket-priority-list', 'model:location', 'model:category']);
         run(() => {

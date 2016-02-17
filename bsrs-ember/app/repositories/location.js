@@ -10,9 +10,8 @@ var LOCATION_URL = PREFIX + '/admin/locations/';
 
 var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'location'; }),
-    // ancillary_processing: Ember.computed(function() { return ['ticket']; }),
-    type_related_m2m: Ember.computed(function() { return ['location-children', 'location-parent']; }),
-    related_m2m_pk_mapping: Ember.computed(function() { return 'location_pk'; }),
+    typeGrid: Ember.computed(function() { return 'location-list'; }),
+    ancillary_processing: Ember.computed(function() { return ['location-list']; }),
     url: Ember.computed(function() { return LOCATION_URL; }),
     uuid: injectUUID('uuid'),
     LocationDeserializer: inject('location'),
@@ -74,6 +73,9 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
             });
         });
     },
+    fetch(id) {
+        return this.get('store').find('location', id);
+    },
     find(filter) {
         PromiseMixin.xhr(this.format_url(filter), 'GET').then((response) => {
             this.get('LocationDeserializer').deserialize(response);
@@ -81,12 +83,9 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
         return this.get('store').find('location');
     },
     findById(id) {
-        let model = this.get('store').find('location', id);
-        model.id = id;
-        PromiseMixin.xhr(LOCATION_URL + id + '/', 'GET').then((response) => {
-            this.get('LocationDeserializer').deserialize(response, id);
+        return PromiseMixin.xhr(LOCATION_URL + id + '/', 'GET').then((response) => {
+            return this.get('LocationDeserializer').deserialize(response, id);
         });
-        return model;
     },
     format_url(filter) {
         let url = LOCATION_URL;

@@ -35,16 +35,15 @@ var TicketSingleRoute = TabRoute.extend({
         const statuses = this.get('statuses');
         const priorities = this.get('priorities');
         let activities = this.get('activityRepository').find('ticket', 'tickets', pk);
-        // return {
         return new Ember.RSVP.Promise((resolve) => {
             // if (!ticket.get('content') || ticket.get('isNotDirtyOrRelatedNotDirty')) { 
                 repository.findById(pk).then((model) => {
                     ticket = model;
+                    //TODO: es6ify this
                     resolve({ model: ticket, statuses: statuses, priorities: priorities, activities: activities });
                 });
             // }
         });
-        // };
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);

@@ -63,22 +63,33 @@ let extract_location_level = (model, store) => {
     return location_level_pk;
 };
 
-var extract_location_status = function(model, store) {
-    let status_id = model.status;
-    let existing_location = store.find('location', model.id);
-    if (existing_location.get('id') && existing_location.get('status.id') !== status_id) {
-        existing_location.change_status(status_id);
-    } else {
-        //TODO: does this block need to be here? has same functionality in change_status function
-        let new_status = store.find('location-status', status_id);
-        let new_status_locations = new_status.get('locations') || [];
-        let updated_new_status_locations = new_status_locations.concat(model.id).uniq();
-        run(() => {
-            store.push('location-status', {id: status_id, locations: updated_new_status_locations});
-        });
+// var extract_location_status = function(model, store) {
+//     let status_id = model.status;
+//     let existing_location = store.find('location', model.id);
+//     if (existing_location.get('id') && existing_location.get('status.id') !== status_id) {
+//         existing_location.change_status(status_id);
+//     } else {
+//         //TODO: does this block need to be here? has same functionality in change_status function
+//         let new_status = store.find('location-status', status_id);
+//         let new_status_locations = new_status.get('locations') || [];
+//         let updated_new_status_locations = new_status_locations.concat(model.id).uniq();
+//         run(() => {
+//             store.push('location-status', {id: status_id, locations: updated_new_status_locations});
+//         });
+//     }
+//     delete model.status;
+//     return status_id;
+// };
+
+var extract_location_status = function(status, store, location) {
+    if (location.get('detail') && location.get('status.id') !== status) {
+        location.change_status(status);
+    }else{
+        const status_list = store.find('location-status-list', status.id);
+        const status_locations = status_list.get('locations') || [];
+        const updated_status_locations = status_locations.concat(location.get('id')).uniq();
+        store.push('location-status-list', {id: status.id, name: status.name, locations: updated_status_locations});
     }
-    delete model.status;
-    return status_id;
 };
 
 var extract_parents = function(model, store, location_deserializer) {
@@ -161,43 +172,38 @@ var LocationDeserializer = Ember.Object.extend({
         if (typeof options === 'undefined') {
             return this.deserialize_list(response);
         } else {
-            this.deserialize_single(response, options);
+            return this.deserialize_single(response, options);
         }
     },
     deserialize_single(response, id) {
         const store = this.get('store');
         const existing = store.find('location', id);
         const location_deserializer = this;
+        let location = existing;
         if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
             response.email_fks = extract_emails(response, store);
             response.phone_number_fks = extract_phone_numbers(response, store);
             response.address_fks = extract_addresses(response, store);
-            response.status_fk = extract_location_status(response, store);
             response.location_level_fk = extract_location_level(response, store);
             response.location_children_fks = extract_children(response, store, location_deserializer);
             response.location_parents_fks = extract_parents(response, store, location_deserializer);
-            run(() => {
-                response.detail = true;
-                let location = store.push('location', response);
-                location.save();
-            });
+            response.detail = true;
+            location = store.push('location', response);
+            location.save();
+            extract_location_status(response.status_fk, store, location);
         }
+        return location;
     },
     deserialize_list(response) {
         const store = this.get('store');
-        let return_array = Ember.A();
+        let return_array = [];
         response.results.forEach((model) => {
-            const existing = store.find('location', model.id);
-            if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
-                model.status_fk = extract_location_status(model, store);
-                model.location_level_fk = extract_location_level(model, store);
-                model.grid = true;
-                let location = store.push('location', model);
-                location.save();
-                return_array.pushObject(location);
-            }else{
-                return_array.pushObject(existing);
-            }
+            model.location_level_fk = extract_location_level(model, store);
+            const status_json = model.status;
+            delete model.status;
+            const location = store.push('location-list', model);
+            extract_location_status(status_json, store, location);
+            return_array.push(location);
         });
         return return_array;
     }

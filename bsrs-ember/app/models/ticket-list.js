@@ -23,10 +23,9 @@ export default Model.extend({
     priority: Ember.computed(function() {
         const store = this.get('store');
         const ticket_priority_list = store.find('ticket-priority-list');
-        var x = ticket_priority_list.filter((tp) => {
+        return ticket_priority_list.filter((tp) => {
             return Ember.$.inArray(this.get('id'), tp.get('tickets')) > -1; 
         }).objectAt(0);
-        return x;
     }),
     assignee: Ember.computed(function() {
         const store = this.get('store'); 

@@ -251,7 +251,7 @@ test('person-location m2m is set up correctly using deserialize single (starting
     role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
     person = store.push('person', {id: PD.id, person_location_fks: [], role_fk: RD.idOne});
     let response = PF.generate(PD.id);
-    response.locations = [LF.get()];
+    response.locations = [LF.get_fk()];
     let locations = person.get('locations');
     assert.equal(locations.get('length'), 0);
     run(() => {
@@ -275,9 +275,9 @@ test('person-location m2m is added after deserialize single (starting with exist
     location = store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idOne]});
     assert.equal(person.get('locations.length'), 1);
     let response = PF.generate(PD.id);
-    let second_location = LF.get(LD.idTwo);
+    let second_location = LF.get_fk(LD.idTwo);
     second_location.name = LD.storeNameTwo;
-    response.locations = [LF.get(), second_location];
+    response.locations = [LF.get_fk(), second_location];
     run(() => {
         subject.deserialize(response, PD.id);
     });
@@ -300,9 +300,9 @@ test('person-location m2m is removed when server payload no longer reflects what
     location = store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idOne]});
     assert.equal(person.get('locations').get('length'), 1);
     let response = PF.generate(PD.id);
-    let second_location = LF.get(LD.idTwo);
+    let second_location = LF.get_fk(LD.idTwo);
     second_location.name = LD.storeNameTwo;
-    let third_location = LF.get(LD.idThree);
+    let third_location = LF.get_fk(LD.idThree);
     third_location.name = LD.storeNameThree;
     response.locations = [second_location, third_location];
     run(() => {
@@ -324,7 +324,7 @@ test('person-location m2m added even when person did not exist before the deseri
     location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
     let response = PF.generate(PD.id);
-    response.locations = [LF.get()];
+    response.locations = [LF.get_fk()];
     run(() => {
         subject.deserialize(response, PD.id);
     });

@@ -29,7 +29,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
     findWithQuery(page, sort, search, find, page_size) {
         let type = this.get('typeGrid');
         let url = this.get('url');
-        let store = this.get('store');
+        const store = this.get('store');
         let deserializer = this.get('deserializer');
         page = page || 1;
         let endpoint = url + '?page=' + page;
@@ -54,7 +54,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
                 endpoint = endpoint + '&' + field + '__icontains=' + encodeURIComponent(value);
             });
         }
-        let ancillary_processing = this.get('ancillary_processing') || [];
+        const ancillary_processing = this.get('ancillary_processing') || [];
         ancillary_processing.forEach((type) => {
             store.clear(type);
         });

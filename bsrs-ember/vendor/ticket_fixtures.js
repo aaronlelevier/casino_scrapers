@@ -42,7 +42,6 @@ var BSRS_TICKET_FACTORY = (function() {
             id: id,
             number: this.ticket.numberOne,
             request: this.ticket.requestOne,
-            //TODO: change this back to status && priority
             status_fk: this.ticket.statusOneId,
             priority_fk: this.ticket.priorityOneId,
             cc: [this.people_fixtures.get()],
@@ -63,13 +62,9 @@ var BSRS_TICKET_FACTORY = (function() {
             } else{
                 uuid = uuid + i;
             }
-            var ticket = this.generate(uuid);
+            var ticket = this.generate_list(uuid);
             ticket.number = 'bye' + i;
             ticket.request = 'sub' + i;
-            ticket.status = {id: this.ticket.statusOneId, name: this.ticket.statusOneKey}
-            ticket.priority = {id: this.ticket.priorityOneId, name: this.ticket.priorityOneKey}
-            delete ticket.status_fk;
-            delete ticket.priority_fk;
             delete ticket.cc;
             delete ticket.attachments;
             response.push(ticket);
@@ -81,8 +76,6 @@ var BSRS_TICKET_FACTORY = (function() {
         unused_category.children_fks = [];
         unused_category.parent = null;
         var location = this.location_fixtures.get(this.ticket.locationTwoId, this.ticket.locationTwo);
-        location.status_fk = location.status;
-        delete location.status;
         var response = [];
         var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=page_size+1; i <= page_size*2-1; i++) {
@@ -90,10 +83,8 @@ var BSRS_TICKET_FACTORY = (function() {
             var ticket = this.generate(uuid + i);
             ticket.number = 'gone' + i;
             ticket.request = 'ape' + i;
-            ticket.status = {id: this.ticket.statusTwoId, name: this.ticket.statusTwoKey}
-            ticket.priority = {id: this.ticket.priorityTwoId, name: this.ticket.priorityTwoKey}
-            delete ticket.status_fk;
-            delete ticket.priority_fk;
+            ticket.status = {id: this.ticket.statusTwoId, name: this.ticket.statusTwoKey};
+            ticket.priority = {id: this.ticket.priorityTwoId, name: this.ticket.priorityTwoKey};
             ticket.location = location;
             ticket.assignee = this.people_fixtures.get(this.ticket.assigneeTwoId, this.ticket.assigneeTwo, this.ticket.assigneeTwo);
             ticket.categories = [unused_category];
@@ -102,35 +93,6 @@ var BSRS_TICKET_FACTORY = (function() {
             response.push(ticket);
         }
         return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
-    };
-    factory.prototype.list_three_diff_locations = function() {
-        var response = [];
-        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
-        for (var i=1; i <= page_size; i++) {
-            var uuid = 'bf2b9c85-f6bd-4345-9834-c5d51de53d';
-            if (i < page_size) {
-                uuid = uuid + '0' + i;
-            } else{
-                uuid = uuid + i;
-            }
-            var ticket = this.generate(uuid);
-            ticket.number = 'bye' + i;
-            ticket.request = 'sub' + i;
-            delete ticket.cc;
-            delete ticket.attachments;
-            if (i % 2 == 0) {
-                ticket.location = this.location_fixtures.get(this.ticket.locationOneId, this.ticket.locationOne);
-            }
-            else {
-                ticket.location = this.location_fixtures.get(this.ticket.locationTwoId, this.ticket.locationTwo);
-            }
-            response.push(ticket);
-        }
-        //we do a reverse order sort here to verify a real sort occurs in the component
-        var sorted = response.sort(function(a,b) {
-            return b.id - a.id;
-        });
-        return {'count':page_size*2-1,'next':null,'previous':null,'results': sorted};
     };
     factory.prototype.detail = function(i) {
         var pk = i || this.ticket.idOne;

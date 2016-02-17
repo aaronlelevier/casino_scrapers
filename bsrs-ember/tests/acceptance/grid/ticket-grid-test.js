@@ -812,7 +812,7 @@ test('category_names is not sortable/filterable/searchable (display only)', func
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-category_names_grid').text().trim(), 'Repair • Plumbing • Toilet Leak');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-categories').text().trim(), 'Repair • Plumbing • Toilet Leak');
         assert.equal(find('.t-sort-category-names').length, 0);
         assert.equal(find('.t-sort-category-names-dir').length, 0);
         assert.equal(find('.t-filter-category-names').length, 0);
