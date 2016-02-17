@@ -305,14 +305,12 @@ class SettingTests(APITestCase):
         self.assertEqual(data['name'], general_setting.name)
         self.assertEqual(data['settings'], general_setting.settings)
         # single 'setting' key:value structure
-        self.assertEqual(data['settings']['company_name']['value'], DEFAULT_GENERAL_SETTINGS['company_name']['value'])
-        self.assertEqual(data['settings']['company_name']['type'], DEFAULT_GENERAL_SETTINGS['company_name']['type'])
-        self.assertEqual(data['settings']['company_name']['required'], DEFAULT_GENERAL_SETTINGS['company_name']['required'])
-        self.assertEqual(data['settings']['company_name']['inherited'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited'])
-        self.assertEqual(data['settings']['company_name']['inherited_from'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited_from'])
-        # others explicit
         self.assertEqual(data['settings']['welcome_text']['value'], DEFAULT_GENERAL_SETTINGS['welcome_text']['value'])
-        self.assertEqual(data['settings']['create_all']['value'], DEFAULT_GENERAL_SETTINGS['create_all']['value'])
+        self.assertEqual(data['settings']['welcome_text']['type'], DEFAULT_GENERAL_SETTINGS['welcome_text']['type'])
+        self.assertEqual(data['settings']['welcome_text']['required'], DEFAULT_GENERAL_SETTINGS['welcome_text']['required'])
+        self.assertEqual(data['settings']['welcome_text']['inherited'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited'])
+        self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
+        # others explicit
         self.assertEqual(data['settings']['login_grace']['value'], DEFAULT_GENERAL_SETTINGS['login_grace']['value'])
         # loop through all
         for key in DEFAULT_GENERAL_SETTINGS.keys():
@@ -353,12 +351,10 @@ class SettingTests(APITestCase):
 
         self.assertEqual(response.status_code, 200)
         # override default 'value', but other keys in the 'company_name' stay the same
-        self.assertEqual(data['settings']['company_name']['value'], new_company_name)
-        self.assertEqual(data['settings']['company_name']['type'], DEFAULT_GENERAL_SETTINGS['company_name']['type'])
-        self.assertEqual(data['settings']['company_name']['required'], DEFAULT_GENERAL_SETTINGS['company_name']['required'])
-        self.assertEqual(data['settings']['company_name']['inherited'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited'])
-        self.assertEqual(data['settings']['company_name']['inherited_from'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited_from'])
-        # others
         self.assertEqual(data['settings']['welcome_text']['value'], new_welcome_text)
-        self.assertEqual(data['settings']['create_all']['value'], new_create_all)
+        self.assertEqual(data['settings']['welcome_text']['type'], DEFAULT_GENERAL_SETTINGS['welcome_text']['type'])
+        self.assertEqual(data['settings']['welcome_text']['required'], DEFAULT_GENERAL_SETTINGS['welcome_text']['required'])
+        self.assertEqual(data['settings']['welcome_text']['inherited'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited'])
+        self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
+        # others
         self.assertEqual(data['settings']['login_grace']['value'], new_login_grace)

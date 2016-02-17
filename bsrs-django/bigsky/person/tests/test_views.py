@@ -142,26 +142,25 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         # inherited settings
-        self.assertEqual(data['settings']['company_name']['value'], DEFAULT_GENERAL_SETTINGS['company_name']['value'])
-        self.assertEqual(data['settings']['company_name']['type'], DEFAULT_GENERAL_SETTINGS['company_name']['type'])
-        self.assertEqual(data['settings']['company_name']['required'], DEFAULT_GENERAL_SETTINGS['company_name']['required'])
-        self.assertEqual(data['settings']['company_name']['inherited'], True)
-        self.assertEqual(data['settings']['company_name']['inherited_from'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited_from'])
-        # role setting
-        self.assertEqual(data['settings']['welcome_text']['value'], combined_settings['welcome_text']['value'])
+        self.assertEqual(data['settings']['welcome_text']['value'], DEFAULT_GENERAL_SETTINGS['welcome_text']['value'])
         self.assertEqual(data['settings']['welcome_text']['type'], DEFAULT_GENERAL_SETTINGS['welcome_text']['type'])
         self.assertEqual(data['settings']['welcome_text']['required'], DEFAULT_GENERAL_SETTINGS['welcome_text']['required'])
-        self.assertEqual(data['settings']['welcome_text']['inherited'], False)
-        self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_ROLE_SETTINGS['welcome_text']['inherited_from'])
-        # others
+        self.assertEqual(data['settings']['welcome_text']['inherited'], True)
+        self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
+        # role setting
         self.assertEqual(data['settings']['create_all']['value'], combined_settings['create_all']['value'])
+        self.assertEqual(data['settings']['create_all']['type'], DEFAULT_ROLE_SETTINGS['create_all']['type'])
+        self.assertEqual(data['settings']['create_all']['required'], DEFAULT_ROLE_SETTINGS['create_all']['required'])
+        self.assertEqual(data['settings']['create_all']['inherited'], False)
+        self.assertEqual(data['settings']['create_all']['inherited_from'], DEFAULT_ROLE_SETTINGS['create_all']['inherited_from'])
+        # others
         self.assertEqual(data['settings']['login_grace']['value'], combined_settings['login_grace']['value'])
         self.assertEqual(data['settings']['modules']['value'], combined_settings['modules']['value'])
         # inherited explicit
         for k,v in data['settings'].items():
             self.assertIn('inherited', v)
-        self.assertTrue(data['settings']['company_name']['inherited'])
-        self.assertFalse(data['settings']['modules']['inherited'])
+        self.assertTrue(data['settings']['welcome_text']['inherited'])
+        self.assertFalse(data['settings']['create_all']['inherited'])
 
     def test_create(self):
         raw_data = {
@@ -185,7 +184,6 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(DEFAULT_ROLE_SETTINGS), len(data['settings']))
         self.assertEqual(
             raw_data['settings']['welcome_text'],
             data['settings']['welcome_text']['value']
@@ -449,7 +447,7 @@ class PersonDetailTests(TestCase):
     def test_data_emails(self):
         self.assertTrue(self.data['emails'])
         email = Email.objects.get(id=self.data['emails'][0]['id'])
-        
+
         self.assertEqual(self.data['emails'][0]['id'], str(email.id))
         self.assertEqual(self.data['emails'][0]['type'], str(email.type.id))
         self.assertEqual(self.data['emails'][0]['email'], email.email)
@@ -457,7 +455,7 @@ class PersonDetailTests(TestCase):
     def test_data_phone_numbers(self):
         self.assertTrue(self.data['phone_numbers'])
         phone = PhoneNumber.objects.get(id=self.data['phone_numbers'][0]['id'])
-        
+
         phone_data = self.data['phone_numbers'][0]
         self.assertEqual(phone_data['id'], str(phone.id))
         self.assertEqual(phone_data['type'], str(phone.type.id))
@@ -484,7 +482,7 @@ class PersonDetailTests(TestCase):
 
     def test_password_not_in_response(self):
         self.assertNotIn('password', self.data)
-    
+
     ### DETAIL ROUTES
 
     def test_current(self):
@@ -520,10 +518,10 @@ class PersonDetailTests(TestCase):
 
 class PersonPutTests(APITestCase):
     '''
-    All required Model fields must be supplied in a PUT, so the PASSWORD is 
+    All required Model fields must be supplied in a PUT, so the PASSWORD is
     required if doing a PUT.
 
-    Resolution: For Password changes, PUT is ok, but for all other Person 
+    Resolution: For Password changes, PUT is ok, but for all other Person
     changes, a PATCH should be used, because User won't need to send Password.
 
     Note: For tests, use empty fields if not required for simplicity.
@@ -557,11 +555,11 @@ class PersonPutTests(APITestCase):
     def test_auth_amount(self):
         new_auth_amount = '1234.1010'
         self.data['auth_amount'] = new_auth_amount
-        
+
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
-        
+
         self.assertEqual(new_auth_amount, data['auth_amount'])
         self.assertEqual(data['id'], str(self.person.id))
         self.assertEqual(data['username'], self.person.username)
@@ -628,7 +626,7 @@ class PersonPutTests(APITestCase):
         )
 
     def test_change_password_other_persons_password(self):
-        
+
         serializer = PersonUpdateSerializer(self.person2)
         self.data = serializer.data
 
@@ -690,7 +688,7 @@ class PersonPutTests(APITestCase):
         self.assertTrue(data['emails'])
         self.assertIn(
             data['emails'][0]['id'],
-            [str(x) for x in self.person.emails.values_list('id', flat=True)]            
+            [str(x) for x in self.person.emails.values_list('id', flat=True)]
         )
 
     def test_update_email_type(self):
@@ -744,7 +742,7 @@ class PersonPutTests(APITestCase):
         )
 
     def test_missing_contact_models(self):
-        # If a nested Contact Model is no longer present, then delete 
+        # If a nested Contact Model is no longer present, then delete
         # Person FK on Contact Nested Model
         create_contacts(self.person)
         # Post standard data w/o contacts

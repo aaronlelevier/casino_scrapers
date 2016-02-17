@@ -75,7 +75,7 @@ class TesterPermissionAlreadyCreatedTests(TransactionTestCase):
             Permission
             )
 
-        
+
 class UpdateTests(TestCase):
 
     def setUp(self):
@@ -121,25 +121,25 @@ class SettingMixinTests(TestCase):
         ret = SettingMixin.get_class_default_settings('role')
         self.assertEqual(DEFAULT_ROLE_SETTINGS, ret)
 
-    def test_get_combined_settings_file__inherited(self):
-        role_settings = SettingMixin.get_class_default_settings('role')
-
-        ret = Setting.get_class_combined_settings('general', role_settings)
-
-        self.assertFalse(ret['welcome_text']['inherited'])
-        self.assertIsNone(ret['welcome_text']['inherited_value'])
-        self.assertEqual(ret['welcome_text']['value'], role_settings['welcome_text']['value'])
-        self.assertEqual(ret['welcome_text']['inherited_from'], role_settings['welcome_text']['inherited_from'])
-
     def test_get_combined_settings_file__not_inherited(self):
         role_settings = SettingMixin.get_class_default_settings('role')
 
         ret = Setting.get_class_combined_settings('general', role_settings)
 
-        self.assertTrue(ret['company_name']['inherited'])
-        self.assertEqual(ret['company_name']['inherited_value'], DEFAULT_GENERAL_SETTINGS['company_name']['value'])
-        self.assertIsNone(ret['company_name']['value'])
-        self.assertEqual(ret['company_name']['inherited_from'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited_from'])
+        self.assertFalse(ret['create_all']['inherited'])
+        self.assertIsNone(ret['create_all']['inherited_value'])
+        self.assertEqual(ret['create_all']['value'], role_settings['create_all']['value'])
+        self.assertEqual(ret['create_all']['inherited_from'], role_settings['create_all']['inherited_from'])
+
+    def test_get_combined_settings_file__inherited(self):
+        role_settings = SettingMixin.get_class_default_settings('role')
+
+        ret = Setting.get_class_combined_settings('general', role_settings)
+
+        self.assertTrue(ret['welcome_text']['inherited'])
+        self.assertEqual(ret['welcome_text']['inherited_value'], DEFAULT_GENERAL_SETTINGS['welcome_text']['value'])
+        self.assertIsNone(ret['welcome_text']['value'])
+        self.assertEqual(ret['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
 
     def test_get_all_class_settings(self):
         with self.assertRaises(NotImplementedError):

@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class UniqueForActiveValidator(object):
-    """Validate that the ``value`` being sent over is Unique 
+    """Validate that the ``value`` being sent over is Unique
     for active instances of the ``model``.
 
     :model: the model type to check against
@@ -40,7 +40,7 @@ class UniqueForActiveValidator(object):
         return queryset
 
     def set_context(self, serializer):
-        """Determine the existing instance, prior to the validation 
+        """Determine the existing instance, prior to the validation
         call being made."""
         self.instance = getattr(serializer, 'instance', None)
 
@@ -54,7 +54,7 @@ class SettingsValidator(object):
         self.model = model
 
     def __call__(self, kwargs):
-        default_settings = self.model.get_class_default_settings()
+        default_settings = self.model.get_all_class_settings()
         errors = {}
 
         settings = kwargs.get('settings', None)

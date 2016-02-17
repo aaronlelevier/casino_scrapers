@@ -190,7 +190,7 @@ MAX_UPLOAD_SIZE = 2621440 # 2621440 # default - aka: 2.5MB
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 
-PAGE_SIZE = 10 
+PAGE_SIZE = 10
 MAX_PAGE_SIZE = 100
 PAGE_SIZE_QUERY_PARAM = 'page_size'
 
@@ -260,7 +260,7 @@ DEFAULTS_TICKET_STATUS = "ticket.status.new"
 TICKET_FILTERING_ON = True
 
 ### WORK ORDER
-DEFAULTS_WORKORDER_STATUS = "work_order.status.new" 
+DEFAULTS_WORKORDER_STATUS = "work_order.status.new"
 
 ### EMAIL ###
 # django native settings for ``django.core.mail.mail_admins()``
@@ -314,7 +314,7 @@ from django.utils.log import DEFAULT_LOGGING
 
 LOGGING = copy.deepcopy(DEFAULT_LOGGING)
 LOGGING['filters']['suppress_deprecated'] = {
-    '()': 'bigsky.settings.SuppressDeprecated'  
+    '()': 'bigsky.settings.SuppressDeprecated'
 }
 LOGGING['handlers']['console']['filters'].append('suppress_deprecated')
 

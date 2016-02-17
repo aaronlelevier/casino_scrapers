@@ -4,6 +4,7 @@ import uuid
 
 from rest_framework.test import APITestCase
 
+from generic.settings import DEFAULT_GENERAL_SETTINGS
 from person.models import Role
 from person.serializers import RoleCreateSerializer
 from person.settings import DEFAULT_ROLE_SETTINGS
@@ -20,10 +21,7 @@ class SettingSerializerMixinTests(RoleSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
 
-        self.assertEqual(data['settings']['welcome_text']['value'], DEFAULT_ROLE_SETTINGS['welcome_text']['value'])
         self.assertEqual(data['settings']['create_all']['value'], DEFAULT_ROLE_SETTINGS['create_all']['value'])
-        self.assertEqual(data['settings']['modules']['value'], DEFAULT_ROLE_SETTINGS['modules']['value'])
-        self.assertEqual(data['settings']['login_grace']['value'], DEFAULT_ROLE_SETTINGS['login_grace']['value'])
 
     def test_update_settings_custom_values(self):
         role = create_role()
@@ -39,5 +37,3 @@ class SettingSerializerMixinTests(RoleSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['settings']['welcome_text']['value'], welcome_text)
         self.assertEqual(data['settings']['create_all']['value'], DEFAULT_ROLE_SETTINGS['create_all']['value'])
-        self.assertEqual(data['settings']['modules']['value'], DEFAULT_ROLE_SETTINGS['modules']['value'])
-        self.assertEqual(data['settings']['login_grace']['value'], DEFAULT_ROLE_SETTINGS['login_grace']['value'])
