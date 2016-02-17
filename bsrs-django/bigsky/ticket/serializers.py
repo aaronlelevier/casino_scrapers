@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from category.serializers import CategoryIDNameSerializerTicket
 from generic.serializers import Attachment
-from location.serializers import LocationSerializer, LocationTicketSerializer
+from location.serializers import LocationSerializer, LocationTicketSerializer, LocationTicketListSerializer
 from person.serializers import PersonTicketSerializer
 from person.serializers_leaf import PersonSimpleSerializer
 from ticket.helpers import TicketActivityToRepresentation
@@ -43,7 +43,7 @@ class TicketCreateSerializer(BaseCreateSerializer):
 
 class TicketListSerializer(serializers.ModelSerializer):
 
-    location = LocationTicketSerializer()
+    location = LocationTicketListSerializer()
     categories = CategoryIDNameSerializerTicket(many=True)
     assignee = PersonTicketSerializer(required=False)
     status = TicketStatusSerializer(required=False)

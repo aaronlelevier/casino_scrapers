@@ -74,6 +74,13 @@ class LocationSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'number', 'location_level',)
 
 
+class LocationTicketListSerializer(serializers.ModelSerializer):
+    """Leaf node serializer for LocationDetailSerializer and PersonDetailSerializer"""
+
+    class Meta:
+        model = Location
+        fields = ('id', 'name', 'number')
+
 class LocationTicketSerializer(serializers.ModelSerializer):
     """Leaf node serializer for LocationDetailSerializer and PersonDetailSerializer"""
 

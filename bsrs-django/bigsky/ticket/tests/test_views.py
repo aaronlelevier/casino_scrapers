@@ -59,8 +59,8 @@ class TicketListTests(TicketSetupMixin, APITestCase):
         ticket = data['results'][0]
 
         self.assertEqual(ticket['id'], str(self.ticket.id))
-        self.assertEqual(ticket['status_fk'], str(self.ticket.status.id))
-        self.assertEqual(ticket['priority_fk'], str(self.ticket.priority.id))
+        self.assertEqual(ticket['status']['id'], str(self.ticket.status.id))
+        self.assertEqual(ticket['priority']['id'], str(self.ticket.priority.id))
         self.assertEqual(ticket['requester'], str(self.ticket.requester))
         self.assertEqual(ticket['request'], self.ticket.request)
         self.assertEqual(ticket['number'], self.ticket.number)
@@ -78,9 +78,6 @@ class TicketListTests(TicketSetupMixin, APITestCase):
         self.assertEqual(location['id'], str(self.ticket.location.id))
         self.assertEqual(location['name'], self.ticket.location.name)
         self.assertEqual(location['number'], self.ticket.location.number)
-        self.assertEqual(location['status_fk'], str(self.ticket.location.status.id))
-        self.assertEqual(location['location_level'],
-            str(self.ticket.location.location_level.id))
 
     def test_data_categories(self):
         response = self.client.get('/api/tickets/')
