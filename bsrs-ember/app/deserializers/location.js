@@ -63,24 +63,6 @@ let extract_location_level = (model, store) => {
     return location_level_pk;
 };
 
-// var extract_location_status = function(model, store) {
-//     let status_id = model.status;
-//     let existing_location = store.find('location', model.id);
-//     if (existing_location.get('id') && existing_location.get('status.id') !== status_id) {
-//         existing_location.change_status(status_id);
-//     } else {
-//         //TODO: does this block need to be here? has same functionality in change_status function
-//         let new_status = store.find('location-status', status_id);
-//         let new_status_locations = new_status.get('locations') || [];
-//         let updated_new_status_locations = new_status_locations.concat(model.id).uniq();
-//         run(() => {
-//             store.push('location-status', {id: status_id, locations: updated_new_status_locations});
-//         });
-//     }
-//     delete model.status;
-//     return status_id;
-// };
-
 var extract_location_status = function(status, store, location) {
     if (location.get('detail') && location.get('status.id') !== status) {
         location.change_status(status);
