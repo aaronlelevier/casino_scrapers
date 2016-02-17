@@ -117,6 +117,11 @@ class LocationDetailSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'number', 'location_level', 'status', 'people',
             'parents', 'children', 'emails', 'phone_numbers', 'addresses',)
 
+    def to_representation(self, obj):
+        data = super(TicketSerializer, self).to_representation(obj)
+        data['status_fk'] = data.pop('status', [])
+        return data
+
 
 class LocationUpdateSerializer(NestedCreateContactSerializerMixin, NestedContactSerializerMixin, serializers.ModelSerializer):
 

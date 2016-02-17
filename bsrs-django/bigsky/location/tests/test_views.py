@@ -303,7 +303,7 @@ class LocationDetailTests(APITestCase):
         self.assertEqual(self.data['id'], str(self.location.id))
         self.assertEqual(self.data['name'], self.location.name)
         self.assertEqual(self.data['number'], self.location.number)
-        self.assertEqual(self.data['status'], str(self.location.status.id))
+        self.assertEqual(self.data['status_fk'], str(self.location.status.id))
         self.assertIsNotNone(self.data['emails'][0]['id'])
         self.assertIsNotNone(self.data['phone_numbers'][0]['id'])
         self.assertIsNotNone(self.data['addresses'][0]['id'])
