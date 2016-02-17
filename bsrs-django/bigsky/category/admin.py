@@ -10,4 +10,4 @@ class CatgegoryStatusAdmin(admin.ModelAdmin):
 
 @admin.register(models.Category)
 class CatgegoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'level', 'label', 'subcategory_label',)
+    list_display = ('name', 'parent', 'level', 'label', 'subcategory_label', 'created',)

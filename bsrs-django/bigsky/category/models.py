@@ -64,6 +64,9 @@ class Category(BaseModel):
     class Meta:
         ordering = ('level',)
 
+    def __str__(self):
+        return self.name
+
     def save(self, *args, **kwargs):
         self._update_defalts()
         return super(Category, self).save(*args, **kwargs)
