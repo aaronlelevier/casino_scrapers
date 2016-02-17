@@ -13,9 +13,12 @@ INSTALLED_APPS += CI_APPS
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
+tlocation_test_dir = os.path.join(BASE_DIR, "utils_transform/tlocation/tests")
+tcategory_test_dir = os.path.join(BASE_DIR, "utils_transform/tcategory/tests")
+
 NOSE_ARGS = [
     '--nologcapture',
-    '--exclude-dir={}'.format(os.path.join(BASE_DIR, "utils_transform/tlocation/tests")),
+    '--exclude-dir={},{}'.format(tlocation_test_dir, tcategory_test_dir),
     '--cover-package=accounting,bigsky,category,contact,generic,location,order,person,session,\
 third_party,ticket,translation,utils,work_request',
 ]
