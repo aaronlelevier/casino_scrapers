@@ -4,7 +4,7 @@ from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSeria
 from contact.serializers import PhoneNumberSerializer, EmailSerializer, AddressSerializer
 from generic.models import Setting
 from location.serializers import LocationIdNameOnlySerializer, LocationStatusFKSerializer
-from person.models import Person, Role
+from person.models import Person, Role, PersonStatus
 from person.validators import RoleLocationValidator, RoleCategoryValidator
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
     RemovePasswordSerializerMixin, SettingSerializerMixin)
@@ -100,7 +100,16 @@ class PersonCreateSerializer(RemovePasswordSerializerMixin, BaseCreateSerializer
         return person
 
 
+class PersonStatusSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PersonStatus
+        fields = ('id', 'name')
+
+
 class PersonListSerializer(serializers.ModelSerializer):
+
+    status = PersonStatusSerializer(required=False)
 
     class Meta:
         model = Person
