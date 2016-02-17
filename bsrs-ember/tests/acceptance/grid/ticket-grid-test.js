@@ -61,6 +61,8 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority-translated_name').text().trim(), TD.priorityOne);
+        assert.ok(find('.t-grid-data:eq(0) .t-ticket-priority-emergency'));
+        assert.ok(find('.t-grid-data:eq(0) .t-ticket-status-new'));
         const time = moment(new Date()).format('h:mm a');
         //TODO: add created to ticket 
         // assert.equal(find('.t-grid-data:eq(0) .t-ticket-created').text().trim(), `${TD.createdFormattedToday} ${time}`);

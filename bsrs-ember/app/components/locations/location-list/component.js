@@ -23,7 +23,9 @@ export default GridViewComponent.extend({
             headerLabel: 'Status',
             isSortable: true,
             isFilterable: true,
-            isSearchable: true
+            isSearchable: true,
+            templateName: 'tickets/ticket-status-tag',
+            classNames: ['location-status']
         },
         {
             field: 'location_level.name',

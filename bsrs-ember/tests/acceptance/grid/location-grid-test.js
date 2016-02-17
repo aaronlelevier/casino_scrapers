@@ -55,6 +55,7 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
         assert.equal(find('.t-grid-data:eq(1) .t-location-number').text().trim(), LD.storeNumber + '2');
         assert.equal(find('.t-grid-data:eq(0) .t-location-status-translated_name').text().trim(), t(LDS.openName));
         assert.equal(find('.t-grid-data:eq(0) .t-location-location_level-name').text().trim(), LLD.nameCompany);
+        assert.ok(find('.t-grid-data:eq(0) .t-location-status-open'));
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
