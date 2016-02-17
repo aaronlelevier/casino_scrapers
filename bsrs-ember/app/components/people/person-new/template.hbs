@@ -17,12 +17,12 @@
 					</div>
 				</section>
 			</div>
-			<div class="col-md-6 col-md-offset-3">
+			<div class="col-md-12">
 				<section>
 					<div class="row">
                         <div class="col-sm-12">
             				{{#form-group title="admin.person.label.username" for="username"}}
-            					{{input type="text" value=model.username placeholder=(t "admin.person.label.username") class="form-control t-person-username" id="username"}}
+            					{{input type="text" value=model.username placeholder=(t "admin.person.label.username") class="form-control t-person-username" id="username" autocomplete="off"}}
             					{{#validation-error-field submitted=submitted field="username" className="validation validation-under t-username-validation-error" model=model validation=usernameValidation}}{{t "validation.invalid"}} {{t "admin.person.label.username"}}{{/validation-error-field}}
             				{{/form-group}}
             			</div>
@@ -30,7 +30,7 @@
                     <div class="row">
             			<div class="col-sm-12">
             				{{#form-group title="admin.person.label.password" for="password"}}
-            					{{input type="text" value=model.password placeholder=(t "admin.person.label.password") class="form-control t-person-password" id="password"}}
+            					{{input type="password" value=model.password placeholder=(t "admin.person.label.password") class="form-control t-person-password" id="password" autocomplete="off"}}
             					{{#validation-error-field submitted=submitted field="password" className="validation validation-under t-password-validation-error" model=model validation=passwordValidation}}{{t "validation.invalid"}} {{t "admin.person.label.password"}}{{/validation-error-field}}
             				{{/form-group}}
             			</div>
@@ -50,7 +50,6 @@
                         </div>
                     </div>
 				</section>
-
 			</div>
         </div>
 	</section>

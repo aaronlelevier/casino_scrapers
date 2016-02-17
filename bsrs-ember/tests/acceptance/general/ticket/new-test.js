@@ -167,7 +167,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     });
 });
 
-test('amk selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
+test('selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
     page.visit();
     andThen(() => {
         patchRandom(counter);
