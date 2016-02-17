@@ -15,6 +15,7 @@ def get_random_data():
     return {f: random.choice(string.ascii_letters)
             for f in DOMINO_LOCATION_FIELDS}
 
+
 def create_location_region():
     data = get_random_data()
     return mommy.make(LocationRegion, **data)
