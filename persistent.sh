@@ -26,7 +26,6 @@ if [  -d "${PROJECT_DIR}/persistent/bsrs" ];
         echo "BSRS REPO EXISTS"
         cd bsrs
         git checkout master
-        git checkout gridTesting
         git pull
     else
         echo "BSRS REPO DOES NOT EXIST"
