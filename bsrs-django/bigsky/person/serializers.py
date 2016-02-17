@@ -3,7 +3,7 @@ from rest_framework import serializers
 from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer
 from contact.serializers import PhoneNumberSerializer, EmailSerializer, AddressSerializer
 from generic.models import Setting
-from location.serializers import LocationSerializer, LocationIdNameOnlySerializer
+from location.serializers import LocationIdNameOnlySerializer, LocationStatusFKSerializer
 from person.models import Person, Role
 from person.validators import RoleLocationValidator, RoleCategoryValidator
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
@@ -116,7 +116,7 @@ class PersonTicketSerializer(serializers.ModelSerializer):
 
 class PersonDetailSerializer(serializers.ModelSerializer):
 
-    locations = LocationSerializer(many=True)
+    locations = LocationStatusFKSerializer(many=True)
     emails = EmailSerializer(required=False, many=True)
     phone_numbers = PhoneNumberSerializer(required=False, many=True)
     addresses = AddressSerializer(required=False, many=True)

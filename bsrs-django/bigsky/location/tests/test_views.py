@@ -324,12 +324,6 @@ class LocationDetailTests(APITestCase):
         self.assertTrue(self.data['location_level'])
         self.assertTrue(self.data['location_level'])
 
-    def test_get_status(self):
-        self.assertIsInstance(
-            LocationStatus.objects.get(id=self.data['status']),
-            LocationStatus
-        )
-
     def test_get_parents(self):
         self.assertIn(
             Location.objects.get(id=self.data['parents'][0]['id']),

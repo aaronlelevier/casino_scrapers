@@ -81,7 +81,7 @@ class LocationTicketListSerializer(serializers.ModelSerializer):
         model = Location
         fields = ('id', 'name', 'number')
 
-class LocationTicketSerializer(serializers.ModelSerializer):
+class LocationStatusFKSerializer(serializers.ModelSerializer):
     """Leaf node serializer for LocationDetailSerializer and PersonDetailSerializer"""
 
     class Meta:
@@ -89,7 +89,7 @@ class LocationTicketSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'number', 'location_level', 'status')
 
     def to_representation(self, obj):
-        data = super(LocationTicketSerializer, self).to_representation(obj)
+        data = super(LocationStatusFKSerializer, self).to_representation(obj)
         data['status_fk'] = data.pop('status', [])
         return data
 
@@ -118,7 +118,7 @@ class LocationDetailSerializer(serializers.ModelSerializer):
             'parents', 'children', 'emails', 'phone_numbers', 'addresses',)
 
     def to_representation(self, obj):
-        data = super(TicketSerializer, self).to_representation(obj)
+        data = super(LocationDetailSerializer, self).to_representation(obj)
         data['status_fk'] = data.pop('status', [])
         return data
 

@@ -441,6 +441,7 @@ class PersonDetailTests(TestCase):
         self.assertEqual(self.data['locations'][0]['id'], str(location.id))
         self.assertEqual(self.data['locations'][0]['name'], location.name)
         self.assertEqual(self.data['locations'][0]['number'], location.number)
+        self.assertEqual(self.data['locations'][0]['status_fk'], str(location.status.id))
         self.assertEqual(self.data['locations'][0]['location_level'],
             str(location.location_level.id))
 
