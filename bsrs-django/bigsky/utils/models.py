@@ -169,6 +169,8 @@ class SettingMixin(object):
                     setting[k]
                 except KeyError:
                     combined[k]['inherited'] = True
+                    combined[k]['inherited_value'] = combined[k]['value']
+                    combined[k]['value'] = None
 
             combined.update(setting)
 

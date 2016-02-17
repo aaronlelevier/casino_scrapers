@@ -121,20 +121,25 @@ class SettingMixinTests(TestCase):
         ret = SettingMixin.get_class_default_settings('role')
         self.assertEqual(DEFAULT_ROLE_SETTINGS, ret)
 
-    def test_get_combined_settings_file(self):
+    def test_get_combined_settings_file__inherited(self):
         role_settings = SettingMixin.get_class_default_settings('role')
-        combined_settings = copy.copy(DEFAULT_GENERAL_SETTINGS)
-        combined_settings.update(role_settings)
 
         ret = Setting.get_class_combined_settings('general', role_settings)
 
-        self.assertEqual(combined_settings, ret)
-        # exists in 'general' but not in 'role'
-        self.assertTrue(ret['company_name']['inherited'])
-        # exists in both, so since 'role' overrides 'general', it is not inherited
         self.assertFalse(ret['welcome_text']['inherited'])
-        # only exists in 'role'
-        self.assertFalse(ret['modules']['inherited'])
+        self.assertIsNone(ret['welcome_text']['inherited_value'])
+        self.assertEqual(ret['welcome_text']['value'], role_settings['welcome_text']['value'])
+        self.assertEqual(ret['welcome_text']['inherited_from'], role_settings['welcome_text']['inherited_from'])
+
+    def test_get_combined_settings_file__not_inherited(self):
+        role_settings = SettingMixin.get_class_default_settings('role')
+
+        ret = Setting.get_class_combined_settings('general', role_settings)
+
+        self.assertTrue(ret['company_name']['inherited'])
+        self.assertEqual(ret['company_name']['inherited_value'], DEFAULT_GENERAL_SETTINGS['company_name']['value'])
+        self.assertIsNone(ret['company_name']['value'])
+        self.assertEqual(ret['company_name']['inherited_from'], DEFAULT_GENERAL_SETTINGS['company_name']['inherited_from'])
 
     def test_get_all_class_settings(self):
         with self.assertRaises(NotImplementedError):
