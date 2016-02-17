@@ -1,9 +1,8 @@
 import Ember from 'ember';
 import { Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
-import DateFormatMixin from 'bsrs-ember/mixins/model/date-format';
 
-export default Model.extend(DateFormatMixin, {
+export default Model.extend({
     store: inject('main'),
     ticket: Ember.computed(function() {
         const store = this.get('store'); 
@@ -51,11 +50,12 @@ export default Model.extend(DateFormatMixin, {
             return location.get('id') === location_pk; 
         }).objectAt(0);
     }),
-    category_names_grid: Ember.computed(function() {
+    categories: Ember.computed(function() {
         const store = this.get('store');
         const categories = store.find('category');
+        const category_ids = this.get('category_ids');
         const filtered_categories = categories.filter((cat) => {
-            return Ember.$.inArray(cat.get('id'), this.get('category_ids')) > -1;
+            return Ember.$.inArray(cat.get('id'), category_ids) > -1;
         });
         const names = filtered_categories.sortBy('level').map((category) => {
             return category.get('name'); 

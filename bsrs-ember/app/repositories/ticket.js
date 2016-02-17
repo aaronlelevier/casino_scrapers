@@ -22,21 +22,11 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
             model.saveRelated();
         });
     },
-    // find() {
-    //     PromiseMixin.xhr(TICKET_URL, 'GET').then((response) => {
-    //         this.get('TicketDeserializer').deserialize(response);
-    //     });
-    //     return this.get('store').find('ticket-list');
-    // },
     findById(id) {
-        // let model = this.get('store').find('ticket', id);
-        // //return id right away to allow for tabs to be pushed into store with correct id 
-        // model.id = id;
         return PromiseMixin.xhr(TICKET_URL + id + '/', 'GET').then((response) => {
             const ticket = this.get('TicketDeserializer').deserialize(response, id);
             return ticket;
         });
-        // return model;
     },
     fetch(id) {
         let store = this.get('store');
