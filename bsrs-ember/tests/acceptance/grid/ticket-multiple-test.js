@@ -123,8 +123,8 @@ test('navigating between ticket and people and locations and category will not d
         // categorys.forEach((category) => {
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
-        const persons = store.find('person');
-        assert.equal(persons.get('length'), 11);
+        const persons = store.find('person-list');
+        assert.equal(persons.get('length'), 10);
         persons.forEach((person) => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         });
@@ -152,8 +152,8 @@ test('navigating between ticket and people and locations and category will not d
         // categorys.forEach((category) => {
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
-        const persons = store.find('person');
-        assert.equal(persons.get('length'), 19);
+        const persons = store.find('person-list');
+        assert.equal(persons.get('length'), 8);
         persons.forEach((person) => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         });
@@ -182,8 +182,8 @@ test('navigating between ticket and people and locations and category will not d
         // categorys.forEach((category) => {
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
-        const persons = store.find('person');
-        assert.equal(persons.get('length'), 19);
+        const persons = store.find('person-list');
+        assert.equal(persons.get('length'), 8);
         persons.forEach((person) => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         });
@@ -211,8 +211,8 @@ test('navigating between ticket and people and locations and category will not d
         // categorys.forEach((category) => {
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
-        const persons = store.find('person');
-        assert.equal(persons.get('length'), 19);
+        const persons = store.find('person-list');
+        assert.equal(persons.get('length'), 8);
         persons.forEach((person) => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         });
@@ -238,8 +238,8 @@ test('navigating between ticket and people and locations and category will not d
         // categorys.forEach((category) => {
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
-        const persons = store.find('person');
-        assert.equal(persons.get('length'), 19);
+        const persons = store.find('person-list');
+        assert.equal(persons.get('length'), 8);
         persons.forEach((person) => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         });
@@ -267,8 +267,8 @@ test('navigating between ticket and people and locations and category will not d
         // categorys.forEach((category) => {
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
-        const persons = store.find('person');
-        assert.equal(persons.get('length'), 19);
+        const persons = store.find('person-list');
+        assert.equal(persons.get('length'), 8);
         persons.forEach((person) => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         });
@@ -297,8 +297,8 @@ test('navigating between ticket and people and locations and category will not d
         // categorys.forEach((category) => {
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
-        const persons = store.find('person');
-        assert.equal(persons.get('length'), 19);
+        const persons = store.find('person-list');
+        assert.equal(persons.get('length'), 1);
         persons.forEach((person) => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         });
