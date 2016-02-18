@@ -80,7 +80,7 @@ test('visiting admin/location-level', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         let location_level = store.find('location-level', LLD.idOne);
-        assert.equal(location_level.get('name'), LLD.nameRegion);
+        assert.equal(location_level.get('name'), LLD.nameAnother);
         assert.ok(location_level.get('isNotDirty'));
     });
 });

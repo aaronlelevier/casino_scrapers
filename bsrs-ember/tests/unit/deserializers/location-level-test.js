@@ -9,9 +9,20 @@ var store, location_level, location_level_two, run = Ember.run, subject;
 
 module('unit: location level deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:location-level']);
+        store = module_registry(this.container, this.registry, ['model:location-level', 'model:location-level-list']);
         subject = LocationLevelDeserializer.create({store: store});
     }
+});
+
+test('location level list model is correctly deserialized in its own store', (assert) => {
+    location_level = store.push('location-level', { id: LLD.idOne, name: LLD.nameCompany, children_fks: [LLD.idTwo] });
+    let json = LLF.generate(LLD.idOne);
+    let response = {'count':1,'next':null,'previous':null,'results': [json]};
+    run(() => {
+        subject.deserialize(response);
+    });
+    const location_levelz = store.find('location-level-list');
+    assert.equal(location_levelz.get('length'), 1);
 });
 
 /* Children */

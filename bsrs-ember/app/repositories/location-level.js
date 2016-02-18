@@ -10,6 +10,8 @@ var LOCATION_LEVEL_URL = PREFIX + '/admin/location-levels/';
 
 var LocationLevelRepo = Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'location-level'; }),
+    typeGrid: Ember.computed(function() { return 'location-level-list'; }),
+    garbage_collection: Ember.computed(function() { return ['location-level-list']; }),
     url: Ember.computed(function() { return LOCATION_LEVEL_URL; }),
     uuid: injectUUID('uuid'),
     LocationLevelDeserializer: inject('location-level'),
@@ -22,19 +24,19 @@ var LocationLevelRepo = Ember.Object.extend(GridRepositoryMixin, {
     peek(filter, computed_keys) {
         return this.get('store').find('location-level', filter);
     },
-    find() {
-        PromiseMixin.xhr(LOCATION_LEVEL_URL, 'GET').then((response) => {
-            this.get('LocationLevelDeserializer').deserialize(response);
-        });
-        return this.get('store').find('location-level');
-    },
+    // find() {
+    //     PromiseMixin.xhr(LOCATION_LEVEL_URL, 'GET').then((response) => {
+    //         this.get('LocationLevelDeserializer').deserialize(response);
+    //     });
+    //     return this.get('store').find('location-level');
+    // },
     findById(id) {
-        let model = this.get('store').find('location-level', id);
-        model.id = id;
-        PromiseMixin.xhr(LOCATION_LEVEL_URL + id + '/', 'GET').then((response) => {
-            this.get('LocationLevelDeserializer').deserialize(response, id);
+        // let model = this.get('store').find('location-level', id);
+        // model.id = id;
+        return PromiseMixin.xhr(LOCATION_LEVEL_URL + id + '/', 'GET').then((response) => {
+            return this.get('LocationLevelDeserializer').deserialize(response, id);
         });
-        return model;
+        // return model;
     }
 });
 
