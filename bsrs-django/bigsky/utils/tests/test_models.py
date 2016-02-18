@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from model_mommy import mommy
 
+from contact.models import Country
 from generic.models import Setting
 from generic.settings import DEFAULT_GENERAL_SETTINGS
 from person.models import PersonStatus, Role
@@ -17,7 +18,7 @@ from utils.models import Tester, SettingMixin
 from utils.permissions import perms_map
 
 
-class TesterManagerTests(TestCase):
+class BaseModelTests(TestCase):
 
     def setUp(self):
         # default ``objects`` model manager should only
@@ -25,11 +26,53 @@ class TesterManagerTests(TestCase):
         self.t_del = mommy.make(Tester, deleted=timezone.now())
         self.t_ok = mommy.make(Tester)
 
-    def test_managers(self):
+    def test_objects(self):
         self.assertEqual(Tester.objects.count(), 1)
 
-    def test_managers_all(self):
+    def test_objects_all(self):
         self.assertEqual(Tester.objects_all.count(), 2)
+
+    def test_str(self):
+        self.assertEqual(
+            str(self.t_ok),
+            "id: {t.id}; class: {t.__class__.__name__}; deleted: {t.deleted}".format(t=self.t_ok)
+        )
+
+    def test_delete__default(self):
+        self.assertIsNone(self.t_ok.deleted)
+
+    def test_delete__soft_delete(self):
+        self.t_ok.delete()
+        self.assertIsNotNone(self.t_ok.deleted)
+        self.assertIsInstance(Tester.objects_all.get(id=self.t_ok.id), Tester)
+
+    def test_delete__hard_delete(self):
+        country = mommy.make(Country)
+        country.delete(override=True)
+
+        with self.assertRaises(ObjectDoesNotExist):
+            Country.objects_all.get(id=country.id)
+
+    def test_to_dict(self):
+        self.assertEqual(
+            self.t_ok.to_dict(),
+            {'id': str(self.t_ok.id)}
+        )
+
+
+class BaseNameModelTests(TestCase):
+
+    def setUp(self):
+        self.x = mommy.make(Country)
+
+    def test_str(self):
+        self.assertEqual(str(self.x), self.x.name)
+
+    def test_to_dict(self):
+        self.assertEqual(
+            self.x.to_dict(),
+            {'id': str(self.x.id), 'name': self.x.name}
+        )
 
 
 class TesterPermissionTests(TestCase):
