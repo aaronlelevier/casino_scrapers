@@ -395,6 +395,8 @@ test('welcome_text isDirty test', (assert) => {
     assert.notOk(role.get('isDirty'));
     role.set('welcome_text', 'foo');
     assert.ok(role.get('isDirty'));
+    role.set('welcome_text', '');
+    assert.ok(!role.get('isDirty'));
 });
 
 test('settings', (assert) => {
