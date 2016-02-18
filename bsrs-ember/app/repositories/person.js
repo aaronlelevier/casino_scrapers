@@ -13,7 +13,7 @@ var PEOPLE_URL = PREFIX + '/admin/people/';
 export default Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'person'; }),
     typeGrid: Ember.computed(function() { return 'person-list'; }),
-    ancillary_processing: Ember.computed(function() { return ['person-list', 'person-status-list']; }),
+    garbage_collection: Ember.computed(function() { return ['person-list', 'person-status-list']; }),
     url: Ember.computed(function() { return PEOPLE_URL; }),
     uuid: injectUUID('uuid'),
     PersonDeserializer: inject('person'),

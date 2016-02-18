@@ -54,8 +54,8 @@ var GridRepositoryMixin = Ember.Mixin.create({
                 endpoint = endpoint + '&' + field + '__icontains=' + encodeURIComponent(value);
             });
         }
-        const ancillary_processing = this.get('ancillary_processing') || [];
-        ancillary_processing.forEach((type) => {
+        const garbage_collection = this.get('garbage_collection') || [];
+        garbage_collection.forEach((type) => {
             store.clear(type);
         });
         return PromiseMixin.xhr(endpoint).then((response) => {

@@ -11,7 +11,7 @@ var LOCATION_URL = PREFIX + '/admin/locations/';
 var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'location'; }),
     typeGrid: Ember.computed(function() { return 'location-list'; }),
-    ancillary_processing: Ember.computed(function() { return ['location-list', 'location-status-list']; }),
+    garbage_collection: Ember.computed(function() { return ['location-list', 'location-status-list']; }),
     url: Ember.computed(function() { return LOCATION_URL; }),
     uuid: injectUUID('uuid'),
     LocationDeserializer: inject('location'),
