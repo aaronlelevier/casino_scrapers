@@ -24,11 +24,14 @@ wait
 ../venv/bin/python manage.py loaddata fixtures/contact.EmailType.json
 ../venv/bin/python manage.py loaddata fixtures/contact.PhoneNumberType.json
 ../venv/bin/python manage.py loaddata fixtures/contact.AddressType.json
-../venv/bin/python manage.py loaddata fixtures/category.json
 ../venv/bin/python manage.py loaddata fixtures/third_party.json
 ../venv/bin/python manage.py loaddata fixtures/auth.json
 wait
 ../venv/bin/python manage.py loaddata utils_transform/tlocation/fixtures/location_levels.json
+wait
+../venv/bin/python manage.py etl_category_type
+../venv/bin/python manage.py etl_category_trade
+../venv/bin/python manage.py etl_category_issue
 wait
 ../venv/bin/python manage.py etl_location_region
 ../venv/bin/python manage.py etl_location_district
