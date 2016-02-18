@@ -1,9 +1,10 @@
 import Ember from 'ember';
 import { Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
+import DateFormatMixin from 'bsrs-ember/mixins/model/date-format';
 
 //TODO: does this need to be a model
-export default Model.extend({
+export default Model.extend(DateFormatMixin, {
     store: inject('main'),
     ticket: Ember.computed(function() {
         const store = this.get('store'); 
