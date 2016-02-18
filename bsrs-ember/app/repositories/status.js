@@ -2,7 +2,11 @@ import Ember from 'ember';
 
 export default Ember.Object.extend({
     find() {
-        var store = this.get('store');
+        const store = this.get('store');
         return store.find('status');
+    },
+    get_default() {
+        const store = this.get('store');
+        return store.find('status', {name: 'admin.person.status.active'}).objectAt(0);
     }
 });

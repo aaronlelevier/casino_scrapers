@@ -234,6 +234,7 @@ test('on boot we should fetch and load the person-current, logged in Person, con
         assert.equal(person_current.get('last_name'), PERSON_CURRENT.last_name);
         assert.equal(person_current.get('username'), PERSON_CURRENT.username);
         assert.equal(person_current.get('title'), PERSON_CURRENT.title);
+        assert.equal(person_current.get('status.id'), PERSON_CURRENT.status);
         assert.equal(person_current.get('role.id'), store.find('person', PERSON_CURRENT.id).get('role').get('id'));
     });
 });

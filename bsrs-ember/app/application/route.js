@@ -86,29 +86,20 @@ var ApplicationRoute = Ember.Route.extend({
         role_types_list.forEach((model, index) => {
             store.push('role-type', {id: index+1, name: model});
         });
-
         const filterset_list = Ember.$('[data-preload-saved-filterset]').data('configuration');
         filterset_list.forEach(filterset => {
             store.push('filterset', filterset);
         });
-
         const model_default_order_definitions = Ember.$('[data-preload-default-model-ordering]').data('configuration');
         Object.keys(model_default_order_definitions).forEach(function(key) {
             let order = model_default_order_definitions[key];
             store.push('model-ordering', {id: key, order: order});
         });
-
         const locale_list = Ember.$('[data-preload-locales]').data('configuration');
         locale_list.forEach((model, index) => {
             store.push('locale', model);
         });
-
         const person_current = Ember.$.extend(true, [], Ember.$('[data-preload-person-current]').data('configuration'));
-        // const person_current_role = store.find('role', person_current.role);
-        // person_current_role.set('people', [person_current.id]);
-        // //save so not dirty
-        // person_current_role.save();
-
         let current_locale = store.find('locale', person_current.locale);
         config.i18n.currentLocale = current_locale.get('locale');
         //Sets current user 
@@ -117,7 +108,6 @@ var ApplicationRoute = Ember.Route.extend({
         // push in 'logged in' Person
         person_current.locale = current_locale;
         person_deserializer.deserialize(person_current, person_current.id);
-
         // Set the current user's time zone
         // TODO: use moment.tz.guess() when it becomes available - https://github.com/moment/moment-timezone/pull/220
         // TODO: allow timezone to be overridden at the system/role/user level

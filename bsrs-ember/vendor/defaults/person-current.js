@@ -16,6 +16,8 @@ var BSRS_PERSON_CURRENT_DEFAULTS_OBJECT = (function() {
             fullname: first_name + ' ' + last_name,
             username: this.person_defaults.nameOne,
             role: this.role_defaults.idOne,
+            status: this.person_defaults.status,
+            status_fk: this.person_defaults.status,
             employee_id: '1',
             title: 'Wanker Extrodinare',
             locale: 'a7ae2835-ee7c-4604-92f7-045f3994936e',

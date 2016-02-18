@@ -89,7 +89,8 @@ var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin,
             id: this.get('id'),
             username: this.get('username'),
             password: this.get('password'),
-            role: this.get('role').get('id')
+            role: this.get('role').get('id'),
+            status: this.get('status_fk')
         };
     },
     serialize() {

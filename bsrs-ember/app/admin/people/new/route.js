@@ -9,7 +9,7 @@ var PersonNew = TabNewRoute.extend({
     modelName: Ember.computed(function() { return 'person'; }),
     templateModelField: Ember.computed(function() { return 'Person'; }),
     model(params) {
-        let new_pk = parseInt(params.new_id, 10);
+        const new_pk = parseInt(params.new_id, 10);
         const roles = this.get('store').find('role');
         let model = this.get('store').find('person', {new_pk: new_pk}).objectAt(0);
         if(!model){

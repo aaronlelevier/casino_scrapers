@@ -23,7 +23,7 @@ var store, personProxy, subject, personCurrent, uuid, location_deserializer, loc
 
 module('unit: person deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:random','model:uuid','model:person', 'model:role','model:person-location','model:location','model:location-level','model:email','model:phonenumber','model:address','model:address-type','service:person-current','service:translations-fetcher','service:i18n', 'model:status', 'model:location-status', 'model:locale']);
+        store = module_registry(this.container, this.registry, ['model:random','model:uuid','model:person', 'model:person-list', 'model:role','model:person-location','model:location','model:location-level','model:email','model:phonenumber','model:address','model:address-type','service:person-current','service:translations-fetcher','service:i18n', 'model:status', 'model:person-status-list', 'model:location-status', 'model:locale']);
         uuid = this.container.lookup('model:uuid');
         location_level_deserializer = LocationLevelDeserializer.create({store: store});
         location_deserializer = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
@@ -109,17 +109,16 @@ test('person setup correct status fk with existing status pointer to person', (a
 });
 
 test('person setup correct status fk with bootstrapped data (list)', (assert) => {
-    let json = PF.generate(PD.idOne);
+    let json = PF.generate_list(PD.idOne);
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    person = store.push('person', {id: PD.id});
     run(() => {
         subject.deserialize(response);
     });
-    assert.equal(person.get('status_fk'), status.get('id'));
-    assert.equal(person.get('status').get('id'), status.get('id'));
+    person = store.find('person-list', PD.idOne);
+    status = store.find('person-status-list', status.get('id'));
+    assert.equal(person.get('status.id'), status.get('id'));
     assert.equal(status.get('people').length, 1);
     assert.deepEqual(status.get('people'), [PD.idOne]);
-    assert.ok(person.get('isNotDirty'));
 });
 
 /* PH and ADDRESSES and EMAILS*/
@@ -215,7 +214,7 @@ test('person will setup the correct relationship with phone numbers when deseria
 /* ROLE */
 test('role will keep appending when deserialize_list is invoked with many people who play the same role', (assert) => {
     let location_level;
-    let json = PF.generate_single_for_list(PD.unusedId);
+    let json = PF.generate_list(PD.unusedId);
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});

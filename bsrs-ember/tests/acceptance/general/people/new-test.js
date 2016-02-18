@@ -6,6 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
+import SD from 'bsrs-ember/vendor/defaults/status';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import PND from 'bsrs-ember/vendor/defaults/phone-number-type';
@@ -33,6 +34,7 @@ module('Acceptance | people-new', {
             username: PD.username,
             password: PD.password,
             role: PD.role,
+            status: SD.activeId
         };
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -40,7 +42,7 @@ module('Acceptance | people-new', {
         list_xhr = xhr(endpoint + '?page=1','GET',null,{},200,PF.empty());
         detailEndpoint = `${PREFIX}${BASE_PEOPLE_URL}/`;
         people_detail_data = {id: UUID.value, username: PD.username,
-            role: RF.get() , phone_numbers:[], addresses: [], locations: []};
+            role: RF.get() , phone_numbers:[], addresses: [], locations: [], status_fk: SD.activeId};
         detail_xhr = xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
         original_uuid = random.uuid;
         random.uuid = function() { return UUID.value; };
@@ -195,6 +197,7 @@ test('can change default role', (assert) => {
         username: PD.username,
         password: PD.password,
         role: RD.idTwo,
+        status: SD.activeId
     };
     fillIn('.t-person-username', PD.username);
     fillIn('.t-person-password', PD.password);

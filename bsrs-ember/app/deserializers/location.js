@@ -162,7 +162,7 @@ var LocationDeserializer = Ember.Object.extend({
             response.detail = true;
             location = store.push('location', response);
             location.save();
-            belongs_to_extract(response.status_fk, store, location, 'status', 'location');
+            belongs_to_extract(response.status_fk, store, location, 'status', 'location', 'locations');
         }
         return location;
     },
@@ -174,7 +174,7 @@ var LocationDeserializer = Ember.Object.extend({
             const status_json = model.status;
             delete model.status;
             const location = store.push('location-list', model);
-            belongs_to_extract(status_json, store, location, 'status', 'location');
+            belongs_to_extract(status_json, store, location, 'status', 'location', 'locations');
             return_array.push(location);
         });
         return return_array;

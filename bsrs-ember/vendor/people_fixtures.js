@@ -24,6 +24,12 @@ var BSRS_PEOPLE_FACTORY = (function() {
             status: this.person_defaults.status
         }
     },
+    factory.prototype.generate_list = function(i) {
+        var person = this.generate(i);
+        person.status = {id: person.status_fk, name: this.status_defaults.activeName};
+        delete person.status_fk;
+        return person;
+    },
     factory.prototype.generate = function(i) {
         return {
             id: i,
@@ -34,7 +40,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
             title : this.person_defaults.title,
             employee_id : this.person_defaults.employee_id,
             auth_amount : this.person_defaults.auth_amount,
-            status : this.status_defaults.activeId,
+            status_fk : this.status_defaults.activeId,
             role: this.role_fixtures.get(),
             locations: [],
             emails: [],
@@ -64,7 +70,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
             } else {
                 uuid = uuid + i;
             }
-            var person = this.generate(uuid);
+            var person = this.generate_list(uuid);
             delete person.locations;
             delete person.locale;
             delete person.emails;
@@ -86,7 +92,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=page_size+1; i <= page_size*2-2; i++) {
             var uuid = '139543cf-8fea-426a-8bc3-09778cd799';
-            var person = this.generate(uuid + i);
+            var person = this.generate_list(uuid + i);
             person.role = this.role_defaults.idTwo;
             delete person.locations;
             delete person.locale;
@@ -111,11 +117,10 @@ var BSRS_PEOPLE_FACTORY = (function() {
         person.phone_numbers = this.phone_number_fixtures.get();
         person.addresses = this.address_fixtures.get();
         person.locations = [this.location_fixtures.get_fk()];
-        person.status = this.person_defaults.status;
         return person;
     };
     factory.prototype.put = function(person) {
-        var response = this.generate(person.id);
+        var response = this.generate_list(person.id);
         response.emails = this.emails.put();
         response.phone_numbers = this.phone_number_fixtures.put();
         response.addresses = this.address_fixtures.put();

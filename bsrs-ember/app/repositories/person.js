@@ -2,6 +2,7 @@ import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
+import injectRepo from 'bsrs-ember/utilities/inject';
 import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 
@@ -11,11 +12,13 @@ var PEOPLE_URL = PREFIX + '/admin/people/';
 
 export default Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'person'; }),
-    type_related: Ember.computed(function() { return ['phonenumber', 'email', 'address']; }),
+    typeGrid: Ember.computed(function() { return 'person-list'; }),
+    ancillary_processing: Ember.computed(function() { return ['person-list', 'person-status-list']; }),
     url: Ember.computed(function() { return PEOPLE_URL; }),
     uuid: injectUUID('uuid'),
     PersonDeserializer: inject('person'),
     deserializer: Ember.computed.alias('PersonDeserializer'),
+    status_repo: injectRepo('status'),
     create(new_pk) {
         const pk = this.get('uuid').v4();
         const store = this.get('store');
@@ -24,8 +27,10 @@ export default Ember.Object.extend(GridRepositoryMixin, {
         }).objectAt(0);
         const people = role.get('people') || [];
         let person;
+        const status_repo = this.get('status_repo');
+        const status_fk = status_repo.get_default().get('id');
         run(() => {
-            person = store.push('person', {id: pk, new: true, new_pk: new_pk, role_fk: role.get('id')});
+            person = store.push('person', {id: pk, new: true, new_pk: new_pk, status_fk: status_fk, role_fk: role.get('id')});
             store.push('role', {id: role.get('id'), people: people.concat(person.get('id'))});
             // role.set('people', people.concat(person.get('id')));
         });
@@ -70,12 +75,12 @@ export default Ember.Object.extend(GridRepositoryMixin, {
             });
         }
     },
-    find() {
-        PromiseMixin.xhr(PEOPLE_URL, 'GET').then((response) => {
-            this.get('PersonDeserializer').deserialize(response);
-        });
-        return this.get('store').find('person');
-    },
+    // find() {
+    //     PromiseMixin.xhr(PEOPLE_URL, 'GET').then((response) => {
+    //         this.get('PersonDeserializer').deserialize(response);
+    //     });
+    //     return this.get('store').find('person');
+    // },
     findById(id) {
         let model = this.get('store').find('person', id);
         model.id = id;

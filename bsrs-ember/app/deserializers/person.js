@@ -1,16 +1,8 @@
 import Ember from 'ember';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
+import { belongs_to_extract } from 'bsrs-components/repository/belongs-to';
 
 const { run } = Ember;
-
-var extract_status = (model, store) => {
-    const status = store.find('status', model.status);
-    let existing_people = status.get('people') || [];
-    existing_people = existing_people.indexOf(model.id) > -1 ? existing_people : existing_people.concat(model.id);
-    store.push('status', {id: status.get('id'), people: existing_people});
-    model.status_fk = status.get('id');
-    delete model.status;
-};
 
 var extract_emails = function(model, store) {
     let email_fks = [];
@@ -135,41 +127,39 @@ var PersonDeserializer = Ember.Object.extend({
         if (typeof options === 'undefined') {
             return this.deserialize_list(response);
         } else {
-            this.deserialize_single(response, options, location_deserializer);
+            return this.deserialize_single(response, options, location_deserializer);
         }
     },
     deserialize_single(model, id, location_deserializer) {
         let store = this.get('store');
-        const person_check = store.find('person', id);
+        const existing = store.find('person', id);
         let location_level_fk;
-        if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
+        let person = existing;
+        if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
             model.email_fks = extract_emails(model, store);
             model.phone_number_fks = extract_phone_numbers(model, store);
             model.address_fks = extract_addresses(model, store);
             [model.role_fk, location_level_fk] = extract_role(model, store);
             extract_person_location(model, store, location_level_fk, location_deserializer);
             extract_locale(model, store);
-            extract_status(model, store);
             model.detail = true;
-            const person = store.push('person', model);
+            person = store.push('person', model);
+            belongs_to_extract(model.status_fk, store, person, 'status', 'person', 'people');
             person.save();
         }
+        return person;
     },
     deserialize_list(response) {
-        let store = this.get('store');
-        let return_array = Ember.A();
+        const store = this.get('store');
+        const return_array = [];
         response.results.forEach((model) => {
-            const person_check = store.find('person', model.id);
-            if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
-                [model.role_fk] = extract_role(model, store);
-                extract_status(model, store);
-                model.grid = true;
-                let person = store.push('person', model);
-                person.save();
-                return_array.pushObject(person);
-            }else{
-                return_array.pushObject(person_check);
-            }
+            [model.role_fk] = extract_role(model, store);
+            const status_json = model.status;
+            delete model.status;
+            const person = store.push('person-list', model);
+            belongs_to_extract(status_json, store, person, 'status', 'person', 'people');
+            // person.save();
+            return_array.push(person);
         });
         return return_array;
     }
