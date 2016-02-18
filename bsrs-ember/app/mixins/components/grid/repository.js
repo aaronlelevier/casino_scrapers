@@ -46,7 +46,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
         }
         if (find && find !== '') {
             let finds = find.split(',');
-            finds.forEach(function(data) {
+            finds.forEach((data) => {
                 let params = data.split(':');
                 let key = params[0] || '';
                 let value = params[1];
