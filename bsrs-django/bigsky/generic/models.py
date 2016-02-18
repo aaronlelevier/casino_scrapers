@@ -40,7 +40,7 @@ class SavedSearch(BaseModel):
 
     class Meta:
         ordering = ('-modified',)
-        verbose_name_plural = "Saved Searches"
+        verbose_name_plural = "Saved searches"
 
     def __str__(self):
         return self.name

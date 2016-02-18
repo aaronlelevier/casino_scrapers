@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from category.models import Category
+from category.models import Category, LABEL_TYPE, LABEL_TRADE, LABEL_ISSUE, LABEL_SUB_ISSUE
 from utils_transform.tcategory.models import CategoryType
 from utils_transform.tcategory.management.commands._etl_utils import (
     resolve_cost_amount, create_category_from_category_type,
@@ -16,7 +16,7 @@ class EtlUtilTests(TestCase):
 
         ret = resolve_cost_amount(cost_amount)
 
-        self.assertEqual(ret, 0)
+        self.assertIsNone(ret)
 
     def test_create_category_and_resolve_cost_amount(self):
         domino_type = create_category_type()
@@ -26,7 +26,7 @@ class EtlUtilTests(TestCase):
         type_ = create_category_from_category_type(domino_type)
 
         self.assertIsInstance(type_, Category)
-        self.assertEqual(type_.cost_amount, 0)
+        self.assertIsNone(type_.cost_amount)
 
     def test_create_category_from_category_type(self):
         domino_type = create_category_type()
@@ -36,8 +36,8 @@ class EtlUtilTests(TestCase):
         self.assertIsInstance(type_, Category)
         self.assertEqual(type_.name, domino_type.name)
         self.assertEqual(type_.description, domino_type.description)
-        self.assertEqual(type_.label, 'type')
-        self.assertEqual(type_.subcategory_label, 'trade')
+        self.assertEqual(type_.label, LABEL_TYPE)
+        self.assertEqual(type_.subcategory_label, LABEL_TRADE)
         self.assertEqual(type_.cost_amount, domino_type.cost_amount)
         self.assertEqual(type_.cost_code, domino_type.cost_code)
 
@@ -51,8 +51,8 @@ class EtlUtilTests(TestCase):
         self.assertIsInstance(trade, Category)
         self.assertEqual(trade.name, domino_trade.name)
         self.assertEqual(trade.description, domino_trade.description)
-        self.assertEqual(trade.label, 'trade')
-        self.assertEqual(trade.subcategory_label, 'issue')
+        self.assertEqual(trade.label, LABEL_TRADE)
+        self.assertEqual(trade.subcategory_label, LABEL_ISSUE)
         self.assertEqual(trade.cost_amount, domino_trade.cost_amount)
         self.assertEqual(trade.cost_code, domino_trade.cost_code)
         self.assertEqual(trade.parent, type_)
@@ -67,8 +67,8 @@ class EtlUtilTests(TestCase):
         self.assertIsInstance(issue, Category)
         self.assertEqual(issue.name, domino_issue.name)
         self.assertEqual(issue.description, domino_issue.description)
-        self.assertEqual(issue.label, 'issue')
-        self.assertEqual(issue.subcategory_label, 'sub-issue')
+        self.assertEqual(issue.label, LABEL_ISSUE)
+        self.assertEqual(issue.subcategory_label, LABEL_SUB_ISSUE)
         self.assertEqual(issue.cost_amount, domino_issue.cost_amount)
         self.assertEqual(issue.cost_code, domino_issue.cost_code)
         self.assertEqual(issue.parent, trade)

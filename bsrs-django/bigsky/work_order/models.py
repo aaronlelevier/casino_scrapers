@@ -31,7 +31,7 @@ class WorkOrderStatus(BaseNameModel):
     objects = WorkOrderStatusManager()
 
     class Meta:
-        verbose_name_plural = "Work Order Statuses"
+        verbose_name_plural = "Work order statuses"
 
     def to_dict(self):
         return {
@@ -61,7 +61,7 @@ class WorkOrderPriority(BaseNameModel):
     objects = WorkOrderPriorityManager()
 
     class Meta:
-        verbose_name_plural = "Work Order Priorities"
+        verbose_name_plural = "Work order priorities"
 
 
 class WorkOrder(BaseModel):

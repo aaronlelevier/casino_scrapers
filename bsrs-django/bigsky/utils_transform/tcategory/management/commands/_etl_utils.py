@@ -1,4 +1,4 @@
-from category.models import Category
+from category.models import Category, LABEL_TYPE, LABEL_TRADE, LABEL_ISSUE, LABEL_SUB_ISSUE
 
 
 def resolve_cost_amount(cost_amount):
@@ -6,7 +6,7 @@ def resolve_cost_amount(cost_amount):
         float(cost_amount)
     except ValueError:
         # Error will be raised here if an empty string
-        return 0
+        return
     else:
         return cost_amount
 
@@ -25,13 +25,13 @@ def _create_category(domino_instance, label, subcategory_label, parent):
     )
 
 
-def create_category_from_category_type(domino_instance, label='type', subcategory_label='trade', parent=None):
+def create_category_from_category_type(domino_instance, label=LABEL_TYPE, subcategory_label=LABEL_TRADE, parent=None):
     return _create_category(domino_instance, label, subcategory_label, parent)
 
 
-def create_category_from_category_trade(domino_instance, label='trade', subcategory_label='issue', parent=None):
+def create_category_from_category_trade(domino_instance, label=LABEL_TRADE, subcategory_label=LABEL_ISSUE, parent=None):
     return _create_category(domino_instance, label, subcategory_label, parent)
 
 
-def create_category_from_category_issue(domino_instance, label='issue', subcategory_label='sub-issue', parent=None):
+def create_category_from_category_issue(domino_instance, label=LABEL_ISSUE, subcategory_label=LABEL_SUB_ISSUE, parent=None):
     return _create_category(domino_instance, label, subcategory_label, parent)

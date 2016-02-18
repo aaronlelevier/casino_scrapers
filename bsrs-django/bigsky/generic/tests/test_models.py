@@ -29,8 +29,8 @@ class SavedSearchTests(TestCase):
         self.assertIsInstance(self.saved_search, SavedSearch)
 
     def test_meta(self):
-        self.saved_search._meta.ordering = ('-modified',)
-        self.saved_search._meta.verbose_name_plural = "Saved Searches"
+        self.assertEqual(self.saved_search._meta.ordering,  ('-modified',))
+        self.assertEqual(self.saved_search._meta.verbose_name_plural, "Saved searches")
 
     def test_str(self):
         self.assertEqual(str(self.saved_search), self.saved_search.name)

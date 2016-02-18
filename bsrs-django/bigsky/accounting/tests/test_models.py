@@ -41,6 +41,9 @@ class CurrencyTests(TestCase):
     def test_manager(self):
         self.assertIsInstance(Currency.objects, CurrencyManager)
 
+    def test_str(self):
+        self.assertEqual(self.default.name, str(self.default))
+
     def test_verbose_name_plural(self):
         self.assertEqual(Currency._meta.verbose_name_plural, "Currencies")
 

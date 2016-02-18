@@ -36,6 +36,9 @@ class Currency(BaseModel):
     class Meta:
         verbose_name_plural = "Currencies"
 
+    def __str__(self):
+        return self.name
+
     def save(self, *args, **kwargs):
         self._update_defaults()
         super(Currency, self).save(*args, **kwargs)

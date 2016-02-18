@@ -11,6 +11,11 @@ CATEGORY_STATUSES = [
     'category.status.inactive'
 ]
 
+LABEL_TYPE = 'Type'
+LABEL_TRADE = 'Trade'
+LABEL_ISSUE = 'Issue'
+LABEL_SUB_ISSUE = 'Sub-Issue'
+
 
 class CategoryStatusManager(BaseManager):
 
@@ -24,7 +29,7 @@ class CategoryStatus(BaseNameModel):
     objects = CategoryStatusManager()
 
     class Meta:
-        verbose_name_plural = "Category Statuses"
+        verbose_name_plural = "Category statuses"
 
 
 class CategoryQuerySet(SelfReferencingQuerySet):
@@ -51,7 +56,7 @@ class Category(BaseModel):
         help_text="This field cannot be set directly.  It is either set from "
                   "a system setting, or defaulted from the Parent Category.")
     subcategory_label = models.CharField(max_length=100, blank=True)
-    cost_amount = models.DecimalField(max_digits=15, decimal_places=4, default=0, blank=True, null=True)
+    cost_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, null=True)
     cost_currency = models.ForeignKey(Currency, blank=True, null=True)
     cost_code = models.CharField(max_length=100, blank=True, null=True)
     parent = models.ForeignKey("self", related_name="children", blank=True, null=True)
@@ -63,6 +68,7 @@ class Category(BaseModel):
 
     class Meta:
         ordering = ('level',)
+        verbose_name_plural = 'Categories'
 
     def __str__(self):
         return self.name

@@ -262,6 +262,9 @@ class PersonStatus(BaseStatusModel):
 
     objects = PersonStatusManager()
 
+    class Meta:
+        verbose_name_plural = 'Person statuses'
+
     def save(self, *args, **kwargs):
         if self.default:
             PersonStatus.objects.update_non_defaults(self.id)
@@ -351,6 +354,7 @@ class Person(BaseModel, AbstractUser):
 
     class Meta:
         ordering = ('fullname',)
+        verbose_name_plural = 'People'
 
     def __str__(self):
         return self.username

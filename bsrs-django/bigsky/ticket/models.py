@@ -37,7 +37,7 @@ class TicketStatus(BaseNameModel):
     objects = TicketStatusManager()
 
     class Meta:
-        verbose_name_plural = "Ticket Statuses"
+        verbose_name_plural = "Ticket statuses"
 
     def to_dict(self):
         return {
@@ -67,7 +67,7 @@ class TicketPriority(BaseNameModel):
     objects = TicketPriorityManager()
 
     class Meta:
-        verbose_name_plural = "Ticket Priorities"
+        verbose_name_plural = "Ticket priorities"
 
 
 class TicketQuerySet(BaseQuerySet):

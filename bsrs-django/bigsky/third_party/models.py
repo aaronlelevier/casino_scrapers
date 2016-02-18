@@ -18,6 +18,9 @@ class ThirdPartyStatusManager(BaseManager):
 class ThirdPartyStatus(BaseNameModel):
     description = models.CharField(max_length=100, blank=True)
 
+    class Meta:
+        verbose_name_plural = 'Third party statuses'
+
     objects = ThirdPartyStatusManager()
 
 
@@ -33,6 +36,9 @@ class ThirdParty(BaseNameModel):
     phone_numbers = GenericRelation(PhoneNumber)
     addresses = GenericRelation(Address)
     emails = GenericRelation(Email)
+
+    class Meta:
+        verbose_name_plural = 'Third parties'
 
     def save(self, *args, **kwargs):
         self._update_defaults()
