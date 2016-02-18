@@ -156,10 +156,13 @@ textarea.ticket-request{
 	margin: 0 8px 0 0;
 	position: relative;
 	white-space: nowrap;
+	&.admin-location-status-open,
 	&.ticket-status-new{
 		background: $lightGreen;
 		border-color: $lightGreen;
 	}
+	&.admin-location-status-future,
+	&.admin-person-status-active,
 	&.ticket-status-in_progress{
 		background: $lightBlue;
 		border-color: $lightBlue;
@@ -168,6 +171,7 @@ textarea.ticket-request{
 		background: $darkOrange;
 		border-color: $darkOrange;
 	}
+	&.admin-person-status-expired,
 	&.ticket-priority-high{
 		background: $orange;
 		border-color: $orange;
