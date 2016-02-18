@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from category.models import Category
+from category.validators import CategoryParentAndNameValidator
 from utils.serializers import BaseCreateSerializer
 
 
@@ -30,6 +31,7 @@ class CategoryIDNameSerializerTicket(BaseCreateSerializer):
         data['children_fks'] = data.pop('children', [])
         data['parent_id'] = data.pop('parent', [])
         return data
+
 
 #TODO: check if can use above serializer
 class CategoryIDNameSerializer(BaseCreateSerializer):
@@ -92,4 +94,5 @@ class CategorySerializer(BaseCreateSerializer):
 
     class Meta:
         model = Category
+        validators = [CategoryParentAndNameValidator()]
         fields = CATEGORY_FIELDS + ('subcategory_label', 'parent', 'children',)
