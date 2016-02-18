@@ -3,13 +3,30 @@ from django.test import TestCase
 from category.models import Category
 from utils_transform.tcategory.models import CategoryType
 from utils_transform.tcategory.management.commands._etl_utils import (
-    create_category_from_category_type, create_category_from_category_trade,
-    create_category_from_category_issue)
+    resolve_cost_amount, create_category_from_category_type,
+    create_category_from_category_trade, create_category_from_category_issue)
 from utils_transform.tcategory.tests.factory import (create_category_type,
     create_category_trade, create_category_issue)
 
 
 class EtlUtilTests(TestCase):
+
+    def test_resolve_cost_amount(self):
+        cost_amount = ''
+
+        ret = resolve_cost_amount(cost_amount)
+
+        self.assertEqual(ret, 0)
+
+    def test_create_category_and_resolve_cost_amount(self):
+        domino_type = create_category_type()
+        domino_type.cost_amount = ''
+        domino_type.save()
+
+        type_ = create_category_from_category_type(domino_type)
+
+        self.assertIsInstance(type_, Category)
+        self.assertEqual(type_.cost_amount, 0)
 
     def test_create_category_from_category_type(self):
         domino_type = create_category_type()

@@ -1,13 +1,25 @@
 from category.models import Category
 
 
+def resolve_cost_amount(cost_amount):
+    try:
+        float(cost_amount)
+    except ValueError:
+        # Error will be raised here if an empty string
+        return 0
+    else:
+        return cost_amount
+
+
 def _create_category(domino_instance, label, subcategory_label, parent):
+    cost_amount = resolve_cost_amount(domino_instance.cost_amount)
+
     return Category.objects.create(
         name=domino_instance.name,
         description=domino_instance.description,
         label=label,
         subcategory_label=subcategory_label,
-        cost_amount=domino_instance.cost_amount,
+        cost_amount=cost_amount,
         cost_code=domino_instance.cost_code,
         parent=parent
     )
