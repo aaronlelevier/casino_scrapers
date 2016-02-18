@@ -43,17 +43,9 @@ test('login_grace', (assert) => {
 });
 
 test('serialize', (assert) => {
-    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, welcome_text: SD.welcome_text, login_grace: SD.login_grace});
+    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, company_name: SD.company_name, welcome_text: SD.welcome_text, login_grace: SD.login_grace});
     var serialize = setting.serialize();
-    // welcome_text
-    assert.equal(serialize.settings.welcome_text, setting.get('welcome_text'));
-    setting.set('welcome_text', 'x');
-    serialize = setting.serialize();
-    assert.equal(serialize.settings.welcome_text, 'x');
-    // login_grace
-    setting.set('login_grace', serialize.settings.login_grace);
-    assert.equal(serialize.settings.login_grace, setting.get('login_grace'));
-    setting.set('login_grace', 2);
-    serialize = setting.serialize();
-    assert.equal(serialize.settings.login_grace, 2);
+    assert.equal(serialize.settings.welcome_text, SD.welcome_text);
+    assert.equal(serialize.settings.company_name, SD.company_name);
+    assert.equal(serialize.settings.login_grace, SD.login_grace);
 });

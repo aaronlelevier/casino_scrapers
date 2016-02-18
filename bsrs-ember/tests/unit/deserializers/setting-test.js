@@ -25,6 +25,5 @@ test('setting correctly deserialized settings object', (assert) => {
     assert.equal(setting.get('welcome_text'), SD.welcome_text);
     assert.equal(setting.get('login_grace'), SD.login_grace);
     assert.equal(setting.get('company_name'), SD.company_name);
-    assert.equal(setting.get('create_all'), SD.create_all);
-    assert.notOk(setting.get('settings'));
+assert.notOk(setting.get('settings'));
 });

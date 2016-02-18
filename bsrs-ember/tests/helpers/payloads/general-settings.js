@@ -7,8 +7,7 @@ var setting_payload = {
     settings: {
         login_grace: SD.login_grace,
         welcome_text: SD.welcome_text,
-        company_name: SD.company_name,
-        create_all: SD.create_all
+        company_name: SD.company_name
     }
 };
 
@@ -19,8 +18,7 @@ var setting_payload_other = {
     settings: {
         login_grace: SD.login_graceOther,
         welcome_text: SD.welcome_textOther,
-        company_name: SD.company_nameOther,
-        create_all: SD.create_allOther
+        company_name: SD.company_nameOther
     }
 };
 

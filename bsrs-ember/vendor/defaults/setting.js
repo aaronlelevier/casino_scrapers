@@ -32,11 +32,6 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
                     'required': false,
                     'type': 'str',
                     'value': one.company_name
-                },
-                'create_all': {
-                    'required': true,
-                    'type': 'bool',
-                    'value': one.create_all
                 }
             },
             'settingsOther': {
@@ -54,11 +49,6 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
                     'required': false,
                     'type': 'str',
                     'value': other.company_nameOther
-                },
-                'create_all': {
-                    'required': true,
-                    'type': 'bool',
-                    'value': other.create_allOther
                 }
             }
         });
