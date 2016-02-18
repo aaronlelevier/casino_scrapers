@@ -43,3 +43,4 @@ test('403 response code will redirect to login page', (assert) => {
         // assert.equal(windowProxy.locationUrl, '/login/');
     });
 });
+

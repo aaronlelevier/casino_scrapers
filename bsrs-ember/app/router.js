@@ -71,6 +71,7 @@ Router.map(function() {
     this.route('reports');
     this.route('phone-number');
     this.route('dashboard');
+    this.route('redirect', {path: '/*wildcard'});
 });
 
 export default Router;

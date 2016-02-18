@@ -3,6 +3,7 @@ import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import RD from 'bsrs-ember/vendor/defaults/role';
+import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const HOME_URL = '/';
 const NAVBAR = '.t-navbar-items';
@@ -41,5 +42,12 @@ test('current user is set from bootstrap data', function(assert) {
     andThen(() => {
         assert.equal(find('.t-current-user-fullname').text(), 'Donald Trump');
         assert.equal(find('.t-current-user-role').text(), RD.nameOne);
+    });
+});
+
+test('navigating to unkown route will redirect to dashboard', (assert) => {
+    visit('/wat');
+    andThen(() => {
+        assert.equal(currentURL(), BASEURLS.dashboard_url);
     });
 });
