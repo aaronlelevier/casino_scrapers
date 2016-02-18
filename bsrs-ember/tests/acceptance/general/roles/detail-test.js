@@ -388,7 +388,7 @@ test('settings - override value from parent', (assert) => {
 
 // BRING THESE BACK WHEN WE HAVE FIRST LEVEL SETTINGS ON THE ROLE
 
-// test('amk settings - has a value, and is not inherited', (assert) => {
+// test('settings - has a value, and is not inherited', (assert) => {
 //     clearxhr(list_xhr);
 //     clearxhr(detail_xhr);
 //     let value = 'foo';

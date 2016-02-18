@@ -53,7 +53,7 @@ module('Acceptance | ticket grid test', {
     }
 });
 
-test(`initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr`, function(assert) {
+test('initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr', function(assert) {
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
@@ -63,8 +63,8 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority-translated_name').text().trim(), TD.priorityOne);
         assert.ok(find('.t-grid-data:eq(0) .t-ticket-priority-emergency'));
         assert.ok(find('.t-grid-data:eq(0) .t-ticket-status-new'));
-        const time = moment(new Date()).format('h:mm a');
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-formatted_date').text().trim(), `${TD.createdFormattedToday} ${time}`);
+        const time = moment(new Date()).calendar();
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-created').text().trim(), `${time}`);
         const pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -85,6 +85,8 @@ test('clicking page 2 will load in another set of data as well as clicking page 
         assert.equal(currentURL(), TICKET_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestLastGrid);
+        const time = moment(new Date()).calendar();
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-created').text().trim(), `${time}`);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -99,6 +101,8 @@ test('clicking page 2 will load in another set of data as well as clicking page 
         assert.equal(currentURL(),TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
+        const time = moment(new Date()).calendar();
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-created').text().trim(), `${time}`);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');

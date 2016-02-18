@@ -33,10 +33,10 @@ export default GridViewComponent.extend({
         },
         {
             field: 'created',
-            formattedField: 'formatted_date',
             headerLabel: 'ticket.label.created',
             headerIsTranslatable: true,
             isSortable: true,
+            templateName: 'grid/helpers/grid-date',
             classNames: ['ticket-created']
         },
         {
