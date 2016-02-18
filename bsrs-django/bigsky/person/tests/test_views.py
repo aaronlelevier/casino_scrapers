@@ -430,7 +430,7 @@ class PersonDetailTests(TestCase):
         self.assertEqual(self.data['auth_currency'], str(self.person.auth_currency.id))
 
     def test_data_status(self):
-        self.assertEqual(self.data['status'], str(self.person.status.id))
+        self.assertEqual(self.data['status_fk'], str(self.person.status.id))
 
     def test_data_location(self):
         self.assertTrue(self.data['locations'])

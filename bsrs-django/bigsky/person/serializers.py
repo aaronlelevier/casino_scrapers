@@ -140,6 +140,11 @@ class PersonDetailSerializer(serializers.ModelSerializer):
                         .prefetch_related('emails', 'phone_numbers', 'addresses',
                                           'locations', 'locations__location_level'))
 
+    def to_representation(self, obj):
+        data = super(PersonDetailSerializer, self).to_representation(obj)
+        data['status_fk'] = data.pop('status', [])
+        return data
+
 
 class PersonCurrentSerializer(PersonDetailSerializer):
 
