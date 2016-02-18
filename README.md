@@ -72,7 +72,7 @@ Then, to **test**, run `bash build_project.sh`.  This will do the same fixture u
 #### Import Fixtures Notes
 ##### TRANSLATION
 1. Output "en" document on [Google Drive](https://drive.google.com/drive/folders/0B7dl5Hhfqk0NfkZWUndwVEFzR2RhTUNPRnFRcVA1UVNWTEUxUEFyaU5ZSVpFeHBFMUZBeTg)
-2. export to CSV and put in the file in `bsrs/bsrs-django/bigsky/source/translation` folder
+2. export to CSV and put in the file in `bsrs/bsrs-django/bigsky/media/translation` folder
 3. ipython notebook or shell_plus and execute:
 
 python commands
