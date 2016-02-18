@@ -18,9 +18,10 @@ var RoleModel = Model.extend(NewMixin, {
     location_level_fk: undefined,
     // Settings
     welcome_text: attr(''),
-    create_all: attr(),
-    login_grace: attr(''),
-    company_name: attr(''),
+    //DON'T make these attrs until they are tested
+    // create_all: ,
+    // login_grace: ,
+    // company_name: ,
     settings:  Ember.computed(function() {
         return {
             welcome_text: this.get('welcome_text') || undefined
