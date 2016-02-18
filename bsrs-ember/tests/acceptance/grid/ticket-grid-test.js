@@ -337,10 +337,10 @@ test('clicking the same sort option over and over will flip the direction and re
 });
 
 test('full text search will filter down the result set and query django accordingly and reset clears all full text searches', function(assert) {
-    let find_three = PREFIX + BASE_URL + '/?page=1&request__icontains=&priority__name__icontains=h';
+    let find_three = PREFIX + BASE_URL + '/?page=1&priority__name__icontains=h';
     xhr(find_three, "GET",null,{},200,TF.sorted('id'));
-    let find_two = PREFIX + BASE_URL + '/?page=1&request__icontains=';
-    xhr(find_two ,"GET",null,{},200,TF.sorted('id'));
+    // let find_two = PREFIX + BASE_URL + '/?page=1&request__icontains=';
+    // xhr(find_two ,"GET",null,{},200,TF.sorted('id'));
     let find_one = PREFIX + BASE_URL + '/?page=1&request__icontains=ape';
     xhr(find_one ,"GET",null,{},200,TF.fulltext('request:ape', 1));
     visit(TICKET_URL);
@@ -357,13 +357,13 @@ test('full text search will filter down the result set and query django accordin
     });
     filterGrid('request', '');
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?find=request%3A');
+        assert.equal(currentURL(),TICKET_URL + '?find=');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestLastGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     });
     filterGrid('priority.translated_name', 'h');
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?find=request%3A%2Cpriority.translated_name%3Ah');
+        assert.equal(currentURL(),TICKET_URL + '?find=priority.translated_name%3Ah');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestLastGrid);
     });
@@ -410,7 +410,7 @@ test('when a full text filter is selected the input inside the modal is focused'
 });
 
 test('full text searched columns will have a special on css class when active', function(assert) {
-    let find_three = PREFIX + BASE_URL + '/?page=1&request__icontains=&priority__name__icontains=7';
+    let find_three = PREFIX + BASE_URL + '/?page=1&priority__name__icontains=7';
     xhr(find_three ,"GET",null,{},200,TF.sorted('priority:7'));
     let find_two = PREFIX + BASE_URL + '/?page=1&request__icontains=num&priority__name__icontains=7';
     xhr(find_two ,"GET",null,{},200,TF.sorted('request:num,priority:7'));

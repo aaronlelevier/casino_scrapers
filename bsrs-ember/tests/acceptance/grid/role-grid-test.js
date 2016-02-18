@@ -377,7 +377,7 @@ test('when a full text filter is selected the input inside the modal is focused'
 });
 
 test('full text searched columns will have a special on css class when active', function(assert) {
-    let find_three = PREFIX + BASE_URL + '/?page=1&role_type__icontains=&name__icontains=7';
+    let find_three = PREFIX + BASE_URL + '/?page=1&name__icontains=7';
     xhr(find_three ,"GET",null,{},200,RF.sorted('name:7'));
     let find_two = PREFIX + BASE_URL + '/?page=1&role_type__icontains=in&name__icontains=7';
     xhr(find_two ,"GET",null,{},200,RF.sorted('role_type:in,name:7'));

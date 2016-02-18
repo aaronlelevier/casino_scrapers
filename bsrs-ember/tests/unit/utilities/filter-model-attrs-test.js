@@ -12,6 +12,24 @@ test('when query is undefined any param set on the filter model is reset to unde
     assert.equal(filterModel.get('random'), undefined);
 });
 
+test('when user backspaces and clears out filter, it resets filterModel', function(assert) {
+    const query = 'name:';
+    var filterModel = Ember.Object.create({name: 'x', role: 'y', random: 'z'});
+    set_filter_model_attrs(filterModel, query);
+    assert.equal(filterModel.get('name'), undefined);
+    assert.equal(filterModel.get('role'), 'y');
+    assert.equal(filterModel.get('random'), 'z');
+});
+
+test('when user backspaces related model, it will update filterModel appropriately', function(assert) {
+    var query = 'name:x,role.name:,random:zap';
+    var filterModel = Ember.Object.create({role: {name:'y'}, random: 'z'});
+    set_filter_model_attrs(filterModel, query);
+    assert.equal(filterModel.get('name'), 'x');
+    assert.equal(filterModel.get('role.name'), undefined);
+    assert.equal(filterModel.get('random'), 'zap');
+});
+
 test('when query is legit the filter model is updated appropriately', function(assert) {
     var query = 'name:wat';
     var filterModel = Ember.Object.create({name: 'x', role: 'y', random: 'z'});

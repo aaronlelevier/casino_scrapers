@@ -403,7 +403,7 @@ test('when a full text filter is selected the input inside the modal is focused'
 });
 
 test('full text searched columns will have a special on css class when active', function(assert) {
-    let find_four = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=&fullname__icontains=ewcomer';
+    let find_four = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&fullname__icontains=ewcomer';
     xhr(find_four ,"GET",null,{},200,PF.sorted('title:wat,fullname:ewcomer'));
     let find_three = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=7&fullname__icontains=ewcomer';
     xhr(find_three ,"GET",null,{},200,PF.sorted('title:wat,username:7,fullname:S'));

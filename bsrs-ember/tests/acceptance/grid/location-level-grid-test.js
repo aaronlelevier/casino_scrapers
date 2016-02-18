@@ -304,8 +304,8 @@ test('when a full text filter is selected the input inside the modal is focused'
 });
 
 test('full text searched columns will have a special on css class when active', function(assert) {
-    let find_two = PREFIX+BASE_URL + '/?page=1&name__icontains=';
-    xhr(find_two ,"GET",null,{},200,LLF.fulltext('name:', 1));
+    // let find_two = PREFIX+BASE_URL + '/?page=1';
+    // xhr(find_two ,"GET",null,{},200,LLF.fulltext('name:', 1));
     let find_one = PREFIX+BASE_URL + '/?page=1&name__icontains=tsi';
     xhr(find_one ,"GET",null,{},200,LLF.fulltext('name:tsi', 1));
     visit(LOCATION_LEVEL_URL);

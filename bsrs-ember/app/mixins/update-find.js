@@ -12,7 +12,7 @@ var UpdateFind = Ember.Mixin.create({
             newFind = find && find.length > 0 ? find + ',' + hash : hash;
         } else {
             let regex = new RegExp(column +':\\w*,?');
-            let replacedFind = find.replace(regex, hash + ',');
+            let replacedFind = value === '' ? find.replace(regex, '') : find.replace(regex, hash + ',');
             newFind = replacedFind.replace(/,+$/, '');
         }
         return newFind;

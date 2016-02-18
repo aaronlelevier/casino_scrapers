@@ -23,6 +23,13 @@ test('update will alter the find query param correctly (starting with single val
     assert.equal(result, 'username:abc');
 });
 
+test('update will alter the find query param correctly after clearing out input field', function(assert) {
+    let subject = new FakeComponentTwo();
+    subject.set('find', 'username:');
+    let result = subject.run('username', '');
+    assert.equal(result, '');
+});
+
 test('update will alter the find query param correctly (when param in between 2 others)', function(assert) {
     let subject = new FakeComponentTwo();
     subject.set('find', 'foo:bar,username:xyz,bat:man');
