@@ -37,6 +37,7 @@ test('navbar and tray have correct items', function(assert) {
         assert.equal(find(NAVBAR + ' > li:eq(9)').text(), t('modules.invoices.titleShort'));
     });
 });
+
 test('current user is set from bootstrap data', function(assert) {
     visit(HOME_URL);
     andThen(() => {

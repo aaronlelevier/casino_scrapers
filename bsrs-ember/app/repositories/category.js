@@ -10,6 +10,8 @@ var CATEGORY_URL = PREFIX + '/admin/categories/';
 
 var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'category'; }),
+    typeGrid: Ember.computed(function() { return 'category-list'; }),
+    garbage_collection: Ember.computed(function() { return ['category-list']; }),
     url: Ember.computed(function() { return CATEGORY_URL; }),
     uuid: injectUUID('uuid'),
     CategoryDeserializer: inject('category'),
@@ -32,20 +34,20 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
             });
         }
     },
-    find() {
-        PromiseMixin.xhr(CATEGORY_URL, 'GET').then((response) => {
-            this.get('CategoryDeserializer').deserialize(response);
-        });
-        return this.get('store').find('category');
-    },
+    // find() {
+    //     PromiseMixin.xhr(CATEGORY_URL, 'GET').then((response) => {
+    //         this.get('CategoryDeserializer').deserialize(response);
+    //     });
+    //     return this.get('store').find('category');
+    // },
     findById(id) {
-        let model = this.get('store').find('category', id);
-        //return id right away to allow for tabs to be pushed into store with correct id 
-        model.id = id;
-        PromiseMixin.xhr(CATEGORY_URL + id + '/', 'GET').then((response) => {
-            this.get('CategoryDeserializer').deserialize(response, id);
+        // let model = this.get('store').find('category', id);
+        // //return id right away to allow for tabs to be pushed into store with correct id 
+        // model.id = id;
+        return PromiseMixin.xhr(CATEGORY_URL + id + '/', 'GET').then((response) => {
+            return this.get('CategoryDeserializer').deserialize(response, id);
         });
-        return model;
+        // return model;
     },
 });
 

@@ -8,15 +8,17 @@ var CategorySingle = TabRoute.extend({
     modelName: Ember.computed(function() { return 'category'; }),
     templateModelField: Ember.computed(function() { return 'name'; }),
     model(params, transition) {
-        let pk = params.category_id;
-        let repository = this.get('repository');
+        const pk = params.category_id;
+        const repository = this.get('repository');
         let category = this.get('store').find('category', pk);
-        if (!category.get('length') || category.get('isNotDirtyOrRelatedNotDirty')) { 
-            category = repository.findById(pk);
-        }
-        return {
-            model: category,
-        };
+        // if (!category.get('length') || category.get('isNotDirtyOrRelatedNotDirty')) { 
+        // }
+        return new Ember.RSVP.Promise((resolve) => {
+            repository.findById(pk).then((model) => {
+                category = model;
+                resolve({model:category}); 
+            });
+        });
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);

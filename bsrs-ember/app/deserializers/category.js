@@ -26,12 +26,13 @@ var CategoryDeserializer = Ember.Object.extend({
         if (typeof options === 'undefined') {
             return this.deserialize_list(response);
         } else {
-            this.deserialize_single(response, options);
+            return this.deserialize_single(response, options);
         }
     },
     deserialize_single(response, id) {
-        let store = this.get('store');
-        let existing_category = store.find('category', id);
+        const store = this.get('store');
+        const existing_category = store.find('category', id);
+        let category = existing_category;
         if (!existing_category.get('id') || existing_category.get('isNotDirtyOrRelatedNotDirty')) {
             let temp = response.children_fks || [];
             [response.children_fks, response.parent_id] = extract_tree(response, store);
@@ -40,24 +41,18 @@ var CategoryDeserializer = Ember.Object.extend({
                 response.children_fks = temp;
             }
             response.detail = true;
-            let category = store.push('category', response);
+            category = store.push('category', response);
             store.push('category', {id: category.get('id'), children_fks: response.children_fks, previous_children_fks: response.children_fks});
             category.save();
         }
+        return category;
     },
     deserialize_list(response) {
-        let store = this.get('store');
-        let return_array = Ember.A();
+        const store = this.get('store');
+        const return_array = [];
         response.results.forEach((model) => {
-            let existing = store.find('category', model.id);
-            if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
-                model.grid = true;
-                let category = store.push('category', model);
-                category.save();
-                return_array.pushObject(category);
-            }else{
-                return_array.pushObject(existing);
-            }
+            const category = store.push('category-list', model);
+            return_array.push(category);
         });
         return return_array;
     }

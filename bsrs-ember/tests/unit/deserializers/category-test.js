@@ -9,7 +9,7 @@ var store, subject, category, category_unused, run = Ember.run;
 
 module('unit: category deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:category', 'service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:category', 'model:category-list', 'service:i18n']);
         subject = CategoryDeserializer.create({store: store});
     }
 });
@@ -36,10 +36,12 @@ test('category deserializer returns correct data with no existing category (list
     run(() => {
         subject.deserialize(response);
     });
-    let categories = store.find('category');
+    let categories = store.find('category-list');
     assert.equal(categories.get('length'), 2);
-    assert.ok(categories.objectAt(0).get('isNotDirty'), false);
-    assert.ok(categories.objectAt(1).get('isNotDirty'), false);
+    assert.ok(categories.objectAt(0).get('id'));
+    assert.ok(categories.objectAt(1).get('id'));
+    assert.equal(categories.objectAt(0).get('name'), CD.nameOne);
+    assert.equal(categories.objectAt(1).get('name'), CD.nameOne);
 });
 
 test('category deserializer returns correct data (w/ children) with no existing category (detail)', (assert) => {
