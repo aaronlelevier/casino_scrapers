@@ -3,26 +3,25 @@ var BSRS_THIRD_PARTY_FACTORY = (function() {
         this.third_party = third_party.default || third_party;
         this.config = config;
     };
-    // factory.prototype.get = function(i) {
-    //     return {
-    //         id: i || this.third_party.idOne,
-    //         name: this.third_party.nameOne,
-    //         number: this.third_party.numberOne,
-    //     }
-    // },
+    factory.prototype.generate_list = function(i) {
+        var tp = this.generate(i);
+        delete tp.status_fk;
+        tp.status = {id: this.third_party.statusActive, name: this.third_party.statusActiveName};
+        return tp;
+    };
     factory.prototype.generate = function(i) {
         var id = i || this.third_party.idOne;
         return {
             id: id,
             name : this.third_party.nameOne,
             number : this.third_party.numberOne,
-            status: this.third_party.statusActive,
+            status_fk: this.third_party.statusActive,
         }
     };
     factory.prototype.list = function() {
         var response = [];
         var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
-        response.push(this.generate(this.third_party.idOne));
+        response.push(this.generate_list(this.third_party.idOne));
         for (var i=1; i <= page_size; i++) {
             var uuid = '4cc31ebe-cad3-44ea-aa33-bbe8d456ed4d';
             if (i < page_size) {
@@ -30,7 +29,7 @@ var BSRS_THIRD_PARTY_FACTORY = (function() {
             } else{
                 uuid = uuid + i;
             }
-            var third_party = this.generate(uuid);
+            var third_party = this.generate_list(uuid);
             third_party.name = third_party.name + i;
             third_party.number = third_party.number + i;
             response.push(third_party);
@@ -42,7 +41,7 @@ var BSRS_THIRD_PARTY_FACTORY = (function() {
         var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=page_size+1; i <= page_size*2-1; i++) {
             var uuid = '232z46cf-9fbb-456z-4hc3-59728vu3099';
-            var third_party = this.generate(uuid + i);
+            var third_party = this.generate_list(uuid + i);
             third_party.name = 'vzoname' + i;
             third_party.number = 'sconumber' + i;
             response.push(third_party);
@@ -54,7 +53,8 @@ var BSRS_THIRD_PARTY_FACTORY = (function() {
     };
     factory.prototype.put = function(third_party) {
         var response = this.generate(third_party.id);
-        // response.third_party = this.third_party_fixtures.detail().id;    // TODO: does this need to be 'third-pary'
+        response.status = response.status_fk;
+        delete response.status_fk;
         for(var key in third_party) {
             response[key] = third_party[key];
         }

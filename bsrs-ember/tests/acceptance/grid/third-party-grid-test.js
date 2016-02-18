@@ -242,37 +242,34 @@ test('clicking header will sort by given property and reset page to 1 (also requ
 //     });
 // });
 
-// test('multiple sort options appear in the query string as expected', (assert) => {
-//     random.uuid = function() { return UUID.value; };
-//     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=status.name,name';
-//     xhr(sort_two ,'GET',null,{},200,TPF.sorted('third-party_type,name'));
-//     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-//     xhr(sort_one ,'GET',null,{},200,TPF.sorted('name'));
-//     visit(TP_URL);
-//     andThen(() => {
-//         assert.equal(currentURL(), TP_URL);
-//         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
-//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'1');
-//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text().trim(), TPD.nameOne+'2');
-//     });
-//     click('.t-sort-name-dir');
-//     andThen(() => {
-//         assert.equal(currentURL(),TP_URL + '?sort=name');
-//         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
-//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'1');
-//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text().trim(), TPD.nameOne+'10');
-//     });
-//     click(SORT_DIR);
-//     andThen(() => {
-//         assert.equal(currentURL(),TP_URL + '?sort=status.name%2Cname');
-//         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
-//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'1');
-//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text().trim(), TPD.nameOne+'10');
-//     });
-// });
+test('multiple sort options appear in the query string as expected', (assert) => {
+    var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=status__name,name';
+    xhr(sort_two ,'GET',null,{},200,TPF.sorted('third-party_type,name'));
+    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
+    xhr(sort_one ,'GET',null,{},200,TPF.sorted('name'));
+    visit(TP_URL);
+    andThen(() => {
+        assert.equal(currentURL(), TP_URL);
+        assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
+        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
+        assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'1');
+        assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text().trim(), TPD.nameOne+'2');
+    });
+    click('.t-sort-name-dir');
+    andThen(() => {
+        assert.equal(currentURL(),TP_URL + '?sort=name');
+        assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
+        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameVz);
+        // assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'10'); //firefox discrepancy
+    });
+    click(SORT_DIR);
+    andThen(() => {
+        assert.equal(currentURL(),TP_URL + '?sort=status.name%2Cname');
+        assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
+        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameVz);
+        // assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'1');
+    });
+});
 
 // test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', (assert) => {
 //     random.uuid = function() { return UUID.value; };

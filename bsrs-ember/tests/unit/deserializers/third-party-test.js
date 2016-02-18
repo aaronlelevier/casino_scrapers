@@ -10,9 +10,9 @@ var store, subject, status, third_party, run = Ember.run;
 
 module('unit: third-party deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:third-party', 'model:status']);
+        store = module_registry(this.container, this.registry, ['model:third-party', 'model:third-party-list', 'model:status', 'model:general-status-list', 'service:i18n']);
         subject = ThirdPartyDeserializer.create({store: store});
-        run(function() {
+        run(() => {
             status = store.push('status', {id: SD.activeId, name: SD.activeName});
         });
     }
@@ -27,6 +27,7 @@ test('third_party setup correct status fk with bootstrapped data (detail)', (ass
     });
     assert.equal(third_party.get('status_fk'), status.get('id'));
     assert.equal(third_party.get('status').get('id'), status.get('id'));
+    //TODO: need to generalize status mixin
     assert.deepEqual(status.get('people'), [TPD.idOne]);
     assert.ok(third_party.get('isNotDirty'));
 });
@@ -34,26 +35,26 @@ test('third_party setup correct status fk with bootstrapped data (detail)', (ass
 test('third_party setup correct status fk with existing status pointer to third_party', (assert) => {
     let response = TPF.generate(TPD.idOne);
     third_party = store.push('third-party', {id: TPD.idOne, status_fk: SD.activeId});
-    status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [TPD.idOne]});
+    status = store.push('status', {id: SD.activeId, name: SD.activeName, third_parties: [TPD.idOne]});
     run(() => {
         subject.deserialize(response, TPD.idOne);
     });
     assert.equal(third_party.get('status_fk'), status.get('id'));
     assert.equal(third_party.get('status').get('id'), status.get('id'));
-    assert.equal(status.get('people').length, 1);
+    assert.equal(status.get('third_parties').length, 1);
     assert.ok(third_party.get('isNotDirty'));
 });
 
 test('third_party setup correct status fk with bootstrapped data (list)', (assert) => {
-    third_party = store.push('third-party', {id: TPD.idOne});
-    let json = TPF.generate(TPD.idOne);
+    third_party = store.push('third-party-list', {id: TPD.idOne});
+    let json = TPF.generate_list(TPD.idOne);
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     run(() => {
         subject.deserialize(response);
     });
-    assert.equal(third_party.get('status_fk'), status.get('id'));
+    status = store.find('general-status-list').objectAt(0);
     assert.equal(third_party.get('status').get('id'), status.get('id'));
-    assert.equal(status.get('people').length, 1);
-    assert.deepEqual(status.get('people'), [TPD.idOne]);
-    assert.ok(third_party.get('isNotDirty'));
+    assert.equal(status.get('third_parties').length, 1);
+    assert.deepEqual(status.get('third_parties'), [TPD.idOne]);
+    assert.ok(third_party.get('isNotDirtyOrRelatedNotDirty'));
 });

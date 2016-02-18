@@ -23,12 +23,6 @@ var ThirdPartyRepo = Ember.Object.extend(GridRepositoryMixin, {
     // peek(filter, computed_keys) {
     //     return this.get('store').find('third-party', filter, computed_keys);
     // },
-    find() {
-        PromiseMixin.xhr(THIRD_PARTY_URL, 'GET').then((response) => {
-            this.get('ThirdPartyDeserializer').deserialize(response);
-        });
-        return this.get('store').find('third-party');
-    },
     findById(id) {
         let model = this.get('store').find('third-party', id);
         model.id = id;

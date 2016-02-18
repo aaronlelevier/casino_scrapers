@@ -19,6 +19,7 @@ var BSRS_THIRD_PARTY_DEFAULTS_OBJECT = (function() {
             nameGrid: 'vzoname14',
             nameGrid4: 'ABC1231 Contractor4',
             statusActive: this.third_party_status.active,
+            statusActiveName: this.third_party_status.activeName,
             statusInactive: this.third_party_status.inactive,
             unusedId: 'cadba3ba-a533-44e0-ab1f-57cc1b056789',
         };

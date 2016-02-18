@@ -163,8 +163,6 @@ var TicketDeserializer = Ember.Object.extend({
                 m2m_categories.forEach((m2m) => {
                     store.push('ticket-category', m2m);
                 });
-                // if(priority){ store.push('ticket-priority', priority); }
-                // if(status){ store.push('ticket-status', status); }
                 const pushed_ticket = store.push('ticket', {id: response.id, ticket_categories_fks: server_sum}); 
                 pushed_ticket.save();
             });
