@@ -417,3 +417,44 @@ test('settings - override value from parent', (assert) => {
 //         assert.equal(find('.t-settings-company_name').val(), translations['admin.setting.company_name']);
 //     });
 // });
+
+// SAVE FOR 'create_all' TEST METHODS
+
+// test('aaron general settings title and fields populated correctly', function(assert) {
+//     visit(DETAIL_URL);
+//     andThen(() => {
+//         assert.equal(currentURL(), DETAIL_URL);
+//         assert.equal(find('.t-settings-title').text().trim(), t(setting_data.title));
+//         assert.equal(find('.t-settings-welcome').val(), SD.welcome_text);
+//     });
+//     fillIn('.t-settings-welcome', SD.welcome_textOther);
+//     fillIn('.t-settings-login_grace', SD.login_graceOther);
+//     fillIn('.t-settings-company_name', SD.company_nameOther);
+//     click('.t-settings-create_all');
+//     andThen(() => {
+//         let setting = store.find('setting', SD.id);
+//         assert.equal(setting.get('welcome_text'), SD.welcome_textOther);
+//         assert.equal(setting.get('login_grace'), SD.login_graceOther);
+//         assert.equal(setting.get('company_name'), SD.company_nameOther);
+//         assert.equal(setting.get('create_all'), SD.create_allOther);
+//         assert.ok(setting.get('isDirty'));
+//         assert.ok(setting.get('isDirtyOrRelatedDirty'));
+//     });
+//     xhr(url, 'PUT', JSON.stringify(setting_payload_other), {}, 200, {});
+//     generalPage.save();
+//     andThen(() => {
+//         assert.equal(currentURL(), '/' + BASE_ADMIN_URL);
+//         let setting = store.find('setting', SD.id);
+//         assert.ok(setting.get('isNotDirty'));
+//     });
+// });
+
+// test('translations - for labels', (assert) => {
+//     visit(DETAIL_URL);
+//     andThen(() => {
+//         assert.equal(getLabelText('welcome_text'), translations['admin.setting.welcome_text']);
+//         assert.equal(getLabelText('login_grace'), translations['admin.setting.login_grace']);
+//         assert.equal(getLabelText('company_name'), translations['admin.setting.company_name']);
+//         assert.ok(find(`span:contains('${translations['admin.settings.create_all']}')`));
+//     });
+// });
