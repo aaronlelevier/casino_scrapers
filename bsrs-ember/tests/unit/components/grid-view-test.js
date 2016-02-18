@@ -283,6 +283,29 @@ test('found filter will only match those exactly in all columns', (assert) => {
     assert.equal(people.get('length'), 0);
 });
 
+test('found content is case insensitive when building regex', (assert) => {
+    store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'azd', title: 'scott newcomer'});
+    store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'yzq', title: 'toran billups'});
+    store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'zed', title: 'aaron lelevier'});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns});
+    var people = subject.get('found_content');
+    assert.equal(people.get('length'), 3);
+    subject.set('find', 'title:Sco');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 1);
+    assert.equal(people.objectAt(0).get('title'), 'scott newcomer');
+    subject.set('find', 'title:sco,username:Z');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 1);
+    assert.equal(people.objectAt(0).get('title'), 'scott newcomer');
+    subject.set('find', 'title:sco,username:ZE');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 0);
+    subject.set('find', 'title:,username:Z');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 3);
+});
+
 test('rolling pagination shows only ten records at a time', (assert) => {
     for(var i=1; i < 179; i++) {
         store.push('person', {id: i});

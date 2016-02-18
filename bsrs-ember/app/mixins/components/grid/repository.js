@@ -27,30 +27,30 @@ var GridRepositoryMixin = Ember.Mixin.create({
         return count+1;
     },
     findWithQuery(page, sort, search, find, page_size) {
-        let type = this.get('typeGrid');
+        const type = this.get('typeGrid');
         let url = this.get('url');
         const store = this.get('store');
-        let deserializer = this.get('deserializer');
+        const deserializer = this.get('deserializer');
         page = page || 1;
         let endpoint = url + '?page=' + page;
-        if (sort && sort !== 'id' && sort.indexOf('.') < 0) {
+        if(sort && sort !== 'id' && sort.indexOf('.') < 0){
             endpoint = endpoint + '&ordering=' + sort;
-        }else if (sort && sort !== 'id'){
+        }else if(sort && sort !== 'id'){
             endpoint = endpoint + '&ordering=' + sort.replace(/\./g, '__').replace(/translated_name/g, 'name');
         }
-        if (search && search !== '') {
+        if(search && search !== ''){
             endpoint = endpoint + '&search=' + encodeURIComponent(search);
         }
-        if (page_size && page_size !== '') {
+        if(page_size && page_size !== ''){
             endpoint = endpoint + '&page_size=' + page_size;
         }
-        if (find && find !== '') {
+        if(find && find !== ''){
             let finds = find.split(',');
             finds.forEach((data) => {
-                let params = data.split(':');
-                let key = params[0] || '';
-                let value = params[1];
-                let field = key.replace('-', '_').replace('.', '__').replace('translated_name', 'name').replace('[', '__').replace(']', '');
+                const params = data.split(':');
+                const key = params[0] || '';
+                const value = params[1];
+                const field = key.replace('-', '_').replace('.', '__').replace('translated_name', 'name').replace('[', '__').replace(']', '');
                 endpoint = endpoint + '&' + field + '__icontains=' + encodeURIComponent(value);
             });
         }
