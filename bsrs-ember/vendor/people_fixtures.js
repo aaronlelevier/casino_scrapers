@@ -103,6 +103,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
             person.first_name = 'Scott' + i;
             person.last_name = 'Newcomer' + i;
             person.title = i + ' WAT';
+            person.status = {id: this.status_defaults.inactiveId, name: this.status_defaults.inactiveName};
             response.push(person);
         }
         return {'count':page_size*2-2,'next':null,'previous':null,'results': response};

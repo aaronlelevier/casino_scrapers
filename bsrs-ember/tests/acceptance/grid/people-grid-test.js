@@ -6,6 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import RD from 'bsrs-ember/vendor/defaults/role';
+import SD from 'bsrs-ember/vendor/defaults/status';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
@@ -20,9 +21,11 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_people_url;
 const PEOPLE_URL = BASE_URL + '/index';
 const LETTER_M = {keyCode: 77};
+const LETTER_A = {keyCode: 65};
 const SPACEBAR = {keyCode: 32};
 const NUMBER_EIGHT = {keyCode: 56};
 const BACKSPACE = {keyCode: 8};
+const SORT_STATUS_DIR = '.t-sort-status-translated-name-dir';
 
 var application, store, endpoint, list_xhr, original_uuid;
 
@@ -689,5 +692,53 @@ test('typing a search will search on related', function(assert) {
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-person-username').text().trim(), PD.username);
+    });
+});
+
+test('status.translated_name is a functional related filter', function(assert) {
+    let option_four = PREFIX + BASE_URL + '/?page=1&ordering=-status__name&status__name__icontains=rr';
+    xhr(option_four,'GET',null,{},200,PF.searched_related(SD.activeId, 'status'));
+    let option_three = PREFIX + BASE_URL + '/?page=1&ordering=-status__name';
+    xhr(option_three,'GET',null,{},200,PF.searched_related(SD.inactiveId, 'status'));
+    let option_two = PREFIX + BASE_URL + '/?page=1&ordering=status__name';
+    xhr(option_two,'GET',null,{},200,PF.searched_related(SD.activeId, 'status'));
+    let option_one = PREFIX + BASE_URL + '/?page=1&search=a';
+    xhr(option_one,'GET',null,{},200,PF.searched_related(SD.activeId, 'status'));
+    visit(PEOPLE_URL);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-status-translated_name').text().trim(), t(SD.activeName));
+    });
+    fillIn('.t-grid-search-input', 'a');
+    triggerEvent('.t-grid-search-input', 'keyup', LETTER_A);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?search=a');
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-status-translated_name').text().trim(), t(SD.activeName));
+    });
+    fillIn('.t-grid-search-input', '');
+    triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?search=');
+        assert.equal(find('.t-grid-data:eq(0) .t-person-status-translated_name').text().trim(), t(SD.activeName));
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    });
+    click(SORT_STATUS_DIR);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?search=&sort=status.translated_name');
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-status-translated_name').text().trim(), t(SD.activeName));
+    });
+    click(SORT_STATUS_DIR);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?search=&sort=-status.translated_name');
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE-2);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-status-translated_name').text().trim(), t(SD.inactiveName));
+    });
+    filterGrid('status.translated_name', 'rr');
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?find=status.translated_name%3Arr&search=&sort=-status.translated_name');
+        assert.equal(find('.t-grid-data').length, 0);
     });
 });

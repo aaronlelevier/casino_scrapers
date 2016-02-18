@@ -5,6 +5,15 @@ export default GridViewComponent.extend({
     layoutName: 'components/grid-view',
     columns: [
         {
+            field: 'status.translated_name',
+            headerLabel: 'Status',
+            isSortable: true,
+            isFilterable: true,
+            isSearchable: true,
+            templateName: 'tickets/ticket-status-tag',
+            classNames: ['location-status']
+        },
+        {
             field: 'name',
             headerLabel: 'Name',
             isSortable: true,
@@ -17,15 +26,6 @@ export default GridViewComponent.extend({
             isSortable: true,
             isFilterable: true,
             isSearchable: true
-        },
-        {
-            field: 'status.translated_name',
-            headerLabel: 'Status',
-            isSortable: true,
-            isFilterable: true,
-            isSearchable: true,
-            templateName: 'tickets/ticket-status-tag',
-            classNames: ['location-status']
         },
         {
             field: 'location_level.name',
