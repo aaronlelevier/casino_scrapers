@@ -14,7 +14,7 @@ let extract_category = (model, store, role_existing, category_deserializer) => {
         });
         if (filtered_model.length === 0) {
             let pk = Ember.uuid();
-            server_sum_category_fks.push(pk);  
+            server_sum_category_fks.push(pk);
             run(() => {
                 store.push('role-category', {id: pk, role_fk: model.id, category_fk: category_json.id});
                 store.push('category', category_json);
@@ -71,11 +71,11 @@ let extract_location_level = (model, store) => {
 var copySettingsToFirstLevel = (obj) => {
   var newState = {};
   var settings = obj.settings || {};
-  
+
   for(var s in settings) {
     var setting = settings[s];
     var keys = Object.keys(setting);
-    
+
     for(var i=0; i < keys.length; i++) {
       var key = keys[i];
       if(key === 'value') {

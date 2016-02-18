@@ -12,7 +12,7 @@ var BSRS_ROLE_FACTORY = (function() {
             role_type: this.role_defaults.roleTypeGeneral,
             location_level: this.location_level_fixtures.detail().id,
             categories: [this.category_fixtures.detail()],
-            settings: settings || {}
+            settings: settings || this.role_defaults.settings
         }
     };
     factory.prototype.generate_single_for_list = function(i) {

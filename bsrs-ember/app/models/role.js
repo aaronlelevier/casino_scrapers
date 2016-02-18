@@ -23,10 +23,7 @@ var RoleModel = Model.extend(NewMixin, {
     company_name: attr(''),
     settings:  Ember.computed(function() {
         return {
-            welcome_text: this.get('welcome_text'),
-            create_all: this.get('create_all'),
-            login_grace: parseInt(this.get('login_grace')) || undefined,
-            company_name: this.get('company_name')
+            welcome_text: this.get('welcome_text') || undefined
         };
     }),
     // Categories
@@ -50,14 +47,14 @@ var RoleModel = Model.extend(NewMixin, {
         });
     }),
     role_categories_ids: Ember.computed('role_categories.[]', function() {
-        return this.get('role_categories').mapBy('id'); 
+        return this.get('role_categories').mapBy('id');
     }),
     role_categories: many_to_many('role-category', 'role_fk'),
     categoryIsDirty: many_to_many_dirty('role_categories_ids', 'role_category_fks'),
     categoryIsNotDirty: Ember.computed.not('categoryIsDirty'),
     // add_category: add_many_to_many('role-category', 'categories', 'category_fk', 'role_fk'),
     add_category(category) {
-        const store = this.get('store'); 
+        const store = this.get('store');
         const new_category = store.push('category', category);
         const category_pk = new_category.get('id');
         const role_categories = store.find('role-category').toArray();

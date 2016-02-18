@@ -1,6 +1,19 @@
 .form-group{
-	margin-bottom: 0;
+	margin: 5px 0 0;
+	label{
+		font-weight: normal;
+		font-size: 0.9em;
+		color: $darkGray;
+	}
+	.inherited-msg{
+		font-size: 0.9em;
+		color: $medGray;
+		margin: 0 0 5px 0;
+		float: right;
+		font-style: italic;
+	}
 }
+
 
 /*=================
 button group on form

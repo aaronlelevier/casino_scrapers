@@ -102,13 +102,13 @@ test('rollback location level will reset the previously used location level when
     let location_level_two = store.push('location-level', {id: LLD.idTwo, name: LLD.nameDepartment, roles: [RD.unusedId]});
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    assert.equal(role.get('location_level.name'), LLD.nameRegion); 
+    assert.equal(role.get('location_level.name'), LLD.nameRegion);
     role.change_location_level();
-    assert.equal(role.get('location_level.name'), undefined); 
+    assert.equal(role.get('location_level.name'), undefined);
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
     role.change_location_level(location_level_two.get('id'));
-    assert.equal(role.get('location_level.name'), LLD.nameDepartment); 
+    assert.equal(role.get('location_level.name'), LLD.nameDepartment);
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
     role.save();
@@ -134,9 +134,9 @@ test('rollback location level will reset the previously used location level when
     let another_location_level = store.push('location-level', {id: LLD.idThree, name: LLD.nameDistrict, roles: [RD.unusedId]});
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    assert.equal(role.get('location_level.name'), LLD.nameRegion); 
+    assert.equal(role.get('location_level.name'), LLD.nameRegion);
     role.change_location_level(location_level_two.get('id'));
-    assert.equal(role.get('location_level.name'), LLD.nameDepartment); 
+    assert.equal(role.get('location_level.name'), LLD.nameDepartment);
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
     role.save();
@@ -405,9 +405,6 @@ test('settings', (assert) => {
     role = store.push('role', {id: RD.idOne, welcome_text, create_all, login_grace, company_name});
     var settings = role.get('settings');
     assert.equal(settings.welcome_text, welcome_text);
-    assert.equal(settings.create_all, create_all);
-    assert.equal(settings.login_grace, login_grace);
-    assert.equal(settings.company_name, company_name);
 });
 
 test('serialize', (assert) => {

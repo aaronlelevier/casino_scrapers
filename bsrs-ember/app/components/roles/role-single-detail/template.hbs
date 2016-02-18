@@ -56,19 +56,30 @@
                         </div>
                     </div>
                 </section>
-                <h4>Role Settings</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
                 <section>
+                    <div class="row card-title">
+                        <h2 class="col-md-12">{{t "admin.role.label.settings"}}</h2>
+                    </div>
                     <div class="row">
                         <div class="col-md-12">
                             {{#form-group title="admin.setting.welcome_text" for="welcome_text"}}
-                                {{input type="text" placeholder=(t "admin.setting.welcome_text") value=model.welcome_text class="form-control t-settings-welcome_text" id="welcome_text" required="required"}}
-                            {{/form-group}}
+                                <p class="inherited-msg t-inherited-msg-welcome_text">{{t 'crud.inherited_from' from=model.welcome_text_inherited_from}}</p>
+                                {{input type="text" placeholder=(t 'crud.default_value' value=model.welcome_text_inherited_value) value=model.welcome_text class="form-control t-settings-welcome_text" id="welcome_text" required="required"}}
+                                {{/form-group}}
                         </div>
+                    </div>
+                    <!-- <div class="row">
                         <div class="col-md-12">
                             {{#form-group title="admin.setting.login_grace" for="login_grace"}}
                                 {{input type="number" placeholder=(t "admin.setting.login_grace") value=model.login_grace class="form-control t-settings-login_grace" id="login_grace" required="required"}}
                             {{/form-group}}
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-12">
                             <div class="checkbox form-group">
                                 <label>
@@ -77,16 +88,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            {{#form-group title="admin.setting.company_name" for="company_name"}}
-                                {{settings/input-settings
-                                  value=model.company_name
-                                  inherited=model.company_name_inherited
-                                  inherited_from=model.company_name_inherited_from
-                                }}
-                            {{/form-group}}
-                        </div>
-                    </div>
+                    </div> -->
                 </section>
             </div>
         </div>

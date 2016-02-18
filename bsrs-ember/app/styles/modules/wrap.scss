@@ -128,16 +128,6 @@ section.wrap{
                         }//ul
                     }//li
                 }//ul
-
-                .form-group{
-                    margin: 5px 0;
-                    label{
-                        font-size: 1.1rem;
-                        font-weight: normal;
-                        margin-bottom: 2px;
-                    }
-                }
-
             }//section
         }//menu
     }// aside.side-panel
@@ -244,11 +234,6 @@ section.wrap{
                     padding: 10px;
                     text-transform: uppercase;
                 }//h2
-                label{
-                    font-weight: normal;
-                    font-size: 0.9em;
-                    color: $darkGray;
-                }
             }
 
             .row {

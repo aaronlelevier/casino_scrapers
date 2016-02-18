@@ -5,10 +5,10 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
     factory.prototype.defaults = function() {
         return {
             idOne: 'af34ee9b-833c-4f3e-a584-b6851d1e04b1',
-            idTwo: 'af34ee9b-833c-4f3e-a584-b6851d1e04b2', 
-            idGridOne: 'af34ee9b-833c-4f3e-a584-b6851d1e0404', 
-            idGridTen: 'af34ee9b-833c-4f3e-a584-b6851d1e04017', 
-            roleTypeContractor: 'Third Party', 
+            idTwo: 'af34ee9b-833c-4f3e-a584-b6851d1e04b2',
+            idGridOne: 'af34ee9b-833c-4f3e-a584-b6851d1e0404',
+            idGridTen: 'af34ee9b-833c-4f3e-a584-b6851d1e04017',
+            roleTypeContractor: 'Third Party',
             roleTypeGeneral: 'Internal',
             nameOne: 'System Administrator',
             nameTwo: 'District Manager',
@@ -24,7 +24,14 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
             locationLevelOne: this.location_level.idOne,
             locationLevelTwo: this.location_level.idTwo,
             categories: [],
-            unusedId: 'af34ee9b-833c-4f3e-a584-b6851d1e04b3', 
+            unusedId: 'af34ee9b-833c-4f3e-a584-b6851d1e04b3',
+            settings: {
+                welcome_text:{
+                    value: null,
+                    inherited_value: 'Welcome',
+                    inherited_from: 'general'
+                }
+            }
         };
     };
     return factory;

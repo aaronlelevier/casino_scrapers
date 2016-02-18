@@ -298,12 +298,14 @@ test('settings copySettingsToFirstLevel', (assert) => {
     let value = 'foo';
     let inherited = true;
     let inherited_from = 'general';
-    let response = RF.generate(RD.idOne, null, {company_name: {value, inherited, inherited_from}});
+    let inherited_value = 'Welcome';
+    let response = RF.generate(RD.idOne, null, {welcome_text: {value, inherited, inherited_from, inherited_value}});
     run(() => {
         subject.deserialize(response, RD.idOne);
     });
     let role = store.find('role', RD.idOne);
-    assert.equal(role.get('company_name'), value);
-    assert.equal(role.get('company_name_inherited'), inherited);
-    assert.equal(role.get('company_name_inherited_from'), inherited_from);
+    assert.equal(role.get('welcome_text'), value);
+    assert.equal(role.get('welcome_text_inherited'), inherited);
+    assert.equal(role.get('welcome_text_inherited_value'), inherited_value);
+    assert.equal(role.get('welcome_text_inherited_from'), inherited_from);
 });
