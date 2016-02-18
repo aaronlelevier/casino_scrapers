@@ -123,7 +123,8 @@ class LocationDetailSerializer(serializers.ModelSerializer):
         return data
 
 
-class LocationUpdateSerializer(NestedCreateContactSerializerMixin, NestedContactSerializerMixin, serializers.ModelSerializer):
+class LocationUpdateSerializer(NestedCreateContactSerializerMixin, NestedContactSerializerMixin,
+    serializers.ModelSerializer):
 
     emails = EmailSerializer(required=False, many=True)
     phone_numbers = PhoneNumberSerializer(required=False, many=True)
