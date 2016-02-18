@@ -296,7 +296,7 @@ class BootstrappedDataTests(TestCase):
         self.assertEqual(data['employee_id'], self.person.employee_id)
         self.assertEqual(data['locale'], str(self.person.locale.id))
         self.assertEqual(data['role'], str(self.person.role.id))
-        self.assertEqual(data['status'], str(self.person.status.id))
+        self.assertEqual(data['status_fk'], str(self.person.status.id))
 
     def test_default_model_ordering(self):
         # Note: this is a Dict Object generated off off URL's and the models,

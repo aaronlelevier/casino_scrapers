@@ -372,7 +372,7 @@ class Person(BaseModel, AbstractUser):
             'employee_id': self.employee_id,
             'locale': str(self.locale.id if self.locale else self._get_locale(locale)),
             'role': str(self.role.id),
-            'status': str(self.status.id)
+            'status_fk': str(self.status.id)
         }
 
     def to_simple_dict(self):
