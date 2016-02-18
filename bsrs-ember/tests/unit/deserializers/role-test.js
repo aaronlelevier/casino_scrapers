@@ -14,7 +14,7 @@ let store, uuid, category_deserializer, subject, role, run = Ember.run;
 
 module('unit: role deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:uuid', 'model:role', 'model:location-level', 'model:category', 'model:role-category', 'service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:uuid', 'model:role', 'model:role-list', 'model:location-level', 'model:category', 'model:role-category', 'service:i18n']);
         category_deserializer = CategoryDeserializer.create({store: store});
         uuid = this.container.lookup('model:uuid');
         subject = RoleDeserializer.create({store: store, uuid: uuid, CategoryDeserializer: category_deserializer});
@@ -23,7 +23,7 @@ module('unit: role deserializer test', {
 
 test('category and location level will not be deserialized into its own store when deserialize list is invoked', (assert) => {
     let location_level, category;
-    role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne});
+    role = store.push('role-list', {id: RD.idOne, location_level_fk: LLD.idOne});
     location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     category = store.push('category', {id: CD.idOne, name: CD.nameOne});
     let json = RF.generate_single_for_list(RD.unusedId);
@@ -31,13 +31,8 @@ test('category and location level will not be deserialized into its own store wh
     run(() => {
         subject.deserialize(response);
     });
-    let original = store.find('location-level', LLD.idOne);
-    assert.deepEqual(original.get('roles'), [RD.idOne, RD.unusedId]);
-    assert.ok(original.get('isNotDirty'));
-    let role_two = store.find('role', RD.unusedId);
-    assert.ok(role.get('isNotDirty'));
-    assert.ok(role_two.get('isNotDirty'));
-    assert.ok(category.get('isNotDirty'));
+    let role_two = store.find('role-list', RD.unusedId);
+    assert.equal(role_two.get('id'), RD.unusedId);
 });
 
 test('location level and category will correctly be deserialized into its own store with a foreign key on role (single)', (assert) => {
@@ -111,7 +106,7 @@ test('role location level will correctly be deserialized (with many roles) when 
 
 test('role location level will correctly be deserialized when server returns role without a location_level (list)', (assert) => {
     let location_level;
-    role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne});
+    role = store.push('role-list', {id: RD.idOne, location_level_fk: LLD.idOne});
     location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     let json = RF.generate_single_for_list(RD.idOne);
     json.location_level = undefined;
@@ -120,9 +115,8 @@ test('role location level will correctly be deserialized when server returns rol
         subject.deserialize(response);
     });
     let original = store.find('location-level', LLD.idOne);
-    assert.deepEqual(original.get('roles'), []);
+    assert.deepEqual(original.get('roles'), [RD.idOne]);
     assert.ok(original.get('isNotDirty'));
-    assert.ok(role.get('isNotDirty'));
 });
 
 /*LL and CATEGORIES*/
@@ -183,19 +177,6 @@ test('role category will correctly be deserialized when server returns role with
     assert.ok(role.get('isNotDirty'));
     assert.deepEqual(role.get('role_category_fks').length, 2);
     assert.equal(role.get('categories').get('length'), 2);
-});
-
-test('role category will correctly be deserialized when server returns role without a location_level (list)', (assert) => {
-    let category;
-    role = store.push('role', {id: RD.idOne, name: RD.nameOne});
-    category = store.push('category', {id: CD.idOne, name: CD.nameOne});
-    let json = RF.generate_single_for_list(RD.idOne);
-    json.categories.push(CF.generate(CD.unusedId));
-    let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    run(() => {
-        subject.deserialize(response);
-    });
-    assert.ok(role.get('isNotDirty'));
 });
 
 /*ROLE CATEGORY M2M*/

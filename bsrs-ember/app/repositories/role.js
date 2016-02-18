@@ -10,6 +10,8 @@ var ROLE_URL = PREFIX + '/admin/roles/';
 
 var RoleRepo = Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'role'; }),
+    typeGrid: Ember.computed(function() { return 'role-list'; }),
+    garbage_collection: Ember.computed(function() { return ['role-list']; }),
     url: Ember.computed(function() { return ROLE_URL; }),
     uuid: injectUUID('uuid'),
     RoleDeserializer: inject('role'),
@@ -29,19 +31,16 @@ var RoleRepo = Ember.Object.extend(GridRepositoryMixin, {
             model.saveRelated();
         });
     },
-    find() {
-        PromiseMixin.xhr(ROLE_URL, 'GET').then((response) => {
-            this.get('RoleDeserializer').deserialize(response);
-        });
-        return this.get('store').find('role');
-    },
+    // find() {
+    //     PromiseMixin.xhr(ROLE_URL, 'GET').then((response) => {
+    //         this.get('RoleDeserializer').deserialize(response);
+    //     });
+    //     return this.get('store').find('role');
+    // },
     findById(id) {
-        let role = this.get('store').find('role', id);
-        role.id = id;
-        PromiseMixin.xhr(ROLE_URL + id + '/', 'GET').then((response) => {
-            this.get('RoleDeserializer').deserialize(response, id);
+        return PromiseMixin.xhr(ROLE_URL + id + '/', 'GET').then((response) => {
+            return this.get('RoleDeserializer').deserialize(response, id);
         });
-        return role;
     },
     get_default() {
         return this.get('store').find('role');

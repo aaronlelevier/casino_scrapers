@@ -17,17 +17,17 @@ module('unit: category deserializer test', {
 test('category deserializer returns correct data with existing category (list)', (assert) => {
     category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
                               label: CD.labelOne});
-    category_unused = store.push('category', {id: CD.unusedId, name: CD.nameTwo, description: CD.descriptionMaintenance});
+    category_unused = store.push('category-list', {id: CD.unusedId, name: CD.nameTwo, description: CD.descriptionMaintenance});
     let json = [CF.generate(CD.idOne), CF.generate(CD.unusedId)];
     let response = {'count':2,'next':null,'previous':null,'results': json};
     run(() => {
         subject.deserialize(response);
     });
     assert.ok(category.get('isNotDirty'));
-    let categories = store.find('category');
+    let categories = store.find('category-list');
     assert.equal(categories.get('length'), 2);
-    assert.ok(categories.objectAt(0).get('isNotDirty'), false);
-    assert.ok(categories.objectAt(1).get('isNotDirty'), false);
+    assert.ok(categories.objectAt(0).get('isNotDirtyOrRelatedNotDirty'), false);
+    assert.ok(categories.objectAt(1).get('isNotDirtyOrRelatedNotDirty'), false);
 });
 
 test('category deserializer returns correct data with no existing category (list)', (assert) => {

@@ -64,8 +64,7 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
         assert.ok(find('.t-grid-data:eq(0) .t-ticket-priority-emergency'));
         assert.ok(find('.t-grid-data:eq(0) .t-ticket-status-new'));
         const time = moment(new Date()).format('h:mm a');
-        //TODO: add created to ticket 
-        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-created').text().trim(), `${TD.createdFormattedToday} ${time}`);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-formatted_date').text().trim(), `${TD.createdFormattedToday} ${time}`);
         const pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');

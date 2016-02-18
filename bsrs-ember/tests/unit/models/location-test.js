@@ -28,7 +28,7 @@ test('related location-level should return first location-level or undefined', (
     store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, locations: [LD.idOne]});
     var location_level = location.get('location_level');
     assert.equal(location_level.get('name'), LLD.nameCompany);
-    run(function() {
+    run(() => {
         store.push('location-level', {id: location_level.get('id'), locations: [LD.unused]});
     });
     assert.equal(location.get('location_level'), undefined);

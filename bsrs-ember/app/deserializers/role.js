@@ -96,35 +96,32 @@ var RoleDeserializer = Ember.Object.extend({
         if (typeof options === 'undefined') {
             return this.deserialize_list(response);
         } else {
-            this.deserialize_single(response, options, category_deserializer);
+            return this.deserialize_single(response, options, category_deserializer);
         }
     },
     deserialize_single(response, id, category_deserializer) {
         let store = this.get('store');
         let role_existing = store.find('role', id);
+        let role = role_existing;
         if (!role_existing.get('id') || role_existing.get('isNotDirtyOrRelatedNotDirty')) {
             response.location_level_fk = extract_location_level(response, store);
             response.role_category_fks = extract_category(response, store, role_existing, category_deserializer);
             response.detail = true;
             response = copySettingsToFirstLevel(response);
-            let originalRole = store.push('role', response);
-            originalRole.save();
+            role = store.push('role', response);
+            role.save();
         }
+        return role;
     },
     deserialize_list(response) {
         const store = this.get('store');
-        let return_array = Ember.A();
+        const return_array = [];
         response.results.forEach((model) => {
-            let existing = store.find('role', model.id);
-            if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
-                model.location_level_fk = extract_location_level(model, store);
-                model.grid = true;
-                let originalRole = this.get('store').push('role', model);
-                originalRole.save();
-                return_array.pushObject(originalRole);
-            }else{
-                return_array.pushObject(existing);
-            }
+            // model.location_level_fk = extract_location_level(model, store);
+            model.location_level_fk = model.location_level;
+            delete model.location_level;
+            const role = store.push('role-list', model);
+            return_array.push(role);
         });
         return return_array;
     }

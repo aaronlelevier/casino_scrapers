@@ -1,8 +1,7 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/store';
-import LocationLevelMixin from 'bsrs-ember/mixins/model/location/location-level';
 
-export default Ember.Object.extend(LocationLevelMixin, {
+export default Ember.Object.extend({
     store: inject('main'),
     location: Ember.computed(function() {
         const store = this.get('store'); 
@@ -23,5 +22,14 @@ export default Ember.Object.extend(LocationLevelMixin, {
         const name = this.get('status.name');
         return name ? name.replace(/\./g, '-') : '';
     }),
+    location_level: Ember.computed(function() {
+        const store = this.get('store'); 
+        const pk = this.get('id');
+        const location_levels = store.find('location-level');
+        return location_levels.filter((llevel) => {
+            const location_pks = llevel.get('locations') || [];
+            return Ember.$.inArray(pk, location_pks) > -1;
+        }).objectAt(0);
+    })
 }); 
 

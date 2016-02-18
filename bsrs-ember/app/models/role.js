@@ -87,7 +87,6 @@ var RoleModel = Model.extend(NewMixin, {
             const updated_old_roles = old_roles.filter((id) => {
                 return id !== role_id;
             });
-            // old_location_level.set('roles', updated_old_roles);
             run(function() {
                 store.push('location-level', {id: old_location_level.get('id'), roles: updated_old_roles});
             });
@@ -100,7 +99,6 @@ var RoleModel = Model.extend(NewMixin, {
             run(function() {
                 store.push('location-level', {id: new_location_level.get('id'), roles: new_roles.concat(role_id)});
             });
-            // new_location_level.set('roles', new_roles.concat(role_id));
         }
     },
     isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'categoryIsDirty', function() {

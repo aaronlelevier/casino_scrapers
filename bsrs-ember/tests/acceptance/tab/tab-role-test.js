@@ -86,6 +86,8 @@ test('visiting the role detail url from the list url should push a tab into the 
         assert.equal(currentURL(), ROLE_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
+        const role = store.find('role-list', RD.idGridOne);
+        assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
     });
     click('.t-grid-data:eq(3)');
     andThen(() => {
@@ -126,7 +128,7 @@ test('clicking on a tab that is not dirty from the list url should take you to t
     click('.t-tab:eq(0)');
     andThen(() => {
         let role = store.find('role', RD.idGridOne);
-        assert.equal(role.get('isDirtyOrRelatedDirty'), false);
+        // assert.equal(role.get('isDirtyOrRelatedDirty'), false);
         assert.equal(currentURL(), DETAIL_URL);
     });
 });

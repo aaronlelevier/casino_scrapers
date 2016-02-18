@@ -36,28 +36,26 @@ test('location deserializer returns correct data with already present location_l
     let location;
     let json = [LF.generate_list(LD.idOne), LF.generate_list(LD.unusedId)];
     let response = {'count':2,'next':null,'previous':null,'results': json};
-    location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
-    location_unused = store.push('location', {id: LD.unusedId, name: LD.storeName, number: '988', location_level_fk: LLD.idOne});
+    location = store.push('location-list', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
+    location_unused = store.push('location-list', {id: LD.unusedId, name: LD.storeName, number: '988', location_level_fk: LLD.idOne});
     location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, locations: [LD.idOne, LD.unusedId]});
     run(() => {
         subject.deserialize(response);
     });
     assert.deepEqual(location_level.get('locations'), [LD.idOne, LD.unusedId]);
     assert.ok(location_level.get('isNotDirty'));
-    assert.ok(location.get('statusIsNotDirty'));
-    assert.ok(location.get('locationLevelIsNotDirty'));
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(location_unused.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(location.get('location_level_fk'), LLD.idOne);
     assert.equal(location_unused.get('location_level_fk'), LLD.idOne);
-    assert.equal(store.find('location').get('length'), 2);
+    assert.equal(store.find('location-list').get('length'), 2);
 });
 
 test('location deserializer returns correct data with no current location_level (list)', (assert) => {
     let location;
     let json = [LF.generate_list(LD.unusedId)];
     let response = {'count':1,'next':null,'previous':null,'results': json};
-    location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
+    location = store.push('location-list', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
     run(() => {
         subject.deserialize(response);
     });
@@ -150,7 +148,9 @@ test('can push in location with location level as an id', (assert) => {
     let json = LF.generate(LD.idOne);
     json.location_level = LLD.idOne;
     location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
-    subject.deserialize(json, LD.idOne);
+    run(() => {
+        subject.deserialize(json, LD.idOne);
+    });
     assert.equal(location.get('location_level').get('id'), LLD.idOne);
 });
 
