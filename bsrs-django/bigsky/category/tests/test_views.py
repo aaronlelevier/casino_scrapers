@@ -19,7 +19,7 @@ class CategoryListTests(APITestCase):
         self.person = create_person()
         # Category
         create_categories()
-        self.top_level = Category.objects.filter(name="Repair").first()
+        self.top_level = Category.objects.filter(parent__isnull=True).first()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -62,7 +62,7 @@ class CategoryListTests(APITestCase):
         self.assertEqual(data['name'], category.name)
         self.assertEqual(data['description'], category.description)
         self.assertEqual(data['label'], category.label)
-        self.assertEqual(data['cost_amount'], str(category.cost_amount))
+        self.assertEqual(data['cost_amount'], category.cost_amount)
         self.assertEqual(data['cost_currency'], str(category.cost_currency.id))
         self.assertEqual(data['cost_code'], category.cost_code)
         self.assertEqual(data['level'], category.level)
@@ -77,7 +77,7 @@ class CategoryDetailTests(APITestCase):
         self.person = create_person()
         # Category
         create_categories()
-        self.type = Category.objects.filter(subcategory_label='Trade').first()
+        self.type = Category.objects.filter(parent__isnull=True).first()
         self.trade = Category.objects.filter(label='Trade').first()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -99,7 +99,7 @@ class CategoryDetailTests(APITestCase):
         self.assertEqual(data['description'], category.description)
         self.assertEqual(data['label'], category.label)
         self.assertEqual(data['subcategory_label'], category.subcategory_label)
-        self.assertEqual(data['cost_amount'], str(category.cost_amount))
+        self.assertEqual(data['cost_amount'], category.cost_amount)
         self.assertEqual(data['cost_currency'], str(category.cost_currency.id))
         self.assertEqual(data['cost_code'], category.cost_code)
         self.assertEqual(data['level'], category.level)
@@ -141,7 +141,7 @@ class CategoryDetailTests(APITestCase):
     def test_parents_have_children(self):
         response = self.client.get('/api/admin/categories/{}/'.format(self.type.id))
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(None, data['parent'])
+        self.assertIsNone(data['parent'])
 
     def test_children_do_not_have_children(self):
         response = self.client.get('/api/admin/categories/{}/'.format(self.trade.id))
@@ -201,7 +201,7 @@ class CategorySerializerDataTests(APITestCase):
         self.assertEqual(data['description'], category.description)
         self.assertEqual(data['label'], category.label)
         self.assertEqual(data['subcategory_label'], category.subcategory_label)
-        self.assertEqual(data['cost_amount'], str(category.cost_amount))
+        self.assertEqual(data['cost_amount'], category.cost_amount)
         self.assertEqual(data['cost_currency'], str(category.cost_currency.id))
         self.assertEqual(data['cost_code'], category.cost_code)
         self.assertEqual(data['parent'], str(category.parent.id))
