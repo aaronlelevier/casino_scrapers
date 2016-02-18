@@ -137,23 +137,17 @@ en,admin.phone.number,Phone Number,Phone Number,,"'admin.phone.number':'Phone Nu
 en,admin.phone.numbers,Phone Numbers,Phone Numbers,,"'admin.phone.numbers':'Phone Numbers',",Phone Numbers,Phone Numbers
 en,admin.phonenumbertype.mobile,Cell,Cell,,"'admin.phonenumbertype.mobile':'Cell',",Cell,Cell
 en,admin.phonenumbertype.office,Office,Office,,"'admin.phonenumbertype.office':'Office',",Office,Office
-en,admin.role.contractor,Contractor,Contractor,,"'admin.role.contractor':'Contractor',",Contractor,Contractor
-en,admin.role.coordinator,Coordinator,Coordinator,,"'admin.role.coordinator':'Coordinator',",Coordinator,Coordinator
-en,admin.role.district_manager,District Manager,District Manager,,"'admin.role.district_manager':'District Manager',",District Manager,District Manager
-en,admin.role.guest,Guest,Guest,,"'admin.role.guest':'Guest',",Guest,Guest
 en,admin.role.label.category,Category,Category,,"'admin.role.label.category':'Category',",Category,Category
 en,admin.role.label.general,General,General,,"'admin.role.label.general':'General',",General,General
 en,admin.role.label.location_level,Location Organization,Location Organization,,"'admin.role.label.location_level':'Location Organization',",Location Organization,Location Organization
 en,admin.role.label.name,Role Name,Role Name,,"'admin.role.label.name':'Role Name',",Role Name,Role Name
 en,admin.role.label.number_users,# of People,# of People,,"'admin.role.label.number_users':'# of People',",# of People,# of People
 en,admin.role.label.role_type,Role Type,Role Type,,"'admin.role.label.role_type':'Role Type',",Role Type,Role Type
+en,admin.role.label.settings,Settings,Settings,,"'admin.role.label.settings':'Settings',",Settings,Settings
 en,admin.role.new,New Role,New Role,,"'admin.role.new':'New Role',",New Role,New Role
 en,admin.role.one,Role,Role,,"'admin.role.one':'Role',",Role,Role
 en,admin.role.other,Roles,Roles,,"'admin.role.other':'Roles',",Roles,Roles
-en,admin.role.regional_manager,Reginal Manager,Reginal Manager,,"'admin.role.regional_manager':'Reginal Manager',",Reginal Manager,Reginal Manager
 en,admin.role.search,Search Role,Search Role,,"'admin.role.search':'Search Role',",Search Role,Search Role
-en,admin.role.store_manager,Store Manager,Store Manager,,"'admin.role.store_manager':'Store Manager',",Store Manager,Store Manager
-en,admin.role.system_administrator,Administrator,Administrator,,"'admin.role.system_administrator':'Administrator',",Administrator,Administrator
 en,admin.setting.company_name,Company Name,Company Name,,"'admin.setting.company_name':'Company Name',",Company Name,Company Name
 en,admin.setting.create_all,Create All,Create All,,"'admin.setting.create_all':'Create All',",Create All,Create All
 en,admin.setting.login_grace,Login Grace,Login Grace,,"'admin.setting.login_grace':'Login Grace',",Login Grace,Login Grace
@@ -177,11 +171,13 @@ en,crud.cancel.button,Cancel,Cancel,,"'crud.cancel.button':'Cancel',",Cancel,Can
 en,crud.create.button,Create,Create,,"'crud.create.button':'Create',",Create,Create
 en,crud.create.error,Error creating {{model}}.,Error creating {{model}}.,,"'crud.create.error':'Error creating {{model}}.',",Error creating {{model_var_.,Error creating _model_var_.
 en,crud.create.success,{{model}} created successfully.,{{model}} created successfully.,,"'crud.create.success':'{{model}} created successfully.',",{{model_var_ created successfully.,_model_var_ created successfully.
+en,crud.default_value,Default: {{value}},Default: {{value}},,"'crud.default_value':'Default: {{value}}',",Default: {{value_var_,Default: _value_var_
 en,crud.delete.button,Delete,Delete,,"'crud.delete.button':'Delete',",Delete,Delete
 en,crud.delete.confirm,Are you sure you want to delete {{model}} \'{{record}}\'?,Are you sure you want to delete {{model}} \'{{record}}\'?,,"'crud.delete.confirm':'Are you sure you want to delete {{model}} \'{{record}}\'?',",Are you sure you want to delete {{model_var_ \'{{record_var_\'?,Are you sure you want to delete _model_var_ \'_record_var_\'?
 en,crud.delete.error,Error deleting {{model}}.,Error deleting {{model}}.,,"'crud.delete.error':'Error deleting {{model}}.',",Error deleting {{model_var_.,Error deleting _model_var_.
 en,crud.discard_changes,Abandon Changes,Abandon Changes,,"'crud.discard_changes':'Abandon Changes',",Abandon Changes,Abandon Changes
 en,crud.discard_changes_confirm,You have unsaved changes. Are you sure?,You have unsaved changes. Are you sure?,,"'crud.discard_changes_confirm':'You have unsaved changes. Are you sure?',",You have unsaved changes. Are you sure?,You have unsaved changes. Are you sure?
+en,crud.inherited_from,Inherited from: {{from}},Inherited from: {{from}},,"'crud.inherited_from':'Inherited from: {{from}}',",Inherited from: {{from_var_,Inherited from: _from_var_
 en,crud.no,No,No,,"'crud.no':'No',",No,No
 en,crud.restore.button,Restore,Restore,,"'crud.restore.button':'Restore',",Restore,Restore
 en,crud.restore.error,Error restoring {{model}},Error restoring {{model}},,"'crud.restore.error':'Error restoring {{model}}',",Error restoring {{model_var_,Error restoring _model_var_
@@ -192,6 +188,7 @@ en,crud.save.success,{{model}} saved successfully.,{{model}} saved successfully.
 en,crud.titles.edit,Edit {{model}},Edit {{model}},,"'crud.titles.edit':'Edit {{model}}',",Edit {{model_var_,Edit _model_var_
 en,crud.titles.new,New {{model}},New {{model}},,"'crud.titles.new':'New {{model}}',",New {{model_var_,New _model_var_
 en,crud.yes,Yes,Yes,,"'crud.yes':'Yes',",Yes,Yes
+en,dashboard.welcome,Welcome,Welcome,,"'dashboard.welcome':'Welcome',",Welcome,Welcome
 en,grid.filter,Filter,Filter,,"'grid.filter':'Filter',",Filter,Filter
 en,grid.filterset_name,Name your filter,Name your filter,,"'grid.filterset_name':'Name your filter',",Name your filter,Name your filter
 en,grid.per_page,{{size}} per page,{{size}} per page,,"'grid.per_page':'{{size}} per page',",{{size_var_ per page,_size_var_ per page
