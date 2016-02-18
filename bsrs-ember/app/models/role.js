@@ -24,7 +24,7 @@ var RoleModel = Model.extend(NewMixin, {
     // company_name: ,
     settings:  Ember.computed(function() {
         return {
-            welcome_text: this.get('welcome_text') || undefined
+            welcome_text: this.get('welcome_text') || undefined;
         };
     }),
     // Categories
