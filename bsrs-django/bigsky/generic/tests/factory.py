@@ -1,3 +1,4 @@
+import copy
 import uuid
 
 from django.db import models
@@ -18,4 +19,5 @@ def create_attachments(ticket=None):
 
 
 def create_general_setting():
-    return Setting.objects.create(name='general', settings=DEFAULT_GENERAL_SETTINGS)
+    settings = copy.copy(DEFAULT_GENERAL_SETTINGS)
+    return Setting.objects.create(name='general', settings=settings)

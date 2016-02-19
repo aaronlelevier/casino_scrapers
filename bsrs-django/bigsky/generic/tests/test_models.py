@@ -10,7 +10,9 @@ from model_mommy import mommy
 from rest_framework.exceptions import ValidationError
 
 from category.tests.factory import create_categories
-from generic.models import Attachment, SavedSearch
+from generic.models import Attachment, SavedSearch, Setting
+from generic.settings import DEFAULT_GENERAL_SETTINGS
+from generic.tests.factory import create_general_setting
 from person.tests.factory import create_single_person
 from ticket.tests.factory import create_ticket
 from utils.tests.helpers import remove_attachment_test_files
@@ -143,3 +145,22 @@ class AttachmentModelTests(TestCase):
             self.assertEqual(ret['filename'], attachment.filename)
             self.assertEqual(ret['file'], str(attachment.file))
             self.assertEqual(ret['image_thumbnail'], str(attachment.image_thumbnail))
+
+
+class SettingModelTests(TestCase):
+
+    def test_get_settings_name(self):
+        self.assertEqual(Setting.get_settings_name(), 'general')
+
+    def test_get_all_class_settings(self):
+        self.assertEqual(Setting.get_all_class_settings(), DEFAULT_GENERAL_SETTINGS)
+
+    def test_detail_api_keys(self):
+        ret = Setting.detail_api_keys()
+        self.assertEqual(ret, ['value', 'inherited_value', 'inherited_from'])
+
+    def test_get_all_instance_settings(self):
+        setting = create_general_setting()
+        ret = setting.get_all_instance_settings()
+        self.assertEqual(ret, setting.settings)
+

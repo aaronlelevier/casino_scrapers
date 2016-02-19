@@ -278,6 +278,7 @@ class SettingTests(APITestCase):
     def setUp(self):
         self.person = create_single_person()
         self.client.login(username=self.person.username, password=PASSWORD)
+        self.maxDiff = None
 
     def tearDown(self):
         self.client.logout()
@@ -303,18 +304,10 @@ class SettingTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['id'], str(general_setting.id))
         self.assertEqual(data['name'], general_setting.name)
-        self.assertEqual(data['settings'], general_setting.settings)
-        # single 'setting' key:value structure
-        self.assertEqual(data['settings']['welcome_text']['value'], DEFAULT_GENERAL_SETTINGS['welcome_text']['value'])
-        self.assertEqual(data['settings']['welcome_text']['type'], DEFAULT_GENERAL_SETTINGS['welcome_text']['type'])
-        self.assertEqual(data['settings']['welcome_text']['required'], DEFAULT_GENERAL_SETTINGS['welcome_text']['required'])
-        self.assertEqual(data['settings']['welcome_text']['inherited'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited'])
-        self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
-        # others explicit
-        self.assertEqual(data['settings']['login_grace']['value'], DEFAULT_GENERAL_SETTINGS['login_grace']['value'])
-        # loop through all
+        # settings
         for key in DEFAULT_GENERAL_SETTINGS.keys():
-            for field in ['value', 'type', 'required', 'inherited', 'inherited_from']:
+            self.assertEqual(len(data['settings'][key]), 3)
+            for field in ['value', 'inherited_value', 'inherited_from']:
                 self.assertEqual(data['settings'][key][field], DEFAULT_GENERAL_SETTINGS[key][field])
 
     def test_create__does_not_have_settings(self):
@@ -332,29 +325,17 @@ class SettingTests(APITestCase):
         self.assertNotIn('settings', data)
 
     def test_update(self):
-        new_company_name = "Bob's Pianos"
         new_welcome_text = "Bueno"
-        new_create_all = False
-        new_login_grace = 3
         general_setting = create_general_setting()
         serializer = SettingSerializer(general_setting)
         raw_data = serializer.data
-        raw_data['settings'] = {
-            'company_name': new_company_name,
-            'welcome_text': new_welcome_text,
-            'create_all': new_create_all,
-            'login_grace':new_login_grace
-        }
+        raw_data['settings'] = {'welcome_text': new_welcome_text}
 
         response = self.client.put('/api/admin/settings/{}/'.format(general_setting.id), raw_data, format='json')
         data = json.loads(response.content.decode('utf8'))
 
         self.assertEqual(response.status_code, 200)
-        # override default 'value', but other keys in the 'company_name' stay the same
+        # welcome_text
         self.assertEqual(data['settings']['welcome_text']['value'], new_welcome_text)
-        self.assertEqual(data['settings']['welcome_text']['type'], DEFAULT_GENERAL_SETTINGS['welcome_text']['type'])
-        self.assertEqual(data['settings']['welcome_text']['required'], DEFAULT_GENERAL_SETTINGS['welcome_text']['required'])
-        self.assertEqual(data['settings']['welcome_text']['inherited'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited'])
+        self.assertIsNone(data['settings']['welcome_text']['inherited_value'])
         self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
-        # others
-        self.assertEqual(data['settings']['login_grace']['value'], new_login_grace)

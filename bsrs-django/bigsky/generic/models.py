@@ -1,3 +1,4 @@
+import copy
 import os
 
 from django.db import models
@@ -203,12 +204,17 @@ class Setting(SettingMixin, BaseNameModel):
     '''
     settings = JSONField(blank=True, default={})
 
-    def __str__(self):
-        return {self.name: self.settings}
+    @classmethod
+    def get_settings_name(cls):
+        return 'general'
 
     @classmethod
     def get_all_class_settings(cls):
         return cls.get_class_default_settings('general')
+
+    @classmethod
+    def detail_api_keys(cls):
+        return ['value', 'inherited_value', 'inherited_from']
 
     def get_all_instance_settings(self):
         return self.settings
