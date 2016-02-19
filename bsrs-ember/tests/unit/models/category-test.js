@@ -24,26 +24,29 @@ test('parent category returns associated model or undefined', (assert) => {
 
 /*CATEGORY TO CHILDREN M2M*/
 test('children returns associated array or empty array', (assert) => {
-    category = store.push('category', {id: CD.idOne, children_fks: []});
-    assert.equal(category.get('has_many_children').get('length'), 0);
-    run(function() {
-        store.push('category', {id:3});
+    run(() => {
+        category = store.push('category', {id: CD.idOne, children_fks: []});
     });
-    category.set('children_fks', [3]);
+    assert.equal(category.get('has_many_children').get('length'), 0);
+    run(() => {
+        store.push('category', {id:3});
+        store.push('category', {id:CD.idOne, children_fks: [3]});
+    });
     assert.equal(category.get('has_many_children').get('length'), 1);
     run(function() {
         store.push('category', {id:4});
+        store.push('category', {id:CD.idOne, children_fks: [4]});
     });
     category.set('children_fks', [4]);
     assert.equal(category.get('has_many_children').get('length'), 1);
     run(function() {
         store.push('category', {id:5});
+        store.push('category', {id:CD.idOne, children_fks: [4, 5]});
     });
-    category.set('children_fks', [4,5]);
     assert.equal(category.get('has_many_children').get('length'), 2);
 });
 
-test('add_child will add child to category fks array', (assert) => {
+test('scott add_child will add child to category fks array', (assert) => {
     category = store.push('category', {id: CD.idOne, children_fks: []});
     const cat_one = {id:8};
     assert.equal(category.get('has_many_children').get('length'), 0);

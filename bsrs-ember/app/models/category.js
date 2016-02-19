@@ -5,6 +5,7 @@ import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import TranslationMixin from 'bsrs-ember/mixins/model/translation';
+import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
 
 const { run } = Ember;
@@ -42,9 +43,9 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
     },
     childrenIsDirty: many_to_many_dirty('children_fks', 'previous_children_fks'),
     childrenIsNotDirty: Ember.computed.not('childrenIsDirty'),
-    has_many_children: Ember.computed('children_fks.[]', function() {
-        const related_fks = this.get('children_fks');
-        const filter = function(cat) {
+    has_many_children: Ember.computed(function() {
+        const filter = (cat) => {
+            const related_fks = this.get('children_fks');
             return Ember.$.inArray(cat.get('id'), related_fks) > -1;
         };
         return this.get('store').find('category', filter);
@@ -62,17 +63,23 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
         return store.find('category', filter);
     }),
     add_child(child) {
+        const store = this.get('store');
         const cat = this.get('store').push('category', child);
         const child_pk = cat.get('id');
-        let related_fks = this.get('children_fks');
-        this.set('children_fks', related_fks.concat(child_pk).uniq());
+        const related_fks = this.get('children_fks');
+        run(() => {
+            store.push('category', {id: this.get('id'), children_fks: related_fks.concat(child_pk).uniq()});
+        });
     },
     remove_child(child_pk) {
-        let related_fks = this.get('children_fks');
-        let updated_fks = related_fks.filter((fk) => {
+        const store = this.get('store');
+        const related_fks = this.get('children_fks');
+        const updated_fks = related_fks.filter((fk) => {
             return fk !== child_pk;
         });
-        this.set('children_fks', updated_fks);
+        run(() => {
+            store.push('category', {id: this.get('id'), children_fks: updated_fks});
+        });
     },
     removeRecord() {
         run(() => {
