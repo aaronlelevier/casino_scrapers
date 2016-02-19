@@ -302,10 +302,14 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # new record shows in List view
         location_levels = location_level_page.find_list_data()
         self.driver.refresh()
+        location_levels = location_level_page.find_list_data()
         location_level_list_view = location_level_page.find_list_name()
-        location_level_page.click_name_in_list(location_level_name, location_level_list_view)
+        new_llevel = location_level_page.click_name_in_list_pages(location_level_name, new_model=None)
+        try:
+            new_llevel.click()
+        except AttributeError as e:
+            raise e("new location level not found")
         ### UPDATE
-        self.driver.refresh()
         location_level_page.find_wait_and_assert_elem("t-location-level-name", location_level_name)
         location_level_name = rand_chars()
         location_level = InputHelper(location_level_name=location_level_name)
