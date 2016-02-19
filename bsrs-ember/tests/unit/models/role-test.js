@@ -11,7 +11,7 @@ var store, uuid, role, run = Ember.run;
 
 module('unit: role test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:role', 'model:category', 'model:location-level', 'model:role-category', 'model:uuid']);
+        store = module_registry(this.container, this.registry, ['model:role', 'model:category', 'model:location-level', 'model:role-category', 'model:uuid', 'service:i18n']);
     }
 });
 
