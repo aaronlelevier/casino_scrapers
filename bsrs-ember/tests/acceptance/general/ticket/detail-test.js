@@ -145,6 +145,7 @@ test('when you deep link to the ticket detail view you get bound attrs', (assert
         assert.ok(ticket.get('isNotDirty'));
         assert.equal(page.priorityInput(), TD.priorityOne);
         assert.equal(page.statusInput(), TD.statusOne);
+        assert.equal(find('.t-created-comment > span').text(), `${PD.nameMel} created this ticket a few seconds ago`);
     });
     page.priorityClickDropdown();
     page.priorityClickOptionTwo();

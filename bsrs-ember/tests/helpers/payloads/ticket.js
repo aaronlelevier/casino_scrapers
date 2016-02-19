@@ -77,6 +77,7 @@ var ticket_payload_detail_one_category = {
     priority: TD.priorityTwoId,
     cc: [PD.idOne],
     categories: [CD.idThree],
+    requester: PD.nameMel,
     assignee: PD.idOne,
     location: LD.idOne,
     attachments: [],

@@ -21,7 +21,7 @@
                                 <div class="col-md-12 meta-data">
                                     {{tickets/ticket-priority-tag item=model}}
                                     {{tickets/ticket-status-tag item=model}}
-                                    <span class="create-date" title="{{moment-format model.created 'dddd, MMMM Do YYYY, h:mm:ss a z'}}">{{t 'ticket.created' requester=model.requester timestamp=(moment-from-now model.created)}}</span>
+                                    {{timestamp-created model=model}}
                                 </div>
                                 <div class="col-md-12">
                                     {{#parent-ticket-category-select ticket=model as |child_valid|}}

@@ -46,10 +46,10 @@ var BSRS_TICKET_FACTORY = (function() {
             priority_fk: this.ticket.priorityOneId,
             cc: [this.people_fixtures.get()],
             categories: [categories[0], categories[1], categories[2]],
+            requester: this.people_defaults.nameMel,
             assignee: this.people_fixtures.get(),
             location: location,
             attachments: []
-
         }
     };
     factory.prototype.list = function() {

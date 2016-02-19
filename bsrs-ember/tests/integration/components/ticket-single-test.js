@@ -7,8 +7,8 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
-import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
-import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category';
+import CD from 'bsrs-ember/vendor/defaults/category';
+import TICKET_CD from 'bsrs-ember/vendor/defaults/ticket-category';
 
 let store, m2m, m2m_two, m2m_three, ticket, category_one, category_two, category_three, run = Ember.run, category_repo;
 const DROPDOWN = '.ember-power-select-dropdown';
@@ -19,12 +19,12 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status', 'model:ticket-category']);
         translation.initialize(this);
         run(function() {
-            m2m = store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, ticket_pk: TD.idOne, category_pk: CATEGORY_DEFAULTS.idOne});
-            m2m_two = store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idTwo, ticket_pk: TD.idOne, category_pk: CATEGORY_DEFAULTS.idTwo});
-            m2m_three = store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idThree, ticket_pk: TD.idOne, category_pk: CATEGORY_DEFAULTS.unusedId});
-            category_one = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent_id: CATEGORY_DEFAULTS.idTwo});
-            category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent_id: CATEGORY_DEFAULTS.unusedId});
-            category_three = store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameThree, parent_id: null});
+            m2m = store.push('ticket-category', {id: TICKET_CD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
+            m2m_two = store.push('ticket-category', {id: TICKET_CD.idTwo, ticket_pk: TD.idOne, category_pk: CD.idTwo});
+            m2m_three = store.push('ticket-category', {id: TICKET_CD.idThree, ticket_pk: TD.idOne, category_pk: CD.unusedId});
+            category_one = store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo});
+            category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId});
+            category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: null});
         });
     }
 });
