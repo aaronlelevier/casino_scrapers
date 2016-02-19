@@ -70,5 +70,5 @@ class CategoryViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
     def parents(self, request):
         categories = Category.objects.filter(parent__isnull=True)
         page = self.paginate_queryset(categories)
-        serializer = cs.CategoryParentSerializer(page, many=True)
+        serializer = cs.CategoryIDNameSerializer(page, many=True)
         return self.get_paginated_response(serializer.data)
