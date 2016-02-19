@@ -37,6 +37,7 @@ var ticket_payload_detail = {
     priority: TD.priorityOneId,
     cc: [PD.idOne],
     categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
+    requester: PD.nameMel,
     assignee: PD.idOne,
     location: LD.idOne,
     attachments: [],
@@ -49,6 +50,7 @@ var ticket_payload_with_comment = {
     priority: TD.priorityOneId,
     cc: [PD.idOne],
     categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
+    requester: PD.nameMel,
     assignee: PD.idOne,
     location: LD.idOne,
     comment: TD.commentOne,
@@ -62,6 +64,7 @@ var ticket_payload_with_attachment = {
     priority: TD.priorityOneId,
     cc: [PD.idOne],
     categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
+    requester: PD.nameMel,
     assignee: PD.idOne,
     location: LD.idOne,
     attachments: [UUID.value]
