@@ -69,16 +69,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
     },
     saveStatus: belongs_to_save('ticket', 'status', 'status_fk'),
     savePriority: belongs_to_save('ticket', 'priority', 'priority_fk'),
-    saveAssignee() {
-        let store = this.get('store');
-        let ticket_pk = this.get('id');
-        let assignee = this.get('assignee');
-        if (assignee) {
-            run(function() {
-                store.push('ticket', {id: ticket_pk, assignee_fk: assignee.get('id')});
-            });
-        }
-    },
+    saveAssignee: belongs_to_save('ticket', 'assignee', 'assignee_fk'),
     saveAttachments() {
         const store = this.get('store');
         const ticket_pk = this.get('id');
@@ -93,18 +84,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
     statusIsDirty: belongs_to_dirty('status_fk', 'status'),
     priorityIsDirty: belongs_to_dirty('priority_fk', 'priority'),
     assigneeIsDirty: belongs_to_dirty('assignee_fk', 'assignee'),
-    // locationIsDirty: belongs_to_dirty('location_fk', 'location'),
-    locationIsDirty: Ember.computed('location', 'location_fk', function() {
-        const location = this.get('location');
-        const location_fk = this.get('location_fk');
-        if (location) {
-            return location.get('id') === location_fk ? false : true;
-        }
-        //needed when cleared out, esp if not there
-        if(!location && location_fk) {
-            return true;
-        }
-    }),
+    locationIsDirty: belongs_to_dirty('location_fk', 'location'),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'locationIsDirty', 'attachmentsIsDirty', function() {
         return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('statusIsDirty') || this.get('priorityIsDirty') || this.get('ccIsDirty') || this.get('categoriesIsDirty') || this.get('locationIsDirty') || this.get('attachmentsIsDirty');
     }),

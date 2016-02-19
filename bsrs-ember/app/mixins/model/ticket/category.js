@@ -126,28 +126,7 @@ var CategoriesMixin = Ember.Mixin.create({
     },
     remove_category: remove_many_to_many('ticket-category', 'category_pk', 'ticket_categories'),
     rollbackCategories: many_to_many_rollback('ticket-category', 'ticket_categories_fks', 'ticket_pk'),
-    // saveCategories: many_to_many_save('ticket_categories', 'ticket_categories_ids', 'ticket_categories'),
-    saveCategories() {
-        const ticket_pk = this.get('id');
-        let saved_m2m_pks = [];
-        const store = this.get('store');
-        let categories = this.get('categories');
-        categories.forEach((category) => {
-            let m2m_array = store.find('ticket-category').toArray();
-            let m2m = m2m_array.filter(function(category_model, join_model) {
-                let removed = join_model.get('removed');
-                let ticket_pk = join_model.get('ticket_pk');
-                let category_pk = join_model.get('category_pk');
-                return ticket_pk === this.get('id') && category_pk === category_model.get('id') && !removed;
-            }.bind(this, category));
-            m2m.forEach(function(join_model) {
-                saved_m2m_pks.push(join_model.get('id'));
-            });
-        });
-        run(() => {
-            store.push('ticket', {id: ticket_pk, ticket_categories_fks: saved_m2m_pks});
-        });
-    },
+    saveCategories: many_to_many_save('ticket', 'ticket_categories', 'ticket_categories_ids', 'ticket_categories_fks'),
 });
 
 export default CategoriesMixin;
