@@ -8,7 +8,7 @@ import translations from 'bsrs-ember/vendor/translation_fixtures';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 
-var ticket;
+var ticket, store, trans;
 
 moduleForComponent('timestamp-created test', 'Integration | Component | timestamp created', {
     integration: true,
@@ -25,7 +25,7 @@ moduleForComponent('timestamp-created test', 'Integration | Component | timestam
     }
 });
 
-test('it renders with correct string', function(assert) {
+test('it renders with correct string', (assert) => {
     this.model = ticket;
     this.render(hbs` {{timestamp-created model=model}}`);
     assert.equal(this.$().text().trim(), 'wat created this ticket a few seconds ago');

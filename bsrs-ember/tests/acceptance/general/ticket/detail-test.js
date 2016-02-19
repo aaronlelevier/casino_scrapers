@@ -51,7 +51,7 @@ const categories = '.categories-power-select-search input';
 
 let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, original_uuid, category_one_xhr, category_two_xhr, category_three_xhr, counter, activity_one, run = Ember.run;
 
-module('Acceptance | ticket detail', {
+module('scott Acceptance | ticket detail', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -59,7 +59,7 @@ module('Acceptance | ticket detail', {
         detail_data = TF.detail(TD.idOne);
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, TF.list());
         detail_xhr = xhr(endpoint + TD.idOne + '/', 'GET', null, {}, 200, detail_data);
-        activity_one = ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
+        activity_one = xhr(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
         timemachine.config({
             dateString: 'December 25, 2015 13:12:59'
         });
@@ -243,7 +243,7 @@ test('visiting detail should set the category even when it has no children', (as
     ajax(`/api/tickets/${TD.idTwo}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
     let solo_data = TF.detail(TD.idTwo);
     solo_data.categories = [{id: CD.idSolo, name: CD.nameSolo, children_fks: [], parent: null}];
-    xhr(endpoint + TD.idTwo + '/', 'GET', null, {}, 200, solo_data);
+    ajax(endpoint + TD.idTwo + '/', 'GET', null, {}, 200, solo_data);
     visit(BASE_URL + '/' + TD.idTwo);
     andThen(() => {
         assert.equal(currentURL(), BASE_URL + '/' + TD.idTwo);
@@ -1014,22 +1014,6 @@ test('making a ticket dirty causes the dirty indicator do show in the grid', (as
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data:eq(0) .dirty').length, 1);
-    });
-});
-
-test('clicking alternate update button will redirect to the given detail view as if the primary save was invoked', (assert) => {
-    page.visitDetail();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(page.ccSelected().indexOf(PD.first_name), 2);
-        assert.equal(find('.t-ticket-header').text().trim().split('  ')[0].trim(), 'Toilet Leak');
-    });
-    let response = TF.detail(TD.idOne);
-    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail), {}, 200, response);
-    clearxhr(list_xhr);
-    page.update();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
     });
 });
 
