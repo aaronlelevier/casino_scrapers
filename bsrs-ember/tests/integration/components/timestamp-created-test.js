@@ -25,8 +25,8 @@ moduleForComponent('timestamp-created test', 'Integration | Component | timestam
     }
 });
 
-test('it renders with correct string', (assert) => {
+test('it renders with correct string', function(assert) {
     this.model = ticket;
-    this.render(hbs` {{timestamp-created model=model}}`);
+    this.render(hbs`{{timestamp-created model=model}}`);
     assert.equal(this.$().text().trim(), 'wat created this ticket a few seconds ago');
 });
