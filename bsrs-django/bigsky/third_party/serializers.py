@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from category.models import Category
 from contact.serializers import (PhoneNumberSerializer, EmailSerializer, AddressSerializer)
-from third_party.models import ThirdParty
+from third_party.models import ThirdParty, ThirdPartyStatus
 from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin
 
 
@@ -10,7 +10,15 @@ from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin
 THIRD_PARTY_FIELDS = ('id', 'name', 'number', 'status',)
 
 
+class ThirdPartyStatusSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ThirdPartyStatus
+        fields = ('id', 'name')
+
 class ThirdPartySerializer(serializers.ModelSerializer):
+
+    status = ThirdPartyStatusSerializer(required=False)
 
     class Meta:
         model = ThirdParty
@@ -50,6 +58,11 @@ class ThirdPartyDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = ThirdParty
         fields = THIRD_PARTY_FIELDS + ('emails', 'phone_numbers', 'addresses',)
+
+    def to_representation(self, obj):
+        data = super(ThirdPartyDetailSerializer, self).to_representation(obj)
+        data['status_fk'] = data.pop('status', [])
+        return data
 
     @staticmethod
     def eager_load(queryset):

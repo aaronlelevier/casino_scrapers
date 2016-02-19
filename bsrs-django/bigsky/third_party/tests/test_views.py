@@ -42,7 +42,8 @@ class ThirdPartyTests(APITestCase):
         self.assertEqual(data['results'][0]['id'], str(self.third_party.id))
         self.assertEqual(data['results'][0]['name'], self.third_party.name)
         self.assertEqual(data['results'][0]['number'], self.third_party.number)
-        self.assertEqual(data['results'][0]['status'], str(self.third_party.status.id))
+        self.assertEqual(data['results'][0]['status']['id'], str(self.third_party.status.id))
+        self.assertEqual(data['results'][0]['status']['name'], self.third_party.status.name)
 
     ### DETAIL
 
@@ -55,7 +56,7 @@ class ThirdPartyTests(APITestCase):
         self.assertEqual(data['id'], str(self.third_party.id))
         self.assertEqual(data['name'], self.third_party.name)
         self.assertEqual(data['number'], self.third_party.number)
-        self.assertEqual(data['status'], str(self.third_party.status.id))
+        self.assertEqual(data['status_fk'], str(self.third_party.status.id))
 
     def test_detail_email(self):
         response = self.client.get('/api/admin/third-parties/{}/'.format(self.third_party.id))
