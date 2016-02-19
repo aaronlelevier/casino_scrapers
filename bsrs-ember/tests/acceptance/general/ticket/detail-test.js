@@ -59,7 +59,7 @@ module('Acceptance | ticket detail', {
         detail_data = TF.detail(TD.idOne);
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, TF.list());
         detail_xhr = xhr(endpoint + TD.idOne + '/', 'GET', null, {}, 200, detail_data);
-        activity_one = xhr(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
+        activity_one = ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
         timemachine.config({
             dateString: 'December 25, 2015 13:12:59'
         });
@@ -1046,7 +1046,10 @@ test('clicking update will not transition away from ticket detail and bring in l
     });
     page.commentFillIn(TD.commentOne);
     let response = TF.detail(TD.idOne);
-    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_comment), {}, 200, response);
+    ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_comment), {}, 200, response);
+    const json = TA_FIXTURES.get_assignee_person_and_to_from_json();
+    const activity_response = {'count':1,'next':null,'previous':null,'results': [json]};
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, activity_response);
     page.update();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -1056,7 +1059,7 @@ test('clicking update will not transition away from ticket detail and bring in l
         assert.equal(ticket.get('comment'), '');
         assert.equal(ticket.get('created'), iso);
         let activity = store.find('activity');
-        // assert.equal(activity.get('length'), 1);
+        assert.equal(activity.get('length'), 1);
     });
 });
 

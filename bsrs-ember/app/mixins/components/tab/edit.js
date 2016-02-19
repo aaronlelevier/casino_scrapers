@@ -3,13 +3,13 @@ import Ember from 'ember';
 var EditMixin = Ember.Mixin.create({
     actions: {
         update() {
-            let model = this.get('model');
-            let persisted = model.get('new');
-            let repository = this.get('repository');
-            let action = persisted === true ? 'insert' : 'update';
-            repository[action](model).then(() => {
-                let tab = this.tab();
-                tab.set('saveModel', persisted);
+            const model = this.get('model');
+            const repository = this.get('repository');
+            const pk = this.get('model').get('id');
+            repository['update'](model).then(() => {
+                const tab = this.tab();
+                tab.set('saveModel', true);
+                this.get('activityRepository').find('ticket', 'tickets', pk);
             }, (xhr) => {
                 if(xhr.status === 400) {
                     var response = JSON.parse(xhr.responseText), errors = [];
