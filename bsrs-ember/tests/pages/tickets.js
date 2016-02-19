@@ -34,6 +34,7 @@ var TicketPage = PageObject.create({
   visitNew: visitable(NEW_URL),
   visit: visitable(TICKETS_URL),
   visitDetail: visitable(DETAIL_URL),
+  update: clickable('.t-ticket-action-save'),
 
   ccClickDropdown: clickable(`${CC}`),
   ccInput: text(CC),

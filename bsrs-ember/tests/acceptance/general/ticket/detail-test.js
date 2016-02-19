@@ -88,25 +88,6 @@ test('clicking a tickets will redirect to the given detail view and can save to 
     });
 });
 
-test('clicking alternate save button will redirect to the given detail view as if the primary save was invoked', (assert) => {
-    page.visit();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-    });
-    click('.t-grid-data:eq(0)');
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(page.ccSelected().indexOf(PD.first_name), 2);
-        assert.equal(find('.t-ticket-header').text().trim().split('  ')[0].trim(), 'Toilet Leak');
-    });
-    let response = TF.detail(TD.idOne);
-    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail), {}, 200, response);
-    click('.t-ticket-action-save');
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-    });
-});
-
 test('you can add a comment and post it while not updating created property', (assert) => {
     let iso;
     clearxhr(list_xhr);
@@ -1035,3 +1016,47 @@ test('making a ticket dirty causes the dirty indicator do show in the grid', (as
         assert.equal(find('.t-grid-data:eq(0) .dirty').length, 1);
     });
 });
+
+test('clicking alternate update button will redirect to the given detail view as if the primary save was invoked', (assert) => {
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(page.ccSelected().indexOf(PD.first_name), 2);
+        assert.equal(find('.t-ticket-header').text().trim().split('  ')[0].trim(), 'Toilet Leak');
+    });
+    let response = TF.detail(TD.idOne);
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail), {}, 200, response);
+    clearxhr(list_xhr);
+    page.update();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+});
+
+test('clicking update will not transition away from ticket detail and bring in latest activities', (assert) => {
+    let iso;
+    clearxhr(list_xhr);
+    page.visitDetail();
+    andThen(() => {
+        const date = new Date();
+        date.setMonth(date.getMonth()-1);
+        iso = date.toISOString();
+        store.push('ticket', {id: TD.idOne, created: iso});
+        assert.equal(find('.t-ticket-comment').attr('placeholder'), 'Enter a comment');
+    });
+    page.commentFillIn(TD.commentOne);
+    let response = TF.detail(TD.idOne);
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_comment), {}, 200, response);
+    page.update();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        let ticket = store.find('ticket', TD.idOne);
+        assert.ok(ticket.get('isNotDirty'));
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(ticket.get('comment'), '');
+        assert.equal(ticket.get('created'), iso);
+        let activity = store.find('activity');
+        // assert.equal(activity.get('length'), 1);
+    });
+});
+

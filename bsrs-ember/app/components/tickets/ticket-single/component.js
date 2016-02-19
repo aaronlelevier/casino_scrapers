@@ -19,6 +19,12 @@ var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMi
             if (this.all_components_valid()) {
                 this._super();
             }
+        },
+        update() {
+            this.set('submitted', true);
+            if (this.all_components_valid()) {
+                this._super();
+            }
         }
     } 
 });
