@@ -15,7 +15,7 @@ export default Model.extend({
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     status: Ember.computed(function() {
         const store = this.get('store');
-        const ticket_status_list = store.find('ticket-status-list');
+        const ticket_status_list = store.find('general-status-list');
         return ticket_status_list.filter((ts) => {
             return Ember.$.inArray(this.get('id'), ts.get('tickets')) > -1;
         }).objectAt(0);

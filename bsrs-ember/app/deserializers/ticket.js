@@ -140,7 +140,7 @@ var TicketDeserializer = Ember.Object.extend({
             response.detail = true;
             let ticket = store.push('ticket', response);
             const [location_fk, ticket_location_json] = extract_ticket_location(location_json, store, ticket);
-            belongs_to_extract(response.status_fk, store, ticket, 'status', 'ticket', 'tickets');
+            belongs_to_extract(response.status_fk, store, ticket, 'status', 'general', 'tickets');
             belongs_to_extract(response.priority_fk, store, ticket, 'priority', 'ticket', 'tickets');
             //TODO: do I need these if statements
             if (cc_json) {
@@ -193,7 +193,7 @@ var TicketDeserializer = Ember.Object.extend({
             delete model.priority;
             const ticket = store.push('ticket-list', model);
             ticket.save();
-            belongs_to_extract(status_json, store, ticket, 'status', 'ticket', 'tickets');
+            belongs_to_extract(status_json, store, ticket, 'status', 'general', 'tickets');
             belongs_to_extract(priority_json, store, ticket, 'priority', 'ticket', 'tickets');
             extract_assignee_list(assignee_json, store, ticket);
             extract_location_list(location_json, store, ticket);
