@@ -71,6 +71,7 @@ test('visiting /category/new', (assert) => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
         let category = store.find('category', UUID.value);
         assert.ok(category.get('new'));
+        assert.equal(find('.t-new-category-name').text(), 'New Category');
     });
     fillIn('.t-category-name', CD.nameOne);
     fillIn('.t-category-description', CD.descriptionMaintenance);
