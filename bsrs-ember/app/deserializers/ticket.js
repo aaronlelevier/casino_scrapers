@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
-import { belongs_to_extract } from 'bsrs-components/repository/belongs-to';
+import { belongs_to_extract, belongs_to_extract_nodetail } from 'bsrs-components/repository/belongs-to';
 
 const { run } = Ember;
 
@@ -48,20 +48,6 @@ var extract_assignee = function(assignee_json, store, ticket_model) {
     if(ticket_model.get('assignee.id') !== assignee_id) {
         ticket_model.change_assignee(assignee_json);
     }
-};
-
-var extract_assignee_list = function(assignee_json, store, ticket) {
-    const existing_person = store.find('person-list', assignee_json.id);
-    const person_tickets = existing_person.get('tickets') || [];
-    const updated_person_tickets = person_tickets.concat(ticket.get('id')).uniq();
-    store.push('person-list', {id: assignee_json.id, first_name: assignee_json.first_name, last_name: assignee_json.last_name, tickets: updated_person_tickets});
-};
-
-var extract_location_list = function(location_json, store, ticket) {
-    const existing_location = store.find('location-list', location_json.id);
-    const location_tickets = existing_location.get('tickets') || [];
-    const updated_location_tickets = location_tickets.concat(ticket.get('id')).uniq();
-    store.push('location-list', {id: location_json.id, name: location_json.name, tickets: updated_location_tickets});
 };
 
 var extract_cc = function(cc_json, store, ticket) {
@@ -195,8 +181,8 @@ var TicketDeserializer = Ember.Object.extend({
             ticket.save();
             belongs_to_extract(status_json, store, ticket, 'status', 'general', 'tickets');
             belongs_to_extract(priority_json, store, ticket, 'priority', 'ticket', 'tickets');
-            extract_assignee_list(assignee_json, store, ticket);
-            extract_location_list(location_json, store, ticket);
+            belongs_to_extract_nodetail(assignee_json, store, ticket, 'person', 'tickets');
+            belongs_to_extract_nodetail(location_json, store, ticket, 'location', 'tickets');
             return_array.push(ticket);
         });
         return return_array;

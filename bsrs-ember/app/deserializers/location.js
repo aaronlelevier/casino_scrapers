@@ -1,49 +1,9 @@
 import Ember from 'ember';
-import { belongs_to_extract } from 'bsrs-components/repository/belongs-to';
+import { belongs_to_extract, belongs_to_extract_contacts } from 'bsrs-components/repository/belongs-to';
 
 const { run } = Ember;
 
-var extract_emails = function(model, store) {
-    let email_fks = [];
-    let emails = model.emails || [];
-    emails.forEach((email) => {
-        email_fks.push(email.id);
-        email.model_fk = model.id;
-        run(() => {
-            store.push('email', email);
-        });
-    });
-    delete model.emails;
-    return email_fks;
-};
-
-var extract_phone_numbers = function(model, store) {
-    let phone_number_fks = [];
-    let phone_numbers = model.phone_numbers || [];
-    phone_numbers.forEach((phone_number) => {
-        phone_number_fks.push(phone_number.id);
-        phone_number.model_fk = model.id;
-        run(() => {
-            store.push('phonenumber', phone_number);
-        });
-    });
-    delete model.phone_numbers;
-    return phone_number_fks;
-};
-
-var extract_addresses = function(model, store) {
-    let address_fks = [];
-    let addresses = model.addresses || [];
-    addresses.forEach((address) => {
-        address_fks.push(address.id);
-        address.model_fk = model.id;
-        store.push('address', address);
-    });
-    delete model.addresses;
-    return address_fks;
-};
-
-let extract_location_level = (model, store) => {
+var extract_location_level = (model, store) => {
     let location_level_pk = model.location_level;
     let existing_location_level = store.find('location-level', location_level_pk);
     let locations = existing_location_level.get('locations') || [];
@@ -153,9 +113,9 @@ var LocationDeserializer = Ember.Object.extend({
         const location_deserializer = this;
         let location = existing;
         if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
-            response.email_fks = extract_emails(response, store);
-            response.phone_number_fks = extract_phone_numbers(response, store);
-            response.address_fks = extract_addresses(response, store);
+            response.email_fks = belongs_to_extract_contacts(response, store, 'email', 'emails');
+            response.phone_number_fks = belongs_to_extract_contacts(response, store, 'phonenumber', 'phone_numbers');
+            response.address_fks = belongs_to_extract_contacts(response, store, 'address', 'addresses');
             response.location_level_fk = extract_location_level(response, store);
             response.location_children_fks = extract_children(response, store, location_deserializer);
             response.location_parents_fks = extract_parents(response, store, location_deserializer);

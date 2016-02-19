@@ -1,46 +1,8 @@
 import Ember from 'ember';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
-import { belongs_to_extract } from 'bsrs-components/repository/belongs-to';
+import { belongs_to_extract, belongs_to_extract_contacts } from 'bsrs-components/repository/belongs-to';
 
 const { run } = Ember;
-
-var extract_emails = function(model, store) {
-    let email_fks = [];
-    let emails = model.emails || [];
-    emails.forEach((email) => {
-        email_fks.push(email.id);
-        email.model_fk = model.id;
-        store.push('email', email);
-    });
-    delete model.emails;
-    return email_fks;
-};
-
-var extract_phone_numbers = function(model, store) {
-    let phone_number_fks = [];
-    let phone_numbers = model.phone_numbers || [];
-    phone_numbers.forEach((phone_number) => {
-        phone_number_fks.push(phone_number.id);
-        phone_number.model_fk = model.id;
-        store.push('phonenumber', phone_number);
-    });
-    delete model.phone_numbers;
-    return phone_number_fks;
-};
-
-var extract_addresses = function(model, store) {
-    let address_fks = [];
-    let addresses = model.addresses || [];
-    addresses.forEach((address) => {
-        address_fks.push(address.id);
-        address.model_fk = model.id;
-        // store.push('address-type', address.type);
-        // address.type = address.type.id;
-        store.push('address', address);
-    });
-    delete model.addresses;
-    return address_fks;
-};
 
 var extract_role_location_level = function(model, store) {
     let role = store.find('role', model.role);
@@ -136,9 +98,9 @@ var PersonDeserializer = Ember.Object.extend({
         let location_level_fk;
         let person = existing;
         if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
-            model.email_fks = extract_emails(model, store);
-            model.phone_number_fks = extract_phone_numbers(model, store);
-            model.address_fks = extract_addresses(model, store);
+            model.email_fks = belongs_to_extract_contacts(model, store, 'email', 'emails');
+            model.phone_number_fks = belongs_to_extract_contacts(model, store, 'phonenumber', 'phone_numbers');
+            model.address_fks = belongs_to_extract_contacts(model, store, 'address', 'addresses');
             [model.role_fk, location_level_fk] = extract_role(model, store);
             extract_person_location(model, store, location_level_fk, location_deserializer);
             extract_locale(model, store);
