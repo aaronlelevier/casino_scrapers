@@ -10,7 +10,7 @@ import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 
 let store, location_level, location_levels, trans, run = Ember.run;
-const PowerSelect = '.ember-power-select-trigger';
+const PowerSelect = '.ember-power-select-trigger > .ember-power-select-multiple-options';
 const COMPONENT = '.t-location-level-children-select';
 const DROPDOWN = '.ember-power-select-dropdown';
 

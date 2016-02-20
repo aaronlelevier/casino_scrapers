@@ -15,7 +15,8 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import PLD from 'bsrs-ember/vendor/defaults/person-location';
 
 let store, m2m, m2m_two, person, location_one, location_two, location_three, run = Ember.run, location_repo;
-const PowerSelect = '.ember-power-select-trigger';
+
+const PowerSelect = '.ember-power-select-trigger > .ember-power-select-multiple-options';
 const DROPDOWN = '.ember-power-select-dropdown';
 const COMPONENT = '.t-person-locations-select';
 const OPTION = 'li.ember-power-select-option';
@@ -51,7 +52,7 @@ test('should render a selectbox when with no options (initial state)', function(
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 1);
     assert.equal($(`${OPTION}`).text(), GLOBALMSG.power_search);
-    assert.equal($(`${PowerSelect} > span.ember-power-select-multiple-option`).length, 2);
+    assert.equal($(`.ember-power-select-multiple-option`).length, 2);
 });
 
 test('should render a selectbox with bound options after type ahead for search', function(assert) {

@@ -16,7 +16,7 @@ import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 
 var store, locationz, location_repo, m2m, m2m_two, trans, run = Ember.run;
 
-const PowerSelect = '.ember-power-select-trigger';
+const PowerSelect = '.ember-power-select-trigger > .ember-power-select-multiple-options';
 const COMPONENT = '.t-location-children-select';
 const DROPDOWN = '.ember-power-select-dropdown';
 const OPTION = 'li.ember-power-select-option';

@@ -15,7 +15,7 @@ import translations from 'bsrs-ember/vendor/translation_fixtures';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 
 let store, category, category_two, category_three, category_repo, run = Ember.run;
-const PowerSelect = '.ember-power-select-trigger';
+const PowerSelect = '.ember-power-select-trigger > .ember-power-select-multiple-options';
 const DROPDOWN = '.ember-power-select-dropdown';
 const COMPONENT = '.t-category-children-select';
 const OPTION = 'li.ember-power-select-option';

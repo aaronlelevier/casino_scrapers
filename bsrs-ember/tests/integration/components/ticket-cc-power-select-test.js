@@ -15,7 +15,7 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TPD from 'bsrs-ember/vendor/defaults/ticket-person';
 
 let store, m2m, m2m_two, ticket, person_one, person_two, person_three, trans, run = Ember.run, person_repo;
-const PowerSelect = '.ember-power-select-trigger';
+const PowerSelect = '.ember-power-select-trigger > .ember-power-select-multiple-options';
 const DROPDOWN = '.ember-power-select-dropdown';
 const COMPONENT = '.t-ticket-cc-select';
 const OPTION = 'li.ember-power-select-option';

@@ -2,7 +2,7 @@ import PageObject from '../page-object';
 import CD from 'bsrs-ember/vendor/defaults/category';
 
 let { visitable, fillable, clickable, count, text } = PageObject;
-const CATEGORY = '.t-category-children-select > .ember-basic-dropdown-trigger';
+const CATEGORY = '.t-category-children-select > .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
 const CATEGORIES = `${CATEGORY} > .ember-power-select-multiple-option`;
 const CATEGORY_ONE = `${CATEGORIES}:eq(0)`;
 const CATEGORY_TWO = `${CATEGORIES}:eq(1)`;
