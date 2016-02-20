@@ -46,7 +46,7 @@ const LETTER_M = {keyCode: 77};
 const BACKSPACE = {keyCode: 8};
 const LOCATION = '.t-person-locations-select > .ember-basic-dropdown-trigger';
 const LOCATION_DROPDOWN = '.t-person-locations-select-dropdown > .ember-power-select-options';
-const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-option`;
+const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-options > .ember-power-select-multiple-option`;
 const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 

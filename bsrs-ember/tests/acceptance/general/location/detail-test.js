@@ -39,7 +39,7 @@ const CHILDREN_SEARCH = '.t-location-children-select-trigger > .ember-power-sele
 const PARENTS = '.t-location-parent-select > .ember-basic-dropdown-trigger';
 const PARENTS_DROPDOWN = '.t-location-parent-select-dropdown > .ember-power-select-options';
 const PARENTS_SEARCH = '.t-location-parent-select-trigger > .ember-power-select-trigger-multiple-input';
-const PARENTS_MULTIPLE_OPTION = '.t-location-parent-select-trigger > .ember-power-select-multiple-option';
+const PARENTS_MULTIPLE_OPTION = '.t-location-parent-select-trigger > .ember-power-select-multiple-options > .ember-power-select-multiple-option';
 
 module('Acceptance | location detail-test', {
     beforeEach() {
