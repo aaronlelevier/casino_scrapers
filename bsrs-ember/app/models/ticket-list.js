@@ -52,7 +52,7 @@ export default Model.extend({
     }),
     categories: Ember.computed(function() {
         const store = this.get('store');
-        const categories = store.find('category');
+        const categories = store.find('category-list');
         const category_ids = this.get('category_ids');
         const filtered_categories = categories.filter((cat) => {
             return Ember.$.inArray(cat.get('id'), category_ids) > -1;

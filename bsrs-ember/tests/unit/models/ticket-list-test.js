@@ -11,7 +11,7 @@ var store, ticket, ticket_detail;
 
 module('unit: ticket list test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-list', 'model:person-list', 'model:location-list', 'model:general-status-list', 'model:ticket-priority-list', 'model:location', 'model:category']);
+        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-list', 'model:person-list', 'model:location-list', 'model:general-status-list', 'model:ticket-priority-list', 'model:location', 'model:category-list']);
         run(() => {
             ticket_detail = store.push('ticket', {id: TD.idOne, number: 'scoo'});
             ticket = store.push('ticket-list', {id: TD.idOne, location_fk: LD.idOne, category_ids: [CD.idOne, CD.idTwo]});
@@ -22,9 +22,9 @@ module('unit: ticket list test', {
             store.push('person-list', {id: 5, name: 'foo', tickets: [TD.idOne]});
             store.push('person-list', {id: 6, name: 'foo'});
             store.push('location-list', {id: LD.idOne, name: LD.storeName});
-            store.push('category', {id: CD.idOne, name: CD.nameOne, level: 1});
-            store.push('category', {id: CD.idTwo, name: CD.nameTwo, level: 2});
-            store.push('category', {id: CD.idThree, name: CD.nameThree, level: 3});
+            store.push('category-list', {id: CD.idOne, name: CD.nameOne, level: 1});
+            store.push('category-list', {id: CD.idTwo, name: CD.nameTwo, level: 2});
+            store.push('category-list', {id: CD.idThree, name: CD.nameThree, level: 3});
         });
     }
 });

@@ -12,7 +12,8 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
     uuid: injectUUID('uuid'),
     type: Ember.computed(function() { return 'ticket'; }),
     typeGrid: Ember.computed(function() { return 'ticket-list'; }),
-    garbage_collection: Ember.computed(function() { return ['ticket-list', 'location-list', 'person-list', 'ticket-priority-list', 'general-status-list']; }),
+    //TODO: test count to ensure being deleted
+    garbage_collection: Ember.computed(function() { return ['ticket-list', 'location-list', 'person-list', 'ticket-priority-list', 'general-status-list', 'category-list']; }),
     url: Ember.computed(function() { return TICKET_URL; }),
     TicketDeserializer: inject('ticket'),
     deserializer: Ember.computed.alias('TicketDeserializer'),

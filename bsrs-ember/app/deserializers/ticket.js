@@ -163,7 +163,8 @@ var TicketDeserializer = Ember.Object.extend({
             const category_json = model.categories;
             model.category_ids = category_json.mapBy('id');
             category_json.forEach((category) => {
-                store.push('category', category); 
+                //TODO: test this
+                store.push('category-list', category); 
             });
             const location_json = model.location;
             model.location_fk = model.location.id;

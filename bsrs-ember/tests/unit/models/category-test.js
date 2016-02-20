@@ -46,7 +46,7 @@ test('children returns associated array or empty array', (assert) => {
     assert.equal(category.get('has_many_children').get('length'), 2);
 });
 
-test('scott add_child will add child to category fks array', (assert) => {
+test('add_child will add child to category fks array', (assert) => {
     category = store.push('category', {id: CD.idOne, children_fks: []});
     const cat_one = {id:8};
     assert.equal(category.get('has_many_children').get('length'), 0);
