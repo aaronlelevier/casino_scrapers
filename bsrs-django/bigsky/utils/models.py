@@ -148,11 +148,20 @@ class SettingMixin(object):
         name = name or cls.__name__.lower()
 
         if name == 'general':
-            return DEFAULT_GENERAL_SETTINGS
+            return copy.copy(DEFAULT_GENERAL_SETTINGS)
         elif name == 'role':
-            return DEFAULT_ROLE_SETTINGS
+            return copy.copy(DEFAULT_ROLE_SETTINGS)
         else:
             return {}
+
+    @classmethod
+    def get_class_combined_settings_full(cls, base_name, *settings):
+        """ concat/update all dicts """
+        base = cls.get_class_default_settings(base_name)
+        ret = {}
+        for setting in settings:
+            ret.update(setting)
+        return ret
 
     @classmethod
     def get_class_combined_settings(cls, base_name, *settings):
@@ -161,20 +170,64 @@ class SettingMixin(object):
         :settings: the other settings files to override the base in order of precedence.
         """
         base = cls.get_class_default_settings(base_name)
-        combined = copy.copy(base)
+        combined = {}
+        combined.update(base)
 
-        for setting in settings:
-            for k,v in combined.items():
-                try:
-                    setting[k]
-                except KeyError:
-                    combined[k]['inherited'] = True
-                    combined[k]['inherited_value'] = combined[k]['value']
-                    combined[k]['value'] = None
-
-            combined.update(setting)
+        all_overrides = cls.combine_overrides(settings)
+        combined = cls.update_overrides(combined, all_overrides)
+        combined = cls.update_non_overrides(combined, all_overrides)
 
         return combined
+
+    @classmethod
+    def combine_overrides(cls, settings):
+        all_overrides = {}
+        for setting in settings:
+            all_overrides.update(setting)
+        return all_overrides
+
+    @classmethod
+    def update_overrides(cls, combined, all_overrides):
+        combined = copy.copy(combined)
+
+        for k,v in all_overrides.items():
+            # override
+            if k in combined:
+                if combined[k]['value'] != None:
+                    combined[k]['inherited_value'] = combined[k]['value']
+                # combined[k]['value'] = all_overrides[k]['value']
+                combined[k]['inherited_from'] = all_overrides[k]['inherited_from']
+            # append
+            else:
+                combined[k] = {}
+                # combined[k]['inherited_value'] = None # all_overrides[k]['value'] # debugging, but might not need this line??
+                combined[k]['value'] = all_overrides[k]['value']
+                combined[k]['inherited_from'] = all_overrides[k]['inherited_from']
+
+            # TEST
+            if k == 'welcome_text':
+                print("update_overrides", '\n', combined[k], '\n')
+
+        return combined
+
+    @classmethod
+    def update_non_overrides(cls, combined, all_overrides):
+        combined = copy.copy(combined)
+
+        for k,v in combined.items():
+            if k not in all_overrides:
+                combined[k]['inherited_value'] = combined[k]['value']
+                combined[k]['value'] = None
+
+            # TEST
+            if k == 'welcome_text':
+                print("update_non_overrides", '\n', combined[k], '\n')
+
+        return combined
+
+    @classmethod
+    def get_settings_name(cls):
+        raise NotImplementedError("Must implent 'get_settings_name' on the concrete class")
 
     @classmethod
     def get_all_class_settings(cls):

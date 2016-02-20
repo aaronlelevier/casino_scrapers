@@ -1,3 +1,4 @@
+import copy
 from datetime import timedelta
 import re
 
@@ -156,7 +157,7 @@ class Role(SettingMixin, BaseModel):
             self.default_auth_currency = Currency.objects.default()
 
         if not self.settings:
-            self.settings = DEFAULT_ROLE_SETTINGS
+            self.settings = copy.copy(DEFAULT_ROLE_SETTINGS)
 
     def _update_password_history_length(self):
         """
@@ -229,10 +230,23 @@ class Role(SettingMixin, BaseModel):
     # JSON settings
 
     @classmethod
+    def get_settings_name(cls):
+        return 'role'
+
+    @classmethod
     def get_class_default_settings(cls, name=None):
         if name == 'general':
-            return DEFAULT_GENERAL_SETTINGS
-        return DEFAULT_ROLE_SETTINGS
+            return copy.copy(DEFAULT_GENERAL_SETTINGS)
+        else:
+            return copy.copy(DEFAULT_ROLE_SETTINGS)
+
+    @classmethod
+    def get_all_class_settings_full(cls):
+        base = cls.get_class_default_settings('general')
+        role_settings = cls.get_class_default_settings()
+        combined = copy.copy(base)
+        combined.update(role_settings)
+        return combined
 
     @classmethod
     def get_all_class_settings(cls):
@@ -242,6 +256,9 @@ class Role(SettingMixin, BaseModel):
 
     def get_all_instance_settings(self):
         return type(self).get_class_combined_settings('general', self.settings)
+
+    def get_all_instance_settings_full(self):
+        return type(self).get_class_combined_settings_full('general', self.settings)
 
 
 class ProxyRole(BaseModel):

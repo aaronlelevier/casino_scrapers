@@ -1,3 +1,5 @@
+import copy
+
 from rest_framework import serializers
 
 from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer
@@ -57,7 +59,7 @@ class RoleDetailSerializer(BaseCreateSerializer):
         """
         GeneralSettings > RoleSettings = CombinedSettings
         """
-        data = super(RoleDetailSerializer, self).to_representation(instance)
+        init_data = super(RoleDetailSerializer, self).to_representation(instance)
         data['settings'] = Setting.get_class_combined_settings('general', data['settings'])
         return data
 

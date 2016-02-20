@@ -155,10 +155,6 @@ class SettingModelTests(TestCase):
     def test_get_all_class_settings(self):
         self.assertEqual(Setting.get_all_class_settings(), DEFAULT_GENERAL_SETTINGS)
 
-    def test_detail_api_keys(self):
-        ret = Setting.detail_api_keys()
-        self.assertEqual(ret, ['value', 'inherited_value', 'inherited_from'])
-
     def test_get_all_instance_settings(self):
         setting = create_general_setting()
         ret = setting.get_all_instance_settings()

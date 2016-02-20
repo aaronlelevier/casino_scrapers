@@ -99,29 +99,27 @@ class RemovePasswordSerializerMixin(object):
 class SettingSerializerMixin(object):
 
     def update(self, instance, validated_data):
-        all_settings = instance.get_all_instance_settings()
-        validated_data = self._validate_and_update_settings(all_settings, validated_data)
+        all_settings = instance.get_all_instance_settings_full()
+        validated_data = self.update_settings(all_settings, validated_data)
         return super(SettingSerializerMixin, self).update(instance, validated_data)
 
-    def _validate_and_update_settings(self, all_settings, validated_data):
+    def update_settings(self, all_settings, validated_data):
         name = validated_data.get('name')
         default_settings = self.Meta.model.get_class_default_settings(name)
         final_settings = copy.copy(default_settings)
-        default_settings_inherited_from = self._settings_inherited_from(default_settings)
+        settings_inherited_from = self.Meta.model.get_settings_name()
 
         for k,v in all_settings.items():
-
             try:
                 new_value = validated_data['settings'][k]
                 # to defend agains key's w/ no values that don't match the req'd type
-                # allow 'False' b/c still want to catch Boolean False's
-                if new_value is not None and new_value != all_settings[k]['value']:
-                    final_settings[k] = all_settings[k]
-                    final_settings[k].update({
-                        'value': new_value,
-                        'inherited': False,
-                        'inherited_from': default_settings_inherited_from
-                    })
+                # allow 'False' b/c still want to catch Boolean False's                
+                if new_value is not None:
+                    if k not in final_settings:
+                        final_settings[k] = {}
+
+                    final_settings[k]['value'] = new_value
+                    final_settings[k]['inherited_from'] = settings_inherited_from
             except KeyError:
                 # Silently pass b/c if a 'value' isn't being posted for
                 # a Role setting, we're going to use the default.
@@ -131,15 +129,6 @@ class SettingSerializerMixin(object):
 
         return validated_data
 
-    @staticmethod
-    def _settings_inherited_from(dct):
-        try:
-            return next(dct[d]['inherited_from'] for d in dct if dct[d]['inherited'] == False)
-        except StopIteration:
-            # not found, so return None.
-            # TODO: We should add logging for this in the future b/c this is an Error that we
-            # should never hit if the Default Settings are correctly configured in the models.
-            return
 
 ### Fields
 

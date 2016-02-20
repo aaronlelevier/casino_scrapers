@@ -10,6 +10,7 @@ from model_mommy import mommy
 from contact.models import Country
 from generic.models import Setting
 from generic.settings import DEFAULT_GENERAL_SETTINGS
+from generic.tests.factory import create_general_setting
 from person.models import PersonStatus, Role
 from person.settings import DEFAULT_ROLE_SETTINGS
 from person.tests.factory import create_single_person, create_role
@@ -164,26 +165,77 @@ class SettingMixinTests(TestCase):
         ret = SettingMixin.get_class_default_settings('role')
         self.assertEqual(DEFAULT_ROLE_SETTINGS, ret)
 
-    def test_get_combined_settings_file__not_inherited(self):
-        role_settings = SettingMixin.get_class_default_settings('role')
-
-        ret = Setting.get_class_combined_settings('general', role_settings)
-
-        self.assertFalse(ret['create_all']['inherited'])
-        self.assertIsNone(ret['create_all']['inherited_value'])
-        self.assertEqual(ret['create_all']['value'], role_settings['create_all']['value'])
-        self.assertEqual(ret['create_all']['inherited_from'], role_settings['create_all']['inherited_from'])
-
     def test_get_combined_settings_file__inherited(self):
         role_settings = SettingMixin.get_class_default_settings('role')
 
         ret = Setting.get_class_combined_settings('general', role_settings)
 
-        self.assertTrue(ret['welcome_text']['inherited'])
+        self.assertIsNone(ret['welcome_text']['value'])
+        self.assertEqual(ret['welcome_text']['inherited_value'], 'Welcome')
+        self.assertEqual(ret['welcome_text']['inherited_from'], 'general')
+
+    def test_get_combined_settings_file__append(self):
+        role_settings = SettingMixin.get_class_default_settings('role')
+
+        ret = Setting.get_class_combined_settings('general', role_settings)
+
+        self.assertEqual(ret['create_all']['value'], role_settings['create_all']['value'])
+        self.assertIsNone(ret['create_all']['inherited_value'])
+        self.assertEqual(ret['create_all']['inherited_from'], role_settings['create_all']['inherited_from'])
+
+    def test_get_combined_settings_file__override(self):
+        role_settings = SettingMixin.get_class_default_settings('role')
+
+        ret = Setting.get_class_combined_settings('general', role_settings)
+
         self.assertEqual(ret['welcome_text']['inherited_value'], DEFAULT_GENERAL_SETTINGS['welcome_text']['value'])
         self.assertIsNone(ret['welcome_text']['value'])
         self.assertEqual(ret['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
 
+    def test_combine_overrides(self):
+        settings = [{'a':'b'}, {'c':'d'}]
+        # raw
+        all_overrides = {}
+        for setting in settings:
+            all_overrides.update(setting)
+
+        ret = SettingMixin.combine_overrides(settings)
+
+        self.assertEqual(ret, all_overrides)
+
+    def test_update_overrides(self):
+        combined = SettingMixin.get_class_default_settings('general')
+        all_overrides = SettingMixin.get_class_default_settings('role')
+        
+        ret = SettingMixin.update_overrides(combined, all_overrides)
+
+        for k,v in all_overrides.items():
+            # override
+            if k in combined:
+                self.assertEqual(ret[k]['inherited_value'], combined[k]['value'])
+                self.assertEqual(ret[k]['value'], all_overrides[k]['value'])
+                self.assertEqual(ret[k]['inherited_from'], all_overrides[k]['inherited_from'])
+            # append
+            else:
+                self.assertIsNone(ret[k]['inherited_value'])
+                self.assertEqual(ret[k]['value'], all_overrides[k]['value'])
+                self.assertEqual(ret[k]['inherited_from'], all_overrides[k]['inherited_from'])
+
+    def test_update_non_overrides(self):
+        combined = SettingMixin.get_class_default_settings('general')
+        all_overrides = SettingMixin.get_class_default_settings('role')
+        
+        ret = SettingMixin.update_non_overrides(combined, all_overrides)
+
+        for k,v in ret.items():
+            if k not in all_overrides:
+                self.assertEqual(ret[k]['inherited_value'], combined[k]['value'])
+                self.assertIsNone(ret[k]['value'])
+
+    def test_get_settings_name(self):
+        with self.assertRaises(NotImplementedError):
+            SettingMixin.get_settings_name()
+        
     def test_get_all_class_settings(self):
         with self.assertRaises(NotImplementedError):
             SettingMixin.get_all_class_settings()

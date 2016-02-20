@@ -212,9 +212,8 @@ class Setting(SettingMixin, BaseNameModel):
     def get_all_class_settings(cls):
         return cls.get_class_default_settings('general')
 
-    @classmethod
-    def detail_api_keys(cls):
-        return ['value', 'inherited_value', 'inherited_from']
-
     def get_all_instance_settings(self):
+        return self.settings
+
+    def get_all_instance_settings_full(self):
         return self.settings

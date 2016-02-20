@@ -306,8 +306,7 @@ class SettingTests(APITestCase):
         self.assertEqual(data['name'], general_setting.name)
         # settings
         for key in DEFAULT_GENERAL_SETTINGS.keys():
-            self.assertEqual(len(data['settings'][key]), 3)
-            for field in ['value', 'inherited_value', 'inherited_from']:
+            for field in ['value', 'inherited_from']:
                 self.assertEqual(data['settings'][key][field], DEFAULT_GENERAL_SETTINGS[key][field])
 
     def test_create__does_not_have_settings(self):
@@ -337,5 +336,4 @@ class SettingTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         # welcome_text
         self.assertEqual(data['settings']['welcome_text']['value'], new_welcome_text)
-        self.assertIsNone(data['settings']['welcome_text']['inherited_value'])
-        self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
+        self.assertEqual(data['settings']['welcome_text']['inherited_from'], 'general')

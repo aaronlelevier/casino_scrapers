@@ -1,32 +1,44 @@
 [
 {
   "model": "generic.setting",
-  "pk": "fc7b06a8-2eae-402f-90bb-9dca4a72ab95",
+  "pk": "e009579a-535e-439c-a3bf-7f127599a0d4",
   "fields": {
-    "created": "2016-02-05T18:17:15.728Z",
-    "modified": "2016-02-05T18:17:15.728Z",
+    "created": "2016-02-18T23:06:48.103Z",
+    "modified": "2016-02-18T23:06:48.104Z",
     "deleted": null,
     "name": "general",
     "settings": {
-      "login_grace": {
-        "required": true,
-        "type": "int",
-        "value": 1
-      },
-      "welcome_text": {
-        "required": false,
-        "type": "str",
-        "value": "Welcome"
-      },
       "company_name": {
-        "required": false,
+        "inherited_from": "general",
+        "inherited_value": null,
+        "inherited": false,
         "type": "str",
+        "required": false,
         "value": "Andy's Pianos"
       },
-      "create_all": {
+      "login_grace": {
+        "inherited_from": "general",
+        "inherited_value": null,
+        "inherited": false,
+        "type": "int",
         "required": true,
-        "type": "bool",
-        "value": true
+        "value": 1
+      },
+      "modules": {
+        "inherited_from": "general",
+        "inherited_value": null,
+        "inherited": false,
+        "type": "list",
+        "required": true,
+        "value": []
+      },
+      "welcome_text": {
+        "inherited_from": "general",
+        "inherited_value": null,
+        "inherited": false,
+        "type": "str",
+        "required": false,
+        "value": "Welcome"
       }
     }
   }

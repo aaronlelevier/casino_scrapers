@@ -56,6 +56,9 @@ class RoleTests(TestCase):
 
     # JSON settings
 
+    def test_get_settings_name(self):
+        self.assertEqual(Role.get_settings_name(), 'role')
+
     def test_get_class_default_settings(self):
         ret = Role.get_class_default_settings()
         self.assertEqual(ret, DEFAULT_ROLE_SETTINGS)
@@ -70,6 +73,17 @@ class RoleTests(TestCase):
 
         ret = Role.get_all_class_settings()
 
+        for k,v in ret.items():
+            self.assertEqual(len(v), 3)
+            for key in Role.detail_api_keys():
+                self.assertEqual(ret[k][key], combined[k][key])
+
+    def test_get_all_class_settings_full(self):
+        combined = copy.copy(DEFAULT_GENERAL_SETTINGS)
+        combined.update(DEFAULT_ROLE_SETTINGS)
+
+        ret = Role.get_all_class_settings_full()
+
         self.assertEqual(ret, combined)
 
     def test_get_all_instance_settings(self):
@@ -78,6 +92,15 @@ class RoleTests(TestCase):
         ret = self.role.get_all_instance_settings()
 
         self.assertEqual(ret, raw_combined_settings)
+
+    def test_get_all_instance_settings_full(self):
+        role = create_role()
+        combined = copy.copy(DEFAULT_GENERAL_SETTINGS)
+        combined.update(role.settings)
+
+        ret = self.role.get_all_instance_settings_full()
+
+        self.assertEqual(ret, combined)
 
 
 class RolePasswordTests(TestCase):
