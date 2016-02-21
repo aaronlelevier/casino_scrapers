@@ -133,10 +133,9 @@ class CategoryDetailTests(APITestCase):
         self.assertIsInstance(child, dict)
         self.assertEqual(child['id'], str(category.children.first().id))
         self.assertEqual(child['name'], category.children.first().name)
-        self.assertIn('parent', child)
-        self.assertIn('children_fks', child)
+        self.assertIn('level', child)
         self.assertNotIn('children', child)
-        self.assertIsInstance(child['children_fks'], list)
+        self.assertNotIn('parent', child)
 
     def test_parents_have_children(self):
         response = self.client.get('/api/admin/categories/{}/'.format(self.type.id))

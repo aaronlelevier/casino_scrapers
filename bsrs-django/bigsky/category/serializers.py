@@ -45,6 +45,12 @@ class CategoryIDNameSerializer(BaseCreateSerializer):
         data['children_fks'] = data.pop('children', [])
         return data
 
+class CategoryChildrenSerializer(BaseCreateSerializer):
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name', 'level',)
+
 
 class CategoryRoleSerializer(BaseCreateSerializer):
 
@@ -75,7 +81,7 @@ class CategoryListSerializer(BaseCreateSerializer):
 class CategoryDetailSerializer(BaseCreateSerializer):
 
     parent = CategoryIDNameSerializer(read_only=True)
-    children = CategoryIDNameSerializer(many=True, read_only=True)
+    children = CategoryChildrenSerializer(many=True, read_only=True)
 
     class Meta:
         model = Category
