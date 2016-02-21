@@ -37,7 +37,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
         }
     },
     factory.prototype.children = function() {
-        return [{id: this.category_defaults.idChild, name: this.category_defaults.nameTwo, description: this.category_defaults.descriptionMaintenance}];
+        return [{id: this.category_defaults.idChild, name: this.category_defaults.nameTwo, level: 1}];
     },
     factory.prototype.top_level = function() {
         var parent_one = this.get(this.category_defaults.idOne);
