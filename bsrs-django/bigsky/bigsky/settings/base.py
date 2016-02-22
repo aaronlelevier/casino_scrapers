@@ -17,8 +17,8 @@ AUTH_USER_MODEL = 'person.Person'
 ### Application definition ###
 DEFAULT_APPS = [
     'django.contrib.admin',
-    'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.auth',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
@@ -198,10 +198,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'utils.pagination.StandardPagination',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
-    ),
-    # 'DEFAULT_FILTER_BACKENDS': (
-    #     'rest_framework_filters.backends.DjangoFilterBackend',
-    # )
+    )
 }
 
 CORS_ALLOW_CREDENTIALS = True

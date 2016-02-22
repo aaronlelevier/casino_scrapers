@@ -2,10 +2,8 @@
 Django==1.9.2
 django-cors-headers==1.1.0
 django-extensions==1.6.1
-django-filter==0.10.0
 django-fsm==2.3.0
 djangorestframework==3.3.1
-djangorestframework-filters==0.4.0
 django-debug-toolbar==1.4
 model-mommy==1.2.6
 
