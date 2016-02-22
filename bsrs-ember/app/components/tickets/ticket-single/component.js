@@ -15,18 +15,18 @@ var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMi
     assigneeValidation: validate('model.assignee'),
     locationValidation: validate('model.location'),
     actions: {
-        save() {
+        save(update=false) {
             this.set('submitted', true);
             if (this.all_components_valid()) {
-                this._super();
+                this._super(update);
             }
         },
-        update() {
-            this.set('submitted', true);
-            if (this.all_components_valid()) {
-                this._super();
-            }
-        }
+        // update() {
+        //     this.set('submitted', true);
+        //     if (this.all_components_valid()) {
+        //         this._super('ab');
+        //     }
+        // }
     } 
 });
 

@@ -36,7 +36,7 @@
                             </div>
                         </section>
                     </div>
-                    {{tickets/ticket-comments-and-file-upload model=model priorities=priorities statuses=statuses save=(action "update")}}
+                    {{tickets/ticket-comments-and-file-upload model=model priorities=priorities statuses=statuses save=(action "save" "update")}}
                   </div>
                 {{activity-list model=activities}}
             </section>
