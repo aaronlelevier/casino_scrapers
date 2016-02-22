@@ -17,8 +17,8 @@ AUTH_USER_MODEL = 'person.Person'
 ### Application definition ###
 DEFAULT_APPS = [
     'django.contrib.admin',
-    'django.contrib.contenttypes',
     'django.contrib.auth',
+    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
