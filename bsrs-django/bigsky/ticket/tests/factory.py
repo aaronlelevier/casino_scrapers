@@ -2,6 +2,8 @@ import random
 import sys
 import uuid
 
+from django.conf import settings
+
 from model_mommy import mommy
 
 from category.models import Category
@@ -29,10 +31,13 @@ def _create_ticket(request=None, assignee=None):
     request = request or _generate_chars()
     assignee = assignee or random.choice(people)
 
+    status = get_or_create_ticket_status()
+    priority = get_or_create_ticket_priority()
+
     kwargs = {
         'location': assignee.locations.first(),
-        'status': TicketStatus.objects.default(),
-        'priority': TicketPriority.objects.default(),
+        'status': status,
+        'priority': priority,
         'requester': _generate_chars(),
         'assignee': assignee,
         'request': request
@@ -48,6 +53,21 @@ def _create_ticket(request=None, assignee=None):
     ticket.cc.add(cc)
 
     return ticket
+
+
+def get_or_create_ticket_status():
+    return get_or_create_ticket_related_model(TicketStatus, settings.DEFAULTS_TICKET_STATUS)
+
+
+def get_or_create_ticket_priority():
+    return get_or_create_ticket_related_model(TicketPriority, TICKET_PRIORITIES[0])
+
+
+def get_or_create_ticket_related_model(model, name):
+    if not model.objects.filter(name=name).exists():
+        return model.objects.default()
+    else:
+        return model.objects.order_by('?')[0]
 
 
 def create_ticket(request=None, assignee=None):

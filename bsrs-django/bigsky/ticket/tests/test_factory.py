@@ -1,5 +1,6 @@
 import sys
 
+from django.conf import settings
 from django.test import TestCase
 
 from category.models import Category
@@ -30,9 +31,11 @@ class CreateTicketTests(TestCase):
 
     def test_status(self):
         self.assertIsInstance(self.ticket.status, TicketStatus)
+        self.assertEqual(self.ticket.status, TicketStatus.objects.default())
 
     def test_priority(self):
         self.assertIsInstance(self.ticket.priority, TicketPriority)
+        self.assertEqual(self.ticket.priority, TicketPriority.objects.default())
 
     def test_assignee(self):
         self.assertIsInstance(self.ticket.assignee, Person)
@@ -52,6 +55,45 @@ class CreateTicketTests(TestCase):
 
     def test_number(self):
         self.assertIsInstance(self.ticket.number, int)
+
+
+class GetOrCreateTicketStatusAndPriorityTests(TestCase):
+
+    # status
+
+    def test_get_or_create_ticket_status(self):
+        self.assertFalse(TicketStatus.objects.filter(name=settings.DEFAULTS_TICKET_STATUS).exists())
+
+        status = factory.get_or_create_ticket_status()
+
+        self.assertEqual(status, TicketStatus.objects.default())
+
+    def test_get_or_create_ticket_status__default_exists(self):
+        factory.create_ticket_statuses()
+        self.assertTrue(TicketStatus.objects.filter(name=settings.DEFAULTS_TICKET_STATUS).exists())
+
+        status = factory.get_or_create_ticket_status()
+
+        self.assertIsInstance(status, TicketStatus)
+        self.assertTrue(TicketStatus.objects.count() > 0)
+
+        # priority
+
+    def test_get_or_create_ticket_priority(self):
+        self.assertFalse(TicketPriority.objects.filter(name=TICKET_PRIORITIES[0]).exists())
+
+        priority = factory.get_or_create_ticket_priority()
+
+        self.assertEqual(priority, TicketPriority.objects.default())
+
+    def test_get_or_create_ticket_priority__default_exists(self):
+        factory.create_ticket_priorities()
+        self.assertTrue(TicketPriority.objects.filter(name=TICKET_PRIORITIES[0]).exists())
+
+        priority = factory.get_or_create_ticket_priority()
+
+        self.assertIsInstance(priority, TicketPriority)
+        self.assertTrue(TicketPriority.objects.count() > 0)
 
 
 class CreateTicketKwargTests(TestCase):
