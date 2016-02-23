@@ -6,8 +6,8 @@ var SettingModel = Model.extend({
     company_name: attr(''),
     welcome_text: attr(''),
     login_grace: attr(''),
-    translated_title: Ember.computed('title', function(){
-        return this.get('title') ? this.get('i18n').t(this.get('title')) : '';
+    translated_title: Ember.computed(function(){
+        return this.get('i18n').t('admin.general', { count: 2 });
     }),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
         return this.get('isDirty');
