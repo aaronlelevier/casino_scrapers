@@ -1,6 +1,5 @@
 import copy
 import json
-from mock import patch
 import uuid
 
 from django.test import TestCase
@@ -25,7 +24,6 @@ from person.tests.mixins import RoleSetupMixin
 from setting.models import Setting
 from setting.serializers import SettingSerializer
 from setting.settings import DEFAULT_GENERAL_SETTINGS
-from setting.tests.factory import create_general_setting
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from utils import create, choices
@@ -138,19 +136,18 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         self.assertNotIn('settings', data['results'][0])
 
     def test_detail(self):
-        with patch.dict(DEFAULT_GENERAL_SETTINGS, {'welcome_text': {'value': "Welcome", 'type': 'str', 'inherited_from': 'general'}}, clear=True):
-            response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
-            self.assertEqual(response.status_code, 200)
-            data = json.loads(response.content.decode('utf8'))
-           
-            # inherited
-            self.assertIsNone(data['settings']['welcome_text']['value'])
-            self.assertEqual(data['settings']['welcome_text']['inherited_value'], 'Welcome')
-            self.assertEqual(data['settings']['welcome_text']['inherited_from'], 'general')
-            # non-inherited
-            self.assertEqual(data['settings']['create_all']['value'], DEFAULT_ROLE_SETTINGS['create_all']['value'])
-            self.assertIsNone(data['settings']['create_all']['inherited_value'])
-            self.assertEqual(data['settings']['create_all']['inherited_from'], 'role')
+        response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+       
+        # inherited
+        self.assertIsNone(data['settings']['welcome_text']['value'])
+        self.assertEqual(data['settings']['welcome_text']['inherited_value'], 'Welcome')
+        self.assertEqual(data['settings']['welcome_text']['inherited_from'], 'general')
+        # non-inherited
+        self.assertEqual(data['settings']['create_all']['value'], DEFAULT_ROLE_SETTINGS['create_all']['value'])
+        self.assertIsNone(data['settings']['create_all']['inherited_value'])
+        self.assertEqual(data['settings']['create_all']['inherited_from'], 'role')
 
     def test_update(self):
         role = create_role()
@@ -160,12 +157,11 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         raw_data['settings'] = {k: 'new dashboard text'}
 
         # detail
-        with patch.dict(DEFAULT_GENERAL_SETTINGS, {'welcome_text': {'value': "Welcome", 'type': 'str', 'inherited_from': 'general'}}, clear=True):
-            response = self.client.get('/api/admin/roles/{}/'.format(role.id))
-            data = json.loads(response.content.decode('utf8'))
-            self.assertIsNone(data['settings']['welcome_text']['value'])
-            self.assertEqual(data['settings']['welcome_text']['inherited_value'],  'Welcome')
-            self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
+        response = self.client.get('/api/admin/roles/{}/'.format(role.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertIsNone(data['settings']['welcome_text']['value'])
+        self.assertEqual(data['settings']['welcome_text']['inherited_value'],  'Welcome')
+        self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
 
         response = self.client.put('/api/admin/roles/{}/'.format(role.id), raw_data, format='json')
 
@@ -174,12 +170,11 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['settings']['welcome_text']['value'], raw_data['settings']['welcome_text'])
         # get
-        with patch.dict(DEFAULT_GENERAL_SETTINGS, {'welcome_text': {'value': "Welcome", 'type': 'str', 'inherited_from': 'general'}}, clear=True):
-            response = self.client.get('/api/admin/roles/{}/'.format(role.id))
-            data = json.loads(response.content.decode('utf8'))
-            self.assertEqual(data['settings']['welcome_text']['value'], raw_data['settings']['welcome_text'])
-            self.assertEqual(data['settings']['welcome_text']['inherited_value'],  'Welcome')
-            self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
+        response = self.client.get('/api/admin/roles/{}/'.format(role.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings']['welcome_text']['value'], raw_data['settings']['welcome_text'])
+        self.assertEqual(data['settings']['welcome_text']['inherited_value'],  'Welcome')
+        self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
 
     def test_update__general_and_then_reflected_in_role(self):
         role = create_role()
@@ -190,12 +185,11 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         raw_data['settings'] = {k: new_value}
 
         # detail
-        with patch.dict(DEFAULT_GENERAL_SETTINGS, {'welcome_text': {'value': "Welcome", 'type': 'str', 'inherited_from': 'general'}}, clear=True):
-            response = self.client.get('/api/admin/roles/{}/'.format(role.id))
-            data = json.loads(response.content.decode('utf8'))
-            self.assertIsNone(data['settings']['welcome_text']['value'])
-            self.assertEqual(data['settings']['welcome_text']['inherited_value'],  'Welcome')
-            self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
+        response = self.client.get('/api/admin/roles/{}/'.format(role.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertIsNone(data['settings']['welcome_text']['value'])
+        self.assertEqual(data['settings']['welcome_text']['inherited_value'],  'Welcome')
+        self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
 
         response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id), raw_data, format='json')
 
@@ -207,12 +201,11 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         setting = Setting.objects.get(id=self.setting.id)
         self.assertEqual(setting.settings['welcome_text']['value'], new_value)
         # get
-        with patch.dict(DEFAULT_GENERAL_SETTINGS, {'welcome_text': {'value': new_value, 'type': 'str', 'inherited_from': 'general'}}, clear=True):
-            response = self.client.get('/api/admin/roles/{}/'.format(role.id))
-            data = json.loads(response.content.decode('utf8'))
-            self.assertIsNone(data['settings']['welcome_text']['value'])
-            self.assertEqual(data['settings']['welcome_text']['inherited_value'], raw_data['settings']['welcome_text'])
-            self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
+        response = self.client.get('/api/admin/roles/{}/'.format(role.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertIsNone(data['settings']['welcome_text']['value'])
+        self.assertEqual(data['settings']['welcome_text']['inherited_value'], raw_data['settings']['welcome_text'])
+        self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
 
 
 ### PERSON ###

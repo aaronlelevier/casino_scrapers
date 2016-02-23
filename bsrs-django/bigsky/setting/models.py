@@ -1,7 +1,6 @@
 import copy
 
 from django.contrib.postgres.fields import JSONField
-from django.db import models
 
 from setting.settings import DEFAULT_GENERAL_SETTINGS
 from utils.models import BaseNameModel, SettingMixin
@@ -13,6 +12,13 @@ class Setting(SettingMixin, BaseNameModel):
     at levels. ex - Location, Role, User.
     '''
     settings = JSONField(blank=True, default={})
+
+    def get_class_default_settings(self, name=None):
+        try:
+            setting = Setting.objects.get(name='general')
+            return copy.copy(setting.settings)
+        except Setting.DoesNotExist:
+            return copy.copy(DEFAULT_GENERAL_SETTINGS)
 
     @classmethod
     def get_settings_name(cls):

@@ -1,9 +1,7 @@
-import copy
 import re
 
 from rest_framework.exceptions import ValidationError
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext_lazy as _
 
 

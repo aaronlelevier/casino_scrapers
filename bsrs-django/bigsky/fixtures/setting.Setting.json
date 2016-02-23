@@ -1,6 +1,6 @@
 [
 {
-  "model": "generic.setting",
+  "model": "setting.setting",
   "pk": "e009579a-535e-439c-a3bf-7f127599a0d4",
   "fields": {
     "created": "2016-02-18T23:06:48.103Z",

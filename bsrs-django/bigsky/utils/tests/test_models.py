@@ -1,6 +1,3 @@
-import copy
-from mock import patch
-
 from django.test import TestCase, TransactionTestCase
 from django.utils import timezone
 from django.contrib.auth.models import ContentType, Permission
@@ -9,12 +6,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from model_mommy import mommy
 
 from contact.models import Country
-from person.models import PersonStatus, Role
+from person.models import PersonStatus
 from person.settings import DEFAULT_ROLE_SETTINGS
 from person.tests.factory import create_single_person, create_role
-from setting.models import Setting
 from setting.settings import DEFAULT_GENERAL_SETTINGS
-from setting.tests.factory import create_general_setting
 from utils import create
 from utils.models import Tester, SettingMixin
 from utils.permissions import perms_map
@@ -189,39 +184,12 @@ class SettingMixinTests(TestCase):
 
     def test_get_combined_settings_file__inherited(self):
         k = 'welcome_text'
-        with patch.dict(DEFAULT_GENERAL_SETTINGS, {k: {'value': "Welcome", 'type': 'str', 'inherited_from': 'general'}}, clear=True):
-            ret = self.settings.get_class_combined_settings('general', DEFAULT_ROLE_SETTINGS)
+        # with patch.dict(DEFAULT_GENERAL_SETTINGS, {k: {'value': "Welcome", 'type': 'str', 'inherited_from': 'general'}}, clear=True):
+        ret = self.settings.get_class_combined_settings('general', DEFAULT_ROLE_SETTINGS)
 
-            self.assertIsNone(ret['welcome_text']['value'])
-            self.assertEqual(ret['welcome_text']['inherited_value'], 'Welcome')
-            self.assertEqual(ret['welcome_text']['inherited_from'], 'general')
-
-    def test_get_combined_settings_file__override(self):
-        k = 'welcome_text'
-        override  = {k: {'value': "foo", 'type': 'str', 'inherited_from': 'override'}}
-
-        with patch.dict(DEFAULT_GENERAL_SETTINGS, {k: {'value': "Welcome", 'type': 'str', 'inherited_from': 'general'}}, clear=True):
-            ret = self.settings.get_class_combined_settings('general', override)
-
-        self.assertEqual(ret['welcome_text']['inherited_value'], 'Welcome')
-        self.assertEqual(ret['welcome_text']['value'], 'foo')
-        self.assertEqual(ret['welcome_text']['inherited_from'], 'general')
-
-    def test_get_combined_settings_file__append(self):
-        k = 'welcome_text'
-        override  = {'create_all': {'value': "foo", 'type': 'str', 'inherited_from': 'override'}}
-
-        with patch.dict(DEFAULT_GENERAL_SETTINGS, {k: {'value': "Welcome", 'type': 'str', 'inherited_from': 'general'}}, clear=True):
-            ret = self.settings.get_class_combined_settings('general', override)
-
-        # not overrode
-        self.assertEqual(ret['welcome_text']['inherited_value'], 'Welcome')
         self.assertIsNone(ret['welcome_text']['value'])
+        self.assertEqual(ret['welcome_text']['inherited_value'], 'Welcome')
         self.assertEqual(ret['welcome_text']['inherited_from'], 'general')
-        # appended
-        self.assertEqual(ret['create_all']['value'], 'foo')
-        self.assertIsNone(ret['create_all']['inherited_value'])
-        self.assertEqual(ret['create_all']['inherited_from'], 'override')
 
     def test_combine_overrides(self):
         settings = [{'a':'b'}, {'c':'d'}]

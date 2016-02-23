@@ -1,5 +1,3 @@
-import copy
-
 from rest_framework import serializers
 
 from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer

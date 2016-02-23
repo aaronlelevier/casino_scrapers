@@ -9,7 +9,7 @@ from rest_framework.test import APITestCase
 from accounting.models import Currency
 from accounting.serializers import CurrencySerializer
 from location.models import LocationLevel
-from location.tests.factory import create_location, create_location_level
+from location.tests.factory import create_location
 from person.models import Person
 from person.tests.factory import create_single_person, create_role, create_roles, PASSWORD
 from utils import create

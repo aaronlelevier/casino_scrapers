@@ -6,13 +6,11 @@ dropdb ci
 wait
 createdb ci
 wait
-./manage.py makemigrations accounting category contact generic location person session third_party ticket translation utils work_order work_request
-wait
 ./manage.py migrate
 wait
 ./manage.py loaddata fixtures/contact.Country.json
 ./manage.py loaddata fixtures/contact.State.json
-./manage.py loaddata fixtures/generic.Setting.json
+./manage.py loaddata fixtures/setting.Setting.json
 ./manage.py loaddata fixtures/translation.json
 ./manage.py loaddata fixtures/accounting.Currency.json
 ./manage.py loaddata fixtures/contact.EmailType.json

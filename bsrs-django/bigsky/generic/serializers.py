@@ -1,8 +1,7 @@
 import copy
 
 from generic.models import SavedSearch, Attachment
-from utils.serializers import BaseCreateSerializer, SettingSerializerMixin
-from utils.validators import SettingsValidator
+from utils.serializers import BaseCreateSerializer
 
 
 class SavedSearchSerializer(BaseCreateSerializer):
