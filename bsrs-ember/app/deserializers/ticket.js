@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 import { belongs_to_extract, belongs_to_extract_nodetail } from 'bsrs-components/repository/belongs-to';
+import { many_to_many_extract } from 'bsrs-components/repository/many-to-many';
 
 const { run } = Ember;
 
@@ -11,75 +12,11 @@ var extract_attachments = function(model, store) {
     return model.attachments;
 };
 
-var extract_categories = function(category_json, store, category_deserializer, ticket) {
-    let server_sum = [];
-    let m2m_categories = [];
-    let categories = [];
-    const category_ids = category_json.mapBy('id');
-    const ticket_categories = ticket.get('ticket_categories') || [];
-    const ticket_categories_pks = ticket_categories.mapBy('category_pk');
-    const ticket_id = ticket.get('id');
-    for (let i = category_json.length-1; i >= 0; i--){
-        const pk = Ember.uuid();
-        const cat = category_json[i];
-        cat.previous_children_fks = cat.children_fks;
-        const existing_category = store.find('category', cat.id);
-        if(!existing_category.get('content')){
-            categories.push(cat);
-        }
-        if(Ember.$.inArray(cat.id, ticket_categories_pks) < 0){
-            server_sum.push(pk);
-            m2m_categories.push({id: pk, ticket_pk: ticket_id, category_pk: cat.id});
-        }
-    }
-    ticket_categories.forEach((m2m) => {
-        if(Ember.$.inArray(m2m.get('category_pk'), category_ids) > -1){
-            server_sum.push(m2m.id);
-            return;
-        }else if(Ember.$.inArray(m2m.get('category_pk'), category_ids) < 0){
-           m2m_categories.push({id: m2m.get('id'), removed: true});
-        }
-    });
-    return [m2m_categories, categories, server_sum, category_ids];
-};
-
 var extract_assignee = function(assignee_json, store, ticket_model) {
     let assignee_id = assignee_json.id;
     if(ticket_model.get('assignee.id') !== assignee_id) {
         ticket_model.change_assignee(assignee_json);
     }
-};
-
-var extract_cc = function(cc_json, store, ticket) {
-    let server_sum = [];
-    let prevented_duplicate_m2m = [];
-    let all_ticket_people = store.find('ticket-person');
-    cc_json.forEach((cc) => {
-        //find one ticket-person model from store
-        let ticket_people = all_ticket_people.filter((m2m) => {
-            return m2m.get('person_pk') === cc.id && m2m.get('ticket_pk') === ticket.get('id');
-        });
-        //push new one in
-        if(ticket_people.length === 0) {
-            const pk = Ember.uuid();
-            server_sum.push(pk);
-            run(() => {
-                store.push('ticket-person', {id: pk, ticket_pk: ticket.get('id'), person_pk: cc.id});  
-            });
-            ticket.person_status_role_setup(cc);
-        }else{
-            //check 
-            prevented_duplicate_m2m.push(ticket_people[0].get('id'));
-        }
-    });
-    server_sum.push(...prevented_duplicate_m2m);
-    let m2m_to_remove = all_ticket_people.filter((m2m) => {
-        return Ember.$.inArray(m2m.get('id'), server_sum) < 0 && m2m.get('ticket_pk') === ticket.get('id');
-    });
-    m2m_to_remove.forEach((m2m) => {
-        store.push('ticket-person', {id: m2m.get('id'), removed: true});
-    });
-    store.push('ticket', {id: ticket.get('id'), ticket_people_fks: server_sum});
 };
 
 var extract_ticket_location = function(location_json, store, ticket) {
@@ -106,8 +43,6 @@ var TicketDeserializer = Ember.Object.extend({
     deserialize_single(response, id, category_deserializer) {
         let store = this.get('store');
         let existing_ticket = store.find('ticket', id);
-        let m2m_categories = [];
-        let categories = [];
         let return_ticket = existing_ticket;
         if (!existing_ticket.get('id') || existing_ticket.get('isNotDirtyOrRelatedNotDirty')) {
             let location_json = response.location;
@@ -125,31 +60,46 @@ var TicketDeserializer = Ember.Object.extend({
             delete response.categories;
             response.detail = true;
             let ticket = store.push('ticket', response);
+            //TODO: only returns one variable
             const [location_fk, ticket_location_json] = extract_ticket_location(location_json, store, ticket);
             belongs_to_extract(response.status_fk, store, ticket, 'status', 'general', 'tickets');
             belongs_to_extract(response.priority_fk, store, ticket, 'priority', 'ticket', 'tickets');
-            //TODO: do I need these if statements
-            if (cc_json) {
-                extract_cc(cc_json, store, ticket);
-            }
             if (assignee_json) {
                 extract_assignee(assignee_json, store, ticket);
             }
-            let categories_arr;
-            let server_sum;
-            [m2m_categories, categories_arr, server_sum] = extract_categories(categories_json, store, category_deserializer, ticket);
-            categories.push(...categories_arr);
+            let [m2m_ccs, ccs, cc_server_sum] = many_to_many_extract(cc_json, store, ticket, 'ticket_cc', 'ticket_pk', 'person', 'person_pk');
+            let [m2m_categories, categories, server_sum] = many_to_many_extract(categories_json, store, ticket, 'ticket_categories', 'ticket_pk', 'category', 'category_pk');
+            categories.forEach((cat) => {
+            });
             run(() => {
                 if(ticket_location_json){
                     ticket.change_location(ticket_location_json);
                 }
                 categories.forEach((cat) => {
-                    store.push('category', cat); 
+                    const children_json = cat.children;
+                    delete cat.children;
+                    const category = store.push('category', cat); 
+                    if(children_json){
+                        let [m2m_children, children, server_sum] = many_to_many_extract(children_json, store, category, 'category_children', 'category_pk', 'category', 'child_pk');
+                        children.forEach((cat) => {
+                            store.push('category', cat); 
+                        });
+                        m2m_children.forEach((m2m) => {
+                            store.push('category-children', m2m);
+                        });
+                        store.push('category', {id: cat.id, category_children_fks: server_sum}); 
+                    }
                 });
                 m2m_categories.forEach((m2m) => {
                     store.push('ticket-category', m2m);
                 });
-                const pushed_ticket = store.push('ticket', {id: response.id, ticket_categories_fks: server_sum}); 
+                ccs.forEach((cc) => {
+                    store.push('person', cc); 
+                });
+                m2m_ccs.forEach((m2m) => {
+                    store.push('ticket-person', m2m);
+                });
+                const pushed_ticket = store.push('ticket', {id: response.id, ticket_people_fks: cc_server_sum, ticket_categories_fks: server_sum}); 
                 pushed_ticket.save();
             });
             return_ticket = ticket;

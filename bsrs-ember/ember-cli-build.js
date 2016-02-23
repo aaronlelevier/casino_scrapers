@@ -44,6 +44,7 @@ module.exports = function(defaults) {
       app.import('vendor/translation_fixtures.js');
       app.import('vendor/defaults/address-type.js');
       app.import('vendor/defaults/address.js');
+      app.import('vendor/defaults/category-children.js');
       app.import('vendor/defaults/country.js');
       app.import('vendor/defaults/currencies.js');
       app.import('vendor/defaults/category.js');

@@ -1,24 +1,14 @@
 import Ember from 'ember';
+import { many_to_many_extract } from 'bsrs-components/repository/many-to-many';
 
 var extract_tree = function(model, store) {
-    let children_fks = [];
-    let children = model.children;
-    if (children) {
-        children.forEach((child_model) => {
-            children_fks.push(child_model.id);
-            delete child_model.parent;
-            child_model.parent_id = model.id;
-            store.push('category', child_model);
-        });
-    }
     let parent_id;
     let parent = model.parent;
     if (parent) {
         parent_id = parent.id ? parent.id : parent;
     }
     delete model.parent;
-    delete model.children;
-    return [children_fks, parent_id];
+    return [parent_id];
 };
 
 var CategoryDeserializer = Ember.Object.extend({
@@ -31,18 +21,24 @@ var CategoryDeserializer = Ember.Object.extend({
     },
     deserialize_single(response, id) {
         const store = this.get('store');
-        const existing_category = store.find('category', id);
-        let category = existing_category;
-        if (!existing_category.get('id') || existing_category.get('isNotDirtyOrRelatedNotDirty')) {
-            let temp = response.children_fks || [];
-            [response.children_fks, response.parent_id] = extract_tree(response, store);
-            if(response.children_fks.length < 1) {
-                //if no children, check if only children_fks was passed down
-                response.children_fks = temp;
-            }
+        const existing = store.find('category', id);
+        let category = existing;
+        if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
+            let children_json = response.children;
+            delete response.children;
+            [response.parent_id] = extract_tree(response, store);
             response.detail = true;
             category = store.push('category', response);
-            store.push('category', {id: category.get('id'), children_fks: response.children_fks, previous_children_fks: response.children_fks});
+            if(children_json){
+                let [m2m_children, children, server_sum] = many_to_many_extract(children_json, store, category, 'category_children', 'category_pk', 'category', 'child_pk');
+                children.forEach((cat) => {
+                    store.push('category', cat); 
+                });
+                m2m_children.forEach((m2m) => {
+                    store.push('category-children', m2m);
+                });
+                category = store.push('category', {id: response.id, category_children_fks: server_sum});
+            }
             category.save();
         }
         return category;
