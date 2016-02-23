@@ -20,8 +20,7 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
     cost_amount: attr(''),
     cost_code: attr(''),
     parent_id: undefined,
-    children_fks: [],
-    previous_children_fks: [],
+    category_children_fks: [],
     isDirtyOrRelatedDirty: Ember.computed('isDirty', 'childrenIsDirty', function() {
         return this.get('isDirty') || this.get('childrenIsDirty');
     }),
@@ -38,21 +37,21 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
             label: this.get('label'),
             subcategory_label: this.get('subcategory_label'),
             parent: null,
-            children: this.get('children_fks')
+            children: this.get('children_ids')
         };
     },
-    childrenIsDirty: many_to_many_dirty('children_fks', 'previous_children_fks'),
+    childrenIsDirty: many_to_many_dirty('category_children_ids', 'category_children_fks'),
     childrenIsNotDirty: Ember.computed.not('childrenIsDirty'),
-    has_many_children: Ember.computed(function() {
-        const filter = (cat) => {
-            const related_fks = this.get('children_fks');
-            return Ember.$.inArray(cat.get('id'), related_fks) > -1;
-        };
-        return this.get('store').find('category', filter);
-    }),
-    child_ids: Ember.computed('has_many_children.[]', function() {
-        return this.get('has_many_children').mapBy('id');
-    }),
+    //m2m attr
+    children_ids: many_models_ids('children'),
+    children: many_models('category_children', 'child_pk', 'category'),
+    category_children_ids: many_to_many_ids('category_children'),
+    category_children: many_to_many('category-children', 'category_pk'),
+    //add m2m
+    add_child: add_many_to_many('category-children', 'category', 'child_pk', 'category_pk'),
+    //remove m2m
+    remove_child: remove_many_to_many('category-children', 'child_pk', 'category_children'),
+    //belongs to attr
     parent: Ember.computed.alias('parent_belongs_to.firstObject'),
     parent_belongs_to: Ember.computed('parent_id', function() {
         const parent_id = this.get('parent_id');
@@ -62,46 +61,13 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
         };
         return store.find('category', filter);
     }),
-    add_child(child) {
-        const store = this.get('store');
-        const cat = this.get('store').push('category', child);
-        const child_pk = cat.get('id');
-        const related_fks = this.get('children_fks');
-        run(() => {
-            store.push('category', {id: this.get('id'), children_fks: related_fks.concat(child_pk).uniq()});
-        });
-    },
-    remove_child(child_pk) {
-        const store = this.get('store');
-        const related_fks = this.get('children_fks');
-        const updated_fks = related_fks.filter((fk) => {
-            return fk !== child_pk;
-        });
-        run(() => {
-            store.push('category', {id: this.get('id'), children_fks: updated_fks});
-        });
-    },
     removeRecord() {
         run(() => {
             this.get('store').remove('category', this.get('id'));
         });
     },
-    //TODO: need to use attrs from bootstrap file
-    rollbackChildren() {
-        let children_fks = this.get('children_fks');
-        let prev_children_fks = this.get('previous_children_fks');
-        children_fks.forEach((id) => {
-            this.remove_child(id);
-        });
-        prev_children_fks.forEach((id) => {
-            const store = this.get('store');
-            const child = {id: id};
-            this.add_child(child);
-        });
-    },
-    saveChildren() {
-        this.set('previous_children_fks', this.get('children_fks'));
-    },
+    rollbackChildren: many_to_many_rollback('category-children', 'category_children_fks', 'category_pk'),
+    saveChildren: many_to_many_save('category', 'category_children', 'category_children_ids', 'category_children_fks'),
     rollbackRelated() {
         this.rollbackChildren();
     },
