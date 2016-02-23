@@ -1,0 +1,34 @@
+[
+{
+  "model": "generic.setting",
+  "pk": "e108f8cc-0593-43f3-b03c-e19f299b096e",
+  "fields": {
+    "created": "2016-02-23T02:01:59.646Z",
+    "modified": "2016-02-23T02:01:59.646Z",
+    "deleted": null,
+    "name": "general",
+    "settings": {
+      "company_name": {
+        "type": "str",
+        "inherited_from": "general",
+        "value": "Andy's Pianos"
+      },
+      "welcome_text": {
+        "type": "str",
+        "inherited_from": "general",
+        "value": "Welcome"
+      },
+      "modules": {
+        "type": "list",
+        "inherited_from": "general",
+        "value": []
+      },
+      "login_grace": {
+        "type": "int",
+        "inherited_from": "general",
+        "value": 1
+      }
+    }
+  }
+}
+]
