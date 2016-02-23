@@ -15,9 +15,9 @@ var RoleMixin = Ember.Mixin.create({
         if(new_role.get('id')) {
             run(() => {
                 //TODO: test uniq
-                store.push('role', {id: new_role.get('id'), people: new_role_people.concat([person_id]).uniq()});
+                new_role = store.push('role', {id: new_role.get('id'), people: new_role_people.concat([person_id]).uniq()});
+                new_role.save();
             });
-            new_role.save();
         }
         //TODO: test this if statement
         if(typeof old_role === 'object' && old_role.get('id') !== new_role.get('id')) {
