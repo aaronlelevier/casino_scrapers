@@ -17,6 +17,7 @@ from category import views as category_views
 from contact import views as contact_views
 from generic import views as generic_views
 from location import views as location_views
+from setting import views as setting_views
 from third_party import views as third_party_views
 from ticket import views as tickets_views
 from work_order import views as work_orders_views
@@ -41,7 +42,7 @@ router.register(r'admin/email-types', contact_views.EmailTypeViewSet)
 # GENERIC
 router.register(r'admin/saved-searches', generic_views.SavedSearchViewSet)
 router.register(r'admin/attachments', generic_views.AttachmentViewSet)
-router.register(r'admin/settings', generic_views.SettingViewSet)
+router.register(r'admin/settings', setting_views.SettingViewSet)
 # LOCATION
 router.register(r'admin/locations', location_views.LocationViewSet)
 router.register(r'admin/location-levels', location_views.LocationLevelViewSet)

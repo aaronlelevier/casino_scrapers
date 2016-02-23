@@ -14,10 +14,10 @@ from category.models import Category
 from category.tests.factory import create_categories
 from contact.models import State, Country, PhoneNumberType, AddressType, EmailType
 from generic.models import SavedSearch
-from generic.tests.factory import create_general_setting
 from location.models import LocationLevel, LocationStatus
 from person.models import PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_single_person, create_role
+from setting.tests.factory import create_general_setting
 from ticket.models import TicketStatus, TicketPriority
 from translation.models import Locale
 from translation.tests.factory import create_locales

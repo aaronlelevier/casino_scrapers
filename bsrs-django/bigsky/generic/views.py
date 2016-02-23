@@ -17,9 +17,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from generic.models import SavedSearch, Attachment, Setting
-from generic.serializers import (SavedSearchSerializer, AttachmentSerializer,
-    SettingSerializer, SettingCreateSerializer, SettingListSerializer)
+from generic.models import SavedSearch, Attachment
+from generic.serializers import SavedSearchSerializer, AttachmentSerializer
 from utils.views import BaseModelViewSet
 
 
@@ -116,20 +115,3 @@ class ExportData(APIView):
             writer.writerow([str(getattr(obj, field)) for field in self.fields])
 
         return response
-
-class SettingViewSet(BaseModelViewSet):
-
-    model = Setting
-    permission_classes = (IsAuthenticated,)
-    queryset = Setting.objects.all()
-
-    def get_serializer_class(self):
-        """
-        set the serializer based on the method
-        """
-        if self.action == 'list':
-            return SettingListSerializer
-        elif self.action == 'create':
-            return SettingCreateSerializer
-        else:
-            return SettingSerializer

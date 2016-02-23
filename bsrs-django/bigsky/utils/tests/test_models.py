@@ -9,12 +9,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from model_mommy import mommy
 
 from contact.models import Country
-from generic.models import Setting
-from generic.settings import DEFAULT_GENERAL_SETTINGS
-from generic.tests.factory import create_general_setting
 from person.models import PersonStatus, Role
 from person.settings import DEFAULT_ROLE_SETTINGS
 from person.tests.factory import create_single_person, create_role
+from setting.models import Setting
+from setting.settings import DEFAULT_GENERAL_SETTINGS
+from setting.tests.factory import create_general_setting
 from utils import create
 from utils.models import Tester, SettingMixin
 from utils.permissions import perms_map

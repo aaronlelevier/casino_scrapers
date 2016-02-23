@@ -20,10 +20,11 @@ from django.utils import timezone
 from accounting.models import Currency
 from category.models import Category
 from contact.models import PhoneNumber, Address, Email
-from generic.settings import DEFAULT_GENERAL_SETTINGS
 from location.models import LocationLevel, Location
 from person import helpers
 from person.settings import DEFAULT_ROLE_SETTINGS
+from setting.models import Setting
+from setting.settings import DEFAULT_GENERAL_SETTINGS
 from translation.models import Locale
 from utils import choices
 from utils.models import BaseModel, BaseStatusModel, BaseStatusManager, SettingMixin
@@ -235,7 +236,9 @@ class Role(SettingMixin, BaseModel):
 
     def get_class_default_settings(self, name=None):
         if name == 'general':
-            return copy.copy(DEFAULT_GENERAL_SETTINGS)
+            setting = Setting.objects.get(name=name)
+            return copy.copy(setting.settings)
+            # return copy.copy(DEFAULT_GENERAL_SETTINGS)
         else:
             return copy.copy(DEFAULT_ROLE_SETTINGS)
 

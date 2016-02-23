@@ -14,9 +14,6 @@ from category.models import Category
 from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
 from contact.tests.factory import create_contact, create_contacts
-from generic.models import Setting
-from generic.settings import DEFAULT_GENERAL_SETTINGS
-from generic.tests.factory import create_general_setting
 from location.models import Location, LocationLevel
 from location.tests.factory import create_location
 from person.models import Person, Role
@@ -25,6 +22,10 @@ from person.settings import DEFAULT_ROLE_SETTINGS
 from person.tests.factory import (PASSWORD, create_single_person, create_role, create_roles,
     create_all_people, create_person_statuses)
 from person.tests.mixins import RoleSetupMixin
+from setting.models import Setting
+from setting.serializers import SettingSerializer
+from setting.settings import DEFAULT_GENERAL_SETTINGS
+from setting.tests.factory import create_general_setting
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from utils import create, choices
@@ -127,7 +128,6 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
 
     def setUp(self):
         super(RoleSettingTests, self).setUp()
-        self.general_settings = create_general_setting()
 
     def test_list(self):
         response = self.client.get('/api/admin/roles/')
@@ -179,6 +179,39 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
             data = json.loads(response.content.decode('utf8'))
             self.assertEqual(data['settings']['welcome_text']['value'], raw_data['settings']['welcome_text'])
             self.assertEqual(data['settings']['welcome_text']['inherited_value'],  'Welcome')
+            self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
+
+    def test_update__general_and_then_reflected_in_role(self):
+        role = create_role()
+        serializer = SettingSerializer(self.setting)
+        raw_data = serializer.data
+        k = 'welcome_text'
+        new_value = 'new dashboard text'
+        raw_data['settings'] = {k: new_value}
+
+        # detail
+        with patch.dict(DEFAULT_GENERAL_SETTINGS, {'welcome_text': {'value': "Welcome", 'type': 'str', 'inherited_from': 'general'}}, clear=True):
+            response = self.client.get('/api/admin/roles/{}/'.format(role.id))
+            data = json.loads(response.content.decode('utf8'))
+            self.assertIsNone(data['settings']['welcome_text']['value'])
+            self.assertEqual(data['settings']['welcome_text']['inherited_value'],  'Welcome')
+            self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
+
+        response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id), raw_data, format='json')
+
+        # update
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings']['welcome_text']['value'], raw_data['settings']['welcome_text'])
+        # DB reflects change
+        setting = Setting.objects.get(id=self.setting.id)
+        self.assertEqual(setting.settings['welcome_text']['value'], new_value)
+        # get
+        with patch.dict(DEFAULT_GENERAL_SETTINGS, {'welcome_text': {'value': new_value, 'type': 'str', 'inherited_from': 'general'}}, clear=True):
+            response = self.client.get('/api/admin/roles/{}/'.format(role.id))
+            data = json.loads(response.content.decode('utf8'))
+            self.assertIsNone(data['settings']['welcome_text']['value'])
+            self.assertEqual(data['settings']['welcome_text']['inherited_value'], raw_data['settings']['welcome_text'])
             self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
 
 

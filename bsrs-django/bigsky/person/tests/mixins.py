@@ -4,6 +4,7 @@ from accounting.models import Currency
 from category.models import Category
 from person.serializers import RoleSerializer
 from person.tests.factory import PASSWORD, create_single_person
+from setting.tests.factory import create_general_setting
 
 
 class RoleSetupMixin(object):
@@ -22,6 +23,8 @@ class RoleSetupMixin(object):
         # data
         serializer = RoleSerializer(self.role)
         self.data = serializer.data
+        # general settings
+        self.setting = create_general_setting()
 
     def tearDown(self):
         self.client.logout()

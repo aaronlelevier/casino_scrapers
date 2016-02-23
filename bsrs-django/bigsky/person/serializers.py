@@ -4,7 +4,6 @@ from rest_framework import serializers
 
 from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer
 from contact.serializers import PhoneNumberSerializer, EmailSerializer, AddressSerializer
-from generic.models import Setting
 from location.serializers import LocationIdNameOnlySerializer, LocationStatusFKSerializer
 from person.models import Person, Role, PersonStatus
 from person.validators import RoleLocationValidator, RoleCategoryValidator

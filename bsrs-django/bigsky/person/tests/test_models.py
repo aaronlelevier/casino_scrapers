@@ -10,12 +10,13 @@ from model_mommy import mommy
 
 from category.models import Category
 from category.tests.factory import create_single_category
-from generic.settings import DEFAULT_GENERAL_SETTINGS
 from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
 from person.settings import DEFAULT_ROLE_SETTINGS
 from person.tests.factory import PASSWORD, create_person, create_role, create_single_person
+from setting.settings import DEFAULT_GENERAL_SETTINGS
+from setting.tests.factory import create_general_setting
 from translation.models import Locale
 from utils import create
 from utils.tests.test_validators import (DIGITS, NO_DIGITS, UPPER_CHARS, NO_UPPER_CHARS,
@@ -28,7 +29,7 @@ class RoleTests(TestCase):
 
     def setUp(self):
         self.role = create_role()
-        self.maxDiff = None
+        create_general_setting()
 
     def test_group(self):
         self.assertIsInstance(self.role.group, Group)

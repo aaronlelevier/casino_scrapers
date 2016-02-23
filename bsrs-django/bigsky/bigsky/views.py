@@ -13,10 +13,11 @@ from django.utils import timezone
 from accounting.models import Currency
 from category.models import Category
 from contact.models import PhoneNumberType, AddressType, EmailType, State, Country
-from generic.models import SavedSearch, Setting
-from person.models import Role, PersonStatus
-from ticket.models import TicketStatus, TicketPriority
+from generic.models import SavedSearch
 from location.models import Location, LocationLevel, LocationStatus
+from person.models import Role, PersonStatus
+from setting.models import Setting
+from ticket.models import TicketStatus, TicketPriority
 from translation.models import Locale
 from utils import choices
 from utils.helpers import model_to_json, model_to_json_select_related, choices_to_json

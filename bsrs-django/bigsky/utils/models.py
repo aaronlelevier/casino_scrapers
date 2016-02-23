@@ -9,8 +9,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
 
-from generic.settings import DEFAULT_GENERAL_SETTINGS
 from person.settings import DEFAULT_ROLE_SETTINGS
+from setting.settings import DEFAULT_GENERAL_SETTINGS
 
 
 ########
