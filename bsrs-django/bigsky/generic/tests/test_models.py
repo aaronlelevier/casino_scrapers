@@ -149,14 +149,16 @@ class AttachmentModelTests(TestCase):
 
 class SettingModelTests(TestCase):
 
-    def test_get_settings_name(self):
-        self.assertEqual(Setting.get_settings_name(), 'general')
+    def setUp(self):
+        self.setting = create_general_setting()
 
     def test_get_all_class_settings(self):
-        self.assertEqual(Setting.get_all_class_settings(), DEFAULT_GENERAL_SETTINGS)
+        self.assertEqual(self.setting.get_all_class_settings(), DEFAULT_GENERAL_SETTINGS)
 
     def test_get_all_instance_settings(self):
-        setting = create_general_setting()
-        ret = setting.get_all_instance_settings()
-        self.assertEqual(ret, setting.settings)
+        ret = self.setting.get_all_instance_settings()
+        self.assertEqual(ret, self.setting.settings)
 
+    def test_get_all_instance_settings_full(self):
+        ret = self.setting.get_all_instance_settings_full()
+        self.assertEqual(ret, self.setting.settings)

@@ -1,4 +1,5 @@
 import copy
+from mock import patch
 
 from django.test import TestCase, TransactionTestCase
 from django.utils import timezone
@@ -153,44 +154,74 @@ class BaseStatusModelTests(TestCase):
 
 class SettingMixinTests(TestCase):
 
+    def setUp(self):
+        self.settings = SettingMixin()
+        self.maxDiff = None
+
     def test_get_class_default_settings(self):
-        ret = SettingMixin.get_class_default_settings()
+        ret = self.settings.get_class_default_settings()
         self.assertEqual({}, ret)
 
     def test_get_class_default_settings__general(self):
-        ret = SettingMixin.get_class_default_settings('general')
+        ret = self.settings.get_class_default_settings('general')
         self.assertEqual(DEFAULT_GENERAL_SETTINGS, ret)
 
     def test_get_class_default_settings__role(self):
-        ret = SettingMixin.get_class_default_settings('role')
+        ret = self.settings.get_class_default_settings('role')
         self.assertEqual(DEFAULT_ROLE_SETTINGS, ret)
 
+    def test_get_class_default_settings__no_memory_leak(self):
+        ret = self.settings.get_class_default_settings('general')
+        ret['foo'] = 'bar'
+
+        ret_two = self.settings.get_class_default_settings('general')
+
+        self.assertNotEqual(ret, ret_two)
+
+    def test_get_class_combined_settings_full(self):
+        raw_ret = {}
+        raw_ret.update(DEFAULT_GENERAL_SETTINGS)
+        raw_ret.update(DEFAULT_ROLE_SETTINGS)
+
+        ret = self.settings.get_class_combined_settings_full('general', DEFAULT_ROLE_SETTINGS)
+
+        self.assertEqual(ret, raw_ret)
+
     def test_get_combined_settings_file__inherited(self):
-        role_settings = SettingMixin.get_class_default_settings('role')
+        k = 'welcome_text'
+        with patch.dict(DEFAULT_GENERAL_SETTINGS, {k: {'value': "Welcome", 'type': 'str', 'inherited_from': 'general'}}, clear=True):
+            ret = self.settings.get_class_combined_settings('general', DEFAULT_ROLE_SETTINGS)
 
-        ret = Setting.get_class_combined_settings('general', role_settings)
+            self.assertIsNone(ret['welcome_text']['value'])
+            self.assertEqual(ret['welcome_text']['inherited_value'], 'Welcome')
+            self.assertEqual(ret['welcome_text']['inherited_from'], 'general')
 
-        self.assertIsNone(ret['welcome_text']['value'])
+    def test_get_combined_settings_file__override(self):
+        k = 'welcome_text'
+        override  = {k: {'value': "foo", 'type': 'str', 'inherited_from': 'override'}}
+
+        with patch.dict(DEFAULT_GENERAL_SETTINGS, {k: {'value': "Welcome", 'type': 'str', 'inherited_from': 'general'}}, clear=True):
+            ret = self.settings.get_class_combined_settings('general', override)
+
         self.assertEqual(ret['welcome_text']['inherited_value'], 'Welcome')
+        self.assertEqual(ret['welcome_text']['value'], 'foo')
         self.assertEqual(ret['welcome_text']['inherited_from'], 'general')
 
     def test_get_combined_settings_file__append(self):
-        role_settings = SettingMixin.get_class_default_settings('role')
+        k = 'welcome_text'
+        override  = {'create_all': {'value': "foo", 'type': 'str', 'inherited_from': 'override'}}
 
-        ret = Setting.get_class_combined_settings('general', role_settings)
+        with patch.dict(DEFAULT_GENERAL_SETTINGS, {k: {'value': "Welcome", 'type': 'str', 'inherited_from': 'general'}}, clear=True):
+            ret = self.settings.get_class_combined_settings('general', override)
 
-        self.assertEqual(ret['create_all']['value'], role_settings['create_all']['value'])
-        self.assertIsNone(ret['create_all']['inherited_value'])
-        self.assertEqual(ret['create_all']['inherited_from'], role_settings['create_all']['inherited_from'])
-
-    def test_get_combined_settings_file__override(self):
-        role_settings = SettingMixin.get_class_default_settings('role')
-
-        ret = Setting.get_class_combined_settings('general', role_settings)
-
-        self.assertEqual(ret['welcome_text']['inherited_value'], DEFAULT_GENERAL_SETTINGS['welcome_text']['value'])
+        # not overrode
+        self.assertEqual(ret['welcome_text']['inherited_value'], 'Welcome')
         self.assertIsNone(ret['welcome_text']['value'])
-        self.assertEqual(ret['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
+        self.assertEqual(ret['welcome_text']['inherited_from'], 'general')
+        # appended
+        self.assertEqual(ret['create_all']['value'], 'foo')
+        self.assertIsNone(ret['create_all']['inherited_value'])
+        self.assertEqual(ret['create_all']['inherited_from'], 'override')
 
     def test_combine_overrides(self):
         settings = [{'a':'b'}, {'c':'d'}]
@@ -199,48 +230,64 @@ class SettingMixinTests(TestCase):
         for setting in settings:
             all_overrides.update(setting)
 
-        ret = SettingMixin.combine_overrides(settings)
+        ret = self.settings.combine_overrides(settings)
 
         self.assertEqual(ret, all_overrides)
 
-    def test_update_overrides(self):
-        combined = SettingMixin.get_class_default_settings('general')
-        all_overrides = SettingMixin.get_class_default_settings('role')
-        
-        ret = SettingMixin.update_overrides(combined, all_overrides)
+    def test_update_overrides__override(self):
+        k = 'welcome_text'
+        init  = {k: {'value': 'foo', 'type': 'str', 'inherited_from': 'init'}}
+        override  = {k: {'value': "bar", 'type': 'str', 'inherited_from': 'override'}}
 
-        for k,v in all_overrides.items():
-            # override
-            if k in combined:
-                self.assertEqual(ret[k]['inherited_value'], combined[k]['value'])
-                self.assertEqual(ret[k]['value'], all_overrides[k]['value'])
-                self.assertEqual(ret[k]['inherited_from'], all_overrides[k]['inherited_from'])
-            # append
-            else:
-                self.assertIsNone(ret[k]['inherited_value'])
-                self.assertEqual(ret[k]['value'], all_overrides[k]['value'])
-                self.assertEqual(ret[k]['inherited_from'], all_overrides[k]['inherited_from'])
+        ret = self.settings.update_overrides(init, override)
+
+        self.assertEqual(ret[k]['inherited_value'], 'foo')
+        self.assertEqual(ret[k]['value'], 'bar')
+        self.assertEqual(ret[k]['inherited_from'], 'init')
+
+    def test_update_overrides__append(self):
+        k = 'welcome_text'
+        init  = {}
+        override  = {k: {'value': "bar", 'type': 'str', 'inherited_from': 'override'}}
+
+        ret = self.settings.update_overrides(init, override)
+
+        self.assertEqual(ret[k]['inherited_value'], None)
+        self.assertEqual(ret[k]['value'], 'bar')
+        self.assertEqual(ret[k]['inherited_from'], 'override')
+
+    def test_update_overrides__neither(self):
+        k = 'welcome_text'
+        init  = {k: {'value': "bar", 'type': 'str', 'inherited_from': 'init'}}
+        override  = {}
+
+        ret = self.settings.update_overrides(init, override)
+
+        with self.assertRaises(KeyError):
+            ret[k]['inherited_value']
+
+        self.assertEqual(ret[k]['value'], init[k]['value'])
+        self.assertEqual(ret[k]['inherited_from'], 'init')
 
     def test_update_non_overrides(self):
-        combined = SettingMixin.get_class_default_settings('general')
-        all_overrides = SettingMixin.get_class_default_settings('role')
-        
-        ret = SettingMixin.update_non_overrides(combined, all_overrides)
+        k = 'welcome_text'
+        init  = {k: {'value': 'foo', 'type': 'str', 'inherited_from': 'init'}} #{}
+        override  = {}
 
-        for k,v in ret.items():
-            if k not in all_overrides:
-                self.assertEqual(ret[k]['inherited_value'], combined[k]['value'])
-                self.assertIsNone(ret[k]['value'])
+        ret = self.settings.update_non_overrides(init, override)
+
+        self.assertEqual(ret[k]['inherited_value'], 'foo')
+        self.assertIsNone(ret[k]['value'])
+        self.assertEqual(ret[k]['inherited_from'], 'init')
 
     def test_get_settings_name(self):
         with self.assertRaises(NotImplementedError):
             SettingMixin.get_settings_name()
-        
+
     def test_get_all_class_settings(self):
         with self.assertRaises(NotImplementedError):
-            SettingMixin.get_all_class_settings()
+            self.settings.get_all_class_settings()
 
     def test_get_all_instance_settings(self):
-        setting_mixin = SettingMixin()
         with self.assertRaises(NotImplementedError):
-            setting_mixin.get_all_instance_settings()
+            self.settings.get_all_instance_settings()

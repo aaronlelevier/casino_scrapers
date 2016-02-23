@@ -60,34 +60,32 @@ class RoleTests(TestCase):
         self.assertEqual(Role.get_settings_name(), 'role')
 
     def test_get_class_default_settings(self):
-        ret = Role.get_class_default_settings()
+        ret = self.role.get_class_default_settings()
         self.assertEqual(ret, DEFAULT_ROLE_SETTINGS)
 
     def test_get_class_default_settings__general(self):
-        ret = Role.get_class_default_settings('general')
+        ret = self.role.get_class_default_settings('general')
         self.assertEqual(ret, DEFAULT_GENERAL_SETTINGS)
 
     def test_get_all_class_settings(self):
         combined = copy.copy(DEFAULT_GENERAL_SETTINGS)
         combined.update(DEFAULT_ROLE_SETTINGS)
 
-        ret = Role.get_all_class_settings()
+        ret = self.role.get_all_class_settings()
 
-        for k,v in ret.items():
-            self.assertEqual(len(v), 3)
-            for key in Role.detail_api_keys():
-                self.assertEqual(ret[k][key], combined[k][key])
+        for k in combined.keys():
+            self.assertIn(k, ret.keys())
 
-    def test_get_all_class_settings_full(self):
+    def test_cls_get_all_class_settings(self):
         combined = copy.copy(DEFAULT_GENERAL_SETTINGS)
         combined.update(DEFAULT_ROLE_SETTINGS)
 
-        ret = Role.get_all_class_settings_full()
+        ret = Role.cls_get_all_class_settings()
 
         self.assertEqual(ret, combined)
 
     def test_get_all_instance_settings(self):
-        raw_combined_settings = Role.get_class_combined_settings('general', self.role.settings)
+        raw_combined_settings = self.role.get_class_combined_settings('general', self.role.settings)
 
         ret = self.role.get_all_instance_settings()
 

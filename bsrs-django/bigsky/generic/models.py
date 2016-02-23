@@ -9,6 +9,7 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from PIL import Image
 from rest_framework.exceptions import ValidationError
 
+from generic.settings import DEFAULT_GENERAL_SETTINGS
 from ticket.models import Ticket
 from utils.models import BaseModel, BaseManager, BaseNameModel, SettingMixin
 
@@ -208,9 +209,12 @@ class Setting(SettingMixin, BaseNameModel):
     def get_settings_name(cls):
         return 'general'
 
+    def get_all_class_settings(self):
+        return copy.copy(DEFAULT_GENERAL_SETTINGS)
+
     @classmethod
-    def get_all_class_settings(cls):
-        return cls.get_class_default_settings('general')
+    def cls_get_all_class_settings(cls):
+        return copy.copy(DEFAULT_GENERAL_SETTINGS)
 
     def get_all_instance_settings(self):
         return self.settings

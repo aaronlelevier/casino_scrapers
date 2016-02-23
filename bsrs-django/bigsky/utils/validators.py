@@ -56,18 +56,13 @@ class SettingsValidator(object):
         self.model = model
 
     def __call__(self, kwargs):
-        try:
-            instance = self.model.objects.get(id=kwargs.get('id'))
-            default_settings = copy.copy(instance.settings)
-        except ObjectDoesNotExist:
-            default_settings = self.model.get_all_class_settings()
+        default_settings = self.model.cls_get_all_class_settings()
 
         errors = {}
 
         settings = kwargs.get('settings', None)
         if settings:
             for k,v in default_settings.items():
-                # import pdb;pdb.set_trace()
 
                 try:
                     new_value = settings[k]
