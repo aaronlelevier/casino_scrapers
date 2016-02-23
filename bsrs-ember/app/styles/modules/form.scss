@@ -254,12 +254,23 @@ label.small-label{
 .progress-wrap{
 	.progress{
 		margin-bottom: 10px;
+		border-radius: $borderRadius;
+		background-color: $light;
 		.remove-attachment{
 			margin-left: 5px;
 			&:hover{
 				cursor: pointer;
 				color: $orange;
 			}
+		}
+		.progress-bar{
+			background-color: $lightBlue;
+			text-align: right;
+			padding: 0 10px;
+			text-overflow: ellipsis;
+		    overflow: hidden;
+		    white-space: nowrap;
+			transition: all 1s ease;
 		}
 		&.complete{
 			background: none;
@@ -272,8 +283,10 @@ label.small-label{
 				height: 20px;
 				box-shadow: none;
 				width: auto !important;
+				min-width: 180px;
 				float: right;
 			}
 		}
 	}
 }
+//file upload
