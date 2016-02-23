@@ -5,7 +5,11 @@
 @import 'bootstrap';
 @import 'app/styles/base/_variables.scss';
 @import 'app/styles/mixins/_mixins.scss';
-@import 'app/styles/base/resets.scss';
+@import 'app/styles/resets/bootstrap.scss';
+@import 'app/styles/resets/browser.scss';
+@import 'app/styles/resets/ember-modal.scss';
+@import 'app/styles/resets/ember-power-select.scss';
+@import 'app/styles/resets/file-upload.scss';
 @import 'app/styles/base/index.scss';
 @import 'app/styles/base/components.scss';
 @import 'app/styles/modules/buttons.scss';

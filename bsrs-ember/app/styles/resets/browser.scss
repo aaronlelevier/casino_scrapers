@@ -1,0 +1,15 @@
+input, textarea, select, button {
+	outline: none;
+	-webkit-box-shadow: none !important;
+	-moz-box-shadow: none !important;
+	-ms-box-shadow: none !important;
+	box-shadow: none !important;
+}
+input[type="text"]:disabled {
+	border: none;
+	box-shadow: none;
+	&:hover {
+		border: none;
+		box-shadow: none;
+	}
+}//input
