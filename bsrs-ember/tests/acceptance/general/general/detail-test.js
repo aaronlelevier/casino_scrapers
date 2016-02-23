@@ -69,3 +69,22 @@ test('translations - for labels', (assert) => {
         assert.equal(getLabelText('company_name'), translations['admin.setting.company_name']);
     });
 });
+
+test('amk general settings are properly dirty tracked', function(assert) {
+    visit(DETAIL_URL);
+    andThen(() => {
+        let setting = store.find('setting', SD.id);
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-settings-login_grace').val(), SD.login_grace);
+    });
+    fillIn('.t-settings-login_grace', SD.login_graceOther);
+    andThen(() => {
+        let setting = store.find('setting', SD.id);
+        assert.ok(setting.get('isDirty'));
+    });
+    fillIn('.t-settings-login_grace', SD.login_grace);
+    andThen(() => {
+        let setting = store.find('setting', SD.id);
+        assert.ok(setting.get('isNotDirty'));
+    });
+});
