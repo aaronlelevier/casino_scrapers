@@ -116,9 +116,8 @@ class CategoryDetailTests(APITestCase):
         self.assertEqual(data['parent']['id'], str(category.parent.id))
         self.assertEqual(data['parent']['name'], str(category.parent.name))
         self.assertIn('parent', data['parent'])
-        self.assertIn('children_fks', data['parent'])
-        self.assertNotIn('children', data['parent'])
-        self.assertIsInstance(data['parent']['children_fks'], list)
+        self.assertIn('children', data['parent'])
+        self.assertIsInstance(data['parent']['children'], list)
 
     def test_data_children(self):
         category = self.trade
@@ -387,16 +386,14 @@ class CategoryFilterTests(APITransactionTestCase):
         data = data['results'][0]
         # db object
         category = Category.objects.filter(parent__isnull=True).first()
-        self.assertIsInstance(data['children_fks'], list)
         self.assertEqual(data['parent'], None)
-        self.assertIn('children_fks', data)
-        self.assertNotIn('children', data)
+        self.assertIn('children', data)
 
     def test_filter_by_parent(self):
         response = self.client.get('/api/admin/categories/?parent={}'.format(self.trade.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], self.trade.children.count())
-        self.assertIn('children_fks', data['results'][0])
+        self.assertIn('children', data['results'][0])
         self.assertIn('parent_id', data['results'][0])
         self.assertIn('level', data['results'][0])
         self.assertIn('name', data['results'][0])
