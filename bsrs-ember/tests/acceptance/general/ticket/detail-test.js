@@ -23,7 +23,6 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/tickets';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import selectize from 'bsrs-ember/tests/pages/selectize';
 import timemachine from 'vendor/timemachine';
 import moment from 'moment';
 
