@@ -211,7 +211,7 @@ test('clicking and typing into power select for categories children will fire of
     visit(CATEGORY_NEW_URL);
     andThen(() => {
         let category = store.find('category', UUID.value);
-        assert.equal(category.get('has_many_children').get('length'), 0);
+        assert.equal(category.get('children').get('length'), 0);
         assert.equal(find('div.item').length, 0);
         assert.equal(find('div.option').length, 0);
     });
@@ -226,8 +226,8 @@ test('clicking and typing into power select for categories children will fire of
     page.categoryClickOptionOneEq();
     andThen(() => {
         let category = store.find('category', UUID.value);
-        assert.equal(category.get('children_fks').get('length'), 1);
-        assert.equal(category.get('has_many_children').get('length'), 1);
+        assert.equal(category.get('children').get('length'), 1);
+        assert.equal(category.get('children').get('length'), 1);
     });
     generalPage.save();
     andThen(() => {
@@ -242,7 +242,7 @@ test('clicking and typing into power select for categories children will not fil
     visit(CATEGORY_NEW_URL);
     andThen(() => {
         let category = store.find('category', UUID.value);
-        assert.equal(category.get('has_many_children').get('length'), 0);
+        assert.equal(category.get('children').get('length'), 0);
         assert.equal(find('div.item').length, 0);
         assert.equal(find('div.option').length, 0);
     });
@@ -253,7 +253,7 @@ test('clicking and typing into power select for categories children will not fil
     });
     andThen(() => {
         let category = store.find('category', UUID.value);
-        assert.equal(category.get('children_fks').get('length'), 0);
+        assert.equal(category.get('children').get('length'), 0);
     });
     fillIn('.t-category-name', CD.nameOne);
     fillIn('.t-category-description', CD.descriptionMaintenance);
@@ -273,7 +273,7 @@ test('you can add and remove child from category', (assert) => {
     visit(CATEGORY_NEW_URL);
     andThen(() => {
         let category = store.find('category', UUID.value);
-        assert.equal(category.get('has_many_children').get('length'), 0);
+        assert.equal(category.get('children').get('length'), 0);
         assert.equal(find('div.item').length, 0);
         assert.equal(find('div.option').length, 0);
     });
@@ -288,20 +288,20 @@ test('you can add and remove child from category', (assert) => {
     andThen(() => {
         assert.equal(page.categoryOptionLength(), 10);
         const category = store.find('category', UUID.value);
-        assert.equal(category.get('has_many_children').get('length'), 0);
-        assert.equal(category.get('children_fks').get('length'), 0);
+        assert.equal(category.get('children').get('length'), 0);
+        assert.equal(category.get('children').get('length'), 0);
     });
     page.categoryClickOptionOneEq();
     andThen(() => {
         const category = store.find('category', UUID.value);
-        assert.equal(category.get('has_many_children').get('length'), 1);
-        assert.equal(category.get('children_fks').get('length'), 1);
+        assert.equal(category.get('children').get('length'), 1);
+        assert.equal(category.get('children').get('length'), 1);
     });
     page.categoryOneRemove();
     andThen(() => {
         const category = store.find('category', UUID.value);
-        assert.equal(category.get('has_many_children').get('length'), 0);
-        assert.equal(category.get('children_fks').get('length'), 0);
+        assert.equal(category.get('children').get('length'), 0);
+        assert.equal(category.get('children').get('length'), 0);
     });
     generalPage.save();
     andThen(() => {

@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
+import { many_to_many_extract } from 'bsrs-components/repository/many-to-many';
 
 const { run } = Ember;
 
@@ -17,7 +18,7 @@ var CategoriesMixin = Ember.Mixin.create({
     construct_category_tree(category, child_nodes=[]) {
         //this method is used for on the fly validation check to see if at end of cat tree
         child_nodes.push(category);
-        const children = category ? category.get('has_many_children') : [];
+        const children = category ? category.get('children') : [];
         if(children.get('length') === 0 && child_nodes.get('length') > 1) {
             return;
         }
@@ -84,9 +85,21 @@ var CategoriesMixin = Ember.Mixin.create({
         const store = this.get('store');
         let pushed_category = store.find('category', category.id);
         if(!pushed_category.get('content') || pushed_category.get('isNotDirtyOrRelatedNotDirty')){
-            Ember.set(category, 'previous_children_fks', category.children_fks);
             run(() => {
+                const children_json = category.children;
+                delete category.children;  
                 pushed_category = store.push('category', category);
+                pushed_category.save();
+                if(children_json){
+                    let [m2m_children, children, server_sum] = many_to_many_extract(children_json, store, pushed_category, 'category_children', 'category_pk', 'category', 'child_pk');
+                    children.forEach((cat) => {
+                        store.push('category', cat); 
+                    });
+                    m2m_children.forEach((m2m) => {
+                        store.push('category-children', m2m);
+                    });
+                    pushed_category = store.push('category', {id: category.id, category_children_fks: server_sum});
+                }
             });
             pushed_category.save();
         }

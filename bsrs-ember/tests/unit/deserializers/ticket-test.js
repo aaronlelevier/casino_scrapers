@@ -25,7 +25,7 @@ let store, subject, uuid, person_deserializer, location_level_deserializer, loca
 
 module('unit: ticket deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-list', 'model:person-list', 'model:ticket-person', 'model:ticket-category', 'model:ticket-status', 'model:ticket-priority', 'model:status', 'model:location', 'model:location-list','model:person-location', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:attachment', 'model:location-status', 'service:person-current','service:translations-fetcher','service:i18n', 'model:locale', 'model:role', 'model:general-status-list', 'model:ticket-priority-list', 'model:category-list']);
+        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-list', 'model:person-list', 'model:ticket-person', 'model:ticket-category', 'model:ticket-status', 'model:ticket-priority', 'model:status', 'model:location', 'model:location-list','model:person-location', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:attachment', 'model:location-status', 'service:person-current','service:translations-fetcher','service:i18n', 'model:locale', 'model:role', 'model:general-status-list', 'model:ticket-priority-list', 'model:category-list', 'model:category-children']);
         uuid = this.container.lookup('model:uuid');
         location_level_deserializer = LocationLevelDeserializer.create({store: store});
         location_deserializer = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
@@ -516,14 +516,14 @@ test('ticket-person m2m is removed when server payload no longer reflects what s
     let original = store.find('ticket', TD.idOne);
     let cc = original.get('cc');
     assert.equal(cc.get('length'), 2);
-    assert.equal(cc.objectAt(0).get('id'), PD.unusedId);
-    assert.equal(cc.objectAt(1).get('id'), PD.idTwo);
+    assert.equal(cc.objectAt(1).get('id'), PD.unusedId);
+    assert.equal(cc.objectAt(0).get('id'), PD.idTwo);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(store.find('ticket-person').get('length'), 3);
 });
 
-test('icket-category m2m added including parent id for categories without a fat parent model', (assert) => {
+test('ticket-category m2m added including parent id for categories without a fat parent model', (assert) => {
     store.clear('ticket');
     let response = TF.generate(TD.idOne);
     response.cc = [PF.get()];
@@ -540,13 +540,13 @@ test('icket-category m2m added including parent id for categories without a fat 
     assert.equal(categories.get('length'), 3);
     assert.equal(categories.objectAt(0).get('id'), CD.idOne);
     assert.equal(categories.objectAt(0).get('parent_id'), null);
-    assert.deepEqual(categories.objectAt(0).get('children_fks'), [CD.idPlumbing, CD.idTwo]);
+    assert.deepEqual(categories.objectAt(0).get('children').mapBy('id'), [CD.idPlumbing, CD.idTwo]);
     assert.equal(categories.objectAt(1).get('id'), CD.idPlumbing);
     assert.equal(categories.objectAt(1).get('parent_id'), CD.idOne);
-    assert.deepEqual(categories.objectAt(1).get('children_fks'), [CD.idPlumbingChild]);
+    assert.deepEqual(categories.objectAt(1).get('children').mapBy('id'), [CD.idPlumbingChild]);
     assert.equal(categories.objectAt(2).get('id'), CD.idPlumbingChild);
     assert.equal(categories.objectAt(2).get('parent_id'), CD.idPlumbing);
-    assert.deepEqual(categories.objectAt(2).get('children_fks'), []);
+    assert.deepEqual(categories.objectAt(2).get('children').mapBy('id'), []);
 });
 
 test('ticket-person m2m added even when ticket did not exist before the deserializer executes', (assert) => {

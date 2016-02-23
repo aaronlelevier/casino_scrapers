@@ -4,14 +4,14 @@ import inject from 'bsrs-ember/utilities/inject';
 
 var CategoryChildrenSelect = Ember.Component.extend({
     repository: inject('category'),
-    categories_selected: Ember.computed('category.has_many_children.[]', function() {
+    categories_selected: Ember.computed('category.children.[]', function() {
         let category = this.get('category');
-        return category.get('has_many_children');
+        return category.get('children');
     }),
     actions: {
         change_children(new_categories) {
             const category = this.get('category');
-            const old_children = category.get('has_many_children');
+            const old_children = category.get('children');
             const old_children_ids = old_children.mapBy('id');
             const new_children_ids = new_categories.mapBy('id');
             new_categories.forEach((cat) => {

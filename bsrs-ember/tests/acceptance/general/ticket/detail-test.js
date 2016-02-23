@@ -13,6 +13,7 @@ import PEOPLE_CURRENT_DEFAULTS from 'bsrs-ember/vendor/defaults/person-current';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
+import CCD from 'bsrs-ember/vendor/defaults/category-children';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
@@ -242,7 +243,7 @@ test('visiting detail should set the category even when it has no children', (as
     clearxhr(activity_one);
     ajax(`/api/tickets/${TD.idTwo}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
     let solo_data = TF.detail(TD.idTwo);
-    solo_data.categories = [{id: CD.idSolo, name: CD.nameSolo, children_fks: [], parent: null}];
+    solo_data.categories = [{id: CD.idSolo, name: CD.nameSolo, children: [], parent: null}];
     ajax(endpoint + TD.idTwo + '/', 'GET', null, {}, 200, solo_data);
     visit(BASE_URL + '/' + TD.idTwo);
     andThen(() => {
@@ -514,7 +515,7 @@ test('categories are in order based on text', (assert) => {
 
 test('power select options are rendered immediately when enter detail route and can save different top level category', (assert) => {
     let top_level_data = CF.top_level();
-    top_level_data.results[1] = {id: CD.idThree, name: CD.nameThree, parent_id: null, children_fks: [CD.idLossPreventionChild], level: 0};
+    top_level_data.results[1] = {id: CD.idThree, name: CD.nameThree, parent_id: null, children: [{id: CD.idLossPreventionChild, name: CD.nameLossPreventionChild}], level: 0};
     page.visitDetail();
     andThen(() => {
         let components = page.powerSelectComponents();
@@ -554,8 +555,8 @@ test('power select options are rendered immediately when enter detail route and 
         assert.equal(ticket.get('top_level_category').get('id'), CD.idThree);
         assert.equal(ticket.get('ticket_categories_fks').length, 3);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-        page.categoryOneClickDropdown();
     });
+    page.categoryOneClickDropdown();
     andThen(() => {
         assert.equal(page.categoryOneInput(), CD.nameThree);
         assert.equal(page.categoryOneOptionLength(), 2);
@@ -583,7 +584,9 @@ test('selecting a top level category will alter the url and can cancel/discard c
     page.visitDetail();
     andThen(() => {
         //override electrical to have children
-        store.push('category', {id: CD.idTwo, name: CD.nameTwo, children_fks: [CD.idChild], parent_id: CD.idOne, level: 1});
+        store.push('category-children', {id: CCD.idOne, category_pk: CD.idTwo, child_pk: CD.idChild});
+        let cat = store.push('category', {id: CD.idTwo, name: CD.nameTwo, category_children_fks: [CCD.idOne], parent_id: CD.idOne, level: 1});
+        cat.save();
         let components = page.powerSelectComponents();
         assert.equal(store.find('category').get('length'), 4);
         let ticket = store.find('ticket', TD.idOne);
@@ -592,7 +595,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
         // assert.ok(ticket.get('categoriesIsNotDirty'));
         assert.equal(components, 3);
     });
-    //select same
+    // select same
     let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
     top_level_xhr = xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
     page.categoryOneClickDropdown();
@@ -603,25 +606,25 @@ test('selecting a top level category will alter the url and can cancel/discard c
         let ticket = store.find('ticket', TD.idOne);
         assert.equal(ticket.get('categories').get('length'), 3);
         assert.equal(ticket.get('sorted_categories').get('length'), 3);
-        assert.equal(ticket.get('sorted_categories').objectAt(0).get('has_many_children').get('length'), 2);
-        assert.equal(ticket.get('sorted_categories').objectAt(1).get('has_many_children').get('length'), 1);
-        assert.equal(ticket.get('sorted_categories').objectAt(2).get('has_many_children').get('length'), 0);
+        assert.equal(ticket.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
+        assert.equal(ticket.get('sorted_categories').objectAt(1).get('children').get('length'), 1);
+        assert.equal(ticket.get('sorted_categories').objectAt(2).get('children').get('length'), 0);
         // assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
         // assert.ok(ticket.get('categoriesIsNotDirty'));
         assert.equal(components, 3);
     });
     //select electrical from second level
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne, 1));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id:CD.idChild}], CD.idOne, 1));
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionElectrical();
     andThen(() => {
         let components = page.powerSelectComponents();
         let ticket = store.find('ticket', TD.idOne);
-        assert.equal(store.find('category').get('length'), 4);
+        assert.equal(store.find('category').get('length'), 5);
         assert.equal(ticket.get('categories').get('length'), 2);
         assert.equal(ticket.get('sorted_categories').get('length'), 2);
-        assert.equal(ticket.get('sorted_categories').objectAt(0).get('has_many_children').get('length'), 2);
-        // assert.equal(ticket.get('sorted_categories').objectAt(1).get('has_many_children').get('length'), 1);
+        assert.equal(ticket.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
+        // assert.equal(ticket.get('sorted_categories').objectAt(1).get('children').get('length'), 1);
         // assert.ok(ticket.get('isDirtyOrRelatedDirty'));
         // assert.ok(ticket.get('categoriesIsDirty'));
         assert.equal(components, 3);
@@ -649,9 +652,9 @@ test('selecting a top level category will alter the url and can cancel/discard c
             assert.equal(tickets.get('length'), 1);
             let ticket = store.find('ticket', TD.idOne);
             assert.equal(ticket.get('categories').get('length'), 3);
-            assert.equal(ticket.get('sorted_categories').objectAt(0).get('has_many_children').get('length'), 2);
-            assert.equal(ticket.get('sorted_categories').objectAt(1).get('has_many_children').get('length'), 1);
-            assert.equal(ticket.get('sorted_categories').objectAt(2).get('has_many_children').get('length'), 0);
+            assert.equal(ticket.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
+            assert.equal(ticket.get('sorted_categories').objectAt(1).get('children').get('length'), 1);
+            assert.equal(ticket.get('sorted_categories').objectAt(2).get('children').get('length'), 0);
             // assert.ok(ticket.get('isDirtyOrRelatedDirty'));
             // assert.ok(ticket.get('categoriesIsDirty'));
             assert.equal(components, 3);
@@ -680,7 +683,9 @@ test('changing tree and reverting tree should not show as dirty', (assert) => {
     page.visitDetail();
     andThen(() => {
         //override electrical to have children
-        store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.idOne, children_fks: [CD.idChild], level: 1});
+        store.push('category-children', {id: CCD.idOne, category_pk: CD.idTwo, child_pk: CD.idChild});
+        let cat = store.push('category', {id: CD.idTwo, name: CD.nameTwo, category_children_fks: [CCD.idOne], parent_id: CD.idOne, level: 1});
+        cat.save();
         let ticket = store.find('ticket', TD.idOne);
         assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
         assert.ok(ticket.get('categoriesIsNotDirty'));
@@ -695,7 +700,7 @@ test('changing tree and reverting tree should not show as dirty', (assert) => {
         assert.ok(ticket.get('categoriesIsNotDirty'));
     });
     //select electrical from second level
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne, 1));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionElectrical();
     andThen(() => {
@@ -711,7 +716,7 @@ test('changing tree and reverting tree should not show as dirty', (assert) => {
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
         assert.ok(ticket.get('categoriesIsDirty'));
     });
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [CD.idPlumbingChild], CD.idOne, 1));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [{id:CD.idPlumbingChild}], CD.idOne, 1));
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionPlumbing();
     andThen(() => {
@@ -737,7 +742,7 @@ test('selecting and removing a top level category will remove children categorie
     page.visitDetail();
     andThen(() => {
         let components = page.powerSelectComponents();
-        assert.equal(store.find('category').get('length'), 3);//was 5 but don't fetch again
+        assert.equal(store.find('category').get('length'), 4);
         let tickets = store.find('ticket');
     });
     //change top level
@@ -748,14 +753,14 @@ test('selecting and removing a top level category will remove children categorie
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 1);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('has_many_children').get('length'), 0);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 0);
         assert.equal(components, 1);
     });
 });
 
 test('when selecting a new parent category it should remove previously selected child category but if select same, it wont clear tree', (assert) => {
     page.visitDetail();
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [CD.idChild], CD.idOne, 1));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [{id: CD.idChild}], CD.idOne, 1));
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionPlumbing();
     andThen(() => {
@@ -765,7 +770,7 @@ test('when selecting a new parent category it should remove previously selected 
         let components = page.powerSelectComponents();
         assert.equal(components, 3);
     });
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [CD.idChild], CD.idOne, 1));
+    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionElectrical();
     andThen(() => {

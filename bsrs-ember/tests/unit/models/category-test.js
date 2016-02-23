@@ -2,12 +2,16 @@ import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import CD from 'bsrs-ember/vendor/defaults/category';
+import CCD from 'bsrs-ember/vendor/defaults/category-children';
 
 var store, uuid, category, run = Ember.run;
 
 module('unit: category test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:category', 'service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:category', 'model:category-children', 'service:i18n']);
+        run(() => {
+            category = store.push('category', {id: CD.idOne});
+        });
     }
 });
 
@@ -24,161 +28,137 @@ test('parent category returns associated model or undefined', (assert) => {
 
 /*CATEGORY TO CHILDREN M2M*/
 test('children returns associated array or empty array', (assert) => {
-    run(() => {
-        category = store.push('category', {id: CD.idOne, children_fks: []});
-    });
-    assert.equal(category.get('has_many_children').get('length'), 0);
+    assert.equal(category.get('children').get('length'), 0);
     run(() => {
         store.push('category', {id:3});
-        store.push('category', {id:CD.idOne, children_fks: [3]});
+        store.push('category-children', {id: CCD.idOne, category_pk: CD.idOne, child_pk: 3});
     });
-    assert.equal(category.get('has_many_children').get('length'), 1);
+    assert.equal(category.get('children').get('length'), 1);
     run(function() {
         store.push('category', {id:4});
-        store.push('category', {id:CD.idOne, children_fks: [4]});
+        store.push('category-children', {id: CCD.idTwo, category_pk: CD.idOne, child_pk: 4});
     });
-    category.set('children_fks', [4]);
-    assert.equal(category.get('has_many_children').get('length'), 1);
+    assert.equal(category.get('children').get('length'), 2);
     run(function() {
         store.push('category', {id:5});
-        store.push('category', {id:CD.idOne, children_fks: [4, 5]});
+        store.push('category-children', {id:CCD.idThree, category_pk: CD.idOne, child_pk: 5});
     });
-    assert.equal(category.get('has_many_children').get('length'), 2);
+    assert.equal(category.get('children').get('length'), 3);
 });
 
 test('add_child will add child to category fks array', (assert) => {
-    category = store.push('category', {id: CD.idOne, children_fks: []});
     const cat_one = {id:8};
-    assert.equal(category.get('has_many_children').get('length'), 0);
+    assert.equal(category.get('children').get('length'), 0);
     category.add_child(cat_one);
-    assert.equal(category.get('has_many_children').get('length'), 1);
-    assert.deepEqual(category.get('children_fks'), [8]);
+    assert.equal(category.get('children').get('length'), 1);
     category.add_child(cat_one);
-    assert.equal(category.get('has_many_children').get('length'), 1);
-    assert.deepEqual(category.get('children_fks'), [8]);
+    assert.equal(category.get('children').get('length'), 1);
+    assert.deepEqual(category.get('category_children_fks'), []);
+    assert.ok(category.get('isDirtyOrRelatedDirty'));
 });
 
 test('remove_child will remove child to category fks array', (assert) => {
-    category = store.push('category', {id: CD.idOne, children_fks: [8]});
-    store.push('category', {id:8});
-    assert.equal(category.get('has_many_children').get('length'), 1);
+    store.push('category', {id: 8});
+    store.push('category-children', {id: CCD.idOne, category_pk: CD.idOne, child_pk: 8});
+    assert.equal(category.get('children').get('length'), 1);
     category.remove_child(8);
-    assert.equal(category.get('has_many_children').get('length'), 0);
+    assert.equal(category.get('children').get('length'), 0);
 });
 
 test('add and remove work as expected', (assert) => {
-    category = store.push('category', {id: CD.idOne, children_fks: []});
     const cat = {id:8};
-    assert.equal(category.get('has_many_children').get('length'), 0);
+    assert.equal(category.get('children').get('length'), 0);
     category.add_child(cat);
-    assert.equal(category.get('has_many_children').get('length'), 1);
-    assert.deepEqual(category.get('children_fks'), [8]);
+    assert.equal(category.get('children').get('length'), 1);
     category.remove_child(8);
-    assert.equal(category.get('has_many_children').get('length'), 0);
-    assert.deepEqual(category.get('children_fks'), []);
+    assert.equal(category.get('children').get('length'), 0);
 });
 
 test('category is dirty when child is added or removed (starting with none)', (assert) => {
-    category = store.push('category', {id: CD.idOne, children_fks: [], previous_children_fks: []});
     const cat_one = {id:8};
-    assert.equal(category.get('has_many_children').get('length'), 0);
+    assert.equal(category.get('children').get('length'), 0);
     category.add_child(cat_one);
-    assert.equal(category.get('has_many_children').get('length'), 1);
+    assert.equal(category.get('children').get('length'), 1);
     assert.ok(category.get('isDirtyOrRelatedDirty'));
     category.remove_child(8);
-    assert.equal(category.get('has_many_children').get('length'), 0);
+    assert.equal(category.get('children').get('length'), 0);
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
     category.add_child(cat_one);
-    assert.equal(category.get('has_many_children').get('length'), 1);
+    assert.equal(category.get('children').get('length'), 1);
     assert.ok(category.get('isDirtyOrRelatedDirty'));
 });
 
 test('category is dirty when child is added or removed (starting with one child)', (assert) => {
-    category = store.push('category', {id: CD.idOne, children_fks: [8], previous_children_fks: [8]});
+    store.push('category', {id: CD.idOne, category_children_fks: [CCD.idOne]});
+    store.push('category', {id: 8});
+    store.push('category-children', {id: CCD.idOne, category_pk: CD.idOne, child_pk: 8});
     const cat_one = {id:8};
+    assert.equal(category.get('children').get('length'), 1);
+    assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
     category.remove_child(8);
-    assert.equal(category.get('has_many_children').get('length'), 0);
+    assert.equal(category.get('children').get('length'), 0);
     assert.ok(category.get('isDirtyOrRelatedDirty'));
     category.add_child(cat_one);
-    assert.equal(category.get('has_many_children').get('length'), 1);
+    assert.equal(category.get('children').get('length'), 1);
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
     const cat_two = store.push('category', {id:9});
     category.add_child(cat_two);
-    assert.equal(category.get('has_many_children').get('length'), 2);
-    assert.ok(category.get('children_fks'), [8,9]);
+    assert.equal(category.get('children').get('length'), 2);
+    assert.ok(category.get('category_children_fks'), [8,9]);
     assert.ok(category.get('isDirtyOrRelatedDirty'));
 });
 
 test('rollback children will revert and reboot the dirty children to clean', (assert) => {
-    category = store.push('category', {id: CD.idOne, children_fks: [8], previous_children_fks: [8]});
+    store.push('category', {id: CD.idOne, category_children_fks: [CCD.idOne]});
+    store.push('category-children', {id: CCD.idOne, category_pk: CD.idOne, child_pk: 8});
     const cat = store.push('category', {id: 8});
     const cat_two = {id: 9};
-    assert.equal(category.get('has_many_children').get('length'), 1);
+    assert.equal(category.get('children').get('length'), 1);
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
     category.remove_child(8);
-    assert.equal(category.get('has_many_children').get('length'), 0);
+    assert.equal(category.get('children').get('length'), 0);
     assert.ok(category.get('isDirtyOrRelatedDirty'));
     category.rollbackRelated();
-    assert.equal(category.get('has_many_children').get('length'), 1);
+    assert.equal(category.get('children').get('length'), 1);
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
     category.add_child(cat_two);
-    assert.equal(category.get('has_many_children').get('length'), 2);
-    assert.deepEqual(category.get('children_fks'), [8,9]);
-    assert.deepEqual(category.get('previous_children_fks'), [8]);
+    assert.equal(category.get('children').get('length'), 2);
+    assert.deepEqual(category.get('category_children_fks'), [CCD.idOne]);
     assert.ok(category.get('isDirtyOrRelatedDirty'));
     category.rollbackRelated();
-    assert.equal(category.get('has_many_children').get('length'), 1);
-    assert.deepEqual(category.get('children_fks'), [8]);
-    assert.deepEqual(category.get('previous_children_fks'), [8]);
+    assert.equal(category.get('children').get('length'), 1);
+    assert.deepEqual(category.get('category_children_fks'), [CCD.idOne]);
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
     category.add_child(cat_two);
-    assert.equal(category.get('has_many_children').get('length'), 2);
-    assert.deepEqual(category.get('children_fks'), [8,9]);
-    assert.deepEqual(category.get('previous_children_fks'), [8]);
+    assert.equal(category.get('children').get('length'), 2);
+    assert.deepEqual(category.get('category_children_fks'), [CCD.idOne]);
     assert.ok(category.get('isDirtyOrRelatedDirty'));
     category.saveRelated();
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
-    assert.equal(category.get('has_many_children').get('length'), 2);
-    assert.deepEqual(category.get('children_fks'), [8,9]);
-    assert.deepEqual(category.get('previous_children_fks'), [8,9]);
+    assert.equal(category.get('children').get('length'), 2);
+    assert.deepEqual(category.get('category_children_fks').length, 2);
     category.remove_child(8);
-    assert.equal(category.get('has_many_children').get('length'), 1);
-    assert.deepEqual(category.get('children_fks'), [9]);
-    assert.deepEqual(category.get('previous_children_fks'), [8,9]);
+    assert.equal(category.get('children').get('length'), 1);
+    assert.deepEqual(category.get('category_children_fks').length, 2);
     assert.ok(category.get('isDirtyOrRelatedDirty'));
     category.saveRelated();
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
-    assert.equal(category.get('has_many_children').get('length'), 1);
-});
-
-test('children should be dirty even when the number of previous matches current', (assert) => {
-    category = store.push('category', {id: CD.idOne, children_fks: [], previous_children_fks: []});
-    const cat = {id: 8};
-    const cat_two = {id: 9};
-    assert.equal(category.get('has_many_children').get('length'), 0);
-    assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
-    category.add_child(cat);
-    assert.equal(category.get('has_many_children').get('length'), 1);
-    assert.ok(category.get('isDirtyOrRelatedDirty'));
-    category.remove_child(8);
-    assert.equal(category.get('has_many_children').get('length'), 0);
-    assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
-    category.add_child(cat_two);
-    assert.equal(category.get('has_many_children').get('length'), 1);
-    assert.ok(category.get('isDirtyOrRelatedDirty'));
+    assert.equal(category.get('children').get('length'), 1);
 });
 
 test('category is not dry after save (starting with not children)', (assert) => {
-    category = store.push('category', {id: CD.idOne, children_fks: [], previous_children_fks: []});
+    category = store.push('category', {id: CD.idOne, category_children_fks: []});
     const cat = {id: 8};
     store.push('category', {id: 9});
-    assert.equal(category.get('has_many_children').get('length'), 0);
+    assert.equal(category.get('children').get('length'), 0);
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
     category.add_child(cat);
-    assert.equal(category.get('has_many_children').get('length'), 1);
+    assert.equal(category.get('children').get('length'), 1);
     assert.ok(category.get('isDirtyOrRelatedDirty'));
+    assert.equal(category.get('category_children_fks').length, 0);
     category.save();
     category.saveRelated();
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
-    assert.equal(category.get('has_many_children').get('length'), 1);
+    assert.equal(category.get('category_children_fks').length, 1);
+    assert.equal(category.get('children').get('length'), 1);
 });

@@ -11,12 +11,12 @@ var BSRS_CATEGORY_FACTORY = (function() {
             status: this.category_defaults.status
         }
     },
-    factory.prototype.get_list = function(i, name, children_fks, parent, level) {
+    factory.prototype.get_list = function(i, name, children, parent, level) {
         var response = [{
             id: i || this.category_defaults.idOne,
             name: name || this.category_defaults.nameOne,
             status: this.category_defaults.status,
-            children_fks: children_fks || [],
+            children: children || [],
             parent_id: parent || null, 
             level: level
         }];
@@ -36,17 +36,19 @@ var BSRS_CATEGORY_FACTORY = (function() {
             // status: this.category_defaults.statusOne
         }
     },
-    factory.prototype.children = function() {
-        return [{id: this.category_defaults.idChild, name: this.category_defaults.nameTwo, level: 1}];
+    factory.prototype.children = function(id) {
+        var _id = id || this.category_defaults.idChild;
+        return [{id: _id, name: this.category_defaults.nameTwo, level: 1}];
     },
     factory.prototype.top_level = function() {
         var parent_one = this.get(this.category_defaults.idOne);
         parent_one.parent_id = null;
-        parent_one.children_fks = [this.category_defaults.idTwo, this.category_defaults.idPlumbing];
+        var children = this.children(this.category_defaults.idTwo);
+        children.push({id: this.category_defaults.idPlumbing});
+        parent_one.children = children;
         parent_one.level = 0;
         var parent_two = this.get(this.category_defaults.idThree, this.category_defaults.nameThree);
         parent_two.parent_id = null;
-        parent_two.children_fks = [];
         parent_two.level = 0;
         var response = [parent_one, parent_two];
         return {'count':2,'next':null,'previous':null,'results': response};
@@ -55,12 +57,10 @@ var BSRS_CATEGORY_FACTORY = (function() {
         var parent_one = this.get(this.category_defaults.idOne);
         delete parent_one.status;
         // parent_one.parent_id = null;
-        // parent_one.children_fks = [this.category_defaults.idTwo, this.category_defaults.idPlumbing];
         // parent_one.level = 0;
         var parent_two = this.get(this.category_defaults.idThree, this.category_defaults.nameThree);
         delete parent_two.status;
         // parent_two.parent_id = null;
-        // parent_two.children_fks = [];
         // parent_two.level = 0;
         var response = [parent_one, parent_two];
         return {'count':2,'next':null,'previous':null,'results': response};

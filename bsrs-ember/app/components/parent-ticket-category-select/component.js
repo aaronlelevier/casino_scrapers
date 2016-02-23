@@ -12,7 +12,7 @@ var ParentTicketCategorySelect = ChildValidationComponent.extend({
         }
         let parent = ticket.get('top_level_category');
         let tree = ticket.construct_category_tree(parent);
-        return tree ? tree.pop().get('children_fks').length === 0 : true;
+        return tree ? tree.pop().get('children').get('length') === 0 : true;
     })
 });
 

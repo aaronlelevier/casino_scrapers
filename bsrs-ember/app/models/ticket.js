@@ -77,7 +77,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
         run(function() {
             store.push('ticket', {id: ticket_pk, previous_attachments_fks: fks});
         });
-        this.get('attachments').forEach(function(attachment) {
+        this.get('attachments').forEach((attachment) => {
             attachment.save();
         });
     },
