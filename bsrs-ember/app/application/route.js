@@ -102,7 +102,7 @@ var ApplicationRoute = Ember.Route.extend({
         const person_current = Ember.$.extend(true, [], Ember.$('[data-preload-person-current]').data('configuration'));
         let current_locale = store.find('locale', person_current.locale);
         config.i18n.currentLocale = current_locale.get('locale');
-        //Sets current user 
+        //Sets current user
         store.push('person-current', person_current);
         var person_deserializer = this.get('PersonDeserializer');
         // push in 'logged in' Person
@@ -127,6 +127,7 @@ var ApplicationRoute = Ember.Route.extend({
     },
     afterModel(){
         this.set('i18n.locale', config.i18n.currentLocale);
+        Ember.$('.application-loading').fadeOut(750, function() { Ember.$(this).remove(); });
     },
     actions: {
         cancel_modal() {
@@ -168,7 +169,7 @@ var ApplicationRoute = Ember.Route.extend({
         delete(tab, callback, id){
             const store = this.get('store');
             callback().then(() => {
-                this.send('closeTabMaster', tab); 
+                this.send('closeTabMaster', tab);
             }).then(() => {
             });
         }
