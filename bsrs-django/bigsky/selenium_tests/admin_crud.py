@@ -69,7 +69,8 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
     def test_role(self):
         ### CREATE
         # Go to Role Area
-        self.nav_page.find_role_link().click()
+        role_link = self.nav_page.find_role_link()
+        role_link.click()
         # Create Role Page Object
         role_page = ModelPage(
             driver = self.driver,
@@ -129,7 +130,8 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
     def test_location(self):
         ### CREATE
         # Go to Location Area
-        self.nav_page.find_location_link().click()
+        location_link = self.nav_page.find_location_link()
+        location_link.click()
         # Create Location Page Object
         location_page = ModelContactPage(
             driver = self.driver,
@@ -285,7 +287,8 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
     def test_location_level(self):
         ### CREATE
         # Go to Role Area
-        self.nav_page.find_location_level_link().click()
+        llevel_link = self.nav_page.find_location_level_link()
+        llevel_link.click()
         # Create LocationLevel Page Object
         location_level_page = ModelPage(
             driver=self.driver,
@@ -341,7 +344,8 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
     def test_person(self):
         ### CREATE
         # Go to Person Area
-        self.nav_page.find_people_link().click()
+        people_link = self.nav_page.find_people_link()
+        people_link.click()
         # Create Person Page Object
         person_page = ModelContactPage(
             driver = self.driver,
