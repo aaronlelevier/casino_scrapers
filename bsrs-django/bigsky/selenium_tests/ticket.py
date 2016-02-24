@@ -111,6 +111,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
             "media/test_in/jp.csv"
         ))
         # Go to Ticket Area
+        self.driver.execute_script("window.scrollTo(0, 0);")
         self.nav_page.find_ticket_link().click()
         tab = self.wait_for_xhr_request("t-tab-close")
         tab.click()
