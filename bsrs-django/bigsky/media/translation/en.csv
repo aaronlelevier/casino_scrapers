@@ -238,7 +238,7 @@ en,ticket.status.draft,Draft,Draft,,"'ticket.status.draft':'Draft',",Draft,Draft
 en,ticket.status.in_progress,In Progress,In Progress,,"'ticket.status.in_progress':'In Progress',",In Progress,In Progress
 en,ticket.status.new,New,New,,"'ticket.status.new':'New',",New,New
 en,ticket.status.problem_solved,Problem Solved,Problem Solved,,"'ticket.status.problem_solved':'Problem Solved',",Problem Solved,Problem Solved
-en,ticket.status.unsatisfactory_completion,Unsatisfactory Completion,Unsatisfactory Completion,,"'ticket.status.unsatisfactory_completion':'Unsatisfactory Completion',",Unsatisfactory Completion,Unsatisfactory Completion
+en,ticket.status.unsatisfactory_completion,Unsatisfactory,Unsatisfactory,,"'ticket.status.unsatisfactory_completion':'Unsatisfactory',",Unsatisfactory,Unsatisfactory
 en,upload.progress,Progress,Progress,,"'upload.progress':'Progress',",Progress,Progress
 en,validation.invalid,Invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid,Invalid
 en,validation.valid,Valid,Valid,,"'validation.valid':'Valid',",Valid,Valid
