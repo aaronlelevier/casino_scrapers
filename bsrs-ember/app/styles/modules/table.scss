@@ -53,7 +53,13 @@ div.rowTable {
                 cursor: pointer;
             }
         }//table
+        .table-responsive{
+            border: none !important;
+        }
         table{
+            &.table{
+                table-layout: fixed;
+            }
             th{
                 span{
                     display: inline-block;
@@ -90,9 +96,19 @@ div.rowTable {
                 font-size: 1.2rem;
                 &.ticket-priority{
                     width: 120px;
+                    .tag{
+                        max-width: 120px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
                 }
                 &.ticket-status{
                     width: 120px;
+                    .tag{
+                        max-width: 120px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
                 }
                 &.ticket-number{
                     width: 80px;
@@ -111,7 +127,13 @@ div.rowTable {
                     width: 180px;
                 }
                 &.ticket-category{
-                    width: 300px;
+                    width: 200px;
+                }
+                &.ticket-request{
+                    width: 200px;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
                 }
                 &.selector{
                     width: 28px;

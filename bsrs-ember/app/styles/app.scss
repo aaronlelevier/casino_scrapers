@@ -15,10 +15,10 @@
 @import 'app/styles/modules/buttons.scss';
 @import 'app/styles/modules/activity-list.scss';
 
-
 @media screen and (max-width: $mobileMax){
     @import 'app/styles/mobile/layout.scss';
 }
+
 @media screen and (min-width: $tabletMin){
     @import 'app/styles/modules/header.scss';
     @import 'app/styles/modules/tabs.scss';
