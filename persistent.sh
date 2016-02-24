@@ -48,7 +48,8 @@ fi
 TEST=$?; if [ "$TEST" == 1 ]; then echo "create virtualenv failed"; exit $TEST; fi
 
 wait
-venv/bin/pip3 install -r requirements.txt
+source venv/bin/activate
+pip install -r requirements.txt
 TEST=$?; if [ "$TEST" == 1 ]; then echo "pip install failed"; exit $TEST; fi
 
 
@@ -57,9 +58,9 @@ cd bigsky/
 # NOTE: Need to manually migrate b/c this has an existing DB
 # TODO: Squash migrations and correctly version control them to make this
 #       process how it should be.
-# wait
-# ../venv/bin/python manage.py migrate
-# TEST=$?; if [ "$TEST" == 1 ]; then echo "migrate failed"; exit $TEST; fi
+wait
+../venv/bin/python manage.py migrate
+TEST=$?; if [ "$TEST" == 1 ]; then echo "migrate failed"; exit $TEST; fi
 
 
 echo "AFTER MIGRATIONS, LOAD LATEST FIXTURE DATA."
