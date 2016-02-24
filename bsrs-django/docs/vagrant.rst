@@ -178,6 +178,12 @@ Scott Note's for new vagrant setup
 .. code-block::
     # CENTOS setup
     sudo yum -y update
+    # firefox update
+        wget https://ftp.mozilla.org/pub/firefox/releases/42.0/linux-x86_64/en-US/ or other versions
+        tar -xvjf firefox...tar.bz2
+        cd firefox
+        sudo ln -s abs_path /usr/bin/firefox
+        firefox -v ==> should say 42.0
     yum groupinstall "Development tools"
     sudo yum install wget
     # Python
