@@ -25,7 +25,7 @@ if [  -d "${PROJECT_DIR}/persistent/bsrs" ];
     then
         echo "BSRS REPO EXISTS"
         cd bsrs
-        git checkout v0.2.0
+        git checkout .
     else
         echo "BSRS REPO DOES NOT EXIST"
         git clone git@github.com:bigskytech/bsrs.git
