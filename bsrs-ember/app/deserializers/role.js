@@ -1,8 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
-import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
-let extract_category = (model, store, role_existing, category_deserializer) => {
+let extract_category = (model, store, role_existing) => {
     let server_sum_category_fks = [];
     let prevented_duplicate_m2m = [];
     let all_join_models = store.find('role-category', {role_fk: model.id});
@@ -90,22 +89,20 @@ var copySettingsToFirstLevel = (obj) => {
 };
 
 var RoleDeserializer = Ember.Object.extend({
-    CategoryDeserializer: injectDeserializer('category'),
     deserialize(response, options) {
-        let category_deserializer = this.get('CategoryDeserializer');
         if (typeof options === 'undefined') {
             return this.deserialize_list(response);
         } else {
-            return this.deserialize_single(response, options, category_deserializer);
+            return this.deserialize_single(response, options);
         }
     },
-    deserialize_single(response, id, category_deserializer) {
+    deserialize_single(response, id) {
         let store = this.get('store');
         let role_existing = store.find('role', id);
         let role = role_existing;
         if (!role_existing.get('id') || role_existing.get('isNotDirtyOrRelatedNotDirty')) {
             response.location_level_fk = extract_location_level(response, store);
-            response.role_category_fks = extract_category(response, store, role_existing, category_deserializer);
+            response.role_category_fks = extract_category(response, store, role_existing);
             response.detail = true;
             response = copySettingsToFirstLevel(response);
             role = store.push('role', response);

@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 import { belongs_to_extract, belongs_to_extract_nodetail } from 'bsrs-components/repository/belongs-to';
 import { many_to_many_extract } from 'bsrs-components/repository/many-to-many';
 
@@ -28,19 +27,14 @@ var extract_ticket_location = function(location_json, store, ticket) {
 };
 
 var TicketDeserializer = Ember.Object.extend({
-    PersonDeserializer: injectDeserializer('person'),
-    CategoryDeserializer: injectDeserializer('category'),
-    LocationDeserializer: injectDeserializer('location'),
     deserialize(response, options) {
-        let category_deserializer = this.get('CategoryDeserializer');
-        let location_deserializer = this.get('LocationDeserializer');
         if (typeof options === 'undefined') {
             return this.deserialize_list(response);
         } else {
-            return this.deserialize_single(response, options, category_deserializer, location_deserializer);
+            return this.deserialize_single(response, options);
         }
     },
-    deserialize_single(response, id, category_deserializer) {
+    deserialize_single(response, id) {
         let store = this.get('store');
         let existing_ticket = store.find('ticket', id);
         let return_ticket = existing_ticket;
