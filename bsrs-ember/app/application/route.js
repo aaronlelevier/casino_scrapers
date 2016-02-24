@@ -130,7 +130,7 @@ var ApplicationRoute = Ember.Route.extend({
         Ember.$('.application-loading').addClass('animated bounceOut');
         Ember.run.later(function(){
             Ember.$('.application-loading').remove();
-        }, 1000);
+        }, 0);
     },
     actions: {
         cancel_modal() {
