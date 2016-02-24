@@ -35,6 +35,7 @@ class CategoryIDNameSerializerTicket(BaseCreateSerializer):
         model = Category
         fields = ('id', 'name', 'level', 'children', 'parent', 'label', 'subcategory_label')
 
+    # TODO: Scott...this needs cleanup
     def to_representation(self, obj):
         data = super(CategoryIDNameSerializerTicket, self).to_representation(obj)
         data['parent_id'] = data.pop('parent', [])
@@ -43,6 +44,8 @@ class CategoryIDNameSerializerTicket(BaseCreateSerializer):
 
 #TODO: check if can use above serializer
 class CategoryIDNameSerializer(BaseCreateSerializer):
+
+    children = CategoryChildrenSerializer(many=True, read_only=True)
 
     class Meta:
         model = Category
