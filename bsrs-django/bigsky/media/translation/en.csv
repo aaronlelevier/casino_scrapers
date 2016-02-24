@@ -182,11 +182,12 @@ en,crud.no,No,No,,"'crud.no':'No',",No,No
 en,crud.restore.button,Restore,Restore,,"'crud.restore.button':'Restore',",Restore,Restore
 en,crud.restore.error,Error restoring {{model}},Error restoring {{model}},,"'crud.restore.error':'Error restoring {{model}}',",Error restoring {{model_var_,Error restoring _model_var_
 en,crud.restore.success,{{model}} restored successfully.,{{model}} restored successfully.,,"'crud.restore.success':'{{model}} restored successfully.',",{{model_var_ restored successfully.,_model_var_ restored successfully.
-en,crud.save.button,Save,Save,,"'crud.save.button':'Save',",Save,Save
+en,crud.save.button,Save and Close,Save and Close,,"'crud.save.button':'Save and Close',",Save and Close,Save and Close
 en,crud.save.error,Error saving {{model}}.,Error saving {{model}}.,,"'crud.save.error':'Error saving {{model}}.',",Error saving {{model_var_.,Error saving _model_var_.
 en,crud.save.success,{{model}} saved successfully.,{{model}} saved successfully.,,"'crud.save.success':'{{model}} saved successfully.',",{{model_var_ saved successfully.,_model_var_ saved successfully.
 en,crud.titles.edit,Edit {{model}},Edit {{model}},,"'crud.titles.edit':'Edit {{model}}',",Edit {{model_var_,Edit _model_var_
 en,crud.titles.new,New {{model}},New {{model}},,"'crud.titles.new':'New {{model}}',",New {{model_var_,New _model_var_
+en,crud.update.button,Update,Update,,"'crud.update.button':'Update',",Update,Update
 en,crud.yes,Yes,Yes,,"'crud.yes':'Yes',",Yes,Yes
 en,dashboard.welcome,Welcome,Welcome,,"'dashboard.welcome':'Welcome',",Welcome,Welcome
 en,grid.filter,Filter,Filter,,"'grid.filter':'Filter',",Filter,Filter
