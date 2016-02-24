@@ -33,7 +33,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         # Generic Elements
         self.gen_elem_page = GeneralElementsPage(self.driver)
         self.nav_page = NavPage(self.driver)
-
+        import time; time.sleep(2)
         # Go to Ticket Area
         self.nav_page.find_ticket_link().click()
 
