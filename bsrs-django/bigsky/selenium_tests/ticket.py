@@ -104,22 +104,22 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
             "media/test_in/es.csv"
         ))
-        # # File 2
-        # attach_file_btn = self.driver.find_element_by_xpath("//input[@type='file']")
-        # attach_file_btn.send_keys(os.path.join(
-        #     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-        #     "media/test_in/jp.csv"
-        # ))
+        # File 2
+        attach_file_btn = self.driver.find_element_by_xpath("//input[@type='file']")
+        attach_file_btn.send_keys(os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            "media/test_in/jp.csv"
+        ))
         # Go to Ticket Area
         self.driver.execute_script("window.scrollTo(0, 0);")
         self.nav_page.find_ticket_link().click()
         tab = self.wait_for_xhr_request("t-tab-close")
-        tab.click()
-        self.wait_for_xhr_request("application-modal", debounce=True).click()
-        # self.driver_wait.find_element_by_class_name("application-modal")
-        WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "modal-title"))
-        )
+        # tab.click()
+        # self.wait_for_xhr_request("application-modal", debounce=True).click()
+        # # self.driver_wait.find_element_by_class_name("application-modal")
+        # WebDriverWait(self.driver, 10).until(
+        #     EC.presence_of_element_located((By.CLASS_NAME, "modal-title"))
+        # )
         # rollback_btn = self.wait_for_xhr_request("t-modal-rollback-btn", debounce=True)
         # rollback_btn.click()
         # # revisit page
