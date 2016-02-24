@@ -37,6 +37,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     'accounting',
     'bigsky',
+    'decision_tree',
     'category',
     'contact',
     'generic',

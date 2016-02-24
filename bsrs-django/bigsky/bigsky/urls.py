@@ -15,6 +15,7 @@ from bigsky import views as bigsky_views
 from bigsky.forms import BsAuthenticationForm
 from category import views as category_views
 from contact import views as contact_views
+from decision_tree import views as decision_tree_views
 from generic import views as generic_views
 from location import views as location_views
 from setting import views as setting_views
@@ -30,6 +31,9 @@ router = routers.DefaultRouter()
 
 # ACCOUNTING
 router.register(r'admin/currencies', accounting_views.CurrencyViewSet)
+# DECISION TREE
+router.register(r'admin/dtd', decision_tree_views.TreeOptionViewSet)
+router.register(r'admin/dtd-links', decision_tree_views.TreeLinkViewSet)
 # CATEGORY
 router.register(r'admin/categories', category_views.CategoryViewSet)
 # CONTACT
