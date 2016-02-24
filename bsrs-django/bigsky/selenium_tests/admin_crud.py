@@ -70,7 +70,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
     def test_role(self):
         ### CREATE
         # Go to Role Area
-        import time; time.sleep(2)
         role_link = self.nav_page.find_role_link()
         role_link.click()
         # Create Role Page Object
@@ -132,7 +131,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
     def test_location(self):
         ### CREATE
         # Go to Location Area
-        import time; time.sleep(2)
         location_link = self.nav_page.find_location_link()
         location_link.click()
         # Create Location Page Object
@@ -290,7 +288,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
     def test_location_level(self):
         ### CREATE
         # Go to Role Area
-        import time; time.sleep(2)
         llevel_link = self.nav_page.find_location_level_link()
         llevel_link.click()
         # Create LocationLevel Page Object
@@ -348,7 +345,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
     def test_person(self):
         ### CREATE
         # Go to Person Area
-        import time; time.sleep(2)
         people_link = self.nav_page.find_people_link()
         people_link.click()
         # Create Person Page Object
