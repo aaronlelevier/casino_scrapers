@@ -9,12 +9,14 @@
 
         {{content-for 'head'}}
 
+        <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
         <link rel="stylesheet" href="assets/vendor.css">
         <link rel="stylesheet" href="assets/bsrs-ember.css">
 
         {{content-for 'head-footer'}}
     </head>
     <body>
+        <div class="application-loading"></div>
         {{content-for 'body'}}
         <script src="assets/vendor.js" integrity=""></script>
         <script src="assets/bsrs-ember.js" integrity=""></script>
