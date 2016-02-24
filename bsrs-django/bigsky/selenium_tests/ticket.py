@@ -112,8 +112,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         ))
         # Go to Ticket Area
         self.nav_page.find_ticket_link().click()
-        tab = self.driver_wait.find_element_by_class_name("t-tab-close")
-        self.driver.execute_script("window.scrollTo(0,0);")
+        tab = self.wait_for_xhr_request("t-tab-close")
         tab.click()
         self.wait_for_xhr_request("application-modal", debounce=True).click()
         # self.driver_wait.find_element_by_class_name("application-modal")
