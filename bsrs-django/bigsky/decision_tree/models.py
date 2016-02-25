@@ -13,19 +13,23 @@ FIELD_TYPES = ['text', 'textarea', 'select', 'checkbox', 'file', 'asset select',
                'check in', 'check out']
 
 
+class TreeField(BaseModel):
+    label = models.CharField(max_length=100)
+    type = models.CharField(max_length=100)
+    required = models.BooleanField(blank=True, default=False)
+
+
 class TreeOption(BaseModel):
-    text = models.CharField(max_length=100)
+    text =  models.CharField(max_length=100)
     order = models.IntegerField(blank=True, default=0)
+    field = models.ForeignKey(TreeField, related_name='options', null=True)
 
 
 class TreeData(BaseModel):
     key = models.CharField(max_length=1000)
     description = models.CharField(max_length=1000)
     files = models.ManyToManyField(Attachment)
-    field_label = models.CharField(max_length=1000)
-    field_type = models.CharField(max_length=1000, choices=[(x,x) for x in FIELD_TYPES],
-                                  blank=True, default=FIELD_TYPES[0])
-    options = models.ForeignKey(TreeOption, null=True)
+    fields = models.ManyToManyField(TreeField)
     note = models.CharField(max_length=1000, blank=True)
     note_type = models.CharField(max_length=1000, choices=[(x,x) for x in NOTE_TYPES],
                                  blank=True, default=NOTE_TYPES[0])
@@ -43,5 +47,5 @@ class TreeLink(BaseModel):
     request = models.CharField(max_length=1000, blank=True)
     priority = models.ForeignKey(TicketPriority, null=True)
     status = models.ForeignKey(TicketStatus, null=True)
-    tree_data_parent = models.ForeignKey(TreeData, related_name='tree_data_parent', null=True)
-    tree_data_links = models.ManyToManyField(TreeData, related_name='tree_data_links')
+    destination = models.OneToOneField(TreeData, related_name='parent_link', null=True)
+    child_data = models.ManyToManyField(TreeData, related_name='links')

@@ -32,6 +32,7 @@ router = routers.DefaultRouter()
 # ACCOUNTING
 router.register(r'admin/currencies', accounting_views.CurrencyViewSet)
 # DECISION TREE
+router.register(r'admin/dtd-fields', decision_tree_views.TreeFieldViewSet)
 router.register(r'admin/dtd-options', decision_tree_views.TreeOptionViewSet)
 router.register(r'admin/dtd-links', decision_tree_views.TreeLinkViewSet)
 router.register(r'admin/dtd', decision_tree_views.TreeDataViewSet)
