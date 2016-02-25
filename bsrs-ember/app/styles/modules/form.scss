@@ -156,6 +156,9 @@ textarea.ticket-request{
 	margin: 0 8px 0 0;
 	position: relative;
 	white-space: nowrap;
+	i{
+		margin-right: 3px;
+	}
 	&.admin-location-status-open,
 	&.ticket-status-new{
 		background: $lightGreen;
@@ -224,7 +227,6 @@ label.small-label{
 	float: left;
     margin-right: -1px;
 	min-width: 120px;
-	max-width: 220px;
 
 	.category-select {
 		float: left;
@@ -283,7 +285,6 @@ label.small-label{
 				height: 20px;
 				box-shadow: none;
 				width: auto !important;
-				min-width: 180px;
 				float: right;
 			}
 		}

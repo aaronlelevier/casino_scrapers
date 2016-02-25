@@ -70,9 +70,7 @@ div.rowTable {
                         float: left;
                         max-width: 80%;
                         margin-right: 5%;
-                        overflow: hidden;
-                        white-space: nowrap;
-                        text-overflow: ellipsis;
+                        @include truncate;
                     }
                 }
                 .fa-sort,
@@ -97,17 +95,15 @@ div.rowTable {
                 &.ticket-priority{
                     width: 120px;
                     .tag{
-                        max-width: 120px;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
+                        max-width: 110px;
+                        @include truncate;
                     }
                 }
                 &.ticket-status{
                     width: 120px;
                     .tag{
-                        max-width: 120px;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
+                        max-width: 110px;
+                        @include truncate;
                     }
                 }
                 &.ticket-number{
@@ -125,15 +121,14 @@ div.rowTable {
                 }
                 &.ticket-location{
                     width: 180px;
+                    @include truncate;
                 }
                 &.ticket-category{
                     width: 200px;
                 }
                 &.ticket-request{
                     width: 200px;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    overflow: hidden;
+                    @include truncate;
                 }
                 &.selector{
                     width: 28px;
