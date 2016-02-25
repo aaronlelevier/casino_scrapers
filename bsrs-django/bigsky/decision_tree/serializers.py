@@ -1,4 +1,4 @@
-from decision_tree.models import TreeOption, TreeLink
+from decision_tree.models import TreeOption, TreeLink, TreeData
 from utils.serializers import BaseCreateSerializer
 
 
@@ -16,3 +16,10 @@ class TreeLinkSerializer(BaseCreateSerializer):
         fields = ('id', 'order', 'text', 'action_button', 'is_header',
             'categories', 'request', 'priority', 'status',
             'tree_data_parent', 'tree_data_links',)
+
+
+class TreeDataSerializer(BaseCreateSerializer):
+
+    class Meta:
+        model = TreeData
+        fields = ('id', 'key', 'description',)

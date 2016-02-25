@@ -5,7 +5,7 @@ import uuid
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
-from decision_tree.models import TreeOption, TreeLink
+from decision_tree.models import TreeOption, TreeLink, TreeData
 from decision_tree.serializers import TreeOptionSerializer, TreeLinkSerializer
 from decision_tree.tests.factory import create_tree_link
 from person.tests.factory import PASSWORD, create_single_person
@@ -32,7 +32,7 @@ class TreeOptionTests(LoginTestMixin, APITestCase):
         self.client.logout()
 
     def test_detail(self):
-        response = self.client.get('/api/admin/dtd/{}/'.format(self.tree_option.id))
+        response = self.client.get('/api/admin/dtd-options/{}/'.format(self.tree_option.id))
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -42,7 +42,7 @@ class TreeOptionTests(LoginTestMixin, APITestCase):
         self.assertEqual(data['order'], self.tree_option.order)
 
     def test_list(self):
-        response = self.client.get('/api/admin/dtd/')
+        response = self.client.get('/api/admin/dtd-options/')
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -54,7 +54,7 @@ class TreeOptionTests(LoginTestMixin, APITestCase):
         raw_data = copy.copy(self.data)
         raw_data['id'] = str(uuid.uuid4())
 
-        response = self.client.post('/api/admin/dtd/', raw_data, format='json')
+        response = self.client.post('/api/admin/dtd-options/', raw_data, format='json')
 
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
@@ -68,7 +68,7 @@ class TreeOptionTests(LoginTestMixin, APITestCase):
         self.assertNotEqual(self.data['order'], new_order)
         self.data['order'] = new_order
 
-        response = self.client.put('/api/admin/dtd/{}/'
+        response = self.client.put('/api/admin/dtd-options/{}/'
             .format(self.tree_option.id), self.data, format='json')
 
         self.assertEqual(response.status_code, 200)
@@ -132,4 +132,25 @@ class TreeLinkTests(LoginTestMixin, APITestCase):
         response = self.client.put('/api/admin/dtd-links/{}/'.format(self.tree_link.id), {}, format='json')
 
         self.assertEqual(response.status_code, 405)
+
+
+class TreeDataTests(LoginTestMixin, APITestCase):
+
+    def setUp(self):
+        super(TreeDataTests, self).setUp()
+        self.tree_data = mommy.make(TreeData)
+
+    def test_list(self):
+        response = self.client.get('/api/admin/dtd/')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        data = data['results'][0]
+        self.assertEqual(data['id'], str(self.tree_data.id))
+        self.assertEqual(data['key'], self.tree_data.key)
+        self.assertEqual(data['description'], self.tree_data.description)
+
+
+
 
