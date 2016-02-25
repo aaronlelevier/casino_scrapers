@@ -23,9 +23,9 @@ class JavascriptMixin(object):
                     assert element.is_displayed()
                 return element
             if just_refreshed:
-                time.sleep(2)
+                time.sleep(2.5)
             else:
-                time.sleep(1)
+                time.sleep(1.5)
 
     def wait_for_xhr_request_xpath(self, selector, plural=False, just_refreshed=False, debounce=False):
         if debounce:

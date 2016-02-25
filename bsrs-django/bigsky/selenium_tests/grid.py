@@ -120,7 +120,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         # test - ordered
         self.driver.find_element_by_class_name("t-filterset-save-btn").click()
         self.driver.find_element_by_class_name("t-sort-username-dir").click()
-        usernames = self.driver.find_elements_by_class_name("t-person-username")
+        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
         self.assertEqual(_username_matches[0], usernames[0].text)
         # TITLE
         # setup
