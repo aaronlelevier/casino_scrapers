@@ -75,12 +75,6 @@ export default Ember.Object.extend(GridRepositoryMixin, {
             });
         }
     },
-    // find() {
-    //     PromiseMixin.xhr(PEOPLE_URL, 'GET').then((response) => {
-    //         this.get('PersonDeserializer').deserialize(response);
-    //     });
-    //     return this.get('store').find('person');
-    // },
     findById(id) {
         let model = this.get('store').find('person', id);
         model.id = id;

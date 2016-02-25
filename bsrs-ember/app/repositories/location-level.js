@@ -24,12 +24,6 @@ var LocationLevelRepo = Ember.Object.extend(GridRepositoryMixin, {
     peek(filter, computed_keys) {
         return this.get('store').find('location-level', filter);
     },
-    // find() {
-    //     PromiseMixin.xhr(LOCATION_LEVEL_URL, 'GET').then((response) => {
-    //         this.get('LocationLevelDeserializer').deserialize(response);
-    //     });
-    //     return this.get('store').find('location-level');
-    // },
     findById(id) {
         let model = this.get('store').find('location-level', id);
         model.id = id;

@@ -31,12 +31,6 @@ var RoleRepo = Ember.Object.extend(GridRepositoryMixin, {
             model.saveRelated();
         });
     },
-    // find() {
-    //     PromiseMixin.xhr(ROLE_URL, 'GET').then((response) => {
-    //         this.get('RoleDeserializer').deserialize(response);
-    //     });
-    //     return this.get('store').find('role');
-    // },
     findById(id) {
         return PromiseMixin.xhr(ROLE_URL + id + '/', 'GET').then((response) => {
             return this.get('RoleDeserializer').deserialize(response, id);
