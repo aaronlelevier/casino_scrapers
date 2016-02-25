@@ -1,15 +1,9 @@
 from rest_framework import serializers
 
+from category.models import Category
 from decision_tree.models import TreeField, TreeOption, TreeLink, TreeData
 from generic.models import Attachment
 from utils.serializers import BaseCreateSerializer
-
-
-class TreeFieldSerializer(BaseCreateSerializer):
-
-    class Meta:
-        model = TreeField
-        fields = ('id', 'label', 'type', 'options', 'required',)
 
 
 class TreeOptionSerializer(BaseCreateSerializer):
@@ -19,12 +13,23 @@ class TreeOptionSerializer(BaseCreateSerializer):
         fields = ('id', 'text', 'order',)
 
 
+class TreeFieldSerializer(BaseCreateSerializer):
+
+    options = TreeOptionSerializer(many=True, required=False)
+
+    class Meta:
+        model = TreeField
+        fields = ('id', 'label', 'type', 'options', 'required',)
+
+
 class TreeLinkSerializer(BaseCreateSerializer):
+
+    categories = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = TreeLink
         fields = ('id', 'order', 'text', 'action_button', 'is_header', 'categories',
-                  'request', 'priority', 'status', 'destination', 'child_data',)
+                  'request', 'priority', 'status', 'parent', 'destination',)
 
 
 class TreeDataListSerializer(BaseCreateSerializer):
@@ -38,12 +43,11 @@ class TreeDataSerializer(BaseCreateSerializer):
 
     files = serializers.PrimaryKeyRelatedField(
         queryset=Attachment.objects.all(), many=True, required=False)
-    fields = serializers.PrimaryKeyRelatedField(
-        queryset=TreeField.objects.all(), many=True, required=False)
+    fields = TreeFieldSerializer(many=True, required=False)
+    from_link = TreeLinkSerializer(required=False)
+    links = TreeLinkSerializer(many=True, required=False)
 
     class Meta:
         model = TreeData
         fields = ('id', 'key', 'description', 'note', 'note_type', 'files', 'fields',
-            'prompt', 'link_type', 'links',)
-
-    
+                  'prompt', 'link_type', 'from_link', 'links',)
