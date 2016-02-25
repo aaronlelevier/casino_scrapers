@@ -31,12 +31,12 @@ var LocationLevelRepo = Ember.Object.extend(GridRepositoryMixin, {
     //     return this.get('store').find('location-level');
     // },
     findById(id) {
-        // let model = this.get('store').find('location-level', id);
-        // model.id = id;
-        return PromiseMixin.xhr(LOCATION_LEVEL_URL + id + '/', 'GET').then((response) => {
-            return this.get('LocationLevelDeserializer').deserialize(response, id);
+        let model = this.get('store').find('location-level', id);
+        model.id = id;
+        PromiseMixin.xhr(LOCATION_LEVEL_URL + id + '/', 'GET').then((response) => {
+            this.get('LocationLevelDeserializer').deserialize(response, id);
         });
-        // return model;
+        return model;
     }
 });
 

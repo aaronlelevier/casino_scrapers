@@ -11,14 +11,12 @@ var LocationLevelRoute = TabRoute.extend({
         const location_level_pk = params.location_level_id;
         const repository = this.get('repository');
         let location_level = this.get('store').find('location-level', location_level_pk);
-        return new Ember.RSVP.Promise((resolve) => {
-            // if (!location_level.get('length') || location_level.get('isNotDirtyOrRelatedNotDirty')) { 
-            repository.findById(location_level_pk).then((model) => {
-                location_level = model;
-                resolve({model:location_level});
-            });
-            // }
-        });
+        if (!location_level.get('length') || location_level.get('isNotDirtyOrRelatedNotDirty')) { 
+            location_level = repository.findById(location_level_pk);
+        }
+        return {
+            model: location_level
+        };
     }, 
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
