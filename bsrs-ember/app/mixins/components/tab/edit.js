@@ -12,8 +12,10 @@ var EditMixin = Ember.Mixin.create({
                 let tab = this.tab();
                 tab.set('saveModel', persisted);
                 if(!update){
+                    //All other routes
                     this.sendAction('close', tab);
                 }else{
+                    //TICKET sends update in args
                     this.get('activityRepository').find('ticket', 'tickets', pk);
                 }
             }, (xhr) => {

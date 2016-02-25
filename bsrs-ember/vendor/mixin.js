@@ -135,23 +135,24 @@ var BSRS_LIST_FIXTURE_MIXIN = (function() {
         return {'count':searched.length,'next':null,'previous':null,'results': paged};
     };
 
-    factory.prototype.searched = function(search, column, page) {
+    factory.prototype.searched = function(search, column, page){
+        //TODO: page1 should be list_two
         var page1 = this.list_two().results;
         var page2 = this.list().results;
         var response = page1.concat(page2);
         //we do a normal order sort here to slice correctly below
-        var sorted = response.sort(function(a,b) {
+        var sorted = response.sort(function(a,b){
             return a[column] - b[column];
         });
         var regex = new RegExp(search, 'i');
-        var searched = sorted.filter(function(object) {
+        var searched = sorted.filter(function(object){
             var value = object[column] || object.name || object.username || object.request || object;
             return regex.test(value);
         });
         var paged;
-        if(page && page > 1) {
+        if(page && page > 1){
             paged = searched.slice(10, 20);
-        } else {
+        }else{
             paged = searched.slice(0, 10);
         }
         return {'count':searched.length,'next':null,'previous':null,'results': paged};

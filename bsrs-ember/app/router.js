@@ -13,6 +13,11 @@ Router.map(function() {
         this.route('contractors');
         this.route('settings', {path: '/settings/:id'});
         this.route('contractor-assignments');
+        this.route('dtds', function() {
+            this.route('index');
+            this.route('new', {path: 'new/:new_id'});
+            this.route('dtd', {path: '/:dtd_id'});
+        });
         this.route('locations', function() {
             this.route('index');
             this.route('new', {path: 'new/:new_id'});

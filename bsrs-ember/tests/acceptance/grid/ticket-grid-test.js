@@ -196,7 +196,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     });
 });
 
-test('scott typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
+test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
     var search_two = PREFIX + BASE_URL + '/?page=1&ordering=request&search=14';
     xhr(search_two ,"GET",null,{},200,TF.searched('14', 'request'));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=request';
@@ -343,8 +343,6 @@ test('clicking the same sort option over and over will flip the direction and re
 test('full text search will filter down the result set and query django accordingly and reset clears all full text searches', function(assert) {
     let find_three = PREFIX + BASE_URL + '/?page=1&priority__name__icontains=h';
     xhr(find_three, "GET",null,{},200,TF.sorted('id'));
-    // let find_two = PREFIX + BASE_URL + '/?page=1&request__icontains=';
-    // xhr(find_two ,"GET",null,{},200,TF.sorted('id'));
     let find_one = PREFIX + BASE_URL + '/?page=1&request__icontains=ape';
     xhr(find_one ,"GET",null,{},200,TF.fulltext('request:ape', 1));
     visit(TICKET_URL);

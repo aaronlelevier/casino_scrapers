@@ -1,0 +1,49 @@
+<form {{action "return false" this on="submit"}}>
+    {{base-component
+        model=model
+        save="save"
+        cancel="cancel"
+        delete="delete"
+    }}
+      <section>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.dtd.label.key" for="key"}}
+            {{input type="text" placeholder=(t "admin.dtd.label.key") value=model.key class="form-control t-dtd-key" id="dtd_key"}}
+            {{#if (v-get model 'key' 'isInvalid')}}
+                <div class="t-wat error">
+                  {{v-get model 'key' 'message'}}
+                </div>
+            {{/if}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{#form-group title="admin.dtd.label.description" for="description"}}
+                  {{textarea type="text" placeholder=(t "admin.dtd.label.description") value=model.description class="form-control t-dtd-description" id="dtd_description"}}
+                {{/form-group}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{#form-group title="admin.dtd.label.note" for="note"}}
+                  {{textarea type="text" placeholder=(t "admin.dtd.label.note") value=model.note class="form-control t-dtd-note" id="dtd_note"}}
+                {{/form-group}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{#form-group title="admin.dtd.label.fields" for="fields"}}
+                {{/form-group}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{#form-group title="admin.dtd.label.prompt" for="prompt"}}
+                  {{textarea type="text" placeholder=(t "admin.dtd.label.prompt") value=model.prompt class="form-control t-dtd-prompt" id="dtd_prompt"}}
+                {{/form-group}}
+            </div>
+        </div>
+      </section>
+</form>
