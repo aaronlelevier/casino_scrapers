@@ -28,6 +28,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.gen_elem_page = GeneralElementsPage(self.driver)
         # Go to Admin Page
         self.nav_page = NavPage(self.driver)
+        import time; time.sleep(2)
         self.nav_page.click_admin()
         # Go to Person Area
         self.nav_page.find_people_link().click()
