@@ -14,9 +14,9 @@ var TransitionRoute = TabRoute.extend({
         if (!translation.get('length') || translation.get('isNotDirty')) {
             translation = repository.findById(translation_pk);
         }
-        return Ember.RSVP.hash({
+        return {
             model: translation
-        });
+        };
 
     },
     setupController: function(controller, hash) {

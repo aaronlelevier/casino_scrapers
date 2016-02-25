@@ -10,9 +10,9 @@ var FakeRepo = Ember.Object.extend(GridRepository);
 
 var store, original_xhr, expected_endpoint;
 
-module('unit: grid repository test', {
+module('scott unit: grid repository test', {
     beforeEach(assert) {
-        store = module_registry(this.container, this.registry, ['model:ticket']);
+        store = module_registry(this.container, this.registry, ['model:ticket', 'model:grid-count']);
         original_xhr = PromiseMixin.xhr;
         PromiseMixin.xhr = function(endpoint) {
             assert.equal(endpoint, expected_endpoint);

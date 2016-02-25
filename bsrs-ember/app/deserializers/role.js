@@ -91,36 +91,31 @@ var copySettingsToFirstLevel = (obj) => {
 var RoleDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         if (typeof options === 'undefined') {
-            return this.deserialize_list(response);
+            this.deserialize_list(response);
         } else {
-            return this.deserialize_single(response, options);
+            this.deserialize_single(response, options);
         }
     },
     deserialize_single(response, id) {
         let store = this.get('store');
         let role_existing = store.find('role', id);
-        let role = role_existing;
         if (!role_existing.get('id') || role_existing.get('isNotDirtyOrRelatedNotDirty')) {
             response.location_level_fk = extract_location_level(response, store);
             response.role_category_fks = extract_category(response, store, role_existing);
             response.detail = true;
             response = copySettingsToFirstLevel(response);
-            role = store.push('role', response);
+            const role = store.push('role', response);
             role.save();
         }
-        return role;
     },
     deserialize_list(response) {
         const store = this.get('store');
-        const return_array = [];
         response.results.forEach((model) => {
             // model.location_level_fk = extract_location_level(model, store);
             model.location_level_fk = model.location_level;
             delete model.location_level;
-            const role = store.push('role-list', model);
-            return_array.push(role);
+            store.push('role-list', model);
         });
-        return return_array;
     }
 });
 

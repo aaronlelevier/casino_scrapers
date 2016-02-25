@@ -87,16 +87,15 @@ var PersonDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         let location_deserializer = this.get('LocationDeserializer');
         if (typeof options === 'undefined') {
-            return this.deserialize_list(response);
+            this.deserialize_list(response);
         } else {
-            return this.deserialize_single(response, options, location_deserializer);
+            this.deserialize_single(response, options, location_deserializer);
         }
     },
     deserialize_single(model, id, location_deserializer) {
         let store = this.get('store');
         const existing = store.find('person', id);
         let location_level_fk;
-        let person = existing;
         if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
             model.email_fks = belongs_to_extract_contacts(model, store, 'email', 'emails');
             model.phone_number_fks = belongs_to_extract_contacts(model, store, 'phonenumber', 'phone_numbers');
@@ -105,25 +104,20 @@ var PersonDeserializer = Ember.Object.extend({
             extract_person_location(model, store, location_level_fk, location_deserializer);
             extract_locale(model, store);
             model.detail = true;
-            person = store.push('person', model);
+            const person = store.push('person', model);
             belongs_to_extract(model.status_fk, store, person, 'status', 'person', 'people');
             person.save();
         }
-        return person;
     },
     deserialize_list(response) {
         const store = this.get('store');
-        const return_array = [];
         response.results.forEach((model) => {
             [model.role_fk] = extract_role(model, store);
             const status_json = model.status;
             delete model.status;
             const person = store.push('person-list', model);
             belongs_to_extract(status_json, store, person, 'status', 'person', 'people');
-            // person.save();
-            return_array.push(person);
         });
-        return return_array;
     }
 });
 

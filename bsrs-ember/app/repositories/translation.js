@@ -9,6 +9,7 @@ const TRANSLATION_URL = PREFIX + '/admin/translations/';
 
 export default Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'translation'; }),
+    typeGrid: Ember.computed(function() { return 'translation-list'; }),
     url: Ember.computed(function() { return TRANSLATION_URL; }),
     TranslationDeserializer: inject('translation'),
     deserializer: Ember.computed.alias('TranslationDeserializer'),

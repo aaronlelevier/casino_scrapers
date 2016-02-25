@@ -20,7 +20,6 @@ var ThirdPartyRoute = TabRoute.extend({
             model: third_party,
             statuses: status_repo.find(),
         };
-
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);

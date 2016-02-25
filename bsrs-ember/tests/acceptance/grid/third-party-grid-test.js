@@ -76,8 +76,8 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     click(`${PAGE}:eq(1) a`);
     andThen(() => {
         assert.equal(currentURL(), TP_URL + '?page=2');
-        assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE-1);
-        assert.equal(substring_up_to_num(find(`${GRID_DATA_0} .t-third-party-name`).text().trim()), 'vzoname');
+        assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
+        assert.equal(substring_up_to_num(find(`${GRID_DATA_0} .t-third-party-name`).text().trim()), 'ABC');
         var pagination = find(`${PAGES}`);
         assert.equal(pagination.find(`${PAGE}`).length, 2);
         assert.equal(pagination.find(`${PAGE}:eq(0) a`).text(), '1');
@@ -113,7 +113,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     click('.t-next a');
     andThen(() => {
         assert.equal(currentURL(), TP_URL + '?page=2');
-        assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE-1);
+        assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         isNotDisabledElement(`${FIRST_LINK}`);
         isNotDisabledElement(`${PREVIOUS_LINK}`);
         isDisabledElement(`${NEXT_LINK}`);
@@ -131,7 +131,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     click('.t-last a');
     andThen(() => {
         assert.equal(currentURL(), TP_URL + '?page=2');
-        assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE-1);
+        assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         isNotDisabledElement(`${FIRST_LINK}`);
         isNotDisabledElement(`${PREVIOUS_LINK}`);
         isDisabledElement(`${NEXT_LINK}`);
@@ -165,19 +165,19 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     andThen(() => {
         assert.equal(currentURL(), TP_URL + '?sort=name');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameVz);
+        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
     });
     click(`${PAGE}:eq(1) a`);
     andThen(() => {
         assert.equal(currentURL(), TP_URL + '?page=2&sort=name');
-        assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE-1);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameVz);
+        assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
+        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
     });
     click('.t-sort-name-dir');
     andThen(() => {
         assert.equal(currentURL(),TP_URL + '?sort=-name');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameVz);
+        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
     });
 });
 
@@ -259,14 +259,14 @@ test('multiple sort options appear in the query string as expected', (assert) =>
     andThen(() => {
         assert.equal(currentURL(),TP_URL + '?sort=name');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameVz);
+        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
         // assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'10'); //firefox discrepancy
     });
     click(SORT_DIR);
     andThen(() => {
         assert.equal(currentURL(),TP_URL + '?sort=status.name%2Cname');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameVz);
+        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
         // assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'1');
     });
 });
@@ -511,7 +511,7 @@ test('picking a different number of pages will alter the query string and xhr', 
     click(`${PAGE}:eq(1) a`);
     andThen(() => {
         assert.equal(currentURL(), TP_URL + '?page=2');
-        assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE-1);
+        assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         var pagination = find(PAGES);
         assert.equal(pagination.find(PAGE).length, 2);
         assert.equal(pagination.find(`${PAGE}:eq(0) a`).text(), '1');

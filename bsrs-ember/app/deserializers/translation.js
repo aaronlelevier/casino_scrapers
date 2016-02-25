@@ -17,7 +17,7 @@ var extract_locale_translation = function(model, store) {
 var TranslationDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         if (typeof options === 'undefined') {
-            return this.deserialize_list(response);
+            this.deserialize_list(response);
         } else {
             this.deserialize_single(response, options);
         }
@@ -33,14 +33,10 @@ var TranslationDeserializer = Ember.Object.extend({
         }
     },
     deserialize_list(response) {
-        let store = this.get('store');
-        const return_array = Ember.A();
+        const store = this.get('store');
         response.results.forEach((json) => {
-            let trans = store.push('translation', {id: json, grid: true});
-            trans.save();
-            return_array.pushObject(trans);
+            store.push('translation-list', {id: json});
         });
-        return return_array;
     }
 });
 

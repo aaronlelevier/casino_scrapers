@@ -29,15 +29,14 @@ var extract_ticket_location = function(location_json, store, ticket) {
 var TicketDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         if (typeof options === 'undefined') {
-            return this.deserialize_list(response);
+            this.deserialize_list(response);
         } else {
-            return this.deserialize_single(response, options);
+            this.deserialize_single(response, options);
         }
     },
     deserialize_single(response, id) {
         let store = this.get('store');
         let existing_ticket = store.find('ticket', id);
-        let return_ticket = existing_ticket;
         if (!existing_ticket.get('id') || existing_ticket.get('isNotDirtyOrRelatedNotDirty')) {
             let location_json = response.location;
             response.location_fk = location_json.id;
@@ -96,13 +95,10 @@ var TicketDeserializer = Ember.Object.extend({
                 const pushed_ticket = store.push('ticket', {id: response.id, ticket_people_fks: cc_server_sum, ticket_categories_fks: server_sum}); 
                 pushed_ticket.save();
             });
-            return_ticket = ticket;
         }
-        return return_ticket;
     },
     deserialize_list(response) {
         const store = this.get('store');
-        const return_array = [];
         response.results.forEach((model) => {
             const category_json = model.categories;
             model.category_ids = category_json.mapBy('id');
@@ -128,9 +124,7 @@ var TicketDeserializer = Ember.Object.extend({
             belongs_to_extract(priority_json, store, ticket, 'priority', 'ticket', 'tickets');
             belongs_to_extract_nodetail(assignee_json, store, ticket, 'person', 'tickets');
             belongs_to_extract_nodetail(location_json, store, ticket, 'location', 'tickets');
-            return_array.push(ticket);
         });
-        return return_array;
     }
 });
 

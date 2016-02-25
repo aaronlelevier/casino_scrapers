@@ -13,7 +13,7 @@ let store, subject, subjectLocale;
 
 module('unit: translation deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:locale', 'model:translation', 'model:locale-translation']);
+        store = module_registry(this.container, this.registry, ['model:locale', 'model:translation', 'model:translation-list', 'model:locale-translation']);
         subject = TranslationDeserializer.create({store: store});
         subjectLocale = LocaleDeserializer.create({store: store});
     }
@@ -23,8 +23,8 @@ test('deserialize_list - translations only created from list of strings', (asser
     let json = ['home.welcome1', 'home.welcome2'];
     let response = {'count':2,'next':null,'previous':null,'results': json};
     subject.deserialize(response);
-    let translations = store.find('translation');
-    assert.ok(translations.get('length'), 2);
+    let translations = store.find('translation-list');
+    assert.equal(translations.get('length'), 2);
     assert.equal(store.find('locales').get('length'), 0);
 });
 

@@ -102,16 +102,15 @@ var extract_children = function(model, store, location_deserializer) {
 var LocationDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         if (typeof options === 'undefined') {
-            return this.deserialize_list(response);
+            this.deserialize_list(response);
         } else {
-            return this.deserialize_single(response, options);
+            this.deserialize_single(response, options);
         }
     },
     deserialize_single(response, id) {
         const store = this.get('store');
         const existing = store.find('location', id);
         const location_deserializer = this;
-        let location = existing;
         if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
             response.email_fks = belongs_to_extract_contacts(response, store, 'email', 'emails');
             response.phone_number_fks = belongs_to_extract_contacts(response, store, 'phonenumber', 'phone_numbers');
@@ -120,24 +119,20 @@ var LocationDeserializer = Ember.Object.extend({
             response.location_children_fks = extract_children(response, store, location_deserializer);
             response.location_parents_fks = extract_parents(response, store, location_deserializer);
             response.detail = true;
-            location = store.push('location', response);
+            const location = store.push('location', response);
             location.save();
             belongs_to_extract(response.status_fk, store, location, 'status', 'location', 'locations');
         }
-        return location;
     },
     deserialize_list(response) {
         const store = this.get('store');
-        let return_array = [];
         response.results.forEach((model) => {
             model.location_level_fk = extract_location_level(model, store);
             const status_json = model.status;
             delete model.status;
             const location = store.push('location-list', model);
             belongs_to_extract(status_json, store, location, 'status', 'location', 'locations');
-            return_array.push(location);
         });
-        return return_array;
     }
 });
 

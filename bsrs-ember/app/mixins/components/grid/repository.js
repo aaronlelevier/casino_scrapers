@@ -55,16 +55,23 @@ var GridRepositoryMixin = Ember.Mixin.create({
             });
         }
         const garbage_collection = this.get('garbage_collection') || [];
-        garbage_collection.forEach((type) => {
-            store.clear(type);
-        });
-        return PromiseMixin.xhr(endpoint).then((response) => {
+        const all = store.find(type);
+        let grid_count = store.find('grid-count', 1);
+        if(!grid_count.get('content')){
+            grid_count = store.push('grid-count', {id: 1, count: 100});
+        }
+        all.set('count', grid_count.get('count'));
+        PromiseMixin.xhr(endpoint).then((response) => {
+            garbage_collection.forEach((type) => {
+                store.clear(type);
+            });
             const grid = deserializer.deserialize(response);
-            //TODO: isLoaded is not needed
-            grid.set('isLoaded', true);
-            grid.set('count', response.count);
-            return grid;
+            all.set('isLoaded', true);
+            const count = response.count;
+            all.set('count', count);
+            store.push('grid-count', { id: 1, count:count });
         });
+        return all;
     }
 });
 

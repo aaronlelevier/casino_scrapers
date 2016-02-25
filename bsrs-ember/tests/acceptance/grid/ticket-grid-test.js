@@ -509,6 +509,8 @@ test('picking a different number of pages will alter the query string and xhr', 
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        const grid_count = store.find('grid-count', 1);
+        assert.equal(grid_count.get('count'), updated_pg_size-1);
         assert.equal(find('.t-page-size option:selected').text(), `${PAGE_SIZE} per page`);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);

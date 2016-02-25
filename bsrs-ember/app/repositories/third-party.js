@@ -10,6 +10,7 @@ var THIRD_PARTY_URL = PREFIX + '/admin/third-parties/';
 
 var ThirdPartyRepo = Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'third-party'; }),
+    typeGrid: Ember.computed(function() { return 'third-party-list'; }),
     uuid: injectUUID('uuid'),
     url: Ember.computed(function() { return THIRD_PARTY_URL; }),
     ThirdPartyDeserializer: inject('third-party'),
