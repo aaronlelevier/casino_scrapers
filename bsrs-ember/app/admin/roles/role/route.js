@@ -14,15 +14,11 @@ var RoleRoute = TabRoute.extend({
         const repository = this.get('repository');
         const all_role_types = this.get('store').find('role-type');
         const all_location_levels = this.get('store').find('location-level');
-        let role = this.get('store').find('role', role_pk);
-        return new Ember.RSVP.Promise((resolve) => {
-            // if (!role.get('length') || role.get('isNotDirtyOrRelatedNotDirty')) {
-            repository.findById(role_pk).then((model) => {
-                role = model;
-                resolve({model:role, all_role_types, all_location_levels});
-            });
-            // }
-        });
+        let role = repository.fetch(role_pk);
+        if(!role.get('length') || role.get('isNotDirtyOrRelatedNotDirty')){
+            role = repository.findById(role_pk);
+        }
+        return {model:role, all_role_types, all_location_levels};
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);

@@ -10,7 +10,7 @@ export default TabRoute.extend({
     model(params){
         const pk = params.dtd_id;
         const repository = this.get('repository');
-        let dtd = this.get('store').find('dtd', pk);
+        let dtd = repository.fetch(pk);
         // if(!dtd.get('length') || dtd.get('isNotDirtyOrRelatedNotDirty')){
             dtd = repository.findById(pk);
         // }

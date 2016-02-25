@@ -22,12 +22,10 @@ var LocationRoute = TabRoute.extend(ContactRouteMixin, {
         const default_address_type = this.address_type_repo.get_default();
         const countries = this.country_repo.find();
         const state_list = this.state_repo.find();
-        return new Ember.RSVP.Promise((resolve) => {
-            repository.findById(pk).then((model) => {
-                location = model;
-                resolve({ model: location, all_statuses, all_location_levels, email_types, default_email_type, phone_number_types, default_phone_number_type, address_types, default_address_type, state_list, countries });
-            });
-        });
+        if(!location.get('length') || location.get('isNotDirtyOrRelatedNotDirty')){ 
+            location = repository.findById(pk);
+        }
+        return { model: location, all_statuses, all_location_levels, email_types, default_email_type, phone_number_types, default_phone_number_type, address_types, default_address_type, state_list, countries };
 
     },
     setupController: function(controller, hash) {

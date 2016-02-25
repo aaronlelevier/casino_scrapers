@@ -21,9 +21,9 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, {
             model.save();
         });
     },
-    // peek(filter, computed_keys) {
-    //     return this.get('store').find('dtd', filter);
-    // },
+    fetch(id) {
+        return this.get('store').find('dtd', id);
+    },
     findById(id) {
         let model = this.get('store').find('dtd', id);
         model.id = id;

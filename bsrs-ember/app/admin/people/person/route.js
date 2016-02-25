@@ -50,7 +50,7 @@ var PersonRoute = TabRoute.extend(ContactRouteMixin, {
         const status_repo = this.get('status_repo');
         const role_repo = this.get('role_repo');
         const repository = this.get('repository');
-        let person = this.get('store').find('person', person_pk);
+        let person = repository.fetch(person_pk);
         if (!person.get('length') || person.get('isNotDirtyOrRelatedNotDirty')) {
             person = repository.findById(person_pk);
         }

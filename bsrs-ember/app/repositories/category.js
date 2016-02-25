@@ -34,14 +34,16 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
             });
         }
     },
+    fetch(id) {
+        return this.get('store').find('category', id);
+    },
     findById(id) {
-        // let model = this.get('store').find('category', id);
-        // //return id right away to allow for tabs to be pushed into store with correct id 
-        // model.id = id;
-        return PromiseMixin.xhr(CATEGORY_URL + id + '/', 'GET').then((response) => {
-            return this.get('CategoryDeserializer').deserialize(response, id);
+        let model = this.get('store').find('category', id);
+        model.id = id;
+        PromiseMixin.xhr(CATEGORY_URL + id + '/', 'GET').then((response) => {
+            this.get('CategoryDeserializer').deserialize(response, id);
         });
-        // return model;
+        return model;
     },
 });
 

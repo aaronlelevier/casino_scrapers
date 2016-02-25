@@ -24,9 +24,12 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
         });
     },
     findById(id) {
-        return PromiseMixin.xhr(TICKET_URL + id + '/', 'GET').then((response) => {
-            return this.get('TicketDeserializer').deserialize(response, id);
+        let model = this.get('store').find('ticket', id);
+        model.id = id;
+        PromiseMixin.xhr(TICKET_URL + id + '/', 'GET').then((response) => {
+            this.get('TicketDeserializer').deserialize(response, id);
         });
+        return model;
     },
     fetch(id) {
         return this.get('store').find('ticket', id);

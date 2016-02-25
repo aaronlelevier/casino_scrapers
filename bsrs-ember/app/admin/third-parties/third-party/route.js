@@ -12,8 +12,8 @@ var ThirdPartyRoute = TabRoute.extend({
         const third_party_pk = params.third_party_id;
         const status_repo = this.get('status_repo');
         const repository = this.get('repository');
-        let third_party = this.get('store').find('third-party', third_party_pk);
-        if (!third_party.get('length') || third_party.get('isNotDirtyOrRelatedNotDirty')) { 
+        let third_party = repository.fetch(third_party_pk);
+        if(!third_party.get('length') || third_party.get('isNotDirtyOrRelatedNotDirty')){ 
             third_party = repository.findById(third_party_pk);
         }
         return {

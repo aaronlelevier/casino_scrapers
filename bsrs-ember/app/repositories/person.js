@@ -75,6 +75,9 @@ export default Ember.Object.extend(GridRepositoryMixin, {
             });
         }
     },
+    fetch(id) {
+        return this.get('store').find('person', id);
+    },
     findById(id) {
         let model = this.get('store').find('person', id);
         model.id = id;
