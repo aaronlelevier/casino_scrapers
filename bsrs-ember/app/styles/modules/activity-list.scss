@@ -38,10 +38,26 @@
             }
         }
     }
+    .activity-list{
+        overflow: hidden;
+        position: relative;
+        padding-bottom: 50px;
+        border: $borderStyle;
+        border-width: 0 0 1px;
+        &:before{
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 49px;
+            display: block;
+            width: 1px;
+            border: $borderStyle;
+            border-width: 0 0 0 1px;
+            content: "";
+        }
+    }
     .activity-spacer,
     .activity-list-item{
-        border: $borderStyle;
-        border-width: 0 0 0 1px;
         margin: 0 0 0 50px;
         padding: 15px 15px 15px 40px;
         position: relative;
