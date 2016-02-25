@@ -26,6 +26,7 @@ const LETTER_R = {keyCode: 82};
 const LETTER_O = {keyCode: 79};
 const LETTER_X = {keyCode: 88};
 const NUMBER_FOUR = {keyCode: 52};
+const NUMBER_FIVE = {keyCode: 53};
 const BACKSPACE = {keyCode: 8};
 const SORT_PRIORITY_DIR = '.t-sort-priority-translated-name-dir';
 const SORT_STATUS_DIR = '.t-sort-status-translated-name-dir';
@@ -195,7 +196,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     });
 });
 
-test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
+test('scott typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
     var search_two = PREFIX + BASE_URL + '/?page=1&ordering=request&search=14';
     xhr(search_two ,"GET",null,{},200,TF.searched('14', 'request'));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=request';
@@ -213,7 +214,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     });
     fillIn('.t-grid-search-input', '5');
-    triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
+    triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FIVE);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=5');
         assert.equal(find('.t-grid-data').length, 2);
