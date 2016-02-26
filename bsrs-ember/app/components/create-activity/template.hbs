@@ -1,2 +1,2 @@
 <span class="activity-icon">{{fa-icon "file"}}</span>
-{{#link-to "admin.people.person" activity.person.id}}{{person}}{{/link-to}} {{begString}} <span class="activity-timestamp t-activity-timestamp" title="{{fulltime}}">{{timestamp}}</span>
+{{#link-to "admin.people.person" activity.person.id}}{{person}}{{/link-to}} {{begString}} <span class="activity-timestamp t-activity-timestamp" title="{{fulltime}}">{{moment-from-now activity.created interval=60000}}</span>
