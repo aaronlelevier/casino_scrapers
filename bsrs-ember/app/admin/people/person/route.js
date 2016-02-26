@@ -20,45 +20,20 @@ var PersonRoute = TabRoute.extend(ContactRouteMixin, {
     modelName: Ember.computed(function() { return 'person'; }),
     templateModelField: Ember.computed(function() { return 'fullname'; }),
     model(params, transition) {
-        // const person_pk = params.person_id;
-        // const location_repo = this.get('location_repo');
-        // const status_repo = this.get('status_repo');
-        // const role_repo = this.get('role_repo');
-        // const repository = this.get('repository');
-        // let person = this.get('store').find('person', person_pk);
-        // const roles = role_repo.get_default();
-        // const role_change = transition.queryParams.role_change;
-        // // model_id: person_pk,
-        // const email_types = this.email_type_repo.find();
-        // const default_email_type = this.email_type_repo.get_default();
-        // const phone_number_types = this.phone_number_type_repo.find();
-        // const default_phone_number_type = this.phone_number_type_repo.get_default();
-        // const address_types = this.address_type_repo.find();
-        // const default_address_type = this.address_type_repo.get_default();
-        // const countries = this.country_repo.find();
-        // const state_list = this.state_repo.find();
-        // const statuses = status_repo.find();
-        // const locales = this.get('store').find('locale');
-        // return new Ember.RSVP.Promise((resolve) => {
-        //     person = repository.findById(person_pk).then((model) => {
-        //         person = model;
-        //         resolve({model: person, email_types, default_email_type, phone_number_types, default_phone_number_type, address_types, default_address_type, statuses, countries, state_list, locales, roles, role_change}); 
-        //     });
-        // });
-        const person_pk = params.person_id;
+        const model_id = params.person_id;
         const location_repo = this.get('location_repo');
         const status_repo = this.get('status_repo');
         const role_repo = this.get('role_repo');
         const repository = this.get('repository');
-        let person = repository.fetch(person_pk);
+        let person = repository.fetch(model_id);
         if (!person.get('length') || person.get('isNotDirtyOrRelatedNotDirty')) {
-            person = repository.findById(person_pk);
+            person = repository.findById(model_id);
         }
         const roles = role_repo.get_default();
         const role_change = transition.queryParams.role_change;
         return {
             model: person,
-            model_id: person_pk,
+            model_id,
             email_types: this.email_type_repo.find(),
             default_email_type: this.email_type_repo.get_default(),
             phone_number_types: this.phone_number_type_repo.find(),
@@ -69,8 +44,8 @@ var PersonRoute = TabRoute.extend(ContactRouteMixin, {
             state_list: this.state_repo.find(),
             statuses: status_repo.find(),
             locales: this.get('store').find('locale'),
-            roles: roles,
-            role_change: role_change,
+            roles,
+            role_change,
         };
     },
     setupController(controller, hash) {
