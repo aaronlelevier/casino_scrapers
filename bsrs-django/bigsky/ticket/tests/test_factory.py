@@ -6,7 +6,6 @@ from django.test import TestCase
 from category.models import Category
 from category.tests.factory import create_categories
 from location.models import Location
-from location.tests.factory import create_location
 from person.models import Person
 from person.tests.factory import create_single_person, DistrictManager
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,

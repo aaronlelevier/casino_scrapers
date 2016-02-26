@@ -13,4 +13,13 @@ def create_attachments(ticket=None):
     Attachment.save = models.Model.save
     filename = _generate_chars()
     file = _generate_chars()
-    return mommy.make(Attachment, id=str(uuid.uuid4()), filename=filename, file=file, ticket=ticket)
+
+    ticket_kwargs = {}
+    if ticket:
+        ticket_kwargs.update({
+            'content_object': ticket,
+            'object_id': ticket.id
+        })
+
+    return mommy.make(Attachment, id=str(uuid.uuid4()), filename=filename,
+                      file=file, **ticket_kwargs)

@@ -3,11 +3,12 @@ import os
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError as DjangoValidationError
+from django.contrib.contenttypes.models import ContentType
 
 from PIL import Image
 from rest_framework.exceptions import ValidationError
 
-from ticket.models import Ticket
+from utils.fields import MyGenericForeignKey
 from utils.models import BaseModel, BaseManager
 
 
@@ -105,7 +106,11 @@ class Attachment(BaseModel):
 
     `MIME Types reference <http://www.sitepoint.com/web-foundations/mime-types-complete-list/>`_
     """
-    ticket = models.ForeignKey(Ticket, related_name='attachments', blank=True, null=True)
+    # GenericForeignKey
+    content_type = models.ForeignKey(ContentType, null=True)
+    object_id = models.UUIDField(null=True)
+    content_object = MyGenericForeignKey('content_type', 'object_id')
+    # Fields
     filename = models.CharField(max_length=100, blank=True)
     is_image = models.BooleanField(blank=True, default=False)
     file = models.FileField(upload_to=upload_to, null=True, blank=True)

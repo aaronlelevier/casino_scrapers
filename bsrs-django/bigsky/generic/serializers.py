@@ -1,5 +1,3 @@
-import copy
-
 from generic.models import SavedSearch, Attachment
 from utils.serializers import BaseCreateSerializer
 

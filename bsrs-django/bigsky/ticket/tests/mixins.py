@@ -2,9 +2,7 @@ from model_mommy import mommy
 
 from category.models import Category
 from category.tests.factory import create_categories
-from location.tests.factory import create_location
-from person.tests.factory import (create_single_person, create_role, PASSWORD,
-    DistrictManager)
+from person.tests.factory import PASSWORD, DistrictManager
 from ticket.models import Ticket
 from ticket.tests.factory import (create_ticket, create_ticket_statuses,
     create_ticket_priorities)

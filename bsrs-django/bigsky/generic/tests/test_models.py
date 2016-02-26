@@ -78,6 +78,11 @@ class AttachmentModelTests(TestCase):
         self.image = join(settings.MEDIA_ROOT, "test_in/aaron.jpeg")
         self.image_filename = os.path.split(self.image)[1]
 
+        self.attachment_kwargs = {
+            'content_object': self.ticket,
+            'object_id': self.ticket.id
+        }
+
     def tearDown(self):
         # remove test attachements after running test
         remove_attachment_test_files()
@@ -89,12 +94,11 @@ class AttachmentModelTests(TestCase):
     def test_upload_file(self):
         with open(self.file, 'rb') as infile:
             _file = SimpleUploadedFile(self.file_filename, infile.read())
-            attachment = Attachment.objects.create(
-                ticket=self.ticket,
-                file=_file
-            )
+            
+            attachment = Attachment.objects.create(file=_file, **self.attachment_kwargs)
+
             self.assertIsInstance(attachment, Attachment)
-            self.assertEqual(attachment.ticket, self.ticket)
+            self.assertEqual(attachment.content_object, self.ticket)
             self.assertEqual(attachment.filename, self.file_filename)
             self.assertFalse(attachment.is_image)
             self.assertTrue(attachment.file)
@@ -105,12 +109,11 @@ class AttachmentModelTests(TestCase):
     def test_upload_image(self):
         with open(self.image, 'rb') as infile:
             _file = SimpleUploadedFile(self.image_filename, infile.read())
-            attachment = Attachment.objects.create(
-                ticket=self.ticket,
-                file=_file
-            )
+
+            attachment = Attachment.objects.create(file=_file, **self.attachment_kwargs)
+
             self.assertIsInstance(attachment, Attachment)
-            self.assertEqual(attachment.ticket, self.ticket)
+            self.assertEqual(attachment.content_object, self.ticket)
             self.assertEqual(attachment.filename, self.image_filename)
             self.assertTrue(attachment.is_image)
             self.assertTrue(attachment.file)
@@ -124,18 +127,13 @@ class AttachmentModelTests(TestCase):
                 with self.assertRaises(DjangoValidationError):
                     _file = SimpleUploadedFile(self.image_filename, infile.read())
                     _file.size = 1 # Force file size w/ ``SimpleUploadedFile``
-                    attachment = Attachment.objects.create(
-                        ticket=self.ticket,
-                        file=_file
-                    )
+                    attachment = Attachment.objects.create(file=_file, **self.attachment_kwargs)
+
 
     def test_to_dict(self):
         with open(self.image, 'rb') as infile:
             _file = SimpleUploadedFile(self.image_filename, infile.read())
-            attachment = Attachment.objects.create(
-                ticket=self.ticket,
-                file=_file
-            )
+            attachment = Attachment.objects.create(file=_file, **self.attachment_kwargs)
 
             ret = attachment.to_dict()
 
@@ -143,3 +141,14 @@ class AttachmentModelTests(TestCase):
             self.assertEqual(ret['filename'], attachment.filename)
             self.assertEqual(ret['file'], str(attachment.file))
             self.assertEqual(ret['image_thumbnail'], str(attachment.image_thumbnail))
+
+    # related objects tests
+
+    def test_related_ticket(self):
+        with open(self.image, 'rb') as infile:
+            _file = SimpleUploadedFile(self.image_filename, infile.read())
+
+            attachment = Attachment.objects.create(file=_file, **self.attachment_kwargs)
+
+            self.assertEqual(Attachment.objects.filter(object_id=self.ticket.id).count(), 1)
+            self.assertIn(attachment, self.ticket.attachments.all())

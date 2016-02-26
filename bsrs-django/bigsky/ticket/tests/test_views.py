@@ -4,7 +4,6 @@ import datetime
 
 from rest_framework.test import APITestCase
 
-from model_mommy import mommy
 
 from category.models import Category
 from category.tests.factory import create_categories, create_single_category
@@ -12,17 +11,13 @@ from location.models import Location
 from location.tests.factory import create_location, create_locations
 from generic.models import Attachment
 from generic.tests.factory import create_attachments
-from person.models import Person
-from person.tests.factory import PASSWORD, create_single_person, create_role, DistrictManager
-from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivity,
-    TicketActivityType, TICKET_PRIORITIES, TICKET_STATUSES)
+from person.tests.factory import PASSWORD, create_single_person, DistrictManager
+from ticket.models import Ticket, TicketActivity, TicketActivityType
 from ticket.serializers import TicketCreateSerializer
 from ticket.tests.factory import (create_ticket, create_ticket_activity,
     create_ticket_activity_type, create_ticket_activity_types,
-    create_ticket_status, create_ticket_priority, create_extra_ticket_with_categories,
-    create_ticket_with_single_category)
-from ticket.tests.mixins import (TicketSetupNoLoginMixin, TicketSetupMixin,
-    TicketCategoryOrderingSetupMixin)
+    create_ticket_status, create_ticket_priority)
+from ticket.tests.mixins import TicketSetupNoLoginMixin, TicketSetupMixin
 
 
 class TicketListFulltextTests(TicketSetupMixin, APITestCase):

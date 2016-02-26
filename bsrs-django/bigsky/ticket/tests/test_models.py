@@ -4,7 +4,6 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from category.models import Category
 from category.tests.factory import create_categories
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,

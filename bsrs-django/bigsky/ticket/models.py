@@ -3,10 +3,11 @@ import uuid
 from django.db import models
 from django.db.models import Q
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import JSONField
-from django.db.models.signals import m2m_changed
 
 from category.models import Category
+from generic.models import Attachment
 from location.models import Location
 from person.models import Person
 from utils.models import BaseModel, BaseQuerySet, BaseManager, BaseNameModel
@@ -128,6 +129,7 @@ class Ticket(BaseModel):
     cc = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
     requester = models.CharField(max_length=150, blank=True, null=True)
     categories = models.ManyToManyField(Category, blank=True)
+    attachments = GenericRelation(Attachment)
     # Fields
     request = models.CharField(max_length=1000, blank=True, null=True)
     # Auto-fields
