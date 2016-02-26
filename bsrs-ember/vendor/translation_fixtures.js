@@ -200,6 +200,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'crud.update.button':'Update',
                     'crud.yes':'Yes',
                     'dashboard.welcome':'Welcome',
+                    'general.new':'New',
                     'grid.filter':'Filter',
                     'grid.filterset_name':'Name your filter',
                     'grid.per_page':'{{size}} per page',

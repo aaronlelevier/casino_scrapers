@@ -2,6 +2,7 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/store';
 
 var TabModel = Ember.Object.extend({
+    i18n: Ember.inject.service(),
     init() {
         const dynamicField = this.get('templateModelField');
         Ember.defineProperty(this, 'modelBindingToTemplate', Ember.computed(function() {
@@ -11,7 +12,7 @@ var TabModel = Ember.Object.extend({
                     case 'categories':
                         return `#${model.get('number')} - ${model.get('leaf_category.name')}`;
                     default:
-                        return model.get('new') ? `New ${dynamicField}` : model.get(dynamicField);
+                        return model.get('new') ? `${this.get('i18n').t('general.new')} ${dynamicField}` : model.get(dynamicField);
                 }
             }
         }).property('model.' + dynamicField));
