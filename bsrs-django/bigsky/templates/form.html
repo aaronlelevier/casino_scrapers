@@ -40,7 +40,7 @@
                                         <div class="form-group">
                                             {{ field.errors }}
     			                    		<label class="sr-only" for="form-username">{{ field.label_tag }}</label>
-                                            <input id="{{ field.id_for_label }}" name="{{ field.name }}" type="{{ field|fieldtype }}" />
+                                            <input id="{{ field.id_for_label }}" name="{{ field.name }}" type="{{ field|fieldtype }}" autofocus/>
     			                        </div>
                                     </div>
                                     {% endfor %}
