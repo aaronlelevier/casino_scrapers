@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
@@ -11,7 +12,7 @@ from utils.models import BaseModel
 class TreeData(BaseModel):
     key = models.CharField(max_length=1000)
     description = models.TextField()
-    files = models.ManyToManyField(Attachment)
+    attachments = GenericRelation(Attachment)
     note = models.CharField(max_length=1000, blank=True)
     note_type = models.CharField(max_length=1000, choices=[(x,x) for x in NOTE_TYPES],
                                  blank=True, default=NOTE_TYPES[0])
@@ -42,5 +43,5 @@ class TreeLink(BaseModel):
     request = models.CharField(max_length=1000, blank=True)
     priority = models.ForeignKey(TicketPriority, null=True)
     status = models.ForeignKey(TicketStatus, null=True)
-    destination = models.OneToOneField(TreeData, related_name='from_link', null=True)
-    parent = models.ForeignKey(TreeData, related_name='links', null=True)
+    destination = models.OneToOneField(TreeData, null=True)
+    parents = models.ManyToManyField(TreeData, related_name='links')

@@ -177,7 +177,7 @@ class TicketActivityTests(TestCase):
 
         self.assertIsInstance(ticket_activity, TicketActivity)
         self.assertEqual(ticket_activity.ticket.id, self.ticket.id)
-        self.assertEqual(ticket_activity.content['0'], attachment.id)
+        self.assertEqual(ticket_activity.content['0'], str(attachment.id))
 
     def test_log_cc_add(self):
         type, _ = TicketActivityType.objects.get_or_create(name='cc_add')

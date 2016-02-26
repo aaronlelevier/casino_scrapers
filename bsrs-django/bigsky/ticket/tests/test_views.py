@@ -936,7 +936,7 @@ class TicketAndTicketActivityTests(APITestCase):
 
         self.assertEqual(TicketActivity.objects.count(), 1)
         self.assertIn(
-            first_attachment.id,
+            str(first_attachment.id),
             list(TicketActivity.objects.order_by('created').last().content.values())
         )
 
@@ -948,11 +948,11 @@ class TicketAndTicketActivityTests(APITestCase):
 
         self.assertEqual(TicketActivity.objects.count(), 2)
         self.assertIn(
-            second_attachment.id,
+            str(second_attachment.id),
             list(TicketActivity.objects.order_by('created').last().content.values())
         )
         self.assertNotIn(
-            first_attachment.id,
+            str(first_attachment.id),
             list(TicketActivity.objects.order_by('created').last().content.values())
         )
 
