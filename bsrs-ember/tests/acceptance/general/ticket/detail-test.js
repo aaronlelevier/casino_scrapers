@@ -189,6 +189,7 @@ test('validation works for non required fields and when hit save, we do same pos
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-assignee-validation-error').is(':visible'));
+        assert.equal(find('.t-assignee-validation-error').text(), GLOBALMSG.invalid_assignee);
     });
     //assignee
     xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy1`, 'GET', null, {}, 200, PF.search());

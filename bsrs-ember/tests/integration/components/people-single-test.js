@@ -8,11 +8,12 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
 import RD from 'bsrs-ember/vendor/defaults/role';
+import GLOBAL from 'bsrs-ember/vendor/defaults/global-message';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 
 var store, email_types, default_email_type, phone_number_types, default_phone_number_type, address_types, default_address_type, run = Ember.run;
 
-moduleForComponent('person-single', 'integration: person-single test', {
+moduleForComponent('person-single', 'scott integration: person-single test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency']);
@@ -65,6 +66,7 @@ test('filling in invalid username reveal validation messages', function(assert) 
     assert.ok($component.is(':visible'));
     this.$('.t-person-username').val('a').trigger('change');
     assert.ok($component.is(':hidden'));
+    assert.equal($component.text(), GLOBAL.invalid_username);
 });
 
 test('filling in valid one char middle initial will not reveal validation messages', function(assert) {
@@ -93,6 +95,7 @@ test('filling in invalid one char middle initial will reveal validation messages
     assert.ok($component.is(':hidden'));
     this.$('.t-person-middle-initial').val('ab').trigger('change');
     assert.ok($component.is(':visible'));
+    assert.equal($component.text(), GLOBAL.invalid_middle_initial);
 });
 
 test('filling in invalid email reveal validation messages', function(assert) {
@@ -111,6 +114,7 @@ test('filling in invalid email reveal validation messages', function(assert) {
     this.$('.t-new-entry').val('a').trigger('change');
     $component = this.$('.t-input-multi-email-validation-format-error');
     assert.ok($component.is(':visible'));
+    assert.equal($component.text(), GLOBAL.invalid_email);
     assert.equal($component.length, 1);
     this.$('.t-new-entry').val('snewcomer@gmail.com').trigger('change');
     $component = this.$('.t-input-multi-email-validation-format-error');
@@ -137,6 +141,7 @@ test('filling in invalid phone number reveal validation messages', function(asse
     this.$('.t-new-entry').val('515-222-3333').trigger('change');
     $component = this.$('.t-input-multi-phone-validation-format-error');
     assert.ok($component.is(':hidden'));
+    assert.equal($component.text(), GLOBAL.invalid_ph);
 });
 
 test('filling in invalid address reveals validation messages', function(assert) {
@@ -156,6 +161,7 @@ test('filling in invalid address reveals validation messages', function(assert) 
     this.$('.t-address-address').val('a').trigger('change');
     $component = this.$('.t-input-multi-address-validation-error');
     assert.ok($component.is(':visible'));
+    assert.equal($component.text(), GLOBAL.invalid_street);
     assert.equal($component.length, 1);
     this.$('.t-address-address').val('925 Sky Park').trigger('change');
     $component = this.$('.t-input-multi-address-validation-error');
@@ -167,6 +173,7 @@ test('filling in invalid address reveals validation messages', function(assert) 
     this.$('.t-address-postal-code').val('a').trigger('change');
     $component = this.$('.t-input-multi-address-zip-validation-error');
     assert.ok($component.is(':visible'));
+    assert.equal($component.text(), GLOBAL.invalid_zip);
     assert.equal($component.length, 1);
     this.$('.t-address-postal-code').val('97255').trigger('change');
     $component = this.$('.t-input-multi-address-zip-validation-error');

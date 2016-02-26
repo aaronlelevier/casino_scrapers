@@ -10,8 +10,18 @@ var BSRS_GLOBAL_MESSAGE_DEFAULTS_OBJECT = (function() {
             location_power_select: '',
             power_search: 'Type to search',
             no_results: 'No Matches',
-            invalid_ph: 'invalid phone number',
-            invalid_email: 'invalid email',
+            invalid_ph: 'Invalid Phone Number',
+            invalid_email: 'Invalid Email',
+            invalid_middle_initial: 'Invalid Middle Initial',
+            invalid_username: 'Invalid Username',
+            invalid_password: 'Invalid Password',
+            invalid_zip: 'Invalid Zip',
+            invalid_street: 'Invalid Street Address',
+            invalid_assignee: 'Invalid Assignee',
+            invalid_location: 'Invalid Location',
+            invalid_category: 'Invalid Category',
+            invalid_status: 'Invalid Status',
+            invalid_priority: 'Invalid Priority',
         };
     };
     return factory;

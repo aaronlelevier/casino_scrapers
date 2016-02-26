@@ -13,7 +13,7 @@
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.address"}}</span>
     {{textarea value=address.address class="form-control t-address-address"}}
-    {{#validation-error-field className="t-input-multi-address-validation-error" submitted=submitted field="address" model=address index=index validation="addressFormat"}}invalid address{{/validation-error-field}}
+    {{#validation-error-field className="t-input-multi-address-validation-error" submitted=submitted field="address" model=address index=index validation="addressFormat"}}{{t "validation.invalid"}} {{t "admin.address.address"}}{{/validation-error-field}}
   </div>
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.city"}}</span>
@@ -31,7 +31,7 @@
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.postal_code"}}</span>
     {{input type="text" value=address.postal_code class="form-control t-address-postal-code"}}
-    {{#validation-error-field className="t-input-multi-address-zip-validation-error" submitted=submitted field="postal_code" model=address index=index validation="postal_codeFormat"}}invalid postal code{{/validation-error-field}}
+    {{#validation-error-field className="t-input-multi-address-zip-validation-error" submitted=submitted field="postal_code" model=address index=index validation="postal_codeFormat"}}{{t "validation.invalid"}} {{t "admin.address.postal_code"}}{{/validation-error-field}}
   </div>
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.country.one"}}</span>

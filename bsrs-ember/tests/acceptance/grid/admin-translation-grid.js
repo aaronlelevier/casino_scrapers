@@ -38,7 +38,7 @@ module('Acceptance | admin-translation-grid-list', {
     }
 });
 
-test('scott initial load should only show first PAGE_SIZE records ordered by id with correct pagination and no additional xhr', function(assert) {
+test('initial load should only show first PAGE_SIZE records ordered by id with correct pagination and no additional xhr', function(assert) {
     visit(ADMIN_TRANSLATION_URL);
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL);

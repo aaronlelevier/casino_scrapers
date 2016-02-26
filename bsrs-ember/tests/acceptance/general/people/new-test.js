@@ -3,6 +3,7 @@ import { test } from 'qunit';
 import module from "bsrs-ember/tests/helpers/module";
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
+import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
@@ -102,7 +103,9 @@ test('validation works and when hit save, we do same post', (assert) => {
     generalPage.save();
     andThen(() => {
         assert.ok(find('.t-username-validation-error').is(':visible'));
+        assert.equal(find('.t-username-validation-error').text(), GLOBALMSG.invalid_username);
         assert.ok(find('.t-password-validation-error').is(':visible'));
+        assert.equal(find('.t-password-validation-error').text(), GLOBALMSG.invalid_password);
     });
     fillIn('.t-person-username', PD.username);
     generalPage.save();

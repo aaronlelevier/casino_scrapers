@@ -161,32 +161,13 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     });
 });
 
-test('when editing username to invalid, it checks for validation', (assert) => {
-    visit(DETAIL_URL);
-    fillIn('.t-person-username', '');
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-username-validation-error').text().trim(), 'invalid username');
-    });
-    fillIn('.t-person-username', PD_PUT.username);
-    var response = PF.detail(PD.idOne);
-    var payload = PF.put({id: PD.id, username: PD_PUT.username});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    generalPage.save();
-    andThen(() => {
-        var person = store.find('person', PD.idOne);
-        assert.equal(currentURL(), PEOPLE_URL);
-    });
-});
-
 test('when changing password to invalid, it checks for validation', (assert) => {
     visit(DETAIL_URL);
     click('.t-person-change-password');
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-password-validation-error').text().trim(), 'invalid password');
+        assert.equal(find('.t-password-validation-error').text().trim(), GLOBALMSG.invalid_password);
     });
     fillIn('.t-person-password', PD.password);
     let url = PREFIX + DETAIL_URL + '/';
@@ -355,7 +336,7 @@ test('emails without a valid name are ignored and removed on save', (assert) => 
     andThen(() => {
         let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
         assert.equal(visible_errors.length, 1);
-        assert.equal(find('.t-input-multi-email-validation-format-error:not(:hidden):eq(0)').text().trim(), 'invalid email');
+        assert.equal(find('.t-input-multi-email-validation-format-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_email);
     });
     generalPage.save();
     andThen(() => {
@@ -386,7 +367,7 @@ test('phone numbers without a valid number are ignored and removed on save', (as
     andThen(() => {
         let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
         assert.equal(visible_errors.length, 1);
-        assert.equal(find('.t-input-multi-phone-validation-format-error:not(:hidden):eq(0)').text().trim(), 'invalid phone number');
+        assert.equal(find('.t-input-multi-phone-validation-format-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_ph);
     });
     generalPage.save();
     andThen(() => {
@@ -419,7 +400,7 @@ test('address without a valid address or zip code are ignored and removed on sav
     andThen(() => {
         let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
         assert.equal(visible_errors.length, 1);
-        assert.equal(find('.t-input-multi-address-validation-error:not(:hidden):eq(0)').text().trim(), 'invalid address');
+        assert.equal(find('.t-input-multi-address-validation-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_street);
     });
     generalPage.save();
     andThen(() => {
@@ -435,7 +416,7 @@ test('address without a valid address or zip code are ignored and removed on sav
     andThen(() => {
         let visible_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
         assert.equal(visible_errors.length, 1);
-        assert.equal(find('.t-input-multi-address-zip-validation-error:not(:hidden):eq(0)').text().trim(), 'invalid postal code');
+        assert.equal(find('.t-input-multi-address-zip-validation-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_zip);
     });
     generalPage.save();
     andThen(() => {

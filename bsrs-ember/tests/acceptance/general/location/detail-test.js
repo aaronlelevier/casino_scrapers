@@ -337,7 +337,7 @@ test('phone numbers without a valid number are ignored and removed on save', (as
     andThen(() => {
         let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
         assert.equal(visible_errors.length, 1);
-        assert.equal(find('.t-input-multi-phone-validation-format-error:not(:hidden):eq(0)').text().trim(), 'invalid phone number');
+        assert.equal(find('.t-input-multi-phone-validation-format-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_ph);
     });
     generalPage.save();
     andThen(() => {
@@ -368,7 +368,7 @@ test('emails without a valid email are ignored and removed on save', (assert) =>
     andThen(() => {
         let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
         assert.equal(visible_errors.length, 1);
-        assert.equal(find('.t-input-multi-email-validation-format-error:not(:hidden):eq(0)').text().trim(), 'invalid email');
+        assert.equal(find('.t-input-multi-email-validation-format-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_email);
     });
     generalPage.save();
     andThen(() => {
@@ -401,7 +401,7 @@ test('address without a valid address or zip code are ignored and removed on sav
     andThen(() => {
         let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
         assert.equal(visible_errors.length, 1);
-        assert.equal(find('.t-input-multi-address-validation-error:not(:hidden):eq(0)').text().trim(), 'invalid address');
+        assert.equal(find('.t-input-multi-address-validation-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_street);
     });
     generalPage.save();
     andThen(() => {
@@ -417,7 +417,7 @@ test('address without a valid address or zip code are ignored and removed on sav
     andThen(() => {
         let visible_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
         assert.equal(visible_errors.length, 1);
-        assert.equal(find('.t-input-multi-address-zip-validation-error:not(:hidden):eq(0)').text().trim(), 'invalid postal code');
+        assert.equal(find('.t-input-multi-address-zip-validation-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_zip);
     });
     generalPage.save();
     andThen(() => {
