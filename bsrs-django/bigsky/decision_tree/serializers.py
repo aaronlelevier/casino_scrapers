@@ -51,3 +51,11 @@ class TreeDataSerializer(BaseCreateSerializer):
         model = TreeData
         fields = ('id', 'key', 'description', 'note', 'note_type', 'files', 'fields',
                   'prompt', 'link_type', 'from_link', 'links',)
+
+    #  TODO: Implement custom for: create, update (nested)
+
+    # def create(self, validated_data):
+    #     pass
+
+    # def update(self, instance, validated_data):
+    #     pass

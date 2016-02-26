@@ -55,7 +55,6 @@ class TreeDataTests(APITestCase):
         self.assertEqual(len(data['links']), 1)
         self.assertEqual(data['links'][0], str(self.tree_data.links.first().id))
 
-# TODO: work needed to support "nestable" writes (POST, PUT) for related models
     # def test_create(self):
     #     serializer = TreeDataSerializer(self.tree_data)
     #     raw_data = copy.copy(serializer.data)
