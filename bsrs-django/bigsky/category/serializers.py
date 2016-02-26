@@ -42,15 +42,14 @@ class CategoryIDNameSerializerTicket(BaseCreateSerializer):
         return data
 
 
-#TODO: check if can use above serializer
+#TODO: parent_id is preventing us from using above serializer. Need to modify frontend
 class CategoryIDNameSerializer(BaseCreateSerializer):
 
     children = CategoryChildrenSerializer(many=True, read_only=True)
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'parent', 'children', 'level',)
-
+        fields = ('id', 'name', 'level', 'parent', 'children', 'label', 'subcategory_label')
 
 
 

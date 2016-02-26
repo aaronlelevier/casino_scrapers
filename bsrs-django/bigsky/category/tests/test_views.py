@@ -386,6 +386,8 @@ class CategoryFilterTests(APITransactionTestCase):
         data = data['results'][0]
         # db object
         category = Category.objects.filter(parent__isnull=True).first()
+        self.assertEqual(data['label'], category.label)
+        self.assertEqual(data['subcategory_label'], category.subcategory_label)
         self.assertEqual(data['parent'], None)
         self.assertTrue(data['children'][0]['id'])
         self.assertTrue(data['children'][0]['name'])
