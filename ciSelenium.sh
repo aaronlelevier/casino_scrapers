@@ -110,6 +110,12 @@ function runSeleniumTests {
     fi
 }
 
+DB_NAME='ci'
+wait
+psql -U bsdev -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity \
+WHERE pg_stat_activity.datname = '${DB_NAME}' AND pid <> pg_backend_pid();"
+wait
+
 cd bsrs-ember
 echo $(firefox -v)
 
