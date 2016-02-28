@@ -89,13 +89,14 @@ var PersonDeserializer = Ember.Object.extend({
         if (typeof options === 'undefined') {
             this.deserialize_list(response);
         } else {
-            this.deserialize_single(response, options, location_deserializer);
+            return this.deserialize_single(response, options, location_deserializer);
         }
     },
     deserialize_single(model, id, location_deserializer) {
         let store = this.get('store');
         const existing = store.find('person', id);
         let location_level_fk;
+        let person = existing;
         if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
             model.email_fks = belongs_to_extract_contacts(model, store, 'email', 'emails');
             model.phone_number_fks = belongs_to_extract_contacts(model, store, 'phonenumber', 'phone_numbers');
@@ -104,10 +105,11 @@ var PersonDeserializer = Ember.Object.extend({
             extract_person_location(model, store, location_level_fk, location_deserializer);
             extract_locale(model, store);
             model.detail = true;
-            const person = store.push('person', model);
+            person = store.push('person', model);
             belongs_to_extract(model.status_fk, store, person, 'status', 'person', 'people');
             person.save();
         }
+        return person;
     },
     deserialize_list(response) {
         const store = this.get('store');

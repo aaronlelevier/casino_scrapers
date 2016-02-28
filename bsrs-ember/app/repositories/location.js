@@ -4,11 +4,12 @@ import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
+import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 
 var PREFIX = config.APP.NAMESPACE;
 var LOCATION_URL = PREFIX + '/admin/locations/';
 
-var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
+var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
     type: Ember.computed(function() { return 'location'; }),
     typeGrid: Ember.computed(function() { return 'location-list'; }),
     garbage_collection: Ember.computed(function() { return ['location-list', 'location-status-list']; }),
@@ -82,14 +83,29 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
         });
         return this.get('store').find('location');
     },
-    findById(id) {
-        let model = this.get('store').find('location', id);
-        model.id = id;
-        PromiseMixin.xhr(LOCATION_URL + id + '/', 'GET').then((response) => {
-            this.get('LocationDeserializer').deserialize(response, id);
-        });
-        return model;
-    },
+    // findById(id, model) {
+    //     if(model){
+    //         PromiseMixin.xhr(`${LOCATION_URL}${id}/`, 'GET').then((response) => {
+    //             this.get('LocationDeserializer').deserialize(response, id);
+    //         }, (xhr) => {
+    //             if(xhr.status === 400 || xhr.status === 404){
+    //                 const err = xhr.responseJSON;
+    //                 const key = Object.keys(err);
+    //                 return Ember.RSVP.Promise.reject(err[key[0]]);
+    //             } 
+    //         });
+    //         return model;
+    //     }
+    //     return PromiseMixin.xhr(`${LOCATION_URL}${id}/`, 'GET').then((response) => {
+    //         return this.get('LocationDeserializer').deserialize(response, id);
+    //     }, (xhr) => {
+    //         if(xhr.status === 400 || xhr.status === 404){
+    //             const err = xhr.responseJSON;
+    //             const key = Object.keys(err);
+    //             return Ember.RSVP.Promise.reject(err[key[0]]);
+    //         } 
+    //     });
+    // },
     format_url(filter) {
         let url = LOCATION_URL;
         if(typeof filter !== 'undefined') {

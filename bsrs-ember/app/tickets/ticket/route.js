@@ -1,11 +1,12 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import TabRoute from 'bsrs-ember/route/tab/route';
+import FindById from 'bsrs-ember/mixins/route/findById';
 //start-non-standard
 import computed from 'ember-computed-decorators';
 //end-non-standard
 
-var TicketSingleRoute = TabRoute.extend({
+var TicketSingleRoute = TabRoute.extend(FindById, {
     activityRepository: inject('activity'),
     repository: inject('ticket'),
     locationRepo: inject('location'),
@@ -35,10 +36,7 @@ var TicketSingleRoute = TabRoute.extend({
         const statuses = this.get('statuses');
         const priorities = this.get('priorities');
         let activities = this.get('activityRepository').find('ticket', 'tickets', pk);
-        if (!ticket.get('content') || ticket.get('isNotDirtyOrRelatedNotDirty')) { 
-            ticket = repository.findById(pk);
-        }
-        return { model: ticket, statuses: statuses, priorities: priorities, activities: activities };
+        return this.findByIdScenario(ticket, pk, {statuses:statuses, priorities:priorities, activities:activities });
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);

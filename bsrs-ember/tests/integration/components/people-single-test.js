@@ -13,7 +13,7 @@ import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 
 var store, email_types, default_email_type, phone_number_types, default_phone_number_type, address_types, default_address_type, run = Ember.run;
 
-moduleForComponent('person-single', 'scott integration: person-single test', {
+moduleForComponent('person-single', 'integration: person-single test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency']);

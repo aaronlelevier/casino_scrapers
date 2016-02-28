@@ -121,7 +121,6 @@ test('filter tickets by their location matching the logged in Persons location',
     });
     let payload = PF.put({id: PD.idDonald});
     payload.locations = [];
-    // return pauseTest();
     ajax(`${PREFIX}${BASEURLS.base_people_url}/${PD.idDonald}/`, 'PUT', JSON.stringify(payload), {}, 200, {});
     ajax(`${PREFIX}${BASEURLS.base_people_url}/?page=1`, 'GET', null, {}, 200, PF.list());
     click('.t-save-btn');

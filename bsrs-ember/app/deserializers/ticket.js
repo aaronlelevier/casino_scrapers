@@ -31,13 +31,14 @@ var TicketDeserializer = Ember.Object.extend({
         if (typeof options === 'undefined') {
             this.deserialize_list(response);
         } else {
-            this.deserialize_single(response, options);
+            return this.deserialize_single(response, options);
         }
     },
     deserialize_single(response, id) {
         let store = this.get('store');
-        let existing_ticket = store.find('ticket', id);
-        if (!existing_ticket.get('id') || existing_ticket.get('isNotDirtyOrRelatedNotDirty')) {
+        let existing = store.find('ticket', id);
+        let ticket = existing;
+        if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
             let location_json = response.location;
             response.location_fk = location_json.id;
             delete response.location;
@@ -52,7 +53,7 @@ var TicketDeserializer = Ember.Object.extend({
             const categories_json = response.categories;
             delete response.categories;
             response.detail = true;
-            let ticket = store.push('ticket', response);
+            ticket = store.push('ticket', response);
             //TODO: only returns one variable
             const [location_fk, ticket_location_json] = extract_ticket_location(location_json, store, ticket);
             belongs_to_extract(response.status_fk, store, ticket, 'status', 'general', 'tickets');
@@ -92,10 +93,11 @@ var TicketDeserializer = Ember.Object.extend({
                 m2m_ccs.forEach((m2m) => {
                     store.push('ticket-person', m2m);
                 });
-                const pushed_ticket = store.push('ticket', {id: response.id, ticket_people_fks: cc_server_sum, ticket_categories_fks: server_sum}); 
-                pushed_ticket.save();
+                ticket = store.push('ticket', {id: response.id, ticket_people_fks: cc_server_sum, ticket_categories_fks: server_sum}); 
+                ticket.save();
             });
         }
+        return ticket;
     },
     deserialize_list(response) {
         const store = this.get('store');

@@ -24,7 +24,7 @@ var extract_location_level = (model, store) => {
     return location_level_pk;
 };
 
-var extract_parents = function(model, store, location_deserializer) {
+var extract_parents = function(model, store) {
     const parents = model.parents || [];
     let prevented_duplicate_m2m = [];
     const server_sum = [];
@@ -61,7 +61,7 @@ var extract_parents = function(model, store, location_deserializer) {
     return server_sum;
 };
 
-var extract_children = function(model, store, location_deserializer) {
+var extract_children = function(model, store) {
     const children = model.children || [];
     let prevented_duplicate_m2m = [];
     const server_sum = [];
@@ -104,25 +104,26 @@ var LocationDeserializer = Ember.Object.extend({
         if (typeof options === 'undefined') {
             this.deserialize_list(response);
         } else {
-            this.deserialize_single(response, options);
+            return this.deserialize_single(response, options);
         }
     },
     deserialize_single(response, id) {
         const store = this.get('store');
         const existing = store.find('location', id);
-        const location_deserializer = this;
+        let location = existing;
         if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
             response.email_fks = belongs_to_extract_contacts(response, store, 'email', 'emails');
             response.phone_number_fks = belongs_to_extract_contacts(response, store, 'phonenumber', 'phone_numbers');
             response.address_fks = belongs_to_extract_contacts(response, store, 'address', 'addresses');
             response.location_level_fk = extract_location_level(response, store);
-            response.location_children_fks = extract_children(response, store, location_deserializer);
-            response.location_parents_fks = extract_parents(response, store, location_deserializer);
+            response.location_children_fks = extract_children(response, store);
+            response.location_parents_fks = extract_parents(response, store);
             response.detail = true;
-            const location = store.push('location', response);
+            location = store.push('location', response);
             location.save();
             belongs_to_extract(response.status_fk, store, location, 'status', 'location', 'locations');
         }
+        return location;
     },
     deserialize_list(response) {
         const store = this.get('store');

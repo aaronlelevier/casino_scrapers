@@ -2,8 +2,8 @@ import Ember from 'ember';
 import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
-import {xhr} from 'bsrs-ember/tests/helpers/xhr';
-import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
+import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
+import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
@@ -16,17 +16,19 @@ import trim from 'bsrs-ember/utilities/trim';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_locations_url;
-const LOCATION_URL = BASE_URL + '/index';
-const LOCATION_NEW_URL = BASE_URL + '/new/1';
-const DJANGO_LOCATION_URL = PREFIX + '/admin/locations/';
+const ERROR_URL = BASEURLS.error_url;
+const LOCATION_URL = `${BASE_URL}/index`;
+const DETAIL_URL = `${BASE_URL}/${LD.idOne}`;
+const LOCATION_NEW_URL = `${BASE_URL}/new/1`;
+const DJANGO_LOCATION_URL = `${PREFIX}/admin/locations/`;
 
-var application, store, payload, original_uuid, originalLoggerError, originalTestAdapterException;
+var application, store, payload, new_xhr, list_xhr, original_uuid, originalLoggerError, originalTestAdapterException;
 
 module('Acceptance | error handling test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        xhr(DJANGO_LOCATION_URL + '?page=1', "GET", null, {}, 200, LOCATION_FIXTURES.empty());
+        new_xhr = xhr(DJANGO_LOCATION_URL + '?page=1', "GET", null, {}, 200, LF.empty());
         payload = {id: UUID.value, name: LD.storeName, number: LD.storeNumber, location_level: LLD.idOne, children: [], parents: [], emails: [], phone_numbers: [], addresses: []};
         original_uuid = random.uuid;
         random.uuid = function() { return UUID.value; };
@@ -132,5 +134,32 @@ test('xhr with a 500 status code will not show up in the form and or display dja
         //TODO: bubble up to a component or the application route
         // assert.ok(find('.t-application-error').is(':visible'));
         // assert.equal(find('.t-application-error').text().trim(), exception);
+    });
+});
+
+test('xhr with a 404 status code will show up in grid and transition to 404 page', (assert) => {
+    clearxhr(new_xhr);
+    const exception = `This record does not exist.`;
+    const location_list_data = LF.list();
+    const endpoint = `${PREFIX}${BASE_URL}/`;
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
+    visit(LOCATION_URL);
+    xhr(`${endpoint}${LD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+    click('.t-grid-data:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), ERROR_URL);
+        assert.equal(find('.t-error-message').text(), 'WAT');
+    });
+});
+
+test('deep linking with an xhr with a 404 status code will show up in grid and prevent transition', (assert) => {
+    clearxhr(new_xhr);
+    const exception = `This record does not exist.`;
+    const endpoint = `${PREFIX}${BASE_URL}/`;
+    xhr(`${endpoint}${LD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), ERROR_URL);
+        assert.equal(find('.t-error-message').text(), 'WAT');
     });
 });

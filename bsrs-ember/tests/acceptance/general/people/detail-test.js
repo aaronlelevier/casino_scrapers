@@ -256,7 +256,9 @@ test('when click delete, person is deleted and removed from store', (assert) => 
     people_list_data.results.splice(0,1);
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
     generalPage.delete();
-    andThen(() => {
+    andThen(() => { 
+        const people = store.find('person'); 
+        assert.equal(people.get('length'), 1);
         assert.equal(currentURL(), PEOPLE_URL);
     });
 });
@@ -767,78 +769,72 @@ test('clicking cancel button will take from detail view to list view', (assert) 
 test('when you change a related role it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
-        clearxhr(detail_xhr);
-        //refreshModel will call findById in people repo
-        let people_detail_data_two = PF.detail(PD.idOne);
-        people_detail_data_two.role = RD.idTwo;
-        xhr(endpoint + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
-        andThen(() => {
-            let person = store.find('person', PD.idOne);
-            assert.equal(person.get('role_fk'), RD.idOne);
-            assert.equal(person.get('locations').get('length'), 1);
-            assert.equal(person.get('locations').objectAt(0).get('id'), LD.idOne);
-        });
-        page.roleClickDropdown();
-        page.roleClickOptionTwo();
-        andThen(() => {
-            assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
-        });
-        var role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
-        var payload = PF.put({id: PD.id, role: role.id});
-        payload.locations = [];
-        xhr(url,'PUT',JSON.stringify(payload),{},200);
-        generalPage.save();
-        andThen(() => {
-            assert.equal(currentURL(), PEOPLE_URL);
-        });
+        let person = store.find('person', PD.idOne);
+        assert.equal(person.get('role_fk'), RD.idOne);
+        assert.equal(person.get('locations').get('length'), 1);
+        assert.equal(person.get('locations').objectAt(0).get('id'), LD.idOne);
+    });
+    //refreshModel will call findById in people repo
+    let people_detail_data_two = PF.detail(PD.idOne);
+    people_detail_data_two.role = RD.idTwo;
+    ajax(endpoint + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
+    page.roleClickDropdown();
+    page.roleClickOptionTwo();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
+    });
+    var role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
+    var payload = PF.put({id: PD.id, role: role.id});
+    payload.locations = [];
+    xhr(url,'PUT',JSON.stringify(payload),{},200);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
     });
 });
 
 test('when you deep link to the person detail view you can alter the role and rolling back will reset it', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
-        clearxhr(detail_xhr);
-        //refreshModel will call findById in people repo
-        let people_detail_data_two = PF.detail(PD.idOne);
-        people_detail_data_two.role = RD.idTwo;
-        xhr(`${endpoint}${PD.idOne}/`, 'GET', null, {}, 200, people_detail_data_two);
         assert.equal(currentURL(), DETAIL_URL);
         var person = store.find('person', PD.idOne);
-        andThen(() => {
-            assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-            assert.equal(page.roleInput(), RD.nameOne);
-            assert.equal(person.get('role.id'), RD.idOne);
-        });
-        page.roleClickDropdown();
-        page.roleClickOptionTwo();
-        andThen(() => {
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(page.roleInput(), RD.nameOne);
+        assert.equal(person.get('role.id'), RD.idOne);
+    });
+    //refreshModel will call findById in people repo
+    let people_detail_data_two = PF.detail(PD.idOne);
+    people_detail_data_two.role = RD.idTwo;
+    ajax(`${endpoint}${PD.idOne}/`, 'GET', null, {}, 200, people_detail_data_two);
+    page.roleClickDropdown();
+    page.roleClickOptionTwo();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
+        assert.equal(page.roleInput(), RD.nameTwo);
+        var person = store.find('person', PD.idOne);
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
+        assert.equal(person.get('role.id'), RD.idTwo);
+    });
+    generalPage.cancel();
+    andThen(() => {
+        waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
-            assert.equal(page.roleInput(), RD.nameTwo);
+            assert.ok(generalPage.modalIsVisible());
+        });
+    });
+    generalPage.clickModalRollback();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), PEOPLE_URL);
             var person = store.find('person', PD.idOne);
-            assert.ok(person.get('isDirtyOrRelatedDirty'));
-            assert.equal(person.get('role.id'), RD.idTwo);
-        });
-        generalPage.cancel();
-        andThen(() => {
-            waitFor(() => {
-                assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
-                assert.ok(generalPage.modalIsVisible());
-            });
-        });
-        generalPage.clickModalRollback();
-        andThen(() => {
-            waitFor(() => {
-                assert.equal(currentURL(), PEOPLE_URL);
-                var person = store.find('person', PD.idOne);
-                assert.equal(person.get('role.id'), RD.idOne);
-                var actual_role = store.find('role', RD.idOne);
-                assert.ok(actual_role.get('isNotDirty'));
-                assert.ok(person.get('isNotDirty'));
-                assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-                var previous_role = store.find('role', RD.idTwo);
-                assert.ok(Ember.$.inArray(person.get('id'), previous_role.get('people')) === -1);
-                assert.ok(previous_role.get('isNotDirty'));
-            });
+            assert.equal(person.get('role.id'), RD.idOne);
+            var actual_role = store.find('role', RD.idOne);
+            assert.ok(actual_role.get('isNotDirty'));
+            assert.ok(person.get('isNotDirty'));
+            assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+            var previous_role = store.find('role', RD.idTwo);
+            assert.ok(Ember.$.inArray(person.get('id'), previous_role.get('people')) === -1);
+            assert.ok(previous_role.get('isNotDirty'));
         });
     });
 });

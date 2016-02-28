@@ -66,7 +66,6 @@ test('clicking between category list and ticket detail allow to select new categ
     visit(CATEGORY_LIST_URL);
     ajax(TICKET_LIST,'GET', null, {}, 200, TF.list());
     visit(TICKET_LIST_URL);
-    // return pauseTest();
     ajax(TICKET_ACTIVITIES_URL, 'GET', null, {}, 200, TA_FIXTURES.empty());
     ajax(`${PREFIX}${BASEURLS.base_tickets_url}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail());
     click('.t-grid-data:eq(0)');

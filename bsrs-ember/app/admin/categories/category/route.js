@@ -7,7 +7,7 @@ var CategorySingle = TabRoute.extend({
     redirectRoute: Ember.computed(function() { return 'admin.categories.index'; }),
     modelName: Ember.computed(function() { return 'category'; }),
     templateModelField: Ember.computed(function() { return 'name'; }),
-    model(params, transition) {
+    model(params) {
         const pk = params.category_id;
         const repository = this.get('repository');
         let category = repository.fetch(pk);

@@ -12,7 +12,8 @@ var BASEURLS = {
     base_tickets_url: '/tickets',
     base_wos_url: '/work-orders',
     base_setting_url: '/admin/settings',
-    dashboard_url: '/dashboard'
+    dashboard_url: '/dashboard',
+    error_url: '/error'
 };
 
 

@@ -2,8 +2,9 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import TabRoute from 'bsrs-ember/route/tab/route';
 import ContactRouteMixin from 'bsrs-ember/mixins/route/contact';
+import FindById from 'bsrs-ember/mixins/route/findById';
 
-var LocationRoute = TabRoute.extend(ContactRouteMixin, {
+var LocationRoute = TabRoute.extend(FindById, ContactRouteMixin, {
     repository: inject('location'),
     redirectRoute: Ember.computed(function() { return 'admin.locations.index'; }),
     modelName: Ember.computed(function() { return 'location'; }),
@@ -22,10 +23,11 @@ var LocationRoute = TabRoute.extend(ContactRouteMixin, {
         const default_address_type = this.address_type_repo.get_default();
         const countries = this.country_repo.find();
         const state_list = this.state_repo.find();
-        if(!location.get('length') || location.get('isNotDirtyOrRelatedNotDirty')){ 
-            location = repository.findById(pk);
-        }
-        return { model: location, all_statuses, all_location_levels, email_types, default_email_type, phone_number_types, default_phone_number_type, address_types, default_address_type, state_list, countries };
+        return this.findByIdScenario(location, pk, {all_statuses:all_statuses, all_location_levels:all_location_levels, 
+                                     email_types:email_types, default_email_type:default_email_type, 
+                                     phone_number_types:phone_number_types,default_phone_number_type:default_phone_number_type,
+                                     address_types:address_types, default_address_type:default_address_type, 
+                                     state_list:state_list, countries:countries});
 
     },
     setupController: function(controller, hash) {

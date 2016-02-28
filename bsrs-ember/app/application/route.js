@@ -133,6 +133,11 @@ var ApplicationRoute = Ember.Route.extend({
         }, 1000);
     },
     actions: {
+        error(error, transition) {
+            if(error){
+                return this.transitionTo('error');
+            }
+        },
         cancel_modal() {
             Ember.$('.t-modal').modal('hide');
         },

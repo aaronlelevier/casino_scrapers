@@ -28,7 +28,7 @@ import random from 'bsrs-ember/models/random';
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_locations_url;
 const LOCATION_URL = `${BASE_URL}/index`;
-const DETAIL_URL = BASE_URL + '/' + LD.idOne;
+const DETAIL_URL = `${BASE_URL}/${LD.idOne}`;
 const LOCATION_PUT_URL = PREFIX + DETAIL_URL + '/';
 
 let application, store, endpoint, list_xhr, url, original_uuid, run = Ember.run;
@@ -45,11 +45,11 @@ module('Acceptance | location detail-test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        endpoint = PREFIX + BASE_URL + '/';
+        endpoint = `${PREFIX}${BASE_URL}/`;
         let location_list_data = LF.list();
         let location_detail_data = LF.detail();
-        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
-        xhr(endpoint + LD.idOne + '/', 'GET', null, {}, 200, location_detail_data);
+        list_xhr = xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, location_list_data);
+        xhr(`${endpoint}${LD.idOne}/`, 'GET', null, {}, 200, location_detail_data);
         url = `${PREFIX}${DETAIL_URL}/`;
         original_uuid = random.uuid;
     },

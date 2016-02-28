@@ -4,11 +4,12 @@ import PromiseMixin from 'ember-promise/mixins/promise';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import inject from 'bsrs-ember/utilities/deserializer';
 import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
+import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 
 var PREFIX = config.APP.NAMESPACE;
 var TICKET_URL = PREFIX + '/tickets/';
 
-var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
+var TicketRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
     uuid: injectUUID('uuid'),
     type: Ember.computed(function() { return 'ticket'; }),
     typeGrid: Ember.computed(function() { return 'ticket-list'; }),
@@ -22,14 +23,6 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
             model.save();
             model.saveRelated();
         });
-    },
-    findById(id) {
-        let model = this.get('store').find('ticket', id);
-        model.id = id;
-        PromiseMixin.xhr(TICKET_URL + id + '/', 'GET').then((response) => {
-            this.get('TicketDeserializer').deserialize(response, id);
-        });
-        return model;
     },
     fetch(id) {
         return this.get('store').find('ticket', id);

@@ -4,13 +4,14 @@ import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import injectRepo from 'bsrs-ember/utilities/inject';
 import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
+import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 
 const { run } = Ember;
 var PREFIX = config.APP.NAMESPACE;
 var PEOPLE_URL = PREFIX + '/admin/people/';
 
-export default Ember.Object.extend(GridRepositoryMixin, {
+export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
     type: Ember.computed(function() { return 'person'; }),
     typeGrid: Ember.computed(function() { return 'person-list'; }),
     garbage_collection: Ember.computed(function() { return ['person-list', 'person-status-list']; }),
@@ -77,13 +78,5 @@ export default Ember.Object.extend(GridRepositoryMixin, {
     },
     fetch(id) {
         return this.get('store').find('person', id);
-    },
-    findById(id) {
-        let model = this.get('store').find('person', id);
-        model.id = id;
-        PromiseMixin.xhr(PEOPLE_URL + id + '/', 'GET').then((response) => {
-            this.get('PersonDeserializer').deserialize(response, id);
-        });
-        return model;
     },
 });

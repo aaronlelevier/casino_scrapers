@@ -217,6 +217,7 @@ test('adding a new person should allow for another new person to be created afte
     let person_count;
     random.uuid = original_uuid;
     payload.id = 'abc123';
+    people_detail_data.id = 'abc123';
     patchRandomAsync(0);
     visit(NEW_URL);
     fillIn('.t-person-username', PD.username);
