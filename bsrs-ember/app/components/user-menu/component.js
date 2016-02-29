@@ -1,8 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-    tagName: 'nav',
-    classNames: ['userMenu'],
+    tagName: 'ul',
+    classNames: ['nav navbar-nav navbar-right'],
     actions: {
         show_menu(){
             let isShowing = this.get('showing');

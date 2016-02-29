@@ -1,3 +1,95 @@
+.navbar {
+    position: relative;
+    min-height: $menuHeight;
+    height: $menuHeight;
+    margin-bottom: 0;
+    border: none;
+	border-radius: 0;
+	background: $blue;
+	color: $white;
+	.navbar-brand{
+		height: $menuHeight;
+		padding: 0 25px 0 15px;
+		line-height: $menuHeight;
+		color: $light;
+		&:hover{
+			color: $light;
+		}
+	}
+	.navbar-nav{
+		li{
+			a{
+				padding: 0 15px;
+				line-height: $menuHeight;
+				color: $light;
+				&:hover{
+					background: $hoverColor;
+					color: $light;
+				}
+				&.active{
+					background: $activeColor;
+					color: $light;
+				}
+				.badge{
+					position: absolute;
+					right: -7px;
+					top: 3px;
+					z-index: 1;
+				}
+			}
+			&.dropdown.open{
+				a.dropdown-toggle{
+					background: $hoverColor;
+					color: $light;
+				}
+			}
+		}
+		.current-user{
+			a.dropdown-toggle{
+				height: $menuHeight;
+				padding: 0 25px 0 15px;
+				margin: 0 0 0 15px;
+				.user{
+					display: block;
+					line-height: 26px;
+				}
+				.role{
+					display: block;
+					font-size: 1rem;
+					line-height: 10px;
+					margin-top: -2px;
+				}
+				.caret{
+					line-height: $menuHeight;
+					position: absolute;
+					right: 5px;
+					top: 20px;
+				}
+			}
+			.dropdown-menu{
+				right: -1px;
+				border: $borderStyle;
+				border-radius: $borderRadiusBottom;
+				a{
+					color: $darkGray;
+					font-size: 1.2rem;
+					line-height: 30px;
+					height: 30px;
+					&:hover{
+						color: $light;
+					}
+					&.active{
+						background: $activeColor;
+						color: $light;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
 .form-control{
 	-webkit-transition: all ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
     -o-transition: all ease-in-out 0.15s, box-shadow ease-in-out 0.15s;

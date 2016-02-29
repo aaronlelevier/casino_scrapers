@@ -1,13 +1,9 @@
-<a>
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+	<span class="caret"></span>
 	<span class="user t-current-user-fullname">{{instance.person.fullname}}</span>
 	<span class="role t-current-user-role">{{instance.person.role.name}}</span>
-	<span class="caret"></span>
 </a>
-<ul class="submenu">
-	<li class="userOpt">
-    <a href="#" title="Log Out" class="t-logout" id="logout" {{action 'logout'}}>Logout</a>
-	</li>
-	<li class="userOpt">
-		{{#link-to "admin.people.person" instance.id title="Profile" class="t-person-profile-link" id="profile"}}Profile{{/link-to}}
-	</li>
+<ul class="dropdown-menu">
+	<li>{{#link-to "admin.people.person" instance.id title="Profile" class="t-person-profile-link" id="profile"}}Profile{{/link-to}}</li>
+	<li><a href="#" title="Log Out" class="t-logout" id="logout" {{action 'logout'}}>Logout</a></li>
 </ul>

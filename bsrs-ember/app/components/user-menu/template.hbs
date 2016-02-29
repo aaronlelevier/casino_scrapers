@@ -1,20 +1,5 @@
-{{#if media.isMobile}}
-<a href="#" class="menu-toggle" {{action 'show_menu'}}>{{fa-icon 'ellipsis-h'}}</a>
-{{/if}}
-{{#if showing}}
-<ul class="userWrap list-inline">
-    <li>
-        <a>{{fa-icon "question" classNames="menuIcon"}}</a>
-    </li>
-    <li>
-        <a data-toggle="modal" data-target=".bs-example-modal-lg">{{fa-icon "search" classNames="menuIcon"}}</a>
-    </li>
-    <li>
-        <a>{{fa-icon "bell-o" classNames="menuIcon"}}<span class="badge">2</span></a>
-    </li>
-    <li>
-        <a>{{fa-icon "envelope-o" classNames="menuIcon"}} <span class="badge">56</span></a>
-    </li>
-    {{people/person-current}}
-</ul>
-{{/if}}
+<li><a>{{fa-icon "question" classNames="menuIcon"}}</a></li>
+<li><a>{{fa-icon "search" classNames="menuIcon"}}</a></li>
+<li><a>{{fa-icon "bell-o" classNames="menuIcon"}}<span class="badge">2</span></a></li>
+<li><a>{{fa-icon "envelope-o" classNames="menuIcon"}} <span class="badge">56</span></a></li>
+{{people/person-current}}
