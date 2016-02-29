@@ -15,11 +15,11 @@ import random from 'bsrs-ember/models/random';
 import trim from 'bsrs-ember/utilities/trim';
 
 const PREFIX = config.APP.NAMESPACE;
-const BASE_URL = BASEURLS.base_locations_url;
+const LOC_URL = BASEURLS.base_locations_url;
 const ERROR_URL = BASEURLS.error_url;
-const LOCATION_URL = `${BASE_URL}/index`;
-const DETAIL_URL = `${BASE_URL}/${LD.idOne}`;
-const LOCATION_NEW_URL = `${BASE_URL}/new/1`;
+const LOCATION_URL = `${LOC_URL}/index`;
+const DETAIL_URL = `${LOC_URL}/${LD.idOne}`;
+const LOCATION_NEW_URL = `${LOC_URL}/new/1`;
 const DJANGO_LOCATION_URL = `${PREFIX}/admin/locations/`;
 
 var application, store, payload, new_xhr, list_xhr, original_uuid, originalLoggerError, originalTestAdapterException;
@@ -141,7 +141,7 @@ test('xhr with a 404 status code will show up in the error component and transit
     clearxhr(new_xhr);
     const exception = `This record does not exist.`;
     const location_list_data = LF.list();
-    const endpoint = `${PREFIX}${BASE_URL}/`;
+    const endpoint = `${PREFIX}${LOC_URL}/`;
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
     visit(LOCATION_URL);
     xhr(`${endpoint}${LD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
@@ -155,7 +155,7 @@ test('xhr with a 404 status code will show up in the error component and transit
 test('deep linking with an xhr with a 404 status code will show up in the error component', (assert) => {
     clearxhr(new_xhr);
     const exception = `This record does not exist.`;
-    const endpoint = `${PREFIX}${BASE_URL}/`;
+    const endpoint = `${PREFIX}${LOC_URL}/`;
     xhr(`${endpoint}${LD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
     visit(DETAIL_URL);
     andThen(() => {

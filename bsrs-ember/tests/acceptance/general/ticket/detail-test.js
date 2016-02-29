@@ -28,9 +28,10 @@ import moment from 'moment';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
-const TICKET_URL = BASE_URL + '/index';
-const DETAIL_URL = BASE_URL + '/' + TD.idOne;
-const TICKET_PUT_URL = PREFIX + DETAIL_URL + '/';
+const TICKET_URL = `${BASE_URL}/index`;
+const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
+const TICKET_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
+const ERROR_URL = BASEURLS.error_url;
 const LETTER_A = {keyCode: 65};
 const LETTER_B = {keyCode: 66};
 const LETTER_R = {keyCode: 82};
@@ -55,10 +56,10 @@ module('Acceptance | ticket detail', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        endpoint = PREFIX + BASE_URL + '/';
+        endpoint = `${PREFIX}${BASE_URL}/`;
         detail_data = TF.detail(TD.idOne);
-        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, TF.list());
-        detail_xhr = xhr(endpoint + TD.idOne + '/', 'GET', null, {}, 200, detail_data);
+        list_xhr = xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, TF.list());
+        detail_xhr = xhr(`${endpoint}${TD.idOne}/`, 'GET', null, {}, 200, detail_data);
         activity_one = xhr(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
         timemachine.config({
             dateString: 'December 25, 2015 13:12:59'
@@ -1052,3 +1053,14 @@ test('clicking update will not transition away from ticket detail and bring in l
     });
 });
 
+test('deep linking with an xhr with a 404 status code will show up in the error component', (assert) => {
+    clearxhr(detail_xhr);
+    clearxhr(list_xhr);
+    const exception = `This record does not exist.`;
+    xhr(`${endpoint}${TD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), ERROR_URL);
+        assert.equal(find('.t-error-message').text(), 'WAT');
+    });
+});

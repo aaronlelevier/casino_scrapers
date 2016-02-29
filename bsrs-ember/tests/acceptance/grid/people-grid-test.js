@@ -479,7 +479,7 @@ test('after you reset the grid the filter model will also be reset', function(as
     });
 });
 
-test('count is shown and updated as the user filters down the list from django', function(assert) {
+test('scott count is shown and updated as the user filters down the list from django', function(assert) {
     let option_one = PREFIX + BASE_URL + '/?page=1&search=8';
     xhr(option_one ,'GET',null,{},200,PF.searched('(8)', 'id'));
     visit(PEOPLE_URL);

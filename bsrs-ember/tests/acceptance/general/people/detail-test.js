@@ -41,6 +41,7 @@ const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const BASE_LOCATION_URL = BASEURLS.base_locations_url;
 const PEOPLE_URL = `${BASE_PEOPLE_URL}/index`;
 const DETAIL_URL = `${BASE_PEOPLE_URL}/${PD.idOne}`;
+const ERROR_URL = BASEURLS.error_url;
 const LETTER_A = {keyCode: 65};
 const LETTER_M = {keyCode: 77};
 const BACKSPACE = {keyCode: 8};
@@ -1230,5 +1231,17 @@ test('when changing the locale for a user (not current user), the language is no
     page.localeClickOptionTwo();
     andThen(() => {
         assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
+    });
+});
+
+test('deep linking with an xhr with a 404 status code will show up in the error component', (assert) => {
+    clearxhr(detail_xhr);
+    clearxhr(list_xhr);
+    const exception = `This record does not exist.`;
+    xhr(`${endpoint}${PD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), ERROR_URL);
+        assert.equal(find('.t-error-message').text(), 'WAT');
     });
 });
