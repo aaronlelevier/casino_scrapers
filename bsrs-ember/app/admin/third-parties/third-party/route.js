@@ -1,25 +1,20 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import TabRoute from 'bsrs-ember/route/tab/route';
+import FindById from 'bsrs-ember/mixins/route/findById';
 
-var ThirdPartyRoute = TabRoute.extend({
+var ThirdPartyRoute = TabRoute.extend(FindById, {
     repository: inject('third-party'),
     status_repo: inject('status'),
     redirectRoute: Ember.computed(function() { return 'admin.third-parties.index'; }),
     modelName: Ember.computed(function() { return 'third-party'; }),
     templateModelField: Ember.computed(function() { return 'name'; }),
     model(params) {
-        const third_party_pk = params.third_party_id;
-        const status_repo = this.get('status_repo');
-        const repository = this.get('repository');
-        let third_party = repository.fetch(third_party_pk);
-        if(!third_party.get('length') || third_party.get('isNotDirtyOrRelatedNotDirty')){ 
-            third_party = repository.findById(third_party_pk);
-        }
-        return {
-            model: third_party,
-            statuses: status_repo.find(),
-        };
+        const pk = params.third_party_id;
+        const statuses = this.get('status_repo').find();
+        let third_party = this.get('repository').fetch(pk);
+        const override = true;
+        return this.findByIdScenario(third_party, pk, {statuses:statuses});
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);

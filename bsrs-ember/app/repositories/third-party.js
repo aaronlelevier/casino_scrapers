@@ -4,11 +4,13 @@ import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
+import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
+import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
 
 var PREFIX = config.APP.NAMESPACE;
 var THIRD_PARTY_URL = PREFIX + '/admin/third-parties/';
 
-var ThirdPartyRepo = Ember.Object.extend(GridRepositoryMixin, {
+var ThirdPartyRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
     type: Ember.computed(function() { return 'third-party'; }),
     typeGrid: Ember.computed(function() { return 'third-party-list'; }),
     garbage_collection: Ember.computed(function() { return ['third-party-list']; }),
@@ -21,17 +23,6 @@ var ThirdPartyRepo = Ember.Object.extend(GridRepositoryMixin, {
             model.save();
             model.saveRelated();
         });
-    },
-    fetch(id) {
-        return this.get('store').find('third-party', id);
-    },
-    findById(id) {
-        let model = this.get('store').find('third-party', id);
-        model.id = id;
-        PromiseMixin.xhr(THIRD_PARTY_URL + id + '/', 'GET').then((response) => {
-            this.get('ThirdPartyDeserializer').deserialize(response, id);
-        });
-        return model;
     },
 });
 

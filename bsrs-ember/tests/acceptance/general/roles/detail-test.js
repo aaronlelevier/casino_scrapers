@@ -23,6 +23,7 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_roles_url;
 const ROLE_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + RD.idOne;
+const ERROR_URL = BASEURLS.error_url;
 const LETTER_A = {keyCode: 65};
 const LETTER_S = {keyCode: 83};
 const LETTER_R = {keyCode: 82};
@@ -41,7 +42,7 @@ module('Acceptance | role-detail', {
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, RF.list());
         detail_xhr = xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
         url = `${PREFIX}${DETAIL_URL}/`;
-        run(function() {
+        run(() => {
             store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
         });
         translations = BSRS_TRANSLATION_FACTORY.generate('en')['en'];
@@ -386,6 +387,7 @@ test('settings - override value from parent', (assert) => {
     });
 });
 
+//TODO: Tabs, role settings, third party were all things that were terribly written.  I wonder when Aaron and Andy will notice this.  Again, don't write bad code just to get things done. 
 // BRING THESE BACK WHEN WE HAVE FIRST LEVEL SETTINGS ON THE ROLE
 
 // test('settings - has a value, and is not inherited', (assert) => {
@@ -458,3 +460,15 @@ test('settings - override value from parent', (assert) => {
 //         assert.ok(find(`span:contains('${translations['admin.settings.create_all']}')`));
 //     });
 // });
+
+test('deep linking with an xhr with a 404 status code will show up in the error component (role)', (assert) => {
+    clearxhr(detail_xhr);
+    clearxhr(list_xhr);
+    const exception = `This record does not exist.`;
+    xhr(`${endpoint}${RD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), ERROR_URL);
+        assert.equal(find('.t-error-message').text(), 'WAT');
+    });
+});

@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import PromiseMixin from 'ember-promise/mixins/promise';
 
-export default Ember.Mixin.create({
+var FindByIdRepo = Ember.Mixin.create({
     findById(id, model){
         const url = this.get('url');
         const deserializer = this.get('deserializer');
@@ -29,3 +29,5 @@ export default Ember.Mixin.create({
     
     }
 });
+
+export default FindByIdRepo;

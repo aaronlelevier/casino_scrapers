@@ -4,11 +4,13 @@ import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
+import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
+import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
 
 var PREFIX = config.APP.NAMESPACE;
-var CATEGORY_URL = PREFIX + '/admin/categories/';
+var CATEGORY_URL = `${PREFIX}/admin/categories/`;
 
-var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
+var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
     type: Ember.computed(function() { return 'category'; }),
     typeGrid: Ember.computed(function() { return 'category-list'; }),
     garbage_collection: Ember.computed(function() { return ['category-list']; }),
@@ -33,17 +35,6 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
                 });
             });
         }
-    },
-    fetch(id) {
-        return this.get('store').find('category', id);
-    },
-    findById(id) {
-        let model = this.get('store').find('category', id);
-        model.id = id;
-        PromiseMixin.xhr(CATEGORY_URL + id + '/', 'GET').then((response) => {
-            this.get('CategoryDeserializer').deserialize(response, id);
-        });
-        return model;
     },
 });
 

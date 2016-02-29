@@ -16,18 +16,19 @@ var CategoryDeserializer = Ember.Object.extend({
         if (typeof options === 'undefined') {
             this.deserialize_list(response);
         } else {
-            this.deserialize_single(response, options);
+            return this.deserialize_single(response, options);
         }
     },
     deserialize_single(response, id) {
         const store = this.get('store');
         const existing = store.find('category', id);
+        let category = existing;
         if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
             let children_json = response.children;
             delete response.children;
             [response.parent_id] = extract_tree(response, store);
             response.detail = true;
-            let category = store.push('category', response);
+            category = store.push('category', response);
             if(children_json){
                 let [m2m_children, children, server_sum] = many_to_many_extract(children_json, store, category, 'category_children', 'category_pk', 'category', 'child_pk');
                 children.forEach((cat) => {
@@ -40,6 +41,7 @@ var CategoryDeserializer = Ember.Object.extend({
             }
             category.save();
         }
+        return category;
     },
     deserialize_list(response) {
         const store = this.get('store');

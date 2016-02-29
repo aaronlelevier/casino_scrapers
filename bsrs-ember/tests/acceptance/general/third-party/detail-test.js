@@ -16,6 +16,7 @@ const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_third_parties_url;
 const LIST_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + TPD.idOne;
+const ERROR_URL = BASEURLS.error_url;
 
 let application, store, endpoint, endpoint_detail, list_xhr, detail_xhr;
 
@@ -200,5 +201,17 @@ test('can change status to inactive for person and save (power select)', (assert
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LIST_URL);
+    });
+});
+
+test('deep linking with an xhr with a 404 status code will show up in the error component (tp)', (assert) => {
+    clearxhr(detail_xhr);
+    clearxhr(list_xhr);
+    const exception = `This record does not exist.`;
+    xhr(`${endpoint}${TPD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), ERROR_URL);
+        assert.equal(find('.t-error-message').text(), 'WAT');
     });
 });

@@ -1,8 +1,9 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import TabRoute from 'bsrs-ember/route/tab/route';
+import FindById from 'bsrs-ember/mixins/route/findById';
 
-var CategorySingle = TabRoute.extend({
+var CategorySingle = TabRoute.extend(FindById, {
     repository: inject('category'),
     redirectRoute: Ember.computed(function() { return 'admin.categories.index'; }),
     modelName: Ember.computed(function() { return 'category'; }),
@@ -11,10 +12,7 @@ var CategorySingle = TabRoute.extend({
         const pk = params.category_id;
         const repository = this.get('repository');
         let category = repository.fetch(pk);
-        if(!category.get('length') || category.get('isNotDirtyOrRelatedNotDirty')){ 
-            category = repository.findById(pk);
-        }
-        return { model:category }; 
+        return this.findByIdScenario(category, pk);
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);

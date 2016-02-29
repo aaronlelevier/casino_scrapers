@@ -1,7 +1,10 @@
 import PageObject from '../page-object';
+import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import CD from 'bsrs-ember/vendor/defaults/category';
 
 let { visitable, fillable, clickable, count, text } = PageObject;
+const BASE_URL = BASEURLS.base_categories_url;
+const DETAIL_URL = `${BASE_URL}/${CD.idOne}`;
 const CATEGORY = '.t-category-children-select > .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
 const CATEGORIES = `${CATEGORY} > .ember-power-select-multiple-option`;
 const CATEGORY_ONE = `${CATEGORIES}:eq(0)`;
@@ -11,6 +14,7 @@ const CATEGORY_DROPDOWN = '.t-category-children-select-dropdown > .ember-power-s
 
 var CategoryPage = PageObject.create({
   visit: visitable('/'),
+  visitDetail: visitable(DETAIL_URL),
   nameFill: fillable('.t-category-name'),
   nameInput: PageObject.value('.t-category-name'),
   descriptionFill: fillable('.t-category-description'),

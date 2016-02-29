@@ -6,12 +6,13 @@ import injectRepo from 'bsrs-ember/utilities/inject';
 import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
 import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 import injectUUID from 'bsrs-ember/utilities/uuid';
+import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
 
 const { run } = Ember;
 var PREFIX = config.APP.NAMESPACE;
-var PEOPLE_URL = PREFIX + '/admin/people/';
+var PEOPLE_URL = `${PREFIX}/admin/people/`;
 
-export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
+export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
     type: Ember.computed(function() { return 'person'; }),
     typeGrid: Ember.computed(function() { return 'person-list'; }),
     garbage_collection: Ember.computed(function() { return ['person-list', 'person-status-list']; }),
@@ -33,7 +34,6 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
         run(() => {
             person = store.push('person', {id: pk, new: true, new_pk: new_pk, status_fk: status_fk, role_fk: role.get('id')});
             store.push('role', {id: role.get('id'), people: people.concat(person.get('id'))});
-            // role.set('people', people.concat(person.get('id')));
         });
         return person;
     },
@@ -75,8 +75,5 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
                 });
             });
         }
-    },
-    fetch(id) {
-        return this.get('store').find('person', id);
-    },
+    }
 });

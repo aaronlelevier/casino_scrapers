@@ -1234,7 +1234,7 @@ test('when changing the locale for a user (not current user), the language is no
     });
 });
 
-test('deep linking with an xhr with a 404 status code will show up in the error component', (assert) => {
+test('deep linking with an xhr with a 404 status code will show up in the error component (person)', (assert) => {
     clearxhr(detail_xhr);
     clearxhr(list_xhr);
     const exception = `This record does not exist.`;

@@ -15,6 +15,7 @@ const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
 const LOCATION_LEVEL_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + LLD.idOne;
+const ERROR_URL = BASEURLS.error_url;
 const DISTRICT_DETAIL_URL = BASE_URL + '/' + LLD.idDistrict;
 const LOCATION_LEVEL = '.t-location-level-children-select > .ember-basic-dropdown-trigger';
 const LOCATION_LEVEL_DROPDOWN = '.t-location-level-children-select-dropdown > .ember-power-select-options';
@@ -259,5 +260,17 @@ test('can remove and add back children', (assert) => {
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
+    });
+});
+
+test('deep linking with an xhr with a 404 status code will show up in the error component (llevel)', (assert) => {
+    clearxhr(detail_xhr);
+    clearxhr(list_xhr);
+    const exception = `This record does not exist.`;
+    xhr(`${endpoint}${LLD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), ERROR_URL);
+        assert.equal(find('.t-error-message').text(), 'WAT');
     });
 });

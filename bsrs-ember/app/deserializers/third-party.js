@@ -6,18 +6,20 @@ var ThirdPartyDeserializer = Ember.Object.extend({
         if (typeof options === 'undefined') {
             this.deserialize_list(model);
         } else {
-            this.deserialize_single(model, options);
+            return this.deserialize_single(model, options);
         }
     },
     deserialize_single(model, id) {
         const store = this.get('store');
-        let existing_third_party = store.find('third-party', id);
-        if (!existing_third_party.get('id') || existing_third_party.get('isNotDirtyOrRelatedNotDirty')) {
+        let existing = store.find('third-party', id);
+        let third_party = existing;
+        if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
             model.detail = true;
-            const third_party = store.push('third-party', model);
+            third_party = store.push('third-party', model);
             belongs_to_extract(model.status_fk, store, third_party, 'status', 'general', 'third_parties');
             third_party.save();
         }
+        return third_party;
     },
     deserialize_list(response) {
         const store = this.get('store');

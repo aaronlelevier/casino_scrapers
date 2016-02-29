@@ -1053,7 +1053,7 @@ test('clicking update will not transition away from ticket detail and bring in l
     });
 });
 
-test('deep linking with an xhr with a 404 status code will show up in the error component', (assert) => {
+test('deep linking with an xhr with a 404 status code will show up in the error component (ticket)', (assert) => {
     clearxhr(detail_xhr);
     clearxhr(list_xhr);
     const exception = `This record does not exist.`;
