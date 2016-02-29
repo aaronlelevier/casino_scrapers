@@ -137,7 +137,7 @@ test('xhr with a 500 status code will not show up in the form and or display dja
     });
 });
 
-test('xhr with a 404 status code will show up in grid and transition to 404 page', (assert) => {
+test('xhr with a 404 status code will show up in the error component and transition to 404 page', (assert) => {
     clearxhr(new_xhr);
     const exception = `This record does not exist.`;
     const location_list_data = LF.list();
@@ -152,7 +152,7 @@ test('xhr with a 404 status code will show up in grid and transition to 404 page
     });
 });
 
-test('deep linking with an xhr with a 404 status code will show up in grid and prevent transition', (assert) => {
+test('deep linking with an xhr with a 404 status code will show up in the error component', (assert) => {
     clearxhr(new_xhr);
     const exception = `This record does not exist.`;
     const endpoint = `${PREFIX}${BASE_URL}/`;
