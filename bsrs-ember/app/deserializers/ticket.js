@@ -63,8 +63,6 @@ var TicketDeserializer = Ember.Object.extend({
             }
             let [m2m_ccs, ccs, cc_server_sum] = many_to_many_extract(cc_json, store, ticket, 'ticket_cc', 'ticket_pk', 'person', 'person_pk');
             let [m2m_categories, categories, server_sum] = many_to_many_extract(categories_json, store, ticket, 'ticket_categories', 'ticket_pk', 'category', 'category_pk');
-            categories.forEach((cat) => {
-            });
             run(() => {
                 if(ticket_location_json){
                     ticket.change_location(ticket_location_json);
