@@ -59,6 +59,8 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     visit(LOCATION_LEVEL_URL);
     click('.t-page:eq(1) a');
     andThen(() => {
+        const location_levels = store.find('location-level-list');
+        assert.equal(location_levels.get('length'), 9);
         assert.equal(currentURL(), LOCATION_LEVEL_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), 'Company-tsiname');
@@ -71,6 +73,8 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     });
     click('.t-page:eq(0) a');
     andThen(() => {
+        const location_levels = store.find('location-level-list');
+        assert.equal(location_levels.get('length'), 13);
         assert.equal(currentURL(),LOCATION_LEVEL_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameCompany);

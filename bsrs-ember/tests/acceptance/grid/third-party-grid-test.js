@@ -75,6 +75,9 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     visit(TP_URL);
     click(`${PAGE}:eq(1) a`);
     andThen(() => {
+        const third_parties = store.find('third-party-list');
+        //TODO: something is wrong here in the fixtures
+        assert.equal(third_parties.get('length'), 20);
         assert.equal(currentURL(), TP_URL + '?page=2');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(substring_up_to_num(find(`${GRID_DATA_0} .t-third-party-name`).text().trim()), 'ABC');
@@ -87,6 +90,8 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     });
     click(`${PAGE}:eq(0) a`);
     andThen(() => {
+        const third_parties = store.find('third-party-list');
+        assert.equal(third_parties.get('length'), 20);
         assert.equal(currentURL(),TP_URL);
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);

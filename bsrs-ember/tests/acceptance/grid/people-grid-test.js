@@ -68,6 +68,8 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     xhr(page_two ,"GET",null,{},200,PF.list_two());
     click('.t-page:eq(1) a');
     andThen(() => {
+        const people = store.find('person-list');
+        assert.equal(people.get('length'), 8);
         assert.equal(currentURL(), PEOPLE_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-2);
         assert.equal(find('.t-grid-data:eq(0) .t-person-username').text().trim(), 'scott11');
@@ -80,6 +82,8 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     });
     click('.t-page:eq(0) a');
     andThen(() => {
+        const people = store.find('person-list');
+        assert.equal(people.get('length'), 10);
         assert.equal(currentURL(),PEOPLE_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-person-username').text().trim(), PD.username);
