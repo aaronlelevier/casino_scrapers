@@ -21,4 +21,4 @@ class GeneralElementsPage(object):
         self.driver.find_element_by_class_name("t-delete-btn").click()
 
     def click_dropdown_delete(self):
-        self.driver.find_element_by_class_name("dropdown-toggle").click()
+        self.driver.find_element_by_xpath("//*[contains(@class, 't-crud-buttons')]/button[contains(@class, 't-dropdown-delete')]").click()

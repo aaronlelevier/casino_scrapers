@@ -45,8 +45,8 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.driver.close()
 
     def test_translated_value(self):
-        """Translation key 'menu.home' -> 'home' in 'en' """
-        self.driver.find_element_by_link_text('Home')
+        """Translation key 'modules.tickets.titleShort' -> 'Tickets' in 'en' """
+        self.driver.find_element_by_link_text('Tickets')
 
     def test_keypress__enter(self):
         # Go to Location Area
@@ -402,6 +402,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         add_address_btn.click()
         person_page.find_address_new_entry_send_keys(2, new_street_two, new_city_two, new_zip_two)
         # Fill in Location
+        # TODO: (scott) double slashes can be removed at some point when the templates are stable. Selects all nodes, regardless of where they are in document.  Allows for relative path selection
         location_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-person-locations-select')])[last()]")
         location_input.click()
         location_input.send_keys("a")
