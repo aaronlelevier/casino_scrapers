@@ -6,6 +6,7 @@ from model_mommy import mommy
 from rest_framework.test import APITestCase
 
 from category.tests.factory import create_single_category
+from decision_tree.model_choices import LINK_TYPES, NOTE_TYPES, FIELD_TYPES
 from decision_tree.models import TreeField, TreeOption, TreeLink, TreeData
 from decision_tree.serializers import TreeDataSerializer
 from decision_tree.tests.factory import create_tree_link, create_tree_field, create_tree_data
@@ -16,7 +17,7 @@ from ticket.tests.factory import create_ticket_status, create_ticket_priority
 from utils.create import random_lorem
 
 
-class TreeDataTests(APITestCase):
+class TreeDataTestSetUpMixin(object):
 
     def setUp(self):
         self.password = PASSWORD
@@ -27,6 +28,9 @@ class TreeDataTests(APITestCase):
 
     def tearDown(self):
         self.client.logout()
+
+
+class TreeDataDetailTests(TreeDataTestSetUpMixin, APITestCase):
 
     def test_detail(self):
         link = self.tree_data.links.first()
@@ -71,6 +75,9 @@ class TreeDataTests(APITestCase):
         self.assertEqual(data['links'][0]['parent'], str(self.tree_data.id))
         self.assertEqual(data['links'][0]['destination'], str(link.destination.id))
 
+
+class TreeDataListTests(TreeDataTestSetUpMixin, APITestCase):
+
     def test_list(self):
         response = self.client.get('/api/admin/dtd/')
 
@@ -89,7 +96,8 @@ class TreeDataTests(APITestCase):
         self.assertEqual(data['links'][0]['order'], link.order)
         self.assertEqual(data['links'][0]['text'], link.text)
 
-    # # create
+
+class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
 
     def test_create__not_related_fields_only(self):
         serializer = TreeDataSerializer(self.tree_data)
@@ -134,7 +142,7 @@ class TreeDataTests(APITestCase):
         raw_data['fields'] = [{
             'id': str(uuid.uuid4()),
             'label': random_lorem(),
-            'type': random_lorem(),
+            'type': FIELD_TYPES[0],
             # 'options': [], # purposely left out b/c not a required field
             'required': True
         }]
@@ -158,7 +166,7 @@ class TreeDataTests(APITestCase):
         raw_data['fields'] = [{
             'id': str(uuid.uuid4()),
             'label': random_lorem(),
-            'type': random_lorem(),
+            'type': FIELD_TYPES[0],
             'options': [{
                 'id': str(uuid.uuid4()),
                 'text': random_lorem(),
@@ -225,3 +233,270 @@ class TreeDataTests(APITestCase):
         self.assertEqual(data['links'][0]['status'], str(status.id))
         self.assertEqual(data['links'][0]['parent'], new_id)
         self.assertEqual(data['links'][0]['destination'], str(destination.id))
+
+
+class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
+
+    def setUp(self):
+        super(TreeDataUpdateTests, self).setUp()
+        serializer = TreeDataSerializer(self.tree_data)
+        self.data = copy.copy(serializer.data)
+
+    def test_change_first_level_fields(self):
+        key = random_lorem()
+        description = random_lorem()
+        note = random_lorem()
+        note_type = NOTE_TYPES[1]
+        prompt = random_lorem()
+        link_type = LINK_TYPES[1]
+        self.data['key'] = key
+        self.data['description'] = description
+        self.data['note'] = note
+        self.data['note_type'] = note_type
+        self.data['prompt'] = prompt
+        self.data['link_type'] = link_type
+
+        response = self.client.put('/api/admin/dtd/{}/'.format(self.tree_data.id), self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['key'], key)
+        self.assertEqual(data['description'], description)
+        self.assertEqual(data['note'], note)
+        self.assertEqual(data['note_type'], note_type)
+        self.assertEqual(data['prompt'], prompt)
+        self.assertEqual(data['link_type'], link_type)
+
+    def test_add_attachment(self):
+        attachment = create_attachments()
+        self.data['attachments'] = [str(attachment.id)]
+
+        response = self.client.put('/api/admin/dtd/{}/'.format(self.tree_data.id), self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['attachments']), 1)
+        self.assertEqual(data['attachments'][0], str(attachment.id))
+
+    def test_remove_attachment(self):
+        attachment = create_attachments()
+        attachment_two = create_attachments()
+        self.tree_data.attachments.add(attachment)
+        self.tree_data.attachments.add(attachment_two)
+        self.assertEqual(self.tree_data.attachments.count(), 2)
+        self.data['attachments'] = [str(attachment.id)]
+
+        response = self.client.put('/api/admin/dtd/{}/'.format(self.tree_data.id), self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['attachments']), 1)
+        self.assertEqual(data['attachments'][0], str(attachment.id))
+
+    def test_add_field_no_options(self):
+        self.data['fields'] = [{
+            'id': str(uuid.uuid4()),
+            'label': random_lorem(),
+            'type': FIELD_TYPES[0],
+            # 'options': [], # purposely left out b/c not a required field
+            'required': True
+        }]
+
+        response = self.client.put('/api/admin/dtd/{}/'.format(self.tree_data.id), self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['fields']), 1)
+        self.assertEqual(data['fields'][0]['id'], self.data['fields'][0]['id'])
+        self.assertEqual(data['fields'][0]['label'], self.data['fields'][0]['label'])
+        self.assertEqual(data['fields'][0]['type'], self.data['fields'][0]['type'])
+        self.assertEqual(data['fields'][0]['options'], [])
+        self.assertEqual(data['fields'][0]['required'], self.data['fields'][0]['required'])
+
+    def test_add_field_and_options(self):
+        self.data['fields'] = [{
+            'id': str(uuid.uuid4()),
+            'label': random_lorem(),
+            'type': FIELD_TYPES[0],
+            'options': [{
+                'id': str(uuid.uuid4()),
+                'text': random_lorem(),
+                'order': 1
+            }],
+            'required': True
+        }]
+
+        response = self.client.put('/api/admin/dtd/{}/'.format(self.tree_data.id), self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        # Field
+        self.assertEqual(len(data['fields']), 1)
+        self.assertEqual(data['fields'][0]['id'], self.data['fields'][0]['id'])
+        self.assertEqual(data['fields'][0]['label'], self.data['fields'][0]['label'])
+        self.assertEqual(data['fields'][0]['type'], self.data['fields'][0]['type'])
+        self.assertEqual(data['fields'][0]['required'], self.data['fields'][0]['required'])
+        # Option
+        self.assertEqual(len(data['fields'][0]['options']), 1)
+        self.assertEqual(data['fields'][0]['options'][0]['id'], self.data['fields'][0]['options'][0]['id'])
+        self.assertEqual(data['fields'][0]['options'][0]['order'], self.data['fields'][0]['options'][0]['order'])
+        self.assertEqual(data['fields'][0]['options'][0]['text'], self.data['fields'][0]['options'][0]['text'])
+    
+    def test_update_existing_field(self):
+        self.data['fields'][0]['label'] = random_lorem()
+
+        response = self.client.put('/api/admin/dtd/{}/'.format(self.tree_data.id), self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['fields'][0]['label'], self.data['fields'][0]['label'])
+        
+    def test_remove_fields(self):
+        self.assertEqual(len(self.data['fields']), 1)
+        self.data['fields'] = []
+
+        response = self.client.put('/api/admin/dtd/{}/'.format(self.tree_data.id), self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['fields']), 0)
+
+    def test_add_option(self):
+        self.assertEqual(len(self.data['fields']), 1)
+        self.data['fields'][0]['options'] = [{
+            'id': str(uuid.uuid4()),
+            'text': random_lorem(),
+            'order': 1
+        }]
+        self.assertEqual(len(self.data['fields'][0]['options']), 1)
+
+        response = self.client.put('/api/admin/dtd/{}/'.format(self.tree_data.id), self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['fields'][0]['options']), 1)
+        self.assertEqual(data['fields'][0]['options'][0]['id'], self.data['fields'][0]['options'][0]['id'])
+        self.assertEqual(data['fields'][0]['options'][0]['order'], self.data['fields'][0]['options'][0]['order'])
+        self.assertEqual(data['fields'][0]['options'][0]['text'], self.data['fields'][0]['options'][0]['text'])
+
+    def test_remove_option(self):
+        self.assertEqual(len(self.data['fields']), 1)
+        self.assertEqual(len(self.data['fields'][0]['options']), 2)
+        self.data['fields'][0]['options'] = []
+
+        response = self.client.put('/api/admin/dtd/{}/'.format(self.tree_data.id), self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['fields']), 1)
+        self.assertEqual(len(data['fields'][0]['options']), 0)
+
+    def test_update_existing_option(self):
+        self.assertEqual(len(self.data['fields']), 1)
+        del self.data['fields'][0]['options'][-1]
+        self.assertEqual(len(self.data['fields'][0]['options']), 1)
+        self.data['fields'][0]['options'][0].update({
+            'text': random_lorem(),
+            'order': 3
+        })
+
+        response = self.client.put('/api/admin/dtd/{}/'.format(self.tree_data.id), self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['fields'][0]['options']), 1)
+        self.assertEqual(data['fields'][0]['options'][0]['text'], self.data['fields'][0]['options'][0]['text'])
+        self.assertEqual(data['fields'][0]['options'][0]['order'], self.data['fields'][0]['options'][0]['order'])
+
+    def test_add_link(self):
+        category = create_single_category()
+        priority = create_ticket_priority()
+        status = create_ticket_status()
+        parent = mommy.make(TreeData)
+        destination = mommy.make(TreeData)
+        self.data['links'] = [{
+            'id': str(uuid.uuid4()),
+            'order': 1,
+            'text': random_lorem(),
+            'action_button': True,
+            'is_header': True,
+            'categories': [str(category.id)],
+            'request': random_lorem(),
+            'priority': str(priority.id),
+            'status': str(status.id),
+            # 'parent':  # purposely left blank, will be the DTD being created here
+            'destination': str(destination.id)
+        }]
+
+        response = self.client.put('/api/admin/dtd/{}/'.format(self.tree_data.id), self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['links']), 1)
+        self.assertEqual(data['links'][0]['id'], self.data['links'][0]['id'])
+        self.assertEqual(data['links'][0]['order'], self.data['links'][0]['order'])
+        self.assertEqual(data['links'][0]['text'], self.data['links'][0]['text'])
+        self.assertEqual(data['links'][0]['action_button'], self.data['links'][0]['action_button'])
+        self.assertEqual(data['links'][0]['is_header'], self.data['links'][0]['is_header'])
+        self.assertEqual(len(data['links'][0]['categories']), 1)
+        self.assertEqual(data['links'][0]['categories'][0], str(category.id))
+        self.assertEqual(data['links'][0]['request'], self.data['links'][0]['request'])
+        self.assertEqual(data['links'][0]['priority'], str(priority.id))
+        self.assertEqual(data['links'][0]['status'], str(status.id))
+        self.assertEqual(data['links'][0]['parent'], str(self.tree_data.id))
+        self.assertEqual(data['links'][0]['destination'], str(destination.id))
+
+    def test_update_existing_link__first_level_key(self):
+        self.assertEqual(len(self.data['links']), 1)
+        self.data['links'][0]['text'] = random_lorem()
+
+        response = self.client.put('/api/admin/dtd/{}/'.format(self.tree_data.id), self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['links']), 1)
+        self.assertEqual(data['links'][0]['text'], self.data['links'][0]['text'])
+
+    def test_update_existing_link__categories(self):
+        self.assertEqual(len(self.data['links']), 1)
+        category = create_single_category()
+        self.assertEqual(len( self.data['links'][0]['categories']), 1)
+        self.data['links'][0]['categories'] = [str(category.id)]
+
+        response = self.client.put('/api/admin/dtd/{}/'.format(self.tree_data.id), self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['links']), 1)
+        self.assertEqual(data['links'][0]['categories'], self.data['links'][0]['categories'])
+
+    def test_update_existing_link__foreign_keys(self):
+        priority = create_ticket_priority()
+        status = create_ticket_status()
+        parent = mommy.make(TreeData)
+        destination = mommy.make(TreeData)
+        self.assertEqual(len(self.data['links']), 1)
+        self.data['links'][0].update({
+            'request': random_lorem(),
+            'priority': str(priority.id),
+            'status': str(status.id),
+            'destination': str(destination.id)
+        })
+
+        response = self.client.put('/api/admin/dtd/{}/'.format(self.tree_data.id), self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['links'][0]['priority'], str(priority.id))
+        self.assertEqual(data['links'][0]['status'], str(status.id))
+        self.assertEqual(data['links'][0]['parent'], str(self.tree_data.id))
+        self.assertEqual(data['links'][0]['destination'], str(destination.id))
+
+    def test_remove_link(self):
+        self.data['links'] = []
+
+        response = self.client.put('/api/admin/dtd/{}/'.format(self.tree_data.id), self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['links']), 0)

@@ -65,14 +65,21 @@ class TreeDataSerializer(BaseCreateSerializer):
                   'attachments', 'fields', 'prompt', 'link_type',
                   'links',)
 
-    #  TODO: Implement custom for: create, update (nested)
-
     def create(self, validated_data):
+        return self.process_all(None, validated_data)
+
+    def update(self, instance, validated_data):
+        return self.process_all(instance, validated_data)
+
+    def process_all(self, instance, validated_data):
         attachments = validated_data.pop('attachments', [])
         fields = validated_data.pop('fields', [])
         links = validated_data.pop('links', [])
 
-        instance = TreeData.objects.create(**validated_data)
+        if instance:
+            instance = create.update_model(instance, validated_data)
+        else:
+            instance = TreeData.objects.create(**validated_data)
 
         self.process_attachments(instance, attachments)
         self.process_fields(instance, fields)
@@ -80,8 +87,11 @@ class TreeDataSerializer(BaseCreateSerializer):
 
         return instance
 
-    @staticmethod
-    def process_attachments(instance, attachments):
+    def process_removes(self, model, filter_kwargs, exclude_kwargs):
+        model.objects.filter(**filter_kwargs).exclude(**exclude_kwargs).delete()
+
+    def process_attachments(self, instance, attachments):
+        # add/update
         for a in attachments:
             a = copy.copy(a)
             attachment = Attachment.objects.get(id=a.id)
@@ -89,45 +99,74 @@ class TreeDataSerializer(BaseCreateSerializer):
             a.object_id = instance.id
             a.save()
 
+        # remove
+        filter_kwargs = {'object_id': instance.id}
+        exclude_kwargs = {'id__in': [x.id for x in attachments]}
+        self.process_removes(Attachment, filter_kwargs, exclude_kwargs)
+
     def process_fields(self, instance, fields):
-        # Fields
+        # add/update
         for f in fields:
             f = copy.copy(f)
+            options = f.pop('options', [])
+
             try:
                 field = TreeField.objects.get(id=f['id'])
-            except TreeField.DoesNotExist:
-                # Options
-                options = f.pop('options', [])
-                option_ids = self.process_options(options)
-
+                field = create.update_model(field, f)
+            except TreeField.DoesNotExist:                
                 f.update({'tree_data': instance})
                 field = TreeField.objects.create(**f)
+            finally:
+                option_ids = self.process_options(field, options)
                 TreeOption.objects.filter(id__in=option_ids).update(field=field)
 
-    @staticmethod
-    def process_options(options):
-        option_ids = set()
-        for o in options:
-            option = TreeOption.objects.create(**o)
-            option_ids.update([option.id])
-        return option_ids
+        # remove
+        filter_kwargs = {'tree_data': instance}
+        exclude_kwargs = {'id__in': [f['id'] for f in fields]}
+        self.process_removes(TreeField, filter_kwargs, exclude_kwargs)
 
     @staticmethod
-    def process_links(instance, links):
+    def process_options(field, options):
+        # add/update
+        option_ids = set()
+        for o in options:
+            try:
+                option = TreeOption.objects.get(id=o['id'])
+                create.update_model(option, o)
+            except TreeOption.DoesNotExist:
+                option = TreeOption.objects.create(**o)
+            finally:
+                option_ids.update([option.id])
+
+        # remove
+        field.options.exclude(id__in=option_ids).delete()
+
+        return option_ids
+
+    def process_links(self, instance, links):
+        # add/update
         for x in links:
             x = copy.copy(x)
             categories = x.pop('categories', [])
             try:
                 link = TreeLink.objects.get(id=x['id'])
+                link = create.update_model(link, x)
             except TreeLink.DoesNotExist:
                 link = TreeLink.objects.create(**x)
             finally:
                 link.parent = instance
                 link.save()
+                # Category
+                # add
                 if categories:
                     link.categories.add(*categories)
+                # remove
+                category_ids = [x.id for x in categories]
+                categories_to_remove = Category.objects.filter(links__id=x['id']).exclude(id__in=category_ids)
+                for c in categories_to_remove:
+                    link.categories.remove(c)
 
-
-    # TODO
-    # def update(self, instance, validated_data):
-    #     pass
+        # remove
+        filter_kwargs = {'parent': instance}
+        exclude_kwargs = {'id__in': [x['id'] for x in links]}
+        self.process_removes(TreeLink, filter_kwargs, exclude_kwargs)

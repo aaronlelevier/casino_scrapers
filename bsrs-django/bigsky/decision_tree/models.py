@@ -23,7 +23,8 @@ class TreeData(BaseModel):
 
 class TreeField(BaseModel):
     label = models.CharField(max_length=1000)
-    type = models.CharField(max_length=100)
+    type = models.CharField(max_length=100, choices=[(x,x) for x in FIELD_TYPES],
+                            default=FIELD_TYPES[0])
     required = models.BooleanField(blank=True, default=False)
     tree_data = models.ForeignKey(TreeData, related_name='fields', null=True)
 
@@ -39,7 +40,7 @@ class TreeLink(BaseModel):
     text = models.CharField(max_length=1000)
     action_button = models.BooleanField(blank=True, default=False)
     is_header = models.BooleanField(blank=True, default=False)
-    categories = models.ManyToManyField(Category)
+    categories = models.ManyToManyField(Category, related_name='links')
     request = models.CharField(max_length=1000, blank=True)
     priority = models.ForeignKey(TicketPriority, null=True)
     status = models.ForeignKey(TicketStatus, null=True)
