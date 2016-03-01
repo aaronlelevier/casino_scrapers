@@ -13,8 +13,7 @@ def create_tree_link(destination=None):
     priority = create_ticket_priority()
 
     tree_link =  mommy.make(TreeLink, status=status, priority=priority,
-                            destination=destination)
-    tree_link.parents.add(parent)
+                            destination=destination, parent=parent)
     tree_link.categories.add(category)
 
     return tree_link

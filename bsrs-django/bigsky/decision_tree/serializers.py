@@ -36,13 +36,11 @@ class TreeLinkSerializer(BaseCreateSerializer):
 
     categories = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(), many=True, required=False)
-    parents = serializers.PrimaryKeyRelatedField(
-        queryset=TreeData.objects.all(), many=True, required=False)
 
     class Meta:
         model = TreeLink
         fields = ('id', 'order', 'text', 'action_button', 'is_header', 'categories',
-                  'request', 'priority', 'status', 'parents', 'destination',)
+                  'request', 'priority', 'status', 'parent', 'destination',)
 
 
 class TreeDataListSerializer(BaseCreateSerializer):
@@ -124,7 +122,8 @@ class TreeDataSerializer(BaseCreateSerializer):
             except TreeLink.DoesNotExist:
                 link = TreeLink.objects.create(**x)
             finally:
-                link.parents.add(instance)
+                link.parent = instance
+                link.save()
                 if categories:
                     link.categories.add(*categories)
 

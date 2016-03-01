@@ -68,8 +68,7 @@ class TreeDataTests(APITestCase):
         self.assertEqual(data['links'][0]['request'], link.request)
         self.assertEqual(data['links'][0]['priority'], str(link.priority.id))
         self.assertEqual(data['links'][0]['status'], str(link.status.id))
-        self.assertEqual(len(data['links'][0]['parents']), 2)
-        self.assertIn(data['links'][0]['parents'][0], [str(x.id) for x in link.parents.all()])
+        self.assertEqual(data['links'][0]['parent'], str(self.tree_data.id))
         self.assertEqual(data['links'][0]['destination'], str(link.destination.id))
 
     def test_list(self):
@@ -224,6 +223,5 @@ class TreeDataTests(APITestCase):
         self.assertEqual(data['links'][0]['request'], raw_data['links'][0]['request'])
         self.assertEqual(data['links'][0]['priority'], str(priority.id))
         self.assertEqual(data['links'][0]['status'], str(status.id))
-        self.assertEqual(len(data['links'][0]['parents']), 1)
-        self.assertIn(new_id, data['links'][0]['parents'])
+        self.assertEqual(data['links'][0]['parent'], new_id)
         self.assertEqual(data['links'][0]['destination'], str(destination.id))

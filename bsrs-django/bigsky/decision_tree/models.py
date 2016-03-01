@@ -44,4 +44,4 @@ class TreeLink(BaseModel):
     priority = models.ForeignKey(TicketPriority, null=True)
     status = models.ForeignKey(TicketStatus, null=True)
     destination = models.OneToOneField(TreeData, null=True)
-    parents = models.ManyToManyField(TreeData, related_name='links')
+    parent = models.ForeignKey(TreeData, related_name='links', null=True)

@@ -20,8 +20,7 @@ class FactoryTests(TestCase):
         self.assertIsInstance(tree_link.categories.first(), Category)
         # TreeData relationships
         self.assertIsNone(tree_link.destination)
-        self.assertEqual(tree_link.parents.count(), 1)
-        self.assertIsInstance(tree_link.parents.first(), TreeData)
+        self.assertIsInstance(tree_link.parent, TreeData)
 
     def test_create_tree_link__with_destination(self):
         destination = mommy.make(TreeData)
