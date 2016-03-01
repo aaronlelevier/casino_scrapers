@@ -46,7 +46,8 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
 
     def test_translated_value(self):
         """Translation key 'modules.tickets.titleShort' -> 'Tickets' in 'en' """
-        self.driver.find_element_by_link_text('Tickets')
+        node = self.driver.find_element_by_class_name("t-nav-tickets")
+        assert node.text == 'Tickets'
 
     def test_keypress__enter(self):
         # Go to Location Area
