@@ -22,6 +22,8 @@ def run_selenium_tests():
     run_selenium_test(['python', 'selenium_tests/admin_crud.py'])
     run_selenium_test(['python', 'selenium_tests/grid.py'])
     run_selenium_test(['python', 'selenium_tests/ticket.py'])
+    run_selenium_test(['python', 'selenium_tests/ticket_mobile.py'])
+    run_selenium_test(['python', 'selenium_tests/ticket_ipad.py'])
 
 
 def run_selenium_test(args):

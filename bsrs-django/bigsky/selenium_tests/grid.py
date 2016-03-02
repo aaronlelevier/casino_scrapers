@@ -18,6 +18,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
 
     def setUp(self):
         self.driver = webdriver.Firefox()
+        self.driver.set_window_size(1200, 1200)
         self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)
         self.login()
         # Wait
