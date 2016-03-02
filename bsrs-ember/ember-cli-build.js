@@ -50,9 +50,11 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/currencies.js');
       app.import('vendor/defaults/category.js');
       app.import('vendor/defaults/dtd.js');
+      app.import('vendor/defaults/dtd-link.js');
       app.import('vendor/defaults/email.js');
       app.import('vendor/defaults/email-type.js');
       app.import('vendor/defaults/general.js');
+      app.import('vendor/defaults/link.js');
       app.import('vendor/defaults/locale.js');
       app.import('vendor/defaults/locale-translation.js');
       app.import('vendor/defaults/location.js');
@@ -76,6 +78,7 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/ticket.js');
       app.import('vendor/defaults/ticket_activity.js');
       app.import('vendor/defaults/ticket-person.js');
+      app.import('vendor/defaults/ticket-priority.js');
       app.import('vendor/defaults/ticket-category.js');
       app.import('vendor/defaults/translation.js');
   }

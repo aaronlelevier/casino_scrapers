@@ -111,6 +111,9 @@ test('clicking on a tab that is not dirty from the list url should take you to t
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let dtd = store.find('dtd', DTD.idOne);
+        assert.equal(dtd.get('isDirty'), false);
+        assert.equal(dtd.get('links').objectAt(0).get('isDirtyOrRelatedDirty'), false);
+        assert.equal(dtd.get('linksIsDirty'), false);
         assert.equal(dtd.get('isDirtyOrRelatedDirty'), false);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);

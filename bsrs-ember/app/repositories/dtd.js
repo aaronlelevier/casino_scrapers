@@ -19,6 +19,7 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, {
     update(model) {
         return PromiseMixin.xhr(`${DTD_URL}${model.get('id')}/`, 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
+            model.saveRelated();
         });
     },
     fetch(id) {

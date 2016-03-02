@@ -46,4 +46,24 @@
             </div>
         </div>
       </section>
+      <section>
+      {{#each model.links as |link|}}
+        <div class="row">
+            <div class="col-md-12">
+                {{#form-group title="admin.dtd.label.link.request" for="request"}}
+                  {{input type="text" placeholder=(t "admin.dtd.label.link.request") value=link.request class="form-control t-dtd-link-request" id="dtd_link_request"}}
+                {{/form-group}}
+                {{#form-group title="admin.dtd.lable.link.action_button" for="action_button"}}
+                    {{input type="checkbox" checked=link.action_button class="form-control t-dtd-link-action_button"}}
+                {{/form-group}}
+                {{#form-group title="admin.dtd.lable.link.is_header" for="is_header"}}
+                    {{input type="checkbox" checked=link.is_header class="form-control t-dtd-link-is_header"}}
+                {{/form-group}}
+                <div class="ticket-action priority">
+                    {{ticket-priority-select ticket=link priorities=priorities}}
+                </div>
+            </div>
+        </div>
+        {{/each}}
+      </section>
 </form>
