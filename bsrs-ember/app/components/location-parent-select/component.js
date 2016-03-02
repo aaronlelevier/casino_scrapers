@@ -15,6 +15,8 @@ var LocationParentMulti = Ember.Component.extend({
                     //TODO: test this
                     parent.status_fk = parent.status;
                     delete parent.status;
+                    parent.location_level_fk = parent.location_level;
+                    delete parent.location_level;
                     location.add_parent(parent);
                 }
             });

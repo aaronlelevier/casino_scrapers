@@ -14,6 +14,8 @@ var LocationChildrenMulti = Ember.Component.extend({
                 if (Ember.$.inArray(children.id, old_children_ids) < 0) {
                     children.status_fk = children.status;
                     delete children.status;
+                    children.location_level_fk = children.location_level;
+                    delete children.location_level;
                     location.add_child(children);
                 }
             });

@@ -11,6 +11,7 @@ import ChildrenMixin from 'bsrs-ember/mixins/model/location/children';
 import ParentMixin from 'bsrs-ember/mixins/model/location/parent';
 import StatusMixin from 'bsrs-ember/mixins/model/location/status';
 import LocationLevelMixin from 'bsrs-ember/mixins/model/location/location-level';
+import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
 
 const { run } = Ember;
 
@@ -24,16 +25,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, StatusMixin, ParentMixin, 
     phone_number_fks: [],
     address_fks: [],
     location_level_fk: undefined,
-    locationLevelIsDirty: Ember.computed('location_levels.[]', 'location_level_fk', function() {
-        const location_level_id = this.get('location_level.id');
-        const location_level_fk = this.get('location_level_fk');
-        if(location_level_id) {
-            return location_level_id === location_level_fk ? false : true;
-        }
-        if(!location_level_id && location_level_fk) {
-            return true;
-        }
-    }),
+    locationLevelIsDirty: belongs_to_dirty('location_level_fk', 'location_level'),
     locationLevelIsNotDirty: Ember.computed.not('locationLevelIsDirty'),
     statusIsDirty: Ember.computed('status', 'status_fk', function() {
         let status = this.get('status');

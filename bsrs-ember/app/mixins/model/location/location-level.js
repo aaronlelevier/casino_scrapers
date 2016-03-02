@@ -35,37 +35,13 @@ var LocationLevelMixin = Ember.Mixin.create({
             });
         });
     },
-    // change_location_level: change_belongs_to('locations', 'location-level'),
-    change_location_level(new_location_level_id) {
+    change_location_level(llevel_id){
         this.remove_children_parents();
-        const location_id = this.get('id');
-        const store = this.get('store');
-        const old_location_level = this.get('location_level');
-        if(old_location_level) {
-            const old_locations = old_location_level.get('locations') || [];
-            let updated_old_locations = old_locations.filter((id) => {
-                return id !== location_id;
-            });
-            run(() => {
-                store.push('location-level', {id: old_location_level.get('id'), locations: updated_old_locations});
-            });
-        }
-        if(!new_location_level_id){
-            return;
-        } else{
-            const new_location_level = store.find('location-level', new_location_level_id);
-            const new_locations = new_location_level.get('locations') || [];
-            run(() => {
-                store.push('location-level', {id: new_location_level.get('id'), locations: new_locations.concat(location_id)});
-            });
-        }
+        this.change_location_level_container(llevel_id); 
     },
+    change_location_level_container: change_belongs_to('locations', 'location-level', 'location_level'),
     saveLocationLevel: belongs_to_save('location', 'location_level', 'location_level_fk'),
-    rollbackLocationLevel() {
-        const location_level = this.get('location_level');
-        const location_level_fk = this.get('location_level_fk');
-        this.change_location_level(location_level_fk);
-    },
+    rollbackLocationLevel: belongs_to_rollback('location_level_fk', 'location_level', 'change_location_level'),
 });
 
 export default LocationLevelMixin;
