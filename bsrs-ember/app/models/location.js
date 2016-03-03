@@ -27,17 +27,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, StatusMixin, ParentMixin, 
     location_level_fk: undefined,
     locationLevelIsDirty: belongs_to_dirty('location_level_fk', 'location_level'),
     locationLevelIsNotDirty: Ember.computed.not('locationLevelIsDirty'),
-    statusIsDirty: Ember.computed('status', 'status_fk', function() {
-        let status = this.get('status');
-        let status_fk = this.get('status_fk');
-        if (status) {
-            return status.get('id') === status_fk ? false : true;
-        }
-        if(!status && status_fk) {
-            return true;
-        }
-        return false;
-    }),
+    statusIsDirty: belongs_to_dirty('status_fk', 'status'),
     statusIsNotDirty: Ember.computed.not('statusIsDirty'),
     childrenIsDirty: Ember.computed('children.[]', 'location_children_fks.[]', function() {
         const children = this.get('children');

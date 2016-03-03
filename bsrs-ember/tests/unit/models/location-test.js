@@ -938,11 +938,6 @@ test('locationLevelIsDirty - when the related location_level and location_level_
     assert.equal(location.get('locationLevelIsDirty'), false);
 });
 
-test('when status is undefined, return false - this test is to confirm statusIsDirty for Location', (assert) => {
-    let location = store.push('location', {id: LD.idOne, email_fks: [ED.idOne]});
-    assert.equal(location.get('statusIsDirty'), false);
-});
-
 /*LOCATION CHILDREN PARENTS M2M*/
 test('related children is setup correctly', (assert) => {
     const location = store.push('location', {id: LD.idOne, location_children_fks: [LCD.idOne]});
