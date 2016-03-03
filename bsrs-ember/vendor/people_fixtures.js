@@ -151,6 +151,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
             person.username = 'boy' + i;
             person.first_name = 'Boy' + i;
             person.last_name = 'Man' + i;
+            person.fullname = person.first_name + ' ' + person.last_name;
             person.title = i + ' Mob Boss';
             response.push(person);
         }
