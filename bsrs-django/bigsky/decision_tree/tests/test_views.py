@@ -70,8 +70,8 @@ class TreeDataDetailTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['links'][0]['is_header'], link.is_header)
         self.assertEqual(len(data['links'][0]['categories']), 1)
         self.assertEqual(data['links'][0]['request'], link.request)
-        self.assertEqual(data['links'][0]['priority'], str(link.priority.id))
-        self.assertEqual(data['links'][0]['status'], str(link.status.id))
+        self.assertEqual(data['links'][0]['priority_fk'], str(link.priority.id))
+        self.assertEqual(data['links'][0]['status_fk'], str(link.status.id))
         self.assertEqual(data['links'][0]['dtd'], str(self.tree_data.id))
         self.assertEqual(data['links'][0]['destination'], str(link.destination.id))
 
@@ -229,8 +229,8 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(len(data['links'][0]['categories']), 1)
         self.assertEqual(data['links'][0]['categories'][0], str(category.id))
         self.assertEqual(data['links'][0]['request'], raw_data['links'][0]['request'])
-        self.assertEqual(data['links'][0]['priority'], str(priority.id))
-        self.assertEqual(data['links'][0]['status'], str(status.id))
+        self.assertEqual(data['links'][0]['priority_fk'], str(priority.id))
+        self.assertEqual(data['links'][0]['status_fk'], str(status.id))
         self.assertEqual(data['links'][0]['dtd'], new_id)
         self.assertEqual(data['links'][0]['destination'], str(destination.id))
 
@@ -441,8 +441,8 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(len(data['links'][0]['categories']), 1)
         self.assertEqual(data['links'][0]['categories'][0], str(category.id))
         self.assertEqual(data['links'][0]['request'], self.data['links'][0]['request'])
-        self.assertEqual(data['links'][0]['priority'], str(priority.id))
-        self.assertEqual(data['links'][0]['status'], str(status.id))
+        self.assertEqual(data['links'][0]['priority_fk'], str(priority.id))
+        self.assertEqual(data['links'][0]['status_fk'], str(status.id))
         self.assertEqual(data['links'][0]['dtd'], str(self.tree_data.id))
         self.assertEqual(data['links'][0]['destination'], str(destination.id))
 
@@ -487,8 +487,8 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['links'][0]['priority'], str(priority.id))
-        self.assertEqual(data['links'][0]['status'], str(status.id))
+        self.assertEqual(data['links'][0]['priority_fk'], str(priority.id))
+        self.assertEqual(data['links'][0]['status_fk'], str(status.id))
         self.assertEqual(data['links'][0]['dtd'], str(self.tree_data.id))
         self.assertEqual(data['links'][0]['destination'], str(destination.id))
 

@@ -42,6 +42,12 @@ class TreeLinkSerializer(BaseCreateSerializer):
         fields = ('id', 'order', 'text', 'action_button', 'is_header', 'categories',
                   'request', 'priority', 'status', 'dtd', 'destination',)
 
+    def to_representation(self, obj):
+        data = super(TreeLinkSerializer, self).to_representation(obj)
+        data['priority_fk'] = data.pop('priority', None)
+        data['status_fk'] = data.pop('status', None)
+        return data
+
 
 class TreeDataListSerializer(BaseCreateSerializer):
 
