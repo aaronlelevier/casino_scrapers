@@ -409,7 +409,7 @@ test('when a full text filter is selected the input inside the modal is focused'
     });
 });
 
-// test('scott full text searched columns will have a special on css class when active', (assert) => {
+// test('full text searched columns will have a special on css class when active', (assert) => {
 //     // let find_three = PREFIX + BASE_URL + '/?page=1&status__name__icontains=&name__icontains=7';
 //     // xhr(find_three ,'GET',null,{},200,TPF.sorted('name:7'));
 //     let find_two = PREFIX + BASE_URL + '/?page=1&status__name__icontains=in&name__icontains=7';

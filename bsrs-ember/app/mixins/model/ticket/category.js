@@ -76,7 +76,7 @@ var CategoriesMixin = Ember.Mixin.create({
             return m2m.get('ticket_pk') === ticket_pk && Ember.$.inArray(m2m.get('category_pk'), parent_ids) === -1;
         });
         m2m_models.forEach((m2m) => {
-            run(function() {
+            run(() => {
                 store.push('ticket-category', {id: m2m.get('id'), removed: true});
             });
         });
