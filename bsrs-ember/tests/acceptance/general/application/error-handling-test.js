@@ -140,12 +140,13 @@ test('xhr with a 500 status code will not show up in the form and or display dja
 test('xhr with a 404 status code will show up in the error component and transition to 404 page', (assert) => {
     clearxhr(new_xhr);
     const exception = `This record does not exist.`;
-    const location_list_data = LF.list();
+    let json = [LF.generate_list(LD.unusedId)];
+    let response = {'count':1,'next':null,'previous':null,'results': json};
     const endpoint = `${PREFIX}${LOC_URL}/`;
-    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, response);
     visit(LOCATION_URL);
     xhr(`${endpoint}${LD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
-    click('.t-grid-data:eq(0)');
+    visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), ERROR_URL);
         assert.equal(find('.t-error-message').text(), 'WAT');
