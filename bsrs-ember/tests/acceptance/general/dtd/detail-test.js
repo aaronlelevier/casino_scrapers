@@ -8,7 +8,7 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
-import { dtd_payload, dtd_payload_link } from 'bsrs-ember/tests/helpers/payloads/dtd';
+import { dtd_payload, dtd_payload_two } from 'bsrs-ember/tests/helpers/payloads/dtd';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
@@ -52,8 +52,6 @@ test('decision tree definition displays data and saves correctly', (assert) => {
         assert.equal(find('.t-dtd-description').val(), DTD.descriptionOne);
         assert.equal(find('.t-dtd-prompt').val(), DTD.promptOne);
         assert.equal(find('.t-dtd-note').val(), DTD.noteOne);
-        // assert.equal(find('.t-dtd-note_type').val(), DTD.noteTypeOne);
-        // assert.equal(find('.t-dtd-link_type').val(), DTD.linkTypeOne);
         assert.equal(find('.t-dtd-link-action_button').prop('checked'), LINK.action_buttonOne);
         assert.equal(find('.t-dtd-link-is_header').prop('checked'), LINK.is_headerOne);
         assert.equal(find('.t-dtd-link-request').val(), LINK.requestOne);
@@ -66,17 +64,44 @@ test('decision tree definition displays data and saves correctly', (assert) => {
     });
 });
 
-// TODO
-// test('aaron dtd payload to update all fields', (assert) => {
-//     page.visitDetail();
-//     fillIn('.t-dtd-link-request', LINK.requestTwo);
-//     andThen(() => {
-//         const dtd = store.find('dtd', DTD.idOne);
-//         assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-//     });
-//     xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), DTD_URL);
-//     });
-// });
+test('dtd payload to update all fields', (assert) => {
+    page.visitDetail();
+    andThen(() => {
+        assert.ok(find('.t-dtd-link-action_button').prop('checked'));
+        assert.ok(find('.t-dtd-link-is_header').prop('checked'));
+    });
+    page
+        .keyFillIn(DTD.keyTwo)
+        .descriptionFillIn(DTD.descriptionTwo)
+        .promptFillIn(DTD.promptTwo)
+        .noteFillIn(DTD.noteTwo)
+        .requestFillIn(LINK.requestTwo)
+        .action_buttonClick()
+        .is_headerClick();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-dtd-key').val(), DTD.keyTwo);
+        assert.equal(find('.t-dtd-description').val(), DTD.descriptionTwo);
+        assert.equal(find('.t-dtd-prompt').val(), DTD.promptTwo);
+        assert.equal(find('.t-dtd-note').val(), DTD.noteTwo);
+        assert.notOk(find('.t-dtd-link-action_button').prop('checked'));
+        assert.notOk(find('.t-dtd-link-is_header').prop('checked'));
+        assert.equal(find('.t-dtd-link-request').val(), LINK.requestTwo);
+    });
+    ticketPage.priorityClickDropdown();
+    andThen(() => {
+        assert.equal(ticketPage.priorityOne(), TP.priorityOne);
+        assert.equal(ticketPage.priorityTwo(), TP.priorityTwo);
+        assert.equal(ticketPage.priorityThree(), TP.priorityThree);
+        assert.equal(ticketPage.priorityFour(), TP.priorityFour);
+    });
+    ticketPage.priorityClickOptionTwo();
+    andThen(() => {
+        assert.equal(ticketPage.priorityInput(), TP.priorityTwo);
+    });
+    xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload_two), {}, 200, {});
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), DTD_URL);
+    });
+});

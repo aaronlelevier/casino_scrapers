@@ -1,5 +1,5 @@
 import PageObject from '../page-object';
-let { value, visitable, fillable } = PageObject;
+let { value, visitable, fillable, clickable } = PageObject;
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
@@ -19,6 +19,17 @@ var DTDPage = PageObject.create({
     keyFillIn: fillable('.t-dtd-key'),
     description: value('.t-dtd-description'),
     descriptionFillIn: fillable('.t-dtd-description'),
+    prompt: value('.t-dtd-prompt'),
+    promptFillIn: fillable('.t-dtd-prompt'),
+    note: value('.t-dtd-note'),
+    noteFillIn: fillable('.t-dtd-note'),
+
+    action_button: value('.t-dtd-link-action_button'),
+    action_buttonClick: clickable('.t-dtd-link-action_button'),
+    is_header: value('.t-dtd-link-is_header'),
+    is_headerClick: clickable('.t-dtd-link-is_header'),
+    request: value('.t-dtd-link-request'),
+    requestFillIn: fillable('.t-dtd-link-request'),
 });
 
 export default DTDPage;

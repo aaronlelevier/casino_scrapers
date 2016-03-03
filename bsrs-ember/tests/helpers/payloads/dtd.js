@@ -22,14 +22,21 @@ var dtd_payload = {
     }]
 };
 
-var dtd_payload_link = {
+var dtd_payload_two = {
     id: DTD.idOne,
-    key: DTD.keyOne,
-    description: DTD.descriptionOne,
-    prompt: DTD.promptOne,
-    note: DTD.noteOne,
+    key: DTD.keyTwo,
+    description: DTD.descriptionTwo,
+    prompt: DTD.promptTwo,
+    note: DTD.noteTwo,
     note_type: DTD.noteTypeOne,
     link_type: DTD.linkTypeOne,
+    links: [{
+        order: LINK.orderOne,
+        action_button: LINK.action_buttonTwo,
+        is_header: LINK.is_headerTwo,
+        request: LINK.requestTwo,
+        priority: TP.priorityTwoId
+    }]
 };
 
 var dtd_new_payload = {
@@ -39,4 +46,4 @@ var dtd_new_payload = {
     links: []
 };
 
-export { dtd_payload, dtd_new_payload };
+export { dtd_payload, dtd_new_payload, dtd_payload_two };
