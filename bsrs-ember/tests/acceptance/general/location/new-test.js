@@ -650,7 +650,7 @@ test('clicking and typing into power select for location will fire off xhr reque
     xhr(location_endpoint_2, 'GET', null, {}, 201, response_2);
     fillIn(`${PARENTS_SEARCH}`, 'BooNdocks');
     andThen(() => {
-        assert.equal(page.parentsSelected().indexOf(LD.apple), 2);
+        assert.equal(page.parentsSelected.indexOf(LD.apple), 2);
         assert.equal(page.parentsOptionLength, 1);
         assert.equal(find(`${PARENTS_DROPDOWN} > li:eq(0)`).text().trim(), LD.boondocks);
         let location = store.find('location',UUID.value);
@@ -664,7 +664,7 @@ test('clicking and typing into power select for location will fire off xhr reque
         assert.equal(location.get('parents').get('length'), 2);
         assert.equal(location.get('parents').objectAt(0).get('name'), LD.apple);
         assert.equal(location.get('parents').objectAt(1).get('name'), LD.boondocks);
-        assert.equal(page.parentsSelected().indexOf(LD.apple), 2);
+        assert.equal(page.parentsSelected.indexOf(LD.apple), 2);
         assert.equal(page.parentsTwoSelected.indexOf(LD.boondocks), 2);
         assert.ok(location.get('isDirtyOrRelatedDirty'));
     });
