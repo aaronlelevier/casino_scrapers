@@ -40,7 +40,7 @@ class TreeLinkSerializer(BaseCreateSerializer):
     class Meta:
         model = TreeLink
         fields = ('id', 'order', 'text', 'action_button', 'is_header', 'categories',
-                  'request', 'priority', 'status', 'parent', 'destination',)
+                  'request', 'priority', 'status', 'dtd', 'destination',)
 
 
 class TreeDataListSerializer(BaseCreateSerializer):
@@ -66,12 +66,12 @@ class TreeDataSerializer(BaseCreateSerializer):
                   'links',)
 
     def create(self, validated_data):
-        return self.process_all(None, validated_data)
+        return self.process_all(validated_data=validated_data)
 
     def update(self, instance, validated_data):
         return self.process_all(instance, validated_data)
 
-    def process_all(self, instance, validated_data):
+    def process_all(self, instance=None, validated_data=None):
         attachments = validated_data.pop('attachments', [])
         fields = validated_data.pop('fields', [])
         links = validated_data.pop('links', [])
@@ -87,8 +87,8 @@ class TreeDataSerializer(BaseCreateSerializer):
 
         return instance
 
-    def process_removes(self, model, filter_kwargs, exclude_kwargs):
-        model.objects.filter(**filter_kwargs).exclude(**exclude_kwargs).delete()
+    def process_removes(self, model, filters, excludes):
+        model.objects.filter(**filters).exclude(**excludes).delete()
 
     def process_attachments(self, instance, attachments):
         # add/update
@@ -100,9 +100,9 @@ class TreeDataSerializer(BaseCreateSerializer):
             a.save()
 
         # remove
-        filter_kwargs = {'object_id': instance.id}
-        exclude_kwargs = {'id__in': [x.id for x in attachments]}
-        self.process_removes(Attachment, filter_kwargs, exclude_kwargs)
+        filters = {'object_id': instance.id}
+        excludes = {'id__in': [x.id for x in attachments]}
+        self.process_removes(Attachment, filters, excludes)
 
     def process_fields(self, instance, fields):
         # add/update
@@ -121,9 +121,9 @@ class TreeDataSerializer(BaseCreateSerializer):
                 TreeOption.objects.filter(id__in=option_ids).update(field=field)
 
         # remove
-        filter_kwargs = {'tree_data': instance}
-        exclude_kwargs = {'id__in': [f['id'] for f in fields]}
-        self.process_removes(TreeField, filter_kwargs, exclude_kwargs)
+        filters = {'tree_data': instance}
+        excludes = {'id__in': [f['id'] for f in fields]}
+        self.process_removes(TreeField, filters, excludes)
 
     @staticmethod
     def process_options(field, options):
@@ -154,7 +154,7 @@ class TreeDataSerializer(BaseCreateSerializer):
             except TreeLink.DoesNotExist:
                 link = TreeLink.objects.create(**x)
             finally:
-                link.parent = instance
+                link.dtd = instance
                 link.save()
                 # Category
                 # add
@@ -167,6 +167,6 @@ class TreeDataSerializer(BaseCreateSerializer):
                     link.categories.remove(c)
 
         # remove
-        filter_kwargs = {'parent': instance}
-        exclude_kwargs = {'id__in': [x['id'] for x in links]}
-        self.process_removes(TreeLink, filter_kwargs, exclude_kwargs)
+        filters = {'dtd': instance}
+        excludes = {'id__in': [x['id'] for x in links]}
+        self.process_removes(TreeLink, filters, excludes)

@@ -45,4 +45,4 @@ class TreeLink(BaseModel):
     priority = models.ForeignKey(TicketPriority, null=True)
     status = models.ForeignKey(TicketStatus, null=True)
     destination = models.ForeignKey(TreeData, null=True)
-    parent = models.ForeignKey(TreeData, related_name='links', null=True)
+    dtd = models.ForeignKey(TreeData, related_name='links', null=True)

@@ -7,13 +7,13 @@ from ticket.tests.factory import create_ticket_status, create_ticket_priority
 
 def create_tree_link(destination=None):
     destination = destination
-    parent = mommy.make(TreeData)
+    dtd = mommy.make(TreeData)
     category = create_single_category()
     status = create_ticket_status()
     priority = create_ticket_priority()
 
     tree_link =  mommy.make(TreeLink, status=status, priority=priority,
-                            destination=destination, parent=parent)
+                            destination=destination, dtd=dtd)
     tree_link.categories.add(category)
 
     return tree_link
