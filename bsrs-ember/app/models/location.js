@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import inject from 'bsrs-ember/utilities/store';
@@ -12,42 +13,26 @@ import ParentMixin from 'bsrs-ember/mixins/model/location/parent';
 import StatusMixin from 'bsrs-ember/mixins/model/location/status';
 import LocationLevelMixin from 'bsrs-ember/mixins/model/location/location-level';
 import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
+import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
 
-const { run } = Ember;
 
 var LocationModel = Model.extend(CopyMixin, NewMixin, StatusMixin, ParentMixin, ChildrenMixin, LocationLevelMixin, AddressMixin, PhoneNumberMixin, EmailMixin, {
     store: inject('main'),
     name: attr(''),
     number: attr(''),
     status_fk: undefined,
+    location_level_fk: undefined,
     tickets: [],
     email_fks: [],
     phone_number_fks: [],
     address_fks: [],
-    location_level_fk: undefined,
     locationLevelIsDirty: belongs_to_dirty('location_level_fk', 'location_level'),
     locationLevelIsNotDirty: Ember.computed.not('locationLevelIsDirty'),
     statusIsDirty: belongs_to_dirty('status_fk', 'status'),
     statusIsNotDirty: Ember.computed.not('statusIsDirty'),
-    childrenIsDirty: Ember.computed('children.[]', 'location_children_fks.[]', function() {
-        const children = this.get('children');
-        const location_children_ids = this.get('location_children_ids');
-        const previous_m2m_fks = this.get('location_children_fks') || [];
-        if(children.get('length') !== previous_m2m_fks.length) {
-            return equal(location_children_ids, previous_m2m_fks) ? false : true;
-        }
-        return equal(location_children_ids, previous_m2m_fks) ? false : true;
-    }),
+    childrenIsDirty: many_to_many_dirty('location_children_ids', 'location_children_fks'),
     childrenIsNotDirty: Ember.computed.not('childrenIsDirty'),
-    parentsIsDirty: Ember.computed('parents.[]', 'location_parents_fks.[]', function() {
-        const parents = this.get('parents');
-        const location_parents_ids = this.get('location_parents_ids');
-        const previous_m2m_fks = this.get('location_parents_fks') || [];
-        if(parents.get('length') !== previous_m2m_fks.length) {
-            return equal(location_parents_ids, previous_m2m_fks) ? false : true;
-        }
-        return equal(location_parents_ids, previous_m2m_fks) ? false : true;
-    }),
+    parentsIsDirty: many_to_many_dirty('location_parents_ids', 'location_parents_fks'),
     parentsIsNotDirty: Ember.computed.not('parentsIsDirty'),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'statusIsDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'emailsIsDirty', 'childrenIsDirty', 'parentsIsDirty', function() {
         return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('statusIsDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('emailsIsDirty') || this.get('childrenIsDirty') || this.get('parentsIsDirty');
