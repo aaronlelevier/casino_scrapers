@@ -105,3 +105,21 @@ test('dtd payload to update all fields', (assert) => {
         assert.equal(currentURL(), DTD_URL);
     });
 });
+
+test('dtd can clear out link priority', (assert) => {
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(ticketPage.priorityInput().split(' ')[0], TP.priorityOne);
+    });
+    ticketPage.removePriority();
+    andThen(() => {
+        assert.equal(ticketPage.priorityInput(), '');
+    });
+    delete dtd_payload.links[0].priority;
+    xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), DTD_URL);
+    });
+});

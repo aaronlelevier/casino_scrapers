@@ -84,5 +84,12 @@ test('change_priority changes priority', (assert) => {
     assert.equal(link.get('priority.id'), TP.priorityOneId);
     link.change_priority(TP.priorityTwoId);
     assert.equal(link.get('priority.id'), TP.priorityTwoId);
+});
 
+test('aaron change_priority to null', (assert) => {
+    assert.equal(link.get('priority.id'), undefined);
+    link.change_priority(TP.priorityOneId);
+    assert.equal(link.get('priority.id'), TP.priorityOneId);
+    link.change_priority(null);
+    assert.equal(link.get('priority.id'), null);
 });

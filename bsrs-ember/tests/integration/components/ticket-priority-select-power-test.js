@@ -129,3 +129,22 @@ test('should be able to select new priority when ticket already has a priority',
     assert.deepEqual(priority_one.get('tickets'), []);
     assert.deepEqual(priority_two.get('tickets'), [TD.idOne]);
 });
+
+test('clear-btn not present by default', function(assert) {
+    let priorities = Ember.A([]);
+    this.set('ticket', ticket);
+    this.set('priorities', priorities);
+    this.render(hbs`{{ticket-priority-select ticket=ticket priorities=priorities}}`);
+    let $component = this.$(COMPONENT);
+    assert.equal($component.find('.ember-power-select-clear-btn').length, 0);
+});
+
+test('clear-btn present if clear=true', function(assert) {
+    priority_one.set('tickets', [TD.idOne]);
+    let priorities = store.find('ticket-priority');
+    this.set('ticket', ticket);
+    this.set('priorities', priorities);
+    this.render(hbs`{{ticket-priority-select ticket=ticket priorities=priorities clear=true}}`);
+    let $component = this.$(COMPONENT);
+    assert.equal($component.find('.ember-power-select-clear-btn').length, 1);
+});
