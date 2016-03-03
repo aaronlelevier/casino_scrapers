@@ -180,7 +180,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
     click('.t-add-new');
     clearxhr(location_xhr);
     andThen(() => {
-        let components = page.powerSelectComponents();
+        let components = page.powerSelectComponents;
         assert.equal(store.find('category').get('length'), 0);
         let tickets = store.find('ticket');
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 0);
@@ -193,7 +193,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
     page.categoryOneClickDropdown();
     page.categoryOneClickOptionOne();
     andThen(() => {
-        let components = page.powerSelectComponents();
+        let components = page.powerSelectComponents;
         assert.equal(store.find('ticket').get('length'), 1);
         assert.equal(store.find('category').get('length'), 3);
         let tickets = store.find('ticket');
@@ -207,7 +207,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionOne();
     andThen(() => {
-        let components = page.powerSelectComponents();
+        let components = page.powerSelectComponents;
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
         assert.equal(store.find('category').get('length'), 3);
@@ -222,7 +222,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), TICKET_NEW_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
             assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
         });
     });
@@ -230,8 +230,8 @@ test('selecting a top level category will alter the url and can cancel/discard c
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), TICKET_NEW_URL);
-            assert.ok(generalPage.modalIsHidden());
-            let components = page.powerSelectComponents();
+            assert.ok(generalPage.modalIsHidden);
+            let components = page.powerSelectComponents;
             let tickets = store.find('ticket');
             assert.equal(tickets.get('length'), 1);
             assert.equal(store.find('category').get('length'), 3);
@@ -245,7 +245,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), TICKET_NEW_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
             assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
         });
     });
@@ -263,7 +263,7 @@ test('selecting category tree and removing a top level category will remove chil
     //clear out first xhr to change unusedId has_children to true
     page.visitNew();
     andThen(() => {
-        let components = page.powerSelectComponents();
+        let components = page.powerSelectComponents;
         let tickets = store.find('ticket');
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 0);
         assert.equal(components, 1);
@@ -274,7 +274,7 @@ test('selecting category tree and removing a top level category will remove chil
     page.categoryOneClickDropdown();
     page.categoryOneClickOptionOne();
     andThen(() => {
-        let components = page.powerSelectComponents();
+        let components = page.powerSelectComponents;
         assert.equal(store.find('ticket').get('length'), 1);
         let tickets = store.find('ticket');
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 1);
@@ -285,7 +285,7 @@ test('selecting category tree and removing a top level category will remove chil
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionOne();
     andThen(() => {
-        let components = page.powerSelectComponents();
+        let components = page.powerSelectComponents;
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 2);
@@ -296,7 +296,7 @@ test('selecting category tree and removing a top level category will remove chil
     page.categoryThreeClickDropdown();
     page.categoryThreeClickOptionOne();
     andThen(() => {
-        let components = page.powerSelectComponents();
+        let components = page.powerSelectComponents;
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 3);
@@ -307,7 +307,7 @@ test('selecting category tree and removing a top level category will remove chil
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionTwo();
     andThen(() => {
-        let components = page.powerSelectComponents();
+        let components = page.powerSelectComponents;
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 2);
@@ -317,7 +317,7 @@ test('selecting category tree and removing a top level category will remove chil
     page.categoryOneClickDropdown();
     page.categoryOneClickOptionTwo();
     andThen(() => {
-        let components = page.powerSelectComponents();
+        let components = page.powerSelectComponents;
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 1);
@@ -331,7 +331,7 @@ test('when selecting a new parent cateogry it should remove previously selected 
     clearxhr(location_xhr);
     page.visitNew();
     andThen(() => {
-        let components = page.powerSelectComponents();
+        let components = page.powerSelectComponents;
         let tickets = store.find('ticket');
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 0);
         assert.equal(components, 1);
@@ -342,7 +342,7 @@ test('when selecting a new parent cateogry it should remove previously selected 
     page.categoryOneClickDropdown();
     page.categoryOneClickOptionOne();
     andThen(() => {
-        let components = page.powerSelectComponents();
+        let components = page.powerSelectComponents;
         assert.equal(store.find('ticket').get('length'), 1);
         let tickets = store.find('ticket');
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 1);
@@ -353,7 +353,7 @@ test('when selecting a new parent cateogry it should remove previously selected 
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionOne();
     andThen(() => {
-        let components = page.powerSelectComponents();
+        let components = page.powerSelectComponents;
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 2);
@@ -364,7 +364,7 @@ test('when selecting a new parent cateogry it should remove previously selected 
     page.categoryThreeClickDropdown();
     page.categoryThreeClickOptionOne();
     andThen(() => {
-        let components = page.powerSelectComponents();
+        let components = page.powerSelectComponents;
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 3);
@@ -377,7 +377,7 @@ test('when selecting a new parent cateogry it should remove previously selected 
         let ticket = store.findOne('ticket');
         assert.ok(!ticket.get('_location'));
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-        let components = page.powerSelectComponents();
+        let components = page.powerSelectComponents;
         assert.equal(components, 3);
     });
     page.categoryOneClickDropdown();
@@ -386,7 +386,7 @@ test('when selecting a new parent cateogry it should remove previously selected 
         let ticket = store.findOne('ticket');
         assert.ok(!ticket.get('_location'));
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-        let components = page.powerSelectComponents();
+        let components = page.powerSelectComponents;
         assert.equal(components, 1);
     });
 });
@@ -397,7 +397,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     clearxhr(location_xhr);
     page.visitNew();
     andThen(() => {
-        assert.equal(page.assigneeInput(), GLOBALMSG.assignee_power_select);
+        assert.equal(page.assigneeInput, GLOBALMSG.assignee_power_select);
         let ticket = store.findOne('ticket');
         assert.equal(ticket.get('assignee.id'), undefined);
         assert.equal(ticket.get('assignee_fk'), undefined);
@@ -407,31 +407,31 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     page.assigneeClickDropdown();
     fillIn(`${SEARCH}`, 'b');
     andThen(() => {
-        assert.equal(page.assigneeInput(), GLOBALMSG.assignee_power_select);
-        assert.equal(page.assigneeOptionLength(), 10);
+        assert.equal(page.assigneeInput, GLOBALMSG.assignee_power_select);
+        assert.equal(page.assigneeOptionLength, 10);
         assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
         assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(1)`).text().trim(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
     });
     page.assigneeClickOptionOne();
     andThen(() => {
-        assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+        assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
     });
     page.assigneeClickDropdown();
     fillIn(`${SEARCH}`, '');
     andThen(() => {
-        assert.equal(page.assigneeOptionLength(), 1);
-        assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+        assert.equal(page.assigneeOptionLength, 1);
+        assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
     });
     fillIn(`${SEARCH}`, 'b');
     andThen(() => {
-        assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-        assert.equal(page.assigneeOptionLength(), 10);
+        assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
+        assert.equal(page.assigneeOptionLength, 10);
         assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
         assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(1)`).text().trim(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
     });
     page.assigneeClickOptionTwo();
     andThen(() => {
-        assert.equal(page.assigneeInput(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
+        assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
         let ticket = store.findOne('ticket');
         assert.equal(ticket.get('assignee.id'), PD.idSearch);
         assert.equal(ticket.get('assignee_fk'), undefined);
@@ -442,13 +442,13 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     page.assigneeClickDropdown();
     fillIn(`${SEARCH}`, 'Boy1');
     andThen(() => {
-        assert.equal(page.assigneeInput(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
-        assert.equal(page.assigneeOptionLength(), 2);
+        assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
+        assert.equal(page.assigneeOptionLength, 2);
         assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
     });
     page.assigneeClickOptionOne();
     andThen(() => {
-        assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+        assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
         let ticket = store.findOne('ticket');
         assert.equal(ticket.get('assignee.id'), PD.idBoy);
         assert.equal(ticket.get('assignee_fk'), undefined);
@@ -466,8 +466,8 @@ test('selecting new location will not affect other selectize components and will
     fillIn(`${SEARCH}`, '6');
     page.locationClickOptionTwo();
     andThen(() => {
-        assert.equal(page.priorityInput(), TD.priorityOne);
-        assert.equal(page.locationInput(), LD.storeNameTwo);
+        assert.equal(page.priorityInput, TD.priorityOne);
+        assert.equal(page.locationInput, LD.storeNameTwo);
         assert.equal(find('.t-tab').length, 1);
     });
 });
@@ -482,7 +482,7 @@ test('location new component shows location for ticket and will fire off xhr to 
     });
     page.locationClickOptionTwo();
     andThen(() => {
-        assert.equal(page.locationInput(), LD.storeNameTwo);
+        assert.equal(page.locationInput, LD.storeNameTwo);
         let ticket = store.find('ticket');
         assert.equal(ticket.objectAt(0).get('location.id'), LD.idTwo);
         assert.equal(ticket.objectAt(0).get('location_fk'), undefined);
@@ -498,7 +498,7 @@ test('removes location dropdown on search to change location', (assert) => {
     page.locationClickDropdown();
     fillIn(`${SEARCH}`, '6');
     andThen(() => {
-        assert.equal(page.locationOptionLength(), 2);
+        assert.equal(page.locationOptionLength, 2);
     });
     fillIn(`${SEARCH}`, ' ');
     andThen(() => {
@@ -506,7 +506,7 @@ test('removes location dropdown on search to change location', (assert) => {
     });
     fillIn(`${SEARCH}`, '6');
     andThen(() => {
-        assert.equal(page.locationOptionLength(), 2);
+        assert.equal(page.locationOptionLength, 2);
     });
 });
 
@@ -526,7 +526,7 @@ test('clicking and typing into power select for people will fire off xhr request
     page.ccClickDropdown();
     fillIn(`${CC_SEARCH}`, 'a');
     andThen(() => {
-        assert.equal(page.ccOptionLength(), 1);
+        assert.equal(page.ccOptionLength, 1);
         assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), PD.donald);
     });
     page.ccClickDonald();
@@ -534,19 +534,19 @@ test('clicking and typing into power select for people will fire off xhr request
         let ticket = store.findOne('ticket');
         assert.equal(ticket.get('cc').get('length'), 1);
         assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
-        assert.equal(page.ccSelected().indexOf(PD.donald), 2);
+        assert.equal(page.ccSelected.indexOf(PD.donald), 2);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     });
     page.ccClickDropdown();
     fillIn(`${CC_SEARCH}`, '');
     andThen(() => {
-        assert.equal(page.ccOptionLength(), 1);
+        assert.equal(page.ccOptionLength, 1);
         assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
     });
     fillIn(`${CC_SEARCH}`, 'a');
     andThen(() => {
-        assert.equal(page.ccSelected().indexOf(PD.donald), 2);
-        assert.equal(page.ccOptionLength(), 1);
+        assert.equal(page.ccSelected.indexOf(PD.donald), 2);
+        assert.equal(page.ccOptionLength, 1);
         assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), PD.donald);
         let ticket = store.findOne('ticket');
         assert.equal(ticket.get('cc').get('length'), 1);
@@ -557,8 +557,8 @@ test('clicking and typing into power select for people will fire off xhr request
     xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy`, 'GET', null, {}, 200, PF.search());
     fillIn(`${CC_SEARCH}`, 'Boy');
     andThen(() => {
-        assert.equal(page.ccSelected().indexOf(PD.donald), 2);
-        assert.equal(page.ccOptionLength(), 10);
+        assert.equal(page.ccSelected.indexOf(PD.donald), 2);
+        assert.equal(page.ccOptionLength, 10);
         assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
         let ticket = store.findOne('ticket');
         assert.equal(ticket.get('cc').get('length'), 1);
@@ -566,8 +566,8 @@ test('clicking and typing into power select for people will fire off xhr request
     });
     page.ccClickOptionOne();
     andThen(() => {
-        assert.equal(page.ccSelected().indexOf(PD.donald), 2);
-        assert.equal(page.ccTwoSelected().indexOf(PD.nameBoy), 2);
+        assert.equal(page.ccSelected.indexOf(PD.donald), 2);
+        assert.equal(page.ccTwoSelected.indexOf(PD.nameBoy), 2);
         let ticket = store.findOne('ticket');
         assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
         assert.equal(ticket.get('cc').objectAt(1).get('id'), PD.idBoy);
@@ -590,7 +590,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     page.ccClickDropdown();
     fillIn(`${CC_SEARCH}`, 'a');
     andThen(() => {
-        assert.equal(page.ccOptionLength(), 1);
+        assert.equal(page.ccOptionLength, 1);
         assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), PD.donald);
     });
     page.ccClickDonald();
@@ -598,7 +598,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
         let ticket = store.findOne('ticket');
         assert.equal(ticket.get('cc').get('length'), 1);
         assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
-        assert.equal(page.ccSelected().indexOf(PD.donald), 2);
+        assert.equal(page.ccSelected.indexOf(PD.donald), 2);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     });
     page.ccOneRemove();
@@ -626,7 +626,7 @@ test('all required fields persist correctly when the user submits a new ticket f
     fillIn(`${SEARCH}`, 'b');
     page.assigneeClickOptionTwo();
     andThen(() => {
-        assert.equal(page.assigneeInput(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
+        assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
         let ticket = store.findOne('ticket');
         assert.ok(ticket.get('assignee'));
         assert.equal(ticket.get('assignee').get('id'), PD.idSearch);
@@ -646,7 +646,7 @@ test('all required fields persist correctly when the user submits a new ticket f
     fillIn(`${SEARCH}`, '6');
     andThen(() => {
         //ensure route doesn't change current selections
-        assert.equal(page.locationOptionLength(), 2);
+        assert.equal(page.locationOptionLength, 2);
         let ticket = store.find('ticket', UUID.value);
         assert.equal(ticket.get('assignee').get('id'), PD.idSearch);
         assert.equal(ticket.get('status.id'), TD.statusOneId);

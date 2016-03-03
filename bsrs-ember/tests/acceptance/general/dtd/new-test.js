@@ -82,7 +82,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DTD_NEW_URL);
-            assert.equal(page.key(), DTD.keyOne);
+            assert.equal(page.key, DTD.keyOne);
             assert.equal(find('.t-modal').is(':hidden'), true);
         });
     });

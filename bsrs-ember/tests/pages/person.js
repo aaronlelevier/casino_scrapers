@@ -1,4 +1,4 @@
-import PageObject from '../page-object';
+import PageObject from 'bsrs-ember/tests/page-object';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import PD from 'bsrs-ember/vendor/defaults/person';

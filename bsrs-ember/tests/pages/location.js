@@ -1,4 +1,4 @@
-import PageObject from '../page-object';
+import PageObject from 'bsrs-ember/tests/page-object';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LDS from 'bsrs-ember/vendor/defaults/location-status';

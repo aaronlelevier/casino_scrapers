@@ -68,7 +68,7 @@ test('visiting role/new', (assert) => {
         assert.equal(store.find('role-type').get('length'), 2);
         assert.equal(store.find('location-level').get('length'), 8);
         //assert.equal(page.locationLevelInput(), 'Select One');
-        assert.equal(page.roleTypeInput(), RD.roleTypeGeneral);
+        assert.equal(page.roleTypeInput, RD.roleTypeGeneral);
         assert.ok(store.find('role').objectAt(1).get('isNotDirty'));
         const role = store.find('role', UUID.value);
         assert.ok(role.get('new'));
@@ -196,8 +196,8 @@ test('clicking power select for parent categories will fire off xhr request for 
     ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
     page.categoryClickDropdown();
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), 2);
-        assert.equal(page.categoriesSelected(), 0);
+        assert.equal(page.categoryOptionLength, 2);
+        assert.equal(page.categoriesSelected, 0);
         const role = store.find('role', UUID.value);
         assert.equal(role.get('role_category_fks').length, 0);
         assert.equal(role.get('categories').get('length'), 0);
@@ -208,7 +208,7 @@ test('clicking power select for parent categories will fire off xhr request for 
         assert.equal(role.get('role_category_fks').length, 0);
         assert.equal(role.get('categories').get('length'), 1);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.categoriesSelected(), 1);
+        assert.equal(page.categoriesSelected, 1);
     });
     fillIn('.t-role-name', RD.nameOne);
     page.locationLevelClickDropdown();
@@ -230,8 +230,8 @@ test('adding and removing removing a category in power select for categories wil
     ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
     page.categoryClickDropdown();
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), 2);
-        assert.equal(page.categoriesSelected(), 0);
+        assert.equal(page.categoryOptionLength, 2);
+        assert.equal(page.categoriesSelected, 0);
         const role = store.find('role', UUID.value);
         assert.equal(role.get('role_category_fks').length, 0);
         assert.equal(role.get('categories').get('length'), 0);
@@ -241,7 +241,7 @@ test('adding and removing removing a category in power select for categories wil
         let role = store.find('role', UUID.value);
         assert.equal(role.get('role_categories').get('length'), 1);
         assert.equal(role.get('categories').get('length'), 1);
-        assert.equal(page.categoriesSelected(), 1);
+        assert.equal(page.categoriesSelected, 1);
     });
     page.categoryOneRemove();
     andThen(() => {
@@ -249,7 +249,7 @@ test('adding and removing removing a category in power select for categories wil
         assert.equal(role.get('role_categories').get('length'), 0);
         assert.equal(role.get('categories').get('length'), 0);
         assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(page.categoriesSelected(), 0);
+        assert.equal(page.categoriesSelected, 0);
     });
     page.categoryClickDropdown();
     page.categoryClickOptionTwoEq();
@@ -272,14 +272,14 @@ test('can add multiple categories', (assert) => {
         let role = store.find('role', UUID.value);
         assert.equal(role.get('categories').get('length'), 0);
         assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(page.categoryOptionLength(), 2);
+        assert.equal(page.categoryOptionLength, 2);
     });
     page.categoryClickOptionOneEq();
     andThen(() => {
         let role = store.find('role', UUID.value);
         assert.equal(role.get('categories').get('length'), 1);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.categoriesSelected(), 1);
+        assert.equal(page.categoriesSelected, 1);
     });
     page.categoryClickDropdown();
     page.categoryClickOptionTwoEq();

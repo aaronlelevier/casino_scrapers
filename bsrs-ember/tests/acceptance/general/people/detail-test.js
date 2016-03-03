@@ -125,12 +125,12 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-state').val(), AD.stateTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), AD.zipTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), AD.countryTwo);
-        assert.equal(page.statusInput(), t(SD.activeName));
-        assert.equal(page.localeInput(), PD.localeFull);
-        assert.equal(page.localeOptionLength(), 3);
-        assert.equal(page.localeOne(), PD.localeFull);
-        assert.equal(page.localeTwo(), PD.localeTwoFull);
-        assert.equal(page.roleInput(), RD.nameOne);
+        assert.equal(page.statusInput, t(SD.activeName));
+        assert.equal(page.localeInput, PD.localeFull);
+        assert.equal(page.localeOptionLength, 3);
+        assert.equal(page.localeOne, PD.localeFull);
+        assert.equal(page.localeTwo, PD.localeTwoFull);
+        assert.equal(page.roleInput, RD.nameOne);
         assert.equal(find('.t-amount').val(), PD.auth_amount);
         assert.equal(find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol);
     });
@@ -206,7 +206,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
             assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
         });
     });
@@ -215,7 +215,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.equal(find('.t-person-username').val(), PD_PUT.username);
-            assert.ok(generalPage.modalIsHidden());
+            assert.ok(generalPage.modalIsHidden);
         });
     });
 });
@@ -227,7 +227,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
         });
     });
     generalPage.clickModalRollback();
@@ -484,7 +484,7 @@ test('when user changes an attribute on email and clicks cancel we prompt them w
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
         });
     });
     generalPage.clickModalRollback();
@@ -505,7 +505,7 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
         });
     });
     generalPage.clickModalRollback();
@@ -526,7 +526,7 @@ test('when user changes an attribute on address and clicks cancel we prompt them
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
         });
     });
     generalPage.clickModalRollback();
@@ -547,7 +547,7 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
         });
     });
     generalPage.clickModalRollback();
@@ -568,7 +568,7 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
         });
     });
     generalPage.clickModalRollback();
@@ -589,7 +589,7 @@ test('when user removes an address clicks cancel we prompt them with a modal and
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
         });
     });
     generalPage.clickModalRollback();
@@ -800,7 +800,7 @@ test('when you deep link to the person detail view you can alter the role and ro
         assert.equal(currentURL(), DETAIL_URL);
         var person = store.find('person', PD.idOne);
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(page.roleInput(), RD.nameOne);
+        assert.equal(page.roleInput, RD.nameOne);
         assert.equal(person.get('role.id'), RD.idOne);
     });
     //refreshModel will call findById in people repo
@@ -811,7 +811,7 @@ test('when you deep link to the person detail view you can alter the role and ro
     page.roleClickOptionTwo();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
-        assert.equal(page.roleInput(), RD.nameTwo);
+        assert.equal(page.roleInput, RD.nameTwo);
         var person = store.find('person', PD.idOne);
         assert.ok(person.get('isDirtyOrRelatedDirty'));
         assert.equal(person.get('role.id'), RD.idTwo);
@@ -820,7 +820,7 @@ test('when you deep link to the person detail view you can alter the role and ro
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
         });
     });
     generalPage.clickModalRollback();
@@ -852,14 +852,14 @@ test('when you deep link to the person detail view you can alter the role and ch
         var person = store.find('person', PD.idOne);
         andThen(() => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-            assert.equal(page.roleInput(), RD.nameOne);
+            assert.equal(page.roleInput, RD.nameOne);
             assert.equal(person.get('role.id'), RD.idOne);
         });
         page.roleClickDropdown();
         page.roleClickOptionTwo();
         andThen(() => {
             assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
-            assert.equal(page.roleInput(), RD.nameTwo);
+            assert.equal(page.roleInput, RD.nameTwo);
             var person = store.find('person', PD.idOne);
             assert.ok(person.get('isDirtyOrRelatedDirty'));
             assert.equal(person.get('role.id'), RD.idTwo);
@@ -873,7 +873,7 @@ test('when you deep link to the person detail view you can alter the role and ch
             page.roleClickOptionOne();
             andThen(() => {
                 assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idOne);
-                assert.equal(page.roleInput(), RD.nameOne);
+                assert.equal(page.roleInput, RD.nameOne);
                 var person = store.find('person', PD.idOne);
                 assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
                 assert.equal(person.get('role.id'), RD.idOne);
@@ -953,7 +953,7 @@ test('when you change a related role it will change the related locations as wel
         fillIn(LOCATION_SEARCH, '');
         andThen(() => {
             let locations = store.find('location');
-            assert.equal(page.locationOptionLength(), 1);
+            assert.equal(page.locationOptionLength, 1);
             assert.equal(find(LOCATION_DROPDOWN).text().trim(), GLOBALMSG.power_search);
         });
         clearxhr(detail_xhr);
@@ -982,11 +982,11 @@ test('deep link to person and clicking in the person-locations-select component 
     andThen(() => {
         let person = store.find('person', PD.idOne);
         assert.equal(person.get('locations').get('length'), 1);
-        assert.equal(page.locationOneSelected().indexOf(LD.storeName), 2);
+        assert.equal(page.locationOneSelected.indexOf(LD.storeName), 2);
     });
     page.locationClickDropdown();
     andThen(() => {
-        assert.equal(page.locationOptionLength(), 1);
+        assert.equal(page.locationOptionLength, 1);
         assert.equal(find(LOCATION_DROPDOWN).text().trim(), GLOBALMSG.power_search);
     });
     let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=ABC1234`;
@@ -994,20 +994,20 @@ test('deep link to person and clicking in the person-locations-select component 
     xhr(locations_endpoint, 'GET', null, {}, 200, response);
     fillIn(LOCATION_SEARCH, 'ABC1234');
     andThen(() => {
-        assert.equal(page.locationOptionLength(), POWER_SELECT_LENGTH);
+        assert.equal(page.locationOptionLength, POWER_SELECT_LENGTH);
     });
     page.locationClickOptionTwo();
     andThen(() => {
         let person = store.find('person', PD.idOne);
         assert.equal(person.get('locations').get('length'), 2);
-        assert.equal(page.locationOneSelected().indexOf(LD.storeName), 2);
-        assert.equal(page.locationTwoSelected().indexOf(LD.storeNameFive), 2);
+        assert.equal(page.locationOneSelected.indexOf(LD.storeName), 2);
+        assert.equal(page.locationTwoSelected.indexOf(LD.storeNameFive), 2);
         assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
     page.locationClickDropdown();
     fillIn(LOCATION_SEARCH, '');
     andThen(() => {
-        assert.equal(page.locationOptionLength(), 1);
+        assert.equal(page.locationOptionLength, 1);
         assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
         let person = store.find('person', PD.idOne);
         assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -1037,7 +1037,7 @@ test('can remove and add back same location', (assert) => {
     andThen(() => {
         let person = store.find('person', PD.idOne);
         assert.equal(person.get('locations').get('length'), 1);
-        assert.equal(page.locationOneSelected().indexOf(LD.storeName), 2);
+        assert.equal(page.locationOneSelected.indexOf(LD.storeName), 2);
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
     let url = PREFIX + DETAIL_URL + "/";
@@ -1056,8 +1056,8 @@ test('starting with multiple locations, can remove all locations (while not popu
     andThen(() => {
         let person = store.find('person', PD.idOne);
         assert.equal(person.get('locations').get('length'), 2);
-        assert.equal(page.locationOneSelected().indexOf(LD.storeName), 2);
-        assert.equal(page.locationTwoSelected().indexOf(LD.storeNameTwo), 2);
+        assert.equal(page.locationOneSelected.indexOf(LD.storeName), 2);
+        assert.equal(page.locationTwoSelected.indexOf(LD.storeNameTwo), 2);
     });
     page.locationOneRemove();
     page.locationOneRemove();
@@ -1074,7 +1074,7 @@ test('starting with multiple locations, can remove all locations (while not popu
     andThen(() => {
         let person = store.find('person', PD.idOne);
         assert.equal(person.get('locations').get('length'), 1);
-        assert.equal(page.locationOneSelected().indexOf(LD.storeNameOne), 2);
+        assert.equal(page.locationOneSelected.indexOf(LD.storeNameOne), 2);
         assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
     let url = PREFIX + DETAIL_URL + "/";
@@ -1090,7 +1090,7 @@ test('clicking and typing into power select for people will not filter if spaceb
     visit(DETAIL_URL);
     fillIn(LOCATION_SEARCH, '');
     andThen(() => {
-        assert.equal(page.locationOptionLength(), 1);
+        assert.equal(page.locationOptionLength, 1);
         assert.equal(find(LOCATION_DROPDOWN).text().trim(), GLOBALMSG.power_search);
     });
     let url = PREFIX + DETAIL_URL + '/';
@@ -1110,7 +1110,7 @@ test('when you deep link to the person detail view you can alter the locations a
     people_detail_data.locations = [];
     page.locationClickDropdown();
     andThen(() => {
-        assert.equal(page.locationOptionLength(), 1);
+        assert.equal(page.locationOptionLength, 1);
         assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
         let person = store.find('person', PD.idOne);
         assert.equal(person.get('locations').get('length'), 0);
@@ -1127,7 +1127,7 @@ test('when you deep link to the person detail view you can alter the locations a
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
             let person = store.find('person', PD.idOne);
             assert.equal(person.get('locations').get('length'), 1);
             assert.ok(person.get('isNotDirty'));
@@ -1157,14 +1157,14 @@ test('when you deep link to the person detail view you can alter the locations a
 test('can change status to inactive for person and save (power select)', (assert) => {
     page.visitDetail();
     andThen(() => {
-        assert.equal(page.statusInput(), t(SD.activeName));
+        assert.equal(page.statusInput, t(SD.activeName));
     });
     page.statusClickDropdown();
     andThen(() => {
-        assert.equal(page.statusOptionLength(), 3);
-        assert.equal(page.statusOne(), t(SD.activeName));
-        assert.equal(page.statusTwo(), t(SD.inactiveName));
-        assert.equal(page.statusThree(), t(SD.expiredName));
+        assert.equal(page.statusOptionLength, 3);
+        assert.equal(page.statusOne, t(SD.activeName));
+        assert.equal(page.statusTwo, t(SD.inactiveName));
+        assert.equal(page.statusThree, t(SD.expiredName));
         const person = store.find('person', PD.idOne);
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
@@ -1174,7 +1174,7 @@ test('can change status to inactive for person and save (power select)', (assert
         assert.equal(person.get('status_fk'), SD.activeId);
         assert.equal(person.get('status.id'), SD.inactiveId);
         assert.ok(person.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.statusInput(), t(SD.inactiveName));
+        assert.equal(page.statusInput, t(SD.inactiveName));
     });
     let url = PREFIX + DETAIL_URL + '/';
     let payload = PF.put({id: PD.idOne, status: SD.inactiveId});
@@ -1189,13 +1189,13 @@ test('can change status to inactive for person and save (power select)', (assert
 test('can change locale to inactive for person and save (power select)', (assert) => {
     page.visitDetail();
     andThen(() => {
-        assert.equal(page.localeInput(), PD.localeFull);
+        assert.equal(page.localeInput, PD.localeFull);
     });
     page.localeClickDropdown();
     andThen(() => {
-        assert.equal(page.localeOptionLength(), 3);
-        assert.equal(page.localeOne(), PD.localeFull);
-        assert.equal(page.localeTwo(), PD.localeTwoFull);
+        assert.equal(page.localeOptionLength, 3);
+        assert.equal(page.localeOne, PD.localeFull);
+        assert.equal(page.localeTwo, PD.localeTwoFull);
         const person = store.find('person', PD.idOne);
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
@@ -1205,7 +1205,7 @@ test('can change locale to inactive for person and save (power select)', (assert
         assert.equal(person.get('locale_fk'), LOCALED.idOne);
         assert.equal(person.get('locale.id'), LOCALED.idTwo);
         assert.ok(person.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.localeInput(), PD.localeTwoFull);
+        assert.equal(page.localeInput, PD.localeTwoFull);
     });
     let url = PREFIX + DETAIL_URL + '/';
     let payload = PF.put({id: PD.idOne, locale: LOCALED.idTwo});
@@ -1224,7 +1224,7 @@ test('when changing the locale for a user (not current user), the language is no
         var person = store.find('person', PD.idOne);
         assert.ok(person.get('id') !== PERSON_CURRENT_DEFAULTS.id);
         assert.equal(find('.t-person-first-name').val(), PD.first_name);
-        assert.equal(page.localeInput(), PD.localeFull);
+        assert.equal(page.localeInput, PD.localeFull);
         assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
     });
     page.localeClickDropdown();

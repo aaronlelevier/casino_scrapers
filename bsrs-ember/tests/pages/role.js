@@ -1,4 +1,4 @@
-import PageObject from '../page-object';
+import PageObject from 'bsrs-ember/tests/page-object';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';

@@ -61,7 +61,7 @@ test('visiting admin/third-parties detail and update all fields on the record', 
         assert.ok(third_party.get('isNotDirty'));
         assert.equal(find('.t-third-party-name').val(), TPD.nameOne);
         assert.equal(find('.t-third-party-number').val(), TPD.numberOne);
-        assert.equal(page.statusInput(), t(SD.activeName));
+        assert.equal(page.statusInput, t(SD.activeName));
     });
     let response = TPF.detail(TPD.idOne);
     let payload = TPF.put({
@@ -127,7 +127,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
             assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
         });
     });
@@ -136,7 +136,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.equal(find('.t-third-party-name').val(), TPD.nameTwo);
-            assert.ok(generalPage.modalIsHidden());
+            assert.ok(generalPage.modalIsHidden);
         });
     });
 });
@@ -148,7 +148,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
         });
     });
     generalPage.clickModalRollback();
@@ -176,14 +176,14 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('can change status to inactive for person and save (power select)', (assert) => {
     page.visitDetail();
     andThen(() => {
-        assert.equal(page.statusInput(), t(SD.activeName));
+        assert.equal(page.statusInput, t(SD.activeName));
     });
     page.statusClickDropdown();
     andThen(() => {
-        assert.equal(page.statusOptionLength(), 3);
-        assert.equal(page.statusOne(), t(SD.activeName));
-        assert.equal(page.statusTwo(), t(SD.inactiveName));
-        assert.equal(page.statusThree(), t(SD.expiredName));
+        assert.equal(page.statusOptionLength, 3);
+        assert.equal(page.statusOne, t(SD.activeName));
+        assert.equal(page.statusTwo, t(SD.inactiveName));
+        assert.equal(page.statusThree, t(SD.expiredName));
         const person = store.find('third-party', TPD.idOne);
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
@@ -193,7 +193,7 @@ test('can change status to inactive for person and save (power select)', (assert
         assert.equal(person.get('status_fk'), SD.activeId);
         assert.equal(person.get('status.id'), SD.inactiveId);
         assert.ok(person.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.statusInput(), t(SD.inactiveName));
+        assert.equal(page.statusInput, t(SD.inactiveName));
     });
     let url = PREFIX + DETAIL_URL + '/';
     let payload = TPF.put({id: TPD.idOne, status: SD.inactiveId});

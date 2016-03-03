@@ -71,7 +71,7 @@ test('visiting admin/location-level', (assert) => {
         let location_level = store.find('location-level', LLD.idOne);
         assert.equal(location_level.get('children_fks').length, 7);
         assert.equal(location_level.get('children').get('length'), 7);
-        assert.equal(page.childrenOptionLength(), 7);
+        assert.equal(page.childrenOptionLength, 7);
         assert.ok(location_level.get('isDirty'));
     });
     let list = LLF.list();
@@ -166,7 +166,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
             assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
         });
     });
@@ -175,7 +175,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.equal(find('.t-location-name').val(), LLD.storeNameTwo);
-            assert.ok(generalPage.modalIsHidden());
+            assert.ok(generalPage.modalIsHidden);
         });
     });
 });
@@ -183,14 +183,14 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
-        assert.equal(page.childrenSelectedCount(), 7);
+        assert.equal(page.childrenSelectedCount, 7);
         const ll = store.find('location-level', LLD.idOne);
         assert.ok(ll.get('isNotDirtyOrRelatedNotDirty'));
     });
     fillIn('.t-location-level-name', LLD.nameRegion);
     page.childrenOneRemove();
     andThen(() => {
-        assert.equal(page.childrenSelectedCount(), 6);
+        assert.equal(page.childrenSelectedCount, 6);
         const ll = store.find('location-level', LLD.idOne);
         assert.ok(ll.get('isDirtyOrRelatedDirty'));
     });
@@ -198,7 +198,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
         });
     });
     generalPage.clickModalRollback();

@@ -1,4 +1,4 @@
-import PageObject from '../page-object';
+import PageObject from 'bsrs-ember/tests/page-object';
 let { value, visitable, fillable, clickable, count, text } = PageObject;
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';

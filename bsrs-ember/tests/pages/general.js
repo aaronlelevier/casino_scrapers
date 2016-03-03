@@ -1,4 +1,4 @@
-import PageObject from '../page-object';
+import PageObject from 'bsrs-ember/tests/page-object';
 let { visitable, clickable } = PageObject;
 
 var GeneralPage = PageObject.create({

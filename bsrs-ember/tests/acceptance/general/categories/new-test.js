@@ -73,6 +73,7 @@ test('visiting /category/new', (assert) => {
         assert.ok(category.get('new'));
         assert.equal(find('.t-new-category-name').text(), 'New Category');
     });
+    //TODO: refactor using page object
     fillIn('.t-category-name', CD.nameOne);
     fillIn('.t-category-description', CD.descriptionMaintenance);
     fillIn('.t-category-label', CD.labelOne);
@@ -249,7 +250,7 @@ test('clicking and typing into power select for categories children will not fil
     page.categoryClickDropdown();
     fillIn(`${CATEGORY_SEARCH}`, ' ');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), 1);
+        assert.equal(page.categoryOptionLength, 1);
     });
     andThen(() => {
         let category = store.find('category', UUID.value);
@@ -286,7 +287,7 @@ test('you can add and remove child from category', (assert) => {
     page.categoryClickDropdown();
     fillIn(`${CATEGORY_SEARCH}`, 'a');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), 10);
+        assert.equal(page.categoryOptionLength, 10);
         const category = store.find('category', UUID.value);
         assert.equal(category.get('children').get('length'), 0);
         assert.equal(category.get('children').get('length'), 0);

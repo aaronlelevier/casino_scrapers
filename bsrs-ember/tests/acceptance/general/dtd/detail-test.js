@@ -55,7 +55,7 @@ test('decision tree definition displays data and saves correctly', (assert) => {
         assert.equal(find('.t-dtd-link-action_button').prop('checked'), LINK.action_buttonOne);
         assert.equal(find('.t-dtd-link-is_header').prop('checked'), LINK.is_headerOne);
         assert.equal(find('.t-dtd-link-request').val(), LINK.requestOne);
-        assert.equal(ticketPage.priorityInput(), TP.priorityOne);
+        assert.equal(ticketPage.priorityInput, TP.priorityOne);
     });
     xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});
     generalPage.save();
@@ -90,14 +90,14 @@ test('dtd payload to update all fields', (assert) => {
     });
     ticketPage.priorityClickDropdown();
     andThen(() => {
-        assert.equal(ticketPage.priorityOne(), TP.priorityOne);
-        assert.equal(ticketPage.priorityTwo(), TP.priorityTwo);
-        assert.equal(ticketPage.priorityThree(), TP.priorityThree);
-        assert.equal(ticketPage.priorityFour(), TP.priorityFour);
+        assert.equal(ticketPage.priorityOne, TP.priorityOne);
+        assert.equal(ticketPage.priorityTwo, TP.priorityTwo);
+        assert.equal(ticketPage.priorityThree, TP.priorityThree);
+        assert.equal(ticketPage.priorityFour, TP.priorityFour);
     });
     ticketPage.priorityClickOptionTwo();
     andThen(() => {
-        assert.equal(ticketPage.priorityInput(), TP.priorityTwo);
+        assert.equal(ticketPage.priorityInput, TP.priorityTwo);
     });
     xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload_two), {}, 200, {});
     generalPage.save();

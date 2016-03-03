@@ -60,9 +60,9 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
         let role = store.find('role').objectAt(0);
         assert.ok(role.get('isNotDirty'));
         assert.equal(role.get('location_level').get('id'), LLD.idOne);
-        assert.equal(page.roleTypeInput(), RD.roleTypeGeneral);
-        assert.equal(page.categorySelected().indexOf(CD.nameOne), 2);
-        assert.equal(page.locationLevelInput().split(' +')[0].trim().split(' ')[0], LLD.nameCompany);
+        assert.equal(page.roleTypeInput, RD.roleTypeGeneral);
+        assert.equal(page.categorySelected.indexOf(CD.nameOne), 2);
+        assert.equal(page.locationLevelInput.split(' +')[0].trim().split(' ')[0], LLD.nameCompany);
     });
     let response = RF.detail(RD.idOne);
     let location_level = LLF.put({id: LLD.idLossRegion, name: LLD.nameLossPreventionRegion});
@@ -159,7 +159,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
             assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
         });
     });
@@ -168,7 +168,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.equal(find('.t-role-name').val(), RD.namePut);
-            assert.ok(generalPage.modalIsHidden());
+            assert.ok(generalPage.modalIsHidden);
         });
     });
 });
@@ -182,7 +182,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
         });
     });
     generalPage.clickModalRollback();
@@ -211,14 +211,14 @@ test('clicking select for categories will fire off xhr request for all parent ca
     andThen(() => {
         let role = store.find('role', RD.idOne);
         assert.equal(role.get('role_category_fks').length, 1);
-        assert.equal(page.categoriesSelected(), 1);
+        assert.equal(page.categoriesSelected, 1);
     });
     let category_children_endpoint = PREFIX + '/admin/categories/parents/';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.top_level_role());
     page.categoryClickDropdown();
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), 2);
-        assert.equal(page.categoriesSelected(), 1);
+        assert.equal(page.categoryOptionLength, 2);
+        assert.equal(page.categoriesSelected, 1);
         const role = store.find('role', RD.idOne);
         assert.equal(role.get('role_category_fks').length, 1);
         assert.equal(role.get('categories').get('length'), 1);
@@ -229,7 +229,7 @@ test('clicking select for categories will fire off xhr request for all parent ca
         assert.equal(role.get('role_category_fks').length, 1);
         assert.equal(role.get('categories').get('length'), 2);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.categoriesSelected(), 2);
+        assert.equal(page.categoriesSelected, 2);
     });
     const payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: [CD.idOne, CD.idThree]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
@@ -245,12 +245,12 @@ test('starting with multiple categories, can remove all categories (while not po
     andThen(() => {
         let role = store.find('role', RD.idOne);
         assert.equal(role.get('categories').get('length'), 2);
-        assert.equal(page.categoriesSelected(), 2);
+        assert.equal(page.categoriesSelected, 2);
     });
     page.categoryOneRemove();
     page.categoryOneRemove();
     andThen(() => {
-        assert.equal(page.categoriesSelected(), 0);
+        assert.equal(page.categoriesSelected, 0);
     });
     let category_endpoint = PREFIX + '/admin/categories/parents/';
     xhr(category_endpoint, 'GET', null, {}, 200, CF.top_level_role());
@@ -260,7 +260,7 @@ test('starting with multiple categories, can remove all categories (while not po
         assert.equal(role.get('role_category_fks').length, 2);
         assert.equal(role.get('categories').get('length'), 0);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.categoryOptionLength(), 2);
+        assert.equal(page.categoryOptionLength, 2);
     });
     page.categoryClickOptionOneEq();
     page.categoryClickDropdown();
@@ -270,7 +270,7 @@ test('starting with multiple categories, can remove all categories (while not po
         assert.equal(role.get('role_category_fks').length, 2);
         assert.equal(role.get('categories').get('length'), 2);
         assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(page.categoriesSelected(), 2);
+        assert.equal(page.categoriesSelected, 2);
     });
     let payload = RF.put({id: RD.idOne, categories: [CD.idOne, CD.idThree]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
@@ -288,17 +288,17 @@ test('search will filter down on categories in store correctly by removing and a
     andThen(() => {
         let role = store.find('role', RD.idOne);
         assert.equal(role.get('categories').get('length'), 2);
-        assert.equal(page.categoriesSelected(), 2);
+        assert.equal(page.categoriesSelected, 2);
     });
     page.categoryOneRemove();
     andThen(() => {
-        assert.equal(page.categoriesSelected(), 1);
+        assert.equal(page.categoriesSelected, 1);
     });
     let category_endpoint = PREFIX + '/admin/categories/parents/';
     xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), 10);
+        assert.equal(page.categoryOptionLength, 10);
     });
     page.categoryClickOptionOneEq();
     andThen(() => {
@@ -307,7 +307,7 @@ test('search will filter down on categories in store correctly by removing and a
         assert.equal(role.get('categories').get('length'), 2);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.deepEqual(role.get('categories_ids'), ['abc123', CD.idGridOne]);
-        assert.equal(page.categoriesSelected(), 2);
+        assert.equal(page.categoriesSelected, 2);
     });
     let payload = RF.put({id: RD.idOne, categories: ['abc123', CD.idGridOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);

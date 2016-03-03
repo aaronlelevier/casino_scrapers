@@ -63,11 +63,11 @@ test('when you deep link to the category detail view you get bound attrs', (asse
         assert.equal(currentURL(), DETAIL_URL);
         let category = store.find('category', CD.idOne);
         assert.ok(category.get('isNotDirty'));
-        assert.equal(page.nameInput(), CD.nameOne);
-        assert.equal(page.descriptionInput(), CD.descriptionRepair);
-        assert.equal(page.labelInput(), CD.labelOne);
-        assert.equal(page.amountInput(), CD.costAmountOne);
-        assert.equal(page.costCodeInput(), CD.costCodeOne);
+        assert.equal(page.nameInput, CD.nameOne);
+        assert.equal(page.descriptionInput, CD.descriptionRepair);
+        assert.equal(page.labelInput, CD.labelOne);
+        assert.equal(page.amountInput, CD.costAmountOne);
+        assert.equal(page.costCodeInput, CD.costCodeOne);
     });
     let url = PREFIX + DETAIL_URL + '/';
     let response = CF.detail(CD.idOne);
@@ -147,7 +147,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
             assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
         });
     });
@@ -156,7 +156,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.equal(find('.t-category-name').val(), CD.nameTwo);
-            assert.ok(generalPage.modalIsHidden());
+            assert.ok(generalPage.modalIsHidden);
         });
     });
 });
@@ -255,18 +255,18 @@ test('clicking and typing into power select for categories children will fire of
     page.categoryClickDropdown();
     fillIn(`${CATEGORY_SEARCH}`, 'a');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), PAGE_SIZE);
+        assert.equal(page.categoryOptionLength, PAGE_SIZE);
     });
     page.categoryClickOptionOneEq();
     andThen(() => {
         let category = store.find('category', CD.idOne);
         assert.equal(category.get('children').get('length'), 2);
-        assert.equal(page.categoriesSelected(), 2);
+        assert.equal(page.categoriesSelected, 2);
     });
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, '');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), 1);
+        assert.equal(page.categoryOptionLength, 1);
         assert.equal(find(`${CATEGORY_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
         let category = store.find('category', CD.idOne);
         assert.ok(category.get('isDirtyOrRelatedDirty'));
@@ -286,13 +286,13 @@ test('when you deep link to the category detail can remove child from category a
     andThen(() => {
         let category = store.find('category', CD.idOne);
         assert.equal(category.get('children').get('length'), 1);
-        assert.equal(page.categoriesSelected(), 1);
+        assert.equal(page.categoriesSelected, 1);
     });
     page.categoryOneRemove();
     andThen(() => {
         let category = store.find('category', CD.idOne);
         assert.equal(category.get('children').get('length'), 0);
-        assert.equal(page.categoriesSelected(), 0);
+        assert.equal(page.categoriesSelected, 0);
     });
     let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
@@ -309,7 +309,7 @@ test('when you deep link to the category detail can remove child from category a
     });
 });
 
-// test('starting with multiple categories, can remove all categories (while not populating options) and add back', (assert) => {
+// test('scott starting with multiple categories, can remove all categories (while not populating options) and add back', (assert) => {
 //     detail_data.children = [...detail_data.children, CF.get(CD.idThree)];
 //     detail_data.children[1].name = CD.nameThree;
 //     visit(DETAIL_URL);
@@ -367,13 +367,13 @@ test('clicking and typing into power select for categories children will not fil
     page.categoryClickDropdown();
     fillIn(`${CATEGORY_SEARCH}`, ' ');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), 1);
+        assert.equal(page.categoryOptionLength, 1);
         assert.equal(find(CATEGORY_DROPDOWN).text().trim(), GLOBALMSG.no_results);
     });
     andThen(() => {
         let category = store.find('category', CD.idOne);
         assert.equal(category.get('children').get('length'), 1);
-        assert.equal(page.categoryOptionLength(), 1);
+        assert.equal(page.categoryOptionLength, 1);
         assert.equal(find(CATEGORY_DROPDOWN).text().trim(), GLOBALMSG.no_results);
     });
     let url = PREFIX + DETAIL_URL + '/';
@@ -413,7 +413,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
             assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
         });
     });
@@ -422,7 +422,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.equal(find('.t-category-name').val(), CD.nameTwo);
-            assert.ok(generalPage.modalIsHidden());
+            assert.ok(generalPage.modalIsHidden);
         });
     });
 });
@@ -435,7 +435,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
+            assert.ok(generalPage.modalIsVisible);
         });
     });
     generalPage.clickModalRollback();

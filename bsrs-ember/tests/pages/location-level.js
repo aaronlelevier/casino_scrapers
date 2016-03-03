@@ -1,4 +1,4 @@
-import PageObject from '../page-object';
+import PageObject from 'bsrs-ember/tests/page-object';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 
 let { text, visitable, fillable, clickable, count } = PageObject;
