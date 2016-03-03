@@ -1,9 +1,0 @@
-{{#power-select
-  selected=ticket.assignee
-  class="t-ticket-assignee-select"
-  search=(action "update_filter")
-  onchange=(action "selected")
-  as |assignee|
-}}
-  {{concat-name assignee.first_name assignee.last_name}}
-{{/power-select}}
