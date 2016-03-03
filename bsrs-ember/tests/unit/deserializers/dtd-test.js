@@ -42,20 +42,20 @@ test('dtd deserializer returns correct data', (assert) => {
 
 test('dtd deserializer removes m2m dtd-link when server is diff from client', (assert) => {
     const json = DTDF.generate(DTD.idOne);
-    let dtd_link;
+    let dtd, dtd_link;
     run(() => {
-        store.push('dtd', {id: DTD.idOne});
+        dtd = store.push('dtd', {id: DTD.idOne, dtd_link_fks: [DTDL.idOne]});
         store.push('link', {id: LINK.idTwo});
         dtd_link = store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idTwo});
     });
+    assert.ok(dtd.get('linksIsNotDirty'));
     run(() => {
         subject.deserialize(json, DTD.idOne);
     });
-    let dtd = store.find('dtd', DTD.idOne);
+    dtd = store.find('dtd', DTD.idOne);
     assert.equal(dtd.get('dtd_links').get('length'), 1);
     let m2m = store.find('dtd-link', DTDL.idOne);
-    // TODO: how to call `many_to_many_extract` w/ the dtd deserializer if dtd already in store?
-    // assert.ok(m2m.get('removed'));
+    assert.ok(m2m.get('removed'));
 });
 
 test('dtd new definitions from server will not dirty model if clean', (assert) => {
