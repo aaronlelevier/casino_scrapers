@@ -50,7 +50,8 @@
             <section>
                 <div class="col-md-12">
                     {{#form-group title="ticket.label.location-name" for="location"}}
-                    {{ticket-location-select ticket=model}}
+                    <!-- {{ticket-location-select ticket=model}} -->
+                    {{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchRepo="findTicket"}}
                     {{#validation-error-field submitted=submitted field="location" className="validation validation-under t-location-validation-error" model=model validation=locationValidation}}{{t "validation.invalid"}} {{t "ticket.label.location-name"}}{{/validation-error-field}}
                     {{/form-group}}
                 </div>

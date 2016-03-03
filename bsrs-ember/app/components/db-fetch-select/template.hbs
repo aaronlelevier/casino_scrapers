@@ -1,0 +1,11 @@
+{{#power-select
+  selected=selectedAttr
+  class=className
+  search=(action "update_filter")
+  onchange=(action "selected")
+  as |optionModel|
+}}
+{{log (get optionModel dispalyName)}}
+  {{get optionModel displayName}}
+{{/power-select}}
+
