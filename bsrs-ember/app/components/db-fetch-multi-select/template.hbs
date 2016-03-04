@@ -1,0 +1,11 @@
+{{#power-select-multiple
+  selected=selectedAttr
+  onchange=(action "selected")
+  class=className
+  search=(action "update_filter")
+  searchField=displayName
+  as |optionModel|
+}}
+  {{get optionModel displayName}}
+{{/power-select-multiple}}
+

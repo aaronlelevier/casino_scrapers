@@ -3,7 +3,7 @@ import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PersonSingleComponent from 'bsrs-ember/components/people/person-single/component';
-import PersonLocationSelect from 'bsrs-ember/components/people/person-locations-select/component';
+import PersonLocationSelect from 'bsrs-ember/components/db-fetch-multi-select/component';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import LD from 'bsrs-ember/vendor/defaults/location';
@@ -36,22 +36,19 @@ test('locations computed will be filtered by person.role.location_level', (asser
     let location_level_fk = person.get('location_level_fk');
     let person_locations_children = store.find('location', {location_level_fk: location_level_fk});
     let subject = PersonSingleComponent.create({model: person, location_repo: location_repo, eventbus: eventbus, tabList: tabList, person_locations_children: person_locations_children});
-    let location_select = PersonLocationSelect.create({model: person.get('locations'), person: person, repository: location_repo});
-    assert.equal(location_select.get('person_locations_selected').get('length'), 1);
+    let location_select = PersonLocationSelect.create({selectedAttr: person.get('locations'), model: person, repository: location_repo});
     run(function() {
         location_two = store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, person_location_fks: [PERSON_LD.idTwo], location_level_fk: LLD.idOne});
         m2m_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.id, location_pk: LD.idTwo});
     });
     person.set('person_location_fks', [PERSON_LD.idOne, PERSON_LD.idTwo]);
     location_level.set('locations', [LD.idOne, LD.idTwo]);
-    assert.equal(location_select.get('person_locations_selected').get('length'), 2);
     run(function() {
         location_three = store.push('location', {id: LD.unusedId, name: LD.storeNameThree, person_location_fks: [PERSON_LD.idFour], location_level_fk: LLD.idTwo});
         m2m_four = store.push('person-location', {id: PERSON_LD.idFour, person_pk: PD.unusedId, location_pk: LD.unusedId});
     });
     person_two.set('person_location_fks', [PERSON_LD.idThree, PERSON_LD.idFour]);
     location_level_two.set('locations', [LD.unusedId]);
-    assert.equal(location_select.get('person_locations_selected').get('length'), 2);
     assert.equal(person.get('location_level_pk'), LLD.idOne);
     let person_location_one = store.find('person-location', PERSON_LD.idOne);
     let person_location_two = store.find('person-location', PERSON_LD.idTwo);
@@ -69,12 +66,10 @@ test('locations computed will be filtered by person.role.location_level', (asser
     assert.equal(person_location_three.get('removed'), undefined);
     assert.equal(person_location_four.get('removed'), undefined);
     assert.equal(person.get('location_level_pk'), LLD.idTwo);
-    assert.equal(location_select.get('person_locations_selected').get('length'), 0);
     person.change_role(role, role_invalid);
     assert.equal(person_location_one.get('removed'), undefined);
     assert.equal(person_location_two.get('removed'), undefined);
     assert.equal(person_location_three.get('removed'), undefined);
     assert.equal(person_location_four.get('removed'), undefined);
-    assert.equal(location_select.get('person_locations_selected').get('length'), 2);
     assert.equal(person.get('locations').get('length'), 2);
 });

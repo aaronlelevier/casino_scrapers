@@ -22,6 +22,7 @@ function validateSingleChar(middle_init){
 
 var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, EditMixin, {
     repository: inject('person'),
+    locationRepo: inject('location'),
     child_components: ['input-multi-phone', 'input-multi-address', 'input-multi-email'],
     classNames: ['wrapper', 'form'],
     //TODO: what is this used for?
@@ -30,6 +31,10 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Edit
     middleInitialValidation: validate('model.middle_initial', validateSingleChar),
     passwordValidation: validate('model.password', validatePassword),
     changingPassword: false,
+    extra_params: Ember.computed(function(){
+        const model = this.get('model');
+        return {location_level: model.get('location_level_pk')};
+    }),
     actions: {
         save() {
             this.set('submitted', true);

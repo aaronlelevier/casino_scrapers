@@ -978,7 +978,7 @@ test('when you change a related role it will change the related locations as wel
 
 /*PERSON TO LOCATION ONE TO MANY*/
 test('deep link to person and clicking in the person-locations-select component will fire off xhr to get locations with one location to start with', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
         let person = store.find('person', PD.idOne);
         assert.equal(person.get('locations').get('length'), 1);

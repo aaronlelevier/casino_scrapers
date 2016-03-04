@@ -62,7 +62,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
             });
         }
     },
-    findLocationSelect(filter, search_criteria) {
+    findLocationSelect(search_criteria, filter) {
         let url = this.format_url(filter);
         // search_criteria = search_criteria ? search_criteria.trim() : search_criteria;
         if (search_criteria) {
