@@ -8,7 +8,7 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
-import { dtd_payload, dtd_payload_two } from 'bsrs-ember/tests/helpers/payloads/dtd';
+import { dtd_payload,dtd_payload_no_priority, dtd_payload_two } from 'bsrs-ember/tests/helpers/payloads/dtd';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
@@ -55,7 +55,7 @@ test('decision tree definition displays data and saves correctly', (assert) => {
         assert.equal(find('.t-dtd-link-action_button').prop('checked'), LINK.action_buttonOne);
         assert.equal(find('.t-dtd-link-is_header').prop('checked'), LINK.is_headerOne);
         assert.equal(find('.t-dtd-link-request').val(), LINK.requestOne);
-        assert.equal(ticketPage.priorityInput, TP.priorityOne);
+        assert.equal(ticketPage.priorityInput.split(' ')[0], TP.priorityOne);
     });
     xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});
     generalPage.save();
@@ -97,7 +97,7 @@ test('dtd payload to update all fields', (assert) => {
     });
     ticketPage.priorityClickOptionTwo();
     andThen(() => {
-        assert.equal(ticketPage.priorityInput, TP.priorityTwo);
+        assert.equal(ticketPage.priorityInput.split(' ')[0], TP.priorityTwo);
     });
     xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload_two), {}, 200, {});
     generalPage.save();
@@ -110,16 +110,78 @@ test('dtd can clear out link priority', (assert) => {
     page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(ticketPage.priorityInput().split(' ')[0], TP.priorityOne);
+        assert.equal(ticketPage.priorityInput.split(' ')[0], TP.priorityOne);
     });
     ticketPage.removePriority();
     andThen(() => {
-        assert.equal(ticketPage.priorityInput(), '');
+        assert.equal(ticketPage.priorityInput.split(' ')[0], '');
     });
-    delete dtd_payload.links[0].priority;
-    xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});
+    xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload_no_priority), {}, 200, {});
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DTD_URL);
+    });
+});
+
+test('click modal cancel (dtd)', (assert) => {
+    clearxhr(list_xhr);
+    page.visitDetail();
+    andThen(() => {
+        assert.ok(find('.t-dtd-link-action_button').prop('checked'));
+        assert.ok(find('.t-dtd-link-is_header').prop('checked'));
+    });
+    page
+        .keyFillIn(DTD.keyTwo)
+        .descriptionFillIn(DTD.descriptionTwo)
+        .promptFillIn(DTD.promptTwo)
+        .noteFillIn(DTD.noteTwo)
+        .requestFillIn(LINK.requestTwo)
+        .action_buttonClick()
+        .is_headerClick();
+    generalPage.cancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.ok(generalPage.modalIsVisible);
+            assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+        });
+    });
+    generalPage.clickModalCancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.ok(generalPage.modalIsHidden);
+        });
+    });
+});
+
+test('click modal ok (dtd)', (assert) => {
+    page.visitDetail();
+    andThen(() => {
+        assert.ok(find('.t-dtd-link-action_button').prop('checked'));
+        assert.ok(find('.t-dtd-link-is_header').prop('checked'));
+    });
+    page
+        .keyFillIn(DTD.keyTwo)
+        .descriptionFillIn(DTD.descriptionTwo)
+        .promptFillIn(DTD.promptTwo)
+        .noteFillIn(DTD.noteTwo)
+        .requestFillIn(LINK.requestTwo)
+        .action_buttonClick()
+        .is_headerClick();
+    generalPage.cancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.ok(generalPage.modalIsVisible);
+            assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+        });
+    });
+    generalPage.clickModalRollback();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DTD_URL);
+            assert.ok(generalPage.modalIsHidden);
+        });
     });
 });

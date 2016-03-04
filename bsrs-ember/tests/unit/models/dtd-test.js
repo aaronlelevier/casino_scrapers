@@ -101,7 +101,7 @@ test('saveRelated', (assert) => {
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('serialize', (assert) => {
+test('serialize dtd model and links with a priority', (assert) => {
     run(() => {
         dtd = store.push('dtd', {
             id: DTD.idOne,
@@ -125,4 +125,33 @@ test('serialize', (assert) => {
     assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idOne);
     let payload = dtd.serialize();
     assert.deepEqual(payload, dtd_payload);
+});
+
+test('rollbackRelated for related links', (assert) => {
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+    run(() => {
+        store.push('link', {id: LINK.idOne, request: LINK.requestTwo});
+    });
+    assert.ok(link.get('isDirty'));
+    assert.ok(link.get('isDirtyOrRelatedDirty'));
+    dtd.rollbackRelated();
+    assert.ok(link.get('isNotDirty'));
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('rollbackRelated for related links priority', (assert) => {
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+    run(() => {
+        priority = store.push('ticket-priority', {id: TP.priorityOneId, links: [LINK.idOne]});
+        link = store.push('link', {id: LINK.idOne});
+    });
+    assert.ok(link.get('isNotDirty'));
+    assert.ok(link.get('isDirtyOrRelatedDirty'));
+    dtd.rollbackRelated();
+    assert.ok(link.get('isNotDirty'));
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
 });

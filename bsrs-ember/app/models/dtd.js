@@ -51,7 +51,17 @@ var DTDModel = Model.extend(Validations, {
         };
     },
     rollbackRelated() {
+        this.linkRollbackContainer();
+        this.linkRollback();
     },
+    linkRollbackContainer() {
+        const links = this.get('links');
+        links.forEach((link) => {
+            link.rollback();
+            link.rollbackRelated();
+        });
+    },
+    linkRollback: many_to_many_rollback('dtd-link', 'dtd_link_fks', 'dtd_pk'),
     saveRelated(){
         this.saveLinks();
     },

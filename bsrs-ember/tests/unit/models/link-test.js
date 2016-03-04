@@ -86,10 +86,46 @@ test('change_priority changes priority', (assert) => {
     assert.equal(link.get('priority.id'), TP.priorityTwoId);
 });
 
-test('aaron change_priority to null', (assert) => {
+test('change_priority to null', (assert) => {
     assert.equal(link.get('priority.id'), undefined);
     link.change_priority(TP.priorityOneId);
     assert.equal(link.get('priority.id'), TP.priorityOneId);
     link.change_priority(null);
     assert.equal(link.get('priority.id'), null);
 });
+
+test('rollbackRelated priority - value value value', (assert) => {
+    let priority_two;
+    run(() => {
+        priority = store.push('ticket-priority', {id: TP.priorityOneId, links: [LINK.idOne]});
+        priority_two = store.push('ticket-priority', {id: TP.priorityTwoId});
+        link = store.push('link', {id: LINK.idOne, priority_fk: TP.priorityOneId});
+    });
+    assert.equal(link.get('priority.id'), TP.priorityOneId);
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+    link.change_priority(TP.priorityTwoId);
+    assert.equal(link.get('priority.id'), TP.priorityTwoId);
+    assert.ok(link.get('isDirtyOrRelatedDirty'));
+    link.rollbackRelated();
+    assert.equal(link.get('priority.id'), TP.priorityOneId);
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+// TODO - ayl
+// test('rollbackRelated priority - value null value', (assert) => {
+//     let priority_two;
+//     run(() => {
+//         priority = store.push('ticket-priority', {id: TP.priorityOneId, links: [LINK.idOne]});
+//         priority_two = store.push('ticket-priority', {id: TP.priorityTwoId});
+//         link = store.push('link', {id: LINK.idOne, priority_fk: TP.priorityOneId});
+//     });
+//     assert.equal(link.get('priority.id'), TP.priorityOneId);
+//     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+//     link.change_priority(null);
+//     assert.equal(link.get('priority.id'), null);
+//     assert.ok(link.get('isDirtyOrRelatedDirty'));
+//     link.rollbackRelated();
+//     assert.equal(link.get('priority.id'), TP.priorityOneId);
+//     // assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+// });
+
