@@ -51,7 +51,7 @@ test('is_header dirty tracking', (assert) => {
     assert.ok(link.get('isNotDirty'));
 });
 
-test('priority', (assert) => {
+test('priority relationship is setup correctly', (assert) => {
     assert.ok(!link.get('priority'));
     run(() => {
         priority = store.push('ticket-priority', {id: TP.priorityOneId, links: [LINK.idOne]});
@@ -111,21 +111,42 @@ test('rollbackRelated priority - value value value', (assert) => {
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-// TODO - ayl
-// test('rollbackRelated priority - value null value', (assert) => {
-//     let priority_two;
-//     run(() => {
-//         priority = store.push('ticket-priority', {id: TP.priorityOneId, links: [LINK.idOne]});
-//         priority_two = store.push('ticket-priority', {id: TP.priorityTwoId});
-//         link = store.push('link', {id: LINK.idOne, priority_fk: TP.priorityOneId});
-//     });
-//     assert.equal(link.get('priority.id'), TP.priorityOneId);
-//     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
-//     link.change_priority(null);
-//     assert.equal(link.get('priority.id'), null);
-//     assert.ok(link.get('isDirtyOrRelatedDirty'));
-//     link.rollbackRelated();
-//     assert.equal(link.get('priority.id'), TP.priorityOneId);
-//     // assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
-// });
+test('rollbackRelated priority - value null value', (assert) => {
+    let priority_two;
+    run(() => {
+        priority = store.push('ticket-priority', {id: TP.priorityOneId, links: [LINK.idOne]});
+        priority_two = store.push('ticket-priority', {id: TP.priorityTwoId});
+        link = store.push('link', {id: LINK.idOne, priority_fk: TP.priorityOneId});
+    });
+    assert.equal(link.get('priority.id'), TP.priorityOneId);
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+    link.change_priority(null);
+    assert.equal(link.get('priority.id'), null);
+    assert.ok(link.get('isDirtyOrRelatedDirty'));
+    link.rollbackRelated();
+    assert.equal(link.get('priority.id'), TP.priorityOneId);
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+});
 
+test('saveRelated', (assert) => {
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+    link.change_priority(TP.priorityOneId);
+    assert.ok(link.get('isDirtyOrRelatedDirty'));
+    link.saveRelated();
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('saveRelated null priority', (assert) => {
+    let priority_two;
+    run(() => {
+        priority = store.push('ticket-priority', {id: TP.priorityOneId, links: [LINK.idOne]});
+        priority_two = store.push('ticket-priority', {id: TP.priorityTwoId});
+        link = store.push('link', {id: LINK.idOne, priority_fk: TP.priorityOneId});
+    });
+    link.change_priority(null);
+    assert.equal(link.get('priority'), undefined);
+    assert.ok(link.get('isDirtyOrRelatedDirty'));
+    link.saveRelated();
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(link.get('priorityIsNotDirty'));
+});

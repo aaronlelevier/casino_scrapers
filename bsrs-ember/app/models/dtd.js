@@ -22,7 +22,7 @@ var DTDModel = Model.extend(Validations, {
     link_type: attr(''),
     dtd_link_fks: [],
     linksIsDirtyContainer: many_to_many_dirty('dtd_link_ids', 'dtd_link_fks'),
-    linksIsDirty: Ember.computed('links.@each.{isNotDirtyOrRelatedNotDirty}', 'linksIsDirtyContainer', function() {
+    linksIsDirty: Ember.computed('links.@each.{isDirtyOrRelatedDirty}', 'linksIsDirtyContainer', function() {
         const links = this.get('links');
         return links.isAny('isDirtyOrRelatedDirty') || this.get('linksIsDirtyContainer');
     }),
@@ -30,6 +30,7 @@ var DTDModel = Model.extend(Validations, {
     links: many_models('dtd_links', 'link_pk', 'link'),
     dtd_links: many_to_many('dtd-link', 'dtd_pk'),
     dtd_link_ids: many_to_many_ids('dtd_links'),
+    add_link: add_many_to_many('dtd-link', 'link', 'link_pk', 'dtd_pk'),
     remove_link:remove_many_to_many('dtd-link', 'link_pk', 'dtd_links'),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', 'linksIsDirty', function() {
         return this.get('isDirty') || this.get('linksIsDirty');
@@ -63,7 +64,15 @@ var DTDModel = Model.extend(Validations, {
     },
     linkRollback: many_to_many_rollback('dtd-link', 'dtd_link_fks', 'dtd_pk'),
     saveRelated(){
+        this.saveLinksContainer();
         this.saveLinks();
+    },
+    saveLinksContainer() {
+        const links = this.get('links');
+        links.forEach((link) => {
+            link.saveRelated();
+            link.save();
+        });
     },
     saveLinks: many_to_many_save('dtd', 'dtd_links', 'dtd_link_ids', 'dtd_link_fks'),
     removeRecord(){

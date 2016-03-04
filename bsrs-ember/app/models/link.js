@@ -13,11 +13,13 @@ export default Model.extend({
     priority: Ember.computed.alias('belongs_to_priority.firstObject'),
     belongs_to_priority: belongs_to('links', 'ticket-priority'),
     priorityIsDirty: belongs_to_dirty('priority_fk', 'priority'),
+    priorityIsNotDirty: Ember.computed.not('priorityIsDirty'),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', 'priorityIsDirty', function() {
         return this.get('isDirty') || this.get('priorityIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     change_priority: change_belongs_to('links', 'ticket-priority', 'priority'),
+    saveRelated: belongs_to_save('link', 'priority', 'priority_fk'),
     rollbackRelated: belongs_to_rollback('priority_fk', 'priority', 'change_priority'),
     serialize() {
         return {

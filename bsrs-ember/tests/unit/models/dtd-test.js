@@ -13,7 +13,7 @@ var store, dtd, link, priority, uuid;
 
 module('unit: dtd test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-link', 'model:link', 'model:ticket-priority']);
+        store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-link', 'model:link', 'model:ticket-priority', 'service:i18n']);
         run(() => {
             dtd = store.push('dtd', {id: DTD.idOne, dtd_link_fks: [DTDL.idOne]});
             store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
@@ -62,12 +62,12 @@ test('the dtd model is dirty when you change a links request', (assert) => {
 });
 
 test('dtd is dirty when priority is changed on link model', (assert) => {
+    assert.ok(!dtd.get('isDirtyOrRelatedDirty'));
     assert.ok(!link.get('priority'));
     run(() => {
         priority = store.push('ticket-priority', {id: TP.priorityOneId, links: [LINK.idOne]});
         link = store.push('link', {id: LINK.idOne, priority_fk: TP.priorityOneId});
     });
-    assert.ok(dtd.get('isNotDirty'));
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
     run(() => {
@@ -75,8 +75,20 @@ test('dtd is dirty when priority is changed on link model', (assert) => {
         priority = store.push('ticket-priority', {id: TP.priorityTwoId, links: [LINK.idOne]});
     });
     assert.equal(link.get('priority').get('id'), TP.priorityTwoId);
+    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
     assert.ok(link.get('isDirtyOrRelatedDirty'));
-    assert.ok(dtd.get('isNotDirty'));
+});
+
+test('dtd is dirty from priority cache breaking', (assert) => {
+    run(() => {
+        priority = store.push('ticket-priority', {id: TP.priorityOneId, links: [LINK.idOne]});
+        link = store.push('link', {id: LINK.idOne, priority_fk: TP.priorityOneId});
+    });
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+    run(() => {
+        priority = store.push('ticket-priority', {id: TP.priorityOneId, links: []});
+        priority = store.push('ticket-priority', {id: TP.priorityTwoId, links: [LINK.idOne]});
+    });
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
 });
 
@@ -86,9 +98,20 @@ test('dtd is dirty when link is removed', (assert) => {
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
     assert.equal(dtd.get('links').get('length'), 0);
 });
+
+test('add_link dtd is dirty when link is added', (assert) => {
+    assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idOne);
+    dtd.add_link({id: LINK.idTwo});
+    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+    assert.equal(dtd.get('links').get('length'), 2);
+});
+
 /* DTD-LINK M2M: END */
 
 test('saveRelated', (assert) => {
+    run(() => {
+        store.push('ticket-priority', {id: TP.priorityOneId});
+    });
     assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idOne);
     dtd.remove_link(link.get('id'));
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
@@ -99,6 +122,23 @@ test('saveRelated', (assert) => {
     assert.ok(dtd.get('linksIsNotDirty'));
     assert.ok(!dtd.get('linksIsDirtyContainer'));
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+    dtd.add_link({id: LINK.idTwo});
+    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+    assert.equal(dtd.get('links').get('length'), 1);
+    assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idTwo);
+    priority = store.find('ticket-priority', TP.priorityOneId);
+    assert.deepEqual(priority.get('links'), undefined);
+    let link_two = store.find('link', LINK.idTwo);
+    link_two.change_priority(priority.get('id'));
+    assert.deepEqual(priority.get('links'), [LINK.idTwo]);
+    assert.equal(dtd.get('links').objectAt(0).get('priority.id'), TP.priorityOneId);
+    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+    assert.ok(link_two.get('isDirtyOrRelatedDirty'));
+    assert.ok(link_two.get('priorityIsDirty'));
+    dtd.saveRelated();
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(link_two.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(link_two.get('priorityIsNotDirty'));
 });
 
 test('serialize dtd model and links with a priority', (assert) => {

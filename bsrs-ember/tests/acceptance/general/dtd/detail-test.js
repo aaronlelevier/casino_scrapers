@@ -8,7 +8,7 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
-import { dtd_payload,dtd_payload_no_priority, dtd_payload_two } from 'bsrs-ember/tests/helpers/payloads/dtd';
+import { dtd_payload, dtd_payload_update_priority, dtd_payload_no_priority, dtd_payload_two } from 'bsrs-ember/tests/helpers/payloads/dtd';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
@@ -58,6 +58,34 @@ test('decision tree definition displays data and saves correctly', (assert) => {
         assert.equal(ticketPage.priorityInput.split(' ')[0], TP.priorityOne);
     });
     xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), DTD_URL);
+    });
+});
+
+test('dtd payload change priority only', (assert) => {
+    page.visitDetail();
+    andThen(() => {
+        const dtd = store.find('dtd', DTD.idOne);
+        assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+        assert.ok(dtd.get('linksIsNotDirty'));
+        const link = dtd.get('links').objectAt(0);
+        assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+        assert.ok(link.get('priorityIsNotDirty'));
+    });
+    ticketPage.priorityClickDropdown();
+    ticketPage.priorityClickOptionTwo();
+    andThen(() => {
+        assert.equal(ticketPage.priorityInput.split(' ')[0], TP.priorityTwo);
+        const dtd = store.find('dtd', DTD.idOne);
+        assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+        assert.ok(dtd.get('linksIsDirty'));
+        const link = dtd.get('links').objectAt(0);
+        assert.ok(link.get('isDirtyOrRelatedDirty'));
+        assert.ok(link.get('priorityIsDirty'));
+    });
+    xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload_update_priority), {}, 200, {});
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DTD_URL);
