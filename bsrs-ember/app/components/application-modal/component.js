@@ -10,9 +10,7 @@ var ApplicationModalComponent = Ember.Component.extend({
             let action = this.trx.attemptedAction;
             model.rollback();
             model.rollbackRelated();
-            // if(action){
-                this.sendAction(action, tab);
-            // }else{ transition.retry(); }
+            this.sendAction(action, tab);
         },
         cancel_modal() {
             this.sendAction('cancel_modal', this.trx.attemptedTabModel);
