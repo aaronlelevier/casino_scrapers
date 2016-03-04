@@ -36,7 +36,7 @@ moduleForComponent('ticket-assignee-select', 'integration: ticket-assignee-selec
 test('should render a selectbox when person options are empty (initial state of selectize)', function(assert) {
     let ticket_assignee_options = Ember.A([]);
     this.set('ticket', ticket);
-    this.render(hbs`{{ticket-assignee-select ticket=ticket}}`);
+    this.render(hbs`{{db-fetch-select model=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
     clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
@@ -48,8 +48,9 @@ test('should render a selectbox when person options are empty (initial state of 
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
     let ticket_assignee_options = store.find('person');
     person_one.set('assigned_tickets', [TD.idOne]);
-    this.set('ticket', ticket);
-    this.render(hbs`{{ticket-assignee-select ticket=ticket}}`);
+    this.model = ticket;
+    this.set('person_repo', person_repo);
+    this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchRepo="findTicketAssignee"}}`);
     let $component = this.$(`${COMPONENT}`);
     clickTrigger();
     run(() => { typeInSearch('a'); });
@@ -66,8 +67,9 @@ test('should render a selectbox with bound options after type ahead for search',
 
 test('should be able to select new person when one doesnt exist', function(assert) {
     let ticket_assignee_options = store.find('person');
-    this.set('ticket', ticket);
-    this.render(hbs`{{ticket-assignee-select ticket=ticket}}`);
+    this.model = ticket;
+    this.set('person_repo', person_repo);
+    this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchRepo="findTicketAssignee"}}`);
     let $component = this.$(`${COMPONENT}`);
     clickTrigger();
     run(() => { typeInSearch('a'); });
@@ -86,9 +88,10 @@ test('should be able to select new person when one doesnt exist', function(asser
 test('should be able to select same person when ticket already has a person', function(assert) {
     let ticket_assignee_options = store.find('person');
     person_one.set('assigned_tickets', [TD.idOne]);
-    this.set('ticket', ticket);
     this.set('ticket_assignee_options', ticket_assignee_options);
-    this.render(hbs`{{ticket-assignee-select ticket=ticket ticket_assignee_options=ticket_assignee_options}}`);
+    this.model = ticket;
+    this.set('person_repo', person_repo);
+    this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchRepo="findTicketAssignee"}}`);
     let $component = this.$(`${COMPONENT}`);
     clickTrigger();
     run(() => { typeInSearch('a'); });
@@ -113,8 +116,9 @@ test('should be able to select same person when ticket already has a person', fu
 test('should be able to select new person when ticket already has a person', function(assert) {
     let ticket_assignee_options = store.find('person');
     person_one.set('assigned_tickets', [TD.idOne]);
-    this.set('ticket', ticket);
-    this.render(hbs`{{ticket-assignee-select ticket=ticket}}`);
+    this.model = ticket;
+    this.set('person_repo', person_repo);
+    this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchRepo="findTicketAssignee"}}`);
     let $component = this.$(`${COMPONENT}`);
     clickTrigger();
     run(() => { typeInSearch('a'); });

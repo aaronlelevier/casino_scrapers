@@ -7,6 +7,8 @@ import ParentValidationComponent from 'bsrs-ember/mixins/validation/parent';
 import StrictMixin from 'bsrs-ember/mixins/validation/strict';
 
 var TicketNewComponent = ParentValidationComponent.extend(StrictMixin, TabMixin, NewTabMixin, {
+    personRepo: inject('person'),
+    locationRepo: inject('location'),
     child_components: ['parent-ticket-category-select'],
     repository: inject('ticket'),
     requesterValidation: validate('model.requester'),
