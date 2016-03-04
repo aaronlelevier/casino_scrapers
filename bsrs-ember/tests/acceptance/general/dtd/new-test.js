@@ -20,7 +20,7 @@ const BASE_URL = BASEURLS.base_dtd_url;
 const DTD_URL = `${BASE_URL}/index`;
 const DTD_NEW_URL = `${BASE_URL}/new/1`;
 const DTD_NEW_URL_2 = `${BASE_URL}/new/2`;
-const DJANGO_DTD_URL = `${PREFIX}/admin/dtds/`;
+const DJANGO_DTD_URL = `${PREFIX}/dtds/`;
 const DETAIL_URL = `${BASE_URL}/${UUID.value}`;
 const DJANGO_DTD_NEW_URL = `${PREFIX}${DJANGO_DTD_URL}${UUID.value}/`;
 

@@ -4,7 +4,7 @@ import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 
 var DtdNewRoute = TabNewRoute.extend({
     repository: inject('dtd'),
-    redirectRoute: Ember.computed(function() { return 'admin.dtds.index'; }),
+    redirectRoute: Ember.computed(function() { return 'dtds.index'; }),
     modelName: Ember.computed(function() { return 'dtd'; }),
     templateModelField: Ember.computed(function() { return 'Definition'; }),
     model(params) {

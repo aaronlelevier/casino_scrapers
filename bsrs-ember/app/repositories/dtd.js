@@ -6,7 +6,7 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
 
 var PREFIX = config.APP.NAMESPACE;
-var DTD_URL = `${PREFIX}/admin/dtds/`;
+var DTD_URL = `${PREFIX}/dtds/`;
 
 var DTDRepo = Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'dtd'; }),

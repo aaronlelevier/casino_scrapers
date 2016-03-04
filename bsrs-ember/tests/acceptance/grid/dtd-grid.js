@@ -591,7 +591,7 @@ test('save filterset will fire off xhr and add item to the sidebar navigation', 
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=key';
     xhr(sort_one ,'GET',null,{},200,DTDF.sorted_page_one('key'));
     let name = '3';
-    let routePath = 'admin.dtds.index';
+    let routePath = 'dtds.index';
     let url = window.location.toString();
     let query = '?sort=key';
     let section = '.t-grid-wrap';
@@ -614,7 +614,7 @@ test('save filterset will fire off xhr and add item to the sidebar navigation', 
 
 test('delete filterset will fire off xhr and remove item from the sidebar navigation', function(assert) {
     let name = '3';
-    let routePath = 'admin.dtds.index';
+    let routePath = 'dtds.index';
     let query = '?key=3';
     let navigation = '.t-filterset-wrap li';
     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};

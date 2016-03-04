@@ -21,9 +21,9 @@ const NEW_URL = `${BASE_DTD_URL}/new/1`;
 const NEW_URL_2 = `${BASE_DTD_URL}/new/2`;
 const DETAIL_URL = `${BASE_DTD_URL}/${DTD.idOne}`;
 const ROLE_URL = `${BASE_ROLE_URL}/index`;
-const NEW_ROUTE = 'admin.dtds.new';
-const INDEX_ROUTE = 'admin.dtds.index';
-const DETAIL_ROUTE = 'admin.dtds.dtd';
+const NEW_ROUTE = 'dtds.new';
+const INDEX_ROUTE = 'dtds.index';
+const DETAIL_ROUTE = 'dtds.dtd';
 const DOC_TYPE = 'dtd';
 const TAB_TITLE = '.t-tab-title:eq(0)';
 

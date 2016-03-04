@@ -5,7 +5,7 @@ import PriorityMixin from 'bsrs-ember/mixins/route/priority';
 
 export default TabRoute.extend(PriorityMixin, {
     repository: inject('dtd'),
-    redirectRoute: Ember.computed(function() { return 'admin.dtds.index'; }),
+    redirectRoute: Ember.computed(function() { return 'dtds.index'; }),
     modelName: Ember.computed(function() { return 'dtd'; }),
     templateModelField: Ember.computed(function() { return 'key'; }),
     model(params){
