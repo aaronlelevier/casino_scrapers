@@ -289,9 +289,9 @@ test('related address model is dirty when address is dirty (and address is not n
 });
 
 
-test('person is dirty or related is dirty when model has been updated', (assert) => {
+test('scott person is dirty or related is dirty when model has been updated', (assert) => {
     store.clear('person');
-    person = store.push('person', {id: PD.idOne, username: PD.username, phone_number_fks: [PND.idOne], address_fks: [AD.idOne], email_fks: [ED.idOne], locale_fk: LOCALED.idOne, role_fk: RD.idOne});
+    person = store.push('person', {id: PD.idOne, username: PD.username, phone_number_fks: [PND.idOne], status_fk: SD.activeId, address_fks: [AD.idOne], email_fks: [ED.idOne], locale_fk: LOCALED.idOne, role_fk: RD.idOne});
     let phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PNTD.officeId, model_fk: PD.idOne});
     let address = store.push('address', {id: AD.idOne, type: ATD.officeId, model_fk: PD.idOne});
     let email = store.push('email', {id: ED.idOne, type: ETD.workId, model_fk: PD.idOne});
