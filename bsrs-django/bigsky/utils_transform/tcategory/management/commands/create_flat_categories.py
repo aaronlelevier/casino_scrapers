@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand
 
-from category.models import Category
 from utils_transform.tcategory.tests.factory import (create_category_type,
     create_category_trade, create_category_issue)
 

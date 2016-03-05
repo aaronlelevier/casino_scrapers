@@ -13,7 +13,7 @@ def get_random_data(fields):
         if f == 'cost_amount':
             data[f] = random.choice(string.digits)
         else:
-            data[f] = random.choice(string.ascii_letters)
+            data[f] = "".join([random.choice(string.ascii_letters) for x in range(10)])
 
     return data
 

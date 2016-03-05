@@ -1,10 +1,11 @@
 from django.test import TestCase
 
 from category.models import Category, LABEL_TYPE, LABEL_TRADE, LABEL_ISSUE, LABEL_SUB_ISSUE
-from utils_transform.tcategory.models import CategoryType
 from utils_transform.tcategory.management.commands._etl_utils import (
     resolve_cost_amount, create_category_from_category_type,
-    create_category_from_category_trade, create_category_from_category_issue)
+    create_category_from_category_trade, create_category_from_category_issue,
+    run_category_trade_migrations, run_category_issue_migrations,
+    run_category_type_migrations,)
 from utils_transform.tcategory.tests.factory import (create_category_type,
     create_category_trade, create_category_issue)
 
@@ -28,6 +29,8 @@ class EtlUtilTests(TestCase):
         self.assertIsInstance(type_, Category)
         self.assertIsNone(type_.cost_amount)
 
+    # type
+
     def test_create_category_from_category_type(self):
         domino_type = create_category_type()
 
@@ -40,6 +43,16 @@ class EtlUtilTests(TestCase):
         self.assertEqual(type_.subcategory_label, LABEL_TRADE)
         self.assertEqual(type_.cost_amount, domino_type.cost_amount)
         self.assertEqual(type_.cost_code, domino_type.cost_code)
+
+    def test_run_category_type_migrations(self):
+        domino_type = create_category_type()
+
+        run_category_type_migrations()
+
+        category = Category.objects.get(name=domino_type.name)
+        self.assertEqual(category.description, domino_type.description)
+
+    # trade
 
     def test_create_category_from_category_trade(self):
         domino_type = create_category_type()
@@ -57,6 +70,20 @@ class EtlUtilTests(TestCase):
         self.assertEqual(trade.cost_code, domino_trade.cost_code)
         self.assertEqual(trade.parent, type_)
 
+    def test_run_category_trade_migrations(self):
+        domino_type = create_category_type()
+        domino_trade = create_category_trade(domino_type)
+        type_ = create_category_from_category_type(domino_type)
+        self.assertEqual(type_.label, LABEL_TYPE)
+        self.assertEqual(type_.name, domino_trade.type_name)
+
+        run_category_trade_migrations()
+
+        trade = Category.objects.get(label=LABEL_TRADE, name=domino_trade.name)
+        self.assertEqual(trade.parent, type_)
+
+    # issue
+
     def test_create_category_from_category_issue(self):
         domino_trade = create_category_trade()
         domino_issue = create_category_issue()
@@ -71,4 +98,16 @@ class EtlUtilTests(TestCase):
         self.assertEqual(issue.subcategory_label, LABEL_SUB_ISSUE)
         self.assertEqual(issue.cost_amount, domino_issue.cost_amount)
         self.assertEqual(issue.cost_code, domino_issue.cost_code)
+        self.assertEqual(issue.parent, trade)
+
+    def test_run_category_issue_migrations(self):
+        domino_trade = create_category_trade()
+        domino_issue = create_category_issue(domino_trade)
+        trade = create_category_from_category_trade(domino_trade)
+        self.assertEqual(trade.label, LABEL_TRADE)
+        self.assertEqual(trade.name, domino_issue.trade_name)
+
+        run_category_issue_migrations()
+
+        issue = Category.objects.get(label=LABEL_ISSUE, name=domino_issue.name)
         self.assertEqual(issue.parent, trade)

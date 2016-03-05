@@ -51,8 +51,6 @@ LOCAL_APPS = [
     'work_order',
     'work_request',
     'utils',
-    # 'utils_transform.tlocation',
-    # 'utils_transform.tcategory',
     ]
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -109,6 +107,12 @@ DATABASES = {
 
 # COMMENT OUT: ETL Domino -> to -> Django dome for the time being, so the ``transforms``
 #   flat database is not needed for now.
+# TRANSFORM_APPS = [
+#     'utils_transform.tlocation',
+#     'utils_transform.tcategory',
+# ]
+# INSTALLED_APPS = INSTALLED_APPS + TRANSFORM_APPS
+
 # DATABASES['transforms'] = {
 #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
 #     'NAME': 'transforms',
