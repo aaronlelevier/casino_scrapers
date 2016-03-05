@@ -6,8 +6,9 @@ var DBFetch = Ember.Component.extend({
         selected(new_selection) {
             const model = this.get('model');
             const multi_attrs = this.get('multiAttr');
-            const old_selection = model.get(`${multi_attrs}s`);
-            const old_selection_ids = model.get(`${multi_attrs}_ids`);
+            const multi_attrs_ids = this.get('multiAttrIds');
+            const old_selection = model.get(multi_attrs);
+            const old_selection_ids = model.get(multi_attrs_ids);
             const new_selection_ids = new_selection.mapBy('id');
             const add_func = this.get('add_func');
             const remove_func = this.get('remove_func');

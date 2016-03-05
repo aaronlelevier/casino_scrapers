@@ -97,7 +97,7 @@ test('clicking between person detail and ticket detail will not dirty the active
     });
 });
 
-test('filter tickets by their location matching the logged in Persons location', (assert) => {
+test('scott filter tickets by their location matching the logged in Persons location', (assert) => {
     // Tickets - are all viewable
     ajax(`${PREFIX}${BASEURLS.base_tickets_url}/?page=1`, 'GET', null, {}, 200, TF.list());
     visit(TICKET_LIST_URL);
@@ -106,7 +106,9 @@ test('filter tickets by their location matching the logged in Persons location',
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     });
     // Person - remove Locations
-    ajax(`${PREFIX}${PEOPLE_DONALD_DETAIL_URL}/`, 'GET', null, {}, 200, PF.detail(PD.idDonald));
+    const drumpf = PF.detail(PD.idDonald);
+    drumpf.fullname = drumpf.first_name + ' ' + drumpf.last_name;
+    ajax(`${PREFIX}${PEOPLE_DONALD_DETAIL_URL}/`, 'GET', null, {}, 200, drumpf);
     visit(PEOPLE_DONALD_DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_DONALD_DETAIL_URL);

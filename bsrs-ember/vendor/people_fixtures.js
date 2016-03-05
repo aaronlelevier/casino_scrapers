@@ -15,10 +15,14 @@ var BSRS_PEOPLE_FACTORY = (function() {
     };
     factory.prototype.get = function(i, first_name, last_name) {
         //right now function used for tickets
+        var first_name = first_name || this.person_defaults.first_name;
+        var last_name = last_name || this.person_defaults.last_name;
+        var fullname = first_name + ' ' + last_name;
         return {
             id: i || this.person_defaults.id,
-            first_name: first_name || this.person_defaults.first_name,
-            last_name: last_name || this.person_defaults.last_name,
+            first_name: first_name,
+            last_name: last_name,
+            fullname: fullname,
             // email: this.person_defaults.emails,
             role: this.person_defaults.role,
             status: this.person_defaults.status
@@ -82,6 +86,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
             person.username = 'mgibson' + i;
             person.first_name = 'Mel' + i;
             person.last_name = 'Gibson' + i;
+            person.fullname = person.first_name + ' ' + person.last_name;
             person.title = i + ' MVP';
             response.push(person);
         }
