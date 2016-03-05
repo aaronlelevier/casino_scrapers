@@ -97,7 +97,7 @@ test('clicking between person detail and ticket detail will not dirty the active
     });
 });
 
-test('scott filter tickets by their location matching the logged in Persons location', (assert) => {
+test('filter tickets by their location matching the logged in Persons location', (assert) => {
     // Tickets - are all viewable
     ajax(`${PREFIX}${BASEURLS.base_tickets_url}/?page=1`, 'GET', null, {}, 200, TF.list());
     visit(TICKET_LIST_URL);

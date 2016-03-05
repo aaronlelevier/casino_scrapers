@@ -26,6 +26,7 @@ module('unit: person test', {
         run(function() {
             person = store.push('person', {id: PD.idOne, first_name: PD.first_name, last_name: PD.last_name, role_fk: RD.idOne, status_fk: SD.activeId, locale_fk: LOCALED.idOne});
             role = store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.idOne]});
+            store.push('status', {id: SD.activeId, people: [PD.idOne]});
             store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]}); 
         });
     }
@@ -101,6 +102,7 @@ test('rollback person will set locale to current locale_fk', (assert) => {
     person.rollbackRelated();
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty')); 
     assert.ok(!person.get('localeIsDirty')); 
+    assert.ok(person.get('locationsIsNotDirty')); 
     assert.equal(person.get('locale.id'), LOCALED.idOne); 
     assert.equal(person.get('locale_fk'), LOCALED.idOne); 
 });
