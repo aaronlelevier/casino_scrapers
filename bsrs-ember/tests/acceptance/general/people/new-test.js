@@ -43,7 +43,7 @@ module('Acceptance | people-new', {
         list_xhr = xhr(endpoint + '?page=1','GET',null,{},200,PF.empty());
         detailEndpoint = `${PREFIX}${BASE_PEOPLE_URL}/`;
         people_detail_data = {id: UUID.value, username: PD.username,
-            role: RF.get() , phone_numbers:[], addresses: [], locations: [], status_fk: SD.activeId};
+            role: RF.get() , phone_numbers:[], addresses: [], locations: [], status_fk: SD.activeId, locale: PD.locale_id};
         detail_xhr = xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
         original_uuid = random.uuid;
         random.uuid = function() { return UUID.value; };
