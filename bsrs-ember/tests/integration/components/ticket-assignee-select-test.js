@@ -50,7 +50,7 @@ test('should render a selectbox with bound options after type ahead for search',
     person_one.set('assigned_tickets', [TD.idOne]);
     this.model = ticket;
     this.set('person_repo', person_repo);
-    this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchRepo="findTicketAssignee"}}`);
+    this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
     let $component = this.$(`${COMPONENT}`);
     clickTrigger();
     run(() => { typeInSearch('a'); });
@@ -69,7 +69,7 @@ test('should be able to select new person when one doesnt exist', function(asser
     let ticket_assignee_options = store.find('person');
     this.model = ticket;
     this.set('person_repo', person_repo);
-    this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchRepo="findTicketAssignee"}}`);
+    this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
     let $component = this.$(`${COMPONENT}`);
     clickTrigger();
     run(() => { typeInSearch('a'); });
@@ -91,7 +91,7 @@ test('should be able to select same person when ticket already has a person', fu
     this.set('ticket_assignee_options', ticket_assignee_options);
     this.model = ticket;
     this.set('person_repo', person_repo);
-    this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchRepo="findTicketAssignee"}}`);
+    this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
     let $component = this.$(`${COMPONENT}`);
     clickTrigger();
     run(() => { typeInSearch('a'); });
@@ -118,7 +118,7 @@ test('should be able to select new person when ticket already has a person', fun
     person_one.set('assigned_tickets', [TD.idOne]);
     this.model = ticket;
     this.set('person_repo', person_repo);
-    this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchRepo="findTicketAssignee"}}`);
+    this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
     let $component = this.$(`${COMPONENT}`);
     clickTrigger();
     run(() => { typeInSearch('a'); });

@@ -1,7 +1,7 @@
 {{#power-select
   selected=selectedAttr
   class=className
-  search=(action "update_filter")
+  search=(perform searchRepo)
   onchange=(action "selected")
   as |optionModel|
 }}

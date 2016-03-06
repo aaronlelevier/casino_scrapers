@@ -15,7 +15,8 @@ module.exports = function(defaults) {
       prepend: '/static/'
     },
     babel: {
-        optional: ['es7.decorators']
+        optional: ['es7.decorators'],
+        includePolyfill: true
     },
     minifyJS: {
         enabled: false

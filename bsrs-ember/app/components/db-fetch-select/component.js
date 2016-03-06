@@ -1,7 +1,18 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
+import { task, timeout } from 'ember-concurrency';
+
+const DEBOUNCE_MS = 250;
 
 var DBFetch = Ember.Component.extend({
+    searchRepo: task(function * (search) {
+        if (Ember.isBlank(search)) { return []; }
+        yield timeout(DEBOUNCE_MS);
+        const repo = this.get('repository');
+        const searchRepo = this.get('searchMethod');
+        const json = yield repo[searchRepo](search);
+        return json;
+    }).restartable(),
     actions: {
         selected(item) {
             const model = this.get('model');
@@ -12,16 +23,6 @@ var DBFetch = Ember.Component.extend({
             } else {
                 model[remove_func]();
             }
-        },
-        update_filter(search) {
-            const repo = this.get('repository');
-            const searchRepo = this.get('searchRepo');
-            return new Ember.RSVP.Promise((resolve, reject) => {
-                Ember.run.later(() => {
-                    if (Ember.isBlank(search)) { return resolve([]); }
-                    resolve(repo[searchRepo](search));
-                }, config.DEBOUNCE_TIMEOUT_INTERVAL);
-            });
         }
     }
 });
