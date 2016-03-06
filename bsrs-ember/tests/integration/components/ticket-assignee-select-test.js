@@ -34,7 +34,6 @@ moduleForComponent('ticket-assignee-select', 'integration: ticket-assignee-selec
 });
 
 test('should render a selectbox when person options are empty (initial state of selectize)', function(assert) {
-    let ticket_assignee_options = Ember.A([]);
     this.set('ticket', ticket);
     this.render(hbs`{{db-fetch-select model=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
@@ -46,7 +45,6 @@ test('should render a selectbox when person options are empty (initial state of 
 });
 
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
-    let ticket_assignee_options = store.find('person');
     person_one.set('assigned_tickets', [TD.idOne]);
     this.model = ticket;
     this.set('person_repo', person_repo);
@@ -56,17 +54,16 @@ test('should render a selectbox with bound options after type ahead for search',
     run(() => { typeInSearch('a'); });
     return waitFor().
         then(() => {
-            assert.equal($(`${DROPDOWN}`).length, 1);
-            assert.equal($('.ember-power-select-option').length, 3);
-            assert.equal($('li.ember-power-select-option:eq(0)').text().trim(), `${PD.nameOne} ${PD.lastNameOne}`);
-            assert.equal($('li.ember-power-select-option:eq(1)').text().trim(), `${PD.nameTwo} ${PD.lastNameTwo}`);
-            assert.equal($('li.ember-power-select-option:eq(2)').text().trim(), `${PD.nameThree} ${PD.lastNameThree}`);
-            assert.equal($(`${PowerSelect}`).text().trim(), `${PD.nameOne} ${PD.lastNameOne}`);
-        });
+        assert.equal($(`${DROPDOWN}`).length, 1);
+        assert.equal($('.ember-power-select-option').length, 3);
+        assert.equal($('li.ember-power-select-option:eq(0)').text().trim(), `${PD.nameOne} ${PD.lastNameOne}`);
+        assert.equal($('li.ember-power-select-option:eq(1)').text().trim(), `${PD.nameTwo} ${PD.lastNameTwo}`);
+        assert.equal($('li.ember-power-select-option:eq(2)').text().trim(), `${PD.nameThree} ${PD.lastNameThree}`);
+        assert.equal($(`${PowerSelect}`).text().trim(), `${PD.nameOne} ${PD.lastNameOne}`);
+    });
 });
 
 test('should be able to select new person when one doesnt exist', function(assert) {
-    let ticket_assignee_options = store.find('person');
     this.model = ticket;
     this.set('person_repo', person_repo);
     this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
@@ -75,20 +72,18 @@ test('should be able to select new person when one doesnt exist', function(asser
     run(() => { typeInSearch('a'); });
     return waitFor().
         then(() => {
-            assert.equal($(`${DROPDOWN}`).length, 1);
-            assert.equal($('.ember-power-select-options > li').length, 3);
-            run(() => {
-                $(`.ember-power-select-option:contains(${PD.nameOne})`).mouseup();
-            });
-            assert.equal($(`${PowerSelect}`).text().trim(), `${PD.nameOne} ${PD.lastNameOne}`);
-            assert.equal(ticket.get('assignee').get('id'), PD.idOne);
+        assert.equal($(`${DROPDOWN}`).length, 1);
+        assert.equal($('.ember-power-select-options > li').length, 3);
+        run(() => {
+            $(`.ember-power-select-option:contains(${PD.nameOne})`).mouseup();
         });
+        assert.equal($(`${PowerSelect}`).text().trim(), `${PD.nameOne} ${PD.lastNameOne}`);
+        assert.equal(ticket.get('assignee').get('id'), PD.idOne);
+    });
 });
 
 test('should be able to select same person when ticket already has a person', function(assert) {
-    let ticket_assignee_options = store.find('person');
     person_one.set('assigned_tickets', [TD.idOne]);
-    this.set('ticket_assignee_options', ticket_assignee_options);
     this.model = ticket;
     this.set('person_repo', person_repo);
     this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
@@ -97,24 +92,23 @@ test('should be able to select same person when ticket already has a person', fu
     run(() => { typeInSearch('a'); });
     return waitFor().
         then(() => {
-            assert.equal($(`${DROPDOWN}`).length, 1);
-            assert.equal($('.ember-basic-dropdown-content').length, 1);
-            assert.equal($('.ember-power-select-options > li').length, 3);
-            run(() => {
-                $(`.ember-power-select-option:contains(${PD.nameOne})`).mouseup();
-            });
-            assert.equal($(`${DROPDOWN}`).length, 0);
-            assert.equal($('.ember-basic-dropdown-content').length, 0);
-            assert.equal($('.ember-power-select-options > li').length, 0);
-            assert.equal($(`${PowerSelect}`).text().trim(), `${PD.nameOne} ${PD.lastNameOne}`);
-            assert.equal(ticket.get('assignee').get('id'), PD.idOne);
-            assert.deepEqual(person_one.get('assigned_tickets'), [TD.idOne]);
-            assert.deepEqual(person_two.get('assigned_tickets'), undefined);
+        assert.equal($(`${DROPDOWN}`).length, 1);
+        assert.equal($('.ember-basic-dropdown-content').length, 1);
+        assert.equal($('.ember-power-select-options > li').length, 3);
+        run(() => {
+            $(`.ember-power-select-option:contains(${PD.nameOne})`).mouseup();
+        });
+        assert.equal($(`${DROPDOWN}`).length, 0);
+        assert.equal($('.ember-basic-dropdown-content').length, 0);
+        assert.equal($('.ember-power-select-options > li').length, 0);
+        assert.equal($(`${PowerSelect}`).text().trim(), `${PD.nameOne} ${PD.lastNameOne}`);
+        assert.equal(ticket.get('assignee').get('id'), PD.idOne);
+        assert.deepEqual(person_one.get('assigned_tickets'), [TD.idOne]);
+        assert.deepEqual(person_two.get('assigned_tickets'), undefined);
     });
 });
 
 test('should be able to select new person when ticket already has a person', function(assert) {
-    let ticket_assignee_options = store.find('person');
     person_one.set('assigned_tickets', [TD.idOne]);
     this.model = ticket;
     this.set('person_repo', person_repo);
@@ -124,18 +118,31 @@ test('should be able to select new person when ticket already has a person', fun
     run(() => { typeInSearch('a'); });
     return waitFor().
         then(() => {
-            assert.equal($(`${DROPDOWN}`).length, 1);
-            assert.equal($('.ember-basic-dropdown-content').length, 1);
-            assert.equal($('.ember-power-select-options > li').length, 3);
-            run(() => {
-                $(`.ember-power-select-option:contains(${PD.nameTwo})`).mouseup();
-            });
-            assert.equal($(`${DROPDOWN}`).length, 0);
-            assert.equal($('.ember-basic-dropdown-content').length, 0);
-            assert.equal($('.ember-power-select-options > li').length, 0);
-            assert.equal($(`${PowerSelect}`).text().trim(), `${PD.nameTwo} ${PD.lastNameTwo}`);
-            assert.equal(ticket.get('assignee').get('id'), PD.idTwo);
-            assert.deepEqual(person_one.get('assigned_tickets'), []);
-            assert.deepEqual(person_two.get('assigned_tickets'), [TD.idOne]);
+        assert.equal($(`${DROPDOWN}`).length, 1);
+        assert.equal($('.ember-basic-dropdown-content').length, 1);
+        assert.equal($('.ember-power-select-options > li').length, 3);
+        run(() => {
+            $(`.ember-power-select-option:contains(${PD.nameTwo})`).mouseup();
+        });
+        assert.equal($(`${DROPDOWN}`).length, 0);
+        assert.equal($('.ember-basic-dropdown-content').length, 0);
+        assert.equal($('.ember-power-select-options > li').length, 0);
+        assert.equal($(`${PowerSelect}`).text().trim(), `${PD.nameTwo} ${PD.lastNameTwo}`);
+        assert.equal(ticket.get('assignee').get('id'), PD.idTwo);
+        assert.deepEqual(person_one.get('assigned_tickets'), []);
+        assert.deepEqual(person_two.get('assigned_tickets'), [TD.idOne]);
     });
+});
+
+test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
+    var done = assert.async();
+    this.model = ticket;
+    this.set('person_repo', person_repo);
+    this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
+    let $component = this.$(`${COMPONENT}`);
+    run(() => { typeInSearch('a'); });
+    Ember.run.later(() => {
+        assert.equal($('.ember-power-select-options > li').length, 0);
+        done();
+    }, 50);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
 });

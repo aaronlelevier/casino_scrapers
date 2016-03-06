@@ -44,7 +44,6 @@ moduleForComponent('person-locations-select', 'integration: person-locations-sel
 });
 
 test('should render a selectbox when with no options (initial state)', function(assert) {
-    let person_locations_children = Ember.A([]);
     this.model = person;
     this.selected = person.get('locations');
     this.extra_params = {};
@@ -58,7 +57,6 @@ test('should render a selectbox when with no options (initial state)', function(
 });
 
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
-    let person_locations_children = store.find('location');
     this.model = person;
     this.selected = person.get('locations');
     this.location_repo = location_repo;
@@ -76,4 +74,19 @@ test('should render a selectbox with bound options after type ahead for search',
             assert.equal($(`${PowerSelect} > .ember-power-select-multiple-option`).length, 2);
             assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains(${LD.storeName})`));
         });
+});
+
+test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
+    var done = assert.async();
+    this.model = person;
+    this.selected = person.get('locations');
+    this.location_repo = location_repo;
+    this.extra_params = {};
+    this.render(hbs`{{db-fetch-multi-select model=model multiAttr="location" selectedAttr=selected className="t-person-locations-select" displayName="name" add_func="add_locations" remove_func="remove_locations" repository=location_repo searchMethod="findLocationSelect" extra_params=extra_params}}`);
+    let $component = this.$(`${COMPONENT}`);
+    run(() => { typeInSearch('a'); });
+    Ember.run.later(() => {
+        assert.equal($('.ember-power-select-options > li').length, 1);
+        done();
+    }, 50);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
 });

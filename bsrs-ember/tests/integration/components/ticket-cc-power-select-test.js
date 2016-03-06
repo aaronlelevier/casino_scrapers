@@ -80,3 +80,18 @@ test('should render a selectbox with bound options after type ahead for search',
             assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains('Scooter McGavin')`));
         });
 });
+
+test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
+    var done = assert.async();
+    let ticket_cc_options = store.find('person');
+    this.model = ticket;
+    this.selected = ticket.get('cc');
+    this.person_repo = person_repo;
+    this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_locations" remove_func="remove_locations" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
+    let $component = this.$(`${COMPONENT}`);
+    run(() => { typeInSearch('a'); });
+    Ember.run.later(() => {
+        assert.equal($('.ember-power-select-options > li').length, 1);
+        done();
+    }, 50);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
+});

@@ -2,7 +2,7 @@ import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import { task, timeout } from 'ember-concurrency';
 
-const DEBOUNCE_MS = 250;
+const DEBOUNCE_MS = config.APP.POWER_SELECT_DEBOUNCE;
 
 var DBFetch = Ember.Component.extend({
     searchRepo: task(function * (search) {
