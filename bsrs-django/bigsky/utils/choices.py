@@ -1,59 +1,60 @@
 CURRENCY_CHOICES = (
-    ('usd', 'usd'),
-    ('eur', 'eur'),
-    ('jpy', 'jpy'),
+    ('admin.currency.usd'), ('USD'),
+    ('admin.currency.eur'), ('EUR'),
+    ('admin.currency.jpy'), ('JPY'),
 )
 
 PERSON_STATUS_CHOICES = (
-    ('Active', 'Active'),
-    ('two', 'two'),
+    ('admin.person.status.active', 'Active'),
+    ('admin.person.status.inactive', 'Inactive'),
+    ('admin.person.status.expired', 'Expired'),
 )
 
 CATEGORY_STATUS_CHOICES = (
-    ('Active', 'Active'),
-    ('Inactive', 'Inactive'),
+    ('admin.category.status.active', 'Active'),
+    ('admin.category.status.inactive', 'Inactive'),
 )
 
 ROLE_TYPE_CHOICES = (
-    ('Internal', 'Internal'),
-    ('Third Party', 'Third Party'),
+    ('admin.role.type.internal', 'Internal'),
+    ('admin.role.type.third_party', 'Third Party'),
 )
 
 INVOICE_CHOICES = (
-    ('new', 'new'),
-    ('draft', 'draft'),
+    ('admin.invoice.new', 'New'),
+    ('admin.invoice.draft', 'Draft'),
 )
 
 INVOICE_SELECT_ASSIGN_CHOICES = (
-    ('all', 'all'),
-    ('managers', 'managers'),
+    ('admin.invoice.select_assign.all', 'All'),
+    ('admin.invoice.select_assign.managers', 'Managers'),
 )
 
 CLOSE_WO_ON_APPROVAL_CHOICES = (
-    ('Do not display', 'Do not display'),
-    ('unchecked', 'unchecked'),
-    ('checked', 'checked'),
+    ('admin.work_order.close.do_not_display', 'Do not display'),
+    ('admin.work_order.close.unchecked', 'Unchecked'),
+    ('admin.work_order.close.checked', 'Checked'),
 )
 
 THIRD_PARTY_STATUS_CHOICES = (
-    ('active', 'active'),
-    ('two', 'two'),
+    ('admin.third_party.status.active', 'Active'),
+    ('admin.third_party.status.inactive', 'Inactive'),
 )
 
 TICKET_STATUS_CHOICES = (
-    ('New', 'New'),
-    ('Deferred', 'Deferred'),
-    ('In Progress', 'In Progress'),
-    ('Complete', 'Complete'),
-    ('Denied', 'Denied'),
-    ('Problem Solved', 'Problem Solved'),
-    ('Draft', 'Draft'),
-    ('Unsatisfactory Completion', 'Unsatisfactory Completion'),
+    ('ticket.status.new'), ('New'),
+    ('ticket.status.deferred'), ('Deferred'),
+    ('ticket.status.in_progress'), ('In Progress'),
+    ('ticket.status.complete'), ('Complete'),
+    ('ticket.status.denied'), ('Denied'),
+    ('ticket.status.problem_solved'), ('Problem solved'),
+    ('ticket.status.draft'), ('Draft'),
+    ('ticket.status.unsatisfactory'), ('Unsatisfactory'),
 )
 
 TICKET_PRIORITY_CHOICES = (
-    ('Emergency', 'Emergency'),
-    ('High', 'High'),
-    ('Medium', 'Medium'),
-    ('Low', 'Low'),
+    ('ticket.priority.emergency'), ('Emergency'),
+    ('ticket.priority.high'), ('High'),
+    ('ticket.priority.low'), ('Low'),
+    ('ticket.priority.medium'), ('Medium'),
 )

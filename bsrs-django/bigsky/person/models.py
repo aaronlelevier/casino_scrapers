@@ -274,7 +274,7 @@ class ProxyRole(BaseModel):
 class PersonStatusManager(BaseStatusManager):
 
     def get_or_create_default(self):
-        return self.get_or_create(name=choices.PERSON_STATUS_CHOICES[0][0], default=True)
+        return self.get_or_create(name=choices.PERSON_STATUS_CHOICES[0][0])
 
 
 class PersonStatus(BaseStatusModel):

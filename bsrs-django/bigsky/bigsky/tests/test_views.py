@@ -217,8 +217,8 @@ class BootstrappedDataTests(TestCase):
         configuration = json.loads(self.response.context['role_types_config'])
         self.assertTrue(len(configuration) > 0)
         # the model id shows in the context
-        self.assertEqual("Internal", configuration[0])
-        self.assertEqual("Third Party", configuration[1])
+        self.assertEqual("admin.role.type.internal", configuration[0])
+        self.assertEqual("admin.role.type.third_party", configuration[1])
 
     def test_role__default_name_bool_and_location_level(self):
         [r.delete() for r in Role.objects.all()]
