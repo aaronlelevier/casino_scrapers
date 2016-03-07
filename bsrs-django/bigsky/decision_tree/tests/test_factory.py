@@ -3,6 +3,7 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from category.models import Category
+from category.tests.factory import create_single_category
 from decision_tree.models import TreeField, TreeOption, TreeData, TreeLink
 from decision_tree.tests import factory
 from ticket.models import TicketStatus, TicketPriority
@@ -29,6 +30,16 @@ class FactoryTests(TestCase):
 
         self.assertIsInstance(tree_link, TreeLink)
         self.assertEqual(tree_link.destination, destination)
+
+    def test_create_tree_link__existing(self):
+        create_single_category()
+        self.assertEqual(Category.objects.count(), 1)
+
+        tree_link = factory.create_tree_link()
+
+        self.assertEqual(Category.objects.count(), 1)
+        category = Category.objects.first()
+        self.assertIn(category, tree_link.categories.all())
 
     def test_create_tree_field(self):
         tree_field = factory.create_tree_field(3)
