@@ -9,6 +9,7 @@ export default Model.extend({
     action_button: attr(''),
     is_header: attr(''),
     request: attr(''),
+    text: attr(''),
     priority_fk: undefined,
     priority: Ember.computed.alias('belongs_to_priority.firstObject'),
     belongs_to_priority: belongs_to('links', 'ticket-priority'),
@@ -23,11 +24,13 @@ export default Model.extend({
     rollbackRelated: belongs_to_rollback('priority_fk', 'priority', 'change_priority'),
     serialize() {
         return {
+            id: this.get('id'),
             order: this.get('order'),
             action_button: this.get('action_button'),
             is_header: this.get('is_header'),
             request: this.get('request'),
-            priority: this.get('priority.id')
+            text: this.get('text'),
+            priority: this.get('priority') ? this.get('priority.id') : null,
         };
     }
 });

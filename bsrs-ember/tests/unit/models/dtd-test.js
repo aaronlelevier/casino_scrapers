@@ -159,7 +159,8 @@ test('serialize dtd model and links with a priority', (assert) => {
             action_button: LINK.action_buttonOne,
             is_header: LINK.is_headerOne,
             request: LINK.requestOne,
-            priority_fk: TP.priorityOneId
+            text: LINK.textOne,
+            priority_fk: TP.priorityOneId,
         });
     });
     assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idOne);

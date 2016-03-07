@@ -24,8 +24,6 @@ const BASE_URL = BASEURLS.base_dtd_url;
 const DTD_URL = `${BASE_URL}/index`;
 const DETAIL_URL = `${BASE_URL}/${DTD.idOne}`;
 const DT_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
-// const LETTER_A = {keyCode: 65};
-// const SPACEBAR = {keyCode: 32};
 const BACKSPACE = {keyCode: 8};
 
 let application, store, endpoint, list_xhr, detail_xhr, detail_data;
@@ -104,6 +102,7 @@ test('dtd payload to update all fields', (assert) => {
         .promptFillIn(DTD.promptTwo)
         .noteFillIn(DTD.noteTwo)
         .requestFillIn(LINK.requestTwo)
+        .textFillIn(LINK.textTwo)
         .action_buttonClick()
         .is_headerClick();
     andThen(() => {
@@ -115,6 +114,7 @@ test('dtd payload to update all fields', (assert) => {
         assert.notOk(find('.t-dtd-link-action_button').prop('checked'));
         assert.notOk(find('.t-dtd-link-is_header').prop('checked'));
         assert.equal(find('.t-dtd-link-request').val(), LINK.requestTwo);
+        assert.equal(find('.t-dtd-link-text').val(), LINK.textTwo);
     });
     ticketPage.priorityClickDropdown();
     andThen(() => {
@@ -211,5 +211,45 @@ test('click modal ok (dtd)', (assert) => {
             assert.equal(currentURL(), DTD_URL);
             assert.ok(generalPage.modalIsHidden);
         });
+    });
+});
+
+test('clicking cancel button will take from detail view to list view', (assert) => {
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(),DETAIL_URL);
+    });
+    generalPage.cancel();
+    andThen(() => {
+        assert.equal(currentURL(), DTD_URL);
+    });
+});
+
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+    page.visitDetail();
+    ticketPage.priorityClickDropdown();
+    ticketPage.priorityClickOptionTwo();
+    generalPage.cancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.ok(generalPage.modalIsVisible);
+        });
+    });
+    generalPage.clickModalRollback();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DTD_URL);
+        });
+    });
+});
+
+test('when click delete, dtd is deleted and removed from store', (assert) => {
+    page.visitDetail();
+    xhr(PREFIX + BASE_URL + '/' + DTD.idOne + '/', 'DELETE', null, {}, 204, {});
+    generalPage.delete();
+    andThen(() => {
+        assert.equal(currentURL(), DTD_URL);
+        assert.equal(store.find('dtd', DTD.idOne).get('length'), undefined);
     });
 });

@@ -30,6 +30,8 @@ var DTDPage = PageObject.create({
     is_headerClick: clickable('.t-dtd-link-is_header'),
     request: value('.t-dtd-link-request'),
     requestFillIn: fillable('.t-dtd-link-request'),
+    text: value('.t-dtd-link-text'),
+    textFillIn: fillable('.t-dtd-link-text'),
 });
 
 export default DTDPage;

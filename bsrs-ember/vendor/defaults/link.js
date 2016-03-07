@@ -15,6 +15,8 @@ var BSRS_LINKS_DEFAULTS_OBJECT = (function() {
             is_headerTwo: false,
             requestOne: 'help',
             requestTwo: 'broken',
+            textOne: 'next',
+            textTwo: 'finished',
             priorityOne: this.priority_defaults.priorityOneId,
             priorityTwo: this.priority_defaults.priorityTwoId
         };

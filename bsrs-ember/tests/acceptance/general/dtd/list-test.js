@@ -6,7 +6,9 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
+const ADMIN_URL = BASEURLS.dashboard_url;
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_dtd_url;
 const DT_URL = `${BASE_URL}/index`;
@@ -31,3 +33,15 @@ test('visiting /dtds', (assert) => {
     });
 });
 
+test('admin to dtds list', (assert) => {
+    generalPage.visitDashboard();
+    andThen(() => {
+        assert.equal(currentURL(), ADMIN_URL);
+    });
+    generalPage
+        .clickAdmin()
+        .clickDTD();
+    andThen(() => {
+        assert.equal(currentURL(), DT_URL);
+    });
+});

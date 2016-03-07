@@ -14,11 +14,13 @@ var dtd_payload = {
     note_type: DTD.noteTypeOne,
     link_type: DTD.linkTypeOne,
     links: [{
+        id: LINK.idOne,
         order: LINK.orderOne,
         action_button: LINK.action_buttonOne,
         is_header: LINK.is_headerOne,
         request: LINK.requestOne,
-        priority: TP.priorityOneId
+        text: LINK.textOne,
+        priority: TP.priorityOneId,
     }]
 };
 
@@ -31,10 +33,12 @@ var dtd_payload_update_priority = {
     note_type: DTD.noteTypeOne,
     link_type: DTD.linkTypeOne,
     links: [{
+        id: LINK.idOne,
         order: LINK.orderOne,
         action_button: LINK.action_buttonOne,
         is_header: LINK.is_headerOne,
         request: LINK.requestOne,
+        text: LINK.textOne,
         priority: TP.priorityTwoId
     }]
 };
@@ -48,10 +52,13 @@ var dtd_payload_no_priority = {
     note_type: DTD.noteTypeOne,
     link_type: DTD.linkTypeOne,
     links: [{
+        id: LINK.idOne,
         order: LINK.orderOne,
         action_button: LINK.action_buttonOne,
         is_header: LINK.is_headerOne,
-        request: LINK.requestOne
+        request: LINK.requestOne,
+        text: LINK.textOne,
+        priority: null
     }]
 };
 
@@ -64,10 +71,12 @@ var dtd_payload_two = {
     note_type: DTD.noteTypeOne,
     link_type: DTD.linkTypeOne,
     links: [{
+        id: LINK.idOne,
         order: LINK.orderOne,
         action_button: LINK.action_buttonTwo,
         is_header: LINK.is_headerTwo,
         request: LINK.requestTwo,
+        text: LINK.textTwo,
         priority: TP.priorityTwoId
     }]
 };

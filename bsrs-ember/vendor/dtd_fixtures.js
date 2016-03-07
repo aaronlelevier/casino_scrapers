@@ -22,6 +22,7 @@ var BSRS_DTD_FACTORY = (function() {
                     action_button: this.link.action_buttonOne,
                     is_header: this.link.is_headerOne,
                     request: this.link.requestOne,
+                    text: this.link.textOne,
                     priority_fk: this.link.priorityOne
                 }
             ]
