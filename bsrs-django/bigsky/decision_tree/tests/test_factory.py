@@ -33,11 +33,11 @@ class FactoryTests(TestCase):
 
     def test_create_tree_link__existing(self):
         create_single_category()
-        self.assertEqual(Category.objects.count(), 1)
+        init_count = Category.objects.count()
 
         tree_link = factory.create_tree_link()
 
-        self.assertEqual(Category.objects.count(), 1)
+        self.assertEqual(Category.objects.count(), init_count)
         category = Category.objects.first()
         self.assertIn(category, tree_link.categories.all())
 
