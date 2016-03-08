@@ -24,9 +24,9 @@
                                     {{timestamp-created model=model}}
                                 </div>
                                 <div class="col-md-12">
-                                    {{#parent-ticket-category-select ticket=model as |child_valid|}}
+                                    {{#parent-model-category-select ticket=model as |child_valid|}}
                                     <span class="validation validation-under category-validation-error t-category-validation-error {{child-validation submitted child_valid}}">{{t "validation.invalid"}} {{t "admin.category.label.name"}}</span>
-                                    {{/parent-ticket-category-select}}
+                                    {{/parent-model-category-select}}
                                 </div>
                                 <div class="col-md-12 request-wrap">
                                     <label class="small-label">{{t "ticket.label.request"}}</label>

@@ -553,7 +553,7 @@ test('power select options are rendered immediately when enter detail route and 
         assert.equal(components, 2);
         let ticket = store.find('ticket', TD.idOne);
         assert.equal(ticket.get('top_level_category').get('id'), CD.idThree);
-        assert.equal(ticket.get('ticket_categories_fks').length, 3);
+        assert.equal(ticket.get('model_categories_fks').length, 3);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     });
     page.categoryOneClickDropdown();

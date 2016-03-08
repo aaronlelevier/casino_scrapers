@@ -1,8 +1,8 @@
-<label class="small-label t-ticket-category-label">{{categories_selected.label}}</label>
+<label class="small-label t-model-category-label">{{categories_selected.label}}</label>
 {{#power-select
   selected=categories_selected
   options=options
-  class="category-select t-ticket-category-select"
+  class="category-select t-model-category-select"
   onchange=(action "selected")
   onopen=(action "handleOpen" category.id)
   searchEnabled=false

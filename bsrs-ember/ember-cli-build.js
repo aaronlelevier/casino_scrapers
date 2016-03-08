@@ -80,7 +80,7 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/ticket_activity.js');
       app.import('vendor/defaults/ticket-person.js');
       app.import('vendor/defaults/ticket-priority.js');
-      app.import('vendor/defaults/ticket-category.js');
+      app.import('vendor/defaults/model-category.js');
       app.import('vendor/defaults/translation.js');
   }
   // Use `app.import` to add additional libraries to the generated

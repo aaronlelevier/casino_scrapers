@@ -7,7 +7,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import TPD from 'bsrs-ember/vendor/defaults/ticket-person';
-import TCD from 'bsrs-ember/vendor/defaults/ticket-category';
+import TCD from 'bsrs-ember/vendor/defaults/model-category';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
@@ -17,7 +17,7 @@ var store, ticket, uuid;
 
 module('unit: ticket test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:location', 'model:ticket-person', 'model:ticket-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'model:attachment', 'model:status', 'model:role', 'model:location-level']);
+        store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:location', 'model:ticket-person', 'model:model-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'model:attachment', 'model:status', 'model:role', 'model:location-level']);
         run(() => {
             store.push('status', {id: SD.activeId, name: SD.activeName});
             store.push('role', {id: RD.idOne, name: RD.nameOne, location_level_fk: LLD.idOne});
@@ -492,13 +492,13 @@ test('ticket_cc_ids computed returns a flat list of ids for each person', (asser
 
 /*TICKET TOP LEVEL CATEGORY*/
 test('top level category returned from route with many to many set up with only the top level category', (assert) => {
-    store.push('ticket-category', {id: TCD.idThree, ticket_pk: TD.idOne, category_pk: CD.idThree});
-    store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
-    store.push('ticket-category', {id: TCD.idTwo, ticket_pk: TD.idOne, category_pk: CD.idTwo});
+    store.push('model-category', {id: TCD.idThree, model_pk: TD.idOne, category_pk: CD.idThree});
+    store.push('model-category', {id: TCD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
+    store.push('model-category', {id: TCD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
@@ -508,7 +508,7 @@ test('top level category returned from route with many to many set up with only 
     run(function() {
         store.push('category', {id: CD.idTwo, parent_id: CD.unusedId});
         store.push('category', {id: CD.unusedId, parent_id: null});
-        store.push('ticket-category', {id: 'xx', ticket_pk: TD.idOne, category_pk: CD.unusedId});
+        store.push('model-category', {id: 'xx', model_pk: TD.idOne, category_pk: CD.unusedId});
     });
     assert.equal(ticket.get('categories.length'), 4);
     top = ticket.get('top_level_category');
@@ -516,9 +516,9 @@ test('top level category returned from route with many to many set up with only 
 });
 
 test('top level category returned when parent_id is undefined (race condition for parent not yet loaded)', (assert) => {
-    store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
+    store.push('model-category', {id: TCD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 1);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idOne);
     let top = ticket.get('top_level_category');
@@ -526,14 +526,14 @@ test('top level category returned when parent_id is undefined (race condition fo
 });
 
 test('changing top level category will reset category tree', (assert) => {
-    store.push('ticket-category', {id: TCD.idThree, ticket_pk: TD.idOne, category_pk: CD.idThree});
-    store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
-    store.push('ticket-category', {id: TCD.idTwo, ticket_pk: TD.idOne, category_pk: CD.idTwo});
+    store.push('model-category', {id: TCD.idThree, model_pk: TD.idOne, category_pk: CD.idThree});
+    store.push('model-category', {id: TCD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
+    store.push('model-category', {id: TCD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
     const unused = {id: CD.unusedId, parent_id: null};
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
@@ -544,16 +544,16 @@ test('changing top level category will reset category tree', (assert) => {
 });
 
 test('if category is dirty, it will not save the pushed in category', (assert) => {
-    store.push('ticket-category', {id: TCD.idThree, ticket_pk: TD.idOne, category_pk: CD.idThree});
-    store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
-    store.push('ticket-category', {id: TCD.idTwo, ticket_pk: TD.idOne, category_pk: CD.idTwo});
+    store.push('model-category', {id: TCD.idThree, model_pk: TD.idOne, category_pk: CD.idThree});
+    store.push('model-category', {id: TCD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
+    store.push('model-category', {id: TCD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
     const unused = store.push('category', {id: CD.unusedId, name: CD.nameUnused, parent_id: null});
     const unused_json = {id: CD.unusedId, name: 'who', parent_id: null};
     assert.ok(unused.get('isNotDirtyOrRelatedNotDirty'));
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
@@ -567,14 +567,14 @@ test('if category is dirty, it will not save the pushed in category', (assert) =
 });
 
 test('if no existing category, it will save the pushed in category', (assert) => {
-    store.push('ticket-category', {id: TCD.idThree, ticket_pk: TD.idOne, category_pk: CD.idThree});
-    store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
-    store.push('ticket-category', {id: TCD.idTwo, ticket_pk: TD.idOne, category_pk: CD.idTwo});
+    store.push('model-category', {id: TCD.idThree, model_pk: TD.idOne, category_pk: CD.idThree});
+    store.push('model-category', {id: TCD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
+    store.push('model-category', {id: TCD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
     const unused_json = {id: CD.unusedId, parent_id: null};
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
@@ -585,14 +585,14 @@ test('if no existing category, it will save the pushed in category', (assert) =>
 });
 
 test('removing top level category will reset category tree', (assert) => {
-    store.push('ticket-category', {id: TCD.idThree, ticket_pk: TD.idOne, category_pk: CD.idThree});
-    store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
-    store.push('ticket-category', {id: TCD.idTwo, ticket_pk: TD.idOne, category_pk: CD.idTwo});
+    store.push('model-category', {id: TCD.idThree, model_pk: TD.idOne, category_pk: CD.idThree});
+    store.push('model-category', {id: TCD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
+    store.push('model-category', {id: TCD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
     store.push('category', {id: CD.unusedId, parent_id: null});
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
@@ -602,14 +602,14 @@ test('removing top level category will reset category tree', (assert) => {
 });
 
 test('removing leaf node category will remove leaf node m2m join model', (assert) => {
-    store.push('ticket-category', {id: TCD.idThree, ticket_pk: TD.idOne, category_pk: CD.idThree});
-    store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
-    store.push('ticket-category', {id: TCD.idTwo, ticket_pk: TD.idOne, category_pk: CD.idTwo});
+    store.push('model-category', {id: TCD.idThree, model_pk: TD.idOne, category_pk: CD.idThree});
+    store.push('model-category', {id: TCD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
+    store.push('model-category', {id: TCD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
     store.push('category', {id: CD.unusedId, parent_id: null});
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
@@ -620,14 +620,14 @@ test('removing leaf node category will remove leaf node m2m join model', (assert
 });
 
 test('removing middle node category will remove leaf node m2m join model', (assert) => {
-    store.push('ticket-category', {id: TCD.idThree, ticket_pk: TD.idOne, category_pk: CD.idThree});
-    store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
-    store.push('ticket-category', {id: TCD.idTwo, ticket_pk: TD.idOne, category_pk: CD.idTwo});
+    store.push('model-category', {id: TCD.idThree, model_pk: TD.idOne, category_pk: CD.idThree});
+    store.push('model-category', {id: TCD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
+    store.push('model-category', {id: TCD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
     store.push('category', {id: CD.unusedId, parent_id: null});
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
@@ -638,14 +638,14 @@ test('removing middle node category will remove leaf node m2m join model', (asse
 });
 
 test('rollback categories will also restore the category tree (when top node changed)', (assert) => {
-    store.push('ticket-category', {id: TCD.idThree, ticket_pk: TD.idOne, category_pk: CD.idThree});
-    store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
-    store.push('ticket-category', {id: TCD.idTwo, ticket_pk: TD.idOne, category_pk: CD.idTwo});
+    store.push('model-category', {id: TCD.idThree, model_pk: TD.idOne, category_pk: CD.idThree});
+    store.push('model-category', {id: TCD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
+    store.push('model-category', {id: TCD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
     const unused = {id: CD.unusedId, parent_id: null};
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
@@ -666,14 +666,14 @@ test('rollback categories will also restore the category tree (when top node cha
 });
 
 test('rollback categories will also restore the category tree (when middle node changed)', (assert) => {
-    store.push('ticket-category', {id: TCD.idThree, ticket_pk: TD.idOne, category_pk: CD.idThree});
-    store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
-    store.push('ticket-category', {id: TCD.idTwo, ticket_pk: TD.idOne, category_pk: CD.idTwo});
+    store.push('model-category', {id: TCD.idThree, model_pk: TD.idOne, category_pk: CD.idThree});
+    store.push('model-category', {id: TCD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
+    store.push('model-category', {id: TCD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
     const unused = {id: CD.unusedId, parent_id: CD.idTwo};
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
@@ -696,14 +696,14 @@ test('rollback categories will also restore the category tree (when middle node 
 });
 
 test('rollback categories will also restore the category tree (when leaf node changed)', (assert) => {
-    store.push('ticket-category', {id: TCD.idThree, ticket_pk: TD.idOne, category_pk: CD.idThree});
-    store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
-    store.push('ticket-category', {id: TCD.idTwo, ticket_pk: TD.idOne, category_pk: CD.idTwo});
+    store.push('model-category', {id: TCD.idThree, model_pk: TD.idOne, category_pk: CD.idThree});
+    store.push('model-category', {id: TCD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
+    store.push('model-category', {id: TCD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
     store.push('category', {id: CD.idThree, parent_id: CD.idOne});
     store.push('category', {id: CD.idOne, parent_id: CD.idTwo});
     store.push('category', {id: CD.idTwo, parent_id: null});
     const unused = {id: CD.unusedId, parent_id: CD.idOne};
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
@@ -728,11 +728,11 @@ test('rollback categories will also restore the category tree (when leaf node ch
 });
 
 test('category names computed will return a string of each category name in order of priority', (assert) => {
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
-    store.push('ticket-category', {id: TCD.idThree, ticket_pk: TD.idOne, category_pk: CD.idThree});
-    store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
-    store.push('ticket-category', {id: TCD.idTwo, ticket_pk: TD.idOne, category_pk: CD.idTwo});
-    store.push('ticket-category', {id: 998, ticket_pk: TD.idTwo, category_pk: CD.unusedId});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
+    store.push('model-category', {id: TCD.idThree, model_pk: TD.idOne, category_pk: CD.idThree});
+    store.push('model-category', {id: TCD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
+    store.push('model-category', {id: TCD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
+    store.push('model-category', {id: 998, model_pk: TD.idTwo, category_pk: CD.unusedId});
     store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo, children_fks: [], level: 2});
     store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId, children_fks: [CD.idOne], level: 1});
     store.push('category', {id: CD.idThree, name: CD.nameThree, parent_id: null, children_fks: [CD.idTwo], level: 0});
@@ -752,9 +752,9 @@ test('category names computed will return a string of each category name in orde
 
 /*TICKET TO CATEGORIES M2M*/
 test('categories property only returns the single matching item even when multiple people (categories) exist', (assert) => {
-    store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idTwo});
+    store.push('model-category', {id: TCD.idOne, model_pk: TD.idOne, category_pk: CD.idTwo});
     store.push('category', {id: CD.idTwo});
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne]});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne]});
     ticket.add_category(CD.idTwo);
     let categories = ticket.get('categories');
     assert.equal(categories.get('length'), 1);
@@ -764,9 +764,9 @@ test('categories property only returns the single matching item even when multip
 test('categories property returns multiple matching items when multiple people (categories) exist', (assert) => {
     store.push('category', {id: CD.idOne});
     store.push('category', {id: CD.idTwo});
-    store.push('ticket-category', {id: TCD.idOne, category_pk: CD.idTwo, ticket_pk: TD.idOne});
-    store.push('ticket-category', {id: TCD.idTwo, category_pk: CD.idOne, ticket_pk: TD.idOne});
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo]});
+    store.push('model-category', {id: TCD.idOne, category_pk: CD.idTwo, model_pk: TD.idOne});
+    store.push('model-category', {id: TCD.idTwo, category_pk: CD.idOne, model_pk: TD.idOne});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo]});
     let categories = ticket.get('categories');
     assert.equal(categories.get('length'), 2);
     assert.equal(categories.objectAt(0).get('id'), CD.idOne);
@@ -774,7 +774,7 @@ test('categories property returns multiple matching items when multiple people (
 });
 
 test('categories property will update when the m2m array suddenly has the category pk (starting w/ empty array)', (assert) => {
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: []});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: []});
     let category = store.push('category', {id: CD.idOne});
     assert.equal(ticket.get('categories').get('length'), 0);
     assert.ok(ticket.get('categoriesIsNotDirty'));
@@ -787,8 +787,8 @@ test('categories property will update when the m2m array suddenly has the catego
 });
 
 test('categories property will update when the m2m array suddenly has the category pk', (assert) => {
-    store.push('ticket-category', {id: TCD.idOne, category_pk: CD.idOne, ticket_pk: TD.idOne});
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne]});
+    store.push('model-category', {id: TCD.idOne, category_pk: CD.idOne, model_pk: TD.idOne});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne]});
     let category = store.push('category', {id: CD.idOne});
     let category_two = store.push('category', {id: CD.idTwo});
     assert.equal(ticket.get('categories').get('length'), 1);
@@ -803,8 +803,8 @@ test('categories property will update when the m2m array suddenly has the catego
 });
 
 test('categories property will update when the m2m array suddenly removes the category', (assert) => {
-    let m2m = store.push('ticket-category', {id: TCD.idOne, category_pk: CD.idOne, ticket_pk: TD.idOne});
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne]});
+    let m2m = store.push('model-category', {id: TCD.idOne, category_pk: CD.idOne, model_pk: TD.idOne});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne]});
     let category = store.push('category', {id: CD.idOne});
     assert.equal(ticket.get('categories').get('length'), 1);
     ticket.remove_category(CD.idOne);
@@ -812,9 +812,9 @@ test('categories property will update when the m2m array suddenly removes the ca
 });
 
 test('when categories is changed dirty tracking works as expected (removing)', (assert) => {
-    store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
+    store.push('model-category', {id: TCD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
     let category = store.push('category', {id: CD.idOne});
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne]});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne]});
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     ticket.remove_category(CD.idOne);
@@ -836,10 +836,10 @@ test('when categories is changed dirty tracking works as expected (removing)', (
 });
 
 test('when categories is changed dirty tracking works as expected (replacing)', (assert) => {
-    store.push('ticket-category', {id: TCD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
+    store.push('model-category', {id: TCD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
     store.push('category', {id: CD.idOne});
     store.push('category', {id: CD.idTwo});
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne]});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne]});
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     ticket.remove_category(CD.idOne);
@@ -867,9 +867,9 @@ test('when categories is changed dirty tracking works as expected (replacing)', 
 test('when category is suddently removed it shows as a dirty relationship (when it has multiple locations to begin with)', (assert) => {
     store.push('category', {id: CD.idOne});
     store.push('category', {id: CD.idTwo});
-    store.push('ticket-category', {id: TCD.idOne, category_pk: CD.idOne, ticket_pk: TD.idOne});
-    store.push('ticket-category', {id: TCD.idTwo, category_pk: CD.idTwo, ticket_pk: TD.idOne});
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo]});
+    store.push('model-category', {id: TCD.idOne, category_pk: CD.idOne, model_pk: TD.idOne});
+    store.push('model-category', {id: TCD.idTwo, category_pk: CD.idTwo, model_pk: TD.idOne});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo]});
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -882,9 +882,9 @@ test('when category is suddently removed it shows as a dirty relationship (when 
 test('rollback ticket will reset the previously used people (categories) when switching from valid categories array to nothing', (assert) => {
     store.push('category', {id: CD.idOne});
     store.push('category', {id: CD.idTwo});
-    store.push('ticket-category', {id: TCD.idOne, category_pk: CD.idOne, ticket_pk: TD.idOne});
-    store.push('ticket-category', {id: TCD.idTwo, category_pk: CD.idTwo, ticket_pk: TD.idOne});
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo]});
+    store.push('model-category', {id: TCD.idOne, category_pk: CD.idOne, model_pk: TD.idOne});
+    store.push('model-category', {id: TCD.idTwo, category_pk: CD.idTwo, model_pk: TD.idOne});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo]});
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -913,9 +913,9 @@ test('rollback categories will reset the previous people (categories) when switc
     store.push('category', {id: CD.idOne});
     store.push('category', {id: CD.idTwo});
     store.push('category', {id: CD.unusedId});
-    store.push('ticket-category', {id: TCD.idOne, category_pk: CD.idOne, ticket_pk: TD.idOne});
-    store.push('ticket-category', {id: TCD.idTwo, category_pk: CD.idTwo, ticket_pk: TD.idOne});
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo]});
+    store.push('model-category', {id: TCD.idOne, category_pk: CD.idOne, model_pk: TD.idOne});
+    store.push('model-category', {id: TCD.idTwo, category_pk: CD.idTwo, model_pk: TD.idOne});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo]});
     assert.equal(ticket.get('categories').get('length'), 2);
     ticket.remove_category(CD.idOne);
     assert.equal(ticket.get('categories').get('length'), 1);
@@ -942,9 +942,9 @@ test('rollback categories will reset the previous people (categories) when switc
 test('categories_ids computed returns a flat list of ids for each category', (assert) => {
     store.push('category', {id: CD.idOne});
     store.push('category', {id: CD.idTwo});
-    store.push('ticket-category', {id: TCD.idOne, category_pk: CD.idOne, ticket_pk: TD.idOne});
-    store.push('ticket-category', {id: TCD.idTwo, category_pk: CD.idTwo, ticket_pk: TD.idOne});
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo]});
+    store.push('model-category', {id: TCD.idOne, category_pk: CD.idOne, model_pk: TD.idOne});
+    store.push('model-category', {id: TCD.idTwo, category_pk: CD.idTwo, model_pk: TD.idOne});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo]});
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.deepEqual(ticket.get('categories_ids'), [CD.idOne, CD.idTwo]);
     ticket.remove_category(CD.idOne);
@@ -952,17 +952,17 @@ test('categories_ids computed returns a flat list of ids for each category', (as
     assert.deepEqual(ticket.get('categories_ids'), [CD.idTwo]);
 });
 
-test('ticket_categories_ids computed returns a flat list of ids for each category', (assert) => {
+test('model_categories_ids computed returns a flat list of ids for each category', (assert) => {
     store.push('category', {id: CD.idOne});
     store.push('category', {id: CD.idTwo});
-    store.push('ticket-category', {id: TCD.idOne, category_pk: CD.idOne, ticket_pk: TD.idOne});
-    store.push('ticket-category', {id: TCD.idTwo, category_pk: CD.idTwo, ticket_pk: TD.idOne});
-    ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo]});
+    store.push('model-category', {id: TCD.idOne, category_pk: CD.idOne, model_pk: TD.idOne});
+    store.push('model-category', {id: TCD.idTwo, category_pk: CD.idTwo, model_pk: TD.idOne});
+    ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo]});
     assert.equal(ticket.get('categories').get('length'), 2);
-    assert.deepEqual(ticket.get('ticket_categories_ids'), [TCD.idOne, TCD.idTwo]);
+    assert.deepEqual(ticket.get('model_categories_ids'), [TCD.idOne, TCD.idTwo]);
     ticket.remove_category(CD.idOne);
     assert.equal(ticket.get('categories').get('length'), 1);
-    assert.deepEqual(ticket.get('ticket_categories_ids'), [TCD.idTwo]);
+    assert.deepEqual(ticket.get('model_categories_ids'), [TCD.idTwo]);
 });
 /*END TICKET CATEGORY M2M*/
 
@@ -1234,12 +1234,12 @@ test('rollback location will revert and reboot the dirty location to clean', (as
 test('there is no leaky state when instantiating ticket (set)', (assert) => {
     let ticket_two;
     ticket = store.push('ticket', {id: TD.idOne, name: TD.nameOne});
-    store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne]});
-    assert.deepEqual(ticket.get('ticket_categories_fks'), [TCD.idOne]);
+    store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne]});
+    assert.deepEqual(ticket.get('model_categories_fks'), [TCD.idOne]);
     run(function() {
         ticket_two = store.push('ticket', {id: TD.idTwo, name: TD.nameOne});
     });
-    assert.deepEqual(ticket_two.get('ticket_categories_fks'), []);
+    assert.deepEqual(ticket_two.get('model_categories_fks'), []);
 });
 
 test('attachments property returns associated array or empty array', (assert) => {

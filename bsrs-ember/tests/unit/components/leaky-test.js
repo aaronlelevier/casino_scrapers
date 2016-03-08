@@ -7,7 +7,7 @@ var FirstComponent = ParentValidationComponent.extend({
 });
 
 var LastComponent = ParentValidationComponent.extend({
-    child_components: ['parent-ticket-category-select']
+    child_components: ['parent-model-category-select']
 });
 
 var store, eventbus;

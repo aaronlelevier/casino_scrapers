@@ -1,0 +1,9 @@
+{{model-category-select-top ticket=ticket selection=ticket.top_level_category ticket_category_options=category.children}}
+
+{{#each ticket.sorted_categories as |category index|}}
+  {{#if category.children}}
+  {{model-category-select ticket=ticket index=(plus-one index) category=category ticket_category_options=category.children}}
+  {{/if}}
+{{/each}}
+
+{{yield valid}}

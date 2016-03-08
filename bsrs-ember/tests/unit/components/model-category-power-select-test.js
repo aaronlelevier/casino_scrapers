@@ -1,18 +1,18 @@
 import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import TicketCategories from 'bsrs-ember/components/ticket-category-select/component';
+import TicketCategories from 'bsrs-ember/components/model-category-select/component';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CCD from 'bsrs-ember/vendor/defaults/category-children';
-import TICKET_CD from 'bsrs-ember/vendor/defaults/ticket-category';
+import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 
 var store, run = Ember.run;
 
-module('unit: ticket-category-select component test', {
+module('unit: model-category-select component test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:person', 'model:ticket', 'model:category', 'model:ticket-category', 'model:category-children', 'model:uuid', 'service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:person', 'model:ticket', 'model:category', 'model:model-category', 'model:category-children', 'model:uuid', 'service:i18n']);
     }
 });
 
@@ -39,8 +39,8 @@ test('categories_selected will always return the correct category object based o
     assert.equal(subject_one.get('categories_selected'), undefined);
     assert.equal(subject_two.get('categories_selected'), undefined);
     assert.equal(subject_three.get('categories_selected'), undefined);
-    assert.equal(ticket.get('ticket_categories').get('length'), 0);
-    assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 0);
+    assert.equal(ticket.get('model_categories').get('length'), 0);
+    assert.equal(ticket.get('model_categories_with_removed').get('length'), 0);
     ticket.change_category_tree({id: category_top_level.get('id')});
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.equal(ticket.get('sorted_categories').get('length'), 1);
@@ -48,8 +48,8 @@ test('categories_selected will always return the correct category object based o
     assert.equal(subject_one.get('categories_selected').get('id'), category_top_level.get('id'));
     assert.equal(subject_two.get('categories_selected'), undefined);
     assert.equal(subject_three.get('categories_selected'), undefined);
-    assert.equal(ticket.get('ticket_categories').get('length'), 1);
-    assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 1);
+    assert.equal(ticket.get('model_categories').get('length'), 1);
+    assert.equal(ticket.get('model_categories_with_removed').get('length'), 1);
     ticket.change_category_tree({id: category_two.get('id')});
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.equal(ticket.get('sorted_categories').get('length'), 2);
@@ -58,8 +58,8 @@ test('categories_selected will always return the correct category object based o
     assert.equal(subject_one.get('categories_selected').get('id'), category_top_level.get('id'));
     assert.equal(subject_two.get('categories_selected').get('id'), category_two.get('id'));
     assert.equal(subject_three.get('categories_selected'), undefined);
-    assert.equal(ticket.get('ticket_categories').get('length'), 2);
-    assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 2);
+    assert.equal(ticket.get('model_categories').get('length'), 2);
+    assert.equal(ticket.get('model_categories_with_removed').get('length'), 2);
     ticket.change_category_tree({id: category_one.get('id')});
     assert.equal(ticket.get('categories').get('length'), 3);
     assert.equal(ticket.get('sorted_categories').get('length'), 3);
@@ -69,8 +69,8 @@ test('categories_selected will always return the correct category object based o
     assert.equal(subject_one.get('categories_selected').get('id'), category_top_level.get('id'));
     assert.equal(subject_two.get('categories_selected').get('id'), category_two.get('id'));
     assert.equal(subject_three.get('categories_selected').get('id'), category_one.get('id'));
-    assert.equal(ticket.get('ticket_categories').get('length'), 3);
-    assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 3);
+    assert.equal(ticket.get('model_categories').get('length'), 3);
+    assert.equal(ticket.get('model_categories_with_removed').get('length'), 3);
     //select rando in place of category_two
     ticket.change_category_tree({id: category_rando.get('id')});
     assert.equal(ticket.get('categories').get('length'), 2);
@@ -80,8 +80,8 @@ test('categories_selected will always return the correct category object based o
     assert.equal(subject_one.get('categories_selected').get('id'), category_top_level.get('id'));
     assert.equal(subject_two.get('categories_selected').get('id'), category_rando.get('id'));
     assert.equal(subject_three.get('categories_selected'), undefined);
-    assert.equal(ticket.get('ticket_categories').get('length'), 2);
-    assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 4);
+    assert.equal(ticket.get('model_categories').get('length'), 2);
+    assert.equal(ticket.get('model_categories_with_removed').get('length'), 4);
     ticket.change_category_tree({id: category_two.get('id')});
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.equal(ticket.get('sorted_categories').get('length'), 2);
@@ -90,6 +90,6 @@ test('categories_selected will always return the correct category object based o
     assert.equal(subject_one.get('categories_selected').get('id'), category_top_level.get('id'));
     assert.equal(subject_two.get('categories_selected').get('id'), category_two.get('id'));
     assert.equal(subject_three.get('categories_selected'), undefined);
-    assert.equal(ticket.get('ticket_categories').get('length'), 2);
-    assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 4);
+    assert.equal(ticket.get('model_categories').get('length'), 2);
+    assert.equal(ticket.get('model_categories_with_removed').get('length'), 4);
 });

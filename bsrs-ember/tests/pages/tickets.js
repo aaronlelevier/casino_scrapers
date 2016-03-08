@@ -21,9 +21,9 @@ const CC_THREE = `${CCS}:eq(2)`;
 const PRIORITY = '.t-ticket-priority-select > .ember-basic-dropdown-trigger';
 const LOCATION = '.t-ticket-location-select > .ember-basic-dropdown-trigger';
 const ASSIGNEE = '.t-ticket-assignee-select > .ember-basic-dropdown-trigger';
-const CATEGORY_ONE = '.t-ticket-category-select:eq(0) > .ember-basic-dropdown-trigger';
-const CATEGORY_TWO = '.t-ticket-category-select:eq(1) > .ember-basic-dropdown-trigger';
-const CATEGORY_THREE = '.t-ticket-category-select:eq(2) > .ember-basic-dropdown-trigger';
+const CATEGORY_ONE = '.t-model-category-select:eq(0) > .ember-basic-dropdown-trigger';
+const CATEGORY_TWO = '.t-model-category-select:eq(1) > .ember-basic-dropdown-trigger';
+const CATEGORY_THREE = '.t-model-category-select:eq(2) > .ember-basic-dropdown-trigger';
 const STATUS = '.t-ticket-status-select > .ember-basic-dropdown-trigger';
 
 var TicketPage = PageObject.create({
@@ -46,7 +46,7 @@ var TicketPage = PageObject.create({
   ccOptionLength: count(`${DROPDOWN} > li`),
   ccsSelected: count(CCS),
 
-  powerSelectComponents: count('.t-ticket-category-select'),
+  powerSelectComponents: count('.t-model-category-select'),
   categoryOneClickDropdown: clickable(CATEGORY_ONE),
   categoryOneInput: text(CATEGORY_ONE),
   categoryOneClickOptionOne: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${CD.nameOne})`),

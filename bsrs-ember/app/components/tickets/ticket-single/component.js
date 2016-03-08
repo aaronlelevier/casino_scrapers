@@ -9,7 +9,7 @@ import ParentValidationComponent from 'bsrs-ember/mixins/validation/parent';
 var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMixin, EditMixin, {
     personRepo: inject('person'),
     locationRepo: inject('location'),
-    child_components: ['parent-ticket-category-select', 'ticket-comments-and-file-upload'],
+    child_components: ['parent-model-category-select', 'ticket-comments-and-file-upload'],
     repository: inject('ticket'),
     activityRepository: inject('activity'),
     requestValidation: validate('model.request'),

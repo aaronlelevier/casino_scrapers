@@ -14,7 +14,7 @@ var BSRS_TICKET_CATEGORY_DEFAULTS_OBJECT = (function() {
 if (typeof window === 'undefined') {
     module.exports = new BSRS_TICKET_CATEGORY_DEFAULTS_OBJECT().defaults();
 } else {
-    define('bsrs-ember/vendor/defaults/ticket-category', ['exports'], function (exports) {
+    define('bsrs-ember/vendor/defaults/model-category', ['exports'], function (exports) {
         'use strict';
         return new BSRS_TICKET_CATEGORY_DEFAULTS_OBJECT().defaults();
     });

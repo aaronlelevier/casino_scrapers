@@ -61,7 +61,7 @@ export default GridViewComponent.extend({
             field: 'categories',
             headerLabel: 'ticket.label.category-name',
             headerIsTranslatable: true,
-            classNames: ['ticket-category']
+            classNames: ['model-category']
         },
         {
             field: 'request',

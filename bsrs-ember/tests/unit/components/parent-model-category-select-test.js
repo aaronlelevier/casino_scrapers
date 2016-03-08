@@ -1,18 +1,18 @@
 import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import ParentTicketCategorySelect from 'bsrs-ember/components/parent-ticket-category-select/component';
+import ParentTicketCategorySelect from 'bsrs-ember/components/parent-model-category-select/component';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CCD from 'bsrs-ember/vendor/defaults/category-children';
-import TICKET_CD from 'bsrs-ember/vendor/defaults/ticket-category';
+import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 
 var store, eventbus, ticket, category_one, category_two, category_three, run = Ember.run;
 
-module('unit: parent-ticket-category-select component test', {
+module('unit: parent-model-category-select component test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:person', 'model:ticket', 'model:category', 'model:ticket-category', 'model:category-children', 'model:uuid', 'service:eventbus', 'service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:person', 'model:ticket', 'model:category', 'model:model-category', 'model:category-children', 'model:uuid', 'service:eventbus', 'service:i18n']);
         eventbus = this.container.lookup('service:eventbus');
     }
 });

@@ -63,9 +63,9 @@
                             <section>
                                 <div class="row">
                                     <div class="col-md-12">
-                                      {{#parent-ticket-category-select ticket=model top_level_category_options=top_level_category_options as |child_valid|}}
+                                      {{#parent-model-category-select ticket=model top_level_category_options=top_level_category_options as |child_valid|}}
                                       <span class="validation validation-under t-category-validation-error {{child-validation submitted child_valid}}">{{t "validation.invalid"}} {{t "ticket.label.category-name"}}</span>
-                                      {{/parent-ticket-category-select}}
+                                      {{/parent-model-category-select}}
                                     </div>
                                 </div>
                                 <div class="row">
