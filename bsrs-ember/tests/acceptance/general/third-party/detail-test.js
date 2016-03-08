@@ -54,7 +54,7 @@ test('clicking on a third party name will redirect them to the detail view', (as
 });
 
 test('visiting admin/third-parties detail and update all fields on the record', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let third_party = store.find('third-party').objectAt(0);
@@ -87,7 +87,7 @@ test('visiting admin/third-parties detail and update all fields on the record', 
 });
 
 test('admin/third-parties detail: when editing name to invalid, it checks for validation', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     fillIn('.t-third-party-name', '');
     fillIn('.t-third-party-number', '');
     generalPage.save();
@@ -117,7 +117,7 @@ test('admin/third-parties detail: when editing name to invalid, it checks for va
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
     clearxhr(list_xhr);
-    visit(DETAIL_URL);
+    page.visitDetail();
     fillIn('.t-third-party-name', TPD.nameTwo);
     andThen(() => {
         let third_party = store.find('third-party', TPD.idOne);
@@ -142,7 +142,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     fillIn('.t-third-party-name', TPD.nameTwo);
     generalPage.cancel();
     andThen(() => {
@@ -209,7 +209,7 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
     clearxhr(list_xhr);
     const exception = `This record does not exist.`;
     xhr(`${endpoint}${TPD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), ERROR_URL);
         assert.equal(find('.t-error-message').text(), 'WAT');

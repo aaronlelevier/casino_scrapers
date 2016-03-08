@@ -1,6 +1,7 @@
 import PageObject from 'bsrs-ember/tests/page-object';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import CD from 'bsrs-ember/vendor/defaults/category';
+import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
 let { visitable, fillable, clickable, count, text, value } = PageObject;
 const BASE_URL = BASEURLS.base_categories_url;
@@ -10,7 +11,7 @@ const CATEGORIES = `${CATEGORY} > .ember-power-select-multiple-option`;
 const CATEGORY_ONE = `${CATEGORIES}:eq(0)`;
 const CATEGORY_TWO = `${CATEGORIES}:eq(1)`;
 const CATEGORY_THREE = `${CATEGORIES}:eq(2)`;
-const CATEGORY_DROPDOWN = '.t-category-children-select-dropdown > .ember-power-select-options';
+const CATEGORY_DROPDOWN = multiple_options;
 
 var CategoryPage = PageObject.create({
   visit: visitable('/'),
@@ -27,14 +28,14 @@ var CategoryPage = PageObject.create({
   labelInput: PageObject.value('.t-category-label'),
   subLabelFill: fillable('.t-category-subcategory-label'),
   clickSelectizeOption: clickable('.t-category-children-select div.option:eq(0)'), 
-  categoryClickDropdown: clickable(`${CATEGORY}`),
+  categoryClickDropdown: clickable(CATEGORY),
   categorySelected: text(`${CATEGORY_ONE}`),
   categoryOneRemove: clickable(`${CATEGORY_ONE} > .ember-power-select-multiple-remove-btn`),
   categoryTwoSelected: text(`${CATEGORY_TWO}`),
-  categoryClickOptionOneEq: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:eq(0)`),
-  categoryClickOptionTwoEq: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:eq(1)`),
-  categoryOptionLength: count(`${CATEGORY_DROPDOWN} > li`),
-  categoriesSelected: count(`${CATEGORIES}`),
+  categoryClickOptionOneEq: clickable(`${options} > .ember-power-select-option:eq(0)`),
+  categoryClickOptionTwoEq: clickable(`${options} > .ember-power-select-option:eq(1)`),
+  categoryOptionLength: count(`${options} > li`),
+  categoriesSelected: count(CATEGORIES),
 });
 
 export default CategoryPage;

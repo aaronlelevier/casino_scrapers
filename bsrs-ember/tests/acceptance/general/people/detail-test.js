@@ -34,6 +34,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/person';
 import selectize from 'bsrs-ember/tests/pages/selectize';
 import random from 'bsrs-ember/models/random';
+import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
 const PREFIX = config.APP.NAMESPACE;
 const POWER_SELECT_LENGTH = 10;
@@ -46,7 +47,7 @@ const LETTER_A = {keyCode: 65};
 const LETTER_M = {keyCode: 77};
 const BACKSPACE = {keyCode: 8};
 const LOCATION = '.t-person-locations-select > .ember-basic-dropdown-trigger';
-const LOCATION_DROPDOWN = '.t-person-locations-select-dropdown > .ember-power-select-options';
+const LOCATION_DROPDOWN = options;
 const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-options > .ember-power-select-multiple-option`;
 const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
@@ -72,7 +73,7 @@ module('Acceptance | person detail test', {
 });
 
 test('clicking a persons name will redirect to the given detail view', (assert) => {
-    visit(PEOPLE_URL);
+    page.visitPeople();
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
     });
@@ -84,7 +85,7 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
 
 // can change locale to inactive for person and save (power select)
 test('when you deep link to the person detail view you get bound attrs', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     page.localeClickDropdown();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -184,7 +185,7 @@ test('when changing password to invalid, it checks for validation', (assert) => 
 });
 
 test('payload does not include password if blank or undefined', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     fillIn('.t-person-username', PD.sorted_username);
     let response = PF.detail(PD.idOne);
     let payload = PF.put({id: PD.id, username: PD.sorted_username});
@@ -200,7 +201,7 @@ test('payload does not include password if blank or undefined', (assert) => {
 /* OTHER */
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
     clearxhr(list_xhr);
-    visit(DETAIL_URL);
+    page.visitDetail();
     fillIn('.t-person-username', PD_PUT.username);
     generalPage.cancel();
     andThen(() => {
@@ -221,7 +222,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     fillIn('.t-person-username', PD_PUT.username);
     generalPage.cancel();
     andThen(() => {
@@ -242,7 +243,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 
 test('currency helper displays correct currency format', (assert) => {
     clearxhr(list_xhr);
-    visit(DETAIL_URL);
+    page.visitDetail();
     var symbol = '$';
     andThen(() => {
         assert.equal(find('.t-amount').val(), PD.auth_amount);
@@ -251,7 +252,7 @@ test('currency helper displays correct currency format', (assert) => {
 
 test('when click delete, person is deleted and removed from store', (assert) => {
     clearxhr(list_xhr);
-    visit(DETAIL_URL);
+    page.visitDetail();
     xhr(PREFIX + BASE_PEOPLE_URL + '/' + PD.idOne + '/', 'DELETE', null, {}, 204, {});
     var people_list_data = PF.list();
     people_list_data.results.splice(0,1);
@@ -287,7 +288,7 @@ test('newly added email without a valid name are ignored and removed when user n
 });
 
 test('newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     click('.t-add-btn:eq(0)');
     andThen(() => {
         assert.equal(store.find('phonenumber').get('length'), 3);
@@ -308,7 +309,7 @@ test('newly added phone numbers without a valid number are ignored and removed w
 });
 
 test('newly added addresses without a valid name are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     click('.t-add-address-btn:eq(0)');
     andThen(() => {
         assert.equal(store.find('address').get('length'), 3);
@@ -329,7 +330,7 @@ test('newly added addresses without a valid name are ignored and removed when us
 });
 
 test('emails without a valid name are ignored and removed on save', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     click('.t-add-email-btn:eq(0)');
     andThen(() => {
         let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
@@ -360,7 +361,7 @@ test('emails without a valid name are ignored and removed on save', (assert) => 
 });
 
 test('phone numbers without a valid number are ignored and removed on save', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     click('.t-add-btn:eq(0)');
     andThen(() => {
         let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
@@ -391,7 +392,7 @@ test('phone numbers without a valid number are ignored and removed on save', (as
 });
 
 test('address without a valid address or zip code are ignored and removed on save', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     click('.t-add-address-btn:eq(0)');
     andThen(() => {
         let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
@@ -442,7 +443,7 @@ test('address without a valid address or zip code are ignored and removed on sav
 });
 
 test('when you change a related email numbers type it will be persisted correctly', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     var emails = EF.put({id: ED.idOne, type: ETD.personalId});
     var payload = PF.put({id: PD.id, emails: emails});
     fillIn('.t-multi-email-type:eq(0)', ETD.personalId);
@@ -454,7 +455,7 @@ test('when you change a related email numbers type it will be persisted correctl
 });
 
 test('when you change a related phone numbers type it will be persisted correctly', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     var phone_numbers = PNF.put({id: PND.idOne, type: PNTD.mobileId});
     var payload = PF.put({id: PD.id, phone_numbers: phone_numbers});
     fillIn('.t-multi-phone-type:eq(0)', PNTD.mobileId);
@@ -466,7 +467,7 @@ test('when you change a related phone numbers type it will be persisted correctl
 });
 
 test('when you change a related address type it will be persisted correctly', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     var addresses = AF.put({id: AD.idOne, type: ATD.shippingId});
     var payload = PF.put({id: PD.id, addresses: addresses});
     xhr(url,'PUT',JSON.stringify(payload),{},200);
@@ -478,7 +479,7 @@ test('when you change a related address type it will be persisted correctly', (a
 });
 
 test('when user changes an attribute on email and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     fillIn('.t-multi-email-type:eq(0)', ETD.personalId);
     generalPage.cancel();
     andThen(() => {
@@ -499,7 +500,7 @@ test('when user changes an attribute on email and clicks cancel we prompt them w
 });
 
 test('when user changes an attribute on phonenumber and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     fillIn('.t-multi-phone-type:eq(0)', PNTD.mobileId);
     generalPage.cancel();
     andThen(() => {
@@ -520,7 +521,7 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
 });
 
 test('when user changes an attribute on address and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     fillIn('.t-address-type:eq(0)', ATD.shippingId);
     generalPage.cancel();
     andThen(() => {
@@ -541,7 +542,7 @@ test('when user changes an attribute on address and clicks cancel we prompt them
 });
 
 test('when user removes a phone number clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     click('.t-del-email-btn:eq(0)');
     generalPage.cancel();
     andThen(() => {
@@ -562,7 +563,7 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
 });
 
 test('when user removes a phone number clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     click('.t-del-btn:eq(0)');
     generalPage.cancel();
     andThen(() => {
@@ -583,7 +584,7 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
 });
 
 test('when user removes an address clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     click('.t-del-address-btn:eq(0)');
     generalPage.cancel();
     andThen(() => {
@@ -604,7 +605,7 @@ test('when user removes an address clicks cancel we prompt them with a modal and
 });
 
 test('when you deep link to the person detail view you can remove a new phone number', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         var person = store.find('person', PD.idOne);
@@ -632,7 +633,7 @@ test('when you deep link to the person detail view you can remove a new phone nu
 });
 
 test('when you deep link to the person detail view you can remove a new address', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         var person = store.find('person', PD.idOne);
@@ -662,7 +663,7 @@ test('when you deep link to the person detail view you can remove a new address'
 
 test('when you deep link to the person detail view you can add and remove a new phone number', (assert) => {
     clearxhr(list_xhr);
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         var person = store.find('person', PD.idOne);
@@ -680,7 +681,7 @@ test('when you deep link to the person detail view you can add and remove a new 
 
 test('when you deep link to the person detail view you can add and remove a new address', (assert) => {
     clearxhr(list_xhr);
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         var person = store.find('person', PD.idOne);
@@ -698,7 +699,7 @@ test('when you deep link to the person detail view you can add and remove a new 
 
 test('when you deep link to the person detail view you can change the phone number type and add a new phone number', (assert) => {
     random.uuid = function() { return UUID.value; };
-    visit(DETAIL_URL);
+    page.visitDetail();
     fillIn('.t-input-multi-phone select:eq(0)', PNTD.mobileId);
     click('.t-add-btn:eq(0)');
     fillIn('.t-new-entry:eq(2)', PND.numberThree);
@@ -723,7 +724,7 @@ test('when you deep link to the person detail view you can change the phone numb
 
 test('when you deep link to the person detail view you can change the address type and can add new address with default type', (assert) => {
     random.uuid = function() { return UUID.value; };
-    visit(DETAIL_URL);
+    page.visitDetail();
     fillIn('.t-input-multi-address .t-address-group:eq(0) select:eq(0)', ATD.shippingId);
     click('.t-add-address-btn:eq(0)');
     fillIn('.t-address-address:eq(2)', AD.streetThree);
@@ -748,7 +749,7 @@ test('when you deep link to the person detail view you can change the address ty
 
 
 test('clicking cancel button will take from detail view to list view', (assert) => {
-    visit(PEOPLE_URL);
+    page.visitPeople();
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
     });
@@ -768,7 +769,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
 
 /* ROLE */
 test('when you change a related role it will be persisted correctly', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
         let person = store.find('person', PD.idOne);
         assert.equal(person.get('role_fk'), RD.idOne);
@@ -841,7 +842,7 @@ test('when you deep link to the person detail view you can alter the role and ro
 });
 
 test('when you deep link to the person detail view you can alter the role and change it back without dirtying the person model', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
         clearxhr(detail_xhr);
         //refreshModel will call findById in people repo
@@ -893,7 +894,7 @@ test('when you change a related role it will change the related locations as wel
     let people_list_data_mod = PF.list();
     people_list_data_mod.results[0].role = RD.idTwo;
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data_mod);
-    visit(DETAIL_URL);
+    page.visitDetail();
     let url = PREFIX + DETAIL_URL + "/";
     let role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
     let payload = PF.put({id: PD.id, role: role.id, locations: []});
@@ -930,7 +931,7 @@ test('when you change a related role it will change the related locations as wel
     let people_list_data_mod = PF.list();
     people_list_data_mod.results[0].role = RD.idTwo;
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data_mod);
-    visit(DETAIL_URL);
+    page.visitDetail();
     let url = PREFIX + DETAIL_URL + "/";
     let role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
     let payload = PF.put({id: PD.id, role: role.id, locations: []});
@@ -945,14 +946,12 @@ test('when you change a related role it will change the related locations as wel
         page.locationClickDropdown();
         fillIn(LOCATION_SEARCH, 'a');
         andThen(() => {
-            let locations = store.find('location');
             let person = store.find('person', PD.idOne);
             assert.equal(person.get('locationsIsDirty'), false);
             assert.equal(person.get('locations').get('length'), 1);
         });
         fillIn(LOCATION_SEARCH, '');
         andThen(() => {
-            let locations = store.find('location');
             assert.equal(page.locationOptionLength, 1);
             assert.equal(find(LOCATION_DROPDOWN).text().trim(), GLOBALMSG.power_search);
         });
@@ -1022,7 +1021,7 @@ test('deep link to person and clicking in the person-locations-select component 
 });
 
 test('can remove and add back same location', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     page.locationOneRemove();
     andThen(() => {
         let person = store.find('person', PD.idOne);
@@ -1052,7 +1051,7 @@ test('can remove and add back same location', (assert) => {
 test('starting with multiple locations, can remove all locations (while not populating options) and add back', (assert) => {
     people_detail_data.locations = [...people_detail_data.locations, LF.get_fk(LD.idTwo)];
     people_detail_data.locations[1].name = LD.storeNameTwo;
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
         let person = store.find('person', PD.idOne);
         assert.equal(person.get('locations').get('length'), 2);
@@ -1087,7 +1086,7 @@ test('starting with multiple locations, can remove all locations (while not popu
 });
 
 test('clicking and typing into power select for people will not filter if spacebar pressed', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     fillIn(LOCATION_SEARCH, '');
     andThen(() => {
         assert.equal(page.locationOptionLength, 1);
@@ -1105,7 +1104,7 @@ test('clicking and typing into power select for people will not filter if spaceb
 
 test('when you deep link to the person detail view you can alter the locations and rolling back will reset it', (assert) => {
     clearxhr(detail_xhr);
-    visit(DETAIL_URL);
+    page.visitDetail();
     people_detail_data = PF.detail(PD.idOne);
     people_detail_data.locations = [];
     page.locationClickDropdown();
@@ -1218,7 +1217,7 @@ test('can change locale to inactive for person and save (power select)', (assert
 
 test('when changing the locale for a user (not current user), the language is not updated on the site', (assert) => {
     clearxhr(list_xhr);
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         var person = store.find('person', PD.idOne);

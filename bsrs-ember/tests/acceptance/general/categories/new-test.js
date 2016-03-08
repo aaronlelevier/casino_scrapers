@@ -22,7 +22,7 @@ const CATEGORY_NEW_URL = BASE_URL + '/new/1';
 const LETTER_A = {keyCode: 65};
 const SPACEBAR = {keyCode: 32};
 const CATEGORY = '.t-category-children-select > .ember-basic-dropdown-trigger';
-const CATEGORY_DROPDOWN = '.t-category-children-select-dropdown > .ember-power-select-options';
+const CATEGORY_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 let application, store, payload, list_xhr, children_xhr, original_uuid, run = Ember.run;

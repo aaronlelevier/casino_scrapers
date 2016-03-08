@@ -25,6 +25,7 @@ import page from 'bsrs-ember/tests/pages/tickets';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import timemachine from 'vendor/timemachine';
 import moment from 'moment';
+import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
@@ -41,11 +42,9 @@ const NUMBER_6 = {keyCode: 54};
 const SPACEBAR = {keyCode: 32};
 const BACKSPACE = {keyCode: 8};
 const LOCATION = '.t-ticket-location-select > .ember-basic-dropdown-trigger';
-const LOCATION_DROPDOWN = '.t-ticket-location-select-dropdown > .ember-power-select-options';
+const DROPDOWN = options;
 const ASSIGNEE = '.t-ticket-assignee-select > .ember-basic-dropdown-trigger';
-const ASSIGNEE_DROPDOWN = '.t-ticket-assignee-select-dropdown > .ember-power-select-options';
 const CC = '.t-ticket-cc-select > .ember-basic-dropdown-trigger';
-const CC_DROPDOWN = '.t-ticket-cc-select-dropdown > .ember-power-select-options';
 const CC_SEARCH = '.ember-power-select-trigger-multiple-input';
 const SEARCH = '.ember-power-select-search input';
 const categories = '.categories-power-select-search input';
@@ -308,7 +307,7 @@ test('clicking and typing into power select for people will fire off xhr request
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(page.ccSelected.indexOf(PD.first_name), 2);
         assert.equal(page.ccOptionLength, 1);
-        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), PD.donald);
+        assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), PD.donald);
     });
     page.ccClickDonald();
     andThen(() => {
@@ -324,14 +323,14 @@ test('clicking and typing into power select for people will fire off xhr request
     fillIn(`${CC_SEARCH}`, '');
     andThen(() => {
         assert.equal(page.ccOptionLength, 1);
-        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
+        assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
     });
     fillIn(`${CC_SEARCH}`, 'a');
     andThen(() => {
         assert.equal(page.ccSelected.indexOf(PD.donald), 2);
         assert.equal(page.ccTwoSelected.indexOf(PD.first_name), 2);
         assert.equal(page.ccOptionLength, 1);
-        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), PD.donald);
+        assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), PD.donald);
         let ticket = store.find('ticket', TD.idOne);
         assert.equal(ticket.get('cc').get('length'), 2);
         assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
@@ -345,7 +344,7 @@ test('clicking and typing into power select for people will fire off xhr request
         assert.equal(page.ccSelected.indexOf(PD.donald), 2);
         assert.equal(page.ccTwoSelected.indexOf(PD.first_name), 2);
         assert.equal(page.ccOptionLength, 10);
-        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+        assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
         let ticket = store.find('ticket', TD.idOne);
         assert.equal(ticket.get('cc').get('length'), 2);
         assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
@@ -492,7 +491,7 @@ test('clicking and typing into power select for people will not filter if spaceb
     andThen(() => {
         assert.equal(page.ccSelected.indexOf(PD.first_name), 2);
         assert.equal(page.ccOptionLength, 1);
-        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.no_results);
+        assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
     });
     let response = TF.detail(TD.idOne);
     let payload = TF.put({id: TD.idOne, cc: [PD.idOne]});
@@ -843,14 +842,15 @@ test('location component shows location for ticket and will fire off xhr to fetc
     });
     // </check category tree>
     xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
+    page.categoryThreeClickDropdown();
     page.locationClickDropdown();
     fillIn(`${SEARCH}`, '6');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(page.locationInput, LD.storeName);
         assert.equal(page.locationOptionLength, 2);
-        assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(0)`).text().trim(), LD.storeNameFour);
-        assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(1)`).text().trim(), LD.storeNameTwo);
+        assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), LD.storeNameFour);
+        assert.equal(find(`${DROPDOWN} > li:eq(1)`).text().trim(), LD.storeNameTwo);
     });
     page.locationClickOptionTwo();
     andThen(() => {
@@ -860,14 +860,14 @@ test('location component shows location for ticket and will fire off xhr to fetc
     fillIn(`${SEARCH}`, '');
     andThen(() => {
         assert.equal(page.locationOptionLength, 1);
-        assert.equal(find(`${LOCATION_DROPDOWN}`).text().trim(), GLOBALMSG.power_search);
+        assert.equal(find(`${DROPDOWN}`).text().trim(), GLOBALMSG.power_search);
     });
     fillIn(`${SEARCH}`, '6');
     andThen(() => {
         assert.equal(page.locationInput, LD.storeNameTwo);
         assert.equal(page.locationOptionLength, 2);
-        assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(0)`).text().trim(), LD.storeNameFour);
-        assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(1)`).text().trim(), LD.storeNameTwo);
+        assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), LD.storeNameFour);
+        assert.equal(find(`${DROPDOWN} > li:eq(1)`).text().trim(), LD.storeNameTwo);
     });
     page.locationClickOptionTwo();
     andThen(() => {
@@ -887,7 +887,7 @@ test('location component shows location for ticket and will fire off xhr to fetc
     andThen(() => {
         assert.equal(page.locationInput, LD.storeNameTwo);
         assert.equal(page.locationOptionLength, 1);
-        assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(0)`).text().trim(), LD.storeNameThree);
+        assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), LD.storeNameThree);
     });
     page.locationClickIdThree();
     andThen(() => {
@@ -926,7 +926,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     andThen(() => {
         assert.equal(page.assigneeInput, PD.fullname);
         assert.equal(page.assigneeOptionLength, 10);
-        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+        assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
     });
     page.assigneeClickOptionOne();
     andThen(() => {
@@ -942,7 +942,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     andThen(() => {
         assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
         assert.equal(page.assigneeOptionLength, 10);
-        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+        assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
     });
     page.assigneeClickOptionTwo();
     andThen(() => {
@@ -962,7 +962,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     andThen(() => {
         assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
         assert.equal(page.assigneeOptionLength, 2);
-        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+        assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
     });
     page.assigneeClickOptionOne();
     andThen(() => {

@@ -3,13 +3,9 @@ import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import TPD from 'bsrs-ember/vendor/defaults/third-party';
 import SD from 'bsrs-ember/vendor/defaults/status';
+import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
-let {
-  visitable,
-  text,
-  clickable,
-  count
-} = PageObject;
+let { visitable, text, clickable, count } = PageObject;
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_THIRD_PARTY_URL = BASEURLS.base_third_parties_url;
@@ -21,12 +17,12 @@ const STATUS_DROPDOWN = '.t-person-status-select-dropdown > .ember-power-select-
 export default PageObject.create({
   visit: visitable('/'),
   visitDetail: visitable(DETAIL_URL),
-  statusInput: text(`${STATUS}`),
-  statusClickDropdown: clickable(`${STATUS}`),
-  statusClickOptionOne: clickable(`${STATUS_DROPDOWN} > .ember-power-select-option:contains(${SD.activeNameTranslated})`),
-  statusClickOptionTwo: clickable(`${STATUS_DROPDOWN} > .ember-power-select-option:contains(${SD.inactiveNameTranslated})`),
-  statusOptionLength: count(`${STATUS_DROPDOWN} > li`),
-  statusOne: text(`${STATUS_DROPDOWN} > li:eq(0)`),
-  statusTwo: text(`${STATUS_DROPDOWN} > li:eq(1)`),
-  statusThree: text(`${STATUS_DROPDOWN} > li:eq(2)`),
+  statusInput: text(STATUS),
+  statusClickDropdown: clickable(STATUS),
+  statusClickOptionOne: clickable(`${options} > .ember-power-select-option:contains(${SD.activeNameTranslated})`),
+  statusClickOptionTwo: clickable(`${options} > .ember-power-select-option:contains(${SD.inactiveNameTranslated})`),
+  statusOptionLength: count(`${options} > li`),
+  statusOne: text(`${options} > li:eq(0)`),
+  statusTwo: text(`${options} > li:eq(1)`),
+  statusThree: text(`${options} > li:eq(2)`),
 });

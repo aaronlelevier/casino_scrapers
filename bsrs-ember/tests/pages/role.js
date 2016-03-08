@@ -2,16 +2,17 @@ import PageObject from 'bsrs-ember/tests/page-object';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
+import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
 let { text, visitable, fillable, clickable, count } = PageObject;
 const ROLETYPE = '.t-role-role-type > .ember-basic-dropdown-trigger';
-const ROLETYPE_DROPDOWN = '.t-role-role-type-dropdown > .ember-power-select-options';
+const ROLETYPE_DROPDOWN = options;
 const LOCATIONLEVEL = '.t-location-level-select > .ember-basic-dropdown-trigger';
-const LOCATIONLEVEL_DROPDOWN = '.t-location-level-select-dropdown > .ember-power-select-options';
+const LOCATIONLEVEL_DROPDOWN = options;
 const CATEGORY = '.t-role-category-select > .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
 const CATEGORIES = `${CATEGORY} > .ember-power-select-multiple-option`;
 const CATEGORY_ONE = `${CATEGORIES}:eq(0)`;
-const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-select-options';
+const CATEGORY_DROPDOWN = options;
 
 
 export default PageObject.create({

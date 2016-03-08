@@ -26,21 +26,22 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/location';
 import random from 'bsrs-ember/models/random';
 import {parents_payload, children_payload, email_payload, phone_number_payload, address_put_payload, new_put_payload} from 'bsrs-ember/tests/helpers/payloads/location';
+import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_locations_url;
 const LOCATION_URL = BASE_URL + '/index';
 const LOCATION_NEW_URL = BASE_URL + '/new/1';
 const DJANGO_LOCATION_URL = PREFIX + '/admin/locations/';
-const DETAIL_URL = BASE_URL + '/' +UUID.value;
+const DETAIL_URL = BASE_URL + '/' + UUID.value;
 const DJANGO_LOCATION_NEW_URL = PREFIX + DJANGO_LOCATION_URL +UUID.value + '/';
 const CHILDREN = '.t-location-children-select > .ember-basic-dropdown-trigger';
-const CHILDREN_DROPDOWN = '.t-location-children-select-dropdown > .ember-power-select-options';
-const CHILDREN_SEARCH = '.t-location-children-select-trigger > .ember-power-select-trigger-multiple-input';
+const CHILDREN_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
+const CHILDREN_SEARCH = `${CHILDREN} > .ember-power-select-trigger-multiple-input`;
 const PARENTS = '.t-location-parent-select > .ember-basic-dropdown-trigger';
-const PARENTS_DROPDOWN = '.t-location-parent-select-dropdown > .ember-power-select-options';
-const PARENTS_SEARCH = '.t-location-parent-select-trigger > .ember-power-select-trigger-multiple-input';
-const PARENTS_MULTIPLE_OPTION = '.t-location-parent-select-trigger > .ember-power-select-multiple-option';
+const PARENTS_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
+const PARENTS_SEARCH = `${PARENTS} > .ember-power-select-trigger-multiple-input`;
+const PARENTS_MULTIPLE_OPTION = `.t-location-parent-select > .ember-power-select-trigger > .ember-power-select-multiple-options`;
 
 let application, store, payload, list_xhr, original_uuid;
 
@@ -604,7 +605,7 @@ test('clicking and typing into power select for location will not filter if spac
     fillIn(`${CHILDREN_SEARCH}`, ' ');
     andThen(() => {
         assert.equal(page.childrenOptionLength, 1);
-        assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.no_results);
+        assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
     });
 });
 
@@ -741,6 +742,6 @@ test('clicking and typing into power select for location will not filter if spac
     fillIn(`${PARENTS_SEARCH}`, ' ');
     andThen(() => {
         assert.equal(page.parentsOptionLength, 1);
-        assert.equal(find(`${PARENTS_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.no_results);
+        assert.equal(find(`${PARENTS_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
     });
 });

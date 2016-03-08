@@ -77,8 +77,8 @@ test('filling in location level on location new template will set diabled to fal
     });
     this.all_location_levels = store.find('location-level');
     this.render(hbs`{{locations/location-detail model=model all_location_levels=all_location_levels}}`);
-    assert.equal(this.$('.t-location-children-select-trigger > input').attr('disabled'), 'disabled');
-    assert.equal(this.$('.t-location-parent-select-trigger > input').attr('disabled'), 'disabled');
+    assert.equal(this.$('.t-location-children-select > .ember-basic-dropdown-trigger > input').attr('disabled'), 'disabled');
+    assert.equal(this.$('.t-location-parent-select > .ember-basic-dropdown-trigger > input').attr('disabled'), 'disabled');
     this.$('.t-location-level-select-trigger').mousedown();
     run(() => {
         $(`.ember-power-select-option:contains(${LLD.nameDistrict})`).mouseup();

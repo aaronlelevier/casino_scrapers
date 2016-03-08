@@ -10,6 +10,7 @@ import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/location-level';
+import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
@@ -18,7 +19,7 @@ const DETAIL_URL = BASE_URL + '/' + LLD.idOne;
 const ERROR_URL = BASEURLS.error_url;
 const DISTRICT_DETAIL_URL = BASE_URL + '/' + LLD.idDistrict;
 const LOCATION_LEVEL = '.t-location-level-children-select > .ember-basic-dropdown-trigger';
-const LOCATION_LEVEL_DROPDOWN = '.t-location-level-children-select-dropdown > .ember-power-select-options';
+const LOCATION_LEVEL_DROPDOWN = options;
 const LOCATION_LEVEL_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 var application, store, endpoint, endpoint_detail, list_xhr, detail_xhr, location_level_district_detail_data;

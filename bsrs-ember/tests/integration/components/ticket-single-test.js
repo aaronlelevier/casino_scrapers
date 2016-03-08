@@ -11,7 +11,7 @@ import CD from 'bsrs-ember/vendor/defaults/category';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/ticket-category';
 
 let store, m2m, m2m_two, m2m_three, ticket, category_one, category_two, category_three, run = Ember.run, category_repo;
-const DROPDOWN = '.ember-power-select-dropdown';
+const DROPDOWN = '.ember-basic-dropdown-trigger';
 
 moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
     integration: true,
@@ -70,8 +70,7 @@ test('changing priority changes the class', function(assert) {
     assert.ok(this.$('.tag:eq(0)').hasClass('ticket-priority-emergency'));
     let $component = this.$('.t-ticket-priority-select');
     assert.equal($component.length, 1);
-    this.$('.t-ticket-priority-select-trigger').mousedown();
-    assert.equal($(DROPDOWN).length, 1);
+    this.$('.t-ticket-priority-select > .ember-basic-dropdown-trigger').mousedown();
     run(() => {
         $(`.ember-power-select-option:contains(${TD.priorityTwoKey})`).mouseup();
     });
@@ -91,8 +90,7 @@ test('changing status changes the class', function(assert) {
     assert.ok(this.$('.tag:eq(1)').hasClass('ticket-status-new'));
     let $component = this.$('.t-ticket-status-select');
     assert.equal($component.length, 1);
-    this.$('.t-ticket-status-select-trigger').mousedown();
-    assert.equal($(DROPDOWN).length, 1);
+    this.$('.t-ticket-status-select > .ember-basic-dropdown-trigger').mousedown();
     run(() => {
         $(`.ember-power-select-option:contains(${TD.statusTwoKey})`).mouseup();
     });
