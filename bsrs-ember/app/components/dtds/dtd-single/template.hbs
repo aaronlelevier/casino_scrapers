@@ -80,6 +80,11 @@
                                 {{ticket-priority-select ticket=link priorities=priorities clear=true}}
                             </div>
                         {{/form-group}}
+                        {{#form-group title="admin.dtd.lable.link.status" for="status"}}
+                            <div class="ticket-action status">
+                                {{ticket-status-select ticket=link statuses=statuses clear=true}}
+                            </div>
+                        {{/form-group}}
                     </div>
                 </div>
                 {{/each}}

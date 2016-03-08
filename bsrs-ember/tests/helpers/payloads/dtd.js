@@ -4,6 +4,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
 
 var dtd_payload = {
     id: DTD.idOne,
@@ -21,6 +22,7 @@ var dtd_payload = {
         request: LINK.requestOne,
         text: LINK.textOne,
         priority: TP.priorityOneId,
+        status: TD.statusOneId
     }]
 };
 

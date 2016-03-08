@@ -2,8 +2,9 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import TabRoute from 'bsrs-ember/route/tab/route';
 import PriorityMixin from 'bsrs-ember/mixins/route/priority';
+import StatusMixin from 'bsrs-ember/mixins/route/status';
 
-export default TabRoute.extend(PriorityMixin, {
+export default TabRoute.extend(PriorityMixin, StatusMixin, {
     repository: inject('dtd'),
     redirectRoute: Ember.computed(function() { return 'dtds.index'; }),
     modelName: Ember.computed(function() { return 'dtd'; }),
@@ -17,12 +18,14 @@ export default TabRoute.extend(PriorityMixin, {
         // }
         return {
             model: dtd,
-            priorities: this.get('priorities')
+            priorities: this.get('priorities'),
+            statuses: this.get('statuses')
         };
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
         controller.set('priorities', hash.priorities);
+        controller.set('statuses', hash.statuses);
     },
 });
 

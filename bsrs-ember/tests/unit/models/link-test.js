@@ -4,15 +4,18 @@ import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
 
-var store, priority, link, uuid;
+var store, priority, status, link, uuid;
 
 module('unit: link test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:link', 'model:ticket-priority', 'service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:link', 'model:ticket-priority', 'model:ticket-status', 'service:i18n']);
         run(() => {
             priority = store.push('ticket-priority', {id: TP.priorityOneId, name: TP.priorityOne});
             store.push('ticket-priority', {id: TP.priorityTwoId, name: TP.priorityTwo});
+            status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
+            store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwo});
             link = store.push('link', {id: LINK.idOne});
         });
     }
@@ -51,6 +54,8 @@ test('is_header dirty tracking', (assert) => {
     assert.ok(link.get('isNotDirty'));
 });
 
+// priority
+
 test('priority relationship is setup correctly', (assert) => {
     assert.ok(!link.get('priority'));
     run(() => {
@@ -60,6 +65,7 @@ test('priority relationship is setup correctly', (assert) => {
     assert.equal(link.get('priority').get('name'), TP.priorityOne);
     assert.deepEqual(priority.get('links'), [LINK.idOne]);
 });
+
 test('priority related dirty tracking', (assert) => {
     assert.ok(!link.get('priority'));
     run(() => {
@@ -93,6 +99,54 @@ test('change_priority to null', (assert) => {
     link.change_priority(null);
     assert.equal(link.get('priority.id'), null);
 });
+
+// status
+
+test('status relationship is setup correctly', (assert) => {
+    assert.ok(!link.get('status'));
+    run(() => {
+        status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, links: [LINK.idOne]});
+    });
+    assert.equal(link.get('status').get('id'), TD.statusOneId);
+    assert.equal(link.get('status').get('name'), TD.statusOne);
+    assert.deepEqual(status.get('links'), [LINK.idOne]);
+});
+
+test('status related dirty tracking', (assert) => {
+    assert.ok(!link.get('status'));
+    run(() => {
+        status = store.push('ticket-status', {id: TD.statusOneId, links: [LINK.idOne]});
+        link = store.push('link', {id: LINK.idOne, status_fk: TD.statusOneId});
+    });
+    assert.ok(link.get('isNotDirty'));
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(link.get('status').get('id'), TD.statusOneId);
+    run(() => {
+        status = store.push('ticket-status', {id: TD.statusOneId, links: []});
+        status = store.push('ticket-status', {id: TD.statusTwoId, links: [LINK.idOne]});
+    });
+    assert.equal(link.get('status').get('id'), TD.statusTwoId);
+    assert.ok(link.get('isNotDirty'));
+    assert.ok(link.get('isDirtyOrRelatedDirty'));
+});
+
+test('change_status changes status', (assert) => {
+    assert.equal(link.get('status.id'), undefined);
+    link.change_status(TD.statusOneId);
+    assert.equal(link.get('status.id'), TD.statusOneId);
+    link.change_status(TD.statusTwoId);
+    assert.equal(link.get('status.id'), TD.statusTwoId);
+});
+
+test('change_status to null', (assert) => {
+    assert.equal(link.get('status.id'), undefined);
+    link.change_status(TD.statusOneId);
+    assert.equal(link.get('status.id'), TD.statusOneId);
+    link.change_status(null);
+    assert.equal(link.get('status.id'), null);
+});
+
+// rollbackRelated
 
 test('rollbackRelated priority - value value value', (assert) => {
     let priority_two;

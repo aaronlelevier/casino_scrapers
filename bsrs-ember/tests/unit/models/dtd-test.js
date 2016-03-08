@@ -7,13 +7,13 @@ import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import DTDL from 'bsrs-ember/vendor/defaults/dtd-link';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
 
-
-var store, dtd, link, priority, uuid;
+var store, dtd, link, priority, status, uuid;
 
 module('unit: dtd test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-link', 'model:link', 'model:ticket-priority', 'service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-link', 'model:link', 'model:ticket-priority', 'model:ticket-status', 'service:i18n']);
         run(() => {
             dtd = store.push('dtd', {id: DTD.idOne, dtd_link_fks: [DTDL.idOne]});
             store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
@@ -24,7 +24,7 @@ module('unit: dtd test', {
 
 test('dtd_link_ids', (assert) => {
     assert.equal(dtd.get('dtd_link_ids').length, 1);
-    assert.equal(LINK.idOne, dtd.get('dtd_link_ids')[0], DTDL.idOne);
+    assert.equal(LINK.idOne, dtd.get('dtd_link_ids')[0], 'x'); // DTDL.idOne);
 });
 
 /* DTD-LINK M2M: START */
@@ -153,6 +153,7 @@ test('serialize dtd model and links with a priority', (assert) => {
             link_type: DTD.linkTypeOne
         });
         priority = store.push('ticket-priority', {id: TP.priorityOneId, links: [LINK.idOne]});
+        status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, links: [LINK.idOne]});
         link = store.push('link', {
             id: LINK.idOne, 
             order: LINK.orderOne,
@@ -161,6 +162,7 @@ test('serialize dtd model and links with a priority', (assert) => {
             request: LINK.requestOne,
             text: LINK.textOne,
             priority_fk: TP.priorityOneId,
+            status_fk: TD.statusOneId
         });
     });
     assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idOne);

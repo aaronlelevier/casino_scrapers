@@ -1,6 +1,7 @@
 var BSRS_LINKS_DEFAULTS_OBJECT = (function() {
-    var factory = function(priority_defaults) {
+    var factory = function(priority_defaults, ticket_defaults) {
         this.priority_defaults = priority_defaults;
+        this.ticket_defaults = ticket_defaults;
     };
     factory.prototype.defaults = function() {
         return {
@@ -18,7 +19,9 @@ var BSRS_LINKS_DEFAULTS_OBJECT = (function() {
             textOne: 'next',
             textTwo: 'finished',
             priorityOne: this.priority_defaults.priorityOneId,
-            priorityTwo: this.priority_defaults.priorityTwoId
+            priorityTwo: this.priority_defaults.priorityTwoId,
+            statusOne: this.ticket_defaults.statusOneId,
+            statusTwo: this.ticket_defaults.statusTwoId
         };
     };
     return factory;
@@ -26,11 +29,14 @@ var BSRS_LINKS_DEFAULTS_OBJECT = (function() {
 
 if (typeof window === 'undefined') {
     var priority_defaults = require('./ticket-priority');
-    module.exports = new BSRS_LINKS_DEFAULTS_OBJECT(priority_defaults).defaults();
+    var ticket_defaults = require('./ticket');
+    module.exports = new BSRS_LINKS_DEFAULTS_OBJECT(priority_defaults, ticket_defaults).defaults();
 } else {
-    define('bsrs-ember/vendor/defaults/link', ['exports', 'bsrs-ember/vendor/defaults/ticket-priority'], function (exports, priority_defaults) {
+    define('bsrs-ember/vendor/defaults/link',
+        ['exports', 'bsrs-ember/vendor/defaults/ticket-priority', 'bsrs-ember/vendor/defaults/ticket'],
+        function (exports, priority_defaults, ticket_defaults) {
         'use strict';
-        return new BSRS_LINKS_DEFAULTS_OBJECT(priority_defaults).defaults();
+        return new BSRS_LINKS_DEFAULTS_OBJECT(priority_defaults, ticket_defaults).defaults();
     });
 }
 
