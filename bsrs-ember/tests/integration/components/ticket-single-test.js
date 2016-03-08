@@ -39,7 +39,7 @@ test('each status shows up as a valid select option', function(assert) {
     this.set('model', ticket);
     this.set('statuses', statuses);
     this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
-    let $component = this.$('.t-ticket-status-select');
+    let $component = this.$('.t-power-select-foreign-key-ticket-status');
     assert.equal($component.length, 1);
 });
 
@@ -88,9 +88,9 @@ test('changing status changes the class', function(assert) {
     this.set('statuses', statuses);
     this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
     assert.ok(this.$('.tag:eq(1)').hasClass('ticket-status-new'));
-    let $component = this.$('.t-ticket-status-select');
+    let $component = this.$('.t-power-select-foreign-key-ticket-status');
     assert.equal($component.length, 1);
-    this.$('.t-ticket-status-select > .ember-basic-dropdown-trigger').mousedown();
+    this.$('.t-power-select-foreign-key-ticket-status > .ember-basic-dropdown-trigger').mousedown();
     run(() => {
         $(`.ember-power-select-option:contains(${TD.statusTwoKey})`).mouseup();
     });

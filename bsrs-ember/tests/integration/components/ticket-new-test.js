@@ -39,7 +39,7 @@ test('each status shows up as a valid select option', function(assert) {
     this.set('model', ticket);
     this.set('statuses', statuses);
     this.render(hbs`{{tickets/ticket-new model=model statuses=statuses}}`);
-    let $component = this.$('.t-ticket-status-select');
+    let $component = this.$('.t-power-select-foreign-key-ticket-status');
     assert.equal($component.length, 1);
 });
 
