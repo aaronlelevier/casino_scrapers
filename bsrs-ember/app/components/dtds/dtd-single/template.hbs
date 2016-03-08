@@ -82,7 +82,7 @@
                         {{/form-group}}
                         {{#form-group title="admin.dtd.lable.link.status" for="status"}}
                             <div class="ticket-action status">
-                                {{ticket-status-select ticket=link statuses=statuses clear=true}}
+                                {{power-select-foreign-key mainModel=link selected=link.status change_method='change_status' relatedModels=statuses relatedModelName='ticket-status' clear=true}}
                             </div>
                         {{/form-group}}
                     </div>

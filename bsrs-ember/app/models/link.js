@@ -29,7 +29,8 @@ export default Model.extend({
         return this.get('isDirty') || this.get('priorityIsDirty') || this.get('statusIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-    saveRelated: belongs_to_save('link', 'priority', 'priority_fk'),
+    saveRelatedPriority: belongs_to_save('link', 'priority', 'priority_fk'),
+    saveRelatedStatus: belongs_to_save('link', 'status', 'status_fk'),
     rollbackRelated: belongs_to_rollback('priority_fk', 'priority', 'change_priority'),
     serialize() {
         return {

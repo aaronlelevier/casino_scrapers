@@ -7,7 +7,7 @@ import computed from 'ember-computed-decorators';
 var StatusRouteMixin = Ember.Mixin.create({
     statusRepository: inject('ticket-status'),
     /*start-non-standard*/ @computed /*end-non-standard*/
-    priorities() {
+    statuses() {
         return this.get('statusRepository').fetch();
     }
 });

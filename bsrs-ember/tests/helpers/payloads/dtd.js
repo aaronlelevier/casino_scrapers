@@ -41,7 +41,8 @@ var dtd_payload_update_priority = {
         is_header: LINK.is_headerOne,
         request: LINK.requestOne,
         text: LINK.textOne,
-        priority: TP.priorityTwoId
+        priority: TP.priorityTwoId,
+        status: TD.statusOneId
     }]
 };
 
@@ -60,7 +61,8 @@ var dtd_payload_no_priority = {
         is_header: LINK.is_headerOne,
         request: LINK.requestOne,
         text: LINK.textOne,
-        priority: null
+        priority: null,
+        status: null
     }]
 };
 
@@ -79,7 +81,9 @@ var dtd_payload_two = {
         is_header: LINK.is_headerTwo,
         request: LINK.requestTwo,
         text: LINK.textTwo,
-        priority: TP.priorityTwoId
+        priority: TP.priorityTwoId,
+        status: TD.statusTwoId
+
     }]
 };
 

@@ -1,0 +1,11 @@
+{{#power-select
+  class=(concat 'power-select-foreign-key-' relatedModelName ' t-power-select-foreign-key-' relatedModelName)
+  selected=selected
+  allowClear=clear
+  onchange=(action "selected")
+  searchEnabled=false
+  options=relatedModels
+  as |option|
+}}
+  {{t option.name}}
+{{/power-select}}

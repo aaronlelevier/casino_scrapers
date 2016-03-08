@@ -7,15 +7,17 @@ import DTDL from 'bsrs-ember/vendor/defaults/dtd-link';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import DTDDeserializer from 'bsrs-ember/deserializers/dtd';
 import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
 
-var store, subject, category, category_unused, priority, run = Ember.run;
+var store, subject, category, category_unused, priority, status, run = Ember.run;
 
 module('unit: dtd deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-link', 'model:link', 'model:dtd-list', 'model:link-priority-list', 'model:ticket-priority', 'service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-link', 'model:link', 'model:dtd-list', 'model:link-priority-list', 'model:ticket-priority', 'model:ticket-status', 'service:i18n']);
         subject = DTDDeserializer.create({store: store});
         run(() => {
             priority = store.push('ticket-priority', {id: TP.priorityOneId, name: TP.priorityOne});
+            status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
         });
     }
 });
@@ -120,4 +122,15 @@ test('priority link already has a priority of two', (assert) => {
     assert.equal(dtd.get('links').objectAt(0).get('priority_fk'), TP.priorityOneId);
     assert.equal(dtd.get('links').objectAt(0).get('priority.id'), TP.priorityOneId);
     assert.equal(dtd.get('links').objectAt(0).get('priority.name'), TP.priorityOne);
+});
+
+test('status gets extracted', (assert) => {
+    const json = DTDF.generate(DTD.idOne);
+    run(() => {
+        subject.deserialize(json, DTD.idOne);
+    });
+    let dtd = store.find('dtd', DTD.idOne);
+    assert.equal(dtd.get('links').objectAt(0).get('status_fk'), TD.statusOneId);
+    assert.equal(dtd.get('links').objectAt(0).get('status.id'), TD.statusOneId);
+    assert.equal(dtd.get('links').objectAt(0).get('status.name'), TD.statusOne);
 });

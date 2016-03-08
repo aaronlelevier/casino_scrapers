@@ -24,7 +24,7 @@ const ASSIGNEE = '.t-ticket-assignee-select > .ember-basic-dropdown-trigger';
 const CATEGORY_ONE = '.t-model-category-select:eq(0) > .ember-basic-dropdown-trigger';
 const CATEGORY_TWO = '.t-model-category-select:eq(1) > .ember-basic-dropdown-trigger';
 const CATEGORY_THREE = '.t-model-category-select:eq(2) > .ember-basic-dropdown-trigger';
-const STATUS = '.t-ticket-status-select > .ember-basic-dropdown-trigger';
+const STATUS = '.t-power-select-foreign-key-ticket-status > .ember-basic-dropdown-trigger';
 
 var TicketPage = PageObject.create({
   visitNew: visitable(NEW_URL),

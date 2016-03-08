@@ -26,19 +26,11 @@ var DTDDeserializer = Ember.Object.extend({
                     store.push('dtd-link', m2m);
                 });
             });
-            // NOTE: (ayl) 3/2 (Aaron was here) maybe remove later
-            // links.forEach((model) => {
-            //     model.detail = true;
-            //     let link;
-            //     run(() => {
-            //         link = store.push('link', model);
-            //     });
-            //     belongs_to_extract(link.priority_fk, store, link, 'priority', 'link', 'links');
-            // });
             link_json.forEach((model) => {
                 const existing = store.push('link', model);
                 existing.detail = true;
                 belongs_to_extract(model.priority_fk, store, existing, 'priority', 'link', 'links');
+                belongs_to_extract(model.status_fk, store, existing, 'status', 'link', 'links');
             });
             dtd = store.push('dtd', {id: dtd.get('id'), dtd_link_fks: links_server_sum});
             dtd.save();

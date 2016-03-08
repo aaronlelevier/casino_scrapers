@@ -111,6 +111,7 @@ test('add_link dtd is dirty when link is added', (assert) => {
 test('saveRelated', (assert) => {
     run(() => {
         store.push('ticket-priority', {id: TP.priorityOneId});
+        store.push('ticket-status', {id: TD.statusOneId});
     });
     assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idOne);
     dtd.remove_link(link.get('id'));
@@ -126,19 +127,30 @@ test('saveRelated', (assert) => {
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
     assert.equal(dtd.get('links').get('length'), 1);
     assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idTwo);
+    // priority
     priority = store.find('ticket-priority', TP.priorityOneId);
     assert.deepEqual(priority.get('links'), undefined);
     let link_two = store.find('link', LINK.idTwo);
     link_two.change_priority(priority.get('id'));
     assert.deepEqual(priority.get('links'), [LINK.idTwo]);
     assert.equal(dtd.get('links').objectAt(0).get('priority.id'), TP.priorityOneId);
+    // status
+    status = store.find('ticket-status', TD.statusOneId);
+    assert.deepEqual(status.get('links'), undefined);
+    link_two = store.find('link', LINK.idTwo);
+    link_two.change_status(status.get('id'));
+    assert.deepEqual(status.get('links'), [LINK.idTwo]);
+    assert.equal(dtd.get('links').objectAt(0).get('status.id'), TD.statusOneId);
+    // assertions
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
     assert.ok(link_two.get('isDirtyOrRelatedDirty'));
     assert.ok(link_two.get('priorityIsDirty'));
+    assert.ok(link_two.get('statusIsDirty'));
     dtd.saveRelated();
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(link_two.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(link_two.get('priorityIsNotDirty'));
+    assert.ok(link_two.get('statusIsNotDirty'));
 });
 
 test('serialize dtd model and links with a priority', (assert) => {

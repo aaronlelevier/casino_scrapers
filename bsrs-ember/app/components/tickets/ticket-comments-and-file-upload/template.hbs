@@ -14,7 +14,8 @@
                     <span class="btn btn-default btn-file">{{fa-icon 'paperclip'}} {{t "button.upload"}}<input type="file" multiple="multiple" onchange={{action "upload"}}></span>
                 </div>
                 <div class="ticket-action status">
-                    {{ticket-status-select ticket=model statuses=statuses}}
+                    {{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModels=statuses relatedModelName='ticket-status'}}
+
                     {{#validation-error-field field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
                 </div>
                 <div class="ticket-action priority">

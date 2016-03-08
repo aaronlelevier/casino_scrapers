@@ -19,7 +19,7 @@
                     </div>
                     <div class="col-md-12">
                         {{#form-group title="ticket.label.status-name" for="status"}}
-                          {{ticket-status-select ticket=model statuses=statuses}}
+                          {{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModels=statuses relatedModelName='ticket-status'}}
                           {{#validation-error-field submitted=submitted field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}{{t "validation.invalid"}} {{t "ticket.label.status-name"}}{{/validation-error-field}}
                         {{/form-group}}
                     </div>
