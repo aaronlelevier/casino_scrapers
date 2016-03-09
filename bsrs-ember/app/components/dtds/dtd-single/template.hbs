@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         {{#form-group title="admin.dtd.label.key" for="key"}}
-                        {{input type="text" placeholder=(t "admin.dtd.label.key") value=model.key class="form-control t-dtd-key" id="dtd_key"}}
+                        {{input type="text" placeholder=(t "admin.dtd.label.key") value=model.key class="form-control t-dtd-single-key" id="dtd_key"}}
                         {{#if (v-get model 'key' 'isInvalid')}}
                         <div class="t-wat error">
                             {{v-get model 'key' 'message'}}
@@ -23,7 +23,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         {{#form-group title="admin.dtd.label.description" for="description"}}
-                        {{textarea type="text" placeholder=(t "admin.dtd.label.description") value=model.description class="form-control t-dtd-description" id="dtd_description"}}
+                        {{textarea type="text" placeholder=(t "admin.dtd.label.description") value=model.description class="form-control t-dtd-single-description" id="dtd_description"}}
                         {{/form-group}}
                     </div>
                 </div>

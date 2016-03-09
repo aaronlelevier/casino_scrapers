@@ -1,6 +1,6 @@
-<article class="main full">
-  {{#dtds/dtd-header as |showing|}}
-      {{#if showing.listShowing}}
+{{#dtds/dtd-header as |showing|}}
+    {{#if showing.listShowing}}
+      <div class="dtd-col dtd-list">
         {{dtds/dtd-list
           count=count
           model=model
@@ -26,14 +26,18 @@
           save_filterset="save_filterset"
           hasActiveFilterSet=hasActiveFilterSet
         }}
-      {{/if}}
-      {{#if showing.detailShowing}}
+      </div>
+    {{/if}}
+  {{#if showing.detailShowing}}
+      <div class="dtd-col dtd-detail">
         {{outlet 'detail'}}
-      {{/if}}
-      {{#if showing.previewShowing}}
+      </div>
+  {{/if}}
+  {{#if showing.previewShowing}}
+      <div class="dtd-col dtd-preview">
         {{outlet 'preview'}}
-      {{/if}}
-    {{/dtds/dtd-header}}
-</article>
+      </div>
+  {{/if}}
+{{/dtds/dtd-header}}
 
 
