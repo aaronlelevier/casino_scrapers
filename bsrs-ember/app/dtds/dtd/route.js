@@ -22,6 +22,16 @@ export default TabRoute.extend(PriorityMixin, StatusMixin, {
             statuses: this.get('statuses')
         };
     },
+    renderTemplate(){
+        this.render('dtds.dtd', {
+            into: 'dtds',
+            outlet: 'wat'
+        });
+        this.render('components.dtds.dtd-preview', {
+            into: 'dtds',
+            outlet: 'foo'
+        });
+    },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
         controller.set('priorities', hash.priorities);

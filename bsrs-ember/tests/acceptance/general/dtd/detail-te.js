@@ -22,7 +22,7 @@ import ticketPage from 'bsrs-ember/tests/pages/tickets';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_dtd_url;
-const DTD_URL = `${BASE_URL}/index`;
+const DTD_URL = `${BASE_URL}`;
 const DETAIL_URL = `${BASE_URL}/${DTD.idOne}`;
 const DT_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
 const BACKSPACE = {keyCode: 8};
