@@ -150,11 +150,67 @@ test('toggle decision tree preview', (assert) => {
         assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
         assert.equal(currentURL(), DETAIL_URL);
     });
-    page.clickPreviewOff();
+    page.clickPreviewToggle();
     andThen(() => {
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('input.t-dtd-key').val(), DTD.keyOne);
         assert.notOk(find('.t-dtd-preview-description').text());
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+    page.clickDetailToggle();
+    andThen(() => {
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.notOk(find('input.t-dtd-key').val());
+        assert.notOk(find('.t-dtd-preview-description').text());
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+    page.clickListToggle();
+    andThen(() => {
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.notOk(find('input.t-dtd-key').val());
+        assert.notOk(find('.t-dtd-preview-description').text());
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+    page.clickDetailToggle();
+    andThen(() => {
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.equal(find('input.t-dtd-key').val(), DTD.keyOne);
+        assert.notOk(find('.t-dtd-preview-description').text());
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+    page.clickListToggle();
+    andThen(() => {
+        assert.notOk(find('.t-grid-data').length);
+        assert.equal(find('input.t-dtd-key').val(), DTD.keyOne);
+        assert.notOk(find('.t-dtd-preview-description').text());
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+    page.clickDetailToggle();
+    andThen(() => {
+        assert.notOk(find('.t-grid-data').length);
+        assert.equal(find('input.t-dtd-key').val(), DTD.keyOne);
+        assert.notOk(find('.t-dtd-preview-description').text());
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+    page.clickPreviewToggle();
+    andThen(() => {
+        assert.notOk(find('.t-grid-data').length);
+        assert.equal(find('input.t-dtd-key').val(), DTD.keyOne);
+        assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+    page.clickDetailToggle();
+    andThen(() => {
+        assert.notOk(find('.t-grid-data').length);
+        assert.notOk(find('input.t-dtd-key').val());
+        assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+    page.clickPreviewToggle();
+    andThen(() => {
+        assert.notOk(find('.t-grid-data').length);
+        assert.notOk(find('input.t-dtd-key').val());
+        assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
         assert.equal(currentURL(), DETAIL_URL);
     });
 });

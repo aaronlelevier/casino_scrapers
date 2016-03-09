@@ -1,33 +1,37 @@
 <article class="main full">
-  {{#dtds/dtd-header as |previewShowing|}}
-      {{dtds/dtd-list
-        count=count
-        model=model
-        page=page
-        sort=sort
-        search=search
-        find=find
-        requested=requested
-        page_size=page_size
-        filterModel=filterModel
-        filtersets=filtersets
-        routeName=routeName
-        defaultSort=defaultSort
-        noun="dtd"
-        plural=(t "admin.dtd.other")
-        prefix="admin.dtd.label"
-        grid_title=(t "admin.dtd" count="2")
-        list_url="dtds.index"
-        detail_url="dtds.dtd"
-        add_model_url="dtds.new"
-        search_placeholder=(t "admin.dtd.search")
-        add_model_text=(t "admin.dtd.one")
-        save_filterset="save_filterset"
-        hasActiveFilterSet=hasActiveFilterSet
-      }}
-      {{outlet 'wat'}}
-      {{#if previewShowing}}
-        {{outlet 'foo'}}
+  {{#dtds/dtd-header as |showing|}}
+      {{#if showing.listShowing}}
+        {{dtds/dtd-list
+          count=count
+          model=model
+          page=page
+          sort=sort
+          search=search
+          find=find
+          requested=requested
+          page_size=page_size
+          filterModel=filterModel
+          filtersets=filtersets
+          routeName=routeName
+          defaultSort=defaultSort
+          noun="dtd"
+          plural=(t "admin.dtd.other")
+          prefix="admin.dtd.label"
+          grid_title=(t "admin.dtd" count="2")
+          list_url="dtds.index"
+          detail_url="dtds.dtd"
+          add_model_url="dtds.new"
+          search_placeholder=(t "admin.dtd.search")
+          add_model_text=(t "admin.dtd.one")
+          save_filterset="save_filterset"
+          hasActiveFilterSet=hasActiveFilterSet
+        }}
+      {{/if}}
+      {{#if showing.detailShowing}}
+        {{outlet 'detail'}}
+      {{/if}}
+      {{#if showing.previewShowing}}
+        {{outlet 'preview'}}
       {{/if}}
     {{/dtds/dtd-header}}
 </article>

@@ -34,7 +34,9 @@ var DTDPage = PageObject.create({
     textFillIn: fillable('.t-dtd-link-text'),
 
     isDirty: hasClass('dirty', 'i', {scope: '.t-tab-close'}),
-    clickPreviewOff: clickable('.t-dtd-preview'),
+    clickPreviewToggle: clickable('.t-dtd-preview'),
+    clickDetailToggle: clickable('.t-dtd-detail'),
+    clickListToggle: clickable('.t-dtd-list'),
 });
 
 export default DTDPage;

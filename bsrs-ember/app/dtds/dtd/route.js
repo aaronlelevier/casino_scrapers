@@ -25,11 +25,11 @@ export default TabRoute.extend(PriorityMixin, StatusMixin, {
     renderTemplate(){
         this.render('dtds.dtd', {
             into: 'dtds',
-            outlet: 'wat'
+            outlet: 'detail'
         });
         this.render('components.dtds.dtd-preview', {
             into: 'dtds',
-            outlet: 'foo'
+            outlet: 'preview'
         });
     },
     setupController: function(controller, hash) {
