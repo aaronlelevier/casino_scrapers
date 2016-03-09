@@ -1,34 +1,34 @@
 <div class="activity-list-wrap row">
-    <menu class="activity-list-tabs">
-        <ul>
-            <li class="active t-activity-tab-all_updates" onclick={{action 'filter' 'all_updates'}}>
-                {{t 'activity.tabs.all_updates'}}
-                {{#if allCounts}}
-                    <span class="t-activity-all-counts badge">{{ allCounts }}</span>
-                {{/if}}
-            </li>
-            <li class="t-activity-tab-comments" onclick={{action 'filter' 'comments'}}>
-                {{t 'activity.tabs.comments'}}
-                {{#if commentCounts}}
-                    <span class="t-activity-comment-counts badge">{{ commentCounts }}</span>
-                {{/if}}
-            </li>
-            <li class="t-activity-tab-status_updates" onclick={{action 'filter' 'status_updates'}}>
-                {{t 'activity.tabs.status_updates'}}
-                {{#if statusCounts}}
-                    <span class="t-activity-status-counts badge">{{ statusCounts }}</span>
-                {{/if}}
-            </li>
-        </ul>
-    </menu>
-    <div class="activity-list">
-        <div class="activity-spacer"></div>
-        <div class="hide activity-empty activity-empty-comments">{{t 'activity.empty.comments'}}</div>
-        <div class="hide activity-empty activity-empty-status_updates">{{t 'activity.empty.status_updates'}}</div>
-        {{#each sortedModels as |activity|}}
-        <div class="t-activity-list-item activity-list-item activity-{{activity.type}} animated fadeInDown">
-            {{component (component-postfix activity.type) activity=activity i18nString=(activity-description activity timestamp=(moment-from-now activity.created) i18n=i18n) fulltime=(moment-format activity.created 'dddd, MMMM Do YYYY, h:mm:ss a z') }}
-        </div>
-        {{/each}}
-    </div>
+  <menu class="activity-list-tabs">
+  <ul>
+    <li class="active t-activity-tab-all_updates" onclick={{action 'filter' 'all_updates'}}>
+      {{t 'activity.tabs.all_updates'}}
+      {{#if allCounts}}
+        <span class="t-activity-all-counts badge">{{ allCounts }}</span>
+      {{/if}}
+    </li>
+    <li class="t-activity-tab-comments" onclick={{action 'filter' 'comments'}}>
+      {{t 'activity.tabs.comments'}}
+      {{#if commentCounts}}
+        <span class="t-activity-comment-counts badge">{{ commentCounts }}</span>
+      {{/if}}
+    </li>
+    <li class="t-activity-tab-status_updates" onclick={{action 'filter' 'status_updates'}}>
+      {{t 'activity.tabs.status_updates'}}
+      {{#if statusCounts}}
+        <span class="t-activity-status-counts badge">{{ statusCounts }}</span>
+      {{/if}}
+    </li>
+  </ul>
+  </menu>
+  <div class="activity-list">
+    <div class="activity-spacer"></div>
+    <div class="hide activity-empty activity-empty-comments">{{t 'activity.empty.comments'}}</div>
+    <div class="hide activity-empty activity-empty-status_updates">{{t 'activity.empty.status_updates'}}</div>
+    {{#each sortedModels as |activity|}}
+      <div class="t-activity-list-item activity-list-item activity-{{activity.type}} animated fadeInDown">
+        {{component (component-postfix activity.type) activity=activity i18nString=(activity-description activity timestamp=(moment-from-now activity.created) i18n=i18n) fulltime=(moment-format activity.created 'dddd, MMMM Do YYYY, h:mm:ss a z') }}
+      </div>
+    {{/each}}
+  </div>
 </div>
