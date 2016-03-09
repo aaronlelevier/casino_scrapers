@@ -99,6 +99,8 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'admin.invoice.new':'New',
                     'admin.invoice.select_assign.all':'All',
                     'admin.invoice.select_assign.managers':'Managers',
+                    'admin.locale.english':'English',
+                    'admin.locale.spanish':'Spanish',
                     'admin.location.label.address.one':'Address',
                     'admin.location.label.address.other':'Addresses',
                     'admin.location.label.children-name':'Child Locations',

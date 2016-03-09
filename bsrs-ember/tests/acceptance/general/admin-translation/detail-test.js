@@ -5,7 +5,7 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
-import LOCALE_DEFAULTS from 'bsrs-ember/vendor/locale_fixtures';
+import LOCALED from 'bsrs-ember/vendor/defaults/locale';
 import TF from 'bsrs-ember/vendor/admin_translation_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/translation';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
@@ -63,8 +63,8 @@ test('detail | header is translation key, each Locale gets populated', (assert) 
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.equal(find('.t-translation-key').text(), TD.keyOneGrid);
-            assert.equal(find('.t-translation-locale-name:eq(0)').text(), 'English');
-            assert.equal(find('.t-translation-locale-name:eq(1)').text(), 'Spanish');
+            assert.equal(find('.t-translation-locale-name:eq(0)').text(), LOCALED.nameOneKey);
+            assert.equal(find('.t-translation-locale-name:eq(1)').text(), LOCALED.nameTwoKey);
         });
     });
 });
