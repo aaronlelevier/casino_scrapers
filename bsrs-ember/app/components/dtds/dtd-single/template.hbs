@@ -77,7 +77,7 @@
                         </div>
                         {{#form-group title="admin.dtd.lable.link.priority" for="priority"}}
                             <div class="ticket-action priority">
-                                {{ticket-priority-select ticket=link priorities=priorities clear=true}}
+                                {{power-select-foreign-key mainModel=link selected=link.priority change_method='change_priority' relatedModels=priorities relatedModelName='ticket-priority' clear=true}}
                             </div>
                         {{/form-group}}
                         {{#form-group title="admin.dtd.lable.link.status" for="status"}}

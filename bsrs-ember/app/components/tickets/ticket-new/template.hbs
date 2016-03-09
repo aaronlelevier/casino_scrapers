@@ -13,7 +13,7 @@
                     </div>
                     <div class="col-md-12">
                         {{#form-group title="ticket.label.priority-name" for="priority"}}
-                          {{ticket-priority-select ticket=model priorities=priorities}}
+                          {{power-select-foreign-key mainModel=model selected=model.priority change_method='change_priority' relatedModels=priorities relatedModelName='ticket-priority'}}
                           {{#validation-error-field submitted=submitted field="priority" className="validation validation-under t-priority-validation-error" model=model validation=priorityValidation}}{{t "validation.invalid"}} {{t "ticket.label.priority-name"}}{{/validation-error-field}}
                         {{/form-group}}
                     </div>

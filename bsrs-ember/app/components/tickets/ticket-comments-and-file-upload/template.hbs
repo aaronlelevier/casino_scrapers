@@ -15,11 +15,10 @@
                 </div>
                 <div class="ticket-action status">
                     {{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModels=statuses relatedModelName='ticket-status'}}
-
                     {{#validation-error-field field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
                 </div>
                 <div class="ticket-action priority">
-                    {{ticket-priority-select ticket=model priorities=priorities}}
+                    {{power-select-foreign-key mainModel=model selected=model.priority change_method='change_priority' relatedModels=priorities relatedModelName='ticket-priority'}}
                     {{#validation-error-field field="priority" className="validation validation-under t-priority-validation-error" model=model validation=priorityValidation}}invalid priority{{/validation-error-field}}
                 </div>
             </div>

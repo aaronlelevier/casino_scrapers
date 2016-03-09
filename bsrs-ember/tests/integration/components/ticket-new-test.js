@@ -53,7 +53,7 @@ test('each priority shows up as a valid select option', function(assert) {
     this.set('model', ticket);
     this.set('priorities', priorities);
     this.render(hbs`{{tickets/ticket-new model=model priorities=priorities}}`);
-    let $component = this.$('.t-ticket-priority-select');
+    let $component = this.$('.t-power-select-foreign-key-ticket-priority');
     assert.equal($component.length, 1);
 });
 
