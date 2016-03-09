@@ -70,8 +70,8 @@ var DTDModel = Model.extend(Validations, {
     saveLinksContainer() {
         const links = this.get('links');
         links.forEach((link) => {
-            link.saveRelatedPriority();
-            link.saveRelatedStatus();
+            link.savePriority();
+            link.saveStatus();
             link.save();
         });
     },

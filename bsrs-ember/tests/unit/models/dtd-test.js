@@ -178,7 +178,10 @@ test('serialize dtd model and links with a priority', (assert) => {
         });
     });
     assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idOne);
-    let payload = dtd.serialize();
+    let payload;
+    run(() => {
+        payload = dtd.serialize();
+    });
     assert.deepEqual(payload, dtd_payload);
 });
 
