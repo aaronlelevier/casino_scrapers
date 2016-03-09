@@ -39,7 +39,7 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              {{people/person-status-select person=model statuses=statuses}}
+              {{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModels=statuses relatedModelName='status'}}
             </div>
           </div>
         </section>

@@ -10,7 +10,7 @@ let { visitable, text, clickable, count } = PageObject;
 const PREFIX = config.APP.NAMESPACE;
 const BASE_THIRD_PARTY_URL = BASEURLS.base_third_parties_url;
 const DETAIL_URL = `${BASE_THIRD_PARTY_URL}/${TPD.idOne}`;
-const STATUS = '.t-person-status-select > .ember-basic-dropdown-trigger';
+const STATUS = '.t-power-select-foreign-key-status > .ember-basic-dropdown-trigger';
 const STATUS_DROPDOWN = '.t-person-status-select-dropdown > .ember-power-select-options';
 
 

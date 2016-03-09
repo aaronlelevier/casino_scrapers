@@ -20,7 +20,7 @@ const ERROR_URL = BASEURLS.error_url;
 
 let application, store, endpoint, endpoint_detail, list_xhr, detail_xhr;
 
-module('Acceptance | third-party-detail-test', {
+module('Acceptance | third-party detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
