@@ -38,8 +38,7 @@ class FactoryTests(TestCase):
         tree_link = factory.create_tree_link()
 
         self.assertEqual(Category.objects.count(), init_count)
-        category = Category.objects.first()
-        self.assertIn(category, tree_link.categories.all())
+        self.assertEqual(tree_link.categories.count(), 1)
 
     def test_create_tree_field(self):
         tree_field = factory.create_tree_field(3)
