@@ -54,14 +54,14 @@ test('admin to dtds list to detail && preview', (assert) => {
         .clickDTD();
     andThen(() => {
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.notOk(find('input.t-dtd-key').val());
+        assert.notOk(find('input.t-dtd-single-key').val());
         assert.notOk(find('.t-dtd-preview-description').text());
         assert.equal(currentURL(), DTD_URL);
     });
     click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);//grid
-        assert.equal(find('input.t-dtd-key').val(), DTD.keyOne);//detail
+        assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);//detail
         assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -70,12 +70,12 @@ test('admin to dtds list to detail && preview', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), DTD_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.notOk(find('input.t-dtd-key').val());
+        assert.notOk(find('input.t-dtd-single-key').val());
     });
     click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('input.t-dtd-key').val(), DTD.keyOne);
+        assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
         assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -137,7 +137,7 @@ test('detail && preview are bound and can save', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), DTD_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.notOk(find('input.t-dtd-key').val());
+        assert.notOk(find('input.t-dtd-single-key').val());
         assert.notOk(find('.t-dtd-preview-description').text());
     });
 });
@@ -146,70 +146,70 @@ test('toggle decision tree preview', (assert) => {
     page.visitDetail();
     andThen(() => {
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('input.t-dtd-key').val(), DTD.keyOne);
+        assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
         assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
         assert.equal(currentURL(), DETAIL_URL);
     });
     page.clickPreviewToggle();
     andThen(() => {
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('input.t-dtd-key').val(), DTD.keyOne);
+        assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
         assert.notOk(find('.t-dtd-preview-description').text());
         assert.equal(currentURL(), DETAIL_URL);
     });
     page.clickDetailToggle();
     andThen(() => {
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.notOk(find('input.t-dtd-key').val());
+        assert.notOk(find('input.t-dtd-single-key').val());
         assert.notOk(find('.t-dtd-preview-description').text());
         assert.equal(currentURL(), DETAIL_URL);
     });
     page.clickListToggle();
     andThen(() => {
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.notOk(find('input.t-dtd-key').val());
+        assert.notOk(find('input.t-dtd-single-key').val());
         assert.notOk(find('.t-dtd-preview-description').text());
         assert.equal(currentURL(), DETAIL_URL);
     });
     page.clickDetailToggle();
     andThen(() => {
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('input.t-dtd-key').val(), DTD.keyOne);
+        assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
         assert.notOk(find('.t-dtd-preview-description').text());
         assert.equal(currentURL(), DETAIL_URL);
     });
     page.clickListToggle();
     andThen(() => {
         assert.notOk(find('.t-grid-data').length);
-        assert.equal(find('input.t-dtd-key').val(), DTD.keyOne);
+        assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
         assert.notOk(find('.t-dtd-preview-description').text());
         assert.equal(currentURL(), DETAIL_URL);
     });
     page.clickDetailToggle();
     andThen(() => {
         assert.notOk(find('.t-grid-data').length);
-        assert.equal(find('input.t-dtd-key').val(), DTD.keyOne);
+        assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
         assert.notOk(find('.t-dtd-preview-description').text());
         assert.equal(currentURL(), DETAIL_URL);
     });
     page.clickPreviewToggle();
     andThen(() => {
         assert.notOk(find('.t-grid-data').length);
-        assert.equal(find('input.t-dtd-key').val(), DTD.keyOne);
+        assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
         assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
         assert.equal(currentURL(), DETAIL_URL);
     });
     page.clickDetailToggle();
     andThen(() => {
         assert.notOk(find('.t-grid-data').length);
-        assert.notOk(find('input.t-dtd-key').val());
+        assert.notOk(find('input.t-dtd-single-key').val());
         assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
         assert.equal(currentURL(), DETAIL_URL);
     });
     page.clickPreviewToggle();
     andThen(() => {
         assert.notOk(find('.t-grid-data').length);
-        assert.notOk(find('input.t-dtd-key').val());
+        assert.notOk(find('input.t-dtd-single-key').val());
         assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
         assert.equal(currentURL(), DETAIL_URL);
     });

@@ -6,7 +6,7 @@ import DTD from 'bsrs-ember/vendor/defaults/dtd';
 
 var store, dtd, dtd_detail;
 
-module('unit: location level list test', {
+module('unit: dtd list test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-list']);
         run(() => {

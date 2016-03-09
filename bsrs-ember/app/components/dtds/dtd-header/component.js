@@ -5,7 +5,7 @@ export default Ember.Component.extend({
     classNames: ['main', 'full', 'dtd-row'],
     classNameBindings: ['countPanes'],
     countPanes: Ember.computed('previewShowing', 'detailShowing', 'listShowing', function() {
-        const showing = this.get('showing')
+        const showing = this.get('showing');
         var count = Object.keys(showing).reduce((prev, key) => {
             return prev += (showing[key] ? 1 : 0);
         }, 0);
@@ -19,7 +19,7 @@ export default Ember.Component.extend({
             previewShowing: this.get('previewShowing'),
             detailShowing: this.get('detailShowing'),
             listShowing: this.get('listShowing'),
-        }
+        };
     }),
     actions: {
         togglePreview(){

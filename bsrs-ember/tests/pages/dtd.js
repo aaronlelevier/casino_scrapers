@@ -10,7 +10,6 @@ const NEW_URL = `${BASE_URL}/new/1`;
 const DETAIL_URL = `${BASE_URL}/${DTD.idOne}`;
 
 var DTDPage = PageObject.create({
-    visitNew: visitable(NEW_URL),
     visit: visitable(DTDS_URL),
     visitDetail: visitable(DETAIL_URL),
     visitNew: visitable(NEW_URL),
