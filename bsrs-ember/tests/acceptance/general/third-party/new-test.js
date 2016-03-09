@@ -23,7 +23,7 @@ const DJANGO_DETAIL_URL = PREFIX + DJANGO_THIRD_PARTY_URL + TPD.idOne + '/';
 
 let application, original_uuid, store, payload, list_xhr;
 
-module('Acceptance | third-party-new', {
+module('Acceptance | third-party new test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');

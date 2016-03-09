@@ -14,11 +14,11 @@
                     <span class="btn btn-default btn-file">{{fa-icon 'paperclip'}} {{t "button.upload"}}<input type="file" multiple="multiple" onchange={{action "upload"}}></span>
                 </div>
                 <div class="ticket-action status">
-                    {{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModels=statuses relatedModelName='ticket-status'}}
+                    {{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModels=statuses relatedModelName='ticket-status' i18n=true}}
                     {{#validation-error-field field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
                 </div>
                 <div class="ticket-action priority">
-                    {{power-select-foreign-key mainModel=model selected=model.priority change_method='change_priority' relatedModels=priorities relatedModelName='ticket-priority'}}
+                    {{power-select-foreign-key mainModel=model selected=model.priority change_method='change_priority' relatedModels=priorities relatedModelName='ticket-priority' i18n=true}}
                     {{#validation-error-field field="priority" className="validation validation-under t-priority-validation-error" model=model validation=priorityValidation}}invalid priority{{/validation-error-field}}
                 </div>
             </div>

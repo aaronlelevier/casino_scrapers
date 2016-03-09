@@ -24,7 +24,7 @@ module('unit: dtd test', {
 
 test('dtd_link_ids', (assert) => {
     assert.equal(dtd.get('dtd_link_ids').length, 1);
-    assert.equal(LINK.idOne, dtd.get('dtd_link_ids')[0], 'x'); // DTDL.idOne);
+    assert.equal(LINK.idOne, dtd.get('dtd_link_ids')[0], 'x');
 });
 
 /* DTD-LINK M2M: START */

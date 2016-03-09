@@ -19,10 +19,11 @@ const BSRS_PERSON_ADDRESSES = [];
 const BSRS_PERSON_UNUSED_ID = 'cadba3ba-a533-44e0-ab1f-57cc1b052138';
 
 var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
-    var factory = function(role_defaults, status_defaults, currency_defaults) {
+    var factory = function(role_defaults, status_defaults, currency_defaults, locale_defaults) {
         this.role_defaults = role_defaults;
         this.status_defaults = status_defaults;
         this.currency_defaults = currency_defaults;
+        this.locale_defaults = locale_defaults;
     };
     factory.prototype.defaults = function() {
         return {
@@ -50,9 +51,9 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
             auth_amount: BSRS_PERSON_AUTH_AMOUNT,
             auth_currency: this.currency_defaults.id,
             locale: 'en',
-            localeFull: 'English - English',
+            localeFull: this.locale_defaults.nameOne, // 'English - English',
             locale2: 'es',
-            localeTwoFull: 'Spanish - Español',
+            localeTwoFull: this.locale_defaults.nameTwo, // 'Spanish - Español',
             localeTwo: 'Spanish',
             locale_id: 'a7ae2835-ee7c-4604-92f7-045f3994936e',
             locale2_id: '51905ba8-024f-4739-ae5c-2d90ffc3f726',
@@ -96,13 +97,15 @@ if (typeof window === 'undefined') {
     var role_defaults = require('./role');
     var status_defaults = require('./status');
     var currency_defaults = require('./currencies');
-    module.exports = new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults).defaults();
+    var locale_defaults = require('./locale');
+    module.exports = new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults, locale_defaults).defaults();
 } else {
     define('bsrs-ember/vendor/defaults/person', ['exports', 'bsrs-ember/vendor/defaults/role',
                                                 'bsrs-ember/vendor/defaults/status',
-                                                'bsrs-ember/vendor/defaults/currencies'],
-    function (exports, role_defaults, status_defaults, currency_defaults) {
+                                                'bsrs-ember/vendor/defaults/currencies',
+                                                'bsrs-ember/vendor/defaults/locale'],
+    function (exports, role_defaults, status_defaults, currency_defaults, locale_defaults) {
         'use strict';
-        return new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults).defaults();
+        return new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults, locale_defaults).defaults();
     });
 }

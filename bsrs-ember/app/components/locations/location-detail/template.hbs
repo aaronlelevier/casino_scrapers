@@ -64,7 +64,7 @@
           <div class="row">
             <div class="col-md-12">
               {{#form-group title="admin.location.label.status-name" for="location_status"}}
-                {{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModels=all_statuses relatedModelName='status'}}
+                {{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModels=all_statuses relatedModelName='status' i18n=true}}
               {{/form-group}}
             </div>
           </div>
