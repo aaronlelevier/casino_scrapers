@@ -221,7 +221,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self._fill_in(location)
         location_level_select = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-level-select ')]/div")
         location_level_select.click()
-        ll_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-level-select-dropdown ')]/ul/li[text()='district_lp']")
+        ll_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-basic-dropdown-content ')]/ul/li[text()='district_lp']")
         ll_option.click()
         # Fill in Children
         location_children_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-location-children-select')])[last()]")
@@ -335,14 +335,15 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # click Delete
         self.gen_elem_page.click_dropdown_delete()
         self.gen_elem_page.click_delete_btn()
-        # # check LLevel is deleted
-        # self.driver.refresh()
-        # location_level = location_level_page.find_list_data()
-        # location_level_list_view = location_level_page.find_list_name()
-        # self.assertNotIn(
-        #     location_level_name,
-        #     [r.text for r in location_level_list_view]
-        # )
+        # check LLevel is deleted
+        location_level = location_level_page.find_list_data()
+        self.driver.refresh()
+        location_level = location_level_page.find_list_data()
+        location_level_list_view = location_level_page.find_list_name()
+        self.assertNotIn(
+            location_level_name,
+            [r.text for r in location_level_list_view]
+        )
 
     def test_person(self):
         ### CREATE

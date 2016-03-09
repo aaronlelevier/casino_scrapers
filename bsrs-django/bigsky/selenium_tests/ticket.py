@@ -171,26 +171,25 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]", debounce=True)
         assignee_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]")
         assignee_option.click()
-        ticket_category = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-category-select ')]/div")
+        ticket_category = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-model-category-select ')]/div")
         ticket_category.click()
         # Select 3 Categories for this Ticket
         # one
-        ticket_category_input = self.wait_for_xhr_request_xpath("(//*[contains(@class, 't-ticket-category-select-trigger')])[last()]")
         category_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
         category_option.click()
         # two
-        ticket_category_input = self.wait_for_xhr_request_xpath("(//*[contains(@class, 't-ticket-category-select-trigger')])[last()]")
-        ticket_category_input.click()
+        ticket_category = self.wait_for_xhr_request_xpath("(//*[contains(@class, 't-model-category-select')])[last()]")
+        ticket_category.click()
         category_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
         category_option.click()
         # three
-        ticket_category_input = self.wait_for_xhr_request_xpath("(//*[contains(@class, 't-ticket-category-select-trigger')])[last()]")
-        ticket_category_input.click()
+        ticket_category = self.wait_for_xhr_request_xpath("(//*[contains(@class, 't-model-category-select')])[last()]")
+        ticket_category.click()
         category_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
         category_option.click()
         # four
-        ticket_category_input = self.wait_for_xhr_request_xpath("(//*[contains(@class, 't-ticket-category-select-trigger')])[last()]")
-        ticket_category_input.click()
+        ticket_category = self.wait_for_xhr_request_xpath("(//*[contains(@class, 't-model-category-select')])[last()]")
+        ticket_category.click()
         category_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
         category_option.click()
 

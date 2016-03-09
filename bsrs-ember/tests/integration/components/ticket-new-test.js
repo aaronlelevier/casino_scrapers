@@ -39,7 +39,7 @@ test('each status shows up as a valid select option', function(assert) {
     this.set('model', ticket);
     this.set('statuses', statuses);
     this.render(hbs`{{tickets/ticket-new model=model statuses=statuses}}`);
-    let $component = this.$('.t-power-select-foreign-key-ticket-status');
+    let $component = this.$('.t-ticket-status-select');
     assert.equal($component.length, 1);
 });
 
@@ -53,7 +53,7 @@ test('each priority shows up as a valid select option', function(assert) {
     this.set('model', ticket);
     this.set('priorities', priorities);
     this.render(hbs`{{tickets/ticket-new model=model priorities=priorities}}`);
-    let $component = this.$('.t-power-select-foreign-key-ticket-priority');
+    let $component = this.$('.t-ticket-priority-select');
     assert.equal($component.length, 1);
 });
 

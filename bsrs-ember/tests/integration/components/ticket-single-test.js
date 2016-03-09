@@ -39,7 +39,7 @@ test('each status shows up as a valid select option', function(assert) {
     this.set('model', ticket);
     this.set('statuses', statuses);
     this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
-    let $component = this.$('.t-power-select-foreign-key-ticket-status');
+    let $component = this.$('.t-ticket-status-select');
     assert.equal($component.length, 1);
 });
 
@@ -53,7 +53,7 @@ test('each priority shows up as a valid select option', function(assert) {
     this.set('model', ticket);
     this.set('priorities', priorities);
     this.render(hbs`{{tickets/ticket-single model=model priorities=priorities activities=priorities}}`);
-    let $component = this.$('.t-power-select-foreign-key-ticket-priority');
+    let $component = this.$('.t-ticket-priority-select');
     assert.equal($component.length, 1);
 });
 
@@ -68,9 +68,9 @@ test('changing priority changes the class', function(assert) {
     this.set('priorities', priorities);
     this.render(hbs`{{tickets/ticket-single model=model priorities=priorities activities=priorities}}`);
     assert.ok(this.$('.tag:eq(0)').hasClass('ticket-priority-emergency'));
-    let $component = this.$('.t-power-select-foreign-key-ticket-priority');
+    let $component = this.$('.t-ticket-priority-select');
     assert.equal($component.length, 1);
-    clickTrigger('.t-power-select-foreign-key-ticket-priority >');
+    clickTrigger('.t-ticket-priority-select >');
     $(`.ember-power-select-option:contains(${TD.priorityTwoKey})`).mouseup();
     assert.ok(this.$('.tag:eq(0)').hasClass('ticket-priority-high'));
 });
@@ -86,9 +86,9 @@ test('changing status changes the class', function(assert) {
     this.set('statuses', statuses);
     this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
     assert.ok(this.$('.tag:eq(1)').hasClass('ticket-status-new'));
-    let $component = this.$('.t-power-select-foreign-key-ticket-status');
+    let $component = this.$('.t-ticket-status-select');
     assert.equal($component.length, 1);
-    clickTrigger('.t-power-select-foreign-key-ticket-status >');
+    clickTrigger('.t-ticket-status-select >');
     $(`.ember-power-select-option:contains(${TD.statusTwoKey})`).mouseup();
     assert.ok(this.$('.tag:eq(1)').hasClass('ticket-status-deferred'));
 });

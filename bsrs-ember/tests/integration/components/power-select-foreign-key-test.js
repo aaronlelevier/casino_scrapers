@@ -9,7 +9,7 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 var store, ticket, priority_one, priority_two, priority_three, trans, run = Ember.run, trans;
 const PowerSelect = '.ember-power-select-trigger';
 const relatedModelName = 'ticket-priority';
-const COMPONENT = `.t-power-select-foreign-key-${relatedModelName}`;
+const COMPONENT = `.t-${relatedModelName}-select`;
 const DROPDOWN = '.ember-power-select-dropdown';
 
 moduleForComponent('power-select-foreign-key', 'integration: power-select-foreign-key test', {

@@ -1,5 +1,5 @@
 {{#power-select
-  class=(concat 'power-select-foreign-key-' relatedModelName ' t-power-select-foreign-key-' relatedModelName)
+  class=(concat relatedModelName '-select' ' t-' relatedModelName '-select')
   selected=selected
   allowClear=clear
   onchange=(action "selected")
