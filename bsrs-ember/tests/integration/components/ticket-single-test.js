@@ -88,7 +88,7 @@ test('changing status changes the class', function(assert) {
     assert.ok(this.$('.tag:eq(1)').hasClass('ticket-status-new'));
     let $component = this.$('.t-power-select-foreign-key-ticket-status');
     assert.equal($component.length, 1);
-    this.$('.t-power-select-foreign-key-ticket-status > .ember-basic-dropdown-trigger').mousedown();
+    clickTrigger('.t-power-select-foreign-key-ticket-status >');
     $(`.ember-power-select-option:contains(${TD.statusTwoKey})`).mouseup();
     assert.ok(this.$('.tag:eq(1)').hasClass('ticket-status-deferred'));
 });
