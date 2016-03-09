@@ -7,5 +7,9 @@
   options=relatedModels
   as |option|
 }}
-  {{t option.name}}
+  {{#if i18n }}
+    {{t option.name}}
+  {{else}}
+    {{option.name}}
+  {{/if}}
 {{/power-select}}

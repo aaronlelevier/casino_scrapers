@@ -20,7 +20,7 @@ const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-option`;
 const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
 const LOCATION_TWO = `${LOCATIONS}:eq(1)`;
 const ROLE = '.t-person-role-select > .ember-basic-dropdown-trigger';
-const LOCALE = '.t-locale-select > .ember-basic-dropdown-trigger';
+const LOCALE = '.t-power-select-foreign-key-locale > .ember-basic-dropdown-trigger';
 
 
 export default PageObject.create({
