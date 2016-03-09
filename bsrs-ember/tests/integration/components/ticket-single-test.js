@@ -70,10 +70,8 @@ test('changing priority changes the class', function(assert) {
     assert.ok(this.$('.tag:eq(0)').hasClass('ticket-priority-emergency'));
     let $component = this.$('.t-power-select-foreign-key-ticket-priority');
     assert.equal($component.length, 1);
-    this.$('.t-power-select-foreign-key-ticket-priority > .ember-basic-dropdown-trigger').mousedown();
-    run(() => {
-        $(`.ember-power-select-option:contains(${TD.priorityTwoKey})`).mouseup();
-    });
+    clickTrigger('.t-power-select-foreign-key-ticket-priority >');
+    $(`.ember-power-select-option:contains(${TD.priorityTwoKey})`).mouseup();
     assert.ok(this.$('.tag:eq(0)').hasClass('ticket-priority-high'));
 });
 
@@ -91,8 +89,6 @@ test('changing status changes the class', function(assert) {
     let $component = this.$('.t-power-select-foreign-key-ticket-status');
     assert.equal($component.length, 1);
     this.$('.t-power-select-foreign-key-ticket-status > .ember-basic-dropdown-trigger').mousedown();
-    run(() => {
-        $(`.ember-power-select-option:contains(${TD.statusTwoKey})`).mouseup();
-    });
+    $(`.ember-power-select-option:contains(${TD.statusTwoKey})`).mouseup();
     assert.ok(this.$('.tag:eq(1)').hasClass('ticket-status-deferred'));
 });
