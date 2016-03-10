@@ -94,3 +94,85 @@ class FactoryTests(TestCase):
         # three
         self.assertEqual(three.links.count(), 1)
         self.assertIsNone(three.links.first().destination)
+
+
+class FixtureGenerationTests(TestCase):
+
+    def test_dtd_clear_all(self):
+        mommy.make(TreeData)
+        mommy.make(TreeLink)
+        mommy.make(TreeField)
+        mommy.make(TreeOption)
+        self.assertTrue(TreeData.objects_all.count() > 0)
+        self.assertTrue(TreeLink.objects_all.count() > 0)
+        self.assertTrue(TreeField.objects_all.count() > 0)
+        self.assertTrue(TreeOption.objects_all.count() > 0)
+
+        factory.dtd_clear_all()
+
+        self.assertTrue(TreeData.objects_all.count() == 0)
+        self.assertTrue(TreeLink.objects_all.count() == 0)
+        self.assertTrue(TreeField.objects_all.count() == 0)
+        self.assertTrue(TreeOption.objects_all.count() == 0)
+
+    def test_create_dtd_fixtures_only(self):
+        factory.create_dtd_fixtures_only()
+
+        self.assertEqual(TreeData.objects.count(), 23)
+        for x in TreeData.objects.all():
+            self.assertEqual(TreeData.objects.filter(note=x.note).count(), 1)
+
+    def test_create_link_fixtures_only(self):
+        factory.create_link_fixtures_only()
+
+        self.assertEqual(TreeLink.objects.count(), 23)
+        for x in TreeLink.objects.all():
+            self.assertEqual(TreeLink.objects.filter(order=x.order).count(), 1)
+
+    # join_dtds_and_links
+
+    def test_join_dtds_and_links__initial_counts(self):
+        factory.create_dtd_fixtures_only()
+        factory.create_link_fixtures_only()
+
+        factory.join_dtds_and_links()
+
+        self.assertEqual(TreeData.objects.count(), 23)
+        self.assertEqual(TreeLink.objects.count(), 23)
+
+    def test_join_dtds_and_links__tree_link_join_counts(self):
+        factory.create_dtd_fixtures_only()
+        factory.create_link_fixtures_only()
+
+        factory.join_dtds_and_links()
+
+        start = TreeData.objects.get(note=str(0))
+        self.assertEqual(start.links.count(), 2)
+
+        appliances = TreeData.objects.get(note=str(2))
+        self.assertEqual(appliances.links.count(), 3)
+
+        parking_lot = TreeData.objects.get(note=str(13))
+        self.assertEqual(parking_lot.links.count(), 3)
+
+        plumbing = TreeData.objects.get(note=str(17))
+        self.assertEqual(plumbing.links.count(), 5)
+
+    def test_join_dtds_and_links__destination(self):
+        factory.create_dtd_fixtures_only()
+        factory.create_link_fixtures_only()
+
+        factory.join_dtds_and_links()
+
+        for link in TreeLink.objects.all():
+            self.assertIsInstance(link.destination, TreeData)
+            if link.dtd:
+                self.assertNotEqual(link.dtd.id, link.destination.id)
+
+    # create_dtd_fixture_data
+
+    def test_create_dtd_fixture_data(self):
+        factory.create_dtd_fixture_data()
+
+        self.assertEqual(TreeData.objects.count(), 23)
+        self.assertEqual(TreeLink.objects.count(), 23)

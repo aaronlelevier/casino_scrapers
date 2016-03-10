@@ -13,10 +13,10 @@ class TreeData(BaseModel):
     key = models.CharField(max_length=1000)
     description = models.TextField()
     attachments = GenericRelation(Attachment)
-    note = models.CharField(max_length=1000, blank=True)
+    note = models.CharField(max_length=1000, blank=True, null=True)
     note_type = models.CharField(max_length=1000, choices=[(x,x) for x in NOTE_TYPES],
                                  blank=True, default=NOTE_TYPES[0])
-    prompt = models.CharField(max_length=1000)
+    prompt = models.CharField(max_length=1000, blank=True, null=True)
     link_type = models.CharField(max_length=1000, choices=[(x,x) for x in LINK_TYPES],
                                  blank=True, default=LINK_TYPES[0])
 
@@ -41,7 +41,7 @@ class TreeLink(BaseModel):
     action_button = models.BooleanField(blank=True, default=False)
     is_header = models.BooleanField(blank=True, default=False)
     categories = models.ManyToManyField(Category, related_name='links')
-    request = models.CharField(max_length=1000, blank=True)
+    request = models.CharField(max_length=1000, blank=True, null=True)
     priority = models.ForeignKey(TicketPriority, null=True)
     status = models.ForeignKey(TicketStatus, null=True)
     destination = models.ForeignKey(TreeData, null=True)
