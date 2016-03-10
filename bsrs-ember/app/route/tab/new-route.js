@@ -21,7 +21,7 @@ var TabNewRoute = Ember.Route.extend({
                 if(temp === tab.get('id') || tab.get('newModel')){
                     this.transitionTo(tab.get('redirect'));
                     if (tab.get('newModel') && !tab.get('saveModel')) {
-                        model.removeRecord(); 
+                        model.removeRecord();
                     }
                 }else if(this.routeName !== tab.get('redirect')){
                     this.transitionTo(this.routeName);
@@ -39,4 +39,3 @@ var TabNewRoute = Ember.Route.extend({
 });
 
 export default TabNewRoute;
-

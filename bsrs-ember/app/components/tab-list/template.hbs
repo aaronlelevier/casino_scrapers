@@ -2,9 +2,17 @@
     <ul id="tabs" class="list-inline">
         {{#each tabs as |tab|}}
             {{#if tab.model.new}}
-              {{tab-navigation tab=tab link_id=tab.model.new_pk close=(action "closeTab")}}
+                {{tab-navigation
+                    tab=tab
+                    link_id=tab.model.new_pk
+                    close=(action "closeTab")
+                }}
             {{else}}
-              {{tab-navigation tab=tab link_id=tab.model.id close=(action "closeTab")}}
+                {{tab-navigation
+                    tab=tab
+                    link_id=tab.model.id
+                    close=(action "closeTab")
+                }}
             {{/if}}
         {{/each}}
         <li class="new">

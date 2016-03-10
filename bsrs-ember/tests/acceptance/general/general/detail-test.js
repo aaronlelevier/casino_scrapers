@@ -70,7 +70,7 @@ test('translations - for labels', (assert) => {
     });
 });
 
-test('amk general settings are properly dirty tracked', function(assert) {
+test('general settings are properly dirty tracked', function(assert) {
     visit(DETAIL_URL);
     andThen(() => {
         let setting = store.find('setting', SD.id);

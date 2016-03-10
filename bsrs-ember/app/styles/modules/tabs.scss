@@ -9,21 +9,51 @@ nav.tabs{
     z-index: 1;
     ul{
         margin-left: 0px;
+        margin-right: -100px;
+        overflow: hidden;
         li{
             height: $tabHeight;
             line-height: $tabHeight;
             background: $light;
             border: $borderStyle;
-            padding: 0 10px;
+            padding: 0;
             float: left;
             font-size: 1.2rem;
             width: $tabWidth;
             margin: 0 3px 0 0;
             border-radius: $borderRadiusTop;
             position: relative;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+
+            -webkit-transition: width .25s ease-in-out;
+            -moz-transition: width .25s ease-in-out;
+            -o-transition: width .25s ease-in-out;
+            transition: width .25s ease-in-out;
+
+            a{
+                height: $tabHeightMinus2;
+                line-height: $tabHeightMinus2;
+                background: $light;
+                padding: 0 10px;
+                display: block;
+                color: $darkGray;
+                @include truncate;
+                &:hover,
+                &:focus{
+                    text-decoration: none;
+                    cursor: pointer;
+                }
+                &.active{
+                    height: $tabHeightMinus1;
+                    background: $lightGray;
+                    border-bottom-color: $lightGray;
+                }
+                &.active{
+                    &:hover{
+                        cursor: default;
+                    }
+                }
+            }
+
             .close-wrap{
                 .close-icon{
                     height: 12px;
@@ -32,9 +62,10 @@ nav.tabs{
                     top: 3px;
                     right: 3px;
                     color: $darkGray;
+                    padding: 0;
                     &:hover{
-                        cursor: pointer;
                         color: $dark;
+                        cursor: pointer;
                         text-decoration: none;
                     }
                     i{
@@ -49,17 +80,6 @@ nav.tabs{
 
                 }
             }
-            &:hover{
-                cursor: pointer;
-            }
-            &.active{
-                background: $lightGray;
-                border-bottom-color: $lightGray;
-            }
-            &:hover.active{
-                cursor: default;
-            }
-
         }//li
 
         li.new{

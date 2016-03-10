@@ -43,6 +43,7 @@ module.exports = function(defaults) {
       app.import('vendor/ticket_fixtures.js');
       app.import('vendor/ticket_activity_fixtures.js');
       app.import('vendor/category_fixtures.js');
+      app.import('vendor/tab_fixtures.js');
       app.import('vendor/translation_fixtures.js');
       app.import('vendor/defaults/address-type.js');
       app.import('vendor/defaults/address.js');
@@ -82,6 +83,7 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/ticket-priority.js');
       app.import('vendor/defaults/model-category.js');
       app.import('vendor/defaults/translation.js');
+      app.import('vendor/defaults/tab.js');
   }
   // Use `app.import` to add additional libraries to the generated
   // output files.

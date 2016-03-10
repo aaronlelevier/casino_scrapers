@@ -23,6 +23,12 @@ var TabModel = Ember.Object.extend({
     }),
     parent: Ember.computed('modelBindingToTemplate', function(){
         return this.get('modelBindingToTemplate') || this.get('doc_type');
+    }),
+    tab_count: Ember.computed(function(){
+        const filter = (tab) => {
+            return true;
+        };
+        return this.get('store').find('tab', filter);
     })
 });
 
