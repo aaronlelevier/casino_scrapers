@@ -1,19 +1,24 @@
 .dtd-row {
     position: absolute;
-    top: 40px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    &.col-count-2 {
-        div:first-of-type {
+    .dtd-col{
+        margin: 40px 0 0;
+        float: left;
+        height: 100%;
+        overflow: auto;
+        position: relative;
+        width: 100%;
+        article.main{
             left: 0;
-            top: 0;
-            bottom: 0;
         }
-        div:last-of-type {
-            right: 0;
-            top: 0;
-            bottom: 0;
+    }
+    &.col-count-3 {
+        .dtd-col {
+            width: 33.33%
+        }
+    }
+    &.col-count-2 {
+        .dtd-col {
+            width: 50%
         }
     }
 }
