@@ -188,7 +188,7 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
         assert.equal(find('.t-tab-title:eq(0)').text(), 'New Person');
     });
     const username_response = {'count':1,'next':null,'previous':null,'results': [{'id': PD.idOne}]};
-    username_search = xhr(endpoint + '?username=llcoolj', 'GET', null, {}, 200, username_response);
+    const username_search = xhr(endpoint + '?username=llcoolj', 'GET', null, {}, 200, username_response);
     fillIn('.t-person-username', PD_PUT.username);
     let people_list_data = PF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
@@ -415,7 +415,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
         assert.equal(find('.t-tab-title:eq(0)').text(), 'New Person');
     });
     const username_response = {'count':1,'next':null,'previous':null,'results': [{'id': PD.idOne}]};
-    username_search = xhr(endpoint + '?username=llcoolj', 'GET', null, {}, 200, username_response);
+    const username_search = xhr(endpoint + '?username=llcoolj', 'GET', null, {}, 200, username_response);
     fillIn('.t-person-username', PD_PUT.username);
     let people_list_data = PF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
