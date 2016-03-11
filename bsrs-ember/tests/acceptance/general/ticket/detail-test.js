@@ -484,7 +484,7 @@ test('starting with multiple cc, can remove all ccs (while not populating option
     });
 });
 
-test('clicking and typing into power select for people will not filter if spacebar pressed', (assert) => {
+test('clicking and typing into db-multi power select for people will fire xhr if spacebar pressed', (assert) => {
     page.visitDetail();
     page.ccClickDropdown();
     fillIn(`${CC_SEARCH}`, ' ');
@@ -985,6 +985,18 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     });
 });
 
+test('clicking and typing into db-fetch power select for people will fire xhr if spacebar pressed', (assert) => {
+    clearxhr(list_xhr);
+    page.visitDetail();
+    page.assigneeClickDropdown();
+    fillIn(`${SEARCH}`, ' ');
+    andThen(() => {
+        assert.equal(page.assigneeOptionLength, 1);
+        assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
+    });
+});
+
+/* OTHER */
 test('textarea autoresize working for the request field', (assert) => {
     page.visit();
     andThen(() => {
