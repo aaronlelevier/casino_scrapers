@@ -63,6 +63,14 @@ test('ticket requester field is not dirty with empty string and no existing', (a
     assert.ok(ticket.get('isNotDirty'));
 });
 
+test('ticket comment field is dirty trackable and no dirty with empty string', (assert) => {
+    ticket = store.push('ticket', {id: TD.idOne});
+    ticket.set('comment', 'wat');
+    assert.ok(ticket.get('isDirty'));
+    ticket.set('comment', '');
+    assert.ok(ticket.get('isNotDirty'));
+});
+
 test('ticket is dirty or related is dirty when model has been updated', (assert) => {
     ticket = store.push('ticket', {id: TD.idOne, number: TD.numberOne, status_fk: TD.statusOneId});
     store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: [TD.idOne]});

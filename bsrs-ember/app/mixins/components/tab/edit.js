@@ -4,7 +4,7 @@ var EditMixin = Ember.Mixin.create({
     actions: {
         save(update) {
             const model = this.get('model');
-            if(update && !model.get('comment') && model.get('isNotDirtyOrRelatedNotDirty')){
+            if(update && model.get('isNotDirtyOrRelatedNotDirty')){
                 return; 
             }
             const pk = this.get('model').get('id');

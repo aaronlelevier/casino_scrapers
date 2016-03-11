@@ -19,6 +19,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
     number: attr(''),
     request: attr(''),
     requester: attr(''),
+    comment: attr(''),
     //TODO: these need to be in an init function
     ticket_people_fks: [],
     model_categories_fks: [],
