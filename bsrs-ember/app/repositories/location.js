@@ -24,7 +24,8 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
             model.saveRelated();
         });
     },
-    findLocationChildren(llevel, search_criteria, pk) {
+    findLocationChildren(search_criteria, extra_params) {
+        const { llevel, pk } = extra_params;
         let url = `${LOCATION_URL}get-level-children/${llevel}/${pk}/`;
         // search_criteria = search_criteria ? search_criteria.trim() : search_criteria;
         if (search_criteria) {
@@ -38,7 +39,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
         });
     },
     findLocationParents(search_criteria, extra_params) {
-        const { llevel, pk } = extra_params
+        const { llevel, pk } = extra_params;
         let url = `${LOCATION_URL}get-level-parents/${llevel}/${pk}/`;
         // search_criteria = search_criteria ? search_criteria.trim() : search_criteria;
         if (search_criteria) {

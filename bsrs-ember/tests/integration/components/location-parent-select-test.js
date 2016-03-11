@@ -50,8 +50,9 @@ test('should render a selectbox when with options selected (initial state)', fun
         store.clear('location-parents');
     });
     let location_parent_options = Ember.A([]);
-    this.set('location', locationz);
-    this.render(hbs`{{location-parent-select location=location}}`);
+    this.set('model', locationz);
+    this.repository = location_repo;
+    this.render(hbs`{{db-fetch-multi-select model=model isDisabled=isDisabled multiAttr="parents" multiAttrIds="parents_ids" selectedAttr=model.parents className="t-location-parent-select" displayName="name" add_func="add_parent" remove_func="remove_parent" repository=repository searchMethod="findLocationParents" extra_params=extra_params}}`);
     let $component = this.$(COMPONENT);
     clickTrigger();
     assert.equal($(DROPDOWN).length, 1);
@@ -62,8 +63,9 @@ test('should render a selectbox when with options selected (initial state)', fun
 
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
     let location_parent_options = store.find('location');
-    this.set('location', locationz);
-    this.render(hbs`{{location-parent-select location=location}}`);
+    this.set('model', locationz);
+    this.repository = location_repo;
+    this.render(hbs`{{db-fetch-multi-select model=model isDisabled=isDisabled multiAttr="parents" multiAttrIds="parents_ids" selectedAttr=model.parents className="t-location-parent-select" displayName="name" add_func="add_parent" remove_func="remove_parent" repository=repository searchMethod="findLocationParents" extra_params=extra_params}}`);
     let $component = this.$(COMPONENT);
     assert.equal(locationz.get('parents').get('length'), 2);
     clickTrigger();
