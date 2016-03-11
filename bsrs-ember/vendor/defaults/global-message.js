@@ -14,6 +14,7 @@ var BSRS_GLOBAL_MESSAGE_DEFAULTS_OBJECT = (function() {
             invalid_email: 'Invalid Email',
             invalid_middle_initial: 'Invalid Middle Initial',
             invalid_username: 'Invalid Username',
+            existing_username: 'Username mgibson1 already exists',
             invalid_password: 'Invalid Password',
             invalid_zip: 'Invalid Zip',
             invalid_street: 'Invalid Street Address',

@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { test } from 'qunit';
 import module from "bsrs-ember/tests/helpers/module";
 import startApp from 'bsrs-ember/tests/helpers/start-app';
@@ -26,7 +27,7 @@ const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + UUID.value;
 const NEW_URL = BASE_PEOPLE_URL + '/new/1';
 
-var application, store, payload, detail_xhr, list_xhr, original_uuid, people_detail_data, detailEndpoint;
+var application, store, payload, detail_xhr, list_xhr, original_uuid, people_detail_data, detailEndpoint, endpoint;
 
 module('Acceptance | people-new', {
     beforeEach() {
@@ -39,7 +40,7 @@ module('Acceptance | people-new', {
         };
         application = startApp();
         store = application.__container__.lookup('store:main');
-        var endpoint = `${PREFIX}${BASE_PEOPLE_URL}/`;
+        endpoint = `${PREFIX}${BASE_PEOPLE_URL}/`;
         list_xhr = xhr(endpoint + '?page=1','GET',null,{},200,PF.empty());
         detailEndpoint = `${PREFIX}${BASE_PEOPLE_URL}/`;
         people_detail_data = {id: UUID.value, username: PD.username,
@@ -54,6 +55,21 @@ module('Acceptance | people-new', {
         random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
+});
+
+test('username backend validation', (assert) => {
+    clearxhr(detail_xhr);
+    clearxhr(list_xhr);
+    visit(NEW_URL);
+    andThen(() => {
+        assert.equal(find('.t-existing-username-error').text().trim(), '');
+    });
+    const username_response = {'count':1,'next':null,'previous':null,'results': [{'id': PD.idOne}]};
+    xhr(endpoint + '?username=mgibson1', 'GET', null, {}, 200, username_response);
+    fillIn('.t-person-username', PD.username);
+    andThen(() => {
+        assert.equal(find('.t-existing-username-error').text().trim(), GLOBALMSG.existing_username);
+    });
 });
 
 test('visiting /people/new and creating a new person', (assert) => {

@@ -6,51 +6,56 @@
   cancel="cancel"
   }}
 
-	<section class="docSection container-fluid">
-		<div class="row">
-			<div class="col-md-12">
-				<section style="padding-bottom: 0">
-					<div class="row card-title">
-                        <h1 class="col-md-12">
-                            <span class="new">{{t 'admin.person.new'}}</span>
-                        </h1>
-					</div>
-				</section>
-			</div>
-			<div class="col-md-12">
-				<section>
-					<div class="row">
-                        <div class="col-sm-12">
-            				{{#form-group title="admin.person.label.username" for="username"}}
-            					{{input type="text" value=model.username placeholder=(t "admin.person.label.username") class="form-control t-person-username" id="username" autocomplete="off"}}
-            					{{#validation-error-field submitted=submitted field="username" className="validation validation-under t-username-validation-error" model=model validation=usernameValidation}}{{t "validation.invalid"}} {{t "admin.person.label.username"}}{{/validation-error-field}}
-            				{{/form-group}}
-            			</div>
-                    </div>
-                    <div class="row">
-            			<div class="col-sm-12">
-            				{{#form-group title="admin.person.label.password" for="password"}}
-            					{{input type="password" value=model.password placeholder=(t "admin.person.label.password") class="form-control t-person-password" id="password" autocomplete="off"}}
-            					{{#validation-error-field submitted=submitted field="password" className="validation validation-under t-password-validation-error" model=model validation=passwordValidation}}{{t "validation.invalid"}} {{t "admin.person.label.password"}}{{/validation-error-field}}
-            				{{/form-group}}
-            			</div>
-                    </div>
-                    <div class="row">
-            			<div class="col-sm-12">
-            				{{#form-group title="admin.person.label.role-name" for="role"}}
-                        {{role-select model=model options=roles}}
-            				{{/form-group}}
-            			</div>
-					</div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{#form-group title="admin.person.label.language" for="locale"}}
-                            {{power-select-foreign-key mainModel=model selected=model.locale change_method='change_locale' relatedModels=locales relatedModelName='locale'}}
-                            {{/form-group}}
-                        </div>
-                    </div>
-				</section>
-			</div>
-        </div>
-	</section>
+  <section class="docSection container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <section style="padding-bottom: 0">
+          <div class="row card-title">
+            <h1 class="col-md-12">
+              <span class="new">{{t 'admin.person.new'}}</span>
+            </h1>
+          </div>
+        </section>
+      </div>
+      <div class="col-md-12">
+        <section>
+          <div class="row">
+            <div class="col-sm-12">
+              {{#form-group title="admin.person.label.username" for="username"}}
+              {{input type="text" value=model.username placeholder=(t "admin.person.label.username") class="form-control t-person-username" id="username" autocomplete="off"}}
+              {{#validation-error-field submitted=submitted field="username" className="validation validation-under t-username-validation-error" model=model validation=usernameValidation}}{{t "validation.invalid"}} {{t "admin.person.label.username"}}{{/validation-error-field}}
+              {{#if (v-get model 'username' 'isInvalid')}}
+              <div class="t-existing-username-error">
+                  {{v-get model 'username' 'message'}}
+              </div>
+              {{/if}}
+              {{/form-group}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              {{#form-group title="admin.person.label.password" for="password"}}
+              {{input type="password" value=model.password placeholder=(t "admin.person.label.password") class="form-control t-person-password" id="password" autocomplete="off"}}
+              {{#validation-error-field submitted=submitted field="password" className="validation validation-under t-password-validation-error" model=model validation=passwordValidation}}{{t "validation.invalid"}} {{t "admin.person.label.password"}}{{/validation-error-field}}
+              {{/form-group}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              {{#form-group title="admin.person.label.role-name" for="role"}}
+              {{role-select model=model options=roles}}
+              {{/form-group}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              {{#form-group title="admin.person.label.language" for="locale"}}
+              {{power-select-foreign-key mainModel=model selected=model.locale change_method='change_locale' relatedModels=locales relatedModelName='locale'}}
+              {{/form-group}}
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
 </form>

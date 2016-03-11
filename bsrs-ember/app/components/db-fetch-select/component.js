@@ -6,6 +6,7 @@ const DEBOUNCE_MS = config.APP.POWER_SELECT_DEBOUNCE;
 
 var DBFetch = Ember.Component.extend({
     searchRepo: task(function * (search) {
+        //TODO: make sure this is tested
         if (Ember.isBlank(search)) { return []; }
         yield timeout(DEBOUNCE_MS);
         const repo = this.get('repository');

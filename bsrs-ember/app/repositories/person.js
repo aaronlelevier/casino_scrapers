@@ -62,6 +62,10 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
             });
         }
     },
+    findUsername(username) {
+        const url = `${PEOPLE_URL}?username=${username}`;
+        return PromiseMixin.xhr(url, 'GET');
+    },
     //TODO: refactor to one method that has text search across multiple fields
     findTicketPeople(search) {
         let url = PEOPLE_URL;

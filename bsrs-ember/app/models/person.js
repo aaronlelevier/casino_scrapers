@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import CopyMixin from 'bsrs-ember/mixins/model/copy';
@@ -12,10 +13,15 @@ import LocaleMixin from 'bsrs-ember/mixins/model/person/locale';
 import config from 'bsrs-ember/config/environment';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import { belongs_to_save } from 'bsrs-components/attr/belongs-to';
+import { validator, buildValidations } from 'ember-cp-validations';
 
-const { run } = Ember;
+const Validations = buildValidations({
+    username: validator('unique-username', {
+        message: 'Username is already taken'
+    }),
+});
 
-var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, StatusMixin, LocaleMixin, NewMixin, {
+var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, StatusMixin, LocaleMixin, NewMixin, {
     type: 'person',
     store: inject('main'),
     username: attr(''),
