@@ -27,7 +27,7 @@ const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + UUID.value;
 const NEW_URL = BASE_PEOPLE_URL + '/new/1';
 
-var application, store, payload, detail_xhr, list_xhr, original_uuid, people_detail_data, detailEndpoint, endpoint;
+var application, store, payload, detail_xhr, list_xhr, original_uuid, people_detail_data, detailEndpoint, endpoint, username_search;
 
 module('Acceptance | people-new', {
     beforeEach() {
@@ -47,7 +47,7 @@ module('Acceptance | people-new', {
             role: RF.get() , phone_numbers:[], addresses: [], locations: [], status_fk: SD.activeId, locale: PD.locale_id};
         detail_xhr = xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
         const username_response = {'count':1,'next':null,'previous':null,'results': [{'id': PD.idOne}]};
-        xhr(endpoint + '?username=mgibson1', 'GET', null, {}, 200, username_response);
+        username_search = xhr(endpoint + '?username=mgibson1', 'GET', null, {}, 200, username_response);
         original_uuid = random.uuid;
         random.uuid = function() { return UUID.value; };
     },
@@ -187,6 +187,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
+    clearxhr(username_search);
     clearxhr(detail_xhr);
     visit(NEW_URL);
     generalPage.cancel();
