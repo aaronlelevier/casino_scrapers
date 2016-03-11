@@ -1,96 +1,96 @@
 <form {{action "return false" this on="submit"}}>
 
-    {{base-component
-        model=model
-        save="save"
-        cancel="cancel"
-        delete="delete"
-    }}
+  {{base-component
+  model=model
+  save="save"
+  cancel="cancel"
+  delete="delete"
+  }}
 
-    <section class="docSection container-fluid">
-        <div class="row">
+  <section class="docSection container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <section style="padding-bottom: 0">
+          <div class="row card-title">
+            <h1 class="col-md-12">
+              {{#if model.name}}
+              {{model.name}}
+              {{else}}
+              <span class="new">{{t 'admin.role.new'}}</span>
+              {{/if}}
+            </h1>
+          </div>
+        </section>
+      </div>
+      <div class="col-md-12">
+        <section>
+          <div class="row">
             <div class="col-md-12">
-                <section style="padding-bottom: 0">
-                    <div class="row card-title">
-                        <h1 class="col-md-12">
-                            {{#if model.name}}
-                                {{model.name}}
-                            {{else}}
-                                <span class="new">{{t 'admin.role.new'}}</span>
-                            {{/if}}
-                        </h1>
-                    </div>
-                </section>
+              {{#form-group title="admin.role.label.name" for="name"}}
+              {{input type="text" placeholder=(t "admin.role.label.name") value=model.name class="form-control t-role-name" id="role_name"}}
+              {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.role.label.name"}}{{/validation-error-field}}
+              {{/form-group}}
             </div>
+          </div>
+          <div class="row">
             <div class="col-md-12">
-                <section>
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{#form-group title="admin.role.label.name" for="name"}}
-                            {{input type="text" placeholder=(t "admin.role.label.name") value=model.name class="form-control t-role-name" id="role_name"}}
-                            {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.role.label.name"}}{{/validation-error-field}}
-                            {{/form-group}}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{#form-group title="admin.role.label.role_type" for="role_type"}}
-                            {{roles/role-type-select role=model all_role_types=all_role_types}}
-                            {{/form-group}}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{#form-group title="admin.location.label.location_level" for="role_location_level_select"}}
-                            {{location-level-select model=model options=all_location_levels}}
-                            {{#validation-error-field submitted=submitted field="location_level" className="validation validation-under t-location-level-validation-error" model=model validation=locationLevelValidation}}{{t "validation.invalid"}} {{t "admin.role.label.location_level"}}{{/validation-error-field}}
-                            {{/form-group}}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{#form-group title="admin.role.label.category" for="category"}}
-                            {{roles/role-category-select role=model options=categories_children}}
-                            {{#validation-error-field submitted=submitted field="categories" className="validation validation-under t-role-category-validation-error" model=model validation=categoryValidation}}{{t "validation.invalid"}} {{t "admin.role.label.categories"}}{{/validation-error-field}}
-                            {{/form-group}}
-                        </div>
-                    </div>
-                </section>
+              {{#form-group title="admin.role.label.role_type" for="role_type"}}
+              {{roles/role-type-select role=model all_role_types=all_role_types}}
+              {{/form-group}}
             </div>
-        </div>
-        <div class="row">
+          </div>
+          <div class="row">
             <div class="col-md-12">
-                <section>
-                    <div class="row card-title">
-                        <h2 class="col-md-12">{{t "admin.role.label.settings"}}</h2>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{#form-group title="admin.setting.welcome_text" for="welcome_text"}}
-                                <p class="inherited-msg t-inherited-msg-welcome_text">{{t 'crud.inherited_from' from=model.welcome_text_inherited_from}}</p>
-                                {{textarea autoresize=true placeholder=(t 'crud.default_value' value=model.welcome_text_inherited_value) value=model.welcome_text class="form-control t-settings-welcome_text" id="welcome_text"}}
-                            {{/form-group}}
-                        </div>
-                    </div>
-                    <!-- <div class="row">
-                        <div class="col-md-12">
-                            {{#form-group title="admin.setting.login_grace" for="login_grace"}}
-                                {{input type="number" placeholder=(t "admin.setting.login_grace") value=model.login_grace class="form-control t-settings-login_grace" id="login_grace"}}
-                            {{/form-group}}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="checkbox form-group">
-                                <label>
-                                    {{input type="checkbox" checked=model.create_all class="form-control t-settings-create_all" id="create_all"}}
-                                    <span>{{t "admin.setting.create_all"}}</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div> -->
-                </section>
+              {{#form-group title="admin.location.label.location_level" for="role_location_level_select"}}
+              {{location-level-select model=model options=all_location_levels}}
+              {{#validation-error-field submitted=submitted field="location_level" className="validation validation-under t-location-level-validation-error" model=model validation=locationLevelValidation}}{{t "validation.invalid"}} {{t "admin.role.label.location_level"}}{{/validation-error-field}}
+              {{/form-group}}
             </div>
-        </div>
-    </section>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              {{#form-group title="admin.role.label.category" for="category"}}
+              {{roles/role-category-select role=model options=categories_children}}
+              {{#validation-error-field submitted=submitted field="categories" className="validation validation-under t-role-category-validation-error" model=model validation=categoryValidation}}{{t "validation.invalid"}} {{t "admin.role.label.categories"}}{{/validation-error-field}}
+              {{/form-group}}
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <section>
+          <div class="row card-title">
+            <h2 class="col-md-12">{{t "admin.role.label.settings"}}</h2>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              {{#form-group title="admin.setting.welcome_text" for="welcome_text"}}
+              <p class="inherited-msg t-inherited-msg-welcome_text">{{t 'crud.inherited_from' from=model.welcome_text_inherited_from}}</p>
+              {{textarea autoresize=true placeholder=(t 'crud.default_value' value=model.welcome_text_inherited_value) value=model.welcome_text class="form-control t-settings-welcome_text" id="welcome_text"}}
+              {{/form-group}}
+            </div>
+          </div>
+          <!-- <div class="row">
+            <div class="col-md-12">
+            {{#form-group title="admin.setting.login_grace" for="login_grace"}}
+            {{input type="number" placeholder=(t "admin.setting.login_grace") value=model.login_grace class="form-control t-settings-login_grace" id="login_grace"}}
+            {{/form-group}}
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-md-12">
+            <div class="checkbox form-group">
+            <label>
+            {{input type="checkbox" checked=model.create_all class="form-control t-settings-create_all" id="create_all"}}
+            <span>{{t "admin.setting.create_all"}}</span>
+            </label>
+            </div>
+            </div>
+            </div> -->
+        </section>
+      </div>
+    </div>
+  </section>
 </form>

@@ -1,44 +1,44 @@
 <section>
-    <div class="row">
-        <div class="col-md-12">
-            {{comment-save model=model}}
+  <div class="row">
+    <div class="col-md-12">
+      {{comment-save model=model}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="ticket-actions">
+        <div class="ticket-action save">
+          <span onclick={{save}} class="btn btn-default add-btn t-ticket-action-save">{{fa-icon 'check-circle'}} {{t 'crud.update.button'}}</span>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="ticket-actions">
-                <div class="ticket-action save">
-                    <span onclick={{save}} class="btn btn-default add-btn t-ticket-action-save">{{fa-icon 'check-circle'}} {{t 'crud.update.button'}}</span>
-                </div>
-                <div class="ticket-action attach">
-                    <span class="btn btn-default btn-file">{{fa-icon 'paperclip'}} {{t "button.upload"}}<input type="file" multiple="multiple" onchange={{action "upload"}}></span>
-                </div>
-                <div class="ticket-action status">
-                    {{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModels=statuses relatedModelName='ticket-status'}}
-                    {{#validation-error-field field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
-                </div>
-                <div class="ticket-action priority">
-                    {{power-select-foreign-key mainModel=model selected=model.priority change_method='change_priority' relatedModels=priorities relatedModelName='ticket-priority'}}
-                    {{#validation-error-field field="priority" className="validation validation-under t-priority-validation-error" model=model validation=priorityValidation}}invalid priority{{/validation-error-field}}
-                </div>
-            </div>
+        <div class="ticket-action attach">
+          <span class="btn btn-default btn-file">{{fa-icon 'paperclip'}} {{t "button.upload"}}<input type="file" multiple="multiple" onchange={{action "upload"}}></span>
         </div>
+        <div class="ticket-action status">
+          {{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModels=statuses relatedModelName='ticket-status'}}
+          {{#validation-error-field field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
+        </div>
+        <div class="ticket-action priority">
+          {{power-select-foreign-key mainModel=model selected=model.priority change_method='change_priority' relatedModels=priorities relatedModelName='ticket-priority'}}
+          {{#validation-error-field field="priority" className="validation validation-under t-priority-validation-error" model=model validation=priorityValidation}}invalid priority{{/validation-error-field}}
+        </div>
+      </div>
     </div>
-    <div class="row">
-        {{#each model.attachments as |attachment|}}
-            {{#if attachment.new}}
-            <div class="col-md-12 progress-wrap">
-                <div class="progress active {{attachment.complete_class}}" role="progressbar" aria-valuemin="100" aria-valuemax="100" aria-valuenow="0">
-                    <div class={{attach-file-progress attachment.percent}} style={{attachment.progress}}>
-                        <span class="attachment-title">{{attachment.title}}</span>
-                        {{#unless attachment.complete}}
-                        <span class="attachment-progress"> - {{t "upload.progress"}}: {{attachment.percent}}%</span>
-                        {{/unless}}
-                        <i class="fa fa-minus-circle remove-attachment t-remove-attachment" aria-hidden="true" {{action "removeAttachment" attachment.id}}></i>
-                    </div>
-                </div>
-            </div>
-            {{/if}}
-        {{/each}}
+  </div>
+  <div class="row">
+    {{#each model.attachments as |attachment|}}
+    {{#if attachment.new}}
+    <div class="col-md-12 progress-wrap">
+      <div class="progress active {{attachment.complete_class}}" role="progressbar" aria-valuemin="100" aria-valuemax="100" aria-valuenow="0">
+        <div class={{attach-file-progress attachment.percent}} style={{attachment.progress}}>
+          <span class="attachment-title">{{attachment.title}}</span>
+          {{#unless attachment.complete}}
+          <span class="attachment-progress"> - {{t "upload.progress"}}: {{attachment.percent}}%</span>
+          {{/unless}}
+          <i class="fa fa-minus-circle remove-attachment t-remove-attachment" aria-hidden="true" {{action "removeAttachment" attachment.id}}></i>
+        </div>
+      </div>
     </div>
+    {{/if}}
+    {{/each}}
+  </div>
 </section>
