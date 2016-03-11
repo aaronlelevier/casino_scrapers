@@ -182,7 +182,9 @@ test('serialize dtd model and links with a priority', (assert) => {
     run(() => {
         payload = dtd.serialize();
     });
-    assert.deepEqual(payload, dtd_payload);
+    assert.equal(link.get('id'), dtd_payload.links[0].id);
+    assert.equal(link.get('priority.id'), dtd_payload.links[0].priority);
+    assert.equal(link.get('status.id'), dtd_payload.links[0].status);
 });
 
 test('rollbackRelated for related links', (assert) => {

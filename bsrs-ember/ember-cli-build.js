@@ -55,6 +55,7 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/dtd-link.js');
       app.import('vendor/defaults/email.js');
       app.import('vendor/defaults/email-type.js');
+      app.import('vendor/defaults/field.js');
       app.import('vendor/defaults/general.js');
       app.import('vendor/defaults/link.js');
       app.import('vendor/defaults/locale.js');
@@ -64,6 +65,7 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/location-parents.js');
       app.import('vendor/defaults/location-level.js');
       app.import('vendor/defaults/location-status.js');
+      app.import('vendor/defaults/option.js');
       app.import('vendor/defaults/person.js');
       app.import('vendor/defaults/person-current.js');
       app.import('vendor/defaults/person-location.js');
