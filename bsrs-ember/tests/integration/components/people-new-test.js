@@ -5,19 +5,23 @@ import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import translations from "bsrs-ember/vendor/translation_fixtures";
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
-import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
+import repository from 'bsrs-ember/tests/helpers/repository';
+import PD from 'bsrs-ember/vendor/defaults/person';
+import RD from 'bsrs-ember/vendor/defaults/role';
+import GLOBAL from 'bsrs-ember/vendor/defaults/global-message';
 
 var store, run = Ember.run;
 
 moduleForComponent('person-new', 'integration: person-new test', {
     integration: true,
     setup() {
-        store = module_registry(this.container, this.registry, ['model:person', 'model:role']);
+        store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency']);
         translation.initialize(this);
         var service = this.container.lookup('service:i18n');
         var json = translations.generate('en');
         loadTranslations(service, json);
+        person_repo = repository.initialize(this.container, this.registry, 'person');
+        person_repo.findUsername = () => { return new Ember.RSVP.Promise(() => {}); };
     }
 });
 
