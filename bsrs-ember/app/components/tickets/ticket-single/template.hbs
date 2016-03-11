@@ -1,71 +1,71 @@
 <form {{action "return false" this on="submit"}}>
-    <article class="main">
-        <div class="wrapper form">
-            <header>
-                {{base-component
-                    model=model
-                    save="save"
-                    cancel="cancel"
-                    delete="delete"
-                }}
-            </header>
-            <section class="docSection container-fluid">
-                <div class="row">
-                    <div class="col-md-12">
-                        <section style="padding-bottom: 0">
-                            <div class="row card-title">
-                                <h1 class="col-md-12 t-ticket-header">
-                                    {{model.sorted_categories.lastObject.name}}
-                                    <small>{{t 'ticket.label.numberSymbol'}}{{model.number}}</small>
-                                </h1>
-                                <div class="col-md-12 meta-data">
-                                    {{tickets/ticket-priority-tag item=model}}
-                                    {{tickets/ticket-status-tag item=model}}
-                                    {{timestamp-created model=model}}
-                                </div>
-                                <div class="col-md-12">
-                                    {{#parent-model-category-select ticket=model as |child_valid|}}
-                                    <span class="validation validation-under category-validation-error t-category-validation-error {{child-validation submitted child_valid}}">{{t "validation.invalid"}} {{t "admin.category.label.name"}}</span>
-                                    {{/parent-model-category-select}}
-                                </div>
-                                <div class="col-md-12 request-wrap">
-                                    <label class="small-label">{{t "ticket.label.request"}}</label>
-                                    {{textarea autoresize=true placeholder=(t "ticket.label.request") value=model.request class="form-control t-ticket-request ticket-request"}}
-                                    {{#validation-error-field submitted=submitted field="request" className="validation validation-under t-request-validation-error" model=model validation=requestValidation}}{{t "validation.invalid"}} {{t "ticket.label.request"}}{{/validation-error-field}}
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                    {{tickets/ticket-comments-and-file-upload model=model priorities=priorities statuses=statuses save=(action "save" "update")}}
-                  </div>
-                {{activity-list model=activities}}
+  <article class="main">
+    <div class="wrapper form">
+      <header>
+        {{base-component
+        model=model
+        save="save"
+        cancel="cancel"
+        delete="delete"
+        }}
+      </header>
+      <section class="docSection container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <section style="padding-bottom: 0">
+              <div class="row card-title">
+                <h1 class="col-md-12 t-ticket-header">
+                  {{model.sorted_categories.lastObject.name}}
+                  <small>{{t 'ticket.label.numberSymbol'}}{{model.number}}</small>
+                </h1>
+                <div class="col-md-12 meta-data">
+                  {{tickets/ticket-priority-tag item=model}}
+                  {{tickets/ticket-status-tag item=model}}
+                  {{timestamp-created model=model}}
+                </div>
+                <div class="col-md-12">
+                  {{#parent-model-category-select ticket=model as |child_valid|}}
+                  <span class="validation validation-under category-validation-error t-category-validation-error {{child-validation submitted child_valid}}">{{t "validation.invalid"}} {{t "admin.category.label.name"}}</span>
+                  {{/parent-model-category-select}}
+                </div>
+                <div class="col-md-12 request-wrap">
+                  <label class="small-label">{{t "ticket.label.request"}}</label>
+                  {{textarea autoresize=true placeholder=(t "ticket.label.request") value=model.request class="form-control t-ticket-request ticket-request"}}
+                  {{#validation-error-field submitted=submitted field="request" className="validation validation-under t-request-validation-error" model=model validation=requestValidation}}{{t "validation.invalid"}} {{t "ticket.label.request"}}{{/validation-error-field}}
+                </div>
+              </div>
             </section>
+          </div>
+          {{tickets/ticket-comments-and-file-upload model=model priorities=priorities statuses=statuses save=(action "save" "update")}}
         </div>
-    </article>
-    <aside class="side-panel">
-        <header>
-            <h1></h1>
-        </header>
-        <menu class="t-side-menu">
-            <section>
-                <div class="col-md-12">
-                    {{#form-group title="ticket.label.location-name" for="location"}}
-                      {{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket"}}
-                      {{#validation-error-field submitted=submitted field="location" className="validation validation-under t-location-validation-error" model=model validation=locationValidation}}{{t "validation.invalid"}} {{t "ticket.label.location-name"}}{{/validation-error-field}}
-                    {{/form-group}}
-                </div>
-                <div class="col-md-12">
-                    {{#form-group title="ticket.label.assignee-fullname" for="assignee"}}
-                      {{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=personRepo searchMethod="findTicketAssignee"}}
-                      {{#validation-error-field submitted=submitted field="assignee" className="validation validation-under t-assignee-validation-error" model=model validation=assigneeValidation}}{{t "validation.invalid"}} {{t "ticket.label.assignee-fullname"}}{{/validation-error-field}}
-                    {{/form-group}}
-                </div>
-                <div class="col-md-12">
-                    {{#form-group title="ticket.label.cc" for="cc"}}
-                      {{db-fetch-multi-select model=model multiAttr="cc" multiAttrIds="cc_ids" selectedAttr=model.cc className="t-ticket-cc-select" displayName="fullname" add_func="add_person" remove_func="remove_person" repository=personRepo searchMethod="findTicketPeople"}}
-                    {{/form-group}}
-                </div>
-            </section>
-        </menu>
-    </aside>
+        {{activity-list model=activities}}
+      </section>
+    </div>
+  </article>
+  <aside class="side-panel">
+    <header>
+      <h1></h1>
+    </header>
+    <menu class="t-side-menu">
+      <section>
+        <div class="col-md-12">
+          {{#form-group title="ticket.label.location-name" for="location"}}
+          {{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket"}}
+          {{#validation-error-field submitted=submitted field="location" className="validation validation-under t-location-validation-error" model=model validation=locationValidation}}{{t "validation.invalid"}} {{t "ticket.label.location-name"}}{{/validation-error-field}}
+          {{/form-group}}
+        </div>
+        <div class="col-md-12">
+          {{#form-group title="ticket.label.assignee-fullname" for="assignee"}}
+          {{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=personRepo searchMethod="findTicketAssignee"}}
+          {{#validation-error-field submitted=submitted field="assignee" className="validation validation-under t-assignee-validation-error" model=model validation=assigneeValidation}}{{t "validation.invalid"}} {{t "ticket.label.assignee-fullname"}}{{/validation-error-field}}
+          {{/form-group}}
+        </div>
+        <div class="col-md-12">
+          {{#form-group title="ticket.label.cc" for="cc"}}
+          {{db-fetch-multi-select model=model multiAttr="cc" multiAttrIds="cc_ids" selectedAttr=model.cc className="t-ticket-cc-select" displayName="fullname" add_func="add_person" remove_func="remove_person" repository=personRepo searchMethod="findTicketPeople"}}
+          {{/form-group}}
+        </div>
+      </section>
+    </menu>
+  </aside>
 </form>

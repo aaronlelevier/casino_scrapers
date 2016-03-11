@@ -12,11 +12,6 @@ var LocationParentMulti = Ember.Component.extend({
             const new_parent_ids = new_parent_selection.mapBy('id');
             new_parent_selection.forEach((parent) => {
                 if (Ember.$.inArray(parent.id, old_parent_ids) < 0) {
-                    //TODO: test this
-                    parent.status_fk = parent.status;
-                    delete parent.status;
-                    parent.location_level_fk = parent.location_level;
-                    delete parent.location_level;
                     location.add_parent(parent);
                 }
             });

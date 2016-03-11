@@ -20,6 +20,11 @@ var LocationSingle = ParentValidationComponent.extend(RelaxedMixin, NewTabMixin,
         }
         return false;
     }),
+    extra_params: Ember.computed(function(){
+        const llevel = this.get('model.location_level.id') ? this.get('model.location_level.id') : this.get('model.top_location_level.id');
+        const pk = this.get('model').get('id');
+        return {llevel, pk};
+    }),
     actions: {
         save() {
             this.set('submitted', true);
