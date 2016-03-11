@@ -1,10 +1,9 @@
 import Ember from 'ember';
-import injectRepo from 'bsrs-ember/utilities/inject';
-import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 import inject from 'bsrs-ember/utilities/inject';
+import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 
 var PersonNew = TabNewRoute.extend({
-    repository: injectRepo('person'),
+    repository: inject('person'),
     redirectRoute: Ember.computed(function() { return 'admin.people.index'; }),
     modelName: Ember.computed(function() { return 'person'; }),
     templateModelField: Ember.computed(function() { return 'Person'; }),
