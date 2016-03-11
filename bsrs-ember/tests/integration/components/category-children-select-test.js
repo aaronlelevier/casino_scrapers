@@ -42,29 +42,27 @@ moduleForComponent('category-children-select', 'integration: category-children-s
 
 test('should render a selectbox when with options selected (initial state)', function(assert) {
     let categories_children = Ember.A([]);
-    this.set('category', category_two);
-    this.set('categories_children', categories_children);
-    this.set('search', '');
-    this.render(hbs`{{category-children-select category=category search=search categories_children=categories_children}}`);
-    let $component = this.$(`${COMPONENT}`);
+    this.set('model', category_two);
+    this.repository = category_repo;
+    this.render(hbs`{{db-fetch-multi-select model=model multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-category-children-select" displayName="name" add_func="add_child" remove_func="remove_child" repository=repository searchMethod="findCategoryChildren"}}`);
+    let $component = this.$(COMPONENT);
     clickTrigger();
-    assert.equal($(`${DROPDOWN}`).length, 1);
+    assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 1);
-    assert.equal($(`${OPTION}`).text(), GLOBALMSG.power_search);
+    assert.equal($(OPTION).text(), GLOBALMSG.power_search);
     assert.equal($(`${PowerSelect} > span.ember-power-select-multiple-option`).length, 0);
 });
 
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
     let categories_children = store.find('category');
-    this.set('category', category);
-    this.set('categories_children', categories_children);
-    this.set('search', 'x');
-    this.render(hbs`{{category-children-select category=category search=search categories_children=categories_children}}`);
-    let $component = this.$(`${COMPONENT}`);
+    this.set('model', category);
+    this.repository = category_repo;
+    this.render(hbs`{{db-fetch-multi-select model=model multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-category-children-select" displayName="name" add_func="add_child" remove_func="remove_child" repository=repository searchMethod="findCategoryChildren"}}`);
+    let $component = this.$(COMPONENT);
     run(() => { typeInSearch('a'); });
     return waitFor().
         then(() => {
-            assert.equal($(`${DROPDOWN}`).length, 1);
+            assert.equal($(DROPDOWN).length, 1);
             assert.equal($('.ember-power-select-options > li').length, 3);
             assert.equal($(`${OPTION}:eq(0)`).text().trim(), CD.nameOne);
             assert.equal($(`${OPTION}:eq(1)`).text().trim(), CD.nameTwo);
