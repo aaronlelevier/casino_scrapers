@@ -985,7 +985,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     });
 });
 
-test('clicking and typing into db-fetch power select for people will fire xhr if spacebar pressed', (assert) => {
+test('clicking and typing into db-fetch power select for people will not fire xhr if spacebar pressed', (assert) => {
     clearxhr(list_xhr);
     page.visitDetail();
     page.assigneeClickDropdown();
@@ -1032,6 +1032,16 @@ test('making a ticket dirty causes the dirty indicator do show in the grid', (as
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data:eq(0) .dirty').length, 1);
+    });
+});
+
+/* UPDATE BUTTON */
+test('clicking update with no changes will not fire off xhr', (assert) => {
+    clearxhr(list_xhr);
+    page.visitDetail();
+    page.update();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
     });
 });
 

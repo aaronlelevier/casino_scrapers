@@ -4,6 +4,9 @@ var EditMixin = Ember.Mixin.create({
     actions: {
         save(update) {
             const model = this.get('model');
+            if(update && model.get('isNotDirtyOrRelatedNotDirty')){
+                return; 
+            }
             const pk = this.get('model').get('id');
             const persisted = model.get('new');
             const repository = this.get('repository');
