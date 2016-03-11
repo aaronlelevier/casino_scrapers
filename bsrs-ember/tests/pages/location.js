@@ -13,8 +13,8 @@ let {
 } = PageObject;
 
 const BASE_URL = BASEURLS.base_locations_url;
-const DETAIL_URL = BASE_URL + '/' + LD.idOne;
-const NEW_URL = BASE_URL + '/new/1';
+const DETAIL_URL = `${BASE_URL}/${LD.idOne}`;
+const NEW_URL = `${BASE_URL}/new/1`;
 const LOCATIONLEVEL = '.t-location-level-select > .ember-basic-dropdown-trigger';
 const STATUS = '.t-status-select > .ember-basic-dropdown-trigger';
 const DROPDOWN = options;
@@ -47,7 +47,7 @@ export default PageObject.create({
 
   statusInput: text(STATUS),
   statusClickDropdown: clickable(STATUS),
-  statusClickOptionOne: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${LDS.openName})`),
+  statusClickOptionOne: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${LDS.openNameTranslated})`),
   //TODO: translate inline
   statusClickOptionTwo: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${LDS.closedNameTranslated})`),
   statusOptionLength: count(`${DROPDOWN} > li`),

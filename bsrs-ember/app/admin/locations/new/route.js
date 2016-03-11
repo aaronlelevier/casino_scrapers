@@ -11,12 +11,14 @@ var LocationNewRoute = TabRoute.extend(ContactRouteMixin, {
     model(params) {
         let new_pk = parseInt(params.new_id, 10);
         let all_location_levels = this.get('store').find('location-level');
+        const all_statuses = this.get('store').find('location-status');
         let model = this.get('store').find('location', {new_pk: new_pk}).objectAt(0);
         if(!model){
             model = this.get('repository').create(new_pk);
         }
         return {
             model: model,
+            all_statuses: all_statuses,
             all_location_levels: all_location_levels,
             email_types: this.email_type_repo.find(),
             default_email_type: this.email_type_repo.get_default(),
@@ -30,6 +32,7 @@ var LocationNewRoute = TabRoute.extend(ContactRouteMixin, {
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
+        controller.set('all_statuses', hash.all_statuses);
         controller.set('all_location_levels', hash.all_location_levels);
         controller.set('email_types', hash.email_types);
         controller.set('default_email_type', hash.default_email_type);

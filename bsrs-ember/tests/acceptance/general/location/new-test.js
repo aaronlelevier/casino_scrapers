@@ -53,6 +53,7 @@ module('Acceptance | location-new', {
         payload = {
             id: UUID.value,
             name: LD.storeName,
+            status: LD.status,
             number: LD.storeNumber,
             location_level: LLD.idOne,
             children: [],
@@ -86,6 +87,8 @@ test('visiting /location/new', (assert) => {
     fillIn('.t-location-number', LD.storeNumber);
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
     andThen(() => {
         assert.equal(page.locationLevelInput.split(' +')[0].split(' ')[0], LLD.nameCompany);
     });
@@ -111,12 +114,14 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
         assert.ok(find('.t-number-validation-error').is(':hidden'));
         assert.ok(find('.t-location-level-validation-error').is(':hidden'));
+        assert.ok(find('.t-status-validation-error').is(':hidden'));
     });
     generalPage.save();
     andThen(() => {
         assert.ok(find('.t-name-validation-error').is(':visible'));
         assert.ok(find('.t-number-validation-error').is(':visible'));
         assert.ok(find('.t-location-level-validation-error').is(':visible'));
+        assert.ok(find('.t-status-validation-error').is(':visible'));
     });
     fillIn('.t-location-name', LD.storeName);
     generalPage.save();
@@ -125,12 +130,14 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
         assert.ok(find('.t-number-validation-error').is(':visible'));
         assert.ok(find('.t-location-level-validation-error').is(':visible'));
+        assert.ok(find('.t-status-validation-error').is(':visible'));
     });
     fillIn('.t-location-number', LD.storeNumber);
     andThen(() => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
         assert.ok(find('.t-number-validation-error').is(':hidden'));
         assert.ok(find('.t-location-level-validation-error').is(':visible'));
+        assert.ok(find('.t-status-validation-error').is(':visible'));
     });
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
@@ -138,6 +145,15 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
         assert.ok(find('.t-number-validation-error').is(':hidden'));
         assert.ok(find('.t-location-level-validation-error').is(':hidden'));
+        assert.ok(find('.t-status-validation-error').is(':visible'));
+    });
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':hidden'));
+        assert.ok(find('.t-number-validation-error').is(':hidden'));
+        assert.ok(find('.t-location-level-validation-error').is(':hidden'));
+        assert.ok(find('.t-status-validation-error').is(':hidden'));
     });
     let response = Ember.$.extend(true, {}, payload);
     xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response);
@@ -211,6 +227,8 @@ test('adding a new location should allow for another new location to be created 
     fillIn('.t-location-number', LD.storeNumber);
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
     xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
     generalPage.save();
     andThen(() => {
@@ -295,6 +313,8 @@ test('phone numbers without a valid number are ignored and removed on save', (as
     fillIn('.t-location-number', LD.storeNumber);
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
     click('.t-add-btn:eq(0)');
     andThen(() => {
         let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
@@ -329,6 +349,8 @@ test('emails without a valid email are ignored and removed on save', (assert) =>
     fillIn('.t-location-number', LD.storeNumber);
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
     click('.t-add-email-btn:eq(0)');
     andThen(() => {
         let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
@@ -383,6 +405,8 @@ test('address without a valid address or zip code are ignored and removed on sav
     fillIn('.t-location-number', LD.storeNumber);
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
     click('.t-add-address-btn:eq(0)');
     andThen(() => {
         let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
@@ -436,6 +460,8 @@ test('when you change a related phone numbers type it will be persisted correctl
     fillIn('.t-location-number', LD.storeNumber);
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
     var phone_numbers = PNF.put({id: PND.idOne, type: PNTD.officeId});
     click('.t-add-btn:eq(0)');
     fillIn('.t-new-entry:eq(0)', PND.numberOne);
@@ -452,6 +478,8 @@ test('when you change a related emails type it will be persisted correctly', (as
     fillIn('.t-location-number', LD.storeNumber);
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
     click('.t-add-email-btn:eq(0)');
     fillIn('.t-new-entry:eq(0)', ED.emailOne);
     xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(email_payload), {}, 201);
@@ -467,6 +495,8 @@ test('when you change a related address type it will be persisted correctly', (a
     fillIn('.t-location-number', LD.storeNumber);
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
     click('.t-add-address-btn:eq(0)');
     fillIn('.t-address-address:eq(0)', '34 2nd St');
     xhr(DJANGO_LOCATION_URL,'POST',JSON.stringify(address_put_payload),{},201);
@@ -482,6 +512,8 @@ test('clicking and typing into power select for location will fire off xhr reque
     page.visitNew();
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
     let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${UUID.value}/?name__icontains=a`;
     let response = LF.search();
     response.results.push(LF.get(LD.unusedId, LD.apple));
@@ -546,6 +578,8 @@ test('can add and remove all children (while not populating options) and add bac
     page.visitNew();
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
     andThen(() => {
         let location = store.find('location',UUID.value);
         assert.equal(location.get('children').get('length'), 0);
@@ -601,6 +635,8 @@ test('clicking and typing into power select for location will not filter if spac
     page.visitNew();
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
     page.childrenClickDropdown();
     fillIn(`${CHILDREN_SEARCH}`, ' ');
     andThen(() => {
@@ -614,6 +650,8 @@ test('clicking and typing into power select for location will fire off xhr reque
     page.visitNew();
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
     andThen(() => {
         let location = store.find('location',UUID.value);
         assert.equal(location.get('parents').get('length'), 0);
@@ -682,6 +720,8 @@ test('starting with multiple parents, can remove all parents (while not populati
     page.visitNew();
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
     andThen(() => {
         let location = store.find('location',UUID.value);
         assert.equal(location.get('parents').get('length'), 0);
@@ -738,10 +778,32 @@ test('clicking and typing into power select for location will not filter if spac
     page.visitNew();
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
     page.parentsClickDropdown();
     fillIn(`${PARENTS_SEARCH}`, ' ');
     andThen(() => {
         assert.equal(page.parentsOptionLength, 1);
         assert.equal(find(`${PARENTS_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
     });
+});
+
+/* STATUS */
+test('status options are populated and validation works correctly', (assert) => {
+    clearxhr(list_xhr);
+    page.visitNew();
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_NEW_URL);
+        assert.ok(find('.t-status-validation-error').is(':hidden'));
+    });
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_NEW_URL);
+        assert.ok(find('.t-status-validation-error').is(':visible'));
+    });
+    page.statusClickDropdown();
+    andThen(() => {
+        assert.equal(page.statusOptionLength, 3);
+    });
+    page.statusClickOptionOne();
 });

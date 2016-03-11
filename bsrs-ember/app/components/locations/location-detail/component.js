@@ -13,6 +13,7 @@ var LocationSingle = ParentValidationComponent.extend(RelaxedMixin, NewTabMixin,
     classNames: ['wrapper', 'form'],
     nameValidation: validate('model.name'),
     numberValidation: validate('model.number'),
+    statusValidation: validate('model.status'),
     locationLevelValidation: validate('model.location_level'),
     isDisabled: Ember.computed('model.location_level', function() {
         if(this.get('model').get('new') && !this.get('model').get('location_level')){
