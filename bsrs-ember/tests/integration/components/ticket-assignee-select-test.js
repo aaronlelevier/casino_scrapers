@@ -144,5 +144,5 @@ test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
     Ember.run.later(() => {
         assert.equal($('.ember-power-select-options > li').length, 0);
         done();
-    }, 50);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
+    }, 150);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
 });
