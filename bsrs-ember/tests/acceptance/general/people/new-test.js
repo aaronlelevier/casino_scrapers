@@ -83,9 +83,7 @@ test('visiting /people/new and creating a new person', (assert) => {
         assert.equal(page.roleInput, RD.nameOne);
         var person = store.find('person', UUID.value);
         assert.ok(person.get('new'));
-        assert.equal(find('.t-person-password').attr('type'), 'password');
     });
-
     fillIn('.t-person-username', PD.username);
     fillIn('.t-person-password', PD.password);
     ajax(`${PREFIX}${BASE_PEOPLE_URL}/`, 'POST', JSON.stringify(payload), {}, 201, response);
