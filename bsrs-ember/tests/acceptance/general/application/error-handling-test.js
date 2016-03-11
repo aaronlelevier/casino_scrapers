@@ -29,7 +29,7 @@ module('Acceptance | error handling test', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         new_xhr = xhr(DJANGO_LOCATION_URL + '?page=1', "GET", null, {}, 200, LF.empty());
-        payload = {id: UUID.value, name: LD.storeName, number: LD.storeNumber, location_level: LLD.idOne, children: [], parents: [], emails: [], phone_numbers: [], addresses: []};
+        payload = {id: UUID.value, name: LD.storeName, number: LD.storeNumber, status: LD.status, location_level: LLD.idOne, children: [], parents: [], emails: [], phone_numbers: [], addresses: []};
         original_uuid = random.uuid;
         random.uuid = function() { return UUID.value; };
         originalLoggerError = Ember.Logger.error;
@@ -56,6 +56,8 @@ test('xhr with a 400 status code will show up in the form and display django err
     fillIn('.t-location-number', LD.storeNumber);
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
     andThen(() => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
         assert.ok(find('.t-number-validation-error').is(':hidden'));
@@ -84,6 +86,8 @@ test('xhr with a 400 status code shows multiple errors and will clear any previo
     fillIn('.t-location-number', LD.storeNumber);
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
     andThen(() => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
         assert.ok(find('.t-number-validation-error').is(':hidden'));
@@ -119,6 +123,8 @@ test('xhr with a 500 status code will not show up in the form and or display dja
     fillIn('.t-location-number', LD.storeNumber);
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
     andThen(() => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
         assert.ok(find('.t-number-validation-error').is(':hidden'));
