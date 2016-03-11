@@ -1,13 +1,19 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
+import { task, timeout } from 'ember-concurrency';
+
+const DEBOUNCE_MS = config.APP.POWER_SELECT_DEBOUNCE;
 
 var GridSearch =  Ember.TextField.extend({
     val: '',
     classNames: ['t-grid-search-input form-control input-sm'],
+    sendValueUp: task(function * (searchValue) {
+        yield timeout(DEBOUNCE_MS);
+        this.sendAction('keyup', this.get('val'));
+    }).restartable(),
     keyUp: function() {
-        Ember.run.debounce(this, function() {
-            this.sendAction('keyup', this.get('val'));
-        }.bind(this), config.DEBOUNCE_TIMEOUT_INTERVAL, false);
+        const searchValue = this.get('val');
+        this.get('sendValueUp').perform(searchValue);
     },
     value: Ember.computed('search', {
         get(key){

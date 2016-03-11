@@ -20,7 +20,7 @@ import moment from 'moment';
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_tickets_url;
-const TICKET_URL = BASE_URL + '/index';
+const TICKET_URL = `${BASE_URL}/index`;
 const NUMBER_ONE = {keyCode: 49};
 const LETTER_R = {keyCode: 82};
 const LETTER_O = {keyCode: 79};
@@ -874,5 +874,21 @@ test('picking a different number of pages will alter the query string and xhr an
     click('.t-reset-grid');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + `?page_size=${updated_pg_size}`);
+    });
+});
+
+test('grid debounces correctly with structured concurrency', (assert) => {
+    visit(TICKET_URL);
+    andThen(() => {
+        //SC: hard to test that xhr doesn't get fired but can test if url changes within the DEBOUNCE INTERVAL.  Can't use fillIn
+        let option_one = PREFIX + BASE_URL + '/?page=1&search=ra';
+        xhr(option_one,'GET',null,{},200,TF.searched_related(TD.assigneeTwoId, 'assignee'));
+        $('.t-grid-search-input').val('ra').trigger('change');
+        triggerEvent('.t-grid-search-input', 'keyup', LETTER_R);
+        var done = assert.async();
+        Ember.run.later(() => {
+            assert.equal(currentURL(),TICKET_URL);
+            done();
+        }, 100);
     });
 });
