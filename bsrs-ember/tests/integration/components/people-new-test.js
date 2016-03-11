@@ -10,7 +10,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import GLOBAL from 'bsrs-ember/vendor/defaults/global-message';
 
-var store, run = Ember.run;
+var store, run = Ember.run, person_repo;
 
 moduleForComponent('person-new', 'integration: person-new test', {
     integration: true,
