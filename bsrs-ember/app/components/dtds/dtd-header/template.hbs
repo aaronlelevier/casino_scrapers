@@ -1,4 +1,4 @@
-<button class="t-dtd-list" {{action "toggleList"}}>LIST</button>
-<button class="t-dtd-detail" {{action "toggleDetail"}}>DETAIL</button>
-<button class="t-dtd-preview" {{action "togglePreview"}}>PREVIEW</button>
-{{yield showing}}
+<button class="t-dtd-list {{listShowing}}" {{action "toggleList"}}>LIST</button>
+<button class="t-dtd-detail {{detailShowing}}" {{action "toggleDetail"}}>DETAIL</button>
+<button class="t-dtd-preview {{previewShowing}}" {{action "togglePreview"}}>PREVIEW</button>
+{{yield previewShowing detailShowing listShowing}}

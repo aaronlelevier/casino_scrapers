@@ -9,6 +9,7 @@ var GeneralPage = PageObject.create({
   cancel: clickable('.t-cancel-btn'),
   delete: clickable('.t-delete-btn'),
   submit: clickable('.submit_btn'),
+  closeTab: clickable('.t-tab-close:eq(0)'),
   clickModalCancel: clickable('.t-modal-footer .t-modal-cancel-btn'),
   clickModalRollback: clickable('.t-modal-footer .t-modal-rollback-btn'),
   modalIsVisible: PageObject.isVisible('.t-modal'),

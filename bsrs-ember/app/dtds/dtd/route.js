@@ -9,7 +9,13 @@ export default TabRoute.extend(PriorityMixin, StatusMixin, {
     redirectRoute: Ember.computed(function() { return 'dtds.index'; }),
     modelName: Ember.computed(function() { return 'dtd'; }),
     templateModelField: Ember.computed(function() { return 'key'; }),
+    transitionCallback() { 
+        const store = this.get('store');
+        store.push('dtd-header', {id: 1, showingList:true, showingDetail:false, showingPreview:false});
+    },
     model(params){
+        const store = this.get('store');
+        store.push('dtd-header', {id: 1, showingList:true, showingDetail:true, showingPreview:true});
         const pk = params.dtd_id;
         const repository = this.get('repository');
         let dtd = repository.fetch(pk);

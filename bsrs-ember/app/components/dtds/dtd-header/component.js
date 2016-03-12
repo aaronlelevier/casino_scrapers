@@ -1,46 +1,66 @@
 import Ember from 'ember';
+import injectStore from 'bsrs-ember/utilities/store';
 
 export default Ember.Component.extend({
+    store: injectStore('main'),
     tagName: 'article',
     classNames: ['main', 'full', 'dtd-row'],
     classNameBindings: ['countPanes'],
-    countPanes: Ember.computed('previewShowing', 'detailShowing', 'listShowing', function() {
-        const showing = this.get('showing');
-        var count = Object.keys(showing).reduce((prev, key) => {
-            return prev += (showing[key] ? 1 : 0);
-        }, 0);
+    countPanes: Ember.computed('previewShowing.[]', 'detailShowing.[]', 'listShowing.[]', function() {
+        const _s = this.get('store').find('dtd-header').objectAt(0);
+        const count = (_s.get('showingDetail') ? 1 : 0) + (_s.get('showingList') ? 1 : 0) + (_s.get('showingPreview') ? 1 : 0);
+        // var count = Object.keys(showing).reduce((prev, key) => {
+        //     return prev += (showing[key] ? 1 : 0);
+        // }, 0);
         return `col-count-${count}`;
     }),
-    previewShowing: true,
-    detailShowing: true,
-    listShowing: true,
-    showing: Ember.computed(function(){ 
-        return {
-            previewShowing: this.get('previewShowing'),
-            detailShowing: this.get('detailShowing'),
-            listShowing: this.get('listShowing'),
+    detailShowing: Ember.computed(function(){
+        const filter = (dtdHeader) => {
+            return dtdHeader.get('showingDetail');
         };
+        return this.get('store').find('dtd-header', filter);
+    }),
+    previewShowing: Ember.computed(function(){
+        const filter = (dtdHeader) => {
+            return dtdHeader.get('showingPreview');
+        };
+        return this.get('store').find('dtd-header', filter);
+    }),
+    listShowing: Ember.computed(function(){
+        const filter = (dtdHeader) => {
+            return dtdHeader.get('showingList');
+        };
+        return this.get('store').find('dtd-header', filter);
     }),
     actions: {
         togglePreview(){
-            const showing = this.get('showing');
-            if(showing.listShowing || showing.detailShowing){
-                const bool = this.toggleProperty('showing.previewShowing');
-                this.set('previewShowing', bool);
-            }
+            const store = this.get('store');
+            const model = store.find('dtd-header').objectAt(0);
+            const bool = model.toggleProperty('showingPreview');
+            const showingPreview = bool;
+            store.push('dtd-header', {id: 1, showingPreview:showingPreview});
         },
         toggleDetail(){
-            const showing = this.get('showing');
-            if(showing.listShowing || showing.previewShowing){
-                const bool = this.toggleProperty('showing.detailShowing');
-                this.set('detailShowing', bool);
+            const store = this.get('store');
+            const model = store.find('dtd-header').objectAt(0);
+            if(model.get('showingList')){
+                const bool = model.toggleProperty('showingDetail');
+                let bool2;
+                if(model.get('showingPreview')){
+                    bool2 = model.toggleProperty('showingPreview');
+                }
+                const showingDetail = bool;
+                const showingPreview = bool2;
+                store.push('dtd-header', {id: 1, showingDetail:showingDetail, showingPreview:showingPreview});
             }
         },
         toggleList(){
-            const showing = this.get('showing');
-            if(showing.detailShowing || showing.previewShowing){
-                const bool = this.toggleProperty('showing.listShowing');
-                this.set('listShowing', bool);
+            const store = this.get('store');
+            const model = store.find('dtd-header').objectAt(0);
+            if(model.get('showingDetail')){
+                const bool = model.toggleProperty('showingList');
+                const showingList = bool;
+                store.push('dtd-header', {id: 1, showingList:showingList});
             }
         }
     }

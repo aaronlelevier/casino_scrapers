@@ -202,15 +202,33 @@ test('toggle decision tree preview', (assert) => {
     page.clickDetailToggle();
     andThen(() => {
         assert.notOk(find('.t-grid-data').length);
-        assert.notOk(find('input.t-dtd-single-key').val());
+        assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
         assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
         assert.equal(currentURL(), DETAIL_URL);
     });
     page.clickPreviewToggle();
     andThen(() => {
         assert.notOk(find('.t-grid-data').length);
-        assert.notOk(find('input.t-dtd-single-key').val());
+        assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
+        assert.notOk(find('.t-dtd-preview-description').text());
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+});
+
+test('clicking close on tab will show list only', (assert) => {
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
         assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
         assert.equal(currentURL(), DETAIL_URL);
+    });
+    generalPage.closeTab();
+    andThen(() => {
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.notOk(find('input.t-dtd-single-key').val());
+        assert.notOk(find('.t-dtd-preview-description').text());
+        assert.equal(find('.col-count-1').length, 1);
+        assert.equal(currentURL(), DTD_URL);
     });
 });

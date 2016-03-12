@@ -139,7 +139,7 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
             this.sendAction('save_filterset', this.get('filtersetName'));
             this.toggleProperty('savingFilter');
             this.set('filtersetName', '');
-        }
+        },
     }
 });
 

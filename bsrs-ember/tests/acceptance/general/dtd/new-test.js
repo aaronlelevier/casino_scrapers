@@ -26,7 +26,7 @@ const DJANGO_DTD_NEW_URL = `${PREFIX}${DJANGO_DTD_URL}${UUID.value}/`;
 
 let application, store, payload, list_xhr, original_uuid;
 
-module('scott Acceptance | dtd-new', {
+module('Acceptance | dtd-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');

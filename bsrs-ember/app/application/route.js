@@ -150,7 +150,7 @@ var ApplicationRoute = Ember.Route.extend({
                 this.trx.attemptedAction = 'closeTabMaster';
             } else {
                 if(model.get('content')){
-                    model.rollbackRelated();//clean up invalid contact info
+                    model.rollbackRelated();//note: cleans up invalid contact info
                 }
                 Ember.$('.t-modal').modal('hide');
                 let temp = this.router.generate(this.controller.currentPath);
