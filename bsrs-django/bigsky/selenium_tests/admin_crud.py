@@ -155,6 +155,10 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         location_level_select.click()
         ll_option = self.driver.find_element_by_xpath("//*[@aria-current='true']")
         ll_option.click()
+        status_select = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-status-select ')]/div")
+        status_select.click()
+        status_option = self.driver.find_element_by_xpath("//*[@aria-current='true']")
+        status_option.click()
         old_phone_one = "222-999-7878"
         old_phone_two = "222-999-7899"
         old_street_one = "001 Tourmaline St"
