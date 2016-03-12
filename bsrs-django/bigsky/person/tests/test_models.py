@@ -323,8 +323,8 @@ class PersonTests(TestCase):
         # Confirm that the ``system_default`` is not equal to the Locale
         # that we are about to assign to the ``Person``
         self.assertNotEqual(
-            Locale.objects.system_default(),
-            person_locale
+            Locale.objects.system_default().id,
+            person_locale.id
         )
         # test
         self.person.locale = person_locale
