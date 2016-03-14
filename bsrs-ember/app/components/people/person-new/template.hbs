@@ -35,7 +35,7 @@
           <div class="row">
             <div class="col-sm-12">
               {{#form-group title="admin.person.label.password" for="password"}}
-              {{input type="text" value=model.password placeholder=(t "admin.person.label.password") class="form-control t-person-password" id="password"}}
+              {{input type="password" value=model.password placeholder=(t "admin.person.label.password") class="form-control t-person-password" id="password" autocomplete="new-password"}}
               {{#validation-error-field submitted=submitted field="password" className="validation validation-under t-password-validation-error" model=model validation=passwordValidation}}{{t "validation.invalid"}} {{t "admin.person.label.password"}}{{/validation-error-field}}
               {{/form-group}}
             </div>
