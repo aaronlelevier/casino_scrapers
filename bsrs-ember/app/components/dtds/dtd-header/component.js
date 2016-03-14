@@ -36,28 +36,25 @@ export default Ember.Component.extend({
         togglePreview(){
             const store = this.get('store');
             const model = store.find('dtd-header').objectAt(0);
-            const bool = model.toggleProperty('showingPreview');
-            const showingPreview = bool;
-            store.push('dtd-header', {id: 1, showingPreview:showingPreview});
+            if(model.get('showingList') || model.get('showingDetail')){
+              const bool = model.toggleProperty('showingPreview');
+              const showingPreview = bool;
+              store.push('dtd-header', {id: 1, showingPreview:showingPreview});
+            }
         },
         toggleDetail(){
             const store = this.get('store');
             const model = store.find('dtd-header').objectAt(0);
-            if(model.get('showingList')){
+            if(model.get('showingList') || model.get('showingPreview')){
                 const bool = model.toggleProperty('showingDetail');
-                let bool2;
-                if(model.get('showingPreview')){
-                    bool2 = model.toggleProperty('showingPreview');
-                }
                 const showingDetail = bool;
-                const showingPreview = bool2;
-                store.push('dtd-header', {id: 1, showingDetail:showingDetail, showingPreview:showingPreview});
+                store.push('dtd-header', {id: 1, showingDetail:showingDetail});
             }
         },
         toggleList(){
             const store = this.get('store');
             const model = store.find('dtd-header').objectAt(0);
-            if(model.get('showingDetail')){
+            if(model.get('showingDetail') || model.get('showingPreview')){
                 const bool = model.toggleProperty('showingList');
                 const showingList = bool;
                 store.push('dtd-header', {id: 1, showingList:showingList});

@@ -36,8 +36,6 @@ export default ChildValidationComponent.extend(ValidationMixin, {
                     repoUpload(i, files);
                 }
             }
-        },
-        repoUpload(i, files) {
         }
     }
 });

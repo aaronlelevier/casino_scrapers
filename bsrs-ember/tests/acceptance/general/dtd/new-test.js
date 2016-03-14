@@ -22,103 +22,107 @@ const DTD_NEW_URL = `${BASE_URL}/new/1`;
 const DTD_NEW_URL_2 = `${BASE_URL}/new/2`;
 const DJANGO_DTD_URL = `${PREFIX}/dtds/`;
 const DETAIL_URL = `${BASE_URL}/${UUID.value}`;
-const DJANGO_DTD_NEW_URL = `${PREFIX}${DJANGO_DTD_URL}${UUID.value}/`;
+const DJANGO_DTD_NEW_URL = `${DJANGO_DTD_URL}${UUID.value}/`;
 
-let application, store, payload, list_xhr, original_uuid;
+let application, store, payload, list_xhr, original_uuid, detail_xhr;
 
 module('Acceptance | dtd-new', {
-    beforeEach() {
-        application = startApp();
-        store = application.__container__.lookup('store:main');
-        list_xhr = xhr(`${DJANGO_DTD_URL}?page=1`, 'GET', null, {}, 201, DTDF.empty());
-        original_uuid = random.uuid;
-        random.uuid = function() { return UUID.value; };
-    },
-    afterEach() {
-        payload = null;
-        random.uuid = original_uuid;
-        Ember.run(application, 'destroy');
-    }
+  beforeEach() {
+    application = startApp();
+    store = application.__container__.lookup('store:main');
+    list_xhr = xhr(`${DJANGO_DTD_URL}?page=1`, 'GET', null, {}, 201, DTDF.empty());
+    original_uuid = random.uuid;
+    random.uuid = function() { return UUID.value; };
+    detail_xhr = xhr(DJANGO_DTD_NEW_URL, 'GET', null, {}, 200, dtd_new_payload);
+  },
+  afterEach() {
+    payload = null;
+    random.uuid = original_uuid;
+    Ember.run(application, 'destroy');
+  }
 });
 
 test('visiting /dtd/new', (assert) => {
-    page.visit();
-    andThen(() => {
-        assert.equal(currentURL(), DTD_URL);
-    });
-    click('.t-add-new');
-    andThen(() => {
-        assert.equal(currentURL(), DTD_NEW_URL);
-        assert.equal(store.find('dtd').get('length'), 1);
-        const dtd = store.find('dtd', UUID.value);
-        assert.ok(dtd.get('new'));
-        assert.notOk(dtd.get('key'));
-        assert.notOk(dtd.get('description'));
-    });
-    page.keyFillIn(DTD.keyOne);
-    page.descriptionFillIn(DTD.descriptionOne);
-    let response = Ember.$.extend(true, {}, payload);
-    xhr(DJANGO_DTD_URL, 'POST', JSON.stringify(dtd_new_payload), {}, 201, response);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), DTD_URL);
-        let dtd = store.find('dtd', UUID.value);
-        assert.equal(dtd.get('key'), DTD.keyOne);
-        assert.equal(dtd.get('description'), DTD.descriptionOne);
-        assert.ok(dtd.get('isNotDirty'));
-    });
+  page.visit();
+  andThen(() => {
+    assert.equal(currentURL(), DTD_URL);
+  });
+  click('.t-add-new');
+  andThen(() => {
+    assert.equal(currentURL(), DTD_NEW_URL);
+    assert.equal(store.find('dtd').get('length'), 1);
+    const dtd = store.find('dtd', UUID.value);
+    assert.ok(dtd.get('new'));
+    assert.notOk(dtd.get('key'));
+    assert.notOk(dtd.get('description'));
+  });
+  page.keyFillIn(DTD.keyOne);
+  page.descriptionFillIn(DTD.descriptionOne);
+  const response = Ember.$.extend(true, {}, payload);
+  xhr(DJANGO_DTD_URL, 'POST', JSON.stringify(dtd_new_payload), {}, 201, response);
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    let dtd = store.find('dtd', UUID.value);
+    assert.equal(dtd.get('key'), DTD.keyOne);
+    assert.equal(dtd.get('description'), DTD.descriptionOne);
+    assert.ok(dtd.get('isNotDirty'));
+  });
 });
 
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
-    page.visitNew();
-    page.keyFillIn(DTD.keyOne);
-    generalPage.cancel();
-    andThen(() => {
-        waitFor(() => {
-            assert.equal(currentURL(), DTD_NEW_URL);
-            assert.equal(find('.t-modal').is(':visible'), true);
-            assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
-        });
+  clearxhr(detail_xhr);
+  page.visitNew();
+  page.keyFillIn(DTD.keyOne);
+  generalPage.cancel();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DTD_NEW_URL);
+      assert.equal(find('.t-modal').is(':visible'), true);
+      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
     });
-    click('.t-modal-footer .t-modal-cancel-btn');
-    andThen(() => {
-        waitFor(() => {
-            assert.equal(currentURL(), DTD_NEW_URL);
-            assert.equal(page.key, DTD.keyOne);
-            assert.equal(find('.t-modal').is(':hidden'), true);
-        });
+  });
+  click('.t-modal-footer .t-modal-cancel-btn');
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DTD_NEW_URL);
+      assert.equal(page.key, DTD.keyOne);
+      assert.equal(find('.t-modal').is(':hidden'), true);
     });
+  });
 });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
-    page.visitNew();
-    page.keyFillIn(DTD.keyOne);
-    generalPage.cancel();
-    andThen(() => {
-        waitFor(() => {
-            assert.equal(currentURL(), DTD_NEW_URL);
-            assert.equal(find('.t-modal').is(':visible'), true);
-            let dtds = store.find('dtd');
-            assert.equal(dtds.get('length'), 1);
-        });
+  clearxhr(detail_xhr);
+  page.visitNew();
+  page.keyFillIn(DTD.keyOne);
+  generalPage.cancel();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DTD_NEW_URL);
+      assert.equal(find('.t-modal').is(':visible'), true);
+      let dtds = store.find('dtd');
+      assert.equal(dtds.get('length'), 1);
     });
-    click('.t-modal-footer .t-modal-rollback-btn');
-    andThen(() => {
-        waitFor(() => {
-            assert.equal(currentURL(), DTD_URL);
-            let dtds = store.find('dtd');
-            assert.equal(dtds.get('length'), 0);
-            assert.equal(find('tr.t-grid-data').length, 0);
-        });
+  });
+  click('.t-modal-footer .t-modal-rollback-btn');
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DTD_URL);
+      let dtds = store.find('dtd');
+      assert.equal(dtds.get('length'), 0);
+      assert.equal(find('tr.t-grid-data').length, 0);
     });
+  });
 });
 
 test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
-    page.visitNew();
-    generalPage.cancel();
-    andThen(() => {
-        assert.equal(store.find('dtd').get('length'), 0);
-    });
+  clearxhr(detail_xhr);
+  page.visitNew();
+  generalPage.cancel();
+  andThen(() => {
+    assert.equal(store.find('dtd').get('length'), 0);
+  });
 });
 
 //TODO: button stays selected after first select

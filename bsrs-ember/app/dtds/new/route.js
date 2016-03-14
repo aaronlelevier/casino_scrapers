@@ -28,6 +28,11 @@ var DtdNewRoute = TabNewRoute.extend({
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
+    },
+    actions: {
+        editDTD() {
+           this.transitionTo('dtds.dtd', this.currentModel.model.get('id'));
+        },
     }
 });
 

@@ -1,42 +1,42 @@
 {{#dtds/dtd-header as |previewShowing detailShowing listShowing|}}
   {{#if listShowing}}
-  <div class="dtd-col dtd-list">
-    {{dtds/dtd-list
-      count=count
-      model=model
-      page=page
-      sort=sort
-      search=search
-      find=find
-      requested=requested
-      page_size=page_size
-      filterModel=filterModel
-      filtersets=filtersets
-      routeName=routeName
-      defaultSort=defaultSort
-      noun="dtd"
-      plural=(t "admin.dtd.other")
-      prefix="admin.dtd.label"
-      grid_title=(t "admin.dtd" count="2")
-      list_url="dtds.index"
-      detail_url="dtds.dtd"
-      add_model_url="dtds.new"
-      search_placeholder=(t "admin.dtd.search")
-      add_model_text=(t "admin.dtd.one")
-      save_filterset="save_filterset"
-      hasActiveFilterSet=hasActiveFilterSet
-    }}
-  </div>
+    <div class="dtd-col dtd-list">
+      {{dtds/dtd-list
+        count=count
+        model=model
+        page=page
+        sort=sort
+        search=search
+        find=find
+        requested=requested
+        page_size=page_size
+        filterModel=filterModel
+        filtersets=filtersets
+        routeName=routeName
+        defaultSort=defaultSort
+        noun="dtd"
+        plural=(t "admin.dtd.other")
+        prefix="admin.dtd.label"
+        grid_title=(t "admin.dtd" count="2")
+        list_url="dtds.index"
+        detail_url="dtds.dtd"
+        add_model_url="dtds.new"
+        search_placeholder=(t "admin.dtd.search")
+        add_model_text=(t "admin.dtd.one")
+        save_filterset="save_filterset"
+        hasActiveFilterSet=hasActiveFilterSet
+      }}
+    </div>
   {{/if}}
   {{#if detailShowing}}
-  <div class="dtd-col dtd-detail">
-    {{outlet 'detail'}}
-  </div>
+    <div class="dtd-col dtd-detail">
+      {{outlet 'detail'}}
+    </div>
   {{/if}}
   {{#if previewShowing}}
-  <div class="dtd-col dtd-preview">
-    {{outlet 'preview'}}
-  </div>
+    <div class="dtd-col dtd-preview">
+      {{outlet 'preview'}}
+    </div>
   {{/if}}
 {{/dtds/dtd-header}}
 
