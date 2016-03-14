@@ -48,7 +48,7 @@ test('filling in invalid password reveal validation messages', function(assert) 
     assert.ok($component);
     var save_btn = this.$('.t-save-btn');
     save_btn.trigger('click').trigger('change');
-    assert.equal($('input.t-person-password').attr('type'), 'text');
+    assert.equal($('input.t-person-password').attr('type'), 'password');
     assert.ok($component.is(':visible'));
     this.$('.t-person-password').val('a').trigger('change');
     assert.ok($component.is(':hidden'));
