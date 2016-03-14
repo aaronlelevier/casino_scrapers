@@ -106,3 +106,66 @@ test('isDirtyOrRelatedDirty - optionsIsDirty - for an existing option', (assert)
     assert.ok(field.get('optionsIsDirty'));
     assert.ok(field.get('isDirtyOrRelatedDirty'));
 });
+
+test('saveRelated - with no related', (assert) => {
+    assert.ok(field.get('isNotDirty'));
+    assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));
+    run(() => {
+        store.push('field', {id: FD.idOne, required: FD.requiredTwo});
+    });
+    assert.ok(field.get('isDirty'));
+    assert.ok(field.get('isDirtyOrRelatedDirty'));
+    field.saveRelated();
+    assert.ok(field.get('isNotDirty'));
+    assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('saveRelated - with related Options', (assert) => {
+    assert.ok(field.get('optionsIsNotDirty'));
+    assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));
+    field.add_option({id: OD.idOne});
+    assert.equal(field.get('options').get('length'), 1);
+    assert.ok(field.get('optionsIsDirty'));
+    assert.ok(field.get('isDirtyOrRelatedDirty'));
+    field.saveRelated();
+    assert.ok(field.get('optionsIsNotDirty'));
+    assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('rollbackRelated for related options', (assert) => {
+    assert.ok(option.get('isNotDirty'));
+    assert.ok(field.get('optionsIsNotDirty'));
+    assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));
+    run(() => {
+        store.push('option', {id: OD.idOne, text: OD.textOne});
+    });
+    assert.ok(option.get('isDirty'));
+    field.add_option({id: OD.idOne});
+    assert.ok(field.get('optionsIsDirty'));
+    assert.ok(field.get('isDirtyOrRelatedDirty'));
+    field.rollbackRelated();
+    assert.ok(option.get('isNotDirty'));
+    assert.ok(field.get('optionsIsNotDirty'));
+    assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('removeRecord', (assert) => {
+    assert.equal(store.find('field').get('length'), 1);
+    field.removeRecord();
+    assert.equal(store.find('field').get('length'), 0);
+});
+
+test('serialize', (assert) => {
+    let fieldData = {id: FD.idOne, label: FD.labelOne, type: FD.typeOne, required: FD.requiredOne};
+    let optionData = {id: OD.idOne, text: OD.textOne, order: OD.orderOne};
+    let rawData = Object.assign({}, fieldData, {options: [optionData]});
+    run(() => {
+        field = store.push('field', fieldData);
+        option = store.push('option', optionData);
+    });
+    field.add_option({id: OD.idOne});
+    assert.equal(field.get('options').get('length'), 1);
+    assert.equal(field.get('options').objectAt(0).get('id'), OD.idOne);
+    let data = field.serialize();
+    assert.deepEqual(rawData, data);
+});

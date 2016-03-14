@@ -27,4 +27,3 @@ if (typeof window === 'undefined') {
         return new BSRS_OPTIONS_DEFAULTS_OBJECT().defaults();
     });
 }
-

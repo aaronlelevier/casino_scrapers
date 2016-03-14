@@ -28,7 +28,30 @@ test('order isDirty', (assert) => {
     assert.ok(option.get('isNotDirty'));
     store.push('option', {id: OD.idOne, order: OD.orderOne});
     assert.ok(option.get('isDirty'));
-    store.push('option', {id: OD.idOne, order: undefined});
+    store.push('option', {id: OD.idOne, order: ''});
     assert.ok(option.get('isNotDirty'));
 });
 
+test('removeRecord', (assert) => {
+    assert.equal(store.find('option').get('length'), 1);
+    option.removeRecord();
+    assert.equal(store.find('option').get('length'), 0);
+});
+
+test('serialize', (assert) => {
+    let rawData = {id: OD.idOne, text: OD.textOne, order: OD.orderOne};
+    run(() => {
+        store.push('option', rawData);
+    });
+    let data = option.serialize();
+    assert.deepEqual(rawData, data);
+});
+
+test('serialize - coerce order to an Int', (assert) => {
+    let rawData = {id: OD.idOne, order: '1'};
+    run(() => {
+        store.push('option', rawData);
+    });
+    let data = option.serialize();
+    assert.ok(data.order === 1);
+});
