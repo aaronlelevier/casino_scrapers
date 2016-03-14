@@ -88,7 +88,7 @@
           <div class="row">
             <div class="col-md-12">
               {{#form-group title="admin.person.label.language" for="locale"}}
-              {{power-select-foreign-key mainModel=model selected=model.locale change_method='change_locale' relatedModels=locales relatedModelName='locale'}}
+              {{power-select-foreign-key mainModel=model selected=model.locale change_method="change_locale" relatedModels=locales relatedModelName="locale"}}
               {{/form-group}}
             </div>
           </div>
@@ -104,7 +104,7 @@
           <div class="row">
             <div class="col-md-4">
               {{#form-group title="admin.person.label.status" for="status"}}
-              {{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModels=statuses relatedModelName='status'}}
+              {{power-select-foreign-key mainModel=model selected=model.status change_method="change_status" relatedModels=statuses relatedModelName="status"}}
               {{/form-group}}
             </div>
             <div class="col-md-4">
@@ -117,10 +117,10 @@
               {{#form-group title="admin.person.label.password" for="password"}}
               {{#if changingPassword}}
               {{input-focus type="password" placeholder=(t "admin.person.label.password") value=model.password class="form-control t-person-password" id="password"}}
-              <div style="padding: 4px 0 0"><button class="btn btn-default btn-sm" {{action 'changePassword'}}>{{fa-icon "ban"}} {{t "crud.cancel.button"}}</button></div>
+              <div style="padding: 4px 0 0"><button class="btn btn-default btn-sm" {{action "changePassword"}}>{{fa-icon "ban"}} {{t "crud.cancel.button"}}</button></div>
               {{#validation-error-field submitted=submitted field="password" className="t-password-validation-error" model=model validation=passwordValidation}}{{t "validation.invalid"}} {{t "admin.person.label.password"}}{{/validation-error-field}}
               {{else}}
-              <div><button class="btn btn-default btn-sm t-person-change-password" {{action 'changePassword'}}>{{fa-icon "key"}} {{t "admin.person.label.change_password"}}</button></div>
+              <div><button class="btn btn-default btn-sm t-person-change-password" {{action "changePassword"}}>{{fa-icon "key"}} {{t "admin.person.label.change_password"}}</button></div>
               {{/if}}
               {{/form-group}}
             </div>
