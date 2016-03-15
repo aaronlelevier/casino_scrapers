@@ -9,6 +9,7 @@ import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import page from 'bsrs-ember/tests/pages/dtd';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import { dtd_payload, dtd_payload_update_priority, dtd_payload_no_priority, dtd_payload_two } from 'bsrs-ember/tests/helpers/payloads/dtd';
 
 const ADMIN_URL = BASEURLS.dashboard_url;
@@ -65,7 +66,6 @@ test('admin to dtds list to detail && preview', (assert) => {
     assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
     assert.equal(currentURL(), DETAIL_URL);
   });
-  // xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -214,14 +214,14 @@ test('toggle decision tree preview', (assert) => {
   });
 });
 
-// test('navigating to list route shows 3 panes', (assert) => {
-//   clearxhr(detail_xhr);
-//   page.visit();
-//   andThen(() => {
-//     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-//     assert.equal(find('.t-dtd-empty-detail').text(), '');
-//   });
-// });
+test('navigating to list route shows 3 panes and message in dtd pane', (assert) => {
+  clearxhr(detail_xhr);
+  page.visit();
+  andThen(() => {
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-dtd-empty-detail').text(), GLOBALMSG.dtd_empty_detail);
+  });
+});
 
 test('clicking close on tab will show list only', (assert) => {
   page.visitDetail();

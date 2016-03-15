@@ -1,4 +1,4 @@
-{{#dtds/dtd-header as |previewShowing detailShowing listShowing|}}
+{{#dtds/dtd-header as |previewShowing detailShowing listShowing message|}}
   {{#if listShowing}}
     <div class="dtd-col dtd-list">
       {{dtds/dtd-list
@@ -29,9 +29,13 @@
     </div>
   {{/if}}
   {{#if detailShowing}}
+    {{#if message}}
+      <h1 class="t-dtd-empty-detail">{{message}}</h1>
+    {{else}}
     <div class="dtd-col dtd-detail">
       {{outlet 'detail'}}
     </div>
+    {{/if}}
   {{/if}}
   {{#if previewShowing}}
     <div class="dtd-col dtd-preview">

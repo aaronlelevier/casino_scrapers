@@ -16,6 +16,6 @@ export default Model.extend({
             id: this.get('id'),
             text: this.get('text'),
             order: parseInt(this.get('order'), 10)
-        }
+        };
     }
 });

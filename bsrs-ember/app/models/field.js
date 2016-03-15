@@ -57,6 +57,6 @@ export default Model.extend({
             type: this.get('type'),
             required: this.get('required'),
             options: options
-        }
+        };
     },
 });

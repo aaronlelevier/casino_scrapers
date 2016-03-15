@@ -23,6 +23,7 @@ var BSRS_GLOBAL_MESSAGE_DEFAULTS_OBJECT = (function() {
             invalid_category: 'Invalid Category',
             invalid_status: 'Invalid Status',
             invalid_priority: 'Invalid Priority',
+            dtd_empty_detail: 'admin.dtd.empty-detail',
         };
     };
     return factory;
