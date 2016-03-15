@@ -134,3 +134,14 @@ test('status gets extracted', (assert) => {
     assert.equal(dtd.get('links').objectAt(0).get('status.id'), TD.statusOneId);
     assert.equal(dtd.get('links').objectAt(0).get('status.name'), TD.statusOne);
 });
+
+test('status gets extracted', (assert) => {
+    const json = DTDF.generate(DTD.idOne);
+    run(() => {
+        subject.deserialize(json, DTD.idOne);
+    });
+    let dtd = store.find('dtd', DTD.idOne);
+    assert.equal(dtd.get('links').objectAt(0).get('destination_fk'), DTD.idTwo);
+    assert.ok(dtd.get('links').objectAt(0).get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DTD.idTwo);
+});

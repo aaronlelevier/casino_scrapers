@@ -24,7 +24,8 @@ var BSRS_DTD_FACTORY = (function() {
                     request: this.link.requestOne,
                     text: this.link.textOne,
                     priority_fk: this.link.priorityOne,
-                    status_fk: this.link.statusOne
+                    status_fk: this.link.statusOne,
+                    destination_fk: this.dtd.idTwo
                 }
             ]
         }

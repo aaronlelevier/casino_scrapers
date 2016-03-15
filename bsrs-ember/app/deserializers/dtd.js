@@ -31,6 +31,10 @@ var DTDDeserializer = Ember.Object.extend({
                 existing.detail = true;
                 belongs_to_extract(model.priority_fk, store, existing, 'priority', 'link', 'links');
                 belongs_to_extract(model.status_fk, store, existing, 'status', 'link', 'links');
+                store.push('dtd', {id: model.destination_fk});
+                if (existing.get('destination.id') !== model.destination_fk) {
+                    existing.change_destination(model.destination_fk);
+                }
             });
             dtd = store.push('dtd', {id: dtd.get('id'), dtd_link_fks: links_server_sum});
             dtd.save();

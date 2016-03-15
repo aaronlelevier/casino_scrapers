@@ -1,5 +1,5 @@
 import PageObject from 'bsrs-ember/tests/page-object';
-let { value, visitable, fillable, clickable, hasClass } = PageObject;
+let { value, visitable, fillable, clickable, hasClass, count } = PageObject;
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
@@ -32,6 +32,7 @@ var DTDPage = PageObject.create({
     requestFillIn: fillable('.t-dtd-link-request'),
     text: value('.t-dtd-link-text'),
     textFillIn: fillable('.t-dtd-link-text'),
+    textCount: count('.t-dtd-link-text'),
 
     isDirty: hasClass('dirty', 'i', {scope: '.t-tab-close'}),
     clickPreviewToggle: clickable('.t-dtd-preview'),
