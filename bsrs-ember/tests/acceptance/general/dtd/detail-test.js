@@ -8,7 +8,7 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
-import { dtd_payload, dtd_payload_update_priority, dtd_payload_no_priority, dtd_payload_two } from 'bsrs-ember/tests/helpers/payloads/dtd';
+import { dtd_payload, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_payload_two } from 'bsrs-ember/tests/helpers/payloads/dtd';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
@@ -27,7 +27,7 @@ const DETAIL_URL = `${BASE_URL}/${DTD.idOne}`;
 const DT_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
 const BACKSPACE = {keyCode: 8};
 
-let application, store, endpoint, list_xhr, detail_xhr, detail_data;
+let application, store, endpoint, list_xhr, detail_xhr, detail_data, original_uuid;
 
 module('Acceptance | dtd detail', {
   beforeEach() {
@@ -37,8 +37,10 @@ module('Acceptance | dtd detail', {
     list_xhr = xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, DTDF.list());
     detail_data = DTDF.detail(DTD.idOne);
     detail_xhr = xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 200, detail_data);
+    original_uuid = random.uuid;
   },
   afterEach() {
+    random.uuid = original_uuid;
     Ember.run(application, 'destroy');
   }
 });
@@ -255,5 +257,29 @@ test('when click delete, dtd is deleted and removed from store', (assert) => {
   andThen(() => {
     assert.equal(currentURL(), DTD_URL);
     assert.equal(store.find('dtd', DTD.idOne).get('length'), undefined);
+  });
+});
+
+test('click add-link, and fill in', (assert) => {
+  random.uuid = function() { return UUID.value; };
+  page.visitDetail();
+  andThen(() => {
+    assert.ok(find('.t-dtd-link-action_button').prop('checked'));
+    assert.ok(find('.t-dtd-link-is_header').prop('checked'));
+    assert.equal(page.textCount, 1);
+  });
+  page.clickAddLinkBtn();
+  andThen(() => {
+    assert.equal(page.textCount, 2);
+  });
+  page
+  .requestFillIn_two(LINK.requestTwo)
+  .textFillIn_two(LINK.textTwo)
+  .action_buttonClick_two()
+  .is_headerClick_two();
+  xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload_link_two_put), {}, 200, {});
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
   });
 });

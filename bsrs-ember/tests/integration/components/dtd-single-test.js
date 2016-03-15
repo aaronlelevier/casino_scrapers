@@ -41,7 +41,7 @@ test('validation works as expected', function(assert) {
     assert.equal($component.text().trim(), 'Key must be provided');
 });
 
-test('dtd links', function(assert) {
+test('add dtd links', function(assert) {
     let links = store.find('link');
     run(() => {
         dtd = store.push('dtd', {id: 1});
@@ -51,18 +51,54 @@ test('dtd links', function(assert) {
     let $component = this.$('.t-input-multi-dtd-link');
     assert.ok($component.is(':visible'));
     var add_btn = this.$('.t-add-link-btn');
-    assert.equal($component.find('.t-dtd-link-request').get('length'), 0);
-    assert.equal($component.find('.t-dtd-link-text').get('length'), 0);
-    assert.equal($component.find('.t-dtd-link-action_button').get('length'), 0);
-    assert.equal($component.find('.t-dtd-link-is_header').get('length'), 0);
-    assert.equal($component.find('.t-ticket-priority-select').get('length'), 0);
-    assert.equal($component.find('.t-ticket-status-select').get('length'), 0);
+    assert.equal($component.find('.t-dtd-link-request').length, 0);
+    assert.equal($component.find('.t-dtd-link-text').length, 0);
+    assert.equal($component.find('.t-dtd-link-action_button').length, 0);
+    assert.equal($component.find('.t-dtd-link-is_header').length, 0);
+    assert.equal($component.find('.t-ticket-priority-select').length, 0);
+    assert.equal($component.find('.t-ticket-status-select').length, 0);
     add_btn.trigger('click').trigger('change');
-    assert.equal($component.find('.t-dtd-link-request').get('length'), 1);
-    assert.equal($component.find('.t-dtd-link-text').get('length'), 1);
-    assert.equal($component.find('.t-dtd-link-action_button').get('length'), 1);
-    assert.equal($component.find('.t-dtd-link-is_header').get('length'), 1);
-    assert.equal($component.find('.t-ticket-priority-select').get('length'), 1);
-    assert.equal($component.find('.t-ticket-status-select').get('length'), 1);
-
+    assert.equal($component.find('.t-dtd-link-request').length, 1);
+    assert.equal($component.find('.t-dtd-link-text').length, 1);
+    assert.equal($component.find('.t-dtd-link-action_button').length, 1);
+    assert.equal($component.find('.t-dtd-link-is_header').length, 1);
+    assert.equal($component.find('.t-ticket-priority-select').length, 1);
+    assert.equal($component.find('.t-ticket-status-select').length, 1);
+    add_btn.trigger('click').trigger('change');
+    assert.equal($component.find('.t-dtd-link-request').length, 2);
+    add_btn.trigger('click').trigger('change');
+    assert.equal($component.find('.t-dtd-link-request').length, 3);
 });
+
+test('remove dtd links', function(assert) {
+    let links = store.find('link');
+    run(() => {
+        dtd = store.push('dtd', {id: 1});
+    });
+    this.set('model', dtd);
+    this.render(hbs`{{dtds/dtd-single model=model}}`);
+    let $component = this.$('.t-input-multi-dtd-link');
+    assert.ok($component.is(':visible'));
+    var add_btn = this.$('.t-add-link-btn');
+    assert.equal($component.find('.t-dtd-link-request').length, 0);
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+    add_btn.trigger('click').trigger('change');
+    assert.equal($component.find('.t-dtd-link-request').length, 1);
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+    var remove_btn = this.$('.t-del-link-btn:eq(0)');
+    remove_btn.trigger('click').trigger('change');
+    assert.equal($component.find('.t-dtd-link-request').length, 0);
+});
+
+// test('link array must have at least one link', function(assert) {
+//     let links = store.find('link');
+//     run(() => {
+//         dtd = store.push('dtd', {id: 1});
+//     });
+//     this.set('model', dtd);
+//     this.render(hbs`{{dtds/dtd-single model=model}}`);
+//     let $component = this.$('.t-input-multi-dtd-link');
+//     assert.ok($component.is(':visible'));
+//     generalPage.save();
+//     assert.equal($component.find('.t-dtd-links-length-error').length, 1);
+// });

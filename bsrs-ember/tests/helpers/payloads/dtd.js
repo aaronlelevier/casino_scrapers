@@ -27,6 +27,38 @@ var dtd_payload = {
     }]
 };
 
+var dtd_payload_link_two_put = {
+    id: DTD.idOne,
+    key: DTD.keyOne,
+    description: DTD.descriptionOne,
+    prompt: DTD.promptOne,
+    note: DTD.noteOne,
+    note_type: DTD.noteTypeOne,
+    link_type: DTD.linkTypeOne,
+    links: [{
+        id: LINK.idOne,
+        order: LINK.orderOne,
+        action_button: LINK.action_buttonOne,
+        is_header: LINK.is_headerOne,
+        request: LINK.requestOne,
+        text: LINK.textOne,
+        priority: TP.priorityOneId,
+        status: TD.statusOneId,
+        destination: DTD.idTwo
+    },
+    {
+        id: 1,
+        // order: LINK.orderOne,
+        action_button: LINK.action_buttonOne,
+        is_header: LINK.is_headerOne,
+        request: LINK.requestTwo,
+        text: LINK.textTwo,
+        priority: null,
+        status: null,
+        destination: null
+    }]
+};
+
 var dtd_payload_update_priority = {
     id: DTD.idOne,
     key: DTD.keyOne,
@@ -98,4 +130,4 @@ var dtd_new_payload = {
     links: []
 };
 
-export { dtd_payload, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload, dtd_payload_two };
+export { dtd_payload, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload, dtd_payload_two };

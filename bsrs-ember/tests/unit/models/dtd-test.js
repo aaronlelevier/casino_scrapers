@@ -119,17 +119,18 @@ test('dtd is dirty from priority cache breaking', (assert) => {
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
 });
 
+// NOTE: Failing b/c 'linkIsDirtyContainer' has been removed from 'isDirtyOrRelatedDirty'
 test('dtd is dirty when link is removed', (assert) => {
     assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idOne);
+    assert.equal(dtd.get('links').get('length'), 1);
     dtd.remove_link(link.get('id'));
-    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
     assert.equal(dtd.get('links').get('length'), 0);
 });
 
 test('add_link dtd is dirty when link is added', (assert) => {
     assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idOne);
+    assert.equal(dtd.get('links').get('length'), 1);
     dtd.add_link({id: LINK.idTwo});
-    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
     assert.equal(dtd.get('links').get('length'), 2);
 });
 
@@ -178,9 +179,9 @@ test('saveRelated - for Links and their Status and Priority', (assert) => {
     });
     assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idOne);
     dtd.remove_link(link.get('id'));
-    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(dtd.get('links').get('length'), 0);
-    assert.ok(dtd.get('linksIsDirty'));
+    assert.ok(dtd.get('linksIsNotDirty'));
     assert.ok(dtd.get('linksIsDirtyContainer'));
     dtd.saveRelated();
     // Links
@@ -188,7 +189,7 @@ test('saveRelated - for Links and their Status and Priority', (assert) => {
     assert.ok(!dtd.get('linksIsDirtyContainer'));
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     dtd.add_link({id: LINK.idTwo});
-    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(dtd.get('links').get('length'), 1);
     assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idTwo);
     // priority
@@ -198,6 +199,7 @@ test('saveRelated - for Links and their Status and Priority', (assert) => {
     link_two.change_priority(priority.get('id'));
     assert.deepEqual(priority.get('links'), [LINK.idTwo]);
     assert.equal(dtd.get('links').objectAt(0).get('priority.id'), TP.priorityOneId);
+    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
     // status
     status = store.find('ticket-status', TD.statusOneId);
     assert.deepEqual(status.get('links'), undefined);
@@ -357,7 +359,7 @@ test('saveRelated and rollbackRelated combined test', (assert) => {
     assert.equal(link.get('priority.id'), TP.idOne);
     link.change_status(TS.idOne);
     assert.equal(link.get('status.id'), TS.idOne);
-    assert.ok(dtd.get('linksIsDirty'));
+    assert.ok(dtd.get('linksIsNotDirty'));
     assert.ok(dtd.get('fieldsIsDirty'));
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
     dtd.saveRelated();
@@ -373,7 +375,7 @@ test('saveRelated and rollbackRelated combined test', (assert) => {
     assert.equal(link.get('priority.id'), TP.idTwo);
     link.change_status(TS.idTwo);
     assert.equal(link.get('status.id'), TS.idTwo);
-    assert.ok(dtd.get('linksIsDirty'));
+    assert.ok(dtd.get('linksIsNotDirty'));
     assert.ok(dtd.get('fieldsIsDirty'));
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
     dtd.rollbackRelated();

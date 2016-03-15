@@ -30,7 +30,7 @@ var DTDModel = Model.extend(Validations, {
     linksIsDirtyContainer: many_to_many_dirty('dtd_link_ids', 'dtd_link_fks'),
     linksIsDirty: Ember.computed('links.@each.{isDirtyOrRelatedDirty}', 'linksIsDirtyContainer', function() {
         const links = this.get('links');
-        return links.isAny('isDirtyOrRelatedDirty') || this.get('linksIsDirtyContainer');
+        return links.isAny('isDirtyOrRelatedDirty'); // || this.get('linksIsDirtyContainer');
     }),
     linksIsNotDirty: Ember.computed.not('linksIsDirty'),
     // Fields

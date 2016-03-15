@@ -8,9 +8,14 @@ var DtdLinkComponent = Ember.Component.extend({
     actions: {
         append(){
             const id = this.get('uuid').v4();
-            const model = {id: id};
+            const model = {id: id, new: true};
             run(() => {
                 this.get('model').add_link(model);
+            });
+        },
+        delete(link) {
+            run(() => {
+                this.get('model').remove_link(link.get('id'));
             });
         }
     }

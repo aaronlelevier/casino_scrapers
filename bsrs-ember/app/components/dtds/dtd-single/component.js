@@ -7,6 +7,15 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
   repository: inject('dtd'),
   actions: {
     save(update=true) {
+      // NOTE: (validate accross app w/ ember-cp-validations)
+      // this.get('model').validateSync();
+      // validations = this.get('model').get('links').forEach((link) => {link.validateSync()})
+      // if (validations.get('isValied') {
+      //   // do whatever we want
+      // } else {
+      //   // prevent transition
+      // })
+
       //update prevents transition
       //this is for insert and update dtd methods and transitions to detail route
       const newModel = this.get('model').get('new');
