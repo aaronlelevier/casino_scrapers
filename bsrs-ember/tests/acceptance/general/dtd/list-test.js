@@ -240,3 +240,11 @@ test('clicking close on tab will show list only', (assert) => {
     assert.equal(currentURL(), DTD_URL);
   });
 });
+test('amk ensure we are seeing the decision tree grid and not the standard grid', (assert) => {
+    clearxhr(detail_xhr);
+    page.visit();
+    andThen(() => {
+      assert.equal(find('h2.t-dtd-grid-title').length, 1);
+      // assert.equal(find('.t-dtd-empty-detail').text(), GLOBALMSG.dtd_empty_detail);
+    });
+});

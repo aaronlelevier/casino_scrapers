@@ -7,6 +7,7 @@
         height: $documentHeaderHeight;
         border: $borderStyle;
         border-width: 0 0 1px;
+        background: $lightGray;
         .dtd-header{
             text-align: center;
             @include vertical-align;
@@ -21,7 +22,14 @@
         right: 0;
         bottom: 0;
         left: 0;
+        .dtd-row{
+            header{
+                border-width: 1px 0;
+            }
+        }
+
     }
+
 }
 .dtd-row {
     display: table;
