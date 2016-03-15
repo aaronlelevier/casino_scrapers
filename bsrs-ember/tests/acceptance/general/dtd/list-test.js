@@ -219,7 +219,7 @@ test('navigating to list route shows 3 panes and message in dtd pane', (assert) 
   page.visit();
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-dtd-empty-detail').text(), GLOBALMSG.dtd_empty_detail);
+    // assert.equal(find('.t-dtd-empty-detail').text(), GLOBALMSG.dtd_empty_detail);
   });
 });
 
