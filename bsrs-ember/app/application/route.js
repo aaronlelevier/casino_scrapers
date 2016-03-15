@@ -127,10 +127,14 @@ var ApplicationRoute = Ember.Route.extend({
     },
     afterModel(){
         this.set('i18n.locale', config.i18n.currentLocale);
-        Ember.$('.application-loading').addClass('animated bounceOut');
-        Ember.run.later(function(){
-            Ember.$('.application-loading').remove();
-        }, 1000);
+        Ember.$('.loading-image').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+            Ember.$('.application-loading').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                Ember.$('.loading-image').remove();
+                Ember.$('.application-loading').remove();
+            });
+            Ember.$('.application-loading').addClass('fadeOut');
+        });
+        Ember.$('.loading-image').addClass('bounceOut');
     },
     actions: {
         error(error, transition) {

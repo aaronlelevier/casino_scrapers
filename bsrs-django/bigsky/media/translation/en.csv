@@ -55,6 +55,7 @@ en,admin.category.one,Category,Category,,"'admin.category.one':'Category',",Cate
 en,admin.category.other,Categories,Categories,,"'admin.category.other':'Categories',",Categories,Categories
 en,admin.category.search,Search Categories,Search Categories,,"'admin.category.search':'Search Categories',",Search Categories,Search Categories
 en,admin.category.status.active,Active,Active,,"'admin.category.status.active':'Active',",Active,Active
+en,admin.category.status.inactive,Inactive,Inactive,,"'admin.category.status.inactive':'Inactive',",Inactive,Inactive
 en,admin.categoryType.one,Category Type,Category Type,,"'admin.categoryType.one':'Category Type',",Category Type,Category Type
 en,admin.categoryType.other,Category Types,Category Types,,"'admin.categoryType.other':'Category Types',",Category Types,Category Types
 en,admin.company.one,Company,Company,,"'admin.company.one':'Company',",Company,Company
@@ -63,11 +64,41 @@ en,admin.contractor.one,Contractor,Contractor,,"'admin.contractor.one':'Contract
 en,admin.contractor.other,Contractors,Contractors,,"'admin.contractor.other':'Contractors',",Contractors,Contractors
 en,admin.contractorAssignment.one,Contractor Assignment,Contractor Assignment,,"'admin.contractorAssignment.one':'Contractor Assignment',",Contractor Assignment,Contractor Assignment
 en,admin.contractorAssignment.other,Contractor Assignments,Contractor Assignments,,"'admin.contractorAssignment.other':'Contractor Assignments',",Contractor Assignments,Contractor Assignments
+en,admin.currency.eur,EUR,EUR,,"'admin.currency.eur':'EUR',",EUR,EUR
+en,admin.currency.jpy,JPY,JPY,,"'admin.currency.jpy':'JPY',",JPY,JPY
+en,admin.currency.usd,USD,USD,,"'admin.currency.usd':'USD',",USD,USD
+en,admin.dtd.detail,Detail,Detail,,"'admin.dtd.detail':'Detail',",Detail,Detail
+en,admin.dtd.empty-detail,Select a definition to get started,Select a definition to get started,,"'admin.dtd.empty-detail':'Select a definition to get started',",Select a definition to get started,Select a definition to get started
+en,admin.dtd.label.description,Description,Description,,"'admin.dtd.label.description':'Description',",Description,Description
+en,admin.dtd.label.fields,Fields,Fields,,"'admin.dtd.label.fields':'Fields',",Fields,Fields
+en,admin.dtd.label.key,Key,Key,,"'admin.dtd.label.key':'Key',",Key,Key
+en,admin.dtd.label.link.action_button,Action Button,Action Button,,"'admin.dtd.label.link.action_button':'Action Button',",Action Button,Action Button
+en,admin.dtd.label.link.is_header,Is Header,Is Header,,"'admin.dtd.label.link.is_header':'Is Header',",Is Header,Is Header
+en,admin.dtd.label.link.priority,Priority,Priority,,"'admin.dtd.label.link.priority':'Priority',",Priority,Priority
+en,admin.dtd.label.link.request,Request,Request,,"'admin.dtd.label.link.request':'Request',",Request,Request
+en,admin.dtd.label.link.text,Text,Text,,"'admin.dtd.label.link.text':'Text',",Text,Text
+en,admin.dtd.label.note,Note,Note,,"'admin.dtd.label.note':'Note',",Note,Note
+en,admin.dtd.label.prompt,Prompt,Prompt,,"'admin.dtd.label.prompt':'Prompt',",Prompt,Prompt
+en,admin.dtd.list,List,List,,"'admin.dtd.list':'List',",List,List
+en,admin.dtd.note_type.danger,Danger,Danger,,"'admin.dtd.note_type.danger':'Danger',",Danger,Danger
+en,admin.dtd.note_type.info,Info,Info,,"'admin.dtd.note_type.info':'Info',",Info,Info
+en,admin.dtd.note_type.success,Success,Success,,"'admin.dtd.note_type.success':'Success',",Success,Success
+en,admin.dtd.note_type.warning,Warning,Warning,,"'admin.dtd.note_type.warning':'Warning',",Warning,Warning
+en,admin.dtd.one,Decision Tree,Decision Tree,,"'admin.dtd.one':'Decision Tree',",Decision Tree,Decision Tree
+en,admin.dtd.other,Decision Tree,Decision Tree,,"'admin.dtd.other':'Decision Tree',",Decision Tree,Decision Tree
+en,admin.dtd.preview,Preview,Preview,,"'admin.dtd.preview':'Preview',",Preview,Preview
+en,admin.dtd.search,Search Definitions,Search Definitions,,"'admin.dtd.search':'Search Definitions',",Search Definitions,Search Definitions
 en,admin.email.add,Add Email,Add Email,,"'admin.email.add':'Add Email',",Add Email,Add Email
 en,admin.emailtype.personal,Personal,Personal,,"'admin.emailtype.personal':'Personal',",Personal,Personal
 en,admin.emailtype.work,Work,Work,,"'admin.emailtype.work':'Work',",Work,Work
 en,admin.general.one,General Setting,General Setting,,"'admin.general.one':'General Setting',",General Setting,General Setting
 en,admin.general.other,General Settings,General Settings,,"'admin.general.other':'General Settings',",General Settings,General Settings
+en,admin.invoice.draft,Draft,Draft,,"'admin.invoice.draft':'Draft',",Draft,Draft
+en,admin.invoice.new,New,New,,"'admin.invoice.new':'New',",New,New
+en,admin.invoice.select_assign.all,All,All,,"'admin.invoice.select_assign.all':'All',",All,All
+en,admin.invoice.select_assign.managers,Managers,Managers,,"'admin.invoice.select_assign.managers':'Managers',",Managers,Managers
+en,admin.locale.english,English,English,,"'admin.locale.english':'English',",English,English
+en,admin.locale.spanish,Spanish,Spanish,,"'admin.locale.spanish':'Spanish',",Spanish,Spanish
 en,admin.location.label.address.one,Address,Address,,"'admin.location.label.address.one':'Address',",Address,Address
 en,admin.location.label.address.other,Addresses,Addresses,,"'admin.location.label.address.other':'Addresses',",Addresses,Addresses
 en,admin.location.label.children-name,Child Locations,Child Locations,,"'admin.location.label.children-name':'Child Locations',",Child Locations,Child Locations
@@ -117,8 +148,9 @@ en,admin.person.label.general,General,General,,"'admin.person.label.general':'Ge
 en,admin.person.label.language,Language,Language,,"'admin.person.label.language':'Language',",Language,Language
 en,admin.person.label.last_name,Last Name,Last Name,,"'admin.person.label.last_name':'Last Name',",Last Name,Last Name
 en,admin.person.label.location,Location,Location,,"'admin.person.label.location':'Location',",Location,Location
-en,admin.person.label.middle_initial,Middle,Middle,,"'admin.person.label.middle_initial':'Middle',",Middle,Middle
+en,admin.person.label.middle_initial,Middle Initial,Middle Initial,,"'admin.person.label.middle_initial':'Middle Initial',",Middle Initial,Middle Initial
 en,admin.person.label.password,Password,Password,,"'admin.person.label.password':'Password',",Password,Password
+en,admin.person.label.phone_number_region,Phone Number Region,Phone Number Region,,"'admin.person.label.phone_number_region':'Phone Number Region',",Phone Number Region,Phone Number Region
 en,admin.person.label.phone_number.one,Phone Number,Phone Number,,"'admin.person.label.phone_number.one':'Phone Number',",Phone Number,Phone Number
 en,admin.person.label.phone_number.other,Phone Numbers,Phone Numbers,,"'admin.person.label.phone_number.other':'Phone Numbers',",Phone Numbers,Phone Numbers
 en,admin.person.label.role-name,Role,Role,,"'admin.person.label.role-name':'Role',",Role,Role
@@ -128,6 +160,7 @@ en,admin.person.label.username,Username,Username,,"'admin.person.label.username'
 en,admin.person.new,New Person,New Person,,"'admin.person.new':'New Person',",New Person,New Person
 en,admin.person.one,Person,Person,,"'admin.person.one':'Person',",Person,Person
 en,admin.person.other,People,People,,"'admin.person.other':'People',",People,People
+en,admin.person.unique-username,Username {{value}} is already taken,Username {{value}} is already taken,,"'admin.person.unique-username':'Username {{value}} is already taken',",Username {{value_var_ is already taken,Username _value_var_ is already taken
 en,admin.person.search,Search People,Search People,,"'admin.person.search':'Search People',",Search People,Search People
 en,admin.person.status.active,Active,Active,,"'admin.person.status.active':'Active',",Active,Active
 en,admin.person.status.expired,Expired,Expired,,"'admin.person.status.expired':'Expired',",Expired,Expired
@@ -148,6 +181,8 @@ en,admin.role.new,New Role,New Role,,"'admin.role.new':'New Role',",New Role,New
 en,admin.role.one,Role,Role,,"'admin.role.one':'Role',",Role,Role
 en,admin.role.other,Roles,Roles,,"'admin.role.other':'Roles',",Roles,Roles
 en,admin.role.search,Search Role,Search Role,,"'admin.role.search':'Search Role',",Search Role,Search Role
+en,admin.role.type.internal,Internal,Internal,,"'admin.role.type.internal':'Internal',",Internal,Internal
+en,admin.role.type.third_party,Third Party,Third Party,,"'admin.role.type.third_party':'Third Party',",Third Party,Third Party
 en,admin.setting.company_name,Company Name,Company Name,,"'admin.setting.company_name':'Company Name',",Company Name,Company Name
 en,admin.setting.create_all,Create All,Create All,,"'admin.setting.create_all':'Create All',",Create All,Create All
 en,admin.setting.login_grace,Login Grace,Login Grace,,"'admin.setting.login_grace':'Login Grace',",Login Grace,Login Grace
@@ -158,6 +193,8 @@ en,admin.template.one,Template,Template,,"'admin.template.one':'Template',",Temp
 en,admin.template.other,Templates,Templates,,"'admin.template.other':'Templates',",Templates,Templates
 en,admin.third_party.label.name,Name,Name,,"'admin.third_party.label.name':'Name',",Name,Name
 en,admin.third_party.label.number,Number,Number,,"'admin.third_party.label.number':'Number',",Number,Number
+en,admin.third_party.status.active,Inactive,Inactive,,"'admin.third_party.status.active':'Inactive',",Inactive,Inactive
+en,admin.third_party.status.inactive,Active,Active,,"'admin.third_party.status.inactive':'Active',",Active,Active
 en,admin.title,Admin,Admin,,"'admin.title':'Admin',",Admin,Admin
 en,admin.translation.label.helper,Helper,Helper,,"'admin.translation.label.helper':'Helper',",Helper,Helper
 en,admin.translation.label.key,Key,Key,,"'admin.translation.label.key':'Key',",Key,Key
@@ -165,6 +202,9 @@ en,admin.translation.label.translation,Translation,Translation,,"'admin.translat
 en,admin.translation.one,Translation,Translation,,"'admin.translation.one':'Translation',",Translation,Translation
 en,admin.translation.other,Translations,Translations,,"'admin.translation.other':'Translations',",Translations,Translations
 en,admin.translation.search,Search Translations,Search Translations,,"'admin.translation.search':'Search Translations',",Search Translations,
+en,admin.work_order.close.checked,Checked,Checked,,"'admin.work_order.close.checked':'Checked',",Work,Work
+en,admin.work_order.close.do_not_display,Do not display,Do not display,,"'admin.work_order.close.do_not_display':'Do not display',",Work,Work
+en,admin.work_order.close.unchecked,Unchecked,Unchecked,,"'admin.work_order.close.unchecked':'Unchecked',",Work,Work
 en,button.add,Add new {{model}},Add new {{model}},,"'button.add':'Add new {{model}}',",Add new {{model_var_,Add new _model_var_
 en,button.upload,Attach file,Attach file,,"'button.upload':'Attach file',",Attach file,Attach file
 en,crud.cancel.button,Cancel,Cancel,,"'crud.cancel.button':'Cancel',",Cancel,Cancel
@@ -190,6 +230,7 @@ en,crud.titles.new,New {{model}},New {{model}},,"'crud.titles.new':'New {{model}
 en,crud.update.button,Update,Update,,"'crud.update.button':'Update',",Update,Update
 en,crud.yes,Yes,Yes,,"'crud.yes':'Yes',",Yes,Yes
 en,dashboard.welcome,Welcome,Welcome,,"'dashboard.welcome':'Welcome',",Welcome,Welcome
+en,general.new,New,New,,"'general.new':'New',",New,New
 en,grid.filter,Filter,Filter,,"'grid.filter':'Filter',",Filter,Filter
 en,grid.filterset_name,Name your filter,Name your filter,,"'grid.filterset_name':'Name your filter',",Name your filter,Name your filter
 en,grid.per_page,{{size}} per page,{{size}} per page,,"'grid.per_page':'{{size}} per page',",{{size_var_ per page,_size_var_ per page
@@ -232,12 +273,20 @@ en,ticket.priority.medium,Medium,Medium,,"'ticket.priority.medium':'Medium',",Me
 en,ticket.search,Search Tickets,Search Tickets,,"'ticket.search':'Search Tickets',",Search Tickets,Search Tickets
 en,ticket.status.closed,Closed,Closed,,"'ticket.status.closed':'Closed',",Closed,Closed
 en,ticket.status.complete,Complete,Complete,,"'ticket.status.complete':'Complete',",Complete,Complete
+en,ticket.status.complete,Complete,Complete,,"'ticket.status.complete':'Complete',",Complete,Complete
+en,ticket.status.deferred,Deferred,Deferred,,"'ticket.status.deferred':'Deferred',",Deferred,Deferred
 en,ticket.status.deferred,Deferred,Deferred,,"'ticket.status.deferred':'Deferred',",Deferred,Deferred
 en,ticket.status.denied,Denied,Denied,,"'ticket.status.denied':'Denied',",Denied,Denied
+en,ticket.status.denied,Denied,Denied,,"'ticket.status.denied':'Denied',",Denied,Denied
+en,ticket.status.draft,Draft,Draft,,"'ticket.status.draft':'Draft',",Draft,Draft
 en,ticket.status.draft,Draft,Draft,,"'ticket.status.draft':'Draft',",Draft,Draft
 en,ticket.status.in_progress,In Progress,In Progress,,"'ticket.status.in_progress':'In Progress',",In Progress,In Progress
+en,ticket.status.in_progress,In Progress,In Progress,,"'ticket.status.in_progress':'In Progress',",In Progress,In Progress
 en,ticket.status.new,New,New,,"'ticket.status.new':'New',",New,New
+en,ticket.status.new,New,New,,"'ticket.status.new':'New',",New,New
+en,ticket.status.problem_solved,Problem solved,Problem solved,,"'ticket.status.problem_solved':'Problem solved',",Problem solved,Problem solved
 en,ticket.status.problem_solved,Problem Solved,Problem Solved,,"'ticket.status.problem_solved':'Problem Solved',",Problem Solved,Problem Solved
+en,ticket.status.unsatisfactory,Unsatisfactory,Unsatisfactory,,"'ticket.status.unsatisfactory':'Unsatisfactory',",Unsatisfactory,Unsatisfactory
 en,ticket.status.unsatisfactory_completion,Unsatisfactory,Unsatisfactory,,"'ticket.status.unsatisfactory_completion':'Unsatisfactory',",Unsatisfactory,Unsatisfactory
 en,upload.progress,Progress,Progress,,"'upload.progress':'Progress',",Progress,Progress
 en,validation.invalid,Invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid,Invalid
