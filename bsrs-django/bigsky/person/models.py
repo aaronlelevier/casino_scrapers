@@ -393,7 +393,7 @@ class Person(BaseModel, AbstractUser):
             'username': self.username,
             'title': self.title,
             'employee_id': self.employee_id,
-            'locale': str(self.locale.id if self.locale else self._get_locale(locale)),
+            'locale': str(self.locale.id),
             'role': str(self.role.id),
             'status_fk': str(self.status.id)
         }
@@ -441,24 +441,6 @@ class Person(BaseModel, AbstractUser):
             self.password_history.append(new_password)
 
         self.password_change = timezone.now()
-
-    def _get_locale(self, locale):
-        """Resolve the Locale using the Accept-Language Header. If not 
-        found, use the system default Locale.
-
-        :locale: Accept-Language Header (string)
-        """
-        try:
-            locales = re.match(r'[\w\_\-\,]+', locale).group()
-            for locale in locales.split(','):
-                try:
-                    return str(Locale.objects.get(locale__iexact=locale).id)
-                except Locale.DoesNotExist:
-                    pass
-        except (AttributeError, TypeError):
-            pass
-
-        return str(Locale.objects.system_default().id)
 
     def _update_defaults(self):
         if not self.status:

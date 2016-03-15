@@ -581,7 +581,7 @@ class PersonPutTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['locale'], str(self.locale.id))
 
-    def test_locale__none_gets_update_as_default(self):
+    def test_locale__none_gets_set_as_default(self):
         # setup
         self.data['locale'] = None
         # test
