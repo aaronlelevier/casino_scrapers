@@ -1,13 +1,18 @@
 <form {{action "return false" this on="submit"}}>
     <article class="main">
         <div class="wrapper form">
-            {{base-component
-            model=model
-            save="save"
-            cancel="cancel"
-            delete="delete"
-            }}
             <section class="docSection container-fluid">
+                <div class="row">
+                    <h2 class="col-md-12 dtd-detail-title">{{model.key}} <small>{{model.description}}</small></h2>
+                </div>
+                <div class="row">
+                    {{base-component
+                    model=model
+                    save="save"
+                    cancel="cancel"
+                    delete="delete"
+                    }}
+                </div>
                 <div class="row">
                     <div class="col-md-12">
                         {{#form-group title="admin.dtd.label.key" for="key"}}

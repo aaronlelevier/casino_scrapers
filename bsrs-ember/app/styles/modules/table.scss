@@ -154,6 +154,10 @@ div.rowTable {
                 }
             }
         }
+        .t-page-count{
+            @include truncate;
+            width: 100%;
+        }
         .page-size{
             margin: 4px 0 0;
         }

@@ -1,6 +1,26 @@
-<h1 class="t-dtd-preview-key">{{model.key}}</h1>
-<h1 class="t-dtd-preview-description">{{model.description}}</h1>
-<h1 class="t-dtd-preview-prompt">{{model.prompt}}</h1>
-<h1 class="t-dtd-preview-note">{{model.note}}</h1>
-<h1 class="t-dtd-preview-note_type">{{model.note_type}}</h1>
-<h1 class="t-dtd-preview-link_type">{{model.link_type}}</h1>
+<div class="container-fluid">
+    <div class="row">
+        <h2 class="col-md-12">{{t 'admin.dtd.preview'}}</h2>
+    </div>
+    <div class="row">
+        <header class="col-md-12"></header>
+    </div>
+    <div class="row">
+        <div class="dtd-live">
+            <div class="dtd-live-inner panel panel-default">
+                <div class="t-dtd-preview-note panel-header">
+                    <div class="alert alert-info {{t model.note_type}}">{{model.note}}</div>
+                </div>
+                <div class="panel-body">
+                    <p class="t-dtd-preview-description">{{model.description}}</p>
+                    <p class="t-dtd-preview-prompt"></p>
+                </div>
+                <div class="panel-footer t-dtd-preview-prompt">{{model.prompt}}</div>
+            </div>
+            <!-- <h1 class="t-dtd-preview-key">{{model.key}}</h1>
+            <h1 class="t-dtd-preview-link_type">{{model.link_type}}</h1> -->
+        </div>
+    </div>
+
+
+</div>
