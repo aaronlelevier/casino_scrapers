@@ -16,9 +16,7 @@ import { belongs_to_save } from 'bsrs-components/attr/belongs-to';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 const Validations = buildValidations({
-    username: validator('unique-username', {
-        message: 'Username is already taken'
-    }),
+    username: validator('unique-username')
 });
 
 var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, StatusMixin, LocaleMixin, NewMixin, {

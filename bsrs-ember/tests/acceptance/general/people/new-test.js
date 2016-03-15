@@ -68,7 +68,7 @@ test('username backend validation', (assert) => {
     });
     fillIn('.t-person-username', PD.username);
     andThen(() => {
-        assert.equal(find('.t-existing-username-error').text().trim(), GLOBALMSG.existing_username);
+        assert.equal(find('.t-existing-username-error').text().trim(), t(GLOBALMSG.existing_username));
     });
 });
 
