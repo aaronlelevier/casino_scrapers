@@ -68,148 +68,120 @@ module('Acceptance | ticket detail', {
         Ember.run(application, 'destroy');
     }
 });
-
-test('clicking a tickets will redirect to the given detail view and can save to ensure validation mixins are working', (assert) => {
-    page.visit();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-    });
-    click('.t-grid-data:eq(0)');
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(page.ccSelected.indexOf(PD.first_name), 2);
-        assert.equal(find('.t-ticket-header').text().trim().split('  ')[0].trim(), 'Toilet Leak');
-    });
+/* jshint ignore:start */
+test('clicking a tickets will redirect to the given detail view and can save to ensure validation mixins are working', async assert => {
+    await page.visit();
+    assert.equal(currentURL(), TICKET_URL);
+    await click('.t-grid-data:eq(0)');
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(page.ccSelected.indexOf(PD.first_name), 2);
+    assert.equal(find('.t-ticket-header').text().trim().split('  ')[0].trim(), 'Toilet Leak');
     let response = TF.detail(TD.idOne);
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail), {}, 200, response);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-    });
+    await generalPage.save();
+    assert.equal(currentURL(), TICKET_URL);
 });
 
-test('you can add a comment and post it while not updating created property', (assert) => {
+test('you can add a comment and post it while not updating created property', async assert => {
     let iso;
     clearxhr(list_xhr);
-    page.visitDetail();
-    andThen(() => {
-        const date = new Date();
-        date.setMonth(date.getMonth()-1);
-        iso = date.toISOString();
-        store.push('ticket', {id: TD.idOne, created: iso});
-        assert.equal(find('.t-ticket-comment').attr('placeholder'), 'Enter a comment');
-    });
+    await page.visitDetail();
+    const date = new Date();
+    date.setMonth(date.getMonth()-1);
+    iso = date.toISOString();
+    run(() => {
+      store.push('ticket', {id: TD.idOne, created: iso});
+    })
+    assert.equal(find('.t-ticket-comment').attr('placeholder'), 'Enter a comment');
     page.commentFillIn(TD.commentOne);
-    andThen(() => {
-        const ticket = store.find('ticket', TD.idOne);
-        assert.equal(ticket.get('created'), iso);
-    });
+    var ticket = store.find('ticket', TD.idOne);
+    assert.equal(ticket.get('created'), iso);
     let response = TF.detail(TD.idOne);
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_comment), {}, 200, response);
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, TF.list());
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-        let ticket = store.find('ticket', TD.idOne);
-        assert.ok(ticket.get('isNotDirty'));
-        assert.equal(ticket.get('comment'), '');
-        assert.equal(ticket.get('created'), iso);
-    });
+    await generalPage.save();
+    assert.equal(currentURL(), TICKET_URL);
+    ticket = store.find('ticket', TD.idOne);
+    assert.ok(ticket.get('isNotDirty'));
+    assert.equal(ticket.get('comment'), '');
+    assert.equal(ticket.get('created'), iso);
 });
 
-test('when you deep link to the ticket detail view you get bound attrs', (assert) => {
+test('when you deep link to the ticket detail view you get bound attrs', async assert => {
     clearxhr(list_xhr);
-    page.visitDetail();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        let ticket = store.find('ticket', TD.idOne);
-        assert.ok(ticket.get('isNotDirty'));
-        assert.equal(page.priorityInput, TD.priorityOne);
-        assert.equal(page.statusInput, TD.statusOne);
-        assert.equal(find('.t-created-comment > span').text(), `${PD.nameMel} created this ticket a few seconds ago`);
-    });
+    await page.visitDetail();
+    assert.equal(currentURL(), DETAIL_URL);
+    var ticket = store.find('ticket', TD.idOne);
+    assert.ok(ticket.get('isNotDirty'));
+    assert.equal(page.priorityInput, TD.priorityOne);
+    assert.equal(page.statusInput, TD.statusOne);
+    assert.equal(find('.t-created-comment > span').text(), `${PD.nameMel} created this ticket a few seconds ago`);
     page.priorityClickDropdown();
     page.priorityClickOptionTwo();
     page.statusClickDropdown();
     page.statusClickOptionTwo();
     const top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
     top_level_xhr = xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
-    page.categoryOneClickDropdown();
-    page.categoryOneClickOptionTwo();
-    andThen(() => {
-        let ticket = store.find('ticket', TD.idOne);
-        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.priorityInput, TD.priorityTwo);
-        assert.equal(page.statusInput, TD.statusTwo);
-    });
+    await page.categoryOneClickDropdown();
+    await page.categoryOneClickOptionTwo();
+    ticket = store.find('ticket', TD.idOne);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    assert.equal(page.priorityInput, TD.priorityTwo);
+    assert.equal(page.statusInput, TD.statusTwo);
     page.requestFillIn(TD.requestOneGrid);
     let response = TF.detail(TD.idOne);
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail_one_category), {}, 200, response);
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, TF.list());
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-        let ticket = store.find('ticket', TD.idOne);
-        assert.ok(ticket.get('isNotDirty'));
-    });
+    await generalPage.save();
+    assert.equal(currentURL(), TICKET_URL);
+    ticket = store.find('ticket', TD.idOne);
+    assert.ok(ticket.get('isNotDirty'));
 });
 
-test('when you click cancel, you are redirected to the ticket list view', (assert) => {
-    page.visitDetail();
-    generalPage.cancel();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-    });
+test('when you click cancel, you are redirected to the ticket list view', async assert => {
+    await page.visitDetail();
+    await generalPage.cancel();
+    assert.equal(currentURL(), TICKET_URL);
 });
 
-test('validation works for request field', (assert) => {
+test('validation works for request field', async assert => {
     clearxhr(list_xhr);
-    visit(DETAIL_URL);
+    await page.visitDetail();
     fillIn('.t-ticket-request', '');
-    generalPage.save();
-    andThen(() => {
-        assert.ok(find('.t-request-validation-error').is(':visible'));
-    });
-    fillIn('.t-ticket-request', 'wat');
-    andThen(() => {
-        assert.ok(find('.t-request-validation-error').is(':hidden'));
-    });
+    await generalPage.save();
+    assert.ok(find('.t-request-validation-error').is(':visible'));
+    await fillIn('.t-ticket-request', 'wat');
+    assert.ok(find('.t-request-validation-error').is(':hidden'));
 });
 
-test('validation works for non required fields and when hit save, we do same post', (assert) => {
+test('validation works for non required fields and when hit save, we do same post', async assert => {
     //assignee, cc, request
     clearxhr(list_xhr);
     detail_data.assignee = null;
-    page.visitDetail();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.ok(find('.t-assignee-validation-error').is(':hidden'));
-    });
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.ok(find('.t-assignee-validation-error').is(':visible'));
-        assert.equal(find('.t-assignee-validation-error').text(), GLOBALMSG.invalid_assignee);
-    });
+    await page.visitDetail();
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.ok(find('.t-assignee-validation-error').is(':hidden'));
+    await generalPage.save();
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.ok(find('.t-assignee-validation-error').is(':visible'));
+    assert.equal(find('.t-assignee-validation-error').text(), GLOBALMSG.invalid_assignee);
     //assignee
     xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy1`, 'GET', null, {}, 200, PF.search());
-    page.assigneeClickDropdown();
+    await page.assigneeClickDropdown();
     fillIn(`${SEARCH}`, 'Boy1');
-    page.assigneeClickOptionOne();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        const ticket = store.find('ticket', TD.idOne);
-        assert.equal(ticket.get('assignee_fk'), undefined);
-        assert.equal(ticket.get('assignee.id'), PD.idBoy);
-    });
+    await page.assigneeClickOptionOne();
+    assert.equal(currentURL(), DETAIL_URL);
+    const ticket = store.find('ticket', TD.idOne);
+    assert.equal(ticket.get('assignee_fk'), undefined);
+    assert.equal(ticket.get('assignee.id'), PD.idBoy);
 });
 
-test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', (assert) => {
+test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async assert => {
     clearxhr(list_xhr);
-    page.visitDetail();
+    await page.visitDetail();
     page.priorityClickDropdown();
     page.priorityClickOptionTwo();
-    generalPage.cancel();
+    await generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
@@ -227,17 +199,15 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
     });
 });
 
-test('when click delete, ticket is deleted and removed from store', (assert) => {
-    page.visitDetail();
+test('when click delete, ticket is deleted and removed from store', async assert => {
+    await page.visitDetail();
     xhr(PREFIX + BASE_URL + '/' + TD.idOne + '/', 'DELETE', null, {}, 204, {});
-    generalPage.delete();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-        assert.equal(store.find('ticket', TD.idOne).get('length'), undefined);
-    });
+    await generalPage.delete();
+    assert.equal(currentURL(), TICKET_URL);
+    assert.equal(store.find('ticket', TD.idOne).get('length'), undefined);
 });
 
-test('visiting detail should set the category even when it has no children', (assert) => {
+test('visiting detail should set the category even when it has no children', async assert => {
     clearxhr(list_xhr);
     clearxhr(detail_xhr);
     clearxhr(activity_one);
@@ -245,28 +215,20 @@ test('visiting detail should set the category even when it has no children', (as
     let solo_data = TF.detail(TD.idTwo);
     solo_data.categories = [{id: CD.idSolo, name: CD.nameSolo, children: [], parent: null}];
     ajax(endpoint + TD.idTwo + '/', 'GET', null, {}, 200, solo_data);
-    visit(BASE_URL + '/' + TD.idTwo);
-    andThen(() => {
-        assert.equal(currentURL(), BASE_URL + '/' + TD.idTwo);
-        let components = page.powerSelectComponents;
-        assert.equal(components, 1);
-        assert.equal(page.categoryOneInput, CD.nameSolo);
-    });
+    await visit(BASE_URL + '/' + TD.idTwo);
+    assert.equal(currentURL(), BASE_URL + '/' + TD.idTwo);
+    let components = page.powerSelectComponents;
+    assert.equal(components, 1);
+    assert.equal(page.categoryOneInput, CD.nameSolo);
 });
 
-test('clicking cancel button will take from detail view to list view', (assert) => {
-    page.visit();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-    });
-    click('.t-grid-data:eq(0)');
-    andThen(() => {
-        assert.equal(currentURL(),DETAIL_URL);
-    });
-    generalPage.cancel();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-    });
+test('clicking cancel button will take from detail view to list view', async assert => {
+    await page.visit();
+    assert.equal(currentURL(), TICKET_URL);
+    await click('.t-grid-data:eq(0)');
+    assert.equal(currentURL(),DETAIL_URL);
+    await generalPage.cancel();
+    assert.equal(currentURL(), TICKET_URL);
 });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
@@ -911,178 +873,142 @@ test('location component shows location for ticket and will fire off xhr to fetc
 });
 
 //*TICKET TO ASSIGNEE*/
-test('assignee component shows assignee for ticket and will fire off xhr to fetch assignees on search to change assignee', (assert) => {
-    page.visitDetail();
-    andThen(() => {
-        assert.equal(page.assigneeInput, PD.fullname);
-        let ticket = store.find('ticket', TD.idOne);
-        assert.equal(ticket.get('assignee.id'), PD.idOne);
-        assert.equal(ticket.get('assignee_fk'), PD.idOne);
-        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    });
+test('assignee component shows assignee for ticket and will fire off xhr to fetch assignees on search to change assignee', async assert => {
+    await page.visitDetail();
+    assert.equal(page.assigneeInput, PD.fullname);
+    let ticket = store.find('ticket', TD.idOne);
+    assert.equal(ticket.get('assignee.id'), PD.idOne);
+    assert.equal(ticket.get('assignee_fk'), PD.idOne);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PF.search());
-    page.assigneeClickDropdown();
-    fillIn(`${SEARCH}`, 'b');
-    andThen(() => {
-        assert.equal(page.assigneeInput, PD.fullname);
-        assert.equal(page.assigneeOptionLength, 10);
-        assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-    });
-    page.assigneeClickOptionOne();
-    andThen(() => {
-        assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
-    });
-    page.assigneeClickDropdown();
-    fillIn(`${SEARCH}`, '');
-    andThen(() => {
-        assert.equal(page.assigneeOptionLength, 1);
-        assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
-    });
-    fillIn(`${SEARCH}`, 'b');
-    andThen(() => {
-        assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
-        assert.equal(page.assigneeOptionLength, 10);
-        assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-    });
-    page.assigneeClickOptionTwo();
-    andThen(() => {
-        assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
-        let ticket = store.find('ticket', TD.idOne);
-        assert.equal(ticket.get('assignee.id'), PD.idSearch);
-        assert.equal(ticket.get('assignee_fk'), PD.idOne);
-        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-        //ensure categories has not changed
-        assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
-        assert.equal(ticket.get('categories').get('length'), 3);
-    });
+    await page.assigneeClickDropdown();
+    await fillIn(`${SEARCH}`, 'b');
+    assert.equal(page.assigneeInput, PD.fullname);
+    assert.equal(page.assigneeOptionLength, 10);
+    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+    await page.assigneeClickOptionOne();
+    assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
+    await page.assigneeClickDropdown();
+    await fillIn(`${SEARCH}`, '');
+    assert.equal(page.assigneeOptionLength, 1);
+    assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
+    await fillIn(`${SEARCH}`, 'b');
+    assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
+    assert.equal(page.assigneeOptionLength, 10);
+    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+    await page.assigneeClickOptionTwo();
+    assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
+    ticket = store.find('ticket', TD.idOne);
+    assert.equal(ticket.get('assignee.id'), PD.idSearch);
+    assert.equal(ticket.get('assignee_fk'), PD.idOne);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    //ensure categories has not changed
+    assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
+    assert.equal(ticket.get('categories').get('length'), 3);
     //search specific assignee
     xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy1`, 'GET', null, {}, 200, PF.search());
-    page.assigneeClickDropdown();
-    fillIn(`${SEARCH}`, 'Boy1');
-    andThen(() => {
-        assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
-        assert.equal(page.assigneeOptionLength, 2);
-        assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-    });
-    page.assigneeClickOptionOne();
-    andThen(() => {
-        assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
-        let ticket = store.find('ticket', TD.idOne);
-        assert.equal(ticket.get('assignee.id'), PD.idBoy);
-        assert.equal(ticket.get('assignee_fk'), PD.idOne);
-        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-        //ensure categories has not changed
-        assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
-        assert.equal(ticket.get('categories').get('length'), 3);
-    });
+    await page.assigneeClickDropdown();
+    await fillIn(`${SEARCH}`, 'Boy1');
+    assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
+    assert.equal(page.assigneeOptionLength, 2);
+    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+    await page.assigneeClickOptionOne();
+    assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
+    ticket = store.find('ticket', TD.idOne);
+    assert.equal(ticket.get('assignee.id'), PD.idBoy);
+    assert.equal(ticket.get('assignee_fk'), PD.idOne);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    //ensure categories has not changed
+    assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
+    assert.equal(ticket.get('categories').get('length'), 3);
     let response_put = TF.detail(TD.idOne);
     response_put.assignee = {id: PD.idBoy, first_name: PD.nameBoy};
     let payload = TF.put({id: TD.idOne, assignee: PD.idBoy});
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response_put);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-    });
+    await generalPage.save();
+    assert.equal(currentURL(), TICKET_URL);
 });
 
-test('clicking and typing into db-fetch power select for people will not fire xhr if spacebar pressed', (assert) => {
+test('clicking and typing into db-fetch power select for people will not fire xhr if spacebar pressed', async assert => {
     clearxhr(list_xhr);
-    page.visitDetail();
-    page.assigneeClickDropdown();
-    fillIn(`${SEARCH}`, ' ');
-    andThen(() => {
-        assert.equal(page.assigneeOptionLength, 1);
-        assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
-    });
+    await page.visitDetail();
+    await page.assigneeClickDropdown();
+    await fillIn(`${SEARCH}`, ' ');
+    assert.equal(page.assigneeOptionLength, 1);
+    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
 });
 
 /* OTHER */
-test('textarea autoresize working for the request field', (assert) => {
-    page.visit();
+test('textarea autoresize working for the request field', async assert => {
+    await page.visit();
+    assert.equal(currentURL(), TICKET_URL);
+    await click('.t-grid-data:eq(0)');
+    assert.equal(currentURL(), DETAIL_URL);
+    let o_height = find('.t-ticket-request').innerHeight();
+    await fillIn(find('.t-ticket-request'), 'this\nthat\nthis\nthat\nthis\n');
     andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-    });
-    click('.t-grid-data:eq(0)');
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        let o_height = find('.t-ticket-request').innerHeight();
-        fillIn(find('.t-ticket-request'), 'this\nthat\nthis\nthat\nthis\n');
-        andThen(() => {
-            waitFor(() => {
-                let n_height = find('.t-ticket-request').innerHeight();
-                assert.ok(n_height > o_height);
-            });
+        waitFor(() => {
+            let n_height = find('.t-ticket-request').innerHeight();
+            assert.ok(n_height > o_height);
         });
     });
-
 });
-test('making a ticket dirty causes the dirty indicator do show in the grid', (assert) => {
-    page.visit();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-        assert.equal(find('.t-grid-data:eq(0) .dirty').length, 0);
-    });
-    click('.t-grid-data:eq(0)');
-    andThen(() => {
-        let ticket = store.find('ticket', TD.idOne);
-        assert.equal(currentURL(), DETAIL_URL);
-        fillIn(find('.t-ticket-request'), 'this\nthat\nthis\nthat\nthis\n');
-    });
-    page.visit();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-        assert.equal(find('.t-grid-data:eq(0) .dirty').length, 1);
-    });
+test('making a ticket dirty causes the dirty indicator do show in the grid', async assert => {
+    await page.visit();
+    assert.equal(currentURL(), TICKET_URL);
+    assert.equal(find('.t-grid-data:eq(0) .dirty').length, 0);
+    await click('.t-grid-data:eq(0)');
+    let ticket = store.find('ticket', TD.idOne);
+    assert.equal(currentURL(), DETAIL_URL);
+    fillIn(find('.t-ticket-request'), 'this\nthat\nthis\nthat\nthis\n');
+    await page.visit();
+    assert.equal(currentURL(), TICKET_URL);
+    assert.equal(find('.t-grid-data:eq(0) .dirty').length, 1);
 });
 
 /* UPDATE BUTTON */
-test('clicking update with no changes will not fire off xhr', (assert) => {
+test('clicking update with no changes will not fire off xhr', async assert => {
     clearxhr(list_xhr);
-    page.visitDetail();
-    page.update();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-    });
+    await page.visitDetail();
+    await page.update();
+    assert.equal(currentURL(), DETAIL_URL);
 });
 
-test('clicking update will not transition away from ticket detail and bring in latest activities', (assert) => {
+test('clicking update will not transition away from ticket detail and bring in latest activities', async assert => {
     let iso;
     clearxhr(list_xhr);
-    page.visitDetail();
-    andThen(() => {
-        const date = new Date();
-        date.setMonth(date.getMonth()-1);
-        iso = date.toISOString();
-        store.push('ticket', {id: TD.idOne, created: iso});
-        assert.equal(find('.t-ticket-comment').attr('placeholder'), 'Enter a comment');
-    });
+    await page.visitDetail();
+    const date = new Date();
+    date.setMonth(date.getMonth()-1);
+    iso = date.toISOString();
+    run(() => {
+      store.push('ticket', {id: TD.idOne, created: iso});
+    })
+    assert.equal(find('.t-ticket-comment').attr('placeholder'), 'Enter a comment');
     page.commentFillIn(TD.commentOne);
     let response = TF.detail(TD.idOne);
     ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_comment), {}, 200, response);
     const json = TA_FIXTURES.get_assignee_person_and_to_from_json();
     const activity_response = {'count':1,'next':null,'previous':null,'results': [json]};
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, activity_response);
-    page.update();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        let ticket = store.find('ticket', TD.idOne);
-        assert.ok(ticket.get('isNotDirty'));
-        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(ticket.get('comment'), '');
-        assert.equal(ticket.get('created'), iso);
-        let activity = store.find('activity');
-        assert.equal(activity.get('length'), 1);
-    });
+    await page.update();
+    assert.equal(currentURL(), DETAIL_URL);
+    let ticket = store.find('ticket', TD.idOne);
+    assert.ok(ticket.get('isNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('comment'), '');
+    assert.equal(ticket.get('created'), iso);
+    let activity = store.find('activity');
+    assert.equal(activity.get('length'), 1);
 });
 
-test('deep linking with an xhr with a 404 status code will show up in the error component (ticket)', (assert) => {
+test('deep linking with an xhr with a 404 status code will show up in the error component (ticket)', async assert => {
     clearxhr(detail_xhr);
     clearxhr(list_xhr);
     const exception = `This record does not exist.`;
     xhr(`${endpoint}${TD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
-    page.visitDetail();
-    andThen(() => {
-        assert.equal(currentURL(), ERROR_URL);
-        assert.equal(find('.t-error-message').text(), 'WAT');
-    });
+    await page.visitDetail();
+    assert.equal(currentURL(), ERROR_URL);
+    assert.equal(find('.t-error-message').text(), 'WAT');
 });
+/* jshint ignore:end */
