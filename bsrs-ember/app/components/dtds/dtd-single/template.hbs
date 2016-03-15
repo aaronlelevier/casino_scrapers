@@ -3,7 +3,7 @@
         <div class="wrapper form">
             <section class="docSection container-fluid">
                 <div class="row">
-                    <h2 class="col-md-12 dtd-detail-title">{{model.key}} <small>{{model.description}}</small></h2>
+                    <h2 class="col-md-12 dtd-detail-title">{{t 'admin.dtd.detail'}}</h2>
                 </div>
                 <div class="row">
                     {{base-component
@@ -13,6 +13,7 @@
                     delete="delete"
                     }}
                 </div>
+                <div class="row"><div class="col-md-12">&nbsp;</div></div>
                 <div class="row">
                     <div class="col-md-12">
                         {{#form-group title="admin.dtd.label.key" for="key"}}
@@ -27,15 +28,15 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        {{#form-group title="admin.dtd.label.description" for="description"}}
-                        {{textarea type="text" placeholder=(t "admin.dtd.label.description") value=model.description class="form-control t-dtd-single-description" id="dtd_description"}}
+                        {{#form-group title="admin.dtd.label.note" for="note"}}
+                        {{textarea autoresize=true placeholder=(t "admin.dtd.label.note") value=model.note class="form-control t-dtd-note" id="dtd_note"}}
                         {{/form-group}}
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        {{#form-group title="admin.dtd.label.note" for="note"}}
-                        {{textarea type="text" placeholder=(t "admin.dtd.label.note") value=model.note class="form-control t-dtd-note" id="dtd_note"}}
+                        {{#form-group title="admin.dtd.label.description" for="description"}}
+                        {{textarea autoresize=true placeholder=(t "admin.dtd.label.description") value=model.description class="form-control t-dtd-single-description" id="dtd_description"}}
                         {{/form-group}}
                     </div>
                 </div>
@@ -48,7 +49,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         {{#form-group title="admin.dtd.label.prompt" for="prompt"}}
-                        {{textarea type="text" placeholder=(t "admin.dtd.label.prompt") value=model.prompt class="form-control t-dtd-prompt" id="dtd_prompt"}}
+                        {{textarea autoresize=true placeholder=(t "admin.dtd.label.prompt") value=model.prompt class="form-control t-dtd-prompt" id="dtd_prompt"}}
                         {{/form-group}}
                     </div>
                 </div>

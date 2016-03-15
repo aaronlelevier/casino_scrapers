@@ -1,6 +1,6 @@
 div.rowTable {
     section.docSection{
-        h1{
+        h1, h2{
             .reset-grid{
                 font-size: 1.1rem;
                 font-weight: normal;
@@ -129,6 +129,14 @@ div.rowTable {
                 }
                 &.ticket-request{
                     width: 200px;
+                    @include truncate;
+                }
+                &.dtd-key{
+                    width: 20%;
+                    @include truncate;
+                }
+                &.dtd-description{
+                    width: 80%;
                     @include truncate;
                 }
                 &.selector{

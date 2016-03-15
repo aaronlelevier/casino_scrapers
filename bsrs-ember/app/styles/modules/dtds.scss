@@ -44,12 +44,38 @@
             left: 0;
         }
     }
+    .dtd-list{
+        article.main{
+            section.docSection{
+                top: 0;
+                .dtd-detail-title{
+                    @include truncate;
+                }
+                tr{
+                    &.active{
+                        td{
+                            background: $activeColor;
+                            border-color: $activeColor;
+                            color: $white;
+                            .dirty{
+                                color: $white;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
     .dtd-detail{
         article.main{
             section.docSection{
                 top: 0;
                 .dtd-detail-title{
                     @include truncate;
+                }
+                textarea{
+                    resize: none;
                 }
             }
         }
@@ -81,6 +107,11 @@
             .alert{
                 border-radius: $borderRadiusTop;
                 margin: -1px -1px 0 -1px;
+            }
+        }
+        .panel-footer{
+            :last-child{
+                margin: 0;
             }
         }
     }

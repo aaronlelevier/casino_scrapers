@@ -34,17 +34,17 @@
             </div>
             <div class="row">
                 <header>
-                    <div class="col-md-3 text-center search-wrap pull-left">
+                    <div class="search-wrap pull-left">
                         {{grid-search-input search=search placeholder=search_placeholder keyup=(action "keyup")}}
                     </div>
-                    <div class="col-md-9">
+                    <div>
                         <div class="pull-right btn-group btn-group-sm">
                             {{#if hasActiveFilterSet}}
                             <button class="t-show-save-filterset-modal btn btn-primary btn-sm" {{action "toggleSaveFilterSetModal"}}>{{t 'grid.save_filter'}}</button>
                             {{/if}}
                             {{#if count}}
                             {{#link-to add_model_url count class="t-add-new add-btn btn btn-default btn-sm"}}
-                            {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
+                            {{fa-icon "plus-circle"}} {{t 'button.add' model=''}}
                             {{/link-to}}
                             {{else}}
                             {{#if add_model_url}}
