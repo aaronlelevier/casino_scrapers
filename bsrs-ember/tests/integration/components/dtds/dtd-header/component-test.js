@@ -7,7 +7,7 @@ import translations from 'bsrs-ember/vendor/translation_fixtures';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 
-var store;
+var store, trans;
 
 moduleForComponent('dtds/dtd-header', 'Integration | Component | dtds/dtd header', {
   integration: true,

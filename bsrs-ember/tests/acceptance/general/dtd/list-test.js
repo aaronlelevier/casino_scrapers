@@ -56,14 +56,14 @@ test('admin to dtds list to detail && preview', (assert) => {
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.notOk(find('input.t-dtd-single-key').val());
-    assert.notOk(find('.t-dtd-preview-description').text());
+    assert.notOk(find('.t-dtd-preview-description').text().trim());
     assert.equal(currentURL(), DTD_URL);
   });
   click('.t-grid-data:eq(0)');
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);//grid
     assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);//detail
-    assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
+    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionOne);
     assert.equal(currentURL(), DETAIL_URL);
   });
   generalPage.save();
@@ -71,13 +71,13 @@ test('admin to dtds list to detail && preview', (assert) => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);//detail
-    assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
+    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionOne);
   });
   click('.t-grid-data:eq(0)');
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
-    assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
+    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionOne);
     assert.equal(currentURL(), DETAIL_URL);
   });
 });
@@ -130,7 +130,7 @@ test('detail && preview are bound and can save', (assert) => {
   page.descriptionFillIn(DTD.descriptionTwo);
   andThen(() => {
     assert.ok(page.isDirty);
-    assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionTwo);
+    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionTwo);
   });
   dtd_payload.description = DTD.descriptionTwo;
   xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});
@@ -139,7 +139,7 @@ test('detail && preview are bound and can save', (assert) => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
-    assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionTwo);
+    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionTwo);
   });
 });
 
@@ -148,68 +148,68 @@ test('toggle decision tree preview', (assert) => {
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
-    assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
+    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionOne);
     assert.equal(currentURL(), DETAIL_URL);
   });
   page.clickPreviewToggle();
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
-    assert.notOk(find('.t-dtd-preview-description').text());
+    assert.notOk(find('.t-dtd-preview-description').text().trim());
   });
   page.clickDetailToggle();
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.notOk(find('input.t-dtd-single-key').val());
-    assert.notOk(find('.t-dtd-preview-description').text());
+    assert.notOk(find('.t-dtd-preview-description').text().trim());
   });
   page.clickListToggle();
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.notOk(find('input.t-dtd-single-key').val());
-    assert.notOk(find('.t-dtd-preview-description').text());
+    assert.notOk(find('.t-dtd-preview-description').text().trim());
   });
   page.clickDetailToggle();
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
-    assert.notOk(find('.t-dtd-preview-description').text());
+    assert.notOk(find('.t-dtd-preview-description').text().trim());
   });
   page.clickListToggle();
   andThen(() => {
     assert.notOk(find('.t-grid-data').length);
     assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
-    assert.notOk(find('.t-dtd-preview-description').text());
+    assert.notOk(find('.t-dtd-preview-description').text().trim());
   });
   page.clickDetailToggle();
   andThen(() => {
     assert.notOk(find('.t-grid-data').length);
     assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
-    assert.notOk(find('.t-dtd-preview-description').text());
+    assert.notOk(find('.t-dtd-preview-description').text().trim());
   });
   page.clickPreviewToggle();
   andThen(() => {
     assert.notOk(find('.t-grid-data').length);
     assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
-    assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
+    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionOne);
   });
   page.clickDetailToggle();
   andThen(() => {
     assert.notOk(find('.t-grid-data').length);
     assert.notOk(find('input.t-dtd-single-key').val());
-    assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
+    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionOne);
   });
   page.clickPreviewToggle();
   andThen(() => {
     assert.notOk(find('.t-grid-data').length);
     assert.notOk(find('input.t-dtd-single-key').val());
-    assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
+    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionOne);
   });
   page.clickListToggle();
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.notOk(find('input.t-dtd-single-key').val());
-    assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
+    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionOne);
     assert.equal(currentURL(), DETAIL_URL);
   });
 });
@@ -228,14 +228,14 @@ test('clicking close on tab will show list only', (assert) => {
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
-    assert.equal(find('.t-dtd-preview-description').text(), DTD.descriptionOne);
+    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionOne);
     assert.equal(currentURL(), DETAIL_URL);
   });
   generalPage.closeTab();
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.notOk(find('input.t-dtd-single-key').val());
-    assert.notOk(find('.t-dtd-preview-description').text());
+    assert.notOk(find('.t-dtd-preview-description').text().trim());
     assert.equal(find('.col-count-1').length, 1);
     assert.equal(currentURL(), DTD_URL);
   });
