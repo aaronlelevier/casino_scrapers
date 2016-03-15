@@ -22,7 +22,8 @@ var dtd_payload = {
         request: LINK.requestOne,
         text: LINK.textOne,
         priority: TP.priorityOneId,
-        status: TD.statusOneId
+        status: TD.statusOneId,
+        destination: DTD.idTwo
     }]
 };
 

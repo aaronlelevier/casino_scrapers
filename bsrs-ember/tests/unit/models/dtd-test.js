@@ -171,7 +171,6 @@ test('remove_field', (assert) => {
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
 });
 
-
 test('saveRelated - for Links and their Status and Priority', (assert) => {
     run(() => {
         store.push('ticket-priority', {id: TP.priorityOneId});
@@ -254,6 +253,7 @@ test('serialize dtd model and links with a priority', (assert) => {
         });
         priority = store.push('ticket-priority', {id: TP.priorityOneId, links: [LINK.idOne]});
         status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, links: [LINK.idOne]});
+        store.push('dtd', {id: DTD.idTwo, destination_links: [LINK.idOne]});
         link = store.push('link', {
             id: LINK.idOne, 
             order: LINK.orderOne,
@@ -262,7 +262,8 @@ test('serialize dtd model and links with a priority', (assert) => {
             request: LINK.requestOne,
             text: LINK.textOne,
             priority_fk: TP.priorityOneId,
-            status_fk: TD.statusOneId
+            status_fk: TD.statusOneId,
+            destination_fk: DTD.idTwo
         });
     });
     assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idOne);
@@ -273,6 +274,7 @@ test('serialize dtd model and links with a priority', (assert) => {
     assert.equal(link.get('id'), dtd_payload.links[0].id);
     assert.equal(link.get('priority.id'), dtd_payload.links[0].priority);
     assert.equal(link.get('status.id'), dtd_payload.links[0].status);
+    assert.equal(link.get('destination.id'), dtd_payload.links[0].destination);
 });
 
 test('rollbackRelated for related links', (assert) => {

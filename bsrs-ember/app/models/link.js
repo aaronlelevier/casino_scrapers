@@ -17,33 +17,46 @@ var LinkModel = Model.extend(CategoriesMixin, {
     priority_fk: undefined,
     priority: Ember.computed.alias('belongs_to_priority.firstObject'),
     belongs_to_priority: belongs_to('links', 'ticket-priority'),
+    change_priority: change_belongs_to('links', 'ticket-priority', 'priority'),
     priorityIsDirty: belongs_to_dirty('priority_fk', 'priority'),
     priorityIsNotDirty: Ember.computed.not('priorityIsDirty'),
-    change_priority: change_belongs_to('links', 'ticket-priority', 'priority'),
+    // categories
     categoriesIsDirty: many_to_many_dirty('model_categories_ids', 'model_categories_fks'),
     categoriesIsNotDirty: Ember.computed.not('categoriesIsDirty'),
     // status
     status_fk: undefined,
     status: Ember.computed.alias('belongs_to_status.firstObject'),
     belongs_to_status: belongs_to('links', 'ticket-status'),
+    change_status: change_belongs_to('links', 'ticket-status', 'status'),
     statusIsDirty: belongs_to_dirty('status_fk', 'status'),
     statusIsNotDirty: Ember.computed.not('statusIsDirty'),
-    change_status: change_belongs_to('links', 'ticket-status', 'status'),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'priorityIsDirty', 'statusIsDirty', 'categoriesIsDirty', function() {
-        return this.get('isDirty') || this.get('priorityIsDirty') || this.get('statusIsDirty') || this.get('categoriesIsDirty');
+    // destination
+    destination_fk: undefined,
+    destination: Ember.computed.alias('belongs_to_destination.firstObject'),
+    belongs_to_destination: belongs_to('destination_links', 'dtd'),
+    change_destination: change_belongs_to('destination_links', 'dtd', 'destination'),
+    destinationIsDirty: belongs_to_dirty('destination_fk', 'destination'),
+    destinationIsNotDirty: Ember.computed.not('destinationIsDirty'),
+    // dirty tracking
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'priorityIsDirty', 'statusIsDirty', 'categoriesIsDirty', 'destinationIsDirty', function() {
+        return this.get('isDirty') || this.get('priorityIsDirty') || this.get('statusIsDirty') || this.get('categoriesIsDirty') || this.get('destinationIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-    savePriority: belongs_to_save('link', 'priority', 'priority_fk'),
-    saveStatus: belongs_to_save('link', 'status', 'status_fk'),
-    rollbackPriority: belongs_to_rollback('priority_fk', 'priority', 'change_priority'),
     rollbackRelated(){
         this.rollbackPriority();
+        this.rollbackDestination();
         this.rollbackCategories();
     },
+    rollbackPriority: belongs_to_rollback('priority_fk', 'priority', 'change_priority'),
+    rollbackDestination: belongs_to_rollback('destination_fk', 'dtd', 'change_destination'),
     saveRelated(){
-        this.savePriority(); 
-        this.saveStatus(); 
+        this.savePriority();
+        this.saveStatus();
+        this.saveDestination();
     },
+    savePriority: belongs_to_save('link', 'priority', 'priority_fk'),
+    saveDestination: belongs_to_save('link', 'destination', 'destination_fk'),
+    saveStatus: belongs_to_save('link', 'status', 'status_fk'),
     serialize() {
         return {
             id: this.get('id'),
@@ -54,6 +67,7 @@ var LinkModel = Model.extend(CategoriesMixin, {
             text: this.get('text'),
             priority: this.get('priority') ? this.get('priority.id') : null,
             status: this.get('status') ? this.get('status.id') : null,
+            destination: this.get('destination') ? this.get('destination.id') : null,
         };
     }
 });
