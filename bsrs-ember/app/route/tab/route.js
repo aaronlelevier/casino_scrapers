@@ -7,12 +7,12 @@ var TabRoute = Ember.Route.extend({
     afterModel(model, transition) {
         let id = model.model ? model.model.get('id') : model.get('id');
         this.get('tabList').createTab(id,
-            this.routeName,
-            this.get('modelName'),
-            this.get('templateModelField'),
-            this.get('redirectRoute'),
-            false,
-            this.transitionCallback.bind(this)
+            this.routeName,//doc_route
+            this.get('modelName'),//doc_type
+            this.get('templateModelField'),//templateModelField
+            this.get('redirectRoute'),//redirect
+            false,//newModel
+            this.transitionCallback.bind(this)//any callbacks you want to call or store mods to make
         );
     }
 });

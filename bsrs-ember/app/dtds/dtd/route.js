@@ -16,7 +16,7 @@ export default Ember.Route.extend(PriorityMixin, StatusMixin, {
     tabList: Ember.inject.service(),
     model(params){
         const store = this.get('store');
-        store.push('dtd-header', {id: 1, showingList:true, showingDetail:true, showingPreview:true, detail_model:true});
+        // store.push('dtd-header', {id: 1, showingList:true, showingDetail:true, showingPreview:true, detail_model:true});
         const pk = params.dtd_id;
         const repository = this.get('repository');
         let dtd = repository.fetch(pk);

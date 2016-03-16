@@ -6,7 +6,7 @@ var TabModel = Ember.Object.extend({
   init() {
     const dynamicField = this.get('templateModelField');
     Ember.defineProperty(this, 'modelBindingToTemplate', Ember.computed(function() {
-      const model = this.get('model');
+      const model = this.get('model').get('id') ? this.get('model') : this.get('singleTabModel');
       if (model.get('content')) {
         switch(dynamicField) {
           case 'categories':
