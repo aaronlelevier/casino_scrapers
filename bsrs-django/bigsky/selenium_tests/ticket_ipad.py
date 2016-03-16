@@ -34,7 +34,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         # Generic Elements
         self.gen_elem_page = GeneralElementsPage(self.driver)
         self.nav_page = NavPage(self.driver)
-        import time; time.sleep(2)
+        import time; time.sleep(3)
         # Go to Ticket Area
         # self.nav_page.find_ticket_link().click()
         self.driver.find_element_by_class_name('t-hamburger').click()
@@ -91,7 +91,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
 
     def test_file_delete(self):
         """
-        Upload 2 Attachments for a Ticket, but then navigate away, and the 
+        Upload 2 Attachments for a Ticket, but then navigate away, and the
         Attachments should be deleted.
         """
         # Create Ticket Page Object
@@ -273,4 +273,3 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

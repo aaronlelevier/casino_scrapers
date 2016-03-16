@@ -2,7 +2,7 @@ from .javascript import JavascriptMixin
 
 
 class ModelPage(JavascriptMixin):
-    """Inherit from ``JavascriptMixin`` so has access 
+    """Inherit from ``JavascriptMixin`` so has access
     to the ``$.active xhr wait method``."""
 
     def __init__(self, driver, new_link, list_name, list_data, *args, **kwargs):
@@ -26,10 +26,10 @@ class ModelPage(JavascriptMixin):
             assert getattr(self, k + "_input").get_attribute("value") == v
 
     def find_list_name(self):
-        return self.wait_for_xhr_request(self.list_name, plural=True)
+        return self.wait_for_xhr_request(self.list_name, plural=True, just_refreshed=True)
 
     def find_list_data(self, just_refreshed=False):
-        return self.wait_for_xhr_request(self.list_data, plural=True, just_refreshed=just_refreshed)
+        return self.wait_for_xhr_request(self.list_data, plural=True, just_refreshed=True)
 
     def find_power_select_data(self, xpath, just_refreshed=False):
         return self.wait_for_xhr_request(xpath, plural=True, just_refreshed=just_refreshed)
