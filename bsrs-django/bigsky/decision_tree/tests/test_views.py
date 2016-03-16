@@ -72,8 +72,9 @@ class TreeDataDetailTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['links'][0]['request'], link.request)
         self.assertEqual(data['links'][0]['priority_fk'], str(link.priority.id))
         self.assertEqual(data['links'][0]['status_fk'], str(link.status.id))
+        self.assertEqual(data['links'][0]['destination_fk'], str(link.destination.id))
         self.assertEqual(data['links'][0]['dtd'], str(self.tree_data.id))
-        self.assertEqual(data['links'][0]['destination'], str(link.destination.id))
+        self.assertEqual(data['links'][0]['destination_fk'], str(link.destination.id))
 
 
 class TreeDataListTests(TreeDataTestSetUpMixin, APITestCase):
@@ -232,7 +233,7 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['links'][0]['priority_fk'], str(priority.id))
         self.assertEqual(data['links'][0]['status_fk'], str(status.id))
         self.assertEqual(data['links'][0]['dtd'], new_id)
-        self.assertEqual(data['links'][0]['destination'], str(destination.id))
+        self.assertEqual(data['links'][0]['destination_fk'], str(destination.id))
 
 
 class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
@@ -444,7 +445,7 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['links'][0]['priority_fk'], str(priority.id))
         self.assertEqual(data['links'][0]['status_fk'], str(status.id))
         self.assertEqual(data['links'][0]['dtd'], str(self.tree_data.id))
-        self.assertEqual(data['links'][0]['destination'], str(destination.id))
+        self.assertEqual(data['links'][0]['destination_fk'], str(destination.id))
 
     def test_update_existing_link__first_level_key(self):
         self.assertEqual(len(self.data['links']), 1)
@@ -490,7 +491,7 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['links'][0]['priority_fk'], str(priority.id))
         self.assertEqual(data['links'][0]['status_fk'], str(status.id))
         self.assertEqual(data['links'][0]['dtd'], str(self.tree_data.id))
-        self.assertEqual(data['links'][0]['destination'], str(destination.id))
+        self.assertEqual(data['links'][0]['destination_fk'], str(destination.id))
 
     def test_remove_link(self):
         self.data['links'] = []

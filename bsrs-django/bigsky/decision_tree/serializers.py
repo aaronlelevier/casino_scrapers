@@ -46,6 +46,7 @@ class TreeLinkSerializer(BaseCreateSerializer):
         data = super(TreeLinkSerializer, self).to_representation(obj)
         data['priority_fk'] = data.pop('priority', None)
         data['status_fk'] = data.pop('status', None)
+        data['destination_fk'] = data.pop('destination', None)
         return data
 
 
