@@ -86,16 +86,17 @@ var DTDModel = Model.extend(Validations, {
         rollbackAll(fields);
     },
     fieldRollback: many_to_many_rollback('dtd-field', 'dtd_field_fks', 'dtd_pk'),
-    saveRelated(){
+    save(){
         this.saveLinksContainer();
         this.saveLinks();
         this.saveFieldsContainer();
         this.saveFields();
+        this._super();
     },
     saveLinksContainer() {
         const links = this.get('links');
         links.forEach((link) => {
-            link.saveRelated();
+            // link.saveRelated();
             link.save();
         });
     },

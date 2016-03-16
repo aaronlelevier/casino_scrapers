@@ -172,7 +172,7 @@ test('remove_field', (assert) => {
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
 });
 
-test('saveRelated - for Links and their Status and Priority', (assert) => {
+test('save - for Links and their Status and Priority', (assert) => {
     run(() => {
         store.push('ticket-priority', {id: TP.priorityOneId});
         store.push('ticket-status', {id: TD.statusOneId});
@@ -183,7 +183,7 @@ test('saveRelated - for Links and their Status and Priority', (assert) => {
     assert.equal(dtd.get('links').get('length'), 0);
     assert.ok(dtd.get('linksIsNotDirty'));
     assert.ok(dtd.get('linksIsDirtyContainer'));
-    dtd.saveRelated();
+    dtd.save();
     // Links
     assert.ok(dtd.get('linksIsNotDirty'));
     assert.ok(!dtd.get('linksIsDirtyContainer'));
@@ -212,20 +212,20 @@ test('saveRelated - for Links and their Status and Priority', (assert) => {
     assert.ok(link_two.get('isDirtyOrRelatedDirty'));
     assert.ok(link_two.get('priorityIsDirty'));
     assert.ok(link_two.get('statusIsDirty'));
-    dtd.saveRelated();
+    dtd.save();
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(link_two.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(link_two.get('priorityIsNotDirty'));
     assert.ok(link_two.get('statusIsNotDirty'));
 });
 
-test('saveRelated - Fields and Options', (assert) => {
+test('save - Fields and Options', (assert) => {
     assert.equal(dtd.get('fields').get('length'), 0);
     dtd.add_field({id: FD.idOne});
     assert.equal(dtd.get('fields').get('length'), 1);
     assert.ok(dtd.get('fieldsIsDirty'));
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-    dtd.saveRelated();
+    dtd.save();
     assert.ok(dtd.get('fieldsIsNotDirty'));
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     field = dtd.get('fields').objectAt(0);
@@ -237,7 +237,7 @@ test('saveRelated - Fields and Options', (assert) => {
     assert.equal(field.get('options').get('length'), 1);
     assert.ok(dtd.get('fieldsIsDirty'));
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-    dtd.saveRelated();
+    dtd.save();
     assert.ok(dtd.get('fieldsIsNotDirty'));
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
 });
@@ -358,7 +358,7 @@ test('rollback for related fields and their options', (assert) => {
     assert.ok(store.findOne('option').get('isNotDirty'));
 });
 
-test('saveRelated and rollback combined test', (assert) => {
+test('save and rollback combined test', (assert) => {
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     dtd.add_field({id: FD.idOne});
     assert.equal(dtd.get('fields').get('length'), 1);
@@ -372,7 +372,7 @@ test('saveRelated and rollback combined test', (assert) => {
     assert.ok(dtd.get('linksIsNotDirty'));
     assert.ok(dtd.get('fieldsIsDirty'));
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-    dtd.saveRelated();
+    dtd.save();
     assert.ok(dtd.get('linksIsNotDirty'));
     assert.ok(dtd.get('fieldsIsNotDirty'));
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));

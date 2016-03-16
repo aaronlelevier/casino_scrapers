@@ -50,10 +50,11 @@ var LinkModel = Model.extend(CategoriesMixin, {
     },
     rollbackPriority: belongs_to_rollback('priority_fk', 'priority', 'change_priority'),
     rollbackDestination: belongs_to_rollback('destination_fk', 'dtd', 'change_destination'),
-    saveRelated(){
+    save(){
         this.savePriority();
         this.saveStatus();
         this.saveDestination();
+        this._super();
     },
     savePriority: belongs_to_save('link', 'priority', 'priority_fk'),
     saveDestination: belongs_to_save('link', 'destination', 'destination_fk'),

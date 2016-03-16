@@ -324,8 +324,8 @@ test('saveDestination null destination', (assert) => {
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-// saveRelated
-test('saveRelated - priority, status, destination', (assert) => {
+// save
+test('save - priority, status, destination', (assert) => {
     run(() => {
         dtd = store.push('dtd', {id: DTD.idOne});
     });
@@ -340,7 +340,7 @@ test('saveRelated - priority, status, destination', (assert) => {
     assert.ok(link.get('statusIsDirty'));
     assert.ok(link.get('priorityIsDirty'));
     assert.ok(link.get('isDirtyOrRelatedDirty'));
-    link.saveRelated();
+    link.save();
     assert.ok(link.get('destinationIsNotDirty'));
     assert.ok(link.get('statusIsNotDirty'));
     assert.ok(link.get('priorityIsNotDirty'));
@@ -780,7 +780,7 @@ test('rollback categories will reset the previous people (categories) when switc
     assert.ok(link.get('categoriesIsDirty'));
     assert.ok(link.get('isDirtyOrRelatedDirty'));
     link.save();
-    link.saveRelated();
+    link.save();
     // assert.equal(link.get('categories').get('length'), 1);
     // assert.ok(link.get('isNotDirty'));
     // assert.ok(link.get('categoriesIsNotDirty'));
@@ -790,7 +790,7 @@ test('rollback categories will reset the previous people (categories) when switc
     assert.ok(link.get('categoriesIsDirty'));
     assert.ok(link.get('isDirtyOrRelatedDirty'));
     link.save();
-    link.saveRelated();
+    link.save();
     // assert.equal(link.get('categories').get('length'), 2);
     // assert.ok(link.get('isNotDirty'));
     // assert.ok(link.get('categoriesIsNotDirty'));

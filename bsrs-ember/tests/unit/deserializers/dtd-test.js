@@ -61,12 +61,13 @@ test('dtd deserializer removes m2m dtd-link when server is diff from client', (a
 });
 
 test('dtd new definitions from server will not dirty model if clean', (assert) => {
-    store.push('dtd', DTDF.generate(DTD.idOne));
+    store.push('dtd', {id: DTD.idOne, dtd_link_fks: [DTDL.idOne]});
     const json = DTDF.generate(DTD.idOne, DTD.keyTwo);
     run(() => {
         subject.deserialize(json, DTD.idOne);
     });
     let dtd = store.find('dtd', DTD.idOne);
+    assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idOne);
     assert.equal(dtd.get('key'), DTD.keyTwo);
     assert.ok(dtd.get('isNotDirty'));
 });
