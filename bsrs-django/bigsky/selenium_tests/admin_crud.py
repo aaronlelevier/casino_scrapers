@@ -25,6 +25,9 @@ def get_text_excluding_children(driver, element):
 def rand_chars(number=10):
     return "a"+''.join([str(random.choice(string.ascii_letters)) for x in range(number)])
 
+def rand_num():
+    return ''.join([str(random.randrange(0, 10)) for x in range(10)])
+
 
 class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
 
@@ -363,7 +366,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         )
         # Go to Create Person view
         person_page.find_new_link().click()
-        username = "almno_"+rand_chars()
+        username = "almno_"+rand_num()
         password = "bobber-foo"
         person = InputHelper(username=username, password=password)
         self._fill_in(person)
