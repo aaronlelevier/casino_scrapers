@@ -279,7 +279,7 @@ test('serialize dtd model and links with a priority', (assert) => {
     assert.equal(link.get('destination.id'), dtd_payload.links[0].destination);
 });
 
-test('rollbackRelated for related links', (assert) => {
+test('rollback for related links', (assert) => {
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
     run(() => {
@@ -288,13 +288,13 @@ test('rollbackRelated for related links', (assert) => {
     assert.ok(link.get('isDirty'));
     assert.ok(link.get('isDirtyOrRelatedDirty'));
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-    dtd.rollbackRelated();
+    dtd.rollback();
     assert.ok(link.get('isNotDirty'));
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('rollbackRelated for related links priority', (assert) => {
+test('rollback for related links priority', (assert) => {
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
     run(() => {
@@ -303,24 +303,34 @@ test('rollbackRelated for related links priority', (assert) => {
     });
     assert.ok(link.get('isNotDirty'));
     assert.ok(link.get('isDirtyOrRelatedDirty'));
-    dtd.rollbackRelated();
+    dtd.rollback();
     assert.ok(link.get('isNotDirty'));
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('rollbackRelated for related fields', (assert) => {
+test('rollback for related fields', (assert) => {
+    assert.ok(dtd.get('fieldsIsNotDirty'));
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(dtd.get('fields').get('length'), 0);
     dtd.add_field({id: FD.idOne});
     assert.equal(dtd.get('fields').get('length'), 1);
+    field = dtd.get('fields').objectAt(0);
+    assert.ok(field.get('isNotDirty'));
+    store.push('field', {id: FD.idOne, required: FD.requiredTwo});
+    assert.ok(field.get('isDirty'));
+    assert.ok(dtd.get('fieldsIsDirty'));
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-    dtd.rollbackRelated();
+    dtd.rollback();
     assert.equal(dtd.get('fields').get('length'), 0);
+    assert.ok(dtd.get('fieldsIsNotDirty'));
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(store.find('field').get('length'), 1);
+    field = store.findOne('field');
+    assert.ok(field.get('isNotDirty'));
 });
 
-test('rollbackRelated for related fields and their options', (assert) => {
+test('rollback for related fields and their options', (assert) => {
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(dtd.get('fields').get('length'), 0);
     dtd.add_field({id: FD.idOne});
@@ -338,7 +348,7 @@ test('rollbackRelated for related fields and their options', (assert) => {
         store.push('option', {id: OD.idOne, text: OD.textOne});
     });
     assert.ok(field.get('options').objectAt(0).get('isDirty'));
-    dtd.rollbackRelated();
+    dtd.rollback();
     assert.equal(dtd.get('fields').get('length'), 0);
     assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(field.get('optionsIsNotDirty'));
@@ -348,7 +358,7 @@ test('rollbackRelated for related fields and their options', (assert) => {
     assert.ok(store.findOne('option').get('isNotDirty'));
 });
 
-test('saveRelated and rollbackRelated combined test', (assert) => {
+test('saveRelated and rollback combined test', (assert) => {
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     dtd.add_field({id: FD.idOne});
     assert.equal(dtd.get('fields').get('length'), 1);
@@ -378,7 +388,7 @@ test('saveRelated and rollbackRelated combined test', (assert) => {
     assert.ok(dtd.get('linksIsNotDirty'));
     assert.ok(dtd.get('fieldsIsDirty'));
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-    dtd.rollbackRelated();
+    dtd.rollback();
     assert.equal(dtd.get('fields').get('length'), 1);
     assert.equal(dtd.get('links').get('length'), 2);
     assert.equal(link.get('priority.id'), TP.idOne);

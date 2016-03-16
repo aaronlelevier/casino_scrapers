@@ -42,10 +42,11 @@ var LinkModel = Model.extend(CategoriesMixin, {
         return this.get('isDirty') || this.get('priorityIsDirty') || this.get('statusIsDirty') || this.get('categoriesIsDirty') || this.get('destinationIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-    rollbackRelated(){
+    rollback(){
         this.rollbackPriority();
         this.rollbackDestination();
         this.rollbackCategories();
+        this._super();
     },
     rollbackPriority: belongs_to_rollback('priority_fk', 'priority', 'change_priority'),
     rollbackDestination: belongs_to_rollback('destination_fk', 'dtd', 'change_destination'),

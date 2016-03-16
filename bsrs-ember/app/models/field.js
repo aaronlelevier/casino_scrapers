@@ -2,6 +2,7 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/store';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
+import { rollbackAll } from 'bsrs-ember/utilities/rollback-all';
 
 export default Model.extend({
     store: inject('main'),
@@ -31,15 +32,14 @@ export default Model.extend({
         this.save();
     },
     saveOptions: many_to_many_save('field', 'field_options', 'field_option_ids', 'field_option_fks'),
-    rollbackRelated() {
+    rollback(){
         this.optionRollbackContainer();
         this.optionRollback();
+        this._super();
     },
     optionRollbackContainer() {
         const options = this.get('options');
-        options.forEach((option) => {
-            option.rollback();
-        });
+        rollbackAll(options);
     },
     optionRollback: many_to_many_rollback('field-option', 'field_option_fks', 'field_pk'),
     removeRecord(){

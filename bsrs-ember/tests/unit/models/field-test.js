@@ -143,7 +143,7 @@ test('rollbackRelated for related options', (assert) => {
     field.add_option({id: OD.idOne});
     assert.ok(field.get('optionsIsDirty'));
     assert.ok(field.get('isDirtyOrRelatedDirty'));
-    field.rollbackRelated();
+    field.rollback();
     assert.ok(option.get('isNotDirty'));
     assert.ok(field.get('optionsIsNotDirty'));
     assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));

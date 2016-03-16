@@ -201,8 +201,8 @@ test('change_destination to null', (assert) => {
     assert.equal(link.get('destination.id'), null);
 });
 
-// rollbackRelated
-test('rollbackRelated priority - value value value', (assert) => {
+// rollback
+test('rollback priority - value value value', (assert) => {
     let priority_two;
     run(() => {
         priority = store.push('ticket-priority', {id: TP.priorityOneId, links: [LINK.idOne]});
@@ -214,12 +214,12 @@ test('rollbackRelated priority - value value value', (assert) => {
     link.change_priority(TP.priorityTwoId);
     assert.equal(link.get('priority.id'), TP.priorityTwoId);
     assert.ok(link.get('isDirtyOrRelatedDirty'));
-    link.rollbackRelated();
+    link.rollback();
     assert.equal(link.get('priority.id'), TP.priorityOneId);
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('rollbackRelated priority - value null value', (assert) => {
+test('rollback priority - value null value', (assert) => {
     let priority_two;
     run(() => {
         priority = store.push('ticket-priority', {id: TP.priorityOneId, links: [LINK.idOne]});
@@ -231,12 +231,12 @@ test('rollbackRelated priority - value null value', (assert) => {
     link.change_priority(null);
     assert.equal(link.get('priority.id'), null);
     assert.ok(link.get('isDirtyOrRelatedDirty'));
-    link.rollbackRelated();
+    link.rollback();
     assert.equal(link.get('priority.id'), TP.priorityOneId);
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('rollbackRelated - destination', (assert) => {
+test('rollback - destination', (assert) => {
     let dtd_two;
     run(() => {
         dtd = store.push('dtd', {id: DTD.idOne, destination_links: [LINK.idOne]});
@@ -248,7 +248,7 @@ test('rollbackRelated - destination', (assert) => {
     link.change_destination(null);
     assert.ok(link.get('isDirtyOrRelatedDirty'));
     assert.equal(link.get('destination.id'), null);
-    link.rollbackRelated();
+    link.rollback();
     assert.equal(link.get('destination.id'), DTD.idOne);
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
 });
@@ -514,7 +514,7 @@ test('rollback categories will also restore the category tree (when top node cha
     assert.equal(link.get('categories.length'), 1);
     assert.equal(link.get('top_level_category').get('id'), CD.unusedId);
     assert.ok(link.get('isDirtyOrRelatedDirty'));
-    link.rollbackRelated();
+    link.rollback();
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(link.get('categories.length'), 3);
     assert.equal(link.get('top_level_category').get('id'), CD.idTwo);
@@ -544,7 +544,7 @@ test('rollback categories will also restore the category tree (when middle node 
     assert.equal(link.get('categories').objectAt(0).get('id'), CD.idTwo);
     assert.equal(link.get('categories').objectAt(1).get('id'), CD.unusedId);
     assert.ok(link.get('isDirtyOrRelatedDirty'));
-    link.rollbackRelated();
+    link.rollback();
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(link.get('categories.length'), 3);
     assert.equal(link.get('top_level_category').get('id'), CD.idTwo);
@@ -576,7 +576,7 @@ test('rollback categories will also restore the category tree (when leaf node ch
     assert.equal(link.get('categories').objectAt(2).get('id'), CD.unusedId);
     assert.ok(link.get('isDirtyOrRelatedDirty'));
     // TODO:
-    // link.rollbackRelated();
+    // link.rollback();
     // assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
     // assert.equal(link.get('categories.length'), 3);
     // assert.equal(link.get('top_level_category').get('id'), CD.idTwo);
@@ -679,7 +679,7 @@ test('when categories is changed dirty tracking works as expected (removing)', (
     assert.equal(link.get('categories').get('length'), 0);
     assert.ok(link.get('categoriesIsDirty'));
     assert.ok(link.get('isDirtyOrRelatedDirty'));
-    link.rollbackRelated();
+    link.rollback();
     assert.equal(link.get('categories').get('length'), 1);
     assert.ok(link.get('categoriesIsNotDirty'));
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
@@ -687,7 +687,7 @@ test('when categories is changed dirty tracking works as expected (removing)', (
     assert.equal(link.get('categories').get('length'), 0);
     assert.ok(link.get('categoriesIsDirty'));
     assert.ok(link.get('isDirtyOrRelatedDirty'));
-    link.rollbackRelated();
+    link.rollback();
     assert.equal(link.get('categories').get('length'), 1);
     assert.ok(link.get('categoriesIsNotDirty'));
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
@@ -707,7 +707,7 @@ test('when categories is changed dirty tracking works as expected (replacing)', 
     assert.ok(link.get('categoriesIsDirty'));
     assert.equal(link.get('categories').get('length'), 1);
     assert.equal(link.get('categories').objectAt(0).get('id'), CD.idTwo);
-    link.rollbackRelated();
+    link.rollback();
     assert.equal(link.get('categories').get('length'), 1);
     assert.ok(link.get('categoriesIsNotDirty'));
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
@@ -716,7 +716,7 @@ test('when categories is changed dirty tracking works as expected (replacing)', 
     assert.equal(link.get('categories').get('length'), 1);
     assert.ok(link.get('categoriesIsDirty'));
     assert.ok(link.get('isDirtyOrRelatedDirty'));
-    link.rollbackRelated();
+    link.rollback();
     assert.equal(link.get('categories').get('length'), 1);
     assert.ok(link.get('categoriesIsNotDirty'));
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
@@ -750,7 +750,7 @@ test('rollback link will reset the previously used people (categories) when swit
     assert.equal(link.get('categories').get('length'), 1);
     assert.ok(link.get('categoriesIsDirty'));
     assert.ok(link.get('isDirtyOrRelatedDirty'));
-    link.rollbackRelated();
+    link.rollback();
     assert.equal(link.get('categories').get('length'), 2);
     assert.ok(link.get('categoriesIsNotDirty'));
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
@@ -759,7 +759,7 @@ test('rollback link will reset the previously used people (categories) when swit
     assert.equal(link.get('categories').get('length'), 0);
     assert.ok(link.get('categoriesIsDirty'));
     assert.ok(link.get('isDirtyOrRelatedDirty'));
-    link.rollbackRelated();
+    link.rollback();
     assert.equal(link.get('categories').get('length'), 2);
     assert.ok(link.get('categoriesIsNotDirty'));
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));

@@ -4,6 +4,7 @@ import inject from 'bsrs-ember/utilities/store';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
+import { rollbackAll } from 'bsrs-ember/utilities/rollback-all';
 
 const Validations = buildValidations({
     key: validator('presence', {
@@ -66,26 +67,23 @@ var DTDModel = Model.extend(Validations, {
             links: links
         };
     },
-    rollbackRelated() {
+    rollback() {
         this.linkRollbackContainer();
         this.linkRollback();
         this.fieldRollbackContainer();
         this.fieldRollback();
+        this._super();
+    },
+    rollbackRelated(){
     },
     linkRollbackContainer() {
         const links = this.get('links');
-        links.forEach((link) => {
-            link.rollback();
-            link.rollbackRelated();
-        });
+        rollbackAll(links);
     },
     linkRollback: many_to_many_rollback('dtd-link', 'dtd_link_fks', 'dtd_pk'),
     fieldRollbackContainer() {
         const fields = this.get('fields');
-        fields.forEach((field) => {
-            field.rollback();
-            field.rollbackRelated();
-        });
+        rollbackAll(fields);
     },
     fieldRollback: many_to_many_rollback('dtd-field', 'dtd_field_fks', 'dtd_pk'),
     saveRelated(){
