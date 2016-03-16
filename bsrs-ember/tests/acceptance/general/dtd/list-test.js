@@ -118,30 +118,30 @@ test('search grid', (assert) => {
   });
 });
 
-test('detail && preview are bound and can save', (assert) => {
-  generalPage.visitDashboard();
-  andThen(() => {
-    assert.equal(currentURL(), ADMIN_URL);
-  });
-  generalPage
-  .clickAdmin()
-  .clickDTD();
-  click('.t-grid-data:eq(0)');
-  page.descriptionFillIn(DTD.descriptionTwo);
-  andThen(() => {
-    assert.ok(page.isDirty);
-    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionTwo);
-  });
-  dtd_payload.description = DTD.descriptionTwo;
-  xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
-    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionTwo);
-  });
-});
+// test('detail && preview are bound and can save', (assert) => {
+//   generalPage.visitDashboard();
+//   andThen(() => {
+//     assert.equal(currentURL(), ADMIN_URL);
+//   });
+//   generalPage
+//   .clickAdmin()
+//   .clickDTD();
+//   click('.t-grid-data:eq(0)');
+//   page.descriptionFillIn(DTD.descriptionTwo);
+//   andThen(() => {
+//     assert.ok(page.isDirty);
+//     assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionTwo);
+//   });
+//   dtd_payload.description = DTD.descriptionTwo;
+//   xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});
+//   generalPage.save();
+//   andThen(() => {
+//     assert.equal(currentURL(), DETAIL_URL);
+//     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+//     assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
+//     assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionTwo);
+//   });
+// });
 
 test('toggle decision tree preview', (assert) => {
   page.visitDetail();
@@ -240,7 +240,7 @@ test('clicking close on tab will show list only', (assert) => {
     assert.equal(currentURL(), DTD_URL);
   });
 });
-test('amk ensure we are seeing the decision tree grid and not the standard grid', (assert) => {
+test('ensure we are seeing the decision tree grid and not the standard grid', (assert) => {
     clearxhr(detail_xhr);
     page.visit();
     andThen(() => {

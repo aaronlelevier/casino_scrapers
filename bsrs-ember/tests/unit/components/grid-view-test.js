@@ -2,7 +2,7 @@ import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import GridViewComponent from 'bsrs-ember/components/grid-view/component';
+import GridViewComponent from 'bsrs-ember/components/grid/helpers/grid-body/component';
 
 var proxy = function() {
     return Ember.ArrayProxy.extend({

@@ -1,0 +1,16 @@
+<div class="pull-right btn-group btn-group-sm">
+  {{#if hasActiveFilterSet}}
+  <button class="t-show-save-filterset-modal btn btn-primary btn-sm" {{action "toggleSaveFilterSetModal"}}>{{t 'grid.save_filter'}}</button>
+  {{/if}}
+  {{#if count}}
+  {{#link-to add_model_url count class="t-add-new add-btn btn btn-default btn-sm"}}
+  {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
+  {{/link-to}}
+  {{else}}
+  {{#if add_model_url}}
+  {{#link-to add_model_url class="t-add-new add-btn btn btn-default btn-sm"}}
+  {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
+  {{/link-to}}
+  {{/if}}
+  {{/if}}
+</div>

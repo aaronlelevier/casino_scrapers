@@ -1,96 +1,56 @@
+{{#grid-view2 as |t|}}
 <div class="rowTable">
   <header class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="pull-right btn-group btn-group-sm">
-          {{#if hasActiveFilterSet}}
-          <button class="t-show-save-filterset-modal btn btn-primary btn-sm" {{action "toggleSaveFilterSetModal"}}>{{t 'grid.save_filter'}}</button>
-          {{/if}}
-          {{#if count}}
-          {{#link-to add_model_url count class="t-add-new add-btn btn btn-default btn-sm"}}
-          {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
-          {{/link-to}}
-          {{else}}
-          {{#if add_model_url}}
-          {{#link-to add_model_url class="t-add-new add-btn btn btn-default btn-sm"}}
-          {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
-          {{/link-to}}
-          {{/if}}
-          {{/if}}
-        </div>
-      </div>
-    </div>
-  </header>
-  {{#if savingFilter}}
-  {{#tether-dialog close='toggleSaveFilterSetModal' containerClassNames='save-filterset-dialog' hasOverlay=true clickOutsideToClose=true}}
-  <div class="form-group input-group">
-    {{input value=filtersetName class="form-control input-md t-filterset-name-input" enter='invokeSaveFilterSet' placeholder=(t 'grid.filterset_name')}}
-    <div class="input-group-btn">
-      <button class="btn btn-primary btn-sm t-filterset-save-btn" {{action "invokeSaveFilterSet"}}>{{t 'grid.save_filter'}}</button>
-    </div>
+<div class="row">
+  <div class="col-md-12">
+    {{t.head
+      add_model_text=add_model_text
+      hasActiveFilterSet=hasActiveFilterSet
+      count=count
+      add_model_url=add_model_url
+      savingFilter=savingFilter
+    }}
   </div>
-  {{/tether-dialog}}
-  {{/if}}
-  {{#if toggleFilter}}
-  {{#tether-dialog containerClassNames='save-filterset-dialog' close='toggleFilterModal' hasOverlay=true clickOutsideToClose=true}}
-  <div class="form-group input-group">
-    {{input-dynamic-filter close='toggleFilterModal' obj=filterModel prop=filterField placeholder=filterPlaceholder}}
-    <div class="input-group-btn">
-      <button class="btn btn-primary btn-sm t-filterset-save-btn" {{action "toggleFilterModal"}}>{{t 'grid.filter'}}</button>
-    </div>
-  </div>
-  {{/tether-dialog}}
-  {{/if}}
-  <section class="docSection docSectionWithFooter container-fluid t-grid-wrap">
-    <div class="row">
-      <div class="col-md-12">
-        <section style="padding-bottom: 0">
-          <div class="row card-title">
-            <h1 class="col-md-8">
-              <span class="t-grid-title">{{grid_title}}</span>
-              {{#if (filters-applied sort find search)}}
-              <span class="t-reset-grid reset-grid" {{action "resetGrid"}}>{{t 'grid.reset_all_options'}}</span>
-              {{/if}}
-              {{#unless model.isLoaded}}
-              {{grid-loading-graphic}}
-              {{/unless}}
-            </h1>
-            <div class="col-md-4 text-center search-wrap pull-right">
-              {{grid-search-input search=search placeholder=search_placeholder keyup=(action "keyup")}}
-            </div>
-            <div class="col-md-12 filtersets t-filterset-wrap">
-              {{filterset-navigation filtersets=filtersets route=routeName}}
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
-    <div class="table-responsive">
-      <table class="table table-striped table-hover">
-        <thead>
-          <tr class="head">
-            <th class="selector"></th>
-            {{#each columns as |column|}}
-            {{grid/helpers/grid-header-column column=column sort=sort find=find toggleFilterModal=(action "toggleFilterModal") sortBy=(action "sortBy")}}
-            {{/each}}
-          </tr>
-        </thead>
-        <tbody>
-          {{#each paginated_content as |item|}}
-          {{#link-to detail_url item.id tagName="tr" class="t-grid-data"}}
-          <td class="selector t-selector">
-            {{#if item.isDirtyOrRelatedDirty}}
-            {{fa-icon 'circle' classNames='dirty'}}
-            {{/if}}
-          </td>
-          {{#each columns as |column|}}
-          {{grid/helpers/grid-body-column noun=noun column=column item=item}}
-          {{/each}}
-          {{/link-to}}
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
-  </section>
-  {{grid/helpers/grid-footer model=model plural=plural list_url=list_url page=page page_size=page_size}}
 </div>
+  </header>
+  {{t.savingFilter
+    savingFilter=savingFilter
+    toggleFilter=toggleFilter
+    save_filterset=save_filterset
+    filterModel=filterModel
+    find=find
+  }}
+  {{t.body
+    columns=columns
+    filter=filter
+    count=count
+    model=model
+    page=page
+    sort=sort
+    search=search
+    find=find
+    requested=requested
+    page_size=page_size
+    filtersets=filtersets
+    routeName=routeName
+    defaultSort=defaultSort
+    noun=noun
+    plural=plural
+    prefix=prefix
+    grid_title=grid_title
+    list_url=list_url
+    detail_url=detail_url
+    search_placeholder=search_placeholder
+    save_filterset=save_filterset
+    savingFilter=savingFilter
+    toggleFilter=toggleFilter
+  }}
+  {{t.footer 
+    model=model 
+    plural=plural 
+    list_url=list_url 
+    page=page 
+    page_size=page_size
+    }}
+</div>
+{{/grid-view2}}
