@@ -1,0 +1,10 @@
+from django.core.management.base import BaseCommand
+
+from utils_transform.trole.management.commands._etl_utils import (
+    run_role_migrations,)
+
+
+class Command(BaseCommand):
+
+    def handle(self, *args, **options):
+        run_role_migrations()
