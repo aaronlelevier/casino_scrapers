@@ -51,7 +51,7 @@ test('singleTabModel is returned based on model_id of corresponding model define
   data.model_id = data.id;
   let ticket;
   run(()=>{
-    ticket = store.push('ticket', {id: data.id, singleTabId: 'ticket123'})
+    ticket = store.push('ticket', {id: data.id, singleTabId: 'ticket123'});
     tab1 = store.push('tab', data);
   });
   assert.equal(tab1.get('doc_type'), 'ticket');
