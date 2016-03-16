@@ -98,13 +98,6 @@ test('search grid', (assert) => {
     assert.equal(currentURL(), `${DTD_URL}?page=2`);
   });
   click('.t-tab:eq(0)');
-  const endpoint_two = `${PREFIX}${BASE_URL}/`;
-  detail_xhr = xhr(`${endpoint_two}${DTD.idGridTwo}/`, 'GET', null, {}, 200, DTDF.detail(DTD.idGridTwo));
-  click('.t-grid-data:eq(1)');
-  andThen(() => {
-    assert.equal(currentURL(), `${DETAIL_PG2_TWO_URL}?page=2`);
-  });
-  click('.t-tab:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), `${DETAIL_URL}?page=2`);
   });

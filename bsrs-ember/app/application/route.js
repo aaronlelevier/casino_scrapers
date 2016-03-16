@@ -146,7 +146,8 @@ var ApplicationRoute = Ember.Route.extend({
             Ember.$('.t-modal').modal('hide');
         },
         closeTabMaster(tab){
-            let model = this.get('store').find(tab.get('doc_type'), tab.get('id'));
+            const tab_id = tab.get('model_id') ? tab.get('model_id') : tab.get('id');
+            let model = this.get('store').find(tab.get('doc_type'), tab_id);
             if (model && model.get('isDirtyOrRelatedDirty')) {
                 Ember.$('.t-modal').modal('show');
                 this.trx.attemptedTabModel = tab;
@@ -164,7 +165,7 @@ var ApplicationRoute = Ember.Route.extend({
                     tab.get('transitionCallback')();
                 }
 
-                if(temp === tab.get('id') || tab.get('newModel')){
+                if(temp === tab_id || tab.get('newModel')){
                     this.transitionTo(tab.get('redirect'));
                     if (tab.get('newModel') && !tab.get('saveModel')) {
                         this.get('tabList').closeTab(model.get('id'));

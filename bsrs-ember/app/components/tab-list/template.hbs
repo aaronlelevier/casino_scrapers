@@ -1,22 +1,28 @@
 <nav class="tabs">
-    <ul id="tabs" class="list-inline">
-        {{#each tabs as |tab|}}
-            {{#if tab.model.new}}
-                {{tab-navigation
-                    tab=tab
-                    link_id=tab.model.new_pk
-                    close=(action "closeTab")
-                }}
-            {{else}}
-                {{tab-navigation
-                    tab=tab
-                    link_id=tab.model.id
-                    close=(action "closeTab")
-                }}
-            {{/if}}
-        {{/each}}
-        <li class="new">
-            <span>{{fa-icon "plus"}}</span>
-        </li>
-    </ul>
+  <ul id="tabs" class="list-inline">
+    {{#each tabs as |tab|}}
+    {{#if tab.model.new}}
+      {{tab-navigation
+      tab=tab
+      link_id=tab.model.new_pk
+      close=(action "closeTab")
+      }}
+    {{else if tab.singleTabModel.id}}
+      {{tab-navigation
+      tab=tab
+      link_id=tab.model_id
+      close=(action "closeTab")
+      }}
+    {{else}}
+      {{tab-navigation
+      tab=tab
+      link_id=tab.model.id
+      close=(action "closeTab")
+      }}
+    {{/if}}
+    {{/each}}
+    <li class="new">
+      <span>{{fa-icon "plus"}}</span>
+    </li>
+  </ul>
 </nav>

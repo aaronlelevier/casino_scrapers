@@ -5,6 +5,10 @@ import inject from 'bsrs-ember/utilities/inject';
 
 export default Ember.Component.extend(TabMixin, EditMixin, {
   repository: inject('dtd'),
+  tab() {
+      let service = this.get('tabList');
+      return service.findTab('dtd123');
+  },
   actions: {
     save(update=true) {
       // NOTE: (validate accross app w/ ember-cp-validations)
