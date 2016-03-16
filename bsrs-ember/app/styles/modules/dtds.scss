@@ -27,9 +27,7 @@
                 border-width: 1px 0;
             }
         }
-
     }
-
 }
 .dtd-row {
     display: table;
@@ -45,6 +43,7 @@
         height: 100%;
         border: $borderStyle;
         border-width: 0 0 0 1px;
+
         &:first-child{
             border-width: 0;
         }

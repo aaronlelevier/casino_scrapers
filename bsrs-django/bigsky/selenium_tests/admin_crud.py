@@ -39,7 +39,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.gen_elem_page = GeneralElementsPage(self.driver)
         # Go to Admin Page
         self.nav_page = NavPage(self.driver)
-        import time; time.sleep(2)
+        import time; time.sleep(3)
         self.nav_page.click_admin()
 
     def tearDown(self):
@@ -455,7 +455,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # person = self.driver_wait.find_elements_by_class_name(person_page.list_data) #person_page.find_list_data(just_refreshed=True)
         # person_page.find_list_name()
 
-        # # TODO: 
+        # # TODO:
         # This is failing because a Grid View page # allows you to go to that page,
         # but there are no records on that page
         # person_page.assert_name_not_in_list(username, new_person=None)
