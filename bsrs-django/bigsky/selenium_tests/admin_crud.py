@@ -100,7 +100,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # new Role in List view
         role = role_page.find_list_data()
         self.driver.refresh()
-        self.wait_for_xhr_request("t-sort-name-dir").click()
+        self.wait_for_xhr_request("t-sort-name-dir", just_refreshed=True).click()
         role_list_view = role_page.find_list_name()
         role_page.click_name_in_list(name, role_list_view)
         ### UPDATE

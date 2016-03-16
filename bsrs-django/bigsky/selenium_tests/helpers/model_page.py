@@ -50,7 +50,7 @@ class ModelPage(JavascriptMixin):
         return (new_model, count)
 
     def click_name_in_list_pages(self, name, new_model):
-        pagination = self.wait_for_xhr_request("t-pages")
+        pagination = self.wait_for_xhr_request("t-pages", just_refreshed=True)
         element_list = pagination.find_elements_by_class_name("t-page")
         element_list_len = len(element_list)
         count = 0
