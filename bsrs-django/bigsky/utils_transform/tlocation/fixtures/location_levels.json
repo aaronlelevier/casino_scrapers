@@ -4,16 +4,19 @@
   "pk": "0403939b-cfae-49a0-8623-a53d531254e8",
   "fields": {
     "created": "2016-02-03T19:53:23.566Z",
-    "modified": "2016-02-03T19:53:23.566Z",
+    "modified": "2016-03-16T22:32:36.239Z",
     "deleted": null,
-    "name": "company",
+    "name": "Company",
     "contact": true,
     "can_create_tickets": true,
     "landlord": true,
     "warranty": true,
     "catalog_categories": true,
     "assets": true,
-    "children": []
+    "children": [
+      "72c91384-8312-4717-a6d2-1b51c26d19f7",
+      "bdb71fbf-9379-46e0-96ce-78ed6c395895"
+    ]
   }
 },
 {
@@ -21,16 +24,37 @@
   "pk": "04f3182a-8ad7-4328-b0d9-3684f036e6a8",
   "fields": {
     "created": "2016-02-03T19:53:23.570Z",
-    "modified": "2016-02-03T19:53:23.570Z",
+    "modified": "2016-03-16T19:06:13.142Z",
     "deleted": null,
-    "name": "district",
+    "name": "District",
     "contact": true,
     "can_create_tickets": true,
     "landlord": true,
     "warranty": true,
     "catalog_categories": true,
     "assets": true,
-    "children": []
+    "children": [
+      "be963d6b-1c51-4969-b3fa-ce36a1ed88e3"
+    ]
+  }
+},
+{
+  "model": "location.locationlevel",
+  "pk": "72c91384-8312-4717-a6d2-1b51c26d19f7",
+  "fields": {
+    "created": "2016-03-16T19:05:44.693Z",
+    "modified": "2016-03-16T19:05:44.693Z",
+    "deleted": null,
+    "name": "Facility Management Unit",
+    "contact": true,
+    "can_create_tickets": true,
+    "landlord": true,
+    "warranty": true,
+    "catalog_categories": true,
+    "assets": true,
+    "children": [
+      "be963d6b-1c51-4969-b3fa-ce36a1ed88e3"
+    ]
   }
 },
 {
@@ -38,16 +62,18 @@
   "pk": "bdb71fbf-9379-46e0-96ce-78ed6c395895",
   "fields": {
     "created": "2016-02-03T19:53:23.569Z",
-    "modified": "2016-02-03T19:53:23.569Z",
+    "modified": "2016-03-16T19:06:03.462Z",
     "deleted": null,
-    "name": "region",
+    "name": "Region",
     "contact": true,
     "can_create_tickets": true,
     "landlord": true,
     "warranty": true,
     "catalog_categories": true,
     "assets": true,
-    "children": []
+    "children": [
+      "04f3182a-8ad7-4328-b0d9-3684f036e6a8"
+    ]
   }
 },
 {
@@ -55,9 +81,9 @@
   "pk": "be963d6b-1c51-4969-b3fa-ce36a1ed88e3",
   "fields": {
     "created": "2016-02-03T19:53:23.572Z",
-    "modified": "2016-02-03T19:53:23.572Z",
+    "modified": "2016-03-16T19:05:52.826Z",
     "deleted": null,
-    "name": "store",
+    "name": "Store",
     "contact": true,
     "can_create_tickets": true,
     "landlord": true,
