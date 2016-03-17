@@ -113,6 +113,48 @@ test('must have one link, cant remove last link, remove btn clears link', functi
     assert.equal(ticketPage.statusInput.split(' ').slice(0,-1).join(' '), '');
 });
 
+test('amk link type selector is present and has a selection', function(assert) {
+    let statuses = store.find('dtd-status');
+    run(() => {
+        dtd = store.push('dtd', {
+          id: DTD.idOne,
+          dtd_link_fks: [DTDL.idOne],
+          link_type: DTD.linkTypeOne,
+          link_types: [DTD.linkTypeOne, DTD.linkTypeTwo]
+        });
+        store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
+        store.push('link', {id: LINK.idOne, request: LINK.requestOne, text: LINK.textOne,
+            action_button: LINK.action_buttonOne, is_header: LINK.is_headerOne});
+    });
+    this.set('model', dtd);
+    this.render(hbs`{{dtds/dtd-single model=model}}`);
+    assert.equal(page.linkTypeLength, 2);
+    assert.equal(page.linkTypeLabelOne, trans.t('admin.dtd.link_type.buttons'));
+    assert.equal(page.linkTypeLabelTwo, trans.t('admin.dtd.link_type.links'));
+    assert.ok(page.linkTypeSelectedOne());
+    assert.notOk(page.linkTypeSelectedTwo());
+
+    assert.ok(page.action_buttonVisible);
+    assert.notOk(page.is_headerVisible);
+
+    page.linkTypeTwoClick();
+    assert.ok(page.linkTypeSelectedTwo());
+    assert.ok(dtd.get('isDirty'));
+    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+
+    assert.notOk(page.action_buttonVisible);
+    assert.ok(page.is_headerVisible);
+
+    page.linkTypeOneClick();
+    assert.ok(page.linkTypeSelectedOne());
+    assert.ok(dtd.get('isNotDirty'));
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+
+    assert.ok(page.action_buttonVisible);
+    assert.notOk(page.is_headerVisible);
+
+});
+
 // test('aaron link array must have at least one link', function(assert) {
 //     let links = store.find('link');
 //     run(() => {

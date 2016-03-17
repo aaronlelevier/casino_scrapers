@@ -22,6 +22,10 @@
                 <div class="panel-footer t-dtd-preview-prompt">{{format-markdown model.prompt}}</div>
                 {{/if}}
             </div>
+
+            {{#each model.links as |link|}}
+              <button type="button" class="btn btn-default">{{link.text}}</button>
+            {{/each}}
             <!-- <h1 class="t-dtd-preview-key">{{model.key}}</h1>
             <h1 class="t-dtd-preview-link_type">{{model.link_type}}</h1> -->
         </div>
