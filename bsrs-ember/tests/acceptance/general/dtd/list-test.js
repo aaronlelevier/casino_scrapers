@@ -54,7 +54,7 @@ test('admin to dtds list to detail && preview', (assert) => {
   .clickAdmin()
   .clickDTD();
   andThen(() => {
-    assert.equal(find('.t-grid-search-input').attr('placeholder'), t('admin.dtd.search'))
+    assert.equal(find('.t-grid-search-input').attr('placeholder'), t('admin.dtd.search'));
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.notOk(find('input.t-dtd-single-key').val());
     assert.notOk(find('.t-dtd-preview-description').text().trim());
