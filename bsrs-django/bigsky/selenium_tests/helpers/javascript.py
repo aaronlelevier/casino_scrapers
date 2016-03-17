@@ -23,7 +23,7 @@ class JavascriptMixin(object):
                     assert element.is_displayed()
                 return element
             if just_refreshed:
-                time.sleep(3)
+                time.sleep(4)
             else:
                 time.sleep(2)
 
@@ -40,6 +40,6 @@ class JavascriptMixin(object):
                     element = self.driver.find_element_by_xpath(selector)
                 return element
             if just_refreshed:
-                time.sleep(3)
+                time.sleep(4)
             else:
                 time.sleep(2)
