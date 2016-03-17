@@ -132,7 +132,7 @@ test('saveRelated - with related Options', (assert) => {
     assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('rollbackRelated for related options', (assert) => {
+test('rollback for related options', (assert) => {
     assert.ok(option.get('isNotDirty'));
     assert.ok(field.get('optionsIsNotDirty'));
     assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));

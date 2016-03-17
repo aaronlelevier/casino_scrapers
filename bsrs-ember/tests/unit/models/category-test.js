@@ -118,14 +118,14 @@ test('rollback children will revert and reboot the dirty children to clean', (as
     category.remove_child(8);
     assert.equal(category.get('children').get('length'), 0);
     assert.ok(category.get('isDirtyOrRelatedDirty'));
-    category.rollbackRelated();
+    category.rollback();
     assert.equal(category.get('children').get('length'), 1);
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
     category.add_child(cat_two);
     assert.equal(category.get('children').get('length'), 2);
     assert.deepEqual(category.get('category_children_fks'), [CCD.idOne]);
     assert.ok(category.get('isDirtyOrRelatedDirty'));
-    category.rollbackRelated();
+    category.rollback();
     assert.equal(category.get('children').get('length'), 1);
     assert.deepEqual(category.get('category_children_fks'), [CCD.idOne]);
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));

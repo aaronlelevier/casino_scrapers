@@ -74,8 +74,6 @@ var DTDModel = Model.extend(Validations, {
         this.fieldRollback();
         this._super();
     },
-    rollbackRelated(){
-    },
     linkRollbackContainer() {
         const links = this.get('links');
         rollbackAll(links);

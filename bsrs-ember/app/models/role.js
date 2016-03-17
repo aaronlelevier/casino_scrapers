@@ -70,9 +70,10 @@ var RoleModel = Model.extend(NewMixin, {
             this.get('store').remove('role', this.get('id'));
         });
     },
-    rollbackRelated() {
+    rollback() {
         this.rollbackLocationLevel();
         this.rollbackCategories();
+        this._super();
     },
     saveRelated() {
         this.saveLocationLevel();

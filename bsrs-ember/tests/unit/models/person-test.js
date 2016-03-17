@@ -99,7 +99,7 @@ test('rollback person will set locale to current locale_fk', (assert) => {
     assert.equal(person.get('locale.id'), LOCALED.idTwo); 
     assert.ok(person.get('isDirtyOrRelatedDirty')); 
     assert.ok(person.get('localeIsDirty')); 
-    person.rollbackRelated();
+    person.rollback();
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty')); 
     assert.ok(!person.get('localeIsDirty')); 
     assert.ok(person.get('locationsIsNotDirty')); 
@@ -157,7 +157,7 @@ test('rollback person will set status to current status_fk', (assert) => {
     assert.equal(person.get('status.id'), SD.inactiveId); 
     assert.ok(person.get('isDirtyOrRelatedDirty')); 
     assert.ok(person.get('statusIsDirty')); 
-    person.rollbackRelated();
+    person.rollback();
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty')); 
     assert.ok(!person.get('statusIsDirty')); 
     assert.equal(person.get('status.id'), SD.activeId); 
@@ -529,11 +529,11 @@ test('rollback related will iterate over each phone number and rollback that mod
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     first_phone_number.set('type', PNTD.mobileId);
     assert.ok(person.get('phoneNumbersIsDirty'));
-    person.rollbackRelated();
+    person.rollback();
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     second_phone_number.set('type', PNTD.officeId);
     assert.ok(person.get('phoneNumbersIsDirty'));
-    person.rollbackRelated();
+    person.rollback();
     assert.ok(person.get('phoneNumbersIsNotDirty'));
 });
 
@@ -545,11 +545,11 @@ test('rollback related will iterate over each address and rollback that model', 
     first_address.set('type', ATD.shippingId);
     assert.ok(person.get('addressesIsDirty'));
     assert.ok(first_address.get('isDirty'));
-    person.rollbackRelated();
+    person.rollback();
     assert.ok(person.get('addressesIsNotDirty'));
     second_address.set('type', ATD.officeId);
     assert.ok(second_address.get('isDirty'));
-    person.rollbackRelated();
+    person.rollback();
     assert.ok(person.get('addressesIsNotDirty'));
 });
 
@@ -857,11 +857,11 @@ test('rollback related will iterate over each email and rollback that model', (a
     first_email.set('type', ETD.personalId);
     assert.ok(person.get('emailsIsDirty'));
     assert.ok(first_email.get('isDirty'));
-    person.rollbackRelated();
+    person.rollback();
     assert.ok(person.get('emailsIsNotDirty'));
     second_email.set('type', ETD.workId);
     assert.ok(second_email.get('isDirty'));
-    person.rollbackRelated();
+    person.rollback();
     assert.ok(person.get('emailsIsNotDirty'));
 });
 
@@ -984,7 +984,7 @@ test('rollback role will reset the previously used role when switching from one 
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     person.rollback();
-    person.rollbackRelated();
+    person.rollback();
     assert.equal(person.get('role.name'), RD.nameOne);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -998,7 +998,7 @@ test('rollback role will reset the previously used role when switching from one 
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     person.rollback();
-    person.rollbackRelated();
+    person.rollback();
     assert.equal(person.get('role.name'), RD.nameOne);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -1275,7 +1275,7 @@ test('rollback location will reset the previous locations when switching from on
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     person.rollback();
-    person.rollbackRelated();
+    person.rollback();
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));

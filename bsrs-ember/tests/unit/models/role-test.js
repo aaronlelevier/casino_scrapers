@@ -259,7 +259,7 @@ test('when categories is changed dirty tracking works as expected (removing)', (
     assert.equal(role.get('categories').get('length'), 0);
     assert.ok(role.get('categoryIsDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.rollbackRelated();
+    role.rollback();
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
@@ -267,7 +267,7 @@ test('when categories is changed dirty tracking works as expected (removing)', (
     assert.equal(role.get('categories').get('length'), 0);
     assert.ok(role.get('categoryIsDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.rollbackRelated();
+    role.rollback();
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
@@ -287,7 +287,7 @@ test('when categories is changed dirty tracking works as expected (replacing)', 
     assert.ok(role.get('categoryIsDirty'));
     assert.equal(role.get('categories').get('length'), 1);
     assert.equal(role.get('categories').objectAt(0).get('id'), CD.idTwo);
-    role.rollbackRelated();
+    role.rollback();
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
@@ -297,7 +297,7 @@ test('when categories is changed dirty tracking works as expected (replacing)', 
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.rollbackRelated();
+    role.rollback();
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
@@ -317,7 +317,7 @@ test('rollback role will reset the previously used people (categories) when swit
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.rollbackRelated();
+    role.rollback();
     assert.equal(role.get('categories').get('length'), 2);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
@@ -326,7 +326,7 @@ test('rollback role will reset the previously used people (categories) when swit
     assert.equal(role.get('categories').get('length'), 0);
     assert.ok(role.get('categoryIsDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.rollbackRelated();
+    role.rollback();
     assert.equal(role.get('categories').get('length'), 2);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));

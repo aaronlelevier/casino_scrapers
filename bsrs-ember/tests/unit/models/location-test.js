@@ -117,7 +117,7 @@ test('rollback location-level will reset the previously used location-level when
     assert.ok(location.get('isNotDirty'));
     assert.ok(location.get('isDirtyOrRelatedDirty'));
     location.rollback();
-    location.rollbackRelated();
+    location.rollback();
     assert.equal(location.get('location_level.name'), LLD.nameCompany);
     assert.ok(location.get('isNotDirty'));
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
@@ -130,7 +130,7 @@ test('rollback location-level will reset the previously used location-level when
     assert.ok(location.get('isNotDirty'));
     assert.ok(location.get('isDirtyOrRelatedDirty'));
     location.rollback();
-    location.rollbackRelated();
+    location.rollback();
     assert.equal(location.get('location_level.name'), LLD.nameCompany);
     assert.ok(location.get('isNotDirty'));
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
@@ -201,7 +201,7 @@ test('rollback status will revert and reboot the dirty status to clean', (assert
     location.change_status(LDS.closedId);
     assert.equal(location.get('status.id'), LDS.closedId);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
-    location.rollbackRelated();
+    location.rollback();
     assert.equal(location.get('status.id'), LDS.openId);
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
     location.change_status(LDS.closedId);
@@ -357,11 +357,11 @@ test('rollback related will iterate over each phone number and rollback that mod
     assert.ok(location.get('phoneNumbersIsNotDirty'));
     first_phone_number.set('type', PNTD.mobileId);
     assert.ok(location.get('phoneNumbersIsDirty'));
-    location.rollbackRelated();
+    location.rollback();
     assert.ok(location.get('phoneNumbersIsNotDirty'));
     second_phone_number.set('type', PNTD.officeId);
     assert.ok(location.get('phoneNumbersIsDirty'));
-    location.rollbackRelated();
+    location.rollback();
     assert.ok(location.get('phoneNumbersIsNotDirty'));
 });
 
@@ -630,11 +630,11 @@ test('rollback related will iterate over each address and rollback that model', 
     first_address.set('type', ATD.shippingId);
     assert.ok(location.get('addressesIsDirty'));
     assert.ok(first_address.get('isDirty'));
-    location.rollbackRelated();
+    location.rollback();
     assert.ok(location.get('addressesIsNotDirty'));
     second_address.set('type', ATD.officeId);
     assert.ok(second_address.get('isDirty'));
-    location.rollbackRelated();
+    location.rollback();
     assert.ok(location.get('addressesIsNotDirty'));
 });
 
@@ -829,11 +829,11 @@ test('rollback related will iterate over each email and rollback that model', (a
     first_email.set('type', ETD.personalId);
     assert.ok(location.get('emailsIsDirty'));
     assert.ok(first_email.get('isDirty'));
-    location.rollbackRelated();
+    location.rollback();
     assert.ok(location.get('emailsIsNotDirty'));
     second_email.set('type', ETD.workId);
     assert.ok(second_email.get('isDirty'));
-    location.rollbackRelated();
+    location.rollback();
     assert.ok(location.get('emailsIsNotDirty'));
 });
 
@@ -1111,7 +1111,7 @@ test('rollback children resets children', (assert) => {
     assert.deepEqual(location.get('location_children_fks').length, 2);
     assert.equal(location.get('children').get('length'), 3);
     location.rollback();
-    location.rollbackRelated();
+    location.rollback();
     assert.deepEqual(location.get('location_children_fks').length, 2);
     assert.equal(location.get('children').get('length'), 2);
     assert.ok(location.get('isNotDirty'));
@@ -1227,7 +1227,7 @@ test('rollback parents resets parents', (assert) => {
     assert.deepEqual(location.get('location_parents_fks').length, 2);
     assert.equal(location.get('parents').get('length'), 3);
     location.rollback();
-    location.rollbackRelated();
+    location.rollback();
     assert.deepEqual(location.get('location_parents_fks').length, 2);
     assert.equal(location.get('parents').get('length'), 2);
     assert.ok(location.get('isNotDirty'));

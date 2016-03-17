@@ -64,7 +64,7 @@ test('rollback third_party will set status to current status_fk', (assert) => {
     assert.equal(third_party.get('status.id'), SD.inactiveId); 
     assert.ok(third_party.get('isDirtyOrRelatedDirty')); 
     assert.ok(third_party.get('statusIsDirty')); 
-    third_party.rollbackRelated();
+    third_party.rollback();
     assert.ok(third_party.get('isNotDirtyOrRelatedNotDirty')); 
     assert.ok(!third_party.get('statusIsDirty')); 
     assert.equal(third_party.get('status.id'), SD.activeId); 

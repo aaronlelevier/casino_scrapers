@@ -13,7 +13,7 @@ var SettingModel = Model.extend({
         return this.get('isDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-    rollbackRelated() {},
+    rollback() {},
     serialize() {
         return {
             id: this.get('id'),

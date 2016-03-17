@@ -279,7 +279,7 @@ test('serialize dtd model and links with a priority', (assert) => {
     assert.equal(link.get('destination.id'), dtd_payload.links[0].destination);
 });
 
-test('rollback for related links', (assert) => {
+test('scott rollback for related links', (assert) => {
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
     run(() => {

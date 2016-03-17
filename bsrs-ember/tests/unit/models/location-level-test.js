@@ -59,6 +59,6 @@ test('location level can roll back children', (assert) => {
     location_level.set_children([location_level_child, location_level_dept]);
     assert.equal(location_level.get('children').get('length'), 2);
     assert.ok(location_level.get('isDirtyOrRelatedDirty'));
-    location_level.rollbackRelated();
+    location_level.rollback();
     assert.equal(location_level.get('children').get('length'), 1);
 });

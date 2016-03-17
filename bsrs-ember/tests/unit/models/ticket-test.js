@@ -115,7 +115,7 @@ test('rollback status will revert and reboot the dirty status to clean', (assert
     ticket.change_status(TD.statusTwoId);
     assert.equal(ticket.get('status.id'), TD.statusTwoId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('status.id'), TD.statusOneId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     ticket.change_status(TD.statusTwoId);
@@ -306,7 +306,7 @@ test('when cc is changed dirty tracking works as expected (removing)', (assert) 
     assert.equal(ticket.get('cc').get('length'), 0);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -314,7 +314,7 @@ test('when cc is changed dirty tracking works as expected (removing)', (assert) 
     assert.equal(ticket.get('cc').get('length'), 0);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -347,7 +347,7 @@ test('multiple ticket\'s with same cc will rollback correctly', (assert) => {
     assert.equal(ticket_two.get('cc').get('length'), 0);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket_two.get('ccIsDirty'));
-    ticket_two.rollbackRelated();
+    ticket_two.rollback();
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -360,7 +360,7 @@ test('multiple ticket\'s with same cc will rollback correctly', (assert) => {
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     assert.equal(ticket_two.get('cc').get('length'), 1);
     assert.ok(ticket_two.get('ccIsNotDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -382,7 +382,7 @@ test('when cc is changed dirty tracking works as expected (replacing)', (assert)
     assert.ok(ticket.get('ccIsDirty'));
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.equal(ticket.get('cc').objectAt(0).get('id'), PD.idTwo);
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -391,7 +391,7 @@ test('when cc is changed dirty tracking works as expected (replacing)', (assert)
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -425,7 +425,7 @@ test('rollback ticket will reset the previously used people (cc) when switching 
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -434,7 +434,7 @@ test('rollback ticket will reset the previously used people (cc) when switching 
     assert.equal(ticket.get('cc').get('length'), 0);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -664,7 +664,7 @@ test('rollback categories will also restore the category tree (when top node cha
     assert.equal(ticket.get('categories.length'), 1);
     assert.equal(ticket.get('top_level_category').get('id'), CD.unusedId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
@@ -694,7 +694,7 @@ test('rollback categories will also restore the category tree (when middle node 
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idTwo);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.unusedId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
@@ -726,7 +726,7 @@ test('rollback categories will also restore the category tree (when leaf node ch
     assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.unusedId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     // TODO:
-    // ticket.rollbackRelated();
+    // ticket.rollback();
     // assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     // assert.equal(ticket.get('categories.length'), 3);
     // assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
@@ -829,7 +829,7 @@ test('when categories is changed dirty tracking works as expected (removing)', (
     assert.equal(ticket.get('categories').get('length'), 0);
     assert.ok(ticket.get('categoriesIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -837,7 +837,7 @@ test('when categories is changed dirty tracking works as expected (removing)', (
     assert.equal(ticket.get('categories').get('length'), 0);
     assert.ok(ticket.get('categoriesIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -857,7 +857,7 @@ test('when categories is changed dirty tracking works as expected (replacing)', 
     assert.ok(ticket.get('categoriesIsDirty'));
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idTwo);
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -866,7 +866,7 @@ test('when categories is changed dirty tracking works as expected (replacing)', 
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -900,7 +900,7 @@ test('rollback ticket will reset the previously used people (categories) when sw
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -909,7 +909,7 @@ test('rollback ticket will reset the previously used people (categories) when sw
     assert.equal(ticket.get('categories').get('length'), 0);
     assert.ok(ticket.get('categoriesIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -1041,7 +1041,7 @@ test('rollback priority will revert and reboot the dirty priority to clean', (as
     ticket.change_priority(TD.priorityTwoId);
     assert.equal(ticket.get('priority.id'), TD.priorityTwoId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('priority.id'), TD.priorityOneId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     ticket.change_priority(TD.priorityTwoId);
@@ -1137,7 +1137,7 @@ test('rollback assignee will revert and reboot the dirty assignee to clean', (as
     ticket.change_assignee(assignee_two);
     assert.equal(ticket.get('assignee.id'), TD.assigneeTwoId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('assignee.id'), TD.assigneeOneId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     ticket.change_assignee(assignee_two);
@@ -1227,7 +1227,7 @@ test('rollback location will revert and reboot the dirty location to clean', (as
     ticket.change_location(location_two);
     assert.equal(ticket.get('location.id'), LD.idTwo);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('location.id'), LD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     ticket.change_location(location_two);
@@ -1348,13 +1348,13 @@ test('rollback attachments will revert and reboot the dirty attachments to clean
     ticket.remove_attachment(8);
     assert.equal(ticket.get('attachments').get('length'), 0);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('attachments').get('length'), 1);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     ticket.add_attachment(9);
     assert.equal(ticket.get('attachments').get('length'), 2);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.rollbackRelated();
+    ticket.rollback();
     assert.equal(ticket.get('attachments').get('length'), 1);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     ticket.add_attachment(9);

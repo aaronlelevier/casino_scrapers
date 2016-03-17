@@ -11,69 +11,70 @@ import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollba
 const { run } = Ember;
 
 var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
-    store: inject('main'),
-    uuid: injectUUID('uuid'),
-    name: attr(''),
-    description: attr(''),
-    label: attr(''),
-    subcategory_label: attr(''),
-    cost_amount: attr(''),
-    cost_code: attr(''),
-    parent_id: undefined,
-    category_children_fks: [],
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'childrenIsDirty', function() {
-        return this.get('isDirty') || this.get('childrenIsDirty');
-    }),
-    isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-    serialize() {
-        const cost_amount = this.get('cost_amount') || null;
-        return {
-            id: this.get('id'),
-            name: this.get('name'),
-            description: this.get('description'),
-            cost_amount: cost_amount,
-            cost_currency: this.get('cost_currency'),
-            cost_code: this.get('cost_code'),
-            label: this.get('label'),
-            subcategory_label: this.get('subcategory_label'),
-            parent: null,
-            children: this.get('children_ids')
-        };
-    },
-    childrenIsDirty: many_to_many_dirty('category_children_ids', 'category_children_fks'),
-    childrenIsNotDirty: Ember.computed.not('childrenIsDirty'),
-    //m2m attr
-    children_ids: many_models_ids('children'),
-    children: many_models('category_children', 'child_pk', 'category'),
-    category_children_ids: many_to_many_ids('category_children'),
-    category_children: many_to_many('category-children', 'category_pk'),
-    //add m2m
-    add_child: add_many_to_many('category-children', 'category', 'child_pk', 'category_pk'),
-    //remove m2m
-    remove_child: remove_many_to_many('category-children', 'child_pk', 'category_children'),
-    //belongs to attr
-    parent: Ember.computed.alias('parent_belongs_to.firstObject'),
-    parent_belongs_to: Ember.computed('parent_id', function() {
-        const parent_id = this.get('parent_id');
-        const store = this.get('store');
-        const filter = function(category) {
-            return parent_id === category.get('id');
-        };
-        return store.find('category', filter);
-    }),
-    removeRecord() {
-        run(() => {
-            this.get('store').remove('category', this.get('id'));
-        });
-    },
-    rollbackChildren: many_to_many_rollback('category-children', 'category_children_fks', 'category_pk'),
-    saveChildren: many_to_many_save('category', 'category_children', 'category_children_ids', 'category_children_fks'),
-    rollbackRelated() {
-        this.rollbackChildren();
-    },
-    saveRelated() {
-        this.saveChildren();
-    }
+  store: inject('main'),
+  uuid: injectUUID('uuid'),
+  name: attr(''),
+  description: attr(''),
+  label: attr(''),
+  subcategory_label: attr(''),
+  cost_amount: attr(''),
+  cost_code: attr(''),
+  parent_id: undefined,
+  category_children_fks: [],
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'childrenIsDirty', function() {
+    return this.get('isDirty') || this.get('childrenIsDirty');
+  }),
+  isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+  serialize() {
+    const cost_amount = this.get('cost_amount') || null;
+    return {
+      id: this.get('id'),
+      name: this.get('name'),
+      description: this.get('description'),
+      cost_amount: cost_amount,
+      cost_currency: this.get('cost_currency'),
+      cost_code: this.get('cost_code'),
+      label: this.get('label'),
+      subcategory_label: this.get('subcategory_label'),
+      parent: null,
+      children: this.get('children_ids')
+    };
+  },
+  childrenIsDirty: many_to_many_dirty('category_children_ids', 'category_children_fks'),
+  childrenIsNotDirty: Ember.computed.not('childrenIsDirty'),
+  //m2m attr
+  children_ids: many_models_ids('children'),
+  children: many_models('category_children', 'child_pk', 'category'),
+  category_children_ids: many_to_many_ids('category_children'),
+  category_children: many_to_many('category-children', 'category_pk'),
+  //add m2m
+  add_child: add_many_to_many('category-children', 'category', 'child_pk', 'category_pk'),
+  //remove m2m
+  remove_child: remove_many_to_many('category-children', 'child_pk', 'category_children'),
+  //belongs to attr
+  parent: Ember.computed.alias('parent_belongs_to.firstObject'),
+  parent_belongs_to: Ember.computed('parent_id', function() {
+    const parent_id = this.get('parent_id');
+    const store = this.get('store');
+    const filter = function(category) {
+      return parent_id === category.get('id');
+    };
+    return store.find('category', filter);
+  }),
+  removeRecord() {
+    run(() => {
+      this.get('store').remove('category', this.get('id'));
+    });
+  },
+  rollbackChildren: many_to_many_rollback('category-children', 'category_children_fks', 'category_pk'),
+  saveChildren: many_to_many_save('category', 'category_children', 'category_children_ids', 'category_children_fks'),
+  rollback() {
+    this.rollbackChildren();
+    this._super();
+  },
+  saveRelated() {
+    this.saveChildren();
+  }
 });
 
 export default CategoryModel;

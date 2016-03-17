@@ -9,7 +9,6 @@ var ApplicationModalComponent = Ember.Component.extend({
             let model = this.trx.attemptedTransitionModel;
             let action = this.trx.attemptedAction;
             model.rollback();
-            model.rollbackRelated();
             this.sendAction(action, tab);
         },
         cancel_modal() {
