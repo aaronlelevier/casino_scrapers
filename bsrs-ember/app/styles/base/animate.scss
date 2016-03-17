@@ -29,8 +29,8 @@
 .animated.flipOutY,
 .animated.bounceIn,
 .animated.bounceOut {
-  -webkit-animation-duration: .75s;
-  animation-duration: .75s;
+  -webkit-animation-duration: .50s;
+  animation-duration: .50s;
 }
 
 @-webkit-keyframes bounce {
@@ -42,15 +42,15 @@
   }
 
   40%, 43% {
-    -webkit-animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
-    animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+    -webkit-animation-timing-function: cubic-bezier(0.505, 0.050, 0.855, 0.060);
+    animation-timing-function: cubic-bezier(0.505, 0.050, 0.855, 0.060);
     -webkit-transform: translate3d(0, -30px, 0);
     transform: translate3d(0, -30px, 0);
   }
 
   70% {
-    -webkit-animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
-    animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+    -webkit-animation-timing-function: cubic-bezier(0.505, 0.050, 0.855, 0.060);
+    animation-timing-function: cubic-bezier(0.505, 0.050, 0.855, 0.060);
     -webkit-transform: translate3d(0, -15px, 0);
     transform: translate3d(0, -15px, 0);
   }
@@ -70,15 +70,15 @@
   }
 
   40%, 43% {
-    -webkit-animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
-    animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+    -webkit-animation-timing-function: cubic-bezier(0.505, 0.050, 0.855, 0.060);
+    animation-timing-function: cubic-bezier(0.505, 0.050, 0.855, 0.060);
     -webkit-transform: translate3d(0, -30px, 0);
     transform: translate3d(0, -30px, 0);
   }
 
   70% {
-    -webkit-animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
-    animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+    -webkit-animation-timing-function: cubic-bezier(0.505, 0.050, 0.855, 0.060);
+    animation-timing-function: cubic-bezier(0.505, 0.050, 0.855, 0.060);
     -webkit-transform: translate3d(0, -15px, 0);
     transform: translate3d(0, -15px, 0);
   }
@@ -169,13 +169,13 @@
   }
 
   30% {
-    -webkit-transform: scale3d(1.25, 0.75, 1);
-    transform: scale3d(1.25, 0.75, 1);
+    -webkit-transform: scale3d(1.25, 0.50, 1);
+    transform: scale3d(1.25, 0.50, 1);
   }
 
   40% {
-    -webkit-transform: scale3d(0.75, 1.25, 1);
-    transform: scale3d(0.75, 1.25, 1);
+    -webkit-transform: scale3d(0.50, 1.25, 1);
+    transform: scale3d(0.50, 1.25, 1);
   }
 
   50% {
@@ -206,13 +206,13 @@
   }
 
   30% {
-    -webkit-transform: scale3d(1.25, 0.75, 1);
-    transform: scale3d(1.25, 0.75, 1);
+    -webkit-transform: scale3d(1.25, 0.50, 1);
+    transform: scale3d(1.25, 0.50, 1);
   }
 
   40% {
-    -webkit-transform: scale3d(0.75, 1.25, 1);
-    transform: scale3d(0.75, 1.25, 1);
+    -webkit-transform: scale3d(0.50, 1.25, 1);
+    transform: scale3d(0.50, 1.25, 1);
   }
 
   50% {
