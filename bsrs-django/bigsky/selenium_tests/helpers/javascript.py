@@ -11,7 +11,7 @@ class JavascriptMixin(object):
     
     def wait_for_xhr_request(self, selector, plural=False, just_refreshed=False, debounce=False):
         if debounce:
-            time.sleep(1)
+            time.sleep(2.5)
         for w in range(10):
             print("waiting for xhr callback...{}".format(selector))
             if self.driver.execute_script("return $.active") == 0:
@@ -23,13 +23,13 @@ class JavascriptMixin(object):
                     assert element.is_displayed()
                 return element
             if just_refreshed:
-                time.sleep(4)
-            else:
                 time.sleep(2)
+            else:
+                time.sleep(1)
 
     def wait_for_xhr_request_xpath(self, selector, plural=False, just_refreshed=False, debounce=False):
         if debounce:
-            time.sleep(1)
+            time.sleep(2.5)
         for w in range(10):
             print("waiting for xhr callback...{}".format(selector))
             if self.driver.execute_script("return $.active") == 0:
@@ -40,6 +40,6 @@ class JavascriptMixin(object):
                     element = self.driver.find_element_by_xpath(selector)
                 return element
             if just_refreshed:
-                time.sleep(4)
-            else:
                 time.sleep(2)
+            else:
+                time.sleep(1)

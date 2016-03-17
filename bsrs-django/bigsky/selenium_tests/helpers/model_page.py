@@ -26,10 +26,10 @@ class ModelPage(JavascriptMixin):
             assert getattr(self, k + "_input").get_attribute("value") == v
 
     def find_list_name(self):
-        return self.wait_for_xhr_request(self.list_name, plural=True, just_refreshed=True)
+        return self.wait_for_xhr_request(self.list_name, plural=True, debounce=True)
 
     def find_list_data(self, just_refreshed=False):
-        return self.wait_for_xhr_request(self.list_data, plural=True, just_refreshed=True)
+        return self.wait_for_xhr_request(self.list_data, plural=True, debounce=True)
 
     def find_power_select_data(self, xpath, just_refreshed=False):
         return self.wait_for_xhr_request(xpath, plural=True, just_refreshed=just_refreshed)
@@ -50,7 +50,7 @@ class ModelPage(JavascriptMixin):
         return (new_model, count)
 
     def click_name_in_list_pages(self, name, new_model):
-        pagination = self.wait_for_xhr_request("t-pages", just_refreshed=True)
+        pagination = self.wait_for_xhr_request("t-pages", debounce=True)
         element_list = pagination.find_elements_by_class_name("t-page")
         element_list_len = len(element_list)
         count = 0
