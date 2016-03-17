@@ -147,12 +147,12 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.assertEqual(_title_matches[0], usernames[0].text)
         # submitted text still present
         self.driver.find_element_by_class_name("t-filter-username").click()
-        username_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
-        self.assertEqual(username_fulltext_search.get_attribute("value"), _username)
-        self.driver.refresh()
-        self.wait_for_xhr_request("t-grid-data", plural=True, just_refreshed=True)
-        self.driver.find_element_by_class_name("t-filter-fullname").click()
-        title_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
+        # username_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
+        # self.assertEqual(username_fulltext_search.get_attribute("value"), _username)
+        # self.driver.refresh()
+        # self.wait_for_xhr_request("t-grid-data", plural=True, just_refreshed=True)
+        # self.driver.find_element_by_class_name("t-filter-fullname").click()
+        # title_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
 
     def test_full_text_search_hidden_on_enter_and_escape(self):
         self.wait_for_xhr_request("t-filter-username").click()
