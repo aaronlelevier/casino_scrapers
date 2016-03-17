@@ -9,7 +9,7 @@ import DTDDeserializer from 'bsrs-ember/deserializers/dtd';
 import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 
-var store, subject, category, category_unused, priority, status, run = Ember.run;
+var store, subject, category, category_unused, dtd_link, priority, status, run = Ember.run;
 
 module('unit: dtd deserializer test', {
     beforeEach() {
@@ -61,7 +61,11 @@ test('dtd deserializer removes m2m dtd-link when server is diff from client', (a
 });
 
 test('dtd new definitions from server will not dirty model if clean', (assert) => {
-    store.push('dtd', {id: DTD.idOne, dtd_link_fks: [DTDL.idOne]});
+    run(() => {
+        dtd = store.push('dtd', {id: DTD.idOne, dtd_link_fks: [DTDL.idOne]});
+        store.push('link', {id: LINK.idTwo});
+        dtd_link = store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idTwo});
+    });
     const json = DTDF.generate(DTD.idOne, DTD.keyTwo);
     run(() => {
         subject.deserialize(json, DTD.idOne);

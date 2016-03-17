@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import PageObject from 'bsrs-ember/tests/page-object';
 let { value, visitable, fillable, clickable, hasClass, count } = PageObject;
 import config from 'bsrs-ember/config/environment';
@@ -24,18 +25,18 @@ var DTDPage = PageObject.create({
     note: value('.t-dtd-note:eq(0)'),
     noteFillIn: fillable('.t-dtd-note:eq(0)'),
     // Link 1
-    action_button: value('.t-dtd-link-action_button:eq(0)'),
+    action_button: () => Ember.$('.t-dtd-link-action_button:eq(0)').is(':checked'),
     action_buttonClick: clickable('.t-dtd-link-action_button:eq(0)'),
-    is_header: value('.t-dtd-link-is_header:eq(0)'),
+    is_header: () => Ember.$('.t-dtd-link-is_header:eq(0)').is(':checked'),
     is_headerClick: clickable('.t-dtd-link-is_header:eq(0)'),
     request: value('.t-dtd-link-request:eq(0)'),
     requestFillIn: fillable('.t-dtd-link-request:eq(0)'),
     text: value('.t-dtd-link-text:eq(0)'),
     textFillIn: fillable('.t-dtd-link-text:eq(0)'),
     // Link 2
-    action_button_two: value('.t-dtd-link-action_button:eq(1)'),
+    action_button_two: () => Ember.$('.t-dtd-link-action_button:eq(1)').is(':checked'),
     action_buttonClick_two: clickable('.t-dtd-link-action_button:eq(1)'),
-    is_header_two: value('.t-dtd-link-is_header:eq(1)'),
+    is_header_two: () => Ember.$('.t-dtd-link-is_header:eq(1)').is(':checked'),
     is_headerClick_two: clickable('.t-dtd-link-is_header:eq(1)'),
     request_two: value('.t-dtd-link-request:eq(1)'),
     requestFillIn_two: fillable('.t-dtd-link-request:eq(1)'),

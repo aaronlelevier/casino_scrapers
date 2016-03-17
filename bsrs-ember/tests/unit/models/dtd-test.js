@@ -179,17 +179,16 @@ test('save - for Links and their Status and Priority', (assert) => {
     });
     assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idOne);
     dtd.remove_link(link.get('id'));
-    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(dtd.get('links').get('length'), 0);
-    assert.ok(dtd.get('linksIsNotDirty'));
+    assert.ok(dtd.get('linksIsDirty'));
     assert.ok(dtd.get('linksIsDirtyContainer'));
+    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
     dtd.save();
     // Links
     assert.ok(dtd.get('linksIsNotDirty'));
     assert.ok(!dtd.get('linksIsDirtyContainer'));
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     dtd.add_link({id: LINK.idTwo});
-    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(dtd.get('links').get('length'), 1);
     assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idTwo);
     // priority
@@ -359,17 +358,19 @@ test('rollback for related fields and their options', (assert) => {
 });
 
 test('save and rollback combined test', (assert) => {
+    assert.ok(dtd.get('linksIsNotDirty'));
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     dtd.add_field({id: FD.idOne});
     assert.equal(dtd.get('fields').get('length'), 1);
+    assert.ok(dtd.get('linksIsNotDirty'));
     dtd.add_link({id: LINK.idTwo});
+    assert.ok(dtd.get('linksIsDirty'));
     assert.equal(dtd.get('links').get('length'), 2);
     link = dtd.get('links').objectAt(0);
     link.change_priority(TP.idOne);
     assert.equal(link.get('priority.id'), TP.idOne);
     link.change_status(TS.idOne);
     assert.equal(link.get('status.id'), TS.idOne);
-    assert.ok(dtd.get('linksIsNotDirty'));
     assert.ok(dtd.get('fieldsIsDirty'));
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
     dtd.save();
@@ -379,13 +380,14 @@ test('save and rollback combined test', (assert) => {
     // rollback
     dtd.add_field({id: FD.idTwo});
     assert.equal(dtd.get('fields').get('length'), 2);
+    assert.ok(dtd.get('linksIsNotDirty'));
     dtd.remove_link(LINK.idOne);
+    assert.ok(dtd.get('linksIsDirty'));
     assert.equal(dtd.get('links').get('length'), 1);
     link.change_priority(TP.idTwo);
     assert.equal(link.get('priority.id'), TP.idTwo);
     link.change_status(TS.idTwo);
     assert.equal(link.get('status.id'), TS.idTwo);
-    assert.ok(dtd.get('linksIsNotDirty'));
     assert.ok(dtd.get('fieldsIsDirty'));
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
     dtd.rollback();

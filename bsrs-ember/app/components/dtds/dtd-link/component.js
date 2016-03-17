@@ -14,9 +14,16 @@ var DtdLinkComponent = Ember.Component.extend({
             });
         },
         delete(link) {
+            const links = this.get('model').get('links');
             run(() => {
+                if (links.get('length') === 1) {
+                    const id = this.get('uuid').v4();
+                    const model = {id: id, new: true};
+                    this.get('model').add_link(model);
+                }
                 this.get('model').remove_link(link.get('id'));
             });
+
         }
     }
 });
