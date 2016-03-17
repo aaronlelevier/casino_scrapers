@@ -68,6 +68,13 @@ div.buttonGroup {
 		font-size: 0.9em;
 	}
 }
+.input-multi-dtd-link{
+	.input-group-addon{
+		min-width: 10em;
+		text-align: left;
+		font-size: 0.9em;
+	}
+}
 .input-group-vertical{
 	margin: 0 0 10px;
 	select{
@@ -77,10 +84,21 @@ div.buttonGroup {
 	}
 	.input-group{
 		margin-bottom: -1px;
+		.checkbox{
+			border: $borderStyle;
+			margin: 0;
+			height: 34px;
+			line-height: 34px;
+			vertical-align: middle;
+			padding: 5px 12px;
+		}
 		&:first-child button{
 			border-radius: 3px 0 0 0;
 		}
 		&:first-child select{
+			border-radius: 0 3px 0 0;
+		}
+		&:first-child input{
 			border-radius: 0 3px 0 0;
 		}
 		&:last-child button{

@@ -1,269 +1,281 @@
 
 section.wrap{
+  position: absolute;
+  top: $mainTop;
+  right: 0;
+  bottom: 0;
+  left: $mainLeft;
+  border: $borderStyle;
+  border-width: 1px 0 0 1px;
+  background: $white;
+  font-size: 1.3rem;
+  .liquid-container{
+    height: 100%;
+    .liquid-child{
+      height: 100%;
+    }
+  }
+  aside.side-panel{
     position: absolute;
-    top: $mainTop;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: $documentLeft;
+    overflow: hidden;
+    header{
+      height: $documentHeaderHeight;
+      line-height: $documentHeaderHeight;
+      border: $borderStyle;
+      border-width: 0 0 1px;
+      padding: 0 10px;
+      position: relative;
+      background: $lightGray;
+      //z-index: 5;
+      h1{
+        vertical-align: middle;
+        font-size: 1.3em;
+        font-weight: normal;
+        display: inline;
+      }//h1
+    }
+    menu{
+      position: absolute;
+      top: $documentHeaderHeight;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      padding: 0;
+      margin: 0;
+      overflow: auto;
+      background-color: $lightGray;
+      border: $borderStyle;
+      border-width: 0 1px 0 0;
+      section{
+        margin: 5px 0;
+        h3{
+          margin: 0;
+          color: $dark;
+          font-size: 1.1em;
+          padding: 10px 5px;
+          i.menuIcon{
+            width: 25px;
+            text-align: center;
+            color: $darkGray;
+          }
+        }//h3
+
+        ul{
+          padding: 0;
+          margin: 0;
+          font-size: 0.9em;
+          li{
+            clear: both;
+            line-height: 2rem;
+            a{
+              color: $darkGray;
+              text-decoration: none;
+              padding: 3px 8px 3px 30px;
+              display: block;
+              &:hover{
+                cursor: pointer;
+                color: $white;
+                background-color: $hoverColor;
+                .fa{
+                  color: $white;
+                  &:hover{
+                    color: $orange;
+                  }
+                }
+              }
+              &.active{
+                color: $white;
+                background-color: $activeColor;
+                .fa{
+                  color: $white;
+                  &:hover{
+                    color: $orange;
+                  }
+                }
+              }
+              &.active:hover{
+                cursor: default;
+                .fa{
+                  color: $white;
+                  &:hover{
+                    cursor: pointer;
+                    color: $orange;
+                  }
+                }
+              }
+
+              .fa{
+                line-height: 1.7rem;
+                margin-right: 7px;
+                &:hover{
+                  color: $orange;
+                }
+              }
+            }//a
+            ul{
+              list-style-type: none;
+              li{
+                font-size: 1em;
+                line-height: 1.7rem;
+                a{
+                  padding: 3px 8px 3px 40px;
+                }
+              }
+            }//ul
+          }//li
+        }//ul
+      }//section
+    }//menu
+  }// aside.side-panel
+
+  article.main { //if no side panel
+    position: absolute;
+    left: $documentLeft;
     right: 0;
     bottom: 0;
-    left: $mainLeft;
-    border: $borderStyle;
-    border-width: 1px 0 0 1px;
-    background: $white;
-    font-size: 1.3rem;
-    .liquid-container{
-        height: 100%;
-        .liquid-child{
-            height: 100%;
-        }
+    top: 0;
+    overflow: hidden;
+    &.full{
+      left: 0;
     }
-    aside.side-panel{
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        width: $documentLeft;
-        overflow: hidden;
-        header{
-            height: $documentHeaderHeight;
-            line-height: $documentHeaderHeight;
-            border: $borderStyle;
-            border-width: 0 0 1px;
-            padding: 0 10px;
-            position: relative;
-            background: $lightGray;
-            //z-index: 5;
-            h1{
-                vertical-align: middle;
-                font-size: 1.3em;
-                font-weight: normal;
-                display: inline;
-            }//h1
+    header,
+    footer{
+      height: $documentHeaderHeight;
+      line-height: $documentHeaderHeight;
+      background: $lightGray;
+      padding: 0 10px;
+      border: $borderStyle;
+      border-width: 0 0 1px 0;
+      position: relative;
+      margin: auto 0;
+      //z-index: 5;
+
+      h1{
+        vertical-align: baseline;
+        font-size: 1.6em;
+        font-weight: normal;
+        display: inline-block;
+        margin: 0;
+        height: $documentHeaderHeight;
+        line-height: $documentHeaderHeight;
+      }//h1
+      .reset-grid{
+        display: inline-block;
+        height: $documentHeaderHeight;
+        line-height: $documentHeaderHeight;
+        vertical-align: baseline;
+        font-size: 0.9em;
+        text-decoration: underline;
+        cursor: pointer;
+        margin: 0 0 0 10px;
+        color: $darkGray;
+      }
+      .btn-group{
+        z-index: 2;
+        margin: 5px 0 0;
+      }
+      .search-wrap{
+        margin: 5px 0 0;
+      }
+      span.add-btn {
+        width: 75px;
+        i {
+          color: $darkGray;
+          font-size: 2.0em;
+          cursor: pointer;
+          &:hover {
+            color: $hoverColor;
+          }
+          &:active {
+            color: $activeColor;
+          }
         }
-        menu{
-            position: absolute;
-            top: $documentHeaderHeight;
-            right: 0;
-            left: 0;
-            bottom: 0;
-            padding: 0;
-            margin: 0;
-            overflow: auto;
-            background-color: $lightGray;
-            border: $borderStyle;
-            border-width: 0 1px 0 0;
-            section{
-                margin: 5px 0;
-                h3{
-                    margin: 0;
-                    color: $dark;
-                    font-size: 1.1em;
-                    padding: 10px 5px;
-                    i.menuIcon{
-                        width: 25px;
-                        text-align: center;
-                        color: $darkGray;
-                    }
-                }//h3
+      }
+      .control-menu{
+        @include vertical-align;
+      }
 
-                ul{
-                    padding: 0;
-                    margin: 0;
-                    font-size: 0.9em;
-                    li{
-                        clear: both;
-                        line-height: 2rem;
-                        a{
-                            color: $darkGray;
-                            text-decoration: none;
-                            padding: 3px 8px 3px 30px;
-                            display: block;
-                            &:hover{
-                                cursor: pointer;
-                                color: $white;
-                                background-color: $hoverColor;
-                                .fa{
-                                    color: $white;
-                                    &:hover{
-                                        color: $orange;
-                                    }
-                                }
-                            }
-                            &.active{
-                                color: $white;
-                                background-color: $activeColor;
-                                .fa{
-                                    color: $white;
-                                    &:hover{
-                                        color: $orange;
-                                    }
-                                }
-                            }
-                            &.active:hover{
-                                cursor: default;
-                                .fa{
-                                    color: $white;
-                                    &:hover{
-                                        cursor: pointer;
-                                        color: $orange;
-                                    }
-                                }
-                            }
+    }//header
 
-                            .fa{
-                                line-height: 1.7rem;
-                                margin-right: 7px;
-                                &:hover{
-                                    color: $orange;
-                                }
-                            }
-                        }//a
-                        ul{
-                            list-style-type: none;
-                            li{
-                                font-size: 1em;
-                                line-height: 1.7rem;
-                                a{
-                                    padding: 3px 8px 3px 40px;
-                                }
-                            }
-                        }//ul
-                    }//li
-                }//ul
-            }//section
-        }//menu
-    }// aside.side-panel
-
-    article.main { //if no side panel
-        position: absolute;
-        left: $documentLeft;
-        right: 0;
-        bottom: 0;
-        top: 0;
-        overflow: hidden;
-        &.full{
-            left: 0;
+    section.docSection {
+      position: absolute;
+      top: $documentHeaderHeight;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: $white;
+      overflow: auto;
+      &.docSectionWithFooter{
+        margin-bottom: $documentFooterHeight;
+      }
+      section{
+        &.sub-section{
+          padding: 0 0 16px;
         }
-        header,
-        footer{
-            height: $documentHeaderHeight;
-            line-height: $documentHeaderHeight;
-            background: $lightGray;
-            padding: 0 10px;
+        h1{
+          color: $dark;
+          font-size: 2.8rem;
+          margin: 0;
+          padding-bottom: 10px;
+          small{
+            font-size: 2.5rem;
+            color: $medGray;
+          }
+          .new{
+            color: $medGray;
+          }
+        }
+        h2{
+          color: $dark;
+          margin: 0;
+          font-size: 1.3em;
+          padding-top: 10px;
+          padding-bottom: 10px;
+          text-transform: uppercase;
+        }//h2
+        h3{
+          color: $dark;
+          background: $lightGray;
+          border: $borderStyle;
+          border-width: 1px 0;
+          font-size: 1.3em;
+          padding: 16px 11px;
+          margin-top: -1px;
+        }
+      }
+
+      .row {
+        /* margin: 15px -7.5px; */
+        .row{
+          margin: 8px -4px;
+          &.card-title{
+            margin: 15px -15px 20px;
+            padding: 11px;
             border: $borderStyle;
             border-width: 0 0 1px 0;
-            position: relative;
-            margin: auto 0;
-            //z-index: 5;
-
-            h1{
-                vertical-align: baseline;
-                font-size: 1.6em;
-                font-weight: normal;
-                display: inline-block;
-                margin: 0;
-                height: $documentHeaderHeight;
-                line-height: $documentHeaderHeight;
-            }//h1
-            .reset-grid{
-                display: inline-block;
-                height: $documentHeaderHeight;
-                line-height: $documentHeaderHeight;
-                vertical-align: baseline;
-                font-size: 0.9em;
-                text-decoration: underline;
-                cursor: pointer;
-                margin: 0 0 0 10px;
-                color: $darkGray;
-            }
-            .btn-group{
-                z-index: 2;
-                margin: 5px 0 0;
-            }
-            .search-wrap{
-                margin: 5px 0 0;
-            }
-            span.add-btn {
-                width: 75px;
-                i {
-                    color: $darkGray;
-                    font-size: 2.0em;
-                    cursor: pointer;
-                    &:hover {
-                        color: $hoverColor;
-                    }
-                    &:active {
-                        color: $activeColor;
-                    }
-                }
-            }
-            .control-menu{
-                @include vertical-align;
-            }
-
-        }//header
-
-        section.docSection {
-            position: absolute;
-            top: $documentHeaderHeight;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            background: $white;
-            overflow: auto;
-            &.docSectionWithFooter{
-                margin-bottom: $documentFooterHeight;
-            }
-            section{
-                h1{
-                    color: $dark;
-                    font-size: 2.8rem;
-                    margin: 0;
-                    padding-bottom: 10px;
-                    small{
-                        font-size: 2.5rem;
-                        color: $medGray;
-                    }
-                    .new{
-                        color: $medGray;
-                    }
-                }
-                h2{
-                    color: $dark;
-                    margin: 0;
-                    font-size: 1.3em;
-                    padding-top: 10px;
-                    padding-bottom: 10px;
-                    text-transform: uppercase;
-                }//h2
-            }
-
-            .row {
-                /* margin: 15px -7.5px; */
-                .row{
-                    margin: 8px -4px;
-                    &.card-title{
-                        margin: 15px -15px 20px;
-                        padding: 11px;
-                        border: $borderStyle;
-                        border-width: 0 0 1px 0;
-                    }
-                }
-            }
+          }
         }
-        footer{
-            height: $documentFooterHeight;
-            position: absolute;
-            top: auto;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            border: $borderStyle;
-            border-width: 1px 0 0;
-        }
-
-    }//article.main
-
-
-    article.full { //if no article.side-panel
-        left: 0
+      }
     }
+    footer{
+      height: $documentFooterHeight;
+      position: absolute;
+      top: auto;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border: $borderStyle;
+      border-width: 1px 0 0;
+    }
+
+  }//article.main
+
+
+  article.full { //if no article.side-panel
+    left: 0
+  }
 }//section.wrap

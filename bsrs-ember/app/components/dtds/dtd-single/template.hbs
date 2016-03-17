@@ -1,64 +1,76 @@
 <form {{action "return false" this on="submit"}}>
-    <article class="main">
-        <div class="wrapper form">
-            <section class="docSection container-fluid">
-                <div class="row">
-                    <h2 class="col-md-12 dtd-detail-title">{{t 'admin.dtd.detail'}}</h2>
-                </div>
-                <div class="row">
-                    {{base-component
-                    model=model
-                    save="save"
-                    cancel="cancel"
-                    delete="delete"
-                    }}
-                </div>
-                <div class="row"><div class="col-md-12">&nbsp;</div></div>
-                <div class="row">
-                    <div class="col-md-12">
-                        {{#form-group title="admin.dtd.label.key" for="key"}}
-                        {{input type="text" placeholder=(t "admin.dtd.label.key") value=model.key class="form-control t-dtd-single-key" id="dtd_key"}}
-                        {{#if (v-get model 'key' 'isInvalid')}}
-                        <div class="t-dtd-key-error error">
-                            {{v-get model 'key' 'message'}}
-                        </div>
-                        {{/if}}
-                        {{/form-group}}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        {{#form-group title="admin.dtd.label.note" for="note"}}
-                        {{textarea autoresize=true placeholder=(t "admin.dtd.label.note") value=model.note class="form-control t-dtd-note" id="dtd_note"}}
-                        {{/form-group}}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        {{#form-group title="admin.dtd.label.description" for="description"}}
-                        {{textarea autoresize=true placeholder=(t "admin.dtd.label.description") value=model.description class="form-control t-dtd-single-description" id="dtd_description"}}
-                        {{/form-group}}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        {{#form-group title="admin.dtd.label.fields" for="fields"}}
-                        {{/form-group}}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        {{#form-group title="admin.dtd.label.prompt" for="prompt"}}
-                        {{textarea autoresize=true placeholder=(t "admin.dtd.label.prompt") value=model.prompt class="form-control t-dtd-prompt" id="dtd_prompt"}}
-                        {{/form-group}}
-                    </div>
-                </div>
-                {{dtd-link
+  <article class="main">
+    <div class="wrapper form">
+      <section class="docSection container-fluid">
+        <div class="row">
+          <h2 class="col-md-12 dtd-detail-title">{{t 'admin.dtd.detail'}}</h2>
+        </div>
+        <div class="row">
+          {{base-component
+            model=model
+            save="save"
+            cancel="cancel"
+            delete="delete"
+          }}
+        </div>
+        <section class="sub-section row">
+          <h3 class="col-md-12">{{t 'admin.dtd.title.display'}}</h3>
+          <div class="row">
+            <div class="col-md-12">
+              {{#form-group title="admin.dtd.label.key" for="key"}}
+              {{input type="text" placeholder=(t "admin.dtd.label.key") value=model.key class="form-control t-dtd-single-key" id="dtd_key"}}
+              {{#if (v-get model 'key' 'isInvalid')}}
+              <div class="t-dtd-key-error error">
+                {{v-get model 'key' 'message'}}
+              </div>
+              {{/if}}
+              {{/form-group}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              {{#form-group title="admin.dtd.label.note" for="note"}}
+              {{textarea autoresize=true placeholder=(t "admin.dtd.label.note") value=model.note class="form-control t-dtd-note" id="dtd_note"}}
+              {{/form-group}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              {{#form-group title="admin.dtd.label.description" for="description"}}
+              {{textarea autoresize=true placeholder=(t "admin.dtd.label.description") value=model.description class="form-control t-dtd-single-description" id="dtd_description"}}
+              {{/form-group}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              {{#form-group title="admin.dtd.label.prompt" for="prompt"}}
+              {{textarea autoresize=true placeholder=(t "admin.dtd.label.prompt") value=model.prompt class="form-control t-dtd-prompt" id="dtd_prompt"}}
+              {{/form-group}}
+            </div>
+          </div>
+        </section>
+        <section class="sub-section row">
+          <h3 class="col-md-12">{{t 'admin.dtd.title.fields'}}</h3>
+          <div class="row">
+            <div class="col-md-12">
+              {{#form-group title="admin.dtd.label.fields" for="fields"}}
+              {{/form-group}}
+            </div>
+          </div>
+        </section>
+        <section class="sub-section row">
+          <h3 class="col-md-12">{{t 'admin.dtd.title.navigation'}}</h3>
+          <div class="col-md-12">
+            {{#form-group title="admin.dtd.label.links" for=""}}
+              {{dtds/dtd-link
                 model=model
                 priorities=priorities
                 statuses=statuses
-                }}
-            </section>
-        </div>
-    </article>
+              }}
+            {{/form-group}}
+          </div>
+        </section>
+      </section>
+    </div>
+  </article>
 </form>
