@@ -15,6 +15,7 @@
     <span class="input-group-addon">{{t "admin.dtd.label.link.request"}}</span>
     {{input type="text" placeholder=(t "admin.dtd.label.link.request") value=link.request class="form-control t-dtd-link-request"}}
   </div>
+  {{#if (is-equal model.link_type model.link_types.[0])}}
   <div class="input-group">
     <span class="input-group-addon">{{t "admin.dtd.label.link.action_button"}}</span>
     <div class="checkbox">
@@ -24,6 +25,7 @@
       </label>
     </div>
   </div>
+  {{else if (is-equal model.link_type model.link_types.[1])}}
   <div class="input-group">
     <span class="input-group-addon">{{t "admin.dtd.label.link.is_header"}}</span>
     <div class="checkbox">
@@ -33,6 +35,7 @@
       </label>
     </div>
   </div>
+  {{/if}}
   <div class="input-group">
     <span class="input-group-addon">{{t "admin.dtd.label.link.priority"}}</span>
     {{power-select-foreign-key mainModel=link selected=link.priority change_method='change_priority' relatedModels=priorities relatedModelName='ticket-priority' clear=true}}

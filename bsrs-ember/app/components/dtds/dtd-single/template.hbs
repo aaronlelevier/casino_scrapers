@@ -61,6 +61,16 @@
         <section class="sub-section row">
           <h3 class="col-md-12">{{t 'admin.dtd.title.navigation'}}</h3>
           <div class="col-md-12">
+            {{#form-group title="admin.dtd.label.link_type" for="link_type"}}
+              {{#each model.link_types as |type|}}
+                <div class="radio">
+            			<label>
+            				<input type="radio" value={{type}} onchange={{action 'setLinkType' type}} class="t-dtd-link_type" checked={{is-equal model.link_type type}} name="link_type">
+            				<span class="t-dtd-link_type-label">{{t type}}</span>
+            			</label>
+            		</div>
+              {{/each}}
+            {{/form-group}}
             {{#form-group title="admin.dtd.label.links" for=""}}
               {{dtds/dtd-link
                 model=model

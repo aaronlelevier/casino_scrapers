@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import PageObject from 'bsrs-ember/tests/page-object';
-let { value, visitable, fillable, clickable, hasClass, count } = PageObject;
+let { value, visitable, fillable, clickable, hasClass, count, text } = PageObject;
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
@@ -27,8 +27,10 @@ var DTDPage = PageObject.create({
     // Link 1
     action_button: () => Ember.$('.t-dtd-link-action_button:eq(0)').is(':checked'),
     action_buttonClick: clickable('.t-dtd-link-action_button:eq(0)'),
+    action_buttonVisible: count('.t-dtd-link-action_button:eq(0)'),
     is_header: () => Ember.$('.t-dtd-link-is_header:eq(0)').is(':checked'),
     is_headerClick: clickable('.t-dtd-link-is_header:eq(0)'),
+    is_headerVisible: count('.t-dtd-link-is_header:eq(0)'),
     request: value('.t-dtd-link-request:eq(0)'),
     requestFillIn: fillable('.t-dtd-link-request:eq(0)'),
     text: value('.t-dtd-link-text:eq(0)'),
@@ -59,6 +61,14 @@ var DTDPage = PageObject.create({
     detailButtonOff: hasClass('off', 'button.t-dtd-detail'),
     previewButtonOn: hasClass('on', 'button.t-dtd-preview'),
     previewButtonOff: hasClass('off', 'button.t-dtd-preview'),
+
+    linkTypeLength: count('.t-dtd-link_type'),
+    linkTypeLabelOne: text('.t-dtd-link_type-label:eq(0)'),
+    linkTypeLabelTwo: text('.t-dtd-link_type-label:eq(1)'),
+    linkTypeSelectedOne: () => Ember.$('.t-dtd-link_type:eq(0)').is(':checked'),
+    linkTypeSelectedTwo: () => Ember.$('.t-dtd-link_type:eq(1)').is(':checked'),
+    linkTypeOneClick: clickable('.t-dtd-link_type:eq(0)'),
+    linkTypeTwoClick: clickable('.t-dtd-link_type:eq(1)'),
 
 });
 

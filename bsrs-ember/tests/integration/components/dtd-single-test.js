@@ -51,7 +51,7 @@ test('validation works as expected', function(assert) {
 
 test('add and remove dtd links', function(assert) {
     run(() => {
-        dtd = store.push('dtd', {id: DTD.idOne});
+        dtd = store.push('dtd', {id: DTD.idOne, link_type: DTD.linkTypeOne});
         uuid = store.push('uuid', {id: 1});
         dtd.add_link({id: uuid.v4()});
     });
@@ -63,7 +63,6 @@ test('add and remove dtd links', function(assert) {
     assert.equal($component.find('.t-dtd-link-request').length, 1);
     assert.equal($component.find('.t-dtd-link-text').length, 1);
     assert.equal($component.find('.t-dtd-link-action_button').length, 1);
-    assert.equal($component.find('.t-dtd-link-is_header').length, 1);
     assert.equal($component.find('.t-ticket-priority-select').length, 1);
     assert.equal($component.find('.t-ticket-status-select').length, 1);
     add_btn.trigger('click').trigger('change');
@@ -78,7 +77,7 @@ test('add and remove dtd links', function(assert) {
 test('must have one link, cant remove last link, remove btn clears link', function(assert) {
     let links = store.find('link');
     run(() => {
-            dtd = store.push('dtd', {id: DTD.idOne, dtd_link_fks: [DTDL.idOne]});
+            dtd = store.push('dtd', {id: DTD.idOne, link_type: DTD.linkTypeOne, dtd_link_fks: [DTDL.idOne]});
             store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
             store.push('ticket-priority', {id: TP.priorityOneId, name: TP.priorityOne, links: [LINK.idOne]});
             store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, links: [LINK.idOne]});
@@ -93,13 +92,11 @@ test('must have one link, cant remove last link, remove btn clears link', functi
     assert.equal($component.find('.t-dtd-link-request').length, 1);
     assert.equal($component.find('.t-dtd-link-text').length, 1);
     assert.equal($component.find('.t-dtd-link-action_button').length, 1);
-    assert.equal($component.find('.t-dtd-link-is_header').length, 1);
     assert.equal($component.find('.t-ticket-priority-select').length, 1);
     assert.equal($component.find('.t-ticket-status-select').length, 1);
     assert.equal(page.request, LINK.requestOne);
     assert.equal(page.text, LINK.textOne);
     assert.equal(page.action_button(), LINK.action_buttonOne);
-    assert.equal(page.is_header(), LINK.is_headerOne);
     assert.equal(ticketPage.priorityInput.split(' ').slice(0,-1).join(' '), trans.t(TP.priorityOne));
     assert.equal(ticketPage.statusInput.split(' ').slice(0,-1).join(' '), trans.t(TD.statusOne));
     var remove_btn = this.$('.t-del-link-btn:eq(0)');
@@ -108,7 +105,6 @@ test('must have one link, cant remove last link, remove btn clears link', functi
     assert.equal(page.request, '');
     assert.equal(page.text, '');
     assert.equal(page.action_button(), LINK.action_buttonTwo);
-    assert.equal(page.is_header(), LINK.is_headerTwo);
     assert.equal(ticketPage.priorityInput.split(' ').slice(0,-1).join(' '), '');
     assert.equal(ticketPage.statusInput.split(' ').slice(0,-1).join(' '), '');
 });
@@ -125,4 +121,46 @@ test('add and remove dtd links', function(assert) {
     assert.ok($component.is(':visible'));
     generalPage.save();
     assert.equal(page.textIsRequiredError(), 'Text must be provided');
+});
+
+test('link type selector is present and has a selection', function(assert) {
+    let statuses = store.find('dtd-status');
+    run(() => {
+        dtd = store.push('dtd', {
+          id: DTD.idOne,
+          dtd_link_fks: [DTDL.idOne],
+          link_type: DTD.linkTypeOne,
+          link_types: [DTD.linkTypeOne, DTD.linkTypeTwo]
+        });
+        store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
+        store.push('link', {id: LINK.idOne, request: LINK.requestOne, text: LINK.textOne,
+            action_button: LINK.action_buttonOne, is_header: LINK.is_headerOne});
+    });
+    this.set('model', dtd);
+    this.render(hbs`{{dtds/dtd-single model=model}}`);
+    assert.equal(page.linkTypeLength, 2);
+    assert.equal(page.linkTypeLabelOne, trans.t('admin.dtd.link_type.buttons'));
+    assert.equal(page.linkTypeLabelTwo, trans.t('admin.dtd.link_type.links'));
+    assert.ok(page.linkTypeSelectedOne());
+    assert.notOk(page.linkTypeSelectedTwo());
+
+    assert.ok(page.action_buttonVisible);
+    assert.notOk(page.is_headerVisible);
+
+    page.linkTypeTwoClick();
+    assert.ok(page.linkTypeSelectedTwo());
+    assert.ok(dtd.get('isDirty'));
+    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+
+    assert.notOk(page.action_buttonVisible);
+    assert.ok(page.is_headerVisible);
+
+    page.linkTypeOneClick();
+    assert.ok(page.linkTypeSelectedOne());
+    assert.ok(dtd.get('isNotDirty'));
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+
+    assert.ok(page.action_buttonVisible);
+    assert.notOk(page.is_headerVisible);
+
 });

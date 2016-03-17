@@ -73,6 +73,7 @@ div.buttonGroup {
 		min-width: 10em;
 		text-align: left;
 		font-size: 0.9em;
+		@include truncate;
 	}
 }
 .input-group-vertical{

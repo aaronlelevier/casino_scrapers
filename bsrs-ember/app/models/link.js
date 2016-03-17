@@ -18,7 +18,7 @@ var LinkModel = Model.extend(CategoriesMixin, Validations, {
     model_categories_fks: [],
     order: attr(''),
     action_button: attr(''),
-    is_header: attr(''),
+    is_header: attr(false),
     request: attr(''),
     text: attr(''),
     // priority
@@ -72,12 +72,12 @@ var LinkModel = Model.extend(CategoriesMixin, Validations, {
             id: this.get('id'),
             order: this.get('order'),
             action_button: this.get('action_button'),
-            is_header: this.get('is_header'),
+            is_header: this.get('is_header') || false,
             request: this.get('request'),
             text: this.get('text'),
-            priority: this.get('priority') ? this.get('priority.id') : null,
-            status: this.get('status') ? this.get('status.id') : null,
-            destination: this.get('destination') ? this.get('destination.id') : null,
+            priority: this.get('priority.id') || null,
+            status: this.get('status.id') || null,
+            destination: this.get('destination.id') || null,
         };
     }
 });

@@ -27,6 +27,9 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
       if(newModel){
         this.sendAction('editDTD');
       }
+    },
+    setLinkType(new_link_type){
+      this.get('model').set('link_type', new_link_type);
     }
   }
 });

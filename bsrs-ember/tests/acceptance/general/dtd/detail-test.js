@@ -54,7 +54,6 @@ test('decision tree definition displays data and does not update nor transitions
     assert.equal(find('.t-dtd-prompt').val(), DTD.promptOne);
     assert.equal(find('.t-dtd-note').val(), DTD.noteOne);
     assert.equal(find('.t-dtd-link-action_button').prop('checked'), LINK.action_buttonOne);
-    assert.equal(find('.t-dtd-link-is_header').prop('checked'), LINK.is_headerOne);
     assert.equal(find('.t-dtd-link-request').val(), LINK.requestOne);
     assert.equal(ticketPage.priorityInput.split(' ')[0], TP.priorityOne);
     assert.equal(ticketPage.statusInput.split(' ')[0], TD.statusOne);
@@ -99,7 +98,6 @@ test('dtd payload to update all fields', (assert) => {
   page.visitDetail();
   andThen(() => {
     assert.ok(find('.t-dtd-link-action_button').prop('checked'));
-    assert.ok(find('.t-dtd-link-is_header').prop('checked'));
   });
   page
   .keyFillIn(DTD.keyTwo)
@@ -108,8 +106,7 @@ test('dtd payload to update all fields', (assert) => {
   .noteFillIn(DTD.noteTwo)
   .requestFillIn(LINK.requestTwo)
   .textFillIn(LINK.textTwo)
-  .action_buttonClick()
-  .is_headerClick();
+  .action_buttonClick();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-dtd-single-key').val(), DTD.keyTwo);
@@ -117,7 +114,6 @@ test('dtd payload to update all fields', (assert) => {
     assert.equal(find('.t-dtd-prompt').val(), DTD.promptTwo);
     assert.equal(find('.t-dtd-note').val(), DTD.noteTwo);
     assert.notOk(find('.t-dtd-link-action_button').prop('checked'));
-    assert.notOk(find('.t-dtd-link-is_header').prop('checked'));
     assert.equal(find('.t-dtd-link-request').val(), LINK.requestTwo);
     assert.equal(find('.t-dtd-link-text').val(), LINK.textTwo);
   });
@@ -162,7 +158,6 @@ test('click modal cancel (dtd)', (assert) => {
   page.visitDetail();
   andThen(() => {
     assert.ok(find('.t-dtd-link-action_button').prop('checked'));
-    assert.ok(find('.t-dtd-link-is_header').prop('checked'));
   });
   page
   .keyFillIn(DTD.keyTwo)
@@ -170,8 +165,7 @@ test('click modal cancel (dtd)', (assert) => {
   .promptFillIn(DTD.promptTwo)
   .noteFillIn(DTD.noteTwo)
   .requestFillIn(LINK.requestTwo)
-  .action_buttonClick()
-  .is_headerClick();
+  .action_buttonClick();
   generalPage.cancel();
   andThen(() => {
     waitFor(() => {
@@ -193,7 +187,6 @@ test('click modal ok (dtd)', (assert) => {
   page.visitDetail();
   andThen(() => {
     assert.ok(find('.t-dtd-link-action_button').prop('checked'));
-    assert.ok(find('.t-dtd-link-is_header').prop('checked'));
   });
   page
   .keyFillIn(DTD.keyTwo)
@@ -201,8 +194,7 @@ test('click modal ok (dtd)', (assert) => {
   .promptFillIn(DTD.promptTwo)
   .noteFillIn(DTD.noteTwo)
   .requestFillIn(LINK.requestTwo)
-  .action_buttonClick()
-  .is_headerClick();
+  .action_buttonClick();
   generalPage.cancel();
   andThen(() => {
     waitFor(() => {
@@ -265,7 +257,6 @@ test('click add-link, and fill in', (assert) => {
   page.visitDetail();
   andThen(() => {
     assert.ok(find('.t-dtd-link-action_button').prop('checked'));
-    assert.ok(find('.t-dtd-link-is_header').prop('checked'));
     assert.equal(page.textCount, 1);
   });
   page.clickAddLinkBtn();
@@ -275,8 +266,7 @@ test('click add-link, and fill in', (assert) => {
   page
   .requestFillIn_two(LINK.requestTwo)
   .textFillIn_two(LINK.textTwo)
-  .action_buttonClick_two()
-  .is_headerClick_two();
+  .action_buttonClick_two();
   xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload_link_two_put), {}, 200, {});
   generalPage.save();
   andThen(() => {
