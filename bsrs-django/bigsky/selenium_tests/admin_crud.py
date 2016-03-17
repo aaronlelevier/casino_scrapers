@@ -91,19 +91,19 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self._fill_in(role)
         role_category = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-role-category-select ')]/div")
         role_category.click()
-        category_options = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]", debounce=True)
+        category_options = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
         category_option = self.driver.find_element_by_xpath("//*[@aria-current='true']")
         category_option.click()
         role_ll_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-level-select ')]/div")
         role_ll_input.click()
-        ll_options = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]", debounce=True)
+        ll_options = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
         ll_option = self.driver.find_element_by_xpath("//*[@aria-current='true']")
         ll_option.click()
         self.gen_elem_page.click_save_btn()
         # new Role in List view
         role = role_page.find_list_data()
         self.driver.refresh()
-        new_role_yay = self.wait_for_xhr_request("t-sort-name-dir", debounce=True)
+        new_role_yay = self.wait_for_xhr_request("t-sort-name-dir")
         new_role_yay.click()
         role_list_view = role_page.find_list_name()
         role_page.click_name_in_list(name, role_list_view)
@@ -236,7 +236,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         location_children_input.click()
         location_children_input.send_keys("a")
         try:
-            child_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
+            child_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
             child_option.click()
         except (AttributeError, NoSuchElementException) as e:
             raise e("child not found")
@@ -244,7 +244,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         location_parents_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-location-parent-select')])[last()]")
         location_parents_input.click()
         location_parents_input.send_keys("a")
-        parent_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
+        parent_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
         parent_option.click()
         # Fill in More Contact data
         add_phone_number_btn = self.gen_elem_page.find_add_btn()
@@ -417,7 +417,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         location_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-person-locations-select')])[last()]")
         location_input.click()
         location_input.send_keys("a")
-        loc_option = self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class ,' '), ' ember-power-select-options ')]/li", debounce=True)
+        loc_option = self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class ,' '), ' ember-power-select-options ')]/li")
         loc_option_name = loc_option.text
         loc_option.click()
         # Select different locale
