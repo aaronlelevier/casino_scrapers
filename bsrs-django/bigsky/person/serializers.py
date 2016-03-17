@@ -73,7 +73,7 @@ class RoleIdNameSerializer(serializers.ModelSerializer):
 
 PERSON_FIELDS = (
     'id', 'username', 'first_name', 'middle_initial',
-    'last_name', 'status', 'role', 'title', 'employee_id',
+    'last_name', 'fullname', 'status', 'role', 'title', 'employee_id',
     'auth_amount', 'auth_currency',
 )
 
