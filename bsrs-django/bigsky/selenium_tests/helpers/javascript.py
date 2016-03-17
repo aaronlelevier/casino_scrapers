@@ -1,4 +1,5 @@
 import time
+from selenium.common.exceptions import NoSuchElementException
 
 
 class JavascriptMixin(object):
@@ -8,13 +9,18 @@ class JavascriptMixin(object):
     Can only be Mixed-in with classes containing a Selenium driver because 
     requires the driver to check for elements.
     """
-    
+    def try_catch(self, selector): 
+       try:
+           return self.driver.find_element_by_class_name(selector)
+       except NoSuchElementException:
+           pass
+
     def wait_for_xhr_request(self, selector, plural=False, just_refreshed=False, debounce=False):
         if debounce:
             time.sleep(2.5)
         for w in range(10):
             print("waiting for xhr callback...{}".format(selector))
-            if self.driver.execute_script("return $.active") == 0:
+            if self.driver.execute_script("return $.active") == 0 and not self.try_catch('application-loading'):
                 if plural:
                     element = self.driver.find_elements_by_class_name(selector)
                     assert len(element) > 0
