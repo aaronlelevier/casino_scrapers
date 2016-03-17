@@ -1,5 +1,5 @@
 {{#dtds/dtd-header as |previewShowing detailShowing listShowing message|}}
-  {{#if listShowing}}
+  {{#if listShowing.showingList}}
     <div class="dtd-col dtd-list">
       {{dtds/dtd-list
         count=count
@@ -28,20 +28,23 @@
       }}
     </div>
   {{/if}}
-  {{#if detailShowing}}
+  {{#if detailShowing.showingDetail}}
     {{#if message}}
-      <h1 class="t-dtd-empty-detail">{{message}}</h1>
+      {{dtds/dtd-empty title='admin.dtd.detail' message=message}}
     {{else}}
-    <div class="dtd-col dtd-detail">
-      {{outlet 'detail'}}
-    </div>
+      <div class="dtd-col dtd-detail">
+        {{outlet 'detail'}}
+      </div>
     {{/if}}
   {{/if}}
-  {{#if previewShowing}}
-    <div class="dtd-col dtd-preview">
-      {{outlet 'preview'}}
-    </div>
+  {{#if previewShowing.showingPreview}}
+    {{#if message}}
+      {{dtds/dtd-empty title='admin.dtd.preview'}}
+    {{else}}
+      <div class="dtd-col dtd-preview t-dtd-preview">
+        {{outlet 'preview'}}
+      </div>
+    {{/if}}
+
   {{/if}}
 {{/dtds/dtd-header}}
-
-

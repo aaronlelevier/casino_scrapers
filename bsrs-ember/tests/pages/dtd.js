@@ -51,6 +51,14 @@ var DTDPage = PageObject.create({
     clickPreviewToggle: clickable('.t-dtd-preview'),
     clickDetailToggle: clickable('.t-dtd-detail'),
     clickListToggle: clickable('.t-dtd-list'),
+
+    listButtonOn: hasClass('on', 'button.t-dtd-list'),
+    listButtonOff: hasClass('off', 'button.t-dtd-list'),
+    detailButtonOn: hasClass('on', 'button.t-dtd-detail'),
+    detailButtonOff: hasClass('off', 'button.t-dtd-detail'),
+    previewButtonOn: hasClass('on', 'button.t-dtd-preview'),
+    previewButtonOff: hasClass('off', 'button.t-dtd-preview'),
+
 });
 
 export default DTDPage;

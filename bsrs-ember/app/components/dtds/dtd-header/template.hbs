@@ -1,14 +1,14 @@
 <div class="dtd-header-wrap">
-    <div class="dtd-header">
-        <div class="btn-group">
-            <button type="button" class="btn btn-default t-dtd-list {{listShowing}}" {{action "toggleList"}}>{{t 'admin.dtd.list'}}</button>
-            <button type="button" class="btn btn-default t-dtd-detail {{detailShowing}}" {{action "toggleDetail"}}>{{t 'admin.dtd.detail'}}</button>
-            <button type="button" class="btn btn-default t-dtd-preview {{previewShowing}}" {{action "togglePreview"}}>{{t 'admin.dtd.preview'}}</button>
-        </div>
+  <div class="dtd-header">
+    <div class="btn-group t-dtd-toggle-btns">
+      <button type="button" class="btn btn-default t-dtd-list {{if listShowing.showingList 'on' 'off'}}" {{action "toggleList"}}>{{t 'admin.dtd.list'}}</button>
+      <button type="button" class="btn btn-default t-dtd-detail {{if detailShowing.showingDetail 'on' 'off'}}" {{action "toggleDetail"}}>{{t 'admin.dtd.detail'}}</button>
+      <button type="button" class="btn btn-default t-dtd-preview {{if previewShowing.showingPreview 'on' 'off'}}" {{action "togglePreview"}}>{{t 'admin.dtd.preview'}}</button>
     </div>
+  </div>
 </div>
 <div class="dtd-row-wrap">
-    <div class="dtd-row">
-        {{yield previewShowing detailShowing listShowing}}
-    </div>
+  <div class="dtd-row">
+    {{yield previewShowing detailShowing listShowing message.message}}
+  </div>
 </div>

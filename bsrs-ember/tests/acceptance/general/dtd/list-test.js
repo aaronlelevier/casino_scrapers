@@ -207,37 +207,86 @@ test('toggle decision tree preview', (assert) => {
   });
 });
 
-test('navigating to list route shows 3 panes and message in dtd pane', (assert) => {
-  clearxhr(detail_xhr);
+test('persist pane selection when preview is off', (assert) => {
   page.visit();
-  andThen(() => {
-    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    // assert.equal(find('.t-dtd-empty-detail').text(), GLOBALMSG.dtd_empty_detail);
-  });
-});
-
-test('clicking close on tab will show list only', (assert) => {
-  page.visitDetail();
+  page.clickPreviewToggle();
+  click('.t-grid-data:eq(0)');
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
-    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionOne);
-    assert.equal(currentURL(), DETAIL_URL);
+    assert.notOk(find('.t-dtd-preview-description').text().trim());
   });
-  generalPage.closeTab();
+});
+
+test('persist pane selection when detail is off', (assert) => {
+  page.visit();
+  page.clickDetailToggle();
+  click('.t-grid-data:eq(0)');
+  andThen(() => {
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.notOk(find('input.t-dtd-single-key').val());
+    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionOne);
+  });
+});
+
+test('persist pane selection when detail and preview are off', (assert) => {
+  page.visit();
+  page.clickPreviewToggle();
+  page.clickDetailToggle();
+  click('.t-grid-data:eq(0)');
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.notOk(find('input.t-dtd-single-key').val());
     assert.notOk(find('.t-dtd-preview-description').text().trim());
-    assert.equal(find('.col-count-1').length, 1);
-    assert.equal(currentURL(), DTD_URL);
   });
 });
+
+test('click all three previews and make sure the list stays on', (assert) => {
+  page.visit();
+  page.clickPreviewToggle();
+  page.clickDetailToggle();
+  page.clickListToggle();
+  click('.t-grid-data:eq(0)');
+  andThen(() => {
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.notOk(find('input.t-dtd-single-key').val());
+    assert.notOk(find('.t-dtd-preview-description').text().trim());
+  });
+});
+
+test('navigating to list route shows 3 panes and message in dtd pane', (assert) => {
+  page.visit();
+  andThen(() => {
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-dtd-empty-detail').text(), t(GLOBALMSG.dtd_empty_detail));
+    assert.equal(find('.dtd-empty:eq(0) .t-dtd-empty-title').text(), t('admin.dtd.detail'));
+    assert.equal(find('.dtd-empty:eq(1) .t-dtd-empty-title').text(), t('admin.dtd.preview'));
+    assert.ok(find('.t-dtd-preview'));
+  });
+  click('.t-grid-data:eq(0)');
+  andThen(() => {
+    assert.notOk(find('.t-dtd-empty-detail').text());
+  });
+});
+
+// test('clicking close on tab from detail will redirect to admin', (assert) => {
+//   page.visitDetail();
+//   andThen(() => {
+//     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+//     assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
+//     assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionOne);
+//     assert.equal(currentURL(), DETAIL_URL);
+//   });
+//   generalPage.closeTab();
+//   andThen(() => {
+//     assert.equal(currentURL(), BASEURLS.base_admin_url);
+//   });
+// });
+
 test('ensure we are seeing the decision tree grid and not the standard grid', (assert) => {
     clearxhr(detail_xhr);
     page.visit();
     andThen(() => {
       assert.equal(find('h2.t-dtd-grid-title').length, 1);
-      // assert.equal(find('.t-dtd-empty-detail').text(), GLOBALMSG.dtd_empty_detail);
     });
 });

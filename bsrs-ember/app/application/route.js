@@ -164,7 +164,6 @@ var ApplicationRoute = Ember.Route.extend({
                 if(tab.get('transitionCallback')) {
                     tab.get('transitionCallback')();
                 }
-
                 if(temp === tab_id || tab.get('newModel')){
                     this.transitionTo(tab.get('redirect'));
                     if (tab.get('newModel') && !tab.get('saveModel')) {
@@ -175,6 +174,7 @@ var ApplicationRoute = Ember.Route.extend({
                 }else if(this.controller.currentPath !== tab.get('redirect')){
                     this.transitionTo(this.controller.currentPath);
                 }else if(typeof tab.get('redirect') !== undefined){
+
                     this.transitionTo(tab.get('redirect'));
                 }
                 this.get('tabList').closeTab(model.get('id'));

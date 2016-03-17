@@ -13,6 +13,14 @@
             @include vertical-align;
             button{
                 font-size: 1.2rem;
+                &:focus{
+                  background: $white;
+                  border: $borderStyle;
+                }
+                &.off{
+                  color: $medGray;
+                  background: $gray;
+                }
             }
         }
     }
