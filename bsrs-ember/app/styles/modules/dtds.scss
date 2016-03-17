@@ -1,133 +1,154 @@
 .dtd{
-    .dtd-header-wrap{
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        height: $documentHeaderHeight;
-        border: $borderStyle;
-        border-width: 0 0 1px;
-        background: $lightGray;
-        .dtd-header{
-            text-align: center;
-            @include vertical-align;
-            button{
-                font-size: 1.2rem;
-                &:focus{
-                  background: $white;
-                  border: $borderStyle;
-                }
-                &.off{
-                  color: $medGray;
-                  background: $gray;
-                }
-            }
+  .dtd-header-wrap{
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: $documentHeaderHeight;
+    border: $borderStyle;
+    border-width: 0 0 1px;
+    background: $lightGray;
+    .dtd-header{
+      text-align: center;
+      @include vertical-align;
+      button{
+        font-size: 1.2rem;
+        &:focus{
+          background: $white;
+          border: $borderStyle;
         }
-    }
-    .dtd-row-wrap{
-        position: absolute;
-        top: $documentHeaderHeight;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        .dtd-row{
-            header{
-                border-width: 1px 0;
-            }
+        &.off{
+          color: $medGray;
+          background: $gray;
         }
+      }
     }
+  }
+  .dtd-row-wrap{
+    position: absolute;
+    top: $documentHeaderHeight;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    .dtd-row{
+      header{
+        border-width: 1px 0;
+      }
+    }
+  }
 }
 .dtd-row {
-    display: table;
-    table-layout: fixed;
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  height: 100%;
+  .dtd-col{
+    display: table-cell;
+    overflow: hidden;
+    position: relative;
+    float: left;
     width: 100%;
     height: 100%;
-    .dtd-col{
-        display: table-cell;
-        overflow: hidden;
+    border: $borderStyle;
+    border-width: 0 0 0 1px;
+    &.dtd-empty{
+      .dtd-empty-detail{
         position: relative;
-        float: left;
-        width: 100%;
-        height: 100%;
-        border: $borderStyle;
-        border-width: 0 0 0 1px;
-
-        &:first-child{
-            border-width: 0;
+        color: $medGray;
+        margin: 65% auto 0;
+        text-align: center;
+        &:before{
+          content: "\f0a5";
+          font-family: FontAwesome;
+          font-style: normal;
+          font-weight: normal;
+          text-decoration: inherit;
+          position: absolute;
+          font-size: 100px;
+          color: $gray;
+          top: -140px;
+          left: 50%;
+          margin: 0 0 0 -60px;
+          z-index: 1;
         }
-        article.main{
-            left: 0;
-        }
+      }
     }
-    .dtd-list{
-        article.main{
-            section.docSection{
-                top: 0;
-                .dtd-detail-title{
-                    @include truncate;
-                }
-                tr{
-                    &.active{
-                        td{
-                            background: $activeColor;
-                            border-color: $activeColor;
-                            color: $white;
-                            .dirty{
-                                color: $white;
-                            }
-                        }
-                    }
-                }
+    &:first-child{
+      border-width: 0;
+    }
+    article.main{
+      left: 0;
+    }
+  }
+  .dtd-list{
+    article.main{
+      section.docSection{
+        top: 0;
+        .dtd-detail-title{
+          @include truncate;
+        }
+        tr{
+          &.active{
+            td{
+              background: $activeColor;
+              border-color: $activeColor;
+              color: $white;
+              .dirty{
+                color: $white;
+              }
             }
+          }
         }
-
+      }
     }
-    .dtd-detail{
-        article.main{
-            section.docSection{
-                top: 0;
-                .dtd-detail-title{
-                    @include truncate;
-                }
-                textarea{
-                    resize: none;
-                }
-            }
+
+  }
+  .dtd-detail{
+    article.main{
+      section.docSection{
+        top: 0;
+        .dtd-detail-title{
+          @include truncate;
         }
+        textarea{
+          resize: none;
+        }
+      }
+    }
 
-    }
-    .dtd-preview{
-        overflow: auto;
-    }
+  }
+  .dtd-preview{
+    overflow: auto;
+  }
 }
 .col-count-3 {
-    .dtd-row {
-        .dtd-col {
-            width: 33.33%
-        }
+  .dtd-row {
+    .dtd-col {
+      width: 33.33%
     }
+  }
 }
 .col-count-2 {
-    .dtd-row {
-        .dtd-col {
-            width: 50%
-        }
+  .dtd-row {
+    .dtd-col {
+      width: 50%
     }
+  }
 }
 .dtd-live{
-    margin: 20px;
-    .dtd-live-inner{
-        border-radius: $borderRadius;
-        .panel-header{
-            .alert{
-                border-radius: $borderRadiusTop;
-                margin: -1px -1px 0 -1px;
-            }
-        }
-        .panel-footer{
-            :last-child{
-                margin: 0;
-            }
-        }
+  margin: 20px;
+  .dtd-live-inner{
+    border-radius: $borderRadius;
+    .panel-header{
+      .alert{
+        border-radius: $borderRadiusTop;
+        margin: -1px -1px 0 -1px;
+      }
     }
+    .panel-footer{
+      :last-child{
+        margin: 0;
+      }
+    }
+  }
 }
