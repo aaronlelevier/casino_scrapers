@@ -1,11 +1,16 @@
 {{#each model.links as |link|}}
-<div class="input-group-vertical t-address-group">
+<div class="input-group-vertical">
   <div class="input-group">
     <span class="input-group-btn">
       <button class="t-del-link-btn btn btn-default btn-sm delete" type="button" {{action 'delete' link}}>{{fa-icon "minus"}}</button>
     </span>
     {{input type="text" placeholder=(t "admin.dtd.label.link.text") value=link.text class="form-control t-dtd-link-text"}}
   </div>
+  {{#if (v-get link "text" "isInvalid")}}
+    <div class="t-dtd-link-text-error">
+      {{v-get link "text" "message"}}
+    </div>
+  {{/if}}
   <div class="input-group">
     <span class="input-group-addon">{{t "admin.dtd.label.link.request"}}</span>
     {{input type="text" placeholder=(t "admin.dtd.label.link.request") value=link.request class="form-control t-dtd-link-request"}}

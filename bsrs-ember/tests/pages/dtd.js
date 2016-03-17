@@ -42,8 +42,8 @@ var DTDPage = PageObject.create({
     requestFillIn_two: fillable('.t-dtd-link-request:eq(1)'),
     text_two: value('.t-dtd-link-text:eq(1)'),
     textFillIn_two: fillable('.t-dtd-link-text:eq(1)'),
-
     textCount: count('.t-dtd-link-text'),
+    textIsRequiredError: () => Ember.$('.t-dtd-link-text-error').text().trim(),
 
     addLinkBtn: value('.t-add-link-btn'),
     clickAddLinkBtn: clickable('.t-add-link-btn'),
