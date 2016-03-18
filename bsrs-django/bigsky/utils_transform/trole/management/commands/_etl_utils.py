@@ -1,9 +1,9 @@
 import logging
-from category.models import Category
 logger = logging.getLogger(__name__)
 
 from person.models import Role
 from location.models import LocationLevel
+from category.models import Category
 from utils_transform.trole.models import DominoRole
 
 
@@ -27,17 +27,21 @@ def create_role(domino_instance):
         selection = "District"
     elif domino_instance.selection == "Store Manager":
         selection = "Store"
+    elif domino_instance.selection == "FMU Manager":
+        selection = "FMU"
+    else:
+        selection = "Company"
     
     try:
-        newrole.location_level = LocationLevel.objects.get(name=selection)
+        newrole.location_level = LocationLevel.objects.get(name__exact=selection)
     except LocationLevel.DoesNotExist:
         logger.debug("LocationLevel name:{} Not Found.".format(selection))
     
     #join categories to new role
-    cats = domino_instance.categories.split(", ")    
+    cats = domino_instance.categories.split(";")    
     for cat in cats:
         try:
-            newrole.categories.add(Category.objects.get(name=cat))
+            newrole.categories.add(Category.objects.get(name__exact=cat, label__exact='Type'))
         except Category.DoesNotExist:
             logger.debug("Category name:{} Not Found.".format(cat))
             

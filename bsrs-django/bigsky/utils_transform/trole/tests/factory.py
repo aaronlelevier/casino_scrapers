@@ -4,7 +4,6 @@ import string
 from model_mommy import mommy
 
 from utils_transform.trole.models import DominoRole
-from location.models import LocationLevel
 from location.tests.factory import create_location_level
 from category.tests.factory import create_single_category
 
@@ -25,7 +24,7 @@ def create_domino_role():
     
     #update selection
     dom_role.selection = 'Region Manager'
-    dom_role.categories = 'Repair, Capex'
+    dom_role.categories = 'Repair;Capex'
     dom_role.save()
     
     #create location level that will be linked to Role

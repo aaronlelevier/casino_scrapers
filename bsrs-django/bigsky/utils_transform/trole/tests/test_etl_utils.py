@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.contrib.auth.models import Group
 
 from person.models import Role
 from utils_transform.trole.management.commands._etl_utils import create_role, run_role_migrations
@@ -16,6 +17,10 @@ class EtlUtilTests(TestCase):
         self.assertEqual(role_.name, domino_role.name)
         self.assertEqual(role_.role_type, "admin.role.internal")
         self.assertEqual(role_.location_level.name, "Region")
+        
+        #add a test to make sure the group is created as well
+        groups_ = Group.objects.filter(name = domino_role.name)
+        self.assertEqual(groups_.count(), 1)
 
     def test_run_role_migrations(self):
         domino_role = create_domino_role()

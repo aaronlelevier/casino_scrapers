@@ -1,4 +1,4 @@
-TRANSFORM_APPS = ('tcategory', 'tlocation', 'trole')
+TRANSFORM_APPS = ('tcategory', 'tlocation', 'trole', 'tperson')
 
 
 class TransformRouter(object):

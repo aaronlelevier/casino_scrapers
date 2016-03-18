@@ -5,6 +5,7 @@ PERSISTENT_LOCAL_APPS = [
     'utils_transform.tlocation',
     'utils_transform.tcategory',
     'utils_transform.trole',
+    'utils_transform.tperson',    
     ]
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS + PERSISTENT_LOCAL_APPS
