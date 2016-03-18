@@ -6,8 +6,7 @@ const detail_msg = 'admin.dtd.empty-detail';
 
 var DTDSRoute = GridViewRoute.extend({
     init(){
-        const store = this.get('store');
-        store.push('dtd-header', {id: 1, showingList:true, showingDetail:true, showingPreview:true, message: detail_msg, detail_model:false});
+        this.get('store').push('dtd-header', {id: 1, showingList:true, showingDetail:true, showingPreview:true, message: detail_msg});
         return this._super();
     },
     repository: inject('dtd'),
