@@ -10,8 +10,9 @@ export default Ember.Route.extend(PriorityMixin, StatusMixin, {
   modelName: Ember.computed(function() { return 'dtd'; }),
   templateModelField: Ember.computed(function() { return 'key'; }),
   transitionCallback() {
-    const store = this.get('store');
-    store.push('dtd-header', {id: 1, showingList:true, showingDetail:false, showingPreview:false});
+    //TODO: not sure why this is needed.  Can't delete this method either
+    // const store = this.get('store');
+    // store.push('dtd-header', {id: 1, showingList:true, showingDetail:true, showingPreview:true});
   },
   tabList: Ember.inject.service(),
   model(params){
