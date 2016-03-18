@@ -11,6 +11,11 @@ const Validations = buildValidations({
     presence: true,
     message: 'Key must be provided'
   }),
+  links: validator(function(value, options, model, attribute) {
+    return model.get(attribute).reduce((prev, model) => {
+      return prev && model.get('validations').get('isValid');
+    }, true);
+  }),
 });
 
 var DTDModel = Model.extend(Validations, {
@@ -122,6 +127,7 @@ var DTDModel = Model.extend(Validations, {
       this.get('store').remove('dtd', this.get('id'));
     });
   },
+  keyErrorMsg: Ember.computed.alias('validations.attrs.key.message')
 });
 
 

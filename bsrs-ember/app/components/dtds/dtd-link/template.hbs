@@ -6,11 +6,9 @@
     </span>
     {{input type="text" placeholder=(t "admin.dtd.label.link.text") value=link.text class="form-control t-dtd-link-text"}}
   </div>
-  {{#if (v-get link "text" "isInvalid")}}
-    <div class="t-dtd-link-text-error">
-      {{v-get link "text" "message"}}
+    <div class="t-dtd-link-text-error error">
+      {{link.textErrorMsg}}
     </div>
-  {{/if}}
   {{#if (is-equal model.link_type model.link_types.[0])}}
   <div class="input-group">
     <span class="input-group-addon">{{t "admin.dtd.label.link.action_button"}}</span>

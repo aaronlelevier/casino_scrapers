@@ -37,20 +37,56 @@ moduleForComponent('dtds/dtd-single', 'integration: dtd-single test', {
     }
 });
 
-test('validation works as expected', function(assert) {
+test('validation on dtd key works as expected', function(assert) {
     this.set('model', dtd);
     this.render(hbs`{{dtds/dtd-single model=model}}`);
     let $component = this.$('.t-dtd-key-error');
-    var save_btn = this.$('.t-save-btn');
     assert.equal($component.text().trim(), '');
-    save_btn.trigger('click').trigger('change');
-    assert.ok($component.is(':visible'));
+    // assert.ok($component.is(':hidden'));
     generalPage.save();
+    assert.ok($component.is(':visible'));
     assert.equal($component.text().trim(), 'Key must be provided');
 });
 
+test('validation on link text works as expected', function(assert) {
+    run(() => {
+        dtd = store.push('dtd', {id: DTD.idOne, key: 'foo', link_type: DTD.linkTypeOne});
+        uuid = store.push('uuid', {id: 1});
+        dtd.add_link({id: uuid.v4()});
+    });
+    this.set('model', dtd);
+    this.render(hbs`{{dtds/dtd-single model=model}}`);
+    let $component = this.$('.t-dtd-link-text-error');
+    assert.equal($component.text().trim(), '');
+    // assert.ok($component.is(':visible'));
+    assert.equal(this.$('.t-dtd-link-request').length, 1);
+    generalPage.save();
+    assert.equal($component.text().trim(), 'Text must be provided');
+});
+
+test('validation - clear out text, and validation msg still works', function(assert) {
+    run(() => {
+            dtd = store.push('dtd', {id: DTD.idOne, link_type: DTD.linkTypeOne, dtd_link_fks: [DTDL.idOne]});
+            store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
+            link = store.push('link', {id: LINK.idOne, request: LINK.requestOne, text: LINK.textOne,
+                action_button: LINK.action_buttonOne, is_header: LINK.is_headerOne});
+    });
+    this.set('model', dtd);
+    this.render(hbs`{{dtds/dtd-single model=model}}`);
+    // assert.ok($component.is(':visible'));
+    assert.equal(this.$('.t-dtd-link-text-error:eq(0)').text().trim(), '');
+    assert.equal(this.$('.t-dtd-link-text').length, 1);
+    var add_btn = this.$('.t-add-link-btn');
+    add_btn.trigger('click').trigger('change');
+    assert.equal(this.$('.t-dtd-link-text').length, 2);
+    assert.equal(this.$('.t-dtd-link-text-error:eq(1)').text().trim(), '');
+    generalPage.save();
+    assert.equal(this.$('.t-dtd-link-text-error:eq(0)').text().trim(), '');
+    assert.equal(this.$('.t-dtd-link-text-error:eq(1)').text().trim(), 'Text must be provided');
+});
+
 test('add and remove dtd links', function(assert) {
-    let links = store.find('link');
+    // let links = store.find('link');
     run(() => {
         dtd = store.push('dtd', {id: DTD.idOne, link_type: DTD.linkTypeOne});
         uuid = store.push('uuid', {id: 1});

@@ -18,6 +18,9 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
           this.sendAction('editDTD');
         }
       } else {
+        this.get('model.links').forEach((link) => {
+          link.set('saved', true);
+        });
         this.set('keyErrorMsg', this.get('model.validations.attrs.key.message'));
       }
     },
