@@ -16,6 +16,8 @@ var DTDPage = PageObject.create({
     visitNew: visitable(NEW_URL),
     // update: clickable('.t-ticket-action-save'),
 
+    emptyDetailText: text('.t-dtd-empty-title:eq(0)'),
+    emptyPreviewText: text('.t-dtd-empty-title:eq(1)'),
     key: value('.t-dtd-single-key:eq(0)'),
     keyFillIn: fillable('.t-dtd-single-key:eq(0)'),
     description: value('.t-dtd-single-description:eq(0)'),

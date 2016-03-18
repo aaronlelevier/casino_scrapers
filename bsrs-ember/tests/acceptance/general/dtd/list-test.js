@@ -285,9 +285,26 @@ test('navigating to list route shows 3 panes and message in dtd pane', (assert) 
 // });
 
 test('ensure we are seeing the decision tree grid and not the standard grid', (assert) => {
-    clearxhr(detail_xhr);
-    page.visit();
-    andThen(() => {
-      assert.equal(find('h2.t-dtd-grid-title').length, 1);
-    });
+  clearxhr(detail_xhr);
+  page.visit();
+  andThen(() => {
+    assert.equal(find('h2.t-dtd-grid-title').length, 1);
+  });
+});
+
+test('navigating to list route will show empty detail route', (assert) => {
+  page.visit();
+  andThen(() => {
+    assert.equal(page.emptyDetailText, 'Detail');
+    assert.equal(page.emptyPreviewText, 'Preview');
+    assert.ok(find('t-dtd-empty-detail'));
+  });
+  page.visitDetail();
+  generalPage.clickAdmin();
+  generalPage.clickDTD();
+  andThen(() => {
+    assert.equal(page.emptyDetailText, 'Detail');
+    assert.equal(page.emptyPreviewText, 'Preview');
+    assert.ok(find('t-dtd-empty-detail'));
+  });
 });
