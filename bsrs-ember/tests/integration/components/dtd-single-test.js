@@ -37,8 +37,7 @@ moduleForComponent('dtds/dtd-single', 'integration: dtd-single test', {
     }
 });
 
-test('scott validation works as expected', function(assert) {
-    let statuses = store.find('dtd-status');
+test('validation works as expected', function(assert) {
     this.set('model', dtd);
     this.render(hbs`{{dtds/dtd-single model=model}}`);
     let $component = this.$('.t-dtd-key-error');
@@ -209,7 +208,6 @@ test('note type selector is present and has a selection', function(assert) {
 // });
 
 test('preview updates as changes are made to detail', function(assert) {
-    let statuses = store.find('dtd-status');
     run(() => {
         dtd = store.push('dtd', {
           id: DTD.idOne,

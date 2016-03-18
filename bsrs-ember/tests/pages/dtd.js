@@ -77,7 +77,7 @@ var DTDPage = PageObject.create({
     previewNote: text('.t-dtd-preview-note'),
     previewButtonOne: text('.t-dtd-preview-btn:eq(0)'),
     previewLinkHeaderText: text('.t-dtd-preview-link-header h4'),
-    previewActionButton: hasClass('btn-primary', '.t-dtd-preview-btn')
+    previewActionButton: hasClass('btn-primary', '.t-dtd-preview-btn'),
 
     noteTypeLength: count('.t-dtd-note_type'),
     noteTypeLabelOne: text('.t-dtd-note_type-label:eq(0)'),
