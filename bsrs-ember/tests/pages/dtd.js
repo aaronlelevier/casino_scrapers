@@ -89,6 +89,12 @@ var DTDPage = PageObject.create({
     noteTypeOneClick: clickable('.t-dtd-note_type:eq(0)'),
     noteTypeTwoClick: clickable('.t-dtd-note_type:eq(1)'),
 
+    fieldLabelOne: value('.t-dtd-field-label:eq(0)'),
+    fieldLabelOneFillin: fillable('.t-dtd-field-label:eq(0)'),
+    fieldTypeOne: text('.t-dtd-field-type-label:eq(0):selected'),
+    fieldRequiredOneNotChecked: () => Ember.$('.t-dtd-field-required:eq(0)').is(':not(:checked)'),
+    fieldRequiredOneChecked: () => Ember.$('.t-dtd-field-required:eq(0)').is(':checked'),
+    fieldRequiredOneClick: clickable('.t-dtd-field-required:eq(0)'),
 });
 
 export default DTDPage;

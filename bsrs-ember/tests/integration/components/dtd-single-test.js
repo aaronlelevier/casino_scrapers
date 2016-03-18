@@ -8,13 +8,14 @@ import repository from 'bsrs-ember/tests/helpers/repository';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import DTDL from 'bsrs-ember/vendor/defaults/dtd-link';
 import LINK from 'bsrs-ember/vendor/defaults/link';
+import FD from 'bsrs-ember/vendor/defaults/field';
 import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import page from 'bsrs-ember/tests/pages/dtd';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import ticketPage from 'bsrs-ember/tests/pages/tickets';
 
-let store, dtd, uuid, trans, link, dtd_repo;
+let store, dtd, uuid, trans, link, field, dtd_repo;
 
 moduleForComponent('dtds/dtd-single', 'integration: dtd-single test', {
     integration: true,
@@ -47,6 +48,8 @@ test('validation on dtd key works as expected', function(assert) {
     assert.ok($component.is(':visible'));
     assert.equal($component.text().trim(), 'Key must be provided');
 });
+
+// Links
 
 test('validation on link text works as expected', function(assert) {
     run(() => {
@@ -86,7 +89,6 @@ test('validation - clear out text, and validation msg still works', function(ass
 });
 
 test('add and remove dtd links', function(assert) {
-    // let links = store.find('link');
     run(() => {
         dtd = store.push('dtd', {id: DTD.idOne, link_type: DTD.linkTypeOne});
         uuid = store.push('uuid', {id: 1});
@@ -257,28 +259,68 @@ test('preview updates as changes are made to detail', function(assert) {
     });
     this.set('model', dtd);
     this.render(hbs`{{dtds/dtd-single model=model}}{{dtds/dtd-preview model=model}}`);
-
     assert.equal(page.text, LINK.textOne);
     assert.equal(page.previewButtonOne, LINK.textOne);
-
     page.textFillIn(LINK.textTwo);
     assert.equal(page.previewButtonOne, LINK.textTwo);
     page.textFillIn(LINK.textOne);
-
     assert.ok(page.previewHasButtons);
     assert.notOk(page.previewHasList);
     assert.equal(page.previewButtonOne, LINK.textOne);
-
     assert.ok(page.previewActionButton);
     page.action_buttonClick();
     assert.notOk(page.previewActionButton);
-
     page.linkTypeTwoClick();
     assert.notOk(page.previewHasButtons);
     assert.ok(page.previewHasList);
-
     assert.equal(page.previewLinkHeaderText, LINK.textOne);
     page.is_headerClick();
     assert.equal(page.previewButtonOne, LINK.textOne);
+});
 
+// Fields
+
+test('add and remove dtd fields', function(assert) {
+    run(() => {
+        dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});
+        store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
+        field = store.push('field', {id: FD.idOne});
+    });
+    this.set('model', dtd);
+    this.render(hbs`{{dtds/dtd-single model=model}}`);
+    let $component = this.$('.t-input-multi-dtd-field');
+    assert.ok($component.is(':visible'));
+    assert.equal($component.find('.t-dtd-field-label').length, 1);
+    assert.equal($component.find('.t-dtd-field-type').length, 1);
+    assert.equal($component.find('.t-dtd-field-required').length, 1);
+    var add_btn = this.$('.t-add-field-btn');
+    add_btn.trigger('click').trigger('change');
+    assert.equal($component.find('.t-dtd-field-label').length, 2);
+    assert.equal($component.find('.t-dtd-field-type').length, 2);
+    assert.equal($component.find('.t-dtd-field-required').length, 2);
+    var remove_btn = this.$('.t-del-field-btn:eq(0)');
+    remove_btn.trigger('click').trigger('change');
+    assert.equal($component.find('.t-dtd-field-label').length, 1);
+    assert.equal($component.find('.t-dtd-field-type').length, 1);
+    assert.equal($component.find('.t-dtd-field-required').length, 1);
+});
+
+// TODO: need to test 'type' select
+test('update a fields values', function(assert) {
+    run(() => {
+        dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});
+        store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
+        field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeOne, required: FD.requestOne});
+    });
+    this.set('model', dtd);
+    this.render(hbs`{{dtds/dtd-single model=model}}`);
+    let $component = this.$('.t-input-multi-dtd-field');
+    assert.ok($component.is(':visible'));
+    assert.equal(page.fieldLabelOne, FD.labelOne);
+    assert.equal(page.fieldTypeOne, trans.t(FD.typeOne));
+    assert.ok(page.fieldRequiredOneNotChecked(), FD.requiredOne);
+    page.fieldLabelOneFillin(FD.labelTwo);
+    page.fieldRequiredOneClick();
+    assert.equal(page.fieldLabelOne, FD.labelTwo);
+    assert.ok(page.fieldRequiredOneChecked(), FD.requiredTwo);
 });

@@ -8,6 +8,18 @@ export default Model.extend({
     store: inject('main'),
     label: attr(''),
     type: attr(''),
+    types: [
+        'admin.dtd.label.field.text',
+        'admin.dtd.label.field.number',
+        'admin.dtd.label.field.textarea',
+        'admin.dtd.label.field.select',
+        'admin.dtd.label.field.with_options',
+        'admin.dtd.label.field.checkbox',
+        'admin.dtd.label.field.file',
+        'admin.dtd.label.field.asset_select',
+        'admin.dtd.label.field.check_in',
+        'admin.dtd.label.field.check_out',
+    ],
     required: attr(),
     // Options
     options: many_models('field_options', 'option_pk', 'option'),
