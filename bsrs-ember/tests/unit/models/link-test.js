@@ -53,7 +53,7 @@ test('is_header dirty tracking', (assert) => {
     assert.ok(!link.get('isDirty'));
     link.set('is_header', LINK.is_headerOne);
     assert.ok(link.get('isDirty'));
-    link.set('is_header', '');
+    link.set('is_header', false);
     assert.ok(link.get('isNotDirty'));
 });
 

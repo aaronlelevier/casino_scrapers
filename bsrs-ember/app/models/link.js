@@ -6,14 +6,14 @@ import { belongs_to, change_belongs_to, change_belongs_to_simple, belongs_to_dir
 import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 
-const Validations = buildValidations({
-    text: validator('presence', {
-        presence: true,
-        message: 'Text must be provided'
-    }),
-});
+// const Validations = buildValidations({
+//     text: validator('presence', {
+//         presence: true,
+//         message: 'Text must be provided'
+//     }),
+// });
 
-var LinkModel = Model.extend(CategoriesMixin, Validations, {
+var LinkModel = Model.extend(CategoriesMixin, {
     store: inject('main'),
     model_categories_fks: [],
     order: attr(''),

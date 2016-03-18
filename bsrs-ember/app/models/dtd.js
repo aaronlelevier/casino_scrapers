@@ -35,8 +35,6 @@ var DTDModel = Model.extend(Validations, {
   linksIsDirtyContainer: many_to_many_dirty('dtd_link_ids', 'dtd_link_fks'),
   linksIsDirty: Ember.computed('links.@each.{isDirtyOrRelatedDirty}', 'linksIsDirtyContainer', function() {
     const links = this.get('links');
-    console.log(links.isAny('isDirtyOrRelatedDirty'), 'links is any isDirtyOrRelatedDirty');
-    console.log(this.get('linksIsDirtyContainer'), 'linksIsDirtyContainer');
     return links.isAny('isDirtyOrRelatedDirty') || this.get('linksIsDirtyContainer');
   }),
   linksIsNotDirty: Ember.computed.not('linksIsDirty'),
@@ -50,14 +48,11 @@ var DTDModel = Model.extend(Validations, {
   fieldsIsDirtyContainer: many_to_many_dirty('dtd_field_ids', 'dtd_field_fks'),
   fieldsIsDirty: Ember.computed('fields.@each.{isDirtyOrRelatedDirty}', 'fieldsIsDirtyContainer', function() {
     const fields = this.get('fields');
-    console.log(fields.isAny('isDirtyOrRelatedDirty'), 'fields is any isDirtyOrRelatedDirty');
-    console.log(this.get('linksIsDirtyContainer'), 'fieldsIsDirtyContainer');
     return fields.isAny('isDirtyOrRelatedDirty') || this.get('fieldsIsDirtyContainer');
   }),
   fieldsIsNotDirty: Ember.computed.not('fieldsIsDirty'),
   // dirty tracking
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'linksIsDirty', 'fieldsIsDirty', function() {
-    console.log(this.get('isDirty'), 'isDirty');
     return this.get('isDirty') || this.get('linksIsDirty') || this.get('fieldsIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),

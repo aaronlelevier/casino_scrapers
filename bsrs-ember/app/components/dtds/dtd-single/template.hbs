@@ -19,10 +19,10 @@
             <div class="col-md-12">
               {{#form-group title="admin.dtd.label.key" for="key"}}
               {{input type="text" placeholder=(t "admin.dtd.label.key") value=model.key class="form-control t-dtd-single-key" id="dtd_key"}}
-              {{#if (v-get model 'key' 'isInvalid')}}
-              <div class="t-dtd-key-error error">
-                {{v-get model 'key' 'message'}}
-              </div>
+              {{#if keyIsInvalid}}
+                <div class="t-dtd-key-error error">
+                  {{keyErrorMsg}}
+                </div>
               {{/if}}
               {{/form-group}}
             </div>

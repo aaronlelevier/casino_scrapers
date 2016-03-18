@@ -37,19 +37,21 @@ moduleForComponent('dtds/dtd-single', 'integration: dtd-single test', {
     }
 });
 
-test('validation works as expected', function(assert) {
+test('scott validation works as expected', function(assert) {
     let statuses = store.find('dtd-status');
     this.set('model', dtd);
     this.render(hbs`{{dtds/dtd-single model=model}}`);
     let $component = this.$('.t-dtd-key-error');
     var save_btn = this.$('.t-save-btn');
+    assert.equal($component.text().trim(), '');
     save_btn.trigger('click').trigger('change');
     assert.ok($component.is(':visible'));
-    this.$('.t-dtd-key').val('a').trigger('change');
+    generalPage.save();
     assert.equal($component.text().trim(), 'Key must be provided');
 });
 
 test('add and remove dtd links', function(assert) {
+    let links = store.find('link');
     run(() => {
         dtd = store.push('dtd', {id: DTD.idOne, link_type: DTD.linkTypeOne});
         uuid = store.push('uuid', {id: 1});
@@ -63,6 +65,7 @@ test('add and remove dtd links', function(assert) {
     assert.equal($component.find('.t-dtd-link-request').length, 1);
     assert.equal($component.find('.t-dtd-link-text').length, 1);
     assert.equal($component.find('.t-dtd-link-action_button').length, 1);
+    assert.equal($component.find('.t-dtd-link-is_header').length, 0);
     assert.equal($component.find('.t-ticket-priority-select').length, 1);
     assert.equal($component.find('.t-ticket-status-select').length, 1);
     add_btn.trigger('click').trigger('change');
@@ -92,6 +95,7 @@ test('must have one link, cant remove last link, remove btn clears link', functi
     assert.equal($component.find('.t-dtd-link-request').length, 1);
     assert.equal($component.find('.t-dtd-link-text').length, 1);
     assert.equal($component.find('.t-dtd-link-action_button').length, 1);
+    assert.equal($component.find('.t-dtd-link-is_header').length, 0);
     assert.equal($component.find('.t-ticket-priority-select').length, 1);
     assert.equal($component.find('.t-ticket-status-select').length, 1);
     assert.equal(page.request, LINK.requestOne);
@@ -101,27 +105,28 @@ test('must have one link, cant remove last link, remove btn clears link', functi
     assert.equal(ticketPage.statusInput.split(' ').slice(0,-1).join(' '), trans.t(TD.statusOne));
     var remove_btn = this.$('.t-del-link-btn:eq(0)');
     remove_btn.trigger('click').trigger('change');
-    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
     assert.equal(page.request, '');
     assert.equal(page.text, '');
     assert.equal(page.action_button(), LINK.action_buttonTwo);
+    assert.equal(page.is_header(), LINK.is_headerTwo);
     assert.equal(ticketPage.priorityInput.split(' ').slice(0,-1).join(' '), '');
     assert.equal(ticketPage.statusInput.split(' ').slice(0,-1).join(' '), '');
 });
 
-test('add and remove dtd links', function(assert) {
-    run(() => {
-        dtd = store.push('dtd', {id: DTD.idOne});
-        uuid = store.push('uuid', {id: 1});
-        dtd.add_link({id: uuid.v4()});
-    });
-    this.set('model', dtd);
-    this.render(hbs`{{dtds/dtd-single model=model}}`);
-    let $component = this.$('.t-input-multi-dtd-link');
-    assert.ok($component.is(':visible'));
-    generalPage.save();
-    assert.equal(page.textIsRequiredError(), 'Text must be provided');
-});
+// test('add and remove dtd links', function(assert) {
+//     run(() => {
+//         dtd = store.push('dtd', {id: DTD.idOne});
+//         uuid = store.push('uuid', {id: 1});
+//         dtd.add_link({id: uuid.v4()});
+//     });
+//     this.set('model', dtd);
+//     this.render(hbs`{{dtds/dtd-single model=model}}`);
+//     let $component = this.$('.t-input-multi-dtd-link');
+//     assert.ok($component.is(':visible'));
+//     assert.equal(page.textIsRequiredError(), '');
+//     generalPage.save();
+//     assert.equal(page.textIsRequiredError(), 'Text must be provided');
+// });
 
 test('link type selector is present and has a selection', function(assert) {
     let statuses = store.find('dtd-status');
@@ -164,3 +169,16 @@ test('link type selector is present and has a selection', function(assert) {
     assert.notOk(page.is_headerVisible);
 
 });
+
+// test('aaron link array must have at least one link', function(assert) {
+//     let links = store.find('link');
+//     run(() => {
+//         dtd = store.push('dtd', {id: 1});
+//     });
+//     this.set('model', dtd);
+//     this.render(hbs`{{dtds/dtd-single model=model}}`);
+//     let $component = this.$('.t-input-multi-dtd-link');
+//     assert.ok($component.is(':visible'));
+//     generalPage.save();
+//     assert.equal($component.find('.t-dtd-links-length-error').length, 1);
+// });
