@@ -28,13 +28,13 @@ moduleForComponent('dtds/dtd-header', 'Integration | Component | dtds/dtd header
   }
 });
 
-test('amk it renders with buttons', function(assert) {
+test('it renders with buttons', function(assert) {
   this.render(hbs`{{#dtds/dtd-header}}{{/dtds/dtd-header}}`);
   assert.equal(this.$('button:eq(0)').text().trim(), trans.t('admin.dtd.list'));
   assert.equal(this.$('button:eq(1)').text().trim(), trans.t('admin.dtd.detail'));
   assert.equal(this.$('button:eq(2)').text().trim(), trans.t('admin.dtd.preview'));
 });
-test('amk buttons have active class when rendered', function(assert) {
+test('buttons have active class when rendered', function(assert) {
   Ember.run(() => {
     store.push('dtd-header', {id: 1, showingList: true, showingDetail: true, showingPreview: true});
   });

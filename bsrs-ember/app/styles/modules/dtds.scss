@@ -150,5 +150,15 @@
         margin: 0;
       }
     }
+    .dtd-links{
+      .dtd-link-header{
+        &:hover{
+          background: $white;
+        }
+        h4{
+          font-weight: bold;
+        }
+      }
+    }
   }
 }

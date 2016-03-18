@@ -182,3 +182,44 @@ test('link type selector is present and has a selection', function(assert) {
 //     generalPage.save();
 //     assert.equal($component.find('.t-dtd-links-length-error').length, 1);
 // });
+
+test('preview updates as changes are made to detail', function(assert) {
+    let statuses = store.find('dtd-status');
+    run(() => {
+        dtd = store.push('dtd', {
+          id: DTD.idOne,
+          dtd_link_fks: [DTDL.idOne],
+          link_type: DTD.linkTypeOne,
+          link_types: [DTD.linkTypeOne, DTD.linkTypeTwo]
+        });
+        store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
+        store.push('link', {id: LINK.idOne, request: LINK.requestOne, text: LINK.textOne,
+            action_button: LINK.action_buttonOne, is_header: LINK.is_headerOne});
+    });
+    this.set('model', dtd);
+    this.render(hbs`{{dtds/dtd-single model=model}}{{dtds/dtd-preview model=model}}`);
+
+    assert.equal(page.text, LINK.textOne);
+    assert.equal(page.previewButtonOne, LINK.textOne);
+
+    page.textFillIn(LINK.textTwo);
+    assert.equal(page.previewButtonOne, LINK.textTwo);
+    page.textFillIn(LINK.textOne);
+
+    assert.ok(page.previewHasButtons);
+    assert.notOk(page.previewHasList);
+    assert.equal(page.previewButtonOne, LINK.textOne);
+
+    assert.ok(page.previewActionButton);
+    page.action_buttonClick();
+    assert.notOk(page.previewActionButton);
+
+    page.linkTypeTwoClick();
+    assert.notOk(page.previewHasButtons);
+    assert.ok(page.previewHasList);
+
+    assert.equal(page.previewLinkHeaderText, LINK.textOne);
+    page.is_headerClick();
+    assert.equal(page.previewButtonOne, LINK.textOne);
+
+});

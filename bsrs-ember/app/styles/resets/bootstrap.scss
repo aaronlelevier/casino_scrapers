@@ -181,7 +181,8 @@
 .input-group-addon:last-child{
 	border-radius: $borderRadiusRight;
 }
-.btn{
+.btn,
+.btn-sm{
 	border-radius: $borderRadius;
 }
 .btn-default,
@@ -234,35 +235,24 @@ fieldset[disabled] .form-control,
 	border-color: $activeColor;
 	z-index: 3;
 }
+.btn-primary{
+  background: $activeColor;
+  border-color: $activeColor;
+  &:hover,
+  &:focus{
+    background: $darkGreen !important;
+    border-color: $darkGreen;
+  }
+}
 .badge{
 	background-color: $orange;
 	font-size: 1.1rem;
 	border-radius: $borderRadius;
 }
-.list-group{
-	.list-group-item{
-		border-width: 0 0 1px;
-		margin-bottom: 0;
-		border-radius: 0 !important;
-		border-color: $gray;
-		background: $light;
-		&:hover{
-			background-color: $white !important;
-		}
-	}
 
-
-	.list-group-item.active,
-	.list-group-item.active:hover,
-	.list-group-item.active:focus{
-		background-color: $white;
-		color: $activeColor;
-		border-color: $gray;
-		font-weight: bold;
-	}
-	.list-group-item.active > .badge,
-	.nav-pills > .active > a > .badge{
-		background-color: $orange;
-		color: $white;
-	}
+.list-group-item:first-child{
+  border-radius: $borderRadiusTop;
+}
+.list-group-item:last-child{
+  border-radius: $borderRadiusBottom;
 }

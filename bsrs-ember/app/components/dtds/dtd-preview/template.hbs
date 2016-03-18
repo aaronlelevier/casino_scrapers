@@ -21,15 +21,27 @@
                 {{#if model.prompt}}
                 <div class="panel-footer t-dtd-preview-prompt">{{format-markdown model.prompt}}</div>
                 {{/if}}
+                {{#if (is-equal model.link_type model.link_types.[1])}}
+                  <div class="list-group dtd-links dtd-list t-dtd-preview-links">
+                    {{#each model.links as |link|}}
+                      {{#if link.is_header}}
+                        <a class="list-group-item dtd-link-header t-dtd-preview-link-header">
+                          <h4 class="list-group-item-heading">{{link.text}}</h4>
+                        </a>
+                      {{else}}
+                        <button type="button" class="list-group-item t-dtd-preview-btn">{{link.text}}</button>
+                      {{/if}}
+                    {{/each}}
+                  </div>
+                {{/if}}
             </div>
-
-            {{#each model.links as |link|}}
-              <button type="button" class="btn btn-default">{{link.text}}</button>
-            {{/each}}
-            <!-- <h1 class="t-dtd-preview-key">{{model.key}}</h1>
-            <h1 class="t-dtd-preview-link_type">{{model.link_type}}</h1> -->
+            {{#if (is-equal model.link_type model.link_types.[0])}}
+              <div class="text-center dtd-links dtd-buttons t-dtd-preview-links">
+                {{#each model.links as |link|}}
+                  <button type="button" class="btn t-dtd-preview-btn {{if link.action_button 'btn-primary' 'btn-default'}}">{{link.text}}</button>
+                {{/each}}
+              </div>
+            {{/if}}
         </div>
     </div>
-
-
 </div>

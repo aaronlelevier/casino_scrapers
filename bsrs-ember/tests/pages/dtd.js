@@ -70,6 +70,17 @@ var DTDPage = PageObject.create({
     linkTypeOneClick: clickable('.t-dtd-link_type:eq(0)'),
     linkTypeTwoClick: clickable('.t-dtd-link_type:eq(1)'),
 
+    previewHasList: hasClass('dtd-list', '.t-dtd-preview-links'),
+    previewHasButtons: hasClass('dtd-buttons', '.t-dtd-preview-links'),
+
+    previewDescription: text('.t-dtd-preview-description'),
+    previewPrompt: text('.t-dtd-preview-prompt'),
+    previewNote: text('.t-dtd-preview-note'),
+    previewButtonOne: text('.t-dtd-preview-btn:eq(0)'),
+    previewLinkHeaderText: text('.t-dtd-preview-link-header h4'),
+
+    previewActionButton: hasClass('btn-primary', '.t-dtd-preview-btn')
+
 });
 
 export default DTDPage;
