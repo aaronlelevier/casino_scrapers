@@ -26,6 +26,26 @@ module('unit: dtd test', {
     }
 });
 
+test('link_types - should be pre-defined on the model, so dont need to be pushed into the store', assert => {
+    dtd = store.find('dtd', DTD.idTwo);
+    assert.equal(dtd.get('id'), undefined);
+    dtd = store.push('dtd', {id: DTD.idTwo});
+    assert.equal(dtd.get('link_types').get('length'), 2);
+    assert.equal(dtd.get('link_types')[0], DTD.linkTypeOne);
+    assert.equal(dtd.get('link_types')[1], DTD.linkTypeTwo);
+});
+
+test('note_types - should be pre-defined on the model, so dont need to be pushed into the store', assert => {
+    dtd = store.find('dtd', DTD.idTwo);
+    assert.equal(dtd.get('id'), undefined);
+    dtd = store.push('dtd', {id: DTD.idTwo});
+    assert.equal(dtd.get('note_types').get('length'), 4);
+    assert.equal(dtd.get('note_types')[0], DTD.noteTypeOne);
+    assert.equal(dtd.get('note_types')[1], DTD.noteTypeTwo);
+    assert.equal(dtd.get('note_types')[2], DTD.noteTypeThree);
+    assert.equal(dtd.get('note_types')[3], DTD.noteTypeFour);
+});
+
 test('dtd_link_ids', (assert) => {
     assert.equal(dtd.get('dtd_link_ids').length, 1);
     assert.equal(LINK.idOne, dtd.get('dtd_link_ids')[0], 'x');
@@ -272,6 +292,7 @@ test('serialize dtd model and links with a priority', (assert) => {
     run(() => {
         payload = dtd.serialize();
     });
+    assert.deepEqual(payload, dtd_payload);
     assert.equal(link.get('id'), dtd_payload.links[0].id);
     assert.equal(link.get('priority.id'), dtd_payload.links[0].priority);
     assert.equal(link.get('status.id'), dtd_payload.links[0].status);

@@ -72,14 +72,20 @@ var DTDPage = PageObject.create({
 
     previewHasList: hasClass('dtd-list', '.t-dtd-preview-links'),
     previewHasButtons: hasClass('dtd-buttons', '.t-dtd-preview-links'),
-
     previewDescription: text('.t-dtd-preview-description'),
     previewPrompt: text('.t-dtd-preview-prompt'),
     previewNote: text('.t-dtd-preview-note'),
     previewButtonOne: text('.t-dtd-preview-btn:eq(0)'),
     previewLinkHeaderText: text('.t-dtd-preview-link-header h4'),
-
     previewActionButton: hasClass('btn-primary', '.t-dtd-preview-btn')
+
+    noteTypeLength: count('.t-dtd-note_type'),
+    noteTypeLabelOne: text('.t-dtd-note_type-label:eq(0)'),
+    noteTypeLabelTwo: text('.t-dtd-note_type-label:eq(1)'),
+    noteTypeSelectedOne: () => Ember.$('.t-dtd-note_type:eq(0)').is(':checked'),
+    noteTypeSelectedTwo: () => Ember.$('.t-dtd-note_type:eq(1)').is(':checked'),
+    noteTypeOneClick: clickable('.t-dtd-note_type:eq(0)'),
+    noteTypeTwoClick: clickable('.t-dtd-note_type:eq(1)'),
 
 });
 

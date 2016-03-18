@@ -19,6 +19,12 @@ var DTDModel = Model.extend(Validations, {
   description: attr(''),
   note: attr(''),
   note_type: attr(''),
+  note_types: [
+    'admin.dtd.note_type.success',
+    'admin.dtd.note_type.warning',
+    'admin.dtd.note_type.info',
+    'admin.dtd.note_type.danger'
+  ],
   prompt: attr(''),
   link_type: attr(''),
   link_types: [

@@ -21,9 +21,12 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
         this.set('keyErrorMsg', this.get('model.validations.attrs.key.message'));
       }
     },
-    setLinkType(new_link_type){
-      this.get('model').set('link_type', new_link_type);
-    }
+    setLinkType(type){
+      this.get('model').set('link_type', type);
+    },
+    setNoteType(type) {
+      this.get('model').set('note_type', type);
+    },
   },
   keyIsInvalid: Ember.computed.alias('model.validations.attrs.key.isInvalid')
 });

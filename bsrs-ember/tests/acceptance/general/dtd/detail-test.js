@@ -8,7 +8,7 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
-import { dtd_payload, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_payload_two } from 'bsrs-ember/tests/helpers/payloads/dtd';
+import { dtd_payload, dtd_payload_two, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload } from 'bsrs-ember/tests/helpers/payloads/dtd';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
@@ -106,7 +106,9 @@ test('dtd payload to update all fields', (assert) => {
   .noteFillIn(DTD.noteTwo)
   .requestFillIn(LINK.requestTwo)
   .textFillIn(LINK.textTwo)
-  .action_buttonClick();
+  .action_buttonClick()
+  .linkTypeTwoClick()
+  .noteTypeTwoClick();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-dtd-single-key').val(), DTD.keyTwo);

@@ -22,6 +22,8 @@ var BSRS_DTD_DEFAULTS_OBJECT = (function() {
             noteTwo: 'Good to go',
             noteTypeOne: 'admin.dtd.note_type.success',
             noteTypeTwo: 'admin.dtd.note_type.warning',
+            noteTypeThree: 'admin.dtd.note_type.info',
+            noteTypeFour: 'admin.dtd.note_type.danger',
             linkTypeOne: 'admin.dtd.link_type.buttons',
             linkTypeTwo: 'admin.dtd.link_type.links',
         };

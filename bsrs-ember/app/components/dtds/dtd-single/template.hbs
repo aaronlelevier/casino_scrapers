@@ -71,6 +71,17 @@
             		</div>
               {{/each}}
             {{/form-group}}
+            {{#form-group title="admin.dtd.label.note_type" for="note_type"}}
+              {{#each model.note_types as |type|}}
+                {{log type}}
+                <div class="radio">
+                  <label>
+                    <input type="radio" value={{type}} onchange={{action 'setNoteType' type}} class="t-dtd-note_type" checked={{is-equal model.note_type type}} name="note_type">
+                    <span class="t-dtd-note_type-label">{{t type}}</span>
+                  </label>
+                </div>
+              {{/each}}
+            {{/form-group}}
             {{#form-group title="admin.dtd.label.links" for=""}}
               {{dtds/dtd-link
                 model=model

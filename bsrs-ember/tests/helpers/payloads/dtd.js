@@ -27,6 +27,28 @@ var dtd_payload = {
     }]
 };
 
+var dtd_payload_two = {
+    id: DTD.idOne,
+    key: DTD.keyTwo,
+    description: DTD.descriptionTwo,
+    prompt: DTD.promptTwo,
+    note: DTD.noteTwo,
+    note_type: DTD.noteTypeTwo,
+    link_type: DTD.linkTypeTwo,
+    links: [{
+        id: LINK.idOne,
+        order: LINK.orderOne,
+        action_button: LINK.action_buttonTwo,
+        is_header: LINK.is_headerOne,
+        request: LINK.requestTwo,
+        text: LINK.textTwo,
+        priority: TP.priorityTwoId,
+        status: TD.statusTwoId,
+        destination: DTD.idTwo
+
+    }]
+};
+
 var dtd_payload_link_two_put = {
     id: DTD.idOne,
     key: DTD.keyOne,
@@ -48,7 +70,7 @@ var dtd_payload_link_two_put = {
     },
     {
         id: 1,
-        // order: LINK.orderOne,
+        // order: LINK.orderOne,  // needs to be set on model based upon order in `dtd-links` array
         action_button: LINK.action_buttonOne,
         is_header: LINK.is_headerTwo,
         request: LINK.requestTwo,
@@ -101,28 +123,6 @@ var dtd_payload_no_priority = {
     }]
 };
 
-var dtd_payload_two = {
-    id: DTD.idOne,
-    key: DTD.keyTwo,
-    description: DTD.descriptionTwo,
-    prompt: DTD.promptTwo,
-    note: DTD.noteTwo,
-    note_type: DTD.noteTypeOne,
-    link_type: DTD.linkTypeOne,
-    links: [{
-        id: LINK.idOne,
-        order: LINK.orderOne,
-        action_button: LINK.action_buttonTwo,
-        is_header: LINK.is_headerOne,
-        request: LINK.requestTwo,
-        text: LINK.textTwo,
-        priority: TP.priorityTwoId,
-        status: TD.statusTwoId,
-        destination: DTD.idTwo
-
-    }]
-};
-
 var dtd_new_payload = {
     id: 1,
     key: DTD.keyOne,
@@ -130,4 +130,4 @@ var dtd_new_payload = {
     links: []
 };
 
-export { dtd_payload, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload, dtd_payload_two };
+export { dtd_payload, dtd_payload_two, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload };

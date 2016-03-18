@@ -129,13 +129,11 @@ test('must have one link, cant remove last link, remove btn clears link', functi
 // });
 
 test('link type selector is present and has a selection', function(assert) {
-    let statuses = store.find('dtd-status');
     run(() => {
         dtd = store.push('dtd', {
           id: DTD.idOne,
           dtd_link_fks: [DTDL.idOne],
-          link_type: DTD.linkTypeOne,
-          link_types: [DTD.linkTypeOne, DTD.linkTypeTwo]
+          link_type: DTD.linkTypeOne
         });
         store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
         store.push('link', {id: LINK.idOne, request: LINK.requestOne, text: LINK.textOne,
@@ -144,30 +142,57 @@ test('link type selector is present and has a selection', function(assert) {
     this.set('model', dtd);
     this.render(hbs`{{dtds/dtd-single model=model}}`);
     assert.equal(page.linkTypeLength, 2);
-    assert.equal(page.linkTypeLabelOne, trans.t('admin.dtd.link_type.buttons'));
-    assert.equal(page.linkTypeLabelTwo, trans.t('admin.dtd.link_type.links'));
+    assert.equal(page.linkTypeLabelOne, trans.t(DTD.linkTypeOne));
+    assert.equal(page.linkTypeLabelTwo, trans.t(DTD.linkTypeTwo));
     assert.ok(page.linkTypeSelectedOne());
     assert.notOk(page.linkTypeSelectedTwo());
-
     assert.ok(page.action_buttonVisible);
     assert.notOk(page.is_headerVisible);
-
     page.linkTypeTwoClick();
     assert.ok(page.linkTypeSelectedTwo());
     assert.ok(dtd.get('isDirty'));
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-
     assert.notOk(page.action_buttonVisible);
     assert.ok(page.is_headerVisible);
-
     page.linkTypeOneClick();
     assert.ok(page.linkTypeSelectedOne());
     assert.ok(dtd.get('isNotDirty'));
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-
     assert.ok(page.action_buttonVisible);
     assert.notOk(page.is_headerVisible);
+});
 
+test('note type selector is present and has a selection', function(assert) {
+    run(() => {
+        dtd = store.push('dtd', {
+          id: DTD.idOne,
+          dtd_link_fks: [DTDL.idOne],
+          note_type: DTD.noteTypeOne
+        });
+        store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, note_pk: LINK.idOne});
+        store.push('link', {id: LINK.idOne, request: LINK.requestOne, text: LINK.textOne,
+            action_button: LINK.action_buttonOne, is_header: LINK.is_headerOne});
+    });
+    this.set('model', dtd);
+    this.render(hbs`{{dtds/dtd-single model=model}}`);
+    assert.equal(page.noteTypeLength, 4);
+    assert.equal(page.noteTypeLabelOne, trans.t(DTD.noteTypeOne));
+    assert.equal(page.noteTypeLabelTwo, trans.t(DTD.noteTypeTwo));
+    assert.ok(page.noteTypeSelectedOne());
+    assert.notOk(page.noteTypeSelectedTwo());
+    // TODO: Is there some flip logic here based upon the note_type (like link_type)?
+    // assert.ok(page.action_buttonVisible);
+    // assert.notOk(page.is_headerVisible);
+    page.noteTypeTwoClick();
+    assert.ok(page.noteTypeSelectedTwo());
+    assert.equal(dtd.get('note_type'), DTD.noteTypeTwo);
+    assert.ok(dtd.get('isDirty'));
+    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+    page.noteTypeOneClick();
+    assert.ok(page.noteTypeSelectedOne());
+    assert.equal(dtd.get('note_type'), DTD.noteTypeOne);
+    assert.ok(dtd.get('isNotDirty'));
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 // test('aaron link array must have at least one link', function(assert) {
