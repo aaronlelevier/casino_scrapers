@@ -162,12 +162,17 @@ var ApplicationRoute = Ember.Route.extend({
                 temp = temp.split('/').pop();
 
                 if(tab.get('transitionCallback')) {
+                  if(model.get('singleTabId')) {
+                    return tab.get('transitionCallback')();//return because singleTabs return from callback
+                  } else{
                     tab.get('transitionCallback')();
+                  } 
                 }
+                const closeTabId = model.get('singleTabId') ? model.get('singleTabId') : model.get('id');
                 if(temp === tab_id || tab.get('newModel')){
                     this.transitionTo(tab.get('redirect'));
                     if (tab.get('newModel') && !tab.get('saveModel')) {
-                        this.get('tabList').closeTab(model.get('id'));
+                        this.get('tabList').closeTab(closeTabId);
                         //TODO: check as to why this is needed
                         model.removeRecord();
                     }
@@ -177,7 +182,7 @@ var ApplicationRoute = Ember.Route.extend({
 
                     this.transitionTo(tab.get('redirect'));
                 }
-                this.get('tabList').closeTab(model.get('id'));
+                this.get('tabList').closeTab(closeTabId);
             }
         },
         delete(tab, callback, id){

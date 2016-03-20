@@ -6,11 +6,11 @@ import StatusMixin from 'bsrs-ember/mixins/route/status';
 
 export default Ember.Route.extend(PriorityMixin, StatusMixin, {
   repository: inject('dtd'),
-  redirectRoute: Ember.computed(function() { return 'dtds.dtd'; }),
+  redirectRoute: Ember.computed(function() { return 'admin'; }),
   modelName: Ember.computed(function() { return 'dtd'; }),
-  templateModelField: Ember.computed(function() { return 'key'; }),
+  templateModelField: Ember.computed(function() { return 'description'; }),
   transitionCallback() {
-    //TODO: not sure why this is needed.  Can't delete this method either
+    return;
     // const store = this.get('store');
     // store.push('dtd-header', {id: 1, showingList:true, showingDetail:true, showingPreview:true});
   },

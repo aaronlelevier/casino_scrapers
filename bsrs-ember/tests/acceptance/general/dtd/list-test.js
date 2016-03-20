@@ -297,14 +297,18 @@ test('navigating to list route will show empty detail route', (assert) => {
   andThen(() => {
     assert.equal(page.emptyDetailText, 'Detail');
     assert.equal(page.emptyPreviewText, 'Preview');
-    assert.ok(find('t-dtd-empty-detail'));
+    assert.ok(find('.t-dtd-empty-detail').text());
   });
   page.visitDetail();
+  andThen(() => {
+    assert.equal(page.titleText, t('admin.dtd.dtd'));
+    assert.throws(find('.t-dtd-empty-detail'));
+  });
   generalPage.clickAdmin();
   generalPage.clickDTD();
   andThen(() => {
     assert.equal(page.emptyDetailText, 'Detail');
     assert.equal(page.emptyPreviewText, 'Preview');
-    assert.ok(find('t-dtd-empty-detail'));
+    assert.ok(find('.t-dtd-empty-detail').text());
   });
 });
