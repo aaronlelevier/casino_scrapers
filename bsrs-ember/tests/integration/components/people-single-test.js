@@ -11,16 +11,16 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import GLOBAL from 'bsrs-ember/vendor/defaults/global-message';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 
-var store, email_types, default_email_type, phone_number_types, default_phone_number_type, address_types, default_address_type, run = Ember.run;
+var store, email_types, default_email_type, phone_number_types, default_phone_number_type, address_types, default_address_type, trans, run = Ember.run;
 
 moduleForComponent('person-single', 'integration: person-single test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency']);
         translation.initialize(this);
-        var service = this.container.lookup('service:i18n');
+        trans = this.container.lookup('service:i18n');
         var json = translations.generate('en');
-        loadTranslations(service, json);
+        loadTranslations(trans, json);
         run(function() {
             store.push('currency', CURRENCY_DEFAULTS);
         });
@@ -52,6 +52,16 @@ moduleForComponent('person-single', 'integration: person-single test', {
         email_types = store.find('email-type');
         default_email_type = email_types.objectAt(0);
     }
+});
+
+test('dropdown displays correct print and duplicate text', function(assert) {
+    run(() => {
+        this.set('model', store.push('person', {}));
+    });
+    this.render(hbs`{{people/person-single model=model}}`);
+    this.$('.t-dropdown-delete').click();
+    assert.equal(this.$('.t-print-btn').text().split(' ')[1], trans.t('crud.print.button'));
+    assert.equal(this.$('.t-duplicate-btn').text().split(' ')[1], trans.t('crud.duplicate.button'));
 });
 
 test('filling in invalid username reveal validation messages', function(assert) {
