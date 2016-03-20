@@ -135,7 +135,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
     assert.equal(currentURL(), NEW_URL);
     let tabs = store.find('tab');
     const dtds = store.find('dtd');
-    assert.equal(dtds.get('length'), 1);
+    assert.equal(dtds.get('length'), 11);
     assert.equal(tabs.get('length'), 1);
     assert.equal(find(TAB_TITLE).text(), 'New Definition');
   });
@@ -147,7 +147,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
     const dtds = store.find('dtd');
-    assert.equal(dtds.get('length'), 1);
+    assert.equal(dtds.get('length'), 11);
   });
 });
 
@@ -229,18 +229,19 @@ test('clicking on a tab that is dirty from the role url (or any non related page
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
   });
+  let endpoint = `${PREFIX}${BASE_ROLE_URL}/`;
+  xhr(endpoint + '?page=1','GET',null,{},200,RF.list());
+  visit(ROLE_URL);
   andThen(() => {
-    let endpoint = `${PREFIX}${BASE_ROLE_URL}/`;
-    xhr(endpoint + '?page=1','GET',null,{},200,RF.list());
-    visit(ROLE_URL);
-    andThen(() => {
-      assert.equal(currentURL(), ROLE_URL);
-    });
+    assert.equal(currentURL(), ROLE_URL);
+    let dtd = store.find('dtd', DTD.idOne);
+    assert.equal(dtd.get('isDirtyOrRelatedDirty'), true);
+    assert.equal(dtd.get('isNotDirtyOrRelatedNotDirty'), false);
   });
   click('.t-tab:eq(0)');
   andThen(() => {
     let dtd = store.find('dtd', DTD.idOne);
-    assert.equal(page.key, DTD.keyTwo);
+    assert.equal(dtd.get('key'), DTD.keyTwo);
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
     assert.equal(currentURL(), DETAIL_URL);
   });

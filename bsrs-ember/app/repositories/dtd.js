@@ -10,7 +10,7 @@ var DTD_URL = `${PREFIX}/dtds/`;
 
 var DTDRepo = Ember.Object.extend(GridRepositoryMixin, {
   type: Ember.computed(function() { return 'dtd'; }),
-  typeGrid: Ember.computed(function() { return 'dtd-list'; }),
+  typeGrid: Ember.computed(function() { return 'dtd'; }),
   garbage_collection: Ember.computed(function() { return ['dtd-list']; }),
   url: Ember.computed(function() { return DTD_URL; }),
   uuid: injectUUID('uuid'),

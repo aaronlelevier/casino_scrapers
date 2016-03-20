@@ -43,6 +43,7 @@ module('Acceptance | dtd-new', {
 });
 
 test('visiting /dtd/new', (assert) => {
+  clearxhr(detail_xhr);
   page.visit();
   andThen(() => {
     assert.equal(currentURL(), DTD_URL);
@@ -69,30 +70,31 @@ test('visiting /dtd/new', (assert) => {
     assert.equal(dtd.get('key'), DTD.keyOne);
     assert.equal(dtd.get('description'), DTD.descriptionOne);
     assert.ok(dtd.get('isNotDirty'));
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
   });
 });
 
-//test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
-//  clearxhr(detail_xhr);
-//  page.visitNew();
-//  page.keyFillIn(DTD.keyOne);
-//  generalPage.cancel();
-//  andThen(() => {
-//    waitFor(() => {
-//      assert.equal(currentURL(), DTD_NEW_URL);
-//      assert.equal(find('.t-modal').is(':visible'), true);
-//      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
-//    });
-//  });
-//  click('.t-modal-footer .t-modal-cancel-btn');
-//  andThen(() => {
-//    waitFor(() => {
-//      assert.equal(currentURL(), DTD_NEW_URL);
-//      assert.equal(page.key, DTD.keyOne);
-//      assert.equal(find('.t-modal').is(':hidden'), true);
-//    });
-//  });
-//});
+test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
+  clearxhr(detail_xhr);
+  page.visitNew();
+  page.keyFillIn(DTD.keyOne);
+  generalPage.cancel();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DTD_NEW_URL);
+      assert.equal(find('.t-modal').is(':visible'), true);
+      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+    });
+  });
+  click('.t-modal-footer .t-modal-cancel-btn');
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DTD_NEW_URL);
+      assert.equal(page.key, DTD.keyOne);
+      assert.equal(find('.t-modal').is(':hidden'), true);
+    });
+  });
+});
 
 //test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
 //  clearxhr(detail_xhr);

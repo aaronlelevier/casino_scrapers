@@ -78,13 +78,15 @@ test('dtd new definitions from server will not dirty model if clean', (assert) =
 
 test('dtd deserializer returns correct data (list)', (assert) => {
     const json = [DTDF.generate(DTD.idOne), DTDF.generate(DTD.idTwo)];
+    delete json[0].links;
+    delete json[1].links;
     const response = {'count':2,'next':null,'previous':null,'results': json};
     run(() => {
         subject.deserialize(response);
     });
-    let dtds = store.find('dtd-list');
+    let dtds = store.find('dtd');
     assert.equal(dtds.get('length'), 2);
-    let dtd = store.find('dtd-list', DTD.idOne);
+    let dtd = store.find('dtd', DTD.idOne);
     assert.equal(dtd.get('id'), DTD.idOne);
     assert.equal(dtd.get('key'), DTD.keyOne);
     assert.equal(dtd.get('description'), DTD.descriptionOne);

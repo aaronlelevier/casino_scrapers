@@ -21,9 +21,9 @@ export default Ember.Route.extend(PriorityMixin, StatusMixin, {
     const pk = params.dtd_id;
     const repository = this.get('repository');
     let dtd = repository.fetch(pk);
-    // if(!dtd.get('length') || dtd.get('isNotDirtyOrRelatedNotDirty')){
-    dtd = repository.findById(pk);
-    // }
+    if(!dtd.get('id') || dtd.get('isNotDirtyOrRelatedNotDirty')){
+      dtd = repository.findById(pk);
+    }
     return {
       model: dtd,
       priorities: this.get('priorities'),

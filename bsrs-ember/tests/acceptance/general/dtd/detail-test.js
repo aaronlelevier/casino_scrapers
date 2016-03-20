@@ -58,7 +58,6 @@ test('decision tree definition displays data and does not update nor transitions
     assert.equal(ticketPage.priorityInput.split(' ')[0], TP.priorityOne);
     assert.equal(ticketPage.statusInput.split(' ')[0], TD.statusOne);
   });
-  // xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
