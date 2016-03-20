@@ -11,8 +11,6 @@ export default Ember.Route.extend(PriorityMixin, StatusMixin, {
   templateModelField: Ember.computed(function() { return 'description'; }),
   transitionCallback() {
     return;
-    // const store = this.get('store');
-    // store.push('dtd-header', {id: 1, showingList:true, showingDetail:true, showingPreview:true});
   },
   tabList: Ember.inject.service(),
   model(params){
