@@ -1,0 +1,29 @@
+{{#each model.fields as |field|}}
+  <div class="input-group-vertical">
+    <div class="input-group">
+      <span class="input-group-btn">
+        <button class="t-del-field-btn btn btn-default btn-sm delete" type="button" {{action 'delete' field}}>{{fa-icon "minus"}}</button>
+      </span>
+      {{input type="text" placeholder=(t "admin.dtd.label.field.label") value=field.label class="form-control t-dtd-field-label"}}
+    </div>
+    {{#form-group title="admin.dtd.field.type" class="t-dtd-field-type" for="type"}}
+      <select onchange={{action 'setFieldType' value="target.value"}} selected={{field.type}}>
+      {{#each field.types as |type|}}
+        <option value={{type}} class="t-dtd-field-type-label">{{t type}}</option>
+      {{/each}}
+      </select>
+    {{/form-group}}
+    <div class="input-group">
+      <span class="input-group-addon">{{t "admin.dtd.label.field.required"}}</span>
+      <div class="checkbox">
+        <label>
+          {{input type="checkbox" checked=field.required class="form-control t-dtd-field-required"}}
+          <span></span>
+        </label>
+      </div>
+    </div>
+  </div>
+{{/each}}
+<button class="t-add-field-btn add-btn btn btn-default btn-sm" type="button" {{action "append"}}>
+  <span class="btn-label">{{fa-icon "plus"}} {{t "admin.dtd.field.add"}}</span>
+</button>
