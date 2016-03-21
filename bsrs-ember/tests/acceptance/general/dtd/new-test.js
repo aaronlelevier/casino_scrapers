@@ -21,10 +21,10 @@ const DTD_URL = `${BASE_URL}`;
 const DTD_NEW_URL = `${BASE_URL}/new/1`;
 const DTD_NEW_URL_2 = `${BASE_URL}/new/2`;
 const DJANGO_DTD_URL = `${PREFIX}/dtds/`;
-const DETAIL_URL = `${BASE_URL}/${UUID.value}`;
+const NEW_URL = `${BASE_URL}/${UUID.value}`;
 const DJANGO_DTD_NEW_URL = `${DJANGO_DTD_URL}${UUID.value}/`;
 
-let application, store, payload, list_xhr, original_uuid, detail_xhr;
+let application, store, payload, list_xhr, original_uuid;
 
 module('Acceptance | dtd-new', {
   beforeEach() {
@@ -33,7 +33,6 @@ module('Acceptance | dtd-new', {
     list_xhr = xhr(`${DJANGO_DTD_URL}?page=1`, 'GET', null, {}, 201, DTDF.empty());
     original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
-    detail_xhr = xhr(DJANGO_DTD_NEW_URL, 'GET', null, {}, 200, dtd_new_payload);
   },
   afterEach() {
     payload = null;
@@ -43,7 +42,6 @@ module('Acceptance | dtd-new', {
 });
 
 test('visiting /dtd/new', (assert) => {
-  clearxhr(detail_xhr);
   page.visit();
   andThen(() => {
     assert.equal(currentURL(), DTD_URL);
@@ -68,7 +66,7 @@ test('visiting /dtd/new', (assert) => {
   xhr(DJANGO_DTD_URL, 'POST', JSON.stringify(dtd_new_payload), {}, 201, response);
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(currentURL(), NEW_URL);
     let dtd = store.find('dtd', UUID.value);
     assert.equal(dtd.get('key'), DTD.keyOne);
     assert.equal(dtd.get('description'), DTD.descriptionOne);
@@ -78,7 +76,6 @@ test('visiting /dtd/new', (assert) => {
 });
 
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
-  clearxhr(detail_xhr);
   page.visitNew();
   page.keyFillIn(DTD.keyOne);
   generalPage.cancel();
@@ -100,7 +97,6 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
 });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
-  clearxhr(detail_xhr);
   page.visitNew();
   page.keyFillIn(DTD.keyOne);
   generalPage.cancel();
@@ -124,7 +120,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
-  clearxhr(detail_xhr);
   page.visitNew();
   generalPage.cancel();
   andThen(() => {
@@ -132,26 +127,25 @@ test('when user enters new form and doesnt enter data, the record is correctly r
   });
 });
 
-////TODO: button stays selected after first select
-//// test('scott adding a new dtd should allow for another new dtd to be created after the first is persisted', (assert) => {
-////     let dtd_count;
-////     random.uuid = original_uuid;
-////     dtd_new_payload.id = 'abc123';
-////     patchRandomAsync(0);
-////     visit(DTD_URL);
-////     click('.t-add-new');
-////     page.keyFillIn(DTD.keyOne);
-////     page.descriptionFillIn(DTD.descriptionOne);
-////     xhr(DJANGO_DTD_URL, 'POST', JSON.stringify(dtd_new_payload), {}, 201, Ember.$.extend(true, {}, payload));
-////     generalPage.save();
-////     andThen(() => {
-////         assert.equal(currentURL(), DTD_URL);
-////         dtd_count = store.find('dtd').get('length');
-////     });
-////     click('.t-add-new');
-////     andThen(() => {
-////         assert.equal(currentURL(), DTD_NEW_URL_2);
-////         assert.equal(store.find('dtd').get('length'), dtd_count + 1);
-////         assert.equal(find('.t-dtd-key').val(), '');
-////     });
-//// });
+test('adding a new dtd should allow for another new dtd to be created after the first is persisted', (assert) => {
+  let dtd_count;
+  random.uuid = original_uuid;
+  dtd_new_payload.id = 'abc123';
+  patchRandomAsync(0);
+  visit(DTD_URL);
+  click('.t-add-new');
+  page.keyFillIn(DTD.keyOne);
+  page.descriptionFillIn(DTD.descriptionOne);
+  xhr(DJANGO_DTD_URL, 'POST', JSON.stringify(dtd_new_payload), {}, 201, Ember.$.extend(true, {}, payload));
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), '/dtds/abc123');
+    dtd_count = store.find('dtd').get('length');
+  });
+  click('.t-add-new');
+  andThen(() => {
+    assert.equal(currentURL(), DTD_NEW_URL);
+    assert.equal(store.find('dtd').get('length'), dtd_count + 1);
+    assert.equal(find('.t-dtd-key').val(), '');
+  });
+});
