@@ -90,12 +90,7 @@ class PersonViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
 
         search = self.request.query_params.get('search', None)
         if search:
-            queryset = queryset.filter(
-                Q(username__icontains=search) | \
-                Q(fullname__icontains=search) | \
-                Q(title__icontains=search) | \
-                Q(role__name__icontains=search)
-            )
+            queryset = queryset.search_multi(keyword=search)
 
         return queryset
 
