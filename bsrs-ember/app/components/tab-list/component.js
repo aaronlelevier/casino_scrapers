@@ -7,7 +7,7 @@ var TabList = Ember.Component.extend({
       if(tab.get('model_id')){
         tab.set('transitionCallback', undefined);
       }
-      this.sendAction('closeTabMaster', tab);
+      this.sendAction('closeTabMaster', tab, 'closeTab');
     }
   }
 });

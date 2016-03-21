@@ -309,7 +309,7 @@ test('when you deep link to the category detail can remove child from category a
     });
 });
 
-// test('scott starting with multiple categories, can remove all categories (while not populating options) and add back', (assert) => {
+// test('starting with multiple categories, can remove all categories (while not populating options) and add back', (assert) => {
 //     detail_data.children = [...detail_data.children, CF.get(CD.idThree)];
 //     detail_data.children[1].name = CD.nameThree;
 //     visit(DETAIL_URL);

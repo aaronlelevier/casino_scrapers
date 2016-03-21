@@ -9,12 +9,10 @@ var DtdNewRoute = Ember.Route.extend({
   tabList: Ember.inject.service(),
   repository: inject('dtd'),
   redirectRoute: Ember.computed(function() { return 'dtds'; }),
+  closeTabRedirect: Ember.computed(function() { return 'admin'; }),
   modelName: Ember.computed(function() { return 'dtd'; }),
   templateModelField: Ember.computed(function() { return 'Definition'; }),
   transitionCallback() { 
-    const store = this.get('store');
-    // store.push('dtd-header', {id: 1, showingList:true, showingDetail:true, showingPreview:true, detail_model:true});
-    this.get('store').push('dtd-header', {id: 1, showingList:true, showingDetail:true, showingPreview:true, message: detail_msg});
   },
   model(params) {
     const store = this.get('store');
@@ -41,9 +39,10 @@ var DtdNewRoute = Ember.Route.extend({
       this.get('modelName'),
       this.get('templateModelField'),
       this.get('redirectRoute'),
-      true,
+      true,//newModel
       this.transitionCallback.bind(this),
-      model_id
+      model_id,
+      this.get('closeTabRedirect')
      );
   },
   renderTemplate(){

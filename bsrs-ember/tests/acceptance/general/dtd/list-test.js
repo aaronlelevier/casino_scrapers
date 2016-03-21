@@ -298,7 +298,7 @@ test('navigating to list route will show empty detail route', async assert => {
   assert.equal(page.emptyPreviewText, 'Preview');
   assert.ok(find('.t-dtd-empty-detail').text());
   await page.visitDetail();
-  assert.equal(page.titleText, t('admin.dtd.dtd'));
+  assert.equal(page.titleText, t('admin.dtd.detail'));
   assert.throws(find('.t-dtd-empty-detail'));
   await generalPage.clickAdmin();
   await generalPage.clickDTD();

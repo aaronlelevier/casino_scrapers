@@ -61,6 +61,9 @@ test('visiting /dtd/new', (assert) => {
   });
   page.keyFillIn(DTD.keyOne);
   page.descriptionFillIn(DTD.descriptionOne);
+  andThen(() => {
+
+  });
   const response = Ember.$.extend(true, {}, payload);
   xhr(DJANGO_DTD_URL, 'POST', JSON.stringify(dtd_new_payload), {}, 201, response);
   generalPage.save();
@@ -96,38 +99,38 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
   });
 });
 
-// test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
-//   clearxhr(detail_xhr);
-//   page.visitNew();
-//   page.keyFillIn(DTD.keyOne);
-//   generalPage.cancel();
-//   andThen(() => {
-//     waitFor(() => {
-//       assert.equal(currentURL(), DTD_NEW_URL);
-//       assert.equal(find('.t-modal').is(':visible'), true);
-//       let dtds = store.find('dtd');
-//       assert.equal(dtds.get('length'), 1);
-//     });
-//   });
-//   click('.t-modal-footer .t-modal-rollback-btn');
-//   andThen(() => {
-//     waitFor(() => {
-//       assert.equal(currentURL(), DTD_URL);
-//       let dtds = store.find('dtd');
-//       assert.equal(dtds.get('length'), 0);
-//       assert.equal(find('tr.t-grid-data').length, 0);
-//     });
-//   });
-// });
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+  clearxhr(detail_xhr);
+  page.visitNew();
+  page.keyFillIn(DTD.keyOne);
+  generalPage.cancel();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DTD_NEW_URL);
+      assert.equal(find('.t-modal').is(':visible'), true);
+      let dtds = store.find('dtd');
+      assert.equal(dtds.get('length'), 1);
+    });
+  });
+  click('.t-modal-footer .t-modal-rollback-btn');
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DTD_URL);
+      let dtds = store.find('dtd');
+      assert.equal(dtds.get('length'), 0);
+      assert.equal(find('tr.t-grid-data').length, 0);
+    });
+  });
+});
 
-// test('scott when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
-//   clearxhr(detail_xhr);
-//   page.visitNew();
-//   generalPage.cancel();
-//   andThen(() => {
-//     assert.equal(store.find('dtd').get('length'), 0);
-//   });
-// });
+test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
+  clearxhr(detail_xhr);
+  page.visitNew();
+  generalPage.cancel();
+  andThen(() => {
+    assert.equal(store.find('dtd').get('length'), 0);
+  });
+});
 
 ////TODO: button stays selected after first select
 //// test('scott adding a new dtd should allow for another new dtd to be created after the first is persisted', (assert) => {

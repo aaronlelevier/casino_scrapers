@@ -1,9 +1,9 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-    actions: {
-        closeTabMaster(id){
-            this.sendAction('closeTabMaster', id);
-        }
+  actions: {
+    closeTabMaster(tab, action){
+      this.sendAction('closeTabMaster', tab, action);
     }
+  }
 });

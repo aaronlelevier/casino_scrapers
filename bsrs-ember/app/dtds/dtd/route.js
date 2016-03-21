@@ -11,6 +11,7 @@ export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
   modelName: Ember.computed(function() { return 'dtd'; }),
   templateModelField: Ember.computed(function() { return 'description'; }),
   transitionCallback() {
+    //to prevent transitionTo in application route
     return;
   },
   tabList: Ember.inject.service(),
@@ -23,12 +24,11 @@ export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
     const priorities = this.get('priorities');
     const statuses = this.get('statuses');
     return this.findByIdScenario(dtd, pk, {statuses:statuses, priorities:priorities });
-
   },
   afterModel(model, transition) {
     const store = this.get('store');
-    let model_id = model.model ? model.model.get('id') : model.get('id');
-    let id = 'dtd123';
+    const model_id = model.model ? model.model.get('id') : model.get('id');
+    const id = 'dtd123';
     store.push('dtd', {id: model_id, singleTabId: id});
     this.get('tabList').createTab(id,
       this.routeName,

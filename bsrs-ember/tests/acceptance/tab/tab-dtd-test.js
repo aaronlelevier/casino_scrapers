@@ -16,7 +16,8 @@ import page from 'bsrs-ember/tests/pages/dtd';
 const PREFIX = config.APP.NAMESPACE;
 const BASE_DTD_URL = BASEURLS.base_dtd_url;
 const BASE_ROLE_URL = BASEURLS.base_roles_url;
-const DTD_URL = `${BASE_DTD_URL}`;
+const DTD_URL = BASE_DTD_URL;
+const ADMIN_URL = BASEURLS.base_admin_url;
 const NEW_URL = `${BASE_DTD_URL}/new/1`;
 const NEW_URL_2 = `${BASE_DTD_URL}/new/2`;
 const DETAIL_URL = `${BASE_DTD_URL}/${DTD.idOne}`;
@@ -315,7 +316,7 @@ test('(NEW) opening a new tab, navigating away and closing the tab should remove
   page.visit();
   click('.t-tab-close:eq(0)');
   andThen(() => {
-    assert.equal(currentURL(), DTD_URL);
+    assert.equal(currentURL(), ADMIN_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
     //TODO: this test should work
@@ -332,7 +333,7 @@ test('opening a tab, navigating away and closing the tab should remove the tab',
   });
   click('.t-tab-close:eq(0)');
   andThen(() => {
-    assert.equal(currentURL(), BASEURLS.base_admin_url);
+    assert.equal(currentURL(), ADMIN_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
