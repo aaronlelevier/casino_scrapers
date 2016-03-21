@@ -14,7 +14,7 @@ var store, location_repo, eventbus, tabList, run = Ember.run;
 
 module('unit: person-single component test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:location-level', 'model:location', 'model:person-location', 'service:eventbus', 'service:tab-list']);
+        store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:location-level', 'model:location', 'model:person-location', 'service:eventbus', 'service:tab-list', 'service:error']);
         eventbus = this.container.lookup('service:eventbus');
         tabList = this.container.lookup('service:tab-list');
         location_repo = repository.initialize(this.container, this.registry, 'location');
