@@ -90,12 +90,6 @@ class TreeDataListTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['id'], str(self.tree_data.id))
         self.assertEqual(data['key'], self.tree_data.key)
         self.assertEqual(data['description'], self.tree_data.description)
-        # Links
-        link = self.tree_data.links.first()
-        self.assertEqual(len(data['links']), 1)
-        self.assertEqual(data['links'][0]['id'], str(link.id))
-        self.assertEqual(data['links'][0]['order'], link.order)
-        self.assertEqual(data['links'][0]['text'], link.text)
 
 
 class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):

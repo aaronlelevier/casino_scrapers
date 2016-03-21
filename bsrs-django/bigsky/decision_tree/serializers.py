@@ -53,11 +53,9 @@ class TreeLinkSerializer(BaseCreateSerializer):
 
 class TreeDataListSerializer(BaseCreateSerializer):
 
-    links = TreeLinkLeafSerializer(many=True, read_only=True)
-
     class Meta:
         model = TreeData
-        fields = ('id', 'key', 'description', 'links',)
+        fields = ('id', 'key', 'description',)
 
 
 class TreeDataSerializer(BaseCreateSerializer):
