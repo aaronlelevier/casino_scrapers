@@ -1,5 +1,5 @@
 import PageObject from 'bsrs-ember/tests/page-object';
-let { visitable, clickable } = PageObject;
+let { visitable, clickable, text } = PageObject;
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const ADMIN_URL = BASEURLS.dashboard_url;
@@ -16,7 +16,8 @@ var GeneralPage = PageObject.create({
   modalIsHidden: PageObject.isHidden('.t-modal'),
   visitDashboard: visitable(ADMIN_URL),
   clickAdmin: clickable('.t-nav-admin'),
-  clickDTD: clickable('.t-nav-admin-dtd')
+  clickDTD: clickable('.t-nav-admin-dtd'),
+  errorText: text('.t-error-message')
 });
 
 export default GeneralPage;

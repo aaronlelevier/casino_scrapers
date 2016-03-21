@@ -285,42 +285,35 @@ test('navigating to list route shows 3 panes and message in dtd pane', (assert) 
 //   });
 // });
 
-test('ensure we are seeing the decision tree grid and not the standard grid', (assert) => {
+/* jshint ignore:start */
+test('ensure we are seeing the decision tree grid and not the standard grid', async assert => {
   clearxhr(detail_xhr);
-  page.visit();
-  andThen(() => {
-    assert.equal(find('h2.t-dtd-grid-title').length, 1);
-  });
+  await page.visit();
+  assert.equal(find('h2.t-dtd-grid-title').length, 1);
 });
 
-test('navigating to list route will show empty detail route', (assert) => {
-  page.visit();
-  andThen(() => {
-    assert.equal(page.emptyDetailText, 'Detail');
-    assert.equal(page.emptyPreviewText, 'Preview');
-    assert.ok(find('.t-dtd-empty-detail').text());
-  });
-  page.visitDetail();
-  andThen(() => {
-    assert.equal(page.titleText, t('admin.dtd.dtd'));
-    assert.throws(find('.t-dtd-empty-detail'));
-  });
-  generalPage.clickAdmin();
-  generalPage.clickDTD();
-  andThen(() => {
-    assert.equal(page.emptyDetailText, 'Detail');
-    assert.equal(page.emptyPreviewText, 'Preview');
-    assert.ok(find('.t-dtd-empty-detail').text());
-  });
+test('navigating to list route will show empty detail route', async assert => {
+  await page.visit();
+  assert.equal(page.emptyDetailText, 'Detail');
+  assert.equal(page.emptyPreviewText, 'Preview');
+  assert.ok(find('.t-dtd-empty-detail').text());
+  await page.visitDetail();
+  assert.equal(page.titleText, t('admin.dtd.dtd'));
+  assert.throws(find('.t-dtd-empty-detail'));
+  await generalPage.clickAdmin();
+  await generalPage.clickDTD();
+  assert.equal(page.emptyDetailText, 'Detail');
+  assert.equal(page.emptyPreviewText, 'Preview');
+  assert.ok(find('.t-dtd-empty-detail').text());
 });
 
-// /* jshint ignore:start */
-// test('404 error at list route', async assert => {
-//     clearxhr(list_xhr);
-//     const exception = `This record does not exist.`;
-//     xhr(`${endpoint}`, 'GET', null, {}, 404, {'list': exception});
-//     await page.visit();
-//     assert.equal(currentURL(), ERROR_URL);
-//     assert.equal(find('.t-error-message').text(), 'WAT');
-// });
-// /* jshint ignore:end */
+test('scott 404 error at list route', async assert => {
+  clearxhr(detail_xhr);
+  clearxhr(list_xhr);
+  const exception = `These records does not exist.`;
+  xhr(`${endpoint}?page=1`, 'GET', null, {}, 404, {'list': exception});
+  await page.visit();
+  assert.equal(currentURL(), ERROR_URL);
+  assert.equal(generalPage.errorText, 'WAT');
+});
+/* jshint ignore:end */

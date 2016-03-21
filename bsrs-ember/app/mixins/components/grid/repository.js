@@ -4,6 +4,7 @@ import PromiseMixin from 'ember-promise/mixins/promise';
 const { run } = Ember;
 
 var GridRepositoryMixin = Ember.Mixin.create({
+  error: Ember.inject.service(),
   create(new_pk) {
     let created;
     const pk = this.get('uuid').v4();
@@ -73,6 +74,8 @@ var GridRepositoryMixin = Ember.Mixin.create({
       const count = response.count;
       all.set('count', count);
       store.push('grid-count', { id: 1, count:count });
+    }, (xhr) => {
+      this.get('error').transToError();
     });
     return all;
   }
