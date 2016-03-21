@@ -108,14 +108,14 @@ test('dtd payload to update all fields', (assert) => {
   .requestFillIn(LINK.requestTwo)
   .textFillIn(LINK.textTwo)
   .action_buttonClick()
-  .linkTypeTwoClick()
-  .noteTypeTwoClick();
+  .linkTypeTwoClick();
+  // .noteTypeTwoClick();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-dtd-single-key').val(), DTD.keyTwo);
     assert.equal(find('.t-dtd-single-description').val(), DTD.descriptionTwo);
     assert.equal(find('.t-dtd-prompt').val(), DTD.promptTwo);
-    assert.equal(find('.t-dtd-note').val(), DTD.noteTwo);
+    // assert.equal(find('.t-dtd-note').val(), DTD.noteTwo);
     assert.notOk(find('.t-dtd-link-action_button').prop('checked'));
     assert.equal(find('.t-dtd-link-request').val(), LINK.requestTwo);
     assert.equal(find('.t-dtd-link-text').val(), LINK.textTwo);

@@ -199,38 +199,38 @@ test('link type selector is present and has a selection', function(assert) {
     assert.notOk(page.is_headerVisible);
 });
 
-test('note type selector is present and has a selection', function(assert) {
-    run(() => {
-        dtd = store.push('dtd', {
-          id: DTD.idOne,
-          dtd_link_fks: [DTDL.idOne],
-          note_type: DTD.noteTypeOne
-        });
-        store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, note_pk: LINK.idOne});
-        store.push('link', {id: LINK.idOne, request: LINK.requestOne, text: LINK.textOne,
-            action_button: LINK.action_buttonOne, is_header: LINK.is_headerOne});
-    });
-    this.set('model', dtd);
-    this.render(hbs`{{dtds/dtd-single model=model}}`);
-    assert.equal(page.noteTypeLength, 4);
-    assert.equal(page.noteTypeLabelOne, trans.t(DTD.noteTypeOne));
-    assert.equal(page.noteTypeLabelTwo, trans.t(DTD.noteTypeTwo));
-    assert.ok(page.noteTypeSelectedOne());
-    assert.notOk(page.noteTypeSelectedTwo());
-    // TODO: Is there some flip logic here based upon the note_type (like link_type)?
-    // assert.ok(page.action_buttonVisible);
-    // assert.notOk(page.is_headerVisible);
-    page.noteTypeTwoClick();
-    assert.ok(page.noteTypeSelectedTwo());
-    assert.equal(dtd.get('note_type'), DTD.noteTypeTwo);
-    assert.ok(dtd.get('isDirty'));
-    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-    page.noteTypeOneClick();
-    assert.ok(page.noteTypeSelectedOne());
-    assert.equal(dtd.get('note_type'), DTD.noteTypeOne);
-    assert.ok(dtd.get('isNotDirty'));
-    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-});
+// test('note type selector is present and has a selection', function(assert) {
+//     run(() => {
+//         dtd = store.push('dtd', {
+//           id: DTD.idOne,
+//           dtd_link_fks: [DTDL.idOne],
+//           note_type: DTD.noteTypeOne
+//         });
+//         store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, note_pk: LINK.idOne});
+//         store.push('link', {id: LINK.idOne, request: LINK.requestOne, text: LINK.textOne,
+//             action_button: LINK.action_buttonOne, is_header: LINK.is_headerOne});
+//     });
+//     this.set('model', dtd);
+//     this.render(hbs`{{dtds/dtd-single model=model}}`);
+//     assert.equal(page.noteTypeLength, 4);
+//     assert.equal(page.noteTypeLabelOne, trans.t(DTD.noteTypeOne));
+//     assert.equal(page.noteTypeLabelTwo, trans.t(DTD.noteTypeTwo));
+//     assert.ok(page.noteTypeSelectedOne());
+//     assert.notOk(page.noteTypeSelectedTwo());
+//     // TODO: Is there some flip logic here based upon the note_type (like link_type)?
+//     // assert.ok(page.action_buttonVisible);
+//     // assert.notOk(page.is_headerVisible);
+//     page.noteTypeTwoClick();
+//     assert.ok(page.noteTypeSelectedTwo());
+//     assert.equal(dtd.get('note_type'), DTD.noteTypeTwo);
+//     assert.ok(dtd.get('isDirty'));
+//     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+//     page.noteTypeOneClick();
+//     assert.ok(page.noteTypeSelectedOne());
+//     assert.equal(dtd.get('note_type'), DTD.noteTypeOne);
+//     assert.ok(dtd.get('isNotDirty'));
+//     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+// });
 
 // test('aaron link array must have at least one link', function(assert) {
 //     let links = store.find('link');

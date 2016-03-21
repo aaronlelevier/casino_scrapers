@@ -33,7 +33,7 @@ var dtd_payload_two = {
     description: DTD.descriptionTwo,
     prompt: DTD.promptTwo,
     note: DTD.noteTwo,
-    note_type: DTD.noteTypeTwo,
+    note_type: DTD.noteTypeOne,
     link_type: DTD.linkTypeTwo,
     links: [{
         id: LINK.idOne,

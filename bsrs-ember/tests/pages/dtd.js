@@ -86,8 +86,8 @@ var DTDPage = PageObject.create({
     noteTypeLength: count('.t-dtd-note_type'),
     noteTypeLabelOne: text('.t-dtd-note_type-label:eq(0)'),
     noteTypeLabelTwo: text('.t-dtd-note_type-label:eq(1)'),
-    noteTypeSelectedOne: () => Ember.$('.t-dtd-note_type:eq(0)').is(':checked'),
-    noteTypeSelectedTwo: () => Ember.$('.t-dtd-note_type:eq(1)').is(':checked'),
+    // noteTypeSelectedOne: () => Ember.$('.t-dtd-note_type:eq(0)').is(':checked'),
+    // noteTypeSelectedTwo: () => Ember.$('.t-dtd-note_type:eq(1)').is(':checked'),
     noteTypeOneClick: clickable('.t-dtd-note_type:eq(0)'),
     noteTypeTwoClick: clickable('.t-dtd-note_type:eq(1)'),
 
