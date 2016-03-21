@@ -67,18 +67,36 @@ en,admin.contractorAssignment.other,Contractor Assignments,Contractor Assignment
 en,admin.currency.eur,EUR,EUR,,"'admin.currency.eur':'EUR',",EUR,EUR
 en,admin.currency.jpy,JPY,JPY,,"'admin.currency.jpy':'JPY',",JPY,JPY
 en,admin.currency.usd,USD,USD,,"'admin.currency.usd':'USD',",USD,USD
+en,admin.dtd.new,New,New,,"'admin.dtd.new':'New',",New,New
 en,admin.dtd.detail,Detail,Detail,,"'admin.dtd.detail':'Detail',",Detail,Detail
 en,admin.dtd.empty-detail,Select a definition to get started,Select a definition to get started,,"'admin.dtd.empty-detail':'Select a definition to get started',",Select a definition to get started,Select a definition to get started
 en,admin.dtd.label.description,Description,Description,,"'admin.dtd.label.description':'Description',",Description,Description
+en,admin.dtd.label.field.asset_select,Asset select,Asset select,,"'admin.dtd.label.field.asset_select':'Asset select',",Asset select,Asset select
+en,admin.dtd.label.field.check_in,Check in,Check in,,"'admin.dtd.label.field.check_in':'Check in',",Check in,Check in
+en,admin.dtd.label.field.check_out,Check out,Check out,,"'admin.dtd.label.field.check_out':'Check out',",Check out,Check out
+en,admin.dtd.label.field.checkbox,Checkbox,Checkbox,,"'admin.dtd.label.field.checkbox':'Checkbox',",Checkbox,Checkbox
+en,admin.dtd.label.field.file,File,File,,"'admin.dtd.label.field.file':'File',",File,File
+en,admin.dtd.label.field.number,Number,Number,,"'admin.dtd.label.field.number':'Number',",Number,Number
+en,admin.dtd.label.field.select,Select,Select,,"'admin.dtd.label.field.select':'Select',",Select,Select
+en,admin.dtd.label.field.text,Text,Text,,"'admin.dtd.label.field.text':'Text',",Text,Text
+en,admin.dtd.label.field.textarea,Textarea,Textarea,,"'admin.dtd.label.field.textarea':'Textarea',",Textarea,Textarea
+en,admin.dtd.label.field.with_options,With options,With options,,"'admin.dtd.label.field.with_options':'With options',",With options,With options
 en,admin.dtd.label.fields,Fields,Fields,,"'admin.dtd.label.fields':'Fields',",Fields,Fields
 en,admin.dtd.label.key,Key,Key,,"'admin.dtd.label.key':'Key',",Key,Key
+en,admin.dtd.label.link_type,Link Type,Link Type,,"'admin.dtd.label.link_type':'Link Type',",Link Type,Link Type
 en,admin.dtd.label.link.action_button,Action Button,Action Button,,"'admin.dtd.label.link.action_button':'Action Button',",Action Button,Action Button
 en,admin.dtd.label.link.is_header,Is Header,Is Header,,"'admin.dtd.label.link.is_header':'Is Header',",Is Header,Is Header
 en,admin.dtd.label.link.priority,Priority,Priority,,"'admin.dtd.label.link.priority':'Priority',",Priority,Priority
 en,admin.dtd.label.link.request,Request,Request,,"'admin.dtd.label.link.request':'Request',",Request,Request
+en,admin.dtd.label.link.status,Status,Status,,"'admin.dtd.label.link.status':'Status',",Status,Status
 en,admin.dtd.label.link.text,Text,Text,,"'admin.dtd.label.link.text':'Text',",Text,Text
+en,admin.dtd.label.links,Links,Links,,"'admin.dtd.label.links':'Links',",Links,Links
 en,admin.dtd.label.note,Note,Note,,"'admin.dtd.label.note':'Note',",Note,Note
+en,admin.dtd.label.note_type,Note Type,Note Type,,"'admin.dtd.label.note_type':'Note Type',",Note Type,Note Type
 en,admin.dtd.label.prompt,Prompt,Prompt,,"'admin.dtd.label.prompt':'Prompt',",Prompt,Prompt
+en,admin.dtd.link_type.buttons,Button,Button,,"'admin.dtd.link_type.buttons':'Button',",Button,Button
+en,admin.dtd.link_type.links,List,List,,"'admin.dtd.link_type.links':'List',",List,List
+en,admin.dtd.link.add,Add Link,Add Link,,"'admin.dtd.link.add':'Add Link',",Add Link,Add Link
 en,admin.dtd.list,List,List,,"'admin.dtd.list':'List',",List,List
 en,admin.dtd.note_type.danger,Danger,Danger,,"'admin.dtd.note_type.danger':'Danger',",Danger,Danger
 en,admin.dtd.note_type.info,Info,Info,,"'admin.dtd.note_type.info':'Info',",Info,Info
@@ -88,6 +106,9 @@ en,admin.dtd.one,Decision Tree,Decision Tree,,"'admin.dtd.one':'Decision Tree',"
 en,admin.dtd.other,Decision Tree,Decision Tree,,"'admin.dtd.other':'Decision Tree',",Decision Tree,Decision Tree
 en,admin.dtd.preview,Preview,Preview,,"'admin.dtd.preview':'Preview',",Preview,Preview
 en,admin.dtd.search,Search Definitions,Search Definitions,,"'admin.dtd.search':'Search Definitions',",Search Definitions,Search Definitions
+en,admin.dtd.title.display,Display,Display,,"'admin.dtd.title.display':'Display',",Display,Display
+en,admin.dtd.title.fields,Fields,Fields,,"'admin.dtd.title.fields':'Fields',",Fields,Fields
+en,admin.dtd.title.navigation,Navigation,Navigation,,"'admin.dtd.title.navigation':'Navigation',",Navigation,Navigation
 en,admin.email.add,Add Email,Add Email,,"'admin.email.add':'Add Email',",Add Email,Add Email
 en,admin.emailtype.personal,Personal,Personal,,"'admin.emailtype.personal':'Personal',",Personal,Personal
 en,admin.emailtype.work,Work,Work,,"'admin.emailtype.work':'Work',",Work,Work
@@ -160,11 +181,11 @@ en,admin.person.label.username,Username,Username,,"'admin.person.label.username'
 en,admin.person.new,New Person,New Person,,"'admin.person.new':'New Person',",New Person,New Person
 en,admin.person.one,Person,Person,,"'admin.person.one':'Person',",Person,Person
 en,admin.person.other,People,People,,"'admin.person.other':'People',",People,People
-en,admin.person.unique-username,Username {{value}} is already taken,Username {{value}} is already taken,,"'admin.person.unique-username':'Username {{value}} is already taken',",Username {{value_var_ is already taken,Username _value_var_ is already taken
 en,admin.person.search,Search People,Search People,,"'admin.person.search':'Search People',",Search People,Search People
 en,admin.person.status.active,Active,Active,,"'admin.person.status.active':'Active',",Active,Active
 en,admin.person.status.expired,Expired,Expired,,"'admin.person.status.expired':'Expired',",Expired,Expired
 en,admin.person.status.inactive,Inactive,Inactive,,"'admin.person.status.inactive':'Inactive',",Inactive,Inactive
+en,admin.person.unique-username,Username {{value}} is already taken,Username {{value}} is already taken,,"'admin.person.unique-username':'Username {{value}} is already taken',",Username {{value_var_ is already taken,Username _value_var_ is already taken
 en,admin.phone.add,Add Phone Number,Add Phone Number,,"'admin.phone.add':'Add Phone Number',",Add Phone Number,Add Phone Number
 en,admin.phone.number,Phone Number,Phone Number,,"'admin.phone.number':'Phone Number',",Phone Number,Phone Number
 en,admin.phone.numbers,Phone Numbers,Phone Numbers,,"'admin.phone.numbers':'Phone Numbers',",Phone Numbers,Phone Numbers
@@ -227,6 +248,8 @@ en,crud.save.error,Error saving {{model}}.,Error saving {{model}}.,,"'crud.save.
 en,crud.save.success,{{model}} saved successfully.,{{model}} saved successfully.,,"'crud.save.success':'{{model}} saved successfully.',",{{model_var_ saved successfully.,_model_var_ saved successfully.
 en,crud.titles.edit,Edit {{model}},Edit {{model}},,"'crud.titles.edit':'Edit {{model}}',",Edit {{model_var_,Edit _model_var_
 en,crud.titles.new,New {{model}},New {{model}},,"'crud.titles.new':'New {{model}}',",New {{model_var_,New _model_var_
+en,crud.duplicate.button,Duplicate,Duplicate,,"'crud.duplicate.button':'Duplicate',",Duplicate,Duplicate
+en,crud.print.button,Print,Print,,"'crud.print.button':'Print',",Print,Print
 en,crud.update.button,Update,Update,,"'crud.update.button':'Update',",Update,Update
 en,crud.yes,Yes,Yes,,"'crud.yes':'Yes',",Yes,Yes
 en,dashboard.welcome,Welcome,Welcome,,"'dashboard.welcome':'Welcome',",Welcome,Welcome
