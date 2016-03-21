@@ -11,7 +11,7 @@ var store, location_level_repo, run = Ember.run;
 
 module('prevent duplicate name tests', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:location-level']);
+        store = module_registry(this.container, this.registry, ['model:location-level', 'service:error']);
         location_level_repo = repository.initialize(this.container, this.registry, 'location-level');
         location_level_repo.peek = (filter) => { return store.find('location-level', filter); };
     }

@@ -170,7 +170,9 @@ var ApplicationRoute = Ember.Route.extend({
         }
         const closeTabId = model.get('singleTabId') ? model.get('singleTabId') : model.get('id');
         if(temp === tab_id || tab.get('newModel')){
-          (closeTabAction && tab.get('closeTabRedirect')) ? this.transitionTo(tab.get('closeTabRedirect')) : this.transitionTo(tab.get('redirect'));
+          /* jshint ignore:start */
+          closeTabAction && tab.get('closeTabRedirect') ? this.transitionTo(tab.get('closeTabRedirect')) : this.transitionTo(tab.get('redirect'));
+          /* jshint ignore:end */
           if (tab.get('newModel') && !tab.get('saveModel')) {
             this.get('tabList').closeTab(closeTabId);
             //TODO: check as to why this is needed
