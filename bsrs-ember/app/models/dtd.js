@@ -11,6 +11,10 @@ const Validations = buildValidations({
     presence: true,
     message: 'Key must be provided'
   }),
+  description: validator('presence', {
+    presence: true,
+    message: 'Description must be provided'
+  }),
   links: validator(function(value, options, model, attribute) {
     return model.get(attribute).reduce((prev, model) => {
       return prev && model.get('validations').get('isValid');
@@ -127,7 +131,15 @@ var DTDModel = Model.extend(Validations, {
       this.get('store').remove('dtd', this.get('id'));
     });
   },
-  keyErrorMsg: Ember.computed.alias('validations.attrs.key.message')
+  saved: false,
+  keyErrorMsg: Ember.computed('saved', function(){
+    return this.get('validations.isValid') ? undefined : this.get('saved') ?
+      this.get('validations.attrs.key.message') : undefined;
+  }),
+  descriptionErrorMsg: Ember.computed('saved', function(){
+    return this.get('validations.isValid') ? undefined : this.get('saved') ?
+      this.get('validations.attrs.description.message') : undefined;
+  })
 });
 
 

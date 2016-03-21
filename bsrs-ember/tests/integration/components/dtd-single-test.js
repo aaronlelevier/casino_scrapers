@@ -43,10 +43,21 @@ test('validation on dtd key works as expected', function(assert) {
     this.render(hbs`{{dtds/dtd-single model=model}}`);
     let $component = this.$('.t-dtd-key-error');
     assert.equal($component.text().trim(), '');
-    // assert.ok($component.is(':hidden'));
     generalPage.save();
+    $component = this.$('.t-dtd-key-error');
     assert.ok($component.is(':visible'));
     assert.equal($component.text().trim(), 'Key must be provided');
+});
+
+test('validation on dtd description works as expected', function(assert) {
+    this.set('model', dtd);
+    this.render(hbs`{{dtds/dtd-single model=model}}`);
+    let $component = this.$('.t-dtd-description-error');
+    assert.equal($component.text().trim(), '');
+    generalPage.save();
+    $component = this.$('.t-dtd-description-error');
+    assert.ok($component.is(':visible'));
+    assert.equal($component.text().trim(), 'Description must be provided');
 });
 
 // Links

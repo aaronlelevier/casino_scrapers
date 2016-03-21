@@ -6,8 +6,8 @@ import inject from 'bsrs-ember/utilities/inject';
 export default Ember.Component.extend(TabMixin, EditMixin, {
   repository: inject('dtd'),
   tab() {
-      let service = this.get('tabList');
-      return service.findTab('dtd123');
+    let service = this.get('tabList');
+    return service.findTab('dtd123');
   },
   actions: {
     save(update=true) {
@@ -18,10 +18,10 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
           this.sendAction('editDTD');
         }
       } else {
+        this.get('model').set('saved', true);
         this.get('model.links').forEach((link) => {
           link.set('saved', true);
         });
-        this.set('keyErrorMsg', this.get('model.validations.attrs.key.message'));
       }
     },
     setLinkType(type){
@@ -30,6 +30,5 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
     setNoteType(type) {
       this.get('model').set('note_type', type);
     },
-  },
-  keyIsInvalid: Ember.computed.alias('model.validations.attrs.key.isInvalid')
+  }
 });

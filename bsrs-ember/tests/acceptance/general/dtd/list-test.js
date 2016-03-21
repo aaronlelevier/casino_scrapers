@@ -307,7 +307,7 @@ test('navigating to list route will show empty detail route', async assert => {
   assert.ok(find('.t-dtd-empty-detail').text());
 });
 
-test('scott 404 error at list route', async assert => {
+test('404 error at list route', async assert => {
   clearxhr(detail_xhr);
   clearxhr(list_xhr);
   const exception = `These records does not exist.`;
