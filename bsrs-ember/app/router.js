@@ -60,6 +60,7 @@ Router.map(function() {
     this.route('dtds', function() {
         this.route('new', {path: 'new/:new_id'});
         this.route('dtd', {path: '/:dtd_id'});
+        this.route('dtd-error');
     });
     this.route('work-orders');
     this.route('purchase-orders');

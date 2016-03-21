@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import TabRoute from 'bsrs-ember/route/tab/route';
-import FindById from 'bsrs-ember/mixins/route/findById';
+import FindById from 'bsrs-ember/mixins/route/findById2';
 import PriorityMixin from 'bsrs-ember/mixins/route/priority';
 //start-non-standard
 import computed from 'ember-computed-decorators';

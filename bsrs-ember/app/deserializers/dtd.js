@@ -40,6 +40,7 @@ var DTDDeserializer = Ember.Object.extend({
             dtd.save();
             return_dtd = dtd;
         }
+        return return_dtd;
     },
     deserialize_list(response) {
         const store = this.get('store');

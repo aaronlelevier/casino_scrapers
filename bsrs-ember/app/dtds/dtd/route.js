@@ -3,8 +3,9 @@ import inject from 'bsrs-ember/utilities/inject';
 import TabRoute from 'bsrs-ember/route/tab/route';
 import PriorityMixin from 'bsrs-ember/mixins/route/priority';
 import StatusMixin from 'bsrs-ember/mixins/route/status';
+import FindById from 'bsrs-ember/mixins/route/findById2';
 
-export default Ember.Route.extend(PriorityMixin, StatusMixin, {
+export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
   repository: inject('dtd'),
   redirectRoute: Ember.computed(function() { return 'admin'; }),
   modelName: Ember.computed(function() { return 'dtd'; }),
@@ -19,14 +20,10 @@ export default Ember.Route.extend(PriorityMixin, StatusMixin, {
     const pk = params.dtd_id;
     const repository = this.get('repository');
     let dtd = repository.fetch(pk);
-    if(!dtd.get('id') || dtd.get('isNotDirtyOrRelatedNotDirty')){
-      dtd = repository.findById(pk);
-    }
-    return {
-      model: dtd,
-      priorities: this.get('priorities'),
-      statuses: this.get('statuses')
-    };
+    const priorities = this.get('priorities');
+    const statuses = this.get('statuses');
+    return this.findByIdScenario(dtd, pk, {statuses:statuses, priorities:priorities });
+
   },
   afterModel(model, transition) {
     const store = this.get('store');
@@ -58,4 +55,9 @@ export default Ember.Route.extend(PriorityMixin, StatusMixin, {
     controller.set('priorities', hash.priorities);
     controller.set('statuses', hash.statuses);
   },
+  actions: {
+    error(){
+      return this.transitionTo('dtds.dtd-error');
+    }
+  }
 });

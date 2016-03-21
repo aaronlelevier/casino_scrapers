@@ -14,7 +14,8 @@ var BASEURLS = {
     base_wos_url: '/work-orders',
     base_setting_url: '/admin/settings',
     dashboard_url: '/dashboard',
-    error_url: '/error'
+    error_url: '/error',
+    dtd_error_url: '/dtds/dtd-error'
 };
 
 

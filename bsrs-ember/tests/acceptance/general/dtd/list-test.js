@@ -20,14 +20,15 @@ const DTD_URL = `${BASE_URL}`;
 const DETAIL_URL = `${BASE_URL}/${DTD.idOne}`;
 const DETAIL_PG2_TWO_URL = `${BASE_URL}/${DTD.idGridTwo}`;
 const DT_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
+const ERROR_URL = BASEURLS.error_url;
 
-let application, detail_xhr;
+let application, endpoint, detail_xhr, list_xhr;
 
 module('Acceptance | dtd list test', {
   beforeEach() {
     application = startApp();
-    let endpoint = `${PREFIX}${BASE_URL}/`;
-    xhr(`${endpoint}?page=1`,'GET', null, {}, 200, DTDF.list());
+    endpoint = `${PREFIX}${BASE_URL}/`;
+    list_xhr = xhr(`${endpoint}?page=1`,'GET', null, {}, 200, DTDF.list());
     const detail_endpoint = `${PREFIX}${BASE_URL}/`;
     const detail_data = DTDF.detail(DTD.idOne);
     detail_xhr = xhr(`${detail_endpoint}${DTD.idOne}/`, 'GET', null, {}, 200, detail_data);
@@ -312,3 +313,14 @@ test('navigating to list route will show empty detail route', (assert) => {
     assert.ok(find('.t-dtd-empty-detail').text());
   });
 });
+
+// /* jshint ignore:start */
+// test('404 error at list route', async assert => {
+//     clearxhr(list_xhr);
+//     const exception = `This record does not exist.`;
+//     xhr(`${endpoint}`, 'GET', null, {}, 404, {'list': exception});
+//     await page.visit();
+//     assert.equal(currentURL(), ERROR_URL);
+//     assert.equal(find('.t-error-message').text(), 'WAT');
+// });
+// /* jshint ignore:end */

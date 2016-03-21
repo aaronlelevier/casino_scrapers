@@ -26,6 +26,8 @@ const DTD_URL = `${BASE_URL}`;
 const DETAIL_URL = `${BASE_URL}/${DTD.idOne}`;
 const DT_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
 const BACKSPACE = {keyCode: 8};
+const DTD_ERROR_URL = BASEURLS.dtd_error_url;
+const PAGE_SIZE = config.APP.PAGE_SIZE;
 
 let application, store, endpoint, list_xhr, detail_xhr, detail_data, original_uuid;
 
@@ -274,3 +276,15 @@ test('click add-link, and fill in', (assert) => {
     assert.equal(currentURL(), DETAIL_URL);
   });
 });
+
+/* jshint ignore:start */
+test('deep linking with an xhr with a 404 status code will show up in the error component (dtd)', async assert => {
+    clearxhr(detail_xhr);
+    const exception = `This record does not exist.`;
+    xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+    await page.visitDetail();
+    assert.equal(currentURL(), DTD_ERROR_URL);
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-error-message').text(), 'WAT');
+});
+/* jshint ignore:end */

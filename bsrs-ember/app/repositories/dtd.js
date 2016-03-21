@@ -4,11 +4,12 @@ import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
+import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById2';
 
 var PREFIX = config.APP.NAMESPACE;
 var DTD_URL = `${PREFIX}/dtds/`;
 
-var DTDRepo = Ember.Object.extend(GridRepositoryMixin, {
+var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
   type: Ember.computed(function() { return 'dtd'; }),
   typeGrid: Ember.computed(function() { return 'dtd'; }),
   url: Ember.computed(function() { return DTD_URL; }),
@@ -23,14 +24,6 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, {
   },
   fetch(id) {
     return this.get('store').find('dtd', id);
-  },
-  findById(id) {
-    let model = this.get('store').find('dtd', id);
-    model.id = id;
-    PromiseMixin.xhr(`${DTD_URL}${id}/`, 'GET').then((response) => {
-      this.get('DTDDeserializer').deserialize(response, id);
-    });
-    return model;
   }
 });
 
