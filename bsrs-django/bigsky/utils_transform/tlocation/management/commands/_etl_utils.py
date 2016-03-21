@@ -1,6 +1,8 @@
 from contact.models import (State, Country, PhoneNumber, PhoneNumberType,
     Email, EmailType, Address, AddressType)
 from location.models import Location
+from utils_transform.tlocation.models import LOCATION_REGION, LOCATION_DISTRICT
+
 
 import logging
 logger = logging.getLogger(__name__)
@@ -83,7 +85,7 @@ def join_company_to_region(company, related_instance):
 
 
 def join_region_to_district(domino_location, related_instance):
-    regions = Location.objects.filter(location_level__name='region')
+    regions = Location.objects.filter(location_level__name=LOCATION_REGION)
 
     try:
         region = regions.get(number=domino_location.regionnumber)
@@ -95,7 +97,7 @@ def join_region_to_district(domino_location, related_instance):
 
 
 def join_district_to_store(domino_location, related_instance):
-    districts = Location.objects.filter(location_level__name='district')
+    districts = Location.objects.filter(location_level__name=LOCATION_DISTRICT)
 
     try:
         district = districts.get(number=domino_location.distnumber)

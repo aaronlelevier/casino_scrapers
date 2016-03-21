@@ -8,7 +8,8 @@ from location.models import Location, LocationLevel
 from utils_transform.tlocation.management.commands._etl_utils import (
     create_phone_numbers, create_email, create_address, _resolve_none_str, _resolve_state,
     _resolve_country, join_company_to_region, join_region_to_district, join_district_to_store)
-from utils_transform.tlocation.models import LocationRegion
+from utils_transform.tlocation.models import (LocationRegion,
+    LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE)
 from utils_transform.tlocation.tests.factory import (
     create_location_region, create_location_district, create_location_store)
 
@@ -26,7 +27,7 @@ class LocationRegionTests(TestCase):
         self.location_region = create_location_region()
 
         # Next-Gen: Location / LocationLevel
-        self.location_level = LocationLevel.objects.get(name='region')
+        self.location_level = LocationLevel.objects.get(name=LOCATION_REGION)
         self.location = Location.objects.create(location_level=self.location_level,
             name=self.location_region.name, number=self.location_region.number)
 
@@ -217,12 +218,12 @@ class LocationDistrictTests(TestCase):
         self.domino_district = create_location_district(self.domino_region)
 
         # Next-Gen: Location / LocationLevel
-        self.region_location_level = LocationLevel.objects.get(name='region')
+        self.region_location_level = LocationLevel.objects.get(name=LOCATION_REGION)
         self.region_location = Location.objects.create(
             location_level=self.region_location_level,
             name=self.domino_region.name, number=self.domino_region.number)
 
-        self.district_location_level = LocationLevel.objects.get(name='district')
+        self.district_location_level = LocationLevel.objects.get(name=LOCATION_DISTRICT)
         self.district_location = Location.objects.create(
             location_level=self.district_location_level,
             name=self.domino_district.name, number=self.domino_district.number)
@@ -260,17 +261,17 @@ class LocationStore(TestCase):
         self.domino_store = create_location_store(self.domino_district)
 
         # Next-Gen: Location / LocationLevel
-        self.region_location_level = LocationLevel.objects.get(name='region')
+        self.region_location_level = LocationLevel.objects.get(name=LOCATION_REGION)
         self.region_location = Location.objects.create(
             location_level=self.region_location_level,
             name=self.domino_region.name, number=self.domino_region.number)
 
-        self.district_location_level = LocationLevel.objects.get(name='district')
+        self.district_location_level = LocationLevel.objects.get(name=LOCATION_DISTRICT)
         self.district_location = Location.objects.create(
             location_level=self.district_location_level,
             name=self.domino_district.name, number=self.domino_district.number)
 
-        self.store_location_level = LocationLevel.objects.get(name='store')
+        self.store_location_level = LocationLevel.objects.get(name=LOCATION_STORE)
         self.store_location = Location.objects.create(
             location_level=self.store_location_level,
             name=self.domino_store.name, number=self.domino_store.number)

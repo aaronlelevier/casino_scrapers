@@ -1,6 +1,13 @@
 from django.db import models
 
 
+LOCATION_COMPANY = 'Company'
+LOCATION_REGION = 'Region'
+LOCATION_DISTRICT = 'District'
+LOCATION_STORE = 'Store'
+LOCATION_FMU = 'Facility Management Unit'
+
+
 class LocationRegion(models.Model):
     number = models.TextField()
     name = models.TextField()
