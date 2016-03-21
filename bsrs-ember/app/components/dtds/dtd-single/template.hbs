@@ -30,7 +30,16 @@
           <div class="row">
             <div class="col-md-12">
               {{#form-group title="admin.dtd.label.note" for="note"}}
-              {{textarea autoresize=true placeholder=(t "admin.dtd.label.note") value=model.note class="form-control t-dtd-note" id="dtd_note"}}
+                <div class="input-group">
+                  <span class="input-group-btn">
+                    <select class="t-dtd-note_type dtd-note-type form-control" onchange={{action (action "setNoteType") value="target.value"}}>
+                    {{#each model.note_types as |type|}}
+                      <option value={{type}} selected={{is-equal model.note_type type}}>{{t type}}</option>
+                    {{/each}}
+                    </select>
+                  </span>
+                  {{textarea autoresize=true placeholder=(t "admin.dtd.label.note") value=model.note class="form-control t-dtd-note" id="dtd_note"}}
+                </div>
               {{/form-group}}
             </div>
           </div>
@@ -54,9 +63,9 @@
           <div class="row">
             <div class="col-md-12">
               {{#form-group title="admin.dtd.label.fields" for="fields"}}
-              {{dtds/dtd-field
+              <!-- {{dtds/dtd-field
                 model=model
-              }}
+              }} -->
               {{/form-group}}
             </div>
           </div>
@@ -72,16 +81,6 @@
             				<span class="t-dtd-link_type-label">{{t type}}</span>
             			</label>
             		</div>
-              {{/each}}
-            {{/form-group}}
-            {{#form-group title="admin.dtd.label.note_type" for="note_type"}}
-              {{#each model.note_types as |type|}}
-                <div class="radio">
-                  <label>
-                    <input type="radio" value={{type}} onchange={{action 'setNoteType' type}} class="t-dtd-note_type" checked={{is-equal model.note_type type}} name="note_type">
-                    <span class="t-dtd-note_type-label">{{t type}}</span>
-                  </label>
-                </div>
               {{/each}}
             {{/form-group}}
             {{#form-group title="admin.dtd.label.links" for=""}}
