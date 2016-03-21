@@ -4,7 +4,7 @@ import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
-// import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
+import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import DTDL from 'bsrs-ember/vendor/defaults/dtd-link';
 import LINK from 'bsrs-ember/vendor/defaults/link';
@@ -161,20 +161,20 @@ test('must have one link, cant remove last link, remove btn clears link', functi
     assert.equal(ticketPage.statusInput.split(' ').slice(0,-1).join(' '), '');
 });
 
-// test('add and remove dtd links', function(assert) {
-//     run(() => {
-//         dtd = store.push('dtd', {id: DTD.idOne});
-//         uuid = store.push('uuid', {id: 1});
-//         dtd.add_link({id: uuid.v4()});
-//     });
-//     this.set('model', dtd);
-//     this.render(hbs`{{dtds/dtd-single model=model}}`);
-//     let $component = this.$('.t-input-multi-dtd-link');
-//     assert.ok($component.is(':visible'));
-//     assert.equal(page.textIsRequiredError(), '');
-//     generalPage.save();
-//     assert.equal(page.textIsRequiredError(), 'Text must be provided');
-// });
+test('add and remove dtd links', function(assert) {
+    run(() => {
+        dtd = store.push('dtd', {id: DTD.idOne});
+        uuid = store.push('uuid', {id: 1});
+        dtd.add_link({id: uuid.v4()});
+    });
+    this.set('model', dtd);
+    this.render(hbs`{{dtds/dtd-single model=model}}`);
+    let $component = this.$('.t-input-multi-dtd-link');
+    assert.ok($component.is(':visible'));
+    assert.equal(page.textIsRequiredError(), '');
+    generalPage.save();
+    assert.equal(page.textIsRequiredError(), 'Text must be provided');
+});
 
 test('link type selector is present and has a selection', function(assert) {
     run(() => {
@@ -210,51 +210,33 @@ test('link type selector is present and has a selection', function(assert) {
     assert.notOk(page.is_headerVisible);
 });
 
-// test('note type selector is present and has a selection', function(assert) {
-//     run(() => {
-//         dtd = store.push('dtd', {
-//           id: DTD.idOne,
-//           dtd_link_fks: [DTDL.idOne],
-//           note_type: DTD.noteTypeOne
-//         });
-//         store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, note_pk: LINK.idOne});
-//         store.push('link', {id: LINK.idOne, request: LINK.requestOne, text: LINK.textOne,
-//             action_button: LINK.action_buttonOne, is_header: LINK.is_headerOne});
-//     });
-//     this.set('model', dtd);
-//     this.render(hbs`{{dtds/dtd-single model=model}}`);
-//     assert.equal(page.noteTypeLength, 4);
-//     assert.equal(page.noteTypeLabelOne, trans.t(DTD.noteTypeOne));
-//     assert.equal(page.noteTypeLabelTwo, trans.t(DTD.noteTypeTwo));
-//     assert.ok(page.noteTypeSelectedOne());
-//     assert.notOk(page.noteTypeSelectedTwo());
-//     // TODO: Is there some flip logic here based upon the note_type (like link_type)?
-//     // assert.ok(page.action_buttonVisible);
-//     // assert.notOk(page.is_headerVisible);
-//     page.noteTypeTwoClick();
-//     assert.ok(page.noteTypeSelectedTwo());
-//     assert.equal(dtd.get('note_type'), DTD.noteTypeTwo);
-//     assert.ok(dtd.get('isDirty'));
-//     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-//     page.noteTypeOneClick();
-//     assert.ok(page.noteTypeSelectedOne());
-//     assert.equal(dtd.get('note_type'), DTD.noteTypeOne);
-//     assert.ok(dtd.get('isNotDirty'));
-//     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-// });
-
-// test('aaron link array must have at least one link', function(assert) {
-//     let links = store.find('link');
-//     run(() => {
-//         dtd = store.push('dtd', {id: 1});
-//     });
-//     this.set('model', dtd);
-//     this.render(hbs`{{dtds/dtd-single model=model}}`);
-//     let $component = this.$('.t-input-multi-dtd-link');
-//     assert.ok($component.is(':visible'));
-//     generalPage.save();
-//     assert.equal($component.find('.t-dtd-links-length-error').length, 1);
-// });
+test('note type selector is present and has a selection', function(assert) {
+    run(() => {
+        dtd = store.push('dtd', {
+          id: DTD.idOne,
+          dtd_link_fks: [DTDL.idOne],
+          note_type: DTD.noteTypeOne
+        });
+        store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, note_pk: LINK.idOne});
+        store.push('link', {id: LINK.idOne, request: LINK.requestOne, text: LINK.textOne,
+            action_button: LINK.action_buttonOne, is_header: LINK.is_headerOne});
+    });
+    this.set('model', dtd);
+    this.render(hbs`{{dtds/dtd-single model=model}}`);
+    assert.equal(page.noteTypeInput, trans.t(DTD.noteTypeOne));
+    assert.ok(dtd.get('isNotDirty'));
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+    clickTrigger('.t-dtd-note_type');
+    $(`.ember-power-select-option:contains(${DTD.noteTypeTwo})`).mouseup();
+    assert.equal(page.noteTypeInput, trans.t(DTD.noteTypeTwo));
+    assert.ok(dtd.get('isDirty'));
+    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+    clickTrigger('.t-dtd-note_type');
+    $(`.ember-power-select-option:contains(${DTD.noteTypeOne})`).mouseup();
+    assert.equal(page.noteTypeInput, trans.t(DTD.noteTypeOne));
+    assert.ok(dtd.get('isNotDirty'));
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+});
 
 test('preview updates as changes are made to detail', function(assert) {
     run(() => {

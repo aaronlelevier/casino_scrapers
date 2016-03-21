@@ -4,7 +4,9 @@ let { value, visitable, fillable, clickable, hasClass, count, text } = PageObjec
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
+import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
+const DROPDOWN = options;
 const BASE_URL = BASEURLS.base_dtd_url;
 const DTDS_URL = `${BASE_URL}`;
 const NEW_URL = `${BASE_URL}/new/1`;
@@ -84,12 +86,9 @@ var DTDPage = PageObject.create({
     previewActionButton: hasClass('btn-primary', '.t-dtd-preview-btn'),
 
     noteTypeLength: count('.t-dtd-note_type'),
-    noteTypeLabelOne: text('.t-dtd-note_type-label:eq(0)'),
-    noteTypeLabelTwo: text('.t-dtd-note_type-label:eq(1)'),
-    // noteTypeSelectedOne: () => Ember.$('.t-dtd-note_type:eq(0)').is(':checked'),
-    // noteTypeSelectedTwo: () => Ember.$('.t-dtd-note_type:eq(1)').is(':checked'),
-    noteTypeOneClick: clickable('.t-dtd-note_type:eq(0)'),
-    noteTypeTwoClick: clickable('.t-dtd-note_type:eq(1)'),
+    noteTypeInput: text('.t-dtd-note_type'),
+    noteTypeClickDropdown: clickable('.t-dtd-note_type > .ember-basic-dropdown-trigger'),
+    noteTypeClickOptionTwo: clickable(`.ember-power-select-option:contains(${DTD.noteTypeTwo})`, { scope: DROPDOWN }),
 
     fieldLabelOne: value('.t-dtd-field-label:eq(0)'),
     fieldLabelOneFillin: fillable('.t-dtd-field-label:eq(0)'),
