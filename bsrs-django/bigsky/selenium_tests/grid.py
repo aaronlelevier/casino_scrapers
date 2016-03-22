@@ -2,6 +2,8 @@ from __future__ import absolute_import
 
 import unittest
 import uuid
+import random
+import string
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
@@ -13,6 +15,9 @@ from helpers import (
     LoginMixin, FillInHelper, JavascriptMixin,
     NavPage, GeneralElementsPage, Wait,
 )
+
+def rand_chars(number=10):
+    return "a"+''.join([str(random.choice(string.ascii_letters)) for x in range(number)])
 
 class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
 
@@ -29,7 +34,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.gen_elem_page = GeneralElementsPage(self.driver)
         # Go to Admin Page
         self.nav_page = NavPage(self.driver)
-        import time; time.sleep(3)
+        import time; time.sleep(1)
         self.nav_page.click_admin()
         # Go to Person Area
         self.nav_page.find_people_link().click()
@@ -199,20 +204,24 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
         self.assertEqual(self.lorem[-1], usernames[0].text)
 
-        # # Save FilterSet
-        # modal = self.wait_for_xhr_request("t-show-save-filterset-modal", debounce=True)
-        # modal.click()
-        # modal_input = self.wait_for_xhr_request("t-filterset-name-input")
-        # modal_input.send_keys(search_name)
-        # self.wait_for_xhr_request("t-filterset-save-btn").click()
-        # self.driver.find_element_by_link_text(search_name)
+        # Save FilterSet
+        try:
+            modal = self.wait_for_xhr_request("t-show-save-filterset-modal", debounce=True)
+            modal.click()
+            modal_input = self.wait_for_xhr_request("t-filterset-name-input")
+            modal_input.send_keys(search_name)
+            self.wait_for_xhr_request("t-filterset-save-btn").click()
+            self.driver.find_element_by_link_text(search_name)
+            # Reset Grid - Hard refresh OK b/c saved in the DB
+            self.driver.refresh()
+            self.wait_for_xhr_request("t-reset-grid").click()
+            self.driver.find_element_by_link_text(search_name).click()
+            usernames = self.wait_for_xhr_request("t-person-username", plural=True)
+            self.assertEqual(self.lorem[-1], usernames[0].text)
+        except NoSuchElementException:
+            # filterset already applied b/c ran tests multiple times.  Jenkins should be ok b/c builds new everytime
+            pass
 
-        # # Reset Grid - Hard refresh OK b/c saved in the DB
-        # self.driver.refresh()
-        # self.wait_for_xhr_request("t-reset-grid").click()
-        # self.driver.find_element_by_link_text(search_name).click()
-        # usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        # self.assertEqual(self.lorem[-1], usernames[0].text)
 
 
 if __name__ == "__main__":
