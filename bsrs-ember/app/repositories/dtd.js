@@ -13,6 +13,7 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
   type: Ember.computed(function() { return 'dtd'; }),
   typeGrid: Ember.computed(function() { return 'dtd'; }),
   url: Ember.computed(function() { return DTD_URL; }),
+  errorUrl: Ember.computed(function() { return 'dtds.dtd-error'; }),
   uuid: injectUUID('uuid'),
   DTDDeserializer: inject('dtd'),
   deserializer: Ember.computed.alias('DTDDeserializer'),

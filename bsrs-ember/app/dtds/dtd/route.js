@@ -27,7 +27,7 @@ export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
   },
   afterModel(model, transition) {
     const store = this.get('store');
-    const model_id = model.model ? model.model.get('id') : model.get('id');
+    const model_id = model.model ? model.model.filter_value : model.get('id');
     const id = 'dtd123';
     store.push('dtd', {id: model_id, singleTabId: id});
     this.get('tabList').createTab(id,
