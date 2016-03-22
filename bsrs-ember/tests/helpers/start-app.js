@@ -5,7 +5,7 @@ import windowProxy from 'bsrs-ember/utilities/window-proxy';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import random from 'bsrs-ember/models/random';
-import t from './t';
+import './ember-i18n/test-helpers';
 import substring_up_to_num from './substring_up_to_num';
 
 function ajax(app, url, verb, data, headers, status, response) {

@@ -15,7 +15,7 @@
     "jquery-mousewheel": "~3.1.4",
     "antiscroll": "fa3f81d3c07b647a63036da1de859fcaf1355993",
     "foundation": "~5.5.0",
-    "bootstrap-sass": "~3.3.5",
+    "bootstrap-sass": "^3.3.6",
     "jquery": "~2.1.4",
     "tether": "~0.7.2",
     "font-awesome": "~4.3.0",
