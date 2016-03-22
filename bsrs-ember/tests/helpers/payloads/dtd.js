@@ -33,8 +33,9 @@ var dtd_payload_two = {
     description: DTD.descriptionTwo,
     prompt: DTD.promptTwo,
     note: DTD.noteTwo,
-    note_type: DTD.noteTypeOne,
+    note_type: DTD.noteTypeTwo,
     link_type: DTD.linkTypeTwo,
+    fields: [],
     links: [{
         id: LINK.idOne,
         order: LINK.orderOne,
@@ -57,6 +58,7 @@ var dtd_payload_link_two_put = {
     note: DTD.noteOne,
     note_type: DTD.noteTypeOne,
     link_type: DTD.linkTypeOne,
+    fields: [],
     links: [{
         id: LINK.idOne,
         order: LINK.orderOne,
@@ -89,6 +91,7 @@ var dtd_payload_update_priority = {
     note: DTD.noteOne,
     note_type: DTD.noteTypeOne,
     link_type: DTD.linkTypeOne,
+    fields: [],
     links: [{
         id: LINK.idOne,
         order: LINK.orderOne,
@@ -110,6 +113,7 @@ var dtd_payload_no_priority = {
     note: DTD.noteOne,
     note_type: DTD.noteTypeOne,
     link_type: DTD.linkTypeOne,
+    fields: [],
     links: [{
         id: LINK.idOne,
         order: LINK.orderOne,
@@ -127,6 +131,7 @@ var dtd_new_payload = {
     id: 1,
     key: DTD.keyOne,
     description: DTD.descriptionOne,
+    fields: [],
     links: []
 };
 

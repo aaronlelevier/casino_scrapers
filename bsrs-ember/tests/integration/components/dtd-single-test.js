@@ -298,7 +298,6 @@ test('add and remove dtd fields', function(assert) {
     assert.equal($component.find('.t-dtd-field-required').length, 1);
 });
 
-// TODO: need to test 'type' select
 test('update a fields values', function(assert) {
     run(() => {
         dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});

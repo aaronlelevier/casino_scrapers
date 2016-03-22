@@ -58,6 +58,29 @@ test('types - are populated without being pushed into store', assert => {
     assert.equal(field.get('types')[9], FD.typeTen);
 });
 
+test('serialize - default for required', (assert) => {
+    field = store.push('field', {id: FD.idOne, required: undefined});
+    let data = field.serialize();
+    assert.equal(data.id, field.get('id'));
+    assert.equal(data.required, false);
+    field = store.push('field', {id: FD.idOne, required: false});
+    data = field.serialize();
+    assert.equal(data.required, false);
+    field = store.push('field', {id: FD.idOne, required: true});
+    data = field.serialize();
+    assert.equal(data.required, true);
+});
+
+test('serialize - default for type', (assert) => {
+    field = store.push('field', {id: FD.idOne, type: undefined});
+    let data = field.serialize();
+    assert.equal(data.id, field.get('id'));
+    assert.equal(data.type, FD.typeOne);
+    field = store.push('field', {id: FD.idOne, type: FD.typeTwo});
+    data = field.serialize();
+    assert.equal(data.type, FD.typeTwo);
+});
+
 test('option relationship is setup correctly', (assert) => {
     assert.ok(!field.get('option'));
     run(() => {

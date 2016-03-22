@@ -11,6 +11,7 @@ import config from 'bsrs-ember/config/environment';
 import { dtd_payload, dtd_payload_two, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload } from 'bsrs-ember/tests/helpers/payloads/dtd';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import LINK from 'bsrs-ember/vendor/defaults/link';
+import FD from 'bsrs-ember/vendor/defaults/field';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
 import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
@@ -108,14 +109,16 @@ test('dtd payload to update all fields', (assert) => {
   .requestFillIn(LINK.requestTwo)
   .textFillIn(LINK.textTwo)
   .action_buttonClick()
-  .linkTypeTwoClick();
-  // .noteTypeTwoClick();
+  .linkTypeTwoClick()
+  .noteTypeClickDropdown()
+  .noteTypeClickOptionTwoValue();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-dtd-single-key').val(), DTD.keyTwo);
     assert.equal(find('.t-dtd-single-description').val(), DTD.descriptionTwo);
     assert.equal(find('.t-dtd-prompt').val(), DTD.promptTwo);
-    // assert.equal(find('.t-dtd-note').val(), DTD.noteTwo);
+    assert.equal(find('.t-dtd-note').val(), DTD.noteTwo);
+    assert.equal(page.noteTypeInput, DTD.noteTypeTwoValue);
     assert.notOk(find('.t-dtd-link-action_button').prop('checked'));
     assert.equal(find('.t-dtd-link-request').val(), LINK.requestTwo);
     assert.equal(find('.t-dtd-link-text').val(), LINK.textTwo);
@@ -134,6 +137,47 @@ test('dtd payload to update all fields', (assert) => {
     assert.equal(ticketPage.priorityInput.split(' ')[0], TP.priorityTwo);
   });
   xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload_two), {}, 200, {});
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
+});
+
+test('add a new field and update', (assert) => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
+  page.addFieldBtn();
+  andThen(() => {
+    assert.equal(page.fieldLabelOne, '');
+    assert.equal(page.fieldTypeOne, '');
+    assert.ok(page.fieldRequiredOneNotChecked);
+  });
+  // label
+  page.fieldLabelOneFillin(FD.labelOne);
+  andThen(() => {
+    assert.equal(page.fieldLabelOne, FD.labelOne);
+  });
+  // required
+  assert.ok(page.fieldRequiredOneNotChecked);
+  page.fieldRequiredOneClick();
+  assert.ok(page.fieldRequiredOneChecked);
+  // type
+  page.fieldTypeOneClickDropdown();
+  page.fieldTypeOneClickOptionTwo();
+  // payload
+  random.uuid = function() { return UUID.value; };
+  dtd_payload['fields'] = [
+    {
+      id: 1,
+      label: FD.labelOne,
+      type: FD.typeTwo,
+      required: true,
+      options: []
+    }
+  ];
+  xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);

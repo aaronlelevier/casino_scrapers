@@ -4,6 +4,7 @@ let { value, visitable, fillable, clickable, hasClass, count, text } = PageObjec
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
+import FD from 'bsrs-ember/vendor/defaults/field';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
 const DROPDOWN = options;
@@ -89,10 +90,15 @@ var DTDPage = PageObject.create({
     noteTypeInput: text('.t-dtd-note_type'),
     noteTypeClickDropdown: clickable('.t-dtd-note_type > .ember-basic-dropdown-trigger'),
     noteTypeClickOptionTwo: clickable(`.ember-power-select-option:contains(${DTD.noteTypeTwo})`, { scope: DROPDOWN }),
+    noteTypeClickOptionTwoValue: clickable(`.ember-power-select-option:contains(${DTD.noteTypeTwoValue})`, { scope: DROPDOWN }),
 
+    addFieldBtn: clickable('.t-add-field-btn'),
     fieldLabelOne: value('.t-dtd-field-label:eq(0)'),
     fieldLabelOneFillin: fillable('.t-dtd-field-label:eq(0)'),
     fieldTypeOne: text('.t-dtd-field-type:eq(0)'),
+    fieldTypeOneClickDropdown: clickable('.t-dtd-field-type > .ember-basic-dropdown-trigger'),
+    fieldTypeOneClickOptionTwo: clickable(`.ember-power-select-option:contains(${FD.typeTwoValue})`, { scope: DROPDOWN }),
+    fieldTypeOneClickOptionTwoValue: clickable(`.ember-power-select-option:contains(${FD.typeTwoValue})`, { scope: DROPDOWN }),
     fieldRequiredOneNotChecked: () => Ember.$('.t-dtd-field-required:eq(0)').is(':not(:checked)'),
     fieldRequiredOneChecked: () => Ember.$('.t-dtd-field-required:eq(0)').is(':checked'),
     fieldRequiredOneClick: clickable('.t-dtd-field-required:eq(0)'),

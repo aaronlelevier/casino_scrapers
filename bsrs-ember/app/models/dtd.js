@@ -75,6 +75,9 @@ var DTDModel = Model.extend(Validations, {
     const links = this.get('links').map((link) => {
       return link.serialize();
     });
+    const fields = this.get('fields').map((field) => {
+      return field.serialize();
+    });
     return {
       id: this.get('id'),
       key: this.get('key'),
@@ -83,7 +86,8 @@ var DTDModel = Model.extend(Validations, {
       note: this.get('note'),
       note_type: this.get('note_type'),
       link_type: this.get('link_type'),
-      links: links
+      links: links,
+      fields: fields
     };
   },
   rollback() {

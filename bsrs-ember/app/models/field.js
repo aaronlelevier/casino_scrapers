@@ -66,8 +66,8 @@ export default Model.extend({
         return {
             id: this.get('id'),
             label: this.get('label'),
-            type: this.get('type'),
-            required: this.get('required'),
+            type: this.get('type') ? this.get('type') : this.get('types')[0],
+            required: this.get('required') ? true : false,
             options: options
         };
     },
