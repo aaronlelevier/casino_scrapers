@@ -102,6 +102,10 @@ var DTDPage = PageObject.create({
     fieldRequiredOneNotChecked: () => Ember.$('.t-dtd-field-required:eq(0)').is(':not(:checked)'),
     fieldRequiredOneChecked: () => Ember.$('.t-dtd-field-required:eq(0)').is(':checked'),
     fieldRequiredOneClick: clickable('.t-dtd-field-required:eq(0)'),
+
+    fieldOptionText: value('.t-dtd-field-option-text'),
+    fieldOptionTextFillin: fillable('.t-dtd-field-option-text'),
+    addFieldOption: clickable('.t-add-field-option-btn')
 });
 
 export default DTDPage;

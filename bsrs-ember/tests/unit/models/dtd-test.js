@@ -274,8 +274,10 @@ test('serialize dtd model and links with a priority', (assert) => {
         });
         priority = store.push('ticket-priority', {id: TP.priorityOneId, links: [LINK.idOne]});
         status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, links: [LINK.idOne]});
-        store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeOne, required: FD.requiredOne});
+        field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeOne, required: FD.requiredOne, order: FD.orderOne});
         dtd.add_field({id: FD.idOne});
+        option = store.push('option', {id: OD.idOne, text: OD.textOne, order: OD.orderOne});
+        field.add_option({id: OD.idOne});
         store.push('dtd', {id: DTD.idTwo, destination_links: [LINK.idOne]});
         link = store.push('link', {
             id: LINK.idOne, 
@@ -305,6 +307,11 @@ test('serialize dtd model and links with a priority', (assert) => {
     assert.equal(payload['fields'][0]['label'], FD.labelOne);
     assert.equal(payload['fields'][0]['type'], FD.typeOne);
     assert.equal(payload['fields'][0]['required'], FD.requiredOne);
+    assert.equal(payload['fields'][0]['order'], FD.orderOne);
+    // options
+    assert.equal(payload['fields'][0]['options'][0]['id'], OD.idOne);
+    assert.equal(payload['fields'][0]['options'][0]['text'], OD.textOne);
+    assert.equal(payload['fields'][0]['options'][0]['order'], OD.orderOne);
 });
 
 test('rollback for related links', (assert) => {

@@ -9,13 +9,14 @@ import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import DTDL from 'bsrs-ember/vendor/defaults/dtd-link';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import FD from 'bsrs-ember/vendor/defaults/field';
+import OD from 'bsrs-ember/vendor/defaults/option';
 import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import page from 'bsrs-ember/tests/pages/dtd';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import ticketPage from 'bsrs-ember/tests/pages/tickets';
 
-let store, dtd, uuid, trans, link, field, dtd_repo;
+let store, dtd, uuid, trans, link, field, option, dtd_repo;
 
 moduleForComponent('dtds/dtd-single', 'integration: dtd-single test', {
     integration: true,
@@ -298,6 +299,25 @@ test('add and remove dtd fields', function(assert) {
     assert.equal($component.find('.t-dtd-field-required').length, 1);
 });
 
+test('add a field - type and required values should be defaulted', function(assert) {
+    run(() => {
+        dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});
+    });
+    this.set('model', dtd);
+    this.render(hbs`{{dtds/dtd-single model=model}}`);
+    let $component = this.$('.t-input-multi-dtd-field');
+    assert.ok($component.is(':visible'));
+    var add_btn = this.$('.t-add-field-btn');
+    add_btn.trigger('click').trigger('change');
+    assert.equal(page.fieldLabelOne, '');
+    assert.equal(page.fieldTypeOne, trans.t(FD.typeOne));
+    assert.ok(page.fieldRequiredOneNotChecked(), FD.requiredOne);
+    // field check
+    assert.equal(dtd.get('fields').get('length'), 1);
+    field = dtd.get('fields').objectAt(0);
+    assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));
+});
+
 test('update a fields values', function(assert) {
     run(() => {
         dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});
@@ -340,4 +360,64 @@ test('update a fields type', function(assert) {
     assert.equal(page.fieldTypeOne, trans.t(FD.typeThree));
     assert.ok(dtd.get('fieldsIsNotDirty'));
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+// Options
+
+test('add and remove dtd field options', function(assert) {
+    run(() => {
+        dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});
+        store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
+        field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeOne, required: FD.requestOne});
+    });
+    this.set('model', dtd);
+    this.render(hbs`{{dtds/dtd-single model=model}}`);
+    let $component = this.$('.t-input-multi-dtd-field');
+    assert.ok($component.is(':visible'));
+    assert.equal(page.fieldLabelOne, FD.labelOne);
+    assert.equal($component.find('.t-dtd-field-option-text').length, 0);
+    var add_btn = this.$('.t-add-field-option-btn');
+    add_btn.trigger('click').trigger('change');
+    assert.equal($component.find('.t-dtd-field-option-text').length, 1);
+    var remove_btn = this.$('.t-remove-field-option-btn');
+    remove_btn.trigger('click').trigger('change');
+    assert.equal($component.find('.t-dtd-field-option-text').length, 0);
+});
+
+test('update a field by adding option values', function(assert) {
+    run(() => {
+        dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});
+        store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
+        field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeOne, required: FD.requestOne});
+    });
+    this.set('model', dtd);
+    this.render(hbs`{{dtds/dtd-single model=model}}`);
+    let $component = this.$('.t-input-multi-dtd-field');
+    var add_btn = this.$('.t-add-field-option-btn');
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+    add_btn.trigger('click').trigger('change');
+    assert.equal($component.find('.t-dtd-field-option-text').length, 1);
+    assert.equal(page.fieldOptionText, '');
+    page.fieldOptionTextFillin(OD.textOne);
+    assert.equal(page.fieldOptionText, OD.textOne);
+    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+});
+
+test('aaron update a fields existing option', function(assert) {
+    run(() => {
+        dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});
+        store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
+        field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeOne, required: FD.requestOne, field_option_fks: [1]});
+        store.push('field-option', {id: 1, field_pk: FD.idOne, option_pk: OD.idOne});
+        option = store.push('option', {id: OD.idOne, text: OD.textOne, order: OD.orderOne});
+    });
+    this.set('model', dtd);
+    this.render(hbs`{{dtds/dtd-single model=model}}`);
+    let $component = this.$('.t-input-multi-dtd-field');
+    assert.equal($component.find('.t-dtd-field-option-text').length, 1);
+    assert.equal(page.fieldOptionText, OD.textOne);
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+    page.fieldOptionTextFillin(OD.textTwo);
+    assert.equal(page.fieldOptionText, OD.textTwo);
+    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
 });

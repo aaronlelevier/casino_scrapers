@@ -30,7 +30,9 @@ var BSRS_FIELDS_DEFAULTS_OBJECT = (function() {
             typeNine: 'admin.dtd.label.field.check_in',
             typeTen: 'admin.dtd.label.field.check_out',
             requiredOne: false,
-            requiredTwo: true
+            requiredTwo: true,
+            orderOne: 0,
+            orderTwo: 1,
         };
     };
     return factory;

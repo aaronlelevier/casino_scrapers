@@ -20,7 +20,11 @@ export default Model.extend({
         'admin.dtd.label.field.check_in',
         'admin.dtd.label.field.check_out',
     ],
+    typeDefault: Ember.computed(function(){
+        return this.get('types')[0];
+    }),
     required: attr(),
+    order: attr(),
     // Options
     options: many_models('field_options', 'option_pk', 'option'),
     field_options: many_to_many('field-option', 'field_pk'),
@@ -66,8 +70,9 @@ export default Model.extend({
         return {
             id: this.get('id'),
             label: this.get('label'),
-            type: this.get('type') ? this.get('type') : this.get('types')[0],
+            type: this.get('type') ? this.get('type') : this.get('typeDefault'),
             required: this.get('required') ? true : false,
+            order: this.get('order'),
             options: options
         };
     },

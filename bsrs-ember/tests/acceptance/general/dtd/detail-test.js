@@ -12,6 +12,7 @@ import { dtd_payload, dtd_payload_two, dtd_payload_link_two_put, dtd_payload_upd
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import FD from 'bsrs-ember/vendor/defaults/field';
+import OD from 'bsrs-ember/vendor/defaults/option';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
 import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
@@ -151,7 +152,7 @@ test('add a new field and update', (assert) => {
   page.addFieldBtn();
   andThen(() => {
     assert.equal(page.fieldLabelOne, '');
-    assert.equal(page.fieldTypeOne, '');
+    assert.equal(page.fieldTypeOne, FD.typeOneValue);
     assert.ok(page.fieldRequiredOneNotChecked);
   });
   // label
@@ -166,6 +167,9 @@ test('add a new field and update', (assert) => {
   // type
   page.fieldTypeOneClickDropdown();
   page.fieldTypeOneClickOptionTwo();
+  // Option
+  page.addFieldOption();
+  page.fieldOptionTextFillin(OD.textOne);
   // payload
   random.uuid = function() { return UUID.value; };
   dtd_payload['fields'] = [
@@ -174,7 +178,7 @@ test('add a new field and update', (assert) => {
       label: FD.labelOne,
       type: FD.typeTwo,
       required: true,
-      options: []
+      options: [{id: 1, text: OD.textOne, order: null}]
     }
   ];
   xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});

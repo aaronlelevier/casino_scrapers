@@ -8,7 +8,7 @@ import OD from 'bsrs-ember/vendor/defaults/option';
 
 var store, field, option, uuid;
 
-module('unit: field test', {
+module('unit: dtd field test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:field', 'model:option', 'model:field-option']);
         run(() => {
@@ -33,16 +33,13 @@ test('type isDirty', (assert) => {
     assert.ok(field.get('isNotDirty'));
     store.push('field', {id: FD.idOne, type: FD.typeOne});
     assert.ok(field.get('isDirty'));
-    store.push('field', {id: FD.idOne, type: ''});
+    store.push('field', {id: FD.idOne, type: undefined});
     assert.ok(field.get('isNotDirty'));
 });
 
-test('required isDirty', (assert) => {
-    assert.ok(field.get('isNotDirty'));
-    store.push('field', {id: FD.idOne, required: FD.requiredTwo});
-    assert.ok(field.get('isDirty'));
-    store.push('field', {id: FD.idOne, required: FD.requiredOne});
-    assert.ok(field.get('isNotDirty'));
+test('type - does not get overridden during init if type is diff than typeDefault', (assert) => {
+    field = store.push('field', {id: FD.idTwo, type: FD.typeTwo});
+    assert.notEqual(field.get('type'), field.get('typeDefault'));
 });
 
 test('types - are populated without being pushed into store', assert => {
@@ -56,6 +53,28 @@ test('types - are populated without being pushed into store', assert => {
     assert.equal(field.get('types')[7], FD.typeEight);
     assert.equal(field.get('types')[8], FD.typeNine);
     assert.equal(field.get('types')[9], FD.typeTen);
+});
+
+test('typeDefault', (assert) => {
+    field = store.push('field', {id: 42});
+    assert.equal(field.get('id'), 42);
+    assert.equal(field.get('typeDefault'), field.get('types')[0]);
+});
+
+test('required isDirty', (assert) => {
+    assert.ok(field.get('isNotDirty'));
+    store.push('field', {id: FD.idOne, required: FD.requiredTwo});
+    assert.ok(field.get('isDirty'));
+    store.push('field', {id: FD.idOne, required: FD.requiredOne});
+    assert.ok(field.get('isNotDirty'));
+});
+
+test('order isDirty', (assert) => {
+    assert.ok(field.get('isNotDirty'));
+    store.push('field', {id: FD.idOne, order: FD.orderTwo});
+    assert.ok(field.get('isDirty'));
+    store.push('field', {id: FD.idOne, order: undefined});
+    assert.ok(field.get('isNotDirty'));
 });
 
 test('serialize - default for required', (assert) => {
@@ -192,11 +211,12 @@ test('removeRecord', (assert) => {
 });
 
 test('serialize', (assert) => {
-    let fieldData = {id: FD.idOne, label: FD.labelOne, type: FD.typeOne, required: FD.requiredOne};
+    let fieldData = {id: FD.idOne, label: FD.labelOne, type: FD.typeOne, required: FD.requiredOne, order: undefined};
     let optionData = {id: OD.idOne, text: OD.textOne, order: OD.orderOne};
     let rawData = Object.assign({}, fieldData, {options: [optionData]});
     run(() => {
         field = store.push('field', fieldData);
+        store.push('field-option', {id: 1, field_pk: FD.idOne, option_pk: OD.idOne});
         option = store.push('option', optionData);
     });
     field.add_option({id: OD.idOne});
