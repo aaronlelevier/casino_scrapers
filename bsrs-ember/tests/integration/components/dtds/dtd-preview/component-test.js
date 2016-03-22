@@ -34,7 +34,7 @@ moduleForComponent('dtds/dtd-preview', 'Integration | Component | dtds/dtd previ
 test('preview renders with model data passed from dtd route - v1', function(assert) {
   run(() => {
     dtd = store.push('dtd', {id: dtd.get('id'), note_type: ''});
-  })
+  });
   this.model = dtd;
   this.render(hbs`{{dtds/dtd-preview model=model}}`);
   assert.equal(page.previewDescription, DTD.descriptionOne);
