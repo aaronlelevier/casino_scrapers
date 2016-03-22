@@ -317,3 +317,28 @@ test('update a fields values', function(assert) {
     assert.equal(page.fieldLabelOne, FD.labelTwo);
     assert.ok(page.fieldRequiredOneChecked(), FD.requiredTwo);
 });
+
+test('update a fields type', function(assert) {
+    run(() => {
+        dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});
+        store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
+        field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeThree, required: FD.requestOne});
+    });
+    this.set('model', dtd);
+    this.render(hbs`{{dtds/dtd-single model=model}}`);
+    let $component = this.$('.t-input-multi-dtd-field');
+    assert.ok($component.is(':visible'));
+    assert.equal(page.fieldTypeOne, trans.t(FD.typeThree));
+    assert.ok(dtd.get('fieldsIsNotDirty'));
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+    clickTrigger('.t-dtd-field-type');
+    $(`.ember-power-select-option:contains(${FD.typeTwo})`).mouseup();
+    assert.equal(page.fieldTypeOne, trans.t(FD.typeTwo));
+    assert.ok(dtd.get('fieldsIsDirty'));
+    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+    clickTrigger('.t-dtd-field-type');
+    $(`.ember-power-select-option:contains(${FD.typeThree})`).mouseup();
+    assert.equal(page.fieldTypeOne, trans.t(FD.typeThree));
+    assert.ok(dtd.get('fieldsIsNotDirty'));
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+});

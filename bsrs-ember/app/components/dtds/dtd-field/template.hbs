@@ -6,12 +6,17 @@
       </span>
       {{input type="text" placeholder=(t "admin.dtd.label.field.label") value=field.label class="form-control t-dtd-field-label"}}
     </div>
-    {{#form-group title="admin.dtd.field.type" class="t-dtd-field-type" for="type"}}
-      <select onchange={{action 'setFieldType' value="target.value"}} selected={{field.type}}>
-      {{#each field.types as |type|}}
-        <option value={{type}} class="t-dtd-field-type-label">{{t type}}</option>
-      {{/each}}
-      </select>
+    {{#form-group title="admin.dtd.field.type" for="type"}}
+      {{#power-select
+        class='t-dtd-field-type'
+        selected=field.type
+        onchange=(action "setFieldType" field.id)
+        searchEnabled=false
+        options=field.types
+        as |field|
+      }}
+        {{t field}}
+      {{/power-select}}
     {{/form-group}}
     <div class="input-group">
       <span class="input-group-addon">{{t "admin.dtd.label.field.required"}}</span>

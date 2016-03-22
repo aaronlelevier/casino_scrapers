@@ -92,7 +92,7 @@ var DTDPage = PageObject.create({
 
     fieldLabelOne: value('.t-dtd-field-label:eq(0)'),
     fieldLabelOneFillin: fillable('.t-dtd-field-label:eq(0)'),
-    fieldTypeOne: text('.t-dtd-field-type-label:eq(0):selected'),
+    fieldTypeOne: text('.t-dtd-field-type:eq(0)'),
     fieldRequiredOneNotChecked: () => Ember.$('.t-dtd-field-required:eq(0)').is(':not(:checked)'),
     fieldRequiredOneChecked: () => Ember.$('.t-dtd-field-required:eq(0)').is(':checked'),
     fieldRequiredOneClick: clickable('.t-dtd-field-required:eq(0)'),

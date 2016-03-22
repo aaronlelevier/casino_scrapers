@@ -19,8 +19,13 @@ var DtdLinkComponent = Ember.Component.extend({
                 this.get('model').remove_field(field.get('id'));
             });
         },
-        setFieldType(type) {
-
+        setFieldType(field_id, type) {
+            const fields = this.get('model').get('fields');
+            fields.forEach(field => {
+                if (field.get('id') === field_id) {
+                    field.set('type', type);
+                }
+            });
         }
     }
 });
