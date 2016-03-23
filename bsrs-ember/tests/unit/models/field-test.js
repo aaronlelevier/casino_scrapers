@@ -43,6 +43,7 @@ test('type - does not get overridden during init if type is diff than typeDefaul
 });
 
 test('types - are populated without being pushed into store', assert => {
+    assert.equal(field.get('types').length, 10);
     assert.equal(field.get('types')[0], FD.typeOne);
     assert.equal(field.get('types')[1], FD.typeTwo);
     assert.equal(field.get('types')[2], FD.typeThree);
@@ -56,6 +57,7 @@ test('types - are populated without being pushed into store', assert => {
 });
 
 test('typesWithOptions - field types that allow options', assert => {
+    assert.equal(field.get('typesWithOptions').length, 2);
     assert.equal(field.get('typesWithOptions')[0], FD.typeFour);
     assert.equal(field.get('typesWithOptions')[1], FD.typeSix);
 });
