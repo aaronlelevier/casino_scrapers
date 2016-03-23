@@ -20,6 +20,9 @@ export default Model.extend({
         'admin.dtd.label.field.check_in',
         'admin.dtd.label.field.check_out',
     ],
+    typesWithOptions: Ember.computed(function(){
+        return [this.get('types')[3], this.get('types')[5]];
+    }),
     typeDefault: Ember.computed(function(){
         return this.get('types')[0];
     }),

@@ -144,8 +144,6 @@ test('dtd payload to update all fields', (assert) => {
   });
 });
 
-// NOTE: this test should fail when adding options on/off switch based upon `fieldType`
-// because the field type is currently 'text' which doesn't have options
 test('add a new field and update', (assert) => {
   page.visitDetail();
   andThen(() => {
@@ -168,9 +166,9 @@ test('add a new field and update', (assert) => {
   assert.ok(page.fieldRequiredTwoChecked);
   // type
   page.fieldTypeTwoClickDropdown();
-  page.fieldTypeTwoClickOptionTwo();
+  page.fieldTypeTwoClickOptionFour();
   andThen(() => {
-    assert.equal(page.fieldTypeTwo, FD.typeTwoValue);
+    assert.equal(page.fieldTypeTwo, FD.typeFourValue);
   });
   // Option
   page.fieldTwoAddFieldOption();
@@ -183,7 +181,7 @@ test('add a new field and update', (assert) => {
   dtd_payload['fields'].push({
     id: 1,
     label: FD.labelOne,
-    type: FD.typeTwo,
+    type: FD.typeFour,
     required: true,
     options: [{id: 1, text: OD.textOne, order: null}]
   });

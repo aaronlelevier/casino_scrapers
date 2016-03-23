@@ -55,6 +55,11 @@ test('types - are populated without being pushed into store', assert => {
     assert.equal(field.get('types')[9], FD.typeTen);
 });
 
+test('typesWithOptions - field types that allow options', assert => {
+    assert.equal(field.get('typesWithOptions')[0], FD.typeFour);
+    assert.equal(field.get('typesWithOptions')[1], FD.typeSix);
+});
+
 test('typeDefault', (assert) => {
     field = store.push('field', {id: 42});
     assert.equal(field.get('id'), 42);
