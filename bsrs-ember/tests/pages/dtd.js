@@ -93,6 +93,7 @@ var DTDPage = PageObject.create({
     noteTypeClickOptionTwoValue: clickable(`.ember-power-select-option:contains(${DTD.noteTypeTwoValue})`, { scope: DROPDOWN }),
 
     addFieldBtn: clickable('.t-add-field-btn'),
+    // Field One
     fieldLabelOne: value('.t-dtd-field-label:eq(0)'),
     fieldLabelOneFillin: fillable('.t-dtd-field-label:eq(0)'),
     fieldTypeOne: text('.t-dtd-field-type:eq(0)'),
@@ -102,10 +103,22 @@ var DTDPage = PageObject.create({
     fieldRequiredOneNotChecked: () => Ember.$('.t-dtd-field-required:eq(0)').is(':not(:checked)'),
     fieldRequiredOneChecked: () => Ember.$('.t-dtd-field-required:eq(0)').is(':checked'),
     fieldRequiredOneClick: clickable('.t-dtd-field-required:eq(0)'),
-
-    fieldOptionText: value('.t-dtd-field-option-text'),
-    fieldOptionTextFillin: fillable('.t-dtd-field-option-text'),
-    addFieldOption: clickable('.t-add-field-option-btn')
+    fieldOneAddFieldOption: clickable('.t-add-field-option-btn'),
+    fieldOneOptionText: value('.t-dtd-field-option-text'),
+    fieldOneOptionTextFillin: fillable('.t-dtd-field-option-text'),
+    // Field Two
+    fieldLabelTwo: value('.t-dtd-field-label:eq(1)'),
+    fieldLabelTwoFillin: fillable('.t-dtd-field-label:eq(1)'),
+    fieldTypeTwo: text('.t-dtd-field-type:eq(1)'),
+    fieldTypeTwoClickDropdown: clickable('.t-dtd-field-type:eq(1) > .ember-basic-dropdown-trigger'),
+    fieldTypeTwoClickOptionTwo: clickable(`.ember-power-select-option:contains(${FD.typeTwoValue})`, { scope: DROPDOWN }),
+    fieldTypeTwoClickOptionTwoValue: clickable(`.ember-power-select-option:contains(${FD.typeTwoValue})`, { scope: DROPDOWN }),
+    fieldRequiredTwoNotChecked: () => Ember.$('.t-dtd-field-required:eq(1)').is(':not(:checked)'),
+    fieldRequiredTwoChecked: () => Ember.$('.t-dtd-field-required:eq(1)').is(':checked'),
+    fieldRequiredTwoClick: clickable('.t-dtd-field-required:eq(1)'),
+    fieldTwoAddFieldOption: clickable('.t-add-field-option-btn:eq(1)'),
+    fieldTwoOptionText: value('.t-dtd-field-option-text:eq(1)'),
+    fieldTwoOptionTextFillin: fillable('.t-dtd-field-option-text:eq(1)'),
 });
 
 export default DTDPage;

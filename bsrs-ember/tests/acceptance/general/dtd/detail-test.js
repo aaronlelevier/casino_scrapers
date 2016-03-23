@@ -144,6 +144,8 @@ test('dtd payload to update all fields', (assert) => {
   });
 });
 
+// NOTE: this test should fail when adding options on/off switch based upon `fieldType`
+// because the field type is currently 'text' which doesn't have options
 test('add a new field and update', (assert) => {
   page.visitDetail();
   andThen(() => {
@@ -151,36 +153,40 @@ test('add a new field and update', (assert) => {
   });
   page.addFieldBtn();
   andThen(() => {
-    assert.equal(page.fieldLabelOne, '');
-    assert.equal(page.fieldTypeOne, FD.typeOneValue);
-    assert.ok(page.fieldRequiredOneNotChecked);
+    assert.equal(page.fieldLabelTwo, '');
+    assert.equal(page.fieldTypeTwo, FD.typeOneValue);
+    assert.ok(page.fieldRequiredTwoNotChecked);
   });
   // label
-  page.fieldLabelOneFillin(FD.labelOne);
+  page.fieldLabelTwoFillin(FD.labelOne);
   andThen(() => {
-    assert.equal(page.fieldLabelOne, FD.labelOne);
+    assert.equal(page.fieldLabelTwo, FD.labelOne);
   });
   // required
-  assert.ok(page.fieldRequiredOneNotChecked);
-  page.fieldRequiredOneClick();
-  assert.ok(page.fieldRequiredOneChecked);
+  assert.ok(page.fieldRequiredTwoNotChecked);
+  page.fieldRequiredTwoClick();
+  assert.ok(page.fieldRequiredTwoChecked);
   // type
-  page.fieldTypeOneClickDropdown();
-  page.fieldTypeOneClickOptionTwo();
+  page.fieldTypeTwoClickDropdown();
+  page.fieldTypeTwoClickOptionTwo();
+  andThen(() => {
+    assert.equal(page.fieldTypeTwo, FD.typeTwoValue);
+  });
   // Option
-  page.addFieldOption();
-  page.fieldOptionTextFillin(OD.textOne);
+  page.fieldTwoAddFieldOption();
+  page.fieldTwoOptionTextFillin(OD.textOne);
+  andThen(() => {
+    assert.equal(page.fieldTwoOptionText, OD.textOne);
+  });
   // payload
   random.uuid = function() { return UUID.value; };
-  dtd_payload['fields'] = [
-    {
-      id: 1,
-      label: FD.labelOne,
-      type: FD.typeTwo,
-      required: true,
-      options: [{id: 1, text: OD.textOne, order: null}]
-    }
-  ];
+  dtd_payload['fields'].push({
+    id: 1,
+    label: FD.labelOne,
+    type: FD.typeTwo,
+    required: true,
+    options: [{id: 1, text: OD.textOne, order: null}]
+  });
   xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});
   generalPage.save();
   andThen(() => {

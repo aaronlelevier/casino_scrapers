@@ -19,7 +19,10 @@ var DTDDeserializer = Ember.Object.extend({
     if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
       let link_json = response.links;
       delete response.links;
+      let field_json = response.fields;
+      delete response.fields;
       let dtd = store.push('dtd', response);
+      // Links
       let [m2m_links, links, links_server_sum] = many_to_many_extract(link_json, store, dtd, 'dtd_links', 'dtd_pk', 'link', 'link_pk');
       m2m_links.forEach((m2m) => {
         run(() => {
@@ -35,6 +38,28 @@ var DTDDeserializer = Ember.Object.extend({
         if (existing.get('destination.id') !== model.destination_fk) {
           existing.change_destination(model.destination_fk);
         }
+      });
+      // Fields
+      let [m2m_fields, fields, fields_server_sum] = many_to_many_extract(field_json, store, dtd, 'dtd_fields', 'dtd_pk', 'field', 'field_pk');
+      m2m_fields.forEach((m2m) => {
+        run(() => {
+          store.push('dtd-field', m2m);
+        });
+      });
+      field_json.forEach((model) => {
+        let option_json = model.options;
+        delete model.options;
+        const field = store.push('field', model);
+        field.detail = true;
+        let [m2m_options, options, options_server_sum] = many_to_many_extract(option_json, store, field, 'field_options', 'field_pk', 'option', 'option_pk');
+        m2m_options.forEach((m2m) => {
+          run(() => {
+            store.push('field-option', m2m);
+          });
+        });
+        option_json.forEach((model) => {
+          let _option = store.push('option', model);
+        });
       });
       dtd = store.push('dtd', {id: dtd.get('id'), dtd_link_fks: links_server_sum});
       dtd.save();

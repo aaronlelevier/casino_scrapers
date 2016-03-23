@@ -2,6 +2,8 @@ import Ember from 'ember';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
+import FD from 'bsrs-ember/vendor/defaults/field';
+import OD from 'bsrs-ember/vendor/defaults/option';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
@@ -14,6 +16,18 @@ var dtd_payload = {
     note: DTD.noteOne,
     note_type: DTD.noteTypeOne,
     link_type: DTD.linkTypeOne,
+    fields: [{
+        id: FD.idOne,
+        label: FD.labelOne,
+        type: FD.typeSix,
+        required: FD.requiredOne,
+        order: FD.orderOne,
+        options: [{
+            id: OD.idOne,
+            text: OD.textOne,
+            order: OD.orderOne
+        }]
+    }],
     links: [{
         id: LINK.idOne,
         order: LINK.orderOne,
@@ -35,7 +49,18 @@ var dtd_payload_two = {
     note: DTD.noteTwo,
     note_type: DTD.noteTypeTwo,
     link_type: DTD.linkTypeTwo,
-    fields: [],
+    fields: [{
+        id: FD.idOne,
+        label: FD.labelOne,
+        type: FD.typeSix,
+        required: FD.requiredOne,
+        order: FD.orderOne,
+        options: [{
+            id: OD.idOne,
+            text: OD.textOne,
+            order: OD.orderOne
+        }]
+    }],
     links: [{
         id: LINK.idOne,
         order: LINK.orderOne,
@@ -46,7 +71,6 @@ var dtd_payload_two = {
         priority: TP.priorityTwoId,
         status: TD.statusTwoId,
         destination: DTD.idTwo
-
     }]
 };
 
@@ -58,7 +82,18 @@ var dtd_payload_link_two_put = {
     note: DTD.noteOne,
     note_type: DTD.noteTypeOne,
     link_type: DTD.linkTypeOne,
-    fields: [],
+    fields: [{
+        id: FD.idOne,
+        label: FD.labelOne,
+        type: FD.typeSix,
+        required: FD.requiredOne,
+        order: FD.orderOne,
+        options: [{
+            id: OD.idOne,
+            text: OD.textOne,
+            order: OD.orderOne
+        }]
+    }],
     links: [{
         id: LINK.idOne,
         order: LINK.orderOne,
@@ -91,7 +126,18 @@ var dtd_payload_update_priority = {
     note: DTD.noteOne,
     note_type: DTD.noteTypeOne,
     link_type: DTD.linkTypeOne,
-    fields: [],
+    fields: [{
+        id: FD.idOne,
+        label: FD.labelOne,
+        type: FD.typeSix,
+        required: FD.requiredOne,
+        order: FD.orderOne,
+        options: [{
+            id: OD.idOne,
+            text: OD.textOne,
+            order: OD.orderOne
+        }]
+    }],
     links: [{
         id: LINK.idOne,
         order: LINK.orderOne,
@@ -113,7 +159,18 @@ var dtd_payload_no_priority = {
     note: DTD.noteOne,
     note_type: DTD.noteTypeOne,
     link_type: DTD.linkTypeOne,
-    fields: [],
+    fields: [{
+        id: FD.idOne,
+        label: FD.labelOne,
+        type: FD.typeSix,
+        required: FD.requiredOne,
+        order: FD.orderOne,
+        options: [{
+            id: OD.idOne,
+            text: OD.textOne,
+            order: OD.orderOne
+        }]
+    }],
     links: [{
         id: LINK.idOne,
         order: LINK.orderOne,

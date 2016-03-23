@@ -1,7 +1,9 @@
 var BSRS_DTD_FACTORY = (function() {
-    var factory = function(dtd_defaults, link_defaults, config) {
+    var factory = function(dtd_defaults, link_defaults, field_defaults, option_defaults, config) {
         this.dtd = dtd_defaults;
         this.link = link_defaults;
+        this.field = field_defaults;
+        this.option = option_defaults;
         this.config = config;
     };
     factory.prototype.generate = function(i, key) {
@@ -14,6 +16,22 @@ var BSRS_DTD_FACTORY = (function() {
             prompt: this.dtd.promptOne,
             note: this.dtd.noteOne,
             note_type: this.dtd.noteTypeOne,
+            fields: [
+                {
+                    id: this.field.idOne,
+                    label: this.field.labelOne,
+                    type: this.field.typeSix, // because `typeOne` is text which has no options
+                    required: this.field.requiredOne,
+                    order: this.field.orderOne,
+                    options: [
+                        {
+                            id: this.option.idOne,
+                            text: this.option.textOne,
+                            order: this.option.orderOne
+                        }
+                    ]
+                }
+            ],
             link_type: this.dtd.linkTypeOne,
             links: [
                 {
@@ -30,8 +48,8 @@ var BSRS_DTD_FACTORY = (function() {
             ]
         }
     };
-    factory.prototype.generate_list = function(i, key) {
-        var id = i || this.dtd.idOne;
+    factory.prototype.generate_list = function(id, key) {
+        var id = id || this.dtd.idOne;
         var key = key || this.dtd.keyOne;
         return {
             id: id,
@@ -98,15 +116,17 @@ if (typeof window === 'undefined') {
     var mixin = require('./mixin');
     var dtd_defaults = require('./defaults/dtd');
     var link_defaults = require('./defaults/link');
+    var field_defaults = require('./defaults/field');
+    var option_defaults = require('./defaults/option');
     var config = require('../config/environment');
     objectAssign(BSRS_DTD_FACTORY.prototype, mixin.prototype);
-    module.exports = new BSRS_DTD_FACTORY(dtd_defaults, link_defaults, config);
+    module.exports = new BSRS_DTD_FACTORY(dtd_defaults, link_defaults, field_defaults, option_defaults, config);
 } else {
-    define('bsrs-ember/vendor/dtd_fixtures', ['exports', 'bsrs-ember/vendor/defaults/dtd', 'bsrs-ember/vendor/defaults/link', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
-           function (exports, dtd_defaults, link_defaults, mixin, config) {
+    define('bsrs-ember/vendor/dtd_fixtures', ['exports', 'bsrs-ember/vendor/defaults/dtd', 'bsrs-ember/vendor/defaults/link', 'bsrs-ember/vendor/defaults/field', 'bsrs-ember/vendor/defaults/option', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
+           function (exports, dtd_defaults, link_defaults, field_defaults, option_defaults, mixin, config) {
         'use strict';
         Object.assign(BSRS_DTD_FACTORY.prototype, mixin.prototype);
-        var Factory = new BSRS_DTD_FACTORY(dtd_defaults, link_defaults, config);
+        var Factory = new BSRS_DTD_FACTORY(dtd_defaults, link_defaults, field_defaults, option_defaults, config);
         return {default: Factory};
     });
 }
