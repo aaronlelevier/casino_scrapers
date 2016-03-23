@@ -384,26 +384,33 @@ test('add and remove dtd field options', function(assert) {
     assert.equal($component.find('.t-dtd-field-option-text').length, 0);
 });
 
+/* jshint ignore:start */
 test('hide or show options based on field.type', function(assert) {
     run(() => {
         dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});
         store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
-        field = store.push('field', {id: FD.idOne, type: FD.typeFour});
+        field = store.push('field', {id: FD.idOne});
     });
     this.set('model', dtd);
     this.render(hbs`{{dtds/dtd-single model=model}}`);
     let $component = this.$('.t-input-multi-dtd-field');
     assert.ok($component.is(':visible'));
-    assert.equal($component.find('.t-input-multi-dtd-field-option').length, 1);
-    run(() => {
-        field = store.push('field', {id: FD.idOne, type: FD.typeOne});
-    });
-    assert.equal($component.find('.t-input-multi-dtd-field-option').length, 0);
-    run(() => {
-        field = store.push('field', {id: FD.idOne, type: FD.typeSix});
-    });
-    assert.equal($component.find('.t-input-multi-dtd-field-option').length, 1);
+    let type;
+    const types = field.get('types');
+    const typesWithOptions = field.get('typesWithOptions');
+    for (var i = 0; i < field.get('types').length; i++) {
+        type = types[i];
+        run(() => {
+            store.push('field', {id: FD.idOne, type: type});
+        });
+        if (typesWithOptions.contains(type)) {
+            assert.equal($component.find('.t-input-multi-dtd-field-option').length, 1);
+        } else {
+            assert.equal($component.find('.t-input-multi-dtd-field-option').length, 0);
+        }
+    }
 });
+/* jshint ignore:end */
 
 test('update a field by adding option values', function(assert) {
     run(() => {
