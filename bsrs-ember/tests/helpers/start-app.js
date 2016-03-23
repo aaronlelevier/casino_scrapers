@@ -13,15 +13,15 @@ function ajax(app, url, verb, data, headers, status, response) {
     Ember.$.fauxjax.removeExisting(url, verb);
     var request = { url: url , method: verb };
     if (data) { 
-        request.data = data;
-        if(verb !== 'DELETE') {
-            request.contentType = 'application/json';
-        }
+      request.data = data;
+      if(verb !== 'DELETE') {
+        request.contentType = 'application/json';
+      }
     }
     if(data && data instanceof FormData) {
-        request.data = data;
-        request.processData = false;
-        request.contentType = false;
+      request.data = data;
+      request.processData = false;
+      request.contentType = false;
     }
     Ember.$.fauxjax.new({
       request: request,
@@ -44,12 +44,12 @@ function alterPageSize(app, selector, size) {
 function patchRandom(app, counter) {
   Ember.run(function() {
     random.uuid = function() { 
-        counter++;
-        if (counter === 1) {
-            return UUID.value;
-        }else{
-            return Ember.uuid();
-        }
+      counter++;
+      if (counter === 1) {
+        return UUID.value;
+      }else{
+        return Ember.uuid();
+      }
     };
   });
 }
@@ -57,12 +57,12 @@ function patchRandom(app, counter) {
 function patchRandomAsync(app, counter) {
   Ember.run(function() {
     random.uuid = function() { 
-        counter++;
-        if (counter === 1) {
-            return 'abc123';
-        }else{
-            return 'def456';
-        }
+      counter++;
+      if (counter === 1) {
+        return 'abc123';
+      }else{
+        return 'def456';
+      }
     };
   });
   return app.testHelpers.wait();
@@ -77,57 +77,57 @@ function filterGrid(app, column, text) {
 }
 
 function visitSync(app, url) {
-    var router = app.__container__.lookup('router:main');
-    var shouldHandleURL = false;
+  var router = app.__container__.lookup('router:main');
+  var shouldHandleURL = false;
 
-    app.boot().then(function () {
-      router.location.setURL(url);
+  app.boot().then(function () {
+    router.location.setURL(url);
 
-      if (shouldHandleURL) {
-        Ember.run(app.__deprecatedInstance__, 'handleURL', url);
-      }
-    });
-
-    if (app._readinessDeferrals > 0) {
-      router['initialURL'] = url;
-      Ember.run(app, 'advanceReadiness');
-      delete router['initialURL'];
-    } else {
-      shouldHandleURL = true;
+    if (shouldHandleURL) {
+      Ember.run(app.__deprecatedInstance__, 'handleURL', url);
     }
+  });
 
-    return app.testHelpers.wait();
+  if (app._readinessDeferrals > 0) {
+    router['initialURL'] = url;
+    Ember.run(app, 'advanceReadiness');
+    delete router['initialURL'];
+  } else {
+    shouldHandleURL = true;
+  }
+
+  return app.testHelpers.wait();
 }
 
 function clearAll(app, store, type) {
   Ember.run(function() {
-      store.clear(type);
+    store.clear(type);
   });
 }
 
 function saveFilterSet(app, name, controller) {
   Ember.run(function() {
-      var component = app.__container__.lookup('component:grid/helpers/saving-filter');
-      var targetObject = app.__container__.lookup('controller:' + controller);
-      component.set('targetObject', targetObject);
-      component.set('attrs', {save_filterset: 'save_filterset'});
-      component.set('filtersetName', name);
-      component.send('invokeSaveFilterSet');
+    var component = app.__container__.lookup('component:grid/helpers/saving-filter');
+    var targetObject = app.__container__.lookup('controller:' + controller);
+    component.set('targetObject', targetObject);
+    // component.set('attrs', {save_filterset: 'save_filterset'});
+    component.set('filtersetName', name);
+    component.send('invokeSaveFilterSet');
   });
 }
 
 function uploadFile(app, name, action, file, model) {
   Ember.run(function() {
-      var files;
-      var component = app.__container__.lookup(`component:${name}`);
-      component.set('model', model);
-      if (file instanceof Array) {
-          files = file;
-      }else{
-          files = [file];
-      }
-      var event = {target: {files: files}};
-      component.send(action, event);
+    var files;
+    var component = app.__container__.lookup(`component:${name}`);
+    component.set('model', model);
+    if (file instanceof Array) {
+      files = file;
+    }else{
+      files = [file];
+    }
+    var event = {target: {files: files}};
+    component.send(action, event);
   });
   return app.testHelpers.wait();
 }
@@ -143,33 +143,33 @@ Ember.Test.registerHelper('patchRandom', patchRandom);
 Ember.Test.registerAsyncHelper('patchRandomAsync', patchRandomAsync);
 
 export default function startApp(attrs) {
-    let application;
+  let application;
 
-    let attributes = Ember.merge({}, config.APP);
-    attributes = Ember.merge(attributes, attrs); // use defaults, but you can override;
+  let attributes = Ember.merge({}, config.APP);
+  attributes = Ember.merge(attributes, attrs); // use defaults, but you can override;
 
-    // Mock english translations
-    var request = { url: '/api/translations/?locale=en' , method: 'GET' };
-    var response = translations.generate('en');
-    Ember.$.fauxjax.new({
-        request: request,
-        response: {
-            status: 200,
-            content: response
-        }
-    });
+  // Mock english translations
+  var request = { url: '/api/translations/?locale=en' , method: 'GET' };
+  var response = translations.generate('en');
+  Ember.$.fauxjax.new({
+    request: request,
+    response: {
+      status: 200,
+      content: response
+    }
+  });
 
-    Ember.run(() => {
-        application = Application.create(attributes);
-        application.setupForTesting();
-        application.injectTestHelpers();
-    });
+  Ember.run(() => {
+    application = Application.create(attributes);
+    application.setupForTesting();
+    application.injectTestHelpers();
+  });
 
-    windowProxy.locationUrl = null;
-    windowProxy.changeLocation = function(url) {
-        var message = 'windowProxy.locationUrl is not null. Actual: ' + windowProxy.locationUrl;
-        Ember.assert(message ,windowProxy.locationUrl === null);
-        windowProxy.locationUrl = url;
-    };
-    return application;
+  windowProxy.locationUrl = null;
+  windowProxy.changeLocation = function(url) {
+    var message = 'windowProxy.locationUrl is not null. Actual: ' + windowProxy.locationUrl;
+    Ember.assert(message ,windowProxy.locationUrl === null);
+    windowProxy.locationUrl = url;
+  };
+  return application;
 }

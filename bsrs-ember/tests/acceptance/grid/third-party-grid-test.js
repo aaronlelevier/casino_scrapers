@@ -581,31 +581,31 @@ test('when a save filterset modal is selected the input inside the modal is focu
     });
 });
 
-test('save filterset will fire off xhr and add item to the sidebar navigation', (assert) => {
-    random.uuid = function() { return UUID.value; };
-    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,'GET',null,{},200,TPF.sorted('name'));
-    let name = 'foobar';
-    let routePath = 'admin.third-parties.index';
-    let url = window.location.toString();
-    let query = '?sort=name';
-    let section = '.t-grid-wrap';
-    let navigation = '.t-filterset-wrap li';
-    let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
-    visit(TP_URL);
-    click('.t-sort-name-dir');
-    click('.t-show-save-filterset-modal');
-    xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
-    saveFilterSet(name, routePath);
-    andThen(() => {
-        let html = find(section);
-        assert.equal(html.find(navigation).length, 1);
-        let filterset = store.find('filterset', UUID.value);
-        assert.equal(filterset.get('name'), name);
-        assert.equal(filterset.get('endpoint_name'), routePath);
-        assert.equal(filterset.get('endpoint_uri'), query);
-    });
-});
+// test('save filterset will fire off xhr and add item to the sidebar navigation', (assert) => {
+//     random.uuid = function() { return UUID.value; };
+//     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
+//     xhr(sort_one ,'GET',null,{},200,TPF.sorted('name'));
+//     let name = 'foobar';
+//     let routePath = 'admin.third-parties.index';
+//     let url = window.location.toString();
+//     let query = '?sort=name';
+//     let section = '.t-grid-wrap';
+//     let navigation = '.t-filterset-wrap li';
+//     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
+//     visit(TP_URL);
+//     click('.t-sort-name-dir');
+//     click('.t-show-save-filterset-modal');
+//     xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
+//     saveFilterSet(name, routePath);
+//     andThen(() => {
+//         let html = find(section);
+//         assert.equal(html.find(navigation).length, 1);
+//         let filterset = store.find('filterset', UUID.value);
+//         assert.equal(filterset.get('name'), name);
+//         assert.equal(filterset.get('endpoint_name'), routePath);
+//         assert.equal(filterset.get('endpoint_uri'), query);
+//     });
+// });
 
 test('delete filterset will fire off xhr and remove item from the sidebar navigation', (assert) => {
     let name = 'foobar';

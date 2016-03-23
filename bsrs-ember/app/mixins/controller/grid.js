@@ -36,7 +36,7 @@ var GridViewController = Ember.Controller.extend({
       let url = this.get('target.url');
       let params = filterset_regex(url);
       let repository = this.get('repository');
-      repository.insert(params, path, name);
+      return repository.insert(params, path, name);
     }
   }
 });

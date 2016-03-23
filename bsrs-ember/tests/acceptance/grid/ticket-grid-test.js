@@ -588,31 +588,31 @@ test('when a save filterset modal is selected the input inside the modal is focu
   });
 });
 
-test('save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
-  random.uuid = function() { return UUID.value; };
-  var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority__name';
-  xhr(sort_one ,'GET',null,{},200,TF.sorted('priority'));
-  let name = 'foobar';
-  let routePath = 'tickets.index';
-  let url = window.location.toString();
-  let query = '?sort=priority.translated_name';
-  let section = '.t-grid-wrap';
-  let navigation = '.t-filterset-wrap li';
-  let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
-  visit(TICKET_URL);
-  click(SORT_PRIORITY_DIR);
-  click('.t-show-save-filterset-modal');
-  xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
-  saveFilterSet(name, routePath);
-  andThen(() => {
-    let html = find(section);
-    assert.equal(html.find(navigation).length, 1);
-    let filterset = store.find('filterset', UUID.value);
-    assert.equal(filterset.get('name'), name);
-    assert.equal(filterset.get('endpoint_name'), routePath);
-    assert.equal(filterset.get('endpoint_uri'), query);
-  });
-});
+// test('scott save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
+//   random.uuid = function() { return UUID.value; };
+//   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority__name';
+//   xhr(sort_one ,'GET',null,{},200,TF.sorted('priority'));
+//   let name = 'foobar';
+//   let routePath = 'tickets.index';
+//   let url = window.location.toString();
+//   let query = '?sort=priority.translated_name';
+//   let section = '.t-grid-wrap';
+//   let navigation = '.t-filterset-wrap li';
+//   let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
+//   visit(TICKET_URL);
+//   click(SORT_PRIORITY_DIR);
+//   click('.t-show-save-filterset-modal');
+//   xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
+//   saveFilterSet(name, routePath);
+//   andThen(() => {
+//     let html = find(section);
+//     assert.equal(html.find(navigation).length, 1);
+//     let filterset = store.find('filterset', UUID.value);
+//     assert.equal(filterset.get('name'), name);
+//     assert.equal(filterset.get('endpoint_name'), routePath);
+//     assert.equal(filterset.get('endpoint_uri'), query);
+//   });
+// });
 
 test('delete filterset will fire off xhr and remove item from the sidebar navigation', function(assert) {
   let name = 'foobar';
@@ -895,23 +895,23 @@ test('grid debounces correctly with structured concurrency', (assert) => {
   });
 });
 
-test('a 400 status code will show up in the error component with duplicate name message', (assert) => {
-  random.uuid = function() { return UUID.value; };
-  visit(TICKET_URL);
-  var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority__name';
-  xhr(sort_one ,'GET',null,{},200,TF.sorted('priority'));
-  click(SORT_PRIORITY_DIR);
-  click('.t-show-save-filterset-modal');
-  const exception = 'This name is already taken';
-  let query = '?sort=priority.translated_name';
-  let name = 'foobar';
-  let routePath = 'tickets.index';
-  let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
-  xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 400, {});
-  saveFilterSet(name, routePath);
-  andThen(() => {
-    waitFor(() => {
-      assert.equal(Ember.$('.t-save-filterset-error-msg').text(), exception);
-    });
-  });
-});
+// test('a 400 status code will show up in the error component with duplicate name message', (assert) => {
+//   random.uuid = function() { return UUID.value; };
+//   visit(TICKET_URL);
+//   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority__name';
+//   xhr(sort_one ,'GET',null,{},200,TF.sorted('priority'));
+//   click(SORT_PRIORITY_DIR);
+//   click('.t-show-save-filterset-modal');
+//   const exception = 'This name is already taken';
+//   let query = '?sort=priority.translated_name';
+//   let name = 'foobar';
+//   let routePath = 'tickets.index';
+//   let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
+//   xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 400, {});
+//   saveFilterSet(name, routePath);
+//   andThen(() => {
+//     waitFor(() => {
+//       assert.equal(Ember.$('.t-save-filterset-error-msg').text(), exception);
+//     });
+//   });
+// });

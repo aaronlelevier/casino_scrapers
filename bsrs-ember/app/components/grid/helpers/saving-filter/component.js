@@ -30,9 +30,15 @@ var SavingFilterComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind,
       this.toggleProperty('savingFilter');
     },
     invokeSaveFilterSet() {
-      this.sendAction('save_filterset', this.get('filtersetName'));
-      this.toggleProperty('savingFilter');
-      this.set('filtersetName', '');
+      this.attrs.save_filterset(this.get('filtersetName')).then(() => {
+        this.toggleProperty('savingFilter');
+        this.set('filtersetName', '');
+        this.set('logMsg', '');
+      }, (xhr) => {
+        if (xhr.status === 400) {
+          this.set('logMsg', 'This saved filter name is already taken');
+        }
+      });
     },
   }
 });

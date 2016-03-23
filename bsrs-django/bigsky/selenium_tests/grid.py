@@ -192,7 +192,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         # people = self.wait_for_xhr_request("t-grid-data", plural=True)
         # self.assertEqual(len(people), 10)
 
-    def test_save_filter(self):
+    def test_save_filter_person(self):
         # Sort DESC
         search_name = str(uuid.uuid4())[:5]
         self.wait_for_xhr_request("t-sort-username-dir", debounce=True).click()
@@ -203,7 +203,6 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.wait_for_xhr_request("t-sort-username-dir", debounce=True).click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
         self.assertEqual(self.lorem[-1], usernames[0].text)
-
         # Save FilterSet
         try:
             modal = self.wait_for_xhr_request("t-show-save-filterset-modal", debounce=True)
@@ -211,6 +210,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
             modal_input = self.wait_for_xhr_request("t-filterset-name-input")
             modal_input.send_keys(search_name)
             self.wait_for_xhr_request("t-filterset-save-btn").click()
+            import time; time.sleep(1)
             self.driver.find_element_by_link_text(search_name)
             # Reset Grid - Hard refresh OK b/c saved in the DB
             self.driver.refresh()
@@ -222,7 +222,93 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
             # filterset already applied b/c ran tests multiple times.  Jenkins should be ok b/c builds new everytime
             pass
 
+    def test_save_filter_role(self):
+        self.nav_page.find_role_link().click()
+        # Sort DESC
+        search_name = str(uuid.uuid4())[:5]
+        self.wait_for_xhr_request("t-sort-name-dir", debounce=True).click()
+        self.wait_for_xhr_request("t-filter-role-type", debounce=True).click()
+        title_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
+        title_fulltext_search.send_keys("a")
+        title_fulltext_search.send_keys(Keys.RETURN)
+        self.wait_for_xhr_request("t-sort-name-dir", debounce=True).click()
+        names = self.wait_for_xhr_request("t-role-name", plural=True)
+        # Save FilterSet
+        try:
+            modal = self.wait_for_xhr_request("t-show-save-filterset-modal", debounce=True)
+            modal.click()
+            modal_input = self.wait_for_xhr_request("t-filterset-name-input")
+            modal_input.send_keys(search_name)
+            self.wait_for_xhr_request("t-filterset-save-btn").click()
+            import time; time.sleep(1)
+            self.driver.find_element_by_link_text(search_name)
+            # Reset Grid - Hard refresh OK b/c saved in the DB
+            self.driver.refresh()
+            self.wait_for_xhr_request("t-reset-grid").click()
+            self.driver.find_element_by_link_text(search_name).click()
+            self.wait_for_xhr_request("t-role-name", plural=True)
+        except NoSuchElementException:
+            # filterset already applied b/c ran tests multiple times.  Jenkins should be ok b/c builds new everytime
+            pass
 
+    def test_save_filter_ticket(self):
+        self.nav_page.find_ticket_link().click()
+        # Sort DESC
+        search_ticket = str(uuid.uuid4())[:5]
+        self.wait_for_xhr_request("t-sort-location-name-dir", debounce=True).click()
+        self.wait_for_xhr_request("t-filter-status-translated-name", debounce=True).click()
+        title_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
+        title_fulltext_search.send_keys("a")
+        title_fulltext_search.send_keys(Keys.RETURN)
+        self.wait_for_xhr_request("t-sort-location-name-dir", debounce=True).click()
+        locations = self.wait_for_xhr_request("t-ticket-location-name", plural=True)
+        # Save FilterSet
+        try:
+            modal = self.wait_for_xhr_request("t-show-save-filterset-modal", debounce=True)
+            modal.click()
+            modal_input = self.wait_for_xhr_request("t-filterset-name-input")
+            modal_input.send_keys(search_ticket)
+            self.wait_for_xhr_request("t-filterset-save-btn").click()
+            import time; time.sleep(1)
+            self.driver.find_element_by_link_text(search_ticket)
+            # Reset Grid - Hard refresh OK b/c saved in the DB
+            self.driver.refresh()
+            self.wait_for_xhr_request("t-reset-grid").click()
+            self.driver.find_element_by_link_text(search_ticket).click()
+            self.wait_for_xhr_request("t-ticket-location-name", plural=True)
+        except NoSuchElementException:
+            # filterset already applied b/c ran tests multiple times.  Jenkins should be ok b/c builds new everytime
+            pass
+
+    #AARON: column reference name is ambiguous???
+    # def test_save_filter_location(self):
+    #     self.nav_page.find_location_link().click()
+    #     # Sort DESC
+    #     search_location = str(uuid.uuid4())[:5]
+    #     self.wait_for_xhr_request("t-sort-name-dir", debounce=True).click()
+    #     self.wait_for_xhr_request("t-filter-status-translated-name", debounce=True).click()
+    #     title_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
+    #     title_fulltext_search.send_keys("a")
+    #     title_fulltext_search.send_keys(Keys.RETURN)
+    #     self.wait_for_xhr_request("t-sort-name-dir", debounce=True).click()
+    #     locations = self.wait_for_xhr_request("t-location-name", plural=True)
+    #     # Save FilterSet
+    #     try:
+    #         modal = self.wait_for_xhr_request("t-show-save-filterset-modal", debounce=True)
+    #         modal.click()
+    #         modal_input = self.wait_for_xhr_request("t-filterset-name-input")
+    #         modal_input.send_keys(search_location)
+    #         self.wait_for_xhr_request("t-filterset-save-btn").click()
+    #         import time; time.sleep(1)
+    #         self.driver.find_element_by_link_text(search_location)
+    #         # Reset Grid - Hard refresh OK b/c saved in the DB
+    #         self.driver.refresh()
+    #         self.wait_for_xhr_request("t-reset-grid").click()
+    #         self.driver.find_element_by_link_text(search_location).click()
+    #         self.wait_for_xhr_request("t-location-name", plural=True)
+    #     except NoSuchElementException:
+    #         # filterset already applied b/c ran tests multiple times.  Jenkins should be ok b/c builds new everytime
+    #         pass
 
 if __name__ == "__main__":
     unittest.main()
