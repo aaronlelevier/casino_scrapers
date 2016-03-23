@@ -54,6 +54,8 @@ class TreeDataDetailTests(TreeDataTestSetUpMixin, APITestCase):
         field = self.tree_data.fields.first()
         self.assertEqual(data['fields'][0]['id'], str(field.id))
         self.assertEqual(data['fields'][0]['label'], field.label)
+        self.assertEqual(data['fields'][0]['type'], field.type)
+        self.assertEqual(data['fields'][0]['order'], field.order)
         self.assertEqual(data['fields'][0]['required'], field.required)
         # Options
         self.assertEqual(len(data['fields'][0]['options']), 2)
@@ -162,12 +164,13 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
             'id': str(uuid.uuid4()),
             'label': random_lorem(),
             'type': FIELD_TYPES[0],
+            'required': True,
+            'order': 1,
             'options': [{
                 'id': str(uuid.uuid4()),
                 'text': random_lorem(),
                 'order': 1
-            }],
-            'required': True
+            }]
         }]
 
         response = self.client.post('/api/dtds/', raw_data, format='json')
@@ -180,6 +183,7 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['fields'][0]['label'], raw_data['fields'][0]['label'])
         self.assertEqual(data['fields'][0]['type'], raw_data['fields'][0]['type'])
         self.assertEqual(data['fields'][0]['required'], raw_data['fields'][0]['required'])
+        self.assertEqual(data['fields'][0]['order'], raw_data['fields'][0]['order'])
         # Option
         self.assertEqual(len(data['fields'][0]['options']), 1)
         self.assertEqual(data['fields'][0]['options'][0]['id'], raw_data['fields'][0]['options'][0]['id'])
@@ -293,8 +297,9 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
             'id': str(uuid.uuid4()),
             'label': random_lorem(),
             'type': FIELD_TYPES[0],
+            'required': True,
+            'order': 2,
             # 'options': [], # purposely left out b/c not a required field
-            'required': True
         }]
 
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
@@ -305,20 +310,22 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['fields'][0]['id'], self.data['fields'][0]['id'])
         self.assertEqual(data['fields'][0]['label'], self.data['fields'][0]['label'])
         self.assertEqual(data['fields'][0]['type'], self.data['fields'][0]['type'])
-        self.assertEqual(data['fields'][0]['options'], [])
         self.assertEqual(data['fields'][0]['required'], self.data['fields'][0]['required'])
+        self.assertEqual(data['fields'][0]['order'], self.data['fields'][0]['order'])
+        self.assertEqual(data['fields'][0]['options'], [])
 
     def test_add_field_and_options(self):
         self.data['fields'] = [{
             'id': str(uuid.uuid4()),
             'label': random_lorem(),
             'type': FIELD_TYPES[0],
+            'required': True,
+            'order': 1,
             'options': [{
                 'id': str(uuid.uuid4()),
                 'text': random_lorem(),
                 'order': 1
-            }],
-            'required': True
+            }]
         }]
 
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
@@ -331,6 +338,7 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['fields'][0]['label'], self.data['fields'][0]['label'])
         self.assertEqual(data['fields'][0]['type'], self.data['fields'][0]['type'])
         self.assertEqual(data['fields'][0]['required'], self.data['fields'][0]['required'])
+        self.assertEqual(data['fields'][0]['order'], self.data['fields'][0]['order'])
         # Option
         self.assertEqual(len(data['fields'][0]['options']), 1)
         self.assertEqual(data['fields'][0]['options'][0]['id'], self.data['fields'][0]['options'][0]['id'])

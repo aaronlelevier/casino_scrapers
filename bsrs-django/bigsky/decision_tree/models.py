@@ -22,6 +22,7 @@ class TreeData(BaseModel):
 
 
 class TreeField(BaseModel):
+    order = models.IntegerField(blank=True, default=0)
     label = models.CharField(max_length=1000)
     type = models.CharField(max_length=100, choices=[(x,x) for x in FIELD_TYPES],
                             default=FIELD_TYPES[0])
@@ -30,8 +31,8 @@ class TreeField(BaseModel):
 
 
 class TreeOption(BaseModel):
-    text =  models.CharField(max_length=1000)
     order = models.IntegerField(blank=True, default=0)
+    text =  models.CharField(max_length=1000)
     field = models.ForeignKey(TreeField, related_name='options', null=True)
 
 

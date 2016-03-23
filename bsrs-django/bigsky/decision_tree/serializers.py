@@ -22,7 +22,7 @@ class TreeFieldSerializer(BaseCreateSerializer):
 
     class Meta:
         model = TreeField
-        fields = ('id', 'label', 'type', 'options', 'required',)
+        fields = ('id', 'label', 'type', 'required', 'order', 'options',)
 
 
 class TreeLinkLeafSerializer(serializers.ModelSerializer):
