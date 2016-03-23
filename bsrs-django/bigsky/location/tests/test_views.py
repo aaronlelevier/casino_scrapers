@@ -135,7 +135,7 @@ class LocationLevelTests(APITestCase):
     ### UPDATE
 
     def test_update(self):
-        region = LocationLevel.objects.get(name='region')
+        region = LocationLevel.objects.get(name=LOCATION_REGION)
         old_name = region.name
         data = {
             'id': str(region.id),
@@ -161,7 +161,7 @@ class LocationLevelTests(APITestCase):
     ### DETAIL ROUTES
 
     def test_get_all_children(self):
-        region = LocationLevel.objects.get(name='region')
+        region = LocationLevel.objects.get(name=LOCATION_REGION)
         response = self.client.get('/api/admin/location-levels/{}/get-all-children/'.format(region.id), format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(

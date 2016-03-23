@@ -68,6 +68,10 @@ class CreateLocationsTests(TestCase):
     def setUp(self):
         factory.create_locations()
 
+    def test_counts(self):
+        self.assertEqual(LocationLevel.objects.count(), 5)
+        self.assertEqual(Location.objects.count(), 7)
+
     def test_company(self):
         company = Location.objects.get(name=settings.LOCATION_TOP_LEVEL_NAME)
 

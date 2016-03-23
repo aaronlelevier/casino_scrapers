@@ -8,8 +8,8 @@ from model_mommy import mommy
 from accounting.models import Currency
 from category.models import Category
 from category.tests.factory import create_single_category, create_categories
-from location.models import Location, LocationLevel
-from location.tests.factory import create_location, create_locations
+from location.models import Location, LocationLevel, LOCATION_DISTRICT, LOCATION_REGION
+from location.tests.factory import create_location, create_locations, create_location_levels
 from person.models import Person, Role
 from person.tests import factory
 from translation.models import Locale
@@ -21,27 +21,39 @@ class DistrictManagerFactoryTests(TestCase):
     def setUp(self):
         self.dm = factory.DistrictManager()
 
-    def test_person(self):
-        self.assertEqual(self.dm.person.username, 'district-manager-1')
-        self.assertEqual(self.dm.person.role.name, 'district-manager')
-        self.assertEqual(self.dm.person.role, self.dm.role)
+    def test_categories(self):
+        category = self.dm.repair
+
+        self.assertEqual(self.dm.role.categories.count(), 1)
+        self.assertEqual(category, self.dm.role.categories.first())
+        self.assertEqual(category.name, factory.CATEGORY_REPAIR)
+        self.assertEqual(category.label, settings.TOP_LEVEL_CATEGORY_LABEL)
+        self.assertEqual(category.subcategory_label, 'trade')
+        self.assertIsNone(category.parent)
+        self.assertEqual(category.children.count(), 0)
 
     def test_location_level(self):
-        self.assertEqual(self.dm.role.location_level, self.dm.location_level)
+        location_level = self.dm.location_level
+
+        self.assertEqual(location_level, self.dm.role.location_level)
+        self.assertEqual(location_level.name, LOCATION_DISTRICT)
         self.assertEqual(
             self.dm.location.location_level,
             self.dm.location_level
         )
 
-    def test_location(self):
-        self.assertIn(
-            self.dm.location,
-            self.dm.person.locations.all()
-        )
+    def test_role(self):
+        self.assertEqual(self.dm.role.location_level, self.dm.location_level)
+        self.assertIn(self.dm.repair, self.dm.role.categories.all())
 
-    def test_categories(self):
-        self.assertEqual(self.dm.role.categories.count(), 1)
-        self.assertEqual(self.dm.role.categories.first().name, "Repair")
+    def test_location(self):
+        self.assertEqual(self.dm.location.location_level, self.dm.location_level)
+
+    def test_person(self):
+        self.assertEqual(self.dm.person.username, 'district-manager-1')
+        self.assertEqual(self.dm.person.role.name, 'district-manager')
+        self.assertEqual(self.dm.person.role, self.dm.role)
+        self.assertIn(self.dm.location, self.dm.person.locations.all())
 
 
 class CreateRoleTests(TestCase):
@@ -52,7 +64,7 @@ class CreateRoleTests(TestCase):
         self.assertIsInstance(role, Role)
         self.assertIsInstance(role.default_auth_currency, Currency)
         self.assertEqual(init_count+1, Role.objects.count())
-        self.assertEqual(role.location_level.name, factory.LOCATION_LEVEL)
+        self.assertEqual(role.location_level.name, LOCATION_REGION)
 
     def test_with_name(self):
         name = "Admin"
@@ -106,6 +118,25 @@ class CreateRolesTests(TestCase):
                 self.assertEqual(role.name, '{}-role'.format(role.location_level.name))
 
             self.assertEqual(role.categories.count(), 1)
+
+class CreateRolesWithExistingRelatedDataTests(TestCase):
+
+    def test_location_levels_exist(self):
+        create_location_levels()
+        self.assertEqual(LocationLevel.objects.count(), 5)
+        self.assertEqual(Location.objects.count(), 0)
+        self.assertEqual(Role.objects.count(), 0)
+
+        factory.create_roles()
+
+        self.assertEqual(LocationLevel.objects.count(), 5)
+        self.assertEqual(Location.objects.count(), 0)
+        self.assertEqual(Role.objects.count(), 5)
+        for ll in LocationLevel.objects.all():
+            if ll.name == settings.DEFAULT_LOCATION_LEVEL:
+                self.assertIsInstance(Role.objects.get(name=settings.DEFAULT_ROLE), Role)
+            else:
+                self.assertIsInstance(Role.objects.get(name="{}-role".format(ll.name)), Role)
 
 
 class CreateSinglePersonTests(TestCase):
@@ -270,15 +301,21 @@ class CreateAllPeopleTests(TestCase):
         # the ``create_all_people`` function should only create objects in the 
         # ``person`` app, not any extra Locations
         create_locations()
+        self.assertEqual(LocationLevel.objects.count(), 5)
+        self.assertEqual(Location.objects.count(), 7)
         create_locales()
         factory.create_person_statuses()
         init_location_count = Location.objects.count()
 
         factory.create_all_people()
 
+        self.assertEqual(LocationLevel.objects.count(), 5)
+        self.assertEqual(Location.objects.count(), 7)
+        # people
         people = Person.objects.all()
         self.assertEqual(people.count(), 187)
         # Roles
+        self.assertEqual(Role.objects.count(), 5)
         self.assertTrue(Role.objects.filter(name=settings.DEFAULT_ROLE).exists())
         # At least some people are assigned to Location(s)
         self.assertTrue(Person.objects.exclude(locations__isnull=True))

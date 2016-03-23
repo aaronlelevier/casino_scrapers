@@ -8,8 +8,8 @@ from model_mommy import mommy
 from accounting.models import Currency
 from category.models import Category
 from category.tests.factory import create_single_category
-from location.models import LocationLevel, Location
-from location.tests.factory import create_location, create_locations
+from location.models import LocationLevel, Location, LOCATION_DISTRICT, LOCATION_REGION
+from location.tests.factory import create_location, create_locations, create_location_levels
 from person.models import Person, Role, PersonStatus
 from translation.tests.factory import create_locale, LOCALES
 from translation.models import Locale
@@ -18,8 +18,7 @@ from utils.helpers import generate_uuid
 
 
 PASSWORD = '1234'
-LOCATION_LEVEL = 'region'
-CATEGORY = 'repair'
+CATEGORY_REPAIR = 'Repair'
 PERSON_STATUSES = [
     'admin.person.status.active',
     'admin.person.status.inactive',
@@ -30,10 +29,10 @@ PERSON_STATUSES = [
 class DistrictManager(object):
     
     def __init__(self, *args, **kwargs):
-        repair = Category.objects.create(name="Repair", subcategory_label="trade")
+        self.repair = Category.objects.create(name=CATEGORY_REPAIR, subcategory_label="trade")
 
-        self.location_level, _ = LocationLevel.objects.get_or_create(name='district')
-        self.role = create_role('district-manager', self.location_level, category=repair)
+        self.location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_DISTRICT)
+        self.role = create_role('district-manager', self.location_level, category=self.repair)
         self.location = Location.objects.create(location_level=self.location_level,
                                                 name='district-1', number='district-1')
         self.person = create_single_person('district-manager-1', self.role, self.location)        
@@ -49,7 +48,7 @@ def create_role(name=None, location_level=None, category=None):
     Currency.objects.default()
 
     if not location_level:
-        location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_LEVEL)
+        location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_REGION)
 
     role = mommy.make(Role, name=name, location_level=location_level)
     role.categories.add(category)
@@ -62,8 +61,8 @@ def create_roles():
 
     category = Category.objects.first()
     
-    if not Location.objects.first():
-        create_locations()
+    if not LocationLevel.objects.first():
+        create_location_levels()
 
     for location_level in LocationLevel.objects.all():
 
