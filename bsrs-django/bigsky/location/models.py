@@ -8,6 +8,13 @@ from contact.models import PhoneNumber, Address, Email
 from utils.models import BaseNameModel, BaseModel, BaseManager
 
 
+LOCATION_COMPANY = 'Company'
+LOCATION_REGION = 'Region'
+LOCATION_DISTRICT = 'District'
+LOCATION_STORE = 'Store'
+LOCATION_FMU = 'Facility Management Unit'
+
+
 ### SELF REFERENCING BASE
 
 class SelfReferencingQuerySet(models.query.QuerySet):
@@ -105,7 +112,7 @@ class SelfReferencingManager(BaseManager):
         return self.get_queryset().objects_and_their_children()
 
     def create_top_level(self):
-        obj, _ = self.get_or_create(name=settings.DEFAULT_LOCATION_LEVEL)
+        obj, _ = self.get_or_create(name=LOCATION_COMPANY)
         return obj
 
 
@@ -282,7 +289,7 @@ class Location(SelfRefrencingBaseModel, BaseModel):
         ordering = ("name", "number",)
 
     def __str__(self):
-        return self.name
+        return "{}: {}".format(self.name, self.location_level.name)
 
     def save(self, *args, **kwargs):
         if not self.status:

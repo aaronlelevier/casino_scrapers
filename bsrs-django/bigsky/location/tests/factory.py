@@ -2,7 +2,8 @@ from django.conf import settings
 
 from model_mommy import mommy
 
-from location.models import Location, LocationLevel
+from location.models import (Location, LocationLevel, LOCATION_COMPANY,
+LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE, LOCATION_FMU,)
 from utils.create import _generate_chars
 
 
@@ -11,29 +12,21 @@ LOS_ANGELES = 'los_angeles'
 
 
 def create_location_levels():
-    '''
-    ``district_lp`` = district loss prevention
-    '''
-    company, _ = LocationLevel.objects.get_or_create(name=settings.DEFAULT_LOCATION_LEVEL)
-    region, _ = LocationLevel.objects.get_or_create(name='region')
-    district, _ = LocationLevel.objects.get_or_create(name='district')
-    district_lp, _ = LocationLevel.objects.get_or_create(name='district_lp')
-    store, _ = LocationLevel.objects.get_or_create(name='store')
-    department, _ = LocationLevel.objects.get_or_create(name='department')
+    company, _ = LocationLevel.objects.get_or_create(name=LOCATION_COMPANY)
+    region, _ = LocationLevel.objects.get_or_create(name=LOCATION_REGION)
+    district, _ = LocationLevel.objects.get_or_create(name=LOCATION_DISTRICT)
+    store, _ = LocationLevel.objects.get_or_create(name=LOCATION_STORE)
+    fmu, _ = LocationLevel.objects.get_or_create(name=LOCATION_FMU)
     # JOIN's
     company.children.add(region)
-    company.children.add(district)
-    company.children.add(district_lp)
-    company.children.add(store)
-    company.children.add(department)
+    company.children.add(fmu)
     region.children.add(district)
-    region.children.add(district_lp)
     district.children.add(store)
-    store.children.add(department)
+    fmu.children.add(store)
 
 
 def create_location_level(name=None):
-    name = name or settings.DEFAULT_LOCATION_LEVEL
+    name = name or LOCATION_COMPANY
     obj, _ = LocationLevel.objects.get_or_create(name=name)
     return obj
 
@@ -42,18 +35,22 @@ def create_locations(_many=None):
     create_location_levels()
     company = Location.objects.create_top_level()
     # Region
-    region_ll = LocationLevel.objects.get(name='region')
+    region_ll = LocationLevel.objects.get(name=LOCATION_REGION)
     east = mommy.make(Location, number=_generate_chars(), location_level=region_ll, name='east')
+    # FMU
+    fmu_ll = LocationLevel.objects.get(name=LOCATION_FMU)
+    fmu = mommy.make(Location, number=_generate_chars(), location_level=fmu_ll, name=LOCATION_FMU)
     # District
-    district_ll = LocationLevel.objects.get(name='district')
+    district_ll = LocationLevel.objects.get(name=LOCATION_DISTRICT)
     ca = mommy.make(Location, number=_generate_chars(), location_level=district_ll, name='ca')
     nv = mommy.make(Location, number=_generate_chars(), location_level=district_ll, name='nv')
     # Stores
-    store_ll = LocationLevel.objects.get(name='store')
+    store_ll = LocationLevel.objects.get(name=LOCATION_STORE)
     san_diego = mommy.make(Location, number=_generate_chars(), location_level=store_ll, name=SAN_DIEGO)
     los_angeles = mommy.make(Location, number=_generate_chars(), location_level=store_ll, name=LOS_ANGELES)
     # JOIN's
     company.children.add(east)
+    company.children.add(fmu)
     east.children.add(ca)
     east.children.add(nv)
     ca.children.add(san_diego)

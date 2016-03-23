@@ -9,7 +9,8 @@ from contact.models import Address, PhoneNumber, PhoneNumberType, Email
 from contact.tests.factory import create_contact, create_contacts
 from location.tests.factory import (create_location_levels, create_locations, 
     LOS_ANGELES, SAN_DIEGO)
-from location.models import Location, LocationLevel, LocationStatus
+from location.models import (Location, LocationLevel, LocationStatus,
+LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE,)
 from location.serializers import LocationUpdateSerializer
 from person.tests.factory import create_person, create_single_person, create_role, PASSWORD
 from utils import create
@@ -21,9 +22,9 @@ class LocationLevelTests(APITestCase):
 
     def setUp(self):
         create_location_levels()
-        self.region = LocationLevel.objects.get(name='region')
-        self.district = LocationLevel.objects.get(name='district')
-        self.store = LocationLevel.objects.get(name='store')
+        self.region = LocationLevel.objects.get(name=LOCATION_REGION)
+        self.district = LocationLevel.objects.get(name=LOCATION_DISTRICT)
+        self.store = LocationLevel.objects.get(name=LOCATION_STORE)
         # Login
         self.person = create_person()
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -166,15 +167,6 @@ class LocationLevelTests(APITestCase):
         self.assertEqual(
             len(data),
             LocationLevel.objects.get_all_children(region).count()
-        )
-
-    def test_get_all_parents(self):
-        department = LocationLevel.objects.get(name='department')
-        response = self.client.get('/api/admin/location-levels/{}/get-all-parents/'.format(department.id), format='json')
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(
-            len(data),
-            LocationLevel.objects.get_all_parents(department).count()
         )
 
     ### DELETE
@@ -359,12 +351,12 @@ class LocationDetailTests(APITestCase):
         child = Location.objects.get(name='ca')
         self.assertIn(str(child.id), [loc['id'] for loc in data])
         self.assertNotIn(str(location.id), [loc['id'] for loc in data])
-        self.assertEqual(len(data), 6)
+        self.assertEqual(len(data), 4)
 
     def test_get_level_parents(self):
         # SetUp
         location = Location.objects.get(name='ca')
-        location_level = LocationLevel.objects.get(name='region')
+        location_level = LocationLevel.objects.get(name=LOCATION_REGION)
         # New Parent Location at "region" Level
         east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
         east_lp.children.add(location)
@@ -382,7 +374,7 @@ class LocationDetailTests(APITestCase):
 
     def test_get_level_children__filtered(self):
         location = Location.objects.get(name='east')
-        location_level = LocationLevel.objects.get(name='store')
+        location_level = LocationLevel.objects.get(name=LOCATION_STORE)
         keyword = 'san_die'
         response = self.client.get(
             '/api/admin/locations/get-level-children/{llevel_id}/{pk}/?name__icontains={name}'
@@ -396,7 +388,7 @@ class LocationDetailTests(APITestCase):
 
     def test_get_level_parents__filtered(self):
         location = Location.objects.get(name='ca')
-        location_level = LocationLevel.objects.get(name='region')
+        location_level = LocationLevel.objects.get(name=LOCATION_REGION)
         east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
         east_lp.children.add(location)
         keyword = 'east_l'

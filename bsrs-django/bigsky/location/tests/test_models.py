@@ -6,7 +6,8 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from location.tests.factory import create_locations
-from location.models import LocationLevel, LocationStatus, LocationType, Location
+from location.models import (LocationLevel, LocationStatus, LocationType, Location,
+    LOCATION_REGION, LOCATION_FMU, LOCATION_STORE,)
 from person.tests.factory import create_single_person
 
 
@@ -132,7 +133,7 @@ class LocationManagerTests(TestCase):
         location = Location.objects.get(name='ca')
         # test
         children = Location.objects.get_level_children(location.location_level.id, location.id)
-        self.assertEqual(children.count(), 3)
+        self.assertEqual(children.count(), 2)
 
     def test_get_level_children_exclude(self):
         # setup
@@ -140,7 +141,7 @@ class LocationManagerTests(TestCase):
         location_level_updated = LocationLevel.objects.get(name=settings.DEFAULT_LOCATION_LEVEL)
         # test
         children = Location.objects.get_level_children(location_level_updated.id, location.id)
-        self.assertEqual(children.count(), 6)
+        self.assertEqual(children.count(), 5)
 
     def test_get_level_children_exclude_not_relevant_pk(self):
         # setup
@@ -148,13 +149,13 @@ class LocationManagerTests(TestCase):
         location_level_updated = LocationLevel.objects.get(name=settings.DEFAULT_LOCATION_LEVEL)
         # test
         children = Location.objects.get_level_children(location_level_updated.id, str(uuid.uuid4()))
-        self.assertEqual(children.count(), 7)
+        self.assertEqual(children.count(), 6)
 
     def test_get_level_parents(self):
         # 'ca' is a 'district' that now has 3 parents at the 'region'(2) and company(1) ``LocationLevel``
         # setup
         location = Location.objects.get(name='ca')
-        location_level = LocationLevel.objects.get(name='region')
+        location_level = LocationLevel.objects.get(name=LOCATION_REGION)
         # New Parent Location at "region" Level
         east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
         east_lp.children.add(location)
@@ -167,20 +168,19 @@ class LocationManagerTests(TestCase):
         # 'ca' is a 'district' that now has 3 parents at the 'region'(2) and company(1) ``LocationLevel``
         # setup
         location = Location.objects.get(name='ca')
-        location_level = LocationLevel.objects.get(name='region')
-        location_level_updated = LocationLevel.objects.get(name='department')
+        location_level = LocationLevel.objects.get(name=LOCATION_REGION)
+        location_level_updated = LocationLevel.objects.get(name=LOCATION_STORE)
         # New Parent Location at "region" Level
         east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
         east_lp.children.add(location)
         # Test
         parents = Location.objects.get_level_parents(location_level_updated.id, location.id)
-        self.assertEqual(parents.count(), 6)
+        self.assertEqual(parents.count(), 5)
         self.assertEqual(parents[0].name, settings.LOCATION_TOP_LEVEL_NAME)
-        self.assertEqual(parents[1].name, 'east')
-        self.assertEqual(parents[2].name, 'east_lp')
-        self.assertEqual(parents[3].name, 'los_angeles')
+        self.assertEqual(parents[1].name, LOCATION_FMU)
+        self.assertEqual(parents[2].name, 'east')
+        self.assertEqual(parents[3].name, 'east_lp')
         self.assertEqual(parents[4].name, 'nv')
-        self.assertEqual(parents[5].name, 'san_diego')
 
     def test_objects_and_their_children(self):
         person = create_single_person()

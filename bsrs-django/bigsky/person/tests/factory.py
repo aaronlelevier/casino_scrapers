@@ -203,7 +203,6 @@ from person.tests.factory import create_all_people
 create_all_people()
 """
 def create_all_people():
-
     if not Location.objects.filter(name=settings.LOCATION_TOP_LEVEL_NAME):
         create_locations()
 
@@ -228,6 +227,7 @@ def create_all_people():
     person = Person.objects.get(username='admin')
     update_admin(person)
 
+
 def create_person_status(name=None):
     id = generate_uuid(PersonStatus)
     if not name:
@@ -237,6 +237,7 @@ def create_person_status(name=None):
     except PersonStatus.DoesNotExist:
         obj = PersonStatus.objects.create(id=id, name=name)
     return obj
+
 
 def create_person_statuses():
     return [create_person_status(s) for s in PERSON_STATUSES]
