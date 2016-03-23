@@ -48,6 +48,11 @@ class SavedSearchTests(TestCase):
             mommy.make(SavedSearch, person=self.person, name="foo",
                 endpoint_name="admin.people.index")
 
+    def test_validate_person_name_unique_diff_endpoint_name(self):
+        mommy.make(SavedSearch, person=self.person, name="foo",
+            endpoint_name="tickets.index")
+        self.assertEqual(SavedSearch.objects.count(), 2)
+
     def test_to_dict(self):
         self.assertEqual(len(self.saved_search.to_dict()), 4)
         self.assertIsInstance(self.saved_search.to_dict(), dict)

@@ -60,7 +60,7 @@ class SavedSearch(BaseModel):
         """Use ``self.created`` check, so this validator will only be triggered
         when creating new records."""
         if not self.created and SavedSearch.objects.filter(
-            person=self.person, name=self.name).exists():
+            person=self.person, name=self.name, endpoint_name=self.endpoint_name).exists():
 
             raise ValidationError("Record for: {} with name: {} already exists.".format(
                 self.person, self.name))
