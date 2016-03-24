@@ -7,10 +7,9 @@ from rest_framework.test import APITestCase
 
 from category.tests.factory import create_single_category
 from decision_tree.model_choices import LINK_TYPES, NOTE_TYPES, FIELD_TYPES
-from decision_tree.models import TreeField, TreeOption, TreeLink, TreeData
-from decision_tree.serializers import TreeDataSerializer
-from decision_tree.tests.factory import create_tree_link, create_tree_field, create_tree_data
-from generic.models import Attachment
+from decision_tree.models import TreeOption, TreeData
+from decision_tree.serializers import TreeDataCreateUpdateSerializer
+from decision_tree.tests.factory import create_tree_data
 from generic.tests.factory import create_attachments
 from person.tests.factory import PASSWORD, create_single_person
 from ticket.tests.factory import create_ticket_status, create_ticket_priority
@@ -71,12 +70,15 @@ class TreeDataDetailTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['links'][0]['action_button'], link.action_button)
         self.assertEqual(data['links'][0]['is_header'], link.is_header)
         self.assertEqual(len(data['links'][0]['categories']), 1)
+        self.assertEqual(data['links'][0]['categories'][0]['id'], str(link.categories.first().id))
+        self.assertEqual(data['links'][0]['categories'][0]['name'], link.categories.first().name)
         self.assertEqual(data['links'][0]['request'], link.request)
         self.assertEqual(data['links'][0]['priority_fk'], str(link.priority.id))
         self.assertEqual(data['links'][0]['status_fk'], str(link.status.id))
-        self.assertEqual(data['links'][0]['destination_fk'], str(link.destination.id))
         self.assertEqual(data['links'][0]['dtd_fk'], str(self.tree_data.id))
-        self.assertEqual(data['links'][0]['destination_fk'], str(link.destination.id))
+        self.assertEqual(data['links'][0]['destination']['id'], str(link.destination.id))
+        self.assertEqual(data['links'][0]['destination']['key'], link.destination.key)
+        self.assertEqual(data['links'][0]['destination']['description'], link.destination.description)
 
 
 class TreeDataListTests(TreeDataTestSetUpMixin, APITestCase):
@@ -97,7 +99,7 @@ class TreeDataListTests(TreeDataTestSetUpMixin, APITestCase):
 class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
 
     def test_create__not_related_fields_only(self):
-        serializer = TreeDataSerializer(self.tree_data)
+        serializer = TreeDataCreateUpdateSerializer(self.tree_data)
         raw_data = copy.copy(serializer.data)
         new_id = str(uuid.uuid4())
         raw_data['id'] = new_id
@@ -116,7 +118,7 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['link_type'], raw_data['link_type'])
 
     def test_create__and_attachment(self):
-        serializer = TreeDataSerializer(self.tree_data)
+        serializer = TreeDataCreateUpdateSerializer(self.tree_data)
         raw_data = copy.copy(serializer.data)
         new_id = str(uuid.uuid4())
         new_attachment = create_attachments()
@@ -132,7 +134,7 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertIn(str(new_attachment.id), data['attachments'])
 
     def test_create__and_create_field(self):
-        serializer = TreeDataSerializer(self.tree_data)
+        serializer = TreeDataCreateUpdateSerializer(self.tree_data)
         raw_data = copy.copy(serializer.data)
         new_id = str(uuid.uuid4())
         raw_data['id'] = new_id
@@ -156,7 +158,7 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['fields'][0]['required'], raw_data['fields'][0]['required'])
 
     def test_create__and_create_field_and_option(self):
-        serializer = TreeDataSerializer(self.tree_data)
+        serializer = TreeDataCreateUpdateSerializer(self.tree_data)
         raw_data = copy.copy(serializer.data)
         new_id = str(uuid.uuid4())
         raw_data['id'] = new_id
@@ -191,7 +193,7 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['fields'][0]['options'][0]['text'], raw_data['fields'][0]['options'][0]['text'])
 
     def test_create__and_create_link(self):
-        serializer = TreeDataSerializer(self.tree_data)
+        serializer = TreeDataCreateUpdateSerializer(self.tree_data)
         raw_data = copy.copy(serializer.data)
         new_id = str(uuid.uuid4())
         category = create_single_category()
@@ -228,17 +230,17 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(len(data['links'][0]['categories']), 1)
         self.assertEqual(data['links'][0]['categories'][0], str(category.id))
         self.assertEqual(data['links'][0]['request'], raw_data['links'][0]['request'])
-        self.assertEqual(data['links'][0]['priority_fk'], str(priority.id))
-        self.assertEqual(data['links'][0]['status_fk'], str(status.id))
-        self.assertEqual(data['links'][0]['dtd_fk'], new_id)
-        self.assertEqual(data['links'][0]['destination_fk'], str(destination.id))
+        self.assertEqual(data['links'][0]['priority'], str(priority.id))
+        self.assertEqual(data['links'][0]['status'], str(status.id))
+        self.assertEqual(data['links'][0]['dtd'], new_id)
+        self.assertEqual(data['links'][0]['destination'], str(destination.id))
 
 
 class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
 
     def setUp(self):
         super(TreeDataUpdateTests, self).setUp()
-        serializer = TreeDataSerializer(self.tree_data)
+        serializer = TreeDataCreateUpdateSerializer(self.tree_data)
         self.data = copy.copy(serializer.data)
 
     def test_change_first_level_fields(self):
@@ -444,10 +446,10 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(len(data['links'][0]['categories']), 1)
         self.assertEqual(data['links'][0]['categories'][0], str(category.id))
         self.assertEqual(data['links'][0]['request'], self.data['links'][0]['request'])
-        self.assertEqual(data['links'][0]['priority_fk'], str(priority.id))
-        self.assertEqual(data['links'][0]['status_fk'], str(status.id))
-        self.assertEqual(data['links'][0]['dtd_fk'], str(self.tree_data.id))
-        self.assertEqual(data['links'][0]['destination_fk'], str(destination.id))
+        self.assertEqual(data['links'][0]['priority'], str(priority.id))
+        self.assertEqual(data['links'][0]['status'], str(status.id))
+        self.assertEqual(data['links'][0]['dtd'], str(self.tree_data.id))
+        self.assertEqual(data['links'][0]['destination'], str(destination.id))
 
     def test_update_existing_link__first_level_key(self):
         self.assertEqual(len(self.data['links']), 1)
@@ -490,10 +492,10 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['links'][0]['priority_fk'], str(priority.id))
-        self.assertEqual(data['links'][0]['status_fk'], str(status.id))
-        self.assertEqual(data['links'][0]['dtd_fk'], str(self.tree_data.id))
-        self.assertEqual(data['links'][0]['destination_fk'], str(destination.id))
+        self.assertEqual(data['links'][0]['priority'], str(priority.id))
+        self.assertEqual(data['links'][0]['status'], str(status.id))
+        self.assertEqual(data['links'][0]['dtd'], str(self.tree_data.id))
+        self.assertEqual(data['links'][0]['destination'], str(destination.id))
 
     def test_remove_link(self):
         self.data['links'] = []

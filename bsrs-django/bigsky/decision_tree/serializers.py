@@ -3,6 +3,7 @@ import copy
 from rest_framework import serializers
 
 from category.models import Category
+from category.serializers import CategoryIDNameOnlySerializer
 from decision_tree.models import TreeField, TreeOption, TreeLink, TreeData
 from generic.models import Attachment
 from utils import create
@@ -25,32 +26,6 @@ class TreeFieldSerializer(BaseCreateSerializer):
         fields = ('id', 'label', 'type', 'required', 'order', 'options',)
 
 
-class TreeLinkLeafSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = TreeLink
-        fields = ('id', 'order', 'text',)
-
-
-class TreeLinkSerializer(BaseCreateSerializer):
-
-    categories = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.all(), many=True, required=False)
-
-    class Meta:
-        model = TreeLink
-        fields = ('id', 'order', 'text', 'action_button', 'is_header', 'categories',
-                  'request', 'priority', 'status', 'dtd', 'destination',)
-
-    def to_representation(self, obj):
-        data = super(TreeLinkSerializer, self).to_representation(obj)
-        data['priority_fk'] = data.pop('priority', None)
-        data['status_fk'] = data.pop('status', None)
-        data['destination_fk'] = data.pop('destination', None)
-        data['dtd_fk'] = data.pop('dtd', None)
-        return data
-
-
 class TreeDataListSerializer(BaseCreateSerializer):
 
     class Meta:
@@ -58,12 +33,55 @@ class TreeDataListSerializer(BaseCreateSerializer):
         fields = ('id', 'key', 'description',)
 
 
-class TreeDataSerializer(BaseCreateSerializer):
+class TreeLinkDetailSerializer(BaseCreateSerializer):
+
+    categories = CategoryIDNameOnlySerializer(many=True, required=False)
+    destination = TreeDataListSerializer(required=False)
+
+    class Meta:
+        model = TreeLink
+        fields = ('id', 'order', 'text', 'action_button', 'is_header', 'categories',
+                  'request', 'priority', 'status', 'dtd', 'destination',)
+
+    def to_representation(self, obj):
+        data = super(TreeLinkDetailSerializer, self).to_representation(obj)
+        data['priority_fk'] = data.pop('priority', None)
+        data['status_fk'] = data.pop('status', None)
+        data['dtd_fk'] = data.pop('dtd', None)
+        return data
+
+
+class TreeLinkCreateUpdateSerializer(BaseCreateSerializer):
+
+    categories = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(),
+                                                    many=True, required=False)
+
+    class Meta:
+        model = TreeLink
+        fields = ('id', 'order', 'text', 'action_button', 'is_header', 'categories',
+                  'request', 'priority', 'status', 'dtd', 'destination',)
+
+
+class TreeDataDetailSerializer(BaseCreateSerializer):
 
     attachments = serializers.PrimaryKeyRelatedField(
         queryset=Attachment.objects.all(), many=True, required=False)
     fields = TreeFieldSerializer(many=True, required=False)
-    links = TreeLinkSerializer(many=True, required=False)
+    links = TreeLinkDetailSerializer(many=True, required=False)
+
+    class Meta:
+        model = TreeData
+        fields = ('id', 'key', 'description', 'note', 'note_type',
+                  'attachments', 'fields', 'prompt', 'link_type',
+                  'links',)
+
+
+class TreeDataCreateUpdateSerializer(BaseCreateSerializer):
+
+    attachments = serializers.PrimaryKeyRelatedField(
+        queryset=Attachment.objects.all(), many=True, required=False)
+    fields = TreeFieldSerializer(many=True, required=False)
+    links = TreeLinkCreateUpdateSerializer(many=True, required=False)
 
     class Meta:
         model = TreeData

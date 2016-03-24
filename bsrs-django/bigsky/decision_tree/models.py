@@ -1,5 +1,4 @@
 from django.contrib.contenttypes.fields import GenericRelation
-from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 from decision_tree.model_choices import LINK_TYPES, NOTE_TYPES, FIELD_TYPES
