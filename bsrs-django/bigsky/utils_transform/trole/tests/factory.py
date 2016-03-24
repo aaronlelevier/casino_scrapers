@@ -7,6 +7,11 @@ from utils_transform.trole.models import DominoRole
 from location.tests.factory import create_location_level
 from category.tests.factory import create_single_category
 
+ROLESELECTION = "Region Manager"
+LOCATIONLEVEL = "Region"
+CATEGORIES = "Repair;Capex"
+CATEGORY1 = "Repair"
+CATEGORY2 = "Capex"
 
 def get_random_data(fields):
     data = {}
@@ -23,15 +28,15 @@ def create_domino_role():
     dom_role = mommy.make(DominoRole, **data)
     
     #update selection
-    dom_role.selection = 'Region Manager'
-    dom_role.categories = 'Repair;Capex'
+    dom_role.selection = ROLESELECTION
+    dom_role.categories = CATEGORIES
     dom_role.save()
     
     #create location level that will be linked to Role
-    create_location_level('Region')
+    create_location_level(LOCATIONLEVEL)
     
     #create categories that will be linked to this Role
-    create_single_category('Repair')
-    create_single_category('Capex')
+    create_single_category(CATEGORY1)
+    create_single_category(CATEGORY2)
 
     return dom_role

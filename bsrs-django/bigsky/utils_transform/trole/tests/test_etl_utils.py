@@ -17,8 +17,7 @@ class EtlUtilTests(TestCase):
         self.assertEqual(role_.name, domino_role.name)
         self.assertEqual(role_.role_type, "admin.role.internal")
         self.assertEqual(role_.location_level.name, "Region")
-        
-        #add a test to make sure the group is created as well
+
         groups_ = Group.objects.filter(name = domino_role.name)
         self.assertEqual(groups_.count(), 1)
 
