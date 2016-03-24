@@ -229,7 +229,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self._fill_in(location)
         location_level_select = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-level-select ')]/div")
         location_level_select.click()
-        ll_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-basic-dropdown-content ')]/ul/li[text()='district_lp']")
+        ll_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-basic-dropdown-content ')]/ul/li[text()='District']")
         ll_option.click()
         # Fill in Children
         location_children_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-location-children-select')])[last()]")
