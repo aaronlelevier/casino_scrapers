@@ -176,11 +176,12 @@ class LocationManagerTests(TestCase):
         # Test
         parents = Location.objects.get_level_parents(location_level_updated.id, location.id)
         self.assertEqual(parents.count(), 5)
-        self.assertEqual(parents[0].name, settings.LOCATION_TOP_LEVEL_NAME)
-        self.assertEqual(parents[1].name, LOCATION_FMU)
-        self.assertEqual(parents[2].name, 'east')
-        self.assertEqual(parents[3].name, 'east_lp')
-        self.assertEqual(parents[4].name, 'nv')
+        names = [x.name for x in parents]
+        self.assertIn(settings.LOCATION_TOP_LEVEL_NAME, names)
+        self.assertIn(LOCATION_FMU, names)
+        self.assertIn('east', names)
+        self.assertIn('east_lp', names)
+        self.assertIn('nv', names)
 
     def test_objects_and_their_children(self):
         person = create_single_person()
