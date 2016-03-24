@@ -1,87 +1,10 @@
 [
 {
   "model": "location.locationlevel",
-  "pk": "0403939b-cfae-49a0-8623-a53d531254e8",
+  "pk": "1ed648e3-5b85-41a6-a30e-8e7722472b1f",
   "fields": {
-    "created": "2016-02-03T19:53:23.566Z",
-    "modified": "2016-03-16T22:32:36.239Z",
-    "deleted": null,
-    "name": "Company",
-    "contact": true,
-    "can_create_tickets": true,
-    "landlord": true,
-    "warranty": true,
-    "catalog_categories": true,
-    "assets": true,
-    "children": [
-      "72c91384-8312-4717-a6d2-1b51c26d19f7",
-      "bdb71fbf-9379-46e0-96ce-78ed6c395895"
-    ]
-  }
-},
-{
-  "model": "location.locationlevel",
-  "pk": "04f3182a-8ad7-4328-b0d9-3684f036e6a8",
-  "fields": {
-    "created": "2016-02-03T19:53:23.570Z",
-    "modified": "2016-03-16T19:06:13.142Z",
-    "deleted": null,
-    "name": "District",
-    "contact": true,
-    "can_create_tickets": true,
-    "landlord": true,
-    "warranty": true,
-    "catalog_categories": true,
-    "assets": true,
-    "children": [
-      "be963d6b-1c51-4969-b3fa-ce36a1ed88e3"
-    ]
-  }
-},
-{
-  "model": "location.locationlevel",
-  "pk": "72c91384-8312-4717-a6d2-1b51c26d19f7",
-  "fields": {
-    "created": "2016-03-16T19:05:44.693Z",
-    "modified": "2016-03-16T19:05:44.693Z",
-    "deleted": null,
-    "name": "Facility Management Unit",
-    "contact": true,
-    "can_create_tickets": true,
-    "landlord": true,
-    "warranty": true,
-    "catalog_categories": true,
-    "assets": true,
-    "children": [
-      "be963d6b-1c51-4969-b3fa-ce36a1ed88e3"
-    ]
-  }
-},
-{
-  "model": "location.locationlevel",
-  "pk": "bdb71fbf-9379-46e0-96ce-78ed6c395895",
-  "fields": {
-    "created": "2016-02-03T19:53:23.569Z",
-    "modified": "2016-03-16T19:06:03.462Z",
-    "deleted": null,
-    "name": "Region",
-    "contact": true,
-    "can_create_tickets": true,
-    "landlord": true,
-    "warranty": true,
-    "catalog_categories": true,
-    "assets": true,
-    "children": [
-      "04f3182a-8ad7-4328-b0d9-3684f036e6a8"
-    ]
-  }
-},
-{
-  "model": "location.locationlevel",
-  "pk": "be963d6b-1c51-4969-b3fa-ce36a1ed88e3",
-  "fields": {
-    "created": "2016-02-03T19:53:23.572Z",
-    "modified": "2016-03-16T19:05:52.826Z",
+    "created": "2016-03-24T16:15:40.360Z",
+    "modified": "2016-03-24T16:15:40.360Z",
     "deleted": null,
     "name": "Store",
     "contact": true,
@@ -91,6 +14,83 @@
     "catalog_categories": true,
     "assets": true,
     "children": []
+  }
+},
+{
+  "model": "location.locationlevel",
+  "pk": "380ca002-6253-45ec-b3c7-47bb25c2ca0c",
+  "fields": {
+    "created": "2016-03-24T16:15:40.363Z",
+    "modified": "2016-03-24T16:15:40.363Z",
+    "deleted": null,
+    "name": "Facility Management Unit",
+    "contact": true,
+    "can_create_tickets": true,
+    "landlord": true,
+    "warranty": true,
+    "catalog_categories": true,
+    "assets": true,
+    "children": [
+      "1ed648e3-5b85-41a6-a30e-8e7722472b1f"
+    ]
+  }
+},
+{
+  "model": "location.locationlevel",
+  "pk": "a22e2eaf-c947-4043-9449-12a034d36f8d",
+  "fields": {
+    "created": "2016-03-24T16:15:40.356Z",
+    "modified": "2016-03-24T16:15:40.356Z",
+    "deleted": null,
+    "name": "Region",
+    "contact": true,
+    "can_create_tickets": true,
+    "landlord": true,
+    "warranty": true,
+    "catalog_categories": true,
+    "assets": true,
+    "children": [
+      "a97a1ebb-46bc-42d6-98a0-859ffee2c72f"
+    ]
+  }
+},
+{
+  "model": "location.locationlevel",
+  "pk": "a97a1ebb-46bc-42d6-98a0-859ffee2c72f",
+  "fields": {
+    "created": "2016-03-24T16:15:40.358Z",
+    "modified": "2016-03-24T16:15:40.358Z",
+    "deleted": null,
+    "name": "District",
+    "contact": true,
+    "can_create_tickets": true,
+    "landlord": true,
+    "warranty": true,
+    "catalog_categories": true,
+    "assets": true,
+    "children": [
+      "1ed648e3-5b85-41a6-a30e-8e7722472b1f"
+    ]
+  }
+},
+{
+  "model": "location.locationlevel",
+  "pk": "d2c25dde-6507-4e6f-8d6e-528cafa7469b",
+  "fields": {
+    "created": "2016-03-24T16:15:40.352Z",
+    "modified": "2016-03-24T16:15:40.352Z",
+    "deleted": null,
+    "name": "Company",
+    "contact": true,
+    "can_create_tickets": true,
+    "landlord": true,
+    "warranty": true,
+    "catalog_categories": true,
+    "assets": true,
+    "children": [
+      "380ca002-6253-45ec-b3c7-47bb25c2ca0c",
+      "a22e2eaf-c947-4043-9449-12a034d36f8d"
+    ]
   }
 }
 ]
