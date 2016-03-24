@@ -7,7 +7,8 @@ import FindById from 'bsrs-ember/mixins/route/findById2';
 
 export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
   repository: inject('dtd'),
-  redirectRoute: Ember.computed(function() { return 'admin'; }),
+  redirectRoute: Ember.computed(function() { return 'dtds'; }),
+  closeTabRedirect: Ember.computed(function() { return 'admin'; }),
   modelName: Ember.computed(function() { return 'dtd'; }),
   templateModelField: Ember.computed(function() { return 'description'; }),
   transitionCallback() {
@@ -37,7 +38,8 @@ export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
       this.get('redirectRoute'),
       false,
       this.transitionCallback.bind(this),
-      model_id
+      model_id,
+      this.get('closeTabRedirect')
     );
   },
   renderTemplate(){

@@ -297,15 +297,15 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-// test('when click delete, dtd is deleted and removed from store', (assert) => {
-//   page.visitDetail();
-//   xhr(PREFIX + BASE_URL + '/' + DTD.idOne + '/', 'DELETE', null, {}, 204, {});
-//   generalPage.delete();
-//   andThen(() => {
-//     assert.equal(currentURL(), DTD_URL);
-//     assert.equal(store.find('dtd', DTD.idOne).get('length'), undefined);
-//   });
-// });
+test('when click delete, dtd is deleted and removed from store', (assert) => {
+  page.visitDetail();
+  xhr(PREFIX + BASE_URL + '/' + DTD.idOne + '/', 'DELETE', null, {}, 204, {});
+  generalPage.delete();
+  andThen(() => {
+    assert.equal(currentURL(), DTD_URL);
+    assert.equal(store.find('dtd', DTD.idOne).get('length'), undefined);
+  });
+});
 
 test('click add-link, and fill in', (assert) => {
   random.uuid = function() { return UUID.value; };

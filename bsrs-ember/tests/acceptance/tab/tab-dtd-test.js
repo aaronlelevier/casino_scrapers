@@ -73,7 +73,7 @@ test('deep linking the dtd detail url should push a tab into the tab store with 
     assert.equal(find(TAB_TITLE).text(), DTD.descriptionOne);
     assert.equal(tab.get('doc_type'), DOC_TYPE);
     assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
-    assert.equal(tab.get('redirect'), 'admin');
+    assert.equal(tab.get('redirect'), INDEX_ROUTE);
     assert.equal(tab.get('newModel'), false);
   });
 });
@@ -93,7 +93,7 @@ test('visiting the dtd detail url from the list url should push a tab into the t
     const tab = store.findOne('tab');
     assert.equal(tab.get('doc_type'), DOC_TYPE);
     assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
-    assert.equal(tab.get('redirect'), 'admin');
+    assert.equal(tab.get('redirect'), INDEX_ROUTE);
     assert.equal(tab.get('newModel'), false);
   });
 });
