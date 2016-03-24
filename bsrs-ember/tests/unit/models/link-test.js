@@ -192,19 +192,6 @@ test('change_destination changes destination', (assert) => {
     assert.equal(link.get('destination.id'), DTD.idTwo);
 });
 
-test('change_destination to null', (assert) => {
-    assert.equal(link.get('destination.id'), undefined);
-    run(() => {
-        dtd = store.push('dtd', {id: DTD.idOne});
-    });
-    const one = {id: DTD.idOne};
-    link.change_destination(one);
-    assert.equal(link.get('destination.id'), DTD.idOne);
-    //TODO: update attrs to accept null
-    // link.change_destination(null);
-    // assert.equal(link.get('destination.id'), null);
-});
-
 // rollback
 test('rollback priority - value value value', (assert) => {
     let priority_two;
@@ -240,22 +227,23 @@ test('rollback priority - value null value', (assert) => {
     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-// test('rollback - destination', (assert) => {
-//     let dtd_two;
-//     run(() => {
-//         dtd = store.push('dtd', {id: DTD.idOne, destination_links: [LINK.idOne]});
-//         link = store.push('link', {id: LINK.idOne, destination_fk: DTD.idOne});
-//         dtd_two = store.push('dtd', {id: DTD.idTwo});
-//     });
-//     assert.equal(link.get('destination.id'), DTD.idOne);
-//     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
-//     link.change_destination(null);
-//     assert.ok(link.get('isDirtyOrRelatedDirty'));
-//     assert.equal(link.get('destination.id'), null);
-//     link.rollback();
-//     assert.equal(link.get('destination.id'), DTD.idOne);
-//     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
-// });
+test('rollback - destination', (assert) => {
+    let dtd_two;
+    run(() => {
+        dtd = store.push('dtd', {id: DTD.idOne, destination_links: [LINK.idOne]});
+        link = store.push('link', {id: LINK.idOne, destination_fk: DTD.idOne});
+        dtd_two = store.push('dtd', {id: DTD.idTwo});
+    });
+    const two = {id: DTD.idTwo};
+    assert.equal(link.get('destination.id'), DTD.idOne);
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+    link.change_destination(two);
+    assert.ok(link.get('isDirtyOrRelatedDirty'));
+    assert.equal(link.get('destination.id'), DTD.idTwo);
+    link.rollback();
+    assert.equal(link.get('destination.id'), DTD.idOne);
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+});
 
 // save
 test('savePriority', (assert) => {
@@ -304,52 +292,42 @@ test('saveStatus null status', (assert) => {
     assert.ok(link.get('statusIsNotDirty'));
 });
 
-// test('saveDestination', (assert) => {
-//     run(() => {
-//         dtd = store.push('dtd', {id: DTD.idOne});
-//     });
-//     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
-//     link.change_destination(DTD.idOne);
-//     assert.ok(link.get('isDirtyOrRelatedDirty'));
-//     link.saveDestination();
-//     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
-// });
+test('saveDestination', (assert) => {
+    run(() => {
+        dtd = store.push('dtd', {id: DTD.idOne});
+    });
+    const two = {id: DTD.idTwo};
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+    link.change_destination(two);
+    assert.ok(link.get('isDirtyOrRelatedDirty'));
+    assert.ok(link.get('destination.id'), DTD.idTwo);
+    link.saveDestination();
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(link.get('destination.id'), DTD.idTwo);
+});
 
-// test('saveDestination null destination', (assert) => {
-//     run(() => {
-//         dtd = store.push('dtd', {id: DTD.idOne, destination_links: [LINK.idOne]});
-//         link = store.push('link', {id: LINK.idOne, destination_fk: DTD.idOne});
-//     });
-//     assert.equal(link.get('destination.id'), DTD.idOne);
-//     link.change_destination(null);
-//     assert.equal(link.get('destination'), undefined);
-//     assert.ok(link.get('isDirtyOrRelatedDirty'));
-//     link.saveDestination();
-//     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
-// });
-
-// // save
-// test('save - priority, status, destination', (assert) => {
-//     run(() => {
-//         dtd = store.push('dtd', {id: DTD.idOne});
-//     });
-//     assert.ok(link.get('destinationIsNotDirty'));
-//     assert.ok(link.get('statusIsNotDirty'));
-//     assert.ok(link.get('priorityIsNotDirty'));
-//     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
-//     link.change_destination(DTD.idOne);
-//     link.change_status(TD.statusOneId);
-//     link.change_priority(TP.priorityOneId);
-//     assert.ok(link.get('destinationIsDirty'));
-//     assert.ok(link.get('statusIsDirty'));
-//     assert.ok(link.get('priorityIsDirty'));
-//     assert.ok(link.get('isDirtyOrRelatedDirty'));
-//     link.save();
-//     assert.ok(link.get('destinationIsNotDirty'));
-//     assert.ok(link.get('statusIsNotDirty'));
-//     assert.ok(link.get('priorityIsNotDirty'));
-//     assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
-// });
+// save
+test('save - priority, status, destination', (assert) => {
+    run(() => {
+        dtd = store.push('dtd', {id: DTD.idOne});
+    });
+    assert.ok(link.get('destinationIsNotDirty'));
+    assert.ok(link.get('statusIsNotDirty'));
+    assert.ok(link.get('priorityIsNotDirty'));
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+    link.change_destination({id: DTD.idOne});
+    link.change_status(TD.statusOneId);
+    link.change_priority(TP.priorityOneId);
+    assert.ok(link.get('destinationIsDirty'));
+    assert.ok(link.get('statusIsDirty'));
+    assert.ok(link.get('priorityIsDirty'));
+    assert.ok(link.get('isDirtyOrRelatedDirty'));
+    link.save();
+    assert.ok(link.get('destinationIsNotDirty'));
+    assert.ok(link.get('statusIsNotDirty'));
+    assert.ok(link.get('priorityIsNotDirty'));
+    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+});
 
 
 /*LINK TOP LEVEL CATEGORY*/

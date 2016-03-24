@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
+import { belongs_to, change_belongs_to_fk, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
 
 const { run } = Ember;
 
@@ -14,7 +14,7 @@ var StatusMixin = Ember.Mixin.create({
         }
     }),
     statusIsNotDirty: Ember.computed.not('statusIsDirty'),
-    change_status: change_belongs_to('people', 'status'),
+    change_status: change_belongs_to_fk('people', 'status'),
     status: Ember.computed.alias('belongs_to_status.firstObject'),
     belongs_to_status: belongs_to('people', 'status'),
 });

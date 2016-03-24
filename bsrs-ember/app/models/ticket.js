@@ -9,7 +9,7 @@ import CcMixin from 'bsrs-ember/mixins/model/ticket/cc';
 import CategoriesMixin from 'bsrs-ember/mixins/model/ticket/category';
 import TicketLocationMixin from 'bsrs-ember/mixins/model/ticket/location';
 import NewMixin from 'bsrs-ember/mixins/model/new';
-import { belongs_to, change_belongs_to, change_belongs_to_simple, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
+import { belongs_to, change_belongs_to_fk, change_belongs_to_full, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
 import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
 
 const { run } = Ember;
@@ -119,13 +119,13 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
     pushed_person.change_status(person_json.status_fk);
     return pushed_person;
   },
-  change_assignee_container: change_belongs_to('assigned_tickets', 'person', 'assignee'),
+  change_assignee_container: change_belongs_to_fk('assigned_tickets', 'person', 'assignee'),
   change_assignee(new_assignee) {
     this.person_status_role_setup(new_assignee);
     this.change_assignee_container(new_assignee.id);
   },
-  change_priority: change_belongs_to('tickets', 'ticket-priority', 'priority'),
-  change_status: change_belongs_to('tickets', 'ticket-status', 'status'),
+  change_priority: change_belongs_to_fk('tickets', 'ticket-priority', 'priority'),
+  change_status: change_belongs_to_fk('tickets', 'ticket-status', 'status'),
   attachmentsIsNotDirty: Ember.computed.not('attachmentsIsDirty'),
   attachmentsIsDirty: Ember.computed('attachment_ids.[]', 'previous_attachments_fks.[]', function() {
     const attachment_ids = this.get('attachment_ids') || [];

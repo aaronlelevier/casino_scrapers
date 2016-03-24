@@ -4,7 +4,7 @@ import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import equal from 'bsrs-ember/utilities/equal';
 import NewMixin from 'bsrs-ember/mixins/model/new';
-import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
+import { belongs_to, change_belongs_to_fk, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
 import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
 
 const { run } = Ember;
@@ -43,7 +43,7 @@ var RoleModel = Model.extend(NewMixin, {
     remove_category: remove_many_to_many('role-category', 'category_fk', 'role_categories'),
     location_level: Ember.computed.alias('location_levels.firstObject'),
     location_levels: belongs_to('roles', 'location-level'),
-    change_location_level: change_belongs_to('roles', 'location-level', 'location_level'),
+    change_location_level: change_belongs_to_fk('roles', 'location-level', 'location_level'),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'categoryIsDirty', function() {
         return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('categoryIsDirty');
     }),

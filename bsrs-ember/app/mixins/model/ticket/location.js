@@ -1,6 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
-import { belongs_to, change_belongs_to, change_belongs_to_simple, belongs_to_dirty, belongs_to_rollback, belongs_to_rollback_simple, belongs_to_save } from 'bsrs-components/attr/belongs-to';
+import { belongs_to, change_belongs_to_fk, change_belongs_to_full, belongs_to_dirty, belongs_to_rollback, belongs_to_rollback_simple, belongs_to_save } from 'bsrs-components/attr/belongs-to';
 
 
 var TicketLocationMixin = Ember.Mixin.create({
@@ -38,7 +38,7 @@ var TicketLocationMixin = Ember.Mixin.create({
             location.save();
         }
     },
-    change_location_container: change_belongs_to_simple('tickets', 'location', 'location'),
+    change_location_container: change_belongs_to_full('tickets', 'location', 'location'),
     saveLocation: belongs_to_save('ticket', 'location', 'location_fk'),
     rollbackLocation: belongs_to_rollback_simple('location_fk', 'location', 'change_location'),
 });

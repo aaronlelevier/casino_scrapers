@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { belongs_to, change_belongs_to, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
+import { belongs_to, change_belongs_to_fk, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
 
 const { run } = Ember;
 
@@ -61,7 +61,7 @@ var RoleMixin = Ember.Mixin.create({
     roleIsNotDirty: Ember.computed.not('roleIsDirty'),
     saveRole: belongs_to_save('person', 'role', 'role_fk'),
     rollbackRole: belongs_to_rollback('role_fk', 'role', 'rollbackChangeRole'),
-    rollbackChangeRole: change_belongs_to('people', 'role'),
+    rollbackChangeRole: change_belongs_to_fk('people', 'role'),
 });
 
 export default RoleMixin;
