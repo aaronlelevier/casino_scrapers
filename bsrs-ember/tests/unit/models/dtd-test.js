@@ -12,23 +12,22 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import FD from 'bsrs-ember/vendor/defaults/field';
 import OD from 'bsrs-ember/vendor/defaults/option';
 
-var store, dtd, link, priority, status, field, option, uuid;
+var store, dtd, dtd_2, link, priority, status, field, option, uuid;
 
 module('unit: dtd test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-link', 'model:link', 'model:ticket-priority', 'model:ticket-status', 'model:field', 'model:dtd-field', 'model:option', 'model:field-option', 'service:i18n']);
         run(() => {
             dtd = store.push('dtd', {id: DTD.idOne, dtd_link_fks: [DTDL.idOne]});
+            dtd_2 = store.push('dtd', {id: DTD.idTwo, destination_links: [LINK.idOne]});
             store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
-            link = store.push('link', {id: LINK.idOne});
+            link = store.push('link', {id: LINK.idOne, destination_fk: DTD.idTwo});
             field = store.push('field', {id: FD.idOne, required: FD.requiredOne});
         });
     }
 });
 
 test('link_types - should be pre-defined on the model, so dont need to be pushed into the store', assert => {
-    dtd = store.find('dtd', DTD.idTwo);
-    assert.equal(dtd.get('id'), undefined);
     dtd = store.push('dtd', {id: DTD.idTwo});
     assert.equal(dtd.get('link_types').get('length'), 2);
     assert.equal(dtd.get('link_types')[0], DTD.linkTypeOne);
@@ -36,8 +35,6 @@ test('link_types - should be pre-defined on the model, so dont need to be pushed
 });
 
 test('note_types - should be pre-defined on the model, so dont need to be pushed into the store', assert => {
-    dtd = store.find('dtd', DTD.idTwo);
-    assert.equal(dtd.get('id'), undefined);
     dtd = store.push('dtd', {id: DTD.idTwo});
     assert.equal(dtd.get('note_types').get('length'), 4);
     assert.equal(dtd.get('note_types')[0], DTD.noteTypeOne);
@@ -393,45 +390,57 @@ test('rollback for related fields and their options', (assert) => {
     assert.ok(store.findOne('option').get('isNotDirty'));
 });
 
-// test('save and rollback combined test', (assert) => {
-//     assert.ok(dtd.get('linksIsNotDirty'));
-//     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-//     dtd.add_field({id: FD.idOne});
-//     assert.equal(dtd.get('fields').get('length'), 1);
-//     assert.ok(dtd.get('linksIsNotDirty'));
-//     dtd.add_link({id: LINK.idTwo});
-//     assert.ok(dtd.get('linksIsDirty'));
-//     assert.equal(dtd.get('links').get('length'), 2);
-//     link = dtd.get('links').objectAt(0);
-//     link.change_priority(TP.idOne);
-//     assert.equal(link.get('priority.id'), TP.idOne);
-//     link.change_status(TS.idOne);
-//     assert.equal(link.get('status.id'), TS.idOne);
-//     assert.ok(dtd.get('fieldsIsDirty'));
-//     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-//     dtd.save();
-//     assert.ok(dtd.get('linksIsNotDirty'));
-//     assert.ok(dtd.get('fieldsIsNotDirty'));
-//     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-//     // rollback
-//     dtd.add_field({id: FD.idTwo});
-//     assert.equal(dtd.get('fields').get('length'), 2);
-//     assert.ok(dtd.get('linksIsNotDirty'));
-//     dtd.remove_link(LINK.idOne);
-//     assert.ok(dtd.get('linksIsDirty'));
-//     assert.equal(dtd.get('links').get('length'), 1);
-//     link.change_priority(TP.idTwo);
-//     assert.equal(link.get('priority.id'), TP.idTwo);
-//     link.change_status(TS.idTwo);
-//     assert.equal(link.get('status.id'), TS.idTwo);
-//     assert.ok(dtd.get('fieldsIsDirty'));
-//     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-//     dtd.rollback();
-//     assert.equal(dtd.get('fields').get('length'), 1);
-//     assert.equal(dtd.get('links').get('length'), 2);
-//     assert.equal(link.get('priority.id'), TP.idOne);
-//     assert.equal(link.get('status.id'), TS.idOne);
-//     assert.ok(dtd.get('linksIsNotDirty'));
-//     assert.ok(dtd.get('fieldsIsNotDirty'));
-//     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-// });
+test('save and rollback combined test', (assert) => {
+    assert.equal(dtd.get('links').objectAt(0).get('id'), link.get('id'));
+    assert.equal(dtd.get('links').objectAt(0).get('destination_fk'), dtd_2.get('id'));
+    assert.equal(dtd.get('links').objectAt(0).get('destination.id'), dtd_2.get('id'));
+    assert.ok(dtd.get('links').objectAt(0).get('destinationIsNotDirty'));
+    assert.ok(dtd.get('linksIsNotDirty'));
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+    dtd.add_field({id: FD.idOne});
+    assert.equal(dtd.get('fields').get('length'), 1);
+    assert.ok(dtd.get('linksIsNotDirty'));
+    dtd.add_link({id: LINK.idTwo});
+    assert.ok(dtd.get('linksIsDirty'));
+    assert.equal(dtd.get('links').get('length'), 2);
+    link = dtd.get('links').objectAt(0);
+    const link_2 = dtd.get('links').objectAt(1);
+    link_2.change_destination({id: DTD.idOne});
+    link.change_priority(TP.idOne);
+    assert.equal(link.get('priority.id'), TP.idOne);
+    link.change_status(TS.idOne);
+    assert.equal(link.get('status.id'), TS.idOne);
+    assert.ok(dtd.get('fieldsIsDirty'));
+    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+    assert.equal(dtd.get('links').objectAt(0).get('destination_fk'), dtd_2.get('id'));
+    assert.equal(dtd.get('links').objectAt(0).get('destination.id'), dtd_2.get('id'));
+    assert.equal(dtd.get('links').objectAt(1).get('destination_fk'), null);
+    assert.equal(dtd.get('links').objectAt(1).get('destination.id'), dtd.get('id'));
+    dtd.save();
+    assert.equal(dtd.get('links').objectAt(0).get('destination_fk'), dtd_2.get('id'));
+    assert.equal(dtd.get('links').objectAt(0).get('destination.id'), dtd_2.get('id'));
+    assert.ok(dtd.get('linksIsNotDirty'));
+    assert.ok(dtd.get('fieldsIsNotDirty'));
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+    dtd.add_field({id: FD.idTwo});
+    assert.equal(dtd.get('fields').get('length'), 2);
+    assert.ok(dtd.get('linksIsNotDirty'));
+    dtd.remove_link(LINK.idOne);
+    assert.ok(dtd.get('linksIsDirty'));
+    assert.equal(dtd.get('links').get('length'), 1);
+    link.change_priority(TP.idTwo);
+    assert.equal(link.get('priority.id'), TP.idTwo);
+    link.change_status(TS.idTwo);
+    assert.equal(link.get('status.id'), TS.idTwo);
+    assert.ok(dtd.get('fieldsIsDirty'));
+    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+    dtd.rollback();
+    // rollback
+    assert.equal(dtd.get('fields').get('length'), 1);
+    assert.equal(dtd.get('links').get('length'), 2);
+    assert.equal(link.get('priority.id'), TP.idOne);
+    assert.equal(link.get('status.id'), TS.idOne);
+    assert.ok(dtd.get('linksIsNotDirty'));
+    assert.ok(dtd.get('fieldsIsNotDirty'));
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+});

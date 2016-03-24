@@ -11,7 +11,7 @@ import TCD from 'bsrs-ember/vendor/defaults/model-category';
 
 var store, priority, status, dtd, link, uuid;
 
-module('scott unit: link test', {
+module('unit: link test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:link', 'model:dtd', 'model:model-category', 'model:category', 'model:ticket-priority', 'model:ticket-status', 'service:i18n']);
         run(() => {
