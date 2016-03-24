@@ -103,7 +103,7 @@ var dtd_payload_link_two_put = {
         text: LINK.textOne,
         priority: TP.priorityOneId,
         status: TD.statusOneId,
-        destination: DTD.idTwo
+        destination: DTD.idOne
     },
     {
         id: 1,

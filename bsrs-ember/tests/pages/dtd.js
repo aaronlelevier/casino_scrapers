@@ -13,6 +13,8 @@ const DTDS_URL = `${BASE_URL}`;
 const NEW_URL = `${BASE_URL}/new/1`;
 const DETAIL_URL = `${BASE_URL}/${DTD.idOne}`;
 
+const DESTINATION = '.t-link-destination-select > .ember-basic-dropdown-trigger';
+
 var DTDPage = PageObject.create({
     visit: visitable(DTDS_URL),
     visitDetail: visitable(DETAIL_URL),
@@ -42,6 +44,17 @@ var DTDPage = PageObject.create({
     requestFillIn: fillable('.t-dtd-link-request:eq(0)'),
     text: value('.t-dtd-link-text:eq(0)'),
     textFillIn: fillable('.t-dtd-link-text:eq(0)'),
+
+    destinationInput: text(DESTINATION),
+    destinationClickDropdownOne: clickable(`${DESTINATION}:eq(0)`),
+    destinationClickDropdownTwo: clickable(`${DESTINATION}:eq(1)`),
+    // destinationClickOptionOne: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${PD.name})`),
+    destinationClickOptionOne: clickable(`.ember-power-select-option:eq(0)`, { scope: DROPDOWN }),
+    destinationClickOptionTwo: clickable(`.ember-power-select-option:eq(1)`, { scope: DROPDOWN }),
+    // destinationClickIdThree: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${PD.storeNameThree})`),
+    // destinationOptionLength: count('li', { scope: DROPDOWN }),
+    destinationSearch: fillable('.ember-power-select-search > input'),
+
     // Link 2
     action_button_two: () => Ember.$('.t-dtd-link-action_button:eq(1)').is(':checked'),
     action_buttonClick_two: clickable('.t-dtd-link-action_button:eq(1)'),

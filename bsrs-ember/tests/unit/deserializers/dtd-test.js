@@ -236,7 +236,7 @@ test('dtd link has a destination', assert => {
 
 test('dtd link has no destination', assert => {
   const json = DTDF.generate(DTD.idOne);
-  delete json.links[0].destination_fk;
+  delete json.links[0].destination;
   run(() => {
     subject.deserialize(json, DTD.idOne);
   });
@@ -264,7 +264,7 @@ test('dtd link gets updated destination from server', assert => {
   });
   dtd = store.find('dtd', DTD.idOne);
   assert.equal(dtd.get('id'), DTD.idOne);
-  assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DTD.idThree);
+  assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DTD.idTwo);
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
 });
 

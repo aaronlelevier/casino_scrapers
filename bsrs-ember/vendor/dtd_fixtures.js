@@ -43,7 +43,7 @@ var BSRS_DTD_FACTORY = (function() {
                     text: this.link.textOne,
                     priority_fk: this.link.priorityOne,
                     status_fk: this.link.statusOne,
-                    destination_fk: this.dtd.idTwo
+                    destination: {id: this.dtd.idTwo},
                 }
             ]
         }

@@ -318,10 +318,15 @@ test('click add-link, and fill in', (assert) => {
   andThen(() => {
     assert.equal(page.textCount, 2);
   });
+  const json = { 'results': [{id: DTD.idOne, key: DTD.keyOne}, {id: DTD.idTwo, key: DTD.keyTwo}] };
+  ajax(`/api/dtds/?key__icontains=1`, 'GET', null, {}, 200, json);
   page
   .requestFillIn_two(LINK.requestTwo)
   .textFillIn_two(LINK.textTwo)
-  .action_buttonClick_two();
+  .action_buttonClick_two()
+  .destinationClickDropdownOne()
+  .destinationSearch('1')
+  .destinationClickOptionOne();
   xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload_link_two_put), {}, 200, {});
   generalPage.save();
   andThen(() => {

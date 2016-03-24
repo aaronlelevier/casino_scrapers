@@ -2,7 +2,7 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/store';
 import CategoriesMixin from 'bsrs-ember/mixins/model/ticket/category';
 import { attr, Model } from 'ember-cli-simple-store/model';
-import { belongs_to, change_belongs_to, change_belongs_to_simple, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
+import { belongs_to, change_belongs_to, change_belongs_to_simple, belongs_to_dirty, belongs_to_rollback, belongs_to_rollback_simple, belongs_to_save } from 'bsrs-components/attr/belongs-to';
 import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 
@@ -42,7 +42,7 @@ var LinkModel = Model.extend(CategoriesMixin, Validations, {
     destination_fk: undefined,
     destination: Ember.computed.alias('belongs_to_destination.firstObject'),
     belongs_to_destination: belongs_to('destination_links', 'dtd'),
-    change_destination: change_belongs_to('destination_links', 'dtd', 'destination'),
+    change_destination: change_belongs_to_simple('destination_links', 'dtd', 'destination'),
     destinationIsDirty: belongs_to_dirty('destination_fk', 'destination'),
     destinationIsNotDirty: Ember.computed.not('destinationIsDirty'),
     // dirty tracking
@@ -57,7 +57,7 @@ var LinkModel = Model.extend(CategoriesMixin, Validations, {
         this._super();
     },
     rollbackPriority: belongs_to_rollback('priority_fk', 'priority', 'change_priority'),
-    rollbackDestination: belongs_to_rollback('destination_fk', 'dtd', 'change_destination'),
+    rollbackDestination: belongs_to_rollback_simple('destination_fk', 'dtd', 'change_destination'),
     save(){
         this.savePriority();
         this.saveStatus();

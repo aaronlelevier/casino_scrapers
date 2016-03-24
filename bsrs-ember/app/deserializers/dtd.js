@@ -4,6 +4,13 @@ import { belongs_to_extract, belongs_to_extract_contacts } from 'bsrs-components
 
 const { run } = Ember;
 
+var extract_destination = function(destination_json, store, link_model) {
+    let destination_id = destination_json.id;
+    if(link_model.get('destination.id') !== destination_id) {
+        link_model.change_destination(destination_json);
+    }
+};
+
 var DTDDeserializer = Ember.Object.extend({
   deserialize(response, options) {
     if (typeof options === 'undefined') {
@@ -30,14 +37,19 @@ var DTDDeserializer = Ember.Object.extend({
         });
       });
       link_json.forEach((model) => {
+        const destination_json = model.destination;
+        delete model.destination;
         const existing = store.push('link', model);
         existing.detail = true;
         belongs_to_extract(model.priority_fk, store, existing, 'priority', 'link', 'links');
         belongs_to_extract(model.status_fk, store, existing, 'status', 'link', 'links');
         store.push('dtd', {id: model.destination_fk});
-        if (existing.get('destination.id') !== model.destination_fk) {
-          existing.change_destination(model.destination_fk);
+        if(destination_json){
+          extract_destination(destination_json, store, existing);
         }
+        // if (existing.get('destination.id') !== model.destination_fk) {
+        //   existing.change_destination(model.destination);
+        // }
       });
       // Fields
       let [m2m_fields, fields, fields_server_sum] = many_to_many_extract(field_json, store, dtd, 'dtd_fields', 'dtd_pk', 'field', 'field_pk');
