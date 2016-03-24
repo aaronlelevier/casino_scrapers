@@ -1,8 +1,9 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { many_to_many_extract } from 'bsrs-components/repository/many-to-many';
 import { belongs_to_extract, belongs_to_extract_contacts } from 'bsrs-components/repository/belongs-to';
+import registerCB from 'bsrs-ember/utilities/registerCB';
 
-const { run } = Ember;
 
 var extract_destination = function(destination_json, store, link_model) {
     let destination_id = destination_json.id;
@@ -82,7 +83,7 @@ var DTDDeserializer = Ember.Object.extend({
   deserialize_list(response) {
     const store = this.get('store');
     const return_array = [];
-    response.results.forEach((model) => {
+    registerCB(response, function(model) {
       const existing = store.find('dtd', model.id);
       if(!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')){
         const dtd = store.push('dtd', model);
