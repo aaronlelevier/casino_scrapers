@@ -1,7 +1,5 @@
 import Ember from 'ember';
 
-export default Ember.Helper.helper((params) => {
-    let elem = params[0];
-    let list = params[1];
+export default Ember.Helper.helper((params, {list, elem}) => {
     return list.includes(elem);
 });

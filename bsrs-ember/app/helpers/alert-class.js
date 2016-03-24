@@ -1,8 +1,6 @@
 import Ember from 'ember';
 
-export function alertClass(params) {
-  const model = params[0];
-  const translated = params[1];
+export function alertClass(params, {model, translated}) {
   const className = translated.string ? translated.string.toLowerCase() : 'info';
   return `alert-${className}`;
 }
