@@ -5,7 +5,7 @@ var TabList = Ember.Component.extend({
     closeTab(tab){
       //assumption: if single tab, and close tab, don't call transition callback which 'returns'
       if(tab.get('model_id')){
-        tab.set('transitionCallback', undefined);
+        tab.set('transitionCB', undefined);
       }
       this.sendAction('closeTabMaster', tab, 'closeTab');
     }

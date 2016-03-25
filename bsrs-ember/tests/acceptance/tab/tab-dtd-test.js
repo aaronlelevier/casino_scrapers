@@ -47,7 +47,7 @@ module('Acceptance | tab dtd test', {
   }
 });
 
-test('aaron going from admin to dtds list view generates a tab', assert => {
+test('going from admin to dtds list view generates a tab', assert => {
   clearxhr(detail_xhr);
   visit(ADMIN_URL);
   andThen(() => {
@@ -60,7 +60,7 @@ test('aaron going from admin to dtds list view generates a tab', assert => {
     assert.equal(tabs.get('length'), 1);
     let tab = tabs.objectAt(0);
     assert.equal(find(TAB_TITLE).text(), DTD_TAB_NAME);
-    assert.equal(tab.get('doc_type'), DOC_TYPE);
+    assert.equal(tab.get('module'), DOC_TYPE);
   });
 });
 
@@ -73,7 +73,7 @@ test('deep link to dtd list view generates a tab', assert => {
     assert.equal(tabs.get('length'), 1);
     let tab = tabs.objectAt(0);
     assert.equal(find(TAB_TITLE).text(), DTD_TAB_NAME);
-    assert.equal(tab.get('doc_type'), DOC_TYPE);
+    assert.equal(tab.get('module'), DOC_TYPE);
   });
 });
 
@@ -86,10 +86,10 @@ test('(NEW URL) deep linking the new dtd url should push a tab into the tab stor
     assert.equal(tabs.get('length'), 1);
     let tab = tabs.objectAt(0);
     assert.equal(find(TAB_TITLE).text(), DTD_TAB_NAME);
-    assert.equal(tab.get('doc_type'), 'dtd');
-    assert.equal(tab.get('doc_route'), NEW_ROUTE);
-    assert.equal(tab.get('redirect'), INDEX_ROUTE);
-    assert.equal(tab.get('newModel'), true);
+    assert.equal(tab.get('module'), 'dtd');
+    assert.equal(tab.get('routeName'), NEW_ROUTE);
+    assert.equal(tab.get('redirectRoute'), INDEX_ROUTE);
+    // assert.equal(tab.get('newModel'), true);
   });
 });
 
@@ -102,10 +102,10 @@ test('deep linking the dtd detail url should push a tab into the tab store with 
     const tab = store.findOne('tab');
     const dtd = store.findOne('dtd');
     assert.equal(find(TAB_TITLE).text(), DTD_TAB_NAME);
-    assert.equal(tab.get('doc_type'), DOC_TYPE);
-    assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
-    assert.equal(tab.get('redirect'), INDEX_ROUTE);
-    assert.equal(tab.get('newModel'), false);
+    assert.equal(tab.get('module'), DOC_TYPE);
+    assert.equal(tab.get('routeName'), DETAIL_ROUTE);
+    assert.equal(tab.get('redirectRoute'), INDEX_ROUTE);
+    // assert.equal(tab.get('newModel'), false);
   });
 });
 
@@ -122,10 +122,10 @@ test('visiting the dtd list, then detail url there will only be one dtd tab', (a
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
     const tab = store.findOne('tab');
-    assert.equal(tab.get('doc_type'), DOC_TYPE);
-    assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
-    assert.equal(tab.get('redirect'), INDEX_ROUTE);
-    assert.equal(tab.get('newModel'), false);
+    assert.equal(tab.get('module'), DOC_TYPE);
+    assert.equal(tab.get('routeName'), DETAIL_ROUTE);
+    assert.equal(tab.get('redirectRoute'), INDEX_ROUTE);
+    // assert.equal(tab.get('newModel'), false);
   });
 });
 

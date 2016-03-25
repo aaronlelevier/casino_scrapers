@@ -6,9 +6,9 @@ var FindById = Ember.Mixin.create({
     /* jshint ignore:start */
     if (!model.get('id') || model.get('isNotDirtyOrRelatedNotDirty')) {
       const model = this.get('repository').findById(pk);
-      return { model, ...deps };
+      return { model, pk, ...deps };
     } else if (model.get('isDirtyOrRelatedDirty')){
-      return { model, ...deps };
+      return { model, pk, ...deps };
     }
     /* jshint ignore:end */
   }

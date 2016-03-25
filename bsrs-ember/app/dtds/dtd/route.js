@@ -7,10 +7,11 @@ import FindById from 'bsrs-ember/mixins/route/findById2';
 
 export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
   repository: inject('dtd'),
-  redirectRoute: Ember.computed(function() { return 'dtds'; }),
-  closeTabRedirect: Ember.computed(function() { return 'admin'; }),
-  modelName: Ember.computed(function() { return 'dtd'; }),
-  templateModelField: Ember.computed(function() { return 'description'; }),
+  i18n: Ember.inject.service(),
+  redirectRoute: 'dtds',
+  closeTabRedirect: 'admin',
+  module: 'dtd',
+  displayText: Ember.computed(function() { return this.get('i18n').t('admin.dtd.one'); }),
   transitionCallback() {
     //to prevent transitionTo in application route
     return;
@@ -27,21 +28,15 @@ export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
     return this.findByIdScenario(dtd, pk, {statuses:statuses, priorities:priorities });
   },
   afterModel(model, transition) {
-    const store = this.get('store');
-    const model_id = model.model ? model.model.filter_value : model.get('id');
-    const id = 'dtd123';
-    store.push('dtd', {id: model_id, singleTabId: id});
-    this.get('tabList').createTab(id,
-      this.routeName,
-      this.get('modelName'),
-      this.get('templateModelField'),
-      this.get('redirectRoute'),
-      false,
-      this.transitionCallback.bind(this),
-      model_id,
-      this.get('closeTabRedirect'),
-      'Decision Tree'
-    );
+    this.get('tabList').createSingleTab({
+      routeName: this.routeName,
+      module: this.get('module'),
+      displayText: this.get('displayText'),
+      redirectRoute: this.get('redirectRoute'),
+      transitionCB: this.transitionCallback.bind(this),
+      model_id: model.pk,
+      closeTabRedirect: this.get('closeTabRedirect'),
+    });
   },
   renderTemplate(){
     this.render('dtds.dtd', {

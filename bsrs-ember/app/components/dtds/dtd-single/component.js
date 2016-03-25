@@ -24,6 +24,10 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
         });
       }
     },
+    delete() {
+      this._super(...arguments);
+      this.tab().set('transitionCB', undefined);
+    },
     setLinkType(type){
       this.get('model').set('link_type', type);
     },

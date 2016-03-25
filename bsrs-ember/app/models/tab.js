@@ -25,10 +25,10 @@ var TabModel = Ember.Object.extend({
     return this.get('store').find(this.get('doc_type'), this.get('id'));
   }),
   singleTabModel: Ember.computed('model_id', function() {
-    return this.get('store').find(this.get('doc_type'), this.get('model_id'));
+    return this.get('store').find(this.get('module'), this.get('model_id'));
   }),
   parent: Ember.computed('modelBindingToTemplate', function(){
-    return this.get('modelBindingToTemplate') || this.get('doc_type');
+    return this.get('displayText') || this.get('modelBindingToTemplate');
   }),
   tab_count: Ember.computed(function(){
     const filter = (tab) => {

@@ -147,7 +147,7 @@ var ApplicationRoute = Ember.Route.extend({
     },
     closeTabMaster(tab, closeTabAction=null){
       const tab_id = tab.get('model_id') ? tab.get('model_id') : tab.get('id');//model_id is the uuid and id might be a 'dtd123' if single tab
-      let model = this.get('store').find(tab.get('doc_type'), tab_id);
+      let model = this.get('store').find(tab.get('module'), tab_id);
       if (model && model.get('isDirtyOrRelatedDirty')) {
         Ember.$('.t-modal').modal('show');
         this.trx.attemptedTabModel = tab;
@@ -160,31 +160,29 @@ var ApplicationRoute = Ember.Route.extend({
         Ember.$('.t-modal').modal('hide');
         let temp = this.router.generate(this.controller.currentPath);
         temp = temp.split('/').pop();
-
-        if(tab.get('transitionCallback')) {
-          if(model.get('singleTabId') && !tab.get('newModel')) {
-            return tab.get('transitionCallback')();//return because singleTabs return from callback
+        if(tab.get('transitionCB')) {
+          if(tab.get('model_id') && !tab.get('newModel')) {
+            return tab.get('transitionCB')();//return because singleTabs return from callback
           } else{
-            tab.get('transitionCallback')();
+            tab.get('transitionCB')();
           } 
         }
-        const closeTabId = model.get('singleTabId') ? model.get('singleTabId') : model.get('id');
         if(temp === tab_id || tab.get('newModel')){
           /* jshint ignore:start */
-          closeTabAction && tab.get('closeTabRedirect') ? this.transitionTo(tab.get('closeTabRedirect')) : this.transitionTo(tab.get('redirect'));
+          closeTabAction && tab.get('closeTabRedirect') ? this.transitionTo(tab.get('closeTabRedirect')) : this.transitionTo(tab.get('redirectRoute'));
           /* jshint ignore:end */
           if (tab.get('newModel') && !tab.get('saveModel')) {
-            this.get('tabList').closeTab(closeTabId);
-            //TODO: check as to why this is needed
+            this.get('tabList').closeTab(tab.get('id'));
+            //needed for new models when havigating away and not yet saved
             model.removeRecord();
           }
-        }else if(this.controller.currentPath !== tab.get('redirect')){
+        }else if(this.controller.currentPath !== tab.get('redirectRoute')){
           this.transitionTo(this.controller.currentPath);
-        }else if(typeof tab.get('redirect') !== undefined){
-          this.transitionTo(tab.get('redirect'));
+        }else if(typeof tab.get('redirectRoute') !== undefined){
+          this.transitionTo(tab.get('redirectRoute'));
         }
         //close tab should not care what the id is...just the model
-        this.get('tabList').closeTab(closeTabId);
+        this.get('tabList').closeTab(tab.get('id'));
       }
     },
     delete(tab, callback, id){

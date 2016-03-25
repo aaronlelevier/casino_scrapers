@@ -6,14 +6,14 @@ import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 const detail_msg = 'admin.dtd.empty-detail';
 
 var DtdNewRoute = Ember.Route.extend({
+  i18n: Ember.inject.service(),
   tabList: Ember.inject.service(),
   repository: inject('dtd'),
-  redirectRoute: Ember.computed(function() { return 'dtds'; }),
-  closeTabRedirect: Ember.computed(function() { return 'admin'; }),
-  modelName: Ember.computed(function() { return 'dtd'; }),
-  templateModelField: Ember.computed(function() { return 'Definition'; }),
-  transitionCallback() { 
-  },
+  redirectRoute: 'dtds',
+  closeTabRedirect: 'admin',
+  module: 'dtd',
+  displayText: Ember.computed(function() { return this.get('i18n').t('admin.dtd.one'); }),
+  transitionCallback: function() {},
   model(params) {
     const store = this.get('store');
     run(() => {
@@ -30,21 +30,17 @@ var DtdNewRoute = Ember.Route.extend({
     };
   },
   afterModel(model, transition) {
-    const store = this.get('store');
     const model_id = model.model ? model.model.get('id') : model.get('id');
-    const id = 'dtd123';
-    store.push('dtd', {id: model_id, singleTabId: id});
-    this.get('tabList').createTab(id,
-      this.routeName,
-      this.get('modelName'),
-      this.get('templateModelField'),
-      this.get('redirectRoute'),
-      true,//newModel
-      this.transitionCallback.bind(this),
-      model_id,
-      this.get('closeTabRedirect'),
-      'Decision Tree'
-     );
+    this.get('tabList').createSingleTab({
+      routeName: this.routeName,
+      module: this.get('module'),
+      displayText: this.get('displayText'),
+      redirectRoute: this.get('redirectRoute'),
+      transitionCB: this.transitionCallback.bind(this),
+      model_id: model_id,
+      closeTabRedirect: this.get('closeTabRedirect'),
+      newModel: true
+    });
   },
   renderTemplate(){
     this.render('dtds.new', {
