@@ -14,14 +14,10 @@
         </div>
         {{/if}}
         <div class="panel-body">
-          {{#if model.description}}
-          <p class="t-dtd-preview-description">{{format-markdown model.description}}</p>
-          {{/if}}
+          {{#if model.description}} <p class="t-dtd-preview-description">{{format-markdown model.description}}</p> {{/if}}
           {{!--fields--}}
         </div>
-        {{#if model.prompt}}
-        <div class="panel-footer t-dtd-preview-prompt">{{format-markdown model.prompt}}</div>
-        {{/if}}
+        {{#if model.prompt}} <div class="panel-footer t-dtd-preview-prompt">{{format-markdown model.prompt}}</div> {{/if}}
         {{#if (is-equal model.link_type model.link_types.[1])}}
         <div class="list-group dtd-links dtd-list t-dtd-preview-links">
           {{#each model.links as |link|}}

@@ -9,6 +9,7 @@ import hbs from 'htmlbars-inline-precompile';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
+import FD from 'bsrs-ember/vendor/defaults/field';
 import page from 'bsrs-ember/tests/pages/dtd';
 
 var dtd, store, trans;
@@ -59,3 +60,44 @@ test('note_type determines class on note (success, info, warning, danger)', func
   const className = trans.t(dtd.get('note_type')).string.toLowerCase();
   assert.ok($component.hasClass(`alert-${className}`));
 });
+
+test('if no description, not displayed', function(assert) {
+  run(() => {
+    store.push('dtd', {id: dtd.get('id'), description: ''});
+  });
+  this.model = dtd;
+  this.render(hbs`{{dtds/dtd-preview model=model}}`);
+  assert.notOk(this.$('.panel-body > p').hasClass('t-dtd-preview-description'));
+  run(() => {
+    store.push('dtd', {id: dtd.get('id'), description: DTD.descriptionOne});
+  });
+  assert.ok(this.$('.panel-body > p').hasClass('t-dtd-preview-description'));
+});
+
+test('if no prompt, not displayed', function(assert) {
+  run(() => {
+    store.push('dtd', {id: dtd.get('id'), prompt: ''});
+  });
+  this.model = dtd;
+  this.render(hbs`{{dtds/dtd-preview model=model}}`);
+  assert.notOk(this.$('.panel-footer').hasClass('t-dtd-preview-prompt'));
+  run(() => {
+    store.push('dtd', {id: dtd.get('id'), prompt: DTD.promptOne});
+  });
+  assert.ok(this.$('.panel-footer').hasClass('t-dtd-preview-prompt'));
+});
+
+// test('scott if no fields, not displayed', function(assert) {
+//   run(() => {
+//     store.push('dtd', {id: dtd.get('id'), prompt: ''});
+//     store.push('field', {id: FD.idOne, field_field_fks: [1]});
+//     store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
+//   });
+//   this.model = dtd;
+//   this.render(hbs`{{dtds/dtd-preview model=model}}`);
+//   assert.notOk(this.$('.panel-footer').hasClass('t-dtd-preview-fields'));
+//   run(() => {
+//     store.push('dtd', {id: dtd.get('id'), fields: DTD.fieldsOne});
+//   });
+//   assert.ok(this.$('.panel-footer').hasClass('t-dtd-preview-fields'));
+// });
