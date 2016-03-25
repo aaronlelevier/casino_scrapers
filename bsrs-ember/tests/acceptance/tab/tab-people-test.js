@@ -48,9 +48,9 @@ test('(NEW URL) deep linking the new people url should push a tab into the tab s
         assert.equal(tabs.get('length'), 1);
         let tab = tabs.objectAt(0);
         assert.equal(find('.t-tab-title:eq(0)').text(), 'New Person');
-        assert.equal(tab.get('doc_type'), 'person');
-        assert.equal(tab.get('doc_route'), 'admin.people.new');
-        assert.equal(tab.get('redirect'), 'admin.people.index');
+        assert.equal(tab.get('module'), 'person');
+        assert.equal(tab.get('routeName'), 'admin.people.new');
+        assert.equal(tab.get('redirectRoute'), 'admin.people.index');
         assert.equal(tab.get('newModel'), true);
     });
 });
@@ -63,9 +63,9 @@ test('deep linking the people detail url should push a tab into the tab store wi
         assert.equal(tabs.get('length'), 1);
         let tab = store.find('tab', PD.id);
         assert.equal(find('.t-tab-title:eq(0)').text(), PD.fullname);
-        assert.equal(tab.get('doc_type'), 'person');
-        assert.equal(tab.get('doc_route'), 'admin.people.person');
-        assert.equal(tab.get('redirect'), 'admin.people.index');
+        assert.equal(tab.get('module'), 'person');
+        assert.equal(tab.get('routeName'), 'admin.people.person');
+        assert.equal(tab.get('redirectRoute'), 'admin.people.index');
         assert.equal(tab.get('newModel'), false);
     });
 });
@@ -86,9 +86,9 @@ test('visiting the people detail url from the list url should push a tab into th
         assert.equal(tabs.get('length'), 1);
         let tab = store.find('tab', PD.id);
         assert.equal(find('.t-tab-title:eq(0)').text(), PD.fullname);
-        assert.equal(tab.get('doc_type'), 'person');
-        assert.equal(tab.get('doc_route'), 'admin.people.person');
-        assert.equal(tab.get('redirect'), 'admin.people.index');
+        assert.equal(tab.get('module'), 'person');
+        assert.equal(tab.get('routeName'), 'admin.people.person');
+        assert.equal(tab.get('redirectRoute'), 'admin.people.index');
         assert.equal(tab.get('newModel'), false);
     });
 });

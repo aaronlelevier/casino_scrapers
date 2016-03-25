@@ -5,8 +5,8 @@ import ContactRouteMixin from 'bsrs-ember/mixins/route/contact';
 
 var LocationNewRoute = TabRoute.extend(ContactRouteMixin, {
     repository: inject('location'),
-    redirectRoute: Ember.computed(function() { return 'admin.locations.index'; }),
-    modelName: Ember.computed(function() { return 'location'; }),
+    redirectRoute: 'admin.locations.index',
+    module: 'location',
     templateModelField: Ember.computed(function() { return 'Location'; }),
     model(params) {
         let new_pk = parseInt(params.new_id, 10);

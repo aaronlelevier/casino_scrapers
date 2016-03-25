@@ -14,11 +14,11 @@ var TicketSingleRoute = TabRoute.extend(FindById, PriorityMixin, {
     categoryRepository: inject('category'),
     statusRepository: inject('ticket-status'),
     attachmentRepository: inject('attachment'),
-    transitionCallback() { this.get('attachmentRepository').removeAllUnrelated(); },
+    transitionCB() { this.get('attachmentRepository').removeAllUnrelated(); },
     /*start-non-standard*/ @computed /*end-non-standard*/
     redirectRoute() { return 'tickets.index'; },
     /*start-non-standard*/ @computed /*end-non-standard*/
-    modelName() { return 'ticket'; },
+    module() { return 'ticket'; },
     /*start-non-standard*/ @computed /*end-non-standard*/
     templateModelField() { return 'categories'; },
     /*start-non-standard*/ @computed /*end-non-standard*/

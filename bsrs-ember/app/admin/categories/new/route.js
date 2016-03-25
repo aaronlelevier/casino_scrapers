@@ -4,8 +4,8 @@ import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 
 var CategoryNewRoute = TabNewRoute.extend({
     repository: inject('category'),
-    redirectRoute: Ember.computed(function() { return 'admin.categories.index'; }),
-    modelName: Ember.computed(function() { return 'category'; }),
+    redirectRoute: 'admin.categories.index',
+    module: 'category',
     templateModelField: Ember.computed(function() { return 'Category'; }),
     model(params) {
         let new_pk = parseInt(params.new_id, 10);

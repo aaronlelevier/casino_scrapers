@@ -52,9 +52,9 @@ test('(NEW URL) deep linking the new location url should push a tab into the tab
         assert.equal(tabs.get('length'), 1);
         let tab = tabs.objectAt(0);
         assert.equal(find('.t-tab-title:eq(0)').text(), 'New Location');
-        assert.equal(tab.get('doc_type'), 'location');
-        assert.equal(tab.get('doc_route'), NEW_ROUTE);
-        assert.equal(tab.get('redirect'), INDEX_ROUTE);
+        assert.equal(tab.get('module'), 'location');
+        assert.equal(tab.get('routeName'), NEW_ROUTE);
+        assert.equal(tab.get('redirectRoute'), INDEX_ROUTE);
         assert.equal(tab.get('newModel'), true);
     });
 });
@@ -67,9 +67,9 @@ test('deep linking the location detail url should push a tab into the tab store 
         assert.equal(tabs.get('length'), 1);
         let tab = store.find('tab', LD.idOne);
         assert.equal(find('.t-tab-title:eq(0)').text(), LD.baseStoreName);
-        assert.equal(tab.get('doc_type'), DOC_TYPE);
-        assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
-        assert.equal(tab.get('redirect'), INDEX_ROUTE);
+        assert.equal(tab.get('module'), DOC_TYPE);
+        assert.equal(tab.get('routeName'), DETAIL_ROUTE);
+        assert.equal(tab.get('redirectRoute'), INDEX_ROUTE);
         assert.equal(tab.get('newModel'), false);
     });
 });
@@ -90,9 +90,9 @@ test('visiting the location detail url from the list url should push a tab into 
         assert.equal(tabs.get('length'), 1);
         let tab = store.find('tab', LD.idOne);
         assert.equal(find('.t-tab-title:eq(0)').text(), LD.baseStoreName);
-        assert.equal(tab.get('doc_type'), DOC_TYPE);
-        assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
-        assert.equal(tab.get('redirect'), INDEX_ROUTE);
+        assert.equal(tab.get('module'), DOC_TYPE);
+        assert.equal(tab.get('routeName'), DETAIL_ROUTE);
+        assert.equal(tab.get('redirectRoute'), INDEX_ROUTE);
         assert.equal(tab.get('newModel'), false);
     });
 });

@@ -6,8 +6,8 @@ import FindById from 'bsrs-ember/mixins/route/findById';
 
 var LocationRoute = TabRoute.extend(FindById, ContactRouteMixin, {
     repository: inject('location'),
-    redirectRoute: Ember.computed(function() { return 'admin.locations.index'; }),
-    modelName: Ember.computed(function() { return 'location'; }),
+    redirectRoute: 'admin.locations.index',
+    module: 'location',
     templateModelField: Ember.computed(function() { return 'name'; }),
     model(params) {
         const pk = params.location_id;

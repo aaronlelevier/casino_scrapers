@@ -5,8 +5,8 @@ import TabRoute from 'bsrs-ember/route/tab/new-route';
 var ThirdPartyNewRoute = TabRoute.extend({
     repository: inject('third-party'),
     status_repo: inject('status'),
-    redirectRoute: Ember.computed(function() { return 'admin.third-parties.index'; }),
-    modelName: Ember.computed(function() { return 'third-party'; }),
+    redirectRoute: 'admin.third-parties.index',
+    module: 'third-party',
     templateModelField: Ember.computed(function() { return 'ThirdParty'; }),
     model(params) {
         let new_pk = parseInt(params.new_id, 10);

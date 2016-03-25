@@ -13,7 +13,7 @@ var DtdNewRoute = Ember.Route.extend({
   closeTabRedirect: 'admin',
   module: 'dtd',
   displayText: Ember.computed(function() { return this.get('i18n').t('admin.dtd.one'); }),
-  transitionCallback: function() {},
+  transitionCB: function() {},
   model(params) {
     const store = this.get('store');
     run(() => {
@@ -36,7 +36,7 @@ var DtdNewRoute = Ember.Route.extend({
       module: this.get('module'),
       displayText: this.get('displayText'),
       redirectRoute: this.get('redirectRoute'),
-      transitionCB: this.transitionCallback.bind(this),
+      transitionCB: this.transitionCB.bind(this),
       model_id: model_id,
       closeTabRedirect: this.get('closeTabRedirect'),
       newModel: true

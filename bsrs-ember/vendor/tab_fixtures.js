@@ -6,10 +6,10 @@ var Tab_Fixtures = (function() {
         var tab_id = new_id ? new_id : this.defaults.id_one;
         return {
             id: tab_id,
-            doc_type: this.defaults.doc_type_one,
-            doc_route: this.defaults.doc_route_one,
+            module: this.defaults.module_one,
+            routeName: this.defaults.routeName_one,
             templateModelField: this.defaults.templateModelField_one,
-            redirect: this.defaults.redirect_one,
+            redirectRoute: this.defaults.redirect_one,
             newModel: this.defaults.newModel_one
         }
     };

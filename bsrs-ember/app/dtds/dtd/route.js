@@ -12,7 +12,7 @@ export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
   closeTabRedirect: 'admin',
   module: 'dtd',
   displayText: Ember.computed(function() { return this.get('i18n').t('admin.dtd.one'); }),
-  transitionCallback() {
+  transitionCB() {
     //to prevent transitionTo in application route
     return;
   },
@@ -33,7 +33,7 @@ export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
       module: this.get('module'),
       displayText: this.get('displayText'),
       redirectRoute: this.get('redirectRoute'),
-      transitionCB: this.transitionCallback.bind(this),
+      transitionCB: this.transitionCB.bind(this),
       model_id: model.pk,
       closeTabRedirect: this.get('closeTabRedirect'),
     });

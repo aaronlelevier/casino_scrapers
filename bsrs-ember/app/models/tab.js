@@ -22,7 +22,7 @@ var TabModel = Ember.Object.extend({
   },
   store: inject('main'),
   model: Ember.computed(function() {
-    return this.get('store').find(this.get('doc_type'), this.get('id'));
+    return this.get('store').find(this.get('module'), this.get('id'));
   }),
   singleTabModel: Ember.computed('model_id', function() {
     return this.get('store').find(this.get('module'), this.get('model_id'));

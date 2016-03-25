@@ -4,8 +4,8 @@ import TabRoute from 'bsrs-ember/route/tab/new-route';
 
 var LocationLevelNew = TabRoute.extend({
     repository: injectRepo('location-level'),
-    redirectRoute: Ember.computed(function() { return 'admin.location-levels.index'; }),
-    modelName: Ember.computed(function() { return 'location-level'; }),
+    redirectRoute: 'admin.location-levels.index',
+    module: 'location-level',
     templateModelField: Ember.computed(function() { return 'location-level'; }),
     model(params) {
         let new_pk = parseInt(params.new_id, 10);

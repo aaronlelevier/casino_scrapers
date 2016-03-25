@@ -4,8 +4,8 @@ import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 
 var PersonNew = TabNewRoute.extend({
     repository: inject('person'),
-    redirectRoute: Ember.computed(function() { return 'admin.people.index'; }),
-    modelName: Ember.computed(function() { return 'person'; }),
+    redirectRoute: 'admin.people.index',
+    module: 'person',
     templateModelField: Ember.computed(function() { return 'Person'; }),
     model(params) {
         const new_pk = parseInt(params.new_id, 10);

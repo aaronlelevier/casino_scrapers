@@ -8,8 +8,8 @@ var TicketNewRoute = TabNewRoute.extend({
   categoryRepository: inject('category'),
   locationRepo: inject('location'),
   priorityRepository: inject('ticket-priority'),
-  redirectRoute: Ember.computed(function() { return 'tickets.index'; }),
-  modelName: Ember.computed(function() { return 'ticket'; }),
+  redirectRoute: 'tickets.index',
+  module: 'ticket',
   templateModelField: Ember.computed(function() { return 'Ticket'; }),
   priorities: Ember.computed(function() {
     return this.get('priorityRepository').fetch();

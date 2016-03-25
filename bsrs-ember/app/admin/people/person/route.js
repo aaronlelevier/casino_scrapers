@@ -16,8 +16,8 @@ var PersonRoute = TabRoute.extend(FindById, ContactRouteMixin, {
       refreshModel: true
     }
   },
-  redirectRoute: Ember.computed(function() { return 'admin.people.index'; }),
-  modelName: Ember.computed(function() { return 'person'; }),
+  redirectRoute: 'admin.people.index',
+  module: 'person',
   templateModelField: Ember.computed(function() { return 'fullname'; }),
   model(params, transition) {
     const pk = params.person_id;

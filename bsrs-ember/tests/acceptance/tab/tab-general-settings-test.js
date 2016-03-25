@@ -46,9 +46,9 @@ test('deep linking the settings detail url should push a tab into the tab store 
         assert.equal(tabs.get('length'), 1);
         let tab = store.find('tab', SD.id);
         assert.equal(find('.t-tab-title:eq(0)').text(), t(SD.title));
-        assert.equal(tab.get('doc_type'), DOC_TYPE);
-        assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
-        assert.equal(tab.get('redirect'), BASE_ADMIN_URL);
+        assert.equal(tab.get('module'), DOC_TYPE);
+        assert.equal(tab.get('routeName'), DETAIL_ROUTE);
+        assert.equal(tab.get('redirectRoute'), BASE_ADMIN_URL);
         assert.equal(tab.get('newModel'), false);
     });
 });
@@ -67,9 +67,9 @@ test('visiting the setting detail url from the admin url should push a tab into 
         assert.equal(tabs.get('length'), 1);
         let tab = store.find('tab', SD.id);
         assert.equal(find('.t-tab-title:eq(0)').text(), t(SD.title));
-        assert.equal(tab.get('doc_type'), DOC_TYPE);
-        assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
-        assert.equal(tab.get('redirect'), BASE_ADMIN_URL);
+        assert.equal(tab.get('module'), DOC_TYPE);
+        assert.equal(tab.get('routeName'), DETAIL_ROUTE);
+        assert.equal(tab.get('redirectRoute'), BASE_ADMIN_URL);
         assert.equal(tab.get('newModel'), false);
     });
 });

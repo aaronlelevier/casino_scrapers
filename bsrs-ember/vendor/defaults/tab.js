@@ -4,8 +4,8 @@ var BSRS_TAB_DEFAULTS_OBJECT = (function() {
         return {
             // one
             id_one: 'a7ae2835-ee7c-4604-92f7-045f3994936e',
-            doc_type_one: 'ticket',
-            doc_route_one: 'tickets.ticket',
+            module_one: 'ticket',
+            routeName_one: 'tickets.ticket',
             templateModelField_one: 'categories',
             redirect_one: 'tickets.index',
             newModel_one: false,

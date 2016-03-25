@@ -3,7 +3,7 @@ import { module, test } from 'qunit';
 
 module('Unit | Helper | alert class');
 
-test('scott it works', function(assert) {
+test('it works', function(assert) {
   let result = alertClass('', {translated: 'info'});
   assert.equal(result, 'alert-info');
 });

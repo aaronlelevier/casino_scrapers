@@ -5,7 +5,7 @@ import TabRoute from 'bsrs-ember/route/tab/route';
 var TransitionRoute = TabRoute.extend({
     repository: inject('translation'),
     redirectRoute: Ember.computed(function() { return 'admin.translations.index'; }),
-    modelName: Ember.computed(function() { return 'translation'; }),
+    module: Ember.computed(function() { return 'translation'; }),
     templateModelField: Ember.computed(function() { return 'key'; }),
     model(params) {
         let translation_pk = params.translation_key;

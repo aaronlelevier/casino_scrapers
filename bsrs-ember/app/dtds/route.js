@@ -9,7 +9,7 @@ var DTDSRoute = GridViewRoute.extend({
   module: 'dtd',
   displayText: Ember.computed(function() { return this.get('i18n').t('admin.dtd.one'); }),
   redirectRoute: 'admin',
-  transitionCallback: function() {},
+  transitionCB: function() {},
   tabList: Ember.inject.service(),
   afterModel(){
     this.get('tabList').createSingleTab({
@@ -17,7 +17,7 @@ var DTDSRoute = GridViewRoute.extend({
       module: this.get('module'),
       displayText: this.get('displayText'),
       redirectRoute: this.get('redirectRoute'),
-      transitionCB: this.transitionCallback.bind(this),//any callbacks you want to call or store mods to make
+      transitionCB: this.transitionCB.bind(this),//any callbacks you want to call or store mods to make
     });
     // original, none tab
     this.get('store').push('dtd-header', {id: 1, showingList:true, showingDetail:true, showingPreview:true, message: detail_msg});

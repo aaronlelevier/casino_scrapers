@@ -5,8 +5,8 @@ import FindById from 'bsrs-ember/mixins/route/findById';
 
 var CategorySingle = TabRoute.extend(FindById, {
     repository: inject('category'),
-    redirectRoute: Ember.computed(function() { return 'admin.categories.index'; }),
-    modelName: Ember.computed(function() { return 'category'; }),
+    redirectRoute: 'admin.categories.index',
+    module: 'category',
     templateModelField: Ember.computed(function() { return 'name'; }),
     model(params) {
         const pk = params.category_id;

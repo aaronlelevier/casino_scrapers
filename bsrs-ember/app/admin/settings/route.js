@@ -7,7 +7,7 @@ export default TabRoute.extend({
     store: injectStore('main'),
     repository: inject('setting'),
     redirectRoute: Ember.computed(function() { return 'admin'; }),
-    modelName: Ember.computed(function() { return 'setting'; }),
+    module: Ember.computed(function() { return 'setting'; }),
     templateModelField: Ember.computed(function() { return 'translated_title'; }),
     model(params){
         const id = params.id;

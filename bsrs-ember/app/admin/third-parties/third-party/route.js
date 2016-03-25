@@ -6,8 +6,8 @@ import FindById from 'bsrs-ember/mixins/route/findById';
 var ThirdPartyRoute = TabRoute.extend(FindById, {
     repository: inject('third-party'),
     status_repo: inject('status'),
-    redirectRoute: Ember.computed(function() { return 'admin.third-parties.index'; }),
-    modelName: Ember.computed(function() { return 'third-party'; }),
+    redirectRoute: 'admin.third-parties.index',
+    module: 'third-party',
     templateModelField: Ember.computed(function() { return 'name'; }),
     model(params) {
         const pk = params.third_party_id;

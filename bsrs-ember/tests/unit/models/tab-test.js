@@ -17,10 +17,10 @@ test('test generic attrs on the model', (assert) => {
   let data = TBF.get();
   tab1 = store.push('tab', data);
   assert.equal(tab1.get('id'), TBD.id_one);
-  assert.equal(tab1.get('doc_type'), TBD.doc_type_one);
-  assert.equal(tab1.get('doc_route'), TBD.doc_route_one);
+  assert.equal(tab1.get('module'), TBD.module_one);
+  assert.equal(tab1.get('routeName'), TBD.routeName_one);
   assert.equal(tab1.get('templateModelField'), TBD.templateModelField_one);
-  assert.equal(tab1.get('redirect'), TBD.redirect_one);
+  assert.equal(tab1.get('redirectRoute'), TBD.redirect_one);
   assert.equal(tab1.get('newModel'), TBD.newModel_one);
 });
 
@@ -54,6 +54,6 @@ test('singleTabModel is returned based on model_id of corresponding model define
     ticket = store.push('ticket', {id: data.id, singleTabId: 'ticket123'});
     tab1 = store.push('tab', data);
   });
-  assert.equal(tab1.get('doc_type'), 'ticket');
+  assert.equal(tab1.get('module'), 'ticket');
   assert.equal(tab1.get('singleTabModel').get('id'), ticket.get('id'));
 });

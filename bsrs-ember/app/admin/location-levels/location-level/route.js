@@ -5,8 +5,8 @@ import FindById from 'bsrs-ember/mixins/route/findById';
 
 var LocationLevelRoute = TabRoute.extend(FindById, {
     repository: inject('location-level'),
-    redirectRoute: Ember.computed(function() { return 'admin.location-levels.index'; }),
-    modelName: Ember.computed(function() { return 'location-level'; }),
+    redirectRoute: 'admin.location-levels.index',
+    module: 'location-level',
     templateModelField: Ember.computed(function() { return 'name'; }),
     model(params) {
         const pk = params.location_level_id;

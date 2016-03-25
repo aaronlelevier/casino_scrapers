@@ -4,8 +4,8 @@ import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 
 var RoleNewRoute = TabNewRoute.extend({
     repository: inject('role'),
-    redirectRoute: Ember.computed(function() { return 'admin.roles.index'; }),
-    modelName: Ember.computed(function() { return 'role'; }),
+    redirectRoute: 'admin.roles.index',
+    module: 'role',
     templateModelField: Ember.computed(function() { return 'Role'; }),
     model(params) {
         let new_pk = parseInt(params.new_id, 10);

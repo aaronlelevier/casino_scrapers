@@ -59,9 +59,9 @@ test('(NEW URL) deep linking the new ticket url should push a tab into the tab s
         assert.equal(tabs.get('length'), 1);
         let tab = tabs.objectAt(0);
         assert.equal(find(TAB_TITLE).text(), 'New Ticket');
-        assert.equal(tab.get('doc_type'), 'ticket');
-        assert.equal(tab.get('doc_route'), NEW_ROUTE);
-        assert.equal(tab.get('redirect'), INDEX_ROUTE);
+        assert.equal(tab.get('module'), 'ticket');
+        assert.equal(tab.get('routeName'), NEW_ROUTE);
+        assert.equal(tab.get('redirectRoute'), INDEX_ROUTE);
         assert.equal(tab.get('newModel'), true);
     });
 });
@@ -76,9 +76,9 @@ test('deep linking the ticket detail url should push a tab into the tab store wi
         const ticket = store.find('ticket', TD.idOne);
         const sorted_cat = ticket.get('sorted_categories');
         assert.equal(find(TAB_TITLE).text(), `#${ticket.get('number')} - ${sorted_cat[sorted_cat.length-1].get('name')}`);
-        assert.equal(tab.get('doc_type'), DOC_TYPE);
-        assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
-        assert.equal(tab.get('redirect'), INDEX_ROUTE);
+        assert.equal(tab.get('module'), DOC_TYPE);
+        assert.equal(tab.get('routeName'), DETAIL_ROUTE);
+        assert.equal(tab.get('redirectRoute'), INDEX_ROUTE);
         assert.equal(tab.get('newModel'), false);
     });
 });
@@ -122,9 +122,9 @@ test('visiting the ticket detail url from the list url should push a tab into th
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
         let tab = store.find('tab', TD.idOne);
-        assert.equal(tab.get('doc_type'), DOC_TYPE);
-        assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
-        assert.equal(tab.get('redirect'), INDEX_ROUTE);
+        assert.equal(tab.get('module'), DOC_TYPE);
+        assert.equal(tab.get('routeName'), DETAIL_ROUTE);
+        assert.equal(tab.get('redirectRoute'), INDEX_ROUTE);
         assert.equal(tab.get('newModel'), false);
     });
 });
