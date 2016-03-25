@@ -17,7 +17,7 @@ var DTDSRoute = GridViewRoute.extend({
       module: this.get('module'),
       displayText: this.get('displayText'),
       redirectRoute: this.get('redirectRoute'),
-      transitionCB: this.transitionCB.bind(this),//any callbacks you want to call or store mods to make
+      transitionCB: this.transitionCB.bind(this),
     });
     // original, none tab
     this.get('store').push('dtd-header', {id: 1, showingList:true, showingDetail:true, showingPreview:true, message: detail_msg});
