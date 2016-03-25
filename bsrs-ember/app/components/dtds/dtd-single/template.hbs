@@ -30,23 +30,21 @@
           <div class="row">
             <div class="col-md-12">
               {{#form-group title="admin.dtd.label.note" for="note"}}
-              {{input type="text" placeholder=(t "admin.dtd.label.note") value=model.note class="form-control t-dtd-note" id="dtd_note"}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12 t-dtd-note_type-parent">
-              {{#form-group title="admin.dtd.label.note_type" for="note_type"}}
-                {{#power-select
-                  class='t-dtd-note_type'
-                  selected=model.note_type
-                  onchange=(action "setNoteType")
-                  searchEnabled=false
-                  options=model.note_types
-                  as |note|
-                }}
-                  {{t note}}
-                {{/power-select}}
+              <div class="input-group">
+                <div class="input-group-btn">
+                  {{#power-select
+                    class='t-dtd-note_type'
+                    selected=model.note_type
+                    onchange=(action "setNoteType")
+                    searchEnabled=false
+                    options=model.note_types
+                    as |note|
+                  }}
+                    {{t note}}
+                  {{/power-select}}
+                </div>
+                {{input type="text" placeholder=(t "admin.dtd.label.note") value=model.note class="form-control t-dtd-note" id="dtd_note"}}
+              </div>
               {{/form-group}}
             </div>
           </div>
@@ -87,7 +85,7 @@
           <div class="col-md-12">
             {{#form-group title="admin.dtd.label.link_type" for="link_type"}}
               {{#each model.link_types as |type|}}
-                <div class="radio">
+                <div class="radio radio-inline">
             			<label>
             				<input type="radio" value={{type}} onchange={{action 'setLinkType' type}} class="t-dtd-link_type" checked={{is-equal model.link_type type}} name="link_type">
             				<span class="t-dtd-link_type-label">{{t type}}</span>

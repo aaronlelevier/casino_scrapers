@@ -17,4 +17,10 @@ export default function(){
     //     this.use('crossFade'),
     //     this.reverse('crossFade'),
     // );
+    // this.transition(
+    //     this.fromRoute('dtds'),
+    //     this.toRoute('dtds.dtd'),
+    //     this.use('toRight'),
+    //     this.reverse('toLeft'),
+    // );
 }

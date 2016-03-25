@@ -43,7 +43,7 @@
     {{power-select-foreign-key mainModel=link selected=link.status change_method='change_status' relatedModels=statuses relatedModelName='ticket-status' clear=true}}
   </div>
   <div class="input-group">
-    <span class="input-group-addon">{{t "admin.dtd.label.link.destination"}}</span>
+    <span class="input-group-addon">{{t "admin.dtd.label.destination"}}</span>
     {{db-fetch-select model=link selectedAttr=link.destination className="t-link-destination-select" displayName="key" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}
   </div>
 </div>

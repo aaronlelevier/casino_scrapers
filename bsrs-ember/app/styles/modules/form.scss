@@ -67,7 +67,8 @@ div.buttonGroup {
 		font-size: 0.9em;
 	}
 }
-.input-multi-dtd-link{
+.input-multi-dtd-link,
+.input-multi-dtd-field{
 	.input-group-addon{
 		min-width: 10em;
 		text-align: left;
@@ -111,9 +112,15 @@ div.buttonGroup {
 			border-radius: 0 0 3px 0;
 		}
 	}
+	.ember-power-select-trigger,
 	.input-group-addon,
 	.form-control,
 	.btn{
+		border-radius: 0;
+	}
+	.btn-default{
+		width: 100%;
+		border: $borderStyle;
 		border-radius: 0;
 	}
 }
@@ -249,22 +256,22 @@ label.small-label{
 	.category-select {
 		float: left;
 	    .ember-power-select-trigger{
-	        font-size: 1.2rem;
-	        min-height: 26px;
-			min-width: 120px;
-	        height: 26px;
-	        line-height: 24px;
-	        border-radius: 0;
-			width: 100%;
-			position: relative;
+				font-size: 1.2rem;
+				min-height: 26px;
+				min-width: 120px;
+				height: 26px;
+				line-height: 24px;
+				border-radius: 0;
+				width: 100%;
+				position: relative;
 			&:focus{
 				z-index: 3;
 			}
-	    }
+	  }
 		.ember-power-select-dropdown{
 			top: 26px;
 		}
-	    .ember-power-select-option,
+	  .ember-power-select-option,
 		.ember-power-select-search input{
 	        font-size: 1.2rem;
 	    }

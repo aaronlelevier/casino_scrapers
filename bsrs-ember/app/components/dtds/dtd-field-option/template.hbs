@@ -1,13 +1,15 @@
 {{#each model.options as |option|}}
-  <div class="input-group-vertical">
-    <div class="input-group">
-      <span class="input-group-btn">
-        <button class="t-remove-field-option-btn btn btn-default btn-sm delete" type="button" {{action 'delete' option}}>{{fa-icon "minus"}}</button>
-      </span>
-      {{input type="text" placeholder=(t "admin.dtd.label.option.text") value=option.text class="form-control t-dtd-field-option-text"}}
-    </div>
+<div class="input-group">
+  <span class="input-group-addon"></span>
+  <div class="input-group-btn t-input-multi-dtd-field-option">
+    <button class="t-remove-field-option-btn btn btn-default btn-sm delete form-control" type="button" {{action 'delete' option}}>{{fa-icon "minus"}}</button>
   </div>
+  {{input type="text" placeholder=(t "admin.dtd.label.option_text") value=option.text class="form-control t-dtd-field-option-text"}}
+</div>
 {{/each}}
-<button class="t-add-field-option-btn add-btn btn btn-default btn-sm" type="button" {{action "append"}}>
-  <span class="btn-label">{{fa-icon "plus"}} {{t "admin.dtd.option.add"}}</span>
-</button>
+<div class="input-group">
+  <span class="input-group-addon"></span>
+  <button class="t-add-field-option-btn btn btn-default btn-sm" type="button" {{action "append"}}>
+    <span class="btn-label">{{fa-icon "plus"}} {{t "admin.dtd.option.add"}}</span>
+  </button>
+</div>

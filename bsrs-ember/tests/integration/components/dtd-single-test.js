@@ -430,9 +430,9 @@ test('hide or show options based on field.type', function(assert) {
       store.push('field', {id: FD.idOne, type: type});
     });
     if (typesWithOptions.includes(type)) {
-      assert.equal($component.find('.t-input-multi-dtd-field-option').length, 1);
+      assert.equal($component.find('.t-add-field-option-btn').length, 1);
     } else {
-      assert.equal($component.find('.t-input-multi-dtd-field-option').length, 0);
+      assert.equal($component.find('.t-add-field-option-btn').length, 0);
     }
   }
 });

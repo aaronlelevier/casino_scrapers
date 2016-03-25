@@ -1,204 +1,220 @@
 
 .navbar-collapse.collapse{
-    background: $blue;
-    ul.navbar-nav{
-        li{
-            a{
-                color: $light;
-            }
-        }
+  background: $blue;
+  ul.navbar-nav{
+    li{
+      a{
+        color: $light;
+      }
     }
+  }
 }
 .navbar {
-    position: relative;
-    min-height: $menuHeight;
+  position: relative;
+  min-height: $menuHeight;
+  height: $menuHeight;
+  margin-bottom: 0;
+  border: none;
+  border-radius: 0;
+  background: $blue;
+  color: $white;
+  .navbar-brand{
     height: $menuHeight;
-    margin-bottom: 0;
-    border: none;
-	border-radius: 0;
-	background: $blue;
-	color: $white;
-	.navbar-brand{
-		height: $menuHeight;
-		padding: 0 25px 0 15px;
-		line-height: $menuHeight;
-		color: $light;
-		&:hover{
-			color: $light;
-		}
-	}
-    .navbar-toggle{
-        border: none;
-        padding: 6px 10px;
-        border-radius: none;
-        &:hover,
-        &:focus{
-            background: none;
-        }
-        .icon-bar{
-            background-color: $light;
-        }
+    padding: 0 25px 0 15px;
+    line-height: $menuHeight;
+    color: $light;
+    &:hover{
+      color: $light;
     }
-	.navbar-nav{
-		li{
-			a{
-				padding: 0 15px;
-				line-height: $menuHeight;
-				color: $light;
-				&:hover{
-					background: $hoverColor;
-					color: $light;
-				}
-				&.active{
-					background: $activeColor;
-					color: $light;
-				}
-				.badge{
-					position: absolute;
-					right: -7px;
-					top: 3px;
-					z-index: 1;
-				}
-			}
-			&.dropdown.open{
-				a.dropdown-toggle{
-					background: $hoverColor;
-					color: $light;
-				}
-			}
-		}
-		.current-user{
-			a.dropdown-toggle{
-				height: $menuHeight;
-				padding: 0 25px 0 15px;
-				margin: 0 0 0 15px;
-				.user{
-					display: block;
-					line-height: 26px;
-				}
-				.role{
-					display: block;
-					font-size: 1rem;
-					line-height: 10px;
-					margin-top: -2px;
-				}
-				.caret{
-					line-height: $menuHeight;
-					position: absolute;
-					right: 5px;
-					top: 20px;
-				}
-			}
-			.dropdown-menu{
-				right: -1px;
-				border: $borderStyle;
-				border-radius: $borderRadiusBottom;
-				a{
-					color: $darkGray;
-					font-size: 1.2rem;
-					line-height: 30px;
-					height: 30px;
-					&:hover{
-						color: $light;
-					}
-					&.active{
-						background: $activeColor;
-						color: $light;
-					}
-				}
-			}
-		}
-	}
+  }
+  .navbar-toggle{
+    border: none;
+    padding: 6px 10px;
+    border-radius: none;
+    &:hover,
+    &:focus{
+      background: none;
+    }
+    .icon-bar{
+      background-color: $light;
+    }
+  }
+  .navbar-nav{
+    li{
+      a{
+        padding: 0 15px;
+        line-height: $menuHeight;
+        color: $light;
+        &:hover{
+          background: $hoverColor;
+          color: $light;
+        }
+        &.active{
+          background: $activeColor;
+          color: $light;
+        }
+        .badge{
+          position: absolute;
+          right: -7px;
+          top: 3px;
+          z-index: 1;
+        }
+      }
+      &.dropdown.open{
+        a.dropdown-toggle{
+          background: $hoverColor;
+          color: $light;
+        }
+      }
+    }
+    .current-user{
+      a.dropdown-toggle{
+        height: $menuHeight;
+        padding: 0 25px 0 15px;
+        margin: 0 0 0 15px;
+        .user{
+          display: block;
+          line-height: 26px;
+        }
+        .role{
+          display: block;
+          font-size: 1rem;
+          line-height: 10px;
+          margin-top: -2px;
+        }
+        .caret{
+          line-height: $menuHeight;
+          position: absolute;
+          right: 5px;
+          top: 20px;
+        }
+      }
+      .dropdown-menu{
+        right: -1px;
+        border: $borderStyle;
+        border-radius: $borderRadiusBottom;
+        a{
+          color: $darkGray;
+          font-size: 1.2rem;
+          line-height: 30px;
+          height: 30px;
+          &:hover{
+            color: $light;
+          }
+          &.active{
+            background: $activeColor;
+            color: $light;
+          }
+        }
+      }
+    }
+  }
 }
 @media (max-width: 1200px) {
-    .navbar{
-        .navbar-nav{
-    		li{
-    			a{
-    				padding: 0 10px;
-                    font-size: 1.2rem;
-                }
-            }
+  .navbar{
+    .navbar-nav{
+      li{
+        a{
+          padding: 0 10px;
+          font-size: 1.2rem;
         }
+      }
     }
+  }
 }
 @media (max-width: 1000px) {
-    .navbar-header {
-        float: none;
-    }
-    .navbar-toggle {
-        display: block;
-    }
-    .navbar-collapse.collapse {
-        display: none !important;
-    }
-    .navbar-nav {
-        float: none!important;
-        margin: 7.5px -15px;
-    }
-    .navbar-nav>li {
-        float: none;
-    }
-    .navbar-nav>li>a {
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-    .navbar-text {
-        float: none;
-        margin: 15px 0;
-    }
-    /* since 3.1.0 */
-    .navbar-collapse.collapse.in {
-        display: block!important;
-    }
-    .collapsing {
-        overflow: hidden!important;
-    }
+  .navbar-header {
+    float: none;
+  }
+  .navbar-toggle {
+    display: block;
+  }
+  .navbar-collapse.collapse {
+    display: none !important;
+  }
+  .navbar-nav {
+    float: none!important;
+    margin: 7.5px -15px;
+  }
+  .navbar-nav>li {
+    float: none;
+  }
+  .navbar-nav>li>a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .navbar-text {
+    float: none;
+    margin: 15px 0;
+  }
+  /* since 3.1.0 */
+  .navbar-collapse.collapse.in {
+    display: block!important;
+  }
+  .collapsing {
+    overflow: hidden!important;
+  }
 }
 
 
 .form-control{
-	-webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
-    -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
-    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 }
 .form-control{
-	border-radius: $borderRadius;
-	border-color: $gray;
-	color: $dark;
-	&:focus{
-		outline: none !important;
-		border-color: $activeColor;
-		z-index: 3;
-	}
+  border-radius: $borderRadius;
+  border-color: $gray;
+  color: $dark;
+  &:focus{
+    outline: none !important;
+    border-color: $activeColor;
+    z-index: 3;
+  }
+}
+.btn-default{
+  border: $borderStyle;
 }
 
+.btn-default:focus,
+.btn-default.focus{
+  border: $borderStyle;
+  background: $white;
+}
 
 
 .input-group-addon:first-child{
-	border-radius: $borderRadiusLeft;
+  border-radius: $borderRadiusLeft;
 }
 .input-group-addon:last-child{
-	border-radius: $borderRadiusRight;
+  border-radius: $borderRadiusRight;
 }
 .btn,
 .btn-sm{
-	border-radius: $borderRadius;
-}
-.btn-default,
-.input-group-addon{
-	border-color: $gray;
+  border-radius: $borderRadius;
 }
 //remove browser default
 .btn:focus,
 .btn:active {
-   outline: none !important;
+  outline: none !important;
 }
 
 .input-group .btn {
-    height: 34px !important; //Remove after bootstrap fix released
- }
-
+  height: 34px !important; //Remove after bootstrap fix released
+}
+.input-group{
+  .input-group-btn{
+    .ember-power-select .ember-power-select-trigger{
+      font-size: 14px;
+      line-height: 32px;
+    }
+    &:first-child{
+      .ember-power-select .ember-power-select-trigger{
+        border-radius: $borderRadiusLeft;
+      }
+    }
+  }
+}
 .btn-default:hover,
 .input-group-addon,
 .form-control[disabled],
@@ -216,9 +232,9 @@ fieldset[disabled] .form-control,
 .open > .btn-default.dropdown-toggle:hover,
 .open > .btn-default.dropdown-toggle:focus,
 .open > .btn-default.dropdown-toggle.focus{
-	background-color: $light;
-	border-color: $gray;
-	z-index: 3;
+  background-color: $light;
+  border-color: $gray;
+  z-index: 3;
 }
 .btn-default:active,
 .btn-default.active,
@@ -232,8 +248,15 @@ fieldset[disabled] .form-control,
 .open > .btn-default.dropdown-toggle:hover,
 .open > .btn-default.dropdown-toggle:focus,
 .open > .btn-default.dropdown-toggle.focus{
-	border-color: $activeColor;
-	z-index: 3;
+  border-color: $gray;
+  background-color: $light;
+  z-index: 3;
+}
+.btn-default:active,
+.btn-default.active{
+  border-color: $gray;
+  background: $gray !important;
+  z-index: 2;
 }
 .btn-primary{
   background: $activeColor;
@@ -245,9 +268,9 @@ fieldset[disabled] .form-control,
   }
 }
 .badge{
-	background-color: $orange;
-	font-size: 1.1rem;
-	border-radius: $borderRadius;
+  background-color: $orange;
+  font-size: 1.1rem;
+  border-radius: $borderRadius;
 }
 
 .list-group-item:first-child{
@@ -255,4 +278,32 @@ fieldset[disabled] .form-control,
 }
 .list-group-item:last-child{
   border-radius: $borderRadiusBottom;
+}
+.panel-default{
+  border: $borderStyle;
+}
+.panel-footer{
+  border: $borderStyle;
+  border-width: 1px 0 0;
+  background-color: $lightGray;
+}
+.alert-success{
+  background: $lightBlue;
+  border-color: $blue;
+  color: $white;
+}
+.alert-warning{
+  background: $yellow;
+  border-color: $darkYellow;
+  color: $dark;
+}
+.alert-info{
+  background: $lightGray;
+  border-color: $borderColor;
+  color: $dark;
+}
+.alert-danger{
+  background: $orange;
+  border-color: $darkOrange;
+  color: $white;
 }

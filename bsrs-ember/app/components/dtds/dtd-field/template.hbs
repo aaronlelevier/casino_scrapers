@@ -4,9 +4,10 @@
       <span class="input-group-btn">
         <button class="t-del-field-btn btn btn-default btn-sm delete" type="button" {{action 'delete' field}}>{{fa-icon "minus"}}</button>
       </span>
-      {{input type="text" placeholder=(t "admin.dtd.label.field.label") value=field.label class="form-control t-dtd-field-label"}}
+      {{input type="text" placeholder=(t "admin.dtd.label.label") value=field.label class="form-control t-dtd-field-label"}}
     </div>
-    {{#form-group title="admin.dtd.field.type" for="type"}}
+    <div class="input-group">
+      <span class="input-group-addon">{{t "admin.dtd.label.field_type"}}</span>
       {{#power-select
         class='t-dtd-field-type'
         selected=field.type
@@ -17,9 +18,14 @@
       }}
         {{t field}}
       {{/power-select}}
-    {{/form-group}}
+    </div>
+    {{#if (if-in elem=field.type list=field.typesWithOptions)}}
+      {{dtds/dtd-field-option
+        model=field
+      }}
+    {{/if}}
     <div class="input-group">
-      <span class="input-group-addon">{{t "admin.dtd.label.field.required"}}</span>
+      <span class="input-group-addon">{{t "admin.dtd.label.required"}}</span>
       <div class="checkbox">
         <label>
           {{input type="checkbox" checked=field.required class="form-control t-dtd-field-required"}}
@@ -27,18 +33,7 @@
         </label>
       </div>
     </div>
-    {{#if (if-in elem=field.type list=field.typesWithOptions)}}
-      <h3 class="col-md-12">{{t 'admin.dtd.title.options'}}</h3>
-      <div class="row">
-        <div class="col-md-12">
-          {{#form-group title="admin.dtd.label.options" for="options"}}
-          {{dtds/dtd-field-option
-            model=field
-          }}
-          {{/form-group}}
-        </div>
-      </div>
-    {{/if}}
+
   </div>
 {{/each}}
 <button class="t-add-field-btn add-btn btn btn-default btn-sm" type="button" {{action "append"}}>

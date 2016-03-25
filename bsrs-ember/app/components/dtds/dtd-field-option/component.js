@@ -4,7 +4,7 @@ import inject from 'bsrs-ember/utilities/uuid';
 
 var DtdLinkComponent = Ember.Component.extend({
     uuid: inject('uuid'),
-    classNames: ['input-multi-dtd-field-option t-input-multi-dtd-field-option'],
+    tagName: '',
     actions: {
         append(){
             const id = this.get('uuid').v4();

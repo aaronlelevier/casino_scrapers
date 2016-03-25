@@ -110,6 +110,9 @@
         .dtd-detail-title{
           @include truncate;
         }
+        .row .row{
+          margin: 8px 0;
+        }
         textarea{
           resize: none;
         }
