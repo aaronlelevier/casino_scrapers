@@ -27,6 +27,7 @@ const INDEX_ROUTE = 'dtds';
 const DETAIL_ROUTE = 'dtds.dtd';
 const DOC_TYPE = 'dtd';
 const TAB_TITLE = '.t-tab-title:eq(0)';
+const DTD_TAB_NAME = 'Decision Tree';
 
 let application, store, list_xhr, dtd_detail_data, endpoint, detail_xhr, original_uuid;
 
@@ -46,6 +47,36 @@ module('Acceptance | tab dtd test', {
   }
 });
 
+test('aaron going from admin to dtds list view generates a tab', assert => {
+  clearxhr(detail_xhr);
+  visit(ADMIN_URL);
+  andThen(() => {
+    assert.equal(currentURL(), ADMIN_URL);
+  });
+  page.visit();
+  andThen(() => {
+    assert.equal(currentURL(), BASE_DTD_URL);
+    let tabs = store.find('tab');
+    assert.equal(tabs.get('length'), 1);
+    let tab = tabs.objectAt(0);
+    assert.equal(find(TAB_TITLE).text(), DTD_TAB_NAME);
+    assert.equal(tab.get('doc_type'), DOC_TYPE);
+  });
+});
+
+test('deep link to dtd list view generates a tab', assert => {
+  clearxhr(detail_xhr);
+  page.visit();
+  andThen(() => {
+    assert.equal(currentURL(), BASE_DTD_URL);
+    let tabs = store.find('tab');
+    assert.equal(tabs.get('length'), 1);
+    let tab = tabs.objectAt(0);
+    assert.equal(find(TAB_TITLE).text(), DTD_TAB_NAME);
+    assert.equal(tab.get('doc_type'), DOC_TYPE);
+  });
+});
+
 test('(NEW URL) deep linking the new dtd url should push a tab into the tab store with correct properties', (assert) => {
   clearxhr(detail_xhr);
   page.visitNew();
@@ -54,7 +85,7 @@ test('(NEW URL) deep linking the new dtd url should push a tab into the tab stor
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
     let tab = tabs.objectAt(0);
-    assert.equal(find(TAB_TITLE).text(), 'New Definition');
+    assert.equal(find(TAB_TITLE).text(), DTD_TAB_NAME);
     assert.equal(tab.get('doc_type'), 'dtd');
     assert.equal(tab.get('doc_route'), NEW_ROUTE);
     assert.equal(tab.get('redirect'), INDEX_ROUTE);
@@ -70,7 +101,7 @@ test('deep linking the dtd detail url should push a tab into the tab store with 
     assert.equal(tabs.get('length'), 1);
     const tab = store.findOne('tab');
     const dtd = store.findOne('dtd');
-    assert.equal(find(TAB_TITLE).text(), DTD.descriptionOne);
+    assert.equal(find(TAB_TITLE).text(), DTD_TAB_NAME);
     assert.equal(tab.get('doc_type'), DOC_TYPE);
     assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
     assert.equal(tab.get('redirect'), INDEX_ROUTE);
@@ -78,12 +109,12 @@ test('deep linking the dtd detail url should push a tab into the tab store with 
   });
 });
 
-test('visiting the dtd detail url from the list url should push a tab into the tab store', (assert) => {
+test('visiting the dtd list, then detail url there will only be one dtd tab', (assert) => {
   page.visit();
   andThen(() => {
     assert.equal(currentURL(), DTD_URL);
     const tabs = store.find('tab');
-    assert.equal(tabs.get('length'), 0);
+    assert.equal(tabs.get('length'), 1);
   });
   click('.t-grid-data:eq(0)');
   andThen(() => {
@@ -103,7 +134,7 @@ test('clicking on a tab that is not dirty from the list url should take you to t
   andThen(() => {
     assert.equal(currentURL(), DTD_URL);
     let tabs = store.find('tab');
-    assert.equal(tabs.get('length'), 0);
+    assert.equal(tabs.get('length'), 1);
   });
   click('.t-grid-data:eq(0)');
   andThen(() => {
@@ -138,7 +169,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
     const dtds = store.find('dtd');
     assert.equal(dtds.get('length'), 11);
     assert.equal(tabs.get('length'), 1);
-    assert.equal(find(TAB_TITLE).text(), 'New Definition');
+    assert.equal(find(TAB_TITLE).text(), DTD_TAB_NAME);
   });
   page.visit();
   andThen(() => {
@@ -160,7 +191,7 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
     assert.equal(currentURL(), NEW_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
-    assert.equal(find(TAB_TITLE).text(), 'New Definition');
+    assert.equal(find(TAB_TITLE).text(), DTD_TAB_NAME);
   });
   page.descriptionFillIn(DTD.descriptionTwo);
   andThen(() => {
@@ -188,7 +219,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
   andThen(() => {
     assert.equal(currentURL(), DTD_URL);
     const tabs = store.find('tab');
-    assert.equal(tabs.get('length'), 0);
+    assert.equal(tabs.get('length'), 1);
   });
   click('.t-grid-data:eq(0)');
   page.descriptionFillIn(DTD.descriptionTwo);
@@ -204,7 +235,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
   andThen(() => {
     assert.equal(currentURL(), DTD_URL);
   });
-  click('.t-tab:eq(0)');
+  click('.t-dtd-description:eq(0)'); // 1st item in dtd list
   andThen(() => {
     const dtd = store.findOne('dtd');
     assert.equal(page.description, DTD.descriptionTwo);
@@ -218,7 +249,7 @@ test('clicking on a tab that is dirty from the role url (or any non related page
   andThen(() => {
     assert.equal(currentURL(), DTD_URL);
     let tabs = store.find('tab');
-    assert.equal(tabs.get('length'), 0);
+    assert.equal(tabs.get('length'), 1);
   });
   click('.t-grid-data:eq(0)');
   page.keyFillIn(DTD.keyTwo);
@@ -253,7 +284,7 @@ test('clicking on a tab that is not dirty from the role url (or any non related 
   andThen(() => {
     assert.equal(currentURL(), DTD_URL);
     let tabs = store.find('tab');
-    assert.equal(tabs.get('length'), 0);
+    assert.equal(tabs.get('length'), 1);
   });
   click('.t-grid-data:eq(0)');
   andThen(() => {
@@ -366,7 +397,7 @@ test('(NEW URL) a dirty new tab and clicking on new model button should not push
     assert.equal(currentURL(), NEW_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
-    assert.equal(find(TAB_TITLE).text(), 'New Definition');
+    assert.equal(find(TAB_TITLE).text(), DTD_TAB_NAME);
   });
   page.keyFillIn(DTD.keyOne);
   visit(DTD_URL);

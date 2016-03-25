@@ -1,5 +1,5 @@
 <li style="width:{{tab-width tab.tab_count.length}}">
-  {{#link-to tab.doc_route link_id classNames="t-tab"}}
+  {{#link-to tab.doc_route (if link_id link_id) classNames="t-tab"}}
   <span class="t-tab-title">{{tab.parent}}</span>
   <span class="close-wrap">
     <a href="#" class="close-icon t-tab-close" {{action "close" tab bubbles=false}}>

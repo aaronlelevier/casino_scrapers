@@ -39,7 +39,8 @@ export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
       false,
       this.transitionCallback.bind(this),
       model_id,
-      this.get('closeTabRedirect')
+      this.get('closeTabRedirect'),
+      'Decision Tree'
     );
   },
   renderTemplate(){

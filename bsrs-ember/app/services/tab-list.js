@@ -6,7 +6,7 @@ export default Ember.Service.extend({
   findTab(id) {
     return this.get('store').find('tab', id);
   },
-  createTab(id, doc_route, doc_type, templateModelField, redirect=undefined, newModel=false, transitionCallback=undefined, model_id=undefined, closeTabRedirect=undefined){
+  createTab(id, doc_route, doc_type, templateModelField, redirect=undefined, newModel=false, transitionCallback=undefined, model_id=undefined, closeTabRedirect=undefined, tabTitle=undefined){
     this.get('store').push('tab', {
       id: id,
       doc_type: doc_type,
@@ -16,7 +16,8 @@ export default Ember.Service.extend({
       newModel: newModel,
       transitionCallback: transitionCallback,
       model_id: model_id, //used for singleTabs,
-      closeTabRedirect: closeTabRedirect //used for new dtd tab that has two different actions depending on cancel or close
+      closeTabRedirect: closeTabRedirect, //used for new dtd tab that has two different actions depending on cancel or close
+      tabTitle: tabTitle
     });
   },
   closeTab(id){

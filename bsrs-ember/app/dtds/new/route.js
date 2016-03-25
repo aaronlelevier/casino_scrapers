@@ -42,7 +42,8 @@ var DtdNewRoute = Ember.Route.extend({
       true,//newModel
       this.transitionCallback.bind(this),
       model_id,
-      this.get('closeTabRedirect')
+      this.get('closeTabRedirect'),
+      'Decision Tree'
      );
   },
   renderTemplate(){
