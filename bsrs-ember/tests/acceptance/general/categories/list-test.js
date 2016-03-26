@@ -15,19 +15,24 @@ const CATEGORIES_URL = BASE_URL + '/index';
 let application;
 
 module('Acceptance | category-list', {
-    beforeEach() {
-        application = startApp();
-        let endpoint = PREFIX + BASE_URL + '/';
-        xhr(endpoint + '?page=1', "GET", null, {}, 200, CATEGORY_FIXTURES.list());
-    },
-    afterEach() {
-        Ember.run(application, 'destroy');
-    }
+  beforeEach() {
+    application = startApp();
+    let endpoint = PREFIX + BASE_URL + '/';
+    xhr(endpoint + '?page=1', "GET", null, {}, 200, CATEGORY_FIXTURES.list());
+  },
+  afterEach() {
+    Ember.run(application, 'destroy');
+  }
 });
 
 test('visiting /categories/index', (assert) => {
-    visit(CATEGORIES_URL);
-    andThen(() => {
-        assert.equal(currentURL(), CATEGORIES_URL);
-    });
+  visit(CATEGORIES_URL);
+  andThen(() => {
+    assert.equal(currentURL(), CATEGORIES_URL);
+    assert.equal(find('.t-sort-name').text(), t('admin.category.label.name'));
+    assert.equal(find('.t-sort-description').text(), t('admin.category.label.description'));
+    assert.equal(find('.t-sort-label').text(), t('admin.category.label.label'));
+    // assert.equal(find('.t-sort-cost-amount').text(), t('admin.category.label.label'));
+    // assert.equal(find('.t-sort-cost-code').text(), t('admin.category.label.label'));
+  });
 });

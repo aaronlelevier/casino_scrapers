@@ -28,5 +28,6 @@ test('visiting /location-levels', function(assert) {
   visit(LOCATION_LEVEL_URL);
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
+    assert.equal(find('.t-sort-name').text(), t('admin.locationlevel.label.name'));
   });
 });

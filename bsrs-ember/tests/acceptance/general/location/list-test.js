@@ -14,19 +14,23 @@ const DJANGO_LOCATION_URL = '/admin/locations/';
 let application;
 
 module('Acceptance | location-list', {
-    beforeEach() {
-        application = startApp();
-        let endpoint = PREFIX + DJANGO_LOCATION_URL;
-        xhr(endpoint + '?page=1','GET', null, {}, 200, LOCATION_FIXTURES.list() );
-    },
-    afterEach() {
-        Ember.run(application, 'destroy');
-    }
+  beforeEach() {
+    application = startApp();
+    let endpoint = PREFIX + DJANGO_LOCATION_URL;
+    xhr(endpoint + '?page=1','GET', null, {}, 200, LOCATION_FIXTURES.list() );
+  },
+  afterEach() {
+    Ember.run(application, 'destroy');
+  }
 });
 
 test('visiting /locations', (assert) => {
-    visit(LOCATION_URL);
-    andThen(() => {
-        assert.equal(currentURL(), LOCATION_URL);
-    });
+  visit(LOCATION_URL);
+  andThen(() => {
+    assert.equal(currentURL(), LOCATION_URL);
+    assert.equal(find('.t-sort-name').text(), t('admin.location.label.name'));
+    assert.equal(find('.t-sort-number').text(), t('admin.location.label.number'));
+    assert.equal(find('.t-sort-location-level-name').text(), t('admin.location.label.location_level'));
+    assert.equal(find('.t-sort-status-translated-name').text(), t('admin.location.label.status-name'));
+  });
 });

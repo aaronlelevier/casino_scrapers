@@ -6,7 +6,8 @@ export default GridViewComponent.extend({
     columns: [
         {
             field: 'status.translated_name',
-            headerLabel: 'Status',
+            headerLabel: 'admin.location.label.status-name',
+            headerIsTranslatable: true,
             isSortable: true,
             isFilterable: true,
             isSearchable: true,
@@ -15,21 +16,24 @@ export default GridViewComponent.extend({
         },
         {
             field: 'name',
-            headerLabel: 'Name',
+            headerLabel: 'admin.location.label.name',
+            headerIsTranslatable: true,
             isSortable: true,
             isFilterable: true,
             isSearchable: true
         },
         {
             field: 'number',
-            headerLabel: 'Number',
+            headerLabel: 'admin.location.label.number',
+            headerIsTranslatable: true,
             isSortable: true,
             isFilterable: true,
             isSearchable: true
         },
         {
             field: 'location_level.name',
-            headerLabel: 'Organization',
+            headerLabel: 'admin.location.label.location_level',
+            headerIsTranslatable: true,
             isSortable: true,
             isFilterable: true,
             isSearchable: true
