@@ -23,8 +23,10 @@ moduleForComponent('dtds/dtd-preview', 'Integration | Component | dtds/dtd previ
     trans = this.container.lookup('service:i18n');
     var json = translations.generate('en');
     loadTranslations(trans, json);
+    const dtd_data = DTDF.generate();
+    delete dtd_data.fields;
     run(() => {
-      dtd = store.push('dtd', DTDF.generate());
+      dtd = store.push('dtd', dtd_data);
     });
   },
   afterEach(){
@@ -87,17 +89,30 @@ test('if no prompt, not displayed', function(assert) {
   assert.ok(this.$('.panel-footer').hasClass('t-dtd-preview-prompt'));
 });
 
-// test('scott if no fields, not displayed', function(assert) {
-//   run(() => {
-//     store.push('dtd', {id: dtd.get('id'), prompt: ''});
-//     store.push('field', {id: FD.idOne, field_field_fks: [1]});
-//     store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
-//   });
-//   this.model = dtd;
-//   this.render(hbs`{{dtds/dtd-preview model=model}}`);
-//   assert.notOk(this.$('.panel-footer').hasClass('t-dtd-preview-fields'));
-//   run(() => {
-//     store.push('dtd', {id: dtd.get('id'), fields: DTD.fieldsOne});
-//   });
-//   assert.ok(this.$('.panel-footer').hasClass('t-dtd-preview-fields'));
-// });
+test('if no fields, not displayed...text type displays properly', function(assert) {
+  assert.equal(dtd.get('fields').get('length'), 0);
+  run(() => {
+    store.push('dtd', {id: dtd.get('id'), prompt: ''});
+    store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeOne, field_field_fks: [1]});
+    store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
+  });
+  assert.equal(dtd.get('fields').get('length'), 1);
+  this.model = dtd;
+  this.render(hbs`{{dtds/dtd-preview model=model}}`);
+  assert.equal(this.$('input.t-dtd-field-preview:eq(0)').val(), FD.labelOne);
+  assert.equal(this.$('input.t-dtd-field-preview:eq(0)').attr('type'), 'text');
+});
+
+test('number type display properly', function(assert) {
+  assert.equal(dtd.get('fields').get('length'), 0);
+  run(() => {
+    store.push('dtd', {id: dtd.get('id'), prompt: ''});
+    store.push('field', {id: FD.idOne, label: 1, type: FD.typeTwo, field_field_fks: [1]});
+    store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
+  });
+  assert.equal(dtd.get('fields').get('length'), 1);
+  this.model = dtd;
+  this.render(hbs`{{dtds/dtd-preview model=model}}`);
+  assert.equal(this.$('input.t-dtd-field-preview').val(), '1');
+  assert.equal(this.$('input.t-dtd-field-preview').attr('type'), 'number');
+});

@@ -15,7 +15,13 @@
         {{/if}}
         <div class="panel-body">
           {{#if model.description}} <p class="t-dtd-preview-description">{{format-markdown model.description}}</p> {{/if}}
-          {{!--fields--}}
+          {{#if model.fields}}
+            {{#each model.fields as |field|}}            
+              <div class="t-dtd-preview-field">
+                {{field-element-display field=field}}
+              </div>
+            {{/each}}
+          {{/if}}
         </div>
         {{#if model.prompt}} <div class="panel-footer t-dtd-preview-prompt">{{format-markdown model.prompt}}</div> {{/if}}
         {{#if (is-equal model.link_type model.link_types.[1])}}
