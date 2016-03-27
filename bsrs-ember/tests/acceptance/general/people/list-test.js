@@ -14,25 +14,26 @@ const PEOPLE_URL = BASE_PEOPLE_LIST_URL + '/index';
 var application;
 
 module('Acceptance | people-list', {
-    beforeEach() {
-        application = startApp();
-        var endpoint = PREFIX + BASE_PEOPLE_LIST_URL + '/';
-        xhr(endpoint + '?page=1', 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
-    },
-    afterEach() {
-        Ember.run(application, 'destroy');
-    }
+  beforeEach() {
+    application = startApp();
+    var endpoint = PREFIX + BASE_PEOPLE_LIST_URL + '/';
+    xhr(endpoint + '?page=1', 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
+  },
+  afterEach() {
+    Ember.run(application, 'destroy');
+  }
 });
 
 test('visiting /people', function(assert) {
-    visit(PEOPLE_URL);
-    andThen(() => {
-        assert.equal(currentURL(),PEOPLE_URL);
-        assert.equal(find('.t-grid-title').text(), t('admin.person.other'));
-        assert.equal(find('.t-sort-fullname').text(), t('admin.person.label.fullname'));
-        assert.equal(find('.t-sort-status-translated-name').text(), t('admin.person.label.status'));
-        assert.equal(find('.t-sort-title').text(), t('admin.person.label.title'));
-        assert.equal(find('.t-sort-username').text(), t('admin.person.label.username'));
-        assert.equal(find('.t-sort-role-name').text(), t('admin.person.label.role-name'));
-    });
+  visit(PEOPLE_URL);
+  andThen(() => {
+    assert.equal(currentURL(),PEOPLE_URL);
+    assert.equal(find('.t-grid-title').text(), t('admin.person.other'));
+    assert.equal(find('.t-sort-fullname').text(), t('admin.person.label.fullname'));
+    assert.equal(find('.t-sort-status-translated-name').text(), t('admin.person.label.status'));
+    assert.equal(find('.t-sort-title').text(), t('admin.person.label.title'));
+    assert.equal(find('.t-sort-username').text(), t('admin.person.label.username'));
+    assert.equal(find('.t-sort-role-name').text(), t('admin.person.label.role-name'));
+    assert.equal(find('.t-sort-employee-id').text(), t('admin.person.label.employee_id'));
+  });
 });

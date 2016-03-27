@@ -8,6 +8,6 @@ export default GridViewComponent.extend({
     {field: 'username', headerLabel: 'admin.person.label.username', headerIsTranslatable: true, isSortable: true, isFilterable: true, isSearchable: true},
     {field: 'title', headerLabel: 'admin.person.label.title', headerIsTranslatable: true, isSortable: true, isFilterable: true, isSearchable: true},
     {field: 'role.name', headerLabel: 'admin.person.label.role-name', headerIsTranslatable: true, isSortable: true, isFilterable: true, isSearchable: true},
-    {field: 'employee_id', headerLabel: 'admin.person.label.employee_id', headerIsTranslatable: true},
+    {field: 'employee_id', headerLabel: 'admin.person.label.employee_id', headerIsTranslatable: true, isSortable: true, isFilterable: true, isSearchable: true},
   ]
 });
