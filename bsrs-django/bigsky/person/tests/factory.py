@@ -108,7 +108,8 @@ def create_single_person(name=None, role=None, location=None, status=None, local
             title=name,
             role=role,
             status=status,
-            locale=locale
+            locale=locale,
+            employee_id=create._generate_ph()
         )
         person.locations.add(location)
 

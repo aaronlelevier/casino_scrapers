@@ -802,17 +802,19 @@ class PersonSearchTests(APITransactionTestCase):
 
     def test_search_title(self):
         keyword = self.person.title
-
         response = self.client.get('/api/admin/people/?search={}'.format(keyword))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], Person.objects.search_multi(keyword).count())
 
+    def test_search_employee_id(self):
+        keyword = self.person.employee_id
+        response = self.client.get('/api/admin/people/?search={}'.format(keyword))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], Person.objects.search_multi(keyword).count())
 
     def test_search_role_name(self):
         keyword = self.person.role.name
-
         response = self.client.get('/api/admin/people/?search={}'.format(keyword))
-
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], Person.objects.search_multi(keyword).count())
 

@@ -314,6 +314,7 @@ class CreateAllPeopleTests(TestCase):
         # people
         people = Person.objects.all()
         self.assertEqual(people.count(), 187)
+        self.assertTrue(people[0].employee_id)
         # Roles
         self.assertEqual(Role.objects.count(), 5)
         self.assertTrue(Role.objects.filter(name=settings.DEFAULT_ROLE).exists())
