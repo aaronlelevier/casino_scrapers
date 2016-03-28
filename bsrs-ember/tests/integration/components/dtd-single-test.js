@@ -475,3 +475,13 @@ test('update a fields existing option', function(assert) {
   assert.equal(page.fieldOneOptionText, OD.textTwo);
   assert.ok(dtd.get('isDirtyOrRelatedDirty'));
 });
+
+test('instead of `Save and Close`, say `Save` for save button because layout is diff from other modules', function(assert) {
+  run(() => {
+    dtd = store.push('dtd', {id: DTD.idOne, key: 'foo', link_type: DTD.linkTypeOne});
+  });
+  this.set('model', dtd);
+  this.render(hbs`{{dtds/dtd-single model=model}}`);
+  let $component = this.$('.t-save-btn');
+  assert.equal($component.text().trim(), trans.t('crud.save_only.button'));
+});
