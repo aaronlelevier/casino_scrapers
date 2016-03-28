@@ -29,7 +29,7 @@ moduleForComponent('language-select', 'integration: language-select test', {
     }
 });
 
-test('should render a selectbox when locale options are empty (initial state of selectize)', function(assert) {
+test('should render a selectbox when locale options are empty (initial state of power select)', function(assert) {
     let locales = Ember.A([]);
     this.set('model', person);
     this.set('locales', locales);

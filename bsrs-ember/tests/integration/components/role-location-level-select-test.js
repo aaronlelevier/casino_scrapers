@@ -34,7 +34,7 @@ moduleForComponent('location-level-select', 'integration: location-level-select 
     }
 });
 
-test('should render a selectbox when role type options are empty (initial state of selectize)', function(assert) {
+test('should render a selectbox when role type options are empty (initial state of power select)', function(assert) {
     let all_location_levels = Ember.A([]);
     this.set('model', role);
     this.set('all_location_levels', all_location_levels);

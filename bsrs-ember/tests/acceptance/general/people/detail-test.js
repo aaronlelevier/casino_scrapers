@@ -32,7 +32,6 @@ import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/person';
-import selectize from 'bsrs-ember/tests/pages/selectize';
 import random from 'bsrs-ember/models/random';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 

@@ -30,7 +30,7 @@ moduleForComponent('power-select-foreign-key', 'integration: power-select-foreig
     }
 });
 
-test('should render a selectbox when priority options are empty (initial state of selectize)', function(assert) {
+test('should render a selectbox when priority options are empty (initial state of power select)', function(assert) {
     let priorities = Ember.A([]);
     this.set('ticket', ticket);
     this.set('priorities', priorities);

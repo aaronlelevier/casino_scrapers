@@ -34,7 +34,7 @@ moduleForComponent('person-role-select', 'integration: person-role-select test',
     }
 });
 
-test('should render a selectbox when role options are empty (initial state of selectize)', function(assert) {
+test('should render a selectbox when role options are empty (initial state of power select)', function(assert) {
     let roles = Ember.A([]);
     this.set('model', person);
     this.set('roles', roles);

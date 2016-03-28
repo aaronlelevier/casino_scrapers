@@ -39,7 +39,7 @@ moduleForComponent('ticket-location-select', 'integration: ticket-location-selec
     }
 });
 
-test('should render a selectbox when location options are empty (initial state of selectize)', function(assert) {
+test('should render a selectbox when location options are empty (initial state of power select)', function(assert) {
     this.model = ticket;
     this.locationRepo = location_repo;
     this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket"}}`);

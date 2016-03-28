@@ -27,7 +27,6 @@ var CategoryPage = PageObject.create({
   labelFill: fillable('.t-category-label'),
   labelInput: PageObject.value('.t-category-label'),
   subLabelFill: fillable('.t-category-subcategory-label'),
-  clickSelectizeOption: clickable('.t-category-children-select div.option:eq(0)'), 
   categoryClickDropdown: clickable(CATEGORY),
   categorySelected: text(`${CATEGORY_ONE}`),
   categoryOneRemove: clickable(`${CATEGORY_ONE} > .ember-power-select-multiple-remove-btn`),

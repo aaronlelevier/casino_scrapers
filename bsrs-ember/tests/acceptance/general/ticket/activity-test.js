@@ -23,7 +23,6 @@ import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/tickets';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import selectize from 'bsrs-ember/tests/pages/selectize';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;

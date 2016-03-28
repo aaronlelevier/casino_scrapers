@@ -33,7 +33,7 @@ moduleForComponent('ticket-assignee-select', 'integration: ticket-assignee-selec
   }
 });
 
-test('should render a selectbox when person options are empty (initial state of selectize)', function(assert) {
+test('should render a selectbox when person options are empty (initial state of power select)', function(assert) {
   this.set('ticket', ticket);
   this.render(hbs`{{db-fetch-select model=ticket}}`);
   clickTrigger();
