@@ -1,5 +1,5 @@
 {{#if (is-equal type "save")}}
-  {{fa-icon "check-circle"}} {{#if saveText}}{{t saveText}}{{else}}{{t "crud.save.button"}}{{/if}}
+{{fa-icon "check-circle"}} {{if saveText (t saveText) (t "crud.save.button")}}
 {{else if (is-equal type "cancel")}}
   {{fa-icon "times-circle"}} {{t "crud.cancel.button"}}
 {{/if}}
