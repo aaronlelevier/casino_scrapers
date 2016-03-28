@@ -15,7 +15,7 @@ var store, subject, category, category_unused, dtd, dtd_link, priority, status, 
 
 module('unit: dtd deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-link', 'model:link', 'model:dtd-field', 'model:field', 'model:option', 'model:field-option', 'model:link-priority-list', 'model:ticket-priority', 'model:ticket-status', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-list', 'model:dtd-link', 'model:link', 'model:dtd-field', 'model:field', 'model:option', 'model:field-option', 'model:link-priority-list', 'model:ticket-priority', 'model:ticket-status', 'service:i18n']);
     subject = DTDDeserializer.create({store: store});
     run(() => {
       priority = store.push('ticket-priority', {id: TP.priorityOneId, name: TP.priorityOne});
@@ -32,13 +32,13 @@ test('dtd deserializer returns correct data', (assert) => {
   run(() => {
     subject.deserialize(response);
   });
-  let dtds = store.find('dtd');
+  let dtds = store.find('dtd-list');
   assert.equal(dtds.get('length'), 2);
-  let dtd = store.find('dtd', DTD.idOne);
+  let dtd = store.find('dtd-list', DTD.idOne);
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(dtd.get('key'), DTD.keyOne);
   assert.equal(dtd.get('description'), DTD.descriptionOne);
-  let dtd_two = store.find('dtd', DTD.idTwo);
+  let dtd_two = store.find('dtd-list', DTD.idTwo);
   assert.ok(dtd_two.get('isNotDirtyOrRelatedNotDirty'));
 });
 

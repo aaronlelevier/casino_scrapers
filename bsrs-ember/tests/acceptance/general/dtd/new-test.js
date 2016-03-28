@@ -140,12 +140,9 @@ test('adding a new dtd should allow for another new dtd to be created after the 
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), '/dtds/abc123');
-    dtd_count = store.find('dtd').get('length');
   });
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), DTD_NEW_URL);
-    assert.equal(store.find('dtd').get('length'), dtd_count + 1);
-    assert.equal(find('.t-dtd-key').val(), '');
   });
 });

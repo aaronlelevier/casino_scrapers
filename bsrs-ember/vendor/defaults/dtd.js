@@ -13,6 +13,7 @@ var BSRS_DTD_DEFAULTS_OBJECT = (function() {
             keySearchFiveOne: '1.2.15',
             keySearchFiveTwo: '1.1.5',
             keySearch14: '1.2.14',
+            keySearch13: '1.2.13',
             keyFullText: '1.1.3',
             descriptionOne: 'Please select an option below',
             descriptionTwo: 'You are done',

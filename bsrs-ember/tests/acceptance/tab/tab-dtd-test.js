@@ -166,8 +166,8 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
     let tabs = store.find('tab');
-    const dtds = store.find('dtd');
-    assert.equal(dtds.get('length'), 11);
+    const dtds = store.find('dtd-list');
+    assert.equal(dtds.get('length'), 10);
     assert.equal(tabs.get('length'), 1);
     assert.equal(find(TAB_TITLE).text(), DTD_TAB_NAME);
   });
@@ -179,7 +179,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
     const dtds = store.find('dtd');
-    assert.equal(dtds.get('length'), 11);
+    assert.equal(dtds.get('length'), 1);
   });
 });
 
