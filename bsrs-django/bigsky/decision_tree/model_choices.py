@@ -11,12 +11,12 @@ NOTE_TYPES = [
 ]
 
 FIELD_TYPES = [
-    'admin.dtd.field_type.text',
-    'admin.dtd.field_type.textarea',
-    'admin.dtd.field_type.select',
-    'admin.dtd.field_type.checkbox',
-    'admin.dtd.field_type.file',
-    'admin.dtd.field_type.asset_select',
-    'admin.dtd.field_type.check_in',
-    'admin.dtd.field_type.check_out'
+    'admin.dtd.label.field.text',
+    'admin.dtd.label.field.textarea',
+    'admin.dtd.label.field.select',
+    'admin.dtd.label.field.checkbox',
+    'admin.dtd.label.field.file',
+    'admin.dtd.label.field.asset_select',
+    'admin.dtd.label.field.check_in',
+    'admin.dtd.label.field.check_out'
 ]
