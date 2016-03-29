@@ -17,7 +17,7 @@ export default Ember.Component.extend({
         return Ember.String.htmlSafe(`<textarea autoresize=true id='dtd-field-preview' class='form-control ${className}' />`);
       case types[3]:
         const options = field.get('options').reduce((prev, option) => {
-          return prev += `<option>${option.get('text')}</option>`
+          return prev += `<option>${option.get('text')}</option>`;
         }, '');
         return Ember.String.htmlSafe(`<label for='dtd-field-preview' class='t-dtd-field-label-preview'>${label}</label>
                                       <select id='dtd-field-preview' class='form-control t-dtd-field-preview'>
@@ -26,7 +26,7 @@ export default Ember.Component.extend({
                                      `);
       case types[4]:
         const with_options_options = field.get('options').reduce((prev, option) => {
-          return prev += `<div class='checkbox t-dtd-field-preview-option'><label><input type='checkbox'><span>${option.get('text')}</span></label></div>`
+          return prev += `<div class='checkbox t-dtd-field-preview-option'><label><input type='checkbox'><span>${option.get('text')}</span></label></div>`;
         }, '');
         return Ember.String.htmlSafe(`<label for='dtd-field-preview' class='t-dtd-field-label-preview'>${label}</label>
                                      ${with_options_options}
