@@ -20,6 +20,7 @@ import waitFor from 'ember-test-helpers/wait';
 
 let store, dtd, uuid, trans, link, field, option, dtd_repo;
 const DROPDOWN = '.ember-power-select-dropdown';
+const FIELD_TYPE = '.t-dtd-field-type';
 
 moduleForComponent('dtds/dtd-single', 'integration: dtd-single test', {
   integration: true,
@@ -276,7 +277,7 @@ test('preview updates as changes are made to detail', function(assert) {
   assert.equal(page.previewButtonOne, LINK.textOne);
 });
 
-test('preview updates as fields changes are made to detail', function(assert) {
+test('scott preview updates as fields changes are made to detail', function(assert) {
   run(() => {
     dtd = store.push('dtd', {
       id: DTD.idOne,
@@ -284,6 +285,8 @@ test('preview updates as fields changes are made to detail', function(assert) {
     });
     store.push('dtd-field', {id: DTDL.idOne, dtd_pk: DTD.idOne, field_pk: FD.idOne});
     store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeOne});
+    store.push('option', {id: OD.idOne, text: OD.textOne});
+    store.push('field-option', {id: 1, field_pk: FD.idOne, option_pk: OD.idOne});
   });
   assert.equal(dtd.get('fields').objectAt(0).get('label'), FD.labelOne);
   this.set('model', dtd);
@@ -293,10 +296,24 @@ test('preview updates as fields changes are made to detail', function(assert) {
   assert.equal(page.fieldLabelOne, FD.labelTwo);
   assert.equal(this.$('.t-dtd-field-label-preview').text(), FD.labelTwo);
   assert.equal(this.$('input.t-dtd-field-preview').attr('type'), 'text');
-  clickTrigger('.t-dtd-field-type');
+  clickTrigger(FIELD_TYPE);
   page.fieldTypeOneClickOptionTwo();
   this.$(`.ember-power-select-option:contains(${FD.typeTwo})`).mouseup();
   assert.equal(this.$('input.t-dtd-field-preview').attr('type'), 'number');
+  clickTrigger(FIELD_TYPE);
+  page.fieldTypeOneClickOptionThree();
+  this.$(`.ember-power-select-option:contains(${FD.typeThree})`).mouseup();
+  assert.ok(this.$('textarea').hasClass('t-dtd-field-preview'));
+  clickTrigger(FIELD_TYPE);
+  page.fieldTypeOneClickOptionFour();
+  this.$(`.ember-power-select-option:contains(${FD.typeFour})`).mouseup();
+  assert.ok(this.$('select').hasClass('t-dtd-field-preview'));
+  assert.equal(dtd.get('fields').objectAt(0).get('options').get('length'), 1);
+  assert.equal(this.$('select.t-dtd-field-preview option:eq(0)').text(), OD.textOne);
+  // clickTrigger(FIELD_TYPE);
+  // page.fieldTypeOneClickOptionFive();
+  // this.$(`.ember-power-select-option:contains(${FD.typeFive})`).mouseup();
+  // assert.ok(this.$('select').hasClass('t-dtd-field-preview'));
 });
 
 test('selecting link destination will populate dropdown with key', function(assert) {
@@ -334,17 +351,17 @@ test('add and remove dtd fields', function(assert) {
   let $component = this.$('.t-input-multi-dtd-field');
   assert.ok($component.is(':visible'));
   assert.equal($component.find('.t-dtd-field-label').length, 1);
-  assert.equal($component.find('.t-dtd-field-type').length, 1);
+  assert.equal($component.find(FIELD_TYPE).length, 1);
   assert.equal($component.find('.t-dtd-field-required').length, 1);
   var add_btn = this.$('.t-add-field-btn');
   add_btn.trigger('click').trigger('change');
   assert.equal($component.find('.t-dtd-field-label').length, 2);
-  assert.equal($component.find('.t-dtd-field-type').length, 2);
+  assert.equal($component.find(FIELD_TYPE).length, 2);
   assert.equal($component.find('.t-dtd-field-required').length, 2);
   var remove_btn = this.$('.t-del-field-btn:eq(0)');
   remove_btn.trigger('click').trigger('change');
   assert.equal($component.find('.t-dtd-field-label').length, 1);
-  assert.equal($component.find('.t-dtd-field-type').length, 1);
+  assert.equal($component.find(FIELD_TYPE).length, 1);
   assert.equal($component.find('.t-dtd-field-required').length, 1);
 });
 
@@ -399,12 +416,12 @@ test('update a fields type', function(assert) {
   assert.equal(page.fieldTypeOne, trans.t(FD.typeThree));
   assert.ok(dtd.get('fieldsIsNotDirty'));
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-  clickTrigger('.t-dtd-field-type');
+  clickTrigger(FIELD_TYPE);
   $(`.ember-power-select-option:contains(${FD.typeTwo})`).mouseup();
   assert.equal(page.fieldTypeOne, trans.t(FD.typeTwo));
   assert.ok(dtd.get('fieldsIsDirty'));
   assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-  clickTrigger('.t-dtd-field-type');
+  clickTrigger(FIELD_TYPE);
   $(`.ember-power-select-option:contains(${FD.typeThree})`).mouseup();
   assert.equal(page.fieldTypeOne, trans.t(FD.typeThree));
   assert.ok(dtd.get('fieldsIsNotDirty'));
