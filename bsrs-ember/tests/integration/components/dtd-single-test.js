@@ -277,7 +277,23 @@ test('preview updates as changes are made to detail', function(assert) {
   assert.equal(page.previewButtonOne, LINK.textOne);
 });
 
-test('scott preview updates as fields changes are made to detail', function(assert) {
+test('no field label does not display undefined', function(assert) {
+  run(() => {
+    dtd = store.push('dtd', {
+      id: DTD.idOne,
+      dtd_field_fks: [DTDL.idOne],
+    });
+    store.push('dtd-field', {id: DTDL.idOne, dtd_pk: DTD.idOne, field_pk: FD.idOne});
+    store.push('field', {id: FD.idOne, label: undefined, type: FD.typeOne});
+    store.push('option', {id: OD.idOne, text: OD.textOne});
+    store.push('field-option', {id: 1, field_pk: FD.idOne, option_pk: OD.idOne});
+  });
+  this.set('model', dtd);
+  this.render(hbs`{{dtds/dtd-single model=model}}{{dtds/dtd-preview model=model}}`);
+  assert.equal(this.$('.t-dtd-field-label-preview').text(), '');
+});
+
+test('preview updates as fields changes are made to detail', function(assert) {
   run(() => {
     dtd = store.push('dtd', {
       id: DTD.idOne,

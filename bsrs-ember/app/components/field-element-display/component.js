@@ -1,10 +1,11 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+  classNames: ['form-group'],
   labelOutlet: Ember.computed('field.label', 'field.type', function() {
     const className = 't-dtd-field-preview';
     const field = this.get('field');
-    const label = field.get('label');
+    const label = field.get('label') || '';
     const types = field.get('types');
     switch(field.get('type')) {
       case types[0]:
