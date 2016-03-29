@@ -111,7 +111,7 @@ var DTDPage = PageObject.create({
     fieldLabelOneFillin: fillable('.t-dtd-field-label:eq(0)'),
     fieldTypeOne: text('.t-dtd-field-type:eq(0)'),
     fieldTypeOneClickDropdown: clickable('.t-dtd-field-type > .ember-basic-dropdown-trigger'),
-    fieldTypeOneClickOptionTwo: clickable(`.ember-power-select-option:contains(${FD.typeTwoValue})`, { scope: DROPDOWN }),
+    fieldTypeOneClickOptionTwo: clickable(`.ember-power-select-option:contains(${FD.typeTwo})`, { scope: DROPDOWN }),
     fieldTypeOneClickOptionTwoValue: clickable(`.ember-power-select-option:contains(${FD.typeTwoValue})`, { scope: DROPDOWN }),
     fieldRequiredOneNotChecked: () => Ember.$('.t-dtd-field-required:eq(0)').is(':not(:checked)'),
     fieldRequiredOneChecked: () => Ember.$('.t-dtd-field-required:eq(0)').is(':checked'),

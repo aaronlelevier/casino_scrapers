@@ -276,6 +276,29 @@ test('preview updates as changes are made to detail', function(assert) {
   assert.equal(page.previewButtonOne, LINK.textOne);
 });
 
+test('preview updates as fields changes are made to detail', function(assert) {
+  run(() => {
+    dtd = store.push('dtd', {
+      id: DTD.idOne,
+      dtd_field_fks: [DTDL.idOne],
+    });
+    store.push('dtd-field', {id: DTDL.idOne, dtd_pk: DTD.idOne, field_pk: FD.idOne});
+    store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeOne});
+  });
+  assert.equal(dtd.get('fields').objectAt(0).get('label'), FD.labelOne);
+  this.set('model', dtd);
+  this.render(hbs`{{dtds/dtd-single model=model}}{{dtds/dtd-preview model=model}}`);
+  assert.equal(this.$('.t-dtd-field-label-preview').text(), FD.labelOne);
+  page.fieldLabelOneFillin(FD.labelTwo);
+  assert.equal(page.fieldLabelOne, FD.labelTwo);
+  assert.equal(this.$('.t-dtd-field-label-preview').text(), FD.labelTwo);
+  assert.equal(this.$('input.t-dtd-field-preview').attr('type'), 'text');
+  clickTrigger('.t-dtd-field-type');
+  page.fieldTypeOneClickOptionTwo();
+  this.$(`.ember-power-select-option:contains(${FD.typeTwo})`).mouseup();
+  assert.equal(this.$('input.t-dtd-field-preview').attr('type'), 'number');
+});
+
 test('selecting link destination will populate dropdown with key', function(assert) {
   run(() => {
     store.clear('dtd');
