@@ -24,10 +24,13 @@ export default Ember.Component.extend({
                                       ${options}
                                       </select>
                                      `);
-      // case types[4]:
-      //   return Ember.String.htmlSafe(`{{#each field.options as |option|}} 
-      //                                <option>{{option.text}}</option> 
-      //                                {{/each}}`);
+      case types[4]:
+        const with_options_options = field.get('options').reduce((prev, option) => {
+          return prev += `<div class='checkbox t-dtd-field-preview-option'><label><input type='checkbox'><span>${option.get('text')}</span></label></div>`
+        }, '');
+        return Ember.String.htmlSafe(`<label for='dtd-field-preview' class='t-dtd-field-label-preview'>${label}</label>
+                                     ${with_options_options}
+                                     `);
         // case types[5]:
         //   return Ember.String.htmlSafe(`{{input type='checkbox' checked={{}} class='${className} form-control t-dtd-field-required'}}`);
         // case types[6]:

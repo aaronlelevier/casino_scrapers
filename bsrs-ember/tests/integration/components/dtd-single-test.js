@@ -310,10 +310,12 @@ test('scott preview updates as fields changes are made to detail', function(asse
   assert.ok(this.$('select').hasClass('t-dtd-field-preview'));
   assert.equal(dtd.get('fields').objectAt(0).get('options').get('length'), 1);
   assert.equal(this.$('select.t-dtd-field-preview option:eq(0)').text(), OD.textOne);
-  // clickTrigger(FIELD_TYPE);
-  // page.fieldTypeOneClickOptionFive();
-  // this.$(`.ember-power-select-option:contains(${FD.typeFive})`).mouseup();
-  // assert.ok(this.$('select').hasClass('t-dtd-field-preview'));
+  clickTrigger(FIELD_TYPE);
+  page.fieldTypeOneClickOptionFive();
+  this.$(`.ember-power-select-option:contains(${FD.typeFive})`).mouseup();
+  assert.equal(this.$('.t-dtd-field-label-preview').text(), FD.labelTwo);
+  assert.ok(this.$('div').hasClass('checkbox'));
+  assert.equal(this.$('div.t-dtd-field-preview-option span').text(), OD.textOne);
 });
 
 test('selecting link destination will populate dropdown with key', function(assert) {
