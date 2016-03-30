@@ -15,7 +15,7 @@ class EtlUtilTests(TestCase):
 
         self.assertIsInstance(role_, Role)
         self.assertEqual(role_.name, domino_role.name)
-        self.assertEqual(role_.role_type, "admin.role.internal")
+        self.assertEqual(role_.role_type, "admin.role.type.internal")
         self.assertEqual(role_.location_level.name, "Region")
 
         groups_ = Group.objects.filter(name = domino_role.name)
@@ -27,6 +27,6 @@ class EtlUtilTests(TestCase):
         run_role_migrations()
 
         role = Role.objects.get(name=domino_role.name)
-        self.assertEqual(role.role_type, "admin.role.internal")
+        self.assertEqual(role.role_type, "admin.role.type.internal")
         self.assertEqual(role.location_level.name, "Region")
         self.assertEqual(role.categories.count(), 2)

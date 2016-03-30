@@ -10,9 +10,9 @@ from utils_transform.trole.models import DominoRole
 def create_role(domino_instance):
 
     if domino_instance.selection == "Contractor":
-        role_type = "admin.role.third_party"
+        role_type = "admin.role.type.third_party"
     else:
-        role_type = "admin.role.internal"
+        role_type = "admin.role.type.internal"
 
     
     newrole = Role.objects.create(
@@ -28,7 +28,7 @@ def create_role(domino_instance):
     elif domino_instance.selection == "Store Manager":
         selection = "Store"
     elif domino_instance.selection == "FMU Manager":
-        selection = "FMU"
+        selection = "Facility Management Unit"
     else:
         selection = "Company"
     
