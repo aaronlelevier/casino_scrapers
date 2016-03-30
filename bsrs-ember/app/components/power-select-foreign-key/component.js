@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 var PowerSelectFKComponent = Ember.Component.extend({
+  displayName: 'name',
   actions: {
     selected(obj) {
       let change_method_name = this.get('change_method');

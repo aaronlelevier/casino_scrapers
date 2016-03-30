@@ -5,7 +5,7 @@
   onchange=(action "selected")
   searchEnabled=false
   options=relatedModels
-  as |option|
+  as |optionModel|
 }}
-  {{t option.name}}
+  {{unless notTranslated (t (get optionModel displayName)) (get optionModel displayName)}}
 {{/power-select}}
