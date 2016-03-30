@@ -13,13 +13,20 @@
       @include vertical-align;
       button{
         font-size: 1.2rem;
-        &:focus{
-          background: $white;
-          border: $borderStyle;
-        }
-        &.off{
-          color: $medGray;
-          background: $gray;
+        &.on{
+          color: $white;
+          background: $activeColor;
+          border-color: $activeColor;
+          &:focus{
+            color: $white !important;
+            background: $activeColor !important;
+            border-color: $activeColor !important;
+          }
+          &:active{
+            color: $white !important;
+            background: $darkGreen !important;
+            border-color: $darkGreen !important;
+          }
         }
       }
     }
