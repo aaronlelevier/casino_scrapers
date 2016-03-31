@@ -307,17 +307,19 @@ test('clicking on a tab that is not dirty from the role url (or any non related 
   });
 });
 
-test('a dirty model should add the dirty class to the tab close icon', (assert) => {
+test('a dirty model should add the dirty class to the tab close icon and the grid', (assert) => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.dirty').length, 0);
+    assert.equal(find('tr .dirty').length, 0);
+    assert.equal(find('.t-tab-close > i.dirty').length, 0);
     const tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
   });
   page.keyFillIn(DTD.keyTwo);
   andThen(() => {
-    assert.equal(find('.dirty').length, 1);
+    assert.equal(find('tr .dirty').length, 1);
+    assert.equal(find('.t-tab-close > i.dirty').length, 1);
   });
 });
 
@@ -379,7 +381,8 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
   });
   page.keyFillIn(DTD.keyTwo);
   andThen(() => {
-    assert.equal(find('.dirty').length, 1);
+    assert.equal(find('tr .dirty').length, 1);
+    assert.equal(find('.t-tab-close > i.dirty').length, 1);
   });
   click('.t-tab-close:eq(0)');
   andThen(() => {

@@ -314,7 +314,7 @@ test('a dirty model should add the dirty class to the tab close icon', (assert) 
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.dirty').length, 0);
+        assert.equal(find('i.dirty').length, 0);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
         assert.equal(find('.t-tab-title:eq(0)').text(), PD.fullname);
