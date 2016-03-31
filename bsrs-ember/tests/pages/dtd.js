@@ -135,6 +135,9 @@ var DTDPage = PageObject.create({
     fieldTwoAddFieldOption: clickable('.t-add-field-option-btn:eq(1)'),
     fieldTwoOptionText: value('.t-dtd-field-option-text:eq(1)'),
     fieldTwoOptionTextFillin: fillable('.t-dtd-field-option-text:eq(1)'),
+
+    fieldOptionOne: text('.t-dtd-field-select li:eq(0)'),
+    fieldOptionTwo: text('.t-dtd-field-select li:eq(1)'),
 });
 
 export default DTDPage;

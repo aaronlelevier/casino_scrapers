@@ -308,30 +308,40 @@ test('preview updates as fields changes are made to detail', function(assert) {
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}{{dtds/dtd-preview model=model}}`);
   assert.equal(this.$('.t-dtd-field-label-preview').text(), FD.labelOne);
+  //text
   page.fieldLabelOneFillin(FD.labelTwo);
   assert.equal(page.fieldLabelOne, FD.labelTwo);
   assert.equal(this.$('.t-dtd-field-label-preview').text(), FD.labelTwo);
   assert.equal(this.$('input.t-dtd-field-preview').attr('type'), 'text');
+  //number
   clickTrigger(FIELD_TYPE);
   page.fieldTypeOneClickOptionTwo();
   this.$(`.ember-power-select-option:contains(${FD.typeTwo})`).mouseup();
   assert.equal(this.$('input.t-dtd-field-preview').attr('type'), 'number');
   clickTrigger(FIELD_TYPE);
+  //textarea
   page.fieldTypeOneClickOptionThree();
   this.$(`.ember-power-select-option:contains(${FD.typeThree})`).mouseup();
   assert.ok(this.$('textarea').hasClass('t-dtd-field-preview'));
   clickTrigger(FIELD_TYPE);
   page.fieldTypeOneClickOptionFour();
+  //select
   this.$(`.ember-power-select-option:contains(${FD.typeFour})`).mouseup();
-  assert.ok(this.$('select').hasClass('t-dtd-field-preview'));
-  assert.equal(dtd.get('fields').objectAt(0).get('options').get('length'), 1);
-  assert.equal(this.$('select.t-dtd-field-preview option:eq(0)').text(), OD.textOne);
+  assert.ok(this.$('.t-dtd-preview-field .ember-power-select').hasClass('t-dtd-field-select'));
+  clickTrigger('.t-dtd-field-select');
+  assert.equal(page.fieldOptionOne, 'yes');
+  page.fieldOneAddFieldOption();
+  page.fieldTwoOptionTextFillin(OD.textTwo);
+  assert.equal(page.fieldTwoOptionText, OD.textTwo);
+  assert.equal(page.fieldOptionTwo, OD.textTwo);
+  //checkbox
   clickTrigger(FIELD_TYPE);
   page.fieldTypeOneClickOptionFive();
   this.$(`.ember-power-select-option:contains(${FD.typeFive})`).mouseup();
   assert.equal(this.$('.t-dtd-field-label-preview').text(), FD.labelTwo);
   assert.ok(this.$('div').hasClass('checkbox'));
-  assert.equal(this.$('div.t-dtd-field-preview-option span').text(), OD.textOne);
+  assert.equal(this.$('.t-dtd-preview-field div.checkbox:eq(0)').text().trim(), OD.textOne);
+  assert.equal(this.$('.t-dtd-preview-field div.checkbox:eq(1)').text().trim(), OD.textTwo);
 });
 
 test('selecting link destination will populate dropdown with key', function(assert) {
