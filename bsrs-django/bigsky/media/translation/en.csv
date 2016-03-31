@@ -67,10 +67,12 @@ en,admin.contractorAssignment.other,Contractor Assignments,Contractor Assignment
 en,admin.currency.eur,EUR,EUR,,"'admin.currency.eur':'EUR',",EUR,EUR
 en,admin.currency.jpy,JPY,JPY,,"'admin.currency.jpy':'JPY',",JPY,JPY
 en,admin.currency.usd,USD,USD,,"'admin.currency.usd':'USD',",USD,USD
-en,admin.dtd.new,New,New,,"'admin.dtd.new':'New',",New,New
 en,admin.dtd.detail,Detail,Detail,,"'admin.dtd.detail':'Detail',",Detail,Detail
 en,admin.dtd.empty-detail,Select a definition to get started,Select a definition to get started,,"'admin.dtd.empty-detail':'Select a definition to get started',",Select a definition to get started,Select a definition to get started
+en,admin.dtd.field.add,Add Field,Add Field,,"'admin.dtd.field.add':'Add Field',",Add Field,Add Field
 en,admin.dtd.label.description,Description,Description,,"'admin.dtd.label.description':'Description',",Description,Description
+en,admin.dtd.label.destination,Destination,Destination,,"'admin.dtd.label.destination':'Destination',",Destination,Destination
+en,admin.dtd.label.field_type,Field Type,Field Type,,"'admin.dtd.label.field_type':'Field Type',",Field Type,Field Type
 en,admin.dtd.label.field.asset_select,Asset select,Asset select,,"'admin.dtd.label.field.asset_select':'Asset select',",Asset select,Asset select
 en,admin.dtd.label.field.check_in,Check in,Check in,,"'admin.dtd.label.field.check_in':'Check in',",Check in,Check in
 en,admin.dtd.label.field.check_out,Check out,Check out,,"'admin.dtd.label.field.check_out':'Check out',",Check out,Check out
@@ -83,6 +85,7 @@ en,admin.dtd.label.field.textarea,Textarea,Textarea,,"'admin.dtd.label.field.tex
 en,admin.dtd.label.field.with_options,With options,With options,,"'admin.dtd.label.field.with_options':'With options',",With options,With options
 en,admin.dtd.label.fields,Fields,Fields,,"'admin.dtd.label.fields':'Fields',",Fields,Fields
 en,admin.dtd.label.key,Key,Key,,"'admin.dtd.label.key':'Key',",Key,Key
+en,admin.dtd.label.label,Label,Label,,"'admin.dtd.label.label':'Label',",Label,Label
 en,admin.dtd.label.link_type,Link Type,Link Type,,"'admin.dtd.label.link_type':'Link Type',",Link Type,Link Type
 en,admin.dtd.label.link.action_button,Action Button,Action Button,,"'admin.dtd.label.link.action_button':'Action Button',",Action Button,Action Button
 en,admin.dtd.label.link.is_header,Is Header,Is Header,,"'admin.dtd.label.link.is_header':'Is Header',",Is Header,Is Header
@@ -93,16 +96,21 @@ en,admin.dtd.label.link.text,Text,Text,,"'admin.dtd.label.link.text':'Text',",Te
 en,admin.dtd.label.links,Links,Links,,"'admin.dtd.label.links':'Links',",Links,Links
 en,admin.dtd.label.note,Note,Note,,"'admin.dtd.label.note':'Note',",Note,Note
 en,admin.dtd.label.note_type,Note Type,Note Type,,"'admin.dtd.label.note_type':'Note Type',",Note Type,Note Type
+en,admin.dtd.label.option_text,Option Text,Option Text,,"'admin.dtd.label.option_text':'Option Text',",Option Text,Option Text
+en,admin.dtd.label.options,Options,Options,,"'admin.dtd.label.options':'Options',",Options,Options
 en,admin.dtd.label.prompt,Prompt,Prompt,,"'admin.dtd.label.prompt':'Prompt',",Prompt,Prompt
+en,admin.dtd.label.required,Required,Required,,"'admin.dtd.label.required':'Required',",Required,Required
 en,admin.dtd.link_type.buttons,Button,Button,,"'admin.dtd.link_type.buttons':'Button',",Button,Button
 en,admin.dtd.link_type.links,List,List,,"'admin.dtd.link_type.links':'List',",List,List
 en,admin.dtd.link.add,Add Link,Add Link,,"'admin.dtd.link.add':'Add Link',",Add Link,Add Link
 en,admin.dtd.list,List,List,,"'admin.dtd.list':'List',",List,List
+en,admin.dtd.new,New,New,,"'admin.dtd.new':'New',",New,New
 en,admin.dtd.note_type.danger,Danger,Danger,,"'admin.dtd.note_type.danger':'Danger',",Danger,Danger
 en,admin.dtd.note_type.info,Info,Info,,"'admin.dtd.note_type.info':'Info',",Info,Info
 en,admin.dtd.note_type.success,Success,Success,,"'admin.dtd.note_type.success':'Success',",Success,Success
 en,admin.dtd.note_type.warning,Warning,Warning,,"'admin.dtd.note_type.warning':'Warning',",Warning,Warning
 en,admin.dtd.one,Decision Tree,Decision Tree,,"'admin.dtd.one':'Decision Tree',",Decision Tree,Decision Tree
+en,admin.dtd.option.add,Add Option,Add Option,,"'admin.dtd.option.add':'Add Option',",Add Option,Add Option
 en,admin.dtd.other,Decision Tree,Decision Tree,,"'admin.dtd.other':'Decision Tree',",Decision Tree,Decision Tree
 en,admin.dtd.preview,Preview,Preview,,"'admin.dtd.preview':'Preview',",Preview,Preview
 en,admin.dtd.search,Search Definitions,Search Definitions,,"'admin.dtd.search':'Search Definitions',",Search Definitions,Search Definitions
@@ -238,18 +246,19 @@ en,crud.delete.confirm,Are you sure you want to delete {{model}} \'{{record}}\'?
 en,crud.delete.error,Error deleting {{model}}.,Error deleting {{model}}.,,"'crud.delete.error':'Error deleting {{model}}.',",Error deleting {{model_var_.,Error deleting _model_var_.
 en,crud.discard_changes,Abandon Changes,Abandon Changes,,"'crud.discard_changes':'Abandon Changes',",Abandon Changes,Abandon Changes
 en,crud.discard_changes_confirm,You have unsaved changes. Are you sure?,You have unsaved changes. Are you sure?,,"'crud.discard_changes_confirm':'You have unsaved changes. Are you sure?',",You have unsaved changes. Are you sure?,You have unsaved changes. Are you sure?
+en,crud.duplicate.button,Duplicate,Duplicate,,"'crud.duplicate.button':'Duplicate',",Duplicate,Duplicate
 en,crud.inherited_from,Inherited from: {{from}},Inherited from: {{from}},,"'crud.inherited_from':'Inherited from: {{from}}',",Inherited from: {{from_var_,Inherited from: _from_var_
 en,crud.no,No,No,,"'crud.no':'No',",No,No
+en,crud.print.button,Print,Print,,"'crud.print.button':'Print',",Print,Print
 en,crud.restore.button,Restore,Restore,,"'crud.restore.button':'Restore',",Restore,Restore
 en,crud.restore.error,Error restoring {{model}},Error restoring {{model}},,"'crud.restore.error':'Error restoring {{model}}',",Error restoring {{model_var_,Error restoring _model_var_
 en,crud.restore.success,{{model}} restored successfully.,{{model}} restored successfully.,,"'crud.restore.success':'{{model}} restored successfully.',",{{model_var_ restored successfully.,_model_var_ restored successfully.
+en,crud.save_only.button,Save,Save,,"'crud.save_only.button':'Save',",Save,Save
 en,crud.save.button,Save and Close,Save and Close,,"'crud.save.button':'Save and Close',",Save and Close,Save and Close
 en,crud.save.error,Error saving {{model}}.,Error saving {{model}}.,,"'crud.save.error':'Error saving {{model}}.',",Error saving {{model_var_.,Error saving _model_var_.
 en,crud.save.success,{{model}} saved successfully.,{{model}} saved successfully.,,"'crud.save.success':'{{model}} saved successfully.',",{{model_var_ saved successfully.,_model_var_ saved successfully.
 en,crud.titles.edit,Edit {{model}},Edit {{model}},,"'crud.titles.edit':'Edit {{model}}',",Edit {{model_var_,Edit _model_var_
 en,crud.titles.new,New {{model}},New {{model}},,"'crud.titles.new':'New {{model}}',",New {{model_var_,New _model_var_
-en,crud.duplicate.button,Duplicate,Duplicate,,"'crud.duplicate.button':'Duplicate',",Duplicate,Duplicate
-en,crud.print.button,Print,Print,,"'crud.print.button':'Print',",Print,Print
 en,crud.update.button,Update,Update,,"'crud.update.button':'Update',",Update,Update
 en,crud.yes,Yes,Yes,,"'crud.yes':'Yes',",Yes,Yes
 en,dashboard.welcome,Welcome,Welcome,,"'dashboard.welcome':'Welcome',",Welcome,Welcome
@@ -296,21 +305,13 @@ en,ticket.priority.medium,Medium,Medium,,"'ticket.priority.medium':'Medium',",Me
 en,ticket.search,Search Tickets,Search Tickets,,"'ticket.search':'Search Tickets',",Search Tickets,Search Tickets
 en,ticket.status.closed,Closed,Closed,,"'ticket.status.closed':'Closed',",Closed,Closed
 en,ticket.status.complete,Complete,Complete,,"'ticket.status.complete':'Complete',",Complete,Complete
-en,ticket.status.complete,Complete,Complete,,"'ticket.status.complete':'Complete',",Complete,Complete
-en,ticket.status.deferred,Deferred,Deferred,,"'ticket.status.deferred':'Deferred',",Deferred,Deferred
 en,ticket.status.deferred,Deferred,Deferred,,"'ticket.status.deferred':'Deferred',",Deferred,Deferred
 en,ticket.status.denied,Denied,Denied,,"'ticket.status.denied':'Denied',",Denied,Denied
-en,ticket.status.denied,Denied,Denied,,"'ticket.status.denied':'Denied',",Denied,Denied
-en,ticket.status.draft,Draft,Draft,,"'ticket.status.draft':'Draft',",Draft,Draft
 en,ticket.status.draft,Draft,Draft,,"'ticket.status.draft':'Draft',",Draft,Draft
 en,ticket.status.in_progress,In Progress,In Progress,,"'ticket.status.in_progress':'In Progress',",In Progress,In Progress
-en,ticket.status.in_progress,In Progress,In Progress,,"'ticket.status.in_progress':'In Progress',",In Progress,In Progress
-en,ticket.status.new,New,New,,"'ticket.status.new':'New',",New,New
 en,ticket.status.new,New,New,,"'ticket.status.new':'New',",New,New
 en,ticket.status.problem_solved,Problem solved,Problem solved,,"'ticket.status.problem_solved':'Problem solved',",Problem solved,Problem solved
-en,ticket.status.problem_solved,Problem Solved,Problem Solved,,"'ticket.status.problem_solved':'Problem Solved',",Problem Solved,Problem Solved
 en,ticket.status.unsatisfactory,Unsatisfactory,Unsatisfactory,,"'ticket.status.unsatisfactory':'Unsatisfactory',",Unsatisfactory,Unsatisfactory
-en,ticket.status.unsatisfactory_completion,Unsatisfactory,Unsatisfactory,,"'ticket.status.unsatisfactory_completion':'Unsatisfactory',",Unsatisfactory,Unsatisfactory
 en,upload.progress,Progress,Progress,,"'upload.progress':'Progress',",Progress,Progress
 en,validation.invalid,Invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid,Invalid
 en,validation.valid,Valid,Valid,,"'validation.valid':'Valid',",Valid,Valid
