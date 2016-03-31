@@ -1,11 +1,30 @@
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
+from django.db.models import Q
 
 from decision_tree.model_choices import LINK_TYPES, NOTE_TYPES, FIELD_TYPES
 from category.models import Category
 from generic.models import Attachment
 from ticket.models import TicketStatus, TicketPriority
-from utils.models import BaseModel
+from utils.models import BaseModel, BaseQuerySet, BaseManager
+
+
+class TreeDataQuerySet(BaseQuerySet):
+
+    def search_multi(self, keyword):
+        return self.filter(
+                Q(key__icontains=keyword) | \
+                Q(description__icontains=keyword)
+            )  
+        
+
+class TreeDataManager(BaseManager):
+    
+    def get_queryset(self):
+        return TreeDataQuerySet(self.model, using=self._db).filter(deleted__isnull=True)
+
+    def search_multi(self, keyword):
+        return self.get_queryset().search_multi(keyword)
 
 
 class TreeData(BaseModel):
@@ -18,6 +37,8 @@ class TreeData(BaseModel):
     prompt = models.CharField(max_length=1000, blank=True, null=True)
     link_type = models.CharField(max_length=1000, choices=[(x,x) for x in LINK_TYPES],
                                  blank=True, default=LINK_TYPES[0])
+
+    objects = TreeDataManager()
 
 
 class TreeField(BaseModel):

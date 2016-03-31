@@ -20,3 +20,13 @@ class TreeDataViewSet(BaseModelViewSet):
             return TreeDataDetailSerializer
         else:
             return TreeDataCreateUpdateSerializer
+
+    def get_queryset(self):
+
+        queryset = super(TreeDataViewSet, self).get_queryset();
+    
+        search = self.request.query_params.get('search', None)
+        if search:
+            queryset = queryset.search_multi(keyword=search)
+
+        return queryset

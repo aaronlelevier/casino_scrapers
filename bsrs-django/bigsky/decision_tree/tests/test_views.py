@@ -94,20 +94,33 @@ class TreeDataListTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['key'], self.tree_data.key)
         self.assertEqual(data['description'], self.tree_data.description)
 
-    def test_list_search_key(self):
+    def test_list_key_lookup(self):
         dtd = mommy.make(TreeData, key='1.11')
         response = self.client.get('/api/dtds/?key__icontains={}'.format(dtd.key))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
 
-    def test_list_search_description(self):
+    def test_list_description_lookup(self):
         dtd = mommy.make(TreeData, description='999')
         response = self.client.get('/api/dtds/?description__icontains={}'.format(dtd.description))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
 
+    def test_list_search_key(self):
+        dtd = mommy.make(TreeData, key='999')
+        response = self.client.get('/api/dtds/?search={}'.format(dtd.key))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+
+    def test_list_search_description(self):
+        dtd = mommy.make(TreeData, description='999')
+        response = self.client.get('/api/dtds/?search={}'.format(dtd.description))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
 
 class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
 
