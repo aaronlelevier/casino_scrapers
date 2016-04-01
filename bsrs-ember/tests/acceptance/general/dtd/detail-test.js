@@ -297,6 +297,73 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
+test('add, cancel, no modal - because fields have not data', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(page.fieldLabelCount, 1);
+  });
+  page.addFieldBtn();
+  andThen(() => {
+    assert.equal(page.fieldLabelCount, 2);
+  });
+  generalPage.cancel();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
+  andThen(() => {
+    assert.equal(page.fieldLabelCount, 1);
+  });
+});
+
+test('add, remove, cancel, not modal - because fields have not data', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(page.fieldLabelCount, 1);
+  });
+  page.addFieldBtn();
+  andThen(() => {
+    assert.equal(page.fieldLabelCount, 2);
+  });
+  page.fieldTwoDelete();
+  andThen(() => {
+    assert.equal(page.fieldLabelCount, 1);
+  });
+  generalPage.cancel();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
+  andThen(() => {
+    assert.equal(page.fieldLabelCount, 1);
+  });
+});
+
+test('remove existing, cancel, modal - should be prompted when removing existing because has data', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(page.fieldLabelCount, 1);
+  });
+  page.fieldOneDelete();
+  andThen(() => {
+    assert.equal(page.fieldLabelCount, 0);
+  });
+  generalPage.cancel();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(generalPage.modalIsVisible);
+    });
+  });
+  generalPage.clickModalRollback();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DETAIL_URL);
+    });
+  });
+  andThen(() => {
+    assert.equal(page.fieldLabelCount, 1);
+  });
+});
+
 test('when click delete, dtd is deleted and removed from store', (assert) => {
   page.visitDetail();
   xhr(PREFIX + BASE_URL + '/' + DTD.idOne + '/', 'DELETE', null, {}, 204, {});
@@ -336,12 +403,12 @@ test('click add-link, and fill in', (assert) => {
 
 /* jshint ignore:start */
 test('deep linking with an xhr with a 404 status code will show up in the error component (dtd)', async assert => {
-    clearxhr(detail_xhr);
-    const exception = `This record does not exist.`;
-    xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
-    await page.visitDetail();
-    assert.equal(currentURL(), DTD_ERROR_URL);
-    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-error-message').text(), 'WAT');
+  clearxhr(detail_xhr);
+  const exception = `This record does not exist.`;
+  xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+  await page.visitDetail();
+  assert.equal(currentURL(), DTD_ERROR_URL);
+  assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+  assert.equal(find('.t-error-message').text(), 'WAT');
 });
 /* jshint ignore:end */

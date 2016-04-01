@@ -60,7 +60,14 @@ var DTDModel = Model.extend(Validations, {
   dtd_field_fks: [],
   add_field: add_many_to_many('dtd-field', 'field', 'field_pk', 'dtd_pk'),
   remove_field: remove_many_to_many('dtd-field', 'field_pk', 'dtd_fields'),
-  fieldsIsDirtyContainer: many_to_many_dirty('dtd_field_ids', 'dtd_field_fks'),
+  fieldsIsDirtyContainer: Ember.computed('dtd_field_ids', function(){
+    const fks = this.get('dtd_field_fks');
+    const ids = this.get('dtd_field_ids');
+    if(ids < fks) {
+      return true;
+    }
+    return false;
+  }),
   fieldsIsDirty: Ember.computed('fields.@each.{isDirtyOrRelatedDirty}', 'fieldsIsDirtyContainer', function() {
     const fields = this.get('fields');
     return fields.isAny('isDirtyOrRelatedDirty') || this.get('fieldsIsDirtyContainer');

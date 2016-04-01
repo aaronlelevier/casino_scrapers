@@ -99,13 +99,16 @@ var DTDPage = PageObject.create({
     previewLinkHeaderText: text('.t-dtd-preview-link-header h4'),
     previewActionButton: hasClass('btn-primary', '.t-dtd-preview-btn'),
 
-    noteTypeLength: count('.t-dtd-note_type'),
+    // noteTypeLength: count('.t-dtd-note_type'),
     noteTypeInput: text('.t-dtd-note_type'),
     noteTypeClickDropdown: clickable('.t-dtd-note_type > .ember-basic-dropdown-trigger'),
     noteTypeClickOptionTwo: clickable(`.ember-power-select-option:contains(${DTD.noteTypeTwo})`, { scope: DROPDOWN }),
     noteTypeClickOptionTwoValue: clickable(`.ember-power-select-option:contains(${DTD.noteTypeTwoValue})`, { scope: DROPDOWN }),
 
     addFieldBtn: clickable('.t-add-field-btn'),
+    fieldLabelCount: count('.t-dtd-field-label'),
+    fieldOneDelete: clickable('.t-del-field-btn:eq(0)'),
+    fieldTwoDelete: clickable('.t-del-field-btn:eq(1)'),
     // Field One
     fieldLabelOne: value('.t-dtd-field-label:eq(0)'),
     fieldLabelOneFillin: fillable('.t-dtd-field-label:eq(0)'),
@@ -127,7 +130,7 @@ var DTDPage = PageObject.create({
     fieldTypeTwo: text('.t-dtd-field-type:eq(1)'),
     fieldTypeTwoClickDropdown: clickable('.t-dtd-field-type:eq(1) > .ember-basic-dropdown-trigger'),
     fieldTypeTwoClickOptionTwo: clickable(`.ember-power-select-option:contains(${FD.typeTwoValue})`, { scope: DROPDOWN }),
-    fieldTypeTwoClickOptionTwoValue: clickable(`.ember-power-select-option:contains(${FD.typeTwoValue})`, { scope: DROPDOWN }),
+    // fieldTypeTwoClickOptionTwoValue: clickable(`.ember-power-select-option:contains(${FD.typeTwoValue})`, { scope: DROPDOWN }),
     fieldTypeTwoClickOptionFour: clickable(`.ember-power-select-option:contains(${FD.typeFourValue})`, { scope: DROPDOWN }),
     fieldRequiredTwoNotChecked: () => Ember.$('.t-dtd-field-required:eq(1)').is(':not(:checked)'),
     fieldRequiredTwoChecked: () => Ember.$('.t-dtd-field-required:eq(1)').is(':checked'),
