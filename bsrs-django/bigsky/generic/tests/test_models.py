@@ -37,6 +37,11 @@ class SavedSearchTests(TestCase):
 
     def test_validate_endpoint_name(self):
         self.assertIsNone(self.saved_search.validate_endpoint_name())
+
+    def test_validate_endpoint_name_no_index(self):
+        saved_search = mommy.make(SavedSearch, person=self.person, name="foo",
+            endpoint_name="dtds")
+        self.assertIsNone(self.saved_search.validate_endpoint_name())
         
     def test_validate_endpoint_name_raise(self):
         self.saved_search.endpoint_name = "not a valid endpoint_name"

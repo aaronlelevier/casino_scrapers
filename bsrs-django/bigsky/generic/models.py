@@ -52,7 +52,8 @@ class SavedSearch(BaseModel):
 
     def validate_endpoint_name(self):
         from bigsky.urls import router
-        if self.endpoint_name not in [".".join(x[0].split('/'))+".index" for x in router.registry]:
+        if self.endpoint_name not in [".".join(x[0].split('/'))+".index" if "index" in self.endpoint_name 
+                else ".".join(x[0].split('/')) for x in router.registry]:
             raise DjangoValidationError("{} is not a valid Ember List API endpoint name."
                 .format(self.endpoint_name))
 
