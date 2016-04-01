@@ -1,42 +1,42 @@
-import random
-import string
-
 from model_mommy import mommy
 
-from utils_transform.trole.models import DominoRole
-from location.tests.factory import create_location_level
 from category.tests.factory import create_single_category
+from location.tests.factory import create_location_level
+from utils.create import _generate_chars
+from utils_transform.tlocation.models import LOCATION_REGION
+from utils_transform.trole.models import DominoRole
 
-ROLESELECTION = "Region Manager"
-LOCATIONLEVEL = "Region"
+
+ROLE_SELECTION = "Region Manager"
 CATEGORIES = "Repair;Capex"
 CATEGORY1 = "Repair"
 CATEGORY2 = "Capex"
 
+
+def get_role_none_id_fields():
+    return [f.name for f in DominoRole._meta.get_fields()
+            if f.name != 'id']
+
+
 def get_random_data(fields):
-    data = {}
+    return {f: _generate_chars() for f in fields}
 
-    for f in fields:
-        data[f] = "".join([random.choice(string.ascii_letters) for x in range(10)])
 
-    return data
-
-def create_domino_role():
-    fields = [f.name for f in DominoRole._meta.get_fields()
-             if f.name != 'id']
+def create_domino_role(selection=ROLE_SELECTION):
+    fields = get_role_none_id_fields()
     data = get_random_data(fields)
-    dom_role = mommy.make(DominoRole, **data)
-    
-    #update selection
-    dom_role.selection = ROLESELECTION
-    dom_role.categories = CATEGORIES
-    dom_role.save()
-    
+    data.update({
+        'selection': selection,
+        'categories': CATEGORIES
+    })
+    return mommy.make(DominoRole, **data)
+
+
+def create_domino_role_and_related(selection=ROLE_SELECTION):
     #create location level that will be linked to Role
-    create_location_level(LOCATIONLEVEL)
-    
+    create_location_level(LOCATION_REGION)
     #create categories that will be linked to this Role
     create_single_category(CATEGORY1)
     create_single_category(CATEGORY2)
-
-    return dom_role
+    # DominoRole
+    return create_domino_role(selection)

@@ -9,6 +9,7 @@ tsg_start_point - Starting point for troubleshooting guide e.g. "1.2.New Store"
 '''
 from django.db import models
 
+
 class DominoRole(models.Model):
     name = models.TextField()
     selection = models.TextField(blank=True, null=True)
