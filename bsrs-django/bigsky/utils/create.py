@@ -75,8 +75,8 @@ def _generate_ph():
     return ''.join([str(random.randrange(0, 10)) for x in range(10)])
 
 
-def _generate_chars():
-    return ''.join([str(random.choice(string.ascii_letters)) for x in range(10)])
+def _generate_chars(length=10):
+    return ''.join([str(random.choice(string.ascii_letters)) for x in range(length)])
 
 
 def model_to_simple_dict(instance):

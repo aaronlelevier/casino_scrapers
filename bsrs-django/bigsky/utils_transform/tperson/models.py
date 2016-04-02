@@ -18,6 +18,7 @@ next_approver - full name of user who is the next approver
 '''
 from django.db import models
 
+
 class DominoPerson(models.Model):
     name = models.TextField()
     username = models.TextField()

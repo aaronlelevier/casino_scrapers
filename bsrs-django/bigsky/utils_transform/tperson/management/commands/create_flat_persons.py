@@ -6,4 +6,4 @@ from utils_transform.tperson.tests.factory import create_domino_person
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        domino_person = create_domino_person()
+        create_domino_person()

@@ -150,6 +150,10 @@ class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
     catalog_categories = models.BooleanField(blank=True, default=True)
     assets = models.BooleanField(blank=True, default=True)
 
+    @property
+    def is_top_level(self):
+        return self.name == LOCATION_COMPANY
+
     def to_dict(self):
         children = [str(child.id) for child in self.children.all()]
         parents = [str(parent.id) for parent in self.parents.all()]

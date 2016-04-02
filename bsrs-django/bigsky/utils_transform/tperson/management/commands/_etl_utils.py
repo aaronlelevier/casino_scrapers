@@ -1,15 +1,11 @@
 import logging
-from decimal import Decimal
-
-from django.conf import settings
+logger = logging.getLogger(__name__)
 
 from contact.models import PhoneNumber, PhoneNumberType, Email, EmailType
-from person.models import Person, Role, PersonStatus
 from location.models import Location
+from person.models import Person, Role, PersonStatus
 from utils_transform.tperson.models import DominoPerson
-from accounting.models import Currency, DEFAULT_CURRENCY
 
-logger = logging.getLogger(__name__)
 
 def create_phone_numbers(domino_person, related_instance):
     ph_types = PhoneNumberType.objects.all()
@@ -18,10 +14,9 @@ def create_phone_numbers(domino_person, related_instance):
         ph_type = ph_types.get(name='admin.phonenumbertype.telephone')
         PhoneNumber.objects.create(content_object=related_instance, object_id=related_instance.id,
             number=domino_person.phone_number, type=ph_type)
-    
+
 
 def create_email(domino_person, related_instance):
-
     if domino_person.email_address:
         email_type = EmailType.objects.get(name='admin.emailtype.personal')
         Email.objects.create(content_object=related_instance,
@@ -31,103 +26,102 @@ def create_email(domino_person, related_instance):
         email_type = EmailType.objects.get(name='admin.emailtype.sms')
         Email.objects.create(content_object=related_instance,
             object_id=related_instance.id, email=domino_person.sms_address, type=email_type)
-        
+
+
+def run_person_migrations():
+    for x in DominoPerson.objects.all():
+        create_person(x)
+
+
 def create_person(domino_instance):
-    
     try:
         role = Role.objects.get(name__exact=domino_instance.role)
     except Role.DoesNotExist:
         logger.debug("Role name:{} Not Found.".format(domino_instance.role))
         return
     
-    top_location = Location.objects.get(name=settings.LOCATION_TOP_LEVEL_NAME)
-    
-    if role.location_level == top_location.location_level and domino_instance.locations != None or \
-        role.location_level != top_location.location_level and domino_instance.locations == None:
+    if top_level_with_locations(role, domino_instance) or non_top_level_with_no_locations(role, domino_instance):
         logger.debug("Data not consistent: username {}.".format(domino_instance.username))
         return
-    
-    first_name = domino_instance.first_name
-    if first_name != None:
-        first_name = first_name[:30]
 
-    middle_initial = domino_instance.middle_initial
-    if middle_initial != None:
-        middle_initial = middle_initial[:1]
+    domino_instance = shorten_strings(domino_instance, ['first_name', 'last_name', 'username'])
+    domino_instance = shorten_strings(domino_instance, ['middle_initial'], length=1)
 
-    last_name = domino_instance.last_name
-    if last_name != None:
-        last_name = last_name[:30]
+    status = get_person_status(domino_instance)
 
-    username = domino_instance.username
-    if username != None:
-        username = username[:30]
-        
-    auth_amount = domino_instance.auth_amount
-    if auth_amount == "":
-        auth_amount = "0"
-        
-    auth_currency = Currency.objects.get(name=DEFAULT_CURRENCY['name'])
-
-    newperson = Person.objects.create(
-        username = username,
-        first_name = first_name,
-        middle_initial = middle_initial,
-        last_name = last_name,
+    newperson = Person.objects.create_user(username=domino_instance.username,
+        email=None,
+        password=domino_instance.username,
+        status=status,
+        first_name = domino_instance.first_name,
+        middle_initial = domino_instance.middle_initial,
+        last_name = domino_instance.last_name,
         employee_id = domino_instance.employee_id,
         title = domino_instance.title,
-        auth_amount = Decimal(auth_amount),
-        auth_currency = auth_currency,
+        auth_amount = 0 if not domino_instance.auth_amount else domino_instance.auth_amount,
         role = role
     )
     
-    #TBD will need to update this to be more secure
-    newperson.set_password(username)
-        
-    if domino_instance.status == "Active":
-        person_status = "admin.person.status.active"
-    else:
-        person_status = "admin.person.status.inactive"
+    """
+    Q: Delete later if not finding LocationLevel or Location?
+       Hard or soft `delete` here?
+       By deleting at the end of the `for` loop, all missing Locations will be logged.
+    """
+    location_not_found = add_locations(newperson, role, domino_instance)
+    if location_not_found:
+        newperson.delete()
+        return
 
-    try:
-        newperson.status = PersonStatus.objects.get(name__exact=person_status)
-    except PersonStatus.DoesNotExist:
-        logger.debug("PersonStatus name:{} Not Found.".format(person_status))
-    
+    #add phone number and link to person
+    create_phone_numbers(domino_instance, newperson)
+    create_email(domino_instance, newperson)
+        
+    return newperson
+
+
+def top_level_with_locations(role, domino_instance):
+    return all([role.location_level.is_top_level, domino_instance.locations])
+
+
+def non_top_level_with_no_locations(role, domino_instance):
+    return role.location_level.is_top_level == False and domino_instance.locations == None
+
+
+def get_person_status(domino_instance):
+    if domino_instance.status == "Active":
+        name = "admin.person.status.active"
+    else:
+        name = "admin.person.status.inactive"
+
+    obj, _ = PersonStatus.objects.get_or_create(name=name)
+    return obj
+
+
+def shorten_strings(obj, strings, length=30):
+    for string in strings:
+        s = getattr(obj, string)
+        if s:
+            setattr(obj, string, s[:length])
+    return obj
+
+
+def add_locations(person, role, domino_instance):
+    location_not_found = False
+
     #join locations to new person
     if domino_instance.locations:
         locations = domino_instance.locations.split(";")
-        location_level = role.location_level
-        
-        for loc in locations:
+        for location in locations:
             try:
-                newperson.locations.add(Location.objects.get(number__exact=loc, location_level=location_level))
+                location = Location.objects.get(number__exact=location, location_level=role.location_level)
             except Location.DoesNotExist:
-                logger.debug("Location number:{} Not Found.".format(loc))
-                #delete person is not found
-                newperson.delete()
-                return
+                logger.debug("Location number:{} with LocationLevel: {} Not Found.".format(location, role.location_level))
+                location_not_found = True
+            else:
+                person.locations.add(location)
     else:
-        #if a user doesn't have a location tie the person to the company location
-        try:
-            newperson.locations.add(Location.objects.get(name=settings.LOCATION_TOP_LEVEL_NAME))
-        except Location.DoesNotExist:
-            logger.debug("Location top level name:{} Not Found.".format(settings.LOCATION_TOP_LEVEL_NAME))
-            #delete person if can't find top level
-            newperson.delete()
-            return
+        top_location = Location.objects.create_top_level()
+        person.locations.add(top_location)
 
-    if newperson:
-        #add phone number and link to person
-        create_phone_numbers(domino_instance, newperson)
-        create_email(domino_instance, newperson)    
-                
-        #need to call save on the new person to run validations
-        newperson.save()
-        
-        return newperson
+    return location_not_found
 
-
-def run_person_migrations():
-    for x in DominoPerson.objects.all():
-        create_person(x)

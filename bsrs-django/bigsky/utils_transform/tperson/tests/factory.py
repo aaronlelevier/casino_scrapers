@@ -1,40 +1,36 @@
-import random
-import string
-
 from model_mommy import mommy
 
+from utils.create import _generate_chars
 from utils_transform.tperson.models import DominoPerson
 
-ROLENAME = "Internal Audit"
-PERSONSTATUS = "Active"
-AUTHAMOUNT = "92826.33"
-PHONENUMBER = "987-654-3210"
-EMAILADDRESS = "emailtest@testee.com"
-SMSADDRESS = "smstest@testee.com"
+
+ROLE_NAME = "Internal Audit"
+PERSON_STATUS = "Active"
+AUTH_AMOUNT = "92826.33"
+PHONE_NUMBER = "987-654-3210"
+EMAIL_ADDRESS = "emailtest@testee.com"
+SMS_ADDRESS = "smstest@testee.com"
+
+
+def get_person_none_id_fields():
+    return [f.name for f in DominoPerson._meta.get_fields()
+            if f.name != 'id']
+
 
 def get_random_data(fields):
-    data = {}
+    return {f: _generate_chars() for f in fields}
 
-    for f in fields:
-        data[f] = "".join([random.choice(string.ascii_letters) for x in range(10)])
-
-    return data
 
 def create_domino_person():
-    fields = [f.name for f in DominoPerson._meta.get_fields()
-             if f.name != 'id']
+    fields = get_person_none_id_fields()
     data = get_random_data(fields)
-    dom_person = mommy.make(DominoPerson, **data)
-    
-    #update selection
-    dom_person.role = ROLENAME
-    dom_person.status = PERSONSTATUS
-    dom_person.auth_amount = AUTHAMOUNT
-    dom_person.phone_number = PHONENUMBER
-    dom_person.email_address = EMAILADDRESS
-    dom_person.sms_address = SMSADDRESS
-    dom_person.locations = None
-    
-    dom_person.save()
-    
-    return dom_person
+    data.update({
+        'role': ROLE_NAME,
+        'status': PERSON_STATUS,
+        'auth_amount': AUTH_AMOUNT,
+        'phone_number': PHONE_NUMBER,
+        'email_address': EMAIL_ADDRESS,
+        'sms_address': SMS_ADDRESS,
+        'locations': None
+    })
+    return mommy.make(DominoPerson, **data)

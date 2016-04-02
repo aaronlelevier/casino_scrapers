@@ -1,11 +1,7 @@
 from django.db import models
 
-
-LOCATION_COMPANY = 'Company'
-LOCATION_REGION = 'Region'
-LOCATION_DISTRICT = 'District'
-LOCATION_STORE = 'Store'
-LOCATION_FMU = 'Facility Management Unit'
+from location.models import (LOCATION_COMPANY, LOCATION_REGION, LOCATION_DISTRICT,
+    LOCATION_STORE, LOCATION_FMU,)
 
 
 class LocationRegion(models.Model):

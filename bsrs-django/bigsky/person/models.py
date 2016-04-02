@@ -329,7 +329,7 @@ class Person(BaseModel, AbstractUser):
                                "header will be used or the Site's system setting.")
     # required
     # Auth Amounts - can be defaulted by the Role
-    fullname = models.CharField(max_length=50, blank=True)
+    fullname = models.CharField(max_length=100, blank=True)
     auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
     auth_currency = models.ForeignKey(Currency, blank=True, null=True)
     accept_assign = models.BooleanField(default=True, blank=True)

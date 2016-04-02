@@ -7,7 +7,7 @@ from model_mommy import mommy
 
 from location.tests.factory import create_locations
 from location.models import (LocationLevel, LocationStatus, LocationType, Location,
-    LOCATION_REGION, LOCATION_FMU, LOCATION_STORE,)
+    LOCATION_COMPANY, LOCATION_REGION, LOCATION_FMU, LOCATION_STORE,)
 from person.tests.factory import create_single_person
 
 
@@ -100,6 +100,14 @@ class LocationLevelTests(TestCase):
     def test_name(self):
         # confirm that the "mixin-inheritance" worked for the ``name`` field
         self.assertTrue(hasattr(self.location, 'name'))
+
+    def test_is_top_level(self):
+        location_level = mommy.make(LocationLevel, name=LOCATION_COMPANY)
+        self.assertTrue(location_level.is_top_level)
+
+    def test_is_top_level__false(self):
+        location_level = mommy.make(LocationLevel, name='foo')
+        self.assertFalse(location_level.is_top_level)
 
     def test_to_dict(self):
         # middle

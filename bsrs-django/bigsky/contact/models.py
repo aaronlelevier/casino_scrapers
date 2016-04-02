@@ -95,6 +95,7 @@ EMAIL_TYPES = [
     'admin.emailtype.location',
     'admin.emailtype.work',
     'admin.emailtype.personal',
+    'admin.emailtype.sms'
 ]
 
 class EmailType(BaseNameOrderModel):

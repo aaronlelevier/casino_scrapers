@@ -13,8 +13,7 @@ INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS + PERSISTENT_LOCAL
 
 DATABASES['default'] = {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#     'NAME': 'persistent',
-    'NAME': 'ci',
+    'NAME': 'persistent',
     'USER': 'bsdev',
     'PASSWORD': 'tango',
     'HOST': 'localhost',
