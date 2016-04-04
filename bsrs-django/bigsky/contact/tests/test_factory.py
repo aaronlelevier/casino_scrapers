@@ -37,12 +37,6 @@ class FactoryTests(TestCase):
         email = Email.objects.first()
         self.assertEqual(str(email.content_object.id), str(person.id))
 
-    @patch("contact.tests.factory.load_create_contact")
-    def test_get_create_contact_method(self, mock_call):
-        ret = factory.get_create_contact_method(Email)
-
-        self.assertTrue(mock_call.was_called)
-
     def test_create_phone_number(self):
         self.assertEqual(PhoneNumber.objects.count(), 0)
         person = create_person()

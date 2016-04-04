@@ -12,10 +12,10 @@ def create_contact(model, content_object):
     `object_id` is a UUID, which `model_mommy` doesn't know how to make,
     so it must be specified.
 
-    :model: ``contact`` app model class
+    :model: ``contact`` app model class. i.e. ``Email``
     :content_object: object to create foreign key for. i.e. ``person`` instance
     """
-    create_method = get_create_contact_method(model)
+    create_method = load_create_contact(model)
     return create_method(content_object)
 
 
@@ -24,17 +24,8 @@ def create_contacts(content_object):
     :content_object: object to create foreign key for. i.e. ``person`` instance
     """
     for model in [PhoneNumber, Address, Email]:
-        create_method = get_create_contact_method(model)
+        create_method = load_create_contact(model)
         create_method(content_object)
-
-
-def get_create_contact_method(model):
-    if model == PhoneNumber:
-        return load_create_contact(model)
-    elif model == Address:
-        return load_create_contact(model)
-    elif model == Email:
-        return load_create_contact(model)
 
 
 def load_create_contact(model):
