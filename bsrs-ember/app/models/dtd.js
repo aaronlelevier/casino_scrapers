@@ -1,6 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
 import inject from 'bsrs-ember/utilities/store';
+import equal from 'bsrs-ember/utilities/equal';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_dirty_ifNotEmpty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
@@ -24,6 +25,8 @@ const Validations = buildValidations({
 
 var DTDModel = Model.extend(Validations, {
   store: inject('main'),
+  dtd_attachments_fks: [],
+  previous_attachments_fks: [],
   key: attr(''),
   description: attr(''),
   note: attr(''),
@@ -68,8 +71,8 @@ var DTDModel = Model.extend(Validations, {
   }),
   fieldsIsNotDirty: Ember.computed.not('fieldsIsDirty'),
   // dirty tracking
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'linksIsDirty', 'fieldsIsDirty', function() {
-    return this.get('isDirty') || this.get('linksIsDirty') || this.get('fieldsIsDirty');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'linksIsDirty', 'fieldsIsDirty', 'attachmentsIsDirty', function() {
+    return this.get('isDirty') || this.get('linksIsDirty') || this.get('fieldsIsDirty') || this.get('attachmentsIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   serialize(){
@@ -96,6 +99,7 @@ var DTDModel = Model.extend(Validations, {
     this.linkRollback();
     this.fieldRollbackContainer();
     this.fieldRollback();
+    this.rollbackAttachments();
     this._super();
   },
   linkRollbackContainer() {
@@ -113,6 +117,7 @@ var DTDModel = Model.extend(Validations, {
     this.saveLinks();
     this.saveFieldsContainer();
     this.saveFields();
+    this.saveAttachments();
     this._super();
   },
   saveLinksContainer() {
@@ -144,7 +149,67 @@ var DTDModel = Model.extend(Validations, {
   descriptionErrorMsg: Ember.computed('saved', function(){
     return this.get('validations.isValid') ? undefined : this.get('saved') ?
       this.get('validations.attrs.description.message') : undefined;
-  })
+  }),
+  attachmentsIsNotDirty: Ember.computed.not('attachmentsIsDirty'),
+  attachmentsIsDirty: Ember.computed('attachment_ids.[]', 'previous_attachments_fks.[]', function() {
+    const attachment_ids = this.get('attachment_ids') || [];
+    const previous_attachments_fks = this.get('previous_attachments_fks') || [];
+    if(attachment_ids.get('length') !== previous_attachments_fks.get('length')) {
+      return true;
+    }
+    return equal(attachment_ids, previous_attachments_fks) ? false : true;
+  }),
+  attachments: Ember.computed('dtd_attachments_fks.[]', function() {
+    const related_fks = this.get('dtd_attachments_fks');
+    const filter = (attachment) => {
+      return Ember.$.inArray(attachment.get('id'), related_fks) > -1;
+    };
+    return this.get('store').find('attachment', filter);
+  }),
+  attachment_ids: Ember.computed('attachments.[]', function() {
+    return this.get('attachments').mapBy('id');
+  }),
+  remove_attachment(attachment_id) {
+    const store = this.get('store');
+    const attachment = store.find('attachment', attachment_id);
+    attachment.set('rollback', true);
+    const current_fks = this.get('dtd_attachments_fks') || [];
+    const updated_fks = current_fks.filter((id) => {
+      return id !== attachment_id;
+    });
+    run(() => {
+      store.push('dtd', {id: this.get('id'), dtd_attachments_fks: updated_fks});
+    });
+  },
+  add_attachment(attachment_id) {
+    const store = this.get('store');
+    const attachment = store.find('attachment', attachment_id);
+    attachment.set('rollback', undefined);
+    const current_fks = this.get('dtd_attachments_fks') || [];
+    run(() => {
+      store.push('dtd', {id: this.get('id'), dtd_attachments_fks: current_fks.concat(attachment_id).uniq()});
+    });
+  },
+  rollbackAttachments() {
+    const dtd_attachments_fks = this.get('dtd_attachments_fks');
+    const previous_attachments_fks = this.get('previous_attachments_fks');
+    dtd_attachments_fks.forEach((id) => {
+      this.remove_attachment(id);
+    });
+    previous_attachments_fks.forEach((id) => {
+      this.add_attachment(id);
+    });
+  },
+  saveAttachments() {
+    const store = this.get('store');
+    const fks = this.get('dtd_attachments_fks');
+    run(() => {
+      store.push('dtd', {id: this.get('id'), previous_attachments_fks: fks});
+    });
+    this.get('attachments').forEach((attachment) => {
+      attachment.save();
+    });
+  },
 });
 
 
