@@ -10,6 +10,8 @@ from model_mommy import mommy
 
 from category.models import Category
 from category.tests.factory import create_single_category
+from contact.models import Email
+from contact.tests.factory import create_contact
 from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
@@ -223,6 +225,15 @@ class PersonTests(TestCase):
 
     def test_person_is_user_subclass(self):
         self.assertIsInstance(self.person, AbstractUser)
+
+    def test_emails_filtering(self):
+        email_one = create_contact(Email, self.person)
+        email_two = create_contact(Email, self.person)
+        self.assertNotEqual(email_one.type, email_two.type)
+
+        self.assertEqual(self.person.emails.count(), 2)
+        self.assertEqual(self.person.emails.filter(type=email_one.type).count(), 1)
+        self.assertEqual(self.person.emails.filter(type__name=email_one.type.name).count(), 1)
 
     def test_person_defaults(self):
         self.assertTrue(self.person.accept_assign)
