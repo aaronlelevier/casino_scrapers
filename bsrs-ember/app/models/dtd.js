@@ -3,7 +3,7 @@ const { run } = Ember;
 import inject from 'bsrs-ember/utilities/store';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { validator, buildValidations } from 'ember-cp-validations';
-import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
+import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_dirty_ifNotEmpty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
 import { rollbackAll } from 'bsrs-ember/utilities/rollback-all';
 
 const Validations = buildValidations({
@@ -47,14 +47,7 @@ var DTDModel = Model.extend(Validations, {
   dtd_link_fks: [],
   add_link: add_many_to_many('dtd-link', 'link', 'link_pk', 'dtd_pk'),
   remove_link: remove_many_to_many('dtd-link', 'link_pk', 'dtd_links'),
-  linksIsDirtyContainer: Ember.computed('dtd_link_ids', 'dtd_link_fks.[]', function(){
-    const fks = this.get('dtd_link_fks');
-    const ids = this.get('dtd_link_ids');
-    if(ids < fks) {
-      return true;
-    }
-    return false;
-  }),
+  linksIsDirtyContainer: many_to_many_dirty_ifNotEmpty('dtd_link_ids', 'dtd_link_fks'),
   linksIsDirty: Ember.computed('links.@each.{isDirtyOrRelatedDirty}', 'linksIsDirtyContainer', function() {
     const links = this.get('links');
     return links.isAny('isDirtyOrRelatedDirty') || this.get('linksIsDirtyContainer');
@@ -67,14 +60,8 @@ var DTDModel = Model.extend(Validations, {
   dtd_field_fks: [],
   add_field: add_many_to_many('dtd-field', 'field', 'field_pk', 'dtd_pk'),
   remove_field: remove_many_to_many('dtd-field', 'field_pk', 'dtd_fields'),
-  fieldsIsDirtyContainer: Ember.computed('dtd_field_ids', function(){
-    const fks = this.get('dtd_field_fks');
-    const ids = this.get('dtd_field_ids');
-    if(ids < fks) {
-      return true;
-    }
-    return false;
-  }),
+  fieldsIsDirtyContainer: many_to_many_dirty_ifNotEmpty('dtd_field_ids', 'dtd_field_fks'),
+
   fieldsIsDirty: Ember.computed('fields.@each.{isDirtyOrRelatedDirty}', 'fieldsIsDirtyContainer', function() {
     const fields = this.get('fields');
     return fields.isAny('isDirtyOrRelatedDirty') || this.get('fieldsIsDirtyContainer');
