@@ -47,7 +47,14 @@ var DTDModel = Model.extend(Validations, {
   dtd_link_fks: [],
   add_link: add_many_to_many('dtd-link', 'link', 'link_pk', 'dtd_pk'),
   remove_link: remove_many_to_many('dtd-link', 'link_pk', 'dtd_links'),
-  linksIsDirtyContainer: many_to_many_dirty('dtd_link_ids', 'dtd_link_fks'),
+  linksIsDirtyContainer: Ember.computed('dtd_link_ids', 'dtd_link_fks.[]', function(){
+    const fks = this.get('dtd_link_fks');
+    const ids = this.get('dtd_link_ids');
+    if(ids < fks) {
+      return true;
+    }
+    return false;
+  }),
   linksIsDirty: Ember.computed('links.@each.{isDirtyOrRelatedDirty}', 'linksIsDirtyContainer', function() {
     const links = this.get('links');
     return links.isAny('isDirtyOrRelatedDirty') || this.get('linksIsDirtyContainer');

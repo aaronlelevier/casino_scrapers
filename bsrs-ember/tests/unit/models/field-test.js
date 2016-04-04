@@ -107,6 +107,8 @@ test('serialize - default for type', (assert) => {
     assert.equal(data.type, FD.typeTwo);
 });
 
+// Options
+
 test('option relationship is setup correctly', (assert) => {
     assert.ok(!field.get('option'));
     run(() => {
@@ -120,23 +122,31 @@ test('option relationship is setup correctly', (assert) => {
     assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('add_option', (assert) => {
+test('add_option - adding an empty Option does not dirty the Field', (assert) => {
     assert.equal(field.get('options').get('length'), 0);
+    assert.notOk(field.get('optionsIsDirtyContainer'));
+    assert.ok(field.get('optionsIsNotDirty'));
     assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));
     field.add_option({id: OD.idOne});
     assert.equal(field.get('options').get('length'), 1);
-    assert.ok(field.get('isDirtyOrRelatedDirty'));
+    assert.notOk(field.get('optionsIsDirtyContainer'));
+    assert.ok(field.get('optionsIsNotDirty'));
+    assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('remove_option', (assert) => {
+test('remove_option - simulates an Option on the server that gets removed thus dirtying the Field', (assert) => {
     run(() => {
         field = store.push('field', {id: FD.idOne, field_option_fks: [1]});
         store.push('field-option', {id: 1, field_pk: FD.idOne, option_pk: OD.idOne});
     });
     assert.equal(field.get('options').get('length'), 1);
+    assert.notOk(field.get('optionsIsDirtyContainer'));
+    assert.ok(field.get('optionsIsNotDirty'));
     assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));
     field.remove_option(OD.idOne);
     assert.equal(field.get('options').get('length'), 0);
+    assert.ok(field.get('optionsIsDirtyContainer'));
+    assert.ok(field.get('optionsIsDirty'));
     assert.ok(field.get('isDirtyOrRelatedDirty'));
 });
 
@@ -149,6 +159,8 @@ test('isDirtyOrRelatedDirty - optionsIsDirty', (assert) => {
     assert.ok(field.get('optionsIsDirty'));
     assert.ok(field.get('isDirtyOrRelatedDirty'));
 });
+
+// Field and Options
 
 test('isDirtyOrRelatedDirty - optionsIsDirty - for an existing option', (assert) => {
     assert.ok(field.get('isNotDirty'));
@@ -169,6 +181,8 @@ test('isDirtyOrRelatedDirty - optionsIsDirty - for an existing option', (assert)
     assert.ok(field.get('isDirtyOrRelatedDirty'));
 });
 
+// saveRelated
+
 test('saveRelated - with no related', (assert) => {
     assert.ok(field.get('isNotDirty'));
     assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));
@@ -187,8 +201,8 @@ test('saveRelated - with related Options', (assert) => {
     assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));
     field.add_option({id: OD.idOne});
     assert.equal(field.get('options').get('length'), 1);
-    assert.ok(field.get('optionsIsDirty'));
-    assert.ok(field.get('isDirtyOrRelatedDirty'));
+    assert.ok(field.get('optionsIsNotDirty'));
+    assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));
     field.saveRelated();
     assert.ok(field.get('optionsIsNotDirty'));
     assert.ok(field.get('isNotDirtyOrRelatedNotDirty'));

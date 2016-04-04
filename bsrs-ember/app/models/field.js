@@ -35,7 +35,14 @@ export default Model.extend({
   field_option_fks: [],
   add_option: add_many_to_many('field-option', 'option', 'option_pk', 'field_pk'),
   remove_option: remove_many_to_many('field-option', 'option_pk', 'field_options'),
-  optionsIsDirtyContainer: many_to_many_dirty('field_option_ids', 'field_option_fks'),
+  optionsIsDirtyContainer: Ember.computed('field_option_ids', function(){
+    const fks = this.get('field_option_fks');
+    const ids = this.get('field_option_ids');
+    if(ids < fks) {
+      return true;
+    }
+    return false;
+  }),
   optionsIsDirty: Ember.computed('options.@each.{isDirty}', 'optionsIsDirtyContainer', function() {
     const options = this.get('options');
     return options.isAny('isDirty') || this.get('optionsIsDirtyContainer');
