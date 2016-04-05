@@ -7,7 +7,7 @@ from model_mommy import mommy
 
 from contact.models import PhoneNumber, Email
 from contact.tests.factory import create_phone_number_type, create_email_type
-from location.models import Location, LocationLevel
+from location.models import Location, LocationLevel, LOCATION_COMPANY, LOCATION_REGION
 from location.tests.factory import create_location_level
 from person.models import Role, Person, PersonStatus
 from person.tests.factory import create_single_person, create_person_status, create_role
@@ -128,6 +128,17 @@ class CreatePersonTests(TestCase):
         with self.assertRaises(Person.DoesNotExist):
             Person.objects.get(username=self.domino_person.username)
 
+    def test_no_role__logged(self):
+        Role.objects.all().delete()
+        with open(settings.LOGGING_INFO_FILE, 'w'): pass
+
+        person = create_person(self.domino_person)
+
+        self.assertEqual(Role.objects.count(), 0)
+        with open(settings.LOGGING_INFO_FILE, 'r') as f:
+            content = f.read()
+        self.assertIn("Role name:{} Not Found.".format(self.domino_person.role), content)
+
     def test_poorly_configured_location_level(self):
         # none top level Role, with no locations, so no Person record gets created
         non_top_level = mommy.make(LocationLevel)
@@ -140,6 +151,23 @@ class CreatePersonTests(TestCase):
         self.assertIsNone(person)
         with self.assertRaises(Person.DoesNotExist):
             Person.objects.get(username=self.domino_person.username)
+
+    def test_poorly_configured_location_level__logged(self):
+        location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_COMPANY)
+        role = mommy.make(Role, location_level=location_level)
+        self.domino_person.role = role.name
+        self.domino_person.locations = "foo;bar"
+        self.domino_person.save()
+        with open(settings.LOGGING_INFO_FILE, 'w'): pass
+
+        person = create_person(self.domino_person)
+
+        with open(settings.LOGGING_INFO_FILE, 'r') as f:
+            content = f.read()
+        self.assertIn("LocationLevel and Location(s) not consistent. Username:{}, LocationLevel:{}, Locations:{}."
+                      .format(self.domino_person.username, role.location_level, self.domino_person.locations),
+            content
+        )
 
     def test_create_person__shorten_names(self):
         domino_person = create_domino_person()
@@ -290,6 +318,25 @@ class CreatePersonTests(TestCase):
         ret = non_top_level_with_no_locations(non_top_level_role, self.domino_person)
 
         self.assertTrue(ret)
+
+    def test_add_locations__logged(self):
+        location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_REGION)
+        role = mommy.make(Role, location_level=location_level)
+        self.domino_person.role = role.name
+        self.domino_person.locations = "foo;bar"
+        self.domino_person.save()
+        role = Role.objects.get(name=self.domino_person.role)
+        with open(settings.LOGGING_INFO_FILE, 'w'): pass
+
+        person = create_person(self.domino_person)
+
+        with open(settings.LOGGING_INFO_FILE, 'r') as f:
+            content = f.read()
+        for location in self.domino_person.locations.split(";"):
+            self.assertIn("Location number:{} with LocationLevel: {} Not Found."
+                          .format(location, role.location_level),
+                content
+            )
 
     def test_get_person_status__active(self):
         self.domino_person.status == "Active"

@@ -37,11 +37,12 @@ def create_person(domino_instance):
     try:
         role = Role.objects.get(name__exact=domino_instance.role)
     except Role.DoesNotExist:
-        logger.debug("Role name:{} Not Found.".format(domino_instance.role))
+        logger.info("Role name:{} Not Found.".format(domino_instance.role))
         return
     
     if top_level_with_locations(role, domino_instance) or non_top_level_with_no_locations(role, domino_instance):
-        logger.debug("Data not consistent: username {}.".format(domino_instance.username))
+        logger.info("LocationLevel and Location(s) not consistent. Username:{}, LocationLevel:{}, Locations:{}."
+                    .format(domino_instance.username, role.location_level, domino_instance.locations))
         return
 
     domino_instance = shorten_strings(domino_instance, ['first_name', 'last_name', 'username'])
@@ -115,7 +116,7 @@ def add_locations(person, role, domino_instance):
             try:
                 location = Location.objects.get(number__exact=location, location_level=role.location_level)
             except Location.DoesNotExist:
-                logger.debug("Location number:{} with LocationLevel: {} Not Found.".format(location, role.location_level))
+                logger.info("Location number:{} with LocationLevel: {} Not Found.".format(location, role.location_level))
                 location_not_found = True
             else:
                 person.locations.add(location)
