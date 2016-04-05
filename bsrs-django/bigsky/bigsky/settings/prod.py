@@ -1,7 +1,6 @@
 from .base import *
 
-
-TEMPLATE_DEBUG = DEBUG = False
+DEBUG = False
 
 # SSL_ENABLED = True
 # CSRF_COOKIE_SECURE = True

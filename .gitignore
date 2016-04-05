@@ -14,7 +14,6 @@ dump.rdb
 *id_rsa*
 so_*
 db.sqlite3
-*.log
 
 # See http://help.github.com/ignore-files/ for more about ignoring files. 
 

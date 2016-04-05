@@ -1,15 +1,33 @@
-from django.test import TestCase
-from django.contrib.auth.models import Group
+import logging
+logger = logging.getLogger(__name__)
 
+from django.conf import settings
+from django.contrib.auth.models import Group
+from django.test import TestCase
+
+from category.models import Category
+from location.models import LocationLevel
 from location.tests.factory import create_location_levels
 from person.models import Role
 from utils_transform.tlocation.models import (LOCATION_COMPANY, LOCATION_FMU,
     LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE)
 from utils_transform.trole.management.commands._etl_utils import (create_role, run_role_migrations,
-ROLE_TYPE_INTERNAL, ROLE_TYPE_THIRD_PARTY, SELECTION_CONTRACTOR, 
+get_location_level, ROLE_TYPE_INTERNAL, ROLE_TYPE_THIRD_PARTY, SELECTION_CONTRACTOR,
 SELECTION_REGION, SELECTION_DISTRICT, SELECTION_STORE, SELECTION_FMU,)
+from utils_transform.trole.tests.factory import create_domino_role, create_domino_role_and_related
 
-from utils_transform.trole.tests.factory import create_domino_role_and_related
+
+class RunRoleMigrationsTests(TestCase):
+
+    def test_run_role_migrations(self):
+        domino_role = create_domino_role_and_related()
+
+        run_role_migrations()
+
+        role = Role.objects.get(name=domino_role.name)
+        self.assertEqual(role.role_type, "admin.role.type.internal")
+        self.assertEqual(role.location_level.name, LOCATION_REGION)
+        self.assertEqual(role.categories.count(), 2)
 
 
 class CreateRoleTests(TestCase):
@@ -62,15 +80,37 @@ class CreateRoleTests(TestCase):
         self.assertEqual(role.role_type, ROLE_TYPE_INTERNAL)
         self.assertEqual(role.location_level.name, LOCATION_FMU)
 
+    def test_location_level_not_found_logged(self):
+        LocationLevel.objects.all().delete()
+        domino_role = create_domino_role()
+        with open(settings.LOGGING_INFO_FILE, 'w'): pass
 
-class RunRoleMigrationsTests(TestCase):
+        create_role(domino_role)
 
-    def test_run_role_migrations(self):
-        domino_role = create_domino_role_and_related()
+        self.assertEqual(LocationLevel.objects.count(), 0)
+        with open(settings.LOGGING_INFO_FILE, 'r') as f:
+            content = f.read()
+        self.assertIn("LocationLevel name:{} Not Found.".format(get_location_level(domino_role)), content)
 
-        run_role_migrations()
+    def test_categories_not_found_logged(self):
+        Category.objects.all().delete()
+        domino_role = create_domino_role()
+        with open(settings.LOGGING_INFO_FILE, 'w'): pass
 
-        role = Role.objects.get(name=domino_role.name)
-        self.assertEqual(role.role_type, "admin.role.type.internal")
-        self.assertEqual(role.location_level.name, LOCATION_REGION)
-        self.assertEqual(role.categories.count(), 2)
+        create_role(domino_role)
+
+        self.assertEqual(Category.objects.count(), 0)
+        with open(settings.LOGGING_INFO_FILE, 'r') as f:
+            content = f.read()
+        cats = domino_role.categories.split(";")
+        for cat in cats:
+            self.assertIn("Category name:{} Not Found.".format(cat), content)
+
+
+# NOTE: Not part of test suite, to run manually on Jenkins for logging checks.
+def manual_log_check():
+    logger.debug('debug')
+    logger.info('info')
+    logger.warning('warning')
+    logger.error('error')
+    logger.critical('critical')
