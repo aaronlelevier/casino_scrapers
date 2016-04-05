@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/store';
 import { attr, Model } from 'ember-cli-simple-store/model';
-import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_dirty_ifNotEmpty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
+import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_dirty_unlessAddedM2M, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
 import { rollbackAll } from 'bsrs-ember/utilities/rollback-all';
 
 export default Model.extend({
@@ -35,7 +35,7 @@ export default Model.extend({
   field_option_fks: [],
   add_option: add_many_to_many('field-option', 'option', 'option_pk', 'field_pk'),
   remove_option: remove_many_to_many('field-option', 'option_pk', 'field_options'),
-  optionsIsDirtyContainer: many_to_many_dirty_ifNotEmpty('field_option_ids', 'field_option_fks'),
+  optionsIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('field_option_ids', 'field_option_fks'),
   optionsIsDirty: Ember.computed('options.@each.{isDirty}', 'optionsIsDirtyContainer', function() {
     const options = this.get('options');
     return options.isAny('isDirty') || this.get('optionsIsDirtyContainer');
