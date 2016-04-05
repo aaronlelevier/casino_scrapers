@@ -9,187 +9,230 @@ import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 
 var dtd_payload = {
-    id: DTD.idOne,
-    key: DTD.keyOne,
-    description: DTD.descriptionOne,
-    prompt: DTD.promptOne,
-    note: DTD.noteOne,
-    note_type: DTD.noteTypeOne,
-    link_type: DTD.linkTypeOne,
-    fields: [{
-        id: FD.idOne,
-        label: FD.labelOne,
-        type: FD.typeSix,
-        required: FD.requiredOne,
-        order: FD.orderOne,
-        options: [{
-            id: OD.idOne,
-            text: OD.textOne,
-            order: OD.orderOne
-        }]
-    }],
-    links: [{
-        id: LINK.idOne,
-        order: LINK.orderOne,
-        action_button: LINK.action_buttonOne,
-        is_header: LINK.is_headerOne,
-        request: LINK.requestOne,
-        text: LINK.textOne,
-        priority: TP.priorityOneId,
-        status: TD.statusOneId,
-        destination: DTD.idTwo
+  id: DTD.idOne,
+  key: DTD.keyOne,
+  description: DTD.descriptionOne,
+  prompt: DTD.promptOne,
+  note: DTD.noteOne,
+  note_type: DTD.noteTypeOne,
+  link_type: DTD.linkTypeOne,
+  fields: [{
+    id: FD.idOne,
+    label: FD.labelOne,
+    type: FD.typeSix,
+    required: FD.requiredOne,
+    order: FD.orderOne,
+    options: [{
+      id: OD.idOne,
+      text: OD.textOne,
+      order: OD.orderOne
     }]
+  }],
+  links: [{
+    id: LINK.idOne,
+    order: LINK.orderOne,
+    action_button: LINK.action_buttonOne,
+    is_header: LINK.is_headerOne,
+    request: LINK.requestOne,
+    text: LINK.textOne,
+    priority: TP.priorityOneId,
+    status: TD.statusOneId,
+    destination: DTD.idTwo
+  }],
+  attachments: []
 };
 
 var dtd_payload_two = {
-    id: DTD.idOne,
-    key: DTD.keyTwo,
-    description: DTD.descriptionTwo,
-    prompt: DTD.promptTwo,
-    note: DTD.noteTwo,
-    note_type: DTD.noteTypeTwo,
-    link_type: DTD.linkTypeTwo,
-    fields: [{
-        id: FD.idOne,
-        label: FD.labelOne,
-        type: FD.typeSix,
-        required: FD.requiredOne,
-        order: FD.orderOne,
-        options: [{
-            id: OD.idOne,
-            text: OD.textOne,
-            order: OD.orderOne
-        }]
-    }],
-    links: [{
-        id: LINK.idOne,
-        order: LINK.orderOne,
-        action_button: LINK.action_buttonTwo,
-        is_header: LINK.is_headerOne,
-        request: LINK.requestTwo,
-        text: LINK.textTwo,
-        priority: TP.priorityTwoId,
-        status: TD.statusTwoId,
-        destination: DTD.idTwo
+  id: DTD.idOne,
+  key: DTD.keyTwo,
+  description: DTD.descriptionTwo,
+  prompt: DTD.promptTwo,
+  note: DTD.noteTwo,
+  note_type: DTD.noteTypeTwo,
+  link_type: DTD.linkTypeTwo,
+  fields: [{
+    id: FD.idOne,
+    label: FD.labelOne,
+    type: FD.typeSix,
+    required: FD.requiredOne,
+    order: FD.orderOne,
+    options: [{
+      id: OD.idOne,
+      text: OD.textOne,
+      order: OD.orderOne
     }]
+  }],
+  links: [{
+    id: LINK.idOne,
+    order: LINK.orderOne,
+    action_button: LINK.action_buttonTwo,
+    is_header: LINK.is_headerOne,
+    request: LINK.requestTwo,
+    text: LINK.textTwo,
+    priority: TP.priorityTwoId,
+    status: TD.statusTwoId,
+    destination: DTD.idTwo
+  }],
+  attachments: []
 };
 
 var dtd_payload_link_two_put = {
-    id: DTD.idOne,
-    key: DTD.keyOne,
-    description: DTD.descriptionOne,
-    prompt: DTD.promptOne,
-    note: DTD.noteOne,
-    note_type: DTD.noteTypeOne,
-    link_type: DTD.linkTypeOne,
-    fields: [{
-        id: FD.idOne,
-        label: FD.labelOne,
-        type: FD.typeSix,
-        required: FD.requiredOne,
-        order: FD.orderOne,
-        options: [{
-            id: OD.idOne,
-            text: OD.textOne,
-            order: OD.orderOne
-        }]
-    }],
-    links: [{
-        id: LINK.idOne,
-        order: LINK.orderOne,
-        action_button: LINK.action_buttonOne,
-        is_header: LINK.is_headerOne,
-        request: LINK.requestOne,
-        text: LINK.textOne,
-        priority: TP.priorityOneId,
-        status: TD.statusOneId,
-        destination: DTD.idOne
-    },
-    {
-        id: 1,
-        // order: LINK.orderOne,  // needs to be set on model based upon order in `dtd-links` array
-        action_button: LINK.action_buttonOne,
-        is_header: LINK.is_headerTwo,
-        request: LINK.requestTwo,
-        text: LINK.textTwo,
-        priority: null,
-        status: null,
-        destination: null
+  id: DTD.idOne,
+  key: DTD.keyOne,
+  description: DTD.descriptionOne,
+  prompt: DTD.promptOne,
+  note: DTD.noteOne,
+  note_type: DTD.noteTypeOne,
+  link_type: DTD.linkTypeOne,
+  fields: [{
+    id: FD.idOne,
+    label: FD.labelOne,
+    type: FD.typeSix,
+    required: FD.requiredOne,
+    order: FD.orderOne,
+    options: [{
+      id: OD.idOne,
+      text: OD.textOne,
+      order: OD.orderOne
     }]
+  }],
+  links: [{
+    id: LINK.idOne,
+    order: LINK.orderOne,
+    action_button: LINK.action_buttonOne,
+    is_header: LINK.is_headerOne,
+    request: LINK.requestOne,
+    text: LINK.textOne,
+    priority: TP.priorityOneId,
+    status: TD.statusOneId,
+    destination: DTD.idOne
+  },
+  {
+    id: 1,
+    // order: LINK.orderOne,  // needs to be set on model based upon order in `dtd-links` array
+    action_button: LINK.action_buttonOne,
+    is_header: LINK.is_headerTwo,
+    request: LINK.requestTwo,
+    text: LINK.textTwo,
+    priority: null,
+    status: null,
+    destination: null
+  }],
+  attachments: []
 };
 
 var dtd_payload_update_priority = {
-    id: DTD.idOne,
-    key: DTD.keyOne,
-    description: DTD.descriptionOne,
-    prompt: DTD.promptOne,
-    note: DTD.noteOne,
-    note_type: DTD.noteTypeOne,
-    link_type: DTD.linkTypeOne,
-    fields: [{
-        id: FD.idOne,
-        label: FD.labelOne,
-        type: FD.typeSix,
-        required: FD.requiredOne,
-        order: FD.orderOne,
-        options: [{
-            id: OD.idOne,
-            text: OD.textOne,
-            order: OD.orderOne
-        }]
-    }],
-    links: [{
-        id: LINK.idOne,
-        order: LINK.orderOne,
-        action_button: LINK.action_buttonOne,
-        is_header: LINK.is_headerOne,
-        request: LINK.requestOne,
-        text: LINK.textOne,
-        priority: TP.priorityTwoId,
-        status: TD.statusOneId,
-        destination: DTD.idTwo
+  id: DTD.idOne,
+  key: DTD.keyOne,
+  description: DTD.descriptionOne,
+  prompt: DTD.promptOne,
+  note: DTD.noteOne,
+  note_type: DTD.noteTypeOne,
+  link_type: DTD.linkTypeOne,
+  fields: [{
+    id: FD.idOne,
+    label: FD.labelOne,
+    type: FD.typeSix,
+    required: FD.requiredOne,
+    order: FD.orderOne,
+    options: [{
+      id: OD.idOne,
+      text: OD.textOne,
+      order: OD.orderOne
     }]
+  }],
+  links: [{
+    id: LINK.idOne,
+    order: LINK.orderOne,
+    action_button: LINK.action_buttonOne,
+    is_header: LINK.is_headerOne,
+    request: LINK.requestOne,
+    text: LINK.textOne,
+    priority: TP.priorityTwoId,
+    status: TD.statusOneId,
+    destination: DTD.idTwo
+  }],
+  attachments: []
 };
 
 var dtd_payload_no_priority = {
-    id: DTD.idOne,
-    key: DTD.keyOne,
-    description: DTD.descriptionOne,
-    prompt: DTD.promptOne,
-    note: DTD.noteOne,
-    note_type: DTD.noteTypeOne,
-    link_type: DTD.linkTypeOne,
-    fields: [{
-        id: FD.idOne,
-        label: FD.labelOne,
-        type: FD.typeSix,
-        required: FD.requiredOne,
-        order: FD.orderOne,
-        options: [{
-            id: OD.idOne,
-            text: OD.textOne,
-            order: OD.orderOne
-        }]
-    }],
-    links: [{
-        id: LINK.idOne,
-        order: LINK.orderOne,
-        action_button: LINK.action_buttonOne,
-        is_header: LINK.is_headerOne,
-        request: LINK.requestOne,
-        text: LINK.textOne,
-        priority: null,
-        status: null,
-        destination: DTD.idTwo
+  id: DTD.idOne,
+  key: DTD.keyOne,
+  description: DTD.descriptionOne,
+  prompt: DTD.promptOne,
+  note: DTD.noteOne,
+  note_type: DTD.noteTypeOne,
+  link_type: DTD.linkTypeOne,
+  fields: [{
+    id: FD.idOne,
+    label: FD.labelOne,
+    type: FD.typeSix,
+    required: FD.requiredOne,
+    order: FD.orderOne,
+    options: [{
+      id: OD.idOne,
+      text: OD.textOne,
+      order: OD.orderOne
     }]
+  }],
+  links: [{
+    id: LINK.idOne,
+    order: LINK.orderOne,
+    action_button: LINK.action_buttonOne,
+    is_header: LINK.is_headerOne,
+    request: LINK.requestOne,
+    text: LINK.textOne,
+    priority: null,
+    status: null,
+    destination: DTD.idTwo
+  }],
+  attachments: []
 };
 
 var dtd_new_payload = {
-    id: 1,
-    key: DTD.keyOne,
-    description: DTD.descriptionOne,
-    fields: [],
-    links: []
+  id: 1,
+  key: DTD.keyOne,
+  description: DTD.descriptionOne,
+  fields: [],
+  links: [],
+  attachments: []
 };
 
-export { dtd_payload, dtd_payload_two, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload };
+var dtd_payload_with_attachment = {
+  id: DTD.idOne,
+  key: DTD.keyOne,
+  description: DTD.descriptionOne,
+  prompt: DTD.promptOne,
+  note: DTD.noteOne,
+  note_type: DTD.noteTypeOne,
+  link_type: DTD.linkTypeOne,
+  fields: [{
+    id: FD.idOne,
+    label: FD.labelOne,
+    type: FD.typeSix,
+    required: FD.requiredOne,
+    order: FD.orderOne,
+    options: [{
+      id: OD.idOne,
+      text: OD.textOne,
+      order: OD.orderOne
+    }]
+  }],
+  links: [{
+    id: LINK.idOne,
+    order: LINK.orderOne,
+    action_button: LINK.action_buttonOne,
+    is_header: LINK.is_headerOne,
+    request: LINK.requestOne,
+    text: LINK.textOne,
+    priority: TP.priorityOneId,
+    status: TD.statusOneId,
+    destination: DTD.idTwo
+  }],
+  attachments: [UUID.value]
+};
+
+var dtd_payload_with_attachments = Ember.$.extend(true, {}, dtd_payload_with_attachment);
+dtd_payload_with_attachments.attachments = ['abc123', 'def456'];
+
+export { dtd_payload, dtd_payload_two, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload, dtd_payload_with_attachment, dtd_payload_with_attachments };

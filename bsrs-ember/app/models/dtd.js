@@ -91,7 +91,8 @@ var DTDModel = Model.extend(Validations, {
       note_type: this.get('note_type'),
       link_type: this.get('link_type'),
       links: links,
-      fields: fields
+      fields: fields,
+      attachments: this.get('attachment_ids')
     };
   },
   rollback() {

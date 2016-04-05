@@ -48,8 +48,10 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
         });
       };
       const files = e.target.files;
-      for (let i = 0; i < files.length; i++) {
+      if (files && files[0]) {
+        for (let i = 0; i < files.length; i++) {
           repoUpload(i, files);
+        }
       }
     }
   }
