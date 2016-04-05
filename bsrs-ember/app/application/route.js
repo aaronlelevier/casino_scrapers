@@ -170,7 +170,7 @@ var ApplicationRoute = Ember.Route.extend({
         temp = temp.split('/').pop();
         if(tab.get('transitionCB')) {
           if(tab.get('model_id') && !tab.get('newModel')) {
-            /* singleTabs have model_id so prevent redirect by returning out */
+            /* singleTabs have model_id so prevent redirect by returning out; expect on delete */
             return tab.get('transitionCB')();
           } else{
             tab.get('transitionCB')();
@@ -199,7 +199,6 @@ var ApplicationRoute = Ember.Route.extend({
       }
     },
     delete(tab, callback, id){
-      const store = this.get('store');
       callback().then(() => {
         this.send('closeTabMaster', tab);
       }).then(() => {
