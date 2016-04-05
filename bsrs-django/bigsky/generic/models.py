@@ -137,8 +137,6 @@ class Attachment(BaseModel):
             self.is_image = True
             self.image_full = self.file
 
-            # # COMMENT OUT: For time being b/c PIL not working on 
-            # #   Jenkins, and we're still growing the feature set.
             self.image_medium.name = "/".join([settings.IMAGE_MEDIUM_SUB_PATH, self.filename])
             self.save_alt_image(location=self.image_medium.name, size=(100, 100))
 
@@ -154,8 +152,6 @@ class Attachment(BaseModel):
             # Pass false so FileField doesn't save the model.
             self.file.delete(False)
 
-    # NOT IN USE: currently b/c PIL either doesn't work on Jenkins,
-    # or the configuration is incorrect.  Still TBD
     def save_alt_image(self, location, size):
         try:
             with Image.open(self.image_full) as im:
