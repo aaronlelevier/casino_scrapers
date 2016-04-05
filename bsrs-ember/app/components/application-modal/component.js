@@ -12,7 +12,8 @@ var ApplicationModalComponent = Ember.Component.extend({
       this.sendAction(action, tab);
     },
     cancel_modal() {
-      this.sendAction('cancel_modal', this.trx.attemptedTabModel);
+      //action lives on controller
+      this.attrs.cancel_modal();
     }
   }
 });

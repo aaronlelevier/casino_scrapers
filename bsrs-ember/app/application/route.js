@@ -142,9 +142,6 @@ var ApplicationRoute = Ember.Route.extend({
         return this.transitionTo('error');
       }
     },
-    cancel_modal() {
-      Ember.$('.t-modal').modal('hide');
-    },
     closeTabMaster(tab, closeTabAction=null){
       /* Find model based on stored id in tab */
       const tab_id = tab.get('model_id') ? tab.get('model_id') : tab.get('id');
