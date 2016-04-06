@@ -6,10 +6,10 @@ import registerCB from 'bsrs-ember/utilities/registerCB';
 
 
 var extract_attachments = function(model, store) {
-  model.attachments.forEach((attachment_id) => {
-    store.push('attachment', {id: attachment_id});
+  model.attachments.forEach((attachment) => {
+    store.push('attachment', attachment);
   });
-  return model.attachments;
+  return model.attachments.mapBy('id');
 };
 
 var extract_destination = function(destination_json, store, link_model) {
@@ -32,7 +32,6 @@ var DTDDeserializer = Ember.Object.extend({
     let existing = store.find('dtd', id);
     let return_dtd = existing;
     if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
-
       // Prep and Attachments
       response.dtd_attachments_fks = extract_attachments(response, store);
       response.previous_attachments_fks = response.dtd_attachments_fks;

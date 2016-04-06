@@ -294,7 +294,7 @@ test('dtd link that is dirty gets ignores destination from server', assert => {
 //ATTACHMENT
 test('attachment added for each attachment on dtd', (assert) => {
     let json = DTDF.generate(DTD.idOne);
-    json.attachments = [DTD.attachmentOneId];
+    json.attachments = [{id: DTD.attachmentOneId}];
     run(() => {
         subject.deserialize(json, json.id);
     });
@@ -312,7 +312,7 @@ test('attachment added for each attachment on dtd (when dtd has existing attachm
     store.push('attachment', {id: DTD.attachmentTwoId});
     assert.equal(dtd.get('attachments').get('length'), 1);
     const json = DTDF.generate(DTD.idOne);
-    json.attachments = [DTD.attachmentTwoId, DTD.attachmentOneId];
+    json.attachments = [{id: DTD.attachmentTwoId}, {id: DTD.attachmentOneId}];
     run(function() {
         subject.deserialize(json, json.id);
     });

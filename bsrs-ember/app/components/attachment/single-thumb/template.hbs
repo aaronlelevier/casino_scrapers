@@ -1,29 +1,26 @@
-<span class="activity-file">
-  <a href={{attachment.filepath}} target="_blank" class="t-ticket-attachment-add-remove">
-      {{#if attachment.image_thumbnail}}
-          <span class="t-ext-jpg activity-thumb"><img src={{attachment.image_thumb}} /></span>
-      {{else if (is-equal attachment.ext 'pdf')}}
-          <span class="t-ext-pdf activity-thumb">{{fa-icon "file-pdf-o"}}</span>
-      {{else if (is-equal attachment.ext 'doc')}}
-          <span class="t-ext-doc activity-thumb">{{fa-icon "file-word-o"}}</span>
-      {{else if (is-equal attachment.ext 'docx')}}
-          <span class="t-ext-docx activity-thumb">{{fa-icon "file-word-o"}}</span>
-      {{else if (is-equal attachment.ext 'xls')}}
-          <span class="t-ext-xls activity-thumb">{{fa-icon "file-excel-o"}}</span>
-      {{else if (is-equal attachment.ext 'xlsx')}}
-          <span class="t-ext-xlsx activity-thumb">{{fa-icon "file-excel-o"}}</span>
-      {{else if (is-equal attachment.ext 'zip')}}
-          <span class="t-ext-zip activity-thumb">{{fa-icon "file-archive-o"}}</span>
-      {{else if (is-equal attachment.ext 'mov')}}
-          <span class="t-ext-mov activity-thumb">{{fa-icon "file-video-o"}}</span>
-      {{else if (is-equal attachment.ext 'mp4')}}
-          <span class="t-ext-mp4 activity-thumb">{{fa-icon "file-video-o"}}</span>
-      {{else if (is-equal attachment.ext 'ppt')}}
-          <span class="t-ext-ppt activity-thumb">{{fa-icon "file-powerpoint-o"}}</span>
-      {{else}}
-          <span class="t-ext-file activity-thumb">{{fa-icon "file-file-o"}}</span>
-      {{/if}}
-      {{attachment.filename}}
-  </a>
-</span>
-{{yield}}
+<a href={{attachment.filepath}} target="_blank" class="t-ticket-attachment-add-remove">
+  {{#if attachment.image_thumbnail}}
+  <span class="t-ext-jpg activity-thumb"><img src={{attachment.image_thumb}} /></span>
+  {{else if (is-equal attachment.ext 'pdf')}}
+  <span class="t-ext-pdf activity-thumb">{{fa-icon "file-pdf-o"}}</span>
+  {{else if (is-equal attachment.ext 'doc')}}
+  <span class="t-ext-doc activity-thumb">{{fa-icon "file-word-o"}}</span>
+  {{else if (is-equal attachment.ext 'docx')}}
+  <span class="t-ext-docx activity-thumb">{{fa-icon "file-word-o"}}</span>
+  {{else if (is-equal attachment.ext 'xls')}}
+  <span class="t-ext-xls activity-thumb">{{fa-icon "file-excel-o"}}</span>
+  {{else if (is-equal attachment.ext 'xlsx')}}
+  <span class="t-ext-xlsx activity-thumb">{{fa-icon "file-excel-o"}}</span>
+  {{else if (is-equal attachment.ext 'zip')}}
+  <span class="t-ext-zip activity-thumb">{{fa-icon "file-archive-o"}}</span>
+  {{else if (is-equal attachment.ext 'mov')}}
+  <span class="t-ext-mov activity-thumb">{{fa-icon "file-video-o"}}</span>
+  {{else if (is-equal attachment.ext 'mp4')}}
+  <span class="t-ext-mp4 activity-thumb">{{fa-icon "file-video-o"}}</span>
+  {{else if (is-equal attachment.ext 'ppt')}}
+  <span class="t-ext-ppt activity-thumb">{{fa-icon "file-powerpoint-o"}}</span>
+  {{else}}
+  <span class="t-ext-file activity-thumb">{{fa-icon "file-file-o"}}</span>
+  {{/if}}
+  {{attachment.filename}}
+</a>

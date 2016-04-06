@@ -2,6 +2,8 @@
 <span class="activity-person">{{#link-to "admin.people.person" activity.person.id}}{{person}}{{/link-to}}</span> <span class="activity-type">{{begString}} {{count}}</span> <span class="activity-timestamp t-activity-timestamp" title="{{fulltime}}">{{timestamp}}</span>
 <div class="activity-files">
 {{#each attachments as |attachment|}}
-  {{attachment/single-thumb attachment=attachment}}
+  <span class="activity-file">
+    {{attachment/single-thumb attachment=attachment}}
+  </span>
 {{/each}}
 </div>

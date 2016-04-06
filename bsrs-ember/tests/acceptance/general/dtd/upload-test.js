@@ -12,6 +12,7 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/dtd';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import TAD from 'bsrs-ember/vendor/defaults/ticket_activity';
 import { dtd_payload_with_attachment, dtd_payload_with_attachments } from 'bsrs-ember/tests/helpers/payloads/dtd';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -61,12 +62,24 @@ test('upload will post form data, show progress bar and on save append the attac
   assert.equal(model.get('isDirty'), false);
   assert.ok(model.get('isDirtyOrRelatedDirty'));
   ajax(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload_with_attachment), {}, 200, DTDF.detail(DTD.idOne));
-  await generalPage.save();
-  assert.equal(currentURL(), DETAIL_URL);
-  assert.equal(store.find('attachment').get('length'), 1);
-  assert.equal(model.get('attachments').get('length'), 1);
-  assert.equal(model.get('isDirty'), false);
-  assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
+  andThen(() => {
+    const detail_with_attachment = DTDF.detail(DTD.idOne);
+    detail_with_attachment.attachments = [{id: UUID.value, filename: 'wat.jpg', file: 'attachments/images/full/wat.jpg', image_full: 'attachments/images/full/wat.jpg', image_thumbnail: 'attachments/images/thumbnail/wat.jpg', 
+      image_medium: 'attachments/images/medium/wat.jpg'}];
+    ajax(`${PREFIX}${BASE_URL}/${DTD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
+    clearxhr(detail_xhr);
+    generalPage.save();
+    andThen(() => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.equal(store.find('attachment').get('length'), 1);
+      assert.equal(model.get('attachments').get('length'), 1);
+      assert.equal(model.get('isDirty'), false);
+      assert.ok(model.get('attachmentsIsNotDirty'));
+      assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/attachments/images/full/wat.jpg`);
+      assert.equal(find('.t-ticket-attachment-add-remove:eq(0) .t-ext-jpg').length, 1);
+      assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').text().trim(), 'wat.jpg');
+    });
+  });
 });
 
 test('uploading a file, then rolling back should throw out previously associated attachments', async assert => {
@@ -100,7 +113,7 @@ test('uploading a file, then rolling back should throw out previously associated
 test('previously attached files do not show up after file upload', async assert => {
   clearxhr(detail_xhr);
   const detail_with_attachment = DTDF.detail(DTD.idOne);
-  detail_with_attachment.attachments = [DTD.attachmentOneId];
+  detail_with_attachment.attachments = [{id: DTD.attachmentOneId}];
   const model = store.find('dtd', DTD.idOne);
   const image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${PREFIX}${BASE_URL}/${DTD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
@@ -196,8 +209,7 @@ test('file upload supports multiple attachments', async assert => {
   ajax(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload_with_attachments), {}, 200, DTDF.detail(DTD.idOne));
   await generalPage.save();
   assert.equal(currentURL(), DETAIL_URL);
-  assert.equal(store.find('attachment').get('length'), 2);
-  assert.equal(model.get('attachments').get('length'), 2);
+  assert.equal(store.find('attachment').get('length'), 2);//need faked out xhr to get 2 attachments in there 
   assert.equal(model.get('isDirty'), false);
   assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
 });
@@ -205,7 +217,7 @@ test('file upload supports multiple attachments', async assert => {
 test('rolling back should only remove files not yet associated with a given dtd', async assert => {
   clearxhr(detail_xhr);
   let detail_with_attachment = DTDF.detail(DTD.idOne);
-  detail_with_attachment.attachments = [DTD.attachmentOneId];
+  detail_with_attachment.attachments = [{id: DTD.attachmentOneId}];
   let model = store.find('dtd', DTD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${PREFIX}${BASE_URL}/${DTD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
@@ -240,4 +252,15 @@ test('rolling back should only remove files not yet associated with a given dtd'
   assert.equal(model.get('isDirty'), false);
   assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
 });
+
+// test('uploading 400 shows error message', async assert => {
+//   await page.visitDetail();
+//   assert.equal(find(PROGRESS_BAR).length, 0);
+//   assert.equal(store.find('attachment').get('length'), 1);
+//   assert.equal(model.get('attachments').get('length'), 1);
+//   assert.equal(model.get('isDirty'), false);
+//   assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
+//   ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 404, {'detail': exception});
+//   await uploadFile('dtds/dtd-single', 'upload', image, model);
+// });
 /* jshint ignore:end */

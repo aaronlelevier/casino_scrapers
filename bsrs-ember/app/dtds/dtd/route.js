@@ -59,6 +59,6 @@ export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
   actions: {
     error(){
       return this.transitionTo('dtds.dtd-error');
-    }
+    },
   }
 });
