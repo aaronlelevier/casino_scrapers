@@ -230,6 +230,7 @@ test('when click delete, modal displays and when click ok, location-level is del
     waitFor(() => {
       assert.equal(currentURL(), LOCATION_LEVEL_URL);
       assert.equal(store.find('location-level', LLD.idOne).get('length'), undefined);
+      assert.ok(generalPage.deleteModalIsHidden);
     });
   });
 });

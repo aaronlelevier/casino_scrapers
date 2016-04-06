@@ -178,6 +178,7 @@ test('when click delete, modal displays and when click ok, category is deleted a
     waitFor(() => {
       assert.equal(currentURL(), CATEGORIES_URL);
       assert.equal(store.find('category', CD.idOne).get('length'), undefined);
+      assert.ok(generalPage.deleteModalIsHidden);
     });
   });
 });

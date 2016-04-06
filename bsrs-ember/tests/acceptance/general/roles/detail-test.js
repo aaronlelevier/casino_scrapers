@@ -212,6 +212,7 @@ test('when click delete, modal displays and when click ok, role is deleted and r
     waitFor(() => {
       assert.equal(currentURL(), ROLE_URL);
       assert.equal(store.find('role', RD.idOne).get('length'), undefined);
+      assert.ok(generalPage.deleteModalIsHidden);
     });
   });
 });

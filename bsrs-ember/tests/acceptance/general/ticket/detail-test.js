@@ -200,7 +200,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   });
 });
 
-test('when click delete, modal displays and when click ok, ticket is deleted and removed from store', async assert => {
+test('scott when click delete, modal displays and when click ok, ticket is deleted and removed from store', async assert => {
   await page.visitDetail();
   await generalPage.delete();
   andThen(() => {
@@ -216,6 +216,7 @@ test('when click delete, modal displays and when click ok, ticket is deleted and
     waitFor(() => {
       assert.equal(currentURL(), TICKET_URL);
       assert.equal(store.find('ticket', TD.idOne).get('length'), undefined);
+      assert.ok(generalPage.deleteModalIsHidden);
     });
   });
 });

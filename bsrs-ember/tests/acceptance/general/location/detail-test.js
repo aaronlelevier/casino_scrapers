@@ -229,6 +229,7 @@ test('when click delete, modal displays and when click ok, location is deleted a
     waitFor(() => {
       assert.equal(currentURL(), LOCATION_URL);
       assert.equal(store.find('location', LD.idOne).get('length'), undefined);
+      assert.ok(generalPage.deleteModalIsHidden);
     });
   });
 });

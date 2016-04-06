@@ -266,6 +266,7 @@ test('when click delete, modal displays and when click ok, person is deleted and
     waitFor(() => {
       assert.equal(currentURL(), PEOPLE_URL);
       assert.equal(store.find('person', PD.idOne).get('length'), undefined);
+      assert.ok(generalPage.deleteModalIsHidden);
     });
   });
 });

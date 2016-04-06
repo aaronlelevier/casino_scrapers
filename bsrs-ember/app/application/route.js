@@ -166,6 +166,7 @@ var ApplicationRoute = Ember.Route.extend({
         
         /* Hide modal if present and call transition callback defined in route */
         Ember.$('.t-modal').modal('hide');
+        Ember.$('.t-delete-modal').modal('hide');
         let temp = this.router.generate(this.controller.currentPath);
         temp = temp.split('/').pop();
         if(tab.get('transitionCB')) {
