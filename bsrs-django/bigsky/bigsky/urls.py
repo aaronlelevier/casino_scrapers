@@ -1,7 +1,7 @@
 import json
 
 from django.conf import settings
-from django.conf.urls import include, url, patterns
+from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views, forms
@@ -112,9 +112,9 @@ urlpatterns += required(
 
 if settings.DEBUG:
     import debug_toolbar
-    urlpatterns += patterns('',
+    urlpatterns += [
         url(r'^__debug__/', include(debug_toolbar.urls)),
-    )
+    ]
 
 # Login Required
 urlpatterns += required(

@@ -1,8 +1,8 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from generic import views
 
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^csv/export_data/$', views.ExportData.as_view(), name="export_data"),
-)
+]
