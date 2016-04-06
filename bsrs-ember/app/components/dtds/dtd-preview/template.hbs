@@ -45,6 +45,11 @@
         {{/each}}
       </div>
       {{/if}}
+      {{#each model.attachments as |attachment|}}
+        <span class="t-dtd-preview-attachment">
+          {{attachment/single-medium attachment=attachment}}
+        </span>
+      {{/each}}
     </div>
   </div>
 </div>

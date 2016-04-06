@@ -1,0 +1,26 @@
+<a href={{attachment.filepath}} target="_blank" class="t-attachment-add-remove">
+  {{#if attachment.image_medium}}
+  <span class="t-ext-jpg activity-medium"><img src={{attachment.image_medium}} /></span>
+  {{else if (is-equal attachment.ext 'pdf')}}
+  <span class="t-ext-pdf activity-medium">{{fa-icon "file-pdf-o"}}</span>
+  {{else if (is-equal attachment.ext 'doc')}}
+  <span class="t-ext-doc activity-medium">{{fa-icon "file-word-o"}}</span>
+  {{else if (is-equal attachment.ext 'docx')}}
+  <span class="t-ext-docx activity-medium">{{fa-icon "file-word-o"}}</span>
+  {{else if (is-equal attachment.ext 'xls')}}
+  <span class="t-ext-xls activity-medium">{{fa-icon "file-excel-o"}}</span>
+  {{else if (is-equal attachment.ext 'xlsx')}}
+  <span class="t-ext-xlsx activity-medium">{{fa-icon "file-excel-o"}}</span>
+  {{else if (is-equal attachment.ext 'zip')}}
+  <span class="t-ext-zip activity-medium">{{fa-icon "file-archive-o"}}</span>
+  {{else if (is-equal attachment.ext 'mov')}}
+  <span class="t-ext-mov activity-medium">{{fa-icon "file-video-o"}}</span>
+  {{else if (is-equal attachment.ext 'mp4')}}
+  <span class="t-ext-mp4 activity-medium">{{fa-icon "file-video-o"}}</span>
+  {{else if (is-equal attachment.ext 'ppt')}}
+  <span class="t-ext-ppt activity-medium">{{fa-icon "file-powerpoint-o"}}</span>
+  {{else}}
+  <span class="t-ext-file activity-medium">{{fa-icon "file-file-o"}}</span>
+  {{/if}}
+  {{attachment.filename}}
+</a>

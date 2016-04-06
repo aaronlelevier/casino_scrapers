@@ -44,7 +44,7 @@ module('Acceptance | dtd file upload test', {
 });
 
 /* jshint ignore:start */
-test('upload will post form data, show progress bar and on save append the attachment', async assert => {
+test('upload will post form data, show progress bar and on save append the attachment to detail and preview', async assert => {
   const model = store.find('dtd', DTD.idOne);
   const image = {name: 'foo.png', type: 'image/png', size: 234000};
   await page.visitDetail();
@@ -78,6 +78,11 @@ test('upload will post form data, show progress bar and on save append the attac
       assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/attachments/images/full/wat.jpg`);
       assert.equal(find('.t-ticket-attachment-add-remove:eq(0) .t-ext-jpg').length, 1);
       assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').text().trim(), 'wat.jpg');
+      assert.equal(find('.t-attachment-add-remove:eq(0)').text().trim(), 'wat.jpg');
+      assert.equal(find('.t-dtd-preview-attachment > a').text().trim(), 'wat.jpg');
+      assert.equal(find('.t-dtd-preview-attachment > a').attr('href'), `/media/attachments/images/full/wat.jpg`);
+      assert.equal(find('.t-dtd-preview-attachment .t-ext-jpg').length, 1);
+      assert.equal(find('.t-dtd-preview-attachment > a').text().trim(), 'wat.jpg');
     });
   });
 });
