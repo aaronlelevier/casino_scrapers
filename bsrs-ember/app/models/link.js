@@ -78,6 +78,7 @@ var LinkModel = Model.extend(CategoriesMixin, Validations, {
             priority: this.get('priority.id') || null,
             status: this.get('status.id') || null,
             destination: this.get('destination.id') || null,
+            categories: this.get('sorted_categories').mapBy('id'),
         };
     },
     saved: false,

@@ -1,52 +1,59 @@
 {{#each model.links as |link|}}
-<div class="input-group-vertical">
-  <div class="input-group">
-    <span class="input-group-btn">
-      <button class="t-del-link-btn btn btn-default btn-sm delete" type="button" {{action 'delete' link}}>{{fa-icon "minus"}}</button>
-    </span>
-    {{input type="text" placeholder=(t "admin.dtd.label.link.text") value=link.text class="form-control t-dtd-link-text"}}
-  </div>
-    <div class="t-dtd-link-text-error error">
-      {{link.textErrorMsg}}
+  <div class="input-group-vertical">
+    <div class="input-group">
+      <span class="input-group-btn">
+        <button class="t-del-link-btn btn btn-default btn-sm delete" type="button" {{action 'delete' link}}>{{fa-icon "minus"}}</button>
+      </span>
+      {{input type="text" placeholder=(t "admin.dtd.label.link.text") value=link.text class="form-control t-dtd-link-text"}}
     </div>
-  {{#if (is-equal model.link_type model.link_types.[0])}}
-  <div class="input-group">
-    <span class="input-group-addon">{{t "admin.dtd.label.link.action_button"}}</span>
-    <div class="checkbox">
-      <label>
-        {{input type="checkbox" checked=link.action_button class="form-control t-dtd-link-action_button"}}
-        <span></span>
-      </label>
+      <div class="t-dtd-link-text-error error">
+        {{link.textErrorMsg}}
+      </div>
+    {{#if (is-equal model.link_type model.link_types.[0])}}
+      <div class="input-group">
+        <span class="input-group-addon">{{t "admin.dtd.label.link.action_button"}}</span>
+        <div class="checkbox">
+          <label>
+            {{input type="checkbox" checked=link.action_button class="form-control t-dtd-link-action_button"}}
+            <span></span>
+          </label>
+        </div>
+      </div>
+    {{else if (is-equal model.link_type model.link_types.[1])}}
+      <div class="input-group">
+        <span class="input-group-addon">{{t "admin.dtd.label.link.is_header"}}</span>
+        <div class="checkbox">
+          <label>
+            {{input type="checkbox" checked=link.is_header class="form-control t-dtd-link-is_header"}}
+            <span></span>
+          </label>
+        </div>
+      </div>
+    {{/if}}
+    <div class="input-group">
+      {{#parent-model-category-select ticket=link as |child_valid|}}
+        <span class="validation validation-under category-validation-error t-category-validation-error {{child-validation submitted child_valid}}">
+          {{t "validation.invalid"}} {{t "admin.category.label.name"}}
+        </span>
+      {{/parent-model-category-select}}
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">{{t "admin.dtd.label.link.request"}}</span>
+      {{input type="text" placeholder=(t "admin.dtd.label.link.request") value=link.request class="form-control t-dtd-link-request"}}
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">{{t "admin.dtd.label.link.priority"}}</span>
+      {{power-select-foreign-key mainModel=link selected=link.priority change_method='change_priority' relatedModels=priorities relatedModelName='ticket-priority' clear=true}}
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">{{t "admin.dtd.label.link.status"}}</span>
+      {{power-select-foreign-key mainModel=link selected=link.status change_method='change_status' relatedModels=statuses relatedModelName='ticket-status' clear=true}}
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">{{t "admin.dtd.label.destination"}}</span>
+      {{db-fetch-select model=link selectedAttr=link.destination className="t-link-destination-select" displayName="key" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}
     </div>
   </div>
-  {{else if (is-equal model.link_type model.link_types.[1])}}
-  <div class="input-group">
-    <span class="input-group-addon">{{t "admin.dtd.label.link.is_header"}}</span>
-    <div class="checkbox">
-      <label>
-        {{input type="checkbox" checked=link.is_header class="form-control t-dtd-link-is_header"}}
-        <span></span>
-      </label>
-    </div>
-  </div>
-  {{/if}}
-  <div class="input-group">
-    <span class="input-group-addon">{{t "admin.dtd.label.link.request"}}</span>
-    {{input type="text" placeholder=(t "admin.dtd.label.link.request") value=link.request class="form-control t-dtd-link-request"}}
-  </div>
-  <div class="input-group">
-    <span class="input-group-addon">{{t "admin.dtd.label.link.priority"}}</span>
-    {{power-select-foreign-key mainModel=link selected=link.priority change_method='change_priority' relatedModels=priorities relatedModelName='ticket-priority' clear=true}}
-  </div>
-  <div class="input-group">
-    <span class="input-group-addon">{{t "admin.dtd.label.link.status"}}</span>
-    {{power-select-foreign-key mainModel=link selected=link.status change_method='change_status' relatedModels=statuses relatedModelName='ticket-status' clear=true}}
-  </div>
-  <div class="input-group">
-    <span class="input-group-addon">{{t "admin.dtd.label.destination"}}</span>
-    {{db-fetch-select model=link selectedAttr=link.destination className="t-link-destination-select" displayName="key" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}
-  </div>
-</div>
 {{/each}}
 <button class="t-add-link-btn add-btn btn btn-default btn-sm" type="button" {{action "append"}}>
   <span class="btn-label">{{fa-icon "plus"}} {{t "admin.dtd.link.add"}}</span>

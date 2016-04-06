@@ -13,6 +13,8 @@ import FD from 'bsrs-ember/vendor/defaults/field';
 import OD from 'bsrs-ember/vendor/defaults/option';
 import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
+import CD from 'bsrs-ember/vendor/defaults/category';
+import TCD from 'bsrs-ember/vendor/defaults/model-category';
 import page from 'bsrs-ember/tests/pages/dtd';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import ticketPage from 'bsrs-ember/tests/pages/tickets';
@@ -276,6 +278,26 @@ test('preview updates as changes are made to detail', function(assert) {
   page.is_headerClick();
   assert.equal(page.previewButtonOne, LINK.textOne);
 });
+
+// Links - Categories
+
+test('dtd-link category select', function(assert) {
+  run(() => {
+    dtd = store.push('dtd', {id: DTD.idOne, dtd_link_fks: [DTDL.idOne]});
+    store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
+    store.push('model-category', {id: TCD.idOne, model_pk: LINK.idOne, category_pk: CD.idOne});
+    store.push('category', {id: CD.idOne, name: CD.nameOne, label: CD.labelOne});
+    link = store.push('link', {id: LINK.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
+  });
+  this.set('model', dtd);
+  this.render(hbs`{{dtds/dtd-single model=model}}`);
+  assert.equal(dtd.get('links').get('length'), 1);
+  assert.equal(link.get('categories').get('length'), 1);
+  assert.equal(this.$('.t-model-category-label').text(), CD.labelOne);
+  assert.equal(this.$('.t-model-category-select').text().trim(), CD.nameOne);
+});
+
+// Fields
 
 test('no field label does not display undefined', function(assert) {
   run(() => {

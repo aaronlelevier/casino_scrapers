@@ -8,7 +8,7 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
-import { dtd_payload, dtd_payload_two, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload } from 'bsrs-ember/tests/helpers/payloads/dtd';
+import { dtd_payload, dtd_payload_two, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload, dtd_payload_with_categories } from 'bsrs-ember/tests/helpers/payloads/dtd';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import FD from 'bsrs-ember/vendor/defaults/field';
@@ -16,6 +16,8 @@ import OD from 'bsrs-ember/vendor/defaults/option';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
 import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
+import CD from 'bsrs-ember/vendor/defaults/category';
+import CF from 'bsrs-ember/vendor/category_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/dtd';
@@ -384,6 +386,16 @@ test('when click delete, modal displays and when click ok, dtd is deleted and re
     });
   });
 });
+
+test('deep linking with an xhr with a 404 status code will show up in the error component (dtd)', async assert => {
+  clearxhr(detail_xhr);
+  const exception = `This record does not exist.`;
+  xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+  await page.visitDetail();
+  assert.equal(currentURL(), DTD_ERROR_URL);
+  assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+  assert.equal(find('.t-error-message').text(), 'WAT');
+});
 /* jshint ignore:end */
 
 test('click add-link, and fill in', (assert) => {
@@ -413,14 +425,27 @@ test('click add-link, and fill in', (assert) => {
   });
 });
 
-/* jshint ignore:start */
-test('deep linking with an xhr with a 404 status code will show up in the error component (dtd)', async assert => {
-  clearxhr(detail_xhr);
-  const exception = `This record does not exist.`;
-  xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
-  await page.visitDetail();
-  assert.equal(currentURL(), DTD_ERROR_URL);
-  assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-  assert.equal(find('.t-error-message').text(), 'WAT');
+test('categories selector is wired up and working', assert => {
+  page.visitDetail();
+  ticketPage
+    .categoryOneClickDropdown()
+    .categoryOneClickOptionOne();
+  const top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
+  xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
+  andThen(() => {
+    assert.equal(ticketPage.categoryOneInput, CD.nameOne);
+  });
+  ticketPage
+    .categoryTwoClickDropdown()
+    .categoryTwoClickOptionOne();
+  const second_level_categories_endpoint = PREFIX + `/admin/categories/?parent=${CD.idOne}`;
+  xhr(second_level_categories_endpoint, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [], CD.idOne, 1));
+  andThen(() => {
+    assert.equal(ticketPage.categoryTwoInput, CD.nameTwo);
+  });
+  generalPage.save();
+  xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload_with_categories), {}, 200, {});
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
 });
-/* jshint ignore:end */

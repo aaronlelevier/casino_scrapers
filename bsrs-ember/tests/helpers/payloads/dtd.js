@@ -7,6 +7,7 @@ import OD from 'bsrs-ember/vendor/defaults/option';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
+import CD from 'bsrs-ember/vendor/defaults/category';
 
 var dtd_payload = {
   id: DTD.idOne,
@@ -37,7 +38,8 @@ var dtd_payload = {
     text: LINK.textOne,
     priority: TP.priorityOneId,
     status: TD.statusOneId,
-    destination: DTD.idTwo
+    destination: DTD.idTwo,
+    categories: []
   }],
   attachments: []
 };
@@ -71,7 +73,8 @@ var dtd_payload_two = {
     text: LINK.textTwo,
     priority: TP.priorityTwoId,
     status: TD.statusTwoId,
-    destination: DTD.idTwo
+    destination: DTD.idTwo,
+    categories: []
   }],
   attachments: []
 };
@@ -105,7 +108,8 @@ var dtd_payload_link_two_put = {
     text: LINK.textOne,
     priority: TP.priorityOneId,
     status: TD.statusOneId,
-    destination: DTD.idOne
+    destination: DTD.idOne,
+    categories: []
   },
   {
     id: 1,
@@ -116,7 +120,8 @@ var dtd_payload_link_two_put = {
     text: LINK.textTwo,
     priority: null,
     status: null,
-    destination: null
+    destination: null,
+    categories: []
   }],
   attachments: []
 };
@@ -150,7 +155,8 @@ var dtd_payload_update_priority = {
     text: LINK.textOne,
     priority: TP.priorityTwoId,
     status: TD.statusOneId,
-    destination: DTD.idTwo
+    destination: DTD.idTwo,
+    categories: []
   }],
   attachments: []
 };
@@ -184,7 +190,8 @@ var dtd_payload_no_priority = {
     text: LINK.textOne,
     priority: null,
     status: null,
-    destination: DTD.idTwo
+    destination: DTD.idTwo,
+    categories: []
   }],
   attachments: []
 };
@@ -227,12 +234,16 @@ var dtd_payload_with_attachment = {
     text: LINK.textOne,
     priority: TP.priorityOneId,
     status: TD.statusOneId,
-    destination: DTD.idTwo
+    destination: DTD.idTwo,
+    categories: []
   }],
   attachments: [UUID.value]
 };
 
+var dtd_payload_with_categories = Ember.$.extend(true, {}, dtd_payload);
+dtd_payload_with_categories.links[0].categories = [CD.idOne, CD.idTwo];
+
 var dtd_payload_with_attachments = Ember.$.extend(true, {}, dtd_payload_with_attachment);
 dtd_payload_with_attachments.attachments = ['abc123', 'def456'];
 
-export { dtd_payload, dtd_payload_two, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload, dtd_payload_with_attachment, dtd_payload_with_attachments };
+export { dtd_payload, dtd_payload_two, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload, dtd_payload_with_attachment, dtd_payload_with_attachments, dtd_payload_with_categories };

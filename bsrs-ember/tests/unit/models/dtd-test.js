@@ -11,12 +11,14 @@ import TS from 'bsrs-ember/vendor/defaults/status';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import FD from 'bsrs-ember/vendor/defaults/field';
 import OD from 'bsrs-ember/vendor/defaults/option';
+import CD from 'bsrs-ember/vendor/defaults/category';
+import TCD from 'bsrs-ember/vendor/defaults/model-category';
 
 var store, dtd, dtd_2, link, priority, status, field, option, uuid;
 
 module('unit: dtd test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-link', 'model:link', 'model:ticket-priority', 'model:ticket-status', 'model:field', 'model:dtd-field', 'model:option', 'model:field-option', 'model:attachment', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-link', 'model:link', 'model:ticket-priority', 'model:ticket-status', 'model:field', 'model:dtd-field', 'model:option', 'model:field-option', 'model:attachment', 'model:category', 'model:model-category', 'service:i18n']);
     run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, dtd_link_fks: [DTDL.idOne]});
     dtd_2 = store.push('dtd', {id: DTD.idTwo, destination_links: [LINK.idOne]});
@@ -308,6 +310,8 @@ test('serialize dtd model and links with a priority', (assert) => {
       status_fk: TD.statusOneId,
       destination_fk: DTD.idTwo
     });
+    store.push('model-category', {id: TCD.idOne, model_pk: LINK.idOne, category_pk: CD.idOne});
+    store.push('category', {id: CD.idOne, name: CD.nameOne, label: CD.labelOne});
   });
   assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idOne);
   assert.equal(dtd.get('fields').objectAt(0).get('id'), FD.idOne);
@@ -315,10 +319,11 @@ test('serialize dtd model and links with a priority', (assert) => {
   run(() => {
     payload = dtd.serialize();
   });
-  assert.equal(link.get('id'), dtd_payload.links[0].id);
-  assert.equal(link.get('priority.id'), dtd_payload.links[0].priority);
-  assert.equal(link.get('status.id'), dtd_payload.links[0].status);
-  assert.equal(link.get('destination.id'), dtd_payload.links[0].destination);
+  assert.equal(payload['links'][0]['id'], dtd_payload.links[0].id);
+  assert.equal(payload['links'][0]['priority'], dtd_payload.links[0].priority);
+  assert.equal(payload['links'][0]['status'], dtd_payload.links[0].status);
+  assert.equal(payload['links'][0]['destination'], dtd_payload.links[0].destination);
+  assert.equal(payload['links'][0]['categories'][0], CD.idOne);
   // field
   field = dtd.get('fields').objectAt(0);
   assert.equal(payload['fields'][0]['id'], FD.idOne);
