@@ -14,9 +14,10 @@ export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
   module: 'dtd',
   displayText: Ember.computed(function() { return this.get('i18n').t('admin.dtd.one'); }),
   transitionCB() {
-    //to prevent transitionTo in application route
-    this.get('attachmentRepository').removeAllUnrelated();
-    return;
+    return {
+      //should be an array
+      otherFuncs: this.get('attachmentRepository').removeAllUnrelated()
+    };
   },
   tabList: Ember.inject.service(),
   model(params){

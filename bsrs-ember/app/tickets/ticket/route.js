@@ -14,7 +14,12 @@ var TicketSingleRoute = TabRoute.extend(FindById, PriorityMixin, {
   categoryRepository: inject('category'),
   statusRepository: inject('ticket-status'),
   attachmentRepository: inject('attachment'),
-  transitionCB() { this.get('attachmentRepository').removeAllUnrelated(); },
+  transitionCB() { 
+    return {
+      //should be an array
+      otherFuncs: this.get('attachmentRepository').removeAllUnrelated()
+    };
+  },
   /*start-non-standard*/ @computed /*end-non-standard*/
   redirectRoute() { return 'tickets.index'; },
   /*start-non-standard*/ @computed /*end-non-standard*/

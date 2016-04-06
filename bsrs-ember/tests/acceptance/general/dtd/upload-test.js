@@ -21,6 +21,7 @@ const DETAIL_TWO_URL = `${BASE_URL}/${DTD.idTwo}`;
 const DTD_URL = `${BASE_URL}/index`;
 const DTD_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
 const ATTACHMENT_DELETE_URL = `${PREFIX}/admin/attachments/${UUID.value}/`;
+const ADMIN_URL = BASEURLS.base_admin_url;
 const PROGRESS_BAR = '.progress-bar';
 
 let application, store, original_uuid, detail_xhr, list_xhr, endpoint;
@@ -118,10 +119,9 @@ test('previously attached files do not show up after file upload', async assert 
   assert.ok(model.get('isDirtyOrRelatedDirty'));
 });
 
-test('scott delete attachment is successful when the user confirms yes (before the file is associated with a dtd)', (assert) => {
+test('delete attachment is successful when the user confirms yes (before the file is associated with a dtd)', (assert) => {
   let model = store.find('dtd', DTD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
-  ajax(`${PREFIX}${BASE_URL}/${DTD.idOne}/`, 'GET', null, {}, 200, DTDF.detail(DTD.idOne));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -158,3 +158,86 @@ test('scott delete attachment is successful when the user confirms yes (before t
     });
   });
 });
+
+test('user cannot see progress bar for uploaded attachment that is associated with a dtd (after save)', async assert => {
+  let model = store.find('dtd', DTD.idOne);
+  let image = {name: 'foo.png', type: 'image/png', size: 234000};
+  await page.visitDetail();
+  ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
+  await uploadFile('dtds/dtd-single', 'upload', image, model);
+  assert.equal(find(PROGRESS_BAR).length, 1);
+  assert.equal(store.find('attachment').get('length'), 1);
+  assert.equal(model.get('attachments').get('length'), 1);
+  assert.equal(find('.t-remove-attachment').length, 1);
+  ajax(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload_with_attachment), {}, 200, DTDF.detail(DTD.idOne));
+  await generalPage.save();
+  assert.equal(currentURL(), DETAIL_URL);
+  assert.equal(find(PROGRESS_BAR).length, 0);
+});
+
+test('file upload supports multiple attachments', async assert => {
+  let model = store.find('dtd', DTD.idOne);
+  let one = {name: 'one.png', type: 'image/png', size: 234000};
+  let two = {name: 'two.png', type: 'image/png', size: 124000};
+  await page.visitDetail();
+  assert.equal(currentURL(), DETAIL_URL);
+  assert.equal(find(PROGRESS_BAR).length, 0);
+  assert.equal(store.find('attachment').get('length'), 0);
+  patchRandomAsync(0);
+  ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
+  await uploadFile('dtds/dtd-single', 'upload', [one, two], model);
+  assert.equal(find(PROGRESS_BAR).length, 2);
+  assert.ok(find(PROGRESS_BAR).is(':visible'));
+  assert.equal(find(PROGRESS_BAR).attr('style'), 'width: 100%;');
+  assert.equal(store.find('attachment').get('length'), 2);
+  assert.equal(model.get('attachments').get('length'), 2);
+  assert.equal(model.get('isDirty'), false);
+  assert.ok(model.get('isDirtyOrRelatedDirty'));
+  ajax(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload_with_attachments), {}, 200, DTDF.detail(DTD.idOne));
+  await generalPage.save();
+  assert.equal(currentURL(), DETAIL_URL);
+  assert.equal(store.find('attachment').get('length'), 2);
+  assert.equal(model.get('attachments').get('length'), 2);
+  assert.equal(model.get('isDirty'), false);
+  assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('rolling back should only remove files not yet associated with a given dtd', async assert => {
+  clearxhr(detail_xhr);
+  let detail_with_attachment = DTDF.detail(DTD.idOne);
+  detail_with_attachment.attachments = [DTD.attachmentOneId];
+  let model = store.find('dtd', DTD.idOne);
+  let image = {name: 'foo.png', type: 'image/png', size: 234000};
+  ajax(`${PREFIX}${BASE_URL}/${DTD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
+  await page.visitDetail();
+  assert.equal(find(PROGRESS_BAR).length, 0);
+  assert.equal(store.find('attachment').get('length'), 1);
+  assert.equal(model.get('attachments').get('length'), 1);
+  assert.equal(model.get('isDirty'), false);
+  assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
+  ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
+  await uploadFile('dtds/dtd-single', 'upload', image, model);
+  model = store.find('dtd', DTD.idOne);
+  assert.equal(find(PROGRESS_BAR).length, 1);
+  assert.ok(find(PROGRESS_BAR).is(':visible'));
+  assert.equal(find(PROGRESS_BAR).attr('style'), 'width: 100%;');
+  assert.equal(store.find('attachment').get('length'), 2);
+  assert.equal(model.get('attachments').get('length'), 2);
+  assert.equal(model.get('isDirty'), false);
+  assert.ok(model.get('isDirtyOrRelatedDirty'));
+  await click('.t-tab-close:eq(0)');
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    waitFor(() => {
+      assert.equal(find('.t-modal-body').length, 1);
+    });
+  });
+  ajax(`${PREFIX}/admin/attachments/batch-delete/`, 'DELETE', {ids: [UUID.value]}, {}, 204, {});
+  await generalPage.clickModalRollback();
+  assert.equal(currentURL(), ADMIN_URL);
+  assert.equal(model.get('attachments').get('length'), 1);
+  assert.equal(store.find('attachment').get('length'), 1);
+  assert.equal(model.get('isDirty'), false);
+  assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
+});
+/* jshint ignore:end */

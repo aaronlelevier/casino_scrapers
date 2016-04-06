@@ -7,8 +7,9 @@ var ApplicationModalComponent = Ember.Component.extend({
       let tab = this.trx.attemptedTabModel;
       let model = this.trx.attemptedTransitionModel;
       let action = this.trx.attemptedAction; //closeTabMaster or parentAction (for new tab)
+      const closeTabAction = this.trx.closeTabAction; //pass back in so exists when hit rollback
       model.rollback();
-      this.sendAction(action, tab);
+      this.sendAction(action, tab, closeTabAction);
     },
     cancel_modal() {
       //action lives on controller

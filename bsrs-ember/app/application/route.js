@@ -157,6 +157,7 @@ var ApplicationRoute = Ember.Route.extend({
         this.trx.attemptedTabModel = tab;
         this.trx.attemptedTransitionModel = model;
         this.trx.attemptedAction = 'closeTabMaster';
+        this.trx.closeTabAction = closeTabAction;
         this.trx.deleteCB = deleteCB;
 
       } else {
@@ -169,13 +170,22 @@ var ApplicationRoute = Ember.Route.extend({
         Ember.$('.t-delete-modal').modal('hide');
         let temp = this.router.generate(this.controller.currentPath);
         temp = temp.split('/').pop();
-        if(tab.get('transitionCB')) {
-          if(tab.get('model_id') && !tab.get('newModel')) {
-            /* singleTabs have model_id so prevent redirect by returning out; expect on delete */
-            return tab.get('transitionCB')();
-          } else{
-            tab.get('transitionCB')();
-          } 
+        const transitionCB = tab.get('transitionCB');
+        if(transitionCB) {
+          const transitionObj = transitionCB();
+          if(transitionObj) {
+            /* jshint ignore:start */
+            if(tab.get('model_id') && !tab.get('newModel')) {
+              /* singleTabs have model_id so prevent redirect by returning out; expect on delete */
+              transitionObj.otherFuncs;
+              if(!tab.get('continueTransition')){
+                return;
+              }
+            } else{
+              transitionObj.otherFuncs;
+            } 
+            /* jshint ignore:end */
+          }
         }
 
         /* Redirect if clicked x on tab...If new route, close tab and remove the model if in unsaved state */
