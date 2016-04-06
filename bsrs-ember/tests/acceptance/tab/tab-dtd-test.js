@@ -12,6 +12,7 @@ import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/dtd';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_DTD_URL = BASEURLS.base_dtd_url;
@@ -388,7 +389,9 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     waitFor(() => {
-      assert.equal(find('.t-modal-body').length, 1);
+      assert.ok(generalPage.modalIsVisible);
+      assert.ok(generalPage.deleteModalIsHidden);
+      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
     });
   });
 });
