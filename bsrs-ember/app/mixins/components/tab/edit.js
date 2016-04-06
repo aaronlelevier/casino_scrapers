@@ -37,7 +37,7 @@ var EditMixin = Ember.Mixin.create({
       let callback = function() {
         return repository.delete(id);
       };
-      this.sendAction('delete', this.tab(), callback, id);
+      this.sendAction('delete', this.tab(), callback);
     }
   }
 });

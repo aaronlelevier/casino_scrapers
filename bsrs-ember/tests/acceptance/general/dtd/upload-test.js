@@ -118,14 +118,43 @@ test('previously attached files do not show up after file upload', async assert 
   assert.ok(model.get('isDirtyOrRelatedDirty'));
 });
 
-test('delete attachment is successful when user confirms yet (before file is associated with dtd)', async assert => {
-  const model = store.find('dtd', DTD.idOne);
-  const image = {name: 'foo.png', type: 'image/png', size: 234000};
-  await page.visitDetail();
+test('scott delete attachment is successful when the user confirms yes (before the file is associated with a dtd)', (assert) => {
+  let model = store.find('dtd', DTD.idOne);
+  let image = {name: 'foo.png', type: 'image/png', size: 234000};
+  ajax(`${PREFIX}${BASE_URL}/${DTD.idOne}/`, 'GET', null, {}, 200, DTDF.detail(DTD.idOne));
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find(PROGRESS_BAR).length, 0);
+    assert.equal(store.find('attachment').get('length'), 0);
+  });
   ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
-  await uploadFile('dtds/dtd-single', 'upload', image, model);
+  uploadFile('dtds/dtd-single', 'upload', image, model);
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    model = store.find('dtd', DTD.idOne);
+    assert.equal(find(PROGRESS_BAR).length, 1);
+    assert.equal(store.find('attachment').get('length'), 1);
+    assert.equal(model.get('attachments').get('length'), 1);
+  });
   ajax(ATTACHMENT_DELETE_URL, 'DELETE', null, {}, 204, {});
   click('.t-remove-attachment');
-  assert.equal(currentURL(), DETAIL_URL);
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(generalPage.deleteModalIsVisible);
+      assert.equal(find('.t-modal-delete-body').text().trim(), t('crud.delete.confirm'));
+    });
+  });
+  generalPage.clickModalDelete();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(generalPage.deleteModalIsHidden);
+      model = store.find('dtd', DTD.idOne);
+      assert.equal(find(PROGRESS_BAR).length, 0);
+      assert.equal(store.find('attachment').get('length'), 0);
+      assert.equal(model.get('attachments').get('length'), 0);
+    });
+  });
 });
-/* jshint ignore:end */

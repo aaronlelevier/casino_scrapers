@@ -199,8 +199,12 @@ var ApplicationRoute = Ember.Route.extend({
         this.get('tabList').closeTab(tab.get('id'));
       }
     },
-    delete(tab, callback, id){
+    delete(tab, callback){
       this.send('closeTabMaster', tab, 'delete', callback);
+    },
+    deleteAttachment(callback){
+      Ember.$('.t-delete-modal').modal('show');
+      this.trx.deleteCB = callback;
     }
   }
 });

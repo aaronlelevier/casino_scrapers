@@ -59,10 +59,12 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
     removeAttachment(attachment_id) {
       const model = this.get('model');
       const repository = this.get('attachmentRepository');
-      // if (window.confirm('Are you sure you want to delete this attachment?')) {
+      const callback = function() {
         model.remove_attachment(attachment_id);
         repository.remove(attachment_id);
-      // }
+        Ember.$('.t-delete-modal').modal('hide');
+      };
+      this.sendAction('deleteAttachment', callback);
     },
   }
 });

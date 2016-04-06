@@ -147,10 +147,6 @@ test('previously attached files do not show up after file upload', (assert) => {
 });
 
 test('delete attachment is successful when the user confirms yes (before the file is associated with a ticket)', (assert) => {
-  let original = window.confirm;
-  window.confirm = function() {
-    return true;
-  };
   let model = store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
@@ -172,11 +168,22 @@ test('delete attachment is successful when the user confirms yes (before the fil
   ajax(ATTACHMENT_DELETE_URL, 'DELETE', null, {}, 204, {});
   click('.t-remove-attachment');
   andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    model = store.find('ticket', TD.idOne);
-    assert.equal(find(PROGRESS_BAR).length, 0);
-    assert.equal(store.find('attachment').get('length'), 0);
-    assert.equal(model.get('attachments').get('length'), 0);
+    waitFor(() => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(generalPage.deleteModalIsVisible);
+      assert.equal(find('.t-modal-delete-body').text().trim(), t('crud.delete.confirm'));
+    });
+  });
+  generalPage.clickModalDelete();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(generalPage.deleteModalIsHidden);
+      model = store.find('ticket', TD.idOne);
+      assert.equal(find(PROGRESS_BAR).length, 0);
+      assert.equal(store.find('attachment').get('length'), 0);
+      assert.equal(model.get('attachments').get('length'), 0);
+    });
   });
 });
 

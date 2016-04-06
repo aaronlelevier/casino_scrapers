@@ -200,7 +200,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   });
 });
 
-test('scott when click delete, modal displays and when click ok, ticket is deleted and removed from store', async assert => {
+test('when click delete, modal displays and when click ok, ticket is deleted and removed from store', async assert => {
   await page.visitDetail();
   await generalPage.delete();
   andThen(() => {

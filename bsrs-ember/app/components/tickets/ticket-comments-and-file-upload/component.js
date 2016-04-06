@@ -13,12 +13,14 @@ export default ChildValidationComponent.extend(ValidationMixin, {
   statusValidation: validate('model.status'),
   actions: {
     removeAttachment(attachment_id) {
-      let model = this.get('model');
-      let repository = this.get('repository');
-      if (window.confirm('Are you sure you want to delete this attachment?')) {
+      const model = this.get('model');
+      const repository = this.get('repository');
+      const callback = function() {
         model.remove_attachment(attachment_id);
         repository.remove(attachment_id);
-      }
+        Ember.$('.t-delete-modal').modal('hide');
+      };
+      this.sendAction('deleteAttachment', callback);
     },
     upload(e) {
       var repoUpload = (i, files) => {
