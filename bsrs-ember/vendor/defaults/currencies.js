@@ -10,7 +10,16 @@ var BSRS_CURRENCY_DEFAULTS_OBJECT = (function() {
             code: 'USD', 
             name_plural: 'US dollars',
             rounding: 0,
-            symbol_native: '$'
+            symbol_native: '$',
+            // Euro
+            idEuro: '2e92dc64-8646-4ef4-823f-407b5a3a2854',
+            symbolEuro: '€',
+            nameEuro: 'Euro',
+            decimal_digitsEuro: 2,
+            codeEuro: 'EUR', 
+            name_pluralEuro: 'Euros',
+            roundingEuro: 0,
+            symbol_nativeEuro: '€'
         };
     };
     return factory;

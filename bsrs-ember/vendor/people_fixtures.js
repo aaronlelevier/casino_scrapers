@@ -44,6 +44,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
             title : this.person_defaults.title,
             employee_id : this.person_defaults.employee_id,
             auth_amount : this.person_defaults.auth_amount,
+            auth_currency : this.person_defaults.auth_currency,
             status_fk : this.status_defaults.activeId,
             role: this.role_fixtures.get(),
             locations: [],
@@ -51,7 +52,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
             phone_numbers: [],
             phone_numbers: [],
             addresses: [],
-            locale: this.locale_defaults.idOne
+            locale: this.locale_defaults.idOne,
         }
     },
     factory.prototype.generate_single_for_list = function(i) {

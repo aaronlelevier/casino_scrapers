@@ -9,7 +9,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import GLOBAL from 'bsrs-ember/vendor/defaults/global-message';
-import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
+import CD from 'bsrs-ember/vendor/defaults/currencies';
 
 var store, email_types, default_email_type, phone_number_types, default_phone_number_type, address_types, default_address_type, trans, run = Ember.run;
 
@@ -22,7 +22,7 @@ moduleForComponent('person-single', 'integration: person-single test', {
         var json = translations.generate('en');
         loadTranslations(trans, json);
         run(function() {
-            store.push('currency', CURRENCY_DEFAULTS);
+            store.push('currency', {id:CD.id, symbol:CD.symbol, name:CD.name, decimal_digits:CD.decimal_digits, code:CD.code, name_plural:CD.name_plural, rounding:CD.rounding, symbol_native:CD.symbol_native});
         });
         let pn_types = [{ 'id': '2bff27c7-ca0c-463a-8e3b-6787dffbe7de', 'name': 'admin.phonenumbertype.office' },
         { 'id': '9416c657-6f96-434d-aaa6-0c867aff3270', 'name': 'admin.phonenumbertype.mobile' }];

@@ -13,6 +13,7 @@ import LOCALED from 'bsrs-ember/vendor/defaults/locale';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import ED from 'bsrs-ember/vendor/defaults/email';
 import EF from 'bsrs-ember/vendor/email_fixtures';
+import CD from 'bsrs-ember/vendor/defaults/currencies';
 import Person from 'bsrs-ember/models/person';
 import PersonDeserializer from 'bsrs-ember/deserializers/person';
 import LocationDeserializer from 'bsrs-ember/deserializers/location';
@@ -23,7 +24,7 @@ var store, personProxy, subject, personCurrent, uuid, location_deserializer, loc
 
 module('unit: person deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:random','model:uuid','model:person', 'model:person-list', 'model:role','model:person-location','model:location','model:location-level','model:email','model:phonenumber','model:address','model:address-type','service:person-current','service:translations-fetcher','service:i18n', 'model:status', 'model:person-status-list', 'model:location-status', 'model:locale']);
+        store = module_registry(this.container, this.registry, ['model:random','model:uuid','model:person', 'model:person-list', 'model:role', 'model:person-location','model:location','model:location-level','model:email','model:phonenumber','model:address','model:address-type','service:person-current','service:translations-fetcher','service:i18n', 'model:status', 'model:person-status-list', 'model:location-status', 'model:locale', 'model:currency']);
         uuid = this.container.lookup('model:uuid');
         location_level_deserializer = LocationLevelDeserializer.create({store: store});
         location_deserializer = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
@@ -335,3 +336,17 @@ test('person-location m2m added even when person did not exist before the deseri
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(store.find('person-location').get('length'), 1);
 });
+
+// TODO: Need to add Currency to Person Deserializer
+// test('currency - fk related model', assert => {
+//     store.clear('person');
+//     let currency = store.push('currency', {id:CD.id, symbol:CD.symbol, name:CD.name, decimal_digits:CD.decimal_digits, code:CD.code, name_plural:CD.name_plural, rounding:CD.rounding, symbol_native:CD.symbol_native});
+//     role = store.push('role', {id: RD.idOne, currency_fk: CD.id, people: [PD.id]});
+//     let response = PF.generate(PD.id);
+//     run(() => {
+//         subject.deserialize(response, PD.id);
+//     });
+//     let person = store.find('person', PD.id);
+//     assert.ok(person.get('currency'));
+// // assert.equal(currency.get('id'), person.get('currency').get('id'))
+// });
