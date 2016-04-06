@@ -213,15 +213,27 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     });
 });
 
-test('when click delete, location level is deleted and removed from store', (assert) => {
-    visit(DETAIL_URL);
-    xhr(endpoint_detail, 'DELETE', null, {}, 204, {});
-    generalPage.delete();
-    andThen(() => {
-        assert.equal(currentURL(), LOCATION_LEVEL_URL);
-        assert.equal(store.find('location-level', LLD.idOne).get('length'), undefined);
+/* jshint ignore:start */
+test('when click delete, modal displays and when click ok, location-level is deleted and removed from store', async assert => {
+  await visit(DETAIL_URL);
+  await generalPage.delete();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(generalPage.deleteModalIsVisible);
+      assert.equal(find('.t-modal-delete-body').text().trim(), t('crud.delete.confirm'));
     });
+  });
+  xhr(endpoint_detail, 'DELETE', null, {}, 204, {});
+  generalPage.clickModalDelete();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), LOCATION_LEVEL_URL);
+      assert.equal(store.find('location-level', LLD.idOne).get('length'), undefined);
+    });
+  });
 });
+/* jshint ignore:end */
 
 /* Children */
 test('can remove and add back children', (assert) => {

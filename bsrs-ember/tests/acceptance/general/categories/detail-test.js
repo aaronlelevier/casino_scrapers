@@ -161,15 +161,27 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
     });
 });
 
-test('when click delete, category is deleted and removed from store', (assert) => {
-    visit(DETAIL_URL);
-    xhr(PREFIX + BASE_URL + '/' + CD.idOne + '/', 'DELETE', null, {}, 204, {});
-    generalPage.delete();
-    andThen(() => {
-        assert.equal(currentURL(), CATEGORIES_URL);
-        assert.equal(store.find('category', CD.idOne).get('length'), undefined);
+/* jshint ignore:start */
+test('when click delete, modal displays and when click ok, category is deleted and removed from store', async assert => {
+  await page.visitDetail();
+  await generalPage.delete();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(generalPage.deleteModalIsVisible);
+      assert.equal(find('.t-modal-delete-body').text().trim(), t('crud.delete.confirm'));
     });
+  });
+  xhr(`${PREFIX}${BASE_URL}/${CD.idOne}/`, 'DELETE', null, {}, 204, {});
+  generalPage.clickModalDelete();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), CATEGORIES_URL);
+      assert.equal(store.find('category', CD.idOne).get('length'), undefined);
+    });
+  });
 });
+/* jshint ignore:end */
 
 test('validation works and when hit save, we do same post', (assert) => {
     visit(DETAIL_URL);

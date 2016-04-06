@@ -364,15 +364,27 @@ test('remove existing, cancel, modal - should be prompted when removing existing
   });
 });
 
-test('when click delete, dtd is deleted and removed from store', (assert) => {
-  page.visitDetail();
-  xhr(PREFIX + BASE_URL + '/' + DTD.idOne + '/', 'DELETE', null, {}, 204, {});
-  generalPage.delete();
+/* jshint ignore:start */
+test('when click delete, modal displays and when click ok, dtd is deleted and removed from store', async assert => {
+  await visit(DETAIL_URL);
+  await generalPage.delete();
   andThen(() => {
-    assert.equal(currentURL(), DTD_URL);
-    assert.equal(store.find('dtd', DTD.idOne).get('length'), undefined);
+    waitFor(() => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(generalPage.deleteModalIsVisible);
+      assert.equal(find('.t-modal-delete-body').text().trim(), t('crud.delete.confirm'));
+    });
+  });
+  xhr(`${PREFIX}${BASE_URL}/${DTD.idOne}/`, 'DELETE', null, {}, 204, {});
+  generalPage.clickModalDelete();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DTD_URL);
+      assert.equal(store.find('dtd', DTD.idOne).get('length'), undefined);
+    });
   });
 });
+/* jshint ignore:end */
 
 test('click add-link, and fill in', (assert) => {
   random.uuid = function() { return UUID.value; };

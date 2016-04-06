@@ -6,6 +6,8 @@ import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 const { Route, inject } = Ember;
 
 var ApplicationRoute = Ember.Route.extend({
+  deleteModal: false,
+  dirtyModal: false,
   repository: injectRepo('person'),
   RoleDeserializer: injectDeserializer('role'),
   LocationDeserializer: injectDeserializer('location'),
@@ -142,24 +144,23 @@ var ApplicationRoute = Ember.Route.extend({
         return this.transitionTo('error');
       }
     },
-    closeTabMaster(tab, closeTabAction=null){
+    closeTabMaster(tab, closeTabAction=null, deleteCB=null){
       /* Find model based on stored id in tab */
       const tab_id = tab.get('model_id') ? tab.get('model_id') : tab.get('id');
       let model = this.get('store').find(tab.get('module'), tab_id);
 
       /* Display modal if dirty */
-      if (model && model.get('isDirtyOrRelatedDirty')) {
-        Ember.$('.t-modal').modal('show');
+      if (model && model.get('isDirtyOrRelatedDirty') || closeTabAction === 'delete') {
+        !closeTabAction ? Ember.$('.t-modal').modal('show') : Ember.$('.t-delete-modal').modal('show');
         this.trx.attemptedTabModel = tab;
         this.trx.attemptedTransitionModel = model;
         this.trx.attemptedAction = 'closeTabMaster';
+        this.trx.deleteCB = deleteCB;
 
       } else {
 
         /* rollback if contact info */
-        if(model.get('content')){
-          model.rollback();
-        }
+        if(model.get('content')) { model.rollback(); }
         
         /* Hide modal if present and call transition callback defined in route */
         Ember.$('.t-modal').modal('hide');
@@ -177,7 +178,7 @@ var ApplicationRoute = Ember.Route.extend({
         /* Redirect if clicked x on tab...If new route, close tab and remove the model if in unsaved state */
         if(temp === tab_id || tab.get('newModel')){
           /* jshint ignore:start */
-          closeTabAction && tab.get('closeTabRedirect') ? this.transitionTo(tab.get('closeTabRedirect')) : this.transitionTo(tab.get('redirectRoute'));
+          closeTabAction === 'closeTab' && tab.get('closeTabRedirect') ? this.transitionTo(tab.get('closeTabRedirect')) : this.transitionTo(tab.get('redirectRoute'));
           /* jshint ignore:end */
           if (tab.get('newModel') && !tab.get('saveModel')) {
             this.get('tabList').closeTab(tab.get('id'));
@@ -196,10 +197,7 @@ var ApplicationRoute = Ember.Route.extend({
       }
     },
     delete(tab, callback, id){
-      callback().then(() => {
-        this.send('closeTabMaster', tab);
-      }).then(() => {
-      });
+      this.send('closeTabMaster', tab, 'delete', callback);
     }
   }
 });

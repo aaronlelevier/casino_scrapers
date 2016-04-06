@@ -195,15 +195,27 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     });
 });
 
-test('when click delete, role is deleted and removed from store', (assert) => {
-    visit(DETAIL_URL);
-    xhr(PREFIX + BASE_URL + '/' + RD.idOne + '/', 'DELETE', null, {}, 204, {});
-    generalPage.delete();
-    andThen(() => {
-        assert.equal(currentURL(), ROLE_URL);
-        assert.equal(store.find('role', RD.idOne).get('length'), undefined);
+/* jshint ignore:start */
+test('when click delete, modal displays and when click ok, role is deleted and removed from store', async assert => {
+  await visit(DETAIL_URL);
+  await generalPage.delete();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(generalPage.deleteModalIsVisible);
+      assert.equal(find('.t-modal-delete-body').text().trim(), t('crud.delete.confirm'));
     });
+  });
+  xhr(`${PREFIX}${BASE_URL}/${RD.idOne}/`, 'DELETE', null, {}, 204, {});
+  generalPage.clickModalDelete();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), ROLE_URL);
+      assert.equal(store.find('role', RD.idOne).get('length'), undefined);
+    });
+  });
 });
+/* jshint ignore:end */
 
 /*ROLE TO CATEGORY M2M*/
 test('clicking select for categories will fire off xhr request for all parent categories', (assert) => {

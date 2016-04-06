@@ -249,20 +249,27 @@ test('currency helper displays correct currency format', (assert) => {
     });
 });
 
-test('when click delete, person is deleted and removed from store', (assert) => {
-    clearxhr(list_xhr);
-    page.visitDetail();
-    xhr(PREFIX + BASE_PEOPLE_URL + '/' + PD.idOne + '/', 'DELETE', null, {}, 204, {});
-    var people_list_data = PF.list();
-    people_list_data.results.splice(0,1);
-    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
-    generalPage.delete();
-    andThen(() => { 
-        const people = store.find('person'); 
-        assert.equal(people.get('length'), 1);
-        assert.equal(currentURL(), PEOPLE_URL);
+/* jshint ignore:start */
+test('when click delete, modal displays and when click ok, person is deleted and removed from store', async assert => {
+  await page.visitDetail();
+  await generalPage.delete();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(generalPage.deleteModalIsVisible);
+      assert.equal(find('.t-modal-delete-body').text().trim(), t('crud.delete.confirm'));
     });
+  });
+  xhr(`${PREFIX}${BASE_PEOPLE_URL}/${PD.idOne}/`, 'DELETE', null, {}, 204, {});
+  generalPage.clickModalDelete();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(store.find('person', PD.idOne).get('length'), undefined);
+    });
+  });
 });
+/* jshint ignore:end */
 
 /* PHONE NUMBER AND ADDRESS AND EMAIL*/
 test('newly added email without a valid name are ignored and removed when user navigates away (no rollback prompt)', (assert) => {

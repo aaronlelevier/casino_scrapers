@@ -5,9 +5,8 @@ var ApplicationModalComponent = Ember.Component.extend({
   actions: {
     rollback_model() {
       let tab = this.trx.attemptedTabModel;
-      let transition = this.trx.attemptedTransition;
       let model = this.trx.attemptedTransitionModel;
-      let action = this.trx.attemptedAction;
+      let action = this.trx.attemptedAction; //closeTabMaster or parentAction (for new tab)
       model.rollback();
       this.sendAction(action, tab);
     },

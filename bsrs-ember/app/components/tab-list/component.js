@@ -7,7 +7,7 @@ var TabList = Ember.Component.extend({
       if(tab.get('model_id')){
         tab.set('transitionCB', undefined);
       }
-      this.sendAction('closeTabMaster', tab, 'closeTab');
+      this.sendAction('closeTabMaster', tab, 'closeTab');//3rd param: closeTabAction in app route
     }
   }
 });
