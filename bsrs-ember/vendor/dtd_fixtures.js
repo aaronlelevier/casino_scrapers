@@ -45,7 +45,8 @@ var BSRS_DTD_FACTORY = (function() {
           status_fk: this.link.statusOne,
           destination: {id: this.dtd.idTwo},
         }
-      ]
+      ],
+      attachments: []
     }
   };
   factory.prototype.generate_list = function(id, key) {

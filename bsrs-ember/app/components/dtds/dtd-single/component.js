@@ -5,6 +5,7 @@ import inject from 'bsrs-ember/utilities/inject';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 
 export default Ember.Component.extend(TabMixin, EditMixin, {
+  
   repository: inject('dtd'),
   attachmentRepository: inject('attachment'),
   uuid: injectUUID('uuid'),
@@ -29,6 +30,7 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
     },
     delete() {
       this._super(...arguments);
+      //Continue on w/ transition
       this.tab().set('transitionCB', undefined);
     },
     setLinkType(type){
@@ -53,6 +55,14 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
           repoUpload(i, files);
         }
       }
-    }
+    },
+    removeAttachment(attachment_id) {
+      const model = this.get('model');
+      const repository = this.get('attachmentRepository');
+      // if (window.confirm('Are you sure you want to delete this attachment?')) {
+        model.remove_attachment(attachment_id);
+        repository.remove(attachment_id);
+      // }
+    },
   }
 });

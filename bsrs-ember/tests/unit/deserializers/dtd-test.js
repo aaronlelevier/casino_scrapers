@@ -15,7 +15,7 @@ var store, subject, category, category_unused, dtd, dtd_link, priority, status, 
 
 module('unit: dtd deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-list', 'model:dtd-link', 'model:link', 'model:dtd-field', 'model:field', 'model:option', 'model:field-option', 'model:link-priority-list', 'model:ticket-priority', 'model:ticket-status', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-list', 'model:dtd-link', 'model:link', 'model:dtd-field', 'model:field', 'model:option', 'model:field-option', 'model:link-priority-list', 'model:ticket-priority', 'model:ticket-status', 'model:attachment', 'service:i18n']);
     subject = DTDDeserializer.create({store: store});
     run(() => {
       priority = store.push('ticket-priority', {id: TP.priorityOneId, name: TP.priorityOne});
@@ -289,4 +289,39 @@ test('dtd link that is dirty gets ignores destination from server', assert => {
   assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DTD.idTwo);
   assert.equal(dtd.get('links').objectAt(0).get('destination_fk'), DTD.idOne);
   assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+});
+
+//ATTACHMENT
+test('attachment added for each attachment on dtd', (assert) => {
+    let json = DTDF.generate(DTD.idOne);
+    json.attachments = [DTD.attachmentOneId];
+    run(() => {
+        subject.deserialize(json, json.id);
+    });
+    dtd = store.find('dtd', DTD.idOne);
+    let attachments = dtd.get('attachments');
+    assert.equal(attachments.get('length'), 1);
+    assert.equal(attachments.objectAt(0).get('id'), DTD.attachmentOneId);
+    assert.ok(dtd.get('isNotDirty'));
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(store.find('attachment').get('length'), 1);
+});
+
+test('attachment added for each attachment on dtd (when dtd has existing attachments)', (assert) => {
+    dtd = store.push('dtd', {id: DTD.idOne, dtd_attachments_fks: [DTD.attachmentTwoId], previous_attachments_fks: [DTD.attachmentTwoId]});
+    store.push('attachment', {id: DTD.attachmentTwoId});
+    assert.equal(dtd.get('attachments').get('length'), 1);
+    const json = DTDF.generate(DTD.idOne);
+    json.attachments = [DTD.attachmentTwoId, DTD.attachmentOneId];
+    run(function() {
+        subject.deserialize(json, json.id);
+    });
+    dtd = store.find('dtd', DTD.idOne);
+    const attachments = dtd.get('attachments');
+    assert.equal(attachments.get('length'), 2);
+    assert.equal(attachments.objectAt(0).get('id'), DTD.attachmentTwoId);
+    assert.equal(attachments.objectAt(1).get('id'), DTD.attachmentOneId);
+    assert.ok(dtd.get('isNotDirty'));
+    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(store.find('attachment').get('length'), 2);
 });

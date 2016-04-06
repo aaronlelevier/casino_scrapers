@@ -5,11 +5,18 @@ import { belongs_to_extract, belongs_to_extract_contacts } from 'bsrs-components
 import registerCB from 'bsrs-ember/utilities/registerCB';
 
 
+var extract_attachments = function(model, store) {
+  model.attachments.forEach((attachment_id) => {
+    store.push('attachment', {id: attachment_id});
+  });
+  return model.attachments;
+};
+
 var extract_destination = function(destination_json, store, link_model) {
-    let destination_id = destination_json.id;
-    if(link_model.get('destination.id') !== destination_id) {
-        link_model.change_destination(destination_json);
-    }
+  let destination_id = destination_json.id;
+  if(link_model.get('destination.id') !== destination_id) {
+    link_model.change_destination(destination_json);
+  }
 };
 
 var DTDDeserializer = Ember.Object.extend({
@@ -25,11 +32,17 @@ var DTDDeserializer = Ember.Object.extend({
     let existing = store.find('dtd', id);
     let return_dtd = existing;
     if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
+
+      // Prep and Attachments
+      response.dtd_attachments_fks = extract_attachments(response, store);
+      response.previous_attachments_fks = response.dtd_attachments_fks;
+      delete response.attachments;
       let link_json = response.links;
       delete response.links;
       let field_json = response.fields;
       delete response.fields;
       let dtd = store.push('dtd', response);
+
       // Links
       let [m2m_links, links, links_server_sum] = many_to_many_extract(link_json, store, dtd, 'dtd_links', 'dtd_pk', 'link', 'link_pk');
       m2m_links.forEach((m2m) => {
@@ -52,6 +65,7 @@ var DTDDeserializer = Ember.Object.extend({
         //   existing.change_destination(model.destination);
         // }
       });
+
       // Fields
       let [m2m_fields, fields, fields_server_sum] = many_to_many_extract(field_json, store, dtd, 'dtd_fields', 'dtd_pk', 'field', 'field_pk');
       m2m_fields.forEach((m2m) => {

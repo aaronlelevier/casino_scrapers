@@ -151,7 +151,9 @@ var ApplicationRoute = Ember.Route.extend({
 
       /* Display modal if dirty */
       if (model && model.get('isDirtyOrRelatedDirty') || closeTabAction === 'delete') {
+        /* jshint ignore:start */
         !closeTabAction ? Ember.$('.t-modal').modal('show') : Ember.$('.t-delete-modal').modal('show');
+        /* jshint ignore:end */
         this.trx.attemptedTabModel = tab;
         this.trx.attemptedTransitionModel = model;
         this.trx.attemptedAction = 'closeTabMaster';

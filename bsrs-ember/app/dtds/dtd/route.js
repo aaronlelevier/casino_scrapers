@@ -7,6 +7,7 @@ import FindById from 'bsrs-ember/mixins/route/findById2';
 
 export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
   repository: inject('dtd'),
+  attachmentRepository: inject('attachment'),
   i18n: Ember.inject.service(),
   redirectRoute: 'dtds',
   closeTabRedirect: 'admin',
@@ -14,6 +15,7 @@ export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
   displayText: Ember.computed(function() { return this.get('i18n').t('admin.dtd.one'); }),
   transitionCB() {
     //to prevent transitionTo in application route
+    this.get('attachmentRepository').removeAllUnrelated();
     return;
   },
   tabList: Ember.inject.service(),
