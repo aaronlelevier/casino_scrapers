@@ -249,6 +249,8 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         ticket_page.find_wait_and_assert_elem("t-ticket-request", ticket_request_two)
         self.gen_elem_page.click_dropdown_delete()
         self.gen_elem_page.click_delete_btn()
+        import time; time.sleep(1)
+        self.gen_elem_page.click_delete_yes()
         # check Ticket is deleted
         tickets = ticket_page.find_list_data()
         ticket_list_view = ticket_page.find_list_name()
