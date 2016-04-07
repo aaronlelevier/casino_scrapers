@@ -1,4 +1,5 @@
 import copy
+import json
 
 from rest_framework import serializers
 
@@ -6,6 +7,7 @@ from category.models import Category
 from category.serializers import CategoryIDNameOnlySerializer
 from decision_tree.models import TreeField, TreeOption, TreeLink, TreeData
 from generic.models import Attachment
+from generic.serializers import AttachmentSerializer
 from utils import create
 from utils.serializers import BaseCreateSerializer
 
@@ -64,8 +66,7 @@ class TreeLinkCreateUpdateSerializer(BaseCreateSerializer):
 
 class TreeDataDetailSerializer(BaseCreateSerializer):
 
-    attachments = serializers.PrimaryKeyRelatedField(
-        queryset=Attachment.objects.all(), many=True, required=False)
+    attachments = AttachmentSerializer(many=True, required=False)
     fields = TreeFieldSerializer(many=True, required=False)
     links = TreeLinkDetailSerializer(many=True, required=False)
 
@@ -194,3 +195,11 @@ class TreeDataCreateUpdateSerializer(BaseCreateSerializer):
         filters = {'dtd': instance}
         excludes = {'id__in': [x['id'] for x in links]}
         self.process_removes(TreeLink, filters, excludes)
+
+    def to_representation(self, obj):
+        data = super(TreeDataCreateUpdateSerializer, self).to_representation(obj)
+        data['attachments'] = Attachment.objects.filter(object_id=str(data['id'])).values('id', 'file', 'filename', 'image_thumbnail', 'image_medium', 'image_full')
+        return data
+
+
+

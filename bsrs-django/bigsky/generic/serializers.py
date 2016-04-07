@@ -13,4 +13,4 @@ class AttachmentSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Attachment
-        fields = ('id', 'filename', 'file',)
+        fields = ('id', 'filename', 'file', 'image_full', 'image_medium', 'image_thumbnail')

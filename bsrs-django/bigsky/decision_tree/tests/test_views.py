@@ -23,7 +23,8 @@ class TreeDataTestSetUpMixin(object):
         self.person = create_single_person()
         self.client.login(username=self.person.username, password=PASSWORD)
         # models
-        self.tree_data = create_tree_data()
+        self.attachment = create_attachments()
+        self.tree_data = create_tree_data(attachments=[self.attachment])
 
     def tearDown(self):
         self.client.logout()
@@ -45,7 +46,13 @@ class TreeDataDetailTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['description'], self.tree_data.description)
         self.assertEqual(data['note'], self.tree_data.note)
         self.assertEqual(data['note_type'], self.tree_data.note_type)
-        self.assertEqual(data['attachments'], [str(x.id) for x in self.tree_data.attachments.all()])
+        self.assertEqual(data['attachments'][0]['id'], str(self.attachment.id))
+        self.assertEqual(data['attachments'][0]['filename'], self.attachment.filename)
+        self.assertEqual(data['attachments'][0]['file'], 'http://testserver' + self.attachment.file.url)
+        self.assertEqual(data['attachments'][0]['filename'], self.attachment.filename)
+        self.assertEqual(data['attachments'][0]['image_medium'], self.attachment.image_medium)
+        self.assertEqual(data['attachments'][0]['image_thumbnail'], self.attachment.image_thumbnail)
+        self.assertEqual(data['attachments'][0]['image_full'], self.attachment.image_full)
         self.assertEqual(data['prompt'], self.tree_data.prompt)
         self.assertEqual(data['link_type'], self.tree_data.link_type)
         # Fields
@@ -122,6 +129,7 @@ class TreeDataListTests(TreeDataTestSetUpMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
 
+
 class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
 
     def test_create__not_related_fields_only(self):
@@ -129,9 +137,9 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         raw_data = copy.copy(serializer.data)
         new_id = str(uuid.uuid4())
         raw_data['id'] = new_id
+        raw_data['attachments'] = [obj['id'] for obj in raw_data['attachments']]
 
         response = self.client.post('/api/dtds/', raw_data, format='json')
-
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], raw_data['id'])
@@ -139,7 +147,13 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['description'], raw_data['description'])
         self.assertEqual(data['note'], raw_data['note'])
         self.assertEqual(data['note_type'], raw_data['note_type'])
-        self.assertEqual(data['attachments'], [])
+        self.assertEqual(data['attachments'][0]['id'], str(self.attachment.id))
+        self.assertEqual(data['attachments'][0]['filename'], self.attachment.filename)
+        # self.assertEqual(data['attachments'][0]['file'], self.attachment.file.url)
+        self.assertEqual(data['attachments'][0]['filename'], self.attachment.filename)
+        # self.assertEqual(data['attachments'][0]['image_medium'], self.attachment.image_medium)
+        # self.assertEqual(data['attachments'][0]['image_thumbnail'], self.attachment.image_thumbnail)
+        # self.assertEqual(data['attachments'][0]['image_full'], self.attachment.image_full)
         self.assertEqual(data['prompt'], raw_data['prompt'])
         self.assertEqual(data['link_type'], raw_data['link_type'])
 
@@ -149,15 +163,14 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         new_id = str(uuid.uuid4())
         new_attachment = create_attachments()
         raw_data['id'] = new_id
+        raw_data['attachments'] = [obj['id'] for obj in raw_data['attachments']]
         raw_data['attachments'].append(str(new_attachment.id))
-        self.assertEqual(self.tree_data.attachments.count(), 0)
-
+        self.assertEqual(self.tree_data.attachments.count(), 1)
         response = self.client.post('/api/dtds/', raw_data, format='json')
-
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data['attachments']), 1)
-        self.assertIn(str(new_attachment.id), data['attachments'])
+        self.assertEqual(len(data['attachments']), 2)
+        self.assertIn(str(new_attachment.id), data['attachments'][1]['id'])
 
     def test_create__and_create_field(self):
         serializer = TreeDataCreateUpdateSerializer(self.tree_data)
@@ -171,9 +184,8 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
             # 'options': [], # purposely left out b/c not a required field
             'required': True
         }]
-
+        raw_data['attachments'] = [obj['id'] for obj in raw_data['attachments']]
         response = self.client.post('/api/dtds/', raw_data, format='json')
-
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['fields']), 1)
@@ -188,6 +200,7 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         raw_data = copy.copy(serializer.data)
         new_id = str(uuid.uuid4())
         raw_data['id'] = new_id
+        raw_data['attachments'] = [obj['id'] for obj in raw_data['attachments']]
         raw_data['fields'] = [{
             'id': str(uuid.uuid4()),
             'label': random_lorem(),
@@ -200,9 +213,7 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
                 'order': 1
             }]
         }]
-
         response = self.client.post('/api/dtds/', raw_data, format='json')
-
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         # Field
@@ -228,6 +239,7 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         dtd = mommy.make(TreeData)
         destination = mommy.make(TreeData)
         raw_data['id'] = new_id
+        raw_data['attachments'] = [obj['id'] for obj in raw_data['attachments']]
         raw_data['links'] = [{
             'id': str(uuid.uuid4()),
             'order': 1,
@@ -241,9 +253,7 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
             # 'dtd':  # purposely left blank, will be the DTD being created here
             'destination': str(destination.id)
         }]
-
         response = self.client.post('/api/dtds/', raw_data, format='json')
-
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         # Field
@@ -282,6 +292,7 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         self.data['note_type'] = note_type
         self.data['prompt'] = prompt
         self.data['link_type'] = link_type
+        self.data['attachments'] = [obj['id'] for obj in self.data['attachments']]
 
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
 
@@ -296,31 +307,29 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
 
     def test_add_attachment(self):
         attachment = create_attachments()
-        self.data['attachments'] = [str(attachment.id)]
-
+        self.data['attachments'] = [obj['id'] for obj in self.data['attachments']]
+        self.data['attachments'].append(str(attachment.id))
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
-
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data['attachments']), 1)
-        self.assertEqual(data['attachments'][0], str(attachment.id))
+        self.assertEqual(len(data['attachments']), 2)
+        self.assertEqual(data['attachments'][1]['id'], str(attachment.id))
 
     def test_remove_attachment(self):
         attachment = create_attachments()
         attachment_two = create_attachments()
         self.tree_data.attachments.add(attachment)
         self.tree_data.attachments.add(attachment_two)
-        self.assertEqual(self.tree_data.attachments.count(), 2)
+        self.assertEqual(self.tree_data.attachments.count(), 3)
         self.data['attachments'] = [str(attachment.id)]
-
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
-
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['attachments']), 1)
-        self.assertEqual(data['attachments'][0], str(attachment.id))
+        self.assertEqual(data['attachments'][0]['id'], str(attachment.id))
 
     def test_add_field_no_options(self):
+        self.data['attachments'] = [obj['id'] for obj in self.data['attachments']]
         self.data['fields'] = [{
             'id': str(uuid.uuid4()),
             'label': random_lorem(),
@@ -343,6 +352,7 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['fields'][0]['options'], [])
 
     def test_add_field_and_options(self):
+        self.data['attachments'] = [obj['id'] for obj in self.data['attachments']]
         self.data['fields'] = [{
             'id': str(uuid.uuid4()),
             'label': random_lorem(),
@@ -375,9 +385,8 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
     
     def test_update_existing_field(self):
         self.data['fields'][0]['label'] = random_lorem()
-
+        self.data['attachments'] = [obj['id'] for obj in self.data['attachments']]
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
-
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['fields'][0]['label'], self.data['fields'][0]['label'])
@@ -385,14 +394,14 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
     def test_remove_fields(self):
         self.assertEqual(len(self.data['fields']), 1)
         self.data['fields'] = []
-
+        self.data['attachments'] = [obj['id'] for obj in self.data['attachments']]
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
-
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['fields']), 0)
 
     def test_add_option(self):
+        self.data['attachments'] = [obj['id'] for obj in self.data['attachments']]
         self.assertEqual(len(self.data['fields']), 1)
         self.data['fields'][0]['options'] = [{
             'id': str(uuid.uuid4()),
@@ -413,6 +422,7 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
     def test_remove_option(self):
         self.assertEqual(len(self.data['fields']), 1)
         self.assertEqual(len(self.data['fields'][0]['options']), 2)
+        self.data['attachments'] = [obj['id'] for obj in self.data['attachments']]
         self.data['fields'][0]['options'] = []
 
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
@@ -430,6 +440,7 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
             'text': random_lorem(),
             'order': 3
         })
+        self.data['attachments'] = [obj['id'] for obj in self.data['attachments']]
 
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
 
@@ -458,9 +469,9 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
             # 'dtd':  # purposely left blank, will be the DTD being created here
             'destination': str(destination.id)
         }]
+        self.data['attachments'] = [obj['id'] for obj in self.data['attachments']]
 
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
-
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['links']), 1)
@@ -480,6 +491,7 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
     def test_update_existing_link__first_level_key(self):
         self.assertEqual(len(self.data['links']), 1)
         self.data['links'][0]['text'] = random_lorem()
+        self.data['attachments'] = [obj['id'] for obj in self.data['attachments']]
 
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
 
@@ -493,6 +505,7 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         category = create_single_category()
         self.assertEqual(len( self.data['links'][0]['categories']), 1)
         self.data['links'][0]['categories'] = [str(category.id)]
+        self.data['attachments'] = [obj['id'] for obj in self.data['attachments']]
 
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
 
@@ -513,6 +526,7 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
             'status': str(status.id),
             'destination': str(destination.id)
         })
+        self.data['attachments'] = [obj['id'] for obj in self.data['attachments']]
 
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
 
@@ -525,6 +539,7 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
 
     def test_remove_link(self):
         self.data['links'] = []
+        self.data['attachments'] = [obj['id'] for obj in self.data['attachments']]
 
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
 
