@@ -410,3 +410,22 @@ test('when multiple tabs are open only attachments associated with the rollback 
 // show the BELOW in another test (with one saved/ one not saved -nav away, the back to detail)
 // assert.equal(find(PROGRESS_BAR).length, 1);
 // assert.equal(find('.t-remove-attachment').length, 0);
+
+/* jshint ignore:start */
+test('uploading error shows error message', async assert => {
+  const model = store.find('ticket', TD.idOne);
+  ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
+  await page.visitDetail();
+  assert.equal(find(PROGRESS_BAR).length, 0);
+  assert.equal(store.find('attachment').get('length'), 0);
+  assert.equal(model.get('attachments').get('length'), 0);
+  assert.equal(model.get('isDirty'), false);
+  assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
+  const exception = `File failed to upload`;
+  const image = {name: 'foo.png', type: 'image/png', size: 234000};
+  ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 404, {'detail': exception});
+  await uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
+  assert.equal(store.find('attachment').get('length'), 0);
+  assert.equal(find('.t-ticket-attachment-error').text(), t('attachment.fail'));
+});
+/* jshint ignore:end */

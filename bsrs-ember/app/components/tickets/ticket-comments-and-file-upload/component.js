@@ -11,6 +11,10 @@ export default ChildValidationComponent.extend(ValidationMixin, {
   repository: inject('attachment'),
   priorityValidation: validate('model.priority'),
   statusValidation: validate('model.status'),
+  error: Ember.inject.service(),
+  attachmentErrMsg: Ember.computed('error.message.ticket-comments-and-file-upload.msg', function() {
+    return this.get('error').getMsg('ticket-comments-and-file-upload');
+  }),
   actions: {
     removeAttachment(attachment_id) {
       const model = this.get('model');
@@ -30,6 +34,8 @@ export default ChildValidationComponent.extend(ValidationMixin, {
         let repository = this.get('repository');
         repository.upload(id, files[i], model).then(() => {
           model.get('attachments').findBy('id', id).set('percent', 100);
+        }).catch(() => {
+          this.get('error').logErr('attachment.fail', 'ticket-comments-and-file-upload');
         });
       };
       let files = e.target.files;

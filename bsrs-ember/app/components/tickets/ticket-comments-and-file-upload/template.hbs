@@ -25,6 +25,9 @@
     </div>
   </div>
   <div class="row">
+    {{#if attachmentErrMsg}}
+      <h2 class="t-ticket-attachment-error">{{t attachmentErrMsg}}</h2>
+    {{/if}}
     {{#each model.attachments as |attachment|}}
     {{#if attachment.new}}
     <div class="col-md-12 progress-wrap">
