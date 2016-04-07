@@ -16,13 +16,9 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
     save(update=true) {
       if (this.get('model.validations.isValid')) {
         const newModel = this.get('model').get('new');
-        //send up action to controller/route and call refresh
-        //send off xhr right here
         this._super(update);
         if(newModel){
           this.sendAction('editDTD');
-        }else{
-          this.attrs.refreshRoute();
         }
       } else {
         this.get('model').set('saved', true);

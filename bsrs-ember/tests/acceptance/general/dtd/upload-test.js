@@ -44,7 +44,7 @@ module('Acceptance | dtd file upload test', {
 });
 
 /* jshint ignore:start */
-test('upload will post form data, show progress bar and on save append the attachment to detail and preview', async assert => {
+test('scott upload will post form data, show progress bar and on save append the attachment to detail and preview', async assert => {
   const model = store.find('dtd', DTD.idOne);
   const image = {name: 'foo.png', type: 'image/png', size: 234000};
   await page.visitDetail();
@@ -61,30 +61,26 @@ test('upload will post form data, show progress bar and on save append the attac
   assert.equal(model.get('attachments').get('length'), 1);
   assert.equal(model.get('isDirty'), false);
   assert.ok(model.get('isDirtyOrRelatedDirty'));
-  ajax(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload_with_attachment), {}, 200, DTDF.detail(DTD.idOne));
-  andThen(() => {
-    const detail_with_attachment = DTDF.detail(DTD.idOne);
-    detail_with_attachment.attachments = [{id: UUID.value, filename: 'wat.jpg', file: 'attachments/images/full/wat.jpg', image_full: 'attachments/images/full/wat.jpg', image_thumbnail: 'attachments/images/thumbnail/wat.jpg', 
-      image_medium: 'attachments/images/medium/wat.jpg'}];
-    ajax(`${PREFIX}${BASE_URL}/${DTD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
-    clearxhr(detail_xhr);
-    generalPage.save();
-    andThen(() => {
-      assert.equal(currentURL(), DETAIL_URL);
-      assert.equal(store.find('attachment').get('length'), 1);
-      assert.equal(model.get('attachments').get('length'), 1);
-      assert.equal(model.get('isDirty'), false);
-      assert.ok(model.get('attachmentsIsNotDirty'));
-      assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/attachments/images/full/wat.jpg`);
-      assert.equal(find('.t-ticket-attachment-add-remove:eq(0) .t-ext-jpg').length, 1);
-      assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').text().trim(), 'wat.jpg');
-      assert.equal(find('.t-attachment-add-remove:eq(0)').text().trim(), 'wat.jpg');
-      assert.equal(find('.t-dtd-preview-attachment > a').text().trim(), 'wat.jpg');
-      assert.equal(find('.t-dtd-preview-attachment > a').attr('href'), `/media/attachments/images/full/wat.jpg`);
-      assert.equal(find('.t-dtd-preview-attachment .t-ext-jpg').length, 1);
-      assert.equal(find('.t-dtd-preview-attachment > a').text().trim(), 'wat.jpg');
-    });
-  });
+  const detail_with_attachment = DTDF.detail(DTD.idOne);
+  detail_with_attachment.attachments = [{id: UUID.value, filename: 'wat.jpg', file: 'attachments/images/full/wat.jpg', image_full: 'attachments/images/full/wat.jpg', image_thumbnail: 'attachments/images/thumbnail/wat.jpg', 
+    image_medium: 'attachments/images/medium/wat.jpg'}];
+  ajax(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload_with_attachment), {}, 200, detail_with_attachment);
+  clearxhr(detail_xhr);
+  await generalPage.save();
+  assert.equal(currentURL(), DETAIL_URL);
+  assert.equal(store.find('attachment').get('length'), 1);
+  assert.equal(model.get('attachments').get('length'), 1);
+  assert.equal(model.get('isDirty'), false);
+  assert.ok(model.get('attachmentsIsNotDirty'));
+  assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/attachments/images/full/wat.jpg`);
+  assert.equal(find('.t-ticket-attachment-add-remove:eq(0) .t-ext-jpg').length, 1);
+  assert.ok(find('.t-ticket-attachment-add-remove:eq(0) .t-ext-jpg > img').attr('src'));
+  assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').text().trim(), 'wat.jpg');
+  assert.equal(find('.t-attachment-add-remove:eq(0)').text().trim(), 'wat.jpg');
+  assert.equal(find('.t-dtd-preview-attachment > a').text().trim(), 'wat.jpg');
+  assert.equal(find('.t-dtd-preview-attachment > a').attr('href'), `/media/attachments/images/full/wat.jpg`);
+  assert.equal(find('.t-dtd-preview-attachment .t-ext-jpg').length, 1);
+  assert.equal(find('.t-dtd-preview-attachment > a').text().trim(), 'wat.jpg');
 });
 
 test('uploading a file, then rolling back should throw out previously associated attachments', async assert => {
