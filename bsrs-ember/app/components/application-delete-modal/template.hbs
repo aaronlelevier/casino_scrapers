@@ -6,7 +6,7 @@
         <h4 class="modal-title">{{t 'crud.delete.title'}}</h4>
       </div>
       <div class="modal-body t-modal-delete-body">
-        <p>{{t 'crud.delete.confirm'}}</p>
+        <p>{{t 'crud.delete.confirm' model=displayName}}</p>
       </div>
       <div class="modal-footer t-modal-delete-footer">
         <button type="button" class="btn btn-default t-modal-cancel-btn" {{action "cancel_modal"}}>{{t 'crud.no'}}</button>

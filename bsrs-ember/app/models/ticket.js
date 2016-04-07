@@ -16,6 +16,7 @@ const { run } = Ember;
 
 var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocationMixin, {
   store: inject('main'),
+  displayName: 'modules.tickets.titleShort',
   number: attr(''),
   request: attr(''),
   requester: attr(''),
