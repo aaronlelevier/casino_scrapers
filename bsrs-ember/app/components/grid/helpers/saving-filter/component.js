@@ -36,6 +36,7 @@ var SavingFilterComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind,
         this.set('logMsg', '');
       }, (xhr) => {
         if (xhr.status === 400) {
+          //TODO: put into translations
           this.set('logMsg', 'This saved filter name is already taken');
         }
       });

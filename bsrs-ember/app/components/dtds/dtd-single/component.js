@@ -5,9 +5,13 @@ import inject from 'bsrs-ember/utilities/inject';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 
 export default Ember.Component.extend(TabMixin, EditMixin, {
+  error: Ember.inject.service(),
   repository: inject('dtd'),
   attachmentRepository: inject('attachment'),
   uuid: injectUUID('uuid'),
+  attachmentErrMsg: Ember.computed('error.message.dtd-single.msg', function() {
+    return this.get('error').getMsg('dtd-single');
+  }),
   tab() {
     let service = this.get('tabList');
     return service.findTab('dtd123');
@@ -46,6 +50,8 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
         const repository = this.get('attachmentRepository');
         repository.upload(id, files[i], model).then(() => {
           model.get('attachments').findBy('id', id).set('percent', 100);
+        }).catch(() => {
+          this.get('error').logErr('attachment.fail', 'dtd-single');
         });
       };
       const files = e.target.files;

@@ -25,7 +25,7 @@ const ATTACHMENT_DELETE_URL = `${PREFIX}/admin/attachments/${UUID.value}/`;
 const ADMIN_URL = BASEURLS.base_admin_url;
 const PROGRESS_BAR = '.progress-bar';
 
-let application, store, original_uuid, detail_xhr, list_xhr, endpoint;
+let application, store, original_uuid, detail_xhr, list_xhr, endpoint, model;
 
 module('Acceptance | dtd file upload test', {
   beforeEach() {
@@ -36,6 +36,7 @@ module('Acceptance | dtd file upload test', {
     detail_xhr = xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 200, DTDF.detail(DTD.idOne));
     original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
+    model = store.find('dtd', DTD.idOne);
   },
   afterEach() {
     random.uuid = original_uuid;
@@ -44,8 +45,7 @@ module('Acceptance | dtd file upload test', {
 });
 
 /* jshint ignore:start */
-test('scott upload will post form data, show progress bar and on save append the attachment to detail and preview', async assert => {
-  const model = store.find('dtd', DTD.idOne);
+test('upload will post form data, show progress bar and on save append the attachment to detail and preview', async assert => {
   const image = {name: 'foo.png', type: 'image/png', size: 234000};
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
@@ -84,7 +84,6 @@ test('scott upload will post form data, show progress bar and on save append the
 });
 
 test('uploading a file, then rolling back should throw out previously associated attachments', async assert => {
-  const model = store.find('dtd', DTD.idOne);
   const image = {name: 'foo.png', type: 'image/png', size: 234000};
   await page.visitDetail();
   ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
@@ -115,7 +114,6 @@ test('previously attached files do not show up after file upload', async assert 
   clearxhr(detail_xhr);
   const detail_with_attachment = DTDF.detail(DTD.idOne);
   detail_with_attachment.attachments = [{id: DTD.attachmentOneId}];
-  const model = store.find('dtd', DTD.idOne);
   const image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${PREFIX}${BASE_URL}/${DTD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
   await page.visitDetail();
@@ -134,7 +132,6 @@ test('previously attached files do not show up after file upload', async assert 
 });
 
 test('delete attachment is successful when the user confirms yes (before the file is associated with a dtd)', (assert) => {
-  let model = store.find('dtd', DTD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   page.visitDetail();
   andThen(() => {
@@ -174,7 +171,6 @@ test('delete attachment is successful when the user confirms yes (before the fil
 });
 
 test('user cannot see progress bar for uploaded attachment that is associated with a dtd (after save)', async assert => {
-  let model = store.find('dtd', DTD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   await page.visitDetail();
   ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
@@ -190,7 +186,6 @@ test('user cannot see progress bar for uploaded attachment that is associated wi
 });
 
 test('file upload supports multiple attachments', async assert => {
-  let model = store.find('dtd', DTD.idOne);
   let one = {name: 'one.png', type: 'image/png', size: 234000};
   let two = {name: 'two.png', type: 'image/png', size: 124000};
   await page.visitDetail();
@@ -219,7 +214,6 @@ test('rolling back should only remove files not yet associated with a given dtd'
   clearxhr(detail_xhr);
   let detail_with_attachment = DTDF.detail(DTD.idOne);
   detail_with_attachment.attachments = [{id: DTD.attachmentOneId}];
-  let model = store.find('dtd', DTD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${PREFIX}${BASE_URL}/${DTD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
   await page.visitDetail();
@@ -254,14 +248,19 @@ test('rolling back should only remove files not yet associated with a given dtd'
   assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-// test('uploading 400 shows error message', async assert => {
-//   await page.visitDetail();
-//   assert.equal(find(PROGRESS_BAR).length, 0);
-//   assert.equal(store.find('attachment').get('length'), 1);
-//   assert.equal(model.get('attachments').get('length'), 1);
-//   assert.equal(model.get('isDirty'), false);
-//   assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
-//   ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 404, {'detail': exception});
-//   await uploadFile('dtds/dtd-single', 'upload', image, model);
-// });
+test('uploading error shows error message', async assert => {
+  await page.visitDetail();
+  assert.equal(find(PROGRESS_BAR).length, 0);
+  assert.equal(store.find('attachment').get('length'), 0);
+  assert.equal(model.get('attachments').get('length'), 0);
+  assert.equal(model.get('isDirty'), false);
+  assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
+  const exception = `File failed to upload`;
+  const image = {name: 'foo.png', type: 'image/png', size: 234000};
+  ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 404, {'detail': exception});
+  await uploadFile('dtds/dtd-single', 'upload', image, model);
+  assert.equal(store.find('attachment').get('length'), 0);
+  assert.equal(find('.t-dtd-attachment-error').text(), t('attachment.fail'));
+});
+
 /* jshint ignore:end */

@@ -34,10 +34,19 @@ var AttachmentRepo = Ember.Object.extend({
       });
     }
   },
-  didProgress(e, id){
-    let store = this.get('store');
-    let attachment = store.find('attachment', id);
+  didProgress(e, id) {
+    const attachment = this.get('store').find('attachment', id);
     attachment.set('percent', Math.round(e.loaded / e.total * 100));
+  },
+  /*
+   * didError removes attachment from store
+   */
+  didError(xhr, status, errorMsg, id) {
+    // xhr.then = null;
+    const store = this.get('store');
+    run(() => {
+      const attachment = store.remove('attachment', id);
+    });
   },
   upload(id, file, model) {
     let self = this;
@@ -66,13 +75,15 @@ var AttachmentRepo = Ember.Object.extend({
         return xhr;
       },
     };
-    return new Ember.RSVP.Promise(function(resolve, reject) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
       options.success = function(json) {
         return Ember.run(null, resolve, json);
       };
+      options.error = (xhr, errorThrown) => {
+        return Ember.run(null, reject, this.didError(xhr, xhr.status, xhr.responseJSON, id));
+      };
       Ember.$.ajax(options);
     });
-    //TODO: err handling
   }
 });
 

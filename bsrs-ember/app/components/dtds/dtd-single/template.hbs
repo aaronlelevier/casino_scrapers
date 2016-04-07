@@ -73,6 +73,9 @@
               <div class="attach">
                 <span class="btn btn-default btn-file">{{fa-icon 'paperclip'}} {{t "button.upload"}}<input type="file" multiple="multiple" onchange={{action "upload"}}></span>
               </div>
+              {{#if attachmentErrMsg}}
+                <h2 class="t-dtd-attachment-error">{{t attachmentErrMsg}}</h2>
+              {{/if}}
               {{#each model.attachments as |attachment|}}
               {{#if attachment.new}}
               <div class="col-md-12 progress-wrap">
