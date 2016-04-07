@@ -270,6 +270,28 @@ test('when click delete, modal displays and when click ok, person is deleted and
     });
   });
 });
+
+test('when click delete, and click no modal disappears', async assert => {
+  clearxhr(list_xhr);
+  await page.visitDetail();
+  await generalPage.delete();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.equal(store.find('person').get('length'), 2);
+      assert.ok(generalPage.deleteModalIsVisible);
+      assert.equal(find('.t-modal-delete-body').text().trim(), t('crud.delete.confirm'));
+    });
+  });
+  generalPage.clickModalCancelDelete();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.equal(store.find('person').get('length'), 2);
+      assert.ok(generalPage.deleteModalIsHidden);
+    });
+  });
+});
 /* jshint ignore:end */
 
 /* PHONE NUMBER AND ADDRESS AND EMAIL*/

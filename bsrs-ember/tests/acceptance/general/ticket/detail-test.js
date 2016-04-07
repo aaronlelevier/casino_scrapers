@@ -221,6 +221,28 @@ test('when click delete, modal displays and when click ok, ticket is deleted and
   });
 });
 
+test('when click delete, and click no modal disappears', async assert => {
+  clearxhr(list_xhr);
+  await page.visitDetail();
+  await generalPage.delete();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.equal(store.find('ticket').get('length'), 1);
+      assert.ok(generalPage.deleteModalIsVisible);
+      assert.equal(find('.t-modal-delete-body').text().trim(), t('crud.delete.confirm'));
+    });
+  });
+  generalPage.clickModalCancelDelete();
+  andThen(() => {
+    waitFor(() => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.equal(store.find('ticket').get('length'), 1);
+      assert.ok(generalPage.deleteModalIsHidden);
+    });
+  });
+});
+
 test('visiting detail should set the category even when it has no children', async assert => {
   clearxhr(list_xhr);
   clearxhr(detail_xhr);

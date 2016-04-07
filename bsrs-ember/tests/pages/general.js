@@ -13,6 +13,7 @@ var GeneralPage = PageObject.create({
   clickModalCancel: clickable('.t-modal-footer .t-modal-cancel-btn'),
   clickModalRollback: clickable('.t-modal-footer .t-modal-rollback-btn'),
   clickModalDelete: clickable('.t-modal-delete-footer .t-modal-delete-btn'),
+  clickModalCancelDelete: clickable('.t-modal-delete-footer .t-modal-cancel-btn'),
   modalIsVisible: PageObject.isVisible('.t-modal'),
   modalIsHidden: PageObject.isHidden('.t-modal'),
   deleteModalIsVisible: PageObject.isVisible('.t-delete-modal'),
