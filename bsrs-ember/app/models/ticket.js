@@ -9,13 +9,22 @@ import CcMixin from 'bsrs-ember/mixins/model/ticket/cc';
 import CategoriesMixin from 'bsrs-ember/mixins/model/ticket/category';
 import TicketLocationMixin from 'bsrs-ember/mixins/model/ticket/location';
 import NewMixin from 'bsrs-ember/mixins/model/new';
-import { belongs_to, change_belongs_to_fk, change_belongs_to_full, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
+import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
+import { belongs_to, change_belongs_to_fk } from 'bsrs-components/attr/belongs-to';
 import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
 
 const { run } = Ember;
 
-var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocationMixin, {
+var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocationMixin, OptConf, {
+  init() {
+    belongs_to.bind(this)('status', 'ticket');
+    belongs_to.bind(this)('priority', 'ticket');
+    belongs_to.bind(this)('assignee', 'ticket', {'change_func':true, 'rollback':true});
+    belongs_to.bind(this)('location', 'ticket', {'bootstrapped':false,'change_func':true});
+    this._super(...arguments);
+  },
   store: inject('main'),
+  //TODO: test this.  Plan on using for delete modal
   displayName: 'modules.tickets.titleShort',
   number: attr(''),
   request: attr(''),
@@ -34,12 +43,13 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
   categoriesIsNotDirty: Ember.computed.not('categoriesIsDirty'),
   ccIsDirty: many_to_many_dirty('ticket_cc_ids', 'ticket_people_fks'),
   ccIsNotDirty: Ember.computed.not('ccIsDirty'),
-  assignee: Ember.computed.alias('belongs_to_assignee.firstObject'),
-  belongs_to_assignee: belongs_to('assigned_tickets', 'person'),
-  priority: Ember.computed.alias('belongs_to_priority.firstObject'),
-  belongs_to_priority: belongs_to('tickets', 'ticket-priority'),
-  status: Ember.computed.alias('belongs_to.firstObject'),
-  belongs_to: belongs_to('tickets', 'ticket-status'),
+  // assignee: Ember.computed.alias('belongs_to_assignee.firstObject'),
+  // belongs_to_assignee: belongs_to('assigned_tickets', 'person'),
+  // priority: Ember.computed.alias('belongs_to_priority.firstObject'),
+  // belongs_to_priority: belongs_to('tickets', 'ticket-priority'),
+  // status: Ember.computed.alias('belongs_to.firstObject'),
+  // belongs_to: belongs_to('tickets', 'ticket-status'),
+  
   /*start-non-standard*/ @computed('status') /*end-non-standard*/
   status_class(status){
     const name = this.get('status.name');
@@ -49,8 +59,8 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
     const name = this.get('priority.name');
     return name ? name.replace(/\./g, '-') : '';
   }),
-  rollbackStatus: belongs_to_rollback('status_fk', 'status', 'change_status'),
-  rollbackPriority: belongs_to_rollback('priority_fk', 'priority', 'change_priority'),
+  // rollbackStatus: belongs_to_rollback('status_fk', 'status', 'change_status'),
+  // rollbackPriority: belongs_to_rollback('priority_fk', 'priority', 'change_priority'),
   rollbackAssignee() {
     const assignee = this.get('assignee');
     const assignee_fk = this.get('assignee_fk');
@@ -69,9 +79,9 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
       this.add_attachment(id);
     });
   },
-  saveStatus: belongs_to_save('ticket', 'status', 'status_fk'),
-  savePriority: belongs_to_save('ticket', 'priority', 'priority_fk'),
-  saveAssignee: belongs_to_save('ticket', 'assignee', 'assignee_fk'),
+  // saveStatus: belongs_to_save('ticket', 'status', 'status_fk'),
+  // savePriority: belongs_to_save('ticket', 'priority', 'priority_fk'),
+  // saveAssignee: belongs_to_save('ticket', 'assignee', 'assignee_fk'),
   saveAttachments() {
     const store = this.get('store');
     const ticket_pk = this.get('id');
@@ -83,10 +93,10 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
       attachment.save();
     });
   },
-  statusIsDirty: belongs_to_dirty('status_fk', 'status'),
-  priorityIsDirty: belongs_to_dirty('priority_fk', 'priority'),
-  assigneeIsDirty: belongs_to_dirty('assignee_fk', 'assignee'),
-  locationIsDirty: belongs_to_dirty('location_fk', 'location'),
+  // statusIsDirty: belongs_to_dirty('status_fk', 'status'),
+  // priorityIsDirty: belongs_to_dirty('priority_fk', 'priority'),
+  // assigneeIsDirty: belongs_to_dirty('assignee_fk', 'assignee'),
+  // locationIsDirty: belongs_to_dirty('location_fk', 'location'),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'locationIsDirty', 'attachmentsIsDirty', function() {
     return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('statusIsDirty') || this.get('priorityIsDirty') || this.get('ccIsDirty') || this.get('categoriesIsDirty') || this.get('locationIsDirty') || this.get('attachmentsIsDirty');
   }),
@@ -120,13 +130,13 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
     pushed_person.change_status(person_json.status_fk);
     return pushed_person;
   },
-  change_assignee_container: change_belongs_to_fk('assigned_tickets', 'person', 'assignee'),
+  change_assignee_container: change_belongs_to_fk('assignee'),
   change_assignee(new_assignee) {
     this.person_status_role_setup(new_assignee);
     this.change_assignee_container(new_assignee.id);
   },
-  change_priority: change_belongs_to_fk('tickets', 'ticket-priority', 'priority'),
-  change_status: change_belongs_to_fk('tickets', 'ticket-status', 'status'),
+  // change_priority: change_belongs_to_fk('tickets', 'ticket-priority', 'priority'),
+  // change_status: change_belongs_to_fk('tickets', 'ticket-status', 'status'),
   attachmentsIsNotDirty: Ember.computed.not('attachmentsIsDirty'),
   attachmentsIsDirty: Ember.computed('attachment_ids.[]', 'previous_attachments_fks.[]', function() {
     const attachment_ids = this.get('attachment_ids') || [];
