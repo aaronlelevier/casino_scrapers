@@ -9,7 +9,7 @@ const { run } = Ember;
 
 var ThirdPartyModel = Model.extend(NewMixin, OptConf, {
   init() {
-    belongs_to.bind(this)('status', 'third-party');
+    belongs_to.bind(this)('status', 'third-party', {'dirty':true});
     this._super(...arguments);
   },
   type: 'third-party',
@@ -21,6 +21,13 @@ var ThirdPartyModel = Model.extend(NewMixin, OptConf, {
     return this.get('isDirty') || this.get('statusIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+  statusIsDirty: Ember.computed('status', 'status_fk', function() {
+      let status = this.get('status');
+      let status_fk = this.get('status_fk');
+      if (typeof status === 'object') {
+          return status.get('id') === status_fk ? false : true;
+      }
+  }),
   // saveStatus: belongs_to_save('third-party', 'status', 'status_fk'),
   saveRelated() {
     this.saveStatus();

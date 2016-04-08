@@ -13,21 +13,20 @@ module('unit: third-party deserializer test', {
         store = module_registry(this.container, this.registry, ['model:third-party', 'model:third-party-list', 'model:status', 'model:general-status-list', 'service:i18n']);
         subject = ThirdPartyDeserializer.create({store: store});
         run(() => {
-            status = store.push('status', {id: SD.activeId, name: SD.activeName});
+            status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [TPD.idOne]});
         });
     }
 });
 
-test('third_party setup correct status fk with bootstrapped data (detail)', (assert) => {
+test('scott third_party setup correct status fk with bootstrapped data (detail)', (assert) => {
     let response = TPF.generate(TPD.idOne);
-    third_party = store.push('third-party', {id: TPD.idOne});
-    status = store.push('status', {id: SD.activeId, name: SD.activeName});
+    third_party = store.push('third-party', {id: TPD.idOne, status_fk: SD.activeId});
+    assert.equal(third_party.get('status').get('id'), status.get('id'));
     run(() => {
         subject.deserialize(response, TPD.idOne);
     });
     assert.equal(third_party.get('status_fk'), status.get('id'));
     assert.equal(third_party.get('status').get('id'), status.get('id'));
-    //TODO: need to generalize status mixin
     assert.deepEqual(status.get('people'), [TPD.idOne]);
     assert.ok(third_party.get('isNotDirty'));
 });
