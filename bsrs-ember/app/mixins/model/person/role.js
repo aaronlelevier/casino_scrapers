@@ -4,8 +4,6 @@ import { change_belongs_to_fk } from 'bsrs-components/attr/belongs-to';
 const { run } = Ember;
 
 var RoleMixin = Ember.Mixin.create({
-  // role: Ember.computed.alias('belongs_to.firstObject'),
-  // belongs_to: belongs_to('people', 'role'),
   change_role(new_role) {
     const old_role = this.get('role');
     const store = this.get('store');
@@ -57,9 +55,6 @@ var RoleMixin = Ember.Mixin.create({
       }
     });
   },
-  // roleIsDirty: belongs_to_dirty('role_fk', 'role'),
-  // roleIsNotDirty: Ember.computed.not('roleIsDirty'),
-  // saveRole: belongs_to_save('person', 'role', 'role_fk'),
   rollbackRole() {
     const role_fk = this.get('role_fk');
     this.rollbackChangeRole(role_fk);

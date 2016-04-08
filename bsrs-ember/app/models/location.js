@@ -10,7 +10,6 @@ import AddressMixin from 'bsrs-ember/mixins/model/address';
 import CopyMixin from 'bsrs-ember/mixins/model/copy';
 import ChildrenMixin from 'bsrs-ember/mixins/model/location/children';
 import ParentMixin from 'bsrs-ember/mixins/model/location/parent';
-// import StatusMixin from 'bsrs-ember/mixins/model/location/status';
 import LocationLevelMixin from 'bsrs-ember/mixins/model/location/location-level';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
@@ -32,10 +31,6 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin
   email_fks: [],
   phone_number_fks: [],
   address_fks: [],
-  // locationLevelIsDirty: belongs_to_dirty('location_level_fk', 'location_level'),
-  // locationLevelIsNotDirty: Ember.computed.not('locationLevelIsDirty'),
-  // statusIsDirty: belongs_to_dirty('status_fk', 'status'),
-  // statusIsNotDirty: Ember.computed.not('statusIsDirty'),
   childrenIsDirty: many_to_many_dirty('location_children_ids', 'location_children_fks'),
   childrenIsNotDirty: Ember.computed.not('childrenIsDirty'),
   parentsIsDirty: many_to_many_dirty('location_parents_ids', 'location_parents_fks'),

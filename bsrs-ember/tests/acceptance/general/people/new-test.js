@@ -162,6 +162,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     visit(NEW_URL);
     andThen(() => {
         const person = store.find('person', UUID.value);
+        assert.equal(person.get('status_fk'), undefined);
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
     fillIn('.t-person-username', PD.username);

@@ -18,7 +18,7 @@ module('unit: third-party deserializer test', {
     }
 });
 
-test('scott third_party setup correct status fk with bootstrapped data (detail)', (assert) => {
+test('third_party setup correct status fk with bootstrapped data (detail)', (assert) => {
     let response = TPF.generate(TPD.idOne);
     third_party = store.push('third-party', {id: TPD.idOne, status_fk: SD.activeId});
     assert.equal(third_party.get('status').get('id'), status.get('id'));

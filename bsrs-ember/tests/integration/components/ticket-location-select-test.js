@@ -34,7 +34,11 @@ moduleForComponent('ticket-location-select', 'integration: ticket-location-selec
         });
         location_repo = repository.initialize(this.container, this.registry, 'location');
         location_repo.findTicket = function() {
-            return store.find('location');
+          return [
+            {id: LD.idOne, name: LD.storeName},
+            {id: LD.idTwo, name: LD.storeNameTwo},
+            {id: LD.unusedId, name: LD.storeNameThree}
+          ];
         };
     }
 });

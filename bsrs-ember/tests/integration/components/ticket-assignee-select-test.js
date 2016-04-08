@@ -28,7 +28,11 @@ moduleForComponent('ticket-assignee-select', 'integration: ticket-assignee-selec
     });
     person_repo = repository.initialize(this.container, this.registry, 'person');
     person_repo.findTicketAssignee = function() {
-      return store.find('person');
+      return [
+        {id: PD.idOne, fullname: PD.nameOne + ' ' + PD.lastNameOne, username: PD.usernameOne, title: PD.titleOne},
+        {id: PD.idTwo, fullname: PD.nameTwo + ' ' + PD.lastNameTwo, username: PD.usernameTwo, title: PD.titleTwo},
+        {id: PD.unusedId, fullname: PD.nameThree + ' ' + PD.lastNameThree, username: PD.usernameThree, title: PD.titleThree}
+      ];
     };
   }
 });

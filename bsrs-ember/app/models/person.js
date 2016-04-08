@@ -2,13 +2,13 @@ import Ember from 'ember';
 const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
+import injectRepo from 'bsrs-ember/utilities/inject';
 import CopyMixin from 'bsrs-ember/mixins/model/copy';
 import EmailMixin from 'bsrs-ember/mixins/model/email';
 import PhoneNumberMixin from 'bsrs-ember/mixins/model/phone_number';
 import AddressMixin from 'bsrs-ember/mixins/model/address';
 import RoleMixin from 'bsrs-ember/mixins/model/person/role';
 import LocationMixin from 'bsrs-ember/mixins/model/person/location';
-// import StatusMixin from 'bsrs-ember/mixins/model/status';
 import LocaleMixin from 'bsrs-ember/mixins/model/person/locale';
 import config from 'bsrs-ember/config/environment';
 import NewMixin from 'bsrs-ember/mixins/model/new';
@@ -24,11 +24,12 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
   init() {
     belongs_to.bind(this)('status', 'person');
     belongs_to.bind(this)('role', 'person', {'change_func': true, 'rollback': true});
-    belongs_to.bind(this)('locale', 'person');
+    belongs_to.bind(this)('locale', 'person', {'change_func':true});
     this._super(...arguments);
   },
   type: 'person',
   store: inject('main'),
+  status_repo: injectRepo('status'),
   username: attr(''),
   password: attr(''),
   first_name: attr(''),
@@ -39,7 +40,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
   auth_amount: attr(''),
   locale_fk: undefined,
   role_fk: undefined,
-  status_fk: '',
+  status_fk: undefined,
   phone_number_fks: [],
   address_fks: [],
   email_fks: [],
@@ -74,7 +75,6 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
   clearPassword() {
     this.set('password', '');
   },
-  // saveStatus: belongs_to_save('person', 'status', 'status_fk'),
   saveRelated() {
     this.saveEmails();
     this.savePhoneNumbers();
@@ -97,12 +97,14 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
     this._super();
   },
   createSerialize() {
+    const status_repo = this.get('status_repo');
+    const status_fk = status_repo.get_default().get('id');
     return {
       id: this.get('id'),
       username: this.get('username'),
       password: this.get('password'),
       role: this.get('role').get('id'),
-      status: this.get('status_fk')
+      status: this.get('status_fk') || status_fk,
     };
   },
   serialize() {

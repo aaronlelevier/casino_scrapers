@@ -4,8 +4,6 @@ import { change_belongs_to_full } from 'bsrs-components/attr/belongs-to';
 
 
 var TicketLocationMixin = Ember.Mixin.create({
-    // location: Ember.computed.alias('belongs_to_location.firstObject'),
-    // belongs_to_location: belongs_to('tickets', 'location'),
     remove_location() {
         let ticket_id = this.get('id');
         let store = this.get('store');
@@ -39,8 +37,6 @@ var TicketLocationMixin = Ember.Mixin.create({
         }
     },
     change_location_container: change_belongs_to_full('location'),//pass owning model when grabbing from add on directly
-    // saveLocation: belongs_to_save('ticket', 'location', 'location_fk'),
-    // rollbackLocation: belongs_to_rollback_simple('location_fk', 'location', 'change_location'),
 });
 
 export default TicketLocationMixin;

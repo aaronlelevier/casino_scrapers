@@ -43,13 +43,6 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
   categoriesIsNotDirty: Ember.computed.not('categoriesIsDirty'),
   ccIsDirty: many_to_many_dirty('ticket_cc_ids', 'ticket_people_fks'),
   ccIsNotDirty: Ember.computed.not('ccIsDirty'),
-  // assignee: Ember.computed.alias('belongs_to_assignee.firstObject'),
-  // belongs_to_assignee: belongs_to('assigned_tickets', 'person'),
-  // priority: Ember.computed.alias('belongs_to_priority.firstObject'),
-  // belongs_to_priority: belongs_to('tickets', 'ticket-priority'),
-  // status: Ember.computed.alias('belongs_to.firstObject'),
-  // belongs_to: belongs_to('tickets', 'ticket-status'),
-  
   /*start-non-standard*/ @computed('status') /*end-non-standard*/
   status_class(status){
     const name = this.get('status.name');
@@ -59,8 +52,6 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
     const name = this.get('priority.name');
     return name ? name.replace(/\./g, '-') : '';
   }),
-  // rollbackStatus: belongs_to_rollback('status_fk', 'status', 'change_status'),
-  // rollbackPriority: belongs_to_rollback('priority_fk', 'priority', 'change_priority'),
   rollbackAssignee() {
     const assignee = this.get('assignee');
     const assignee_fk = this.get('assignee_fk');
@@ -79,9 +70,6 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
       this.add_attachment(id);
     });
   },
-  // saveStatus: belongs_to_save('ticket', 'status', 'status_fk'),
-  // savePriority: belongs_to_save('ticket', 'priority', 'priority_fk'),
-  // saveAssignee: belongs_to_save('ticket', 'assignee', 'assignee_fk'),
   saveAttachments() {
     const store = this.get('store');
     const ticket_pk = this.get('id');
@@ -93,10 +81,6 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
       attachment.save();
     });
   },
-  // statusIsDirty: belongs_to_dirty('status_fk', 'status'),
-  // priorityIsDirty: belongs_to_dirty('priority_fk', 'priority'),
-  // assigneeIsDirty: belongs_to_dirty('assignee_fk', 'assignee'),
-  // locationIsDirty: belongs_to_dirty('location_fk', 'location'),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'locationIsDirty', 'attachmentsIsDirty', function() {
     return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('statusIsDirty') || this.get('priorityIsDirty') || this.get('ccIsDirty') || this.get('categoriesIsDirty') || this.get('locationIsDirty') || this.get('attachmentsIsDirty');
   }),
@@ -135,8 +119,6 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
     this.person_status_role_setup(new_assignee);
     this.change_assignee_container(new_assignee.id);
   },
-  // change_priority: change_belongs_to_fk('tickets', 'ticket-priority', 'priority'),
-  // change_status: change_belongs_to_fk('tickets', 'ticket-status', 'status'),
   attachmentsIsNotDirty: Ember.computed.not('attachmentsIsDirty'),
   attachmentsIsDirty: Ember.computed('attachment_ids.[]', 'previous_attachments_fks.[]', function() {
     const attachment_ids = this.get('attachment_ids') || [];

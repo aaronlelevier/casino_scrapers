@@ -29,10 +29,8 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
     }).objectAt(0);
     const people = role.get('people') || [];
     let person;
-    const status_repo = this.get('status_repo');
-    const status_fk = status_repo.get_default().get('id');
     run(() => {
-      person = store.push('person', {id: pk, new: true, new_pk: new_pk, status_fk: status_fk, role_fk: role.get('id')});
+      person = store.push('person', {id: pk, new: true, new_pk: new_pk, role_fk: role.get('id')});
       store.push('role', {id: role.get('id'), people: people.concat(person.get('id'))});
     });
     return person;
