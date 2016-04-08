@@ -1,13 +1,17 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
-import StatusMixin from 'bsrs-ember/mixins/model/status';
 import NewMixin from 'bsrs-ember/mixins/model/new';
-import { belongs_to_save } from 'bsrs-components/attr/belongs-to';
+import { belongs_to } from 'bsrs-components/attr/belongs-to';
+import OptConf from 'bsrs-ember/mixins/optconfigure/third-party';
 
 const { run } = Ember;
 
-var ThirdPartyModel = Model.extend(NewMixin, StatusMixin, {
+var ThirdPartyModel = Model.extend(NewMixin, OptConf, {
+  init() {
+    belongs_to.bind(this)('status', 'third-party');
+    this._super(...arguments);
+  },
   type: 'third-party',
   store: inject('main'),
   name: attr(),
@@ -17,7 +21,7 @@ var ThirdPartyModel = Model.extend(NewMixin, StatusMixin, {
     return this.get('isDirty') || this.get('statusIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-  saveStatus: belongs_to_save('third-party', 'status', 'status_fk'),
+  // saveStatus: belongs_to_save('third-party', 'status', 'status_fk'),
   saveRelated() {
     this.saveStatus();
   },
