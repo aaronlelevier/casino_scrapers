@@ -4,15 +4,15 @@ export default Ember.Mixin.create({
   OPT_CONF: {
     status: {
       collection: 'people',
-      related_model: 'status',
+      property: 'status',
     },
     role: {
       collection: 'people',
-      related_model: 'role',
+      property: 'role',
     },
     locale: {
       collection: 'people',
-      related_model: 'locale',
+      property: 'locale',
     }
   },
 });

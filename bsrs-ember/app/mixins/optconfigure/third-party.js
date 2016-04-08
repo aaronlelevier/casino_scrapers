@@ -4,7 +4,7 @@ export default Ember.Mixin.create({
   OPT_CONF: {
     status: {
       collection: 'people',
-      related_model: 'status',
+      property: 'status',
     },
   },
 });
