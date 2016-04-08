@@ -101,6 +101,7 @@ test('rollback person will set locale to current locale_fk', (assert) => {
     assert.ok(person.get('localeIsDirty')); 
     person.rollback();
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty')); 
+    assert.ok(person.get('roleIsNotDirty')); 
     assert.ok(!person.get('localeIsDirty')); 
     assert.ok(person.get('locationsIsNotDirty')); 
     assert.equal(person.get('locale.id'), LOCALED.idOne); 

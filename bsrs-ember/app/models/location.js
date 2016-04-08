@@ -10,13 +10,19 @@ import AddressMixin from 'bsrs-ember/mixins/model/address';
 import CopyMixin from 'bsrs-ember/mixins/model/copy';
 import ChildrenMixin from 'bsrs-ember/mixins/model/location/children';
 import ParentMixin from 'bsrs-ember/mixins/model/location/parent';
-import StatusMixin from 'bsrs-ember/mixins/model/location/status';
+// import StatusMixin from 'bsrs-ember/mixins/model/location/status';
 import LocationLevelMixin from 'bsrs-ember/mixins/model/location/location-level';
-import { belongs_to, change_belongs_to_fk, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
+import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
+import OptConf from 'bsrs-ember/mixins/optconfigure/location';
 
 
-var LocationModel = Model.extend(CopyMixin, NewMixin, StatusMixin, ParentMixin, ChildrenMixin, LocationLevelMixin, AddressMixin, PhoneNumberMixin, EmailMixin, {
+var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin, LocationLevelMixin, AddressMixin, PhoneNumberMixin, EmailMixin, OptConf, {
+  init() {
+    belongs_to.bind(this)('status', 'location');
+    belongs_to.bind(this)('location_level', 'location', {'change_func': true});
+    this._super(...arguments);
+  },
   store: inject('main'),
   name: attr(''),
   number: attr(''),
@@ -26,10 +32,10 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, StatusMixin, ParentMixin, 
   email_fks: [],
   phone_number_fks: [],
   address_fks: [],
-  locationLevelIsDirty: belongs_to_dirty('location_level_fk', 'location_level'),
-  locationLevelIsNotDirty: Ember.computed.not('locationLevelIsDirty'),
-  statusIsDirty: belongs_to_dirty('status_fk', 'status'),
-  statusIsNotDirty: Ember.computed.not('statusIsDirty'),
+  // locationLevelIsDirty: belongs_to_dirty('location_level_fk', 'location_level'),
+  // locationLevelIsNotDirty: Ember.computed.not('locationLevelIsDirty'),
+  // statusIsDirty: belongs_to_dirty('status_fk', 'status'),
+  // statusIsNotDirty: Ember.computed.not('statusIsDirty'),
   childrenIsDirty: many_to_many_dirty('location_children_ids', 'location_children_fks'),
   childrenIsNotDirty: Ember.computed.not('childrenIsDirty'),
   parentsIsDirty: many_to_many_dirty('location_parents_ids', 'location_parents_fks'),

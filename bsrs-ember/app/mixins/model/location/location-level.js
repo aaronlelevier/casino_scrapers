@@ -1,11 +1,11 @@
 import Ember from 'ember';
-import { belongs_to, change_belongs_to_fk, belongs_to_dirty, belongs_to_rollback, belongs_to_save } from 'bsrs-components/attr/belongs-to';
+import { change_belongs_to_fk } from 'bsrs-components/attr/belongs-to';
 
 const { run } = Ember;
 
 var LocationLevelMixin = Ember.Mixin.create({
-    location_level: Ember.computed.alias('location_levels.firstObject'),
-    location_levels: belongs_to('locations', 'location-level'),
+    // location_level: Ember.computed.alias('location_levels.firstObject'),
+    // location_levels: belongs_to('locations', 'location-level'),
     top_location_level: Ember.computed(function() {
         const filter = (llevel) => {
             return llevel.get('parents').get('length') === 0;
@@ -39,9 +39,12 @@ var LocationLevelMixin = Ember.Mixin.create({
         this.remove_children_parents();
         this.change_location_level_container(llevel_id); 
     },
-    change_location_level_container: change_belongs_to_fk('locations', 'location-level', 'location_level'),
-    saveLocationLevel: belongs_to_save('location', 'location_level', 'location_level_fk'),
-    rollbackLocationLevel: belongs_to_rollback('location_level_fk', 'location_level', 'change_location_level'),
+    change_location_level_container: change_belongs_to_fk('location_level'),
+    // change_location_level_container(llevel_id) {
+    //   this.change_belongs_to_fk(llevel_id);
+    // }
+    // saveLocationLevel: belongs_to_save('location', 'location_level', 'location_level_fk'),
+    // rollbackLocationLevel: belongs_to_rollback('location_level_fk', 'location_level', 'change_location_level'),
 });
 
 export default LocationLevelMixin;

@@ -8,18 +8,25 @@ import PhoneNumberMixin from 'bsrs-ember/mixins/model/phone_number';
 import AddressMixin from 'bsrs-ember/mixins/model/address';
 import RoleMixin from 'bsrs-ember/mixins/model/person/role';
 import LocationMixin from 'bsrs-ember/mixins/model/person/location';
-import StatusMixin from 'bsrs-ember/mixins/model/status';
+// import StatusMixin from 'bsrs-ember/mixins/model/status';
 import LocaleMixin from 'bsrs-ember/mixins/model/person/locale';
 import config from 'bsrs-ember/config/environment';
 import NewMixin from 'bsrs-ember/mixins/model/new';
-import { belongs_to_save } from 'bsrs-components/attr/belongs-to';
+import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import { validator, buildValidations } from 'ember-cp-validations';
+import OptConf from 'bsrs-ember/mixins/optconfigure/person';
 
 const Validations = buildValidations({
   username: validator('unique-username')
 });
 
-var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, StatusMixin, LocaleMixin, NewMixin, {
+var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin, LocationMixin, NewMixin, OptConf, RoleMixin, LocaleMixin, {
+  init() {
+    belongs_to.bind(this)('status', 'person');
+    belongs_to.bind(this)('role', 'person', {'change_func': true, 'rollback': true});
+    belongs_to.bind(this)('locale', 'person');
+    this._super(...arguments);
+  },
   type: 'person',
   store: inject('main'),
   username: attr(''),
@@ -67,7 +74,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
   clearPassword() {
     this.set('password', '');
   },
-  saveStatus: belongs_to_save('person', 'status', 'status_fk'),
+  // saveStatus: belongs_to_save('person', 'status', 'status_fk'),
   saveRelated() {
     this.saveEmails();
     this.savePhoneNumbers();
