@@ -11,6 +11,14 @@ export default Ember.Mixin.create({
       collection: 'locations',
       property: 'location-level',
     },
+    children: {
+      associated_model: 'location',
+      join_model: 'location-children'
+    },
+    parents: {
+      associated_model: 'location',
+      join_model: 'location-parents'
+    }
   },
 });
 

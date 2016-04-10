@@ -8,10 +8,10 @@ var CCMixin = Ember.Mixin.create({
     cc: many_models('ticket_cc', 'person_pk', 'person'),
     ticket_cc_ids: many_to_many_ids('ticket_cc'),
     ticket_cc: many_to_many('ticket-person', 'ticket_pk'),
-    add_person: add_many_to_many('ticket-person', 'person', 'person_pk', 'ticket_pk'),
-    remove_person: remove_many_to_many('ticket-person', 'person_pk', 'ticket_cc'),
-    rollbackCC: many_to_many_rollback('ticket-person', 'ticket_people_fks', 'ticket_pk'),
-    saveCC: many_to_many_save('ticket', 'ticket_cc', 'ticket_cc_ids', 'ticket_people_fks'),
+    add_cc: add_many_to_many('ticket-person', 'person', 'person_pk', 'ticket_pk'),
+    remove_cc: remove_many_to_many('ticket-person', 'person_pk', 'ticket_cc'),
+    rollbackCc: many_to_many_rollback('ticket-person', 'ticket_cc_fks', 'ticket_pk'),
+    saveCc: many_to_many_save('ticket', 'ticket_cc', 'ticket_cc_ids', 'ticket_cc_fks'),
 });
 
 export default CCMixin;

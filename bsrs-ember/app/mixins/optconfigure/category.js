@@ -17,32 +17,10 @@ import Ember from 'ember';
  */
 export default Ember.Mixin.create({
   OPT_CONF: {
-    status: {
-      collection: 'tickets',
-      property: 'ticket-status',
-      related_model: 'status',
-    },
-    priority: {
-      collection: 'tickets',
-      property: 'ticket-priority',
-      related_model: 'priority',
-    },
-    assignee: {
-      collection: 'assigned_tickets',
-      property: 'person',
-      related_model: 'assignee',
-    },
-    location: {
-      collection: 'tickets',
-      property: 'location',
-    },
-    cc: {
-      associated_model: 'person',
-      join_model: 'ticket-person'
-    },
-    categories: {
+    children: {
       associated_model: 'category',
-      join_model: 'model-category'
+      join_model: 'category-children'
     }
   },
 });
+

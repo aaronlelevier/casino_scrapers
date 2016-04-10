@@ -19,9 +19,9 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status', 'model:model-category']);
         translation.initialize(this);
         run(function() {
-            m2m = store.push('model-category', {id: TICKET_CD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
-            m2m_two = store.push('model-category', {id: TICKET_CD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
-            m2m_three = store.push('model-category', {id: TICKET_CD.idThree, model_pk: TD.idOne, category_pk: CD.unusedId});
+            m2m = store.push('model-category', {id: TICKET_CD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
+            m2m_two = store.push('model-category', {id: TICKET_CD.idTwo, ticket_pk: TD.idOne, category_pk: CD.idTwo});
+            m2m_three = store.push('model-category', {id: TICKET_CD.idThree, ticket_pk: TD.idOne, category_pk: CD.unusedId});
             category_one = store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo});
             category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId});
             category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: null});

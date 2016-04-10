@@ -13,6 +13,7 @@ import LocaleMixin from 'bsrs-ember/mixins/model/person/locale';
 import config from 'bsrs-ember/config/environment';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
+import { many_to_many } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/person';
 
@@ -25,6 +26,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
     belongs_to.bind(this)('status', 'person');
     belongs_to.bind(this)('role', 'person', {'change_func': true, 'rollback': true});
     belongs_to.bind(this)('locale', 'person', {'change_func':true});
+    many_to_many.bind(this)('location', 'person', {'plural':true});
     this._super(...arguments);
   },
   type: 'person',

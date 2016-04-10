@@ -5,22 +5,23 @@ import inject from 'bsrs-ember/utilities/store';
 import computed from 'ember-computed-decorators';
 //end-non-standard
 import equal from 'bsrs-ember/utilities/equal';
-import CcMixin from 'bsrs-ember/mixins/model/ticket/cc';
 import CategoriesMixin from 'bsrs-ember/mixins/model/ticket/category';
 import TicketLocationMixin from 'bsrs-ember/mixins/model/ticket/location';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
 import { belongs_to, change_belongs_to_fk } from 'bsrs-components/attr/belongs-to';
-import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
+import { many_to_many } from 'bsrs-components/attr/many-to-many';
 
 const { run } = Ember;
 
-var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocationMixin, OptConf, {
+var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, OptConf, {
   init() {
     belongs_to.bind(this)('status', 'ticket');
     belongs_to.bind(this)('priority', 'ticket');
     belongs_to.bind(this)('assignee', 'ticket', {'change_func':true, 'rollback':true});
     belongs_to.bind(this)('location', 'ticket', {'bootstrapped':false,'change_func':true});
+    many_to_many.bind(this)('cc', 'ticket');
+    many_to_many.bind(this)('category', 'ticket', {plural:true, add_func:true});
     this._super(...arguments);
   },
   store: inject('main'),
@@ -31,18 +32,18 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
   requester: attr(''),
   comment: attr(''),
   //TODO: these need to be in an init function
-  ticket_people_fks: [],
-  model_categories_fks: [],
+  ticket_cc_fks: [],
+  ticket_categories_fks: [],
   previous_attachments_fks: [],
   ticket_attachments_fks: [],
   status_fk: undefined,
   priority_fk: undefined,
   location_fk: undefined,
   assignee_fk: undefined,
-  categoriesIsDirty: many_to_many_dirty('model_categories_ids', 'model_categories_fks'),
-  categoriesIsNotDirty: Ember.computed.not('categoriesIsDirty'),
-  ccIsDirty: many_to_many_dirty('ticket_cc_ids', 'ticket_people_fks'),
-  ccIsNotDirty: Ember.computed.not('ccIsDirty'),
+  // categoriesIsDirty: many_to_many_dirty('ticket_categories_ids', 'ticket_categories_fks'),
+  // categoriesIsNotDirty: Ember.computed.not('categoriesIsDirty'),
+  // ccIsDirty: many_to_many_dirty('ticket_cc_ids', 'ticket_cc_fks'),
+  // ccIsNotDirty: Ember.computed.not('ccIsDirty'),
   /*start-non-standard*/ @computed('status') /*end-non-standard*/
   status_class(status){
     const name = this.get('status.name');
@@ -201,7 +202,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
     this.rollbackStatus();
     this.rollbackPriority();
     this.rollbackLocation();
-    this.rollbackCC();
+    this.rollbackCc();
     this.rollbackCategories();
     this.rollbackAssignee();
     this.rollbackAttachments();
@@ -210,7 +211,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
   saveRelated() {
     this.saveStatus();
     this.savePriority();
-    this.saveCC();
+    this.saveCc();
     this.saveAssignee();
     this.saveAttachments();
     this.saveCategories();

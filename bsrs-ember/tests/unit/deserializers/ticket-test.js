@@ -476,7 +476,7 @@ test('ticket-person m2m is set up correctly using deserialize single (starting w
 
 test('ticket-status m2m is added after deserialize single (starting with existing m2m relationship)', (assert) => {
     let m2m, person;
-    ticket.set('ticket_people_fks', [TICKET_PERSON_DEFAULTS.idOne]);
+    ticket.set('ticket_cc_fks', [TICKET_PERSON_DEFAULTS.idOne]);
     ticket.save();
     m2m = store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
     person = store.push('person', {id: PD.id, fullname: PD.fullname});
@@ -500,7 +500,7 @@ test('ticket-status m2m is added after deserialize single (starting with existin
 
 test('ticket-person m2m is removed when server payload no longer reflects what server has for m2m relationship', (assert) => {
     let m2m, person;
-    ticket.set('ticket_people_fks', [TICKET_PERSON_DEFAULTS.idOne]);
+    ticket.set('ticket_cc_fks', [TICKET_PERSON_DEFAULTS.idOne]);
     ticket.save();
     m2m = store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
     person = store.push('person', {id: PD.id, name: PD.fullname});
@@ -576,9 +576,9 @@ test('model-category m2m is set up correctly using deserialize single (starting 
     });
     let original = store.find('ticket', TD.idOne);
     categories = original.get('sorted_categories');
-    let m2m_categories = original.get('model_categories');
-    let m2m_fks = original.get('model_categories_fks');
-    let m2m_ids = original.get('model_categories_ids');
+    let m2m_categories = original.get('ticket_categories');
+    let m2m_fks = original.get('ticket_categories_fks');
+    let m2m_ids = original.get('ticket_categories_ids');
     assert.equal(categories.get('length'), 3);
     assert.equal(m2m_categories.get('length'), 3);
     assert.equal(m2m_fks.get('length'), 3);
@@ -622,9 +622,9 @@ test('model-category m2m is set up correctly using deserialize single (starting 
 
 test('ticket-status m2m is added after deserialize single (starting with existing m2m relationship)', (assert) => {
     let m2m, category;
-    ticket.set('model_categories_fks', [TICKET_CD.idOne]);
+    ticket.set('ticket_categories_fks', [TICKET_CD.idOne]);
     ticket.save();
-    m2m = store.push('model-category', {id: TICKET_CD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
+    m2m = store.push('model-category', {id: TICKET_CD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
     category = store.push('category', {id: CD.idOne, name: CD.nameOne});
     assert.equal(ticket.get('categories.length'), 1);
     let response = TF.generate(TD.idOne);
@@ -642,16 +642,16 @@ test('ticket-status m2m is added after deserialize single (starting with existin
     original = store.find('ticket', TD.idOne);
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(original.get('categoriesIsNotDirty'));
-    assert.equal(original.get('model_categories_fks').length, 3);
-    assert.equal(original.get('model_categories_ids').length, 3);
+    assert.equal(original.get('ticket_categories_fks').length, 3);
+    assert.equal(original.get('ticket_categories_ids').length, 3);
     assert.equal(store.find('model-category').get('length'), 3);
 });
 
 test('ticket-status m2m is added after deserialize list (starting with existing m2m relationship)', (assert) => {
     let m2m, category;
-    ticket.set('model_categories_fks', [TICKET_CD.idOne]);
+    ticket.set('ticket_categories_fks', [TICKET_CD.idOne]);
     ticket.save();
-    m2m = store.push('model-category', {id: TICKET_CD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
+    m2m = store.push('model-category', {id: TICKET_CD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
     category = store.push('category', {id: CD.idOne, name: CD.nameOne});
     assert.equal(ticket.get('categories.length'), 1);
     let json = TF.generate_list(TD.idOne);
@@ -668,9 +668,9 @@ test('ticket-status m2m is added after deserialize list (starting with existing 
 
 test('model-category m2m is removed when server payload no longer reflects what server has for m2m relationship', (assert) => {
     let m2m, category;
-    ticket.set('model_categories_fks', [TICKET_CD.idThree]);
+    ticket.set('ticket_categories_fks', [TICKET_CD.idThree]);
     ticket.save();
-    const m2m_unused = store.push('model-category', {id: TICKET_CD.idThree, model_pk: TD.idOne, category_pk: CD.unusedId});
+    const m2m_unused = store.push('model-category', {id: TICKET_CD.idThree, ticket_pk: TD.idOne, category_pk: CD.unusedId});
     category = store.push('category', {id: CD.idOne, name: CD.nameOne});
     store.push('category', {id: CD.unusedId, name: CD.nameUnused});
     assert.equal(ticket.get('categories').get('length'), 1);
@@ -694,7 +694,7 @@ test('model-category m2m is removed when server payload no longer reflects what 
 
 // test('model-category m2m is removed when server payload no longer reflects what server has for m2m relationship (list)', (assert) => {
 //     let m2m, category;
-//     ticket.set('model_categories_fks', [TICKET_CD.idOne]);
+//     ticket.set('ticket_categories_fks', [TICKET_CD.idOne]);
 //     ticket.save();
 //     m2m = store.push('model-category', {id: TICKET_CD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
 //     category = store.push('category', {id: CD.idOne, name: CD.nameOne});

@@ -13,6 +13,10 @@ export default Ember.Mixin.create({
     locale: {
       collection: 'people',
       property: 'locale',
+    },
+    locations: {
+      associated_model: 'location',
+      join_model: 'person-location'
     }
   },
 });

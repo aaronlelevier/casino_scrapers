@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
 import { many_to_many_extract } from 'bsrs-components/repository/many-to-many';
 
 const { run } = Ember;
@@ -12,8 +11,8 @@ var CategoriesMixin = Ember.Mixin.create({
     }).join(' &#8226; ');
     return Ember.String.htmlSafe(names);
   }),
-  model_categories_no_filter: Ember.computed(function() {
-    return this.get('store').find('model-category').filterBy('model_pk', this.get('id'));
+  ticket_categories_no_filter: Ember.computed(function() {
+    return this.get('store').find('model-category').filterBy('ticket_pk', this.get('id'));
   }),
   construct_category_tree(category, child_nodes=[]) {
     //this method is used for on the fly validation check to see if at end of cat tree
@@ -44,16 +43,16 @@ var CategoriesMixin = Ember.Mixin.create({
     const sorted_categories = this.get('sorted_categories') || [];
     return sorted_categories[sorted_categories.length-1];
   }),
-  categories_ids: many_models_ids('categories'),
+  // categories_ids: many_models_ids('categories'),
   sorted_categories: Ember.computed('categories.[]', 'top_level_category', function() {
     return this.get('categories').sortBy('level');
   }),
-  categories: many_models('model_categories', 'category_pk', 'category'),
-  model_categories_ids: many_to_many_ids('model_categories'),
-  model_categories: many_to_many('model-category', 'model_pk'),
-  model_categories_with_removed: Ember.computed(function() {
+  // categories: many_models('ticket_categories', 'category_pk', 'category'),
+  // ticket_categories_ids: many_to_many_ids('ticket_categories'),
+  // ticket_categories: many_to_many('model-category', 'ticket_pk'),
+  ticket_categories_with_removed: Ember.computed(function() {
     let filter = function(join_model) {
-      return join_model.get('model_pk') === this.get('id');
+      return join_model.get('ticket_pk') === this.get('id');
     };
     return this.get('store').find('model-category', filter.bind(this));
   }),
@@ -71,9 +70,9 @@ var CategoriesMixin = Ember.Mixin.create({
   remove_categories_down_tree(category_pk) {
     let parent_ids = this.find_parent_nodes(category_pk);
     let store = this.get('store');
-    let model_pk = this.get('id');
-    let m2m_models = this.get('model_categories').filter((m2m) => {
-      return m2m.get('model_pk') === model_pk && Ember.$.inArray(m2m.get('category_pk'), parent_ids) === -1;
+    let ticket_pk = this.get('id');
+    let m2m_models = this.get('ticket_categories').filter((m2m) => {
+      return m2m.get('ticket_pk') === ticket_pk && Ember.$.inArray(m2m.get('category_pk'), parent_ids) === -1;
     });
     m2m_models.forEach((m2m) => {
       run(() => {
@@ -105,10 +104,10 @@ var CategoriesMixin = Ember.Mixin.create({
     }
     const category_pk = category.id;
     const parent_ids = this.find_parent_nodes(category_pk);
-    const model_pk = this.get('id');
+    const ticket_pk = this.get('id');
     //remove all m2m join models that don't relate to this category pk down the tree
-    const m2m_models = this.get('model_categories').filter((m2m) => {
-      return m2m.get('model_pk') === model_pk && Ember.$.inArray(m2m.get('category_pk'), parent_ids) === -1;
+    const m2m_models = this.get('ticket_categories').filter((m2m) => {
+      return m2m.get('ticket_pk') === ticket_pk && Ember.$.inArray(m2m.get('category_pk'), parent_ids) === -1;
     });
     m2m_models.forEach((m2m) => {
       run(() => {
@@ -116,8 +115,8 @@ var CategoriesMixin = Ember.Mixin.create({
       });
     });
     //find old m2m models that might exist
-    const matching_m2m = this.get('model_categories_with_removed').filter((m2m) => {
-      return m2m.get('model_pk') === model_pk && category_pk === m2m.get('category_pk') && m2m.get('removed') === true;
+    const matching_m2m = this.get('ticket_categories_with_removed').filter((m2m) => {
+      return m2m.get('ticket_pk') === ticket_pk && category_pk === m2m.get('category_pk') && m2m.get('removed') === true;
     }).objectAt(0); 
     if (matching_m2m) {
       run(() => {
@@ -125,21 +124,21 @@ var CategoriesMixin = Ember.Mixin.create({
       });
     }else{
       run(() => {
-        store.push('model-category', {id: Ember.uuid(), model_pk: model_pk, category_pk: category_pk});
+        store.push('model-category', {id: Ember.uuid(), ticket_pk: ticket_pk, category_pk: category_pk});
       });
     }
   },
   //TODO: add tests
   add_category(category_pk) {
-    const model_pk = this.get('id');
+    const ticket_pk = this.get('id');
     const store = this.get('store');
     run(() => {
-      store.push('model-category', {id: Ember.uuid(), model_pk: model_pk, category_pk: category_pk});
+      store.push('model-category', {id: Ember.uuid(), ticket_pk: ticket_pk, category_pk: category_pk});
     });
   },
-  remove_category: remove_many_to_many('model-category', 'category_pk', 'model_categories'),
-  rollbackCategories: many_to_many_rollback('model-category', 'model_categories_fks', 'model_pk'),
-  saveCategories: many_to_many_save('ticket', 'model_categories', 'model_categories_ids', 'model_categories_fks'),
+  // remove_category: remove_many_to_many('model-category', 'category_pk', 'ticket_categories'),
+  // rollbackCategories: many_to_many_rollback('model-category', 'ticket_categories_fks', 'ticket_pk'),
+  // saveCategories: many_to_many_save('ticket', 'ticket_categories', 'ticket_categories_ids', 'ticket_categories_fks'),
 });
 
 export default CategoriesMixin;

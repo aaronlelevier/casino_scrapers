@@ -25,7 +25,7 @@
                     </div>
                     <div class="col-md-12">
                         {{#form-group title="ticket.label.cc" for="cc"}}
-                          {{db-fetch-multi-select model=model multiAttr="cc" multiAttrIds="cc_ids" selectedAttr=model.cc className="t-ticket-cc-select" displayName="fullname" add_func="add_person" remove_func="remove_person" repository=personRepo searchMethod="findTicketPeople"}}
+                          {{db-fetch-multi-select model=model multiAttr="cc" multiAttrIds="cc_ids" selectedAttr=model.cc className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=personRepo searchMethod="findTicketPeople"}}
                         {{/form-group}}
                     </div>
                     <div class="col-md-12">

@@ -393,7 +393,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
   andThen(() => {
     assert.equal(page.ccOptionLength, 1);
     let ticket = store.find('ticket', TD.idOne);
-    assert.equal(ticket.get('ticket_people_fks').length, 1);
+    assert.equal(ticket.get('ticket_cc_fks').length, 1);
     assert.equal(ticket.get('cc').get('length'), 0);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
@@ -401,7 +401,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
   page.ccClickDonald();
   andThen(() => {
     let ticket = store.find('ticket', TD.idOne);
-    assert.equal(ticket.get('ticket_people_fks').length, 1);
+    assert.equal(ticket.get('ticket_cc_fks').length, 1);
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
@@ -440,7 +440,7 @@ test('starting with multiple cc, can remove all ccs (while not populating option
   andThen(() => {
     let ticket = store.find('ticket', TD.idOne);
     assert.equal(ticket.get('cc').get('length'), 2);
-    assert.equal(ticket.get('ticket_people_fks').length, 2);
+    assert.equal(ticket.get('ticket_cc_fks').length, 2);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(page.ccsSelected, 2);
   });
@@ -551,7 +551,7 @@ test('power select options are rendered immediately when enter detail route and 
     assert.equal(components, 2);
     let ticket = store.find('ticket', TD.idOne);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idThree);
-    assert.equal(ticket.get('model_categories_fks').length, 3);
+    assert.equal(ticket.get('ticket_categories_fks').length, 3);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
   page.categoryOneClickDropdown();

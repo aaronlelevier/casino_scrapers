@@ -30,7 +30,7 @@ moduleForComponent('ticket-cc-power-select', 'integration: ticket-cc-power-selec
         run(function() {
             m2m = store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
             m2m_two = store.push('ticket-person', {id: TPD.idTwo, ticket_pk: TD.idOne, person_pk: PD.idTwo});
-            ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne, TPD.idTwo]});
+            ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne, TPD.idTwo]});
             person_one = store.push('person', {id: PD.id, first_name: PD.first_name, last_name: PD.last_name});
             person_two = store.push('person', {id: PD.idTwo, first_name: 'Scooter', last_name: 'McGavin'});
             person_three = store.push('person', {id: PD.unusedId, first_name: 'Aaron', last_name: 'Wat'});

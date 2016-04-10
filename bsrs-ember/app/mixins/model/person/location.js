@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
+import { many_to_many_rollback } from 'bsrs-components/attr/many-to-many';
 
 const { run } = Ember;
 
@@ -11,9 +11,9 @@ var LocationMixin = Ember.Mixin.create({
             return location_level ? location_level.get('id') : undefined;
         }
     }),
-    location_ids: many_to_many_ids('locations'),
-    locations: many_models('person_locations', 'location_pk', 'location'),
-    person_locations: many_to_many('person-location', 'person_pk'),
+    // location_ids: many_to_many_ids('locations'),
+    // locations: many_models('person_locations', 'location_pk', 'location'),
+    // person_locations: many_to_many('person-location', 'person_pk'),
     add_locations(location) {
         const pk = this.get('id');
         const store = this.get('store');
@@ -23,7 +23,7 @@ var LocationMixin = Ember.Mixin.create({
             store.push('person-location', {id: Ember.uuid(), person_pk: pk, location_pk: location_pk});
         });
     },
-    remove_locations: remove_many_to_many('person-location', 'location_pk', 'person_locations'),
+    // remove_locations: remove_many_to_many('person-location', 'location_pk', 'person_locations'),
     locationsIsNotDirty: Ember.computed.not('locationsIsDirty'),
     locationsIsDirty: Ember.computed('person_location_fks.[]', 'locations.@each.isDirty', function() {
         const locations = this.get('locations');
