@@ -46,7 +46,7 @@ test('clicking between person detail and ticket detail will not dirty the active
         person = store.find('person', PD.idOne);
         assert.ok(person.get('localeIsNotDirty'));
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(person.get('person_location_fks').length, 1);
+        assert.equal(person.get('person_locations_fks').length, 1);
         assert.equal(person.get('locations.length'), 1);
     });
     ajax(`${PREFIX}${BASEURLS.base_tickets_url}/?page=1`, 'GET', null, {}, 200, TF.list());
@@ -55,7 +55,7 @@ test('clicking between person detail and ticket detail will not dirty the active
         assert.equal(currentURL(), TICKET_LIST_URL);
         person = store.find('person', PD.idOne);
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(person.get('person_location_fks').length, 1);
+        assert.equal(person.get('person_locations_fks').length, 1);
         assert.equal(person.get('locations.length'), 1);
         assert.equal(person.get('locations').objectAt(0).get('id'), LD.idOne);
     });
@@ -69,7 +69,7 @@ test('clicking between person detail and ticket detail will not dirty the active
         person = store.find('person', PD.idOne);
         assert.ok(person.get('statusIsNotDirty'));
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(person.get('person_location_fks').length, 1);
+        assert.equal(person.get('person_locations_fks').length, 1);
         assert.equal(person.get('locations.length'), 1);
         const location = store.find('location', LD.idOne);
         assert.equal(location.get('id'), LD.idOne);
@@ -82,7 +82,7 @@ test('clicking between person detail and ticket detail will not dirty the active
         assert.ok(person.get('roleIsNotDirty'));
         assert.ok(person.get('statusIsNotDirty'));
         assert.ok(person.get('locationsIsNotDirty'));
-        assert.equal(person.get('person_location_fks').length, 1);
+        assert.equal(person.get('person_locations_fks').length, 1);
         assert.equal(person.get('locations.length'), 1);
         ticket = store.find('ticket', TD.idOne);
         assert.equal(ticket.get('isDirtyOrRelatedDirty'), false);

@@ -31,16 +31,16 @@ var RoleMixin = Ember.Mixin.create({
     //remove person-locations that are part of the old role to ensure locationIsNotDirty
     const person_locations = this.get('person_locations');
     const person_location_ids = person_locations.mapBy('id');
-    let person_location_fks = this.get('person_location_fks');
+    let person_locations_fks = this.get('person_locations_fks');
     person_location_ids.forEach((id) => {
-      let indx = person_location_fks.indexOf(id);
-      person_location_fks.splice(indx, 1);
+      let indx = person_locations_fks.indexOf(id);
+      person_locations_fks.splice(indx, 1);
       run(() => {
-        store.push('person', {id: person_id, person_location_fks: person_location_fks});
+        store.push('person', {id: person_id, person_locations_fks: person_locations_fks});
         store.push('person-location', {id: id, removed: true});
       });
     });
-    //reset removed person-locations as a result of the new role set and update person_location_fks so locationIsNotDirty
+    //reset removed person-locations as a result of the new role set and update person_locations_fks so locationIsNotDirty
     const all_person_locations = store.find('person-location');
     const matched_person_locations = all_person_locations.filter((join_model) => {
       return join_model.get('person_pk') === person_id;
@@ -51,7 +51,7 @@ var RoleMixin = Ember.Mixin.create({
         run(() => {
           store.push('person-location', {id: person_location.get('id'), removed: undefined});
         });
-        person_location_fks.pushObject(person_location.get('id'));
+        person_locations_fks.pushObject(person_location.get('id'));
       }
     });
   },

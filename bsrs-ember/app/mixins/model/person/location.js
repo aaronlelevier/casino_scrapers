@@ -25,9 +25,9 @@ var LocationMixin = Ember.Mixin.create({
     },
     // remove_locations: remove_many_to_many('person-location', 'location_pk', 'person_locations'),
     locationsIsNotDirty: Ember.computed.not('locationsIsDirty'),
-    locationsIsDirty: Ember.computed('person_location_fks.[]', 'locations.@each.isDirty', function() {
+    locationsIsDirty: Ember.computed('person_locations_fks.[]', 'locations.@each.isDirty', function() {
         const locations = this.get('locations');
-        const previous_m2m_fks = this.get('person_location_fks');
+        const previous_m2m_fks = this.get('person_locations_fks');
         if(locations.get('length') > 0) {
             if(!previous_m2m_fks || previous_m2m_fks.get('length') !== locations.get('length')) {
                 return true;
@@ -45,7 +45,7 @@ var LocationMixin = Ember.Mixin.create({
     saveLocations() {
         this.resetPersonLocationFks({save: true});
     },
-    rollbackLocationsContainer: many_to_many_rollback('person-location', 'person_location_fks', 'person_pk'),
+    rollbackLocationsContainer: many_to_many_rollback('locations', 'person_locations', 'person'),
     rollbackLocations() {
         this.rollbackLocationsContainer();
         this.resetPersonLocationFks();
@@ -72,7 +72,7 @@ var LocationMixin = Ember.Mixin.create({
             });
         });
         run(() => {
-            store.push('person', {id: person_id, person_location_fks: saved_m2m_pks});
+            store.push('person', {id: person_id, person_locations_fks: saved_m2m_pks});
         });
     }
 });

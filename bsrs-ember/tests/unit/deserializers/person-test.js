@@ -251,7 +251,7 @@ test('person-location m2m is set up correctly using deserialize single (starting
   let location_level;
   location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
   role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
-  person = store.push('person', {id: PD.id, person_location_fks: [], role_fk: RD.idOne});
+  person = store.push('person', {id: PD.id, person_locations_fks: [], role_fk: RD.idOne});
   let response = PF.generate(PD.id);
   response.locations = [LF.get_fk()];
   let locations = person.get('locations');
@@ -273,8 +273,8 @@ test('person-location m2m is added after deserialize single (starting with exist
   location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
   m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.id, location_pk: LD.idOne});
   role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
-  person = store.push('person', {id: PD.id, person_location_fks: [PERSON_LD.idOne], role_fk: RD.idOne});
-  location = store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idOne]});
+  person = store.push('person', {id: PD.id, person_locations_fks: [PERSON_LD.idOne], role_fk: RD.idOne});
+  location = store.push('location', {id: LD.idOne, name: LD.storeName, person_locations_fks: [PERSON_LD.idOne]});
   assert.equal(person.get('locations.length'), 1);
   let response = PF.generate(PD.id);
   let second_location = LF.get_fk(LD.idTwo);
@@ -298,8 +298,8 @@ test('person-location m2m is removed when server payload no longer reflects what
   location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
   m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.id, location_pk: LD.idOne});
   role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
-  person = store.push('person', {id: PD.id, person_location_fks: [PERSON_LD.idOne], role_fk: RD.idOne});
-  location = store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idOne]});
+  person = store.push('person', {id: PD.id, person_locations_fks: [PERSON_LD.idOne], role_fk: RD.idOne});
+  location = store.push('location', {id: LD.idOne, name: LD.storeName, person_locations_fks: [PERSON_LD.idOne]});
   assert.equal(person.get('locations').get('length'), 1);
   let response = PF.generate(PD.id);
   let second_location = LF.get_fk(LD.idTwo);

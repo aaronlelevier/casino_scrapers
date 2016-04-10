@@ -1143,7 +1143,7 @@ test('when you deep link to the person detail view you can alter the locations a
         let person = store.find('person', PD.idOne);
         assert.equal(person.get('locations').get('length'), 0);
         var previous_location_m2m = store.find('person-location', {person_pk: PD.id});
-        assert.deepEqual(person.get('person_location_fks'), []);
+        assert.deepEqual(person.get('person_locations_fks'), []);
         assert.equal(previous_location_m2m.get('length'), 0);
     });
     xhr(endpoint + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data);
@@ -1161,7 +1161,7 @@ test('when you deep link to the person detail view you can alter the locations a
             assert.ok(person.get('isNotDirty'));
             assert.ok(person.get('isDirtyOrRelatedDirty'));
             var previous_location_m2m = store.find('person-location', {person_pk: PD.id});
-            assert.deepEqual(person.get('person_location_fks'), []);
+            assert.deepEqual(person.get('person_locations_fks'), []);
             assert.equal(previous_location_m2m.get('length'), 1);
         });
     });
@@ -1174,7 +1174,7 @@ test('when you deep link to the person detail view you can alter the locations a
             assert.ok(person.get('isNotDirty'));
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
             var previous_location_m2m = store.find('person-location', {person_pk: PD.id});
-            assert.deepEqual(person.get('person_location_fks'), []);
+            assert.deepEqual(person.get('person_locations_fks'), []);
             assert.equal(previous_location_m2m.get('length'), 1);
             assert.ok(previous_location_m2m.objectAt(0).get('removed'), true);
         });

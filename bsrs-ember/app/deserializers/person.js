@@ -68,7 +68,7 @@ var extract_person_location = function(model, store, location_level_fk, location
             });
         });
         delete model.locations;
-        model.person_location_fks = server_locations_sum;
+        model.person_locations_fks = server_locations_sum;
     }
 };
 

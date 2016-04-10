@@ -26,7 +26,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
     belongs_to.bind(this)('status', 'person');
     belongs_to.bind(this)('role', 'person', {'change_func': true, 'rollback': true});
     belongs_to.bind(this)('locale', 'person', {'change_func':true});
-    many_to_many.bind(this)('location', 'person', {'plural':true});
+    many_to_many.bind(this)('location', 'person', {'plural':true, 'rollback':true, 'dirty':true, 'save':true});
     this._super(...arguments);
   },
   type: 'person',
@@ -46,7 +46,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
   phone_number_fks: [],
   address_fks: [],
   email_fks: [],
-  person_location_fks: [],
+  person_locations_fks: [],
   isModelDirty: false,
   changingPassword: false,
   //models are leaf nodes and should be given a set of data and encapsulate and work on that data

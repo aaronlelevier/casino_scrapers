@@ -1014,8 +1014,8 @@ test('rollback role will reset the previously used role when switching from one 
 //TODO: test drive how this works on location if/when it's required
 test('locations property should return all associated locations or empty array', (assert) => {
   let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
-  person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne]});
-  let location = store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idOne]});
+  person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  let location = store.push('location', {id: LD.idOne, name: LD.storeName, person_locations_fks: [PERSON_LD.idOne]});
   let locations = person.get('locations');
   assert.equal(locations.get('length'), 1);
   assert.equal(locations.objectAt(0).get('name'), LD.storeName);
@@ -1026,27 +1026,31 @@ test('locations property should return all associated locations or empty array',
 });
 
 test('locations property is not dirty when no location present (undefined)', (assert) => {
-  store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: undefined});
-  person = store.push('person', {id: PD.idOne, person_location_fks: undefined});
+  store.push('location', {id: LD.idOne, name: LD.storeName, person_locations_fks: undefined});
+  person = store.push('person', {id: PD.idOne, person_locations_fks: undefined});
   assert.equal(person.get('locations').get('length'), 0);
   assert.ok(person.get('locationsIsNotDirty'));
 });
 
 test('locations property is not dirty when no location present (empty array)', (assert) => {
-  store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: []});
-  person = store.push('person', {id: PD.idOne, person_location_fks: []});
+  store.push('location', {id: LD.idOne, name: LD.storeName, person_locations_fks: []});
+  person = store.push('person', {id: PD.idOne, person_locations_fks: []});
   assert.equal(person.get('locations').get('length'), 0);
   assert.ok(person.get('locationsIsNotDirty'));
 });
 
 test('locations property is not dirty with original location model', (assert) => {
   store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
-  let location = store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idOne]});
-  person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne]});
+  let location = store.push('location', {id: LD.idOne, name: LD.storeName, person_locations_fks: [PERSON_LD.idOne]});
+  person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne]});
   assert.equal(person.get('locations').get('length'), 1);
+  assert.equal(person.get('person_locations_fks').length, 1);
+  assert.equal(person.get('person_locations_ids').length, 1);
   assert.ok(person.get('locationsIsNotDirty'));
   location.set('name', LD.storeNameTwo);
   assert.ok(location.get('isDirty'));
+  assert.equal(person.get('person_locations_fks').length, 1);
+  assert.equal(person.get('person_locations_ids').length, 1);
   assert.ok(person.get('locationsIsDirty'));
   assert.equal(person.get('locations').get('length'), 1);
   assert.equal(person.get('locations').objectAt(0).get('name'), LD.storeNameTwo);
@@ -1055,9 +1059,9 @@ test('locations property is not dirty with original location model', (assert) =>
 test('locations property only returns the single matching item even when multiple locations exist', (assert) => {
   store.push('person-location', {id: PERSON_LD.idThree, person_pk: PD.unusedId, location_pk: LD.idOne});
   store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idTwo});
-  person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne]});
-  store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, person_location_fks: [PERSON_LD.idOne]});
-  store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idThree]});
+  person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, person_locations_fks: [PERSON_LD.idOne]});
+  store.push('location', {id: LD.idOne, name: LD.storeName, person_locations_fks: [PERSON_LD.idThree]});
   let locations = person.get('locations');
   assert.equal(locations.get('length'), 1);
   assert.equal(locations.objectAt(0).get('id'), LD.idTwo);
@@ -1066,9 +1070,9 @@ test('locations property only returns the single matching item even when multipl
 test('locations property returns multiple matching items when multiple locations exist', (assert) => {
   store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idTwo});
   store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idOne, location_pk: LD.idOne});
-  person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne, PERSON_LD.idTwo]});
-  store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idTwo]});
-  store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, person_location_fks: [PERSON_LD.idOne]});
+  person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne, PERSON_LD.idTwo]});
+  store.push('location', {id: LD.idOne, name: LD.storeName, person_locations_fks: [PERSON_LD.idTwo]});
+  store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, person_locations_fks: [PERSON_LD.idOne]});
   let locations = person.get('locations');
   assert.equal(locations.get('length'), 2);
   assert.equal(locations.objectAt(0).get('id'), LD.idOne);
@@ -1076,9 +1080,9 @@ test('locations property returns multiple matching items when multiple locations
 });
 
 test('locations property will update when the m2m array suddenly has the person pk (starting w/ empty array)', (assert) => {
-  person = store.push('person', {id: PD.idOne, person_location_fks: []});
-  let location = {id: LD.idOne, person_location_fks: []};
-  store.push('location', {id: LD.idTwo, person_location_fks: []});
+  person = store.push('person', {id: PD.idOne, person_locations_fks: []});
+  let location = {id: LD.idOne, person_locations_fks: []};
+  store.push('location', {id: LD.idTwo, person_locations_fks: []});
   assert.equal(person.get('locations').get('length'), 0);
   person.add_locations(location);
   assert.equal(person.get('locations').get('length'), 1);
@@ -1087,9 +1091,9 @@ test('locations property will update when the m2m array suddenly has the person 
 
 test('locations property will update when the m2m array suddenly has the person pk', (assert) => {
   store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
-  person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne]});
-  let location = store.push('location', {id: LD.idOne, person_location_fks: [PERSON_LD.idOne]});
-  let location_two = {id: LD.idTwo, person_location_fks: []};
+  person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  let location_two = {id: LD.idTwo, person_locations_fks: []};
   assert.equal(person.get('locations').get('length'), 1);
   person.add_locations(location_two);
   assert.equal(person.get('locations').get('length'), 2);
@@ -1099,18 +1103,18 @@ test('locations property will update when the m2m array suddenly has the person 
 
 test('locations property will update when the m2m array suddenly removes the person', (assert) => {
   let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
-  person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne]});
-  let location = store.push('location', {id: LD.idOne, person_location_fks: [PERSON_LD.idOne]});
+  person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
   assert.equal(person.get('locations').get('length'), 1);
-  person.remove_locations(LD.idOne);
+  person.remove_location(LD.idOne);
   assert.equal(person.get('locations').get('length'), 0);
 });
 
 //TODO: do no want to dirty person model when location name is changed
 test('when location is changed dirty tracking works as expected', (assert) => {
   store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
-  person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne]});
-  let location = store.push('location', {id: LD.idOne, person_location_fks: [PERSON_LD.idOne]});
+  person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
   assert.equal(person.get('locations').get('length'), 1);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -1130,8 +1134,8 @@ test('when location is changed dirty tracking works as expected', (assert) => {
 });
 
 test('when location is suddently assigned it shows as a dirty relationship (starting undefined)', (assert) => {
-  let location = {id: LD.idOne, name: LD.storeName, person_location_fks: undefined};
-  person = store.push('person', {id: PD.idOne, person_location_fks: undefined});
+  let location = {id: LD.idOne, name: LD.storeName, person_locations_fks: undefined};
+  person = store.push('person', {id: PD.idOne, person_locations_fks: undefined});
   assert.equal(person.get('locations').get('length'), 0);
   assert.ok(person.get('locationsIsNotDirty'));
   assert.ok(person.get('isNotDirty'));
@@ -1143,8 +1147,8 @@ test('when location is suddently assigned it shows as a dirty relationship (star
 });
 
 test('when location is suddenly assigned it shows as a dirty relationship (starting with an empty array)', (assert) => {
-  let location = {id: LD.idOne, name: LD.storeName, person_location_fks: []};
-  person = store.push('person', {id: PD.idOne, person_location_fks: []});
+  let location = {id: LD.idOne, name: LD.storeName, person_locations_fks: []};
+  person = store.push('person', {id: PD.idOne, person_locations_fks: []});
   assert.equal(person.get('locations').get('length'), 0);
   assert.ok(person.get('locationsIsNotDirty'));
   assert.ok(person.get('isNotDirty'));
@@ -1157,9 +1161,9 @@ test('when location is suddenly assigned it shows as a dirty relationship (start
 
 test('when location is suddently assigned it shows as a dirty relationship (starting with legit value)', (assert) => {
   store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
-  person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne]});
-  let location = store.push('location', {id: LD.idOne, person_location_fks: [PERSON_LD.idOne]});
-  let location_two = {id: LD.idTwo, person_location_fks: []};
+  person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  let location_two = {id: LD.idTwo, person_locations_fks: []};
   assert.equal(person.get('locations').get('length'), 1);
   assert.ok(person.get('locationsIsNotDirty'));
   assert.ok(person.get('isNotDirty'));
@@ -1172,12 +1176,12 @@ test('when location is suddently assigned it shows as a dirty relationship (star
 
 test('when location is suddently removed it shows as a dirty relationship', (assert) => {
   let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
-  person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne]});
-  let location = store.push('location', {id: LD.idOne, person_location_fks: [PERSON_LD.idOne]});
+  person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
   assert.equal(person.get('locations').get('length'), 1);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  person.remove_locations(LD.idOne);
+  person.remove_location(LD.idOne);
   assert.equal(person.get('locations').get('length'), 0);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -1186,13 +1190,13 @@ test('when location is suddently removed it shows as a dirty relationship', (ass
 test('when location is suddently removed it shows as a dirty relationship (when it has multiple locations to begin with)', (assert) => {
   let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
   store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
-  person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne, PERSON_LD.idTwo]});
-  let location = store.push('location', {id: LD.idOne, person_location_fks: [PERSON_LD.idOne]});
-  let location_two = store.push('location', {id: LD.idTwo, person_location_fks: [PERSON_LD.idTwo]});
+  person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne, PERSON_LD.idTwo]});
+  let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  let location_two = store.push('location', {id: LD.idTwo, person_locations_fks: [PERSON_LD.idTwo]});
   assert.equal(person.get('locations').get('length'), 2);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  person.remove_locations(LD.idOne);
+  person.remove_location(LD.idOne);
   assert.equal(person.get('locations').get('length'), 1);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -1201,13 +1205,13 @@ test('when location is suddently removed it shows as a dirty relationship (when 
 test('rollback location will reset the previously used locations when switching from valid locations to nothing', (assert) => {
   let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
   let m2m_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
-  person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne, PERSON_LD.idTwo]});
-  let location = store.push('location', {id: LD.idOne, person_location_fks: [PERSON_LD.idOne]});
-  let location_two = store.push('location', {id: LD.idTwo, person_location_fks: [PERSON_LD.idTwo]});
+  person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne, PERSON_LD.idTwo]});
+  let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  let location_two = store.push('location', {id: LD.idTwo, person_locations_fks: [PERSON_LD.idTwo]});
   assert.equal(person.get('locations').get('length'), 2);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  person.remove_locations(LD.idOne);
+  person.remove_location(LD.idOne);
   assert.equal(person.get('locations').get('length'), 1);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -1216,8 +1220,8 @@ test('rollback location will reset the previously used locations when switching 
   assert.equal(person.get('locations').get('length'), 2);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  person.remove_locations(LD.idOne);
-  person.remove_locations(LD.idTwo);
+  person.remove_location(LD.idOne);
+  person.remove_location(LD.idTwo);
   assert.equal(person.get('locations').get('length'), 0);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -1231,11 +1235,11 @@ test('rollback location will reset the previously used locations when switching 
 test('rollback location will reset the previous locations when switching from one location to another and saving in between each step', (assert) => {
   let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
   let m2m_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
-  person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne, PERSON_LD.idTwo]});
-  let location = store.push('location', {id: LD.idOne, person_location_fks: [PERSON_LD.idOne]});
-  let location_two = store.push('location', {id: LD.idTwo, person_location_fks: [PERSON_LD.idTwo]});
-  let location_three = {id: LD.unusedId, person_location_fks: [PERSON_LD.idThree]};
-  let location_four = {id: LD.anotherId, person_location_fks: [PERSON_LD.idFour]};
+  person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne, PERSON_LD.idTwo]});
+  let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  let location_two = store.push('location', {id: LD.idTwo, person_locations_fks: [PERSON_LD.idTwo]});
+  let location_three = {id: LD.unusedId, person_locations_fks: [PERSON_LD.idThree]};
+  let location_four = {id: LD.anotherId, person_locations_fks: [PERSON_LD.idFour]};
   assert.equal(person.get('locations').get('length'), 2);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -1245,7 +1249,7 @@ test('rollback location will reset the previous locations when switching from on
   assert.equal(person.get('locations').get('length'), 2);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  person.remove_locations(LD.idOne);
+  person.remove_location(LD.idOne);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isDirtyOrRelatedDirty'));
   assert.equal(person.get('locations').get('length'), 1);
@@ -1262,7 +1266,7 @@ test('rollback location will reset the previous locations when switching from on
   assert.equal(person.get('locations').get('length'), 2);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  person.remove_locations(LD.idTwo);
+  person.remove_location(LD.idTwo);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isDirtyOrRelatedDirty'));
   assert.equal(person.get('locations').get('length'), 1);
@@ -1285,16 +1289,16 @@ test('rollback location will reset the previous locations when switching from on
 test('location_ids computed returns a flat list of ids for each location', (assert) => {
   let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
   let m2m_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
-  let person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne, PERSON_LD.idTwo]});
-  let location = store.push('location', {id: LD.idOne, person_location_fks: [PERSON_LD.idOne]});
-  let location_two = store.push('location', {id: LD.idTwo, person_location_fks: [PERSON_LD.idTwo]});
-  let location_three = store.push('location', {id: LD.unusedId, person_location_fks: [PERSON_LD.idThree]});
-  let location_four = store.push('location', {id: LD.anotherId, person_location_fks: [PERSON_LD.idFour]});
+  let person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne, PERSON_LD.idTwo]});
+  let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  let location_two = store.push('location', {id: LD.idTwo, person_locations_fks: [PERSON_LD.idTwo]});
+  let location_three = store.push('location', {id: LD.unusedId, person_locations_fks: [PERSON_LD.idThree]});
+  let location_four = store.push('location', {id: LD.anotherId, person_locations_fks: [PERSON_LD.idFour]});
   assert.equal(person.get('locations').get('length'), 2);
-  assert.deepEqual(person.get('location_ids'), [LD.idOne, LD.idTwo]);
-  person.remove_locations(LD.idOne);
+  assert.deepEqual(person.get('locations_ids'), [LD.idOne, LD.idTwo]);
+  person.remove_location(LD.idOne);
   assert.equal(person.get('locations').get('length'), 1);
-  assert.deepEqual(person.get('location_ids'), [LD.idTwo]);
+  assert.deepEqual(person.get('locations_ids'), [LD.idTwo]);
 });
 /*END PERSON LOCATION M2M*/
 
@@ -1438,8 +1442,8 @@ test('person-location join models are correctly filtered on for the current User
   let new_role = store.push('role', {id: RD.idTwo, people: [], location_level_fk: LLD.idOne});
   let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
   let m2m_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.unusedId, location_pk: LD.idOne});
-  person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne]});
-  let location = store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idOne], location_level_fk: LLD.idOne});
+  person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  let location = store.push('location', {id: LD.idOne, name: LD.storeName, person_locations_fks: [PERSON_LD.idOne], location_level_fk: LLD.idOne});
   assert.equal(person.get('locations').get('length'), 1);
   person.change_role(new_role);
   assert.equal(person.get('locations').get('length'), 1);
