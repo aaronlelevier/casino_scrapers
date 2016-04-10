@@ -31,7 +31,7 @@ var extract_parents = function(model, store) {
     const all_location_parents = store.find('location-parents');
     parents.forEach((parent) => {
         const location_parents = all_location_parents.filter((m2m) => {
-            return m2m.get('parent_pk') === parent.id && m2m.get('location_pk') === model.id;
+            return m2m.get('parents_pk') === parent.id && m2m.get('location_pk') === model.id;
         });
         if(location_parents.length === 0) {
             const pk = Ember.uuid();
@@ -42,7 +42,7 @@ var extract_parents = function(model, store) {
                 parent.status_fk = parent.status;
                 delete parent.status;
                 store.push('location', parent);
-                store.push('location-parents', {id: pk, location_pk: model.id, parent_pk: parent.id});
+                store.push('location-parents', {id: pk, location_pk: model.id, parents_pk: parent.id});
             });
         }else{
             prevented_duplicate_m2m.push(location_parents[0].get('id'));
@@ -68,7 +68,7 @@ var extract_children = function(model, store) {
     const all_location_children = store.find('location-children');
     children.forEach((child) => {
         const location_children = all_location_children.filter((m2m) => {
-            return m2m.get('child_pk') === child.id && m2m.get('location_pk') === model.id;
+            return m2m.get('children_pk') === child.id && m2m.get('location_pk') === model.id;
         });
         if(location_children.length === 0) {
             const pk = Ember.uuid();
@@ -80,7 +80,7 @@ var extract_children = function(model, store) {
                 child.status_fk = child.status;
                 delete child.status;
                 store.push('location', child);
-                store.push('location-children', {id: pk, location_pk: model.id, child_pk: child.id});
+                store.push('location-children', {id: pk, location_pk: model.id, children_pk: child.id});
             });
         }else{
             prevented_duplicate_m2m.push(location_children[0].get('id'));

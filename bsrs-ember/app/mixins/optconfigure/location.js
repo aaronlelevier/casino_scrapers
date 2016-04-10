@@ -13,10 +13,12 @@ export default Ember.Mixin.create({
     },
     children: {
       associated_model: 'location',
+      associated_pointer: 'children',
       join_model: 'location-children'
     },
     parents: {
       associated_model: 'location',
+      associated_pointer: 'parents',
       join_model: 'location-parents'
     }
   },

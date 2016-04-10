@@ -20,8 +20,8 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin
   init() {
     belongs_to.bind(this)('status', 'location');
     belongs_to.bind(this)('location_level', 'location', {'change_func': true});
-    many_to_many.bind(this)('children', 'location');
-    many_to_many.bind(this)('parent', 'location', {plural:true});
+    many_to_many.bind(this)('children', 'location', {add_func:true});
+    many_to_many.bind(this)('parent', 'location', {plural:true, add_func:true});
     this._super(...arguments);
   },
   store: inject('main'),

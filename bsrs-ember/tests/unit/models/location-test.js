@@ -145,12 +145,13 @@ test('parent and child locations will be removed when change llevel', (assert) =
   let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameDistrict, locations: [LD.unusedId]});
   store.push('location', {id: LD.idTwo});
   store.push('location', {id: LD.idThree});
-  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
-  store.push('location-children', {id: LCD.idTwo, location_pk: LD.idOne, child_pk: LD.idThree});
-  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parent_pk: LD.idTwo});
+  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, children_pk: LD.idTwo});
+  store.push('location-children', {id: LCD.idTwo, location_pk: LD.idOne, children_pk: LD.idThree});
+  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parents_pk: LD.idTwo});
   assert.equal(location.get('location_children').get('length'), 2);
   assert.equal(location.get('location_children').objectAt(0).get('id'), LCD.idOne);
   assert.equal(location.get('location_children').objectAt(1).get('id'), LCD.idTwo);
+  assert.equal(location.get('children_ids').get('length'), 2);
   assert.equal(location.get('children').get('length'), 2);
   assert.equal(location.get('children').objectAt(0).get('id'), LD.idTwo);
   assert.equal(location.get('children').objectAt(1).get('id'), LD.idThree);
@@ -942,7 +943,7 @@ test('locationLevelIsDirty - when the related location_level and location_level_
 test('related children is setup correctly', (assert) => {
   const location = store.push('location', {id: LD.idOne, location_children_fks: [LCD.idOne]});
   store.push('location', {id: LD.idTwo});
-  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
+  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, children_pk: LD.idTwo});
   assert.equal(location.get('location_children').get('length'), 1);
   assert.equal(location.get('location_children').objectAt(0).get('id'), LCD.idOne);
   assert.equal(location.get('children').get('length'), 1);
@@ -953,8 +954,8 @@ test('related children can have multiple', (assert) => {
   const location = store.push('location', {id: LD.idOne, location_children_fks: [LCD.idOne, LCD.idTwo]});
   store.push('location', {id: LD.idTwo});
   store.push('location', {id: LD.idThree});
-  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
-  store.push('location-children', {id: LCD.idTwo, location_pk: LD.idOne, child_pk: LD.idThree});
+  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, children_pk: LD.idTwo});
+  store.push('location-children', {id: LCD.idTwo, location_pk: LD.idOne, children_pk: LD.idThree});
   assert.equal(location.get('location_children').get('length'), 2);
   assert.equal(location.get('location_children').objectAt(0).get('id'), LCD.idOne);
   assert.equal(location.get('location_children').objectAt(1).get('id'), LCD.idTwo);
@@ -966,7 +967,7 @@ test('related children can have multiple', (assert) => {
 test('removed location children join models are excluded', (assert) => {
   const location = store.push('location', {id: LD.idOne, location_children_fks: [LCD.idOne]});
   const location_two = store.push('location', {id: LD.idTwo});
-  const location_m2m = store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo, removed: true});
+  const location_m2m = store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, children_pk: LD.idTwo, removed: true});
   assert.equal(location.get('location_children').get('length'), 0);
   assert.equal(location.get('children').get('length'), 0);
 });
@@ -974,7 +975,7 @@ test('removed location children join models are excluded', (assert) => {
 test('related parents is setup correctly', (assert) => {
   const location = store.push('location', {id: LD.idOne, location_parents_fks: [LPD.idOne]});
   store.push('location', {id: LD.idTwo});
-  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parent_pk: LD.idTwo});
+  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parents_pk: LD.idTwo});
   assert.equal(location.get('location_parents').get('length'), 1);
   assert.equal(location.get('location_parents').objectAt(0).get('id'), LPD.idOne);
   assert.equal(location.get('parents').get('length'), 1);
@@ -985,8 +986,8 @@ test('related parents can have multiple', (assert) => {
   const location = store.push('location', {id: LD.idOne, location_parents_fks: [LPD.idOne, LPD.idTwo]});
   store.push('location', {id: LD.idTwo});
   store.push('location', {id: LD.idThree});
-  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parent_pk: LD.idTwo});
-  store.push('location-parents', {id: LPD.idTwo, location_pk: LD.idOne, parent_pk: LD.idThree});
+  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parents_pk: LD.idTwo});
+  store.push('location-parents', {id: LPD.idTwo, location_pk: LD.idOne, parents_pk: LD.idThree});
   assert.equal(location.get('location_parents').get('length'), 2);
   assert.equal(location.get('location_parents').objectAt(0).get('id'), LPD.idOne);
   assert.equal(location.get('location_parents').objectAt(1).get('id'), LPD.idTwo);
@@ -998,7 +999,7 @@ test('related parents can have multiple', (assert) => {
 test('removed location parents join models are excluded', (assert) => {
   const location = store.push('location', {id: LD.idOne, location_parents_fks: [LPD.idTwo]});
   const location_two = store.push('location', {id: LD.idTwo});
-  const location_m2m = store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parent_pk: LD.idTwo, removed: true});
+  const location_m2m = store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parents_pk: LD.idTwo, removed: true});
   assert.equal(location.get('location_parents').get('length'), 0);
   assert.equal(location.get('parents').get('length'), 0);
 });
@@ -1017,7 +1018,7 @@ test('add_child correctly adds child when already has one', (assert) => {
   const location = store.push('location', {id: LD.idOne, location_children_fks: [LCD.idOne]});
   const location_two = store.push('location', {id: LD.idTwo});
   const location_three = {id: LD.idThree};
-  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
+  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, children_pk: LD.idTwo});
   location.add_child(location_three);
   assert.equal(location.get('children').get('length'), 2);
 });
@@ -1025,8 +1026,8 @@ test('add_child correctly adds child when already has one', (assert) => {
 test('add_child will add back old join model after it was removed', (assert) => {
   const location = store.push('location', {id: LD.idOne, location_children_fks: [LCD.idOne]});
   const location_two = store.push('location', {id: LD.idTwo});
-  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
-  location.remove_child(location_two.get('id'));
+  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, children_pk: LD.idTwo});
+  location.remove_children(location_two.get('id'));
   assert.equal(location.get('children').get('length'), 0);
   location.add_child({id: LD.idTwo});
   assert.equal(location.get('children').get('length'), 1);
@@ -1037,9 +1038,9 @@ test('add_child will add back old join model after it was removed and not dirty 
   const location = store.push('location', {id: LD.idOne, location_children_fks: [LCD.idOne, LCD.idTwo]});
   const location_two = store.push('location', {id: LD.idTwo});
   const location_three = store.push('location', {id: LD.idThree});
-  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
-  store.push('location-children', {id: LCD.idTwo, location_pk: LD.idOne, child_pk: LD.idThree});
-  location.remove_child(location_three.get('id'));
+  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, children_pk: LD.idTwo});
+  store.push('location-children', {id: LCD.idTwo, location_pk: LD.idOne, children_pk: LD.idThree});
+  location.remove_children(location_three.get('id'));
   assert.equal(location.get('children').get('length'), 1);
   const location_three_object = {id: LD.idThree};
   location.add_child(location_three_object);
@@ -1050,8 +1051,8 @@ test('add_child will add back old join model after it was removed and not dirty 
 test('remove_child correctly adds child when already has one', (assert) => {
   const location = store.push('location', {id: LD.idOne, location_children_fks: [LCD.idTwo]});
   const location_two = store.push('location', {id: LD.idTwo});
-  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
-  location.remove_child(location_two.get('id'));
+  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, children_pk: LD.idTwo});
+  location.remove_children(location_two.get('id'));
   assert.equal(location.get('children').get('length'), 0);
 });
 
@@ -1059,9 +1060,9 @@ test('remove_child correctly adds child when has multiple', (assert) => {
   const location = store.push('location', {id: LD.idOne, location_children_fks: [LCD.idTwo, LCD.idThree]});
   const location_two = store.push('location', {id: LD.idTwo});
   const location_three = store.push('location', {id: LD.idThree});
-  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
-  store.push('location-children', {id: LCD.idTwo, location_pk: LD.idOne, child_pk: LD.idThree});
-  location.remove_child(location_three.get('id'));
+  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, children_pk: LD.idTwo});
+  store.push('location-children', {id: LCD.idTwo, location_pk: LD.idOne, children_pk: LD.idThree});
+  location.remove_children(location_three.get('id'));
   assert.equal(location.get('children').get('length'), 1);
 });
 
@@ -1081,7 +1082,7 @@ test('clicking save will make location model children not dirty with existing', 
   const location = store.push('location', {id: LD.idOne, location_children_fks: [LCD.idOne]});
   const location_two = store.push('location', {id: LD.idTwo});
   const location_three = store.push('location', {id: LD.idThree});
-  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
+  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, children_pk: LD.idTwo});
   location.add_child({id: LD.idThree});
   assert.equal(location.get('children').get('length'), 2);
   assert.ok(location.get('childrenIsDirty'));
@@ -1096,7 +1097,7 @@ test('rollback children resets children', (assert) => {
   const location_two = store.push('location', {id: LD.idTwo});
   const location_three = store.push('location', {id: LD.idThree});
   const location_four = store.push('location', {id: LD.idFour});
-  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
+  store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, children_pk: LD.idTwo});
   assert.deepEqual(location.get('location_children_fks'), [LCD.idOne]);
   location.add_child({id: LD.idThree});
   assert.ok(location.get('isNotDirty'));
@@ -1132,7 +1133,7 @@ test('add_parent correctly adds parent when already has one', (assert) => {
   const location = store.push('location', {id: LD.idOne, location_parents_fks: [LPD.idOne]});
   const location_two = store.push('location', {id: LD.idTwo});
   const location_three = {id: LD.idThree};
-  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parent_pk: LD.idTwo});
+  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parents_pk: LD.idTwo});
   location.add_parent({id: LD.idThree});
   assert.equal(location.get('parents').get('length'), 2);
 });
@@ -1140,7 +1141,7 @@ test('add_parent correctly adds parent when already has one', (assert) => {
 test('add_parent will add back old join model after it was removed', (assert) => {
   const location = store.push('location', {id: LD.idOne, location_parents_fks: [LPD.idOne]});
   const location_two = store.push('location', {id: LD.idTwo});
-  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parent_pk: LD.idTwo});
+  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parents_pk: LD.idTwo});
   location.remove_parent(location_two.get('id'));
   assert.equal(location.get('parents').get('length'), 0);
   const location_two_plain = {id: LD.idTwo};
@@ -1153,8 +1154,8 @@ test('add_parent will add back old join model after it was removed and not dirty
   const location = store.push('location', {id: LD.idOne, location_parents_fks: [LPD.idOne, LPD.idTwo]});
   const location_two = store.push('location', {id: LD.idTwo});
   const location_three = store.push('location', {id: LD.idThree});
-  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parent_pk: LD.idTwo});
-  store.push('location-parents', {id: LPD.idTwo, location_pk: LD.idOne, parent_pk: LD.idThree});
+  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parents_pk: LD.idTwo});
+  store.push('location-parents', {id: LPD.idTwo, location_pk: LD.idOne, parents_pk: LD.idThree});
   location.remove_parent(location_three.get('id'));
   assert.equal(location.get('parents').get('length'), 1);
   const location_three_plain = {id: LD.idThree};
@@ -1166,7 +1167,7 @@ test('add_parent will add back old join model after it was removed and not dirty
 test('remove_parent correctly adds parent when already has one', (assert) => {
   const location = store.push('location', {id: LD.idOne, location_parents_fks: [LPD.idTwo]});
   const location_two = store.push('location', {id: LD.idTwo});
-  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parent_pk: LD.idTwo});
+  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parents_pk: LD.idTwo});
   location.remove_parent(location_two.get('id'));
   assert.equal(location.get('parents').get('length'), 0);
 });
@@ -1175,8 +1176,8 @@ test('remove_parent correctly adds parent when has multiple', (assert) => {
   const location = store.push('location', {id: LD.idOne, location_parents_fks: [LPD.idTwo, LPD.idThree]});
   const location_two = store.push('location', {id: LD.idTwo});
   const location_three = store.push('location', {id: LD.idThree});
-  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parent_pk: LD.idTwo});
-  store.push('location-parents', {id: LPD.idTwo, location_pk: LD.idOne, parent_pk: LD.idThree});
+  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parents_pk: LD.idTwo});
+  store.push('location-parents', {id: LPD.idTwo, location_pk: LD.idOne, parents_pk: LD.idThree});
   location.remove_parent(location_three.get('id'));
   assert.equal(location.get('parents').get('length'), 1);
 });
@@ -1197,7 +1198,7 @@ test('clicking save will make location model parents not dirty with existing', (
   const location = store.push('location', {id: LD.idOne, location_parents_fks: [LPD.idOne]});
   const location_two = store.push('location', {id: LD.idTwo});
   const location_three = {id: LD.idThree};
-  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parent_pk: LD.idTwo});
+  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parents_pk: LD.idTwo});
   location.add_parent(location_three);
   assert.equal(location.get('parents').get('length'), 2);
   assert.ok(location.get('parentsIsDirty'));
@@ -1212,7 +1213,7 @@ test('rollback parents resets parents', (assert) => {
   const location_two = store.push('location', {id: LD.idTwo});
   const location_three = store.push('location', {id: LD.idThree});
   const location_four = store.push('location', {id: LD.idFour});
-  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parent_pk: LD.idTwo});
+  store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parents_pk: LD.idTwo});
   assert.deepEqual(location.get('location_parents_fks'), [LPD.idOne]);
   location.add_parent({id: LD.idThree});
   assert.ok(location.get('isNotDirty'));

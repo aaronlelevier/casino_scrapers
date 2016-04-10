@@ -284,7 +284,7 @@ test('parents are deserialized correctly (detail)', (assert) => {
 test('children are deserialized correctly with existing same child (detail)', (assert) => {
     store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId, location_children_fks: [LCD.idOne]});
     store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, location_level_fk: LLD.idOne, status_fk: LDS.openId});
-    store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
+    store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, children_pk: LD.idTwo});
     const response = LF.generate(LD.idOne);
     response.children = [LF.get(LD.idTwo)];
     run(() => {
@@ -299,7 +299,7 @@ test('children are deserialized correctly with existing same child (detail)', (a
 test('children are deserialized correctly with existing different child (detail)', (assert) => {
     store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId, location_children_fks: [LCD.idOne]});
     store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, location_level_fk: LLD.idOne, status_fk: LDS.openId});
-    store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
+    store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, children_pk: LD.idTwo});
     const response = LF.generate(LD.idOne);
     response.children = [LF.get(LD.idThree)];
     run(() => {
@@ -309,14 +309,14 @@ test('children are deserialized correctly with existing different child (detail)
     assert.equal(location.get('children').get('length'), 1); 
     assert.equal(location.get('children').objectAt(0).get('id'), LD.idThree); 
     assert.equal(location.get('location_children').get('length'), 1); 
-    assert.equal(location.get('location_children').objectAt(0).get('child_pk'), LD.idThree); 
+    assert.equal(location.get('location_children').objectAt(0).get('children_pk'), LD.idThree); 
     assert.notDeepEqual(location.get('location_children_fks'), [LCD.idOne]);
 });
 
 test('children are deserialized correctly with null child (detail)', (assert) => {
     store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId, location_children_fks: [LCD.idOne]});
     store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, location_level_fk: LLD.idOne, status_fk: LDS.openId});
-    store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
+    store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, children_pk: LD.idTwo});
     const response = LF.generate(LD.idOne);
     response.children = null;
     run(() => {
@@ -331,7 +331,7 @@ test('children are deserialized correctly with null child (detail)', (assert) =>
 test('parents are deserialized correctly with existing same parent (detail)', (assert) => {
     store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId, location_parent_fks: [LPD.idOne]});
     store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, location_level_fk: LLD.idOne, status_fk: LDS.openId});
-    store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parent_pk: LD.idTwo});
+    store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parents_pk: LD.idTwo});
     const response = LF.generate(LD.idOne);
     response.parents = [LF.get(LD.idTwo)];
     subject.deserialize(response, LD.idOne);
@@ -344,7 +344,7 @@ test('parents are deserialized correctly with existing same parent (detail)', (a
 test('parents are deserialized correctly with existing different parent (detail)', (assert) => {
     store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId, location_parents_fks: [LPD.idOne]});
     store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, location_level_fk: LLD.idOne, status_fk: LDS.openId});
-    store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parent_pk: LD.idTwo});
+    store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parents_pk: LD.idTwo});
     const response = LF.generate(LD.idOne);
     response.parents = [LF.get(LD.idThree)];
     run(() => {
@@ -354,14 +354,14 @@ test('parents are deserialized correctly with existing different parent (detail)
     assert.equal(location.get('parents').get('length'), 1); 
     assert.equal(location.get('parents').objectAt(0).get('id'), LD.idThree); 
     assert.equal(location.get('location_parents').get('length'), 1); 
-    assert.equal(location.get('location_parents').objectAt(0).get('parent_pk'), LD.idThree); 
+    assert.equal(location.get('location_parents').objectAt(0).get('parents_pk'), LD.idThree); 
     assert.notDeepEqual(location.get('location_parents_fks'), [LPD.idOne]);
 });
 
 test('parents are deserialized correctly with null parent (detail)', (assert) => {
     store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId, location_parents_fks: [LPD.idOne]});
     store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, location_level_fk: LLD.idOne, status_fk: LDS.openId});
-    store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parent_pk: LD.idTwo});
+    store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parents_pk: LD.idTwo});
     const response = LF.generate(LD.idOne);
     response.parents = null;
     run(() => {

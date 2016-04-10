@@ -29,8 +29,8 @@ moduleForComponent('location-parent-select', 'integration: location-parent-selec
         translation.initialize(this);
         store = module_registry(this.container, this.registry, ['model:location', 'model:location-parents', 'model:location-level']);
         run(function() {
-            m2m = store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parent_pk: LD.idTwo});
-            m2m_two = store.push('location-parents', {id: LPD.idTwo, location_pk: LD.idOne, parent_pk: LD.idThree});
+            m2m = store.push('location-parents', {id: LPD.idOne, location_pk: LD.idOne, parents_pk: LD.idTwo});
+            m2m_two = store.push('location-parents', {id: LPD.idTwo, location_pk: LD.idOne, parents_pk: LD.idThree});
             locationz = store.push('location', {id: LD.idOne, name: LD.storeName, location_parents_fks: [LPD.idOne, LPD.idTwo]});
             store.push('location', {id: LD.idTwo, name: 'wat', location_level: LLD.idOne});
             store.push('location', {id: LD.idThree, name: 'bat', location_level: LLD.idOne});

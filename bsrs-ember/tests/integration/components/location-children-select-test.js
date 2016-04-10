@@ -29,8 +29,8 @@ moduleForComponent('location-children-select', 'integration: location-children-s
         translation.initialize(this);
         store = module_registry(this.container, this.registry, ['model:location', 'model:location-children', 'model:location-level']);
         run(function() {
-            m2m = store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
-            m2m_two = store.push('location-children', {id: LCD.idTwo, location_pk: LD.idOne, child_pk: LD.idThree});
+            m2m = store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, children_pk: LD.idTwo});
+            m2m_two = store.push('location-children', {id: LCD.idTwo, location_pk: LD.idOne, children_pk: LD.idThree});
             locationz = store.push('location', {id: LD.idOne, name: LD.storeName, location_children_fks: [LCD.idOne, LCD.idTwo]});
             store.push('location', {id: LD.idTwo, name: 'wat', location_level: LLD.idOne});
             store.push('location', {id: LD.idThree, name: 'bat', location_level: LLD.idOne});
