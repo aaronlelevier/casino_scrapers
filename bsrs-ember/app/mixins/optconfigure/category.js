@@ -19,6 +19,7 @@ export default Ember.Mixin.create({
   OPT_CONF: {
     children: {
       associated_model: 'category',
+      associated_pointer: 'children',
       join_model: 'category-children'
     }
   },

@@ -199,13 +199,13 @@ test('clicking power select for parent categories will fire off xhr request for 
         assert.equal(page.categoryOptionLength, 2);
         assert.equal(page.categoriesSelected, 0);
         const role = store.find('role', UUID.value);
-        assert.equal(role.get('role_category_fks').length, 0);
+        assert.equal(role.get('role_categories_fks').length, 0);
         assert.equal(role.get('categories').get('length'), 0);
     });
     page.categoryClickOptionOneEq();
     andThen(() => {
         let role = store.find('role', UUID.value);
-        assert.equal(role.get('role_category_fks').length, 0);
+        assert.equal(role.get('role_categories_fks').length, 0);
         assert.equal(role.get('categories').get('length'), 1);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(page.categoriesSelected, 1);
@@ -222,7 +222,7 @@ test('clicking power select for parent categories will fire off xhr request for 
     });
 });
 
-test('adding and removing removing a category in power select for categories will save correctly and cleanup role_category_fks', (assert) => {
+test('adding and removing removing a category in power select for categories will save correctly and cleanup role_categories_fks', (assert) => {
     visit(NEW_URL);
     andThen(() => {
         patchRandom(counter);
@@ -233,7 +233,7 @@ test('adding and removing removing a category in power select for categories wil
         assert.equal(page.categoryOptionLength, 2);
         assert.equal(page.categoriesSelected, 0);
         const role = store.find('role', UUID.value);
-        assert.equal(role.get('role_category_fks').length, 0);
+        assert.equal(role.get('role_categories_fks').length, 0);
         assert.equal(role.get('categories').get('length'), 0);
     });
     page.categoryClickOptionOneEq();

@@ -20,8 +20,8 @@ module('unit: parent-model-category-select component test', {
 //TODO: change_category_tree should just pass plain JS object
 test('component is not valid when the only category (on the ticket model) has children', (assert) => {
     ticket = store.push('ticket', {id: TD.idOne});
-    store.push('category-children', {id: CCD.idOne, category_pk: CD.idTwo, child_pk: CD.idOne});
-    store.push('category-children', {id: CCD.idTwo, category_pk: CD.unusedId, child_pk: CD.idTwo});
+    store.push('category-children', {id: CCD.idOne, category_pk: CD.idTwo, children_pk: CD.idOne});
+    store.push('category-children', {id: CCD.idTwo, category_pk: CD.unusedId, children_pk: CD.idTwo});
     category_one = store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo});
     category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId});
     category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: null});

@@ -72,7 +72,7 @@ var TicketDeserializer = Ember.Object.extend({
                     delete cat.children;
                     const category = store.push('category', cat); 
                     if(children_json){
-                        let [m2m_children, children, server_sum] = many_to_many_extract(children_json, store, category, 'category_children', 'category_pk', 'category', 'child_pk');
+                        let [m2m_children, children, server_sum] = many_to_many_extract(children_json, store, category, 'category_children', 'category_pk', 'category', 'children_pk');
                         children.forEach((cat) => {
                             store.push('category', cat); 
                         });

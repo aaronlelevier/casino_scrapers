@@ -223,7 +223,7 @@ test('clicking select for categories will fire off xhr request for all parent ca
     visit(DETAIL_URL);
     andThen(() => {
         let role = store.find('role', RD.idOne);
-        assert.equal(role.get('role_category_fks').length, 1);
+        assert.equal(role.get('role_categories_fks').length, 1);
         assert.equal(page.categoriesSelected, 1);
     });
     let category_children_endpoint = PREFIX + '/admin/categories/parents/';
@@ -233,13 +233,13 @@ test('clicking select for categories will fire off xhr request for all parent ca
         assert.equal(page.categoryOptionLength, 2);
         assert.equal(page.categoriesSelected, 1);
         const role = store.find('role', RD.idOne);
-        assert.equal(role.get('role_category_fks').length, 1);
+        assert.equal(role.get('role_categories_fks').length, 1);
         assert.equal(role.get('categories').get('length'), 1);
     });
     page.categoryClickOptionTwoEq();
     andThen(() => {
         const role = store.find('role', RD.idOne);
-        assert.equal(role.get('role_category_fks').length, 1);
+        assert.equal(role.get('role_categories_fks').length, 1);
         assert.equal(role.get('categories').get('length'), 2);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(page.categoriesSelected, 2);
@@ -270,7 +270,7 @@ test('starting with multiple categories, can remove all categories (while not po
     page.categoryClickDropdown();
     andThen(() => {
         let role = store.find('role', RD.idOne);
-        assert.equal(role.get('role_category_fks').length, 2);
+        assert.equal(role.get('role_categories_fks').length, 2);
         assert.equal(role.get('categories').get('length'), 0);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(page.categoryOptionLength, 2);
@@ -280,7 +280,7 @@ test('starting with multiple categories, can remove all categories (while not po
     page.categoryClickOptionTwoEq();
     andThen(() => {
         let role = store.find('role', RD.idOne);
-        assert.equal(role.get('role_category_fks').length, 2);
+        assert.equal(role.get('role_categories_fks').length, 2);
         assert.equal(role.get('categories').get('length'), 2);
         assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
         assert.equal(page.categoriesSelected, 2);
@@ -316,7 +316,7 @@ test('search will filter down on categories in store correctly by removing and a
     page.categoryClickOptionOneEq();
     andThen(() => {
         let role = store.find('role', RD.idOne);
-        assert.equal(role.get('role_category_fks').length, 2);
+        assert.equal(role.get('role_categories_fks').length, 2);
         assert.equal(role.get('categories').get('length'), 2);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.deepEqual(role.get('categories_ids'), ['abc123', CD.idGridOne]);

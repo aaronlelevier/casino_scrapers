@@ -4,18 +4,18 @@ const { run } = Ember;
 let extract_category = (model, store, role_existing) => {
     let server_sum_category_fks = [];
     let prevented_duplicate_m2m = [];
-    let all_join_models = store.find('role-category', {role_fk: model.id});
+    let all_join_models = store.find('role-category', {role_pk: model.id});
     let categories = model.categories || [];
     let all_filtered_models = [];
     categories.forEach((category_json) => {
         let filtered_model = all_join_models.filter((m2m) => {
-            return m2m.get('category_fk') === category_json.id;
+            return m2m.get('category_pk') === category_json.id;
         });
         if (filtered_model.length === 0) {
             let pk = Ember.uuid();
             server_sum_category_fks.push(pk);
             run(() => {
-                store.push('role-category', {id: pk, role_fk: model.id, category_fk: category_json.id});
+                store.push('role-category', {id: pk, role_pk: model.id, category_pk: category_json.id});
                 store.push('category', category_json);
             });
         } else {
@@ -24,7 +24,7 @@ let extract_category = (model, store, role_existing) => {
     });
     server_sum_category_fks.push(...prevented_duplicate_m2m);
     let m2m_to_remove = all_join_models.filter((m2m) => {
-        return Ember.$.inArray(m2m.get('id'), server_sum_category_fks) < 0 && m2m.get('role_fk') === model.id;
+        return Ember.$.inArray(m2m.get('id'), server_sum_category_fks) < 0 && m2m.get('role_pk') === model.id;
     });
     m2m_to_remove.forEach((m2m) => {
         store.push('role-category', {id: m2m.get('id'), removed: true});
@@ -102,7 +102,7 @@ var RoleDeserializer = Ember.Object.extend({
         let role = existing;
         if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
             response.location_level_fk = extract_location_level(response, store);
-            response.role_category_fks = extract_category(response, store, existing);
+            response.role_categories_fks = extract_category(response, store, existing);
             response.detail = true;
             response = copySettingsToFirstLevel(response);
             role = store.push('role', response);

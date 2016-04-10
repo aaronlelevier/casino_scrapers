@@ -49,13 +49,13 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, OptConf, {
   //childrenIsNotDirty: Ember.computed.not('childrenIsDirty'),
   ////m2m attr
   //children_ids: many_models_ids('children'),
-  //children: many_models('category_children', 'child_pk', 'category'),
+  //children: many_models('category_children', 'children_pk', 'category'),
   //category_children_ids: many_to_many_ids('category_children'),
   //category_children: many_to_many('category-children', 'category_pk'),
   ////add m2m
-  //add_child: add_many_to_many('category-children', 'category', 'child_pk', 'category_pk'),
+  //add_children: add_many_to_many('category-children', 'category', 'children_pk', 'category_pk'),
   ////remove m2m
-  //remove_child: remove_many_to_many('category-children', 'child_pk', 'category_children'),
+  //remove_children remove_many_to_many('category-children', 'children_pk', 'category_children'),
   //belongs to attr
   parent: Ember.computed.alias('parent_belongs_to.firstObject'),
   parent_belongs_to: Ember.computed('parent_id', function() {

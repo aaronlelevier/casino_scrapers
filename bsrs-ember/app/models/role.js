@@ -13,7 +13,7 @@ const { run } = Ember;
 var RoleModel = Model.extend(NewMixin, OptConf, {
   init() {
     belongs_to.bind(this)('location_level', 'role', {'rollback': true});
-    many_to_many.bind(this)('category', 'role');
+    many_to_many.bind(this)('category', 'role', {plural:true});
     this._super(...arguments);
   },
   store: inject('main'),
@@ -34,21 +34,21 @@ var RoleModel = Model.extend(NewMixin, OptConf, {
     };
   }),
   // Categories
-  role_category_fks: [],
-  categories_ids: Ember.computed('categories.[]', function() {
-    return this.get('categories').mapBy('id').uniq();
-  }),
+  role_categories_fks: [],
+  // categories_ids: Ember.computed('categories.[]', function() {
+  //   return this.get('categories').mapBy('id').uniq();
+  // }),
   // categories: many_models('role_categories', 'category_fk', 'category'),
-  role_categories_ids: Ember.computed('role_categories.[]', function() {
-    return this.get('role_categories').mapBy('id');
-  }),
-  // role_categories: many_to_many('role-category', 'role_fk'),
-  // categoryIsDirty: many_to_many_dirty('role_categories_ids', 'role_category_fks'),
-  // categoryIsNotDirty: Ember.computed.not('categoryIsDirty'),
-  // add_category: add_many_to_many('role-category', 'category', 'category_fk', 'role_fk'),
+  // role_categories_ids: Ember.computed('role_categories.[]', function() {
+  //   return this.get('role_categories').mapBy('id');
+  // }),
+  // role_categories: many_to_many('role-category', 'role_pk'),
+  // categoriesIsDirty: many_to_many_dirty('role_categories_ids', 'role_categories_fks'),
+  // categoriesIsNotDirty: Ember.computed.not('categoriesIsDirty'),
+  // add_category: add_many_to_many('role-category', 'category', 'category_pk', 'role_pk'),
   // remove_category: remove_many_to_many('role-category', 'category_fk', 'role_categories'),
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'categoryIsDirty', function() {
-    return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('categoryIsDirty');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'categoriesIsDirty', function() {
+    return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('categoriesIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   serialize() {
@@ -84,8 +84,8 @@ var RoleModel = Model.extend(NewMixin, OptConf, {
     const location_level_fk = this.get('location_level_fk');
     this.change_location_level(location_level_fk);
   },
-  // saveCategories: many_to_many_save('role', 'role_categories', 'role_categories_ids', 'role_category_fks'),
-  // rollbackCategories: many_to_many_rollback('role-category', 'role_category_fks', 'role_fk'),
+  // saveCategories: many_to_many_save('role', 'role_categories', 'role_categories_ids', 'role_categories_fks'),
+  // rollbackCategories: many_to_many_rollback('role-category', 'role_categories_fks', 'role_pk'),
   toString: function() {
     const name = this.get('name');
     return name ? name : '';

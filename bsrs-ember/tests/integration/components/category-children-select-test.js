@@ -28,7 +28,7 @@ moduleForComponent('category-children-select', 'integration: category-children-s
         const service = this.container.lookup('service:i18n');
         loadTranslations(service, translations.generate('en'));
         run(() => {
-            store.push('category-children', {id: CD.idOne, category_pk: CD.idOne, child_pk: CD.idTwo});
+            store.push('category-children', {id: CD.idOne, category_pk: CD.idOne, children_pk: CD.idTwo});
             category = store.push('category', {id: CD.idOne, name: CD.nameOne});
             category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo});
             category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree});
@@ -44,7 +44,7 @@ test('should render a selectbox when with options selected (initial state)', fun
     let categories_children = Ember.A([]);
     this.set('model', category_two);
     this.repository = category_repo;
-    this.render(hbs`{{db-fetch-multi-select model=model multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-category-children-select" displayName="name" add_func="add_child" remove_func="remove_child" repository=repository searchMethod="findCategoryChildren"}}`);
+    this.render(hbs`{{db-fetch-multi-select model=model multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-category-children-select" displayName="name" add_func="add_children" remove_func="remove_child" repository=repository searchMethod="findCategoryChildren"}}`);
     let $component = this.$(COMPONENT);
     clickTrigger();
     assert.equal($(DROPDOWN).length, 1);
@@ -57,7 +57,7 @@ test('should render a selectbox with bound options after type ahead for search',
     let categories_children = store.find('category');
     this.set('model', category);
     this.repository = category_repo;
-    this.render(hbs`{{db-fetch-multi-select model=model multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-category-children-select" displayName="name" add_func="add_child" remove_func="remove_child" repository=repository searchMethod="findCategoryChildren"}}`);
+    this.render(hbs`{{db-fetch-multi-select model=model multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-category-children-select" displayName="name" add_func="add_children" remove_func="remove_child" repository=repository searchMethod="findCategoryChildren"}}`);
     let $component = this.$(COMPONENT);
     run(() => { typeInSearch('a'); });
     return waitFor().

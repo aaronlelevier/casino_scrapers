@@ -22,14 +22,14 @@ test('categories_selected will always return the correct category object based o
     let category_huh = store.push('category', {id: CD.idLossPreventionChild, name: CD.nameLossPreventionChild, parent_id: CD.idWatChild, level: 3});
     //new 2nd level
     let category_rando = store.push('category', {id: CD.idWatChild, name: CD.nameWatChild, parent_id: CD.unusedId, level: 1});
-    store.push('category-children', {id: CD.idOne, category_pk: CD.idWatChild, child_pk: CD.idLossPreventionChild});
+    store.push('category-children', {id: CD.idOne, category_pk: CD.idWatChild, children_pk: CD.idLossPreventionChild});
     //top level
     let category_top_level = store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: undefined, level: 0});
-    store.push('category-children', {id: CCD.idTwo, category_pk: CD.unusedId, child_pk: CD.idTwo});
-    store.push('category-children', {id: CCD.idThree, category_pk: CD.unusedId, child_pk: CD.idWatChild});
+    store.push('category-children', {id: CCD.idTwo, category_pk: CD.unusedId, children_pk: CD.idTwo});
+    store.push('category-children', {id: CCD.idThree, category_pk: CD.unusedId, children_pk: CD.idWatChild});
     //second level
     let category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId, level: 1});
-    store.push('category-children', {id: 4, category_pk: CD.idTwo, child_pk: CD.idOne});
+    store.push('category-children', {id: 4, category_pk: CD.idTwo, children_pk: CD.idOne});
     //third level
     let category_one = store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo, level: 2});
     let subject_one = TicketCategories.create({ticket: ticket, index: undefined});

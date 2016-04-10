@@ -6,7 +6,7 @@ export default Ember.Mixin.create({
       collection: 'roles',
       property: 'location-level',
     },
-    category: {
+    categories: {
       associated_model: 'category',
       join_model: 'role-category'
     }
