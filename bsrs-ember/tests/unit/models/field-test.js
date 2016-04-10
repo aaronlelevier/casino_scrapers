@@ -136,7 +136,7 @@ test('add_option - adding an empty Option does not dirty the Field', (assert) =>
 
 test('remove_option - simulates an Option on the server that gets removed thus dirtying the Field', (assert) => {
     run(() => {
-        field = store.push('field', {id: FD.idOne, field_option_fks: [1]});
+        field = store.push('field', {id: FD.idOne, field_options_fks: [1]});
         store.push('field-option', {id: 1, field_pk: FD.idOne, option_pk: OD.idOne});
     });
     assert.equal(field.get('options').get('length'), 1);

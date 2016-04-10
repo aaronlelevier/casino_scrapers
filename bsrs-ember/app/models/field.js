@@ -1,10 +1,15 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/store';
+import OptConf from 'bsrs-ember/mixins/optconfigure/field';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_dirty_unlessAddedM2M, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
 import { rollbackAll } from 'bsrs-ember/utilities/rollback-all';
 
-export default Model.extend({
+export default Model.extend(OptConf, {
+  init() {
+    many_to_many.bind(this)('option', 'field', {plural:true, dirty:true});
+    this._super(...arguments);
+  },
   store: inject('main'),
   label: attr(''),
   type: attr(''),
@@ -29,13 +34,13 @@ export default Model.extend({
   required: attr(),
   order: attr(),
   // Options
-  options: many_models('field_options', 'option_pk', 'option'),
-  field_options: many_to_many('field-option', 'field_pk'),
-  field_option_ids: many_to_many_ids('field_options'),
+  // options: many_models('field_options', 'option_pk', 'option'),
+  // field_options: many_to_many('field-option', 'field_pk'),
+  // field_option_ids: many_to_many_ids('field_options'),
   field_option_fks: [],
-  add_option: add_many_to_many('field-option', 'option', 'option_pk', 'field_pk'),
-  remove_option: remove_many_to_many('field-option', 'option_pk', 'field_options'),
-  optionsIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('field_option_ids', 'field_option_fks'),
+  // add_option: add_many_to_many('field-option', 'option', 'option_pk', 'field_pk'),
+  // remove_option: remove_many_to_many('field-option', 'option_pk', 'field_options'),
+  optionsIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('field_options'),
   optionsIsDirty: Ember.computed('options.@each.{isDirty}', 'optionsIsDirtyContainer', function() {
     const options = this.get('options');
     return options.isAny('isDirty') || this.get('optionsIsDirtyContainer');
@@ -50,17 +55,17 @@ export default Model.extend({
     this.saveOptions();
     this.save();
   },
-  saveOptions: many_to_many_save('field', 'field_options', 'field_option_ids', 'field_option_fks'),
+  // saveOptions: many_to_many_save('field', 'field_options', 'field_option_ids', 'field_option_fks'),
   rollback(){
     this.optionRollbackContainer();
-    this.optionRollback();
+    this.rollbackOptions();
     this._super();
   },
   optionRollbackContainer() {
     const options = this.get('options');
     rollbackAll(options);
   },
-  optionRollback: many_to_many_rollback('field-option', 'field_option_fks', 'field_pk'),
+  // optionRollback: many_to_many_rollback('field-option', 'field_option_fks', 'field_pk'),
   removeRecord(){
     Ember.run(() => {
       this.get('store').remove('field', this.get('id'));

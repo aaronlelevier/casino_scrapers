@@ -88,7 +88,7 @@ test('validation on link text works as expected', function(assert) {
 
 test('validation - clear out text, and validation msg still works', function(assert) {
   run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, link_type: DTD.linkTypeOne, dtd_link_fks: [DTDL.idOne]});
+    dtd = store.push('dtd', {id: DTD.idOne, link_type: DTD.linkTypeOne, dtd_links_fks: [DTDL.idOne]});
     store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
     link = store.push('link', {id: LINK.idOne, request: LINK.requestOne, text: LINK.textOne,
                       action_button: LINK.action_buttonOne, is_header: LINK.is_headerOne});
@@ -136,7 +136,7 @@ test('add and remove dtd links', function(assert) {
 test('must have one link, cant remove last link, remove btn clears link', function(assert) {
   let links = store.find('link');
   run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, link_type: DTD.linkTypeOne, dtd_link_fks: [DTDL.idOne]});
+    dtd = store.push('dtd', {id: DTD.idOne, link_type: DTD.linkTypeOne, dtd_links_fks: [DTDL.idOne]});
     store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
     store.push('ticket-priority', {id: TP.priorityOneId, name: TP.priorityOne, links: [LINK.idOne]});
     store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, links: [LINK.idOne]});
@@ -188,7 +188,7 @@ test('link type selector is present and has a selection', function(assert) {
   run(() => {
     dtd = store.push('dtd', {
       id: DTD.idOne,
-      dtd_link_fks: [DTDL.idOne],
+      dtd_links_fks: [DTDL.idOne],
       link_type: DTD.linkTypeOne
     });
     store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
@@ -222,7 +222,7 @@ test('note type selector is present and has a selection', function(assert) {
   run(() => {
     dtd = store.push('dtd', {
       id: DTD.idOne,
-      dtd_link_fks: [DTDL.idOne],
+      dtd_links_fks: [DTDL.idOne],
       note_type: DTD.noteTypeOne
     });
     store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, note_pk: LINK.idOne});
@@ -250,7 +250,7 @@ test('preview updates as changes are made to detail', function(assert) {
   run(() => {
     dtd = store.push('dtd', {
       id: DTD.idOne,
-      dtd_link_fks: [DTDL.idOne],
+      dtd_links_fks: [DTDL.idOne],
       link_type: DTD.linkTypeOne,
       link_types: [DTD.linkTypeOne, DTD.linkTypeTwo]
     });
@@ -283,11 +283,11 @@ test('preview updates as changes are made to detail', function(assert) {
 
 test('dtd-link category select', function(assert) {
   run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, dtd_link_fks: [DTDL.idOne]});
+    dtd = store.push('dtd', {id: DTD.idOne, dtd_links_fks: [DTDL.idOne]});
     store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
-    store.push('model-category', {id: TCD.idOne, model_pk: LINK.idOne, category_pk: CD.idOne});
+    store.push('model-category', {id: TCD.idOne, link_pk: LINK.idOne, category_pk: CD.idOne});
     store.push('category', {id: CD.idOne, name: CD.nameOne, label: CD.labelOne});
-    link = store.push('link', {id: LINK.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
+    link = store.push('link', {id: LINK.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
   });
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}`);
@@ -303,7 +303,7 @@ test('no field label does not display undefined', function(assert) {
   run(() => {
     dtd = store.push('dtd', {
       id: DTD.idOne,
-      dtd_field_fks: [DTDL.idOne],
+      dtd_fields_fks: [DTDL.idOne],
     });
     store.push('dtd-field', {id: DTDL.idOne, dtd_pk: DTD.idOne, field_pk: FD.idOne});
     store.push('field', {id: FD.idOne, label: undefined, type: FD.typeOne});
@@ -319,7 +319,7 @@ test('preview updates as fields changes are made to detail', function(assert) {
   run(() => {
     dtd = store.push('dtd', {
       id: DTD.idOne,
-      dtd_field_fks: [DTDL.idOne],
+      dtd_fields_fks: [DTDL.idOne],
     });
     store.push('dtd-field', {id: DTDL.idOne, dtd_pk: DTD.idOne, field_pk: FD.idOne});
     store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeOne});
@@ -369,7 +369,7 @@ test('preview updates as fields changes are made to detail', function(assert) {
 test('selecting link destination will populate dropdown with key', function(assert) {
   run(() => {
     store.clear('dtd');
-    dtd = store.push('dtd', {id: DTD.idOne, key: DTD.keyOne, destination_links: [LINK.idTwo], dtd_link_fks: [DTDL.idOne]});
+    dtd = store.push('dtd', {id: DTD.idOne, key: DTD.keyOne, destination_links: [LINK.idTwo], dtd_links_fks: [DTDL.idOne]});
     store.push('link', {id: LINK.idTwo, destination_fk: DTD.idOne});
     store.push('dtd', {id: DTD.idTwo, key: DTD.keyTwo});
     store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idTwo});
@@ -392,7 +392,7 @@ test('selecting link destination will populate dropdown with key', function(asse
 
 test('add and remove dtd fields', function(assert) {
   run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});
+    dtd = store.push('dtd', {id: DTD.idOne, dtd_fields_fks: [1]});
     store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
     field = store.push('field', {id: FD.idOne});
   });
@@ -417,7 +417,7 @@ test('add and remove dtd fields', function(assert) {
 
 test('add a field - type and required values should be defaulted', function(assert) {
   run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});
+    dtd = store.push('dtd', {id: DTD.idOne, dtd_fields_fks: [1]});
   });
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}`);
@@ -436,7 +436,7 @@ test('add a field - type and required values should be defaulted', function(asse
 
 test('update a fields values', function(assert) {
   run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});
+    dtd = store.push('dtd', {id: DTD.idOne, dtd_fields_fks: [1]});
     store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
     field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeOne, required: FD.requestOne});
   });
@@ -455,7 +455,7 @@ test('update a fields values', function(assert) {
 
 test('update a fields type', function(assert) {
   run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});
+    dtd = store.push('dtd', {id: DTD.idOne, dtd_fields_fks: [1]});
     store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
     field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeThree, required: FD.requestOne});
   });
@@ -482,7 +482,7 @@ test('update a fields type', function(assert) {
 
 test('add and remove dtd field options', function(assert) {
   run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});
+    dtd = store.push('dtd', {id: DTD.idOne, dtd_fields_fks: [1]});
     store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
     field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeSix, required: FD.requestOne});
   });
@@ -503,7 +503,7 @@ test('add and remove dtd field options', function(assert) {
 /* jshint ignore:start */
 test('hide or show options based on field.type', function(assert) {
   run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});
+    dtd = store.push('dtd', {id: DTD.idOne, dtd_fields_fks: [1]});
     store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
     field = store.push('field', {id: FD.idOne});
   });
@@ -530,7 +530,7 @@ test('hide or show options based on field.type', function(assert) {
 
 test('update a field by adding option values', function(assert) {
   run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});
+    dtd = store.push('dtd', {id: DTD.idOne, dtd_fields_fks: [1]});
     store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
     field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeSix, required: FD.requestOne});
   });
@@ -549,7 +549,7 @@ test('update a field by adding option values', function(assert) {
 
 test('update a fields existing option', function(assert) {
   run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, dtd_field_fks: [1]});
+    dtd = store.push('dtd', {id: DTD.idOne, dtd_fields_fks: [1]});
     store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
     field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeSix, required: FD.requestOne, field_option_fks: [1]});
     store.push('field-option', {id: 1, field_pk: FD.idOne, option_pk: OD.idOne});

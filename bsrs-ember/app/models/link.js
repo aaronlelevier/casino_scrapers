@@ -19,25 +19,21 @@ var LinkModel = Model.extend(CategoriesMixin, Validations, OptConf, {
     belongs_to.bind(this)('status', 'link');
     belongs_to.bind(this)('priority', 'link');
     belongs_to.bind(this)('destination', 'link', {'bootstrapped':false});
+    many_to_many.bind(this)('category', 'ticket', {plural:true, add_func:true});
     this._super(...arguments);
   },
   store: inject('main'),
-  model_categories_fks: [],
+  ticket_categories_fks: [],
   order: attr(''),
   action_button: attr(''),
   is_header: attr(false),
   request: attr(''),
   text: attr(''),
-  // priority
   priority_fk: undefined,
-  // categories
-  categoriesIsDirty: many_to_many_dirty('model_categories_ids', 'model_categories_fks'),
-  categoriesIsNotDirty: Ember.computed.not('categoriesIsDirty'),
-  // status
   status_fk: undefined,
-  // destination
   destination_fk: undefined,
-  // dirty tracking
+  // categoriesIsDirty: many_to_many_dirty('link_categories_ids', 'ticket_categories_fks'),
+  // categoriesIsNotDirty: Ember.computed.not('categoriesIsDirty'),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'priorityIsDirty', 'statusIsDirty', 'categoriesIsDirty', 'destinationIsDirty', function() {
     return this.get('isDirty') || this.get('priorityIsDirty') || this.get('statusIsDirty') || this.get('categoriesIsDirty') || this.get('destinationIsDirty');
   }),

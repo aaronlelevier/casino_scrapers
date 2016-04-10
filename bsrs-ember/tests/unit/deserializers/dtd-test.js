@@ -62,7 +62,7 @@ test('dtd deserializer returns correct data', (assert) => {
   assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idOne);
   assert.equal(dtd.get('links').objectAt(0).get('request'), LINK.requestOne);
   assert.equal(dtd.get('dtd_links').get('length'), 1);
-  assert.equal(dtd.get('dtd_link_fks').length, 1);
+  assert.equal(dtd.get('dtd_links_fks').length, 1);
   // fields
   assert.equal(dtd.get('fields').get('length'), 1);
   let field = dtd.get('fields').objectAt(0);
@@ -84,7 +84,7 @@ test('dtd deserializer removes m2m dtd-link when server is diff from client', (a
   assert.ok(json.fields);
   let dtd, dtd_link;
   run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, dtd_link_fks: [DTDL.idOne]});
+    dtd = store.push('dtd', {id: DTD.idOne, dtd_links_fks: [DTDL.idOne]});
     store.push('link', {id: LINK.idTwo});
     dtd_link = store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idTwo});
   });
@@ -104,7 +104,7 @@ test('dtd deserializer removes m2m dtd-link when server is diff from client', (a
 
 test('dtd new definitions from server will not dirty model if clean', (assert) => {
   run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, dtd_link_fks: [DTDL.idOne]});
+    dtd = store.push('dtd', {id: DTD.idOne, dtd_links_fks: [DTDL.idOne]});
     store.push('link', {id: LINK.idTwo});
     dtd_link = store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idTwo});
   });
@@ -122,7 +122,7 @@ test('dtd isDirty, so the deserializer wont override store data', assert => {
   const json = DTDF.generate(DTD.idOne);
   assert.ok(json.fields);
   run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, dtd_link_fks: [DTDL.idOne]});
+    dtd = store.push('dtd', {id: DTD.idOne, dtd_links_fks: [DTDL.idOne]});
     store.push('link', {id: LINK.idTwo});
     store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idTwo});
   });
@@ -151,7 +151,7 @@ test('priority gets extracted', (assert) => {
 test('priority link already has a priority of two', (assert) => {
   let dtd, link;
   run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, dtd_link_fks: [DTDL.idOne]});
+    dtd = store.push('dtd', {id: DTD.idOne, dtd_links_fks: [DTDL.idOne]});
     store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
     link = store.push('link', {id: LINK.idOne, priority_fk: TP.priorityTwoId});
     store.push('ticket-priority', {id: TP.priorityTwoId, name: TP.priorityTwo, links: [link.get('id')]});
@@ -248,7 +248,7 @@ test('dtd link has no destination', assert => {
 test('dtd link gets updated destination from server', assert => {
   let dtd;
   run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, destination_links: [LINK.idTwo], dtd_link_fks: [DTDL.idOne]});
+    dtd = store.push('dtd', {id: DTD.idOne, destination_links: [LINK.idTwo], dtd_links_fks: [DTDL.idOne]});
     store.push('link', {id: LINK.idTwo, destination_fk: DTD.idOne});
     store.push('dtd', {id: DTD.idTwo});
     store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idTwo});
@@ -271,7 +271,7 @@ test('dtd link gets updated destination from server', assert => {
 test('dtd link that is dirty gets ignores destination from server', assert => {
   let dtd;
   run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, dtd_link_fks: [DTDL.idOne]});
+    dtd = store.push('dtd', {id: DTD.idOne, dtd_links_fks: [DTDL.idOne]});
     store.push('link', {id: LINK.idTwo, destination_fk: DTD.idOne});
     store.push('dtd', {id: DTD.idTwo, destination_links: [LINK.idTwo]});
     store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idTwo});

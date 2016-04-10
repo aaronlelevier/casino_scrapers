@@ -87,7 +87,7 @@ var DTDDeserializer = Ember.Object.extend({
           let _option = store.push('option', model);
         });
       });
-      dtd = store.push('dtd', {id: dtd.get('id'), dtd_link_fks: links_server_sum});
+      dtd = store.push('dtd', {id: dtd.get('id'), dtd_links_fks: links_server_sum});
       dtd.save();
       return_dtd = dtd;
     }

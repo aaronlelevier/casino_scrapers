@@ -17,25 +17,11 @@ import Ember from 'ember';
  */
 export default Ember.Mixin.create({
   OPT_CONF: {
-    status: {
-      collection: 'links',
-      property: 'ticket-status',
-      related_model: 'status',
+    options: {
+      associated_model: 'option',
+      join_model: 'field-option'
     },
-    priority: {
-      collection: 'links',
-      property: 'ticket-priority',
-      related_model: 'priority',
-    },
-    destination: {
-      collection: 'destination_links',
-      property: 'dtd',
-      related_model: 'destination',
-    },
-    categories: {
-      associated_model: 'category',
-      join_model: 'model-category'
-    }
   },
 });
+
 
