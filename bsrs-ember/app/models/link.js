@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/store';
-import CategoriesMixin from 'bsrs-ember/mixins/model/ticket/category';
+import CategoriesMixin from 'bsrs-ember/mixins/model/category';
 import OptConf from 'bsrs-ember/mixins/optconfigure/link';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
@@ -38,6 +38,7 @@ var LinkModel = Model.extend(CategoriesMixin, Validations, OptConf, {
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   rollback(){
     this.rollbackPriority();
+    this.rollbackStatus();
     this.rollbackDestination();
     this.rollbackCategories();
     this._super();
@@ -46,6 +47,7 @@ var LinkModel = Model.extend(CategoriesMixin, Validations, OptConf, {
     this.savePriority();
     this.saveStatus();
     this.saveDestination();
+    this.saveCategories();
     this._super();
   },
   serialize() {

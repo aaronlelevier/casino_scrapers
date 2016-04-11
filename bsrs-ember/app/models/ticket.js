@@ -5,7 +5,7 @@ import inject from 'bsrs-ember/utilities/store';
 import computed from 'ember-computed-decorators';
 //end-non-standard
 import equal from 'bsrs-ember/utilities/equal';
-import CategoriesMixin from 'bsrs-ember/mixins/model/ticket/category';
+import CategoriesMixin from 'bsrs-ember/mixins/model/category';
 import TicketLocationMixin from 'bsrs-ember/mixins/model/ticket/location';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
