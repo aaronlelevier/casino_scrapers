@@ -310,7 +310,7 @@ test('serialize dtd model and links with a priority', (assert) => {
       status_fk: TD.statusOneId,
       destination_fk: DTD.idTwo
     });
-    store.push('model-category', {id: TCD.idOne, ticket_pk: LINK.idOne, category_pk: CD.idOne});
+    store.push('model-category', {id: TCD.idOne, model_pk: LINK.idOne, category_pk: CD.idOne});
     store.push('category', {id: CD.idOne, name: CD.nameOne, label: CD.labelOne});
   });
   assert.equal(dtd.get('links').objectAt(0).get('id'), LINK.idOne);

@@ -18,10 +18,10 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
   init() {
     belongs_to.bind(this)('status', 'ticket');
     belongs_to.bind(this)('priority', 'ticket');
-    belongs_to.bind(this)('assignee', 'ticket', {'change_func':true, 'rollback':true});
-    belongs_to.bind(this)('location', 'ticket', {'bootstrapped':false,'change_func':true});
+    belongs_to.bind(this)('assignee', 'ticket', {change_func:false, rollback:false});
+    belongs_to.bind(this)('location', 'ticket', {bootstrapped:false, change_func:false});
     many_to_many.bind(this)('cc', 'ticket');
-    many_to_many.bind(this)('category', 'ticket', {plural:true, add_func:true});
+    many_to_many.bind(this)('category', 'model', {plural:true, add_func:false});
     this._super(...arguments);
   },
   store: inject('main'),
@@ -33,7 +33,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
   comment: attr(''),
   //TODO: these need to be in an init function
   ticket_cc_fks: [],
-  ticket_categories_fks: [],
+  model_categories_fks: [],
   previous_attachments_fks: [],
   ticket_attachments_fks: [],
   status_fk: undefined,

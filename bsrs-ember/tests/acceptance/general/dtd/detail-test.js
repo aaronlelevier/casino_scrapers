@@ -486,7 +486,7 @@ test('categories selector is wired up and working', async assert => {
 //    assert.equal(components, 2);
 //    let dtd = store.find('dtd', DTD.idOne);
 //    assert.equal(dtd.get('top_level_category').get('id'), CD.idThree);
-//    assert.equal(dtd.get('ticket_categories_fks').length, 3);
+//    assert.equal(dtd.get('model_categories_fks').length, 3);
 //    assert.ok(dtd.get('isDirtyOrRelatedDirty'));
 //  });
 //  page.categoryOneClickDropdown();

@@ -24,9 +24,9 @@ const Validations = buildValidations({
 var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin, LocationMixin, NewMixin, OptConf, RoleMixin, LocaleMixin, {
   init() {
     belongs_to.bind(this)('status', 'person');
-    belongs_to.bind(this)('role', 'person', {'change_func': true, 'rollback': true});
-    belongs_to.bind(this)('locale', 'person', {'change_func':true});
-    many_to_many.bind(this)('location', 'person', {'plural':true, 'rollback':true, 'dirty':true, 'save':true});
+    belongs_to.bind(this)('role', 'person', {change_func:false, rollback: false});
+    belongs_to.bind(this)('locale', 'person', {change_func:false});
+    many_to_many.bind(this)('location', 'person', {plural:true, rollback:false, dirty:false, save:false});
     this._super(...arguments);
   },
   type: 'person',

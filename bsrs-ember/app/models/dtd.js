@@ -26,8 +26,8 @@ const Validations = buildValidations({
 
 var DTDModel = Model.extend(Validations, OptConf, {
   init() {
-    many_to_many.bind(this)('link', 'dtd', {plural:true, dirty:true});
-    many_to_many.bind(this)('field', 'dtd', {plural:true, dirty:true});
+    many_to_many.bind(this)('link', 'dtd', {plural:true, dirty:false});
+    many_to_many.bind(this)('field', 'dtd', {plural:true, dirty:false});
     this._super(...arguments);
   },
   store: inject('main'),

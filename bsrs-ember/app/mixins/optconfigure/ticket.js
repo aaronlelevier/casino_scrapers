@@ -42,7 +42,8 @@ export default Ember.Mixin.create({
     },
     categories: {
       associated_model: 'category',
-      join_model: 'model-category'
+      join_model: 'model-category',
+      main_model: 'ticket'
     }
   },
 });

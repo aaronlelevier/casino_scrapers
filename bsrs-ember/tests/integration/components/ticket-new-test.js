@@ -19,9 +19,9 @@ moduleForComponent('tickets/ticket-new', 'integration: ticket-new test', {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status']);
         translation.initialize(this);
         run(function() {
-            m2m = store.push('model-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne});
-            m2m_two = store.push('model-category', {id: TICKET_CATEGORY_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idTwo});
-            m2m_three = store.push('model-category', {id: TICKET_CATEGORY_DEFAULTS.idThree, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.unusedId});
+            m2m = store.push('model-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, model_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne});
+            m2m_two = store.push('model-category', {id: TICKET_CATEGORY_DEFAULTS.idTwo, model_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idTwo});
+            m2m_three = store.push('model-category', {id: TICKET_CATEGORY_DEFAULTS.idThree, model_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.unusedId});
             category_one = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent_id: CATEGORY_DEFAULTS.idTwo});
             category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent_id: CATEGORY_DEFAULTS.unusedId});
             category_three = store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameThree, parent_id: null});

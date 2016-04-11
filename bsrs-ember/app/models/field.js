@@ -7,7 +7,7 @@ import { rollbackAll } from 'bsrs-ember/utilities/rollback-all';
 
 export default Model.extend(OptConf, {
   init() {
-    many_to_many.bind(this)('option', 'field', {plural:true, dirty:true});
+    many_to_many.bind(this)('option', 'field', {plural:true, dirty:false});
     this._super(...arguments);
   },
   store: inject('main'),

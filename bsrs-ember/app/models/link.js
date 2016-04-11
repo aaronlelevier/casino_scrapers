@@ -18,12 +18,12 @@ var LinkModel = Model.extend(CategoriesMixin, Validations, OptConf, {
   init() {
     belongs_to.bind(this)('status', 'link');
     belongs_to.bind(this)('priority', 'link');
-    belongs_to.bind(this)('destination', 'link', {'bootstrapped':false});
-    many_to_many.bind(this)('category', 'ticket', {plural:true, add_func:true});
+    belongs_to.bind(this)('destination', 'link', {bootstrapped:false});
+    many_to_many.bind(this)('category', 'model', {plural:true, add_func:false});
     this._super(...arguments);
   },
   store: inject('main'),
-  ticket_categories_fks: [],
+  model_categories_fks: [],
   order: attr(''),
   action_button: attr(''),
   is_header: attr(false),

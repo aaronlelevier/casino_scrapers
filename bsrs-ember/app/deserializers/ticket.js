@@ -62,7 +62,7 @@ var TicketDeserializer = Ember.Object.extend({
                 extract_assignee(assignee_json, store, ticket);
             }
             let [m2m_ccs, ccs, cc_server_sum] = many_to_many_extract(cc_json, store, ticket, 'ticket_cc', 'ticket_pk', 'person', 'person_pk');
-            let [m2m_categories, categories, server_sum] = many_to_many_extract(categories_json, store, ticket, 'ticket_categories', 'ticket_pk', 'category', 'category_pk');
+            let [m2m_categories, categories, server_sum] = many_to_many_extract(categories_json, store, ticket, 'model_categories', 'model_pk', 'category', 'category_pk');
             run(() => {
                 if(ticket_location_json){
                     ticket.change_location(ticket_location_json);
@@ -91,7 +91,7 @@ var TicketDeserializer = Ember.Object.extend({
                 m2m_ccs.forEach((m2m) => {
                     store.push('ticket-person', m2m);
                 });
-                ticket = store.push('ticket', {id: response.id, ticket_cc_fks: cc_server_sum, ticket_categories_fks: server_sum}); 
+                ticket = store.push('ticket', {id: response.id, ticket_cc_fks: cc_server_sum, model_categories_fks: server_sum}); 
                 ticket.save();
             });
         }

@@ -285,9 +285,9 @@ test('dtd-link category select', function(assert) {
   run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, dtd_links_fks: [DTDL.idOne]});
     store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
-    store.push('model-category', {id: TCD.idOne, ticket_pk: LINK.idOne, category_pk: CD.idOne});
+    store.push('model-category', {id: TCD.idOne, model_pk: LINK.idOne, category_pk: CD.idOne});
     store.push('category', {id: CD.idOne, name: CD.nameOne, label: CD.labelOne});
-    link = store.push('link', {id: LINK.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
+    link = store.push('link', {id: LINK.idOne, model_categories_fks: [TCD.idOne, TCD.idTwo, TCD.idThree]});
   });
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}`);
