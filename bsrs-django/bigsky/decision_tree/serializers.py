@@ -64,7 +64,15 @@ class TreeLinkCreateUpdateSerializer(BaseCreateSerializer):
                   'request', 'priority', 'status', 'dtd', 'destination',)
 
 
-class TreeDataDetailSerializer(BaseCreateSerializer):
+class TreeDataAttachmentToRepresentationMixin(object):
+
+    def to_representation(self, obj):
+        data = super(TreeDataAttachmentToRepresentationMixin, self).to_representation(obj)
+        data['attachments'] = Attachment.objects.filter(object_id=data['id']).to_dict_full()
+        return data
+
+
+class TreeDataDetailSerializer(TreeDataAttachmentToRepresentationMixin, BaseCreateSerializer):
 
     attachments = AttachmentSerializer(many=True, required=False)
     fields = TreeFieldSerializer(many=True, required=False)
@@ -77,7 +85,7 @@ class TreeDataDetailSerializer(BaseCreateSerializer):
                   'links',)
 
 
-class TreeDataCreateUpdateSerializer(BaseCreateSerializer):
+class TreeDataCreateUpdateSerializer(TreeDataAttachmentToRepresentationMixin, BaseCreateSerializer):
 
     attachments = serializers.PrimaryKeyRelatedField(
         queryset=Attachment.objects.all(), many=True, required=False)
@@ -89,11 +97,6 @@ class TreeDataCreateUpdateSerializer(BaseCreateSerializer):
         fields = ('id', 'key', 'description', 'note', 'note_type',
                   'attachments', 'fields', 'prompt', 'link_type',
                   'links',)
-
-    def to_representation(self, obj):
-        data = super(TreeDataCreateUpdateSerializer, self).to_representation(obj)
-        data['attachments'] = Attachment.objects.filter(object_id=data['id']).to_dict_full()
-        return data
 
     def create(self, validated_data):
         return self.process_all(validated_data=validated_data)
