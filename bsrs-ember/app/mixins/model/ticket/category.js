@@ -43,13 +43,9 @@ var CategoriesMixin = Ember.Mixin.create({
     const sorted_categories = this.get('sorted_categories') || [];
     return sorted_categories[sorted_categories.length-1];
   }),
-  // categories_ids: many_models_ids('categories'),
   sorted_categories: Ember.computed('categories.[]', 'top_level_category', function() {
     return this.get('categories').sortBy('level');
   }),
-  // categories: many_models('ticket_categories', 'category_pk', 'category'),
-  // ticket_categories_ids: many_to_many_ids('ticket_categories'),
-  // ticket_categories: many_to_many('model-category', 'ticket_pk'),
   ticket_categories_with_removed: Ember.computed(function() {
     let filter = function(join_model) {
       return join_model.get('ticket_pk') === this.get('id');
@@ -136,9 +132,6 @@ var CategoriesMixin = Ember.Mixin.create({
       store.push('model-category', {id: Ember.uuid(), ticket_pk: ticket_pk, category_pk: category_pk});
     });
   },
-  // remove_category: remove_many_to_many('model-category', 'category_pk', 'ticket_categories'),
-  // rollbackCategories: many_to_many_rollback('model-category', 'ticket_categories_fks', 'ticket_pk'),
-  // saveCategories: many_to_many_save('ticket', 'ticket_categories', 'ticket_categories_ids', 'ticket_categories_fks'),
 });
 
 export default CategoriesMixin;

@@ -40,10 +40,6 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
   priority_fk: undefined,
   location_fk: undefined,
   assignee_fk: undefined,
-  // categoriesIsDirty: many_to_many_dirty('ticket_categories_ids', 'ticket_categories_fks'),
-  // categoriesIsNotDirty: Ember.computed.not('categoriesIsDirty'),
-  // ccIsDirty: many_to_many_dirty('ticket_cc_ids', 'ticket_cc_fks'),
-  // ccIsNotDirty: Ember.computed.not('ccIsDirty'),
   /*start-non-standard*/ @computed('status') /*end-non-standard*/
   status_class(status){
     const name = this.get('status.name');

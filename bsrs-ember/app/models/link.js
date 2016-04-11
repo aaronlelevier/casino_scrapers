@@ -32,8 +32,6 @@ var LinkModel = Model.extend(CategoriesMixin, Validations, OptConf, {
   priority_fk: undefined,
   status_fk: undefined,
   destination_fk: undefined,
-  // categoriesIsDirty: many_to_many_dirty('link_categories_ids', 'ticket_categories_fks'),
-  // categoriesIsNotDirty: Ember.computed.not('categoriesIsDirty'),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'priorityIsDirty', 'statusIsDirty', 'categoriesIsDirty', 'destinationIsDirty', function() {
     return this.get('isDirty') || this.get('priorityIsDirty') || this.get('statusIsDirty') || this.get('categoriesIsDirty') || this.get('destinationIsDirty');
   }),

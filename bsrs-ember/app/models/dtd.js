@@ -49,26 +49,12 @@ var DTDModel = Model.extend(Validations, OptConf, {
     'admin.dtd.link_type.buttons',
     'admin.dtd.link_type.links'
   ],
-  // Links
-  // links: many_models('dtd_links', 'link_pk', 'link'),
-  // dtd_links: many_to_many('dtd-link', 'dtd_pk'),
-  // dtd_links_ids: many_to_many_ids('dtd_links'),
-  // dtd_links_fks: [],
-  // add_link: add_many_to_many('dtd-link', 'link', 'link_pk', 'dtd_pk'),
-  // remove_link: remove_many_to_many('dtd-link', 'link_pk', 'dtd_links'),
   linksIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('dtd_links'),
   linksIsDirty: Ember.computed('links.@each.{isDirtyOrRelatedDirty}', 'linksIsDirtyContainer', function() {
     const links = this.get('links');
     return links.isAny('isDirtyOrRelatedDirty') || this.get('linksIsDirtyContainer');
   }),
   linksIsNotDirty: Ember.computed.not('linksIsDirty'),
-  // Fields
-  // fields: many_models('dtd_fields', 'field_pk', 'field'),
-  // dtd_fields: many_to_many('dtd-field', 'dtd_pk'),
-  // dtd_fields_ids: many_to_many_ids('dtd_fields'),
-  // dtd_fields_fks: [],
-  // add_field: add_many_to_many('dtd-field', 'field', 'field_pk', 'dtd_pk'),
-  // remove_field: remove_many_to_many('dtd-field', 'field_pk', 'dtd_fields'),
   fieldsIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('dtd_fields'),
   fieldsIsDirty: Ember.computed('fields.@each.{isDirtyOrRelatedDirty}', 'fieldsIsDirtyContainer', function() {
     const fields = this.get('fields');
@@ -112,12 +98,10 @@ var DTDModel = Model.extend(Validations, OptConf, {
     const links = this.get('links');
     rollbackAll(links);
   },
-  // linkRollback: many_to_many_rollback('dtd-link', 'dtd_links_fks', 'dtd_pk'),
   fieldRollbackContainer() {
     const fields = this.get('fields');
     rollbackAll(fields);
   },
-  // fieldRollback: many_to_many_rollback('dtd-field', 'dtd_fields_fks', 'dtd_pk'),
   save(){
     this.saveLinksContainer();
     this.saveLinks();

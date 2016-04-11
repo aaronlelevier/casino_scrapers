@@ -33,10 +33,6 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin
   email_fks: [],
   phone_number_fks: [],
   address_fks: [],
-  // childrenIsDirty: many_to_many_dirty('location_children_ids', 'location_children_fks'),
-  // childrenIsNotDirty: Ember.computed.not('childrenIsDirty'),
-  // parentsIsDirty: many_to_many_dirty('location_parents_ids', 'location_parents_fks'),
-  // parentsIsNotDirty: Ember.computed.not('parentsIsDirty'),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'statusIsDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'emailsIsDirty', 'childrenIsDirty', 'parentsIsDirty', function() {
     return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('statusIsDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('emailsIsDirty') || this.get('childrenIsDirty') || this.get('parentsIsDirty');
   }),
