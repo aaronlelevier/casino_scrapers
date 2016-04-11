@@ -4,7 +4,7 @@ import CategoriesMixin from 'bsrs-ember/mixins/model/ticket/category';
 import OptConf from 'bsrs-ember/mixins/optconfigure/link';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
-import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
+import { many_to_many } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 const Validations = buildValidations({

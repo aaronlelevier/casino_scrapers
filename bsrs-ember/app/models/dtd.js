@@ -5,7 +5,7 @@ import equal from 'bsrs-ember/utilities/equal';
 import OptConf from 'bsrs-ember/mixins/optconfigure/dtd';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { validator, buildValidations } from 'ember-cp-validations';
-import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_dirty_unlessAddedM2M, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
+import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
 import { rollbackAll } from 'bsrs-ember/utilities/rollback-all';
 
 const Validations = buildValidations({
@@ -61,7 +61,6 @@ var DTDModel = Model.extend(Validations, OptConf, {
     return fields.isAny('isDirtyOrRelatedDirty') || this.get('fieldsIsDirtyContainer');
   }),
   fieldsIsNotDirty: Ember.computed.not('fieldsIsDirty'),
-  // dirty tracking
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'linksIsDirty', 'fieldsIsDirty', 'attachmentsIsDirty', function() {
     return this.get('isDirty') || this.get('linksIsDirty') || this.get('fieldsIsDirty') || this.get('attachmentsIsDirty');
   }),
@@ -117,8 +116,6 @@ var DTDModel = Model.extend(Validations, OptConf, {
       link.save();
     });
   },
-  saveLinks: many_to_many_save('dtd', 'dtd_links', 'dtd_links_ids', 'dtd_links_fks'),
-  saveFields: many_to_many_save('dtd', 'dtd_fields', 'dtd_fields_ids', 'dtd_fields_fks'),
   saveFieldsContainer() {
     const fields = this.get('fields');
     fields.forEach((field) => {
@@ -131,6 +128,7 @@ var DTDModel = Model.extend(Validations, OptConf, {
       this.get('store').remove('dtd', this.get('id'));
     });
   },
+  //Validation msgs
   saved: false,
   keyErrorMsg: Ember.computed('saved', function(){
     return this.get('validations.isValid') ? undefined : this.get('saved') ?
@@ -140,6 +138,7 @@ var DTDModel = Model.extend(Validations, OptConf, {
     return this.get('validations.isValid') ? undefined : this.get('saved') ?
       this.get('validations.attrs.description.message') : undefined;
   }),
+  //Attachments
   attachmentsIsNotDirty: Ember.computed.not('attachmentsIsDirty'),
   attachmentsIsDirty: Ember.computed('attachment_ids.[]', 'previous_attachments_fks.[]', function() {
     const attachment_ids = this.get('attachment_ids') || [];

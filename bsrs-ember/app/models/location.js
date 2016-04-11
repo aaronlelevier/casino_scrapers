@@ -12,7 +12,7 @@ import ChildrenMixin from 'bsrs-ember/mixins/model/location/children';
 import ParentMixin from 'bsrs-ember/mixins/model/location/parent';
 import LocationLevelMixin from 'bsrs-ember/mixins/model/location/location-level';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
-import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
+import { many_to_many } from 'bsrs-components/attr/many-to-many';
 import OptConf from 'bsrs-ember/mixins/optconfigure/location';
 
 

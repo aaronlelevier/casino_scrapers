@@ -2,7 +2,7 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/store';
 import OptConf from 'bsrs-ember/mixins/optconfigure/field';
 import { attr, Model } from 'ember-cli-simple-store/model';
-import { many_to_many, many_to_many_ids, many_to_many_dirty, many_to_many_dirty_unlessAddedM2M, many_to_many_rollback, many_to_many_save, add_many_to_many, remove_many_to_many, many_models, many_models_ids } from 'bsrs-components/attr/many-to-many';
+import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
 import { rollbackAll } from 'bsrs-ember/utilities/rollback-all';
 
 export default Model.extend(OptConf, {
@@ -40,7 +40,6 @@ export default Model.extend(OptConf, {
     return options.isAny('isDirty') || this.get('optionsIsDirtyContainer');
   }),
   optionsIsNotDirty: Ember.computed.not('optionsIsDirty'),
-  // dirty tracking
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'optionsIsDirty', function() {
     return this.get('isDirty') || this.get('optionsIsDirty');
   }),

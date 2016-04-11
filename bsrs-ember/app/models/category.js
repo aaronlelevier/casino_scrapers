@@ -45,18 +45,6 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, OptConf, {
       children: this.get('children_ids')
     };
   },
-  //childrenIsDirty: many_to_many_dirty('category_children_ids', 'category_children_fks'),
-  //childrenIsNotDirty: Ember.computed.not('childrenIsDirty'),
-  ////m2m attr
-  //children_ids: many_models_ids('children'),
-  //children: many_models('category_children', 'children_pk', 'category'),
-  //category_children_ids: many_to_many_ids('category_children'),
-  //category_children: many_to_many('category-children', 'category_pk'),
-  ////add m2m
-  //add_children: add_many_to_many('category-children', 'category', 'children_pk', 'category_pk'),
-  ////remove m2m
-  //remove_children remove_many_to_many('category-children', 'children_pk', 'category_children'),
-  //belongs to attr
   parent: Ember.computed.alias('parent_belongs_to.firstObject'),
   parent_belongs_to: Ember.computed('parent_id', function() {
     const parent_id = this.get('parent_id');
@@ -71,8 +59,6 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, OptConf, {
       this.get('store').remove('category', this.get('id'));
     });
   },
-  // rollbackChildren: many_to_many_rollback('category-children', 'category_children_fks', 'category_pk'),
-  // saveChildren: many_to_many_save('category', 'category_children', 'category_children_ids', 'category_children_fks'),
   rollback() {
     this.rollbackChildren();
     this._super();
