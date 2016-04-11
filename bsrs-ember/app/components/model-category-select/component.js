@@ -8,7 +8,7 @@ const CATEGORY_URL = PREFIX + '/admin/categories/';
 var TicketCategories = Ember.Component.extend({
     classNames: ['model-category-wrap'],
     label: Ember.computed('ticket.categories.[]', function() {
-      return this.get('categories_selected.label') || this.get('category.subcategory_label')
+      return this.get('categories_selected.label') || this.get('category.subcategory_label');
     }),
     categories_selected: Ember.computed('ticket.top_level_category', 'ticket.categories.[]', function() {
         let index = this.get('index');
