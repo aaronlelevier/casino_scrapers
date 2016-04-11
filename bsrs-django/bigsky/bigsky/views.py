@@ -15,12 +15,12 @@ from category.models import Category
 from contact.models import PhoneNumberType, AddressType, EmailType, State, Country
 from generic.models import SavedSearch
 from location.models import Location, LocationLevel, LocationStatus
+from person.config import ROLE_TYPES
 from person.models import Role, PersonStatus
 from setting.models import Setting
 from ticket.models import TicketStatus, TicketPriority
 from translation.models import Locale
-from utils import choices
-from utils.helpers import model_to_json, model_to_json_select_related, choices_to_json
+from utils.helpers import model_to_json, model_to_json_select_related
 
 
 class IndexView(TemplateView):
@@ -52,7 +52,7 @@ class IndexView(TemplateView):
             'states_us': model_to_json(State),
             'countries': model_to_json(Country),
             'role_config': model_to_json_select_related(Role, select=['location_level']),
-            'role_types_config': choices_to_json(choices.ROLE_TYPE_CHOICES),
+            'role_types_config': json.dumps(ROLE_TYPES),
             'person_status_config': model_to_json(PersonStatus),
             'location_level_config': model_to_json(LocationLevel),
             'location_status_config': model_to_json(LocationStatus),

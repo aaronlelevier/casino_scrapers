@@ -15,6 +15,7 @@ from contact.models import (Address, AddressType, Email, EmailType,
 from contact.tests.factory import create_contact, create_contacts
 from location.models import Location, LocationLevel
 from location.tests.factory import create_location
+from person import config as person_config
 from person.models import Person, Role
 from person.serializers import PersonUpdateSerializer, RoleCreateSerializer
 from person.settings import DEFAULT_ROLE_SETTINGS
@@ -26,7 +27,7 @@ from setting.serializers import SettingSerializer
 from setting.settings import DEFAULT_GENERAL_SETTINGS
 from translation.models import Locale
 from translation.tests.factory import create_locales
-from utils import create, choices
+from utils import create
 
 
 ### ROLE ###
@@ -70,7 +71,7 @@ class RoleCreateTests(RoleSetupMixin, APITestCase):
         role_data = {
             "id": str(uuid.uuid4()),
             "name": "Admin",
-            "role_type": choices.ROLE_TYPE_CHOICES[0][0],
+            "role_type": person_config.ROLE_TYPES[0],
             "location_level": str(self.location.location_level.id),
             "categories": self.role.categories_ids
         }

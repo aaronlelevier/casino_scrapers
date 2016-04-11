@@ -20,12 +20,11 @@ from accounting.models import Currency
 from category.models import Category
 from contact.models import PhoneNumber, Address, Email
 from location.models import LocationLevel, Location
-from person import helpers
+from person import config, helpers
 from person.settings import DEFAULT_ROLE_SETTINGS
 from setting.models import Setting
 from setting.settings import DEFAULT_GENERAL_SETTINGS
 from translation.models import Locale
-from utils import choices
 from utils.models import BaseModel, BaseStatusModel, BaseStatusManager, SettingMixin
 from utils.validators import (contains_digit, contains_upper_char, contains_lower_char,
     contains_special_char, contains_no_whitespaces)
@@ -37,7 +36,7 @@ class Role(SettingMixin, BaseModel):
     group = models.OneToOneField(Group, blank=True, null=True)
     location_level = models.ForeignKey(LocationLevel, null=True, blank=True)
     role_type = models.CharField(max_length=29, blank=True,
-        choices=choices.ROLE_TYPE_CHOICES, default=choices.ROLE_TYPE_CHOICES[0][0])
+        choices=[(x,x) for x in config.ROLE_TYPES], default=config.ROLE_TYPES[0])
     # Required
     name = models.CharField(max_length=75, unique=True, help_text="Will be set to the Group Name")
     categories = models.ManyToManyField(Category, blank=True) 
@@ -92,20 +91,20 @@ class Role(SettingMixin, BaseModel):
     wo_allow_backdate = models.BooleanField(blank=True, default=False)
     wo_days_backdate = models.PositiveIntegerField(blank=True, null=True)
     # Invoices
-    inv_options = models.CharField(max_length=255, choices=choices.INVOICE_CHOICES,
-                                   default=choices.INVOICE_CHOICES[0][0])
+    inv_options = models.CharField(max_length=255, choices=[(x,x) for x in config.INVOICE_TYPES],
+                                   default=config.INVOICE_TYPES[0])
     inv_wo_status = models.ForeignKey(WorkOrderStatus, blank=True, null=True)
     inv_wait = models.PositiveIntegerField(blank=True, null=True)
-    inv_select_assign = models.CharField(max_length=255, choices=choices.INVOICE_SELECT_ASSIGN_CHOICES,
-                                         default=choices.INVOICE_SELECT_ASSIGN_CHOICES[0][0])
+    inv_select_assign = models.CharField(max_length=255, choices=[(x,x) for x in config.INVOICE_SELECT_ASSIGN_TYPES],
+                                         default=config.INVOICE_SELECT_ASSIGN_TYPES[0])
     inv_autoapprove = models.BooleanField(blank=True, default=False)
     inv_max_approval_amount = models.PositiveIntegerField(
         blank=True, default=0)
     inv_max_approval_currency = models.CharField(
         max_length=25, blank=True, default='usd')
     inv_req_attach = models.BooleanField(blank=True, default=True)
-    inv_close_wo = models.CharField(max_length=255, choices=choices.CLOSE_WO_ON_APPROVAL_CHOICES,
-                                    default=choices.CLOSE_WO_ON_APPROVAL_CHOICES[0][0])
+    inv_close_wo = models.CharField(max_length=255, choices=[(x,x) for x in config.CLOSE_WO_ON_APPROVAL_TYPES],
+                                    default=config.CLOSE_WO_ON_APPROVAL_TYPES[0])
     # Messages
     # TODO: are these "Email" or "SMS" messages, or any particular type?
     msg_address = models.BooleanField(blank=True, default=False,
@@ -273,7 +272,7 @@ class ProxyRole(BaseModel):
 class PersonStatusManager(BaseStatusManager):
 
     def get_or_create_default(self):
-        return self.get_or_create(name=choices.PERSON_STATUS_CHOICES[0][0])
+        return self.get_or_create(name=config.PERSON_STATUSES[0])
 
 
 class PersonStatus(BaseStatusModel):

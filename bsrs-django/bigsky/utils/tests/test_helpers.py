@@ -7,9 +7,8 @@ from django.test import TestCase
 
 from person.models import Role
 from person.tests.factory import create_role
-from utils import choices
 from utils.helpers import (BASE_UUID, model_to_json, model_to_json_select_related,
-     choices_to_json, generate_uuid, get_content_type_number)
+     generate_uuid, get_content_type_number)
 
 
 class ModelToJsonTests(TestCase):
@@ -36,15 +35,6 @@ class ModelToJsonTests(TestCase):
         self.assertEqual(ret[0]['name'], self.role.name)
         self.assertEqual(ret[0]['location_level'], str(self.role.location_level.id))
         self.assertEqual(ret[0]['default'], True)
-
-    def test_choices_to_json(self):
-        ret = choices_to_json(choices.ROLE_TYPE_CHOICES)
-
-        ret = json.loads(ret)
-        self.assertEqual(
-            ret,
-            [c[0] for c in choices.ROLE_TYPE_CHOICES]
-        )
 
 
 class GenerateUuidTests(TestCase):
