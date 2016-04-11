@@ -243,7 +243,11 @@ var dtd_payload_with_attachment = {
 var dtd_payload_with_categories = Ember.$.extend(true, {}, dtd_payload);
 dtd_payload_with_categories.links[0].categories = [CD.idOne, CD.idTwo];
 
+var dtd_payload_change_categories = Ember.$.extend(true, {}, dtd_payload);
+dtd_payload_change_categories.links[0].categories = [CD.idThree, CD.idLossPreventionChild];
+
 var dtd_payload_with_attachments = Ember.$.extend(true, {}, dtd_payload_with_attachment);
 dtd_payload_with_attachments.attachments = ['abc123', 'def456'];
 
-export { dtd_payload, dtd_payload_two, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload, dtd_payload_with_attachment, dtd_payload_with_attachments, dtd_payload_with_categories };
+export { dtd_payload, dtd_payload_two, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload, dtd_payload_with_attachment, dtd_payload_with_attachments, 
+  dtd_payload_with_categories, dtd_payload_change_categories };
