@@ -8,8 +8,9 @@ from django.contrib.contenttypes.models import ContentType
 from PIL import Image
 from rest_framework.exceptions import ValidationError
 
+from utils.helpers import media_path
 from utils.fields import MyGenericForeignKey
-from utils.models import BaseModel, BaseManager
+from utils.models import BaseModel, BaseManager, BaseQuerySet
 
 
 ### SAVED SEARCHES
@@ -97,6 +98,21 @@ def upload_to_images_thumbnail(instance, filename):
     return '/'.join([settings.IMAGE_THUMBNAIL_SUB_PATH, filename])
 
 
+class AttachmentQuerySet(BaseQuerySet):
+
+    def to_dict_full(self):
+        return [x.to_dict_full() for x in self.all()]
+
+
+class AttachmentManager(BaseManager):
+
+    def get_queryset(self):
+        return AttachmentQuerySet(self.model, using=self._db).filter(deleted__isnull=True)
+
+    def to_dict_full(self):
+        return self.get_queryset().to_dict_full()
+
+
 class Attachment(BaseModel):
     """
     Stores a File or Image w/ multiple sizes locations in a single model.
@@ -118,6 +134,8 @@ class Attachment(BaseModel):
     image_full = models.ImageField(upload_to=upload_to, null=True, blank=True)
     image_medium = models.ImageField(upload_to=upload_to_images_medium, null=True, blank=True)
     image_thumbnail = models.ImageField(upload_to=upload_to_images_thumbnail, null=True, blank=True)
+
+    objects = AttachmentManager()
 
     def __str__(self):
         return self.filename
@@ -190,6 +208,16 @@ class Attachment(BaseModel):
         return {
             "id": str(self.id),
             "filename": self.filename,
-            "file": str(self.file),
-            "image_thumbnail": str(self.image_thumbnail)
+            "file": media_path(self.file),
+            "image_thumbnail": media_path(self.image_thumbnail)
+        }
+
+    def to_dict_full(self):
+        return {
+            "id": str(self.id),
+            "filename": self.filename,
+            "file": media_path(self.file),
+            "image_full": media_path(self.image_full),
+            "image_medium": media_path(self.image_medium),
+            "image_thumbnail": media_path(self.image_thumbnail)
         }

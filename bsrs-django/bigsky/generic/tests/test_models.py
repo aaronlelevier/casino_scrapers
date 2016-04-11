@@ -11,8 +11,10 @@ from rest_framework.exceptions import ValidationError
 
 from category.tests.factory import create_categories
 from generic.models import Attachment, SavedSearch
+from generic.tests.factory import create_file_attachment, create_image_attachment
 from person.tests.factory import create_single_person
 from ticket.tests.factory import create_ticket
+from utils.helpers import media_path
 from utils.tests.helpers import remove_attachment_test_files
 
 
@@ -70,7 +72,19 @@ class SavedSearchTests(TestCase):
         self.assertIsInstance(ret[0], dict)
 
 
-class AttachmentModelTests(TestCase):
+class AttachmentManagerTests(TestCase):
+
+    def setUp(self):
+        create_image_attachment()
+
+    def test_to_dict_full(self):
+        self.assertEqual(
+            Attachment.objects.to_dict_full(),
+            [x.to_dict_full() for x in Attachment.objects.all()]
+        )
+
+
+class AttachmentTests(TestCase):
 
     def setUp(self):
         # this can be any Model here, ``Attachment`` just requires a
@@ -141,16 +155,27 @@ class AttachmentModelTests(TestCase):
 
 
     def test_to_dict(self):
-        with open(self.image, 'rb') as infile:
-            _file = SimpleUploadedFile(self.image_filename, infile.read())
-            attachment = Attachment.objects.create(file=_file, **self.attachment_kwargs)
+        attachment = create_file_attachment()
 
-            ret = attachment.to_dict()
+        ret = attachment.to_dict()
 
-            self.assertEqual(ret['id'], str(attachment.id))
-            self.assertEqual(ret['filename'], attachment.filename)
-            self.assertEqual(ret['file'], str(attachment.file))
-            self.assertEqual(ret['image_thumbnail'], str(attachment.image_thumbnail))
+        self.assertEqual(ret['id'], str(attachment.id))
+        self.assertEqual(ret['filename'], attachment.filename)
+        self.assertEqual(ret['file'], media_path(attachment.file))
+        self.assertEqual(ret['image_thumbnail'], media_path(attachment.image_thumbnail))
+
+
+    def test_to_dict(self):
+        attachment = create_image_attachment()
+
+        ret = attachment.to_dict_full()
+
+        self.assertEqual(ret['id'], str(attachment.id))
+        self.assertEqual(ret['filename'], attachment.filename)
+        self.assertEqual(ret['file'], media_path(attachment.file))
+        self.assertEqual(ret['image_full'], media_path(attachment.image_full))
+        self.assertEqual(ret['image_medium'], media_path(attachment.image_medium))
+        self.assertEqual(ret['image_thumbnail'], media_path(attachment.image_thumbnail))
 
     # related objects tests
 

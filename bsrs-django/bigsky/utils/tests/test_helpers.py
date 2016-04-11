@@ -1,14 +1,14 @@
 import json
 import uuid
 
-from django.contrib.auth.models import ContentType
 from django.conf import settings
+from django.contrib.auth.models import ContentType
 from django.test import TestCase
 
 from person.models import Role
 from person.tests.factory import create_role
 from utils.helpers import (BASE_UUID, model_to_json, model_to_json_select_related,
-     generate_uuid, get_content_type_number)
+     generate_uuid, get_content_type_number, media_path)
 
 
 class ModelToJsonTests(TestCase):
@@ -73,3 +73,28 @@ class GenerateUuidTests(TestCase):
                               init_number=number)),
             ret
         )
+
+
+class MediaPathTests(TestCase):
+
+    def test_default(self):
+        path = 'foo/bar.csv'
+
+        ret = media_path(path)
+
+        self.assertEqual(ret, "{}{}".format(settings.MEDIA_URL, path))
+
+    def test_override_prefix(self):
+        path = 'foo/bar.csv'
+        prefix = '/some-other-media-prefix/'
+
+        ret = media_path(path, prefix=prefix)
+
+        self.assertEqual(ret, "{}{}".format(prefix, path))
+
+    def test_path_is_none(self):
+        path = None
+
+        ret = media_path(path)
+
+        self.assertEqual(ret, "")

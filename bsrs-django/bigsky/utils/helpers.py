@@ -1,6 +1,7 @@
 import json
 import uuid
 
+from django.conf import settings
 from django.contrib.auth.models import ContentType
 
 
@@ -27,3 +28,9 @@ def generate_uuid(model):
     return uuid.UUID("{model_number}{base_id}{number}".format(model_number=model_number,
                                                               base_id=BASE_UUID,
                                                               number=number))
+
+
+def media_path(path, prefix=settings.MEDIA_URL):
+    if not path:
+        return ""
+    return "{}{}".format(prefix, path)

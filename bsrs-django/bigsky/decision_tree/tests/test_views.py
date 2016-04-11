@@ -10,10 +10,11 @@ from decision_tree.model_choices import LINK_TYPES, NOTE_TYPES, FIELD_TYPES
 from decision_tree.models import TreeOption, TreeData
 from decision_tree.serializers import TreeDataCreateUpdateSerializer
 from decision_tree.tests.factory import create_tree_data
-from generic.tests.factory import create_attachments
+from generic.tests.factory import create_file_attachment, create_image_attachment
 from person.tests.factory import PASSWORD, create_single_person
 from ticket.tests.factory import create_ticket_status, create_ticket_priority
 from utils.create import random_lorem
+from utils.helpers import media_path
 
 
 class TreeDataTestSetUpMixin(object):
@@ -23,7 +24,7 @@ class TreeDataTestSetUpMixin(object):
         self.person = create_single_person()
         self.client.login(username=self.person.username, password=PASSWORD)
         # models
-        self.attachment = create_attachments()
+        self.attachment = create_image_attachment()
         self.tree_data = create_tree_data(attachments=[self.attachment])
 
     def tearDown(self):
@@ -48,11 +49,11 @@ class TreeDataDetailTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['note_type'], self.tree_data.note_type)
         self.assertEqual(data['attachments'][0]['id'], str(self.attachment.id))
         self.assertEqual(data['attachments'][0]['filename'], self.attachment.filename)
-        self.assertEqual(data['attachments'][0]['file'], 'http://testserver' + self.attachment.file.url)
+        self.assertEqual(data['attachments'][0]['file'], 'http://testserver'+media_path(str(self.attachment.file)))
         self.assertEqual(data['attachments'][0]['filename'], self.attachment.filename)
-        self.assertEqual(data['attachments'][0]['image_medium'], self.attachment.image_medium)
-        self.assertEqual(data['attachments'][0]['image_thumbnail'], self.attachment.image_thumbnail)
-        self.assertEqual(data['attachments'][0]['image_full'], self.attachment.image_full)
+        self.assertEqual(data['attachments'][0]['image_medium'], 'http://testserver'+media_path(str(self.attachment.image_medium)))
+        self.assertEqual(data['attachments'][0]['image_thumbnail'], 'http://testserver'+media_path(str(self.attachment.image_thumbnail)))
+        self.assertEqual(data['attachments'][0]['image_full'], 'http://testserver'+media_path(str(self.attachment.image_full)))
         self.assertEqual(data['prompt'], self.tree_data.prompt)
         self.assertEqual(data['link_type'], self.tree_data.link_type)
         # Fields
@@ -149,11 +150,10 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['note_type'], raw_data['note_type'])
         self.assertEqual(data['attachments'][0]['id'], str(self.attachment.id))
         self.assertEqual(data['attachments'][0]['filename'], self.attachment.filename)
-        # self.assertEqual(data['attachments'][0]['file'], self.attachment.file.url)
-        self.assertEqual(data['attachments'][0]['filename'], self.attachment.filename)
-        # self.assertEqual(data['attachments'][0]['image_medium'], self.attachment.image_medium)
-        # self.assertEqual(data['attachments'][0]['image_thumbnail'], self.attachment.image_thumbnail)
-        # self.assertEqual(data['attachments'][0]['image_full'], self.attachment.image_full)
+        self.assertEqual(data['attachments'][0]['file'], media_path(str(self.attachment.file)))
+        self.assertEqual(data['attachments'][0]['image_full'], media_path(str(self.attachment.image_full)))
+        self.assertEqual(data['attachments'][0]['image_medium'], media_path(str(self.attachment.image_medium)))
+        self.assertEqual(data['attachments'][0]['image_thumbnail'], media_path(str(self.attachment.image_thumbnail)))
         self.assertEqual(data['prompt'], raw_data['prompt'])
         self.assertEqual(data['link_type'], raw_data['link_type'])
 
@@ -161,7 +161,7 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         serializer = TreeDataCreateUpdateSerializer(self.tree_data)
         raw_data = copy.copy(serializer.data)
         new_id = str(uuid.uuid4())
-        new_attachment = create_attachments()
+        new_attachment = create_file_attachment()
         raw_data['id'] = new_id
         raw_data['attachments'] = [obj['id'] for obj in raw_data['attachments']]
         raw_data['attachments'].append(str(new_attachment.id))
@@ -306,7 +306,7 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['link_type'], link_type)
 
     def test_add_attachment(self):
-        attachment = create_attachments()
+        attachment = create_file_attachment()
         self.data['attachments'] = [obj['id'] for obj in self.data['attachments']]
         self.data['attachments'].append(str(attachment.id))
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
@@ -316,8 +316,8 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['attachments'][1]['id'], str(attachment.id))
 
     def test_remove_attachment(self):
-        attachment = create_attachments()
-        attachment_two = create_attachments()
+        attachment = create_file_attachment()
+        attachment_two = create_file_attachment()
         self.tree_data.attachments.add(attachment)
         self.tree_data.attachments.add(attachment_two)
         self.assertEqual(self.tree_data.attachments.count(), 3)

@@ -10,7 +10,7 @@ from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityT
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES)
 from ticket.tests.factory import create_ticket, create_tickets
 from ticket.tests.mixins import TicketCategoryOrderingSetupMixin
-from generic.tests.factory import create_attachments
+from generic.tests.factory import create_file_attachment
 
 
 class TicketStatusManagerTests(TestCase):
@@ -163,7 +163,7 @@ class TicketActivityTests(TestCase):
         self.assertTrue(TicketActivity.objects.filter(content__from=str(self.person.id)).exists())
 
     def test_log_attachment(self):
-        attachment = create_attachments(ticket=self.ticket)
+        attachment = create_file_attachment(self.ticket)
         type, _ = TicketActivityType.objects.get_or_create(name='attachment_add')
         
         ticket_activity = TicketActivity.objects.create(

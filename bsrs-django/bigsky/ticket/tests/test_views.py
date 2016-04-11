@@ -10,7 +10,7 @@ from category.tests.factory import create_categories, create_single_category
 from location.models import Location
 from location.tests.factory import create_location, create_locations
 from generic.models import Attachment
-from generic.tests.factory import create_attachments
+from generic.tests.factory import create_file_attachment
 from person.tests.factory import PASSWORD, create_single_person, DistrictManager
 from ticket.models import Ticket, TicketActivity, TicketActivityType
 from ticket.serializers import TicketCreateSerializer
@@ -18,6 +18,7 @@ from ticket.tests.factory import (create_ticket, create_ticket_activity,
     create_ticket_activity_type, create_ticket_activity_types,
     create_ticket_status, create_ticket_priority)
 from ticket.tests.mixins import TicketSetupNoLoginMixin, TicketSetupMixin
+from utils.helpers import media_path
 
 
 class TicketListFulltextTests(TicketSetupMixin, APITestCase):
@@ -223,8 +224,8 @@ class TicketUpdateTests(TicketSetupMixin, APITestCase):
     # attachments
 
     def test_attachments_add_multiple(self):
-        new_attachment = create_attachments()
-        new_attachment_two = create_attachments()
+        new_attachment = create_file_attachment()
+        new_attachment_two = create_file_attachment()
         self.data['attachments'].append(str(new_attachment.id))
         self.data['attachments'].append(str(new_attachment_two.id))
         self.assertEqual(self.ticket.attachments.count(), 0)
@@ -234,7 +235,7 @@ class TicketUpdateTests(TicketSetupMixin, APITestCase):
         self.assertEqual(self.ticket.attachments.count(), 2)
 
     def test_attachments_remove_from_ticket(self):
-        new_attachment = create_attachments(self.ticket)
+        new_attachment = create_file_attachment(self.ticket)
         self.data['attachments'] = []
         self.assertEqual(self.ticket.attachments.count(), 1)
 
@@ -655,7 +656,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['results'][0]['content']['comment'], my_comment)
 
     def test_attachment_add(self):
-        attachment = create_attachments(ticket=self.ticket)
+        attachment = create_file_attachment(self.ticket)
         ticket_activity = create_ticket_activity(ticket=self.ticket, type='attachment_add',
             content={'0': str(attachment.id)})
 
@@ -666,7 +667,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(len(data['results'][0]['content']), 1)
         self.assertEqual(data['results'][0]['content']['added'][0]['id'], str(attachment.id))
         self.assertEqual(data['results'][0]['content']['added'][0]['filename'], attachment.filename)
-        self.assertEqual(data['results'][0]['content']['added'][0]['file'], str(attachment.file))
+        self.assertEqual(data['results'][0]['content']['added'][0]['file'], media_path(attachment.file))
         self.assertEqual(data['results'][0]['content']['added'][0]['image_thumbnail'], str(attachment.image_thumbnail))
 
 
@@ -882,7 +883,7 @@ class TicketAndTicketActivityTests(APITestCase):
     def test_attachment_add(self):
         name = 'attachment_add'
         self.assertEqual(TicketActivity.objects.count(), 0)
-        new_attachment = create_attachments() # not `Ticket` yet associated w/ this `Attachment`
+        new_attachment = create_file_attachment() # not `Ticket` yet associated w/ this `Attachment`
         self.data['attachments'].append(str(new_attachment.id))
 
         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
@@ -913,7 +914,7 @@ class TicketAndTicketActivityTests(APITestCase):
         """
         name = 'attachment_add'
         self.assertEqual(TicketActivity.objects.count(), 0)
-        new_attachment = create_attachments()
+        new_attachment = create_file_attachment()
         self.data['attachments'].append(str(new_attachment.id))
         self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
         self.assertEqual(TicketActivity.objects.count(), 1)
@@ -929,7 +930,7 @@ class TicketAndTicketActivityTests(APITestCase):
         self.assertEqual(TicketActivity.objects.count(), 0)
 
         # Attachment 1
-        first_attachment = create_attachments()
+        first_attachment = create_file_attachment()
         self.data['attachments'] = [str(first_attachment.id)]
 
         self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
@@ -941,7 +942,7 @@ class TicketAndTicketActivityTests(APITestCase):
         )
 
         # Attachment 2
-        second_attachment = create_attachments()
+        second_attachment = create_file_attachment()
         self.data['attachments'] = [str(second_attachment.id)]
 
         self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')

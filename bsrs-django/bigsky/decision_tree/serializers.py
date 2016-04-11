@@ -90,6 +90,11 @@ class TreeDataCreateUpdateSerializer(BaseCreateSerializer):
                   'attachments', 'fields', 'prompt', 'link_type',
                   'links',)
 
+    def to_representation(self, obj):
+        data = super(TreeDataCreateUpdateSerializer, self).to_representation(obj)
+        data['attachments'] = Attachment.objects.filter(object_id=data['id']).to_dict_full()
+        return data
+
     def create(self, validated_data):
         return self.process_all(validated_data=validated_data)
 
@@ -195,11 +200,3 @@ class TreeDataCreateUpdateSerializer(BaseCreateSerializer):
         filters = {'dtd': instance}
         excludes = {'id__in': [x['id'] for x in links]}
         self.process_removes(TreeLink, filters, excludes)
-
-    def to_representation(self, obj):
-        data = super(TreeDataCreateUpdateSerializer, self).to_representation(obj)
-        data['attachments'] = Attachment.objects.filter(object_id=str(data['id'])).values('id', 'file', 'filename', 'image_thumbnail', 'image_medium', 'image_full')
-        return data
-
-
-

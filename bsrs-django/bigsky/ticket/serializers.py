@@ -89,6 +89,7 @@ class TicketSerializer(serializers.ModelSerializer):
         data['priority_fk'] = data.pop('priority', [])
         return data
 
+
 class TicketActivitySerializer(serializers.ModelSerializer):
 
     person = PersonSimpleSerializer()
