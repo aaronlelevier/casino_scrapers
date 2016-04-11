@@ -50,7 +50,7 @@ test('should render a selectbox when with options selected (initial state)', fun
     this.model = ticket;
     this.selected = ticket.get('cc');
     this.person_repo = person_repo;
-    this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_locations" remove_func="remove_locations" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
+    this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
     let $component = this.$(`${COMPONENT}`);
     clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
@@ -64,7 +64,7 @@ test('should render a selectbox with bound options after type ahead for search',
     this.model = ticket;
     this.selected = ticket.get('cc');
     this.person_repo = person_repo;
-    this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_locations" remove_func="remove_locations" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
+    this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
     let $component = this.$(`${COMPONENT}`);
     clickTrigger();
     run(() => { typeInSearch('a'); });
@@ -87,7 +87,7 @@ test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
     this.model = ticket;
     this.selected = ticket.get('cc');
     this.person_repo = person_repo;
-    this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_locations" remove_func="remove_locations" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
+    this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
     let $component = this.$(`${COMPONENT}`);
     run(() => { typeInSearch('a'); });
     Ember.run.later(() => {

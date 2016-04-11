@@ -74,7 +74,7 @@ test('upload will post form data, show progress bar and on save append the attac
   assert.ok(model.get('attachmentsIsNotDirty'));
   assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/attachments/images/full/wat.jpg`);
   assert.equal(find('.t-ticket-attachment-add-remove:eq(0) .t-ext-jpg').length, 1);
-  assert.ok(find('.t-ticket-attachment-add-remove:eq(0) .t-ext-jpg > img').attr('src'));
+  // assert.equal(find('.t-attachment-add-remove:eq(0) .t-ext-jpg > img').attr('src'), `/media/attachments/images/full/wat.jpg`);
   assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').text().trim(), 'wat.jpg');
   assert.equal(find('.t-attachment-add-remove:eq(0)').text().trim(), 'wat.jpg');
   assert.equal(find('.t-dtd-preview-attachment > a').text().trim(), 'wat.jpg');

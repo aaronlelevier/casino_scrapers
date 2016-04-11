@@ -23,7 +23,7 @@ var LocationMixin = Ember.Mixin.create({
             store.push('person-location', {id: Ember.uuid(), person_pk: pk, location_pk: location_pk});
         });
     },
-    // remove_locations: remove_many_to_many('person-location', 'location_pk', 'person_locations'),
+    // remove_location: remove_many_to_many('person-location', 'location_pk', 'person_locations'),
     locationsIsNotDirty: Ember.computed.not('locationsIsDirty'),
     locationsIsDirty: Ember.computed('person_locations_fks.[]', 'locations.@each.isDirty', function() {
         const locations = this.get('locations');
