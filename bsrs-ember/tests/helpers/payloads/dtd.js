@@ -39,7 +39,7 @@ var dtd_payload = {
     priority: TP.priorityOneId,
     status: TD.statusOneId,
     destination: DTD.idTwo,
-    categories: []
+    categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
   }],
   attachments: []
 };
@@ -74,7 +74,7 @@ var dtd_payload_two = {
     priority: TP.priorityTwoId,
     status: TD.statusTwoId,
     destination: DTD.idTwo,
-    categories: []
+    categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
   }],
   attachments: []
 };
@@ -109,7 +109,7 @@ var dtd_payload_link_two_put = {
     priority: TP.priorityOneId,
     status: TD.statusOneId,
     destination: DTD.idOne,
-    categories: []
+    categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
   },
   {
     id: 1,
@@ -156,7 +156,7 @@ var dtd_payload_update_priority = {
     priority: TP.priorityTwoId,
     status: TD.statusOneId,
     destination: DTD.idTwo,
-    categories: []
+    categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
   }],
   attachments: []
 };
@@ -191,7 +191,7 @@ var dtd_payload_no_priority = {
     priority: null,
     status: null,
     destination: DTD.idTwo,
-    categories: []
+    categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
   }],
   attachments: []
 };
@@ -235,7 +235,7 @@ var dtd_payload_with_attachment = {
     priority: TP.priorityOneId,
     status: TD.statusOneId,
     destination: DTD.idTwo,
-    categories: []
+    categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
   }],
   attachments: [UUID.value]
 };

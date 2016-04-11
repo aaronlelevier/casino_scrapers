@@ -69,7 +69,6 @@ test('validation on dtd description works as expected', function(assert) {
 });
 
 // Links
-
 test('validation on link text works as expected', function(assert) {
   run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, key: 'foo', link_type: DTD.linkTypeOne});
@@ -280,7 +279,6 @@ test('preview updates as changes are made to detail', function(assert) {
 });
 
 // Links - Categories
-
 test('dtd-link category select', function(assert) {
   run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, dtd_links_fks: [DTDL.idOne]});
@@ -298,7 +296,6 @@ test('dtd-link category select', function(assert) {
 });
 
 // Fields
-
 test('no field label does not display undefined', function(assert) {
   run(() => {
     dtd = store.push('dtd', {
@@ -387,8 +384,6 @@ test('selecting link destination will populate dropdown with key', function(asse
       assert.equal($('li.ember-power-select-option:eq(1)').text().trim(), DTD.keyTwo);
     });
 });
-
-// Fields
 
 test('add and remove dtd fields', function(assert) {
   run(() => {
@@ -479,7 +474,6 @@ test('update a fields type', function(assert) {
 });
 
 // Options
-
 test('add and remove dtd field options', function(assert) {
   run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, dtd_fields_fks: [1]});

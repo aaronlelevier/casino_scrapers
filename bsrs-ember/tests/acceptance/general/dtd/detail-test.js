@@ -439,11 +439,10 @@ test('categories selector is wired up and working', async assert => {
 });
 
 // test('categories are in order based on text', async assert => {
-//   clearxhr(list_xhr);
 //   await page.visitDetail();
-//   assert.equal(page.categoryOneInput, CD.nameOne);
-//   assert.equal(page.categoryTwoInput, CD.nameRepairChild);
-//   assert.equal(page.categoryThreeInput, CD.namePlumbingChild);
+//   assert.equal(ticketPage.categoryOneInput, CD.nameOne);
+//   assert.equal(ticketPage.categoryTwoInput, CD.nameRepairChild);
+//   assert.equal(ticketPage.categoryThreeInput, CD.namePlumbingChild);
 // });
 
 //test('power select options are rendered immediately when enter detail route and can save different top level category', (assert) => {

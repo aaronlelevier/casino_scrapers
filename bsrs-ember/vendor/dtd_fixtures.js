@@ -1,14 +1,17 @@
 var BSRS_DTD_FACTORY = (function() {
-  var factory = function(dtd_defaults, link_defaults, field_defaults, option_defaults, config) {
+  var factory = function(dtd_defaults, link_defaults, field_defaults, option_defaults, category_fixtures, category_defaults, config) {
     this.dtd = dtd_defaults;
     this.link = link_defaults;
     this.field = field_defaults;
     this.option = option_defaults;
+    this.category_fixtures = category_fixtures.default || category_fixtures;
+    this.category_defaults = category_defaults.default || category_defaults;
     this.config = config;
   };
   factory.prototype.generate = function(i, key) {
     var id = i || this.dtd.idOne;
     var key = key || this.dtd.keyOne;
+    var categories = this.categories();
     return {
       id: id,
       key: key,
@@ -44,6 +47,7 @@ var BSRS_DTD_FACTORY = (function() {
           priority_fk: this.link.priorityOne,
           status_fk: this.link.statusOne,
           destination: {id: this.dtd.idTwo},
+          categories: [categories[0], categories[1], categories[2]]
         }
       ],
       attachments: []
@@ -93,6 +97,22 @@ var BSRS_DTD_FACTORY = (function() {
     var detail = this.generate(pk, key);
     return detail;
   };
+  factory.prototype.categories = function() {
+      var child_category = this.category_fixtures.generate(this.category_defaults.idPlumbing, this.category_defaults.nameRepairChild);
+      var child_child_category = {id: this.category_defaults.idPlumbingChild, name: this.category_defaults.namePlumbingChild, parent_id: child_category.id, label: this.category_defaults.labelThree, children: [], level: 2};
+      child_category.children = [{id:this.category_defaults.idPlumbingChild}];
+      child_category.parent_id = this.category_defaults.idOne;
+      child_category.label = this.category_defaults.labelTwo;
+      child_category.level = 1;
+      var parent_category = this.category_fixtures.generate(this.category_defaults.idOne, this.category_defaults.nameOne);
+      parent_category.children = [{id: this.category_defaults.idPlumbing}, {id: this.category_defaults.idTwo}];
+      parent_category.parent_id = null;
+      parent_category.level = 0;
+      delete parent_category.status;
+      delete child_category.status;
+      delete child_child_category.status;
+      return [parent_category, child_category, child_child_category];
+  };
   // factory.prototype.put = function(dtd) {
   //     var response = this.generate(dtd.id);
   //     response.cc = [response.cc[0].id];
@@ -119,15 +139,16 @@ if (typeof window === 'undefined') {
   var link_defaults = require('./defaults/link');
   var field_defaults = require('./defaults/field');
   var option_defaults = require('./defaults/option');
+  var category_defaults = require('../vendor/defaults/category');
   var config = require('../config/environment');
   objectAssign(BSRS_DTD_FACTORY.prototype, mixin.prototype);
   module.exports = new BSRS_DTD_FACTORY(dtd_defaults, link_defaults, field_defaults, option_defaults, config);
 } else {
-  define('bsrs-ember/vendor/dtd_fixtures', ['exports', 'bsrs-ember/vendor/defaults/dtd', 'bsrs-ember/vendor/defaults/link', 'bsrs-ember/vendor/defaults/field', 'bsrs-ember/vendor/defaults/option', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
-         function (exports, dtd_defaults, link_defaults, field_defaults, option_defaults, mixin, config) {
+  define('bsrs-ember/vendor/dtd_fixtures', ['exports', 'bsrs-ember/vendor/defaults/dtd', 'bsrs-ember/vendor/defaults/link', 'bsrs-ember/vendor/defaults/field', 'bsrs-ember/vendor/defaults/option', 'bsrs-ember/vendor/category_fixtures', 'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
+         function (exports, dtd_defaults, link_defaults, field_defaults, option_defaults, category_fixtures, category_defaults, mixin, config) {
            'use strict';
            Object.assign(BSRS_DTD_FACTORY.prototype, mixin.prototype);
-           var Factory = new BSRS_DTD_FACTORY(dtd_defaults, link_defaults, field_defaults, option_defaults, config);
+           var Factory = new BSRS_DTD_FACTORY(dtd_defaults, link_defaults, field_defaults, option_defaults, category_fixtures, category_defaults, config);
            return {default: Factory};
          });
 }

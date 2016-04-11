@@ -32,7 +32,7 @@ module('unit: ticket deserializer test', {
         person_deserializer = PersonDeserializer.create({store: store, uuid: uuid, LocationDeserializer: location_deserializer});
         category_deserializer = CategoryDeserializer.create({store: store});
         subject = TicketDeserializer.create({store: store, uuid: uuid, PersonDeserializer: person_deserializer, CategoryDeserializer: category_deserializer, LocationDeserializer: location_deserializer});
-        run(function() {
+        run(() => {
             store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
             ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne]});
             ticket_status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: [TD.idOne]});
@@ -620,7 +620,7 @@ test('model-category m2m is set up correctly using deserialize single (starting 
 //     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
 // });
 
-test('ticket-status m2m is added after deserialize single (starting with existing m2m relationship)', (assert) => {
+test('ticket-category m2m is added after deserialize single (starting with existing m2m relationship)', (assert) => {
     let m2m, category;
     ticket.set('model_categories_fks', [TICKET_CD.idOne]);
     ticket.save();
@@ -629,7 +629,7 @@ test('ticket-status m2m is added after deserialize single (starting with existin
     assert.equal(ticket.get('categories.length'), 1);
     let response = TF.generate(TD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
+    run(() => {
         subject.deserialize(response, TD.idOne);
     });
     let original = store.find('ticket', TD.idOne);
@@ -647,7 +647,7 @@ test('ticket-status m2m is added after deserialize single (starting with existin
     assert.equal(store.find('model-category').get('length'), 3);
 });
 
-test('ticket-status m2m is added after deserialize list (starting with existing m2m relationship)', (assert) => {
+test('ticket-category m2m is added after deserialize list (starting with existing m2m relationship)', (assert) => {
     let m2m, category;
     ticket.set('model_categories_fks', [TICKET_CD.idOne]);
     ticket.save();
@@ -664,6 +664,7 @@ test('ticket-status m2m is added after deserialize list (starting with existing 
     let original = store.find('ticket-list', TD.idOne);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
+    //TODO: what is this test doing
 });
 
 test('model-category m2m is removed when server payload no longer reflects what server has for m2m relationship', (assert) => {

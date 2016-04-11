@@ -80,8 +80,8 @@ var DTDModel = Model.extend(Validations, OptConf, {
       note: this.get('note'),
       note_type: this.get('note_type'),
       link_type: this.get('link_type'),
-      links: links,
       fields: fields,
+      links: links,
       attachments: this.get('attachment_ids')
     };
   },
