@@ -46,9 +46,13 @@ var BSRS_CATEGORY_FACTORY = (function() {
         var children = this.children(this.category_defaults.idTwo);
         children.push({id: this.category_defaults.idPlumbing});
         parent_one.children = children;
+        parent_one.label = this.category_defaults.labelOne;
+        parent_one.subcategory_label = this.category_defaults.subCatLabelOne;
         parent_one.level = 0;
         var parent_two = this.get(this.category_defaults.idThree, this.category_defaults.nameThree);
         parent_two.parent_id = null;
+        parent_two.label = this.category_defaults.labelOne;
+        parent_two.subcategory_label = this.category_defaults.subCatLabelOne;
         parent_two.level = 0;
         var response = [parent_one, parent_two];
         return {'count':2,'next':null,'previous':null,'results': response};

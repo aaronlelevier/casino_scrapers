@@ -183,7 +183,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
         let tickets = store.find('ticket');
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 0);
         assert.ok(tickets.objectAt(0).get('isNotDirtyOrRelatedNotDirty'));
-        // assert.ok(tickets.objectAt(0).get('categoriesIsNotDirty'));
+        // assert.ok(tickets.objectAt(0).get('categoriesIsNotDirty'));//jenkins fail
         assert.equal(components, 1);
     });
     let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
@@ -200,6 +200,8 @@ test('selecting a top level category will alter the url and can cancel/discard c
         assert.ok(tickets.objectAt(0).get('isDirtyOrRelatedDirty'));
         // assert.ok(tickets.objectAt(0).get('categoriesIsDirty'));
         assert.equal(components, 2);
+        assert.equal(find('.t-model-category-label:eq(0)').text(), CD.labelOne);
+        assert.equal(find('.t-model-category-label:eq(1)').text(), CD.subCatLabelOne);
     });
     ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [], CD.idOne, 1));
     page.categoryTwoClickDropdown();
