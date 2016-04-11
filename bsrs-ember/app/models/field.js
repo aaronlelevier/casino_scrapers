@@ -18,7 +18,6 @@ export default Model.extend(OptConf, {
     'admin.dtd.label.field.number',
     'admin.dtd.label.field.textarea',
     'admin.dtd.label.field.select',
-    'admin.dtd.label.field.with_options',
     'admin.dtd.label.field.checkbox',
     'admin.dtd.label.field.file',
     'admin.dtd.label.field.asset_select',
@@ -26,7 +25,7 @@ export default Model.extend(OptConf, {
     'admin.dtd.label.field.check_out',
   ],
   typesWithOptions: Ember.computed(function(){
-    return [this.get('types')[3], this.get('types')[5]];
+    return [this.get('types')[3], this.get('types')[4]];
   }),
   typeDefault: Ember.computed(function(){
     return this.get('types')[0];

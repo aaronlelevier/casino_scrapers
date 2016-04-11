@@ -103,18 +103,3 @@ test('if no fields, not displayed...text type displays properly', function(asser
   assert.equal(this.$('.t-dtd-field-label-preview').text(), FD.labelOne);
   assert.equal(this.$('input.t-dtd-field-preview:eq(0)').attr('type'), 'text');
 });
-
-test('number type display properly', function(assert) {
-  assert.equal(dtd.get('fields').get('length'), 0);
-  run(() => {
-    store.push('dtd', {id: dtd.get('id'), prompt: ''});
-    store.push('field', {id: FD.idOne, label: 1, type: FD.typeTwo, field_field_fks: [1]});
-    store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
-  });
-  assert.equal(dtd.get('fields').get('length'), 1);
-  this.model = dtd;
-  this.render(hbs`{{dtds/dtd-preview model=model}}`);
-  assert.equal(this.$('.t-dtd-field-label-preview').text(), '1');
-  assert.equal(this.$('input.t-dtd-field-preview').attr('type'), 'number');
-});
-

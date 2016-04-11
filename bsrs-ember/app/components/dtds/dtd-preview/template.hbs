@@ -16,9 +16,9 @@
         <div class="panel-body">
           {{#if model.description}} <p class="t-dtd-preview-description">{{format-markdown model.description}}</p> {{/if}}
           {{#if model.fields}}
-            {{#each model.fields as |field|}}            
+            {{#each model.fields as |field|}}
               <div class="t-dtd-preview-field">
-                {{field-element-display field=field}}
+                {{dtds/field-element-display field=field}}
               </div>
             {{/each}}
           {{/if}}

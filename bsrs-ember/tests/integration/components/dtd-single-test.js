@@ -24,7 +24,7 @@ let store, dtd, uuid, trans, link, field, option, dtd_repo;
 const DROPDOWN = '.ember-power-select-dropdown';
 const FIELD_TYPE = '.t-dtd-field-type';
 
-moduleForComponent('dtds/dtd-single', 'integration: dtd-single test', {
+moduleForComponent('dtds/dtd-single', 'amk integration: dtd-single test', {
   integration: true,
   beforeEach() {
     page.setContext(this);
@@ -291,7 +291,7 @@ test('dtd-link category select', function(assert) {
   this.render(hbs`{{dtds/dtd-single model=model}}`);
   assert.equal(dtd.get('links').get('length'), 1);
   assert.equal(link.get('categories').get('length'), 1);
-  assert.equal(this.$('.t-model-category-label').text(), CD.labelOne);
+  assert.equal(this.$('.t-model-category-label').text().trim(), CD.labelOne);
   assert.equal(this.$('.t-model-category-select').text().trim(), CD.nameOne);
 });
 
@@ -309,7 +309,7 @@ test('no field label does not display undefined', function(assert) {
   });
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}{{dtds/dtd-preview model=model}}`);
-  assert.equal(this.$('.t-dtd-field-label-preview').text(), '');
+  assert.equal(this.$('.t-dtd-field-label-preview').text().trim(), '');
 });
 
 test('preview updates as fields changes are made to detail', function(assert) {
@@ -326,11 +326,11 @@ test('preview updates as fields changes are made to detail', function(assert) {
   assert.equal(dtd.get('fields').objectAt(0).get('label'), FD.labelOne);
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}{{dtds/dtd-preview model=model}}`);
-  assert.equal(this.$('.t-dtd-field-label-preview').text(), FD.labelOne);
+  assert.equal(this.$('.t-dtd-field-label-preview').text().trim(), FD.labelOne);
   //text
   page.fieldLabelOneFillin(FD.labelTwo);
   assert.equal(page.fieldLabelOne, FD.labelTwo);
-  assert.equal(this.$('.t-dtd-field-label-preview').text(), FD.labelTwo);
+  assert.equal(this.$('.t-dtd-field-label-preview').text().trim(), FD.labelTwo);
   assert.equal(this.$('input.t-dtd-field-preview').attr('type'), 'text');
   //number
   clickTrigger(FIELD_TYPE);
@@ -357,7 +357,7 @@ test('preview updates as fields changes are made to detail', function(assert) {
   clickTrigger(FIELD_TYPE);
   page.fieldTypeOneClickOptionFive();
   this.$(`.ember-power-select-option:contains(${FD.typeFive})`).mouseup();
-  assert.equal(this.$('.t-dtd-field-label-preview').text(), FD.labelTwo);
+  assert.equal(this.$('.t-dtd-field-label-preview').text().trim(), FD.labelTwo);
   assert.ok(this.$('div').hasClass('checkbox'));
   assert.equal(this.$('.t-dtd-preview-field div.checkbox:eq(0)').text().trim(), OD.textOne);
   assert.equal(this.$('.t-dtd-preview-field div.checkbox:eq(1)').text().trim(), OD.textTwo);
@@ -478,7 +478,7 @@ test('add and remove dtd field options', function(assert) {
   run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, dtd_fields_fks: [1]});
     store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
-    field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeSix, required: FD.requestOne});
+    field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeFive, required: FD.requestOne});
   });
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}`);
@@ -526,7 +526,7 @@ test('update a field by adding option values', function(assert) {
   run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, dtd_fields_fks: [1]});
     store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
-    field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeSix, required: FD.requestOne});
+    field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeFive, required: FD.requestOne});
   });
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}`);
@@ -545,7 +545,7 @@ test('update a fields existing option', function(assert) {
   run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, dtd_fields_fks: [1]});
     store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
-    field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeSix, required: FD.requestOne, field_option_fks: [1]});
+    field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeFive, required: FD.requestOne, field_option_fks: [1]});
     store.push('field-option', {id: 1, field_pk: FD.idOne, option_pk: OD.idOne});
     option = store.push('option', {id: OD.idOne, text: OD.textOne, order: OD.orderOne});
   });
