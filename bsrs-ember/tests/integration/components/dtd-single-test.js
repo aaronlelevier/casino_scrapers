@@ -345,7 +345,7 @@ test('preview updates as fields changes are made to detail', function(assert) {
   this.$(`.ember-power-select-option:contains(${FD.typeThree})`).mouseup();
   assert.ok(this.$('textarea').hasClass('t-dtd-field-preview'));
   clickTrigger(FIELD_TYPE);
-  page.fieldTypeOneClickOptionFour();
+  page.fieldTypeOneClickOptionFourTranslated();
   //select
   this.$(`.ember-power-select-option:contains(${FD.typeFour})`).mouseup();
   assert.ok(this.$('.t-dtd-preview-field .ember-power-select').hasClass('t-dtd-field-select'));

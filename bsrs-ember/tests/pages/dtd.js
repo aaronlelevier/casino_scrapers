@@ -116,6 +116,7 @@ var DTDPage = PageObject.create({
     fieldTypeOneClickDropdown: clickable('.t-dtd-field-type > .ember-basic-dropdown-trigger'),
     fieldTypeOneClickOptionTwo: clickable(`.ember-power-select-option:contains(${FD.typeTwo})`, { scope: DROPDOWN }),
     fieldTypeOneClickOptionThree: clickable(`.ember-power-select-option:contains(${FD.typeThree})`, { scope: DROPDOWN }),
+    fieldTypeOneClickOptionFourTranslated: clickable(`.ember-power-select-option:contains(${FD.typeFour})`, { scope: DROPDOWN }),
     fieldTypeOneClickOptionFour: clickable(`.ember-power-select-option:contains(${FD.typeFourValue})`, { scope: DROPDOWN }),
     fieldTypeOneClickOptionSix: clickable(`.ember-power-select-option:contains(${FD.typeSix})`, { scope: DROPDOWN }),
     fieldRequiredOneNotChecked: () => Ember.$('.t-dtd-field-required:eq(0)').is(':not(:checked)'),
