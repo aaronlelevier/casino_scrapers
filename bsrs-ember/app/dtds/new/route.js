@@ -2,10 +2,12 @@ import Ember from 'ember';
 const { run } = Ember;
 import inject from 'bsrs-ember/utilities/inject';
 import TabNewRoute from 'bsrs-ember/route/tab/new-route';
+import PriorityMixin from 'bsrs-ember/mixins/route/priority';
+import StatusMixin from 'bsrs-ember/mixins/route/status';
 
 const detail_msg = 'admin.dtd.empty-detail';
 
-var DtdNewRoute = Ember.Route.extend({
+var DtdNewRoute = Ember.Route.extend(PriorityMixin, StatusMixin, {
   i18n: Ember.inject.service(),
   tabList: Ember.inject.service(),
   repository: inject('dtd'),
@@ -19,6 +21,8 @@ var DtdNewRoute = Ember.Route.extend({
     run(() => {
       store.push('dtd-header', {id: 1, message: ''});
     });
+    const priorities = this.get('priorities');
+    const statuses = this.get('statuses');
     const new_pk = parseInt(params.new_id, 10);
     const repository = this.get('repository');
     // let model = this.get('store').find('dtd', {new_pk: new_pk}).objectAt(0);
@@ -27,6 +31,8 @@ var DtdNewRoute = Ember.Route.extend({
     // }
     return {
       model: model,
+      statuses: statuses,
+      priorities: priorities
     };
   },
   afterModel(model, transition) {
