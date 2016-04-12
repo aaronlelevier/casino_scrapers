@@ -126,6 +126,7 @@ urlpatterns += required(
             'post_change_redirect': '/',
             },
             name='password_change'),
+        url(r'^protected/attachments/images/full/(?P<filename>.+)/$', bigsky_views.image_full_view, name='image_full_view'),
         url(r'^logout/$', bigsky_views.logout, name='logout'),
         url(r'^django-admin/', include(admin.site.urls)),
         url(r'', include('generic.urls')),

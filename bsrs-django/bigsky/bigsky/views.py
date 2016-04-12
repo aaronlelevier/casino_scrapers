@@ -3,24 +3,23 @@ import json
 from django.conf import settings
 from django.contrib import auth
 from django.core.urlresolvers import reverse
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.views.generic.base import TemplateView
 from django.views.decorators.cache import never_cache
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.utils import timezone
 
 from accounting.models import Currency
-from category.models import Category
 from contact.models import PhoneNumberType, AddressType, EmailType, State, Country
-from generic.models import SavedSearch
-from location.models import Location, LocationLevel, LocationStatus
+from generic.models import SavedSearch, Attachment
+from location.models import LocationLevel, LocationStatus
 from person.config import ROLE_TYPES
 from person.models import Role, PersonStatus
 from setting.models import Setting
 from ticket.models import TicketStatus, TicketPriority
 from translation.models import Locale
-from utils.helpers import model_to_json, model_to_json_select_related
+from utils.helpers import model_to_json, model_to_json_select_related, media_path
 
 
 class IndexView(TemplateView):
@@ -68,6 +67,14 @@ class IndexView(TemplateView):
             'ticket_priorities': model_to_json(TicketPriority),
         })
         return context
+
+
+def image_full_view(request, filename):
+    attachment = get_object_or_404(Attachment, filename=filename)
+    response = HttpResponse()
+    response["Content-Type"] = ""
+    response['X-Accel-Redirect'] = "{}".format(media_path(attachment.image_full))
+    return response
 
 
 def logout(request):

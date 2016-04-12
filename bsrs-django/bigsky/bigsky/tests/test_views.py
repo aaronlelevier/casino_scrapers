@@ -14,6 +14,7 @@ from category.models import Category
 from category.tests.factory import create_categories
 from contact.models import State, Country, PhoneNumberType, AddressType, EmailType
 from generic.models import SavedSearch
+from generic.tests.factory import create_image_attachment
 from location.models import LocationLevel, LocationStatus
 from person.models import PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_single_person, create_role
@@ -21,6 +22,7 @@ from setting.tests.factory import create_general_setting
 from ticket.models import TicketStatus, TicketPriority
 from translation.models import Locale
 from translation.tests.factory import create_locales
+from utils.helpers import media_path
 
 
 class IndexTests(TestCase):
@@ -90,6 +92,42 @@ class LoginTests(TestCase):
     def test_favicon_and_media_url(self):
         response = self.client.get(reverse('login'))
         self.assertIn("{}images/favicon.ico".format(settings.MEDIA_URL), response.content.decode('utf8'))
+
+
+class DocumentViewTests(TestCase):
+
+    def setUp(self):
+        self.person = create_single_person()
+        self.attachment = create_image_attachment()
+        self.url = reverse('image_full_view', kwargs={'filename': self.attachment.filename})
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_logged_in(self):
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "")
+        self.assertEqual(
+            response['X-Accel-Redirect'],
+            "{}".format(media_path(self.attachment.image_full))
+        )
+
+    def test_404(self):
+        self.client.login(username=self.person.username, password=PASSWORD)
+        self.url = reverse('image_full_view', kwargs={'filename': 'foo'})
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_logged_out(self):
+        response = self.client.get(self.url)
+
+        self.assertRedirects(response, '{}?next={}'.format(reverse('login'), self.url))
 
 
 class LogoutTests(TestCase):
