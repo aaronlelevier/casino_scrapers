@@ -67,8 +67,6 @@ var DTDPage = PageObject.create({
     textCount: count('.t-dtd-link-text'),
     textIsRequiredError: () => Ember.$('.t-dtd-link-text-error').text().trim(),
 
-    addLinkBtn: value('.t-add-link-btn'),
-    clickAddLinkBtn: clickable('.t-add-link-btn'),
 
     isDirty: hasClass('dirty', 'i', {scope: '.t-tab-close'}),
     clickPreviewToggle: clickable('.t-dtd-preview'),
@@ -82,6 +80,8 @@ var DTDPage = PageObject.create({
     previewButtonOn: hasClass('on', 'button.t-dtd-preview'),
     previewButtonOff: hasClass('off', 'button.t-dtd-preview'),
 
+    addLinkBtn: clickable('.t-add-link-btn'),
+    linkTextLength: count('.t-dtd-link-text'),
     linkTypeLength: count('.t-dtd-link_type'),
     linkTypeLabelOne: text('.t-dtd-link_type-label:eq(0)'),
     linkTypeLabelTwo: text('.t-dtd-link_type-label:eq(1)'),
@@ -116,7 +116,7 @@ var DTDPage = PageObject.create({
     fieldTypeOneClickDropdown: clickable('.t-dtd-field-type > .ember-basic-dropdown-trigger'),
     fieldTypeOneClickOptionTwo: clickable(`.ember-power-select-option:contains(${FD.typeTwo})`, { scope: DROPDOWN }),
     fieldTypeOneClickOptionThree: clickable(`.ember-power-select-option:contains(${FD.typeThree})`, { scope: DROPDOWN }),
-    fieldTypeOneClickOptionFour: clickable(`.ember-power-select-option:contains(${FD.typeFour})`, { scope: DROPDOWN }),
+    fieldTypeOneClickOptionFour: clickable(`.ember-power-select-option:contains(${FD.typeFourValue})`, { scope: DROPDOWN }),
     fieldTypeOneClickOptionSix: clickable(`.ember-power-select-option:contains(${FD.typeSix})`, { scope: DROPDOWN }),
     fieldRequiredOneNotChecked: () => Ember.$('.t-dtd-field-required:eq(0)').is(':not(:checked)'),
     fieldRequiredOneChecked: () => Ember.$('.t-dtd-field-required:eq(0)').is(':checked'),

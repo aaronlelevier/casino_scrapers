@@ -98,9 +98,9 @@ var links = [{
     is_header: LINK.is_headerTwo,
     request: LINK.requestTwo,
     text: LINK.textTwo,
-    priority: null,
-    status: null,
-    destination: null,
+    priority: undefined,
+    status: undefined,
+    destination: undefined,
     categories: []
   }];
 dtd_payload_link_two_put['links'] = links;
@@ -109,17 +109,40 @@ var dtd_payload_update_priority = Ember.$.extend(true, {}, dtd_payload);
 dtd_payload_update_priority['links'][0]['priority'] = TP.priorityTwoId;
 
 var dtd_payload_no_status = Ember.$.extend(true, {}, dtd_payload);
-dtd_payload_no_status['links'][0]['status'] = null;
+dtd_payload_no_status['links'][0]['status'] = undefined;
 
 var dtd_payload_no_priority = Ember.$.extend(true, {}, dtd_payload);
-dtd_payload_no_priority['links'][0]['priority'] = null;
+dtd_payload_no_priority['links'][0]['priority'] = undefined;
 
 var dtd_new_payload = {
   id: 1,
   key: DTD.keyOne,
   description: DTD.descriptionOne,
-  fields: [],
-  links: [],
+  link_type: DTD.linkTypeOne,
+  fields: [{
+    id: 1,
+    label: FD.labelOne,
+    type: FD.typeFour,
+    required: FD.requiredTwo,
+    order: FD.orderOne,
+    options: [{
+      id: 1,
+      text: OD.textOne,
+      order: OD.orderOne
+    }]
+  }],
+  links: [{
+    id: 1,
+    order: LINK.orderOne,
+    action_button: LINK.action_buttonOne,
+    is_header: LINK.is_headerTwo,
+    request: LINK.requestOne,
+    text: LINK.textOne,
+    priority: TP.priorityOneId,
+    status: TD.statusOneId,
+    destination: DTD.idOne,
+    categories: [],
+  }],
   attachments: []
 };
 
