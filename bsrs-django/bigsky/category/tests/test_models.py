@@ -32,10 +32,27 @@ class CategoryManagerTests(TestCase):
         self.role.categories.add(self.store)
         self.role.categories.add(self.windows)
 
-    def test_get_all_children(self):
+    def test_objects_and_their_children(self):
         ret = self.person.role.categories.objects_and_their_children()
 
         self.assertEqual(len(ret), 3)
+
+    def test_get_all_if_none(self):
+        for c in self.person.role.categories.all():
+            self.person.role.categories.remove(c)
+
+        ret = self.person.role.categories.get_all_if_none(self.person.role)
+
+        self.assertEqual(len(ret), Category.objects.count())
+
+    def test_get_all_if_none__related_exist(self):
+        count = self.person.role.categories.count()
+        self.assertTrue(count)
+        self.assertNotEqual(count, Category.objects.count())
+
+        ret = self.person.role.categories.get_all_if_none(self.person.role)
+
+        self.assertEqual(len(ret), count)
 
 
 class CategoryTests(CategorySetupMixin, TestCase):

@@ -33,13 +33,20 @@ class CategoryStatus(BaseNameModel):
 
 
 class CategoryQuerySet(SelfReferencingQuerySet):
-    pass
+
+    def get_all_if_none(self, role):
+        if not role.categories.count():
+            return Category.objects.all().values_list('id', flat=True)
+        return role.categories.all().values_list('id', flat=True)
 
 
 class CategoryManager(SelfReferencingManager):
 
     def get_queryset(self):
         return CategoryQuerySet(self.model, self._db).filter(deleted__isnull=True)
+
+    def get_all_if_none(self, role):
+        return self.get_queryset().get_all_if_none(role)
 
 
 class Category(BaseModel):

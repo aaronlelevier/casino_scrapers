@@ -4,7 +4,6 @@ import datetime
 
 from rest_framework.test import APITestCase
 
-
 from category.models import Category
 from category.tests.factory import create_categories, create_single_category
 from location.models import Location
@@ -1032,12 +1031,6 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
             response = self.client.get('/api/tickets/')
             data = json.loads(response.content.decode('utf8'))
 
-            # TODO: aaron
-            # self.assertIn(
-            #     str(ticket.id),
-            #     [x['id'] for x in data['results']]
-            # )
-
     def test_can_view_tickets__category(self):
         """
         Checks that at least one of Ticket's 'Categories' are in the 
@@ -1075,3 +1068,49 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
                 str(self.ticket_two.id),
                 [x['id'] for x in data['results']]
             )
+
+    def test_can_view_tickets__role_has_no_categories(self):
+        """
+        If a Role has no Categories, the Person can see all Categories
+        """
+        with self.settings(TICKET_FILTERING_ON=True):
+            person_two = create_single_person()
+            # No Categories
+            for c in person_two.role.categories.all():
+                person_two.role.categories.remove(c)
+            self.assertEqual(person_two.role.categories.count(), 0)
+            # Locations
+            for x in Location.objects.filter(location_level=person_two.role.location_level):
+                person_two.locations.add(x)
+            self.assertEqual(
+                person_two.locations.count(),
+                Location.objects.filter(location_level=person_two.role.location_level).count()
+            )
+            # Ticket
+            self.ticket.location = person_two.locations.first()
+            self.ticket.save()
+            self.assertEqual(1, Ticket.objects.filter_on_categories_and_location(person_two).count())
+            # Login
+            self.client.login(username=person_two.username, password=PASSWORD)
+
+            response = self.client.get('/api/tickets/')
+            data = json.loads(response.content.decode('utf8'))
+
+            self.assertEqual(data['count'], 1)
+            self.assertEqual(data['results'][0]['id'], str(self.ticket.id))
+
+    def test_can_view_tickets__detail_endpoint_get_fails(self):
+        """
+        Person can't view any Tickets (due) to filtering, so a GET request
+        should also fail.
+        """
+        with self.settings(TICKET_FILTERING_ON=True):
+            person_two = create_single_person()
+            self.ticket.location = person_two.locations.first()
+            self.ticket.save()
+            self.assertEqual(0, Ticket.objects.filter_on_categories_and_location(person_two).count())
+            self.client.login(username=person_two.username, password=PASSWORD)
+
+            response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
+
+            self.assertEqual(response.status_code, 404)

@@ -90,7 +90,7 @@ class TicketQuerySet(BaseQuerySet):
 
     def filter_on_categories_and_location(self, person):
         return self.filter(
-            Q(categories__id__in=person.role.categories.filter(parent__isnull=True).values_list('id', flat=True)) &
+            Q(categories__id__in=person.role.categories.get_all_if_none(person.role)) &
             Q(location__id__in=person.locations.objects_and_their_children())
         ).distinct()
 
