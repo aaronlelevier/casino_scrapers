@@ -6,7 +6,6 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/dtd';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
-import { rollbackAll } from 'bsrs-ember/utilities/rollback-all';
 
 const Validations = buildValidations({
   key: validator('presence', {
@@ -95,11 +94,15 @@ var DTDModel = Model.extend(Validations, OptConf, {
   },
   linkRollbackContainer() {
     const links = this.get('links');
-    rollbackAll(links);
+    links.forEach((model) => {
+      model.rollback();
+    });
   },
   fieldRollbackContainer() {
     const fields = this.get('fields');
-    rollbackAll(fields);
+    fields.forEach((model) => {
+      model.rollback();
+    });
   },
   save(){
     this.saveLinksContainer();

@@ -446,7 +446,7 @@ test('save and rollback combined test', (assert) => {
   assert.ok(dtd.get('isDirtyOrRelatedDirty'));
   assert.equal(dtd.get('links').objectAt(0).get('destination_fk'), dtd_2.get('id'));
   assert.equal(dtd.get('links').objectAt(0).get('destination.id'), dtd_2.get('id'));
-  assert.equal(dtd.get('links').objectAt(1).get('destination_fk'), null);
+  assert.equal(dtd.get('links').objectAt(1).get('destination_fk'), undefined);
   assert.equal(dtd.get('links').objectAt(1).get('destination.id'), dtd.get('id'));
   dtd.save();
   assert.equal(dtd.get('links').objectAt(0).get('destination_fk'), dtd_2.get('id'));

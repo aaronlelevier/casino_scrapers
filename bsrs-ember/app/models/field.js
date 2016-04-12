@@ -3,7 +3,6 @@ import inject from 'bsrs-ember/utilities/store';
 import OptConf from 'bsrs-ember/mixins/optconfigure/field';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
-import { rollbackAll } from 'bsrs-ember/utilities/rollback-all';
 
 export default Model.extend(OptConf, {
   init() {
@@ -54,7 +53,9 @@ export default Model.extend(OptConf, {
   },
   optionRollbackContainer() {
     const options = this.get('options');
-    rollbackAll(options);
+    options.forEach((model) => {
+      model.rollback();
+    });
   },
   removeRecord(){
     Ember.run(() => {
