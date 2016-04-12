@@ -40,6 +40,9 @@ class TreeData(BaseModel):
 
     objects = TreeDataManager()
 
+    class Meta:
+        ordering = ('key',)
+
 
 class TreeField(BaseModel):
     order = models.IntegerField(blank=True, default=0)

@@ -130,6 +130,14 @@ class TreeDataListTests(TreeDataTestSetUpMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
 
+    def test_default_ordering_key(self):
+        dtd = mommy.make(TreeData, description='999')
+        response = self.client.get('/api/dtds/')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 3)
+        self.assertTrue(data['results'][0]['key'] < data['results'][1]['key'])
+
 
 class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
 
