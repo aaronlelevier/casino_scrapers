@@ -44,6 +44,7 @@ export default Model.extend(OptConf, {
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   saveRelated() {
     this.saveOptions();
+    this.saveOptionsContainer();
     this.save();
   },
   rollback(){
@@ -55,6 +56,12 @@ export default Model.extend(OptConf, {
     const options = this.get('options');
     options.forEach((model) => {
       model.rollback();
+    });
+  },
+  saveOptionsContainer() {
+    const options = this.get('options');
+    options.forEach((option) => {
+      option.save();
     });
   },
   removeRecord(){

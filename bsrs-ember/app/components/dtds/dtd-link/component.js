@@ -7,10 +7,12 @@ var DtdLinkComponent = Ember.Component.extend({
   classNames: ['input-multi-dtd-link t-input-multi-dtd-link'],
   actions: {
     append(){
+      const model = this.get('model');
+      const links_length = model.get('links.length');
       const id = this.get('uuid').v4();
-      const model = {id: id, new: true};
+      const obj = {id: id, new: true, order: links_length};
       run(() => {
-        this.get('model').add_link(model);
+        model.add_link(obj);
       });
     },
     delete(link) {

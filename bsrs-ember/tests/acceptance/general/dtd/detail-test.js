@@ -148,7 +148,7 @@ test('dtd payload to update all fields', (assert) => {
   });
 });
 
-test('add a new field and update', (assert) => {
+test('scott add a new field and update', (assert) => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -187,7 +187,8 @@ test('add a new field and update', (assert) => {
     label: FD.labelOne,
     type: FD.typeFour,
     required: true,
-    options: [{id: 1, text: OD.textOne, order: null}]
+    order: FD.orderTwo,
+    options: [{id: 1, text: OD.textOne, order: 0}]
   });
   xhr(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});
   generalPage.save();

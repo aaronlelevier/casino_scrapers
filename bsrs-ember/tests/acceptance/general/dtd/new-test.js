@@ -32,7 +32,7 @@ const DJANGO_DTD_NEW_URL = `${DJANGO_DTD_URL}${UUID.value}/`;
 
 let application, store, payload, list_xhr, original_uuid;
 
-module('scott Acceptance | dtd-new', {
+module('Acceptance | dtd-new', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('store:main');
@@ -49,57 +49,61 @@ module('scott Acceptance | dtd-new', {
 
 /* jshint ignore:start */
 
-// test('visiting /dtd/new', async assert => {
-//   await page.visit();
-//   assert.equal(currentURL(), DTD_URL);
-//   await click('.t-add-new');
-//   assert.equal(currentURL(), DTD_NEW_URL);
-//   assert.equal(store.find('dtd').get('length'), 1);
-//   const dtd = store.find('dtd', UUID.value);
-//   assert.ok(dtd.get('new'));
-//   assert.notOk(dtd.get('key'));
-//   assert.notOk(dtd.get('description'));
-//   assert.notOk(find('t-dtd-empty-detail').text());
-//   assert.equal(page.titleText, t('admin.dtd.new'));
-//   page.keyFillIn(DTD.keyOne);
-//   page.descriptionFillIn(DTD.descriptionOne);
-//   const json = { 'results': [{id: DTD.idOne, key: DTD.keyOne}, {id: DTD.idTwo, key: DTD.keyTwo}] };
-//   ajax(`/api/dtds/?key__icontains=1`, 'GET', null, {}, 200, json);
-//   await page.addLinkBtn()
-//   .requestFillIn(LINK.requestOne)
-//   .textFillIn(LINK.textOne)
-//   .linkTypeOneClick()
-//   .destinationClickDropdownOne()
-//   .destinationSearch('1')
-//   .destinationClickOptionOne()
-//   .addFieldBtn()
-//   .fieldLabelOneFillin(FD.labelOne)
-//   .fieldRequiredOneClick()
-//   .fieldTypeOneClickDropdown()
-//   .fieldTypeOneClickOptionFour()
-//   .fieldOneAddFieldOption()
-//   .fieldOneOptionTextFillin(OD.textOne)
-//   .action_buttonClick();
-//   await ticketPage
-//   .priorityClickDropdown()
-//   .priorityClickOptionOne()
-//   .statusClickDropdown()
-//   .statusClickOptionOne()
-//   assert.equal(ticketPage.priorityInput.split(' ')[0], TP.priorityOne);
-//   assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-//   assert.ok(dtd.get('linksIsDirty'));
-//   const link = dtd.get('links').objectAt(0);
-//   assert.ok(link.get('isDirtyOrRelatedDirty'));
-//   assert.ok(link.get('priorityIsDirty'));
-//   const response = Ember.$.extend(true, {}, payload);
-//   xhr(DJANGO_DTD_URL, 'POST', JSON.stringify(dtd_new_payload), {}, 201, response);
-//   await generalPage.save();
-//   assert.equal(currentURL(), NEW_URL);
-//   assert.equal(dtd.get('key'), DTD.keyOne);
-//   assert.equal(dtd.get('description'), DTD.descriptionOne);
-//   // assert.ok(dtd.get('isNotDirty'));
-//   // assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-// });
+test('visiting /dtd/new', async assert => {
+  await page.visit();
+  assert.equal(currentURL(), DTD_URL);
+  await click('.t-add-new');
+  assert.equal(currentURL(), DTD_NEW_URL);
+  assert.equal(store.find('dtd').get('length'), 1);
+  const dtd = store.find('dtd', UUID.value);
+  assert.ok(dtd.get('new'));
+  assert.notOk(dtd.get('key'));
+  assert.notOk(dtd.get('description'));
+  assert.notOk(find('t-dtd-empty-detail').text());
+  assert.equal(page.titleText, t('admin.dtd.new'));
+  page.keyFillIn(DTD.keyOne);
+  page.descriptionFillIn(DTD.descriptionOne);
+  const json = { 'results': [{id: DTD.idOne, key: DTD.keyOne}, {id: DTD.idTwo, key: DTD.keyTwo}] };
+  ajax(`/api/dtds/?key__icontains=1`, 'GET', null, {}, 200, json);
+  await page.addLinkBtn()
+  .requestFillIn(LINK.requestOne)
+  .textFillIn(LINK.textOne)
+  .linkTypeOneClick()
+  .destinationClickDropdownOne()
+  .destinationSearch('1')
+  .destinationClickOptionOne()
+  .addFieldBtn()
+  .fieldLabelOneFillin(FD.labelOne)
+  .fieldRequiredOneClick()
+  .fieldTypeOneClickDropdown()
+  .fieldTypeOneClickOptionFour()
+  .fieldOneAddFieldOption()
+  .fieldOneOptionTextFillin(OD.textOne)
+  .action_buttonClick();
+  await ticketPage
+  .priorityClickDropdown()
+  .priorityClickOptionOne()
+  .statusClickDropdown()
+  .statusClickOptionOne()
+  assert.equal(ticketPage.priorityInput.split(' ')[0], TP.priorityOne);
+  assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+  assert.ok(dtd.get('linksIsDirty'));
+  const link = dtd.get('links').objectAt(0);
+  assert.ok(link.get('isDirtyOrRelatedDirty'));
+  assert.ok(link.get('priorityIsDirty'));
+  const response = Ember.$.extend(true, {}, payload);
+  xhr(DJANGO_DTD_URL, 'POST', JSON.stringify(dtd_new_payload), {}, 201, response);
+  await generalPage.save();
+  assert.equal(currentURL(), NEW_URL);
+  assert.equal(dtd.get('key'), DTD.keyOne);
+  assert.equal(dtd.get('description'), DTD.descriptionOne);
+  assert.ok(dtd.get('isNotDirty'));
+  assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(dtd.get('linksIsNotDirty'));
+  assert.ok(dtd.get('fieldsIsNotDirty'));
+  assert.notOk(link.get('fieldsIsDirtyContainer'));
+  assert.ok(link.get('priorityIsNotDirty'));
+});
 
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
   page.visitNew();

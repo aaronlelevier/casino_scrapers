@@ -93,7 +93,7 @@ var links = [{
     categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
   }, {
     id: 1,
-    // order: LINK.orderOne,  // needs to be set on model based upon order in `dtd-links` array
+    order: LINK.orderTwo,
     action_button: LINK.action_buttonOne,
     is_header: LINK.is_headerTwo,
     request: LINK.requestTwo,

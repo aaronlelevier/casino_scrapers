@@ -110,13 +110,15 @@ test('add and remove dtd links', function(assert) {
   run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, link_type: DTD.linkTypeOne});
     uuid = store.push('uuid', {id: 1});
-    dtd.add_link({id: uuid.v4()});
+    dtd.add_link({id: uuid.v4(), order: 0});
   });
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}`);
   let $component = this.$('.t-input-multi-dtd-link');
   assert.ok($component.is(':visible'));
   var add_btn = this.$('.t-add-link-btn');
+  let link = dtd.get('links').objectAt(0);
+  assert.equal(link.get('order'), 0);
   assert.equal($component.find('.t-dtd-link-request').length, 1);
   assert.equal($component.find('.t-dtd-link-text').length, 1);
   assert.equal($component.find('.t-dtd-link-action_button').length, 1);
@@ -124,8 +126,12 @@ test('add and remove dtd links', function(assert) {
   assert.equal($component.find('.t-ticket-priority-select').length, 1);
   assert.equal($component.find('.t-ticket-status-select').length, 1);
   add_btn.trigger('click').trigger('change');
+  link = dtd.get('links').objectAt(1);
+  assert.equal(link.get('order'), 1);
   assert.equal($component.find('.t-dtd-link-request').length, 2);
   add_btn.trigger('click').trigger('change');
+  link = dtd.get('links').objectAt(2);
+  assert.equal(link.get('order'), 2);
   assert.equal($component.find('.t-dtd-link-request').length, 3);
   var remove_btn = this.$('.t-del-link-btn:eq(0)');
   remove_btn.trigger('click').trigger('change');
@@ -391,17 +397,21 @@ test('add and remove dtd fields', function(assert) {
   run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, dtd_fields_fks: [1]});
     store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
-    field = store.push('field', {id: FD.idOne});
+    field = store.push('field', {id: FD.idOne, order: 0});
   });
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}`);
   let $component = this.$('.t-input-multi-dtd-field');
   assert.ok($component.is(':visible'));
+  let field = dtd.get('fields').objectAt(0);
+  assert.equal(field.get('order'), 0);
   assert.equal($component.find('.t-dtd-field-label').length, 1);
   assert.equal($component.find(FIELD_TYPE).length, 1);
   assert.equal($component.find('.t-dtd-field-required').length, 1);
   var add_btn = this.$('.t-add-field-btn');
   add_btn.trigger('click').trigger('change');
+  field = dtd.get('fields').objectAt(1);
+  assert.equal(field.get('order'), 1);
   assert.equal($component.find('.t-dtd-field-label').length, 2);
   assert.equal($component.find(FIELD_TYPE).length, 2);
   assert.equal($component.find('.t-dtd-field-required').length, 2);
@@ -490,7 +500,13 @@ test('add and remove dtd field options', function(assert) {
   assert.equal($component.find('.t-dtd-field-option-text').length, 0);
   var add_btn = this.$('.t-add-field-option-btn');
   add_btn.trigger('click').trigger('change');
+  let option = field.get('options').objectAt(0);
+  assert.equal(option.get('order'), 0);
   assert.equal($component.find('.t-dtd-field-option-text').length, 1);
+  add_btn.trigger('click').trigger('change');
+  option = field.get('options').objectAt(1);
+  assert.equal(option.get('order'), 1);
+  assert.equal($component.find('.t-dtd-field-option-text').length, 2);
   var remove_btn = this.$('.t-remove-field-option-btn');
   remove_btn.trigger('click').trigger('change');
   assert.equal($component.find('.t-dtd-field-option-text').length, 0);

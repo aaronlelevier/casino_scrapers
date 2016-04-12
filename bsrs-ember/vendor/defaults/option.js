@@ -9,9 +9,9 @@ var BSRS_OPTIONS_DEFAULTS_OBJECT = (function() {
             textOne: 'yes',
             textTwo: 'no',
             textThree: 'maybe',
-            orderOne: 1,
-            orderTwo: 2,
-            orderThree: 3
+            orderOne: 0,
+            orderTwo: 1,
+            orderThree: 2
         };
     };
     return factory;
