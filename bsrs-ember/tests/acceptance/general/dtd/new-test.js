@@ -83,7 +83,7 @@ test('visiting /dtd/new', async assert => {
   .priorityClickDropdown()
   .priorityClickOptionOne()
   .statusClickDropdown()
-  .statusClickOptionOne()
+  .statusClickOptionOne();
   assert.equal(ticketPage.priorityInput.split(' ')[0], TP.priorityOne);
   assert.ok(dtd.get('isDirtyOrRelatedDirty'));
   assert.ok(dtd.get('linksIsDirty'));
