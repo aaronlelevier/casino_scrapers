@@ -17,9 +17,5 @@ export default Ember.Object.extend(NewMixin, {
     if(complete){
       return 'complete';
     }
-  }),
-  filepath: Ember.computed('file', function() {
-    const file = this.get('file');
-    return `/media/${file}`;
-  }),
+  })
 });

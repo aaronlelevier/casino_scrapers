@@ -1,6 +1,6 @@
-<a href={{attachment.filepath}} target="_blank" class="t-ticket-attachment-add-remove">
+<a href={{attachment.file}} target="_blank" class="t-ticket-attachment-add-remove">
   {{#if attachment.image_thumbnail}}
-  <span class="t-ext-jpg activity-thumb"><img src={{attachment.image_thumb}} /></span>
+  <span class="t-ext-jpg activity-thumb"><img src={{attachment.image_thumbnail}} /></span>
   {{else if (is-equal attachment.ext 'pdf')}}
   <span class="t-ext-pdf activity-thumb">{{fa-icon "file-pdf-o"}}</span>
   {{else if (is-equal attachment.ext 'doc')}}

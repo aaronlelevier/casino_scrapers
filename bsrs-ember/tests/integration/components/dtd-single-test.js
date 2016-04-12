@@ -24,7 +24,7 @@ let store, dtd, uuid, trans, link, field, option, dtd_repo;
 const DROPDOWN = '.ember-power-select-dropdown';
 const FIELD_TYPE = '.t-dtd-field-type';
 
-moduleForComponent('dtds/dtd-single', 'amk integration: dtd-single test', {
+moduleForComponent('dtds/dtd-single', 'integration: dtd-single test', {
   integration: true,
   beforeEach() {
     page.setContext(this);
@@ -355,8 +355,8 @@ test('preview updates as fields changes are made to detail', function(assert) {
   assert.equal(page.fieldOptionTwo, OD.textTwo);
   //checkbox
   clickTrigger(FIELD_TYPE);
-  page.fieldTypeOneClickOptionFive();
-  this.$(`.ember-power-select-option:contains(${FD.typeFive})`).mouseup();
+  page.fieldTypeOneClickOptionSix();
+  this.$(`.ember-power-select-option:contains(${FD.typeSix})`).mouseup();
   assert.equal(this.$('.t-dtd-field-label-preview').text().trim(), FD.labelTwo);
   assert.ok(this.$('div').hasClass('checkbox'));
   assert.equal(this.$('.t-dtd-preview-field div.checkbox:eq(0)').text().trim(), OD.textOne);
@@ -478,7 +478,7 @@ test('add and remove dtd field options', function(assert) {
   run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, dtd_fields_fks: [1]});
     store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
-    field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeFive, required: FD.requestOne});
+    field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeSix, required: FD.requestOne});
   });
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}`);
@@ -526,7 +526,7 @@ test('update a field by adding option values', function(assert) {
   run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, dtd_fields_fks: [1]});
     store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
-    field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeFive, required: FD.requestOne});
+    field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeSix, required: FD.requestOne});
   });
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}`);
@@ -545,7 +545,7 @@ test('update a fields existing option', function(assert) {
   run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, dtd_fields_fks: [1]});
     store.push('dtd-field', {id: 1, dtd_pk: DTD.idOne, field_pk: FD.idOne});
-    field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeFive, required: FD.requestOne, field_option_fks: [1]});
+    field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeSix, required: FD.requestOne, field_option_fks: [1]});
     store.push('field-option', {id: 1, field_pk: FD.idOne, option_pk: OD.idOne});
     option = store.push('option', {id: OD.idOne, text: OD.textOne, order: OD.orderOne});
   });

@@ -139,10 +139,11 @@ if (typeof window === 'undefined') {
   var link_defaults = require('./defaults/link');
   var field_defaults = require('./defaults/field');
   var option_defaults = require('./defaults/option');
+  var category_fixtures = require('../vendor/category_fixtures');
   var category_defaults = require('../vendor/defaults/category');
   var config = require('../config/environment');
   objectAssign(BSRS_DTD_FACTORY.prototype, mixin.prototype);
-  module.exports = new BSRS_DTD_FACTORY(dtd_defaults, link_defaults, field_defaults, option_defaults, config);
+  module.exports = new BSRS_DTD_FACTORY(dtd_defaults, link_defaults, field_defaults, option_defaults, category_fixtures, category_defaults, config);
 } else {
   define('bsrs-ember/vendor/dtd_fixtures', ['exports', 'bsrs-ember/vendor/defaults/dtd', 'bsrs-ember/vendor/defaults/link', 'bsrs-ember/vendor/defaults/field', 'bsrs-ember/vendor/defaults/option', 'bsrs-ember/vendor/category_fixtures', 'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
          function (exports, dtd_defaults, link_defaults, field_defaults, option_defaults, category_fixtures, category_defaults, mixin, config) {
@@ -152,4 +153,3 @@ if (typeof window === 'undefined') {
            return {default: Factory};
          });
 }
-

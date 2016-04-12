@@ -63,8 +63,8 @@ test('upload will post form data, show progress bar and on save append the attac
   assert.equal(model.get('isDirty'), false);
   // assert.ok(model.get('isDirtyOrRelatedDirty'));
   const detail_with_attachment = DTDF.detail(DTD.idOne);
-  detail_with_attachment.attachments = [{id: UUID.value, filename: 'wat.jpg', file: 'attachments/images/full/wat.jpg', image_full: 'attachments/images/full/wat.jpg', image_thumbnail: 'attachments/images/thumbnail/wat.jpg', 
-    image_medium: 'attachments/images/medium/wat.jpg'}];
+  detail_with_attachment.attachments = [{id: UUID.value, filename: 'wat.jpg', file: '/media/attachments/images/full/wat.jpg', image_full: '/media/attachments/images/full/wat.jpg', image_thumbnail: '/media/attachments/images/thumbnail/wat.jpg',
+    image_medium: '/media/attachments/images/medium/wat.jpg'}];
   ajax(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload_with_attachment), {}, 200, detail_with_attachment);
   clearxhr(detail_xhr);
   await generalPage.save();
@@ -75,11 +75,12 @@ test('upload will post form data, show progress bar and on save append the attac
   // assert.ok(model.get('attachmentsIsNotDirty'));
   assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/attachments/images/full/wat.jpg`);
   assert.equal(find('.t-ticket-attachment-add-remove:eq(0) .t-ext-jpg').length, 1);
-  // assert.equal(find('.t-attachment-add-remove:eq(0) .t-ext-jpg > img').attr('src'), `/media/attachments/images/full/wat.jpg`);
+  assert.equal(find('.t-attachment-add-remove:eq(0) .t-ext-jpg > img').attr('src'), `/media/attachments/images/medium/wat.jpg`);
   assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').text().trim(), 'wat.jpg');
   assert.equal(find('.t-attachment-add-remove:eq(0)').text().trim(), 'wat.jpg');
   assert.equal(find('.t-dtd-preview-attachment > a').text().trim(), 'wat.jpg');
   assert.equal(find('.t-dtd-preview-attachment > a').attr('href'), `/media/attachments/images/full/wat.jpg`);
+  assert.equal(find('.t-dtd-preview-attachment .t-ext-jpg > img').attr('src'), `/media/attachments/images/medium/wat.jpg`);
   assert.equal(find('.t-dtd-preview-attachment .t-ext-jpg').length, 1);
   assert.equal(find('.t-dtd-preview-attachment > a').text().trim(), 'wat.jpg');
 });
@@ -206,7 +207,7 @@ test('file upload supports multiple attachments', async assert => {
   ajax(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload_with_attachments), {}, 200, DTDF.detail(DTD.idOne));
   await generalPage.save();
   assert.equal(currentURL(), DETAIL_URL);
-  assert.equal(store.find('attachment').get('length'), 2);//need faked out xhr to get 2 attachments in there 
+  assert.equal(store.find('attachment').get('length'), 2);//need faked out xhr to get 2 attachments in there
   assert.equal(model.get('isDirty'), false);
   assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
 });

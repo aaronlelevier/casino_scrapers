@@ -31,7 +31,7 @@
           <div class="row">
             <div class="col-md-12">
               {{#form-group title="admin.dtd.label.note" for="note"}}
-              <div class="input-group">
+              <div class="input-group" style="margin-bottom: 0;">
                 <div class="input-group-btn">
                   {{#power-select
                     class='t-dtd-note_type'
@@ -70,33 +70,35 @@
           </div>
           <div class="row">
             <div class="col-md-12">
+              {{#form-group title="admin.dtd.label.files" for=""}}
               <div class="attach">
                 <span class="btn btn-default btn-file">{{fa-icon 'paperclip'}} {{t "button.upload"}}<input type="file" multiple="multiple" onchange={{action "upload"}}></span>
+                {{#if attachmentErrMsg}}
+                  <h2 class="t-dtd-attachment-error">{{t attachmentErrMsg}}</h2>
+                {{/if}}
               </div>
-              {{#if attachmentErrMsg}}
-                <h2 class="t-dtd-attachment-error">{{t attachmentErrMsg}}</h2>
-              {{/if}}
-              {{#each model.attachments as |attachment|}}
-              {{#if attachment.new}}
-              <div class="col-md-12 progress-wrap">
-                <div class="progress active {{attachment.complete_class}}" role="progressbar" aria-valuemin="100" aria-valuemax="100" aria-valuenow="0">
-                  <div class={{attach-file-progress attachment.percent}} style={{attachment.progress}}>
-                    <span class="attachment-title">{{attachment.title}}</span>
-                    {{#unless attachment.complete}}
-                    <span class="attachment-progress"> - {{t "upload.progress"}}: {{attachment.percent}}%</span>
-                    {{/unless}}
-                    <i class="fa fa-minus-circle remove-attachment t-remove-attachment" aria-hidden="true" {{action "removeAttachment" attachment.id}}></i>
-                  </div>
+              {{/form-group}}
+            </div>
+            {{#each model.attachments as |attachment|}}
+            {{#if attachment.new}}
+            <div class="col-md-12 progress-wrap">
+              <div class="progress active {{attachment.complete_class}}" role="progressbar" aria-valuemin="100" aria-valuemax="100" aria-valuenow="0">
+                <div class={{attach-file-progress attachment.percent}} style={{attachment.progress}}>
+                  <span class="attachment-title">{{attachment.title}}</span>
+                  {{#unless attachment.complete}}
+                  <span class="attachment-progress"> - {{t "upload.progress"}}: {{attachment.percent}}%</span>
+                  {{/unless}}
+                  <i class="fa fa-minus-circle remove-attachment t-remove-attachment" aria-hidden="true" {{action "removeAttachment" attachment.id}}></i>
                 </div>
               </div>
-              {{/if}}
-              {{/each}}
-              {{#each model.attachments as |attachment|}}
-                {{#unless attachment.new}}
-                  {{attachment/single-thumb attachment=attachment}}
-                {{/unless}}
-              {{/each}}
             </div>
+            {{/if}}
+            {{/each}}
+            {{#each model.attachments as |attachment|}}
+              {{#unless attachment.new}}
+                {{attachment/single-thumb attachment=attachment}}
+              {{/unless}}
+            {{/each}}
           </div>
         </section>
         <section class="sub-section row">

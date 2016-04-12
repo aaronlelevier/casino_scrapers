@@ -100,6 +100,6 @@ test('if no fields, not displayed...text type displays properly', function(asser
   assert.equal(dtd.get('fields').get('length'), 1);
   this.model = dtd;
   this.render(hbs`{{dtds/dtd-preview model=model}}`);
-  assert.equal(this.$('.t-dtd-field-label-preview').text(), FD.labelOne);
+  assert.equal(this.$('.t-dtd-field-label-preview').text().trim(), FD.labelOne);
   assert.equal(this.$('input.t-dtd-field-preview:eq(0)').attr('type'), 'text');
 });
