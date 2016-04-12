@@ -1,6 +1,7 @@
 from datetime import timedelta
 import json
 import time
+import uuid
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -99,7 +100,7 @@ class DocumentViewTests(TestCase):
     def setUp(self):
         self.person = create_single_person()
         self.attachment = create_image_attachment()
-        self.url = reverse('image_full_view', kwargs={'filename': self.attachment.filename})
+        self.url = reverse('image_full_view', kwargs={'id': self.attachment.id})
 
     def tearDown(self):
         self.client.logout()
@@ -118,7 +119,7 @@ class DocumentViewTests(TestCase):
 
     def test_404(self):
         self.client.login(username=self.person.username, password=PASSWORD)
-        self.url = reverse('image_full_view', kwargs={'filename': 'foo'})
+        self.url = reverse('image_full_view', kwargs={'id': uuid.uuid4()})
 
         response = self.client.get(self.url)
 

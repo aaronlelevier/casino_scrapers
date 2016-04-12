@@ -69,8 +69,8 @@ class IndexView(TemplateView):
         return context
 
 
-def image_full_view(request, filename):
-    attachment = get_object_or_404(Attachment, filename=filename)
+def image_full_view(request, id):
+    attachment = get_object_or_404(Attachment, id=id)
     response = HttpResponse()
     response["Content-Type"] = ""
     response['X-Accel-Redirect'] = "{}".format(media_path(attachment.image_full))
