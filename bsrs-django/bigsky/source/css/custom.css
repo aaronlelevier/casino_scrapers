@@ -7,7 +7,7 @@ body {
     color: #888;
     line-height: 30px;
     text-align: center;
-    background: url('{{ MEDIA_URL }}/images/hero-mountains-gradient.jpg')  no-repeat center center fixed;
+    background: url('{{ STATIC_URL }}/images/hero-mountains-gradient.jpg')  no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

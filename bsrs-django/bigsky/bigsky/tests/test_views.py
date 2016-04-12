@@ -91,9 +91,9 @@ class LoginTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context['form'].non_field_errors)
 
-    def test_favicon_and_media_url(self):
+    def test_favicon_and_static_url(self):
         response = self.client.get(reverse('login'))
-        self.assertIn("{}images/favicon.ico".format(settings.MEDIA_URL), response.content.decode('utf8'))
+        self.assertIn("{}images/favicon.ico".format(settings.STATIC_URL), response.content.decode('utf8'))
 
 
 class DocumentViewTests(TestCase):
