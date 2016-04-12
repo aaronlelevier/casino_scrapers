@@ -5,10 +5,12 @@ const { run } = Ember;
 
 var GridRepositoryMixin = Ember.Mixin.create({
   error: Ember.inject.service(),
-  create(new_pk) {
+  create(new_pk, options={}) {
     let created;
     const pk = this.get('uuid').v4();
-    created = this.get('store').push(this.get('type'), {id: pk, new: true, new_pk: new_pk});
+    /* jshint ignore:start */
+    created = this.get('store').push(this.get('type'), {id: pk, new: true, new_pk: new_pk, ...options});
+    /* jshint ignore:end */
     return created;
   },
   insert(model) {

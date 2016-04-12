@@ -1,6 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
 import inject from 'bsrs-ember/utilities/inject';
+import injectUUID from 'bsrs-ember/utilities/uuid';
 import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 import PriorityMixin from 'bsrs-ember/mixins/route/priority';
 import StatusMixin from 'bsrs-ember/mixins/route/status';
@@ -10,6 +11,7 @@ const detail_msg = 'admin.dtd.empty-detail';
 var DtdNewRoute = Ember.Route.extend(PriorityMixin, StatusMixin, {
   i18n: Ember.inject.service(),
   tabList: Ember.inject.service(),
+  uuid: injectUUID('uuid'),
   repository: inject('dtd'),
   redirectRoute: 'dtds',
   closeTabRedirect: 'admin',
@@ -27,7 +29,12 @@ var DtdNewRoute = Ember.Route.extend(PriorityMixin, StatusMixin, {
     const repository = this.get('repository');
     // let model = this.get('store').find('dtd', {new_pk: new_pk}).objectAt(0);
     // if(!model){
-      let model = this.get('repository').create(new_pk);
+    const uuid = this.get('uuid');
+    const m2m_id = uuid.v4();
+    let model = this.get('repository').create(new_pk, { dtd_links_fks: [m2m_id] });
+    const link_id = uuid.v4();
+    const link = store.push('link', {id: link_id, order: 0});
+    store.push('dtd-link', {id: m2m_id, dtd_pk: model.get('id'), link_pk: link_id});
     // }
     return {
       model: model,

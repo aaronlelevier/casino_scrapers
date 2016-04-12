@@ -65,8 +65,7 @@ test('visiting /dtd/new', async assert => {
   page.descriptionFillIn(DTD.descriptionOne);
   const json = { 'results': [{id: DTD.idOne, key: DTD.keyOne}, {id: DTD.idTwo, key: DTD.keyTwo}] };
   ajax(`/api/dtds/?key__icontains=1`, 'GET', null, {}, 200, json);
-  await page.addLinkBtn()
-  .requestFillIn(LINK.requestOne)
+  await page.requestFillIn(LINK.requestOne)
   .textFillIn(LINK.textOne)
   .linkTypeOneClick()
   .destinationClickDropdownOne()
@@ -157,7 +156,7 @@ test('when user enters new form and doesnt enter data, the record is correctly r
   });
 });
 
-// test('adding a new dtd should allow for another new dtd to be created after the first is persisted', (assert) => {
+// test('scott adding a new dtd should allow for another new dtd to be created after the first is persisted', (assert) => {
 //   let dtd_count;
 //   random.uuid = original_uuid;
 //   dtd_new_payload.id = 'abc123';

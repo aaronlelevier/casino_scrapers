@@ -148,7 +148,7 @@ test('dtd payload to update all fields', (assert) => {
   });
 });
 
-test('scott add a new field and update', (assert) => {
+test('add a new field and update', (assert) => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
