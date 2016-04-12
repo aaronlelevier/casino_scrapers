@@ -65,8 +65,8 @@ var LinkModel = Model.extend(CategoriesMixin, Validations, OptConf, {
     };
   },
   saved: false,
-  textErrorMsg: Ember.computed('saved', function(){
-    return this.get('validations.isValid') ? undefined : this.get('saved') ?
+  textErrorMsg: Ember.computed('text', 'saved', function(){
+    return this.get('validations.attrs.text.isValid') ? undefined : this.get('saved') ?
       this.get('validations.attrs.text.message') : undefined;
   })
 });
