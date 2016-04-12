@@ -58,9 +58,9 @@ var LinkModel = Model.extend(CategoriesMixin, Validations, OptConf, {
       is_header: this.get('is_header') || false,
       request: this.get('request'),
       text: this.get('text'),
-      priority: this.get('priority.id') || null,
-      status: this.get('status.id') || null,
-      destination: this.get('destination.id') || null,
+      priority: this.get('priority.id'),
+      status: this.get('status.id'),
+      destination: this.get('destination.id'),
       categories: this.get('sorted_categories').mapBy('id'),
     };
   },
