@@ -79,27 +79,8 @@ var dtd_payload_two = {
   attachments: []
 };
 
-var dtd_payload_link_two_put = {
-  id: DTD.idOne,
-  key: DTD.keyOne,
-  description: DTD.descriptionOne,
-  prompt: DTD.promptOne,
-  note: DTD.noteOne,
-  note_type: DTD.noteTypeOne,
-  link_type: DTD.linkTypeOne,
-  fields: [{
-    id: FD.idOne,
-    label: FD.labelOne,
-    type: FD.typeSix,
-    required: FD.requiredOne,
-    order: FD.orderOne,
-    options: [{
-      id: OD.idOne,
-      text: OD.textOne,
-      order: OD.orderOne
-    }]
-  }],
-  links: [{
+var dtd_payload_link_two_put = Ember.$.extend(true, {}, dtd_payload);
+var links = [{
     id: LINK.idOne,
     order: LINK.orderOne,
     action_button: LINK.action_buttonOne,
@@ -110,8 +91,7 @@ var dtd_payload_link_two_put = {
     status: TD.statusOneId,
     destination: DTD.idOne,
     categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
-  },
-  {
+  }, {
     id: 1,
     // order: LINK.orderOne,  // needs to be set on model based upon order in `dtd-links` array
     action_button: LINK.action_buttonOne,
@@ -122,114 +102,17 @@ var dtd_payload_link_two_put = {
     status: null,
     destination: null,
     categories: []
-  }],
-  attachments: []
-};
+  }];
+dtd_payload_link_two_put['links'] = links;
 
-var dtd_payload_update_priority = {
-  id: DTD.idOne,
-  key: DTD.keyOne,
-  description: DTD.descriptionOne,
-  prompt: DTD.promptOne,
-  note: DTD.noteOne,
-  note_type: DTD.noteTypeOne,
-  link_type: DTD.linkTypeOne,
-  fields: [{
-    id: FD.idOne,
-    label: FD.labelOne,
-    type: FD.typeSix,
-    required: FD.requiredOne,
-    order: FD.orderOne,
-    options: [{
-      id: OD.idOne,
-      text: OD.textOne,
-      order: OD.orderOne
-    }]
-  }],
-  links: [{
-    id: LINK.idOne,
-    order: LINK.orderOne,
-    action_button: LINK.action_buttonOne,
-    is_header: LINK.is_headerOne,
-    request: LINK.requestOne,
-    text: LINK.textOne,
-    priority: TP.priorityTwoId,
-    status: TD.statusOneId,
-    destination: DTD.idTwo,
-    categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
-  }],
-  attachments: []
-};
+var dtd_payload_update_priority = Ember.$.extend(true, {}, dtd_payload);
+dtd_payload_update_priority['links'][0]['priority'] = TP.priorityTwoId;
 
-var dtd_payload_no_status = {
-  id: DTD.idOne,
-  key: DTD.keyOne,
-  description: DTD.descriptionOne,
-  prompt: DTD.promptOne,
-  note: DTD.noteOne,
-  note_type: DTD.noteTypeOne,
-  link_type: DTD.linkTypeOne,
-  fields: [{
-    id: FD.idOne,
-    label: FD.labelOne,
-    type: FD.typeSix,
-    required: FD.requiredOne,
-    order: FD.orderOne,
-    options: [{
-      id: OD.idOne,
-      text: OD.textOne,
-      order: OD.orderOne
-    }]
-  }],
-  links: [{
-    id: LINK.idOne,
-    order: LINK.orderOne,
-    action_button: LINK.action_buttonOne,
-    is_header: LINK.is_headerOne,
-    request: LINK.requestOne,
-    text: LINK.textOne,
-    priority: TP.priorityOneId,
-    status: null,
-    destination: DTD.idTwo,
-    categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
-  }],
-  attachments: []
-};
+var dtd_payload_no_status = Ember.$.extend(true, {}, dtd_payload);
+dtd_payload_no_status['links'][0]['status'] = null;
 
-var dtd_payload_no_priority = {
-  id: DTD.idOne,
-  key: DTD.keyOne,
-  description: DTD.descriptionOne,
-  prompt: DTD.promptOne,
-  note: DTD.noteOne,
-  note_type: DTD.noteTypeOne,
-  link_type: DTD.linkTypeOne,
-  fields: [{
-    id: FD.idOne,
-    label: FD.labelOne,
-    type: FD.typeSix,
-    required: FD.requiredOne,
-    order: FD.orderOne,
-    options: [{
-      id: OD.idOne,
-      text: OD.textOne,
-      order: OD.orderOne
-    }]
-  }],
-  links: [{
-    id: LINK.idOne,
-    order: LINK.orderOne,
-    action_button: LINK.action_buttonOne,
-    is_header: LINK.is_headerOne,
-    request: LINK.requestOne,
-    text: LINK.textOne,
-    priority: null,
-    status: TD.statusOneId,
-    destination: DTD.idTwo,
-    categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
-  }],
-  attachments: []
-};
+var dtd_payload_no_priority = Ember.$.extend(true, {}, dtd_payload);
+dtd_payload_no_priority['links'][0]['priority'] = null;
 
 var dtd_new_payload = {
   id: 1,
@@ -240,40 +123,8 @@ var dtd_new_payload = {
   attachments: []
 };
 
-var dtd_payload_with_attachment = {
-  id: DTD.idOne,
-  key: DTD.keyOne,
-  description: DTD.descriptionOne,
-  prompt: DTD.promptOne,
-  note: DTD.noteOne,
-  note_type: DTD.noteTypeOne,
-  link_type: DTD.linkTypeOne,
-  fields: [{
-    id: FD.idOne,
-    label: FD.labelOne,
-    type: FD.typeSix,
-    required: FD.requiredOne,
-    order: FD.orderOne,
-    options: [{
-      id: OD.idOne,
-      text: OD.textOne,
-      order: OD.orderOne
-    }]
-  }],
-  links: [{
-    id: LINK.idOne,
-    order: LINK.orderOne,
-    action_button: LINK.action_buttonOne,
-    is_header: LINK.is_headerOne,
-    request: LINK.requestOne,
-    text: LINK.textOne,
-    priority: TP.priorityOneId,
-    status: TD.statusOneId,
-    destination: DTD.idTwo,
-    categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
-  }],
-  attachments: [UUID.value]
-};
+var dtd_payload_with_attachment = Ember.$.extend(true, {}, dtd_payload);
+dtd_payload_with_attachment['attachments'] = [UUID.value];
 
 var dtd_payload_with_categories = Ember.$.extend(true, {}, dtd_payload);
 dtd_payload_with_categories.links[0].categories = [CD.idOne, CD.idTwo];

@@ -732,6 +732,6 @@ test('can clear out leaf category', async assert => {
   assert.equal(components, 3);
   assert.equal(link.get('categories.length'), 2);
 });
-
 /*END CATEGORIES */
+
 /* jshint ignore:end */
