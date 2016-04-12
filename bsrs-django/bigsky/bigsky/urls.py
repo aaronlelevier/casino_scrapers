@@ -1,4 +1,5 @@
 import json
+import platform
 
 from django.conf import settings
 from django.conf.urls import include, url
@@ -87,12 +88,15 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
 
-
 # No Requirement
 urlpatterns += [
     url(r'^404/$', bigsky_views.handler404, name='404'),
     url(r'^500/$', bigsky_views.handler500, name='500'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+# Media - serve via Django locally
+if settings.SYSTEM != 'Linux':
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Logout Required
 urlpatterns += required(
@@ -108,7 +112,6 @@ urlpatterns += required(
             name='login'),
     ]
 )
-
 
 if settings.DEBUG:
     import debug_toolbar
@@ -126,7 +129,7 @@ urlpatterns += required(
             'post_change_redirect': '/',
             },
             name='password_change'),
-        url(r'^protected/attachments/images/full/(?P<id>[\w-]+)/$', bigsky_views.image_full_view, name='image_full_view'),
+        url(r'^media/', bigsky_views.MediaView.as_view(), name="media"),
         url(r'^logout/$', bigsky_views.logout, name='logout'),
         url(r'^django-admin/', include(admin.site.urls)),
         url(r'', include('generic.urls')),
@@ -138,6 +141,7 @@ urlpatterns += required(
 
 handler404 = 'bigsky.views.handler404'
 handler500 = 'bigsky.views.handler500'
+
 
 ### URL HELPERS
 

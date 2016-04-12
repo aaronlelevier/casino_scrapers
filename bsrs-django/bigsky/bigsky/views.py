@@ -4,22 +4,22 @@ from django.conf import settings
 from django.contrib import auth
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.views.generic.base import TemplateView
-from django.views.decorators.cache import never_cache
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils import timezone
+from django.views.decorators.cache import never_cache
+from django.views.generic.base import View, TemplateView
 
 from accounting.models import Currency
 from contact.models import PhoneNumberType, AddressType, EmailType, State, Country
-from generic.models import SavedSearch, Attachment
+from generic.models import SavedSearch
 from location.models import LocationLevel, LocationStatus
 from person.config import ROLE_TYPES
 from person.models import Role, PersonStatus
 from setting.models import Setting
 from ticket.models import TicketStatus, TicketPriority
 from translation.models import Locale
-from utils.helpers import model_to_json, model_to_json_select_related, media_path
+from utils.helpers import model_to_json, model_to_json_select_related
 
 
 class IndexView(TemplateView):
@@ -69,12 +69,13 @@ class IndexView(TemplateView):
         return context
 
 
-def image_full_view(request, id):
-    attachment = get_object_or_404(Attachment, id=id)
-    response = HttpResponse()
-    response["Content-Type"] = ""
-    response['X-Accel-Redirect'] = "{}".format(media_path(attachment.image_full))
-    return response
+class MediaView(View):
+
+    def get(self, request):
+        response = HttpResponse()
+        response["Content-Type"] = ""
+        response['X-Accel-Redirect'] = request.path
+        return response
 
 
 def logout(request):

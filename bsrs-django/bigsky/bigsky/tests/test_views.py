@@ -5,12 +5,13 @@ import uuid
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.utils import timezone
 
 from model_mommy import mommy
 
 from accounting.models import Currency
+from bigsky.views import MediaView
 from category.models import Category
 from category.tests.factory import create_categories
 from contact.models import State, Country, PhoneNumberType, AddressType, EmailType
@@ -98,9 +99,10 @@ class LoginTests(TestCase):
 class DocumentViewTests(TestCase):
 
     def setUp(self):
+        self.factory = RequestFactory()
         self.person = create_single_person()
         self.attachment = create_image_attachment()
-        self.url = reverse('image_full_view', kwargs={'id': self.attachment.id})
+        self.path = media_path(self.attachment.image_full)
 
     def tearDown(self):
         self.client.logout()
@@ -108,7 +110,8 @@ class DocumentViewTests(TestCase):
     def test_logged_in(self):
         self.client.login(username=self.person.username, password=PASSWORD)
 
-        response = self.client.get(self.url)
+        request = self.factory.get(self.path)
+        response = MediaView.as_view()(request)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response["Content-Type"], "")
@@ -117,18 +120,10 @@ class DocumentViewTests(TestCase):
             "{}".format(media_path(self.attachment.image_full))
         )
 
-    def test_404(self):
-        self.client.login(username=self.person.username, password=PASSWORD)
-        self.url = reverse('image_full_view', kwargs={'id': uuid.uuid4()})
-
-        response = self.client.get(self.url)
-
-        self.assertEqual(response.status_code, 404)
-
     def test_logged_out(self):
-        response = self.client.get(self.url)
+        response = self.client.get(reverse('media'))
 
-        self.assertRedirects(response, '{}?next={}'.format(reverse('login'), self.url))
+        self.assertRedirects(response, '{}?next={}'.format(reverse('login'), reverse('media')))
 
 
 class LogoutTests(TestCase):

@@ -1,4 +1,5 @@
 import os
+import platform
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -185,6 +186,7 @@ LOGOUT_URL = '/logout/'
 SESSION_COOKIE_AGE = 5400
 SESSION_SAVE_EVERY_REQUEST = True
 
+SYSTEM = platform.system()
 
 ### FILES
 
