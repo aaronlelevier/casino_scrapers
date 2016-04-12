@@ -292,7 +292,9 @@ test('dtd-link category select', function(assert) {
   assert.equal(dtd.get('links').get('length'), 1);
   assert.equal(link.get('categories').get('length'), 1);
   assert.equal(this.$('.t-model-category-label').text().trim(), CD.labelOne);
-  assert.equal(this.$('.t-model-category-select').text().trim(), CD.nameOne);
+  assert.equal(this.$('.t-model-category-select').text().trim().split(/\s+/)[0], CD.nameOne);
+  // assert.equal(this.$('.t-model-category-select').text().trim().split(/\s+/)[1], '×');//bad test b/c if power select changes, then this will fail
+  assert.equal(this.$('.t-model-category-select').text().trim().split(/\s+/)[1].length, 1);
 });
 
 // Fields

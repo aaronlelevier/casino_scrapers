@@ -28,13 +28,18 @@ var TicketCategories = Ember.Component.extend({
     }),
     actions: {
         selected(category) {
-            const ticket = this.get('ticket');
-            const category_id = category.id;
-            //TODO: need to prevent select same b/c plain JS vs hydrated obj
-            if(category_id === ticket.get('top_level_category.id')){ 
-                return;
-            }
-            ticket.change_category_tree(category);
+          const ticket = this.get('ticket');
+          const top_level_id = ticket.get('top_level_category.id');
+          if(!category) {
+            ticket.remove_categories_down_tree(top_level_id);
+            return;
+          }
+          const category_id = category.id;
+          //TODO: need to prevent select same b/c plain JS vs hydrated obj
+          if(category_id === top_level_id){ 
+              return;
+          }
+          ticket.change_category_tree(category);
         },
         handleOpen() {
             const url = CATEGORY_URL + 'parents/';

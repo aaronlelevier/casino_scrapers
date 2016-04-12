@@ -1,8 +1,8 @@
-{{model-category-select-top ticket=ticket selection=ticket.top_level_category ticket_category_options=category.children}}
+{{model-category-select-top ticket=ticket selection=ticket.top_level_category ticket_category_options=category.children allowClear=allowClear}}
 
 {{#each ticket.sorted_categories as |category index|}}
   {{#if category.children}}
-  {{model-category-select ticket=ticket index=(plus-one index) category=category ticket_category_options=category.children}}
+  {{model-category-select ticket=ticket index=(plus-one index) category=category ticket_category_options=category.children allowClear=allowClear}}
   {{/if}}
 {{/each}}
 

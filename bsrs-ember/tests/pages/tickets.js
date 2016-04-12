@@ -83,7 +83,6 @@ var TicketPage = PageObject.create({
   priorityTwo: text('li:eq(1)', { scope: DROPDOWN }),
   priorityThree: text('li:eq(2)', { scope: DROPDOWN }),
   priorityFour: text('li:eq(3)', { scope: DROPDOWN }),
-  removePriority: clickable('.ember-power-select-clear-btn'),
 
   statusInput: text(STATUS),
   statusClickDropdown: clickable(STATUS),

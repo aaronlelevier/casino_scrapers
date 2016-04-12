@@ -161,6 +161,41 @@ var dtd_payload_update_priority = {
   attachments: []
 };
 
+var dtd_payload_no_status = {
+  id: DTD.idOne,
+  key: DTD.keyOne,
+  description: DTD.descriptionOne,
+  prompt: DTD.promptOne,
+  note: DTD.noteOne,
+  note_type: DTD.noteTypeOne,
+  link_type: DTD.linkTypeOne,
+  fields: [{
+    id: FD.idOne,
+    label: FD.labelOne,
+    type: FD.typeSix,
+    required: FD.requiredOne,
+    order: FD.orderOne,
+    options: [{
+      id: OD.idOne,
+      text: OD.textOne,
+      order: OD.orderOne
+    }]
+  }],
+  links: [{
+    id: LINK.idOne,
+    order: LINK.orderOne,
+    action_button: LINK.action_buttonOne,
+    is_header: LINK.is_headerOne,
+    request: LINK.requestOne,
+    text: LINK.textOne,
+    priority: TP.priorityOneId,
+    status: null,
+    destination: DTD.idTwo,
+    categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
+  }],
+  attachments: []
+};
+
 var dtd_payload_no_priority = {
   id: DTD.idOne,
   key: DTD.keyOne,
@@ -189,7 +224,7 @@ var dtd_payload_no_priority = {
     request: LINK.requestOne,
     text: LINK.textOne,
     priority: null,
-    status: null,
+    status: TD.statusOneId,
     destination: DTD.idTwo,
     categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
   }],
@@ -250,4 +285,4 @@ var dtd_payload_with_attachments = Ember.$.extend(true, {}, dtd_payload_with_att
 dtd_payload_with_attachments.attachments = ['abc123', 'def456'];
 
 export { dtd_payload, dtd_payload_two, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload, dtd_payload_with_attachment, dtd_payload_with_attachments, 
-  dtd_payload_with_categories, dtd_payload_change_categories };
+  dtd_payload_with_categories, dtd_payload_change_categories, dtd_payload_no_status };

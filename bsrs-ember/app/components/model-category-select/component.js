@@ -32,6 +32,13 @@ var TicketCategories = Ember.Component.extend({
     actions: {
         selected(category) {
             const ticket = this.get('ticket');
+            if(!category) {
+              const index = this.get('index');
+              const category = ticket.get('sorted_categories').objectAt(`${index}`);
+              const category_id = category.get('id');
+              ticket.remove_categories_down_tree(category_id);
+              return;
+            }
             const cat_ids = ticket.get('categories_ids');
             if(Ember.$.inArray(category.id, cat_ids) === -1){
                 ticket.change_category_tree(category);

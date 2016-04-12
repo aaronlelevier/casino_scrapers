@@ -9,7 +9,7 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
 import { dtd_payload, dtd_payload_two, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload, 
-  dtd_payload_with_categories, dtd_payload_change_categories } from 'bsrs-ember/tests/helpers/payloads/dtd';
+  dtd_payload_with_categories, dtd_payload_change_categories, dtd_payload_no_status } from 'bsrs-ember/tests/helpers/payloads/dtd';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import FD from 'bsrs-ember/vendor/defaults/field';
@@ -202,11 +202,28 @@ test('dtd can clear out link priority', (assert) => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(ticketPage.priorityInput.split(' ')[0], TP.priorityOne);
   });
-  ticketPage.removePriority();
+  page.removePriority();
   andThen(() => {
     assert.equal(ticketPage.priorityInput.split(' ')[0], '');
   });
   xhr(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload_no_priority), {}, 200, {});
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
+});
+
+test('dtd can clear out link status', (assert) => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(ticketPage.statusInput.split(' ')[0], TD.statusOne);
+  });
+  page.removeStatus();
+  andThen(() => {
+    assert.equal(ticketPage.statusInput.split(' ')[0], '');
+  });
+  xhr(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload_no_status), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -428,13 +445,13 @@ test('categories selector is wired up and working', async assert => {
   await ticketPage
   .categoryOneClickDropdown()
   .categoryOneClickOptionOne();
-  assert.equal(ticketPage.categoryOneInput, CD.nameOne);
+  assert.equal(ticketPage.categoryOneInput.split(/\s/)[0], CD.nameOne);
   const second_level_categories_endpoint = PREFIX + `/admin/categories/?parent=${CD.idOne}`;
   xhr(second_level_categories_endpoint, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [], CD.idOne, 1));
   await ticketPage
   .categoryTwoClickDropdown()
   .categoryTwoClickOptionOne();
-  assert.equal(ticketPage.categoryTwoInput, CD.nameTwo);
+  assert.equal(ticketPage.categoryTwoInput.split(/\s/)[0], CD.nameTwo);
   xhr(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload_with_categories), {}, 200, {});
   await generalPage.save();
   assert.equal(currentURL(), DETAIL_URL);
@@ -442,9 +459,9 @@ test('categories selector is wired up and working', async assert => {
 
 test('categories are in order based on text', async assert => {
   await page.visitDetail();
-  assert.equal(ticketPage.categoryOneInput, CD.nameOne);
-  assert.equal(ticketPage.categoryTwoInput, CD.nameRepairChild);
-  assert.equal(ticketPage.categoryThreeInput, CD.namePlumbingChild);
+  assert.equal(ticketPage.categoryOneInput.split(/\s/)[0], CD.nameOne);
+  assert.equal(ticketPage.categoryTwoInput.split(/\s/)[0], CD.nameRepairChild);
+  assert.equal(`${ticketPage.categoryThreeInput.split(/\s/)[0]} ${ticketPage.categoryThreeInput.split(/\s/)[1]}`, CD.namePlumbingChild);
 });
 
 test('power select options are rendered immediately when enter detail route and can save different top level category', async assert => {
@@ -460,16 +477,16 @@ test('power select options are rendered immediately when enter detail route and 
   let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
   xhr(top_level_categories_endpoint, 'GET', null, {}, 200, top_level_data);
   await ticketPage.categoryOneClickDropdown();
-  assert.equal(ticketPage.categoryOneInput, CD.nameOne);
+  assert.equal(ticketPage.categoryOneInput.split(/\s/)[0], CD.nameOne);
   assert.equal(ticketPage.categoryOneOptionLength, 2);
   await ticketPage.categoryOneClickDropdown();
   ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get(CD.idTwo, CD.nameTwo));
   await ticketPage.categoryTwoClickDropdown();
-  assert.equal(ticketPage.categoryTwoInput, CD.nameRepairChild);
+  assert.equal(ticketPage.categoryTwoInput.split(/\s/)[0], CD.nameRepairChild);
   ticketPage.categoryTwoClickDropdown();
   ajax(`${PREFIX}/admin/categories/?parent=${CD.idPlumbing}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild));
   await ticketPage.categoryThreeClickDropdown();
-  assert.equal(ticketPage.categoryThreeInput, CD.namePlumbingChild);
+  assert.equal(`${ticketPage.categoryThreeInput.split(/\s/)[0]} ${ticketPage.categoryThreeInput.split(/\s/)[1]}`, CD.namePlumbingChild);
   assert.equal(ticketPage.categoryThreeOptionLength, 1);
   await ticketPage.categoryThreeClickDropdown();
   //click loss prevention
@@ -482,7 +499,7 @@ test('power select options are rendered immediately when enter detail route and 
   assert.ok(link.get('isDirtyOrRelatedDirty'));
   assert.ok(link.get('isDirtyOrRelatedDirty'));
   await ticketPage.categoryOneClickDropdown();
-  assert.equal(ticketPage.categoryOneInput, CD.nameThree);
+  assert.equal(`${ticketPage.categoryOneInput.split(/\s/)[0]} ${ticketPage.categoryOneInput.split(/\s/)[1]}`, CD.nameThree);
   assert.equal(ticketPage.categoryOneOptionLength, 2);
   await ticketPage.categoryOneClickDropdown();
   const security = CF.get_list(CD.idLossPreventionChild, CD.nameLossPreventionChild, [], CD.idThree, 1);
@@ -490,7 +507,7 @@ test('power select options are rendered immediately when enter detail route and 
   await ticketPage.categoryTwoClickDropdown();
   assert.equal(ticketPage.categoryTwoOptionLength, 1);
   await ticketPage.categoryTwoClickOptionSecurity();
-  assert.equal(ticketPage.categoryTwoInput, CD.nameLossPreventionChild);
+  assert.equal(ticketPage.categoryTwoInput.split(/\s/)[0], CD.nameLossPreventionChild);
   xhr(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload_change_categories), {}, 200);
   await generalPage.save();
   assert.equal(currentURL(), DETAIL_URL);
@@ -685,5 +702,36 @@ test('when selecting a new parent category it should remove previously selected 
   await generalPage.save();
   assert.equal(currentURL(), DETAIL_URL);
 });
+
+test('can clear out top level category', async assert => {
+  await page.visitDetail();
+  let dtd = store.find('dtd', DTD.idOne);
+  let link = store.find('link', dtd.get('links').objectAt(0).get('id'));
+  await page.removeTopLevelCategory();
+  let components = ticketPage.powerSelectComponents;
+  assert.equal(components, 1);
+  assert.equal(link.get('categories.length'), 0);
+});
+
+test('can clear out middle category', async assert => {
+  await page.visitDetail();
+  let dtd = store.find('dtd', DTD.idOne);
+  let link = store.find('link', dtd.get('links').objectAt(0).get('id'));
+  await page.removeMiddleCategory();
+  let components = ticketPage.powerSelectComponents;
+  assert.equal(components, 2);
+  assert.equal(link.get('categories.length'), 1);
+});
+
+test('can clear out leaf category', async assert => {
+  await page.visitDetail();
+  let dtd = store.find('dtd', DTD.idOne);
+  let link = store.find('link', dtd.get('links').objectAt(0).get('id'));
+  await page.removeLeafCategory();
+  let components = ticketPage.powerSelectComponents;
+  assert.equal(components, 3);
+  assert.equal(link.get('categories.length'), 2);
+});
+
 /*END CATEGORIES */
 /* jshint ignore:end */

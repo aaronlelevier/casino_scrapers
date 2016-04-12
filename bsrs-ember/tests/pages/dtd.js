@@ -141,6 +141,12 @@ var DTDPage = PageObject.create({
 
     fieldOptionOne: text('.t-dtd-field-select li:eq(0)'),
     fieldOptionTwo: text('.t-dtd-field-select li:eq(1)'),
+
+    removePriority: clickable('.t-ticket-priority-select > .ember-power-select-trigger > .ember-power-select-clear-btn'),
+    removeStatus: clickable('.t-ticket-status-select > .ember-power-select-trigger > .ember-power-select-clear-btn'),
+    removeTopLevelCategory: clickable('.ember-power-select-clear-btn:eq(0)'),
+    removeMiddleCategory: clickable('.ember-power-select-clear-btn:eq(1)'),
+    removeLeafCategory: clickable('.ember-power-select-clear-btn:eq(2)'),
 });
 
 export default DTDPage;
