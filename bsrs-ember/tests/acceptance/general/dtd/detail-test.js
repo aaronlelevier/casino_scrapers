@@ -288,7 +288,7 @@ test('click modal ok (dtd)', (assert) => {
   });
 });
 
-test('clicking cancel button will take from detail view to list view', (assert) => {
+test('clicking cancel button will stay on detail view', (assert) => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(),DETAIL_URL);
@@ -318,44 +318,25 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('add, cancel, no modal - because fields have not data', assert => {
-  page.visitDetail();
-  andThen(() => {
-    assert.equal(page.fieldLabelCount, 1);
-  });
-  page.addFieldBtn();
-  andThen(() => {
-    assert.equal(page.fieldLabelCount, 2);
-  });
-  generalPage.cancel();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-  });
-  andThen(() => {
-    assert.equal(page.fieldLabelCount, 1);
-  });
+/* jshint ignore:start */
+test('add field, cancel, no modal', async assert => {
+  await page.visitDetail();
+  assert.equal(page.fieldLabelCount, 1);
+  await page.addFieldBtn();
+  assert.equal(page.fieldLabelCount, 2);
+  await generalPage.cancel();
+  assert.equal(currentURL(), DETAIL_URL);
+  assert.equal(page.fieldLabelCount, 1);
 });
 
-test('add, remove, cancel, not modal - because fields have not data', assert => {
-  page.visitDetail();
-  andThen(() => {
-    assert.equal(page.fieldLabelCount, 1);
-  });
-  page.addFieldBtn();
-  andThen(() => {
-    assert.equal(page.fieldLabelCount, 2);
-  });
-  page.fieldTwoDelete();
-  andThen(() => {
-    assert.equal(page.fieldLabelCount, 1);
-  });
-  generalPage.cancel();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-  });
-  andThen(() => {
-    assert.equal(page.fieldLabelCount, 1);
-  });
+test('add link, remove, cancel', async assert => {
+  await page.visitDetail();
+  assert.equal(page.linkTextLength, 1);
+  await page.addLinkBtn();
+  assert.equal(page.linkTextLength, 2);
+  await generalPage.cancel();
+  assert.equal(currentURL(), DETAIL_URL);
+  assert.equal(page.linkTextLength, 1);
 });
 
 test('remove existing, cancel, modal - should be prompted when removing existing because has data', assert => {
@@ -385,7 +366,6 @@ test('remove existing, cancel, modal - should be prompted when removing existing
   });
 });
 
-/* jshint ignore:start */
 test('when click delete, modal displays and when click ok, dtd is deleted and removed from store', async assert => {
   await visit(DETAIL_URL);
   await generalPage.delete();
@@ -421,7 +401,7 @@ test('click add-link, and fill in', async assert => {
   await page.visitDetail();
   assert.ok(find('.t-dtd-link-action_button').prop('checked'));
   assert.equal(page.textCount, 1);
-  await page.clickAddLinkBtn();
+  await page.addLinkBtn();
   assert.equal(page.textCount, 2);
   const json = { 'results': [{id: DTD.idOne, key: DTD.keyOne}, {id: DTD.idTwo, key: DTD.keyTwo}] };
   ajax(`/api/dtds/?key__icontains=1`, 'GET', null, {}, 200, json);
