@@ -11,20 +11,20 @@ var PREFIX = config.APP.NAMESPACE;
 var TICKET_URL = PREFIX + '/tickets/';
 
 var TicketRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
-    uuid: injectUUID('uuid'),
-    type: Ember.computed(function() { return 'ticket'; }),
-    typeGrid: Ember.computed(function() { return 'ticket-list'; }),
-    //TODO: test count to ensure being deleted
-    garbage_collection: Ember.computed(function() { return ['ticket-list', 'location-list', 'person-list', 'ticket-priority-list', 'general-status-list', 'category-list']; }),
-    url: Ember.computed(function() { return TICKET_URL; }),
-    TicketDeserializer: inject('ticket'),
-    deserializer: Ember.computed.alias('TicketDeserializer'),
-    update(model) {
-        return PromiseMixin.xhr(TICKET_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
-            model.save();
-            model.saveRelated();
-        });
-    },
+  uuid: injectUUID('uuid'),
+  type: Ember.computed(function() { return 'ticket'; }),
+  typeGrid: Ember.computed(function() { return 'ticket-list'; }),
+  //TODO: test count to ensure being deleted
+  garbage_collection: Ember.computed(function() { return ['ticket-list', 'location-list', 'person-list', 'ticket-priority-list', 'general-status-list', 'category-list']; }),
+  url: Ember.computed(function() { return TICKET_URL; }),
+  TicketDeserializer: inject('ticket'),
+  deserializer: Ember.computed.alias('TicketDeserializer'),
+  update(model) {
+    return PromiseMixin.xhr(TICKET_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
+      model.save();
+      model.saveRelated();
+    });
+  },
 });
 
 export default TicketRepo;

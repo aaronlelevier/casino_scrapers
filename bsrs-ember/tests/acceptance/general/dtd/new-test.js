@@ -66,7 +66,7 @@ test('visiting /dtd/new', async assert => {
   page.keyFillIn(DTD.keyOne);
   page.descriptionFillIn(DTD.descriptionOne);
   const json = { 'results': [{id: DTD.idOne, key: DTD.keyOne}, {id: DTD.idTwo, key: DTD.keyTwo}] };
-  ajax(`/api/dtds/?key__icontains=1`, 'GET', null, {}, 200, json);
+  ajax(`/api/dtds/?search=1`, 'GET', null, {}, 200, json);
   await page.requestFillIn(LINK.requestOne)
   .textFillIn(LINK.textOne)
   .linkTypeOneClick()
@@ -162,7 +162,7 @@ test('adding a new dtd should allow for another new dtd to be created after the 
   page.keyFillIn(DTD.keyOne);
   page.descriptionFillIn(DTD.descriptionOne);
   const json = { 'results': [{id: DTD.idOne, key: DTD.keyOne}, {id: DTD.idTwo, key: DTD.keyTwo}] };
-  ajax(`/api/dtds/?key__icontains=1`, 'GET', null, {}, 200, json);
+  ajax(`/api/dtds/?search=1`, 'GET', null, {}, 200, json);
   await page.requestFillIn(LINK.requestOne)
   .textFillIn(LINK.textOne)
   .linkTypeOneClick()
@@ -195,7 +195,7 @@ test('400 error redirects to dtd-error route', async assert => {
   page.keyFillIn(DTD.keyOne);
   page.descriptionFillIn(DTD.descriptionOne);
   const json = { 'results': [{id: DTD.idOne, key: DTD.keyOne}, {id: DTD.idTwo, key: DTD.keyTwo}] };
-  ajax(`/api/dtds/?key__icontains=1`, 'GET', null, {}, 200, json);
+  ajax(`/api/dtds/?search=1`, 'GET', null, {}, 200, json);
   await page.requestFillIn(LINK.requestOne)
   .textFillIn(LINK.textOne)
   .linkTypeOneClick()

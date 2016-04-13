@@ -405,7 +405,7 @@ test('click add-link, and fill in', async assert => {
   await page.addLinkBtn();
   assert.equal(page.textCount, 2);
   const json = { 'results': [{id: DTD.idOne, key: DTD.keyOne}, {id: DTD.idTwo, key: DTD.keyTwo}] };
-  ajax(`/api/dtds/?key__icontains=1`, 'GET', null, {}, 200, json);
+  ajax(`/api/dtds/?search=1`, 'GET', null, {}, 200, json);
   await page
   .requestFillIn_two(LINK.requestTwo)
   .textFillIn_two(LINK.textTwo)

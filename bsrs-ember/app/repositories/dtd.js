@@ -34,7 +34,7 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
     let url = DTD_URL;
     search = search ? search.trim() : search;
     if (search) {
-      url += `?key__icontains=${search}`;
+      url += `?search=${search}`;
       return PromiseMixin.xhr(url, 'GET').then((response) => {
         return response.results.filter((dtd) => {
           return dtd.key.toLowerCase().indexOf(search.toLowerCase()) > -1;
