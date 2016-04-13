@@ -37,12 +37,15 @@ def create_person(domino_instance):
     try:
         role = Role.objects.get(name__exact=domino_instance.role)
     except Role.DoesNotExist:
-        logger.info("Role name:{} Not Found.".format(domino_instance.role))
+        log_role_not_found(domino_instance)
         return
     
-    if top_level_with_locations(role, domino_instance) or non_top_level_with_no_locations(role, domino_instance):
-        logger.info("LocationLevel and Location(s) not consistent. Username:{}, LocationLevel:{}, Locations:{}."
-                    .format(domino_instance.username, role.location_level, domino_instance.locations))
+    # Users that fall in this 'if' block will be created, but logged
+    if top_level_with_locations(role, domino_instance):
+        log_top_level_with_locations(role, domino_instance)
+
+    if non_top_level_with_no_locations(role, domino_instance):
+        log_non_top_level_with_no_locations(role, domino_instance)
         return
 
     domino_instance = shorten_strings(domino_instance, ['first_name', 'last_name', 'username'])
@@ -62,16 +65,11 @@ def create_person(domino_instance):
         auth_amount = 0 if not domino_instance.auth_amount else domino_instance.auth_amount,
         role = role
     )
-    
-    """
-    Q: Delete later if not finding LocationLevel or Location?
-       Hard or soft `delete` here?
-       By deleting at the end of the `for` loop, all missing Locations will be logged.
-    """
+
     location_not_found = add_locations(newperson, role, domino_instance)
     if location_not_found:
         newperson.delete()
-        return
+        return newperson
 
     #add phone number and link to person
     create_phone_numbers(domino_instance, newperson)
@@ -80,12 +78,27 @@ def create_person(domino_instance):
     return newperson
 
 
+def log_role_not_found(domino_instance):
+    logger.info("Person id:{person.id}, username:{person.username}; Role name:{person.role} Not Found."
+                .format(person=domino_instance))
+
+
 def top_level_with_locations(role, domino_instance):
     return all([role.location_level.is_top_level, domino_instance.locations])
 
 
+def log_top_level_with_locations(role, domino_instance):
+    logger.info("Person id:{person.id}, username:{person.username}; Top LocationLevel: {level} with Locations: {locations}"
+                .format(person=domino_instance, level=role.location_level, locations=domino_instance.locations))
+
+
 def non_top_level_with_no_locations(role, domino_instance):
     return role.location_level.is_top_level == False and domino_instance.locations == None
+
+
+def log_non_top_level_with_no_locations(role, domino_instance):
+    logger.info("Person id:{person.id}, username:{person.username}; Non-Top LocationLevel:{level} with no Locations"
+                .format(person=domino_instance, level=role.location_level))
 
 
 def get_person_status(domino_instance):
@@ -116,7 +129,7 @@ def add_locations(person, role, domino_instance):
             try:
                 location = Location.objects.get(number__exact=location, location_level=role.location_level)
             except Location.DoesNotExist:
-                logger.info("Location number:{} with LocationLevel: {} Not Found.".format(location, role.location_level))
+                log_location_does_not_match(person, domino_instance, location)
                 location_not_found = True
             else:
                 person.locations.add(location)
@@ -126,3 +139,9 @@ def add_locations(person, role, domino_instance):
 
     return location_not_found
 
+
+def log_location_does_not_match(person, domino_instance, location):
+    logger.info(
+        "Django id: {dj_person.id}; Person id:{person.id}, username:{person.username}; \
+Location number:{location} does not match LocationLevel: {level}".format(
+    dj_person=person, person=domino_instance, location=location, level=person.role.location_level))

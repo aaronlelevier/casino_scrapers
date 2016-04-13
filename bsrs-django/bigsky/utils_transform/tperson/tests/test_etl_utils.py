@@ -14,7 +14,8 @@ from person.tests.factory import create_single_person, create_person_status, cre
 from utils.create import LOREM_IPSUM_WORDS, _generate_chars
 from utils_transform.tperson.management.commands._etl_utils import (create_phone_numbers,
     create_email, create_person, run_person_migrations, top_level_with_locations,
-    non_top_level_with_no_locations, get_person_status, shorten_strings,)
+    non_top_level_with_no_locations, get_person_status, shorten_strings,
+    log_top_level_with_locations)
 from utils_transform.tperson.models import DominoPerson
 from utils_transform.tperson.tests.factory import create_domino_person
 
@@ -137,35 +138,51 @@ class CreatePersonTests(TestCase):
         self.assertEqual(Role.objects.count(), 0)
         with open(settings.LOGGING_INFO_FILE, 'r') as f:
             content = f.read()
-        self.assertIn("Role name:{} Not Found.".format(self.domino_person.role), content)
+        self.assertIn("Person id:{person.id}, username:{person.username}; Role name:{person.role} Not Found."
+                      .format(person=self.domino_person),
+            content
+        )
 
-    def test_poorly_configured_location_level(self):
-        # none top level Role, with no locations, so no Person record gets created
-        non_top_level = mommy.make(LocationLevel)
-        non_top_level_role = create_role(location_level=non_top_level)
-        self.domino_person.role = non_top_level_role.name
-        self.domino_person.save()
-
-        person = create_person(self.domino_person)
-
-        self.assertIsNone(person)
-        with self.assertRaises(Person.DoesNotExist):
-            Person.objects.get(username=self.domino_person.username)
-
-    def test_poorly_configured_location_level__logged(self):
+    def test_top_level_with_locations(self):
         location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_COMPANY)
         role = mommy.make(Role, location_level=location_level)
         self.domino_person.role = role.name
         self.domino_person.locations = "foo;bar"
         self.domino_person.save()
+        self.assertTrue(top_level_with_locations(role, self.domino_person))
         with open(settings.LOGGING_INFO_FILE, 'w'): pass
 
         person = create_person(self.domino_person)
 
+        # Person - fine to create, but still log
+        self.assertIsInstance(person, Person)
+        # Log
         with open(settings.LOGGING_INFO_FILE, 'r') as f:
             content = f.read()
-        self.assertIn("LocationLevel and Location(s) not consistent. Username:{}, LocationLevel:{}, Locations:{}."
-                      .format(self.domino_person.username, role.location_level, self.domino_person.locations),
+        self.assertIn("Person id:{person.id}, username:{person.username}; Top LocationLevel: {level} with Locations: {locations}"
+                      .format(person=self.domino_person, level=role.location_level, locations=self.domino_person.locations),
+            content
+        )
+
+    def test_non_top_level_with_no_locations(self):
+        # none top level Role, with no locations, so no Person record gets created
+        non_top_level = mommy.make(LocationLevel)
+        non_top_level_role = create_role(location_level=non_top_level)
+        self.domino_person.role = non_top_level_role.name
+        self.domino_person.save()
+        self.assertTrue(non_top_level_with_no_locations(non_top_level_role, self.domino_person))
+
+        person = create_person(self.domino_person)
+
+        # Person
+        self.assertIsNone(person)
+        with self.assertRaises(Person.DoesNotExist):
+            Person.objects.get(username=self.domino_person.username)
+        # Log
+        with open(settings.LOGGING_INFO_FILE, 'r') as f:
+            content = f.read()
+        self.assertIn("Person id:{person.id}, username:{person.username}; Non-Top LocationLevel:{level} with no Locations"
+                      .format(person=self.domino_person, level=non_top_level_role.location_level),
             content
         )
 
@@ -299,26 +316,6 @@ class CreatePersonTests(TestCase):
         self.assertIsInstance(person_email_address, Email)
         self.assertEqual(person_email_address.email, EMAILADDRESS)
 
-    def test_top_level_with_locations(self):
-        top_level = LocationLevel.objects.create_top_level()
-        top_level_role = create_role(location_level=top_level)
-        self.domino_person.locations = "foo;bar"
-        self.domino_person.save()
-        self.assertTrue(self.domino_person.locations)
-
-        ret = top_level_with_locations(top_level_role, self.domino_person)
-
-        self.assertTrue(ret)
-
-    def test_non_top_level_with_no_locations(self):
-        non_top_level = mommy.make(LocationLevel)
-        non_top_level_role = create_role(location_level=non_top_level)
-        self.assertIsNone(self.domino_person.locations)
-
-        ret = non_top_level_with_no_locations(non_top_level_role, self.domino_person)
-
-        self.assertTrue(ret)
-
     def test_add_locations__logged(self):
         location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_REGION)
         role = mommy.make(Role, location_level=location_level)
@@ -333,8 +330,10 @@ class CreatePersonTests(TestCase):
         with open(settings.LOGGING_INFO_FILE, 'r') as f:
             content = f.read()
         for location in self.domino_person.locations.split(";"):
-            self.assertIn("Location number:{} with LocationLevel: {} Not Found."
-                          .format(location, role.location_level),
+            self.assertIn(
+                "Django id: {dj_person.id}; Person id:{person.id}, username:{person.username}; \
+Location number:{location} does not match LocationLevel: {level}".format(
+    dj_person=person, person=self.domino_person, location=location, level=role.location_level),
                 content
             )
 
