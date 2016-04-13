@@ -15,6 +15,13 @@
         {{/if}}
         <div class="panel-body">
           {{#if model.description}} <p class="t-dtd-preview-description">{{format-markdown model.description}}</p> {{/if}}
+          <div class="dtd-attachments">
+            {{#each model.attachments as |attachment|}}
+              <span class="t-dtd-preview-attachment">
+                {{attachment/single-medium attachment=attachment}}
+              </span>
+            {{/each}}
+          </div>
           {{#if model.fields}}
             {{#each model.fields as |field|}}
               <div class="t-dtd-preview-field">
@@ -45,11 +52,6 @@
         {{/each}}
       </div>
       {{/if}}
-      {{#each model.attachments as |attachment|}}
-        <span class="t-dtd-preview-attachment">
-          {{attachment/single-medium attachment=attachment}}
-        </span>
-      {{/each}}
     </div>
   </div>
 </div>
