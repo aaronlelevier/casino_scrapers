@@ -715,4 +715,17 @@ test('can clear out leaf category', async assert => {
 });
 /*END CATEGORIES */
 
+test('sending a put request with a 400 error will redirect you to the dtd-error page', async assert => {
+  await page.visitDetail();
+  await ticketPage.priorityClickDropdown()
+  .priorityClickOptionTwo();
+  const json = { 'results': [{id: DTD.idOne, key: DTD.keyOne}, {id: DTD.idTwo, key: DTD.keyTwo}] };
+  const exception = 'Saving this record failed';
+  xhr(`${DTD_PUT_URL}`, 'PUT', dtd_payload_update_priority, {}, 400, {'detail': exception});
+  await generalPage.save();
+  assert.equal(currentURL(), DTD_ERROR_URL);
+  assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+  assert.equal(find('.t-error-message').text(), 'WAT');
+});
+
 /* jshint ignore:end */

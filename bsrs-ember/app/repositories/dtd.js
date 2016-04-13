@@ -23,6 +23,8 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
       model.save();
       // model.saveRelated();
       this.get('deserializer').deserialize(response, response.id);
+    }, (xhr) => {
+      this.get('error').transToError(this.get('errorUrl'));
     });
   },
   fetch(id) {
