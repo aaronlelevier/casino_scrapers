@@ -212,6 +212,12 @@ class TicketUpdateTests(TicketSetupMixin, APITestCase):
             self.data, format='json')
         self.assertEqual(response.status_code, 200)
 
+    def test_no_change_patch(self):
+        self.data = { 'id': self.data['id'], 'location': self.data['location'] }
+        response = self.client.patch('/api/tickets/{}/'.format(self.ticket.id),
+            self.data, format='json')
+        self.assertEqual(response.status_code, 200)
+
     def test_change_name(self):
         self.data['request'] = 'new request name'
         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id),
