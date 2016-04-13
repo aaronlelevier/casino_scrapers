@@ -17,6 +17,8 @@ var GridRepositoryMixin = Ember.Mixin.create({
     return PromiseMixin.xhr(this.get('url'), 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
       model.save();
       model.saveRelated();
+    }, (xhr) => {
+      this.get('error').transToError(this.get('errorUrl'));
     });
   },
   delete(id) {
