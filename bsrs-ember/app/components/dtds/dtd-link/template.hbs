@@ -47,7 +47,7 @@
     </div>
     <div class="input-group">
       <span class="input-group-addon">{{t "admin.dtd.label.destination"}}</span>
-      {{db-fetch-select model=link selectedAttr=link.destination className="t-link-destination-select" displayName="key" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}
+      {{db-fetch-custom-select model=link selectedAttr=link.destination className="t-link-destination-select" componentName="dtds/dtd-key-desc" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}
     </div>
   </div>
 {{/each}}

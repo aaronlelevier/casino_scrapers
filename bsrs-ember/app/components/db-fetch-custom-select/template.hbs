@@ -1,0 +1,11 @@
+{{#power-select
+  selected=selectedAttr
+  class=className
+  search=(perform searchRepo)
+  selectedItemComponent="dtds/dtd-key-desc-selected"
+  onchange=(action "selected")
+  as |optionModel|
+}}
+  {{component componentName model=optionModel}}
+{{/power-select}}
+
