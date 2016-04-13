@@ -13,7 +13,7 @@ from decision_tree.tests.factory import create_tree_data
 from generic.tests.factory import create_file_attachment, create_image_attachment
 from person.tests.factory import PASSWORD, create_single_person
 from ticket.tests.factory import create_ticket_status, create_ticket_priority
-from utils.create import random_lorem
+from utils.create import random_lorem, _generate_chars
 from utils.helpers import media_path
 
 
@@ -146,9 +146,11 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         raw_data = copy.copy(serializer.data)
         new_id = str(uuid.uuid4())
         raw_data['id'] = new_id
+        raw_data['key'] = _generate_chars()
         raw_data['attachments'] = [obj['id'] for obj in raw_data['attachments']]
 
         response = self.client.post('/api/dtds/', raw_data, format='json')
+
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], raw_data['id'])
@@ -171,10 +173,13 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         new_id = str(uuid.uuid4())
         new_attachment = create_file_attachment()
         raw_data['id'] = new_id
+        raw_data['key'] = _generate_chars()
         raw_data['attachments'] = [obj['id'] for obj in raw_data['attachments']]
         raw_data['attachments'].append(str(new_attachment.id))
         self.assertEqual(self.tree_data.attachments.count(), 1)
+
         response = self.client.post('/api/dtds/', raw_data, format='json')
+
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['attachments']), 2)
@@ -185,6 +190,7 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         raw_data = copy.copy(serializer.data)
         new_id = str(uuid.uuid4())
         raw_data['id'] = new_id
+        raw_data['key'] = _generate_chars()
         raw_data['fields'] = [{
             'id': str(uuid.uuid4()),
             'label': random_lorem(),
@@ -193,7 +199,9 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
             'required': True
         }]
         raw_data['attachments'] = [obj['id'] for obj in raw_data['attachments']]
+
         response = self.client.post('/api/dtds/', raw_data, format='json')
+
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['fields']), 1)
@@ -208,6 +216,7 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         raw_data = copy.copy(serializer.data)
         new_id = str(uuid.uuid4())
         raw_data['id'] = new_id
+        raw_data['key'] = _generate_chars()
         raw_data['attachments'] = [obj['id'] for obj in raw_data['attachments']]
         raw_data['fields'] = [{
             'id': str(uuid.uuid4()),
@@ -221,7 +230,9 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
                 'order': 1
             }]
         }]
+
         response = self.client.post('/api/dtds/', raw_data, format='json')
+
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         # Field
@@ -247,6 +258,7 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         dtd = mommy.make(TreeData)
         destination = mommy.make(TreeData)
         raw_data['id'] = new_id
+        raw_data['key'] = _generate_chars()
         raw_data['attachments'] = [obj['id'] for obj in raw_data['attachments']]
         raw_data['links'] = [{
             'id': str(uuid.uuid4()),
@@ -261,7 +273,9 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
             # 'dtd':  # purposely left blank, will be the DTD being created here
             'destination': str(destination.id)
         }]
+
         response = self.client.post('/api/dtds/', raw_data, format='json')
+
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         # Field

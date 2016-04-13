@@ -1,3 +1,4 @@
+
 from collections import namedtuple
 import random
 
@@ -8,6 +9,7 @@ from category.tests.factory import create_single_category
 from decision_tree.models import TreeField, TreeOption, TreeData, TreeLink
 from ticket.models import TicketStatus, TicketPriority
 from ticket.tests.factory import create_ticket_status, create_ticket_priority
+from utils.create import _generate_chars
 
 
 def _link_get_or_create_related(model, factory_create_func):
@@ -106,7 +108,7 @@ def create_dtd_fixtures_only():
     for x in DTD_DATA:
         DTDData = namedtuple('DTDData', ['id', 'name', 'parent_id'])
         data = DTDData._make(x)._asdict()
-        key = random.randrange(1,1000)
+        key = _generate_chars()
 
         TreeData.objects.create(
             key=key,
