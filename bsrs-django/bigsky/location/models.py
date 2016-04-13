@@ -84,7 +84,7 @@ class SelfReferencingQuerySet(models.query.QuerySet):
 
         for obj in self.all():
 
-            if obj.name == settings.LOCATION_TOP_LEVEL_NAME:
+            if obj.name == LOCATION_COMPANY:
                 master_set.update(type(obj).objects.values_list("id", flat=True))
                 continue
 
@@ -264,7 +264,8 @@ class LocationManager(SelfReferencingManager):
 
     def create_top_level(self):
         location_level = LocationLevel.objects.create_top_level()
-        obj, _ = self.get_or_create(name=settings.LOCATION_TOP_LEVEL_NAME, location_level=location_level)
+        obj, _ = self.get_or_create(name=LOCATION_COMPANY, number=LOCATION_COMPANY,
+            location_level=location_level)
         return obj
 
 

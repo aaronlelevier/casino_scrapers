@@ -185,7 +185,7 @@ class LocationManagerTests(TestCase):
         parents = Location.objects.get_level_parents(location_level_updated.id, location.id)
         self.assertEqual(parents.count(), 5)
         names = [x.name for x in parents]
-        self.assertIn(settings.LOCATION_TOP_LEVEL_NAME, names)
+        self.assertIn(LOCATION_COMPANY, names)
         self.assertIn(LOCATION_FMU, names)
         self.assertIn('east', names)
         self.assertIn('east_lp', names)
@@ -216,7 +216,8 @@ class LocationManagerTests(TestCase):
     def test_create_top_level(self):
         ret = Location.objects.create_top_level()
         self.assertIsInstance(ret, Location)
-        self.assertEqual(ret.name, settings.LOCATION_TOP_LEVEL_NAME)
+        self.assertEqual(ret.name, LOCATION_COMPANY)
+        self.assertEqual(ret.number, LOCATION_COMPANY)
         self.assertEqual(ret.location_level.name, settings.DEFAULT_LOCATION_LEVEL)
 
 

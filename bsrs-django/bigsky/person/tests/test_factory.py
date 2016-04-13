@@ -8,7 +8,8 @@ from model_mommy import mommy
 from accounting.models import Currency
 from category.models import Category
 from category.tests.factory import create_single_category, create_categories
-from location.models import Location, LocationLevel, LOCATION_DISTRICT, LOCATION_REGION
+from location.models import (Location, LocationLevel, LOCATION_COMPANY, LOCATION_DISTRICT,
+    LOCATION_REGION)
 from location.tests.factory import create_location, create_locations, create_location_levels
 from person.models import Person, Role
 from person.tests import factory
@@ -114,7 +115,7 @@ class CreateRolesTests(TestCase):
             if role.name == settings.DEFAULT_ROLE:
                 self.assertEqual(role.location_level.name, settings.DEFAULT_LOCATION_LEVEL)
             else:
-                self.assertNotEqual(role.location_level.name, settings.LOCATION_TOP_LEVEL_NAME)
+                self.assertNotEqual(role.location_level.name, LOCATION_COMPANY)
                 self.assertEqual(role.name, '{}-role'.format(role.location_level.name))
 
             self.assertEqual(role.categories.count(), 1)

@@ -250,7 +250,6 @@ DEFAULT_ROLE = 'Administrator'
 DEFAULT_LOCATION_STATUS = 'admin.location.status.open'
 DEFAULT_LOCATION_TYPE = 'big_store'
 DEFAULT_LOCATION_LEVEL = 'Company'
-LOCATION_TOP_LEVEL_NAME = "Andy's Pianos"
 
 ### PERSON
 PASSWORD_EXPIRE_DAYS = 90

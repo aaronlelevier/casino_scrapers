@@ -73,7 +73,7 @@ class CreateLocationsTests(TestCase):
         self.assertEqual(Location.objects.count(), 7)
 
     def test_company(self):
-        company = Location.objects.get(name=settings.LOCATION_TOP_LEVEL_NAME)
+        company = Location.objects.get(name=LOCATION_COMPANY)
 
         self.assertIsInstance(company, Location)
         self.assertEqual(company.parents.count(), 0)
@@ -90,14 +90,14 @@ class CreateLocationsTests(TestCase):
         self.assertEqual(fmus.count(), 1)
         self.assertEqual(fmu.name, LOCATION_FMU)
         self.assertEqual(fmu.parents.count(), 1)
-        self.assertEqual(fmu.parents.first(), Location.objects.get(name=settings.LOCATION_TOP_LEVEL_NAME))
+        self.assertEqual(fmu.parents.first(), Location.objects.get(name=LOCATION_COMPANY))
         self.assertEqual(fmu.children.count(), 0)
 
     def test_region(self):
         east = Location.objects.get(name='east')
 
         self.assertEqual(east.parents.count(), 1)
-        self.assertEqual(east.parents.first().name, settings.LOCATION_TOP_LEVEL_NAME)
+        self.assertEqual(east.parents.first().name, LOCATION_COMPANY)
 
     def test_district__one(self):
         ca = Location.objects.get(name='ca')
