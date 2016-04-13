@@ -2,7 +2,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 from contact.models import PhoneNumber, PhoneNumberType, Email, EmailType
-from location.models import Location
+from location.models import Location, LOCATION_COMPANY
 from person.models import Person, Role, PersonStatus
 from utils_transform.tperson.models import DominoPerson
 
@@ -43,6 +43,9 @@ def create_person(domino_instance):
     # Users that fall in this 'if' block will be created, but logged
     if top_level_with_locations(role, domino_instance):
         log_top_level_with_locations(role, domino_instance)
+        # Give User top level location
+        domino_instance.locations = LOCATION_COMPANY
+        domino_instance.save()
 
     if non_top_level_with_no_locations(role, domino_instance):
         log_non_top_level_with_no_locations(role, domino_instance)

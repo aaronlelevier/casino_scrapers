@@ -147,20 +147,26 @@ class CreatePersonTests(TestCase):
         location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_COMPANY)
         role = mommy.make(Role, location_level=location_level)
         self.domino_person.role = role.name
-        self.domino_person.locations = "foo;bar"
+        original_locations = "foo;bar"
+        self.domino_person.locations = original_locations
         self.domino_person.save()
         self.assertTrue(top_level_with_locations(role, self.domino_person))
+        self.assertNotEqual(self.domino_person.locations, LOCATION_COMPANY)
         with open(settings.LOGGING_INFO_FILE, 'w'): pass
 
         person = create_person(self.domino_person)
 
         # Person - fine to create, but still log
         self.assertIsInstance(person, Person)
+        # Location - Person's location gets updated to "Company" if different
+        self.assertEqual(person.locations.count(), 1)
+        location = person.locations.first()
+        self.assertEqual(location.name, LOCATION_COMPANY)
         # Log
         with open(settings.LOGGING_INFO_FILE, 'r') as f:
             content = f.read()
         self.assertIn("Person id:{person.id}, username:{person.username}; Top LocationLevel: {level} with Locations: {locations}"
-                      .format(person=self.domino_person, level=role.location_level, locations=self.domino_person.locations),
+                      .format(person=self.domino_person, level=role.location_level, locations=original_locations),
             content
         )
 
@@ -222,7 +228,7 @@ class CreatePersonTests(TestCase):
         self.assertEqual(person.status.name, 'admin.person.status.active')
         self.assertEqual(person.middle_initial, domino_person.middle_initial[:1])
         person_location = person.locations.first()
-        self.assertEqual(person_location.name, settings.LOCATION_TOP_LEVEL_NAME)
+        self.assertEqual(person_location.name, LOCATION_COMPANY)
 
     def test_run_person_migrations(self):
         domino_person = create_domino_person()
@@ -278,18 +284,6 @@ class CreatePersonTests(TestCase):
         domino_person = create_domino_person()
         domino_person.locations = None
         domino_person.role = "Store Manager"
-        store_location_level = create_location_level(name='Store')
-        create_role(name='Store Manager', location_level=store_location_level, category=None)
-
-        create_person(domino_person)
-
-        with self.assertRaises(Person.DoesNotExist):
-            Person.objects.get(username=domino_person.username)
-        
-    def test_person_extra_location(self):
-        domino_person = create_domino_person()
-        domino_person.locations = "32344"
-        domino_person.role = "Internal Audit"
         store_location_level = create_location_level(name='Store')
         create_role(name='Store Manager', location_level=store_location_level, category=None)
 
