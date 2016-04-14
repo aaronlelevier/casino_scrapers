@@ -48,7 +48,7 @@ class UniqueForActiveValidator(object):
 class SettingsValidator(object):
     """Validate that a Settings are the right type."""
 
-    message = _("Must be a {type}")
+    message = _("{value} must be type {type}")
 
     def __init__(self, model):
         self.model = model
@@ -69,14 +69,40 @@ class SettingsValidator(object):
                     # for the setting, we're going to use the default.
                     pass
                 else:
+                    value = self.get_value(new_value)
                     type_str = default_settings[k]['type']
-                    required_type = self.get_required_type(type_str)
 
-                    if not isinstance(new_value, required_type):
-                        errors[k] = self.message.format(type=type_str)
+                    error = self.validate_new_value(value, new_value, type_str)
+                    if error:
+                        errors[k] = error
             else:
                 if errors:
                     raise ValidationError(errors)
+
+    @staticmethod
+    def get_value(v):
+        try:
+            return v['value']
+        except TypeError:
+            return v
+
+    def validate_new_value(self, value, new_value, type_str):
+        if type_str == 'email':
+            return self.validate_email(value)
+        elif type_str == 'phone':
+            return self.validate_phone(value)
+        else:
+            required_type = self.get_required_type(type_str)
+            if not isinstance(value, required_type):
+                return self.message.format(value=value, type=type_str)
+
+    def validate_email(self, email):
+        if not valid_email(email):
+            return _('{} is not a valid email'.format(email))
+
+    def validate_phone(self, phone):
+        if not valid_phone(phone):
+            return _('{} is not a valid phone'.format(phone))
 
     @staticmethod
     def get_required_type(t):
@@ -94,13 +120,21 @@ class SettingsValidator(object):
 
 ### REGEX VALIDATORS
 
+def valid_email(email):
+    if email:
+        pattern = re.compile(r'[^@]+@[^@]+\.[^@]+')
+        return re.match(pattern, email)
+
+
+def valid_phone(phone):
+    if phone:
+        pattern = re.compile(r'(?:\+1){0,1}(\d{10})')
+        return re.match(pattern, phone)
+
+
 def regex_check_contains(regex, chars):
     pattern = re.compile(regex)
-    match = re.search(pattern, chars)
-    if match:
-        return True
-    else:
-        return False
+    return re.search(pattern, chars)
 
 
 def contains_digit(chars):

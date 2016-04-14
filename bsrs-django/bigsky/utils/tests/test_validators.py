@@ -1,6 +1,7 @@
 import json
 
 from django.test import TestCase
+from django.utils.translation import ugettext_lazy as _
 
 from rest_framework.test import APITestCase
 
@@ -9,8 +10,11 @@ from location.models import Location
 from location.serializers import LocationUpdateSerializer
 from person.serializers import RoleUpdateSerializer
 from person.tests.factory import create_person, create_single_person, PASSWORD
+from setting.serializers import SettingSerializer
+from setting.tests.factory import create_general_setting
 from utils.validators import (regex_check_contains, contains_digit, contains_upper_char,
-    contains_lower_char, contains_special_char, contains_no_whitespaces)
+    contains_lower_char, contains_special_char, contains_no_whitespaces,
+    SettingsValidator, valid_email, valid_phone,)
 
 
 class UniqueForActiveValidatorTests(APITestCase):
@@ -52,31 +56,67 @@ class SettingsValidatorTests(APITestCase):
 
     def setUp(self):
         self.person = create_single_person()
-        self.role = self.person.role
+        # Settings
+        self.setting = create_general_setting()
+        serializer = SettingSerializer(self.setting)
+        self.data = serializer.data
+        self.error_message = SettingsValidator.message
+        # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
         self.client.logout()
 
-    def test_create__settings__value_wrong_type(self):
-        # the supplied values are all the wrong type
-        serializer = RoleUpdateSerializer(self.role)
-        role_data = serializer.data
-        role_data["settings"] = {
-            "create_all": {'value': 0},
-            "welcome_text": {'value': 0},
-            "login_grace": {'value': 'foo'},
-            "modules": {'value': 0}
-        }
+    def test_valid__email(self):
+        email = 'foo@bar'
+        self.data["settings"]["email"] = {'value': email}
 
-        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
-            role_data, format='json')
+        response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id),
+            self.data, format='json')
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(json.loads(response.content.decode('utf8'))['create_all'], ['Must be a bool'])
-        self.assertEqual(json.loads(response.content.decode('utf8'))['welcome_text'], ['Must be a str'])
-        self.assertEqual(json.loads(response.content.decode('utf8'))['login_grace'], ['Must be a int'])
-        self.assertEqual(json.loads(response.content.decode('utf8'))['modules'], ['Must be a list'])
+        self.assertEqual(
+            json.loads(response.content.decode('utf8'))['email'],
+            ['{} is not a valid email'.format(email)]
+        )
+
+    def test_valid__phone(self):
+        phone = "+1800"
+        self.data["settings"]["test_contractor_phone"] = {'value': phone}
+
+        response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            json.loads(response.content.decode('utf8'))['test_contractor_phone'],
+            ['{} is not a valid phone'.format(phone)]
+        )
+
+    def test_valid__builtins(self):
+        """
+        the supplied values are all the wrong type:
+
+        str, int, float, list, bool
+        """
+        self.data["settings"] = {
+            "welcome_text": {'value': 0},
+            "login_grace": {'value': 'foo'},
+            "exchange_rates": {'value': 'foo'},
+            "modules": {'value': 0},
+            "test_mode": {'value': 0}
+        }
+
+        response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id),
+            self.data, format='json')
+        error = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(error['welcome_text'], [self.error_message.format(value=0, type='str')])
+        self.assertEqual(error['login_grace'], [self.error_message.format(value='foo', type='int')])
+        self.assertEqual(error['exchange_rates'], [self.error_message.format(value='foo', type='float')])
+        self.assertEqual(error['modules'], [self.error_message.format(value=0, type='list')])
+        self.assertEqual(error['test_mode'], [self.error_message.format(value=0, type='bool')])
 
 
 DIGITS = "Bobby123"
@@ -96,6 +136,16 @@ NO_WHITESPACE = "joe"
 
 
 class RegexValidatorTests(TestCase):
+
+    def test_valid_email(self):
+        self.assertTrue(valid_email('foo@bar.com'))
+        self.assertFalse(valid_email('foo@bar'))
+        self.assertFalse(valid_email(None))
+
+    def test_valid_phone(self):
+        self.assertTrue(valid_phone('+18003331234'))
+        self.assertFalse(valid_phone('+1800333'))
+        self.assertFalse(valid_phone(None))
 
     def test_regex_check_contains_true(self):
         regex = r'\d+'

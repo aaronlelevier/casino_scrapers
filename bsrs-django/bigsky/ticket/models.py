@@ -127,7 +127,8 @@ class Ticket(BaseModel):
     assignee = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
         related_name="assignee_tickets")
     cc = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
-    requester = models.CharField(max_length=150, blank=True, null=True)
+    requester = models.CharField(max_length=150, blank=True, null=True,
+        help_text="The User or string inputted by User")
     categories = models.ManyToManyField(Category, blank=True)
     attachments = GenericRelation(Attachment)
     # Fields
