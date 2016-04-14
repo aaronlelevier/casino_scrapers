@@ -67,7 +67,7 @@ test('should be able to select new destination when one doesnt exist', function(
   assert.equal(link_one.get('destination.id'), undefined);
   this.model = link_one;
   this.set('repository', dtd_repo);
-  this.render(hbs`{{db-fetch-custom-select model=model selectedAttr=model.destination className="t-link-destination-select" componentName="dtds/dtd-key-desc" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}`);
+  this.render(hbs`{{db-fetch-custom-select model=model selectedAttr=model.destination className="t-link-destination-select" componentName="dtds/dtd-key-desc" selectedComponent="dtds/dtd-key-desc-selected" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}`);
   clickTrigger();
   run(() => { typeInSearch('a'); });
   return waitFor().
@@ -86,7 +86,7 @@ test('should be able to select new destination when one doesnt exist', function(
 test('should be able to select same dtd when dtd already has a dtd', function(assert) {
   this.model = link_one;
   this.set('repository', dtd_repo);
-  this.render(hbs`{{db-fetch-custom-select model=model selectedAttr=model.destination className="t-link-destination-select" componentName="dtds/dtd-key-desc" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}`);
+  this.render(hbs`{{db-fetch-custom-select model=model selectedAttr=model.destination className="t-link-destination-select" componentName="dtds/dtd-key-desc" selectedComponent="dtds/dtd-key-desc-selected" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}`);
   clickTrigger();
   run(() => { typeInSearch('a'); });
   return waitFor().
@@ -109,7 +109,7 @@ test('should be able to select same dtd when dtd already has a dtd', function(as
 test('should be able to select same dtd when dtd already has a dtd', function(assert) {
   this.model = link_one;
   this.set('repository', dtd_repo);
-  this.render(hbs`{{db-fetch-custom-select model=model selectedAttr=model.destination className="t-link-destination-select" componentName="dtds/dtd-key-desc" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}`);
+  this.render(hbs`{{db-fetch-custom-select model=model selectedAttr=model.destination className="t-link-destination-select" componentName="dtds/dtd-key-desc" selectedComponent="dtds/dtd-key-desc-selected" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}`);
   clickTrigger();
   run(() => { typeInSearch('a'); });
   return waitFor().
@@ -135,7 +135,7 @@ test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
   var done = assert.async();
   this.model = link_one;
   this.set('repository', dtd_repo);
-  this.render(hbs`{{db-fetch-custom-select model=model selectedAttr=model.destination className="t-link-destination-select" componentName="dtds/dtd-key-desc" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}`);
+  this.render(hbs`{{db-fetch-custom-select model=model selectedAttr=model.destination className="t-link-destination-select" componentName="dtds/dtd-key-desc" selectedComponent="dtds/dtd-key-desc-selected" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}`);
   run(() => { typeInSearch('a'); });
   Ember.run.later(() => {
     assert.equal($('.ember-power-select-options > li').length, 0);
