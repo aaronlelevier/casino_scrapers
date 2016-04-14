@@ -182,7 +182,7 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         serializer = SettingSerializer(self.setting)
         raw_data = serializer.data
         k = 'welcome_text'
-        new_value = 'new dashboard text'
+        new_value = 'new text'
         raw_data['settings'] = {k: new_value}
 
         # detail
