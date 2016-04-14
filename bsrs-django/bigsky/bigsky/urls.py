@@ -67,7 +67,7 @@ router.register(r'admin/translations', translation_views.TranslationViewSet)
 router.register(r'translations', translation_views.TranslationBootstrapViewSet)
 
 
-class CustomReadOnlyRouter(SimpleRouter):
+class TicketActivityRouter(SimpleRouter):
     routes = [
         Route(
             url=r'^{prefix}/{lookup}/activity/$',
@@ -77,14 +77,32 @@ class CustomReadOnlyRouter(SimpleRouter):
         ),
     ]
 
-custom_router = CustomReadOnlyRouter()
-custom_router.register('tickets', tickets_views.TicketActivityViewSet)
+ticket_activity_router = TicketActivityRouter()
+ticket_activity_router.register('tickets', tickets_views.TicketActivityViewSet)
+
+
+class DecisionTreeRouter(SimpleRouter):
+    routes = [
+        Route(
+            url=r'^{prefix}/{lookup}/dt/$',
+            mapping={
+                'post': 'create',
+                'patch': 'partial_update'
+            },
+            name='{basename}-create',
+            initkwargs={'suffix': 'create'}
+        )
+    ]
+
+decision_tree_router = DecisionTreeRouter()
+decision_tree_router.register('tickets', decision_tree_views.DecisionTreeViewSet)
 
 
 # API
 urlpatterns = [
     url(r'^api/', include(router.urls)),
-    url(r'^api/', include(custom_router.urls)),
+    url(r'^api/', include(ticket_activity_router.urls)),
+    url(r'^api/', include(decision_tree_router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
 

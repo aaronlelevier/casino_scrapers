@@ -8,11 +8,13 @@ from rest_framework.test import APITestCase
 from category.tests.factory import create_single_category
 from decision_tree.model_choices import LINK_TYPES, NOTE_TYPES, FIELD_TYPES
 from decision_tree.models import TreeOption, TreeData
-from decision_tree.serializers import TreeDataCreateUpdateSerializer
+from decision_tree.serializers import TreeDataCreateUpdateSerializer, TreeDataDetailSerializer
 from decision_tree.tests.factory import create_tree_data
 from generic.tests.factory import create_file_attachment, create_image_attachment
 from person.tests.factory import PASSWORD, create_single_person
-from ticket.tests.factory import create_ticket_status, create_ticket_priority
+from ticket.models import Ticket
+from ticket.serializers import TicketCreateSerializer
+from ticket.tests.factory import create_ticket, create_ticket_status, create_ticket_priority
 from utils.create import random_lorem, _generate_chars
 from utils.helpers import media_path
 
@@ -568,3 +570,89 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['links']), 0)
+
+
+class DecisionTreeCreateTests(TreeDataTestSetUpMixin, APITestCase):
+
+    def setUp(self):
+        super(DecisionTreeCreateTests, self).setUp()
+        # serializer data
+        self.ticket = create_ticket(assignee=self.person)
+        serializer = TicketCreateSerializer(self.ticket)
+        self.data = serializer.data
+        link = self.tree_data.links.first()
+        link.destination = mommy.make(TreeData)
+        link.save()
+
+    def test_post__ticket_created_and_dtd_response(self):
+        self.data.update({
+            'id': str(uuid.uuid4()),
+            'request': 'plumbing'
+        })
+
+        response = self.client.post('/api/tickets/{}/dt/'.format(self.tree_data.id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 201)
+        # Ticket
+        self.assertTrue(Ticket.objects.get(id=self.data['id']))
+        # DTD
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['id'], str(self.tree_data.id))
+        self.assertEqual(data.keys(), TreeDataDetailSerializer(self.tree_data).data.keys())
+
+    def test_patch__ticket_updated_and_dtd_response(self):
+        self.data.update({
+            'request': 'plumbing'
+        })
+        self.assertNotEqual(self.data['request'], self.ticket.request)
+
+        response = self.client.patch('/api/tickets/{}/dt/'.format(self.tree_data.id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        # Ticket
+        ticket = Ticket.objects.get(id=self.data['id'])
+        self.assertEqual(ticket.request, self.data['request'])
+        # DTD
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['id'], str(self.tree_data.id))
+        self.assertEqual(data.keys(), TreeDataDetailSerializer(self.tree_data).data.keys())
+
+    def test_404_if_dtd_not_found(self):
+        id = uuid.uuid4()
+
+        response = self.client.patch('/api/tickets/{}/dt/'.format(id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_404_if_ticket_not_found(self):
+        self.data['id'] = uuid.uuid4()
+
+        response = self.client.patch('/api/tickets/{}/dt/'.format(self.tree_data.id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_patch__cannot_set_required_field_to_none(self):
+        self.data['location'] =  None
+        self.assertTrue(self.ticket.location)
+
+        response = self.client.patch('/api/tickets/{}/dt/'.format(self.tree_data.id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.content.decode('utf8'))
+        self.assertEqual(message, {'location': ['This field may not be null.']})
+
+    def test_patch__missing_required_field(self):
+        self.data.pop('location',  None)
+        self.assertTrue(self.ticket.location)
+
+        response = self.client.patch('/api/tickets/{}/dt/'.format(self.tree_data.id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        ticket = Ticket.objects.get(id=self.ticket.id)
+        self.assertEqual(self.ticket.location, ticket.location)

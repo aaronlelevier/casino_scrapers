@@ -1,6 +1,4 @@
-
 from collections import namedtuple
-import random
 
 from model_mommy import mommy
 
