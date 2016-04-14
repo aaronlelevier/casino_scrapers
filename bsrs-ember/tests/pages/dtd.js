@@ -67,7 +67,6 @@ var DTDPage = PageObject.create({
     textCount: count('.t-dtd-link-text'),
     textIsRequiredError: () => Ember.$('.t-dtd-link-text-error').text().trim(),
 
-
     isDirty: hasClass('dirty', 'i', {scope: '.t-tab-close'}),
     clickPreviewToggle: clickable('.t-dtd-preview'),
     clickDetailToggle: clickable('.t-dtd-detail'),
@@ -105,7 +104,7 @@ var DTDPage = PageObject.create({
     noteTypeClickOptionTwo: clickable(`.ember-power-select-option:contains(${DTD.noteTypeTwo})`, { scope: DROPDOWN }),
     noteTypeClickOptionTwoValue: clickable(`.ember-power-select-option:contains(${DTD.noteTypeTwoValue})`, { scope: DROPDOWN }),
 
-    addFieldBtn: clickable('.t-add-field-btn'),
+
     fieldLabelCount: count('.t-dtd-field-label'),
     fieldOneDelete: clickable('.t-del-field-btn:eq(0)'),
     fieldTwoDelete: clickable('.t-del-field-btn:eq(1)'),
@@ -148,6 +147,12 @@ var DTDPage = PageObject.create({
     removeTopLevelCategory: clickable('.ember-power-select-clear-btn:eq(0)'),
     removeMiddleCategory: clickable('.ember-power-select-clear-btn:eq(1)'),
     removeLeafCategory: clickable('.ember-power-select-clear-btn:eq(2)'),
+    
+    // DT
+    addFieldBtn: clickable('.t-add-field-btn'),
+    fieldFillInTextOne: fillable('.t-dtd-field-text:eq(0)'),
+    fieldClickCheckboxOne: clickable('.t-dtd-field-checkbox:eq(0)'),
+    clickNextBtn: clickable('.t-dtd-link-btn'),
 });
 
 export default DTDPage;

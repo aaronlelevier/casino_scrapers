@@ -30,6 +30,7 @@ export default Model.extend(OptConf, {
     return this.get('types')[0];
   }),
   required: attr(),
+  //TODO: test for empty string
   order: attr(),
   field_option_fks: [],
   optionsIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('field_options'),

@@ -14,6 +14,7 @@ import { many_to_many } from 'bsrs-components/attr/many-to-many';
 
 const { run } = Ember;
 
+
 var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, OptConf, {
   init() {
     belongs_to.bind(this)('status', 'ticket');
@@ -36,6 +37,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
   model_categories_fks: [],
   previous_attachments_fks: [],
   ticket_attachments_fks: [],
+  requestValues: [], //store array of values to be sent in dt post or put request field
   status_fk: undefined,
   priority_fk: undefined,
   location_fk: undefined,
@@ -180,6 +182,20 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
       });
     }
     if(!this.get('created')) { this.createdAt(); }
+    return payload;
+  },
+  patchFields: ['request'],
+  patchSerialize() {
+    const dirtyFields = this.get('patchFields').map((field) => {
+      const state = this.get('_oldState');
+      if(field in state) {
+        return field;
+      }
+    });
+    let payload = {id: this.get('id')};
+    dirtyFields.forEach((field) => {
+      payload[field] = this.get(field);
+    });
     return payload;
   },
   createdAt() {

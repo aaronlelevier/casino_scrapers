@@ -1,0 +1,54 @@
+<div class="container-fluid"> <div class="row">
+    <h2 class="col-md-12">{{t 'admin.dtd.preview'}}</h2>
+  </div>
+  <div class="row">
+    <header class="col-md-12"></header>
+  </div>
+  <div class="row">
+    <div class="dtd-live">
+      <div class="dtd-live-inner panel panel-default">
+        {{#if model.note}}
+        <div class="t-dtd-preview-note panel-header">
+          <div class="alert {{alert-class translated=(t model.note_type)}} {{t model.note_type}} t-dtd-note-preview">{{format-markdown model.note}}</div>
+        </div>
+        {{/if}}
+        <div class="panel-body">
+          {{#if model.description}} <p class="t-dtd-preview-description">{{format-markdown model.description}}</p> {{/if}}
+          {{#if model.fields}}
+            {{#each model.fields as |field|}}
+              <div class="t-dtd-preview-field">
+                {{dtds/field-element-display field=field optionSelect=(action "optionSelect") ticket=ticket}}
+              </div>
+            {{/each}}
+          {{/if}}
+        </div>
+        {{#if model.prompt}} <div class="panel-footer t-dtd-preview-prompt">{{format-markdown model.prompt}}</div> {{/if}}
+        {{#if (is-equal model.link_type model.link_types.[1])}}
+        <div class="list-group dtd-links dtd-list t-dtd-preview-links">
+          {{#each model.links as |link|}}
+          {{#if link.is_header}}
+          <a class="list-group-item dtd-link-header t-dtd-preview-link-header">
+            <h4 class="list-group-item-heading">{{link.text}}</h4>
+          </a>
+          {{else}}
+          <button type="button" class="list-group-item t-dtd-preview-btn">{{link.text}}</button>
+          {{/if}}
+          {{/each}}
+        </div>
+        {{/if}}
+      </div>
+      {{#if (is-equal model.link_type model.link_types.[0])}}
+      <div class="text-center dtd-links dtd-buttons t-dtd-preview-links">
+        {{#each model.links as |link|}}
+        <button type="button" class="btn t-dtd-link-btn {{if link.action_button 'btn-primary' 'btn-default'}}" {{action "linkClick" link.destination.id ticket}}>{{link.text}}</button>
+        {{/each}}
+      </div>
+      {{/if}}
+      {{#each model.attachments as |attachment|}}
+        <span class="t-dtd-preview-attachment">
+          {{attachment/single-medium attachment=attachment}}
+        </span>
+      {{/each}}
+    </div>
+  </div>
+</div>

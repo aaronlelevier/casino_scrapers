@@ -3,18 +3,18 @@
   {{if field.required "*" ""}}
 </label>
 {{#if (eq field.type field.types.[0])}}
-  {{input id="dtd-field-preview" type="text" class="form-control t-dtd-field-preview"}}
+  {{input type="text" class="form-control t-dtd-field-preview t-dtd-field-text"}}
 {{else if (eq field.type field.types.[1])}}
-  {{input id="dtd-field-preview" type="number" class="form-control t-dtd-field-preview"}}
+  {{input type="number" class="form-control t-dtd-field-preview t-dtd-field-number"}}
 {{else if (eq field.type field.types.[2])}}
-  {{textarea autoresize=true id="dtd-field-preview" class="form-control t-dtd-field-preview"}}
+  {{textarea autoresize=true class="form-control t-dtd-field-preview t-dtd-field-textarea"}}
 {{else if (eq field.type field.types.[3])}}
   {{power-select-foreign-key mainModel=field displayName="text" relatedModels=field.options relatedModelName='dtd-field' notTranslated=true}}
 {{else if (eq field.type field.types.[4])}}
   {{#each field.options as |option|}}
     <div class="checkbox">
       <label>
-        <input type="checkbox">
+        <input type="checkbox" class="t-dtd-field-checkbox" {{action "optionSelect" option.text field.label ticket}}>
         <span>{{option.text}}</span>
       </label>
     </div>
