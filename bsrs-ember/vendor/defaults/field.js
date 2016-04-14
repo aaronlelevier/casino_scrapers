@@ -9,6 +9,7 @@ var BSRS_FIELDS_DEFAULTS_OBJECT = (function() {
       labelOne: 'name',
       labelTwo: 'age',
       labelThree: 'address',
+      labelFour: 'Big Deal?',
       typeOneValue: 'Text',
       typeTwoValue: 'Number',
       typeThreeValue: 'Textarea',

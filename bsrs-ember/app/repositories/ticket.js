@@ -25,10 +25,18 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMix
       model.saveRelated();
     });
   },
-  patch(model) {
-    return PromiseMixin.xhr(TICKET_URL + model.get('id') + '/', 'PATCH', {data: JSON.stringify(model.patchSerialize())}).then(() => {
+  patch(model, destination_id) {
+    return PromiseMixin.xhr(`${TICKET_URL}dt/${destination_id}/${model.get('id')}/`, 'PATCH', {data: JSON.stringify(model.patchSerialize())}).then((response) => {
       model.save();
       model.saveRelated();
+      return response;
+    });
+  },
+  dtPost(model, destination_id) {
+    return PromiseMixin.xhr(`${TICKET_URL}${destination_id}/dt/`, 'POST', {data: JSON.stringify(model.serialize())}).then((response) => {
+      model.save();
+      model.saveRelated();
+      return response;
     });
   },
 });

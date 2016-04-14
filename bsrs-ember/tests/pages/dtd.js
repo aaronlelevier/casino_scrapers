@@ -5,6 +5,7 @@ import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import FD from 'bsrs-ember/vendor/defaults/field';
+import OD from 'bsrs-ember/vendor/defaults/option';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
 const DROPDOWN = options;
@@ -14,6 +15,7 @@ const NEW_URL = `${BASE_URL}/new/1`;
 const DETAIL_URL = `${BASE_URL}/${DTD.idOne}`;
 
 const DESTINATION = '.t-link-destination-select > .ember-basic-dropdown-trigger';
+const FIELD_SELECT_OPTION = '.t-dtd-field-select > .ember-basic-dropdown-trigger';
 
 var DTDPage = PageObject.create({
     visit: visitable(DTDS_URL),
@@ -152,7 +154,10 @@ var DTDPage = PageObject.create({
     addFieldBtn: clickable('.t-add-field-btn'),
     fieldFillInTextOne: fillable('.t-dtd-field-text:eq(0)'),
     fieldClickCheckboxOne: clickable('.t-dtd-field-checkbox:eq(0)'),
-    clickNextBtn: clickable('.t-dtd-link-btn'),
+    clickNextBtn: clickable('.t-dtd-preview-btn'),
+    selectClickDropdown: clickable(FIELD_SELECT_OPTION),
+    selectOneOption: clickable(`.ember-power-select-option:contains(${OD.textOne})`, { scope: DROPDOWN }),
+    selectOneValue: text(FIELD_SELECT_OPTION),
 });
 
 export default DTDPage;

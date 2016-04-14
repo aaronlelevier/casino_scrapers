@@ -3,18 +3,18 @@
   {{if field.required "*" ""}}
 </label>
 {{#if (eq field.type field.types.[0])}}
-  {{input type="text" class="form-control t-dtd-field-preview t-dtd-field-text"}}
+  {{input type="text" class="form-control t-dtd-field-preview t-dtd-field-text" key-up=(action "updateRequest" undefined field.label ticket) }}
 {{else if (eq field.type field.types.[1])}}
-  {{input type="number" class="form-control t-dtd-field-preview t-dtd-field-number"}}
+  {{input type="number" class="form-control t-dtd-field-preview t-dtd-field-number" key-up=(action "updateRequest" undefined field.label ticket)}}
 {{else if (eq field.type field.types.[2])}}
-  {{textarea autoresize=true class="form-control t-dtd-field-preview t-dtd-field-textarea"}}
+  {{textarea autoresize=true class="form-control t-dtd-field-preview t-dtd-field-textarea" key-up=(action "updateRequest" undefined field.label ticket)}}
 {{else if (eq field.type field.types.[3])}}
-  {{power-select-foreign-key mainModel=field displayName="text" relatedModels=field.options relatedModelName='dtd-field' notTranslated=true}}
+  {{power-select-action mainModel=field displayName="text" relatedModels=field.options relatedModelName='dtd-field' notTranslated=true action=(hash action=this.attrs.updateRequest label=field.label ticket=ticket)}}
 {{else if (eq field.type field.types.[4])}}
   {{#each field.options as |option|}}
     <div class="checkbox">
       <label>
-        <input type="checkbox" class="t-dtd-field-checkbox" {{action "optionSelect" option.text field.label ticket}}>
+        <input type="checkbox" class="t-dtd-field-checkbox" {{action "updateRequest" option.text field.label ticket}}>
         <span>{{option.text}}</span>
       </label>
     </div>

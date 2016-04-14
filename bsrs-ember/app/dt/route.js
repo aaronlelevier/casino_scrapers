@@ -21,20 +21,6 @@ var DTRoute = Ember.Route.extend(FindById, {
     controller.set('model', hash.model);
     controller.set('ticket', hash.ticket);
   },
-  actions: {
-    linkClick(destination_id, ticket) {
-      if(ticket.get('new_pk')){
-        this.get('ticketRepository').insert(ticket).then((response) => {
-          //TODO: use response data to determine transition to
-          this.transitionTo('dt', destination_id);
-        });
-      } else {
-        this.get('ticketRepository').patch(ticket).then((response) => {
-          this.transitionTo('dt', destination_id);
-        });
-      }
-    }
-  }
 });
 
 export default DTRoute;
