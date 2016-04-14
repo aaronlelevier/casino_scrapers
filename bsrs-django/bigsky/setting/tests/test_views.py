@@ -3,21 +3,12 @@ import uuid
 
 from rest_framework.test import APITestCase
 
-from person.tests.factory import PASSWORD, create_single_person
 from setting.serializers import SettingSerializer
 from setting.settings import DEFAULT_GENERAL_SETTINGS
-from setting.tests.factory import create_general_setting
+from setting.tests.mixins import SettingSetupMixin
 
 
-class SettingTests(APITestCase):
-
-    def setUp(self):
-        self.person = create_single_person()
-        self.client.login(username=self.person.username, password=PASSWORD)
-        self.general_setting = create_general_setting()
-
-    def tearDown(self):
-        self.client.logout()
+class SettingTests(SettingSetupMixin, APITestCase):
 
     def test_list(self):
         response = self.client.get('/api/admin/settings/')
@@ -68,3 +59,5 @@ class SettingTests(APITestCase):
         # welcome_text
         self.assertEqual(data['settings']['welcome_text']['value'], new_welcome_text)
         self.assertEqual(data['settings']['welcome_text']['inherited_from'], 'general')
+
+
