@@ -1,6 +1,8 @@
 from .base import *
 
 
+LOCATION_FILTERING = False
+
 TICKET_FILTERING_ON = False
 
 CI_APPS = [

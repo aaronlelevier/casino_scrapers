@@ -250,6 +250,8 @@ DEFAULT_ROLE = 'Administrator'
 DEFAULT_LOCATION_STATUS = 'admin.location.status.open'
 DEFAULT_LOCATION_TYPE = 'big_store'
 DEFAULT_LOCATION_LEVEL = 'Company'
+# API filtering by User
+LOCATION_FILTERING = True
 
 ### PERSON
 PASSWORD_EXPIRE_DAYS = 90

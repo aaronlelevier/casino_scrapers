@@ -198,9 +198,15 @@ class LocationManagerTests(TestCase):
         person.locations.add(east)
         self.assertEqual(person.locations.count(), 1)
         self.assertEqual(person.locations.first().children.count(), 2)
+        # set 1 location not able to create tickets, and make sure it gets filtered out
+        cant = person.locations.order_by('?')[0].location_level
+        cant.can_create_tickets = False
+        cant.save()
+
         ret = person.locations.objects_and_their_children()
-        self.assertEqual(len(ret), 5)
-        self.assertIn(person.locations.first().id, ret)
+
+        self.assertEqual(len(ret), 4)
+        self.assertNotIn(cant.id, [x.location_level.id for x in Location.objects.filter(id__in=ret)])
 
     def test_objects_and_their_children__top_level(self):
         # All Locations should be returned if the 'person' has the 'top level location'
@@ -219,6 +225,19 @@ class LocationManagerTests(TestCase):
         self.assertEqual(ret.name, LOCATION_COMPANY)
         self.assertEqual(ret.number, LOCATION_COMPANY)
         self.assertEqual(ret.location_level.name, settings.DEFAULT_LOCATION_LEVEL)
+
+    def test_can_create_tickets_ids(self):
+        level = Location.objects.first().location_level
+        level.can_create_tickets = False
+        level.save()
+
+        ret = Location.objects.can_create_tickets_ids()
+
+        self.assertNotIn(level.id, ret)
+        self.assertEqual(
+            len(ret),
+            Location.objects.filter(location_level__can_create_tickets=True).count()
+        )
 
 
 class LocationTests(TestCase):

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 
 from rest_framework.response import Response
@@ -148,6 +149,15 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
             return ls.LocationUpdateSerializer
         else:
             raise MethodNotAllowed(method=self.action)
+
+    def get_queryset(self):
+        queryset = super(LocationViewSet, self).get_queryset()
+
+        if settings.LOCATION_FILTERING:
+            ids = self.request.user.locations.objects_and_their_children()
+            queryset = queryset.filter(id__in=ids)
+
+        return queryset
 
     @property
     def _all_related_serializer(self):

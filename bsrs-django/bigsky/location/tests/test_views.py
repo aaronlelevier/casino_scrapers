@@ -256,17 +256,32 @@ class LocationListTests(APITestCase):
             str(location_level.id))
 
     def test_filter_by_can_create_tickets(self):
-        location = Location.objects.get(name='nv')
-        location.location_level.can_create_tickets = False
-        location.save()
+        level = Location.objects.get(name='nv').location_level
+        level.can_create_tickets = False
+        level.save()
 
         response = self.client.get('/api/admin/locations/?location_level__can_create_tickets=True')
         data = json.loads(response.content.decode('utf8'))
 
+        return_ids = [x['id'] for x in data['results']]
+        self.assertNotIn(
+            level.id,
+            [x.location_level.id for x in Location.objects.filter(id__in=return_ids)]
+        )
         self.assertEqual(
             data['count'],
             Location.objects.filter(location_level__can_create_tickets=True).count()
         )
+
+    def test_user_filtering_on(self):
+        person_locations = self.person.locations.objects_and_their_children()
+        self.assertNotEqual(len(person_locations), Location.objects.count())
+
+        with self.settings(LOCATION_FILTERING=True):
+            response = self.client.get('/api/admin/locations/')
+            data = json.loads(response.content.decode('utf8'))
+
+            self.assertEqual(data['count'], len(person_locations))
 
 
 class LocationDetailTests(APITestCase):

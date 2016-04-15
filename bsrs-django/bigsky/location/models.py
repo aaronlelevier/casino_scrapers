@@ -73,7 +73,7 @@ class SelfReferencingQuerySet(models.query.QuerySet):
 
     def objects_and_their_children(self):
         """
-        Meant to be called from a RelatedManager standpoint, otherwise 
+        Meant to be called from a RelatedManager standpoint, otherwise
         would just return all model objects.
 
         Ex: person.locations.objects_and_their_children()
@@ -85,14 +85,14 @@ class SelfReferencingQuerySet(models.query.QuerySet):
         for obj in self.all():
 
             if obj.name == LOCATION_COMPANY:
-                master_set.update(type(obj).objects.values_list("id", flat=True))
+                master_set.update(type(obj).objects.values_list('id', flat=True))
                 continue
 
             # parent
             master_set.add(obj.id)
             # children
             children = type(obj).objects.get_all_children(obj)
-            master_set.update(children.values_list("id", flat=True))
+            master_set.update(children.values_list('id', flat=True))
 
         return master_set
 
@@ -108,12 +108,12 @@ class SelfReferencingManager(BaseManager):
     def get_all_parents(self, child, first_child_id=None, all_parents=None):
         return self.get_queryset().get_all_parents(child, first_child_id, all_parents)
 
-    def objects_and_their_children(self):
-        return self.get_queryset().objects_and_their_children()
-
     def create_top_level(self):
         obj, _ = self.get_or_create(name=LOCATION_COMPANY)
         return obj
+
+    def objects_and_their_children(self):
+        return self.get_queryset().objects_and_their_children()
 
 
 class SelfRefrencingBaseModel(models.Model):
@@ -241,6 +241,37 @@ class LocationQuerySet(SelfReferencingQuerySet):
             Q(addresses__postal_code__icontains=keyword)
         )
 
+    def objects_and_their_children(self):
+        """
+        Meant to be called from a RelatedManager standpoint, otherwise
+        would just return all model objects.
+
+        Ex: person.locations.objects_and_their_children()
+
+        Exp: returns the Person's related Locations and their Children.
+        """
+        master_set = set()
+
+        for obj in self.all():
+
+            if obj.name == LOCATION_COMPANY:
+                master_set.update(type(obj).objects.can_create_tickets_ids())
+                continue
+
+            # parent
+            if obj.location_level.can_create_tickets:
+                master_set.add(obj.id)
+            # children
+            children = type(obj).objects.get_all_children(obj)
+            master_set.update(children.can_create_tickets_ids())
+
+        return master_set
+
+    def can_create_tickets_ids(self):
+        return (self.select_related('location_level')
+                    .filter(location_level__can_create_tickets=True)
+                    .values_list("id", flat=True))
+
 
 class LocationManager(SelfReferencingManager):
     
@@ -267,6 +298,12 @@ class LocationManager(SelfReferencingManager):
         obj, _ = self.get_or_create(name=LOCATION_COMPANY, number=LOCATION_COMPANY,
             location_level=location_level)
         return obj
+
+    def objects_and_their_children(self):
+        return self.get_queryset().objects_and_their_children()
+
+    def can_create_tickets_ids(self):
+        return self.get_queryset().can_create_tickets_ids()
 
 
 class Location(SelfRefrencingBaseModel, BaseModel):
