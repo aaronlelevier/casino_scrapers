@@ -7,6 +7,7 @@ from rest_framework.exceptions import MethodNotAllowed
 
 from location.models import Location, LocationLevel, LocationStatus, LocationType
 from location import serializers as ls
+from utils.mixins import SearchMultiMixin
 from utils.views import BaseModelViewSet
 
 
@@ -84,7 +85,7 @@ class LocationTypeViewSet(BaseModelViewSet):
     queryset = LocationType.objects.all()
 
 
-class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
+class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelViewSet):
     '''
     ## Detail Routes
 
@@ -151,15 +152,6 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
     @property
     def _all_related_serializer(self):
         return ls.LocationListSerializer
-
-    def get_queryset(self):
-        queryset = super(LocationViewSet, self).get_queryset()
-
-        search = self.request.query_params.get('search', None)
-        if search:
-            queryset = queryset.search_multi(keyword=search)
-
-        return queryset
 
     @list_route(methods=['GET'], url_path=r'get-level-children/(?P<llevel_id>[\w\-]+)/(?P<pk>[\w\-]+)')
     def get_level_children(self, request, llevel_id=None, pk=None):

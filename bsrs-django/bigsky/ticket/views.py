@@ -8,7 +8,7 @@ from ticket.mixins import CreateTicketModelMixin, UpdateTicketModelMixin
 from ticket.models import Ticket, TicketActivity
 from ticket.serializers import (TicketSerializer, TicketCreateSerializer,
     TicketListSerializer, TicketActivitySerializer)
-from utils.mixins import EagerLoadQuerySetMixin
+from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.views import BaseModelViewSet
 
 
@@ -24,7 +24,7 @@ class TicketQuerySetFilters(object):
 
 
 class TicketViewSet(EagerLoadQuerySetMixin, TicketQuerySetFilters, CreateTicketModelMixin,
-    UpdateTicketModelMixin, BaseModelViewSet):
+    UpdateTicketModelMixin, SearchMultiMixin, BaseModelViewSet):
 
     model = Ticket
     queryset = Ticket.objects.all()
@@ -42,20 +42,6 @@ class TicketViewSet(EagerLoadQuerySetMixin, TicketQuerySetFilters, CreateTicketM
             return TicketCreateSerializer
         else:
             return TicketSerializer
-
-    def get_queryset(self):
-        """
-        :search: will use the ``Q`` lookup class:
-
-        https://docs.djangoproject.com/en/1.8/topics/db/queries/#complex-lookups-with-q-objects
-        """
-        queryset = super(TicketViewSet, self).get_queryset()
-
-        search = self.request.query_params.get('search', None)
-        if search:
-            queryset = queryset.search_multi(keyword=search)
-
-        return queryset
 
 
 class TicketActivityViewSet(BaseModelViewSet):
@@ -90,4 +76,3 @@ class TicketActivityViewSet(BaseModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-

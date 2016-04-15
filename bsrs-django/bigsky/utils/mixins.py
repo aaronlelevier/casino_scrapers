@@ -158,3 +158,25 @@ class FilterRelatedMixin(object):
 
             return queryset.filter(**kwargs)
         return queryset
+
+
+class SearchMultiMixin(object):
+    """
+    Search accross multiple fields with the `search` query param.
+
+    `search_multi` method must be defined on the `Model.Manager` in order to use.
+    """
+
+    def get_queryset(self):
+        """
+        :search: will use the ``Q`` lookup class:
+
+        https://docs.djangoproject.com/en/1.8/topics/db/queries/#complex-lookups-with-q-objects
+        """
+        queryset = super(SearchMultiMixin, self).get_queryset()
+
+        search = self.request.query_params.get('search', None)
+        if search:
+            queryset = queryset.search_multi(keyword=search)
+
+        return queryset

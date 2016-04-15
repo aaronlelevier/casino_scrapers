@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 from person import serializers as ps
 from person.models import Person, Role
-from utils.mixins import EagerLoadQuerySetMixin
+from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.views import BaseModelViewSet
 
 
@@ -38,7 +38,7 @@ class RoleViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
 
 ### PERSON
 
-class PersonViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
+class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
     '''
     ## Detail Routes
 
@@ -78,20 +78,6 @@ class PersonViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
             return ps.PersonCreateSerializer
         else:
             return ps.PersonListSerializer
-
-    def get_queryset(self):
-        """
-        :search: will use the ``Q`` lookup class:
-
-        https://docs.djangoproject.com/en/1.8/topics/db/queries/#complex-lookups-with-q-objects
-        """
-        queryset = super(PersonViewSet, self).get_queryset()
-
-        search = self.request.query_params.get('search', None)
-        if search:
-            queryset = queryset.search_multi(keyword=search)
-
-        return queryset
 
     @list_route(methods=['GET'])
     def current(self, request):

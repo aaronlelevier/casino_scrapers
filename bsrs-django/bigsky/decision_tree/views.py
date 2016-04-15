@@ -10,10 +10,11 @@ from decision_tree.serializers import (TreeDataListSerializer, TreeDataDetailSer
     TreeDataCreateUpdateSerializer,)
 from ticket.models import Ticket
 from ticket.serializers import TicketCreateSerializer
+from utils.mixins import SearchMultiMixin
 from utils.views import BaseModelViewSet
 
 
-class TreeDataViewSet(BaseModelViewSet):
+class TreeDataViewSet(SearchMultiMixin, BaseModelViewSet):
 
     model = TreeData
     permission_classes = (IsAuthenticated,)
@@ -27,16 +28,6 @@ class TreeDataViewSet(BaseModelViewSet):
             return TreeDataDetailSerializer
         else:
             return TreeDataCreateUpdateSerializer
-
-    def get_queryset(self):
-
-        queryset = super(TreeDataViewSet, self).get_queryset();
-    
-        search = self.request.query_params.get('search', None)
-        if search:
-            queryset = queryset.search_multi(keyword=search)
-
-        return queryset
 
 
 class DecisionTreeViewSet(BaseModelViewSet):
