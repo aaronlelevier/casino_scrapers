@@ -584,7 +584,7 @@ class DecisionTreeCreateTests(TreeDataTestSetUpMixin, APITestCase):
         link.destination = mommy.make(TreeData)
         link.save()
 
-    def test_post__ticket_created_and_dtd_response(self):
+    def test_post__ticket_created_and_dtd_response_returned(self):
         self.data.update({
             'id': str(uuid.uuid4()),
             'request': 'plumbing'
@@ -601,7 +601,7 @@ class DecisionTreeCreateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['id'], str(self.tree_data.id))
         self.assertEqual(data.keys(), TreeDataDetailSerializer(self.tree_data).data.keys())
 
-    def test_patch__ticket_updated_and_dtd_response(self):
+    def test_patch__ticket_updated_and_dtd_response_returned(self):
         self.data.update({
             'request': 'plumbing'
         })
@@ -619,7 +619,7 @@ class DecisionTreeCreateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['id'], str(self.tree_data.id))
         self.assertEqual(data.keys(), TreeDataDetailSerializer(self.tree_data).data.keys())
 
-    def test_404_if_dtd_not_found(self):
+    def test_patch__404_if_dtd_not_found(self):
         id = uuid.uuid4()
 
         response = self.client.patch('/api/tickets/{}/dt/'.format(id),
@@ -627,7 +627,7 @@ class DecisionTreeCreateTests(TreeDataTestSetUpMixin, APITestCase):
 
         self.assertEqual(response.status_code, 404)
 
-    def test_404_if_ticket_not_found(self):
+    def test_patch__404_if_ticket_not_found(self):
         self.data['id'] = uuid.uuid4()
 
         response = self.client.patch('/api/tickets/{}/dt/'.format(self.tree_data.id),
@@ -656,3 +656,15 @@ class DecisionTreeCreateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         ticket = Ticket.objects.get(id=self.ticket.id)
         self.assertEqual(self.ticket.location, ticket.location)
+
+    def test_get(self):
+        response = self.client.get('/api/tickets/{}/dt/'.format(self.tree_data.id))
+        self.assertEqual(response.status_code, 405)
+
+    def test_put(self):
+        response = self.client.put('/api/tickets/{}/dt/'.format(self.tree_data.id), {}, format='json')
+        self.assertEqual(response.status_code, 405)
+
+    def test_delete(self):
+        response = self.client.delete('/api/tickets/{}/dt/'.format(self.tree_data.id), {}, format='json')
+        self.assertEqual(response.status_code, 405)

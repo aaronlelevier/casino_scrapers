@@ -41,6 +41,8 @@ class TreeDataViewSet(BaseModelViewSet):
 
 class DecisionTreeViewSet(BaseModelViewSet):
     """
+    API Endpoint: `/api/tickets/{dt-id}/dt/`
+
     For use with the Decistion Tree, while the User is navigating the Tree.
     To send Create/Updates to a Ticket, and return the detail TreeData for the
     next node in the tree back to the User.
