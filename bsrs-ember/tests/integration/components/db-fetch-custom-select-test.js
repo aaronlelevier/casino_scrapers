@@ -55,10 +55,10 @@ test('should render a selectbox with bound options after type ahead for search',
     then(() => {
       assert.equal($(DROPDOWN).length, 1);
       assert.equal($('.ember-power-select-option').length, 3);
-      assert.equal($('.t-dtd-key-select-option:eq(0)').text().trim(), DTD.keyOne);
-      assert.equal($('.t-dtd-desc-select-option:eq(0)').text().trim(), DTD.descriptionOne);
-      assert.equal($('.t-dtd-key-select-option:eq(1)').text().trim(), DTD.keyTwo);
-      assert.equal($('.t-dtd-desc-select-option:eq(1)').text().trim(), DTD.descriptionTwo);
+      assert.equal($('.t-dtd-key-select-option:eq(1)').text().trim(), DTD.keyOne);
+      assert.equal($('.t-dtd-desc-select-option:eq(1)').text().trim(), DTD.descriptionOne);
+      assert.equal($('.t-dtd-key-select-option:eq(2)').text().trim(), DTD.keyTwo);
+      assert.equal($('.t-dtd-desc-select-option:eq(2)').text().trim(), DTD.descriptionTwo);
     });
 });
 

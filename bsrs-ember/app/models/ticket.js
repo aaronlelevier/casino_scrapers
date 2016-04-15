@@ -17,7 +17,7 @@ const { run } = Ember;
 
 var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, OptConf, {
   init() {
-    this.requestValues = [], //store array of values to be sent in dt post or put request field
+    this.requestValues = []; //store array of values to be sent in dt post or put request field
     belongs_to.bind(this)('status', 'ticket');
     belongs_to.bind(this)('priority', 'ticket');
     belongs_to.bind(this)('assignee', 'ticket', {change_func:false, rollback:false});
