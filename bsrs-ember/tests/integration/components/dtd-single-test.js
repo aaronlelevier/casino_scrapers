@@ -251,7 +251,7 @@ test('note type selector is present and has a selection', function(assert) {
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('preview updates as changes are made to detail', function(assert) {
+test('preview updates as changes are made to detail (w/ no fields)', function(assert) {
   run(() => {
     dtd = store.push('dtd', {
       id: DTD.idOne,

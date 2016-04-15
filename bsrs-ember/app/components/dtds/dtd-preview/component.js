@@ -5,7 +5,9 @@ export default Ember.Component.extend({
     const fields = this.get('model.fields');
     const ticket = this.get('ticket');
     //length of array should be the same as the values stored in the ongoing ticket...
-    return fields.get('length') === ticket.get('requestValues').length ? '' : 'disabled';
+    if(fields.get('length')) {
+      return fields.get('length') === ticket.get('requestValues').length ? '' : 'disabled';
+    }
   }),
   actions: {
     linkClick(destination_id, ticket) {
