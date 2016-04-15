@@ -56,9 +56,9 @@ class SettingsValidatorTests(APITestCase):
 
     def setUp(self):
         self.person = create_single_person()
+        self.role = self.person.role
         # Settings
-        self.setting = create_general_setting()
-        serializer = SettingSerializer(self.setting)
+        serializer = RoleUpdateSerializer(self.role)
         self.data = serializer.data
         self.error_message = SettingsValidator.message
         # Login
@@ -71,7 +71,7 @@ class SettingsValidatorTests(APITestCase):
         email = 'foo@bar'
         self.data["settings"]["email"] = {'value': email}
 
-        response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id),
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
             self.data, format='json')
 
         self.assertEqual(response.status_code, 400)
@@ -84,7 +84,7 @@ class SettingsValidatorTests(APITestCase):
         phone = "+1800"
         self.data["settings"]["test_contractor_phone"] = {'value': phone}
 
-        response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id),
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
             self.data, format='json')
 
         self.assertEqual(response.status_code, 400)
@@ -107,7 +107,7 @@ class SettingsValidatorTests(APITestCase):
             "test_mode": {'value': 0}
         }
 
-        response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id),
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
             self.data, format='json')
         error = json.loads(response.content.decode('utf8'))
 

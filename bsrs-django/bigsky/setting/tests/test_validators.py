@@ -1,58 +1,60 @@
-# NOTE (4/14): Comment out for now. Main issue being that errors aren't associated with field.
-# wait for reply to this issue: https://github.com/Julian/jsonschema/issues/281
+import json
+
+from rest_framework.test import APITestCase
+
+from setting.serializers import SettingSerializer
+from setting.tests.mixins import SettingSetupMixin
 
 
-# import json
+class SettingsSchemaValidatorTests(SettingSetupMixin, APITestCase):
 
-# from rest_framework.test import APITestCase
+    def test_required(self):
+        serializer = SettingSerializer(self.general_setting)
+        raw_data = serializer.data
+        field = 'welcome_text'
+        raw_data['settings'].pop('welcome_text', None)
+        raw_data['settings'].pop('test_mode', None)
 
-# from setting.serializers import SettingSerializer
-# from setting.tests.mixins import SettingSetupMixin
+        response = self.client.put('/api/admin/settings/{}/'.format(self.general_setting.id), raw_data, format='json')
 
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.content.decode('utf8'))
+        self.assertEqual(message['test_mode'], ["'test_mode' is a required property"])
+        self.assertEqual(message['welcome_text'], ["'welcome_text' is a required property"])
 
-# class SettingsSchemaValidatorTests(SettingSetupMixin, APITestCase):
+    def test_type(self):
+        serializer = SettingSerializer(self.general_setting)
+        raw_data = serializer.data
+        raw_data['settings'] = {'welcome_text': 1}
 
-#     def test_required(self):
-#         serializer = SettingSerializer(self.general_setting)
-#         raw_data = serializer.data
-#         field = 'welcome_text'
-#         raw_data['settings'].pop('welcome_text', None)
+        response = self.client.put('/api/admin/settings/{}/'.format(self.general_setting.id), raw_data, format='json')
 
-#         response = self.client.put('/api/admin/settings/{}/'.format(self.general_setting.id), raw_data, format='json')
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.content.decode('utf8'))
+        self.assertEqual(message['welcome_text'], ["1 is not of type 'string'"])
 
-#         self.assertEqual(response.status_code, 400)
-#         message = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(message['non_field_errors'], ["Invalid JSON - '{}' is a required property".format(field)])
+    def test_minLength(self):
+        serializer = SettingSerializer(self.general_setting)
+        raw_data = serializer.data
+        raw_data['settings'] = {'welcome_text': 'a'}
 
-#     def test_type(self):
-#         serializer = SettingSerializer(self.general_setting)
-#         raw_data = serializer.data
-#         raw_data['settings'] = {'welcome_text': 1}
+        response = self.client.put('/api/admin/settings/{}/'.format(self.general_setting.id), raw_data, format='json')
 
-#         response = self.client.put('/api/admin/settings/{}/'.format(self.general_setting.id), raw_data, format='json')
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.content.decode('utf8'))
+        self.assertEqual(message['welcome_text'], ["'a' is too short"])
 
-#         self.assertEqual(response.status_code, 400)
-#         message = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(message['non_field_errors'], ["Invalid JSON - 1 is not of type 'string'"])
+    def test_maxLength(self):
+        serializer = SettingSerializer(self.general_setting)
+        raw_data = serializer.data
+        raw_data['settings'] = {
+            "test_mode": 1,
+            'welcome_text': 'hahahahahahahahahaha',
+        }
 
-#     def test_minLength(self):
-#         serializer = SettingSerializer(self.general_setting)
-#         raw_data = serializer.data
-#         raw_data['settings'] = {'welcome_text': 'a'}
+        response = self.client.put('/api/admin/settings/{}/'.format(self.general_setting.id), raw_data, format='json')
 
-#         response = self.client.put('/api/admin/settings/{}/'.format(self.general_setting.id), raw_data, format='json')
-
-#         self.assertEqual(response.status_code, 400)
-#         message = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(message['non_field_errors'], ["Invalid JSON - 'a' is too short"])
-
-#     def test_maxLength(self):
-#         serializer = SettingSerializer(self.general_setting)
-#         raw_data = serializer.data
-#         raw_data['settings'] = {'welcome_text': 'hahahahahahahahahaha'}
-
-#         response = self.client.put('/api/admin/settings/{}/'.format(self.general_setting.id), raw_data, format='json')
-
-#         self.assertEqual(response.status_code, 400)
-#         message = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(message['non_field_errors'], ["Invalid JSON - 'hahahahahahahahahaha' is too long"])
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.content.decode('utf8'))
+        self.assertEqual(message['test_mode'], ["1 is not of type 'boolean'"])
+        self.assertEqual(message['welcome_text'], ["'hahahahahahahahahaha' is too long"])

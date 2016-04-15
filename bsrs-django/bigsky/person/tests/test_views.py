@@ -183,7 +183,8 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         raw_data = serializer.data
         k = 'welcome_text'
         new_value = 'new text'
-        raw_data['settings'] = {k: new_value}
+        raw_data['settings'][k] = new_value
+        raw_data['settings']['test_mode'] = True # will raise error if not included b/c 'required'
 
         # detail
         response = self.client.get('/api/admin/roles/{}/'.format(role.id))

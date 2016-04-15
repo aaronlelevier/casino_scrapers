@@ -50,7 +50,10 @@ class SettingTests(SettingSetupMixin, APITestCase):
         new_welcome_text = "Bueno"
         serializer = SettingSerializer(self.general_setting)
         raw_data = serializer.data
-        raw_data['settings'] = {'welcome_text': new_welcome_text}
+        raw_data['settings'] = {
+            'welcome_text': new_welcome_text,
+            'test_mode': False
+        }
 
         response = self.client.put('/api/admin/settings/{}/'.format(self.general_setting.id), raw_data, format='json')
         data = json.loads(response.content.decode('utf8'))
@@ -59,5 +62,3 @@ class SettingTests(SettingSetupMixin, APITestCase):
         # welcome_text
         self.assertEqual(data['settings']['welcome_text']['value'], new_welcome_text)
         self.assertEqual(data['settings']['welcome_text']['inherited_from'], 'general')
-
-

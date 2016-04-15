@@ -5,7 +5,10 @@ schema = {
             "type": "string",
             "minLength": 2,
             "maxLength": 10
+        },
+        "test_mode": {
+            "type": "boolean"
         }
     },
-    "required": ["welcome_text"]
+    "required": ["welcome_text", "test_mode"]
 }
