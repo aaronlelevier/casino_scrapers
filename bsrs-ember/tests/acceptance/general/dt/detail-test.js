@@ -18,6 +18,7 @@ import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/dtd';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import ticketPage from 'bsrs-ember/tests/pages/tickets';
+import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_dt_url;//Routing
@@ -34,7 +35,7 @@ const TICKET_PATCH_URL = `${PREFIX}${TICKET_URL}/${DT.idTwo}/dt/`;
 
 let application, store, endpoint, original_uuid;
 
-module('Acceptance | dt detail', {
+module('scott Acceptance | dt detail', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('store:main');
@@ -153,6 +154,36 @@ test('can click to next destination after updating field textarea (patch ticket)
   await fillIn('.t-dtd-field-textarea:eq(0)', 'wat');
   const LETTER_W = {keyCode: 87};
   await triggerEvent('.t-dtd-field-textarea:eq(0)', 'keyup', LETTER_W);
+  const ticket = store.find('ticket', UUID.value);
+  const dtd = store.find('dtd', DT.idOne);
+  assert.deepEqual(ticket.get('requestValues'), [`${FD.labelThree}: wat`]);
+  assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
+  assert.equal(dtd.get('fields').objectAt(0).get('type'), FD.typeThree);
+  let dtd_payload = DTF.generate(DT.idTwo);
+  dtd_payload = { ...dtd_payload, target_id: UUID.value };
+  let ticket_payload = { id: UUID.value, request: `${FD.labelThree}: wat` };
+  xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
+  await page.clickNextBtn();
+  assert.equal(currentURL(), DEST_URL);
+});
+
+test('can\'t click to next destination if field is required and don\'t fill in field value (patch ticket)', async assert => {
+  run(() => {
+    store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
+  });
+  const detail_data = DTF.detail(DT.idOne);
+  detail_data['fields'][0]['type'] = FD.typeThree;
+  detail_data['fields'][0]['label'] = FD.labelThree;
+  detail_data['fields'][0]['required'] = FD.requiredTwo;
+  const detail_xhr = xhr(`${endpoint}${DT.idOne}/`, 'GET', null, {}, 200, detail_data);
+  await visit(DETAIL_URL);
+  assert.equal(currentURL(), DETAIL_URL);
+  assert.equal(find('.t-dtd-preview-btn').attr('disabled'), 'disabled');
+  assert.equal(currentURL(), DETAIL_URL);
+  await fillIn('.t-dtd-field-textarea:eq(0)', 'wat');
+  const LETTER_W = {keyCode: 87};
+  await triggerEvent('.t-dtd-field-textarea:eq(0)', 'keyup', LETTER_W);
+  assert.equal(find('.t-dtd-preview-btn').attr('disabled'), undefined);
   const ticket = store.find('ticket', UUID.value);
   const dtd = store.find('dtd', DT.idOne);
   assert.deepEqual(ticket.get('requestValues'), [`${FD.labelThree}: wat`]);
