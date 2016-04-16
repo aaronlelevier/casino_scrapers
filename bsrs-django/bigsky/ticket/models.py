@@ -133,6 +133,7 @@ class Ticket(BaseModel):
     attachments = GenericRelation(Attachment)
     # Fields
     request = models.CharField(max_length=1000, blank=True, null=True)
+    metadata = JSONField(blank=True, default={})
     # Auto-fields
     number = models.IntegerField(blank=True, default=no_ticket_models)
 

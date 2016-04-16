@@ -7,6 +7,7 @@ from django.conf import settings
 from model_mommy import mommy
 
 from category.models import Category
+from generic.tests.factory import create_file_attachment
 from person.models import Person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
@@ -23,7 +24,7 @@ def construct_tree(category, tree):
     return tree
 
 
-def _create_ticket(request=None, assignee=None):
+def _create_ticket(request=None, assignee=None, add_attachment=False):
     people = Person.objects.all()
 
     request = request or _generate_chars()
@@ -38,7 +39,8 @@ def _create_ticket(request=None, assignee=None):
         'priority': priority,
         'requester': _generate_chars(),
         'assignee': assignee,
-        'request': request
+        'request': request,
+        'metadata': {'foo':'bar'}
     }
 
     if 'test' in sys.argv:
@@ -49,6 +51,10 @@ def _create_ticket(request=None, assignee=None):
     ticket = Ticket.objects.create(id=id, **kwargs)
     cc = random.choice(people)
     ticket.cc.add(cc)
+
+    if add_attachment:
+        a = create_file_attachment()
+        ticket.attachments.add(a)
 
     return ticket
 
@@ -68,8 +74,8 @@ def get_or_create_ticket_related_model(model, name):
         return model.objects.order_by('?')[0]
 
 
-def create_ticket(request=None, assignee=None):
-    ticket = _create_ticket(request, assignee)
+def create_ticket(request=None, assignee=None, add_attachment=False):
+    ticket = _create_ticket(request, assignee, add_attachment)
     top_level_category = Category.objects.filter(parent__isnull=True).first()
     tree = construct_tree(top_level_category, [])
     for category in tree:

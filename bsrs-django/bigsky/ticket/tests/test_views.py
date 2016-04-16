@@ -144,7 +144,8 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
         self.assertEqual(data['attachments'],
             list(self.ticket.attachments.values_list('id', flat=True)))
         self.assertEqual(data['request'], self.ticket.request)
-        self.assertEqual(data['number'], self.ticket.number)
+        self.assertEqual(data['number'], self.ticket.number),
+        self.assertEqual(data['metadata'], self.ticket.metadata)
         self.assertEqual(
             self.ticket.created.strftime('%m/%d/%Y'),
             datetime.datetime.strptime(str(data['created']), '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%m/%d/%Y')
@@ -226,6 +227,17 @@ class TicketUpdateTests(TicketSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertNotEqual(self.ticket.request, data['request'])
 
+    def test_change_metadata(self):
+        self.data['metadata'] = {'bar':'baz'}
+        self.assertNotEqual(self.data['metadata'], self.ticket.metadata)
+
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(self.data['metadata'], data['metadata'])
+
     # attachments
 
     def test_attachments_add_multiple(self):
@@ -260,7 +272,8 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
     def test_ticket(self):
         self.data.update({
             'id': str(uuid.uuid4()),
-            'request': 'plumbing'
+            'request': 'plumbing',
+            'metadata': {'a': 'b'}
         })
 
         response = self.client.post('/api/tickets/', self.data, format='json')
@@ -269,6 +282,7 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(self.data['id'], data['id'])
         self.assertEqual(self.data['request'], data['request'])
+        self.assertEqual(self.data['metadata'], data['metadata'])
 
     def test_attachments_field_not_required(self):
         self.data.update({

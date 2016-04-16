@@ -38,7 +38,7 @@ class TicketCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS + ('cc', 'attachments')
+        fields = TICKET_FIELDS + ('metadata', 'cc', 'attachments')
 
     def create(self, validated_data):
         validated_data.pop('attachments', None)
@@ -74,7 +74,7 @@ class TicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS + ('number', 'cc', 'attachments', 'created')
+        fields = TICKET_FIELDS + ('number', 'metadata', 'cc', 'attachments', 'created')
 
     @staticmethod
     def eager_load(queryset):

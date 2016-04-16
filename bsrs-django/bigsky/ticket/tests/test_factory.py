@@ -5,6 +5,7 @@ from django.test import TestCase
 
 from category.models import Category
 from category.tests.factory import create_categories
+from generic.models import Attachment
 from location.models import Location
 from person.models import Person
 from person.tests.factory import create_single_person, DistrictManager
@@ -45,15 +46,19 @@ class CreateTicketTests(TestCase):
     def test_category(self):
         self.assertIsInstance(self.ticket.categories.all()[0], Category)
 
-    # TODO: need to create a factory method to get this test to pass.
-    # def test_attachments(self):
-    #     self.assertIsInstance(self.ticket.attachments[0], Attachment)
+    def test_attachments(self):
+        ticket = factory.create_ticket(add_attachment=True)
+        self.assertEqual(ticket.attachments.count(), 1)
+        self.assertIsInstance(ticket.attachments.first(), Attachment)
 
     def test_request(self):
         self.assertIsInstance(self.ticket.request, str)
 
     def test_number(self):
         self.assertIsInstance(self.ticket.number, int)
+
+    def test_metadata(self):
+        self.assertEqual(self.ticket.metadata, {'foo':'bar'})
 
 
 class GetOrCreateTicketStatusAndPriorityTests(TestCase):
