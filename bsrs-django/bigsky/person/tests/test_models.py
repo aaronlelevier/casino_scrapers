@@ -348,7 +348,11 @@ class PersonTests(TestCase):
 
     def test_to_dict_location(self):
         dict_person = self.person.to_dict(None)
-        self.assertEqual(dict_person['locations'], [str(location.id) for location in self.person.locations.all()])
+        self.assertEqual(dict_person['locations'][0]['id'], str(self.person.locations.first().id))
+        self.assertEqual(dict_person['locations'][0]['status_fk'], str(self.person.locations.first().status.id))
+        self.assertEqual(dict_person['locations'][0]['location_level'], str(self.person.locations.first().location_level.id))
+        self.assertEqual(dict_person['locations'][0]['number'], self.person.locations.first().number)
+        self.assertEqual(dict_person['locations'][0]['name'], self.person.locations.first().name)
 
     def test_all_locations_and_children(self):
         """
