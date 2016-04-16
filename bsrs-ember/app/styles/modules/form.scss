@@ -49,6 +49,9 @@ div.buttonGroup {
 }
 .input-group{
 	margin-bottom: 10px;
+	.validation-under{
+		margin-top: 0;
+	}
 }
 .phonenumber-type,
 .email-type,
@@ -78,6 +81,9 @@ div.buttonGroup {
 }
 .input-group-vertical{
 	margin: 0 0 10px;
+	*{
+		font-size: 1.2rem;
+	}
 	select{
 		-webkit-appearance: none;
 		-moz-appearance: none;
@@ -152,7 +158,10 @@ div.buttonGroup {
 	}
 }
 .request-wrap{
-	margin: 15px 0 15px;
+	margin: 0 0 15px;
+	*{
+		font-size: 1.2rem;
+	}
 }
 textarea.ticket-request{
 	font-size: 1.2rem;
@@ -248,33 +257,47 @@ label.small-label{
 		float: none;
 	}
 }
-.model-category-wrap{
-	float: left;
-    margin-right: -1px;
-	min-width: 120px;
-
-	.category-select {
+.ticket-categories{
+	*{
+		font-size: 1.2rem;
+	}
+	.category{
 		float: left;
-	    .ember-power-select-trigger{
-				font-size: 1.2rem;
-				min-height: 26px;
-				min-width: 120px;
-				height: 26px;
-				line-height: 24px;
-				border-radius: 0;
-				width: 100%;
-				position: relative;
-			&:focus{
-				z-index: 3;
-			}
-	  }
-		.ember-power-select-dropdown{
-			top: 26px;
+    margin-right: -1px;
+    min-width: 120px;
+    display: block;
+		.input-group-addon{
+			float: left;
+	    font-size: 1.2rem;
+	    width: auto;
+			height: 26px;
+			line-height: 24px;
+			padding-top: 0;
+			padding-bottom: 0;
 		}
-	  .ember-power-select-option,
-		.ember-power-select-search input{
-	        font-size: 1.2rem;
-	    }
+		.category-select {
+			float: left;
+		    .ember-power-select-trigger{
+					font-size: 1.2rem;
+					min-height: 26px;
+					min-width: 120px;
+					height: 26px;
+					line-height: 24px;
+					border-radius: 0;
+					width: 100%;
+					position: relative;
+				&:focus{
+					z-index: 3;
+				}
+		  }
+			.ember-power-select-dropdown{
+				top: 26px;
+			}
+		  .ember-power-select-option,
+			.ember-power-select-search input{
+		        font-size: 1.2rem;
+		    }
+		}
 	}
 }
 //file attachment

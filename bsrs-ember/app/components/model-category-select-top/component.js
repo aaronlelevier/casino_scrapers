@@ -6,7 +6,7 @@ const PREFIX = config.APP.NAMESPACE;
 const CATEGORY_URL = PREFIX + '/admin/categories/';
 
 var TicketCategories = Ember.Component.extend({
-    classNames: ['model-category-wrap'],
+    classNames: ['input-group category'],
     categories_selected: Ember.computed('ticket.top_level_category', 'ticket.categories.[]', function() {
         let index = this.get('index');
         let ticket = this.get('ticket');
@@ -36,7 +36,7 @@ var TicketCategories = Ember.Component.extend({
           }
           const category_id = category.id;
           //TODO: need to prevent select same b/c plain JS vs hydrated obj
-          if(category_id === top_level_id){ 
+          if(category_id === top_level_id){
               return;
           }
           ticket.change_category_tree(category);

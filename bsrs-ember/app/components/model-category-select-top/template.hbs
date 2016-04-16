@@ -1,4 +1,4 @@
-<label class="small-label t-model-category-label">{{categories_selected.label}}</label>
+<span class="input-group-addon t-model-category-label">{{if categories_selected.label categories_selected.label (t "admin.category.other")}}</span>
 {{#power-select
   selected=categories_selected
   options=options

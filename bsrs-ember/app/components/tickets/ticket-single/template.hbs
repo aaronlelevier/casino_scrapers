@@ -23,15 +23,17 @@
                   {{tickets/ticket-status-tag item=model}}
                   {{timestamp-created model=model}}
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-12 ticket-categories">
                   {{#parent-model-category-select ticket=model as |child_valid|}}
                   <span class="validation validation-under category-validation-error t-category-validation-error {{child-validation submitted child_valid}}">{{t "validation.invalid"}} {{t "admin.category.label.name"}}</span>
                   {{/parent-model-category-select}}
                 </div>
                 <div class="col-md-12 request-wrap">
-                  <label class="small-label">{{t "ticket.label.request"}}</label>
-                  {{textarea autoresize=true placeholder=(t "ticket.label.request") value=model.request class="form-control t-ticket-request ticket-request"}}
-                  {{#validation-error-field submitted=submitted field="request" className="validation validation-under t-request-validation-error" model=model validation=requestValidation}}{{t "validation.invalid"}} {{t "ticket.label.request"}}{{/validation-error-field}}
+                  <div class="input-group">
+                    <span class="input-group-addon">{{t "ticket.label.request"}}</span>
+                    {{textarea autoresize=true placeholder=(t "ticket.label.request") value=model.request class="form-control t-ticket-request ticket-request"}}
+                    {{#validation-error-field submitted=submitted field="request" className="validation validation-under t-request-validation-error" model=model validation=requestValidation}}{{t "validation.invalid"}} {{t "ticket.label.request"}}{{/validation-error-field}}
+                  </div>                  
                 </div>
               </div>
             </section>

@@ -4,6 +4,7 @@ import ChildValidationComponent from 'bsrs-ember/mixins/validation/child';
 
 var ParentTicketCategorySelect = ChildValidationComponent.extend({
     repository: inject('category'),
+    tagName: '',
     valid: Ember.computed('ticket.categories.[]', function() {
         let ticket = this.get('ticket');
         let categories = ticket.get('categories') || [];
