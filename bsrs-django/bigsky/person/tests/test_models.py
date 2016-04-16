@@ -346,6 +346,10 @@ class PersonTests(TestCase):
             str(self.person.locale.id)
         )
 
+    def test_to_dict_location(self):
+        dict_person = self.person.to_dict(None)
+        self.assertEqual(dict_person['locations'], [str(location.id) for location in self.person.locations.all()])
+
     def test_all_locations_and_children(self):
         """
         Tests that a full Location object is being returned, which will later 

@@ -330,6 +330,12 @@ class BootstrappedDataTests(TestCase):
         self.assertEqual(data['employee_id'], self.person.employee_id)
         self.assertEqual(data['locale'], str(self.person.locale.id))
         self.assertEqual(data['role'], str(self.person.role.id))
+        self.assertEqual(data['locations'][0]['id'], str(self.person.locations.first().id))
+        self.assertEqual(data['locations'][0]['number'], self.person.locations.first().number)
+        self.assertEqual(data['locations'][0]['location_level'], str(self.person.locations.first().location_level.id))
+        self.assertEqual(data['locations'][0]['status_fk'], str(self.person.locations.first().status.id))
+        self.assertEqual(data['locations'][0]['number'], self.person.locations.first().number)
+
         self.assertEqual(data['status_fk'], str(self.person.status.id))
 
     def test_default_model_ordering(self):

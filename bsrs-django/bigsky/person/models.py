@@ -384,6 +384,8 @@ class Person(BaseModel, AbstractUser):
         return super(Person, self).save(*args, **kwargs)
 
     def to_dict(self, locale):
+        locations = [{'id': str(child.id), 'name': child.name, 'status_fk': str(child.status.id), 
+            'location_level': str(child.location_level.id), 'number': child.number} for child in self.locations.all()]
         return {
             'id': str(self.id),
             'first_name': self.first_name,
@@ -394,6 +396,7 @@ class Person(BaseModel, AbstractUser):
             'employee_id': self.employee_id,
             'locale': str(self.locale.id),
             'role': str(self.role.id),
+            'locations': locations,
             'status_fk': str(self.status.id)
         }
 
