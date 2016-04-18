@@ -453,8 +453,6 @@ class Person(BaseModel, AbstractUser):
             self.auth_currency = self.role.default_auth_currency
         if not self.password_expire_date:
             self.password_expire_date = self._password_expire_date
-        if not self.locale:
-            self.locale = Locale.objects.system_default()
 
         self.fullname = self.first_name + ' ' + self.last_name
 

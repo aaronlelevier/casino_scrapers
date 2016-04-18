@@ -245,14 +245,6 @@ class PersonTests(TestCase):
         self.assertIsNotNone(self.person.status)
         self.assertIsNotNone(self.person.password_expire_date)
 
-    def test_update_defaults__locale(self):
-        self.person.locale = None
-        self.assertIsNone(self.person.locale)
-
-        self.person._update_defaults()
-
-        self.assertEqual(self.person.locale, Locale.objects.system_default())
-
     def test_fullname(self):
         self.assertEqual(
             self.person.fullname,
