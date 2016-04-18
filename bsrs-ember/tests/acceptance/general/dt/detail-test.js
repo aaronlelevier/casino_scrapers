@@ -89,9 +89,10 @@ test('decision tree displays data and can click to next destination after updati
   xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
   await page.clickNextBtn();
   assert.equal(currentURL(), DEST_URL);
+  assert.deepEqual(ticket.get('dt_path'), [{requestValue}])
 });
 
-test('can click to next destination after updating field text (patch ticket)', async assert => {
+test('updating field text (patch ticket)', async assert => {
   run(() => {
     store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
   });
@@ -117,7 +118,7 @@ test('can click to next destination after updating field text (patch ticket)', a
   assert.equal(currentURL(), DEST_URL);
 });
 
-test('can click to next destination after updating field number (patch ticket)', async assert => {
+test('updating field number (patch ticket)', async assert => {
   run(() => {
     store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
   });
@@ -144,7 +145,7 @@ test('can click to next destination after updating field number (patch ticket)',
   assert.equal(currentURL(), DEST_URL);
 });
 
-test('can click to next destination after updating field textarea (patch ticket)', async assert => {
+test('updating field textarea (patch ticket)', async assert => {
   run(() => {
     store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
   });
@@ -202,7 +203,7 @@ test('can\'t click to next destination if field is required and don\'t fill in f
   assert.equal(currentURL(), DEST_URL);
 });
 
-test('can click to next destination after updating field select (patch ticket)', async assert => {
+test('updating field select (patch ticket)', async assert => {
   run(() => {
     store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
   });
