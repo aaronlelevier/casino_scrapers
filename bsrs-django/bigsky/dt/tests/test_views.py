@@ -9,7 +9,7 @@ from dtd.serializers import TreeDataDetailSerializer
 from dtd.tests.mixins import TreeDataTestSetUpMixin
 from person.tests.factory import create_single_person
 from ticket.models import Ticket
-from ticket.serializers import TicketCreateSerializer
+from ticket.serializers import TicketCreateSerializer, TicketSerializer
 from ticket.tests.factory import create_ticket
 
 
@@ -98,10 +98,6 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
         ticket = Ticket.objects.get(id=self.ticket.id)
         self.assertEqual(self.ticket.location, ticket.location)
 
-    def test_get(self):
-        response = self.client.get('/api/tickets/{}/dt/'.format(self.tree_data.id))
-        self.assertEqual(response.status_code, 405)
-
     def test_put(self):
         response = self.client.put('/api/tickets/{}/dt/'.format(self.tree_data.id), {}, format='json')
         self.assertEqual(response.status_code, 405)
@@ -109,3 +105,20 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
     def test_delete(self):
         response = self.client.delete('/api/tickets/{}/dt/'.format(self.tree_data.id), {}, format='json')
         self.assertEqual(response.status_code, 405)
+
+    def test_get__ticket_not_returned_if_no_query_param(self):
+        response = self.client.get('/api/tickets/{}/dt/'.format(self.tree_data.id))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data.keys(), TreeDataDetailSerializer(self.tree_data).data.keys())
+
+    def test_get__ticket_returned_if_query_param(self):
+        response = self.client.get('/api/tickets/{}/dt/?ticket={}'
+                                   .format(self.tree_data.id, self.ticket.id))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 2)
+        self.assertEqual(data['dtd'].keys(), TreeDataDetailSerializer(self.tree_data).data.keys())
+        self.assertEqual(data['ticket'].keys(), TicketSerializer(self.ticket).data.keys())

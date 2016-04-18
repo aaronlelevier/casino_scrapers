@@ -87,6 +87,7 @@ class DecisionTreeRouter(SimpleRouter):
         Route(
             url=r'^{prefix}/{lookup}/dt/$',
             mapping={
+                'get': 'list',
                 'post': 'create',
                 'patch': 'partial_update'
             },

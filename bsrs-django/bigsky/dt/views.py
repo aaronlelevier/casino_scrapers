@@ -7,24 +7,46 @@ from rest_framework.response import Response
 from dtd.models import TreeData
 from dtd.serializers import TreeDataDetailSerializer
 from ticket.models import Ticket
-from ticket.serializers import TicketCreateSerializer
+from ticket.serializers import TicketCreateSerializer, TicketSerializer
 from utils.views import BaseModelViewSet
 
 
 class DTTicketViewSet(BaseModelViewSet):
     """
-    API Endpoint: `/api/tickets/{dt-id}/dt/`
+    **API Endpoint:**
 
-    For use with the Decistion Tree, while the User is navigating the Tree.
-    To send Create/Updates to a Ticket, and return the detail TreeData for the
-    next node in the tree back to the User.
+      - POST/PATCH: `/api/tickets/{dt-id}/dt/`
 
-    :return: the `TreeDataDetailSerializer` representation from the (pk) in the URI.
+        Create or Partial Update a Ticket.
+
+        :return: the `TreeDataDetailSerializer` representation from the (pk) in the URI.
+
+      - GET: `/api/tickets/{dt-id}/dt/?ticket={ticket-id}`
+
+        Query a DTD by ID, and a Ticket by ID, and return them side by side.
+        Ticket ID is optional.
+
+        :return: `{'dtd': dtd, 'ticket': ticket}`
     """
 
     queryset = Ticket.objects.all()
     serializer_class = TicketCreateSerializer
     permission_classes = (IsAuthenticated,)
+
+    def list(self, request, *args, **kwargs):
+        dt_serializer = self._get_tree_data(kwargs)
+
+        ticket_id = request.query_params.get('ticket', None)
+        if ticket_id:
+            ticket = self._get_ticket({'id': ticket_id})
+            ticket_serializer = TicketSerializer(ticket)
+            data = {
+                'ticket': ticket_serializer.data,
+                'dtd': dt_serializer.data
+            }
+            return Response(data)
+
+        return Response(dt_serializer.data)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
