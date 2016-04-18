@@ -11,7 +11,8 @@ def create_locales():
     locales = [
         'en',
         'en-us',
-        'en-x-sephora'
+        'en-x-sephora',
+        'es'
     ]
     return [Locale.objects.create(locale=l, name=l)
             for l in locales]

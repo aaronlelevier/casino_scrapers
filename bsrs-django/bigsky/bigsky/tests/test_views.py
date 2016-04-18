@@ -18,7 +18,7 @@ from contact.models import State, Country, PhoneNumberType, AddressType, EmailTy
 from generic.models import SavedSearch
 from generic.tests.factory import create_image_attachment
 from location.models import LocationLevel, LocationStatus
-from person.models import PersonStatus, Role
+from person.models import PersonStatus, Role, Person
 from person.tests.factory import PASSWORD, create_person, create_single_person, create_role
 from setting.tests.factory import create_general_setting
 from ticket.models import TicketStatus, TicketPriority
@@ -31,12 +31,21 @@ class IndexTests(TestCase):
 
     def setUp(self):
         create_categories()
+        create_locales()
         self.person = create_person()
 
     def test_logged_in(self):
         self.client.login(username=self.person.username, password=PASSWORD)
         response = self.client.get(reverse('index'))
         self.assertEqual(response.status_code, 200)
+
+    def test_logged_in_no_locale(self):
+        Person.objects.filter(id=str(self.person.id)).update(locale=None)
+        self.client.login(username=self.person.username, password=PASSWORD)
+        response = self.client.get(reverse('index'), HTTP_ACCEPT_LANGUAGE='es;q=0.8')
+        data = json.loads(response.context['person_current'])
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Locale.objects.get(id=data['locale']).locale, 'es')
 
     def test_logged_out_redirect(self):
         response = self.client.get(reverse('index'))

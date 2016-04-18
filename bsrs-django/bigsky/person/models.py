@@ -1,4 +1,5 @@
 import copy
+import re
 from datetime import timedelta
 
 from django.conf import settings
@@ -384,8 +385,8 @@ class Person(BaseModel, AbstractUser):
         return super(Person, self).save(*args, **kwargs)
 
     def to_dict(self, locale):
-        locations = [{'id': str(child.id), 'name': child.name, 'status_fk': str(child.status.id), 
-            'location_level': str(child.location_level.id), 'number': child.number} for child in self.locations.all()]
+        locations = [{'id': str(x.id), 'name': x.name, 'status_fk': str(x.status.id), 
+            'location_level': str(x.location_level.id), 'number': x.number} for x in self.locations.all()]
         return {
             'id': str(self.id),
             'first_name': self.first_name,
@@ -394,7 +395,7 @@ class Person(BaseModel, AbstractUser):
             'username': self.username,
             'title': self.title,
             'employee_id': self.employee_id,
-            'locale': str(self.locale.id),
+            'locale': str(self.locale.id if self.locale else self._get_locale(locale)),
             'role': str(self.role.id),
             'locations': locations,
             'status_fk': str(self.status.id)
@@ -413,6 +414,28 @@ class Person(BaseModel, AbstractUser):
             'id': str(self.id),
             'fullname': self.fullname
         }
+
+    def _get_locale(self, locale):
+        '''
+        Only returns one locale based on last locale in list of languages (en,en-US)
+        checks a Locale object with a locale of en-US
+        Returns system default if no language for browser detected language
+        re.findall(r"([\w\-]+;q=\d\.\d)+", "en,en-US;q=0.9,zh;q=0.4")
+        >> ['en-US;q=0.9', 'zh;q=0.4']
+        '''
+        try:
+            locales = re.findall(r'([\w\-]+;q=\d\.\d)+', locale)
+            for locale in locales:
+                locale = locale.split(';')[0]
+                try:
+                    return str(Locale.objects.get(locale=locale).id)
+                except Locale.DoesNotExist:
+                    pass
+        except (AttributeError, TypeError):
+            pass
+
+        return str(Locale.objects.system_default().id)
+
 
     @property
     def _password_expire_date(self):

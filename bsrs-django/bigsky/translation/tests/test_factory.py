@@ -20,7 +20,7 @@ class FactoryTests(TestCase):
 
     def test_create_locales(self):
         factory.create_locales()
-        self.assertEqual(Locale.objects.count(), 3)
+        self.assertEqual(Locale.objects.count(), 4)
 
     def test_create_locale(self):
         name = 'bob'
@@ -31,4 +31,4 @@ class FactoryTests(TestCase):
 
     def test_create_translations(self):
         factory.create_translations()
-        self.assertEqual(Translation.objects.count(), 3)
+        self.assertEqual(Translation.objects.count(), 4)

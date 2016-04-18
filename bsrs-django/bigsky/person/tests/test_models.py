@@ -20,6 +20,7 @@ from person.tests.factory import PASSWORD, create_person, create_role, create_si
 from setting.settings import DEFAULT_GENERAL_SETTINGS
 from setting.tests.factory import create_general_setting
 from translation.models import Locale
+from translation.tests.factory import create_locales
 from utils import create
 from utils.tests.test_validators import (DIGITS, NO_DIGITS, UPPER_CHARS, NO_UPPER_CHARS,
     LOWER_CHARS, NO_LOWER_CHARS, SPECIAL_CHARS, NO_SPECIAL_CHARS)
@@ -337,6 +338,18 @@ class PersonTests(TestCase):
             self.person.to_dict(None)['locale'],
             str(self.person.locale.id)
         )
+
+    def test_get_locale_accept_language_header(self):
+        self.assertIn(
+                self.person._get_locale('en;q=0.9,zh,zh-ch;q=.3'),
+                [str(x) for x in Locale.objects.values_list('id', flat=True)]
+                )
+
+    def test_get_locale_unrecognized_accept_language_header(self):
+        self.assertIn(
+                self.person._get_locale('zzzz;q=0.9'),
+                [str(x) for x in Locale.objects.values_list('id', flat=True)]
+                )
 
     def test_to_dict_location(self):
         dict_person = self.person.to_dict(None)
