@@ -185,14 +185,14 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     return payload;
   },
   patchFields: ['request'],
-  patchSerialize() {
+  patchSerialize(link) {
     const dirtyFields = this.get('patchFields').map((field) => {
       const state = this.get('_oldState');
       if(field in state) {
         return field;
       }
     });
-    let payload = {id: this.get('id')};
+    let payload = {id: this.get('id'), priority: link.get('priority').get('id'), status: link.get('status').get('id'), categories: link.get('sorted_categories').mapBy('id')};
     dirtyFields.forEach((field) => {
       payload[field] = this.get(field);
     });

@@ -48,7 +48,7 @@
       {{#if (is-equal model.link_type model.link_types.[0])}}
       <div class="text-center dtd-links dtd-buttons t-dtd-preview-links">
         {{#each model.links as |link|}}
-        <button type="button" disabled={{fieldsCompleted}} class="btn t-dtd-preview-btn {{if link.action_button 'btn-primary' 'btn-default'}}" {{action "linkClick" link.destination.id ticket}}>{{link.text}}</button>
+        <button type="button" disabled={{fieldsCompleted}} class="btn t-dtd-preview-btn {{if link.action_button 'btn-primary' 'btn-default'}}" {{action "linkClick" link ticket}}>{{link.text}}</button>
         {{/each}}
       </div>
       {{/if}}

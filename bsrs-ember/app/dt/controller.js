@@ -16,8 +16,8 @@ export default Ember.Controller.extend({
       //TODO: if no label
       this.get('store').push('ticket', {id: ticket.get('id'), request: requestValues.join(', '), requestValues: requestValues});
     },
-    linkClick(destination_id, ticket) {
-      this.get('ticketRepository').patch(ticket, destination_id).then((response) => {
+    linkClick(link, ticket) {
+      this.get('ticketRepository').patch(ticket, link).then((response) => {
         const { ticket, dtd } = response;
         this.get('DTDDeserializer').deserialize(dtd, dtd.id);
         this.get('store').push('ticket', {id: ticket.id, dt_path: ticket.dt_path});
