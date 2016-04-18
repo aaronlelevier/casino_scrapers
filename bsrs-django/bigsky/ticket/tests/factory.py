@@ -40,7 +40,6 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
         'requester': _generate_chars(),
         'assignee': assignee,
         'request': request,
-        'metadata': {'foo':'bar'}
     }
 
     if 'test' in sys.argv:

@@ -316,7 +316,7 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['attachments']), 2)
-        self.assertEqual(data['attachments'][1]['id'], str(attachment.id))
+        self.assertEqual(data['attachments'][0]['id'], str(attachment.id))
 
     def test_remove_attachment(self):
         attachment = create_file_attachment()

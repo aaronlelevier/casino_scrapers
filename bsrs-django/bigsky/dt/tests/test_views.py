@@ -9,7 +9,7 @@ from dtd.serializers import TreeDataDetailSerializer
 from dtd.tests.mixins import TreeDataTestSetUpMixin
 from person.tests.factory import create_single_person
 from ticket.models import Ticket
-from ticket.serializers import TicketCreateSerializer, TicketSerializer
+from ticket.serializers import TicketCreateSerializer, TicketDTSerializer
 from ticket.tests.factory import create_ticket
 
 
@@ -121,4 +121,4 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data), 2)
         self.assertEqual(data['dtd'].keys(), TreeDataDetailSerializer(self.tree_data).data.keys())
-        self.assertEqual(data['ticket'].keys(), TicketSerializer(self.ticket).data.keys())
+        self.assertEqual(data['ticket'].keys(), TicketDTSerializer(self.ticket).data.keys())

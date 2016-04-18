@@ -328,9 +328,7 @@ class PersonTests(TestCase):
         # Confirm that the ``system_default`` is not equal to the Locale
         # that we are about to assign to the ``Person``
         self.assertNotEqual(default_locale, person_locale)
-
-        self.person.locale = person_locale
-        self.person.save()
+        Person.objects.filter(pk=self.person.id).update(locale=person_locale) 
 
         # ``person.to_dict(_)`` will return the ``person.locale`` first
         # if it exists, not ``person._get_locale``

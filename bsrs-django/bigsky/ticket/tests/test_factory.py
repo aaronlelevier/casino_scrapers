@@ -57,9 +57,6 @@ class CreateTicketTests(TestCase):
     def test_number(self):
         self.assertIsInstance(self.ticket.number, int)
 
-    def test_metadata(self):
-        self.assertEqual(self.ticket.metadata, {'foo':'bar'})
-
 
 class GetOrCreateTicketStatusAndPriorityTests(TestCase):
 

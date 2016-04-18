@@ -38,7 +38,7 @@ class TicketCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS + ('metadata', 'cc', 'attachments')
+        fields = TICKET_FIELDS + ('cc', 'attachments')
 
     def create(self, validated_data):
         validated_data.pop('attachments', None)
@@ -64,6 +64,12 @@ class TicketListSerializer(serializers.ModelSerializer):
                         .prefetch_related('categories', 'categories__children'))
 
 
+class TicketDTSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = ('id', 'dt_path')
+
+
 class TicketSerializer(serializers.ModelSerializer):
 
     location = LocationStatusFKSerializer()
@@ -74,7 +80,7 @@ class TicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS + ('number', 'metadata', 'cc', 'attachments', 'created')
+        fields = TICKET_FIELDS + ('number', 'cc', 'attachments', 'created')
 
     @staticmethod
     def eager_load(queryset):
