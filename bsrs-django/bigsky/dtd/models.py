@@ -2,7 +2,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.db.models import Q
 
-from decision_tree.model_choices import LINK_TYPES, NOTE_TYPES, FIELD_TYPES
+from dtd.model_choices import LINK_TYPES, NOTE_TYPES, FIELD_TYPES
 from category.models import Category
 from generic.models import Attachment
 from ticket.models import TicketStatus, TicketPriority

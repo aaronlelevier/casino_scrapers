@@ -3,8 +3,8 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from decision_tree.models import TreeData, TreeDataManager
-from decision_tree.tests.factory import create_tree_link, create_tree_data
+from dtd.models import TreeData, TreeDataManager
+from dtd.tests.factory import create_tree_link, create_tree_data
 
 
 class TreeDataManagerTests(TestCase):

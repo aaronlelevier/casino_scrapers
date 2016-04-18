@@ -16,7 +16,8 @@ from bigsky import views as bigsky_views
 from bigsky.forms import BsAuthenticationForm
 from category import views as category_views
 from contact import views as contact_views
-from decision_tree import views as decision_tree_views
+from dt import views as dt_views
+from dtd import views as dtd_views
 from generic import views as generic_views
 from location import views as location_views
 from setting import views as setting_views
@@ -33,7 +34,7 @@ router = routers.DefaultRouter()
 # ACCOUNTING
 router.register(r'admin/currencies', accounting_views.CurrencyViewSet)
 # DECISION TREE
-router.register(r'dtds', decision_tree_views.TreeDataViewSet)
+router.register(r'dtds', dtd_views.TreeDataViewSet)
 # CATEGORY
 router.register(r'admin/categories', category_views.CategoryViewSet)
 # CONTACT
@@ -94,15 +95,15 @@ class DecisionTreeRouter(SimpleRouter):
         )
     ]
 
-decision_tree_router = DecisionTreeRouter()
-decision_tree_router.register('tickets', decision_tree_views.DecisionTreeViewSet)
+dt_ticket_router = DecisionTreeRouter()
+dt_ticket_router.register('tickets', dt_views.DTTicketViewSet)
 
 
 # API
 urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^api/', include(ticket_activity_router.urls)),
-    url(r'^api/', include(decision_tree_router.urls)),
+    url(r'^api/', include(dt_ticket_router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
 

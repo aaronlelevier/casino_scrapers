@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from decision_tree import models
+from dtd import models
 
 
 @admin.register(models.TreeData)

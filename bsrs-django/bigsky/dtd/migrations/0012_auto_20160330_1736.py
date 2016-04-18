@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('decision_tree', '0011_treefield_order'),
+        ('dtd', '0011_treefield_order'),
     ]
 
     operations = [

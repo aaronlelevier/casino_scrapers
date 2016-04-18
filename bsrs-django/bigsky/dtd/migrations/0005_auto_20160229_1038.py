@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('decision_tree', '0004_auto_20160229_0927'),
+        ('dtd', '0004_auto_20160229_0927'),
     ]
 
     operations = [
@@ -19,6 +19,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='treelink',
             name='parents',
-            field=models.ManyToManyField(related_name='links', to='decision_tree.TreeData'),
+            field=models.ManyToManyField(related_name='links', to='dtd.TreeData'),
         ),
     ]

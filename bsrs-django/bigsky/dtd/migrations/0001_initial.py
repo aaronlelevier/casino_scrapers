@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
                 ('label', models.CharField(max_length=1000)),
                 ('type', models.CharField(max_length=100)),
                 ('required', models.BooleanField(default=False)),
-                ('tree_data', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='fields', to='decision_tree.TreeData')),
+                ('tree_data', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='fields', to='dtd.TreeData')),
             ],
             options={
                 'abstract': False,
@@ -66,8 +66,8 @@ class Migration(migrations.Migration):
                 ('is_header', models.BooleanField(default=False)),
                 ('request', models.CharField(blank=True, max_length=1000)),
                 ('categories', models.ManyToManyField(to='category.Category')),
-                ('destination', models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='from_link', to='decision_tree.TreeData')),
-                ('parent', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='links', to='decision_tree.TreeData')),
+                ('destination', models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='from_link', to='dtd.TreeData')),
+                ('parent', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='links', to='dtd.TreeData')),
                 ('priority', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='ticket.TicketPriority')),
                 ('status', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='ticket.TicketStatus')),
             ],
@@ -84,7 +84,7 @@ class Migration(migrations.Migration):
                 ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
                 ('text', models.CharField(max_length=1000)),
                 ('order', models.IntegerField(blank=True, default=0)),
-                ('field', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='options', to='decision_tree.TreeField')),
+                ('field', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='options', to='dtd.TreeField')),
             ],
             options={
                 'abstract': False,

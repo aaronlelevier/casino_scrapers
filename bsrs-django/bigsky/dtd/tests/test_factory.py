@@ -4,8 +4,8 @@ from model_mommy import mommy
 
 from category.models import Category
 from category.tests.factory import create_single_category
-from decision_tree.models import TreeField, TreeOption, TreeData, TreeLink
-from decision_tree.tests import factory
+from dtd.models import TreeField, TreeOption, TreeData, TreeLink
+from dtd.tests import factory
 from ticket.models import TicketStatus, TicketPriority
 
 

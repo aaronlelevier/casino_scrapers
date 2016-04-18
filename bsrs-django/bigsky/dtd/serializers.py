@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from category.models import Category
 from category.serializers import CategoryIDNameOnlySerializer
-from decision_tree.models import TreeField, TreeOption, TreeLink, TreeData
+from dtd.models import TreeField, TreeOption, TreeLink, TreeData
 from generic.models import Attachment
 from generic.serializers import AttachmentSerializer
 from utils import create
