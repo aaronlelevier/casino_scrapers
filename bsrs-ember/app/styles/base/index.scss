@@ -1,6 +1,8 @@
 html, body{
   margin: 0;
   padding: 0;
+  height: 100%;
+  width: 100%;
   font-family: $fontfamily;
   background-color: $light;
   .wrapper {
@@ -8,6 +10,3 @@ html, body{
     margin: 0;
   }//wrapper for components
 }//html, body
-body{
-    margin-top: $menuHeight;
-}

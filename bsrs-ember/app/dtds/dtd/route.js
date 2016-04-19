@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
-import TabRoute from 'bsrs-ember/route/tab/route';
 import PriorityMixin from 'bsrs-ember/mixins/route/priority';
 import StatusMixin from 'bsrs-ember/mixins/route/status';
 import FindById from 'bsrs-ember/mixins/route/findById2';
