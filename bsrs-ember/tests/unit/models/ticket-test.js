@@ -1424,15 +1424,3 @@ test('priority_class returns empty string when no priority found and valid class
   assert.equal(ticket.get('priority'), priority);
   assert.equal(ticket.get('priority_class'), 'ticket-priority-emergency');
 });
-
-//Patch Serialize
-test('patch serialize loops through attrs and return those properties that are dirty', assert => {
-  ticket = store.push('ticket', {id: TD.idOne});
-  store.push('person', {id: TD.assigneeOneId, name: TD.assigneeOne, assigned_tickets: [TD.idOne]});
-  ticket.set('request', 'wat');
-  assert.ok(ticket.get('isDirty'));
-  const payload = ticket.patchSerialize();
-  assert.equal(payload.id, ticket.get('id'));
-  assert.equal(payload.request, ticket.get('request'));
-  assert.notOk(payload.assignee, undefined);
-});
