@@ -62,8 +62,10 @@ Router.map(function() {
     this.route('dtd', {path: '/:dtd_id'});
     this.route('dtd-error');
   });
-  this.route('dt', {path: '/dt/:dt_id'});
-  // this.route('dt-error');
+  this.route('dt', function() {
+    this.route('new', {path: '/new'});
+    this.route('dt', {path: '/:dt_id'});
+  });
   this.route('work-orders');
   this.route('purchase-orders');
   this.route('tasks');

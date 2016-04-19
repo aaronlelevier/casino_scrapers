@@ -21,7 +21,8 @@ var GeneralPage = PageObject.create({
   visitDashboard: visitable(ADMIN_URL),
   clickAdmin: clickable('.t-nav-admin'),
   clickDTD: clickable('.t-nav-admin-dtd'),
-  errorText: text('.t-error-message')
+  errorText: text('.t-error-message'),
+  clickLaunchDTTicket: clickable('.t-launch-dt-ticket')
 });
 
 export default GeneralPage;

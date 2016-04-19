@@ -1,0 +1,8 @@
+{{input type="text" placeholder=(t "admin.dt.requester") value=bound_field class="form-control t-dt-ticket-requester" id="requester"}}
+{{power-select-location
+  disabled=model.disabled
+  options=model.options
+  selected=model.selected
+  respository=locationRepo
+  ticket=model.ticket
+}}
