@@ -3,7 +3,13 @@
   padding: 1px;
   box-shadow: 0 0 5px $gray;
 }
-.save-filterset-dialog{
-    width: 400px;
-    border-radius: $borderRadius;
+.save-filterset-dialog, 
+.dt-modal {
+  width: 400px;
+  border-radius: $borderRadius;
 }
+
+.dt-modal {
+  min-height: 400px;
+}
+
