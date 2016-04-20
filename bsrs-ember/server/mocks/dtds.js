@@ -1,4 +1,4 @@
-var DTD_FIXTURES = require('../../../vendor/dtd_fixtures.js');
+var DTD_FIXTURES = require('../../vendor/dtd_fixtures.js');
 
 module.exports = function(app) {
   var express = require('express');
