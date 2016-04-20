@@ -119,6 +119,7 @@ var LocationDeserializer = Ember.Object.extend({
             response.location_children_fks = extract_children(response, store);
             response.location_parents_fks = extract_parents(response, store);
             response.detail = true;
+            delete response.status;
             location = store.push('location', response);
             location.save();
             belongs_to_extract(response.status_fk, store, location, 'status', 'location', 'locations');

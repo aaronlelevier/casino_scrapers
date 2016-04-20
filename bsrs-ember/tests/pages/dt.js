@@ -21,9 +21,10 @@ var DTPage = PageObject.create({
     requester: value('.t-dt-ticket-requester'),
     requesterFillin: fillable('.t-dt-ticket-requester'),
 
-    locationsValue: value('.ember-basic-dropdown-trigger'),
+    locationsValue: text('.ember-basic-dropdown-trigger'),
     locationsClickDropdown: clickable('.ember-basic-dropdown-trigger'),
     locationsClickOne: clickable('.ember-basic-dropdown-trigger:eq(0)'),
+    locationsOptionOneClick: clickable('.ember-power-select-option:eq(0)'),
 });
 
 export default DTPage;

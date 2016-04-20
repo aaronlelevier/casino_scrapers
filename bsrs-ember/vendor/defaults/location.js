@@ -6,6 +6,7 @@ var BSRS_LOCATION_DEFAULTS_OBJECT = (function() {
     };
     factory.prototype.defaults = function() {
         return {
+            idZero: 'a7b84195-6086-44b3-9d0c-1e71d69546be',
             idOne: '232z46cf-9fbb-456z-4hc3-59728vu309901',
             idTwo: '232543cf-cfby-129a-3fc9-1t771c372509',
             idThree: '232543cf-cfby-129a-3fc9-1t771c372510',

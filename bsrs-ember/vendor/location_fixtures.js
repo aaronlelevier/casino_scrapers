@@ -26,8 +26,9 @@ var BSRS_LOCATION_FACTORY = (function() {
             name: name,
             number: this.location_defaults.storeName,
             location_level: this.location_level_fixtures.detail().id,
-            status_fk: this.location_status_defaults.openId
-        }
+            status_fk: this.location_status_defaults.openId,
+            status: this.location_status_defaults.openId
+        };
     },
     factory.prototype.generate_list = function(i) {
         var location = this.generate(i);

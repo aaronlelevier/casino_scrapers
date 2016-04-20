@@ -63,30 +63,30 @@ test('go to /dashboard, click button to get to /dt/new', assert => {
 });
 
 // NOTE: not passing, need to first bootstrap Locations on logged in User
-// test('aaron /dts/new - render form with requester and location selector', assert => {
-//   visit(DT_NEW_URL);
-//   andThen(() => {
-//     assert.equal(currentURL(), DT_NEW_URL);
-//   });
-//   // requester
-//   andThen(() => {
-//     assert.equal(dtPage.requester, '');
-//   });
-//   dtPage.requesterFillin(TICKET.requesterOne);
-//   andThen(() => {
-//     assert.equal(dtPage.requester, TICKET.requesterOne);
-//   });
-//   // location select
-//   xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
-//   dtPage.locationsClickDropdown();
-//   fillIn(`${SEARCH}`, '6');
-//   andThen(() => {
-//     assert.equal(currentURL(), DT_NEW_URL);
-//     assert.equal(page.locationsValue, LD.storeName);
-//     // assert.equal(page.locationOptionLength, 2);
-//     // assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), LD.storeNameFour);
-//     // assert.equal(find(`${DROPDOWN} > li:eq(1)`).text().trim(), LD.storeNameTwo);
-//   });
-// });
-
-
+test('/dts/new - render form with requester and location selector', assert => {
+  visit(DT_NEW_URL);
+  andThen(() => {
+    assert.equal(currentURL(), DT_NEW_URL);
+  });
+  // requester
+  andThen(() => {
+    assert.equal(dtPage.requester, '');
+  });
+  dtPage.requesterFillin(TICKET.requesterOne);
+  andThen(() => {
+    assert.equal(dtPage.requester, TICKET.requesterOne);
+  });
+  // location select
+  xhr(`${PREFIX}/admin/locations/?page=1&name__icontains=a`, 'GET', null, {}, 200, LF.search());
+  dtPage.locationsClickDropdown();
+  fillIn(`${SEARCH}`, 'a');
+  andThen(() => {
+    assert.equal(currentURL(), DT_NEW_URL);
+    assert.equal(ticketPage.locationOptionLength, 2);
+  });
+  dtPage.locationsOptionOneClick();
+  andThen(() => {
+    let ticket = store.findOne('ticket');
+    assert.equal(ticket.get('location.id'), LD.idFour);
+  });
+});

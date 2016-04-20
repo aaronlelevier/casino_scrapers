@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+  classNames: ['dt-modal'],
   fieldsCompleted: Ember.computed('ticket.requestValues.[]', function() {
     const fields = this.get('model.fields');
     const ticket = this.get('ticket');

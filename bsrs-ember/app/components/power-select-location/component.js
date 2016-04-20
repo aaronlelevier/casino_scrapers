@@ -9,7 +9,8 @@ var DBFetch = Ember.Component.extend({
     if (Ember.isBlank(search)) { return []; }
     yield timeout(DEBOUNCE_MS);
     const repo = this.get('repository');
-    const json = yield repo['findWithQuery'](search);
+    let find = `name:${search}`;
+    const json = yield repo['findWithQuery'](null, null, null, find, null);
     return json;
   }).restartable(),
   actions: {
