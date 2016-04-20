@@ -37,7 +37,7 @@ const TICKET_PATCH_URL = `${PREFIX}${TICKET_URL}/${DT.idTwo}/dt/`;
 
 let application, store, endpoint, original_uuid;
 
-module('Acceptance | dt detail', {
+module('Acceptance | dt new', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('store:main');
@@ -77,16 +77,16 @@ test('/dts/new - render form with requester and location selector', assert => {
     assert.equal(dtPage.requester, TICKET.requesterOne);
   });
   // location select
-  xhr(`${PREFIX}/admin/locations/?page=1&name__icontains=a`, 'GET', null, {}, 200, LF.search());
+  xhr(`${PREFIX}/admin/locations/?page=1&name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
   dtPage.locationsClickDropdown();
   fillIn(`${SEARCH}`, 'a');
   andThen(() => {
     assert.equal(currentURL(), DT_NEW_URL);
-    assert.equal(ticketPage.locationOptionLength, 2);
+    assert.equal(ticketPage.locationOptionLength, 1);
   });
   dtPage.locationsOptionOneClick();
   andThen(() => {
     let ticket = store.findOne('ticket');
-    assert.equal(ticket.get('location.id'), LD.idFour);
+    assert.equal(ticket.get('location.id'), LD.idThree);
   });
 });

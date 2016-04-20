@@ -77,7 +77,6 @@ test('visiting /location/new', (assert) => {
     click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_NEW_URL);
-        assert.equal(store.find('location').get('length'), 1);
         const location = store.find('location', UUID.value);
         assert.ok(location.get('new'));
         assert.notOk(location.get('name'));
@@ -189,12 +188,13 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     page.visitNew();
     fillIn('.t-location-name', LD.storeName);
     generalPage.cancel();
+    let initLocationCount;
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_NEW_URL);
             assert.equal(find('.t-modal').is(':visible'), true);
             let locations = store.find('location');
-            assert.equal(locations.get('length'), 1);
+            initLocationCount = locations.get('length')
         });
     });
     click('.t-modal-footer .t-modal-rollback-btn');
@@ -202,17 +202,17 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_URL);
             let locations = store.find('location');
-            assert.equal(locations.get('length'), 0);
+            assert.equal(locations.get('length'), initLocationCount-1);
             assert.equal(find('tr.t-grid-data').length, 0);
         });
     });
 });
 
-test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
+test('when user enters new form and doesnt enter data, only has boostrapped location(s)', (assert) => {
     page.visitNew();
     generalPage.cancel();
     andThen(() => {
-        assert.equal(store.find('location').get('length'), 0);
+        assert.equal(store.find('location').get('length'), 1);
     });
 });
 

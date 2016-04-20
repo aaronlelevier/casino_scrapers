@@ -929,8 +929,6 @@ test('when you change a related role it will change the related locations as wel
     let payload = PF.put({id: PD.id, role: role.id, locations: []});
     xhr(url,'PUT',JSON.stringify(payload),{},200);
     andThen(() => {
-        let locations = store.find('location');
-        assert.equal(locations.get('length'), 1);
         let person = store.find('person', PD.idOne);
         assert.equal(person.get('locationsIsDirty'), false);
         assert.deepEqual(person.get('locations').get('length'), 1);
@@ -966,10 +964,6 @@ test('when you change a related role it will change the related locations as wel
     let payload = PF.put({id: PD.id, role: role.id, locations: []});
     xhr(url,'PUT',JSON.stringify(payload),{},200);
     andThen(() => {
-        andThen(() => {
-            let locations = store.find('location');
-            assert.equal(locations.get('length'), 1);
-        });
         let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=a`;
         xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
         page.locationClickDropdown();
