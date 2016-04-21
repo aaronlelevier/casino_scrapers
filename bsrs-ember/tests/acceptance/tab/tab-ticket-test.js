@@ -373,14 +373,16 @@ test('closing a document should close it\'s related tab', (assert) => {
     assert.equal(currentURL(), DETAIL_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
-    click('.t-cancel-btn:eq(0)');
-    andThen(() => {
-      assert.equal(tabs.get('length'), 0);
-    });
+  });
+  click('.t-cancel-btn:eq(0)');
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_URL);
+    let tabs = store.find('tab');
+    assert.equal(tabs.get('length'), 0);
   });
 });
 
-test('opening a new tab, navigating away and closing the tab should remove the tab', (assert) => {
+test('(NEW URL) opening a new tab, navigating away and closing the tab should remove the tab', (assert) => {
   clearxhr(detail_xhr);
   clearxhr(activity_one);
   let ticket_list_data = TF.list();

@@ -148,9 +148,9 @@ var ApplicationRoute = Ember.Route.extend({
       /* Find model based on stored id in tab */
       const tab_id = tab.get('model_id') ? tab.get('model_id') : tab.get('id');
       let model = this.get('store').find(tab.get('module'), tab_id);
+      const tabService = this.get('tabList');
 
-      /* Display modal if dirty */
-      if (model && model.get('isDirtyOrRelatedDirty') || closeTabAction === 'delete') {
+      if (tabService.isDirty(tab) || closeTabAction === 'delete') {
         /* jshint ignore:start */
         closeTabAction !== 'delete' ? Ember.$('.t-modal').modal('show') : Ember.$('.t-delete-modal').modal('show');
         /* jshint ignore:end */
@@ -161,7 +161,6 @@ var ApplicationRoute = Ember.Route.extend({
         this.trx.deleteCB = deleteCB;
 
       } else {
-
         /* rollback if contact info */
         if(model.get('content')) { model.rollback(); }
         
@@ -170,23 +169,24 @@ var ApplicationRoute = Ember.Route.extend({
         Ember.$('.t-delete-modal').modal('hide');
         let temp = this.router.generate(this.controller.currentPath);
         temp = temp.split('/').pop();
-        const transitionCB = tab.get('transitionCB');
-        if(transitionCB) {
-          const transitionObj = transitionCB();
-          if(transitionObj) {
-            /* jshint ignore:start */
-            if(tab.get('model_id') && !tab.get('newModel')) {
-              /* singleTabs have model_id so prevent redirect by returning out; expect on delete */
-              transitionObj.otherFuncs;
-              if(!tab.get('continueTransition')){
-                return;
-              }
-            } else{
-              transitionObj.otherFuncs;
-            } 
-            /* jshint ignore:end */
-          }
-        }
+        tabService.callCB(tab);
+        // const transitionCB = tab.get('transitionCB');
+        // if(transitionCB) {
+        //   const transitionObj = transitionCB();
+        //   if(transitionObj) {
+        //     /* jshint ignore:start */
+        //     if(tab.get('model_id') && !tab.get('newModel')) {
+        //       /* singleTabs have model_id so prevent redirect by returning out; expect on delete */
+        //       transitionObj.otherFuncs;
+        //       if(!tab.get('continueTransition')){
+        //         return;
+        //       }
+        //     } else{
+        //       transitionObj.otherFuncs;
+        //     } 
+        //     /* jshint ignore:end */
+        //   }
+        // }
 
         /* Redirect if clicked x on tab...If new route, close tab and remove the model if in unsaved state */
         if(temp === tab_id || tab.get('newModel')){
@@ -194,19 +194,22 @@ var ApplicationRoute = Ember.Route.extend({
           closeTabAction === 'closeTab' && tab.get('closeTabRedirect') ? this.transitionTo(tab.get('closeTabRedirect')) : this.transitionTo(tab.get('redirectRoute'));
           /* jshint ignore:end */
           if (tab.get('newModel') && !tab.get('saveModel')) {
-            this.get('tabList').closeTab(tab.get('id'));
+            tabService.closeTab(tab.get('id'));
             model.removeRecord();
           }
 
         /* Redirect to redirectRoute for all crud actions */
-        }else if(this.controller.currentPath !== tab.get('redirectRoute')){
-          this.transitionTo(this.controller.currentPath);
-        }else if(typeof tab.get('redirectRoute') !== undefined){
-          this.transitionTo(tab.get('redirectRoute'));
+        } else {
+          // this.transitionTo(tabService.redirectRoute(tab, this.controller.currentPath));
         }
+        // }else if(this.controller.currentPath !== tab.get('redirectRoute')){
+        //   this.transitionTo(this.controller.currentPath);
+        // }else if(typeof tab.get('redirectRoute') !== undefined){
+        //   this.transitionTo(tab.get('redirectRoute'));
+        // }
 
         /* close tab */
-        this.get('tabList').closeTab(tab.get('id'));
+        tabService.closeTab(tab.get('id'));
       }
     },
     delete(tab, callback){
