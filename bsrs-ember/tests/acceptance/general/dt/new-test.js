@@ -13,6 +13,7 @@ import DTF from 'bsrs-ember/vendor/dtd_fixtures';
 import TICKET from 'bsrs-ember/vendor/defaults/ticket';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
@@ -64,7 +65,7 @@ test('go to /dashboard, click button to get to /dt/new', assert => {
   });
 });
 
-test('person with multi locations, can POST data, and transition to /dt/{start-id}', assert => {
+test('has_multi_locations === true, can POST data, and transition to /dt/{start-id}', assert => {
   visit(DT_NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), DT_NEW_URL);
@@ -98,6 +99,73 @@ test('person with multi locations, can POST data, and transition to /dt/{start-i
     assert.equal(currentURL(), DT_START_URL);
     let ticket = store.findOne('ticket');
     assert.equal(ticket.get('dtd_fk'), dtd_response.id);
-    assert.equal(ticket.get('dtd.id'), dtd_response.id);
+  });
+});
+
+test('has_multi_locations === true, validation: cant click next until select location if multiple', assert => {
+  // disabled
+  visit(DT_NEW_URL);
+  andThen(() => {
+    assert.equal(currentURL(), DT_NEW_URL);
+    assert.equal(dtPage.requester, '');
+    assert.equal(dtPage.locationsValue, '');
+    assert.ok(find('.t-dt-start').attr('disabled'));
+  });
+  // requester
+  dtPage.requesterFillin(TICKET.requesterOne);
+  andThen(() => {
+    assert.equal(dtPage.requester, TICKET.requesterOne);
+    assert.ok(find('.t-dt-start').attr('disabled'));
+  });
+  // location
+  xhr(`${PREFIX}/admin/locations/?page=1&name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
+  dtPage.locationsClickDropdown();
+  fillIn(`${SEARCH}`, 'a');
+  dtPage.locationsOptionOneClick();
+  andThen(() => {
+    assert.equal(dtPage.locationsValue, LD.storeNameThree);
+    assert.ok(!find('.t-dt-start').attr('disabled'));
+  });
+});
+
+test('has_multi_locations === false, can POST data, and transition to /dt/{start-id}', assert => {
+  let person;
+  visit('/dashboard');
+  andThen(() => {
+    assert.equal(currentURL(), '/dashboard');
+    let person_current = store.findOne('person-current');
+    person = store.push('person', {id: person_current.get('id'), has_multi_locations: false});
+    store.push('person-current', {id: person_current.get('id'), has_multi_locations: false});
+    assert.ok(!person.get('has_multi_locations'));
+  });
+  visit(DT_NEW_URL);
+  andThen(() => {
+    assert.equal(currentURL(), DT_NEW_URL);
+    assert.equal(dtPage.requester, '');
+    let person_current = store.findOne('person-current').get('person');
+    assert.equal(dtPage.locationsValue, store.find('person', person_current.get('id')).get('locations').objectAt(0).get('name'));
+  });
+  // requester
+  dtPage.requesterFillin(TICKET.requesterOne);
+  andThen(() => {
+    assert.equal(dtPage.requester, TICKET.requesterOne);
+    assert.equal(store.findOne('ticket').get('requester'), TICKET.requesterOne);
+  });
+  // POST
+  let dtd_response = DTF.generate(DT.idOne);
+  var payload = {
+      id: 1,
+      cc: [],
+      categories: [],
+      requester: TD.requesterOne,
+      location: LD.idZero,
+      attachments: []
+  };
+  xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(payload), {}, 201, dtd_response);
+  dtPage.clickStart();
+  andThen(() => {
+    assert.equal(currentURL(), DT_START_URL);
+    let ticket = store.findOne('ticket');
+    assert.equal(ticket.get('dtd_fk'), dtd_response.id);
   });
 });

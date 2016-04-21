@@ -26,6 +26,7 @@ var DTPage = PageObject.create({
     locationsClickOne: clickable('.ember-basic-dropdown-trigger:eq(0)'),
     locationsOptionOneClick: clickable('.ember-power-select-option:eq(0)'),
 
+    startBtn: value('t-dt-start'),
     clickStart: clickable('.t-dt-start')
 });
 

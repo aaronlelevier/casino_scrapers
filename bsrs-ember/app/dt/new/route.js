@@ -3,13 +3,12 @@ import inject from 'bsrs-ember/utilities/inject';
 
 
 var DTNewRoute = Ember.Route.extend({
-    store: inject('main'),
     locationRepo: inject('location'),
     ticketRepository: inject('ticket'),
     personCurrent: Ember.inject.service(),
     model(params) {
         const new_pk = parseInt(params.new_id, 10);
-        let person = this.get('personCurrent').get('model');
+        let person = this.get('personCurrent').get('model').get('person');
         let disabled = !person.get('has_multi_locations');
         let ticket;
         let defaultLocation = person.get('locations').objectAt(0);

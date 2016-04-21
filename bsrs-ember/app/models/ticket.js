@@ -14,7 +14,6 @@ import { many_to_many } from 'bsrs-components/attr/many-to-many';
 
 const { run } = Ember;
 
-
 var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, OptConf, {
   init() {
     this.requestValues = []; //store array of values to be sent in dt post or put request field
@@ -42,13 +41,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
   priority_fk: undefined,
   location_fk: undefined,
   assignee_fk: undefined,
-  // DTD - Ticket does not have an FK. `dtd_fk` is just set on the Ticket to get the User's
-  // Ticket while they are PATCHING during navigating the Decision Tree.
   dtd_fk: undefined,
-  dtd: Ember.computed('dtd_fk', function() {
-    let dtd_fk = this.get('dtd_fk');
-    return dtd_fk ? this.get('store').find('dtd', dtd_fk) : null;
-  }),
   /*start-non-standard*/ @computed('status') /*end-non-standard*/
   status_class(status){
     const name = this.get('status.name');

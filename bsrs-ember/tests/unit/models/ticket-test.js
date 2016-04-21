@@ -1432,11 +1432,3 @@ test('dtd_fk - is not dirty tracked', assert => {
   ticket = store.push('ticket', {id: TD.idOne, dtd_fk: 1});
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
-
-test('dtd - is a dtd store instance based on `dtd_fk` or null if `dtd_fk` is null', assert => {
-  ticket = store.push('ticket', {id: TD.idOne});
-  assert.ok(!ticket.get('dtd'));
-  ticket = store.push('ticket', {id: TD.idOne, dtd_fk: DTD.idOne});
-  store.push('dtd', {id: DTD.idOne});
-  assert.equal(ticket.get('dtd.id'), DTD.idOne);
-});
