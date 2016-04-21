@@ -96,6 +96,8 @@ test('person with multi locations, can POST data, and transition to /dt/{start-i
   dtPage.clickStart();
   andThen(() => {
     assert.equal(currentURL(), DT_START_URL);
-    assert.equal(store.findOne('ticket').get('new_pk'), dtd_response.id);
+    let ticket = store.findOne('ticket');
+    assert.equal(ticket.get('dtd_fk'), dtd_response.id);
+    assert.equal(ticket.get('dtd.id'), dtd_response.id);
   });
 });

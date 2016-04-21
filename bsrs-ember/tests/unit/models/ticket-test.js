@@ -11,13 +11,14 @@ import TCD from 'bsrs-ember/vendor/defaults/model-category';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
+import DTD from 'bsrs-ember/vendor/defaults/dtd';
 
 
 var store, ticket, uuid;
 
 module('unit: ticket test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:location', 'model:ticket-person', 'model:model-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'model:attachment', 'model:status', 'model:role', 'model:location-level']);
+    store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:location', 'model:ticket-person', 'model:model-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'model:attachment', 'model:status', 'model:role', 'model:location-level', 'model:dtd']);
     run(() => {
       store.push('status', {id: SD.activeId, name: SD.activeName});
       store.push('role', {id: RD.idOne, name: RD.nameOne, location_level_fk: LLD.idOne});
@@ -1423,4 +1424,19 @@ test('priority_class returns empty string when no priority found and valid class
   });
   assert.equal(ticket.get('priority'), priority);
   assert.equal(ticket.get('priority_class'), 'ticket-priority-emergency');
+});
+
+test('dtd_fk - is not dirty tracked', assert => {
+  ticket = store.push('ticket', {id: TD.idOne});
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  ticket = store.push('ticket', {id: TD.idOne, dtd_fk: 1});
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('dtd - is a dtd store instance based on `dtd_fk` or null if `dtd_fk` is null', assert => {
+  ticket = store.push('ticket', {id: TD.idOne});
+  assert.ok(!ticket.get('dtd'));
+  ticket = store.push('ticket', {id: TD.idOne, dtd_fk: DTD.idOne});
+  store.push('dtd', {id: DTD.idOne});
+  assert.equal(ticket.get('dtd.id'), DTD.idOne);
 });
