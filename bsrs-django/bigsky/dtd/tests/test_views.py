@@ -312,11 +312,13 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         attachment = create_file_attachment()
         self.data['attachments'] = [obj['id'] for obj in self.data['attachments']]
         self.data['attachments'].append(str(attachment.id))
+
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
+
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['attachments']), 2)
-        self.assertEqual(data['attachments'][0]['id'], str(attachment.id))
+        self.assertIn(str(attachment.id), [a['id'] for a in data['attachments']])
 
     def test_remove_attachment(self):
         attachment = create_file_attachment()
@@ -325,7 +327,9 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         self.tree_data.attachments.add(attachment_two)
         self.assertEqual(self.tree_data.attachments.count(), 3)
         self.data['attachments'] = [str(attachment.id)]
+
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
+
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['attachments']), 1)

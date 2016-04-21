@@ -9,6 +9,9 @@ from ticket.models import TicketStatus, TicketPriority
 from utils.models import BaseModel, BaseQuerySet, BaseManager
 
 
+DTD_START_KEY = 'Start'
+
+
 class TreeDataQuerySet(BaseQuerySet):
 
     def search_multi(self, keyword):
@@ -25,6 +28,10 @@ class TreeDataManager(BaseManager):
 
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
+
+    def get_start(self):
+        obj, _ = self.get_or_create(key=DTD_START_KEY)
+        return obj
 
 
 class TreeData(BaseModel):

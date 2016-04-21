@@ -3,7 +3,7 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from dtd.models import TreeData, TreeDataManager
+from dtd.models import TreeData, TreeDataManager, DTD_START_KEY
 from dtd.tests.factory import create_tree_link, create_tree_data
 
 
@@ -22,6 +22,12 @@ class TreeDataManagerTests(TestCase):
         ret = TreeData.objects.search_multi(keyword)
 
         self.assertEqual(len(ret), len(raw_ret))
+
+    def test_get_start(self):
+        ret = TreeData.objects.get_start()
+
+        self.assertIsInstance(ret, TreeData)
+        self.assertEqual(ret.key, DTD_START_KEY)
 
 
 class TreeDataTests(TestCase):

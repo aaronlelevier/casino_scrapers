@@ -85,10 +85,17 @@ ticket_activity_router.register('tickets', tickets_views.TicketActivityViewSet)
 class DecisionTreeRouter(SimpleRouter):
     routes = [
         Route(
-            url=r'^{prefix}/{lookup}/dt/$',
+            url=r'^{prefix}/ticket/$',
+            mapping={
+                'post': 'create',
+            },
+            name='{basename}-create',
+            initkwargs={'suffix': 'create'}
+        ),
+        Route(
+            url=r'^{prefix}/{lookup}/ticket/$',
             mapping={
                 'get': 'list',
-                'post': 'create',
                 'patch': 'partial_update'
             },
             name='{basename}-create',
@@ -97,7 +104,7 @@ class DecisionTreeRouter(SimpleRouter):
     ]
 
 dt_ticket_router = DecisionTreeRouter()
-dt_ticket_router.register('tickets', dt_views.DTTicketViewSet)
+dt_ticket_router.register('dt', dt_views.DTTicketViewSet)
 
 
 # API

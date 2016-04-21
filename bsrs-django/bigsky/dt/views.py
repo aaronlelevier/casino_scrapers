@@ -15,18 +15,20 @@ class DTTicketViewSet(BaseModelViewSet):
     """
     **API Endpoint:**
 
-      - POST/PATCH: `/api/tickets/{dt-id}/dt/`
-
-        Create or Partial Update a Ticket.
-
-        :return: the `TreeDataDetailSerializer` representation from the (pk) in the URI.
-
-      - GET: `/api/tickets/{dt-id}/dt/?ticket={ticket-id}`
+      - GET: `/api/dt/{dt-id}/ticket/?ticket={ticket-id}`
 
         Query a DTD by ID, and a Ticket by ID, and return them side by side.
         Ticket ID is optional.
 
         :return: `{'dtd': dtd, 'ticket': ticket}`
+
+      - POST: `/api/dt/ticket/`
+
+        :return: the `TreeDataDetailSerializer` representation for the 'Start' DTD.
+
+      - POST/PATCH: `/api/dt/{dt-id}/ticket/`
+
+        :return: the `TreeDataDetailSerializer` representation from the (pk) in the URI.
     """
 
     queryset = Ticket.objects.all()
@@ -54,7 +56,8 @@ class DTTicketViewSet(BaseModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         # custom: return response with TreeData
-        dt_serializer = self._get_tree_data(kwargs)
+        tree_data = TreeData.objects.get_start()
+        dt_serializer = TreeDataDetailSerializer(tree_data)
         return Response(dt_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def update(self, request, *args, **kwargs):

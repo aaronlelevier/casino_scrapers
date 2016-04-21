@@ -4,7 +4,7 @@ import uuid
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
-from dtd.models import TreeData
+from dtd.models import TreeData, DTD_START_KEY
 from dtd.serializers import TreeDataDetailSerializer
 from dtd.tests.mixins import TreeDataTestSetUpMixin
 from person.tests.factory import create_single_person
@@ -31,8 +31,7 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
             'request': 'plumbing'
         })
 
-        response = self.client.post('/api/tickets/{}/dt/'.format(self.tree_data.id),
-            self.data, format='json')
+        response = self.client.post('/api/dt/ticket/', self.data, format='json')
 
         self.assertEqual(response.status_code, 201)
         # Ticket
@@ -40,6 +39,8 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
         # DTD
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.tree_data.id))
+        self.assertEqual(data['key'], self.tree_data.key)
+        self.assertEqual(data['key'], DTD_START_KEY)
         self.assertEqual(data.keys(), TreeDataDetailSerializer(self.tree_data).data.keys())
 
     def test_patch__ticket_updated_and_dtd_response_returned(self):
@@ -48,7 +49,7 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
         })
         self.assertNotEqual(self.data['request'], self.ticket.request)
 
-        response = self.client.patch('/api/tickets/{}/dt/'.format(self.tree_data.id),
+        response = self.client.patch('/api/dt/{}/ticket/'.format(self.tree_data.id),
             self.data, format='json')
 
         self.assertEqual(response.status_code, 200)
@@ -63,7 +64,7 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
     def test_patch__404_if_dtd_not_found(self):
         id = uuid.uuid4()
 
-        response = self.client.patch('/api/tickets/{}/dt/'.format(id),
+        response = self.client.patch('/api/dt/{}/ticket/'.format(id),
             self.data, format='json')
 
         self.assertEqual(response.status_code, 404)
@@ -71,7 +72,7 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
     def test_patch__404_if_ticket_not_found(self):
         self.data['id'] = uuid.uuid4()
 
-        response = self.client.patch('/api/tickets/{}/dt/'.format(self.tree_data.id),
+        response = self.client.patch('/api/dt/{}/ticket/'.format(self.tree_data.id),
             self.data, format='json')
 
         self.assertEqual(response.status_code, 404)
@@ -80,7 +81,7 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
         self.data['location'] =  None
         self.assertTrue(self.ticket.location)
 
-        response = self.client.patch('/api/tickets/{}/dt/'.format(self.tree_data.id),
+        response = self.client.patch('/api/dt/{}/ticket/'.format(self.tree_data.id),
             self.data, format='json')
 
         self.assertEqual(response.status_code, 400)
@@ -91,7 +92,7 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
         self.data.pop('location',  None)
         self.assertTrue(self.ticket.location)
 
-        response = self.client.patch('/api/tickets/{}/dt/'.format(self.tree_data.id),
+        response = self.client.patch('/api/dt/{}/ticket/'.format(self.tree_data.id),
             self.data, format='json')
 
         self.assertEqual(response.status_code, 200)
@@ -99,22 +100,22 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(self.ticket.location, ticket.location)
 
     def test_put(self):
-        response = self.client.put('/api/tickets/{}/dt/'.format(self.tree_data.id), {}, format='json')
+        response = self.client.put('/api/dt/{}/ticket/'.format(self.tree_data.id), {}, format='json')
         self.assertEqual(response.status_code, 405)
 
     def test_delete(self):
-        response = self.client.delete('/api/tickets/{}/dt/'.format(self.tree_data.id), {}, format='json')
+        response = self.client.delete('/api/dt/{}/ticket/'.format(self.tree_data.id), {}, format='json')
         self.assertEqual(response.status_code, 405)
 
     def test_get__ticket_not_returned_if_no_query_param(self):
-        response = self.client.get('/api/tickets/{}/dt/'.format(self.tree_data.id))
+        response = self.client.get('/api/dt/{}/ticket/'.format(self.tree_data.id))
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data.keys(), TreeDataDetailSerializer(self.tree_data).data.keys())
 
     def test_get__ticket_returned_if_query_param(self):
-        response = self.client.get('/api/tickets/{}/dt/?ticket={}'
+        response = self.client.get('/api/dt/{}/ticket/?ticket={}'
                                    .format(self.tree_data.id, self.ticket.id))
 
         self.assertEqual(response.status_code, 200)
