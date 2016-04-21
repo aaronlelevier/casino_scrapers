@@ -66,7 +66,7 @@ test('going from admin to dtds list view generates a tab', assert => {
 });
 
 //RECURSION PROBLEM ON JENKINS
-// test('scott deep link to dtd list view generates a tab', assert => {
+// test('deep link to dtd list view generates a tab', assert => {
 //   clearxhr(detail_xhr);
 //   page.visit();
 //   andThen(() => {
@@ -396,6 +396,41 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
     });
   });
 });
+
+//TODO
+// test('scott trying to close the tab with one of the dirty dtds that are dirty will show modal', (assert) => {
+//   visit(DETAIL_URL);
+//   andThen(() => {
+//     assert.equal(currentURL(), DETAIL_URL);
+//     let tabs = store.find('tab');
+//     assert.equal(tabs.get('length'), 1);
+//   });
+//   page.keyFillIn(DTD.keyTwo);
+//   andThen(() => {
+//     assert.equal(find('tr .dirty').length, 1);
+//     assert.equal(find('.t-tab-close > i.dirty').length, 1);
+//   });
+//   let dtd_detail_data_2 = DTDF.detail(DTD.idTwo);
+//   detail_xhr = xhr(`${endpoint}${DTD.idTwo}/`, 'GET', null, {}, 200, dtd_detail_data_2);
+//   click('.t-grid-data:eq(1)');
+//   click('.t-tab-close:eq(0)');
+//   andThen(() => {
+//     const DETAIL_URL_2 = `${BASE_DTD_URL}/${DTD.idTwo}`;
+//     assert.equal(currentURL(), DETAIL_URL_2);
+//     waitFor(() => {
+//       assert.ok(generalPage.modalIsVisible);
+//       // assert.ok(generalPage.deleteModalIsHidden);
+//       // assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+//     });
+//   });
+//   generalPage.clickModalRollback();
+//   andThen(() => {
+//     waitFor(() => {
+//       assert.equal(currentURL(), ADMIN_URL);
+//       assert.ok(generalPage.modalIsHidden);
+//     });
+//   });
+// });
 
 test('(NEW URL) a dirty new tab and clicking on new model button should not push new tab into store', (assert) => {
   clearxhr(detail_xhr);
