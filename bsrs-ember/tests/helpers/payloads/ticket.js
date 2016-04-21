@@ -86,7 +86,16 @@ var ticket_payload_detail_one_category = {
     attachments: [],
 };
 
+var ticket_dt_new_payload = {
+    id: 1,
+    cc: [],
+    categories: [],
+    requester: TD.requesterOne,
+    location: LD.idThree,
+    attachments: []
+};
+
 var required_ticket_payload = Ember.$.extend(true, {}, ticket_payload);
 delete required_ticket_payload.subject;
 
-export {ticket_payload, ticket_payload_with_comment, required_ticket_payload, ticket_payload_detail_with_assignee, ticket_payload_detail, ticket_payload_detail_one_category, ticket_payload_with_attachment, ticket_payload_with_attachments};
+export {ticket_payload, ticket_payload_with_comment, required_ticket_payload, ticket_payload_detail_with_assignee, ticket_payload_detail, ticket_payload_detail_one_category, ticket_payload_with_attachment, ticket_payload_with_attachments, ticket_dt_new_payload};

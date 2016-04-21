@@ -61,17 +61,19 @@ test('default and disable if has_multi_locations === false', function(assert) {
     assert.equal($('.ember-basic-dropdown-trigger').text().trim(), LD.storeNameTwo);
 });
 
-test('if has_multi_locations === true, should default first Location as selected, andrender a selectbox with options after type ahead for search', function(assert) {
+test('if has_multi_locations === true, no default location, and render a selectbox with options after type ahead for search', function(assert) {
     this.set('person', person);
     let locations = store.find('location');
     assert.equal(locations.get('length'), 3);
     this.set('options', locations);
-    this.set('selected', person.get('locations').objectAt(0));
-    this.set('disabled', !person.get('has_multi_locations'));
+    let disabled = !person.get('has_multi_locations');
+    this.set('disabled', disabled);
+    let defaultLocation = person.get('locations').objectAt(0);
+    this.set('selected', disabled ? defaultLocation : null);
     this.set('repository', location_repo);
     this.render(hbs`{{power-select-location options=options selected=selected disabled=disabled repository=repository}}`);
     assert.equal($(PowerSelect).attr('aria-disabled'), "false");
-    assert.equal($('.ember-basic-dropdown-trigger').text().trim(), LD.storeName);
+    assert.equal($('.ember-basic-dropdown-trigger').text().trim(), '');
     clickTrigger();
     run(() => { typeInSearch('a'); });
     return waitFor().
@@ -89,8 +91,10 @@ test('change selected location', function(assert) {
     let locations = store.find('location');
     assert.equal(locations.get('length'), 3);
     this.set('options', locations);
-    this.set('selected', person.get('locations').objectAt(0));
-    this.set('disabled', !person.get('has_multi_locations'));
+    let disabled = !person.get('has_multi_locations');
+    this.set('disabled', disabled);
+    let defaultLocation = person.get('locations').objectAt(0);
+    this.set('selected', disabled ? defaultLocation : null);
     this.set('repository', location_repo);
     this.set('ticket', ticket);
     this.render(hbs`{{power-select-location options=options selected=selected disabled=disabled repository=repository ticket=ticket}}`);

@@ -9,7 +9,9 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
 import DT from 'bsrs-ember/vendor/defaults/dtd';
+import DTF from 'bsrs-ember/vendor/dtd_fixtures';
 import TICKET from 'bsrs-ember/vendor/defaults/ticket';
+import PD from 'bsrs-ember/vendor/defaults/person';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
@@ -18,6 +20,8 @@ import page from 'bsrs-ember/tests/pages/dtd';
 import dtPage from 'bsrs-ember/tests/pages/dt';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import ticketPage from 'bsrs-ember/tests/pages/tickets';
+import {dtd_payload} from 'bsrs-ember/tests/helpers/payloads/dtd';
+import {ticket_dt_new_payload} from 'bsrs-ember/tests/helpers/payloads/ticket';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
 
 const DASHBOARD_URL = BASEURLS.dashboard_url;
@@ -27,13 +31,11 @@ const DT_NEW_URL = `${DT_URL}/new`;
 const SEARCH = '.ember-power-select-search input';
 
 const PREFIX = config.APP.NAMESPACE;
-const BASE_URL = BASEURLS.base_dt_url;//Routing
-const DTD_URL = BASEURLS.base_dtd_url;//Request
-const TICKET_URL = BASEURLS.base_tickets_url;//Ticket
-const DETAIL_URL = `${BASE_URL}/${DT.idOne}`;
-const DEST_URL = `${BASE_URL}/${DT.idTwo}`;
-const TICKET_POST_URL = `${PREFIX}${TICKET_URL}/${DT.idTwo}/dt/`;
-const TICKET_PATCH_URL = `${PREFIX}${TICKET_URL}/${DT.idTwo}/dt/`;
+const DTD_URL = BASEURLS.base_dtd_url;
+const DTD_API_URL = `${PREFIX}${DTD_URL}/`;
+const TICKET_URL = BASEURLS.base_tickets_url;
+const DT_TICKET_POST_URL = `${PREFIX}/dt/ticket/`;
+const DT_START_URL = `${DT_URL}/${DT.idOne}`;
 
 let application, store, endpoint, original_uuid;
 
@@ -62,21 +64,20 @@ test('go to /dashboard, click button to get to /dt/new', assert => {
   });
 });
 
-// NOTE: not passing, need to first bootstrap Locations on logged in User
-test('/dts/new - render form with requester and location selector', assert => {
+test('person with multi locations, can POST data, and transition to /dt/{start-id}', assert => {
   visit(DT_NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), DT_NEW_URL);
+    assert.equal(dtPage.requester, '');
+    assert.equal(dtPage.locationsValue, '');
   });
   // requester
-  andThen(() => {
-    assert.equal(dtPage.requester, '');
-  });
   dtPage.requesterFillin(TICKET.requesterOne);
   andThen(() => {
     assert.equal(dtPage.requester, TICKET.requesterOne);
+    assert.equal(store.findOne('ticket').get('requester'), TICKET.requesterOne);
   });
-  // location select
+  // location
   xhr(`${PREFIX}/admin/locations/?page=1&name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
   dtPage.locationsClickDropdown();
   fillIn(`${SEARCH}`, 'a');
@@ -86,7 +87,15 @@ test('/dts/new - render form with requester and location selector', assert => {
   });
   dtPage.locationsOptionOneClick();
   andThen(() => {
-    let ticket = store.findOne('ticket');
-    assert.equal(ticket.get('location.id'), LD.idThree);
+    assert.equal(dtPage.locationsValue, LD.storeNameThree);
+    assert.equal(store.findOne('ticket').get('location.id'), LD.idThree);
+  });
+  // POST
+  let dtd_response = DTF.generate(DT.idOne);
+  xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(ticket_dt_new_payload), {}, 201, dtd_response);
+  dtPage.clickStart();
+  andThen(() => {
+    assert.equal(currentURL(), DT_START_URL);
+    assert.equal(store.findOne('ticket').get('new_pk'), dtd_response.id);
   });
 });

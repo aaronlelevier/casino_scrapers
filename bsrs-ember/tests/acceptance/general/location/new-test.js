@@ -194,7 +194,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(currentURL(), LOCATION_NEW_URL);
             assert.equal(find('.t-modal').is(':visible'), true);
             let locations = store.find('location');
-            initLocationCount = locations.get('length')
+            initLocationCount = locations.get('length');
         });
     });
     click('.t-modal-footer .t-modal-rollback-btn');
