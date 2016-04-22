@@ -13,7 +13,6 @@ import DTF from 'bsrs-ember/vendor/dtd_fixtures';
 import TICKET from 'bsrs-ember/vendor/defaults/ticket';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import LD from 'bsrs-ember/vendor/defaults/location';
-import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
@@ -157,7 +156,7 @@ test('has_multi_locations === false, can POST data, and transition to /dt/{start
       id: 1,
       cc: [],
       categories: [],
-      requester: TD.requesterOne,
+      requester: TICKET.requesterOne,
       location: LD.idZero,
       attachments: []
   };
