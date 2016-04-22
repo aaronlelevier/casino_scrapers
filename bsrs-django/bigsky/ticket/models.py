@@ -26,17 +26,22 @@ TICKET_STATUSES = [
 ]
 
 
-class TicketStatus(BaseNameModel):
-
-    class Meta:
-        verbose_name_plural = "Ticket statuses"
+class DefaultToDictMixin(object):
 
     def to_dict(self):
         return {
-            "id": str(self.pk),
+            "id": str(self.id),
             "name": self.name,
-            "default": True if self.name == TICKET_STATUSES[0] else False
+            "default": True if self.name == self.default else False
         }
+
+
+class TicketStatus(DefaultToDictMixin, BaseNameModel):
+
+    default = TICKET_STATUSES[0]
+
+    class Meta:
+        verbose_name_plural = "Ticket statuses"
     
 
 TICKET_PRIORITIES = [
@@ -47,7 +52,9 @@ TICKET_PRIORITIES = [
 ]
 
 
-class TicketPriority(BaseNameModel):
+class TicketPriority(DefaultToDictMixin, BaseNameModel):
+
+    default = TICKET_PRIORITIES[0]
 
     class Meta:
         verbose_name_plural = "Ticket priorities"

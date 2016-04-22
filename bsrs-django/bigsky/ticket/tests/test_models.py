@@ -8,9 +8,62 @@ from category.tests.factory import create_categories
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES)
-from ticket.tests.factory import create_ticket, create_tickets
+from ticket.tests.factory import (create_ticket, create_tickets,
+    create_ticket_statuses, create_ticket_priorities)
 from ticket.tests.mixins import TicketCategoryOrderingSetupMixin
 from generic.tests.factory import create_file_attachment
+
+
+class TicketStatusTests(TestCase):
+
+    def setUp(self):
+        create_ticket_statuses()
+
+    def test_to_dict__default(self):
+        status = TicketStatus.objects.get(name=TICKET_STATUSES[0])
+
+        ret = status.to_dict()
+
+        self.assertEqual(len(ret), 3)
+        self.assertEqual(ret['id'], str(status.id))
+        self.assertEqual(ret['name'], status.name)
+        self.assertTrue(ret['default'])
+
+    def test_to_dict__non_default(self):
+        status = TicketStatus.objects.get(name=TICKET_STATUSES[1])
+
+        ret = status.to_dict()
+
+        self.assertEqual(len(ret), 3)
+        self.assertEqual(ret['id'], str(status.id))
+        self.assertEqual(ret['name'], status.name)
+        self.assertFalse(ret['default'])
+
+
+class TicketPriorityTests(TestCase):
+
+    def setUp(self):
+        create_ticket_priorities()
+
+    def test_to_dict__default(self):
+        priority = TicketPriority.objects.get(name=TICKET_PRIORITIES[0])
+
+        ret = priority.to_dict()
+
+        self.assertEqual(len(ret), 3)
+        self.assertEqual(ret['id'], str(priority.id))
+        self.assertEqual(ret['name'], priority.name)
+        self.assertTrue(ret['default'])
+
+    def test_to_dict__non_default(self):
+        priority = TicketPriority.objects.get(name=TICKET_PRIORITIES[1])
+
+        ret = priority.to_dict()
+
+        self.assertEqual(len(ret), 3)
+        self.assertEqual(ret['id'], str(priority.id))
+        self.assertEqual(ret['name'], priority.name)
+        self.assertFalse(ret['default'])
 
 
 class TicketManagerTests(TestCase):
