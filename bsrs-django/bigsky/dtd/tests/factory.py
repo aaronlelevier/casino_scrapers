@@ -72,11 +72,11 @@ DTD_DATA = [
     [4, 'Broken', 3],
     [5, 'Replace', 3],
     [6, 'Refrigerator', 2],
-    [7, 'Broken', 6],
-    [8, 'Replace', 6],
+    [7, 'Broken-2', 6],
+    [8, 'Replace-2', 6],
     [9, 'Stove', 2],
-    [10, 'Broken', 9],
-    [11, 'Replace', 9],
+    [10, 'Broken-3', 9],
+    [11, 'Replace-3', 9],
     [12, 'Maintenance', 0],
     [13, 'Parking Lot', 12],
     [14, 'Potholes', 13],
@@ -109,7 +109,7 @@ def create_dtd_fixtures_only():
         key = _generate_chars()
 
         TreeData.objects.create(
-            key=key,
+            key=data['name'],
             note=data['id'],
             description=data['name'],
             prompt=data['parent_id']

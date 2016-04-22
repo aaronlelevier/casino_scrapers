@@ -121,6 +121,7 @@ class FixtureGenerationTests(TestCase):
         self.assertEqual(TreeData.objects.count(), 23)
         for x in TreeData.objects.all():
             self.assertEqual(TreeData.objects.filter(note=x.note).count(), 1)
+            self.assertEqual(x.key, x.description)
 
     def test_create_link_fixtures_only(self):
         factory.create_link_fixtures_only()
