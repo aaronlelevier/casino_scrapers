@@ -248,7 +248,7 @@ test('role-category m2m is removed when server payload no longer reflects what s
 });
 
 test('role-category m2m does not delete other role-category m2m models', (assert) => {
-    let m2m, m2m_2, category, role_two;
+    let m2m, m2m_2, category, role, role_two;
     run(() => {
         store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
         role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne});
@@ -265,7 +265,7 @@ test('role-category m2m does not delete other role-category m2m models', (assert
     run(() => {
         subject.deserialize(response, RD.idOne);
     });
-    let role = store.find('role', RD.idOne);
+    role = store.find('role', RD.idOne);
     let categories = role.get('categories');
     assert.equal(categories.get('length'), 1);
     assert.equal(categories.objectAt(0).get('id'), CD.idOne);
