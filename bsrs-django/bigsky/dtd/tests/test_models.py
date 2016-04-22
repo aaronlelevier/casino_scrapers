@@ -5,6 +5,7 @@ from model_mommy import mommy
 
 from dtd.models import TreeData, TreeDataManager, DTD_START_KEY
 from dtd.tests.factory import create_tree_link, create_tree_data
+from setting.tests.factory import create_general_setting
 
 
 class TreeDataManagerTests(TestCase):
@@ -24,10 +25,12 @@ class TreeDataManagerTests(TestCase):
         self.assertEqual(len(ret), len(raw_ret))
 
     def test_get_start(self):
+        general_settings = create_general_setting()
+
         ret = TreeData.objects.get_start()
 
         self.assertIsInstance(ret, TreeData)
-        self.assertEqual(ret.key, DTD_START_KEY)
+        self.assertEqual(ret.key, general_settings.settings['dt_start_key']['value'])
 
 
 class TreeDataTests(TestCase):

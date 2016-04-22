@@ -26,6 +26,9 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
         link.save()
 
     def test_post__ticket_created_and_dtd_response_returned(self):
+        """
+        Response is the DTD start point, which is configured as a General Setting.
+        """
         self.data.update({
             'id': str(uuid.uuid4()),
             'request': 'plumbing'

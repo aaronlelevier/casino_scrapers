@@ -6,5 +6,6 @@ DEFAULT_GENERAL_SETTINGS = {
     'modules': {'value': [], 'type': 'list', 'inherited_from': 'general'},
     'test_mode': {'value': False, 'type': 'bool', 'inherited_from': 'general'},
     'email': {'value': '', 'type': 'email', 'inherited_from': 'general'},
-    'test_contractor_phone': {'value': '', 'type': 'phone', 'inherited_from': 'general'}
+    'test_contractor_phone': {'value': '', 'type': 'phone', 'inherited_from': 'general'},
+    'dt_start_key': {'value': 'Start', 'type': 'str', 'inherited_from': 'general'}
 }
