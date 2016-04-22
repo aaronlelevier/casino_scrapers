@@ -59,18 +59,13 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
 
 
 def get_or_create_ticket_status():
-    return get_or_create_ticket_related_model(TicketStatus, settings.DEFAULTS_TICKET_STATUS)
+    obj, _ = TicketStatus.objects.get_or_create(name=TICKET_STATUSES[0])
+    return obj
 
 
 def get_or_create_ticket_priority():
-    return get_or_create_ticket_related_model(TicketPriority, TICKET_PRIORITIES[0])
-
-
-def get_or_create_ticket_related_model(model, name):
-    if not model.objects.filter(name=name).exists():
-        return model.objects.default()
-    else:
-        return model.objects.order_by('?')[0]
+    obj, _ = TicketPriority.objects.get_or_create(name=TICKET_PRIORITIES[0])
+    return obj
 
 
 def create_ticket(request=None, assignee=None, add_attachment=False):
@@ -127,7 +122,8 @@ def create_ticket_status(name=None):
 
 
 def create_ticket_statuses():
-    return [create_ticket_status(s) for s in TICKET_STATUSES]
+    [create_ticket_status(s) for s in TICKET_STATUSES]
+    return TicketStatus.objects.all()
 
 
 def create_ticket_priority(name=None):
@@ -145,7 +141,8 @@ def create_ticket_priority(name=None):
 
 
 def create_ticket_priorities():
-    return [create_ticket_priority(p) for p in TICKET_PRIORITIES]
+    [create_ticket_priority(p) for p in TICKET_PRIORITIES]
+    return TicketPriority.objects.all()
 
 
 def create_ticket_activity(ticket=None, type=None, content=None):

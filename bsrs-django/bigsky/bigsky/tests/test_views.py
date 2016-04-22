@@ -178,7 +178,7 @@ class BootstrappedDataTests(TestCase):
         LocationStatus.objects.default()
         self.person_status = mommy.make(PersonStatus)
         self.ticket_status = mommy.make(TicketStatus)
-        TicketStatus.objects.default()
+        # TicketStatus.objects.default()
         self.ticket_priority = mommy.make(TicketPriority)
 
         categories = Category.objects.order_by("-parent")

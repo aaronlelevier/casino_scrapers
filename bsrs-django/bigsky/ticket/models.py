@@ -26,16 +26,7 @@ TICKET_STATUSES = [
 ]
 
 
-class TicketStatusManager(BaseManager):
-
-    def default(self):
-        obj, _ = self.get_or_create(name=settings.DEFAULTS_TICKET_STATUS)
-        return obj
-
-
 class TicketStatus(BaseNameModel):
-
-    objects = TicketStatusManager()
 
     class Meta:
         verbose_name_plural = "Ticket statuses"
@@ -44,28 +35,19 @@ class TicketStatus(BaseNameModel):
         return {
             "id": str(self.pk),
             "name": self.name,
-            "default": True if self.name == settings.DEFAULTS_TICKET_STATUS else False
+            "default": True if self.name == TICKET_STATUSES[0] else False
         }
     
 
 TICKET_PRIORITIES = [
-    'ticket.priority.emergency',
-    'ticket.priority.high',
     'ticket.priority.medium',
     'ticket.priority.low',
+    'ticket.priority.high',
+    'ticket.priority.emergency',
 ]
 
 
-class TicketPriorityManager(BaseManager):
-
-    def default(self):
-        obj, _ = self.get_or_create(name=TICKET_PRIORITIES[0])
-        return obj
-
-
 class TicketPriority(BaseNameModel):
-
-    objects = TicketPriorityManager()
 
     class Meta:
         verbose_name_plural = "Ticket priorities"
@@ -122,8 +104,8 @@ class Ticket(BaseModel):
 
     # Keys
     location = models.ForeignKey(Location)
-    status = models.ForeignKey(TicketStatus, blank=True, null=True)
-    priority = models.ForeignKey(TicketPriority, blank=True, null=True)
+    status = models.ForeignKey(TicketStatus)
+    priority = models.ForeignKey(TicketPriority)
     assignee = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
         related_name="assignee_tickets")
     cc = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
@@ -138,16 +120,6 @@ class Ticket(BaseModel):
     number = models.IntegerField(blank=True, default=no_ticket_models)
 
     objects = TicketManager()
-
-    def save(self, *args, **kwargs):
-        self._update_defaults()
-        return super(Ticket, self).save(*args, **kwargs)
-
-    def _update_defaults(self):
-        if not self.status:
-            self.status = TicketStatus.objects.default()
-        if not self.priority:
-            self.priority = TicketPriority.objects.default()
 
 
 TICKET_ACTIVITY_TYPES = [

@@ -264,7 +264,6 @@ THIRD_PARTY_STATUS_DEFAULT = "active"
 
 ### TICKETS
 ACTIVITY_DEFAULT_WEIGHT = 4
-DEFAULTS_TICKET_STATUS = "ticket.status.new"
 # Enables Permission filtering on Ticket API data
 TICKET_FILTERING_ON = True
 

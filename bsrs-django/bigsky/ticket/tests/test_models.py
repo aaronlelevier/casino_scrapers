@@ -13,22 +13,6 @@ from ticket.tests.mixins import TicketCategoryOrderingSetupMixin
 from generic.tests.factory import create_file_attachment
 
 
-class TicketStatusManagerTests(TestCase):
-
-    def test_default(self):
-        default = TicketStatus.objects.default()
-        self.assertIsInstance(default, TicketStatus)
-        self.assertEqual(default.name, TICKET_STATUSES[1])
-
-
-class TicketPriorityTests(TestCase):
-
-    def test_default(self):
-        default = TicketPriority.objects.default()
-        self.assertIsInstance(default, TicketPriority)
-        self.assertEqual(default.name, TICKET_PRIORITIES[0])
-
-
 class TicketManagerTests(TestCase):
 
     def setUp(self):
@@ -84,15 +68,6 @@ class TicketTests(TestCase):
 
         two = Ticket.objects.get(number=2)
         self.assertIsInstance(two, Ticket)
-
-    def test_defaults(self):
-        ticket = Ticket.objects.first()
-        ticket.status = None
-        ticket.priority = None
-        ticket.save()
-
-        self.assertIsInstance(ticket.status, TicketStatus)
-        self.assertIsInstance(ticket.priority, TicketPriority)
 
 
 class TicketActivityTests(TestCase):

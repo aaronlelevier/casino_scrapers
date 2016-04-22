@@ -29,10 +29,6 @@ class TicketStatusSerializer(serializers.ModelSerializer):
 
 class TicketCreateSerializer(BaseCreateSerializer):
 
-    status = serializers.PrimaryKeyRelatedField(
-        queryset=TicketStatus.objects.all(), required=True)
-    priority = serializers.PrimaryKeyRelatedField(
-        queryset=TicketPriority.objects.all(), required=True)
     attachments = serializers.PrimaryKeyRelatedField(
         queryset=Attachment.objects.all(), many=True, required=False)
 
