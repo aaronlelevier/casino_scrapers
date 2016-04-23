@@ -17,9 +17,6 @@ var PersonNewComponent = Ember.Component.extend(TabMixin, NewTabMixin, Validatio
         });
       }
     },
-    cancel() {
-      this.sendAction('close', this.tab());
-    }
   }
 });
 

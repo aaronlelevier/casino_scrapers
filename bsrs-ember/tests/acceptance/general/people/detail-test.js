@@ -256,8 +256,10 @@ test('when click delete, modal displays and when click ok, person is deleted and
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.deleteModalIsVisible);
-      assert.equal(find('.t-modal-delete-body').text().trim(), t('crud.delete.confirm'));
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.delete.confirm', {module: 'person'}));
+      assert.equal(Ember.$('.t-modal-delete-btn').text().trim(), t('crud.delete.button'));
     });
   });
   xhr(`${PREFIX}${BASE_PEOPLE_URL}/${PD.idOne}/`, 'DELETE', null, {}, 204, {});
@@ -266,7 +268,7 @@ test('when click delete, modal displays and when click ok, person is deleted and
     waitFor(() => {
       assert.equal(currentURL(), PEOPLE_URL);
       assert.equal(store.find('person', PD.idOne).get('length'), undefined);
-      assert.ok(generalPage.deleteModalIsHidden);
+      assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
@@ -279,8 +281,10 @@ test('when click delete, and click no modal disappears', async assert => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(store.find('person').get('length'), 2);
-      assert.ok(generalPage.deleteModalIsVisible);
-      assert.equal(find('.t-modal-delete-body').text().trim(), t('crud.delete.confirm'));
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.delete.confirm', {module: 'person'}));
+      assert.equal(Ember.$('.t-modal-delete-btn').text().trim(), t('crud.delete.button'));
     });
   });
   generalPage.clickModalCancelDelete();
@@ -288,7 +292,7 @@ test('when click delete, and click no modal disappears', async assert => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(store.find('person').get('length'), 2);
-      assert.ok(generalPage.deleteModalIsHidden);
+      assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
