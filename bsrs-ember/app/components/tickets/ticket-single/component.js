@@ -23,8 +23,8 @@ var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMi
         this._super(update, updateActivities);
       }
     },
-    deleteAttachment(callback) {
-      this.sendAction('deleteAttachment', callback);
+    deleteAttachment(tab, callback) {
+      this.sendAction('deleteAttachment', tab, callback);
     }
   } 
 });

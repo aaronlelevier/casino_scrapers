@@ -5,6 +5,7 @@ import ChildValidationComponent from 'bsrs-ember/mixins/validation/child';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
 export default ChildValidationComponent.extend(ValidationMixin, {
+  tabList: Ember.inject.service(),
   tagName: 'div',
   classNames: ['col-md-12'],
   uuid: injectUUID('uuid'),
@@ -19,12 +20,13 @@ export default ChildValidationComponent.extend(ValidationMixin, {
     removeAttachment(attachment_id) {
       const model = this.get('model');
       const repository = this.get('repository');
+      const tab = this.get('tabList').findTab(model.get('id'));
       const callback = function() {
         model.remove_attachment(attachment_id);
         repository.remove(attachment_id);
-        Ember.$('.t-delete-modal').modal('hide');
+        // Ember.$('.t-delete-modal').modal('hide');
       };
-      this.sendAction('deleteAttachment', callback);
+      this.sendAction('deleteAttachment', tab, callback);
     },
     upload(e) {
       var repoUpload = (i, files) => {

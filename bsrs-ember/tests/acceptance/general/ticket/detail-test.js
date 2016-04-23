@@ -186,8 +186,11 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.modalIsVisible);
-      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
   generalPage.clickModalCancel();
@@ -195,19 +198,21 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(page.priorityInput, TD.priorityTwo);
-      assert.ok(generalPage.modalIsHidden);
+      assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
 
-test('when click delete, modal displays and when click ok, ticket is deleted and removed from store', async assert => {
-  await page.visitDetail();
-  await generalPage.delete();
+test('when click delete, modal displays and when click ok, ticket is deleted and removed from store', assert => {
+  page.visitDetail();
+  generalPage.delete();
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.deleteModalIsVisible);
-      assert.equal(find('.t-modal-delete-body').text().trim(), t('crud.delete.confirm'));
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.delete.confirm', {module: 'ticket'}));
+      assert.equal(Ember.$('.t-modal-delete-btn').text().trim(), t('crud.delete.button'));
     });
   });
   xhr(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'DELETE', null, {}, 204, {});
@@ -216,7 +221,7 @@ test('when click delete, modal displays and when click ok, ticket is deleted and
     waitFor(() => {
       assert.equal(currentURL(), TICKET_URL);
       assert.equal(store.find('ticket', TD.idOne).get('length'), undefined);
-      assert.ok(generalPage.deleteModalIsHidden);
+      assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
@@ -229,8 +234,10 @@ test('when click delete, and click no modal disappears', async assert => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(store.find('ticket').get('length'), 1);
-      assert.ok(generalPage.deleteModalIsVisible);
-      assert.equal(find('.t-modal-delete-body').text().trim(), t('crud.delete.confirm'));
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.delete.confirm', {module: 'ticket'}));
+      assert.equal(Ember.$('.t-modal-delete-btn').text().trim(), t('crud.delete.button'));
     });
   });
   generalPage.clickModalCancelDelete();
@@ -238,7 +245,7 @@ test('when click delete, and click no modal disappears', async assert => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(store.find('ticket').get('length'), 1);
-      assert.ok(generalPage.deleteModalIsHidden);
+      assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
@@ -275,7 +282,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.modalIsVisible);
+      assert.ok(Ember.$('.ember-modal-dialog'));
     });
   });
   generalPage.clickModalRollback();
@@ -635,15 +642,19 @@ test('selecting a top level category will alter the url and can cancel/discard c
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.modalIsVisible);
-      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      // assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
   generalPage.clickModalCancel();
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.modalIsHidden);
+      assert.throws(Ember.$('.ember-modal-dialog'));
+      // assert.ok(generalPage.modalIsHidden);
       let components = page.powerSelectComponents;
       let tickets = store.find('ticket');
       assert.equal(store.find('category').get('length'), 5);
@@ -662,8 +673,11 @@ test('selecting a top level category will alter the url and can cancel/discard c
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.modalIsVisible);
-      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      // assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
   generalPage.clickModalRollback();

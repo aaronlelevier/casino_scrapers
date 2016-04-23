@@ -102,7 +102,11 @@ test('uploading a file, then rolling back should throw out any previously associ
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
     waitFor(() => {
-      assert.equal(find('.t-modal-body').length, 1);
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
   ajax(`${PREFIX}/admin/attachments/batch-delete/`, 'DELETE', {ids: [UUID.value]}, {}, 204, {});
@@ -170,15 +174,13 @@ test('delete attachment is successful when the user confirms yes (before the fil
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.deleteModalIsVisible);
-      assert.equal(find('.t-modal-delete-body').text().trim(), t('crud.delete.confirm'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.delete.confirm', {module:'ticket'}));
     });
   });
   generalPage.clickModalDelete();
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.deleteModalIsHidden);
       model = store.find('ticket', TD.idOne);
       assert.equal(find(PROGRESS_BAR).length, 0);
       assert.equal(store.find('attachment').get('length'), 0);
@@ -392,19 +394,23 @@ test('when multiple tabs are open only attachments associated with the rollback 
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
     waitFor(() => {
-      assert.equal(find('.t-modal-body').length, 1);
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
-  // ajax(`${PREFIX}/admin/attachments/batch-delete/`, 'DELETE', {ids: ['abc123']}, {}, 204, {});
-  // click('.t-modal-rollback-btn');
-  // andThen(() => {
-  //     // assert.equal(store.find('attachment').get('length'), 1);
-  //     // TODO: fix once figure out delete
-  //     assert.equal(store.find('ticket', TD.idOne).get('attachments').get('length'), 0);
-  //     // assert.equal(store.find('ticket', TD.idOne).get('isDirtyOrRelatedDirty'), false);
-  //     // assert.equal(store.find('ticket', TD.idOne).get('attachmentsIsDirty'), false);
-  //     assert.equal(store.find('ticket', TD.idTwo).get('attachments').get('length'), 1);
-  // });
+  ajax(`${PREFIX}/admin/attachments/batch-delete/`, 'DELETE', {ids: ['abc123']}, {}, 204, {});
+  click('.t-modal-rollback-btn');
+  andThen(() => {
+      // assert.equal(store.find('attachment').get('length'), 1);
+      // TODO: fix once figure out delete
+      assert.equal(store.find('ticket', TD.idOne).get('attachments').get('length'), 0);
+      // assert.equal(store.find('ticket', TD.idOne).get('isDirtyOrRelatedDirty'), false);
+      // assert.equal(store.find('ticket', TD.idOne).get('attachmentsIsDirty'), false);
+      assert.equal(store.find('ticket', TD.idTwo).get('attachments').get('length'), 1);
+  });
 });
 
 // show the BELOW in another test (with one saved/ one not saved -nav away, the back to detail)
