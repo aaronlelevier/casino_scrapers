@@ -2,6 +2,7 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/store';
 
 var TabModel = Ember.Object.extend({
+  modalIsShowing: false,
   i18n: Ember.inject.service(),
   init() {
     const dynamicField = this.get('templateModelField') || [];

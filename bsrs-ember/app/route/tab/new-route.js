@@ -17,7 +17,7 @@ var TabNewRoute = Ember.Route.extend({
     parentAction(tab){
       let model = this.get('store').find(tab.get('module'), tab.get('id'));
       if (model && model.get('isDirtyOrRelatedDirty')) {
-        Ember.$('.t-modal').modal('show');
+        // Ember.$('.t-modal').modal('show');
         this.trx.attemptedTabModel = tab;
         this.trx.attemptedTransitionModel = model;
         this.trx.attemptedAction = 'parentAction';

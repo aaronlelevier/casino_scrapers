@@ -6,6 +6,7 @@ var Tab_Fixtures = (function() {
         var tab_id = new_id ? new_id : this.defaults.id_one;
         return {
             id: tab_id,
+            type: this.defaults.typeTwo,
             module: this.defaults.module_one,
             routeName: this.defaults.routeName_one,
             templateModelField: this.defaults.templateModelField_one,

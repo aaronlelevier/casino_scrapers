@@ -47,21 +47,19 @@ test('redirects based on action', function(assert) {
   assert.equal(route_dtd, 'admin');
   route_dtd = service.redirectRoute(tab_dtd, 'dtds.dtd', 'delete'); 
   assert.equal(route_dtd, 'dtds.index');
-  run(() => {
-    store.push('tab-single', {id: DTD.idOne, previousLocation: 'person.index'});
-  });
+  service.set('previousLocation', 'person.index');
   route_dtd = service.redirectRoute(tab_dtd, 'dtds.dtd', 'delete'); 
   assert.equal(route_dtd, 'person.index');
 });
 
-test('log location will update all tabs previousLocation property', function(assert) {
-  let service = this.subject();
-  assert.equal(tab.get('previousLocation'), undefined);
-  assert.equal(tab_single.get('previousLocation'), undefined);
-  service.logLocation('people.index');
-  assert.equal(tab.get('previousLocation'), 'people.index');
-  assert.equal(tab_single.get('previousLocation'), 'people.index');
-});
+// test('log location will update all tabs previousLocation property', function(assert) {
+//   let service = this.subject();
+//   assert.equal(tab.get('previousLocation'), undefined);
+//   assert.equal(tab_single.get('previousLocation'), undefined);
+//   service.logLocation('people.index');
+//   assert.equal(tab.get('previousLocation'), 'people.index');
+//   assert.equal(tab_single.get('previousLocation'), 'people.index');
+// });
 
 test('isDirty will return a boolean to tell modal to show', function(assert) {
   let service = this.subject();

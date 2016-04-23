@@ -17,6 +17,7 @@ test('test generic attrs on the model', (assert) => {
   let data = TBF.get();
   tab1 = store.push('tab', data);
   assert.equal(tab1.get('id'), TBD.id_one);
+  assert.equal(tab1.get('type'), TBD.typeTwo);
   assert.equal(tab1.get('module'), TBD.module_one);
   assert.equal(tab1.get('routeName'), TBD.routeName_one);
   assert.equal(tab1.get('templateModelField'), TBD.templateModelField_one);

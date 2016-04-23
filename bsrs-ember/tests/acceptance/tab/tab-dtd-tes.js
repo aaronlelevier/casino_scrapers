@@ -398,7 +398,7 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
 });
 
 //TODO
-// test('scott trying to close the tab with one of the dirty dtds that are dirty will show modal', (assert) => {
+// test('trying to close the tab with one of the dirty dtds that are dirty will show modal', (assert) => {
 //   visit(DETAIL_URL);
 //   andThen(() => {
 //     assert.equal(currentURL(), DETAIL_URL);

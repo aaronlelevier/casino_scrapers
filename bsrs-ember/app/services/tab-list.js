@@ -4,7 +4,7 @@ import inject from 'bsrs-ember/utilities/store';
 
 export default Ember.Service.extend({
   store: inject('main'),
-  //modalIsShowing: false,
+  previousLocation: undefined,
   findTabByType(id, type='multiple') {
     if (type === 'single') {
       return this.get('store').find('tab-single', id);
@@ -18,10 +18,10 @@ export default Ember.Service.extend({
    * @param {string} action 
    */
   redirectRoute(tab, currentRoute, action) {
-    const prev = tab.get('previousLocation') || currentRoute;
-    if (prev && !prev.split('.')[0].includes(tab.get('module'))) {
-      return prev;
-    }
+    // const prev = this.get('previousLocation') || currentRoute;
+    // if (prev && !prev.split('.')[0].includes(tab.get('module'))) {
+    //   return prev;
+    // }
     if (action === 'closeTab') {
       return tab.get('closeTabRedirect') || tab.get('redirectRoute');
     } else if (action === 'delete') {
@@ -29,24 +29,24 @@ export default Ember.Service.extend({
     }
     return tab.get('redirectRoute');
   },
-  /* logs route from willDestroyElement of every component
-   * @param {string} route 
-   */
-  logLocation(route) {
-    const store = this.get('store');
-    const tabs = store.find('tab');
-    const tab_singles = store.find('tab-single');
-    tabs.forEach((tab) => {
-      run(() => {
-        store.push('tab', {id: tab.get('id'), previousLocation: route});
-      });
-    });
-    tab_singles.forEach((tab) => {
-      run(() => {
-        store.push('tab-single', {id: tab.get('id'), previousLocation: route});
-      });
-    });
-  },
+  // /* logs route from willDestroyElement of every component
+  //  * @param {string} route 
+  //  */
+  // logLocation(route) {
+  //   const store = this.get('store');
+  //   const tabs = store.find('tab');
+  //   const tab_singles = store.find('tab-single');
+  //   tabs.forEach((tab) => {
+  //     run(() => {
+  //       store.push('tab', {id: tab.get('id'), previousLocation: route});
+  //     });
+  //   });
+  //   tab_singles.forEach((tab) => {
+  //     run(() => {
+  //       store.push('tab-single', {id: tab.get('id'), previousLocation: route});
+  //     });
+  //   });
+  // },
   /* Determines if model or models (if trying to close single tab) is dirty based on type 
    * @param {string} route 
    * @param {string} action 

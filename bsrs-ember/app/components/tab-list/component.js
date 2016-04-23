@@ -8,8 +8,8 @@ var TabList = Ember.Component.extend({
         const cb = tab.get('transitionCB')();
         tab.set('continueTransition', true);
       }
-      this.sendAction('closeTabMaster', tab, 'closeTab');//3rd param: closeTabAction in app route
-    }
+      this.sendAction('closeTabMaster', tab, {action:'closeTab'});
+    },
   }
 });
 

@@ -144,20 +144,21 @@ var ApplicationRoute = Ember.Route.extend({
         return this.transitionTo('error');
       }
     },
-    closeTabMaster(tab, closeTabAction=null, deleteCB=null){
+    closeTabMaster(tab, {action, deleteCB=null}={}) {
       /* Find model based on stored id in tab */
       const tab_id = tab.get('model_id') ? tab.get('model_id') : tab.get('id');
       let model = this.get('store').find(tab.get('module'), tab_id);
       const tabService = this.get('tabList');
-
-      if (tabService.isDirty(tab) || closeTabAction === 'delete') {
+      if (tabService.isDirty(tab) || action === 'delete' || action === 'deleteAttachment') {
         /* jshint ignore:start */
-        closeTabAction !== 'delete' ? Ember.$('.t-modal').modal('show') : Ember.$('.t-delete-modal').modal('show');
+        tab.toggleProperty('modalIsShowing');
+        tabService.set('action', action);
+        // action !== 'delete' ? Ember.$('.t-modal').modal('show') : Ember.$('.t-delete-modal').modal('show');
         /* jshint ignore:end */
         this.trx.attemptedTabModel = tab;
         this.trx.attemptedTransitionModel = model;
         this.trx.attemptedAction = 'closeTabMaster';
-        this.trx.closeTabAction = closeTabAction;
+        this.trx.closeTabAction = action;
         this.trx.deleteCB = deleteCB;
 
       } else {
@@ -165,10 +166,8 @@ var ApplicationRoute = Ember.Route.extend({
         if(model.get('content')) { model.rollback(); }
         
         /* Hide modal if present and call transition callback defined in route */
-        Ember.$('.t-modal').modal('hide');
-        Ember.$('.t-delete-modal').modal('hide');
-        let temp = this.router.generate(this.controller.currentPath);
-        temp = temp.split('/').pop();
+        // Ember.$('.t-modal').modal('hide');
+        // Ember.$('.t-delete-modal').modal('hide');
         tabService.callCB(tab);
         // const transitionCB = tab.get('transitionCB');
         // if(transitionCB) {
@@ -188,19 +187,12 @@ var ApplicationRoute = Ember.Route.extend({
         //   }
         // }
 
-        /* Redirect if clicked x on tab...If new route, close tab and remove the model if in unsaved state */
-        if(temp === tab_id || tab.get('newModel')){
-          /* jshint ignore:start */
-          closeTabAction === 'closeTab' && tab.get('closeTabRedirect') ? this.transitionTo(tab.get('closeTabRedirect')) : this.transitionTo(tab.get('redirectRoute'));
-          /* jshint ignore:end */
-          if (tab.get('newModel') && !tab.get('saveModel')) {
-            tabService.closeTab(tab.get('id'));
-            model.removeRecord();
-          }
-
-        /* Redirect to redirectRoute for all crud actions */
-        } else {
-          // this.transitionTo(tabService.redirectRoute(tab, this.controller.currentPath));
+        /* Redirect if clicked x on tab but stay on route if on other route...If new route, close tab and remove the model if in unsaved state (and not dirty) */
+        let temp = this.router.generate(this.controller.currentPath);
+        temp = temp.split('/').pop();
+        if(temp === String(tab_id)) {
+          const nextRoute = tabService.redirectRoute(tab, temp, action);
+          this.transitionTo(nextRoute);
         }
         // }else if(this.controller.currentPath !== tab.get('redirectRoute')){
         //   this.transitionTo(this.controller.currentPath);
@@ -209,15 +201,18 @@ var ApplicationRoute = Ember.Route.extend({
         // }
 
         /* close tab */
+        if (tab.get('newModel') && !tab.get('saveModel')) {
+          model.removeRecord();
+        }
         tabService.closeTab(tab.get('id'));
       }
     },
     delete(tab, callback){
-      this.send('closeTabMaster', tab, 'delete', callback);
+      this.send('closeTabMaster', tab, {action:'delete', deleteCB:callback});
     },
-    deleteAttachment(callback){
-      Ember.$('.t-delete-modal').modal('show');
-      this.trx.deleteCB = callback;
+    deleteAttachment(tab, callback){
+      // Ember.$('.t-delete-modal').modal('show');
+      this.send('closeTabMaster', tab, {action:'deleteAttachment', deleteCB:callback});
     }
   }
 });

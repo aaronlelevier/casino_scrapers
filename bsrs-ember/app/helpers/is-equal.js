@@ -1,5 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Helper.helper((params) => {
-    return params[0] === params[1];
+  if(params[2]){
+    return params[0] === params[1] || params[0] === params[2];
+  }
+  return params[0] === params[1];
 });
