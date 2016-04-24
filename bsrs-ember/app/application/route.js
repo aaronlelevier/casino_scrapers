@@ -193,12 +193,11 @@ var ApplicationRoute = Ember.Route.extend({
         if(temp === String(tab_id)) {
           const nextRoute = tabService.redirectRoute(tab, temp, action);
           this.transitionTo(nextRoute);
-        }
         // }else if(this.controller.currentPath !== tab.get('redirectRoute')){
         //   this.transitionTo(this.controller.currentPath);
-        // }else if(typeof tab.get('redirectRoute') !== undefined){
-        //   this.transitionTo(tab.get('redirectRoute'));
-        // }
+        }else if(typeof tab.get('redirectRoute') !== undefined){
+          this.transitionTo(tab.get('redirectRoute'));
+        }
 
         /* close tab */
         if (tab.get('newModel') && !tab.get('saveModel')) {

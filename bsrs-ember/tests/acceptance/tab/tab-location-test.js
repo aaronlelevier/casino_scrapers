@@ -368,9 +368,11 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
     waitFor(() => {
-      assert.ok(generalPage.modalIsVisible);
-      assert.ok(generalPage.deleteModalIsHidden);
-      assert.equal(find('.t-modal-body').length, 1);
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
 });

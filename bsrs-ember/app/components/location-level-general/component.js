@@ -6,17 +6,17 @@ import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/vali
 import prevent_duplicate_name from 'bsrs-ember/validation/prevent_duplicate_name';
 
 var LocationLevelGeneral = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, {
-    repository: inject('location-level'),
-    classNames: ['wrapper', 'form'],
-    nameValidation: validate('model.name', prevent_duplicate_name),
-    actions: {
-        save() {
-            this.set('submitted', true);
-            if (this.get('valid')) {
-                this._super();
-            }
-        },
-    }
+  repository: inject('location-level'),
+  classNames: ['wrapper', 'form'],
+  nameValidation: validate('model.name', prevent_duplicate_name),
+  actions: {
+    save() {
+      this.set('submitted', true);
+      if (this.get('valid')) {
+        this._super();
+      }
+    },
+  }
 });
 
 export default LocationLevelGeneral;
