@@ -40,10 +40,7 @@ var TicketSingleRoute = TabRoute.extend(FindById, PriorityMixin, {
     return this.findByIdScenario(ticket, pk, {statuses:statuses, priorities:priorities, activities:activities });
   },
   setupController: function(controller, hash) {
-    controller.set('model', hash.model);
-    controller.set('statuses', hash.statuses);
-    controller.set('priorities', hash.priorities);
-    controller.set('activities', hash.activities);
+    controller.setProperties(hash);
   },
 });
 
