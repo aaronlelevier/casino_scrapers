@@ -88,6 +88,8 @@ var ticket_payload_detail_one_category = {
 
 var ticket_dt_new_payload = {
     id: 1,
+    status: TD.statusZeroId,
+    priority: TD.priorityZeroId,
     cc: [],
     categories: [],
     requester: TD.requesterOne,

@@ -79,8 +79,6 @@ test('validation works and when hit save, we do same post', (assert) => {
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL);
-        assert.ok(find('.t-status-validation-error').is(':visible'));
-        assert.ok(find('.t-priority-validation-error').is(':visible'));
         assert.ok(find('.t-assignee-validation-error').is(':visible'));
         assert.ok(find('.t-location-validation-error').is(':visible'));
         assert.ok(find('.t-category-validation-error').is(':visible'));
@@ -89,7 +87,6 @@ test('validation works and when hit save, we do same post', (assert) => {
     page.requesterFillIn(TD.requesterOne);
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL);
-        assert.ok(find('.t-priority-validation-error').is(':visible'));
         assert.ok(find('.t-assignee-validation-error').is(':visible'));
         assert.ok(find('.t-location-validation-error').is(':visible'));
         assert.ok(find('.t-category-validation-error').is(':visible'));
@@ -100,7 +97,6 @@ test('validation works and when hit save, we do same post', (assert) => {
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL);
-        assert.ok(find('.t-priority-validation-error').is(':visible'));
         assert.equal(find('.t-priority-validation-error').text(), GLOBALMSG.invalid_priority);
         assert.ok(find('.t-assignee-validation-error').is(':visible'));
         assert.equal(find('.t-assignee-validation-error').text(), GLOBALMSG.invalid_assignee);
@@ -619,7 +615,6 @@ test('all required fields persist correctly when the user submits a new ticket f
         assert.equal(store.find('ticket').get('length'), 1);
         const ticket = store.find('ticket', UUID.value);
         assert.ok(ticket.get('isNotDirty'));
-        assert.ok(ticket.get('new'));
     });
     people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PF.search());
     page.assigneeClickDropdown();

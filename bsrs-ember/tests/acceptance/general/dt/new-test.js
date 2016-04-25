@@ -153,12 +153,14 @@ test('has_multi_locations === false, can POST data, and transition to /dt/{start
   // POST
   let dtd_response = DTF.generate(DT.idOne);
   var payload = {
-      id: 1,
-      cc: [],
-      categories: [],
-      requester: TICKET.requesterOne,
-      location: LD.idZero,
-      attachments: []
+    id: 1,
+    cc: [],
+    status: TICKET.statusZeroId,
+    priority: TICKET.priorityZeroId,
+    categories: [],
+    requester: TICKET.requesterOne,
+    location: LD.idZero,
+    attachments: []
   };
   xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(payload), {}, 201, dtd_response);
   dtPage.clickStart();
