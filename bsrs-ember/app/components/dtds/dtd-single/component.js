@@ -14,10 +14,11 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
   attachmentErrMsg: Ember.computed('error.message.dtd-single.msg', function() {
     return this.get('error').getMsg('dtd-single');
   }),
-  tab() {
-    let service = this.get('tabList');
-    return service.findTab('dtd123');
-  },
+  tabList: Ember.inject.service(),
+  // tab() {
+  //   let service = this.get('tabList');
+  //   return service.findTab(this.get('model.id'));
+  // },
   actions: {
     save(update=true) {
       if (this.get('model.validations.isValid')) {
@@ -33,11 +34,12 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
         });
       }
     },
-    delete() {
-      this._super(...arguments);
-      //Continue on w/ transition
-      this.tab().set('transitionCB', undefined);
-    },
+    //delete() {
+    //  this._super(...arguments);
+    //  //Continue on w/ transition
+    //  //TODO: abstract to service
+    //  this.tab().set('transitionCB', undefined);
+    //},
     setLinkType(type){
       this.get('model').set('link_type', type);
     },
@@ -71,12 +73,12 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
     removeAttachment(attachment_id) {
       const model = this.get('model');
       const repository = this.get('attachmentRepository');
+      const tab = this.get('tabList').findTab(model.get('id'));
       const callback = function() {
         model.remove_attachment(attachment_id);
         repository.remove(attachment_id);
-        Ember.$('.t-delete-modal').modal('hide');
       };
-      this.sendAction('deleteAttachment', callback);
+      this.sendAction('deleteAttachment', tab, callback);
     },
   }
 });

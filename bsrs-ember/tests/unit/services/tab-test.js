@@ -9,25 +9,25 @@ var ticket, dtd, store, tab, tab_single;
 
 moduleFor('service:tab-list', 'Unit | Service | tab list', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:tab-single', 'model:tab', 'model:dtd', 'model:dtd-list', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:ticket', 'model:tab', 'model:dtd', 'model:dtd-list', 'service:i18n']);
     ticket = store.push('ticket', {id: TD.idOne});
     dtd = store.push('dtd', {id: DTD.idOne});
     tab = store.push('tab', {id: TD.idOne, module: 'ticket', tabType: 'multiple', redirectRoute: 'tickets.index'});
-    tab_single = store.push('tab-single', {id: DTD.idOne, module: 'dtd', moduleList: 'dtd-list', tabType: 'single', closeTabRedirect: 'admin', deleteRedirect: 'dtds.index'});
+    tab_single = store.push('tab', {id: DTD.idOne, tabType: 'single', module: 'dtd', moduleList: 'dtd-list', closeTabRedirect: 'admin', deleteRedirect: 'dtds.index'});
   }
 });
 
 /*
- * findTabByType: used to get tab that is passed to application route
+ * findTab: used to get tab that is passed to application route
  */
 test('it exists for multiple tabs', function(assert) {
   let service = this.subject();
-  assert.equal(service.findTabByType(TD.idOne).get('id'), TD.idOne);
+  assert.equal(service.findTab(TD.idOne).get('id'), TD.idOne);
 });
 
 test('it exists for single tabs', function(assert) {
   let service = this.subject();
-  assert.equal(service.findTabByType(DTD.idOne, 'single').get('id'), DTD.idOne);
+  assert.equal(service.findTab(DTD.idOne).get('id'), DTD.idOne);
 });
 
 /*
@@ -39,10 +39,10 @@ test('it exists for single tabs', function(assert) {
  */
 test('redirects based on action', function(assert) {
   let service = this.subject();
-  const tab = service.findTabByType(TD.idOne, 'multiple');
+  const tab = service.findTab(TD.idOne);
   const route = service.redirectRoute(tab, 'tickets.ticket', 'closeTab'); 
   assert.equal(route, 'tickets.index');
-  const tab_dtd = service.findTabByType(DTD.idOne, 'single');
+  const tab_dtd = service.findTab(DTD.idOne);
   let route_dtd = service.redirectRoute(tab_dtd, 'dtds.dtd', 'closeTab'); 
   assert.equal(route_dtd, 'admin');
   route_dtd = service.redirectRoute(tab_dtd, 'dtds.dtd', 'delete'); 
@@ -63,11 +63,12 @@ test('redirects based on action', function(assert) {
 
 test('isDirty will return a boolean to tell modal to show', function(assert) {
   let service = this.subject();
-  const tab = service.findTabByType(TD.idOne, 'multiple');
+  const tab = service.findTab(TD.idOne);
   assert.notOk(service.isDirty(tab), 'closeTab');
   ticket.set('request', 'wat');
   assert.ok(service.isDirty(tab, 'closeTab'));
-  const tab_dtd = service.findTabByType(DTD.idOne, 'single');
+  const tab_dtd = service.findTab(DTD.idOne);
+  assert.equal(tab_dtd.get('moduleList'), 'dtd-list');
   assert.notOk(service.isDirty(tab_dtd, 'delete'));
   dtd.set('key', '456');
   assert.ok(service.isDirty(tab_dtd, 'delete'));

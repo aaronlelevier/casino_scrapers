@@ -14,7 +14,7 @@ export default Ember.Component.extend({
       const closeTabAction = this.trx.closeTabAction;
       model.rollback();
       tab.toggleProperty('modalIsShowing');
-      this.attrs.closeTabMaster(tab);
+      this.attrs.closeTabMaster(tab, {action:'rollback'});
     },
     cancel_modal() {
       const tab = this.trx.attemptedTabModel;
@@ -29,7 +29,7 @@ export default Ember.Component.extend({
         return deleteCB();//don't want to transition if only deleting an attachment
       }
       deleteCB();
-      this.attrs.closeTabMaster(tab, action);//call closeTabMaster action again w/ different action to closeTab
+      this.attrs.closeTabMaster(tab, {action:action, confirmed:true});//call closeTabMaster action again w/ different action to closeTab
     },
   }
 });

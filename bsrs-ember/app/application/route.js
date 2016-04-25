@@ -144,17 +144,14 @@ var ApplicationRoute = Ember.Route.extend({
         return this.transitionTo('error');
       }
     },
-    closeTabMaster(tab, {action, deleteCB=null}={}) {
+    closeTabMaster(tab, {action='closeTab', deleteCB=null, confirmed=false}={}) {
       /* Find model based on stored id in tab */
       const tab_id = tab.get('model_id') ? tab.get('model_id') : tab.get('id');
-      let model = this.get('store').find(tab.get('module'), tab_id);
+      const model = this.get('store').find(tab.get('module'), tab_id);
       const tabService = this.get('tabList');
-      if (tabService.isDirty(tab) || action === 'delete' || action === 'deleteAttachment') {
-        /* jshint ignore:start */
+      if (tabService.showModal(tab, action, confirmed)) {
         tab.toggleProperty('modalIsShowing');
         tabService.set('action', action);
-        // action !== 'delete' ? Ember.$('.t-modal').modal('show') : Ember.$('.t-delete-modal').modal('show');
-        /* jshint ignore:end */
         this.trx.attemptedTabModel = tab;
         this.trx.attemptedTransitionModel = model;
         this.trx.attemptedAction = 'closeTabMaster';
@@ -165,9 +162,6 @@ var ApplicationRoute = Ember.Route.extend({
         /* rollback if contact info */
         if(model.get('content')) { model.rollback(); }
         
-        /* Hide modal if present and call transition callback defined in route */
-        // Ember.$('.t-modal').modal('hide');
-        // Ember.$('.t-delete-modal').modal('hide');
         tabService.callCB(tab);
         // const transitionCB = tab.get('transitionCB');
         // if(transitionCB) {
@@ -187,16 +181,13 @@ var ApplicationRoute = Ember.Route.extend({
         //   }
         // }
 
-        /* Redirect if clicked x on tab but stay on route if on other route...If new route, close tab and remove the model if in unsaved state (and not dirty) */
-        let temp = this.router.generate(this.controller.currentPath);
-        temp = temp.split('/').pop();
-        if(temp === String(tab_id)) {
-          const nextRoute = tabService.redirectRoute(tab, temp, action);
-          this.transitionTo(nextRoute);
+        /* Redirect if clicked x on tab but stay on route if on other route...If new route, close tab, transition if at same module, and remove the model if in unsaved state (and not dirty) */
+        const currentPath = this.router.generate(this.controller.currentPath);
+        const temp = currentPath.split('/').pop();
+        if (temp === String(tab_id) || (tab.get('newModel') && currentPath.includes(tab.get('module')))) {
+          tabService.redirectRoute(tab, action, confirmed, this.transitionTo.bind(this));
         // }else if(this.controller.currentPath !== tab.get('redirectRoute')){
         //   this.transitionTo(this.controller.currentPath);
-        }else if(typeof tab.get('redirectRoute') !== undefined){
-          this.transitionTo(tab.get('redirectRoute'));
         }
 
         /* close tab */
@@ -210,7 +201,6 @@ var ApplicationRoute = Ember.Route.extend({
       this.send('closeTabMaster', tab, {action:'delete', deleteCB:callback});
     },
     deleteAttachment(tab, callback){
-      // Ember.$('.t-delete-modal').modal('show');
       this.send('closeTabMaster', tab, {action:'deleteAttachment', deleteCB:callback});
     }
   }

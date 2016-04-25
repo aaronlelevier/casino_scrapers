@@ -113,8 +113,11 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DTD_NEW_URL);
-      assert.equal(find('.t-modal').is(':visible'), true);
-      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
   click('.t-modal-footer .t-modal-cancel-btn');
@@ -122,7 +125,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     waitFor(() => {
       assert.equal(currentURL(), DTD_NEW_URL);
       assert.equal(page.key, DTD.keyOne);
-      assert.equal(find('.t-modal').is(':hidden'), true);
+      assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
@@ -134,7 +137,11 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DTD_NEW_URL);
-      assert.equal(find('.t-modal').is(':visible'), true);
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
       let dtds = store.find('dtd');
       assert.equal(dtds.get('length'), 1);
     });
@@ -143,6 +150,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DTD_URL);
+      assert.throws(Ember.$('.ember-modal-dialog'));
       let dtds = store.find('dtd');
       assert.equal(dtds.get('length'), 0);
       assert.equal(find('tr.t-grid-data').length, 10);

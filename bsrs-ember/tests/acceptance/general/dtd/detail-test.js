@@ -247,15 +247,18 @@ test('click modal cancel (dtd)', (assert) => {
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.modalIsVisible);
-      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
   generalPage.clickModalCancel();
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.modalIsHidden);
+      assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
@@ -276,15 +279,18 @@ test('click modal ok (dtd)', (assert) => {
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.modalIsVisible);
-      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.modalIsHidden);
+      assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
@@ -308,13 +314,18 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.modalIsVisible);
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
+      assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
@@ -353,13 +364,18 @@ test('remove existing, cancel, modal - should be prompted when removing existing
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.modalIsVisible);
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
+      assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
   andThen(() => {
@@ -373,8 +389,10 @@ test('when click delete, modal displays and when click ok, dtd is deleted and re
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.deleteModalIsVisible);
-      assert.equal(find('.t-modal-delete-body').text().trim(), t('crud.delete.confirm'));
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.delete.confirm', {module: 'dtd'}));
+      assert.equal(Ember.$('.t-modal-delete-btn').text().trim(), t('crud.delete.button'));
     });
   });
   xhr(`${PREFIX}${BASE_URL}/${DTD.idOne}/`, 'DELETE', null, {}, 204, {});
@@ -383,6 +401,7 @@ test('when click delete, modal displays and when click ok, dtd is deleted and re
     waitFor(() => {
       assert.equal(currentURL(), DTD_URL);
       assert.equal(store.find('dtd', DTD.idOne).get('length'), undefined);
+      assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
@@ -546,15 +565,18 @@ test('selecting a top level category will alter the url and can cancel/discard c
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.modalIsVisible);
-      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
   await generalPage.clickModalCancel();
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.modalIsHidden);
+      assert.throws(Ember.$('.ember-modal-dialog'));
       assert.equal(store.find('category').get('length'), 5);
       let dtd = store.find('dtd', DTD.idOne);
       let link = store.find('link', dtd.get('links').objectAt(0).get('id'));
@@ -572,13 +594,17 @@ test('selecting a top level category will alter the url and can cancel/discard c
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.modalIsVisible);
-      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
   await generalPage.clickModalRollback();
   andThen(() => {
     waitFor(() => {
+      assert.throws(Ember.$('.ember-modal-dialog'));
       assert.equal(currentURL(), DETAIL_URL);
     });
   });

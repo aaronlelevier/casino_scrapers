@@ -167,15 +167,17 @@ test('delete attachment is successful when the user confirms yes (before the fil
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.deleteModalIsVisible);
-      assert.equal(find('.t-modal-delete-body').text().trim(), t('crud.delete.confirm'));
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.delete.confirm', {module: 'dtd'}));
+      assert.equal(Ember.$('.t-modal-delete-btn').text().trim(), t('crud.delete.button'));
     });
   });
   generalPage.clickModalDelete();
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.deleteModalIsHidden);
+      assert.throws(Ember.$('.ember-modal-dialog'));
       model = store.find('dtd', DTD.idOne);
       assert.equal(find(PROGRESS_BAR).length, 0);
       assert.equal(store.find('attachment').get('length'), 0);
@@ -250,12 +252,12 @@ test('rolling back should only remove files not yet associated with a given dtd'
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     waitFor(() => {
-      assert.equal(find('.t-modal-body').length, 1);
+      assert.ok(Ember.$('.ember-modal-dialog'));
     });
   });
   ajax(`${PREFIX}/admin/attachments/batch-delete/`, 'DELETE', {ids: [UUID.value]}, {}, 204, {});
-  await generalPage.clickModalRollback();
-  assert.equal(currentURL(), ADMIN_URL);
+  await click('.t-modal-rollback-btn');
+  assert.equal(currentURL(), DETAIL_URL);
   assert.equal(model.get('attachments').get('length'), 1);
   assert.equal(store.find('attachment').get('length'), 1);
   assert.equal(model.get('isDirty'), false);
