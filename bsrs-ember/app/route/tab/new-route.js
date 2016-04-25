@@ -14,6 +14,12 @@ var TabNewRoute = Ember.Route.extend({
     });
   },
   actions: {
+    didTransition() {
+      this.get('tabList').logCurrentLocation(this.routeName);
+    },
+    willTransition() {
+      this.get('tabList').logLocation(this.router.currentPath);
+    },
     parentAction(tab){
       let model = this.get('store').find(tab.get('module'), tab.get('id'));
       if (model && model.get('isDirtyOrRelatedDirty')) {

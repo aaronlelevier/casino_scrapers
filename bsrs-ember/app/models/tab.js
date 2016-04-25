@@ -3,6 +3,8 @@ import inject from 'bsrs-ember/utilities/store';
 
 var TabModel = Ember.Object.extend({
   modalIsShowing: false,
+  previousLocation: undefined,
+  currentLocation: undefined, //only used for new tabs right now
   i18n: Ember.inject.service(),
   init() {
     const dynamicField = this.get('templateModelField') || [];
