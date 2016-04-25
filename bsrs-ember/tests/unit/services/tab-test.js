@@ -30,48 +30,57 @@ test('it exists for single tabs', function(assert) {
   assert.equal(service.findTab(DTD.idOne).get('id'), DTD.idOne);
 });
 
-/*
- * redirectRoute: will determine where to redirect to based on action
- * if all three actions redirect to same route, just declare the `redirectRoute` on the route for the module
- * redirect should handle going back to route before entering the tab
- * before entering route, should log location with each tab that exists in the willDestroyElement hook of the detail component
- * if tabs previous route is not the same as the `module` property, then transition to that route
- */
-test('redirects based on action', function(assert) {
-  let service = this.subject();
-  const tab = service.findTab(TD.idOne);
-  const route = service.redirectRoute(tab, 'tickets.ticket', 'closeTab'); 
-  assert.equal(route, 'tickets.index');
-  const tab_dtd = service.findTab(DTD.idOne);
-  let route_dtd = service.redirectRoute(tab_dtd, 'dtds.dtd', 'closeTab'); 
-  assert.equal(route_dtd, 'admin');
-  route_dtd = service.redirectRoute(tab_dtd, 'dtds.dtd', 'delete'); 
-  assert.equal(route_dtd, 'dtds.index');
-  service.set('previousLocation', 'person.index');
-  route_dtd = service.redirectRoute(tab_dtd, 'dtds.dtd', 'delete'); 
-  assert.equal(route_dtd, 'person.index');
-});
-
-// test('log location will update all tabs previousLocation property', function(assert) {
+// /*
+//  * redirectRoute: will determine where to redirect to based on action
+//  * if all three actions redirect to same route, just declare the `redirectRoute` on the route for the module
+//  * redirect should handle going back to route before entering the tab
+//  * before entering route, should log location with each tab that exists in the willDestroyElement hook of the detail component
+//  * if tabs previous route is not the same as the `module` property, then transition to that route
+//  */
+// test('redirects based on action', function(assert) {
 //   let service = this.subject();
-//   assert.equal(tab.get('previousLocation'), undefined);
-//   assert.equal(tab_single.get('previousLocation'), undefined);
-//   service.logLocation('people.index');
-//   assert.equal(tab.get('previousLocation'), 'people.index');
-//   assert.equal(tab_single.get('previousLocation'), 'people.index');
+//   const tab = service.findTab(TD.idOne);
+//   const route = service.redirectRoute(tab, 'tickets.ticket', 'closeTab'); 
+//   assert.equal(route, 'tickets.index');
+//   const tab_dtd = service.findTab(DTD.idOne);
+//   let route_dtd = service.redirectRoute(tab_dtd, 'dtds.dtd', 'closeTab', ); 
+//   assert.equal(route_dtd, 'admin');
+//   route_dtd = service.redirectRoute(tab_dtd, 'dtds.dtd', 'delete'); 
+//   assert.equal(route_dtd, 'dtds.index');
+//   service.set('previousLocation', 'person.index');
+//   route_dtd = service.redirectRoute(tab_dtd, 'dtds.dtd', 'delete'); 
+//   assert.equal(route_dtd, 'person.index');
 // });
 
-test('isDirty will return a boolean to tell modal to show', function(assert) {
+test('log location will update all tabs previousLocation property', function(assert) {
+  let service = this.subject();
+  assert.equal(tab.get('previousLocation'), undefined);
+  assert.equal(tab_single.get('previousLocation'), undefined);
+  service.logLocation('people.index');
+  assert.equal(tab.get('previousLocation'), 'people.index');
+  assert.equal(tab_single.get('previousLocation'), 'people.index');
+});
+
+test('log location will update all tabs currentLocation property', function(assert) {
+  let service = this.subject();
+  assert.equal(tab.get('currentLocation'), undefined);
+  assert.equal(tab_single.get('currentLocation'), undefined);
+  service.logCurrentLocation('people.index');
+  assert.equal(tab.get('currentLocation'), 'people.index');
+  assert.equal(tab_single.get('currentLocation'), 'people.index');
+});
+
+test('showModal will return a boolean to tell modal to show', function(assert) {
   let service = this.subject();
   const tab = service.findTab(TD.idOne);
-  assert.notOk(service.isDirty(tab), 'closeTab');
+  assert.notOk(service.showModal(tab), 'closeTab');
   ticket.set('request', 'wat');
-  assert.ok(service.isDirty(tab, 'closeTab'));
+  assert.ok(service.showModal(tab, 'closeTab'));
   const tab_dtd = service.findTab(DTD.idOne);
   assert.equal(tab_dtd.get('moduleList'), 'dtd-list');
-  assert.notOk(service.isDirty(tab_dtd, 'delete'));
+  assert.ok(service.showModal(tab_dtd, 'delete'));
   dtd.set('key', '456');
-  assert.ok(service.isDirty(tab_dtd, 'delete'));
+  assert.ok(service.showModal(tab_dtd, 'delete'));
   dtd.save();
   let dtd_2;
   run(() => {
@@ -79,16 +88,16 @@ test('isDirty will return a boolean to tell modal to show', function(assert) {
     store.push('dtd', {id: DTD.idTwo});
     store.push('dtd-list', {id: DTD.idOne});
   });
-  assert.notOk(service.isDirty(tab_dtd, 'closeTab'));
+  assert.notOk(service.showModal(tab_dtd, 'closeTab'));
   run(() => {
     store.push('dtd', {id: DTD.idOne, key: DTD.keyOne});
   });
-  assert.ok(service.isDirty(tab_dtd, 'closeTab'));
+  assert.ok(service.showModal(tab_dtd, 'closeTab'));
   dtd.save();
-  assert.notOk(service.isDirty(tab_dtd, 'closeTab'));
+  assert.notOk(service.showModal(tab_dtd, 'closeTab'));
   run(() => {
     store.push('dtd', {id: DTD.idTwo, key: DTD.keyOne});
   });
   assert.ok(dtd_2.get('isDirtyOrRelatedDirty'));
-  assert.ok(service.isDirty(tab_dtd, 'closeTab'));
+  assert.ok(service.showModal(tab_dtd, 'closeTab'));
 });
