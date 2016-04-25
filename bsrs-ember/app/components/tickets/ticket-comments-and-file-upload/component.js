@@ -24,7 +24,6 @@ export default ChildValidationComponent.extend(ValidationMixin, {
       const callback = function() {
         model.remove_attachment(attachment_id);
         repository.remove(attachment_id);
-        // Ember.$('.t-delete-modal').modal('hide');
       };
       this.sendAction('deleteAttachment', tab, callback);
     },

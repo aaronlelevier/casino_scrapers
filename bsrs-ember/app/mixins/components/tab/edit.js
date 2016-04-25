@@ -34,10 +34,10 @@ var EditMixin = Ember.Mixin.create({
     delete() {
       let id = this.get('model').get('id');
       let repository = this.get('repository');
-      let callback = function() {
+      let deleteCB = function() {
         return repository.delete(id);
       };
-      this.sendAction('delete', this.tab(), callback);
+      this.sendAction('delete', this.tab(), deleteCB);
     }
   }
 });
