@@ -5,14 +5,16 @@ import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
+import config from 'bsrs-ember/config/environment';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
-import config from 'bsrs-ember/config/environment';
 import DT from 'bsrs-ember/vendor/defaults/dtd';
-import DTF from 'bsrs-ember/vendor/dtd_fixtures';
+import FD from 'bsrs-ember/vendor/defaults/field';
 import TICKET from 'bsrs-ember/vendor/defaults/ticket';
 import PD from 'bsrs-ember/vendor/defaults/person';
+import LINK from 'bsrs-ember/vendor/defaults/link';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import DTF from 'bsrs-ember/vendor/dtd_fixtures';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
@@ -168,5 +170,36 @@ test('has_multi_locations === false, can POST data, and transition to /dt/{start
     assert.equal(currentURL(), DT_START_URL);
     let ticket = store.findOne('ticket');
     assert.equal(ticket.get('dtd_fk'), dtd_response.id);
+  });
+});
+
+test('after POST, redirected to next DT, and DT is rendered', assert => {
+  visit(DT_NEW_URL);
+  andThen(() => {
+    assert.equal(currentURL(), DT_NEW_URL);
+  });
+  // fill out form
+  dtPage.requesterFillin(TICKET.requesterOne);
+  xhr(`${PREFIX}/admin/locations/?page=1&name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
+  dtPage.locationsClickDropdown();
+  fillIn(`${SEARCH}`, 'a');
+  dtPage.locationsOptionOneClick();
+  // POST
+  let dtd_response = DTF.generate(DT.idOne);
+  xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(ticket_dt_new_payload), {}, 201, dtd_response);
+  dtPage.clickStart();
+  andThen(() => {
+    assert.equal(currentURL(), DT_START_URL);
+    let ticket = store.findOne('ticket');
+    assert.equal(ticket.get('dtd_fk'), dtd_response.id);
+    // can preview start DT elements
+    assert.equal(dtPage.note, DT.noteOne);
+    assert.equal(dtPage.description, DT.descriptionOne);
+    assert.equal(dtPage.fieldCount, 1);
+    assert.equal(dtPage.fieldOneName, FD.labelOne);
+    assert.ok(!dtPage.fieldOneCheckboxIsChecked());
+    assert.equal(dtPage.prompt, DT.promptOne);
+    assert.equal(dtPage.btnCount, 1);
+    assert.equal(dtPage.btnOneText, LINK.textOne);
   });
 });
