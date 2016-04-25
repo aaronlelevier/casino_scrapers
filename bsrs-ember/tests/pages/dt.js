@@ -31,10 +31,10 @@ var DTPage = PageObject.create({
 
     // Preivew
     // TODO: these CSS class names should use the same naming convention
-    note: text('.t-dtd-note-preview'),
+    note: text('.t-dtd-preview-note'),
     description: text('.t-dtd-preview-description'),
     fieldCount: count('.t-dtd-preview-field'),
-    fieldOneName: text('.t-dtd-field-label-preview:eq(0)'),
+    fieldOneName: text('.t-dtd-preview-field-label:eq(0)'),
     fieldOneCheckboxIsChecked: () => Ember.$('.t-dtd-field-checkbox:eq(0)').is(':checked'),
     prompt: text('.t-dtd-preview-prompt'),
     btnCount: count('.t-dtd-preview-btn'),

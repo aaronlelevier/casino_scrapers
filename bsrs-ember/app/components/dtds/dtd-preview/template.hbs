@@ -9,8 +9,8 @@
     <div class="dtd-live">
       <div class="dtd-live-inner panel panel-default">
         {{#if model.note}}
-        <div class="t-dtd-preview-note panel-header">
-          <div class="alert {{alert-class translated=(t model.note_type)}} {{t model.note_type}} t-dtd-note-preview">{{format-markdown model.note}}</div>
+        <div class="t-dtd-preview-note-header panel-header">
+          <div class="alert {{alert-class translated=(t model.note_type)}} {{t model.note_type}} t-dtd-preview-note">{{format-markdown model.note}}</div>
         </div>
         {{/if}}
         <div class="panel-body">

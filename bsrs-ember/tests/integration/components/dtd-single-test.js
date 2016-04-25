@@ -317,7 +317,7 @@ test('no field label does not display undefined', function(assert) {
   });
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}{{dtds/dtd-preview model=model}}`);
-  assert.equal(this.$('.t-dtd-field-label-preview').text().trim(), '');
+  assert.equal(this.$('.t-dtd-preview-field-label').text().trim(), '');
 });
 
 test('preview updates as fields changes are made to detail', function(assert) {
@@ -334,11 +334,11 @@ test('preview updates as fields changes are made to detail', function(assert) {
   assert.equal(dtd.get('fields').objectAt(0).get('label'), FD.labelOne);
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}{{dtds/dtd-preview model=model}}`);
-  assert.equal(this.$('.t-dtd-field-label-preview').text().trim(), FD.labelOne);
+  assert.equal(this.$('.t-dtd-preview-field-label').text().trim(), FD.labelOne);
   //text
   page.fieldLabelOneFillin(FD.labelTwo);
   assert.equal(page.fieldLabelOne, FD.labelTwo);
-  assert.equal(this.$('.t-dtd-field-label-preview').text().trim(), FD.labelTwo);
+  assert.equal(this.$('.t-dtd-preview-field-label').text().trim(), FD.labelTwo);
   assert.equal(this.$('input.t-dtd-field-preview').attr('type'), 'text');
   //number
   clickTrigger(FIELD_TYPE);
@@ -365,7 +365,7 @@ test('preview updates as fields changes are made to detail', function(assert) {
   clickTrigger(FIELD_TYPE);
   page.fieldTypeOneClickOptionSix();
   this.$(`.ember-power-select-option:contains(${FD.typeSix})`).mouseup();
-  assert.equal(this.$('.t-dtd-field-label-preview').text().trim(), FD.labelTwo);
+  assert.equal(this.$('.t-dtd-preview-field-label').text().trim(), FD.labelTwo);
   assert.ok(this.$('div').hasClass('checkbox'));
   assert.equal(this.$('.t-dtd-preview-field div.checkbox:eq(0)').text().trim(), OD.textOne);
   assert.equal(this.$('.t-dtd-preview-field div.checkbox:eq(1)').text().trim(), OD.textTwo);

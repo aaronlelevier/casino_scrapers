@@ -49,7 +49,7 @@ test('preview renders with model data passed from dtd route - v1', function(asse
   // assert.equal(page.previewButtonOne, LINK.textOne);
   // Add back when needed
   // assert.equal(this.$('.t-dtd-preview-note_type').text().trim(), DTD.noteTypeOne);
-  const $component = this.$('.t-dtd-note-preview');
+  const $component = this.$('.t-dtd-preview-note');
   assert.ok($component.hasClass('alert-info'));
 });
 
@@ -59,7 +59,7 @@ test('note_type determines class on note (success, info, warning, danger)', func
   });
   this.model = dtd;
   this.render(hbs`{{dtds/dtd-preview model=model}}`);
-  const $component = this.$('.t-dtd-note-preview');
+  const $component = this.$('.t-dtd-preview-note');
   const className = trans.t(dtd.get('note_type')).string.toLowerCase();
   assert.ok($component.hasClass(`alert-${className}`));
 });
@@ -100,6 +100,6 @@ test('if no fields, not displayed...text type displays properly', function(asser
   assert.equal(dtd.get('fields').get('length'), 1);
   this.model = dtd;
   this.render(hbs`{{dtds/dtd-preview model=model}}`);
-  assert.equal(this.$('.t-dtd-field-label-preview').text().trim(), FD.labelOne);
+  assert.equal(this.$('.t-dtd-preview-field-label').text().trim(), FD.labelOne);
   assert.equal(this.$('input.t-dtd-field-preview:eq(0)').attr('type'), 'text');
 });
