@@ -184,7 +184,8 @@ var ApplicationRoute = Ember.Route.extend({
         /* Redirect if clicked x on tab but stay on route if on other route...If new route, close tab, transition if at same module, and remove the model if in unsaved state (and not dirty) */
         const currentPath = this.router.generate(this.controller.currentPath);
         const temp = currentPath.split('/').pop();
-        if (temp === String(tab_id) || (tab.get('newModel') && currentPath.includes(tab.get('module')))) {
+        const currentLocation = tab.get('currentLocation');
+        if (temp === String(tab_id) || (tab.get('newModel') && currentLocation === this.controller.currentPath)) {
           tabService.redirectRoute(tab, action, confirmed, this.transitionTo.bind(this));
         // }else if(this.controller.currentPath !== tab.get('redirectRoute')){
         //   this.transitionTo(this.controller.currentPath);

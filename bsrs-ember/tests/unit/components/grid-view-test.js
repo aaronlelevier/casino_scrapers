@@ -94,7 +94,7 @@ test('knows how to sort a list of people even when sortable column is null', (as
 //     assert.equal(people.objectAt(3).get('id'), 2);
 // });
 
-// test('scott given a list of people and page number, should only return those people on that page', (assert) => {
+// test('given a list of people and page number, should only return those people on that page', (assert) => {
 //     store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
 //     store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
 //     store.push('person', {id: 2, username: 'zzz', first_name: '', last_name: ''});

@@ -74,7 +74,11 @@ test('when rolling back the locale the current locale is also changed back', (as
   andThen(() => {
     waitFor(() => {
       assert.equal(currentURL(), PERSON_CURRENT_URL);
-      assert.equal(find('.t-modal').is(':visible'), true);
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
   click('.t-modal-footer .t-modal-rollback-btn');
@@ -84,6 +88,7 @@ test('when rolling back the locale the current locale is also changed back', (as
       var person = store.find('person', PCD.id);
       assert.equal(person.get('locale').get('locale'), PD.locale);
       assert.equal(find('.t-grid-title').text(), "People");
+      assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
