@@ -78,5 +78,5 @@ class DTTicketViewSet(BaseModelViewSet):
 
     @staticmethod
     def _get_ticket(data):
-        id = data.pop('id', None)
+        id = data.get('id', None)
         return get_object_or_404(Ticket, id=id)

@@ -20,7 +20,7 @@ wait
 ./manage.py loaddata fixtures/third_party.json
 ./manage.py loaddata fixtures/auth.json
 ./manage.py loaddata fixtures/location.json
-
+./manage.py loaddata fixtures/dtd.json
 
 wait
 ./manage.py create_all_people
