@@ -179,7 +179,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
-      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.close_tab'));
       assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
@@ -204,7 +204,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
-      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.close_tab'));
       assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });

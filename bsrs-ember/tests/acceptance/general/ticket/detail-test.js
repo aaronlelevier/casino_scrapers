@@ -189,7 +189,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
-      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.close_tab'));
       assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
@@ -645,7 +645,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
       assert.ok(Ember.$('.ember-modal-dialog'));
       // assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
-      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.close_tab'));
       assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
@@ -676,7 +676,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
       assert.ok(Ember.$('.ember-modal-dialog'));
       // assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
-      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.close_tab'));
       assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });

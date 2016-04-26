@@ -163,23 +163,6 @@ var ApplicationRoute = Ember.Route.extend({
         if(model.get('content')) { model.rollback(); }
         
         tabService.callCB(tab);
-        // const transitionCB = tab.get('transitionCB');
-        // if(transitionCB) {
-        //   const transitionObj = transitionCB();
-        //   if(transitionObj) {
-        //     /* jshint ignore:start */
-        //     if(tab.get('model_id') && !tab.get('newModel')) {
-        //       /* singleTabs have model_id so prevent redirect by returning out; expect on delete */
-        //       transitionObj.otherFuncs;
-        //       if(!tab.get('continueTransition')){
-        //         return;
-        //       }
-        //     } else{
-        //       transitionObj.otherFuncs;
-        //     } 
-        //     /* jshint ignore:end */
-        //   }
-        // }
 
         /* Redirect if clicked x on tab but stay on route if on other route...If new route, close tab, transition if at same module, and remove the model if in unsaved state (and not dirty) */
         const currentPath = this.router.generate(this.controller.currentPath);
@@ -187,8 +170,6 @@ var ApplicationRoute = Ember.Route.extend({
         const currentLocation = tab.get('currentLocation');
         if (temp === String(tab_id) || (tab.get('newModel') && currentLocation === this.controller.currentPath)) {
           tabService.redirectRoute(tab, action, confirmed, this.transitionTo.bind(this));
-        // }else if(this.controller.currentPath !== tab.get('redirectRoute')){
-        //   this.transitionTo(this.controller.currentPath);
         }
 
         /* close tab */
