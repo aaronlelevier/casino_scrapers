@@ -406,12 +406,12 @@ test('when click delete, modal displays and when click ok, dtd is deleted and re
   });
 });
 
-test('scott deep linking with an xhr with a 404 status code will show up in the error component (dtd)', async assert => {
+test('deep linking with an xhr with a 404 status code will show up in the error component (dtd)', async assert => {
   clearxhr(detail_xhr);
   const exception = `This record does not exist.`;
   xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
   await page.visitDetail();
-  assert.equal(currentURL(), ERROR_URL);
+  assert.equal(currentURL(), DTD_ERROR_URL);
   assert.equal(find('.t-grid-data').length, PAGE_SIZE);
   assert.equal(find('.t-error-message').text(), 'WAT');
 });
