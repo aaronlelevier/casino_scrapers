@@ -32,7 +32,6 @@ const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
 const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
 const TICKET_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
-const ERROR_URL = BASEURLS.error_url;
 const LETTER_A = {keyCode: 65};
 const LETTER_B = {keyCode: 66};
 const LETTER_R = {keyCode: 82};
@@ -1058,7 +1057,7 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
   const exception = `This record does not exist.`;
   xhr(`${endpoint}${TD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
   await page.visitDetail();
-  assert.equal(currentURL(), ERROR_URL);
+  assert.equal(currentURL(), DETAIL_URL);
   assert.equal(find('.t-error-message').text(), 'WAT');
 });
 /* jshint ignore:end */

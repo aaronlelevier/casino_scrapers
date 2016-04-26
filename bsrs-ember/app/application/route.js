@@ -141,7 +141,8 @@ var ApplicationRoute = Ember.Route.extend({
   actions: {
     error(error, transition) {
       if(error){
-        return this.transitionTo('error');
+        /* intermediateTransitionTo does not modify the url or window history so when page is refreshed, they are redirected to route user intended */
+        return this.intermediateTransitionTo('error');
       }
     },
     closeTabMaster(tab, {action='closeTab', deleteCB=null, confirmed=false}={}) {

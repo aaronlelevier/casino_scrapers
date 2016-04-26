@@ -21,7 +21,6 @@ import moment from 'moment';
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_tickets_url;
-const ERROR_URL = BASEURLS.error_url;
 const TICKET_URL = `${BASE_URL}/index`;
 const NUMBER_ONE = {keyCode: 49};
 const LETTER_R = {keyCode: 82};

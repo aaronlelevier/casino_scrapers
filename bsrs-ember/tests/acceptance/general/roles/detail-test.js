@@ -23,7 +23,6 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_roles_url;
 const ROLE_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + RD.idOne;
-const ERROR_URL = BASEURLS.error_url;
 const LETTER_A = {keyCode: 65};
 const LETTER_S = {keyCode: 83};
 const LETTER_R = {keyCode: 82};
@@ -491,7 +490,7 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
   xhr(`${endpoint}${RD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
   visit(DETAIL_URL);
   andThen(() => {
-    assert.equal(currentURL(), ERROR_URL);
+    assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-error-message').text(), 'WAT');
   });
 });

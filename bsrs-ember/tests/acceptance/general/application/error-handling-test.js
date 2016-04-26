@@ -16,7 +16,6 @@ import trim from 'bsrs-ember/utilities/trim';
 
 const PREFIX = config.APP.NAMESPACE;
 const LOC_URL = BASEURLS.base_locations_url;
-const ERROR_URL = BASEURLS.error_url;
 const LOCATION_URL = `${LOC_URL}/index`;
 const DETAIL_URL = `${LOC_URL}/${LD.idOne}`;
 const LOCATION_NEW_URL = `${LOC_URL}/new/1`;
@@ -25,24 +24,24 @@ const DJANGO_LOCATION_URL = `${PREFIX}/admin/locations/`;
 var application, store, payload, new_xhr, list_xhr, original_uuid, originalLoggerError, originalTestAdapterException;
 
 module('Acceptance | error handling test', {
-    beforeEach() {
-        application = startApp();
-        store = application.__container__.lookup('store:main');
-        new_xhr = xhr(DJANGO_LOCATION_URL + '?page=1', "GET", null, {}, 200, LF.empty());
-        payload = {id: UUID.value, name: LD.storeName, number: LD.storeNumber, status: LD.status, location_level: LLD.idOne, children: [], parents: [], emails: [], phone_numbers: [], addresses: []};
-        original_uuid = random.uuid;
-        random.uuid = function() { return UUID.value; };
-        originalLoggerError = Ember.Logger.error;
-        originalTestAdapterException = Ember.Test.adapter.exception;
-        Ember.Logger.error = function() {};
-        Ember.Test.adapter.exception = function() {};
-    },
-    afterEach() {
-        Ember.Logger.error = originalLoggerError;
-        Ember.Test.adapter.exception = originalTestAdapterException;
-        random.uuid = original_uuid;
-        Ember.run(application, 'destroy');
-    }
+  beforeEach() {
+    application = startApp();
+    store = application.__container__.lookup('store:main');
+    new_xhr = xhr(DJANGO_LOCATION_URL + '?page=1', "GET", null, {}, 200, LF.empty());
+    payload = {id: UUID.value, name: LD.storeName, number: LD.storeNumber, status: LD.status, location_level: LLD.idOne, children: [], parents: [], emails: [], phone_numbers: [], addresses: []};
+    original_uuid = random.uuid;
+    random.uuid = function() { return UUID.value; };
+    originalLoggerError = Ember.Logger.error;
+    originalTestAdapterException = Ember.Test.adapter.exception;
+    Ember.Logger.error = function() {};
+    Ember.Test.adapter.exception = function() {};
+  },
+  afterEach() {
+    Ember.Logger.error = originalLoggerError;
+    Ember.Test.adapter.exception = originalTestAdapterException;
+    random.uuid = original_uuid;
+    Ember.run(application, 'destroy');
+  }
 });
 
 // test('xhr with a 400 status code will show up in the form and display django error', (assert) => {
@@ -144,29 +143,29 @@ module('Acceptance | error handling test', {
 //});
 
 test('xhr with a 404 status code will show up in the error component and transition to 404 page', (assert) => {
-    clearxhr(new_xhr);
-    const exception = `This record does not exist.`;
-    let json = [LF.generate_list(LD.unusedId)];
-    let response = {'count':1,'next':null,'previous':null,'results': json};
-    const endpoint = `${PREFIX}${LOC_URL}/`;
-    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, response);
-    visit(LOCATION_URL);
-    xhr(`${endpoint}${LD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
-    visit(DETAIL_URL);
-    andThen(() => {
-        assert.equal(currentURL(), ERROR_URL);
-        assert.equal(find('.t-error-message').text(), 'WAT');
-    });
+  clearxhr(new_xhr);
+  const exception = `This record does not exist.`;
+  let json = [LF.generate_list(LD.unusedId)];
+  let response = {'count':1,'next':null,'previous':null,'results': json};
+  const endpoint = `${PREFIX}${LOC_URL}/`;
+  list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, response);
+  visit(LOCATION_URL);
+  xhr(`${endpoint}${LD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+  visit(DETAIL_URL);
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-error-message').text(), 'WAT');
+  });
 });
 
 test('deep linking with an xhr with a 404 status code will show up in the error component', (assert) => {
-    clearxhr(new_xhr);
-    const exception = `This record does not exist.`;
-    const endpoint = `${PREFIX}${LOC_URL}/`;
-    xhr(`${endpoint}${LD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
-    visit(DETAIL_URL);
-    andThen(() => {
-        assert.equal(currentURL(), ERROR_URL);
-        assert.equal(find('.t-error-message').text(), 'WAT');
-    });
+  clearxhr(new_xhr);
+  const exception = `This record does not exist.`;
+  const endpoint = `${PREFIX}${LOC_URL}/`;
+  xhr(`${endpoint}${LD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+  visit(DETAIL_URL);
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-error-message').text(), 'WAT');
+  });
 });

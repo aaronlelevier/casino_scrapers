@@ -19,7 +19,6 @@ const BASE_URL = BASEURLS.base_categories_url;
 const CATEGORIES_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + CD.idOne;
 const GRID_DETAIL_URL = BASE_URL + '/' + CD.idGridOne;
-const ERROR_URL = BASEURLS.error_url;
 const LETTER_A = {keyCode: 65};
 const SPACEBAR = {keyCode: 32};
 const CATEGORY = '.t-category-children-select > .ember-basic-dropdown-trigger';
@@ -471,7 +470,7 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
   xhr(`${endpoint}${CD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
   page.visitDetail();
   andThen(() => {
-    assert.equal(currentURL(), ERROR_URL);
+    assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-error-message').text(), 'WAT');
   });
 });
