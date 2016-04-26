@@ -307,6 +307,25 @@ test('clicking cancel button will stay on detail view', (assert) => {
   });
 });
 
+test('altering the page size will not push in models over top of dirty ones', assert => {
+  page.visitDetail();
+  page.descriptionFillIn(DTD.descriptionTwo);
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-dtd-single-description').val(), DTD.descriptionTwo);
+  });
+  const updated_pg_size = PAGE_SIZE*2;
+  let option_one = PREFIX + BASE_URL + `/?page=1&page_size=${updated_pg_size}`;
+  xhr(option_one, 'GET',null,{},200,DTDF.paginated(updated_pg_size));
+  alterPageSize('.t-page-size', updated_pg_size);
+  andThen(() => {
+    assert.equal(currentURL(),`${DETAIL_URL}?page_size=${updated_pg_size}`);
+    assert.equal(find('.t-grid-data').length, updated_pg_size-1);
+    assert.equal(find('.t-page-size option:selected').text(), `${updated_pg_size} per page`);
+    assert.equal(find('.t-tab-close > i.dirty').length, 1);
+  });
+});
+
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
   page.visitDetail();
   ticketPage.priorityClickDropdown();

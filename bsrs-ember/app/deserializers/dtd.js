@@ -125,10 +125,12 @@ var DTDDeserializer = Ember.Object.extend({
     const store = this.get('store');
     const return_array = [];
     registerCB(response, function(model) {
-      const existing = store.find('dtd', model.id);
+      const existing = store.find('dtd-list', model.id);
       if(!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')){
         const dtd = store.push('dtd-list', model);
         return_array.push(dtd);
+      } else {
+        return_array.push(existing);
       }
     });
     return return_array;

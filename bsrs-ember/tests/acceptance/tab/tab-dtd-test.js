@@ -1,5 +1,4 @@
-import Ember from 'ember';
-import { test } from 'qunit';
+import Ember from 'ember'; import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
@@ -65,19 +64,18 @@ test('going from admin to dtds list view generates a tab', assert => {
   });
 });
 
-//RECURSION PROBLEM ON JENKINS
-// test('deep link to dtd list view generates a tab', assert => {
-//   clearxhr(detail_xhr);
-//   page.visit();
-//   andThen(() => {
-//     assert.equal(currentURL(), BASE_DTD_URL);
-//     let tabs = store.find('tab');
-//     assert.equal(tabs.get('length'), 1);
-//     let tab = tabs.objectAt(0);
-//     assert.equal(find(TAB_TITLE).text(), DTD_TAB_NAME);
-//     assert.equal(tab.get('module'), DOC_TYPE);
-//   });
-// });
+test('deep link to dtd list view generates a tab', assert => {
+  clearxhr(detail_xhr);
+  page.visit();
+  andThen(() => {
+    assert.equal(currentURL(), BASE_DTD_URL);
+    let tabs = store.find('tab');
+    assert.equal(tabs.get('length'), 1);
+    let tab = tabs.objectAt(0);
+    assert.equal(find(TAB_TITLE).text(), DTD_TAB_NAME);
+    assert.equal(tab.get('module'), DOC_TYPE);
+  });
+});
 
 // test('(NEW URL) deep linking the new dtd url should push a tab into the tab store with correct properties', (assert) => {
 //   clearxhr(detail_xhr);
@@ -325,7 +323,7 @@ test('a dirty model should add the dirty class to the tab close icon and the gri
   });
 });
 
-test('closing a document via the cancel button shouldn\'t close it\'s related tab', (assert) => {
+test('closing a document via the cancel button should close it\'s related tab', (assert) => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -340,24 +338,24 @@ test('closing a document via the cancel button shouldn\'t close it\'s related ta
   });
 });
 
-test('(NEW) opening a new tab, navigating away and closing the tab should remove the tab and navigate to list url', (assert) => {
-  clearxhr(detail_xhr);
-  page.visitNew();
-  andThen(() => {
-    assert.equal(currentURL(), NEW_URL);
-    let tabs = store.find('tab');
-    assert.equal(tabs.get('length'), 1);
-  });
-  page.visit();
-  click('.t-tab-close:eq(0)');
-  andThen(() => {
-    assert.equal(currentURL(), ADMIN_URL);
-    let tabs = store.find('tab');
-    assert.equal(tabs.get('length'), 0);
-    //TODO: this test should work
-    // assert.equal(page.emptyDetailHint, '');
-  });
-});
+//test('(NEW) opening a new tab, navigating away and closing the tab should remove the tab and stay on that url', (assert) => {
+//  clearxhr(detail_xhr);
+//  page.visitNew();
+//  andThen(() => {
+//    assert.equal(currentURL(), NEW_URL);
+//    let tabs = store.find('tab');
+//    assert.equal(tabs.get('length'), 1);
+//  });
+//  page.visit();
+//  click('.t-tab-close:eq(0)');
+//  andThen(() => {
+//    // assert.equal(currentURL(), INDEX_ROUTE);
+//    let tabs = store.find('tab');
+//    assert.equal(tabs.get('length'), 0);
+//    //TODO: this test should work
+//    // assert.equal(page.emptyDetailHint, '');
+//  });
+//});
 
 test('opening a tab, navigating away and closing the tab should remove the tab', (assert) => {
   visit(DETAIL_URL);
@@ -390,47 +388,51 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     waitFor(() => {
-      assert.ok(generalPage.modalIsVisible);
-      assert.ok(generalPage.deleteModalIsHidden);
-      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.close_tab'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
 });
 
-//TODO
-// test('trying to close the tab with one of the dirty dtds that are dirty will show modal', (assert) => {
-//   visit(DETAIL_URL);
-//   andThen(() => {
-//     assert.equal(currentURL(), DETAIL_URL);
-//     let tabs = store.find('tab');
-//     assert.equal(tabs.get('length'), 1);
-//   });
-//   page.keyFillIn(DTD.keyTwo);
-//   andThen(() => {
-//     assert.equal(find('tr .dirty').length, 1);
-//     assert.equal(find('.t-tab-close > i.dirty').length, 1);
-//   });
-//   let dtd_detail_data_2 = DTDF.detail(DTD.idTwo);
-//   detail_xhr = xhr(`${endpoint}${DTD.idTwo}/`, 'GET', null, {}, 200, dtd_detail_data_2);
-//   click('.t-grid-data:eq(1)');
-//   click('.t-tab-close:eq(0)');
-//   andThen(() => {
-//     const DETAIL_URL_2 = `${BASE_DTD_URL}/${DTD.idTwo}`;
-//     assert.equal(currentURL(), DETAIL_URL_2);
-//     waitFor(() => {
-//       assert.ok(generalPage.modalIsVisible);
-//       // assert.ok(generalPage.deleteModalIsHidden);
-//       // assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
-//     });
-//   });
-//   generalPage.clickModalRollback();
-//   andThen(() => {
-//     waitFor(() => {
-//       assert.equal(currentURL(), ADMIN_URL);
-//       assert.ok(generalPage.modalIsHidden);
-//     });
-//   });
-// });
+test('trying to close the tab with one of the dirty dtds that are dirty will show modal', (assert) => {
+  visit(DETAIL_URL);
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    let tabs = store.find('tab');
+    assert.equal(tabs.get('length'), 1);
+  });
+  page.keyFillIn(DTD.keyTwo);
+  andThen(() => {
+    assert.equal(find('tr .dirty').length, 1);
+    assert.equal(find('.t-tab-close > i.dirty').length, 1);
+  });
+  let dtd_detail_data_2 = DTDF.detail(DTD.idTwo);
+  detail_xhr = xhr(`${endpoint}${DTD.idTwo}/`, 'GET', null, {}, 200, dtd_detail_data_2);
+  click('.t-grid-data:eq(1)');
+  click('.t-tab-close:eq(0)');
+  andThen(() => {
+    const DETAIL_URL_2 = `${BASE_DTD_URL}/${DTD.idTwo}`;
+    assert.equal(currentURL(), DETAIL_URL_2);
+    waitFor(() => {
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.close_tab'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
+    });
+  });
+  generalPage.clickModalRollback();
+  andThen(() => {
+    waitFor(() => {
+      const DETAIL_URL_2 = `${BASE_DTD_URL}/${DTD.idTwo}`;
+      assert.equal(currentURL(), DETAIL_URL_2);
+      assert.throws(Ember.$('.ember-modal-dialog'));
+    });
+  });
+});
 
 test('(NEW URL) a dirty new tab and clicking on new model button should not push new tab into store', (assert) => {
   clearxhr(detail_xhr);
