@@ -479,7 +479,7 @@ test('picking a different number of pages will alter the query string and xhr', 
   alterPageSize('.t-page-size', updated_pg_size);
   andThen(() => {
     assert.equal(currentURL(),DTD_URL + `?page_size=${updated_pg_size}`);
-    // assert.equal(find('.t-grid-data').length, updated_pg_size-1);//not sure why this isn't working...setup correctly from a fixture pov
+    assert.equal(find('.t-grid-data').length, updated_pg_size-1);
     assert.equal(find('.t-page-size option:selected').text(), `${updated_pg_size} per page`);
     var pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 1);

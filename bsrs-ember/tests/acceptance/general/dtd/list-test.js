@@ -113,30 +113,30 @@ test('search grid', (assert) => {
   });
 });
 
-// test('detail && preview are bound and can save', (assert) => {
-//   generalPage.visitDashboard();
-//   andThen(() => {
-//     assert.equal(currentURL(), ADMIN_URL);
-//   });
-//   generalPage
-//   .clickAdmin()
-//   .clickDTD();
-//   click('.t-grid-data:eq(0)');
-//   page.descriptionFillIn(DTD.descriptionTwo);
-//   andThen(() => {
-//     assert.ok(page.isDirty);
-//     assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionTwo);
-//   });
-//   dtd_payload.description = DTD.descriptionTwo;
-//   xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});
-//   generalPage.save();
-//   andThen(() => {
-//     assert.equal(currentURL(), DETAIL_URL);
-//     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-//     assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
-//     assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionTwo);
-//   });
-// });
+test('detail && preview are bound and can save', (assert) => {
+  generalPage.visitDashboard();
+  andThen(() => {
+    assert.equal(currentURL(), ADMIN_URL);
+  });
+  generalPage
+  .clickAdmin()
+  .clickDTD();
+  click('.t-grid-data:eq(0)');
+  page.descriptionFillIn(DTD.descriptionTwo);
+  andThen(() => {
+    assert.ok(page.isDirty);
+    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionTwo);
+  });
+  dtd_payload.description = DTD.descriptionTwo;
+  xhr(DT_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
+    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionTwo);
+  });
+});
 
 test('toggle decision tree preview', (assert) => {
   page.visitDetail();
@@ -271,19 +271,19 @@ test('navigating to list route shows 3 panes and message in dtd pane', (assert) 
   });
 });
 
-// test('clicking close on tab from detail will redirect to admin', (assert) => {
-//   page.visitDetail();
-//   andThen(() => {
-//     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-//     assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
-//     assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionOne);
-//     assert.equal(currentURL(), DETAIL_URL);
-//   });
-//   generalPage.closeTab();
-//   andThen(() => {
-//     assert.equal(currentURL(), BASEURLS.base_admin_url);
-//   });
-// });
+test('clicking close on tab from detail will redirect to admin', (assert) => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('input.t-dtd-single-key').val(), DTD.keyOne);
+    assert.equal(find('.t-dtd-preview-description').text().trim(), DTD.descriptionOne);
+    assert.equal(currentURL(), DETAIL_URL);
+  });
+  generalPage.closeTab();
+  andThen(() => {
+    assert.equal(currentURL(), BASEURLS.base_admin_url);
+  });
+});
 
 /* jshint ignore:start */
 test('ensure we are seeing the decision tree grid and not the standard grid', async assert => {
