@@ -1460,7 +1460,7 @@ test('patchSerialize - show full serialized object', assert => {
   });
 });
 
-test('patchSerialize - show full serialized object', assert => {
+test('patchSerialize - show full serialized object (with optional values not present)', assert => {
   ticket = store.push('ticket', {id: TD.idOne});
   link = store.push('link', {id: LINK.idOne});
   // NO status, priority

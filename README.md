@@ -105,3 +105,9 @@ rm -rf translation.json
 1. Write code as if the person who has to maintain it is a psycopath that know where you live.  This means, DONT write code without tests.
 2. Blocking behavior that is rarely truthy.
 3. Pushing code that you aren't confident in.  Always ask for a code review.  Nobody cares how many times your are pushing or what you are pushing.  They do care if they have to fix your commits.
+4. Putting off refactors that have the possibility of impacting the team in the near future; including bugs, longer development timelines, ect.
+5. Adding ad hoc code to the codebase just to get it in there.  Might as well be dead code.
+6. Duplicating the same code.  Components are meant to provide reusability and a specified api.
+7. Adding complicated logic w/o a test comment including a description, params, and if necessary why. 
+8. Long functions are a sign that splitting up the function might remove bugs and improve understanding.
+9. Model instances are mean for data.  Components are meant as a presentational layer. Thus don't include presentational logic in the model
