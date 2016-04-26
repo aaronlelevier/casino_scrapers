@@ -21,14 +21,12 @@ export default Ember.Service.extend({
     const deleteRedirect = tab.get('deleteRedirect');
     const tabType = tab.get('tabType');
     /* Need to fix this */
-    if (action === 'closeTab' && tabType === 'multiple') {
+    if (action === 'closeTab') {
       return closeTabRedirect ? transitionFunc(closeTabRedirect) : transitionFunc(redirectRoute);
     } else if (action === 'delete') {
       return transitionFunc(redirectRoute);
     } else if (tabType === 'single') {
-      if (action === 'closeTab') {
-        return transitionFunc(closeTabRedirect);
-      } else if (action === 'delete' && confirmed) {
+      if (action === 'delete' && confirmed) {
         return transitionFunc(redirectRoute);
       } else if (action === 'rollback' && tab.get('newModel')) {
         return transitionFunc(redirectRoute);

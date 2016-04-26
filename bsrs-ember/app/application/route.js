@@ -177,7 +177,7 @@ var ApplicationRoute = Ember.Route.extend({
         if (tab.get('newModel') && !tab.get('saveModel')) {
           model.removeRecord();
         }
-        tabService.closeTab(tab.get('id'));
+        tabService.closeTab(tab, action);
       }
     },
     delete(tab, callback){
