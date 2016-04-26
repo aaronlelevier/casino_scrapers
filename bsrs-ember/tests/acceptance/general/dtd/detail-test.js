@@ -182,7 +182,8 @@ test('add a new field and update', (assert) => {
   });
   // payload
   random.uuid = function() { return UUID.value; };
-  dtd_payload['fields'].push({
+  const new_dtd_payload = Ember.$.extend(true, {}, dtd_payload);
+  new_dtd_payload['fields'].push({
     id: 1,
     label: FD.labelOne,
     type: FD.typeFour,
@@ -190,7 +191,7 @@ test('add a new field and update', (assert) => {
     order: FD.orderTwo,
     options: [{id: 1, text: OD.textOne, order: 0}]
   });
-  xhr(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload), {}, 200, {});
+  xhr(DTD_PUT_URL, 'PUT', JSON.stringify(new_dtd_payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);

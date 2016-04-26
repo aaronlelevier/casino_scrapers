@@ -97,7 +97,7 @@ test('search grid', (assert) => {
   xhr(page_two ,'GET',null,{},200,DTDF.list_two());
   click('.t-page:eq(1) a');
   andThen(() => {
-    // assert.equal(currentURL(), `${DTD_URL}?page=2`);
+    assert.equal(currentURL(), `${DTD_URL}?page=2`);
   });
   click('.t-tab:eq(0)');
   andThen(() => {
