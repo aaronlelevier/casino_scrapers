@@ -100,3 +100,8 @@ rm -rf translation.json
 2. go into shell_plus and do Category.objects.all().delete() and then run create_categories function
 3. ./manage.py dumpdata category --indent=2 > fixtures/watt.json
 4. Remove copy watt.json into category.json
+
+#### Anti-Patterns
+1. Write code as if the person who has to maintain it is a psycopath that know where you live.  This means, DONT write code without tests.
+2. Blocking behavior that is rarely truthy.
+3. Pushing code that you aren't confident in.  Always ask for a code review.  Nobody cares how many times your are pushing or what you are pushing.  They do care if they have to fix your commits.
