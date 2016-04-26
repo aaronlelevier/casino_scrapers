@@ -27,12 +27,7 @@ const DTD_URL = BASEURLS.base_dtd_url;//Request
 const TICKET_URL = BASEURLS.base_tickets_url;//Ticket
 const DETAIL_URL = `${BASE_URL}/${DT.idOne}`;
 const DEST_URL = `${BASE_URL}/${DT.idTwo}`;
-const TICKET_POST_URL = `${PREFIX}${TICKET_URL}/${DT.idTwo}/dt/`;
-const TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idOne}/ticket/`;
-// const DT_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
-// const BACKSPACE = {keyCode: 8};
-// const DT_ERROR_URL = BASEURLS.dtd_error_url;
-// const PAGE_SIZE = config.APP.PAGE_SIZE;
+const TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
 
 let application, store, endpoint, original_uuid, link, dtd;
 
@@ -52,23 +47,6 @@ module('Acceptance | dt detail', {
 });
 
 /* jshint ignore:start */
-
-//test('decision tree displays data and can click to next destination (post ticket)', async assert => {
-//  const detail_data = DTF.detail(DT.idOne);
-//  const detail_xhr = xhr(`${endpoint}${DT.idOne}/`, 'GET', null, {}, 200, detail_data);
-//  await visit(DETAIL_URL);
-//  assert.equal(currentURL(), DETAIL_URL);
-//  await page.fieldClickCheckboxOne();
-//  const ticket = store.find('ticket', UUID.value);
-//  assert.deepEqual(ticket.get('requestValues'), [`${FD.labelOne}: ${OD.textOne}`]);
-//  assert.equal(ticket.get('request'), `${FD.labelOne}: ${OD.textOne}`);
-//  //TODO: need to include location in here, requestor
-//  let dtd_payload = DTF.generate(DT.idTwo);
-//  dtd_payload = { ...dtd_payload, target_id: UUID.value };
-//  let ticket_payload = { id: UUID.value, request: `name: ${OD.textOne}`, cc: [], categories: [], attachments: [] };
-//  xhr(TICKET_POST_URL, 'POST', JSON.stringify(ticket_payload), {}, 201, Ember.$.extend(true, {}, dtd_payload));
-//  await page.clickNextBtn();
-//});
 
 test('decision tree displays data and can click to next destination after updating option (patch ticket)', async assert => {
   run(() => {

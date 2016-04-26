@@ -38,7 +38,7 @@ const DTD_URL = BASEURLS.base_dtd_url;
 const DTD_API_URL = `${PREFIX}${DTD_URL}/`;
 const TICKET_URL = BASEURLS.base_tickets_url;
 const DT_TICKET_POST_URL = `${PREFIX}/dt/ticket/`;
-const DT_TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idOne}/ticket/`;
+const DT_TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
 const DT_START_URL = `${DT_URL}/${DT.idOne}`;
 const DT_TWO_URL = `${DT_URL}/${DT.idTwo}`;
 
