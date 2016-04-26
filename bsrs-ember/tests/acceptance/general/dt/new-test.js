@@ -14,6 +14,7 @@ import TICKET from 'bsrs-ember/vendor/defaults/ticket';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import CD from 'bsrs-ember/vendor/defaults/category';
 import DTF from 'bsrs-ember/vendor/dtd_fixtures';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
@@ -23,7 +24,7 @@ import dtPage from 'bsrs-ember/tests/pages/dt';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import ticketPage from 'bsrs-ember/tests/pages/tickets';
 import {dtd_payload} from 'bsrs-ember/tests/helpers/payloads/dtd';
-import {ticket_dt_new_payload} from 'bsrs-ember/tests/helpers/payloads/ticket';
+import {ticket_dt_new_payload, ticket_dt_new_payload_PATCH} from 'bsrs-ember/tests/helpers/payloads/ticket';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
 
 const DASHBOARD_URL = BASEURLS.dashboard_url;
@@ -37,7 +38,9 @@ const DTD_URL = BASEURLS.base_dtd_url;
 const DTD_API_URL = `${PREFIX}${DTD_URL}/`;
 const TICKET_URL = BASEURLS.base_tickets_url;
 const DT_TICKET_POST_URL = `${PREFIX}/dt/ticket/`;
+const DT_TICKET_PATCH_URL = `${PREFIX}${TICKET_URL}/1/dt/`;
 const DT_START_URL = `${DT_URL}/${DT.idOne}`;
+const DT_TWO_URL = `${DT_URL}/${DT.idTwo}`;
 
 let application, store, endpoint, original_uuid;
 
@@ -198,6 +201,67 @@ test('after POST, redirected to next DT, and DT is rendered', assert => {
     assert.equal(dtPage.fieldCount, 1);
     assert.equal(dtPage.fieldOneName, FD.labelOne);
     assert.ok(!dtPage.fieldOneCheckboxIsChecked());
+    assert.equal(dtPage.prompt, DT.promptOne);
+    assert.equal(dtPage.btnCount, 1);
+    assert.equal(dtPage.btnOneText, LINK.textOne);
+  });
+});
+
+// TODO (ayl): Can't get checkbox to display value in DOM, and can't submit PATCH because button is disabled
+//  and trying to enable button means getting value of checkbox.
+test('aaron POST then PATCH - to demonstrate starting the DT and maintaining traversing the DT Tree and updating the same Ticket', assert => {
+  visit(DT_NEW_URL);
+  andThen(() => {
+    assert.equal(currentURL(), DT_NEW_URL);
+  });
+  // fill out form
+  dtPage.requesterFillin(TICKET.requesterOne);
+  xhr(`${PREFIX}/admin/locations/?page=1&name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
+  dtPage.locationsClickDropdown();
+  fillIn(`${SEARCH}`, 'a');
+  dtPage.locationsOptionOneClick();
+  // POST
+  let dtd_response = DTF.generate(DT.idOne);
+  xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(ticket_dt_new_payload), {}, 201, dtd_response);
+  dtPage.clickStart();
+  andThen(() => {
+    assert.equal(currentURL(), DT_START_URL);
+    let ticket = store.findOne('ticket');
+    assert.equal(ticket.get('dtd_fk'), dtd_response.id);
+  });
+  // fill out checkbox Field
+  andThen(() => {
+    assert.ok(!dtPage.fieldOneCheckboxIsChecked());
+  });
+  dtPage.fieldOneCheckboxCheck();
+  andThen(() => {
+    // assert.ok(dtPage.fieldOneCheckboxIsChecked());
+  });
+  // PATCH
+  let patch_payload = {
+    id: 1,
+    status: TICKET.statusOneId,
+    priority: TICKET.priorityOneId,
+    categories: [
+      CD.idOne,
+      CD.idPlumbing,
+      CD.idPlumbingChild
+    ],
+    request: "name: yes"
+  };
+  let dtd_response_two = DTF.generate(DT.idTwo);
+  xhr(DT_TICKET_PATCH_URL, 'PATCH', JSON.stringify(patch_payload), {}, 200, dtd_response_two);
+  dtPage.btnOneClick();
+  andThen(() => {
+    assert.equal(currentURL(), DT_TWO_URL);
+    let ticket = store.findOne('ticket');
+    assert.equal(ticket.get('dtd_fk'), dtd_response_two.id);
+    // can preview second DT start node elements
+    assert.equal(dtPage.note, DT.noteOne);
+    assert.equal(dtPage.description, DT.descriptionOne);
+    assert.equal(dtPage.fieldCount, 1);
+    assert.equal(dtPage.fieldOneName, FD.labelOne);
+    // assert.ok(dtPage.fieldOneCheckboxIsChecked());
     assert.equal(dtPage.prompt, DT.promptOne);
     assert.equal(dtPage.btnCount, 1);
     assert.equal(dtPage.btnOneText, LINK.textOne);

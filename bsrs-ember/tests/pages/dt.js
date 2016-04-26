@@ -30,15 +30,19 @@ var DTPage = PageObject.create({
     clickStart: clickable('.t-dt-start'),
 
     // Preivew
-    // TODO: these CSS class names should use the same naming convention
+    label: text('.t-dtd-preview-field-label'),
     note: text('.t-dtd-preview-note'),
     description: text('.t-dtd-preview-description'),
     fieldCount: count('.t-dtd-preview-field'),
     fieldOneName: text('.t-dtd-preview-field-label:eq(0)'),
     fieldOneCheckboxIsChecked: () => Ember.$('.t-dtd-field-checkbox:eq(0)').is(':checked'),
+    fieldOneCheckboxCheck: clickable('.t-dtd-field-checkbox:eq(0)'),
     prompt: text('.t-dtd-preview-prompt'),
     btnCount: count('.t-dtd-preview-btn'),
-    btnOneText: text('.t-dtd-preview-btn:eq(0)')
+    btnOneText: text('.t-dtd-preview-btn:eq(0)'),
+    btnOneClick: clickable('.t-dtd-preview-btn:eq(0)'),
+    // option
+    fieldOneCheckboxCount: count('.t-dtd-field-checkbox')
 });
 
 export default DTPage;
