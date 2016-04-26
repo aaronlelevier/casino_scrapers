@@ -192,7 +192,12 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
         return field;
       }
     });
-    let payload = {id: this.get('id'), priority: link.get('priority').get('id'), status: link.get('status').get('id'), categories: link.get('sorted_categories').mapBy('id')};
+    let payload = {
+      id: this.get('id'),
+      priority: link.get('priority.id'),
+      status: link.get('status.id'),
+      categories: link.get('sorted_categories').mapBy('id')
+    };
     dirtyFields.forEach((field) => {
       payload[field] = this.get(field);
     });

@@ -11,8 +11,8 @@ export default Ember.Component.extend({
     }
   }),
   actions: {
-    linkClick(destination_id, ticket) {
-      this.attrs.linkClick(destination_id, ticket);
+    linkClick(destination_id, link, ticket) {
+      this.attrs.linkClick(destination_id, link, ticket);
     }
   }
 });

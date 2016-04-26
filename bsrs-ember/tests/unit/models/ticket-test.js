@@ -3,6 +3,7 @@ const { run } = Ember;
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
+import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import CD from 'bsrs-ember/vendor/defaults/category';
@@ -12,13 +13,14 @@ import SD from 'bsrs-ember/vendor/defaults/status';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
+import LINK from 'bsrs-ember/vendor/defaults/link';
 
 
-var store, ticket, uuid;
+var store, ticket, link, uuid;
 
 module('unit: ticket test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:location', 'model:ticket-person', 'model:model-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'model:attachment', 'model:status', 'model:role', 'model:location-level', 'model:dtd']);
+    store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:location', 'model:ticket-person', 'model:model-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'model:attachment', 'model:status', 'model:role', 'model:location-level', 'model:dtd', 'model:link']);
     run(() => {
       store.push('status', {id: SD.activeId, name: SD.activeName});
       store.push('role', {id: RD.idOne, name: RD.nameOne, location_level_fk: LLD.idOne});
@@ -1431,4 +1433,48 @@ test('dtd_fk - is not dirty tracked', assert => {
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   ticket = store.push('ticket', {id: TD.idOne, dtd_fk: 1});
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('patchSerialize - show full serialized object', assert => {
+  ticket = store.push('ticket', {id: TD.idOne});
+  link = store.push('link', {id: LINK.idOne});
+  store.push('ticket-priority', {id: TP.priorityOneId, name: TP.priorityOne});
+  store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
+  // status, priority
+  link.change_status(TD.statusOneId);
+  assert.equal(link.get('status.id'), TD.statusOneId);
+  link.change_priority(TP.priorityOneId);
+  assert.equal(link.get('priority.id'), TP.priorityOneId);
+  // categories
+  store.push('model-category', {id: TCD.idOne, model_pk: LINK.idOne, category_pk: CD.idThree});
+  store.push('category', {id: CD.idThree});
+  link = store.push('link', {id: LINK.idOne, model_categories_fks: [TCD.idOne]});
+  assert.equal(link.get('categories').get('length'), 1);
+  let ret = ticket.patchSerialize(link);
+  assert.deepEqual(ret, {
+    id: TD.idOne,
+    request: undefined,
+    priority: TP.priorityOneId,
+    status: TD.statusOneId,
+    categories: [CD.idThree]
+  });
+});
+
+test('patchSerialize - show full serialized object', assert => {
+  ticket = store.push('ticket', {id: TD.idOne});
+  link = store.push('link', {id: LINK.idOne});
+  // NO status, priority
+  link.change_status(TD.statusOneId);
+  assert.ok(!link.get('status.id'));
+  assert.ok(!link.get('priority.id'));
+  // NO categories
+  assert.equal(link.get('categories').get('length'), 0);
+  let ret = ticket.patchSerialize(link);
+  assert.deepEqual(ret, {
+    id: TD.idOne,
+    request: undefined,
+    priority: undefined,
+    status: undefined,
+    categories: []
+  });
 });

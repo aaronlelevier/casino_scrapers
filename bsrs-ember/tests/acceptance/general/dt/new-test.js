@@ -38,7 +38,7 @@ const DTD_URL = BASEURLS.base_dtd_url;
 const DTD_API_URL = `${PREFIX}${DTD_URL}/`;
 const TICKET_URL = BASEURLS.base_tickets_url;
 const DT_TICKET_POST_URL = `${PREFIX}/dt/ticket/`;
-const DT_TICKET_PATCH_URL = `${PREFIX}${TICKET_URL}/1/dt/`;
+const DT_TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idOne}/ticket/`;
 const DT_START_URL = `${DT_URL}/${DT.idOne}`;
 const DT_TWO_URL = `${DT_URL}/${DT.idTwo}`;
 
@@ -209,7 +209,7 @@ test('after POST, redirected to next DT, and DT is rendered', assert => {
 
 // TODO (ayl): Can't get checkbox to display value in DOM, and can't submit PATCH because button is disabled
 //  and trying to enable button means getting value of checkbox.
-test('aaron POST then PATCH - to demonstrate starting the DT and maintaining traversing the DT Tree and updating the same Ticket', assert => {
+test('POST then PATCH - to demonstrate starting the DT and maintaining traversing the DT Tree and updating the same Ticket', assert => {
   visit(DT_NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), DT_NEW_URL);
