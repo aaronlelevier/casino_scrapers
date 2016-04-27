@@ -53,6 +53,37 @@ var BSRS_DTD_FACTORY = (function() {
       attachments: []
     }
   };
+  factory.prototype.generateWithAllFields = function(i, key) {
+    let dtd = this.generate(i, key);
+    // text
+    dtd['fields'].push({
+      id: this.field.idFour,
+      label: this.field.labelFour,
+      type: this.field.typeOne,
+      required: this.field.requiredOne,
+      order: this.field.orderOne,
+      options: []
+    });
+    // number
+    dtd['fields'].push({
+      id: this.field.idTwo,
+      label: this.field.labelTwo,
+      type: this.field.typeTwo,
+      required: this.field.requiredOne,
+      order: this.field.orderOne,
+      options: []
+    });
+    // textarea
+    dtd['fields'].push({
+      id: this.field.idThree,
+      label: this.field.labelThree,
+      type: this.field.typeThree,
+      required: this.field.requiredOne,
+      order: this.field.orderOne,
+      options: []
+    });
+    return dtd;
+  };
   factory.prototype.generate_list = function(id, key) {
     var id = id || this.dtd.idOne;
     var key = key || this.dtd.keyOne;
@@ -95,6 +126,12 @@ var BSRS_DTD_FACTORY = (function() {
     var pk = i || this.dtd.idOne;
     var key = key || this.dtd.keyOne;
     var detail = this.generate(pk, key);
+    return detail;
+  };
+  factory.prototype.detailWithAllFields = function(i, key) {
+    var pk = i || this.dtd.idOne;
+    var key = key || this.dtd.keyOne;
+    var detail = this.generateWithAllFields(pk, key);
     return detail;
   };
   factory.prototype.categories = function() {

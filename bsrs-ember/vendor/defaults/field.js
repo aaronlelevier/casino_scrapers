@@ -6,6 +6,7 @@ var BSRS_FIELDS_DEFAULTS_OBJECT = (function() {
       idOne: 'a12695d0-a82d-451f-a9c3-d87aaa47ac44',
       idTwo: 'a12695d0-a82d-451f-a9c3-d87aaa47ac45',
       idThree: 'a12695d0-a82d-451f-a9c3-d87aaa47ac46',
+      idThree: 'a12695d0-a82d-451f-a9c3-d87aaa47ac47',
       labelOne: 'name',
       labelTwo: 'age',
       labelThree: 'address',

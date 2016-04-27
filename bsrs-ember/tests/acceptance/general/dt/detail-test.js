@@ -17,6 +17,7 @@ import OD from 'bsrs-ember/vendor/defaults/option';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/dtd';
+import dtPage from 'bsrs-ember/tests/pages/dt';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import ticketPage from 'bsrs-ember/tests/pages/tickets';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
@@ -234,6 +235,40 @@ test('can click to next destination after updating multiple fields select (patch
   const joinedRequest = `${requestValue}, ${requestValueTwo}`;
   const link = dtd.get('links').objectAt(0);
   let ticket_payload = { id: UUID.value, priority: LINK.priorityOne, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id'), request: joinedRequest };
+  xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
+  await page.clickNextBtn();
+  assert.equal(currentURL(), DEST_URL);
+});
+
+test('fill out: number, text, textarea, and select (patch ticket)', async assert => {
+  run(() => {
+    store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
+  });
+  let detail_data = DTF.detailWithAllFields(DT.idOne);
+  const detail_xhr = xhr(`${endpoint}${DT.idOne}/`, 'GET', null, {}, 200, detail_data);
+  await visit(DETAIL_URL);
+  assert.equal(currentURL(), DETAIL_URL);
+  // checkbox
+  dtPage.fieldOneCheckboxCheck();
+  // number
+  await fillIn('.t-dtd-field-number:eq(0)', 92);
+  const NUMBER = {keyCode: 57};
+  await triggerEvent('.t-dtd-field-number:eq(0)', 'keyup', NUMBER);
+  // text
+  await fillIn('.t-dtd-field-text:eq(0)', 'wat');
+  const LETTER_W = {keyCode: 87};
+  await triggerEvent('.t-dtd-field-text:eq(0)', 'keyup', LETTER_W);
+  // textarea
+  assert.equal(currentURL(), DETAIL_URL);
+  await fillIn('.t-dtd-field-textarea:eq(0)', '123 St.');
+  await triggerEvent('.t-dtd-field-textarea:eq(0)', 'keyup', LETTER_W);
+  const ticket = store.find('ticket', UUID.value);
+  const requestValue = `${FD.labelOne}: yes, ${FD.labelTwo}: 92, ${FD.labelFour}: wat, ${FD.labelThree}: 123 St.`;
+  assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
+  assert.equal(dtd.get('fields').objectAt(0).get('type'), FD.typeSix);
+  let dtd_payload = DTF.generate(DT.idTwo);
+  const link = dtd.get('links').objectAt(0);
+  let ticket_payload = { id: UUID.value, request: requestValue, priority: LINK.priorityOne, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id') };
   xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
   await page.clickNextBtn();
   assert.equal(currentURL(), DEST_URL);
