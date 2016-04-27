@@ -5,9 +5,10 @@ from model_mommy import mommy
 from category.models import Category
 from category.tests.factory import create_single_category
 from dtd.models import TreeField, TreeOption, TreeData, TreeLink
+from dtd.model_choices import FIELD_TYPES
 from ticket.models import TicketStatus, TicketPriority
 from ticket.tests.factory import create_ticket_status, create_ticket_priority
-from utils.create import _generate_chars
+from utils.create import _generate_chars, random_lorem
 
 
 def _link_get_or_create_related(model, factory_create_func):
@@ -108,12 +109,26 @@ def create_dtd_fixtures_only():
         data = DTDData._make(x)._asdict()
         key = _generate_chars()
 
-        TreeData.objects.create(
+        dtd = TreeData.objects.create(
             key=data['name'],
             note=data['id'],
             description=data['name'],
             prompt=data['parent_id']
         )
+
+        if data['parent_id'] in (None, 0):
+            add_field_of_each_type(dtd)
+
+
+def add_field_of_each_type(dtd):
+    for type in FIELD_TYPES[:5]:
+        label = type.split('.')[-1]
+        field = TreeField.objects.create(label=label, type=type, required=True, tree_data=dtd)
+
+        if type in ('admin.dtd.label.field.select', 'admin.dtd.label.field.checkbox'):
+            for i in range(2):
+                text = random_lorem(1)
+                TreeOption.objects.create(text=text, field=field)
 
 
 def create_link_fixtures_only():

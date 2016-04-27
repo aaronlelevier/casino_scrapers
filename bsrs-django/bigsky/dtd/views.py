@@ -1,15 +1,8 @@
-from django.shortcuts import get_object_or_404
-
-from rest_framework import status
-from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
 from dtd.models import TreeData
 from dtd.serializers import (TreeDataListSerializer, TreeDataDetailSerializer,
     TreeDataCreateUpdateSerializer,)
-from ticket.models import Ticket
-from ticket.serializers import TicketCreateSerializer
 from utils.mixins import SearchMultiMixin
 from utils.views import BaseModelViewSet
 

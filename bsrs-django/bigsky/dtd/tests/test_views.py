@@ -8,14 +8,10 @@ from rest_framework.test import APITestCase
 from category.tests.factory import create_single_category
 from dtd.model_choices import LINK_TYPES, NOTE_TYPES, FIELD_TYPES
 from dtd.models import TreeOption, TreeData
-from dtd.serializers import TreeDataCreateUpdateSerializer, TreeDataDetailSerializer
-from dtd.tests.factory import create_tree_data
+from dtd.serializers import TreeDataCreateUpdateSerializer
 from dtd.tests.mixins import TreeDataTestSetUpMixin
-from generic.tests.factory import create_file_attachment, create_image_attachment
-from person.tests.factory import PASSWORD, create_single_person
-from ticket.models import Ticket
-from ticket.serializers import TicketCreateSerializer
-from ticket.tests.factory import create_ticket, create_ticket_status, create_ticket_priority
+from generic.tests.factory import create_file_attachment
+from ticket.tests.factory import create_ticket_status, create_ticket_priority
 from utils.create import random_lorem, _generate_chars
 from utils.helpers import media_path
 

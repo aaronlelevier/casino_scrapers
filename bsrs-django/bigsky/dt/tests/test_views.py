@@ -7,7 +7,6 @@ from rest_framework.test import APITestCase
 from dtd.models import TreeData, DTD_START_KEY
 from dtd.serializers import TreeDataDetailSerializer
 from dtd.tests.mixins import TreeDataTestSetUpMixin
-from person.tests.factory import create_single_person
 from ticket.models import Ticket
 from ticket.serializers import TicketCreateSerializer, TicketDTSerializer
 from ticket.tests.factory import create_ticket

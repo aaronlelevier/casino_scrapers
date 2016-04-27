@@ -12,6 +12,7 @@ NOTE_TYPES = [
 
 FIELD_TYPES = [
     'admin.dtd.label.field.text',
+    'admin.dtd.label.field.number',
     'admin.dtd.label.field.textarea',
     'admin.dtd.label.field.select',
     'admin.dtd.label.field.checkbox',

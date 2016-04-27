@@ -3,8 +3,7 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from dtd.models import TreeData, TreeDataManager, DTD_START_KEY
-from dtd.tests.factory import create_tree_link, create_tree_data
+from dtd.models import TreeData, TreeDataManager
 from setting.tests.factory import create_general_setting
 
 

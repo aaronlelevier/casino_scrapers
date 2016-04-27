@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.test import TestCase
 
 from model_mommy import mommy
@@ -5,6 +6,7 @@ from model_mommy import mommy
 from category.models import Category
 from category.tests.factory import create_single_category
 from dtd.models import TreeField, TreeOption, TreeData, TreeLink
+from dtd.model_choices import FIELD_TYPES
 from dtd.tests import factory
 from ticket.models import TicketStatus, TicketPriority
 
@@ -130,6 +132,27 @@ class FixtureGenerationTests(TestCase):
         for x in TreeLink.objects.all():
             self.assertEqual(TreeLink.objects.filter(order=x.order).count(), 1)
 
+    def test_add_field_of_each_type(self):
+        dtd = mommy.make(TreeData)
+        self.assertEqual(dtd.fields.count(), 0)
+
+        factory.add_field_of_each_type(dtd)
+
+        self.assertEqual(dtd.fields.count(), 5)
+        dtd_field_types = dtd.fields.values_list('type', flat=True)
+        # only the currently supported field types by Ember
+        for type in FIELD_TYPES[:5]:
+            label = type.split('.')[-1]
+            self.assertIsInstance(
+                TreeField.objects.get(label=label, type=type, required=True, tree_data=dtd),
+                TreeField
+            )
+        # options (select, checkbox only)
+        select = dtd.fields.get(type='admin.dtd.label.field.select')
+        self.assertEqual(select.options.count(), 2)
+        checkbox = dtd.fields.get(type='admin.dtd.label.field.checkbox')
+        self.assertEqual(checkbox.options.count(), 2)
+
     # join_dtds_and_links
 
     def test_join_dtds_and_links__initial_counts(self):
@@ -177,3 +200,11 @@ class FixtureGenerationTests(TestCase):
 
         self.assertEqual(TreeData.objects.count(), 23)
         self.assertEqual(TreeLink.objects.count(), 23)
+        # dtds with fields
+        dtds = TreeData.objects.filter(
+            Q(prompt__isnull=True) | \
+            Q(prompt=0)
+        )
+        self.assertEqual(dtds.count(), 3)
+        for dtd in dtds:
+            self.assertEqual(dtd.fields.count(), 5)
