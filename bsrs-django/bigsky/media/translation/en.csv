@@ -67,6 +67,7 @@ en,admin.contractorAssignment.other,Contractor Assignments,Contractor Assignment
 en,admin.currency.eur,EUR,EUR,,"'admin.currency.eur':'EUR',",EUR,EUR
 en,admin.currency.jpy,JPY,JPY,,"'admin.currency.jpy':'JPY',",JPY,JPY
 en,admin.currency.usd,USD,USD,,"'admin.currency.usd':'USD',",USD,USD
+en,admin.dt.requester,Requester,Requester,,"'admin.dt.requester':'Requester',",Requester,Requester
 en,admin.dtd.detail,Detail,Detail,,"'admin.dtd.detail':'Detail',",Detail,Detail
 en,admin.dtd.empty-detail,Select a definition to get started,Select a definition to get started,,"'admin.dtd.empty-detail':'Select a definition to get started',",Select a definition to get started,Select a definition to get started
 en,admin.dtd.field.add,Add Field,Add Field,,"'admin.dtd.field.add':'Add Field',",Add Field,Add Field
@@ -84,6 +85,7 @@ en,admin.dtd.label.field.text,Text,Text,,"'admin.dtd.label.field.text':'Text',",
 en,admin.dtd.label.field.textarea,Textarea,Textarea,,"'admin.dtd.label.field.textarea':'Textarea',",Textarea,Textarea
 en,admin.dtd.label.field.with_options,With options,With options,,"'admin.dtd.label.field.with_options':'With options',",With options,With options
 en,admin.dtd.label.fields,Fields,Fields,,"'admin.dtd.label.fields':'Fields',",Fields,Fields
+en,admin.dtd.label.files,Files,Files,,"'admin.dtd.label.files':'Files',",Files,Files
 en,admin.dtd.label.key,Key,Key,,"'admin.dtd.label.key':'Key',",Key,Key
 en,admin.dtd.label.label,Label,Label,,"'admin.dtd.label.label':'Label',",Label,Label
 en,admin.dtd.label.link_type,Link Type,Link Type,,"'admin.dtd.label.link_type':'Link Type',",Link Type,Link Type
@@ -234,6 +236,7 @@ en,admin.translation.search,Search Translations,Search Translations,,"'admin.tra
 en,admin.work_order.close.checked,Checked,Checked,,"'admin.work_order.close.checked':'Checked',",Work,Work
 en,admin.work_order.close.do_not_display,Do not display,Do not display,,"'admin.work_order.close.do_not_display':'Do not display',",Work,Work
 en,admin.work_order.close.unchecked,Unchecked,Unchecked,,"'admin.work_order.close.unchecked':'Unchecked',",Work,Work
+en,attachment.fail,File failed to upload,File failed to upload,,"'attachment.fail':'File failed to upload',",Work,Work
 en,button.add,Add new {{model}},Add new {{model}},,"'button.add':'Add new {{model}}',",Add new {{model_var_,Add new _model_var_
 en,button.upload,Attach file,Attach file,,"'button.upload':'Attach file',",Attach file,Attach file
 en,crud.cancel.button,Cancel,Cancel,,"'crud.cancel.button':'Cancel',",Cancel,Cancel
@@ -242,12 +245,14 @@ en,crud.create.error,Error creating {{model}}.,Error creating {{model}}.,,"'crud
 en,crud.create.success,{{model}} created successfully.,{{model}} created successfully.,,"'crud.create.success':'{{model}} created successfully.',",{{model_var_ created successfully.,_model_var_ created successfully.
 en,crud.default_value,Default: {{value}},Default: {{value}},,"'crud.default_value':'Default: {{value}}',",Default: {{value_var_,Default: _value_var_
 en,crud.delete.button,Delete,Delete,,"'crud.delete.button':'Delete',",Delete,Delete
-en,crud.delete.confirm,Are you sure you want to delete {{model}} \'{{record}}\'?,Are you sure you want to delete {{model}} \'{{record}}\'?,,"'crud.delete.confirm':'Are you sure you want to delete {{model}} \'{{record}}\'?',",Are you sure you want to delete {{model_var_ \'{{record_var_\'?,Are you sure you want to delete _model_var_ \'_record_var_\'?
+en,crud.delete.title,Delete Record,Delete Record,,"'crud.delete.title':'Delete Record',",Delete Record,Delete Record
+en,crud.delete.confirm,Are you sure you want to delete this {{module}}?,Are you sure you want to delete this {{module}}?,,"'crud.delete.confirm':'Are you sure you want to delete this {{module}}?',",Are you sure you want to delete this {{module_var_?,Are you sure you want to delete this _module_var_?
 en,crud.delete.error,Error deleting {{model}}.,Error deleting {{model}}.,,"'crud.delete.error':'Error deleting {{model}}.',",Error deleting {{model_var_.,Error deleting _model_var_.
-en,crud.discard_changes,Abandon Changes,Abandon Changes,,"'crud.discard_changes':'Abandon Changes',",Abandon Changes,Abandon Changes
-en,crud.discard_changes_confirm,You have unsaved changes. Are you sure?,You have unsaved changes. Are you sure?,,"'crud.discard_changes_confirm':'You have unsaved changes. Are you sure?',",You have unsaved changes. Are you sure?,You have unsaved changes. Are you sure?
+en,crud.discard_changes,Unsaved Changes,Unsaved Changes,,"'crud.discard_changes':'Unsaved Changes',",Unsaved Changes,Unsaved Changes
+en,crud.discard_changes_confirm,All unsaved changes will be lost.  Are you sure you want to continue?,All unsaved changes will be lost.  Are you sure you want to continue?,,"'crud.discard_changes_confirm':'All unsaved changes will be lost.  Are you sure you want to continue?',",All unsaved changes will be lost.  Are you sure you want to continue?,All unsaved changes will be lost.  Are you sure you want to continue?
 en,crud.duplicate.button,Duplicate,Duplicate,,"'crud.duplicate.button':'Duplicate',",Duplicate,Duplicate
 en,crud.inherited_from,Inherited from: {{from}},Inherited from: {{from}},,"'crud.inherited_from':'Inherited from: {{from}}',",Inherited from: {{from_var_,Inherited from: _from_var_
+en,crud.close_tab,Close Tab,Close Tab,,"'crud.close_tab':'Close Tab',",Close Tab,Close Tab
 en,crud.no,No,No,,"'crud.no':'No',",No,No
 en,crud.print.button,Print,Print,,"'crud.print.button':'Print',",Print,Print
 en,crud.restore.button,Restore,Restore,,"'crud.restore.button':'Restore',",Restore,Restore
@@ -262,7 +267,12 @@ en,crud.titles.new,New {{model}},New {{model}},,"'crud.titles.new':'New {{model}
 en,crud.update.button,Update,Update,,"'crud.update.button':'Update',",Update,Update
 en,crud.yes,Yes,Yes,,"'crud.yes':'Yes',",Yes,Yes
 en,dashboard.welcome,Welcome,Welcome,,"'dashboard.welcome':'Welcome',",Welcome,Welcome
-en,general.new,New,New,,"'general.new':'New',",New,New
+en,dt.new,New,New,,"'dt.new':'New',",New,New
+en,dt.start,Start,Start,,"'dt.start':'Start',",Start,Start
+en,dt.ticket.lauch,Lauch Ticket Decision Tree,Lauch Ticket Decision Tree,,"'dt.ticket.lauch':'Lauch Ticket Decision Tree',",Lauch Ticket Decision Tree,Lauch Ticket Decision Tree
+en,errors.dtd.key,Key must be provided,Key must be provided,,"'errors.dtd.key':'Key must be provided',",Key must be provided,Key must be provided
+en,errors.dtd.description,Description must be provided,Description must be provided,,"'errors.dtd.description':'Description must be provided',",Description must be provided,Description must be provided
+en,errors.link.text,Text must be provided,Text must be provided,,"'errors.link.text':'Text must be provided',",Text must be provided,Text must be provided
 en,grid.filter,Filter,Filter,,"'grid.filter':'Filter',",Filter,Filter
 en,grid.filterset_name,Name your filter,Name your filter,,"'grid.filterset_name':'Name your filter',",Name your filter,Name your filter
 en,grid.per_page,{{size}} per page,{{size}} per page,,"'grid.per_page':'{{size}} per page',",{{size_var_ per page,_size_var_ per page
@@ -311,7 +321,33 @@ en,ticket.status.draft,Draft,Draft,,"'ticket.status.draft':'Draft',",Draft,Draft
 en,ticket.status.in_progress,In Progress,In Progress,,"'ticket.status.in_progress':'In Progress',",In Progress,In Progress
 en,ticket.status.new,New,New,,"'ticket.status.new':'New',",New,New
 en,ticket.status.problem_solved,Problem solved,Problem solved,,"'ticket.status.problem_solved':'Problem solved',",Problem solved,Problem solved
-en,ticket.status.unsatisfactory,Unsatisfactory,Unsatisfactory,,"'ticket.status.unsatisfactory':'Unsatisfactory',",Unsatisfactory,Unsatisfactory
+en,ticket.status.unsatisfactory_completion,Unsatisfactory,Unsatisfactory,,"'ticket.status.unsatisfactory_completion':'Unsatisfactory',",Unsatisfactory,Unsatisfactory
 en,upload.progress,Progress,Progress,,"'upload.progress':'Progress',",Progress,Progress
 en,validation.invalid,Invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid,Invalid
 en,validation.valid,Valid,Valid,,"'validation.valid':'Valid',",Valid,Valid
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,

@@ -1,6 +1,8 @@
-import os
 import csv
 import copy
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+import os
 
 from django.db import models
 from django.contrib.postgres.fields import HStoreField
@@ -81,7 +83,36 @@ class TranslationManager(BaseManager):
         current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         return os.path.join(settings.MEDIA_ROOT, 'translation')
 
-    def import_csv(self, language):
+    def gspread_get_all_csv(self):
+        for language, locale in self.language_locales.items():
+            self.gspread_get_csv(language, locale)
+
+    def gspread_get_csv(self, language, locale):
+        scope = ['https://spreadsheets.google.com/feeds']
+        credentials = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(self.translation_dir, 'i18n.json'), scope)
+        gc = gspread.authorize(credentials)
+        wks = gc.open(language).sheet1
+
+        with open(os.path.join(self.translation_dir, '{}.csv'.format(locale)), 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',')
+            for row in wks.get_all_values():
+                writer.writerow(row)
+
+    @property
+    def language_locales(self):
+        return {
+            'Chinese (Traditional)': 'zh-cn',
+            'English (Master)': 'en',
+            'French': 'fr',
+            'Japanese': 'ja',
+            'Spanish': 'es'
+        }
+
+    def import_all_csv(self):
+        for language, locale in self.language_locales.items():
+            self.import_csv(locale)
+
+    def import_csv(self, locale_name):
         '''
         # Boiler-plate code for creating a new `Translation` record
 
@@ -93,7 +124,7 @@ class TranslationManager(BaseManager):
                     m.delete(override=True)
             Translation.objects.import_csv('en')
         '''
-        with open(os.path.join(self.translation_dir, '{}.csv'.format(language))) as csvfile:
+        with open(os.path.join(self.translation_dir, '{}.csv'.format(locale_name))) as csvfile:
             reader = csv.DictReader(csvfile)
             values = {}
             context = {}
@@ -106,7 +137,7 @@ class TranslationManager(BaseManager):
                 if row['VALUE']:
                     values.update({row['KEY']: row['VALUE']})
             
-            locale, _ = Locale.objects.get_or_create(locale=language, name=language)
+            locale, _ = Locale.objects.get_or_create(locale=locale_name, name=locale_name)
             
             ret, _ = Translation.objects.get_or_create(locale=locale)
             ret.values = values

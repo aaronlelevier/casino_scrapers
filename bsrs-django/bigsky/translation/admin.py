@@ -10,4 +10,4 @@ class LocaleAdmin(admin.ModelAdmin):
 
 @admin.register(models.Translation)
 class TranslationAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('locale', 'created', 'modified',)
