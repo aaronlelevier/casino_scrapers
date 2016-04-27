@@ -52,10 +52,10 @@ test('validation on dtd key works if clear out input', function(assert) {
   this.render(hbs`{{dtds/dtd-single model=model}}`);
   let $component = this.$('.has-error');
   assert.equal($component.text().trim(), '');
-  this.$('.t-dtd-single-key').val('wat');
-  assert.equal(this.$('.t-dtd-single-key').val(), 'wat');
+  page.keyFillIn('wat');
+  assert.equal(page.key, 'wat');
   assert.notOk($component.is(':visible'));
-  this.$('.t-dtd-single-key').trigger('click').val('').trigger('change');
+  page.keyFillIn('');
   Ember.run.later(() => {
     const $component = this.$('.has-error');
     assert.ok($component.is(':visible'));
@@ -64,20 +64,25 @@ test('validation on dtd key works if clear out input', function(assert) {
   }, 300);
 });
 
-test('validation on dtd key works when click save', function(assert) {
+test('validation on fields when click save', function(assert) {
   var done = assert.async();
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}`);
   let $component = this.$('.has-error');
   assert.equal($component.text().trim(), '');
+  const add_btn = this.$('.t-add-link-btn');
+  add_btn.trigger('click').trigger('change');
   generalPage.save();
   Ember.run.later(() => {
-    const $key_component = this.$('.has-error:eq(0)');
-    const $desc_component = this.$('.has-error:eq(1)');
+    const $key_component = this.$('.t-dtd-key');
+    const $desc_component = this.$('.t-dtd-description');
+    const $link_text_component = this.$('.t-link-text');
     assert.ok($key_component.is(':visible'));
+    assert.ok($key_component.hasClass('has-error'));
     assert.ok($desc_component.is(':visible'));
     assert.equal($key_component.text().trim(), trans.t('errors.dtd.key'));
     assert.equal($desc_component.text().trim(), trans.t('errors.dtd.description'));
+    assert.equal($link_text_component.text().trim(), trans.t('errors.link.text'));
     done();
   }, 300);
 });
@@ -88,10 +93,10 @@ test('validation on dtd description works if clear out input', function(assert) 
   this.render(hbs`{{dtds/dtd-single model=model}}`);
   let $component = this.$('.has-error');
   assert.equal($component.text().trim(), '');
-  this.$('.t-dtd-single-description').val('wat');
-  assert.equal(this.$('.t-dtd-single-description').val(), 'wat');
+  page.descriptionFillIn('wat');
+  assert.equal(page.description, 'wat');
   assert.notOk($component.is(':visible'));
-  this.$('.t-dtd-single-description').trigger('click').val('').trigger('change');
+  page.descriptionFillIn('');
   Ember.run.later(() => {
     const $component = this.$('.has-error');
     assert.ok($component.is(':visible'));
@@ -102,42 +107,26 @@ test('validation on dtd description works if clear out input', function(assert) 
 
 // Links
 
-// test('validation on link text works as expected', function(assert) {
-//   run(() => {
-//     dtd = store.push('dtd', {id: DTD.idOne, key: 'foo', link_type: DTD.linkTypeOne});
-//     uuid = store.push('uuid', {id: 1});
-//     dtd.add_link({id: uuid.v4()});
-//   });
-//   this.set('model', dtd);
-//   this.render(hbs`{{dtds/dtd-single model=model}}`);
-//   let $component = this.$('.t-dtd-link-text-error');
-//   assert.equal($component.text().trim(), '');
-//   // assert.ok($component.is(':visible'));
-//   assert.equal(this.$('.t-dtd-link-request').length, 1);
-//   generalPage.save();
-//   assert.equal($component.text().trim(), 'Text must be provided');
-// });
-
-// test('validation - clear out text, and validation msg still works', function(assert) {
-//   run(() => {
-//     dtd = store.push('dtd', {id: DTD.idOne, link_type: DTD.linkTypeOne, dtd_links_fks: [DTDL.idOne]});
-//     store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
-//     link = store.push('link', {id: LINK.idOne, request: LINK.requestOne, text: LINK.textOne,
-//                       action_button: LINK.action_buttonOne, is_header: LINK.is_headerOne});
-//   });
-//   this.set('model', dtd);
-//   this.render(hbs`{{dtds/dtd-single model=model}}`);
-//   // assert.ok($component.is(':visible'));
-//   assert.equal(this.$('.t-dtd-link-text-error:eq(0)').text().trim(), '');
-//   assert.equal(this.$('.t-dtd-link-text').length, 1);
-//   var add_btn = this.$('.t-add-link-btn');
-//   add_btn.trigger('click').trigger('change');
-//   assert.equal(this.$('.t-dtd-link-text').length, 2);
-//   assert.equal(this.$('.t-dtd-link-text-error:eq(1)').text().trim(), '');
-//   generalPage.save();
-//   assert.equal(this.$('.t-dtd-link-text-error:eq(0)').text().trim(), '');
-//   assert.equal(this.$('.t-dtd-link-text-error:eq(1)').text().trim(), 'Text must be provided');
-// });
+test('validation - clear out text, and validation msg still works', function(assert) {
+  var done = assert.async();
+  run(() => {
+    dtd = store.push('dtd', {id: DTD.idOne, link_type: DTD.linkTypeOne, dtd_links_fks: [DTDL.idOne]});
+    store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
+    link = store.push('link', {id: LINK.idOne, request: LINK.requestOne, text: LINK.textOne,
+                      action_button: LINK.action_buttonOne, is_header: LINK.is_headerOne});
+  });
+  this.set('model', dtd);
+  this.render(hbs`{{dtds/dtd-single model=model}}`);
+  let $component = this.$('.has-error');
+  assert.notOk($component.is(':visible'));
+  page.textFillIn('');
+  Ember.run.later(() => {
+    const $component = this.$('.has-error');
+    assert.ok($component.is(':visible'));
+    assert.equal($component.text().trim(), trans.t('errors.link.text'));
+    done();
+  }, 300);
+});
 
 test('add and remove dtd links', function(assert) {
   run(() => {

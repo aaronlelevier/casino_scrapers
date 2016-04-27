@@ -19,7 +19,7 @@
           <div class="row">
             <div class="col-md-12">
               {{#form-group title="admin.dtd.label.key" for="key"}}
-                {{validated-input model=model value=model.key placeholder=(t "admin.dtd.label.key") valuePath="key" className="form-control t-dtd-single-key" didValidate=didValidate}}
+                {{validated-input model=model value=model.key placeholder=(t "admin.dtd.label.key") valuePath="key" className="form-control t-dtd-single-key" didValidate=didValidate class="t-dtd-key"}}
               {{/form-group}}
             </div>
           </div>
@@ -47,7 +47,7 @@
           <div class="row">
             <div class="col-md-12">
               {{#form-group title="admin.dtd.label.description" for="description"}}
-                {{validated-input model=model value=model.description placeholder=(t "admin.dtd.label.description") valuePath="description" className="form-control t-dtd-single-description" didValidate=didValidate input=false}}
+                {{validated-input model=model value=model.description placeholder=(t "admin.dtd.label.description") valuePath="description" className="form-control t-dtd-single-description" didValidate=didValidate input=false class="t-dtd-description"}}
               {{/form-group}}
             </div>
           </div>
@@ -122,6 +122,7 @@
                 priorities=priorities
                 statuses=statuses
                 repository=repository
+                didValidate=didValidate
               }}
             {{/form-group}}
           </div>

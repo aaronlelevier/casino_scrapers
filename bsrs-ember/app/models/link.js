@@ -10,7 +10,7 @@ import { validator, buildValidations } from 'ember-cp-validations';
 const Validations = buildValidations({
   text: validator('presence', {
     presence: true,
-    message: 'Text must be provided'
+    message: 'errors.link.text'
   }),
 });
 
@@ -64,11 +64,11 @@ var LinkModel = Model.extend(CategoriesMixin, Validations, OptConf, {
       categories: this.get('sorted_categories').mapBy('id'),
     };
   },
-  saved: false,
-  textErrorMsg: Ember.computed('text', 'saved', function(){
-    return this.get('validations.attrs.text.isValid') ? undefined : this.get('saved') ?
-      this.get('validations.attrs.text.message') : undefined;
-  })
+  // saved: false,
+  // textErrorMsg: Ember.computed('text', 'saved', function(){
+  //   return this.get('validations.attrs.text.isValid') ? undefined : this.get('saved') ?
+  //     this.get('validations.attrs.text.message') : undefined;
+  // })
 });
 
 export default LinkModel;

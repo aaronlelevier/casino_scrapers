@@ -328,6 +328,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
           'validation.valid':'Valid',
           'errors.dtd.key':'Key must be provided',
           'errors.dtd.description':'Description must be provided',
+          'errors.link.text':'Text must be provided',
         },
       }
       break;

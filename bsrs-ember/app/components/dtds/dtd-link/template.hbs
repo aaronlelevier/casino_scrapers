@@ -4,11 +4,8 @@
       <span class="input-group-btn">
         <button class="t-del-link-btn btn btn-default btn-sm delete" type="button" {{action 'delete' link}}>{{fa-icon "minus"}}</button>
       </span>
-      {{input type="text" placeholder=(t "admin.dtd.label.link.text") value=link.text class="form-control t-dtd-link-text"}}
+      {{validated-input model=link value=link.text placeholder=(t "admin.dtd.label.link.text") valuePath="text" className="form-control t-dtd-link-text" didValidate=didValidate class="t-link-text"}}
     </div>
-      <div class="t-dtd-link-text-error error">
-        {{link.textErrorMsg}}
-      </div>
     {{#if (is-equal model.link_type model.link_types.[0])}}
       <div class="input-group">
         <span class="input-group-addon">{{t "admin.dtd.label.link.action_button"}}</span>
