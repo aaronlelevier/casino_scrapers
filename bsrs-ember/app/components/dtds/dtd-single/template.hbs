@@ -19,12 +19,7 @@
           <div class="row">
             <div class="col-md-12">
               {{#form-group title="admin.dtd.label.key" for="key"}}
-              {{input type="text" placeholder=(t "admin.dtd.label.key") value=model.key class="form-control t-dtd-single-key" id="dtd_key"}}
-              {{#if model.keyErrorMsg}}
-                <div class="t-dtd-key-error error">
-                  {{model.keyErrorMsg}}
-                </div>
-              {{/if}}
+                {{validated-input model=model value=model.key placeholder=(t "admin.dtd.label.key") valuePath="key" className="form-control t-dtd-single-key" didValidate=didValidate}}
               {{/form-group}}
             </div>
           </div>
@@ -52,12 +47,7 @@
           <div class="row">
             <div class="col-md-12">
               {{#form-group title="admin.dtd.label.description" for="description"}}
-              {{textarea autoresize=true placeholder=(t "admin.dtd.label.description") value=model.description class="form-control t-dtd-single-description" id="dtd_description"}}
-              {{#if model.descriptionErrorMsg}}
-                <div class="t-dtd-description-error error">
-                  {{model.descriptionErrorMsg}}
-                </div>
-              {{/if}}
+                {{validated-input model=model value=model.description placeholder=(t "admin.dtd.label.description") valuePath="description" className="form-control t-dtd-single-description" didValidate=didValidate input=false}}
               {{/form-group}}
             </div>
           </div>

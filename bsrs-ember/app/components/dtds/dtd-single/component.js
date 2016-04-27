@@ -6,6 +6,7 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 import injectStore from 'bsrs-ember/utilities/store';
 
 export default Ember.Component.extend(TabMixin, EditMixin, {
+  didValidate: false,
   store: injectStore('main'),
   error: Ember.inject.service(),
   repository: inject('dtd'),
@@ -21,19 +22,29 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
   // },
   actions: {
     save(update=true) {
+      const model = this.get('model');
+      // model.validate().then(({model, validations}) => {
       if (this.get('model.validations.isValid')) {
         const newModel = this.get('model').get('new');
         this._super(update);
         if(newModel){
           this.sendAction('editDTD');
         }
-      } else {
-        this.get('model').set('saved', true);
-        this.get('model.links').forEach((link) => {
-          link.set('saved', true);
-        });
       }
+      this.set('didValidate', true);
     },
+    // if (this.get('model.validations.isValid')) {
+    //   const newModel = this.get('model').get('new');
+    //   this._super(update);
+    //   if(newModel){
+    //     this.sendAction('editDTD');
+    //   }
+    // } else {
+    //   // this.get('model').set('saved', true);
+    //   this.get('model.links').forEach((link) => {
+    //     link.set('saved', true);
+    //   });
+    // }
     //delete() {
     //  this._super(...arguments);
     //  //Continue on w/ transition

@@ -133,14 +133,14 @@ var DTDModel = Model.extend(Validations, OptConf, {
   },
   //Validation msgs
   saved: false,
-  keyErrorMsg: Ember.computed('saved', function(){
-    return this.get('validations.attrs.key.isValid') ? undefined : this.get('saved') ?
-      this.get('validations.attrs.key.message') : undefined;
-  }),
-  descriptionErrorMsg: Ember.computed('saved', function(){
-    return this.get('validations.attrs.description.isValid') ? undefined : this.get('saved') ?
-      this.get('validations.attrs.description.message') : undefined;
-  }),
+  // keyErrorMsg: Ember.computed('saved', function(){
+  //   return this.get('validations.attrs.key.isValid') ? undefined : this.get('saved') ?
+  //     this.get('validations.attrs.key.message') : undefined;
+  // }),
+  // descriptionErrorMsg: Ember.computed('saved', function(){
+  //   return this.get('validations.attrs.description.isValid') ? undefined : this.get('saved') ?
+  //     this.get('validations.attrs.description.message') : undefined;
+  // }),
   //Attachments: TODO make into a reusable mixin
   attachmentsIsNotDirty: Ember.computed.not('attachmentsIsDirty'),
   attachmentsIsDirty: Ember.computed('attachment_ids.[]', 'previous_attachments_fks.[]', function() {
