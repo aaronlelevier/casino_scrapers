@@ -16,14 +16,9 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
     return this.get('error').getMsg('dtd-single');
   }),
   tabList: Ember.inject.service(),
-  // tab() {
-  //   let service = this.get('tabList');
-  //   return service.findTab(this.get('model.id'));
-  // },
   actions: {
     save(update=true) {
       const model = this.get('model');
-      // model.validate().then(({model, validations}) => {
       if (this.get('model.validations.isValid')) {
         const newModel = this.get('model').get('new');
         this._super(update);
@@ -33,18 +28,6 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
       }
       this.set('didValidate', true);
     },
-    // if (this.get('model.validations.isValid')) {
-    //   const newModel = this.get('model').get('new');
-    //   this._super(update);
-    //   if(newModel){
-    //     this.sendAction('editDTD');
-    //   }
-    // } else {
-    //   // this.get('model').set('saved', true);
-    //   this.get('model.links').forEach((link) => {
-    //     link.set('saved', true);
-    //   });
-    // }
     //delete() {
     //  this._super(...arguments);
     //  //Continue on w/ transition
