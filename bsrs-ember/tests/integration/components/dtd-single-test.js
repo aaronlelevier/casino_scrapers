@@ -59,7 +59,7 @@ test('validation on dtd key works if clear out input', function(assert) {
   Ember.run.later(() => {
     const $component = this.$('.has-error');
     assert.ok($component.is(':visible'));
-    assert.equal($component.text().trim(), 'Key must be provided');
+    assert.equal($component.text().trim(), trans.t('errors.dtd.key'));
     done();
   }, 300);
 });
@@ -76,8 +76,8 @@ test('validation on dtd key works when click save', function(assert) {
     const $desc_component = this.$('.has-error:eq(1)');
     assert.ok($key_component.is(':visible'));
     assert.ok($desc_component.is(':visible'));
-    assert.equal($key_component.text().trim(), 'Key must be provided');
-    assert.equal($desc_component.text().trim(), 'Description must be provided');
+    assert.equal($key_component.text().trim(), trans.t('errors.dtd.key'));
+    assert.equal($desc_component.text().trim(), trans.t('errors.dtd.description'));
     done();
   }, 300);
 });
@@ -95,7 +95,7 @@ test('validation on dtd description works if clear out input', function(assert) 
   Ember.run.later(() => {
     const $component = this.$('.has-error');
     assert.ok($component.is(':visible'));
-    assert.equal($component.text().trim(), 'Description must be provided');
+    assert.equal($component.text().trim(), trans.t('errors.dtd.description'));
     done();
   }, 300);
 });

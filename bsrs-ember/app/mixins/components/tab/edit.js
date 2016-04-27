@@ -11,7 +11,6 @@ var EditMixin = Ember.Mixin.create({
       const persisted = model.get('new');
       const repository = this.get('repository');
       const action = persisted === true ? 'insert' : 'update';
-      debugger;
       repository[action](model).then(() => {
         let tab = this.tab();
         tab.set('saveModel', persisted);

@@ -10,11 +10,11 @@ import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components
 const Validations = buildValidations({
   key: validator('presence', {
     presence: true,
-    message: 'Key must be provided'
+    message: 'errors.dtd.key'
   }),
   description: validator('presence', {
     presence: true,
-    message: 'Description must be provided'
+    message: 'errors.dtd.description'
   }),
   links: validator(function(value, options, model, attribute) {
     return model.get(attribute).reduce((prev, model) => {

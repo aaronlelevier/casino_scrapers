@@ -325,8 +325,10 @@ var BSRS_TRANSLATION_FACTORY = (function() {
           'ticket.status.unsatisfactory_completion':'Unsatisfactory',
           'upload.progress':'Progress',
           'validation.invalid':'Invalid',
-          'validation.valid':'Valid'
-        }
+          'validation.valid':'Valid',
+          'errors.dtd.key':'Key must be provided',
+          'errors.dtd.description':'Description must be provided',
+        },
       }
       break;
       case 'es':
