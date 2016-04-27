@@ -1,0 +1,65 @@
+version: '2'
+
+services:
+  postgres:  
+    build:
+      context: .
+      dockerfile: Dockerfile-psql
+    env_file:
+      - ./bsrs-django/env/app.${APP_ENV}.env
+    ports:
+      - "5432:5432"
+    networks:
+      - bsrs_default
+
+  django:  
+    build: 
+      context: ./bsrs-django
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_HOST=postgres
+    command: bash -c "sleep 3 && python bigsky/manage.py migrate"
+    volumes:
+      - .:/www/src/bsrs-django
+    expose:
+      - "8000"
+    links: 
+      - postgres
+    networks:
+      - bsrs_default
+
+networks:
+  bsrs_default:
+    driver: bridge
+
+  # nginx:
+  #   build: ./builds
+  #   volumes:
+  #     - /www/static
+  #   volumes_from:
+  #     - uwsgi
+  #   links:
+  #     - uwisgi
+  #   ports:
+  #     - "5432"
+
+  # ember:  
+  #   build: 
+  #     context: ./bsrs-ember
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     - EMBER_ENV=development
+  #   ports:
+  #     - "4200:4200"
+  #     - "49152:49152"
+
+  # uwsgi:
+  #   build: .
+  #   links:
+  #     - postgres
+  #   command: ./uwsgi.sh
+  #   volumes:
+  #     - /static
+  #     - /data/media:/media
+  # nginx: sudo service nginx status
+  # postgres: systemctl command postgres.rst, db deploy, username and password, 
