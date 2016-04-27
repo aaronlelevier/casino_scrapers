@@ -29,6 +29,39 @@ def rand_num():
     return ''.join([str(random.randrange(0, 10)) for x in range(10)])
 
 
+class DtSeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
+
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+        self.driver.set_window_size(1200, 1200)
+        self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)
+        self.login()
+        # Wait
+        self.driver_wait = Wait(self.driver)
+        # Generic Elements
+        self.gen_elem_page = GeneralElementsPage(self.driver)
+        import time; time.sleep(3)
+
+    def tearDown(self):
+        self.driver.close()
+
+    def test_post_and_patch(self):
+        # /dashboard
+        self.wait_for_xhr_request('t-launch-dt-ticket').click()
+        # /dt/new
+        requester_input = self.wait_for_xhr_request('t-dt-ticket-requester')
+        requester_input.send_keys('foo')
+        self.wait_for_xhr_request('t-dt-start').click()
+        # /dt/{start-id}
+        description = self.wait_for_xhr_request('t-dtd-preview-description')
+        assert description.text == 'Start'
+        buttons = self.wait_for_xhr_request('t-dtd-preview-btn', plural=True)
+        buttons[1].click()
+        # /dt/{2nd-node-id}
+        description = self.wait_for_xhr_request('t-dtd-preview-description')
+        assert description.text == 'Maintenance'
+
+
 class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
 
     def setUp(self):
