@@ -25,7 +25,7 @@ export default Ember.Component.extend({
     let len = 0;
     for (var obj of objs) {
       /* jshint ignore:start */
-      obj.required ? len += obj.num : len += 0;
+      obj.required ? len += obj.num : null;
       /* jshint ignore:end */
     }
     return len === 0 ? undefined : 'disabled';
