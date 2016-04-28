@@ -54,7 +54,7 @@ var BSRS_DTD_FACTORY = (function() {
     }
   };
   factory.prototype.generateWithAllFields = function(i, key) {
-    let dtd = this.generate(i, key);
+    var dtd = this.generate(i, key);
     // text
     dtd['fields'].push({
       id: this.field.idFour,
