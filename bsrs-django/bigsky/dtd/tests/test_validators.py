@@ -26,13 +26,9 @@ class UniqueDtdFieldValidatorTests(TreeDataTestSetUpMixin, APITestCase):
             'fields': [{
                 'id': str(uuid.uuid4()),
                 'label': label,
-                'type': FIELD_TYPES[0],
-                'required': True
             },{
                 'id': str(uuid.uuid4()),
                 'label': label,
-                'type': FIELD_TYPES[0],
-                'required': True
             }],
             'attachments': []
         })
@@ -57,8 +53,6 @@ class UniqueDtdFieldValidatorTests(TreeDataTestSetUpMixin, APITestCase):
             'fields': [{
                 'id': str(uuid.uuid4()),
                 'label': label,
-                'type': FIELD_TYPES[0],
-                'required': True
             }],
             'attachments': []
         })
@@ -93,8 +87,6 @@ class UniqueDtdFieldValidatorTests(TreeDataTestSetUpMixin, APITestCase):
         raw_data['fields'].append({
             'id': str(uuid.uuid4()),
             'label': label,
-            'type': FIELD_TYPES[0],
-            'required': True
         })
         raw_data['attachments'] = []
 
