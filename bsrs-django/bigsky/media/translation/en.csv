@@ -269,7 +269,7 @@ en,crud.yes,Yes,Yes,,"'crud.yes':'Yes',",Yes,Yes
 en,dashboard.welcome,Welcome,Welcome,,"'dashboard.welcome':'Welcome',",Welcome,Welcome
 en,dt.new,New,New,,"'dt.new':'New',",New,New
 en,dt.start,Start,Start,,"'dt.start':'Start',",Start,Start
-en,dt.ticket.lauch,Lauch Ticket Decision Tree,Lauch Ticket Decision Tree,,"'dt.ticket.lauch':'Lauch Ticket Decision Tree',",Lauch Ticket Decision Tree,Lauch Ticket Decision Tree
+en,dt.ticket.launch,Lauch Ticket Decision Tree,Lauch Ticket Decision Tree,,"'dt.ticket.launch':'Lauch Ticket Decision Tree',",Lauch Ticket Decision Tree,Lauch Ticket Decision Tree
 en,errors.dtd.key,Key must be provided,Key must be provided,,"'errors.dtd.key':'Key must be provided',",Key must be provided,Key must be provided
 en,errors.dtd.description,Description must be provided,Description must be provided,,"'errors.dtd.description':'Description must be provided',",Description must be provided,Description must be provided
 en,errors.link.text,Text must be provided,Text must be provided,,"'errors.link.text':'Text must be provided',",Text must be provided,Text must be provided
