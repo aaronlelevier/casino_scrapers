@@ -15,9 +15,10 @@ export default Ember.Controller.extend({
       let requestValues = [];
       const objs = fieldsObj.values();
       for (var obj of objs) {
-        requestValues.push(`${obj.label}: ${obj.value}`);
+        /* jshint ignore:start */
+        obj.label ? requestValues.push(`${obj.label}: ${obj.value}`) : requestValues.push(obj.value);
+        /* jshint ignore:end */
       }
-      //TODO: if no label
       this.get('store').push('ticket', {id: ticket.get('id'), request: requestValues.join(', '), requestValues: requestValues});
     },
     linkClick(dtd_id, link, ticket) {

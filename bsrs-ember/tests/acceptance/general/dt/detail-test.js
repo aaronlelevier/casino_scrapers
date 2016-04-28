@@ -94,6 +94,31 @@ test('updating field text (patch ticket)', async assert => {
   assert.equal(currentURL(), DEST_URL);
 });
 
+test('updating field text no label (patch ticket)', async assert => {
+  run(() => {
+    store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
+  });
+  const detail_data = DTF.detail(DT.idOne);
+  detail_data['fields'][0]['type'] = FD.typeOne;
+  detail_data['fields'][0]['label'] = undefined;
+  const detail_xhr = xhr(`${endpoint}${DT.idOne}/`, 'GET', null, {}, 200, detail_data);
+  await visit(DETAIL_URL);
+  assert.equal(currentURL(), DETAIL_URL);
+  await fillIn('.t-dtd-field-text:eq(0)', 'wat');
+  const LETTER_W = {keyCode: 87};
+  await triggerEvent('.t-dtd-field-text:eq(0)', 'keyup', LETTER_W);
+  const ticket = store.find('ticket', UUID.value);
+  const requestValue = `wat`;
+  assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
+  assert.equal(dtd.get('fields').objectAt(0).get('type'), FD.typeOne);
+  let dtd_payload = DTF.generate(DT.idTwo);
+  const link = dtd.get('links').objectAt(0);
+  let ticket_payload = { id: UUID.value, request: requestValue, priority: LINK.priorityOne, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id') };
+  xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
+  await page.clickNextBtn();
+  assert.equal(currentURL(), DEST_URL);
+});
+
 test('updating field number (patch ticket)', async assert => {
   run(() => {
     store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
@@ -286,7 +311,7 @@ test('fill out: number, text, textarea, and select (patch ticket)', async assert
   await fillIn('.t-dtd-field-textarea:eq(0)', '123 St.');
   await triggerEvent('.t-dtd-field-textarea:eq(0)', 'keyup', LETTER_W);
   const ticket = store.find('ticket', UUID.value);
-  const requestValue = `${FD.labelOne}: yes, ${FD.labelTwo}: 92, ${FD.labelFour}: wat, ${FD.labelThree}: 123 St.`;
+  const requestValue = `${FD.labelOne}: yes, ${FD.labelFour}: wat, ${FD.labelTwo}: 92, ${FD.labelThree}: 123 St.`;
   assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
   assert.equal(dtd.get('fields').objectAt(0).get('type'), FD.typeSix);
   let dtd_payload = DTF.generate(DT.idTwo);
