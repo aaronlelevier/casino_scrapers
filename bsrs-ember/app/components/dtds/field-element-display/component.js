@@ -18,6 +18,7 @@ export default Ember.Component.extend({
     /*
      * updateRequest 1 unfullfilled; 0 fullfilled field 
      * @param {string} value ...passed from option
+     * @param {string} ticket 
      * @param {object} opts ...passed from textarea or input as last argument
      * @return processValid is sent in the event bus to dtd-preview and updates fieldsObj Map object
      */

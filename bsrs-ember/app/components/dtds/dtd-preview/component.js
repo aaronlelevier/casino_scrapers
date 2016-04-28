@@ -5,8 +5,8 @@ export default Ember.Component.extend({
   classNames: ['dt-modal'],
   /* 
    * fieldsObj
-   * contains key (id of field) and value (0 or 1) of only fields that have a required flag
-   * value of 0 indicates fields has been fullfilled, 1 means unfullfilled
+   * contains {key}-(id of field), {num}-(0 or 1), {value}-ongoing value of field, {required}, and {label}
+   * num of 0 indicates fields has been fullfilled, 1 means unfullfilled
    */
   init() {
     this._super(...arguments);
