@@ -14,7 +14,7 @@
   {{#each field.options as |option|}}
     <div class="checkbox">
       <label>
-        <input type="checkbox" class="t-dtd-field-checkbox" {{action "updateRequest" option.text ticket}}>
+        <input type="checkbox" class="t-dtd-field-checkbox" onchange={{action "updateRequest" option.text ticket}}>
         <span>{{option.text}}</span>
       </label>
     </div>
