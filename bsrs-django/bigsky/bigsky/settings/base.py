@@ -95,7 +95,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bigsky.wsgi.application'
 
 
-# Must Override
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -108,49 +107,18 @@ DATABASES = {
 }
 
 
-# COMMENT OUT: ETL Domino -> to -> Django dome for the time being, so the ``transforms``
-#   flat database is not needed for now.
-# TRANSFORM_APPS = [
-#     'utils_transform.tlocation',
-#     'utils_transform.tcategory',
-# ]
-# INSTALLED_APPS = INSTALLED_APPS + TRANSFORM_APPS
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
 
-# DATABASES['transforms'] = {
-#     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#     'NAME': 'transforms',
-#     'USER': 'bsdev',
-#     'PASSWORD': 'tango',
-#     'HOST': 'localhost',
-#     'PORT': '5432',
-# }
-
-# DATABASE_ROUTERS = ['bigsky.db_router.TransformRouter', 'bigsky.db_router.DefaultRouter']
-
-
-# Password validation (not in use in currently)
-# https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 
 PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
 )
 
 AUTH_PASSWORD_VALIDATORS = []
-# [
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-#     },
-# ]
-
 
 
 LANGUAGE_CODE = 'en'
@@ -218,7 +186,6 @@ CORS_ORIGIN_REGEX_WHITELIST = (r'^https?://(\w+\.)?bs-webdev03.bigskytech\.com:8
 # get w/ Aaron to understand what settings people run for local dev
 # CORS_ORIGIN_REGEX_WHITELIST = ('^https?://localhost:\d{4}$',
 #    '^https?://192\.168\.\d{1,3}\.\d{1,3}:\d{4}$', )
-
 
 
 ################

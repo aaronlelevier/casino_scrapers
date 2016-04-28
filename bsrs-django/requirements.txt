@@ -45,3 +45,12 @@ idna==2.1
 pycparser==2.14
 gspread==0.3.0
 requests==2.9.1
+
+# celery
+amqp==1.4.9
+anyjson==0.3.3
+billiard==3.3.0.23
+celery==3.1.23
+kombu==3.0.35
+django-redis==4.4.2
+redis==2.10.5
