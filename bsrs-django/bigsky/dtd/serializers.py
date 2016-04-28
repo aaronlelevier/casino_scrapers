@@ -5,6 +5,7 @@ from rest_framework import serializers
 from category.models import Category
 from category.serializers import CategoryIDNameOnlySerializer
 from dtd.models import TreeField, TreeOption, TreeLink, TreeData
+from dtd.validators import UniqueDtdFieldValidator
 from generic.models import Attachment
 from generic.serializers import AttachmentSerializer
 from utils import create
@@ -93,6 +94,9 @@ class TreeDataCreateUpdateSerializer(TreeDataAttachmentToRepresentationMixin, Ba
 
     class Meta:
         model = TreeData
+        validators = [
+            UniqueDtdFieldValidator()
+        ]
         fields = ('id', 'key', 'description', 'note', 'note_type',
                   'attachments', 'fields', 'prompt', 'link_type',
                   'links',)
