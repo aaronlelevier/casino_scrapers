@@ -10,5 +10,12 @@ DATABASES['default'] = {
     'PORT': '5432',
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': 'localhost:6379',
+    },
+}
+
 MEDIA_ROOT = "/var/www/media/deploy/"
 STATIC_ROOT = "/var/www/static/deploy/"

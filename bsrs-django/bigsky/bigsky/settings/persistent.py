@@ -4,10 +4,11 @@ from .prod import *
 
 
 PERSISTENT_APPS = [
-    'utils_transform.tlocation',
     'utils_transform.tcategory',
-    'utils_transform.trole',
+    'utils_transform.tlocation',
     'utils_transform.tperson',    
+    'utils_transform.trole',
+    'utils_transform.tticket',
     ]
 
 INSTALLED_APPS = INSTALLED_APPS + PERSISTENT_APPS

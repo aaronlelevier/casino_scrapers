@@ -2,12 +2,6 @@ from .base import *
 
 DEBUG = False
 
-CACHES = {
-    'default': {
-        'BACKEND': 'redis_cache.RedisCache',
-        'LOCATION': 'localhost:6379',
-    },
-}
 
 # SSL_ENABLED = True
 # CSRF_COOKIE_SECURE = True

@@ -23,12 +23,6 @@ MIDDLEWARE_CLASSES += [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     ]
 
-# Disable Caching for Local Dev
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-   }
-}
 
 if 'test' in sys.argv:
     from .ci import *
