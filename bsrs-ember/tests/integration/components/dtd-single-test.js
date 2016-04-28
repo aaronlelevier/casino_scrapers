@@ -75,32 +75,11 @@ test('validation on fields when click save', function(assert) {
   generalPage.save();
   Ember.run.later(() => {
     const $key_component = this.$('.t-dtd-key');
-    const $desc_component = this.$('.t-dtd-description');
     const $link_text_component = this.$('.t-link-text');
     assert.ok($key_component.is(':visible'));
     assert.ok($key_component.hasClass('has-error'));
-    assert.ok($desc_component.is(':visible'));
     assert.equal($key_component.text().trim(), trans.t('errors.dtd.key'));
-    assert.equal($desc_component.text().trim(), trans.t('errors.dtd.description'));
     assert.equal($link_text_component.text().trim(), trans.t('errors.link.text'));
-    done();
-  }, 300);
-});
-
-test('validation on dtd description works if clear out input', function(assert) {
-  var done = assert.async();
-  this.set('model', dtd);
-  this.render(hbs`{{dtds/dtd-single model=model}}`);
-  let $component = this.$('.has-error');
-  assert.equal($component.text().trim(), '');
-  page.descriptionFillIn('wat');
-  assert.equal(page.description, 'wat');
-  assert.notOk($component.is(':visible'));
-  page.descriptionFillIn('');
-  Ember.run.later(() => {
-    const $component = this.$('.has-error');
-    assert.ok($component.is(':visible'));
-    assert.equal($component.text().trim(), trans.t('errors.dtd.description'));
     done();
   }, 300);
 });

@@ -4,7 +4,7 @@ import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
-import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById2';
+import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 
 var PREFIX = config.APP.NAMESPACE;
 var DTD_URL = `${PREFIX}/dtds/`;

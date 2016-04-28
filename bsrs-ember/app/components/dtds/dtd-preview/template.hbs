@@ -25,7 +25,7 @@
           {{#if model.fields}}
             {{#each model.fields as |field|}}
               <div class="t-dtd-preview-field">
-                {{dtds/field-element-display field=field updateRequest=this.attrs.updateRequest ticket=ticket}}
+                {{dtds/field-element-display field=field ticket=ticket}}
               </div>
             {{/each}}
           {{/if}}

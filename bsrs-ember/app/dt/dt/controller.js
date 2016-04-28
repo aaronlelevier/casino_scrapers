@@ -7,12 +7,16 @@ export default Ember.Controller.extend({
   ticketRepository: inject('ticket'),
   DTDDeserializer: injectDeserializer('dtd'),
   actions: {
-    updateRequest(value, label, ticket) {
-      const requestValues = ticket.get('requestValues') || [];
-      /* jshint ignore:start */
-      const labelPlusVal = `${label}: ${value}`;
-      requestValues.includes(labelPlusVal) ? requestValues.removeObject(labelPlusVal) : requestValues.pushObject(labelPlusVal);
-      /* jshint ignore:end */
+    /*
+     * updatRequest 
+     * updates ticket request based on fieldsObj (Map) that holds the current value for a field
+     */
+    updateRequest(fieldsObj, ticket) {
+      let requestValues = [];
+      const objs = fieldsObj.values();
+      for (var obj of objs) {
+        requestValues.push(`${obj.label}: ${obj.value}`);
+      }
       //TODO: if no label
       this.get('store').push('ticket', {id: ticket.get('id'), request: requestValues.join(', '), requestValues: requestValues});
     },

@@ -5,8 +5,8 @@ var PowerSelectActionComponent = Ember.Component.extend({
   actions: {
     selected(obj) {
       //RIGHT NOW only can be used for dt updating requeset
-      const { action, label, ticket } = this.attrs.action;
-      action(obj.get('text'), label, ticket);
+      const action = this.attrs.action;
+      action(obj.get('text'), this.get('ticket'));
       this.set('selected', obj);
     }
   },

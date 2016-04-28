@@ -12,10 +12,6 @@ const Validations = buildValidations({
     presence: true,
     message: 'errors.dtd.key'
   }),
-  description: validator('presence', {
-    presence: true,
-    message: 'errors.dtd.description'
-  }),
   links: validator(function(value, options, model, attribute) {
     return model.get(attribute).reduce((prev, model) => {
       return prev && model.get('validations').get('isValid');

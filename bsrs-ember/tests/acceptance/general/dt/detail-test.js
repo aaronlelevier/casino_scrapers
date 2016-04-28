@@ -20,7 +20,6 @@ import page from 'bsrs-ember/tests/pages/dtd';
 import dtPage from 'bsrs-ember/tests/pages/dt';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import ticketPage from 'bsrs-ember/tests/pages/tickets';
-import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_dt_url;//Routing
@@ -145,34 +144,6 @@ test('updating field textarea (patch ticket)', async assert => {
   assert.equal(currentURL(), DEST_URL);
 });
 
-test('can\'t click to next destination if field is required and don\'t fill in field value (patch ticket)', async assert => {
-  run(() => {
-    store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
-  });
-  const detail_data = DTF.detail(DT.idOne);
-  detail_data['fields'][0]['type'] = FD.typeThree;
-  detail_data['fields'][0]['label'] = FD.labelThree;
-  detail_data['fields'][0]['required'] = FD.requiredTwo;
-  const detail_xhr = xhr(`${endpoint}${DT.idOne}/`, 'GET', null, {}, 200, detail_data);
-  await visit(DETAIL_URL);
-  assert.equal(currentURL(), DETAIL_URL);
-  assert.equal(currentURL(), DETAIL_URL);
-  await fillIn('.t-dtd-field-textarea:eq(0)', 'wat');
-  const LETTER_W = {keyCode: 87};
-  await triggerEvent('.t-dtd-field-textarea:eq(0)', 'keyup', LETTER_W);
-  assert.equal(find('.t-dtd-preview-btn').attr('disabled'), undefined);
-  const ticket = store.find('ticket', UUID.value);
-  const requestValue = `${FD.labelThree}: wat`;
-  assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
-  assert.equal(dtd.get('fields').objectAt(0).get('type'), FD.typeThree);
-  let dtd_payload = DTF.generate(DT.idTwo);
-  const link = dtd.get('links').objectAt(0);
-  let ticket_payload = { id: UUID.value, request: requestValue, priority: LINK.priorityOne, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id') };
-  xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
-  await page.clickNextBtn();
-  assert.equal(currentURL(), DEST_URL);
-});
-
 test('updating field select (patch ticket)', async assert => {
   run(() => {
     store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
@@ -193,6 +164,58 @@ test('updating field select (patch ticket)', async assert => {
   let dtd_payload = DTF.generate(DT.idTwo);
   const link = dtd.get('links').objectAt(0);
   let ticket_payload = { id: UUID.value, request: requestValue, priority: LINK.priorityOne, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id') };
+  xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
+  await page.clickNextBtn();
+  assert.equal(currentURL(), DEST_URL);
+});
+
+test('can\'t click to next destination if field is required (patch ticket)', async assert => {
+  run(() => {
+    store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
+  });
+  const detail_data = DTF.detail(DT.idOne);
+  detail_data['fields'][0]['type'] = FD.typeThree;
+  detail_data['fields'][0]['label'] = FD.labelThree;
+  detail_data['fields'][0]['required'] = FD.requiredTwo;
+  const detail_xhr = xhr(`${endpoint}${DT.idOne}/`, 'GET', null, {}, 200, detail_data);
+  await visit(DETAIL_URL);
+  assert.equal(currentURL(), DETAIL_URL);
+  assert.ok(find('.t-dtd-preview-btn').attr('disabled'));
+  await fillIn('.t-dtd-field-textarea:eq(0)', 'wat');
+  const LETTER_W = {keyCode: 87};
+  await triggerEvent('.t-dtd-field-textarea:eq(0)', 'keyup', LETTER_W);
+  assert.equal(find('.t-dtd-preview-btn').attr('disabled'), undefined);
+  await fillIn('.t-dtd-field-textarea:eq(0)', 'wats');
+  const LETTER_S = {keyCode: 83};
+  await triggerEvent('.t-dtd-field-textarea:eq(0)', 'keyup', LETTER_S);
+  assert.equal(find('.t-dtd-preview-btn').attr('disabled'), undefined);
+  const ticket = store.find('ticket', UUID.value);
+  assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
+  assert.equal(dtd.get('fields').objectAt(0).get('type'), FD.typeThree);
+  let dtd_payload = DTF.generate(DT.idTwo);
+  const link = dtd.get('links').objectAt(0);
+  const requestValue = `${FD.labelThree}: wats`;
+  let ticket_payload = { id: UUID.value, request: requestValue, priority: LINK.priorityOne, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id') };
+  xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
+  await page.clickNextBtn();
+  assert.equal(currentURL(), DEST_URL);
+});
+
+test('can click to next destination if field is not required and don\'t fill in field value (patch ticket)', async assert => {
+  run(() => {
+    store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
+  });
+  const detail_data = DTF.detail(DT.idOne);
+  detail_data['fields'][0]['type'] = FD.typeThree;
+  detail_data['fields'][0]['label'] = FD.labelThree;
+  detail_data['fields'][0]['required'] = FD.requiredOne;
+  const detail_xhr = xhr(`${endpoint}${DT.idOne}/`, 'GET', null, {}, 200, detail_data);
+  await visit(DETAIL_URL);
+  assert.equal(currentURL(), DETAIL_URL);
+  assert.equal(find('.t-dtd-preview-btn').attr('disabled'), undefined);
+  let dtd_payload = DTF.generate(DT.idTwo);
+  const link = dtd.get('links').objectAt(0);
+  let ticket_payload = { id: UUID.value, priority: LINK.priorityOne, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id') };
   xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
   await page.clickNextBtn();
   assert.equal(currentURL(), DEST_URL);

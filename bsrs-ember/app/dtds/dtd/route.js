@@ -2,7 +2,7 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import PriorityMixin from 'bsrs-ember/mixins/route/priority';
 import StatusMixin from 'bsrs-ember/mixins/route/status';
-import FindById from 'bsrs-ember/mixins/route/findById2';
+import FindById from 'bsrs-ember/mixins/route/findById';
 
 export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
   repository: inject('dtd'),
@@ -36,7 +36,7 @@ export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
       displayText: this.get('displayText'),
       redirectRoute: this.get('redirectRoute'),
       transitionCB: this.transitionCB.bind(this),
-      model_id: model.pk,
+      model_id: model.model.get('id'),
       closeTabRedirect: this.get('closeTabRedirect'),
     });
   },

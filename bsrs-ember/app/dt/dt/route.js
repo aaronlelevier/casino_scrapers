@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
-import FindById from 'bsrs-ember/mixins/route/findById2';
+import FindById from 'bsrs-ember/mixins/route/findById';
 
 var DTRoute = Ember.Route.extend(FindById, {
   repository: inject('dtd'),
