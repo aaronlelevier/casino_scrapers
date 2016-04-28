@@ -124,7 +124,7 @@ class Ticket(BaseModel):
     request = models.CharField(max_length=1000, blank=True, null=True)
     dt_path = JSONField(blank=True, default={})
     # Auto-fields
-    number = models.IntegerField(blank=True, default=no_ticket_models)
+    number = models.IntegerField(blank=True, unique=True, default=no_ticket_models)
 
     objects = TicketManager()
 
