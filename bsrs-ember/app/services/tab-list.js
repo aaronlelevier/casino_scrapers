@@ -62,7 +62,8 @@ export default Ember.Service.extend({
       });
     });
   },
-  /* Determines if model or models (if trying to close single tab) is dirty based on type 
+  /* Determines if model or models (if trying to close single tab) is dirty based on type in application route
+   * Also used to show dirty icon in tab-navigation
    * @param {string} route 
    * @param {string} action 
    * @return {boolean}
@@ -80,7 +81,21 @@ export default Ember.Service.extend({
       return models.isAny('isDirtyOrRelatedDirty');
     }
     /* if deleting something, always return true as model might not be dirty */
-    return (!confirmed && action === 'delete' || action === 'deleteAttachment') ? true : tab.get('model').get('isDirtyOrRelatedDirty');
+    return (!confirmed && action === 'delete' || action === 'deleteAttachment') ? true : tab.get('model.isDirtyOrRelatedDirty');
+  },
+  /*
+   * rollbackAll
+   * when user wants to close a single tab, all dirty dtd's need to be rolled back
+   * some dtd-list models, for ex//, won't have a corresponding model property
+   */
+  rollbackAll(tab) {
+    const models = this.get('store').find(tab.get('moduleList'));
+    const arr = [];
+    models.forEach((listModel) => {
+      if (listModel.get('model.id')) {
+        listModel.get('model').rollback();
+      }
+    });
   },
   callCB(tab) {
     const cb = tab.get('transitionCB');

@@ -125,7 +125,7 @@ test('visiting the dtd list, then detail url there will only be one dtd tab', (a
     assert.equal(tab.get('module'), DOC_TYPE);
     assert.equal(tab.get('routeName'), DETAIL_ROUTE);
     assert.equal(tab.get('redirectRoute'), INDEX_ROUTE);
-    // assert.equal(tab.get('newModel'), false);
+    assert.equal(tab.get('newModel'), false);
   });
 });
 
@@ -230,6 +230,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
     const tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
+    assert.ok(generalPage.isDirty);
   });
   page.visit();
   andThen(() => {
@@ -319,7 +320,7 @@ test('a dirty model should add the dirty class to the tab close icon and the gri
   page.keyFillIn(DTD.keyTwo);
   andThen(() => {
     assert.equal(find('tr .dirty').length, 1);
-    assert.equal(find('.t-tab-close > i.dirty').length, 1);
+    assert.ok(generalPage.isDirty);
   });
 });
 
@@ -357,7 +358,7 @@ test('closing a document via the cancel button should close it\'s related tab', 
 //  });
 //});
 
-test('opening a tab, navigating away and closing the tab should remove the tab', (assert) => {
+test('opening a tab and closing the tab should remove the tab from the store', (assert) => {
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -372,7 +373,7 @@ test('opening a tab, navigating away and closing the tab should remove the tab',
   });
 });
 
-test('opening a tab, making the model dirty, navigating away and closing the tab should display the confirm dialog', (assert) => {
+test('opening a tab, making the model dirty and closing the tab should display the confirm dialog', (assert) => {
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -381,8 +382,7 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
   });
   page.keyFillIn(DTD.keyTwo);
   andThen(() => {
-    assert.equal(find('tr .dirty').length, 1);
-    assert.equal(find('.t-tab-close > i.dirty').length, 1);
+    assert.ok(generalPage.isDirty);
   });
   click('.t-tab-close:eq(0)');
   andThen(() => {
@@ -407,11 +407,14 @@ test('trying to close the tab with one of the dirty dtds that are dirty will sho
   page.keyFillIn(DTD.keyTwo);
   andThen(() => {
     assert.equal(find('tr .dirty').length, 1);
-    assert.equal(find('.t-tab-close > i.dirty').length, 1);
+    assert.ok(generalPage.isDirty);
   });
   let dtd_detail_data_2 = DTDF.detail(DTD.idTwo);
   detail_xhr = xhr(`${endpoint}${DTD.idTwo}/`, 'GET', null, {}, 200, dtd_detail_data_2);
   click('.t-grid-data:eq(1)');
+  andThen(() => {
+    assert.ok(generalPage.isDirty);
+  });
   click('.t-tab-close:eq(0)');
   andThen(() => {
     const DETAIL_URL_2 = `${BASE_DTD_URL}/${DTD.idTwo}`;
@@ -428,7 +431,7 @@ test('trying to close the tab with one of the dirty dtds that are dirty will sho
   andThen(() => {
     waitFor(() => {
       const DETAIL_URL_2 = `${BASE_DTD_URL}/${DTD.idTwo}`;
-      assert.equal(currentURL(), DETAIL_URL_2);
+      assert.equal(currentURL(), ADMIN_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });

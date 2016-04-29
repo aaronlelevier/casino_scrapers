@@ -257,7 +257,7 @@ test('rolling back should only remove files not yet associated with a given dtd'
   });
   ajax(`${PREFIX}/admin/attachments/batch-delete/`, 'DELETE', {ids: [UUID.value]}, {}, 204, {});
   await click('.t-modal-rollback-btn');
-  assert.equal(currentURL(), DETAIL_URL);
+  assert.equal(currentURL(), ADMIN_URL);
   assert.equal(model.get('attachments').get('length'), 1);
   assert.equal(store.find('attachment').get('length'), 1);
   assert.equal(model.get('isDirty'), false);

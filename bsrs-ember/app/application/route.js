@@ -161,7 +161,7 @@ var ApplicationRoute = Ember.Route.extend({
 
       } else {
         /* rollback if contact info */
-        if(model.get('content')) { model.rollback(); }
+        if(model.get('id')) { model.rollback(); }
         
         tabService.callCB(tab);
 

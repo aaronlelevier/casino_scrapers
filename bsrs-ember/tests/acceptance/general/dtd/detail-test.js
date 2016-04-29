@@ -264,7 +264,7 @@ test('click modal cancel (dtd)', (assert) => {
   });
 });
 
-test('click modal ok (dtd)', (assert) => {
+test('click modal rollback (dtd)', (assert) => {
   page.visitDetail();
   andThen(() => {
     assert.ok(find('.t-dtd-link-action_button').prop('checked'));

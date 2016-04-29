@@ -38,7 +38,7 @@ var TabModel = Ember.Object.extend({
       return true;
     };
     return this.get('store').find('tab', filter);
-  })
+  }),
 });
 
 export default TabModel;
