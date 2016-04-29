@@ -2,6 +2,11 @@
 
 echo $(date -u) "DJANGO BUILD STARTED!"
 
+# Start at root of project
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $SCRIPT_DIR
+cd ../
+
 function pipInstall {
     echo "ENABLE SPECIFIC DJANGO SETTINGS FILE HERE B/C AFFECTS PIP INSTALL"
     export DJANGO_SETTINGS_MODULE='bigsky.settings.ci'

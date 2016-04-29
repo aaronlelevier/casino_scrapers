@@ -1,6 +1,6 @@
 #!/bin/bash -lx
 
-echo "DEPLOY DEPLOY STARTED!"
+echo "DEPLOY DEPLOY STARTED!"#!/bin/bash -lx
 
 wait
 echo "UWSGI - START/RELOAD"

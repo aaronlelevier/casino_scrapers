@@ -1,28 +1,11 @@
 #!/bin/bash -lx
 
-echo $(date -u) "BUILD STARTED!"
+echo $(date -u) "SELENIUM BUILD STARTED!"
 
-while [[ $# > 1 ]]
-do
-key="$1"
-
-case $key in
-  -e|--test_ember)
-  TEST_EMBER="$2"
-  shift # past argument
-  ;;
-  *)
-  ;;
-esac
-shift # past argument or value
-done
-
-if ! [ "$TEST_EMBER" == "false" ]; 
-  then
-    echo "TEST EMBER: YES"
-  else
-    echo "TEST EMBER: NO"
-fi
+# Start at root of project
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $SCRIPT_DIR
+cd ../
 
 function npmInstall {
     npm install --no-optional
@@ -31,19 +14,6 @@ function npmInstall {
     if [ "$NPM_INSTALL" == 1 ]; then
       echo "npm install failed"
       exit $NPM_INSTALL
-    fi
-}
-
-function emberTest {
-    if [ "$(uname)" == "Darwin" ]; then
-      ./node_modules/ember-cli/bin/ember test
-    else
-      xvfb-run ./node_modules/ember-cli/bin/ember test
-    fi
-    EMBER_TEST=$?
-    if [ "$EMBER_TEST" == 1 ]; then
-      echo "ember subprocess test failed"
-      exit $EMBER_TEST
     fi
 }
 
@@ -58,15 +28,6 @@ function pipInstall {
     if [ "$PIP_INSTALL" == 1 ]; then
       echo "pip install failed"
       exit $PIP_INSTALL
-    fi
-}
-
-function djangoTest {
-    python manage.py test --settings=bigsky.settings.ci --liveserver=localhost:8001 --noinput --verbosity=3
-    DJANGO_TEST=$?
-    if [ "$DJANGO_TEST" == 1 ]; then
-      echo "django subprocess test failed"
-      exit $DJANGO_TEST
     fi
 }
 
@@ -154,7 +115,14 @@ function runSeleniumTests {
     fi
 }
 
+DB_NAME='ci'
+wait
+psql -U bsdev -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity \
+WHERE pg_stat_activity.datname = '${DB_NAME}' AND pid <> pg_backend_pid();"
+wait
+
 cd bsrs-ember
+echo $(firefox -v)
 
 echo $(date -u) "NPM INSTALL"
 npmInstall
@@ -166,37 +134,6 @@ pipInstall
 
 cd ../bsrs-ember
 
-if ! [ "$TEST_EMBER" == "false" ];  then
-  echo $(date -u) "EMBER TESTS"
-  emberTest &
-  emberPID=$!
-fi
-
-cd ../bsrs-django/bigsky
-
-echo $(date -u) "EMBER / DJANGO TESTS"
-djangoTest &
-djangoPID=$!
-
-wait $djangoPID
-echo $(date -u) "DJANGO TESTS COMPLETE"
-djangoFinalResult=$?
-if [ "$djangoFinalResult" == 1 ]; then
-    echo "DJANGO TESTS FAILED"
-    exit 1
-fi
-
-wait $emberPID
-echo $(date -u) "EMBER TESTS COMPLETE"
-emberFinalResult=$?
-if [ "$emberFinalResult" == 1 ]; then
-    echo "EMBER TESTS FAILED"
-    exit 1
-fi
-
-cd ../../bsrs-ember
-
-wait
 echo $(date -u) "BUILD EMBER"
 productionEmberBuild
 
