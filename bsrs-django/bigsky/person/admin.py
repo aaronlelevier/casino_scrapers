@@ -5,7 +5,7 @@ from person import models
 
 @admin.register(models.Person)
 class PersonAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('username', 'first_name', 'middle_initial', 'last_name', 'fullname')
 
 
 @admin.register(models.PersonStatus)

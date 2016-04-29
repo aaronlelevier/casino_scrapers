@@ -236,8 +236,8 @@ class PersonTests(TestCase):
     def test_emails_filtering(self):
         email_one = create_contact(Email, self.person)
         email_two = create_contact(Email, self.person)
-        self.assertNotEqual(email_one.type, email_two.type)
 
+        self.assertNotEqual(email_one.type, email_two.type)
         self.assertEqual(self.person.emails.count(), 2)
         self.assertEqual(self.person.emails.filter(type=email_one.type).count(), 1)
         self.assertEqual(self.person.emails.filter(type__name=email_one.type.name).count(), 1)
@@ -246,26 +246,52 @@ class PersonTests(TestCase):
         self.assertTrue(self.person.accept_assign)
 
     def test_update_defaults(self):
+        self.person.middle_initial = 'A'
         self.person.status = None
         self.assertIsNone(self.person.status)
+
         self.person._update_defaults()
+
         self.assertIsNotNone(self.person.status)
         self.assertIsNotNone(self.person.password_expire_date)
+        self.assertEqual(self.person.fullname, self.person.get_full_name())
 
-    def test_fullname(self):
-        self.assertEqual(
-            self.person.fullname,
-            self.person.first_name + ' ' + self.person.last_name
-        )
-        init_fullname = self.person.first_name + ' ' + self.person.last_name
-
-        self.person.last_name = self.person.last_name+'wat'
+    def test_get_fullname(self):
+        self.person.first_name = 'Clark'
+        self.person.middle_initial = 'A'
+        self.person.last_name = 'Kent'
         self.person.save()
 
-        self.assertEqual(
-            self.person.fullname,
-            init_fullname+'wat'
-        )
+        ret = self.person.get_full_name()
+
+        self.assertEqual(ret, 'Clark A. Kent')
+
+    def test_get_fullname__no_middle_initial(self):
+        self.person.first_name = 'Clark'
+        self.person.middle_initial = None
+        self.person.last_name = 'Kent'
+        self.person.save()
+
+        ret = self.person.get_full_name()
+
+        self.assertEqual(ret, 'Clark Kent')
+
+    def test_formatted_middle_initial(self):
+        mid_init = "Y"
+        self.person.middle_initial = mid_init
+        self.person.save()
+
+        ret = self.person.formatted_middle_initial
+
+        self.assertEqual(ret, "Y.")
+
+    def test_formatted_middle_initial__is_none(self):
+        self.person.middle_initial = None
+        self.person.save()
+
+        ret = self.person.formatted_middle_initial
+
+        self.assertIsNone(ret)
 
     def test_password_expire_date(self):
         self.assertIsInstance(self.person._password_expire_date, date)

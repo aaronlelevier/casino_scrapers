@@ -477,7 +477,18 @@ class Person(BaseModel, AbstractUser):
         if not self.password_expire_date:
             self.password_expire_date = self._password_expire_date
 
-        self.fullname = self.first_name + ' ' + self.last_name
+        self.fullname = self.get_full_name()
+
+    def get_full_name(self):
+        names = [self.first_name, self.last_name]
+        if self.middle_initial:
+            names.insert(1, self.formatted_middle_initial)
+        return ' '.join(names)
+
+    @property
+    def formatted_middle_initial(self):
+        if self.middle_initial:
+            return "{}.".format(self.middle_initial)
 
     def _validate_locations(self):
         """

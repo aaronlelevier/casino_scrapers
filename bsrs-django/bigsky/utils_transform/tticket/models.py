@@ -27,13 +27,21 @@ class DominoTicket(models.Model):
     wo_number = models.TextField(blank=True, null=True)
     status = models.TextField()
     priority = models.TextField()
+
+    # Categories by level
     type = models.TextField()
     trade = models.TextField(blank=True, null=True)
     issue = models.TextField(blank=True, null=True)
+
+    # concat **subject** - request into 'request' django field
     subject = models.TextField(blank=True, null=True)
     request = models.TextField(blank=True, null=True)
+
+    # skip
     notes = models.TextField(blank=True, null=True)
+    # person's fullname
     assigned_to = models.TextField(blank=True, null=True)
+
     requester = models.TextField(blank=True, null=True)
     create_date = models.DateTimeField()
     complete_date = models.DateTimeField(blank=True, null=True)

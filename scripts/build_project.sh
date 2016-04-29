@@ -8,6 +8,7 @@ cd $SCRIPT_DIR
 cd ../
 
 cd bsrs-ember
+npm install
 
 rm -rf tmp dist
 wait

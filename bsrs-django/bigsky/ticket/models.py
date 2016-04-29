@@ -16,13 +16,14 @@ from utils.models import BaseModel, BaseQuerySet, BaseManager, BaseNameModel
 TICKET_STATUSES = [
     'ticket.status.draft',
     'ticket.status.new',
-    'ticket.status.in_progress',
     'ticket.status.deferred',
+    'ticket.status.in_progress',
+    'ticket.status.complete',
     'ticket.status.denied',
     'ticket.status.problem_solved',
-    'ticket.status.complete',
-    'ticket.status.closed',
-    'ticket.status.unsatisfactory_completion'
+    'ticket.status.unsatisfactory_completion',
+    'ticket.status.canceled',
+    'ticket.status.pending',
 ]
 
 
