@@ -2,6 +2,11 @@
 
 echo "BUILD EMBER"
 
+# Start at root of project
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $SCRIPT_DIR
+cd ../
+
 cd bsrs-ember
 
 rm -rf tmp dist

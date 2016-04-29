@@ -8,12 +8,12 @@ var LocationLevelMixin = Ember.Mixin.create({
     const filter = (llevel) => {
       return llevel.get('parents').get('length') === 0;
     };
-    const llevels = this.get('store').find('location-level', filter);
+    const llevels = this.get('simpleStore').find('location-level', filter);
     return llevels.objectAt(0);
   }),
   remove_children_parents() {
     const id = this.get('id');
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const location_children = this.get('location_children');
     const location_parents = this.get('location_parents');
     const m2m_children_to_remove = location_children.reduce((arr, m2m) => {

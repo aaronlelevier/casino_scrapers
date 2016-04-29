@@ -16,7 +16,7 @@ var RoleModel = Model.extend(NewMixin, OptConf, {
     many_to_many.bind(this)('category', 'role', {plural:true});
     this._super(...arguments);
   },
-  store: inject('main'),
+  simpleStore: Ember.inject.service(),
   uuid: injectUUID('uuid'),
   name: attr(''),
   people: [],
@@ -55,7 +55,7 @@ var RoleModel = Model.extend(NewMixin, OptConf, {
   },
   removeRecord() {
     run(() => {
-      this.get('store').remove('role', this.get('id'));
+      this.get('simpleStore').remove('role', this.get('id'));
     });
   },
   rollback() {

@@ -19,7 +19,7 @@ var RoleRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
     RoleDeserializer: inject('role'),
     deserializer: Ember.computed.alias('RoleDeserializer'),
     create(role_type, new_pk) {
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         const pk = this.get('uuid').v4();
         let role;
         run(() => {
@@ -34,7 +34,7 @@ var RoleRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
         });
     },
     get_default() {
-        return this.get('store').find('role');
+        return this.get('simpleStore').find('role');
     }
 });
 

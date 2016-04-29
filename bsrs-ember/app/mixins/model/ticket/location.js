@@ -6,7 +6,7 @@ import { change_belongs_to_full } from 'bsrs-components/attr/belongs-to';
 var TicketLocationMixin = Ember.Mixin.create({
   remove_location() {
     let ticket_id = this.get('id');
-    let store = this.get('store');
+    let store = this.get('simpleStore');
     let old_location = this.get('location');
     if(old_location) {
       let old_location_tickets = old_location.get('tickets') || [];
@@ -19,7 +19,7 @@ var TicketLocationMixin = Ember.Mixin.create({
     }
   },
   location_status_setup(location_json) {
-    const pushed_location = this.get('store').push('location', location_json);
+    const pushed_location = this.get('simpleStore').push('location', location_json);
     pushed_location.change_status(location_json.status_fk);
     return pushed_location;
   },
@@ -30,7 +30,7 @@ var TicketLocationMixin = Ember.Mixin.create({
       this.location_status_setup(location_json);
     }
     this.change_location_container(location_json);
-    let location = this.get('store').find('location', location_json.id);
+    let location = this.get('simpleStore').find('location', location_json.id);
     if(location.get('id')){
       location.change_location_level(location_json.location_level_fk);
       location.save();

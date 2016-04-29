@@ -12,13 +12,13 @@ var ApplicationRoute = Ember.Route.extend({
   RoleDeserializer: injectDeserializer('role'),
   LocationDeserializer: injectDeserializer('location'),
   PersonDeserializer: injectDeserializer('person'),
-  store: injectStore('main'),
+  simpleStore: Ember.inject.service(),
   translationsFetcher: inject.service(),
   i18n: inject.service(),
   moment: inject.service(),
   tabList: inject.service(),
   beforeModel() {
-    let store = this.get('store');
+    let store = this.get('simpleStore');
     const email_types = Ember.$('[data-preload-email_types]').data('configuration');
     email_types.forEach((model) => {
       store.push('email-type', model);
@@ -125,7 +125,7 @@ var ApplicationRoute = Ember.Route.extend({
 
   },
   setupController(controller, hash) {
-    controller.set('tabs', this.get('store').find('tab'));
+    controller.set('tabs', this.get('simpleStore').find('tab'));
   },
   afterModel(){
     this.set('i18n.locale', config.i18n.currentLocale);
@@ -148,7 +148,7 @@ var ApplicationRoute = Ember.Route.extend({
     closeTabMaster(tab, {action='closeTab', deleteCB=null, confirmed=false}={}) {
       /* Find model based on stored id in tab */
       const tab_id = tab.get('model_id') ? tab.get('model_id') : tab.get('id');
-      const model = this.get('store').find(tab.get('module'), tab_id);
+      const model = this.get('simpleStore').find(tab.get('module'), tab_id);
       const tabService = this.get('tabList');
       if (tabService.showModal(tab, action, confirmed)) {
         tab.toggleProperty('modalIsShowing');

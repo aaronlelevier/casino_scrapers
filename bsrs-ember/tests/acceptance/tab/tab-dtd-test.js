@@ -34,7 +34,7 @@ let application, store, list_xhr, dtd_detail_data, endpoint, detail_xhr, origina
 module('Acceptance | tab dtd test', {
   beforeEach() {
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_DTD_URL}/`;
     dtd_detail_data = DTDF.detail(DTD.idOne);
     detail_xhr = xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 200, dtd_detail_data);

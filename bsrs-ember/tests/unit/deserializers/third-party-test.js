@@ -11,7 +11,7 @@ var store, subject, status, third_party, run = Ember.run;
 module('unit: third-party deserializer test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:third-party', 'model:third-party-list', 'model:status', 'model:general-status-list', 'service:i18n']);
-        subject = ThirdPartyDeserializer.create({store: store});
+        subject = ThirdPartyDeserializer.create({simpleStore: store});
         run(() => {
             status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [TPD.idOne]});
         });

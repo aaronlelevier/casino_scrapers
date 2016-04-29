@@ -43,7 +43,7 @@ module('Acceptance | ticket grid test', {
       dateString: 'December 25, 2014 13:12:59'
     });
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';
     list_xhr = xhr(endpoint, 'GET', null, {}, 200, TF.list());
     original_uuid = random.uuid;

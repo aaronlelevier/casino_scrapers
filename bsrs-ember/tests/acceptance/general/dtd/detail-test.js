@@ -40,7 +40,7 @@ let application, store, endpoint, list_xhr, detail_xhr, detail_data, original_uu
 module('Acceptance | dtd detail', {
   beforeEach() {
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/`;
     list_xhr = xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, DTDF.list());
     detail_data = DTDF.detail(DTD.idOne);

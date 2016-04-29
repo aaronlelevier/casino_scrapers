@@ -29,7 +29,7 @@ var application, store, location_endpoint, location_list_xhr, ticket_endpoint, t
 module('Acceptance | location multiple grid test', {
     beforeEach() {
         application = startApp();
-        store = application.__container__.lookup('store:main');
+        store = application.__container__.lookup('service:simpleStore');
         location_endpoint = `${PREFIX}${BASE_LOCATION_URL}/?page=1`;
         location_list_xhr = xhr(location_endpoint, 'GET', null, {}, 200, LF.list());
         // ticket_endpoint = `${PREFIX}${BASE_TICKET_URL}/?page=1`;

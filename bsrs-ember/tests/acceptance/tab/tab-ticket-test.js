@@ -37,7 +37,7 @@ let application, store, list_xhr, ticket_detail_data, endpoint, detail_xhr, orig
 module('Acceptance | tab ticket test', {
   beforeEach() {
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_TICKET_URL + '/';
     ticket_detail_data = TF.detail(TD.idOne);
     detail_xhr = xhr(endpoint + TD.idOne + '/', 'GET', null, {}, 200, ticket_detail_data);

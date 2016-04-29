@@ -21,7 +21,7 @@ var application, store, endpoint, translation_list_data, translation_detail_data
 module('Acceptance | Admin Translation Detail-test', {
     beforeEach() {
         application = startApp();
-        store = application.__container__.lookup('store:main');
+        store = application.__container__.lookup('service:simpleStore');
         endpoint = PREFIX + BASE_URL + '/';
         translation_list_data = TF.list();
         translation_detail_data = TF.get();

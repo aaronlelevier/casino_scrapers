@@ -11,7 +11,7 @@ var store, subject, category, category_unused, run = Ember.run;
 module('unit: category deserializer test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:category', 'model:category-list', 'model:category-children', 'service:i18n']);
-        subject = CategoryDeserializer.create({store: store});
+        subject = CategoryDeserializer.create({simpleStore: store});
     }
 });
 

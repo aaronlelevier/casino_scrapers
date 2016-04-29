@@ -2,6 +2,11 @@
 
 echo $(date -u) "EMBER BUILD STARTED!"
 
+# Start at root of project
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $SCRIPT_DIR
+cd ../
+
 function npmInstall {
     npm install --no-optional
     NPM_INSTALL=$?

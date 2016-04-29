@@ -32,7 +32,7 @@ let application, store, list_xhr, location_detail_data, endpoint, detail_xhr, or
 module('Acceptance | tab location-level test', {
   beforeEach() {
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/';
     location_detail_data = LLF.detail(LLD.idOne);
     detail_xhr = xhr(DJANGO_DETAIL_URL, 'GET', null, {}, 200, location_detail_data);

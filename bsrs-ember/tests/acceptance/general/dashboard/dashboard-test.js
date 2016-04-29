@@ -10,7 +10,7 @@ var application, store, endpoint;
 module('Acceptance | dashboard', {
     beforeEach() {
         application = startApp();
-        store = application.__container__.lookup('store:main');
+        store = application.__container__.lookup('service:simpleStore');
     },
     afterEach() {
         Ember.run(application, 'destroy');

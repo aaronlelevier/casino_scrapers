@@ -11,7 +11,7 @@ var LocationLevelRoute = TabRoute.extend(FindById, {
   model(params) {
     const pk = params.location_level_id;
     const repository = this.get('repository');
-    let location_level = this.get('store').find('location-level', pk);
+    let location_level = this.get('simpleStore').find('location-level', pk);
     const override = true;
     return this.findByIdScenario(location_level, pk, {}, override);
   }, 

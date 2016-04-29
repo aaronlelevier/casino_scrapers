@@ -6,7 +6,7 @@ const { run } = Ember;
 var RoleMixin = Ember.Mixin.create({
   change_role(new_role) {
     const old_role = this.get('role');
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const person_id = this.get('id');
     const new_role_people = new_role.get('people') || [];
     //set people for role

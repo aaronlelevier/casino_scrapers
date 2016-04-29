@@ -20,7 +20,7 @@ var CategoryDeserializer = Ember.Object.extend({
         }
     },
     deserialize_single(response, id) {
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         const existing = store.find('category', id);
         let category = existing;
         if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
@@ -44,7 +44,7 @@ var CategoryDeserializer = Ember.Object.extend({
         return category;
     },
     deserialize_list(response) {
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         response.results.forEach((model) => {
             const category = store.push('category-list', model);
         });

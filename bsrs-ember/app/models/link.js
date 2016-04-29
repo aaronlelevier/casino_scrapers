@@ -22,7 +22,7 @@ var LinkModel = Model.extend(CategoriesMixin, Validations, OptConf, {
     many_to_many.bind(this)('category', 'model', {plural:true, add_func:false});
     this._super(...arguments);
   },
-  store: inject('main'),
+  simpleStore: Ember.inject.service(),
   model_categories_fks: [],
   order: attr(''),
   action_button: attr(''),

@@ -12,7 +12,7 @@ export default Ember.Object.extend({
     SettingDeserializer: inject('setting'),
     deserializer: Ember.computed.alias('SettingDeserializer'),
     findById(id) {
-        let store = this.get('store');
+        let store = this.get('simpleStore');
         let model = store.find('setting', id);
         model.id = id;
         PromiseMixin.xhr(SETTING_URL + id + '/', 'GET').then((response) => {

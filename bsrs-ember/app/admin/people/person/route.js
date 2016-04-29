@@ -7,7 +7,7 @@ import ContactRouteMixin from 'bsrs-ember/mixins/route/contact';
 import FindById from 'bsrs-ember/mixins/route/findById';
 
 var PersonRoute = TabRoute.extend(FindById, ContactRouteMixin, {
-  store: injectStore('main'),
+  simpleStore: Ember.inject.service(),
   repository: inject('person'),
   status_repo: inject('status'),
   role_repo: inject('role'),
@@ -33,7 +33,7 @@ var PersonRoute = TabRoute.extend(FindById, ContactRouteMixin, {
     const countries = this.country_repo.find();
     const state_list = this.state_repo.find();
     const statuses = this.get('status_repo').find();
-    const locales = this.get('store').find('locale');
+    const locales = this.get('simpleStore').find('locale');
     let person = repository.fetch(pk);
     const override = person.get('roleIsDirty');
     return this.findByIdScenario(person, pk, {email_types:email_types, default_email_type:default_email_type,

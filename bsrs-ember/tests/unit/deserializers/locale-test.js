@@ -9,7 +9,7 @@ let store, subject;
 module('unit: locale deserializer test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:locale']);
-        subject = LocaleDeserializer.create({store: store});
+        subject = LocaleDeserializer.create({simpleStore: store});
     }
 });
 

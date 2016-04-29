@@ -26,9 +26,9 @@ module('unit: person deserializer test', {
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:random','model:uuid','model:person', 'model:person-list', 'model:role', 'model:person-location','model:location','model:location-level','model:email','model:phonenumber','model:address','model:address-type','service:person-current','service:translations-fetcher','service:i18n', 'model:status', 'model:person-status-list', 'model:location-status', 'model:locale', 'model:currency']);
     uuid = this.container.lookup('model:uuid');
-    location_level_deserializer = LocationLevelDeserializer.create({store: store});
-    location_deserializer = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
-    subject = PersonDeserializer.create({store: store, uuid: uuid, LocationDeserializer: location_deserializer});
+    location_level_deserializer = LocationLevelDeserializer.create({simpleStore: store});
+    location_deserializer = LocationDeserializer.create({simpleStore: store, LocationLevelDeserializer: location_level_deserializer});
+    subject = PersonDeserializer.create({simpleStore: store, uuid: uuid, LocationDeserializer: location_deserializer});
     run(() => {
       status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [PD.idOne]});
       store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.idOne], location_level_fk: LLD.idOne});

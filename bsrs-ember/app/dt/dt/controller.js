@@ -19,12 +19,12 @@ export default Ember.Controller.extend({
         obj.label ? requestValues.push(`${obj.label}: ${obj.value}`) : requestValues.push(obj.value);
         /* jshint ignore:end */
       }
-      this.get('store').push('ticket', {id: ticket.get('id'), request: requestValues.join(', '), requestValues: requestValues});
+      this.get('simpleStore').push('ticket', {id: ticket.get('id'), request: requestValues.join(', '), requestValues: requestValues});
     },
     linkClick(dtd_id, link, ticket) {
       this.get('ticketRepository').patch(dtd_id, ticket, link).then((response) => {
         const dtd = this.get('DTDDeserializer').deserialize(response, response.id);
-        ticket = this.get('store').push('ticket', {id: ticket.id, dtd_fk: response.id});
+        ticket = this.get('simpleStore').push('ticket', {id: ticket.id, dtd_fk: response.id});
         this.transitionToRoute('dt.dt', {id: response.id, model: dtd, ticket: ticket});
       });
     }

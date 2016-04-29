@@ -27,7 +27,7 @@ var application, store, endpoint, list_xhr, original_uuid, run = Ember.run;
 module('Acceptance | admin-translation-grid-list', {
     beforeEach() {
         application = startApp();
-        store = application.__container__.lookup('store:main');
+        store = application.__container__.lookup('service:simpleStore');
         endpoint = PREFIX + BASE_URL + '/?page=1';
         list_xhr = xhr(endpoint ,"GET",null,{},200,ATF.list());
         original_uuid = random.uuid;

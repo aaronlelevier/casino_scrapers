@@ -26,7 +26,7 @@ let application, store, list_xhr, settings_data, endpoint, detail_xhr, original_
 module('Acceptance | tab general settings test', {
     beforeEach() {
         application = startApp();
-        store = application.__container__.lookup('store:main');
+        store = application.__container__.lookup('service:simpleStore');
         endpoint = PREFIX + BASE_SETTINGS_URL + '/';
         settings_data = SF.detail();
         detail_xhr = xhr(endpoint + SD.id + '/', 'GET', null, {}, 200, settings_data);

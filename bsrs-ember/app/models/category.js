@@ -16,7 +16,7 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, OptConf, {
     many_to_many.bind(this)('children', 'category');
     this._super(...arguments);
   },
-  store: inject('main'),
+  simpleStore: Ember.inject.service(),
   uuid: injectUUID('uuid'),
   name: attr(''),
   description: attr(''),
@@ -48,7 +48,7 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, OptConf, {
   parent: Ember.computed.alias('parent_belongs_to.firstObject'),
   parent_belongs_to: Ember.computed('parent_id', function() {
     const parent_id = this.get('parent_id');
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const filter = function(category) {
       return parent_id === category.get('id');
     };
@@ -56,7 +56,7 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, OptConf, {
   }),
   removeRecord() {
     run(() => {
-      this.get('store').remove('category', this.get('id'));
+      this.get('simpleStore').remove('category', this.get('id'));
     });
   },
   rollback() {

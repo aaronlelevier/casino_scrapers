@@ -169,7 +169,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
           'admin.locationlevel.other':'Location Levels',
           'admin.locationlevel.region':'Region',
           'admin.locationlevel.search':'Search Location Levels',
-          'admin.locationlevel.store':'Store',
+          'admin.locationlevel.store':'simpleStore',
           'admin.notification.one':'Notification Profile',
           'admin.notification.other':'Notification Profiles',
           'admin.person.label.address':'Address',

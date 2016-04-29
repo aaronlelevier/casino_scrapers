@@ -26,7 +26,7 @@ let application, original_uuid, store, payload, list_xhr;
 module('Acceptance | third-party new test', {
     beforeEach() {
         application = startApp();
-        store = application.__container__.lookup('store:main');
+        store = application.__container__.lookup('service:simpleStore');
         list_xhr = xhr(`${DJANGO_THIRD_PARTY_URL}?page=1`, "GET", null, {}, 200, TPF.empty());
         payload = {
             id: UUID.value,

@@ -9,7 +9,7 @@ export default Model.extend(OptConf, {
     many_to_many.bind(this)('option', 'field', {plural:true, dirty:false});
     this._super(...arguments);
   },
-  store: inject('main'),
+  simpleStore: Ember.inject.service(),
   label: attr(''),
   type: attr(''),
   types: [
@@ -67,7 +67,7 @@ export default Model.extend(OptConf, {
   },
   removeRecord(){
     Ember.run(() => {
-      this.get('store').remove('field', this.get('id'));
+      this.get('simpleStore').remove('field', this.get('id'));
     });
   },
   serialize() {

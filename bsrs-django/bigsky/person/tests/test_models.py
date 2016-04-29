@@ -54,6 +54,12 @@ class RoleTests(TestCase):
             self.role.categories.add(child)
             self.role.save()
 
+    def test_categories_not_reqd(self):
+        category = Category.objects.get(id=self.role.categories.first().id)
+        self.role.categories.remove(category)  
+        self.role.save()
+        self.assertEqual(self.role.categories.count(), 0)
+
     def test_settings_default(self):
         role = create_role()
         self.assertEqual(role.settings, DEFAULT_ROLE_SETTINGS)

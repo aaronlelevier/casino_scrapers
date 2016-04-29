@@ -10,7 +10,7 @@ var store, setting, run = Ember.run, deserializer;
 module('unit: settings deserializer test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:setting', 'service:i18n']);
-        deserializer = SettingDeserializer.create({store: store});
+        deserializer = SettingDeserializer.create({simpleStore: store});
         run(()=>{
             setting = store.push('setting', {id: SD.id, name: SD.name});
         });

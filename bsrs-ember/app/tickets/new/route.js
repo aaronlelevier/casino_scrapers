@@ -21,7 +21,7 @@ var TicketNewRoute = TabNewRoute.extend({
     const new_pk = parseInt(params.new_id, 10);
     const statuses = this.get('statuses');
     const priorities = this.get('priorities');
-    let model = this.get('store').find('ticket', {new_pk: new_pk}).objectAt(0);
+    let model = this.get('simpleStore').find('ticket', {new_pk: new_pk}).objectAt(0);
     if(!model){
       model = this.get('repository').create(new_pk);
     }

@@ -44,7 +44,7 @@ const PARENTS_MULTIPLE_OPTION = `.t-location-parent-select > .ember-power-select
 module('Acceptance | location detail-test', {
   beforeEach() {
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/`;
     let location_list_data = LF.list();
     let location_detail_data = LF.detail();

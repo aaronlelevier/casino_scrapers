@@ -32,10 +32,10 @@ export default Ember.Object.extend(GridRepositoryMixin, {
         PromiseMixin.xhr(TRANSLATION_URL, 'GET').then((response) => {
             this.get('TranslationDeserializer').deserialize(response);
         });
-        return this.get('store').find('translation');
+        return this.get('simpleStore').find('translation');
     },
     findById(id) {
-        let model = this.get('store').find('translation', id);
+        let model = this.get('simpleStore').find('translation', id);
         model.id = id;
         PromiseMixin.xhr(TRANSLATION_URL + id + '/', 'GET').then((response) => {
             this.get('TranslationDeserializer').deserialize(response, id);

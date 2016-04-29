@@ -30,20 +30,20 @@ module('unit: grid repository test', {
 test('findWithQuery will format sort url string correctly', (assert) => {
     assert.expect(1);
     expected_endpoint = '?page=1&ordering=status__name,request,priority__name';
-    let subject = FakeRepo.create({store: store, type: 'ticket', url:''});
+    let subject = FakeRepo.create({simpleStore: store, type: 'ticket', url:''});
     subject.findWithQuery(1, 'status.translated_name,request,priority.translated_name');
 });
 
 test('findWithQuery will format find url string correctly', (assert) => {
     assert.expect(1);
     expected_endpoint = '?page=1&status__name__icontains=a&request__icontains=r&priority__name__icontains=b';
-    let subject = FakeRepo.create({store: store, type: 'ticket', url:''});
+    let subject = FakeRepo.create({simpleStore: store, type: 'ticket', url:''});
     subject.findWithQuery(1, '', '', 'status.translated_name:a,request:r,priority.translated_name:b');
 });
 
 test('findWithQuery will format find url string correctly with array based property', (assert) => {
     assert.expect(1);
     expected_endpoint = '?page=1&status__name__icontains=a&categories__name__icontains=x&request__icontains=r';
-    let subject = FakeRepo.create({store: store, type: 'ticket', url:''});
+    let subject = FakeRepo.create({simpleStore: store, type: 'ticket', url:''});
     subject.findWithQuery(1, '', '', 'status.translated_name:a,categories[name]:x,request:r');
 });

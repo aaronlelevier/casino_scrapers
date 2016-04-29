@@ -1,5 +1,10 @@
 #!/bin/bash -lx
 
+# Start at root of project
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $SCRIPT_DIR
+cd ../
+
 export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
 
 cd bsrs-django/bigsky

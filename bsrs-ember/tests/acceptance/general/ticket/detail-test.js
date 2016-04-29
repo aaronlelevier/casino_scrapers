@@ -53,7 +53,7 @@ let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_da
 module('Acceptance | ticket detail', {
   beforeEach() {
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/`;
     detail_data = TF.detail(TD.idOne);
     list_xhr = xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, TF.list());

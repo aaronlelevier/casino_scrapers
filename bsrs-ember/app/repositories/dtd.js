@@ -28,7 +28,7 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
     });
   },
   fetch(id) {
-    return this.get('store').find('dtd', id);
+    return this.get('simpleStore').find('dtd', id);
   },
   findDTD(search) {
     let url = DTD_URL;

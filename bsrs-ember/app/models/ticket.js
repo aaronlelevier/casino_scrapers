@@ -25,7 +25,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     many_to_many.bind(this)('category', 'model', {plural:true, add_func:false});
     this._super(...arguments);
   },
-  store: inject('main'),
+  simpleStore: Ember.inject.service(),
   //TODO: test this.  Plan on using for delete modal
   displayName: 'modules.tickets.titleShort',
   number: attr(''),
@@ -70,7 +70,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     });
   },
   saveAttachments() {
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const ticket_pk = this.get('id');
     const fks = this.get('ticket_attachments_fks');
     run(function() {
@@ -86,7 +86,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   remove_assignee: function() {
     const ticket_id = this.get('id');
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const old_assignee = this.get('assignee');
     if(old_assignee) {
       const old_assignee_tickets = old_assignee.get('assigned_tickets') || [];
@@ -99,7 +99,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     }
   },
   person_status_role_setup(person_json) {
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const role = store.find('role', person_json.role);
     delete person_json.role;
     person_json.role_fk = role.get('id');
@@ -132,13 +132,13 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     const filter = function(attachment) {
       return Ember.$.inArray(attachment.get('id'), related_fks) > -1;
     };
-    return this.get('store').find('attachment', filter);
+    return this.get('simpleStore').find('attachment', filter);
   }),
   attachment_ids: Ember.computed('attachments.[]', function() {
     return this.get('attachments').mapBy('id');
   }),
   remove_attachment(attachment_id) {
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const attachment = store.find('attachment', attachment_id);
     attachment.set('rollback', true);
     const ticket_id = this.get('id');
@@ -151,7 +151,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     });
   },
   add_attachment(attachment_id) {
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const attachment = store.find('attachment', attachment_id);
     attachment.set('rollback', undefined);
     const ticket_id = this.get('id');
@@ -162,7 +162,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
   },
   serialize() {
     const ticket_pk = this.get('id');
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     let payload = {
       id: ticket_pk,
       request: this.get('request'),
@@ -207,12 +207,12 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     const date = new Date();
     const iso = date.toISOString();
     run(() => {
-      this.get('store').push('ticket', {id: this.get('id'), created: iso});
+      this.get('simpleStore').push('ticket', {id: this.get('id'), created: iso});
     });
   },
   removeRecord() {
     run(() => {
-      this.get('store').remove('ticket', this.get('id'));
+      this.get('simpleStore').remove('ticket', this.get('id'));
     });
   },
   rollback() {

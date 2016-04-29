@@ -39,7 +39,7 @@ module('Acceptance | ticket activity test', {
       dateString: 'December 25, 2015 13:12:59'
     });
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/`;
     detail_data = TF.detail(TD.idOne);
     detail_xhr = ajax(endpoint + TD.idOne + '/', 'GET', null, {}, 200, detail_data);

@@ -26,7 +26,7 @@ var application, store, endpoint, endpoint_detail, list_xhr, detail_xhr, locatio
 module('Acceptance | detail-test', {
   beforeEach() {
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     let location_list_data = LLF.list();
     let location_detail_data = LLF.detail();
     location_level_district_detail_data = LLF.detail_district();

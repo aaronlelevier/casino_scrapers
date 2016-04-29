@@ -13,7 +13,7 @@ var ThirdPartyModel = Model.extend(NewMixin, OptConf, {
     this._super(...arguments);
   },
   type: 'third-party',
-  store: inject('main'),
+  simpleStore: Ember.inject.service(),
   name: attr(),
   number: attr(),
   status_fk: undefined,
@@ -38,7 +38,7 @@ var ThirdPartyModel = Model.extend(NewMixin, OptConf, {
   },
   removeRecord() {
     run(() => {
-      this.get('store').remove('third-party', this.get('id'));
+      this.get('simpleStore').remove('third-party', this.get('id'));
     });
   },
   serialize() {

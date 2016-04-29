@@ -39,7 +39,7 @@ module('Acceptance | role-new', {
       settings: {}
     };
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     let endpoint = PREFIX + BASE_URL + '/';
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, RF.empty());
     original_uuid = random.uuid;

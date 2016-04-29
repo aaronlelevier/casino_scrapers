@@ -14,8 +14,8 @@ let store, subject, subjectLocale;
 module('unit: translation deserializer test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:locale', 'model:translation', 'model:translation-list', 'model:locale-translation']);
-        subject = TranslationDeserializer.create({store: store});
-        subjectLocale = LocaleDeserializer.create({store: store});
+        subject = TranslationDeserializer.create({simpleStore: store});
+        subjectLocale = LocaleDeserializer.create({simpleStore: store});
     }
 });
 

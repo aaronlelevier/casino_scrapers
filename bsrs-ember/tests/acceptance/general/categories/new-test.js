@@ -41,7 +41,7 @@ module('Acceptance | category-new', {
       children: []
     };
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     let endpoint = PREFIX + BASE_URL + '/';
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, CF.empty());
     let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a&page_size=25';

@@ -64,7 +64,7 @@ var ActivityDeserializer = Ember.Object.extend({
     uuid: inject('uuid'),
     deserialize(response, type) {
         let uuid = this.get('uuid');
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         response.results.forEach((model) => {
             extract_comment(model);
             extract_category(store, model, uuid);

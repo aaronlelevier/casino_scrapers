@@ -22,8 +22,8 @@ var store, location_unused, location_level_deserializer, subject, location_statu
 module('unit: location deserializer test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:location', 'model:location-list', 'model:location-status-list', 'model:location-level', 'model:location-status', 'model:location-children', 'model:location-parents', 'model:address', 'model:phonenumber', 'model:email', 'service:i18n']);
-        location_level_deserializer = LocationLevelDeserializer.create({store: store});
-        subject = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
+        location_level_deserializer = LocationLevelDeserializer.create({simpleStore: store});
+        subject = LocationDeserializer.create({simpleStore: store, LocationLevelDeserializer: location_level_deserializer});
         run(function() {
             location_status = store.push('location-status', {id: LDS.openId, name: LDS.openName, locations: [LD.idOne]});
             location_status_two = store.push('location-status', {id: LDS.closedId, name: LDS.closedName, locations: []});

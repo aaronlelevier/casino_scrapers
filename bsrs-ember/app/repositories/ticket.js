@@ -22,12 +22,12 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMix
   deserializer: Ember.computed.alias('TicketDeserializer'),
   create(new_pk, options={}) {
     let ticket;
-    let store = this.get('store');
+    let store = this.get('simpleStore');
     const pk = this.get('uuid').v4();
     let status_id = store.find('ticket-status', {default: true}).objectAt(0).get('id');
     let priority_id = store.find('ticket-priority', {default: true}).objectAt(0).get('id');
     /* jshint ignore:start */
-    ticket = this.get('store').push(this.get('type'), {id: pk, new: true, new_pk: new_pk, status_fk: status_id, priority_fk: priority_id, ...options});
+    ticket = this.get('simpleStore').push(this.get('type'), {id: pk, new: true, new_pk: new_pk, status_fk: status_id, priority_fk: priority_id, ...options});
     /* jshint ignore:end */
     ticket.change_status(status_id);
     ticket.change_priority(priority_id);

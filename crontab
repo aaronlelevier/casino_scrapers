@@ -1,0 +1,2 @@
+* 01 * * * sudo rm -rf /tmp/* 1> /dev/null 2> /home/bsdev/cron.err
+30 11 * * * . $HOME/.bashrc; bash /var/www/deploy/bsrs/scripts/update_translations.sh 1> /dev/null 2> /home/web/cron.err

@@ -24,7 +24,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin
     many_to_many.bind(this)('parent', 'location', {plural:true, add_func:false});
     this._super(...arguments);
   },
-  store: inject('main'),
+  simpleStore: Ember.inject.service(),
   name: attr(''),
   number: attr(''),
   status_fk: undefined,
@@ -96,7 +96,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin
   },
   removeRecord() {
     run(() => {
-      this.get('store').remove('location', this.get('id'));
+      this.get('simpleStore').remove('location', this.get('id'));
     });
   },
 });

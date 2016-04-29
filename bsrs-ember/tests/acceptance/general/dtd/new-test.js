@@ -37,7 +37,7 @@ let application, store, payload, list_xhr, original_uuid;
 module('Acceptance | dtd-new', {
   beforeEach() {
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${DJANGO_DTD_URL}?page=1`, 'GET', null, {}, 201, DTDF.list());
     original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };

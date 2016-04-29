@@ -9,15 +9,15 @@ var PersonNew = TabNewRoute.extend({
   templateModelField: Ember.computed(function() { return 'Person'; }),
   model(params) {
     const new_pk = parseInt(params.new_id, 10);
-    const roles = this.get('store').find('role');
-    let model = this.get('store').find('person', {new_pk: new_pk}).objectAt(0);
+    const roles = this.get('simpleStore').find('role');
+    let model = this.get('simpleStore').find('person', {new_pk: new_pk}).objectAt(0);
     if(!model){
       model = this.get('repository').create(new_pk);
     }
     return {
       model: model,
       roles: roles,
-      locales: this.get('store').find('locale')
+      locales: this.get('simpleStore').find('locale')
     };
   },
   setupController(controller, hash) {

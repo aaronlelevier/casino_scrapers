@@ -35,7 +35,7 @@ var TicketDeserializer = Ember.Object.extend({
         }
     },
     deserialize_single(response, id) {
-        let store = this.get('store');
+        let store = this.get('simpleStore');
         let existing = store.find('ticket', id);
         let ticket = existing;
         if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
@@ -98,7 +98,7 @@ var TicketDeserializer = Ember.Object.extend({
         return ticket;
     },
     deserialize_list(response) {
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         response.results.forEach((model) => {
             const category_json = model.categories;
             model.category_ids = category_json.mapBy('id');

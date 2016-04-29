@@ -32,48 +32,48 @@ def rand_num():
 
 # NOTE: Comment out - b/c button is currently disabled, and not able to click on 'checkbox'.
 #   - debug on Ember then bring back this test.
-# class DtSeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
+class DtSeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
 
-#     def setUp(self):
-#         self.driver = webdriver.Firefox()
-#         self.driver.set_window_size(1200, 1200)
-#         self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)
-#         self.login()
-#         # Wait
-#         self.driver_wait = Wait(self.driver)
-#         # Generic Elements
-#         self.gen_elem_page = GeneralElementsPage(self.driver)
-#         time.sleep(3)
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+        self.driver.set_window_size(1200, 1200)
+        self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)
+        self.login()
+        # Wait
+        self.driver_wait = Wait(self.driver)
+        # Generic Elements
+        self.gen_elem_page = GeneralElementsPage(self.driver)
+        time.sleep(3)
 
-#     def tearDown(self):
-#         self.driver.close()
+    def tearDown(self):
+        self.driver.close()
 
-#     def test_post_and_patch(self):
-#         # /dashboard
-#         self.wait_for_xhr_request('t-launch-dt-ticket').click()
-#         # /dt/new
-#         requester_input = self.wait_for_xhr_request('t-dt-ticket-requester')
-#         requester_input.send_keys('foo')
-#         self.wait_for_xhr_request('t-dt-start').click()
-#         # /dt/{start-id}
-#         description = self.wait_for_xhr_request('t-dtd-preview-description')
-#         assert description.text == 'Start'
-#         number = self.wait_for_xhr_request('t-dtd-field-number')
-#         number.send_keys(1)
-#         text = self.wait_for_xhr_request('t-dtd-field-text')
-#         text.send_keys('foo')
-#         textarea = self.wait_for_xhr_request('t-dtd-field-textarea')
-#         textarea.send_keys('bar')
-#         self.wait_for_xhr_request('ember-basic-dropdown-trigger').click()
-#         options = self.wait_for_xhr_request('ember-power-select-options', plural=True)
-#         options[0].click()
-#         checkboxes = self.wait_for_xhr_request('t-dtd-field-checkbox', plural=True)
-#         checkboxes[0].click()
-#         buttons = self.wait_for_xhr_request('t-dtd-preview-btn', plural=True)
-#         buttons[1].click()
-#         # /dt/{2nd-node-id}
-#         description = self.wait_for_xhr_request('t-dtd-preview-description')
-#         assert description.text == 'Maintenance'
+    def test_post_and_patch(self):
+        # /dashboard
+        self.wait_for_xhr_request('t-launch-dt-ticket').click()
+        # /dt/new
+        requester_input = self.wait_for_xhr_request('t-dt-ticket-requester')
+        requester_input.send_keys('foo')
+        self.wait_for_xhr_request('t-dt-start').click()
+        # /dt/{start-id}
+        description = self.wait_for_xhr_request('t-dtd-preview-description')
+        assert description.text == 'Start'
+        number = self.wait_for_xhr_request('t-dtd-field-number')
+        number.send_keys(1)
+        text = self.wait_for_xhr_request('t-dtd-field-text')
+        text.send_keys('foo')
+        textarea = self.wait_for_xhr_request('t-dtd-field-textarea')
+        textarea.send_keys('bar')
+        self.wait_for_xhr_request('ember-basic-dropdown-trigger').click()
+        options = self.wait_for_xhr_request('ember-power-select-options', plural=True)
+        options[0].click()
+        checkbox = self.wait_for_xhr_request_xpath("//*[contains(@class, 't-dtd-preview-field')]//span[text()='aptent']")
+        checkbox.click()
+        buttons = self.wait_for_xhr_request('t-dtd-preview-btn', plural=True)
+        buttons[1].click()
+        # /dt/{2nd-node-id}
+        description = self.wait_for_xhr_request('t-dtd-preview-description')
+        assert description.text == 'Repair'
 
 
 class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):

@@ -14,18 +14,18 @@ var FilterSetRepository = Ember.Object.extend({
     const pk = this.get('uuid').v4();
     const data = {id: pk, name: name, endpoint_name: path, endpoint_uri: query};
     return PromiseMixin.xhr(FILTERSET_URL, 'POST', {data: JSON.stringify(data)}).then((response) => {
-      const store = this.get('store');
+      const store = this.get('simpleStore');
       run(() => {
         store.push('filterset', data);
       });
     });
   },
   fetch() {
-    let store = this.get('store');
+    let store = this.get('simpleStore');
     return store.find('filterset');
   },
   delete(id) {
-    let store = this.get('store');
+    let store = this.get('simpleStore');
     PromiseMixin.xhr(FILTERSET_URL + id + '/', 'DELETE');
     run(() => {
       store.remove('filterset', id);

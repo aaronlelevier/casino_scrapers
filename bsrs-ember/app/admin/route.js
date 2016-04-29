@@ -2,9 +2,9 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 
 export default Ember.Route.extend({
-  store: inject('main'),
+  simpleStore: Ember.inject.service(),
   model(params) {
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const settings = store.find('setting');
     let general_settings = settings.filter(function(obj) {
       return obj.name === 'general';

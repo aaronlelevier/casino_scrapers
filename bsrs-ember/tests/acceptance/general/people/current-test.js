@@ -24,7 +24,7 @@ var application, store, list_xhr;
 module('Acceptance | current user test', {
   beforeEach() {
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     var people_list_data = PF.list();
     var current_person_data = PF.detail(PCD.id);
     var locale_data_es = translations.generate('es');

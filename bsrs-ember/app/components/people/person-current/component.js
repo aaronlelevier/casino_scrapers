@@ -5,7 +5,7 @@ import windowProxy from 'bsrs-ember/utilities/window-proxy';
 import config from 'bsrs-ember/config/environment';
 
 export default Ember.Component.extend({
-    store: inject('main'),
+    simpleStore: Ember.inject.service(),
     tagName: 'li',
     classNames: ['dropdown current-user t-current-user'],
     personCurrent: Ember.inject.service(),

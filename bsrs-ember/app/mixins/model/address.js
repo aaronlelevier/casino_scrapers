@@ -5,7 +5,7 @@ const { run } = Ember;
 var AddressMixin = Ember.Mixin.create({
     addresses_all: Ember.computed(function() {
         let pk = this.get('id');
-        let store = this.get('store');
+        let store = this.get('simpleStore');
         let filter = function(address) {
             return pk === address.get('model_fk');
         };
@@ -13,7 +13,7 @@ var AddressMixin = Ember.Mixin.create({
     }),
     addresses: Ember.computed(function() {
         let pk = this.get('id');
-        let store = this.get('store');
+        let store = this.get('simpleStore');
         let filter = function(address) {
             return pk === address.get('model_fk') && !address.get('removed');
         };
@@ -64,7 +64,7 @@ var AddressMixin = Ember.Mixin.create({
     }),
     addressesIsNotDirty: Ember.computed.not('addressesIsDirty'),
     rollbackAddresses() {
-        let store = this.get('store');
+        let store = this.get('simpleStore');
         let addresses_to_remove = [];
         let addresses = this.get('addresses_all');
         run(function() {
@@ -83,7 +83,7 @@ var AddressMixin = Ember.Mixin.create({
         });
     },
     cleanupAddresses: function() {
-        let store = this.get('store');
+        let store = this.get('simpleStore');
         let addresses_to_remove = [];
         let addresses = this.get('addresses');
         let addresses_all = this.get('addresses_all');
