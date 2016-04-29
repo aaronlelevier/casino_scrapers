@@ -15,9 +15,9 @@ let store, uuid, category_deserializer, subject, role, run = Ember.run;
 module('unit: role deserializer test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:uuid', 'model:role', 'model:role-list', 'model:location-level', 'model:category', 'model:role-category', 'service:i18n']);
-        category_deserializer = CategoryDeserializer.create({store: store});
+        category_deserializer = CategoryDeserializer.create({simpleStore: store});
         uuid = this.container.lookup('model:uuid');
-        subject = RoleDeserializer.create({store: store, uuid: uuid, CategoryDeserializer: category_deserializer});
+        subject = RoleDeserializer.create({simpleStore: store, uuid: uuid, CategoryDeserializer: category_deserializer});
     }
 });
 

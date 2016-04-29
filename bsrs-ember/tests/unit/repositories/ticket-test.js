@@ -23,7 +23,7 @@ module('unit: ticket repo test', {
 test('create - will default status and priority (which exist in the store because they are bootstrapped)', assert => {
     let new_pk = 1;
     let init_count = store.find('ticket').get('length');
-    ticketRepo = TicketRepository.create({store: store, type: 'ticket', url:'', uuid: uuid});
+    ticketRepo = TicketRepository.create({simpleStore: store, type: 'ticket', url:'', uuid: uuid});
     ticket = ticketRepo.create(new_pk);
     let post_count = store.find('ticket').get('length');
     assert.equal(post_count, init_count+1);

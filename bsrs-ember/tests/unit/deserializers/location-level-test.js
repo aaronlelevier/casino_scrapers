@@ -10,7 +10,7 @@ var store, location_level, location_level_two, run = Ember.run, subject;
 module('unit: location level deserializer test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:location-level', 'model:location-level-list']);
-        subject = LocationLevelDeserializer.create({store: store});
+        subject = LocationLevelDeserializer.create({simpleStore: store});
     }
 });
 

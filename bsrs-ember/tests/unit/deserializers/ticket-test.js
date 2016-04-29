@@ -27,11 +27,11 @@ module('unit: ticket deserializer test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-list', 'model:person-list', 'model:ticket-person', 'model:model-category', 'model:ticket-status', 'model:ticket-priority', 'model:status', 'model:location', 'model:location-list','model:person-location', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:attachment', 'model:location-status', 'service:person-current','service:translations-fetcher','service:i18n', 'model:locale', 'model:role', 'model:general-status-list', 'model:ticket-priority-list', 'model:category-list', 'model:category-children']);
         uuid = this.container.lookup('model:uuid');
-        location_level_deserializer = LocationLevelDeserializer.create({store: store});
-        location_deserializer = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
-        person_deserializer = PersonDeserializer.create({store: store, uuid: uuid, LocationDeserializer: location_deserializer});
-        category_deserializer = CategoryDeserializer.create({store: store});
-        subject = TicketDeserializer.create({store: store, uuid: uuid, PersonDeserializer: person_deserializer, CategoryDeserializer: category_deserializer, LocationDeserializer: location_deserializer});
+        location_level_deserializer = LocationLevelDeserializer.create({simpleStore: store});
+        location_deserializer = LocationDeserializer.create({simpleStore: store, LocationLevelDeserializer: location_level_deserializer});
+        person_deserializer = PersonDeserializer.create({simpleStore: store, uuid: uuid, LocationDeserializer: location_deserializer});
+        category_deserializer = CategoryDeserializer.create({simpleStore: store});
+        subject = TicketDeserializer.create({simpleStore: store, uuid: uuid, PersonDeserializer: person_deserializer, CategoryDeserializer: category_deserializer, LocationDeserializer: location_deserializer});
         run(() => {
             store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
             ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne]});

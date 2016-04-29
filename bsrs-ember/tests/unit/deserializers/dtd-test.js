@@ -18,7 +18,7 @@ var store, subject, category, category_unused, dtd, dtd_link, priority, status, 
 module('unit: dtd deserializer test', {
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-list', 'model:dtd-link', 'model:link', 'model:dtd-field', 'model:field', 'model:option', 'model:field-option', 'model:link-priority-list', 'model:ticket-priority', 'model:ticket-status', 'model:category', 'model:category-children', 'model:model-category', 'model:attachment', 'service:i18n']);
-    subject = DTDDeserializer.create({store: store});
+    subject = DTDDeserializer.create({simpleStore: store});
     run(() => {
       priority = store.push('ticket-priority', {id: TP.priorityOneId, name: TP.priorityOne});
       status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
