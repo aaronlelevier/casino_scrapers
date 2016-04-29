@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { computed, observer, defineProperty, run } = Ember;
+const { computed, defineProperty } = Ember;
 
 export default Ember.Component.extend({
   type: 'text',
