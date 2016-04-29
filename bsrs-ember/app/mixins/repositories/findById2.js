@@ -7,7 +7,7 @@ var FindByIdRepo = Ember.Mixin.create({
     const url = this.get('url');
     const errorUrl = this.get('errorUrl');
     const deserializer = this.get('deserializer');
-    const modelInstance = this.get('store').find('dtd', id);
+    const modelInstance = this.get('simpleStore').find('dtd', id);
     PromiseMixin.xhr(`${url}${id}/`, 'GET').then((response) => {
       deserializer.deserialize(response, id);
     }, (xhr) => {

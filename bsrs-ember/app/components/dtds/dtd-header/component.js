@@ -2,12 +2,12 @@ import Ember from 'ember';
 import injectStore from 'bsrs-ember/utilities/store';
 
 export default Ember.Component.extend({
-  store: injectStore('main'),
+  simpleStore: Ember.inject.service(),
   tagName: 'article',
   classNames: ['main', 'full', 'dtd'],
   classNameBindings: ['countPanes'],
   countPanes: Ember.computed('previewShowing.showingPreview', 'detailShowing.showingDetail', 'listShowing.showingList', function() {
-    const _s = this.get('store').find('dtd-header').objectAt(0);
+    const _s = this.get('simpleStore').find('dtd-header').objectAt(0);
     const count = (_s.get('showingDetail') ? 1 : 0) + (_s.get('showingList') ? 1 : 0) + (_s.get('showingPreview') ? 1 : 0);
     // var count = Object.keys(showing).reduce((prev, key) => {
     //     return prev += (showing[key] ? 1 : 0);
@@ -18,29 +18,29 @@ export default Ember.Component.extend({
     const filter = (dtdHeader) => {
       return dtdHeader.get('showingDetail');
     };
-    return this.get('store').find('dtd-header', filter).objectAt(0);
+    return this.get('simpleStore').find('dtd-header', filter).objectAt(0);
   }),
   previewShowing: Ember.computed(function(){
     const filter = (dtdHeader) => {
       return dtdHeader.get('showingPreview');
     };
-    return this.get('store').find('dtd-header', filter).objectAt(0);
+    return this.get('simpleStore').find('dtd-header', filter).objectAt(0);
   }),
   listShowing: Ember.computed(function(){
     const filter = (dtdHeader) => {
       return dtdHeader.get('showingList');
     };
-    return this.get('store').find('dtd-header', filter).objectAt(0);
+    return this.get('simpleStore').find('dtd-header', filter).objectAt(0);
   }),
   message: Ember.computed(function(){
     const filter = (dtdHeader) => {
       return dtdHeader.get('message');
     };
-    return this.get('store').find('dtd-header', filter).objectAt(0);
+    return this.get('simpleStore').find('dtd-header', filter).objectAt(0);
   }),
   actions: {
     togglePreview(){
-      const store = this.get('store');
+      const store = this.get('simpleStore');
       const model = store.find('dtd-header').objectAt(0);
       if(model.get('showingList') || model.get('showingDetail')){
         const bool = model.toggleProperty('showingPreview');
@@ -49,7 +49,7 @@ export default Ember.Component.extend({
       }
     },
     toggleDetail(){
-      const store = this.get('store');
+      const store = this.get('simpleStore');
       const model = store.find('dtd-header').objectAt(0);
       if(model.get('showingList') || model.get('showingPreview')){
         const bool = model.toggleProperty('showingDetail');
@@ -58,7 +58,7 @@ export default Ember.Component.extend({
       }
     },
     toggleList(){
-      const store = this.get('store');
+      const store = this.get('simpleStore');
       const model = store.find('dtd-header').objectAt(0);
       if(model.get('showingDetail') || model.get('showingPreview')){
         const bool = model.toggleProperty('showingList');

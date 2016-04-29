@@ -46,7 +46,7 @@ let application, store, list_xhr, location_xhr, people_xhr, original_uuid, count
 module('Acceptance | ticket new test', {
   beforeEach() {
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(TICKET_LIST_URL, 'GET', null, {}, 200, TF.empty());
     location_xhr = xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
     counter = 0;

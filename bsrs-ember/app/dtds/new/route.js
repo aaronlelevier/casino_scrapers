@@ -19,7 +19,7 @@ var DtdNewRoute = Ember.Route.extend(PriorityMixin, StatusMixin, {
   displayText: Ember.computed(function() { return this.get('i18n').t('admin.dtd.one'); }),
   transitionCB: function() {},
   model(params) {
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     run(() => {
       store.push('dtd-header', {id: 1, message: ''});
     });
@@ -27,7 +27,7 @@ var DtdNewRoute = Ember.Route.extend(PriorityMixin, StatusMixin, {
     const statuses = this.get('statuses');
     const new_pk = parseInt(params.new_id, 10);
     const repository = this.get('repository');
-    // let model = this.get('store').find('dtd', {new_pk: new_pk}).objectAt(0);
+    // let model = this.get('simpleStore').find('dtd', {new_pk: new_pk}).objectAt(0);
     // if(!model){
     const uuid = this.get('uuid');
     const m2m_id = uuid.v4();

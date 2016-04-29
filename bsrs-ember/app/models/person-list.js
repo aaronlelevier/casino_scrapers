@@ -9,9 +9,9 @@ export default Ember.Object.extend(RoleMixin, OptConf, {
     belongs_to.bind(this)('role', 'person-list');
     this._super(...arguments);
   },
-  store: inject('main'),
+  simpleStore: Ember.inject.service(),
   person: Ember.computed(function() {
-    const store = this.get('store'); 
+    const store = this.get('simpleStore'); 
     return store.find('person', this.get('id'));
   }),
   isDirtyOrRelatedDirty: Ember.computed('person.isDirtyOrRelatedDirty', function() {
@@ -24,7 +24,7 @@ export default Ember.Object.extend(RoleMixin, OptConf, {
     return first_name + ' ' + last_name;
   }),
   status: Ember.computed(function() {
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const person_status_list = store.find('person-status-list');
     return person_status_list.filter((ps) => {
       return Ember.$.inArray(this.get('id'), ps.get('people')) > -1; 

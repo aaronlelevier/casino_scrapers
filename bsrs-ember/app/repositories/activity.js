@@ -14,7 +14,7 @@ var ActivityRepo = Ember.Object.extend({
         let filter = function(activity) {
             return activity.get(`${model}`) === pk;
         };
-        return this.get('store').find('activity', filter);
+        return this.get('simpleStore').find('activity', filter);
     },
 });
 export default ActivityRepo;

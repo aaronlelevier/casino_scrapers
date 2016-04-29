@@ -35,7 +35,7 @@ let application, store, list_xhr, detail_xhr, endpoint, detail_data, url, transl
 module('Acceptance | role-detail', {
   beforeEach() {
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/';
     detail_data = RF.detail(RD.idOne);
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, RF.list());

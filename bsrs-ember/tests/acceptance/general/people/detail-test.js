@@ -55,7 +55,7 @@ var application, store, list_xhr, people_detail_data, endpoint, detail_xhr, orig
 module('Acceptance | person detail test', {
   beforeEach() {
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_PEOPLE_URL + '/';
     var people_list_data = PF.list();
     people_detail_data = PF.detail(PD.idOne);

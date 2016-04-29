@@ -30,7 +30,7 @@ let application, store, endpoint, detail_xhr, list_xhr, detail_data;
 module('Acceptance | detail test', {
   beforeEach() {
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/';
     detail_data = CF.detail(CD.idOne);
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, CF.list());

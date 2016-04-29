@@ -23,7 +23,7 @@ var TranslationDeserializer = Ember.Object.extend({
         }
     },
     deserialize_single(model, id) {
-        let store = this.get('store');
+        let store = this.get('simpleStore');
         let trans_check = store.find('translation', id);
         if (!trans_check.get('id') || trans_check.get('isNotDirtyOrRelatedNotDirty')) {
             extract_locale_translation(model, store);
@@ -33,7 +33,7 @@ var TranslationDeserializer = Ember.Object.extend({
         }
     },
     deserialize_list(response) {
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         response.results.forEach((json) => {
             store.push('translation-list', {id: json});
         });

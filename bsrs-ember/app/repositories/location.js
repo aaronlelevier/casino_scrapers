@@ -81,7 +81,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
         PromiseMixin.xhr(this.format_url(filter), 'GET').then((response) => {
             this.get('LocationDeserializer').deserialize(response);
         });
-        return this.get('store').find('location');
+        return this.get('simpleStore').find('location');
     },
     format_url(filter) {
         let url = LOCATION_URL;

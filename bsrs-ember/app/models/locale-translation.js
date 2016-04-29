@@ -5,7 +5,7 @@ import inject from 'bsrs-ember/utilities/store';
 
 
 var LocaleTranslationModel = Model.extend({
-    store: inject('main'),
+    simpleStore: Ember.inject.service(),
     id: attr(''),
     locale: attr(''),
     translation: attr(''),

@@ -2,9 +2,9 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/store';
 
 export default Ember.Object.extend({
-    store: inject('main'),
+    simpleStore: Ember.inject.service(),
     role: Ember.computed(function() {
-        const store = this.get('store'); 
+        const store = this.get('simpleStore'); 
         return store.find('role', this.get('id'));
     }),
     isDirtyOrRelatedDirty: Ember.computed('role.isDirtyOrRelatedDirty', function() {
@@ -12,7 +12,7 @@ export default Ember.Object.extend({
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     location_level: Ember.computed(function() {
-        const store = this.get('store'); 
+        const store = this.get('simpleStore'); 
         const pk = this.get('location_level_fk');
         const location_levels = store.find('location-level');
         return location_levels.filter((llevel) => {

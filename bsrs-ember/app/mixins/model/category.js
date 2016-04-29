@@ -12,7 +12,7 @@ var CategoriesMixin = Ember.Mixin.create({
     return Ember.String.htmlSafe(names);
   }),
   model_categories_no_filter: Ember.computed(function() {
-    return this.get('store').find('model-category').filterBy('model_pk', this.get('id'));
+    return this.get('simpleStore').find('model-category').filterBy('model_pk', this.get('id'));
   }),
   construct_category_tree(category, child_nodes=[]) {
     //this method is used for on the fly validation check to see if at end of cat tree
@@ -50,11 +50,11 @@ var CategoriesMixin = Ember.Mixin.create({
     let filter = function(join_model) {
       return join_model.get('model_pk') === this.get('id');
     };
-    return this.get('store').find('model-category', filter.bind(this));
+    return this.get('simpleStore').find('model-category', filter.bind(this));
   }),
   find_parent_nodes(child_pk, parent_ids=[]) {
     if (!child_pk) { return; }
-    let child = this.get('store').find('category', child_pk);
+    let child = this.get('simpleStore').find('category', child_pk);
     //TODO: check to see if only need to check for parent_id
     let parent_id = child.get('parent.id') || child.get('parent_id');
     if (parent_id) {
@@ -65,7 +65,7 @@ var CategoriesMixin = Ember.Mixin.create({
   },
   remove_categories_down_tree(category_pk) {
     let parent_ids = this.find_parent_nodes(category_pk);
-    let store = this.get('store');
+    let store = this.get('simpleStore');
     let model_pk = this.get('id');
     let m2m_models = this.get('model_categories').filter((m2m) => {
       return m2m.get('model_pk') === model_pk && Ember.$.inArray(m2m.get('category_pk'), parent_ids) === -1;
@@ -77,7 +77,7 @@ var CategoriesMixin = Ember.Mixin.create({
     });
   },
   change_category_tree(category) {
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     let pushed_category = store.find('category', category.id);
     if(!pushed_category.get('content') || pushed_category.get('isNotDirtyOrRelatedNotDirty')){
       run(() => {
@@ -127,7 +127,7 @@ var CategoriesMixin = Ember.Mixin.create({
   //TODO: add tests
   add_category(category_pk) {
     const model_pk = this.get('id');
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     run(() => {
       store.push('model-category', {id: Ember.uuid(), model_pk: model_pk, category_pk: category_pk});
     });

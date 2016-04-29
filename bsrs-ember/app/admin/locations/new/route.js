@@ -10,9 +10,9 @@ var LocationNewRoute = TabRoute.extend(ContactRouteMixin, {
   templateModelField: Ember.computed(function() { return 'Location'; }),
   model(params) {
     let new_pk = parseInt(params.new_id, 10);
-    let all_location_levels = this.get('store').find('location-level');
-    const all_statuses = this.get('store').find('location-status');
-    let model = this.get('store').find('location', {new_pk: new_pk}).objectAt(0);
+    let all_location_levels = this.get('simpleStore').find('location-level');
+    const all_statuses = this.get('simpleStore').find('location-status');
+    let model = this.get('simpleStore').find('location', {new_pk: new_pk}).objectAt(0);
     if(!model){
       model = this.get('repository').create(new_pk);
     }

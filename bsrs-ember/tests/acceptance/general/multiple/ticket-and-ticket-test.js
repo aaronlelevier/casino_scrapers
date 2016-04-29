@@ -25,7 +25,7 @@ var application, store, ticket_one, ticket_two;
 module('Acceptance | ticket and ticket test', {
     beforeEach() {
         application = startApp();
-        store = application.__container__.lookup('store:main');
+        store = application.__container__.lookup('service:simpleStore');
     },
     afterEach() {
         Ember.run(application, 'destroy');

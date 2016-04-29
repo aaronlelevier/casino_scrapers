@@ -13,7 +13,7 @@ var LocationMixin = Ember.Mixin.create({
   }),
   add_locations(location) {
     const pk = this.get('id');
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const new_location = store.push('location', location);
     const location_pk = new_location.get('id');
     run(() => {
@@ -49,7 +49,7 @@ var LocationMixin = Ember.Mixin.create({
   resetPersonLocationFks(options) {
     let saved_m2m_pks = [];
     const person_id = this.get('id');
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const locations = this.get('locations');
     locations.forEach((location) => {
       if(options && options.save === true) {

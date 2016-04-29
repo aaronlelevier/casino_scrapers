@@ -23,8 +23,8 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
   status_repo: injectRepo('status'),
   create(new_pk) {
     const pk = this.get('uuid').v4();
-    const store = this.get('store');
-    const role = this.get('store').find('role').filter((role) => {
+    const store = this.get('simpleStore');
+    const role = this.get('simpleStore').find('role').filter((role) => {
       return role.get('default') ? true : false;
     }).objectAt(0);
     const people = role.get('people') || [];

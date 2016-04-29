@@ -11,7 +11,7 @@ var ThirdPartyNewRoute = TabRoute.extend({
     model(params) {
         let new_pk = parseInt(params.new_id, 10);
         const status_repo = this.get('status_repo');
-        let model = this.get('store').find('third-party', {new_pk: new_pk}).objectAt(0);
+        let model = this.get('simpleStore').find('third-party', {new_pk: new_pk}).objectAt(0);
         if(!model){
             model = this.get('repository').create(new_pk);
         }

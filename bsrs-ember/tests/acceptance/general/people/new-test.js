@@ -39,7 +39,7 @@ module('Acceptance | people-new', {
       status: SD.activeId
     };
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_PEOPLE_URL}/`;
     list_xhr = xhr(endpoint + '?page=1','GET',null,{},200,PF.empty());
     detailEndpoint = `${PREFIX}${BASE_PEOPLE_URL}/`;

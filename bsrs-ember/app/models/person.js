@@ -30,7 +30,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
     this._super(...arguments);
   },
   type: 'person',
-  store: inject('main'),
+  simpleStore: Ember.inject.service(),
   status_repo: injectRepo('status'),
   username: attr(''),
   password: attr(''),
@@ -110,7 +110,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
     };
   },
   serialize() {
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const emails = this.get('emails').filter(function(email) {
       if(email.get('invalid_email')) {
         return;
@@ -163,7 +163,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
   },
   removeRecord() {
     run(() => {
-      this.get('store').remove('person', this.get('id'));
+      this.get('simpleStore').remove('person', this.get('id'));
     });
   }
 });

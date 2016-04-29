@@ -8,7 +8,7 @@ var DTRoute = Ember.Route.extend(FindById, {
   model(params) {
     const pk = params.dt_id;
     const repository = this.get('repository');
-    let ticket = this.get('store').find('ticket', {new_pk: pk}).objectAt(0);
+    let ticket = this.get('simpleStore').find('ticket', {new_pk: pk}).objectAt(0);
     if(!ticket){
       ticket = this.get('ticketRepository').create(pk);
     }

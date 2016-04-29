@@ -6,14 +6,14 @@ var PREFIX = config.APP.NAMESPACE, run = Ember.run;
 
 var AttachmentRepo = Ember.Object.extend({
   remove(id) {
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     run(() => {
       store.remove('attachment', id);
     });
     PromiseMixin.xhr(`${PREFIX}/admin/attachments/${id}/`, 'DELETE');
   },
   removeAllUnrelated() {
-    let store = this.get('store');
+    let store = this.get('simpleStore');
     let ids_array = store.find('attachment').toArray();
     let ids = ids_array.filter(function(attachment) {
       return attachment.get('rollback');
@@ -35,7 +35,7 @@ var AttachmentRepo = Ember.Object.extend({
     }
   },
   didProgress(e, id) {
-    const attachment = this.get('store').find('attachment', id);
+    const attachment = this.get('simpleStore').find('attachment', id);
     attachment.set('percent', Math.round(e.loaded / e.total * 100));
   },
   /*
@@ -43,14 +43,14 @@ var AttachmentRepo = Ember.Object.extend({
    */
   didError(xhr, status, errorMsg, id) {
     // xhr.then = null;
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     run(() => {
       const attachment = store.remove('attachment', id);
     });
   },
   upload(id, file, model) {
     let self = this;
-    let store = this.get('store');
+    let store = this.get('simpleStore');
     run(() => {
       store.push('attachment', {id: id, new: true, title: file.name, percent: 0});
     });

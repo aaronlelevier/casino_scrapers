@@ -34,7 +34,7 @@ var application, store, category, ticket;
 module('Acceptance | ticket and category test', {
     beforeEach() {
         application = startApp();
-        store = application.__container__.lookup('store:main');
+        store = application.__container__.lookup('service:simpleStore');
     },
     afterEach() {
         Ember.run(application, 'destroy');

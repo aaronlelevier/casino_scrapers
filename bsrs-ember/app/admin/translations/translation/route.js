@@ -9,7 +9,7 @@ var TransitionRoute = TabRoute.extend({
     templateModelField: Ember.computed(function() { return 'key'; }),
     model(params) {
         let translation_pk = params.translation_key;
-        let translation = this.get('store').find('translation', translation_pk);
+        let translation = this.get('simpleStore').find('translation', translation_pk);
         let repository = this.get('repository');
         if (!translation.get('length') || translation.get('isNotDirty')) {
             translation = repository.findById(translation_pk);

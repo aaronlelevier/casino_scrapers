@@ -32,7 +32,7 @@ let application, store, list_xhr, role_detail_data, endpoint, detail_xhr, origin
 module('Acceptance | tab role test', {
     beforeEach() {
         application = startApp();
-        store = application.__container__.lookup('store:main');
+        store = application.__container__.lookup('service:simpleStore');
         endpoint = PREFIX + BASE_ROLE_URL + '/';
         role_detail_data = RF.detail(RD.idGridOne, RD.nameGrid);
         detail_xhr = xhr(endpoint + RD.idGridOne + '/', 'GET', null, {}, 200, role_detail_data);

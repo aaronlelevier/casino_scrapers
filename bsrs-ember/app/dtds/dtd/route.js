@@ -20,7 +20,7 @@ export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
   },
   tabList: Ember.inject.service(),
   model(params){
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     store.push('dtd-header', {id: 1, message: ''});
     const pk = params.dtd_id;
     const repository = this.get('repository');

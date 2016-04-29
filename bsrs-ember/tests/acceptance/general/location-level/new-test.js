@@ -24,7 +24,7 @@ let application, store, payload, list_xhr, endpoint, original_uuid;
 module('Acceptance | location-level-new', {
   beforeEach() {
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/' + '?page=1';
     list_xhr = xhr(endpoint, 'GET', null, {}, 200, LOCATION_LEVEL_FIXTURES.empty());
     payload = {

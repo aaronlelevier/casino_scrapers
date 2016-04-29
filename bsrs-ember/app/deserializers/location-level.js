@@ -9,7 +9,7 @@ var LocationLevelDeserializer = Ember.Object.extend({
         }
     },
     deserialize_single(response, id) {
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         const existing = store.find('location-level', id);
         let location_level = existing;
         if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
@@ -24,7 +24,7 @@ var LocationLevelDeserializer = Ember.Object.extend({
         return location_level;
     },
     deserialize_list(response) {
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         response.results.forEach((model) => {
             const location_level = store.push('location-level-list', model);
         });

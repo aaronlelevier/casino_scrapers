@@ -48,7 +48,7 @@ let application, store, payload, list_xhr, original_uuid;
 module('Acceptance | location-new', {
     beforeEach() {
         application = startApp();
-        store = application.__container__.lookup('store:main');
+        store = application.__container__.lookup('service:simpleStore');
         list_xhr = xhr(DJANGO_LOCATION_URL + '?page=1', "GET", null, {}, 201, LOCATION_FIXTURES.empty());
         payload = {
             id: UUID.value,

@@ -6,7 +6,7 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 const { run } = Ember;
 
 var LocationLevel = Model.extend(NewMixin, {
-  store: inject('main'),
+  simpleStore: Ember.inject.service(),
   name: attr(''),
   locations: [],
   roles: [],
@@ -21,7 +21,7 @@ var LocationLevel = Model.extend(NewMixin, {
     this._super();
   },
   rollbackChildren() {
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     store.push('location-level', {id: this.get('id'), children_fks: this.get('_oldState').children_fks});
   },
   serialize() {
@@ -38,7 +38,7 @@ var LocationLevel = Model.extend(NewMixin, {
   },
   removeRecord() {
     run(() => {
-      this.get('store').remove('location-level', this.get('id'));
+      this.get('simpleStore').remove('location-level', this.get('id'));
     });
   },
   children: Ember.computed('children_fks.[]', function() {
@@ -46,14 +46,14 @@ var LocationLevel = Model.extend(NewMixin, {
     const filter = (loc_level) => {
       return Ember.$.inArray(loc_level.get('id'), children_fks) > -1 && loc_level.get('name') !== this.get('name');
     };
-    return this.get('store').find('location-level', filter.bind(this));
+    return this.get('simpleStore').find('location-level', filter.bind(this));
   }),
   parents: Ember.computed('parent_fks.[]', function() {
     const parent_fks = this.get('parent_fks');
     const filter = (loc_level) => {
       return Ember.$.inArray(loc_level.get('id'), parent_fks) > -1 && loc_level.get('name') !== this.get('name');
     };
-    return this.get('store').find('location-level', filter.bind(this));
+    return this.get('simpleStore').find('location-level', filter.bind(this));
   }),
   toString: function() {
     const name = this.get('name');

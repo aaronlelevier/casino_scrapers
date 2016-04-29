@@ -10,7 +10,7 @@ var ThirdPartyDeserializer = Ember.Object.extend({
         }
     },
     deserialize_single(model, id) {
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         let existing = store.find('third-party', id);
         let third_party = existing;
         if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
@@ -22,7 +22,7 @@ var ThirdPartyDeserializer = Ember.Object.extend({
         return third_party;
     },
     deserialize_list(response) {
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         response.results.forEach((model) => {
             const status_json = model.status;
             delete model.status;

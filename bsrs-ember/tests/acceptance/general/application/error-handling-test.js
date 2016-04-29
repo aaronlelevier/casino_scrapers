@@ -26,7 +26,7 @@ var application, store, payload, new_xhr, list_xhr, original_uuid, originalLogge
 module('Acceptance | error handling test', {
   beforeEach() {
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     new_xhr = xhr(DJANGO_LOCATION_URL + '?page=1', "GET", null, {}, 200, LF.empty());
     payload = {id: UUID.value, name: LD.storeName, number: LD.storeNumber, status: LD.status, location_level: LLD.idOne, children: [], parents: [], emails: [], phone_numbers: [], addresses: []};
     original_uuid = random.uuid;

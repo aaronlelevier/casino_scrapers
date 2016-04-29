@@ -7,13 +7,13 @@ var EmailMixin = Ember.Mixin.create({
         const filter = (email) => {
             return this.get('id') === email.get('model_fk');
         };
-        return this.get('store').find('email', filter);
+        return this.get('simpleStore').find('email', filter);
     }),
     emails: Ember.computed(function() {
         const filter = (email) => {
             return this.get('id') === email.get('model_fk') && !email.get('removed');
         };
-        return this.get('store').find('email', filter);
+        return this.get('simpleStore').find('email', filter);
     }),
     email_ids: Ember.computed('emails.[]', function() {
         return this.get('emails').mapBy('id');
@@ -64,7 +64,7 @@ var EmailMixin = Ember.Mixin.create({
         });
     },
     rollbackEmails() {
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         const emails_to_remove = [];
         const emails = this.get('emails_all');
         emails.forEach((email) => {
@@ -87,7 +87,7 @@ var EmailMixin = Ember.Mixin.create({
         });
     },
     cleanupEmails() {
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         const emails_to_remove = [];
         const emails = this.get('emails');
         const emails_all = this.get('emails_all');

@@ -97,7 +97,7 @@ var RoleDeserializer = Ember.Object.extend({
         }
     },
     deserialize_single(response, id) {
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         const existing = store.find('role', id);
         let role = existing;
         if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
@@ -111,7 +111,7 @@ var RoleDeserializer = Ember.Object.extend({
         return role;
     },
     deserialize_list(response) {
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         response.results.forEach((model) => {
             model.location_level_fk = model.location_level;
             delete model.location_level;

@@ -3,7 +3,7 @@ const { run } = Ember;
 import inject from 'bsrs-ember/utilities/store';
 
 export default Ember.Service.extend({
-  store: inject('main'),
+  simpleStore: Ember.inject.service(),
   /* Default to redirectRoute defined on module route if all redirect route locations are the same
    * previousLocation is logged with each tab and will redirect to that location if user visits tab directly from a different module
    * single tab types do not redirect unless tab is closed or single tab is deleted.  Rollback and cancel do not transition
@@ -41,7 +41,7 @@ export default Ember.Service.extend({
    * @param {string} route 
    */
   logLocation(route) {
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const tabs = store.find('tab');
     tabs.forEach((tab) => {
       run(() => {
@@ -54,7 +54,7 @@ export default Ember.Service.extend({
    * @param {string} route 
    */
   logCurrentLocation(route) {
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const tabs = store.find('tab');
     tabs.forEach((tab) => {
       run(() => {
@@ -71,7 +71,7 @@ export default Ember.Service.extend({
   showModal(tab, action, confirmed) {
     /* if single tab need to check all models due to split pane */
     if (tab.get('tabType') === 'single' && (action === 'closeTab' || action === 'cancel')) {
-      const store = this.get('store');
+      const store = this.get('simpleStore');
       /* if new model, only check the one tab single new model */
       if (tab.get('newModel')) {
         const model = store.find(tab.get('module'), tab.get('model_id'));
@@ -89,7 +89,7 @@ export default Ember.Service.extend({
    * some dtd-list models, for ex//, won't have a corresponding model property
    */
   rollbackAll(tab) {
-    const models = this.get('store').find(tab.get('moduleList'));
+    const models = this.get('simpleStore').find(tab.get('moduleList'));
     const arr = [];
     models.forEach((listModel) => {
       if (listModel.get('model.id')) {
@@ -104,7 +104,7 @@ export default Ember.Service.extend({
     } 
   },
   findTab(id) {
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const tab = store.find('tab', id);
     if (!tab.get('content')) {
       return store.find('tab', {model_id: id}).objectAt(0);
@@ -113,7 +113,7 @@ export default Ember.Service.extend({
   },
   createTab(args){
     let { id, module, routeName, redirectRoute, templateModelField, newModel, transitionCB } = args;
-    this.get('store').push('tab', {
+    this.get('simpleStore').push('tab', {
       id: id,
       tabType: 'multiple',
       module: module,
@@ -126,7 +126,7 @@ export default Ember.Service.extend({
   },
   createSingleTab(args){
     let { module, routeName, displayText, redirectRoute, closeTabRedirect, transitionCB, model_id, newModel } = args;
-    this.get('store').push('tab', {
+    this.get('simpleStore').push('tab', {
       id: module,
       tabType: 'single',
       model_id: model_id, 
@@ -142,7 +142,7 @@ export default Ember.Service.extend({
   },
   closeTab(tab, action){
     if (action !== 'cancel' || tab.get('tabType') !== 'single') {
-      this.get('store').remove('tab', tab.get('id'));
+      this.get('simpleStore').remove('tab', tab.get('id'));
     }
   }
 });

@@ -21,7 +21,7 @@ var TabNewRoute = Ember.Route.extend({
       this.get('tabList').logLocation(this.router.currentPath);
     },
     parentAction(tab){
-      let model = this.get('store').find(tab.get('module'), tab.get('id'));
+      let model = this.get('simpleStore').find(tab.get('module'), tab.get('id'));
       if (model && model.get('isDirtyOrRelatedDirty')) {
         // Ember.$('.t-modal').modal('show');
         this.trx.attemptedTabModel = tab;

@@ -18,7 +18,7 @@ var application, store, endpoint, setting_data, detail_xhr;
 module('Acceptance | admin settings layout test', {
     beforeEach() {
         application = startApp();
-        store = application.__container__.lookup('store:main');
+        store = application.__container__.lookup('service:simpleStore');
         endpoint = PREFIX + SETTING_URL + '/';
         setting_data = SF.detail();
         detail_xhr = xhr(endpoint, 'GET', null, {}, 200, setting_data);

@@ -25,7 +25,7 @@ var application, store, run = Ember.run;
 module('Acceptance | bootup test', {
     beforeEach() {
         application = startApp();
-        store = application.__container__.lookup('store:main');
+        store = application.__container__.lookup('service:simpleStore');
     },
     afterEach() {
         store = null;

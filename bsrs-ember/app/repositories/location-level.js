@@ -23,7 +23,7 @@ var LocationLevelRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, 
         });
     },
     peek(filter, computed_keys) {
-        return this.get('store').find('location-level', filter);
+        return this.get('simpleStore').find('location-level', filter);
     },
 });
 

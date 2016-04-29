@@ -20,7 +20,7 @@ var DTDSRoute = GridViewRoute.extend({
       transitionCB: this.transitionCB.bind(this),
     });
     // original, none tab
-    this.get('store').push('dtd-header', {id: 1, showingList:true, showingDetail:true, showingPreview:true, message: detail_msg});
+    this.get('simpleStore').push('dtd-header', {id: 1, showingList:true, showingDetail:true, showingPreview:true, message: detail_msg});
     return this._super(...arguments);
   },
   repository: inject('dtd'),

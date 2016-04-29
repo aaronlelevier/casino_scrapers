@@ -7,7 +7,7 @@ import injectStore from 'bsrs-ember/utilities/store';
 
 export default Ember.Component.extend(TabMixin, EditMixin, {
   didValidate: false,
-  store: injectStore('main'),
+  simpleStore: Ember.inject.service(),
   error: Ember.inject.service(),
   repository: inject('dtd'),
   attachmentRepository: inject('attachment'),
@@ -45,7 +45,7 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
         const uuid = this.get('uuid');
         const id = uuid.v4();
         const model = this.get('model');
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         const repository = this.get('attachmentRepository');
         repository.upload(id, files[i], model).then((attachment) => {
           model.get('attachments').findBy('id', id).set('percent', 100);

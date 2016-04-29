@@ -6,7 +6,7 @@ import inject from 'bsrs-ember/utilities/store';
 const { run } = Ember;
 
 var TranslationModel = Model.extend(NewMixin, {
-    store: inject('main'),
+    simpleStore: Ember.inject.service(),
     key: Ember.computed.alias('id'),
     locales: Ember.computed(function() {
         const trans_key = this.get('key');
@@ -14,7 +14,7 @@ var TranslationModel = Model.extend(NewMixin, {
             const key = locale_trans.get('translation_key');
             return key === trans_key;
         };
-        return this.get('store').find('locale-translation', filter);
+        return this.get('simpleStore').find('locale-translation', filter);
     }),
     locale_ids: Ember.computed('locales.[]', function() {
         return this.get('locales').mapBy('id');
@@ -42,7 +42,7 @@ var TranslationModel = Model.extend(NewMixin, {
         });
     },
     rollbackLocales() {
-        let store = this.get('store');
+        let store = this.get('simpleStore');
         let locales_to_remove = [];
         let locales = this.get('locales');
         locales.forEach((x) => {
@@ -71,7 +71,7 @@ var TranslationModel = Model.extend(NewMixin, {
     },
     removeRecord() {
         run(() => {
-            this.get('store').remove('translation', this.get('id'));
+            this.get('simpleStore').remove('translation', this.get('id'));
         });
     },
 });

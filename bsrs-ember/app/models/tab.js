@@ -23,12 +23,12 @@ var TabModel = Ember.Object.extend({
       }
     }).property('model.' + dynamicField));
   },
-  store: inject('main'),
+  simpleStore: Ember.inject.service(),
   model: Ember.computed(function() {
-    return this.get('store').find(this.get('module'), this.get('id'));
+    return this.get('simpleStore').find(this.get('module'), this.get('id'));
   }),
   singleTabModel: Ember.computed('model_id', function() {
-    return this.get('store').find(this.get('module'), this.get('model_id'));
+    return this.get('simpleStore').find(this.get('module'), this.get('model_id'));
   }),
   parent: Ember.computed('modelBindingToTemplate', function(){
     return this.get('displayText') || this.get('modelBindingToTemplate');
@@ -37,7 +37,7 @@ var TabModel = Ember.Object.extend({
     const filter = (tab) => {
       return true;
     };
-    return this.get('store').find('tab', filter);
+    return this.get('simpleStore').find('tab', filter);
   }),
 });
 

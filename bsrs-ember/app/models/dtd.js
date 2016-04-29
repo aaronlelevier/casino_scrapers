@@ -26,7 +26,7 @@ var DTDModel = Model.extend(Validations, OptConf, {
     many_to_many.bind(this)('field', 'dtd', {plural:true, dirty:false});
     this._super(...arguments);
   },
-  store: inject('main'),
+  simpleStore: Ember.inject.service(),
   dtd_attachments_fks: [],
   previous_attachments_fks: [],
   key: attr(''),
@@ -125,7 +125,7 @@ var DTDModel = Model.extend(Validations, OptConf, {
   },
   removeRecord(){
     run(() => {
-      this.get('store').remove('dtd', this.get('id'));
+      this.get('simpleStore').remove('dtd', this.get('id'));
     });
   },
   //Attachments: TODO make into a reusable mixin
@@ -143,13 +143,13 @@ var DTDModel = Model.extend(Validations, OptConf, {
     const filter = (attachment) => {
       return Ember.$.inArray(attachment.get('id'), related_fks) > -1;
     };
-    return this.get('store').find('attachment', filter);
+    return this.get('simpleStore').find('attachment', filter);
   }),
   attachment_ids: Ember.computed('attachments.[]', function() {
     return this.get('attachments').mapBy('id');
   }),
   remove_attachment(attachment_id) {
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const attachment = store.find('attachment', attachment_id);
     attachment.set('rollback', true);
     const current_fks = this.get('dtd_attachments_fks') || [];
@@ -161,7 +161,7 @@ var DTDModel = Model.extend(Validations, OptConf, {
     });
   },
   add_attachment(attachment_id) {
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const attachment = store.find('attachment', attachment_id);
     attachment.set('rollback', undefined);
     const current_fks = this.get('dtd_attachments_fks') || [];
@@ -180,7 +180,7 @@ var DTDModel = Model.extend(Validations, OptConf, {
     });
   },
   saveAttachments() {
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const fks = this.get('dtd_attachments_fks');
     run(() => {
       store.push('dtd', {id: this.get('id'), previous_attachments_fks: fks});

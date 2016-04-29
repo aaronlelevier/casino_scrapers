@@ -5,7 +5,7 @@ const { run } = Ember;
 var PhoneNumberMixin = Ember.Mixin.create({
     phone_numbers_all: Ember.computed(function() {
         let pk = this.get('id');
-        let store = this.get('store');
+        let store = this.get('simpleStore');
         let filter = function(phone_number) {
             return pk === phone_number.get('model_fk');
         };
@@ -13,7 +13,7 @@ var PhoneNumberMixin = Ember.Mixin.create({
     }),
     phone_numbers: Ember.computed(function() {
         let pk = this.get('id');
-        let store = this.get('store');
+        let store = this.get('simpleStore');
         let filter = function(phone_number) {
             return pk === phone_number.get('model_fk') && !phone_number.get('removed');
         };
@@ -67,7 +67,7 @@ var PhoneNumberMixin = Ember.Mixin.create({
         });
     },
     rollbackPhoneNumbers() {
-        let store = this.get('store');
+        let store = this.get('simpleStore');
         let phone_numbers_to_remove = [];
         let phone_numbers = this.get('phone_numbers_all');
         phone_numbers.forEach((num) => {
@@ -90,7 +90,7 @@ var PhoneNumberMixin = Ember.Mixin.create({
         });
     },
     cleanupPhoneNumbers() {
-        let store = this.get('store');
+        let store = this.get('simpleStore');
         let phone_numbers_to_remove = [];
         let phone_numbers = this.get('phone_numbers');
         let phone_numbers_all = this.get('phone_numbers_all');

@@ -34,7 +34,7 @@ let application, store, endpoint, original_uuid, link, dtd;
 module('Acceptance | dt detail', {
   beforeEach() {
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${DTD_URL}/`;
     dtd = store.find('dtd', DT.idOne);
     original_uuid = random.uuid;

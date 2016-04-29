@@ -28,7 +28,7 @@ var application, store, ticket_endpoint, ticket_list_xhr, people_endpoint, peopl
 module('Acceptance | ticket multiple grid test', {
     beforeEach() {
         application = startApp();
-        store = application.__container__.lookup('store:main');
+        store = application.__container__.lookup('service:simpleStore');
         ticket_endpoint = `${PREFIX}${BASE_TICKET_URL}/?page=1`;
         ticket_list_xhr = xhr(ticket_endpoint, 'GET', null, {}, 200, TF.list());
         people_endpoint = `${PREFIX}${BASE_PEOPLE_URL}/?page=1`;

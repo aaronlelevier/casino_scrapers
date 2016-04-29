@@ -2,9 +2,9 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/store';
 
 export default Ember.Object.extend({
-    store: inject('main'),
+    simpleStore: Ember.inject.service(),
     location_level: Ember.computed(function() {
-        const store = this.get('store'); 
+        const store = this.get('simpleStore'); 
         return store.find('location-level', this.get('id'));
     }),
     isDirtyOrRelatedDirty: Ember.computed('location_level.isDirtyOrRelatedDirty', function() {

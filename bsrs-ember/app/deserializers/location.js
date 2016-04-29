@@ -108,7 +108,7 @@ var LocationDeserializer = Ember.Object.extend({
         }
     },
     deserialize_single(response, id) {
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         const existing = store.find('location', id);
         let location = existing;
         if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
@@ -127,7 +127,7 @@ var LocationDeserializer = Ember.Object.extend({
         return location;
     },
     deserialize_list(response) {
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         response.results.forEach((model) => {
             model.location_level_fk = extract_location_level(model, store);
             const status_json = model.status;

@@ -9,7 +9,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
     let created;
     const pk = this.get('uuid').v4();
     /* jshint ignore:start */
-    created = this.get('store').push(this.get('type'), {id: pk, new: true, new_pk: new_pk, ...options});
+    created = this.get('simpleStore').push(this.get('type'), {id: pk, new: true, new_pk: new_pk, ...options});
     /* jshint ignore:end */
     return created;
   },
@@ -24,11 +24,11 @@ var GridRepositoryMixin = Ember.Mixin.create({
   delete(id) {
     const type = this.get('type');
     return PromiseMixin.xhr(this.get('url') + id + '/', 'DELETE').then(() => {
-      this.get('store').remove(type, id);
+      this.get('simpleStore').remove(type, id);
     });
   },
   findCount() {
-    var count_array = this.get('store').find(this.get('type')).toArray();
+    var count_array = this.get('simpleStore').find(this.get('type')).toArray();
     var count = count_array.filter(function(m) {
       return m.get('new') === true;
     }).get('length');
@@ -37,7 +37,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
   findWithQuery(page, sort, search, find, page_size) {
     const type = this.get('typeGrid');
     let url = this.get('url');
-    const store = this.get('store');
+    const store = this.get('simpleStore');
     const deserializer = this.get('deserializer');
     page = page || 1;
     let endpoint = url + '?page=' + page;

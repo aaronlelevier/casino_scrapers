@@ -30,7 +30,7 @@ let application, store, original_uuid, detail_xhr, list_xhr, endpoint, model, im
 module('Acceptance | dtd file upload test', {
   beforeEach() {
     application = startApp();
-    store = application.__container__.lookup('store:main');
+    store = application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/`;
     list_xhr = xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, DTDF.list());
     detail_xhr = xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 200, DTDF.detail(DTD.idOne));

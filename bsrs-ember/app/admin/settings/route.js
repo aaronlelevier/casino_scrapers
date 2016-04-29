@@ -4,7 +4,7 @@ import injectStore from 'bsrs-ember/utilities/store';
 import TabRoute from 'bsrs-ember/route/tab/route';
 
 export default TabRoute.extend({
-    store: injectStore('main'),
+    simpleStore: Ember.inject.service(),
     repository: inject('setting'),
     redirectRoute: Ember.computed(function() { return 'admin'; }),
     module: Ember.computed(function() { return 'setting'; }),

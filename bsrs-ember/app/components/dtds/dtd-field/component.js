@@ -4,12 +4,12 @@ import injectStore from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 
 var DtdLinkComponent = Ember.Component.extend({
-  store: injectStore('main'),
+  simpleStore: Ember.inject.service(),
   uuid: injectUUID('uuid'),
   classNames: ['input-multi-dtd-field t-input-multi-dtd-field'],
   actions: {
     append(){
-      const store = this.get('store');
+      const store = this.get('simpleStore');
       let id, m2m;
       run(() => {
         const model = this.get('model');

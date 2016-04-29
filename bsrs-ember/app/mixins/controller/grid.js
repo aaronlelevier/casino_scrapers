@@ -25,7 +25,7 @@ var GridViewController = Ember.Controller.extend({
     return active && result;
   }),
   defaultSort: Ember.computed(function() {
-    let store = this.get('store');
+    let store = this.get('simpleStore');
     let path = this.get('routeName');
     let configuration = store.find('model-ordering', path);
     return configuration.get('order') || ['id'];

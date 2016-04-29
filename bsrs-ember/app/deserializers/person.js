@@ -93,7 +93,7 @@ var PersonDeserializer = Ember.Object.extend({
         }
     },
     deserialize_single(model, id, location_deserializer) {
-        let store = this.get('store');
+        let store = this.get('simpleStore');
         const existing = store.find('person', id);
         let location_level_fk;
         let person = existing;
@@ -112,7 +112,7 @@ var PersonDeserializer = Ember.Object.extend({
         return person;
     },
     deserialize_list(response) {
-        const store = this.get('store');
+        const store = this.get('simpleStore');
         response.results.forEach((model) => {
             [model.role_fk] = extract_role(model, store);
             const status_json = model.status;
