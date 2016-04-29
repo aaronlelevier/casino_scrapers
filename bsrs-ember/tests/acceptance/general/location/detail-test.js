@@ -174,7 +174,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   page.locationLevelClickOptionTwo();
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -185,7 +185,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
   generalPage.clickModalCancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(find('.t-location-name').val(), LD.storeNameTwo);
       assert.throws(Ember.$('.ember-modal-dialog'));
@@ -200,7 +200,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   page.locationLevelClickOptionTwo();
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
@@ -210,7 +210,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
       let location = store.find('location', LD.idOne);
       assert.throws(Ember.$('.ember-modal-dialog'));
@@ -223,7 +223,7 @@ test('when click delete, modal displays and when click ok, location is deleted a
   await page.visitDetail();
   await generalPage.delete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
@@ -234,7 +234,7 @@ test('when click delete, modal displays and when click ok, location is deleted a
   xhr(`${PREFIX}${BASE_URL}/${LD.idOne}/`, 'DELETE', null, {}, 204, {});
   generalPage.clickModalDelete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
       assert.equal(store.find('location', LD.idOne).get('length'), undefined);
       assert.throws(Ember.$('.ember-modal-dialog'));
@@ -502,14 +502,14 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
   fillIn('.t-multi-phone-type:eq(0)', PNTD.mobileId);
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
       var location = store.find('location', LD.idOne);
       var phone_numbers = store.find('phonenumber', LD.idOne);
@@ -523,14 +523,14 @@ test('when user changes an attribute on email and clicks cancel we prompt them w
   fillIn('.t-multi-email-type:eq(0)', ETD.personalId);
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
       var location = store.find('location', LD.idOne);
       var email = store.find('email', LD.idOne);
@@ -544,14 +544,14 @@ test('when user changes an attribute on address and clicks cancel we prompt them
   fillIn('.t-address-type:eq(0)', ATD.shippingId);
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
       var location = store.find('location', LD.idOne);
       var addresses = store.find('address', LD.idOne);
@@ -565,14 +565,14 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
   click('.t-del-btn:eq(0)');
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
       var location = store.find('location', LD.idOne);
       var phone_numbers = store.find('phonenumber', LD.idOne);
@@ -586,14 +586,14 @@ test('when user removes a email clicks cancel we prompt them with a modal and th
   click('.t-del-email-btn:eq(0)');
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
       var location = store.find('location', LD.idOne);
       var emails = store.find('email', LD.idOne);
@@ -607,14 +607,14 @@ test('when user removes an address clicks cancel we prompt them with a modal and
   click('.t-del-address-btn:eq(0)');
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
       var location = store.find('location', LD.idOne);
       var addresses = store.find('address', LD.idOne);

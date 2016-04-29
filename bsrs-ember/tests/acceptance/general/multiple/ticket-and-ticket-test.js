@@ -77,7 +77,7 @@ test('rolling back should have no effect on another open tickets dirty status', 
 //     // });
 //     // click('.t-cancel-btn');
 //     // andThen(() => {
-//     //     waitFor(() => {
+//     //     waitFor(assert, () => {
 //     //         assert.equal(currentURL(), TICKET_TWO_DETAIL_URL);
 //     //         ticket_one = store.find('ticket', TD.idOne);
 //     //         assert.equal(ticket_one.get('isDirtyOrRelatedDirty'), false);
@@ -88,7 +88,7 @@ test('rolling back should have no effect on another open tickets dirty status', 
 //     // });
 //     // click('.t-modal-rollback-btn');
 //     // andThen(() => {
-//     //     waitFor(() => {
+//     //     waitFor(assert, () => {
 //     //         assert.equal(currentURL(), TICKET_LIST_URL);
 //     //         ticket_one = store.find('ticket', TD.idOne);
 //     //         assert.equal(ticket_one.get('isDirtyOrRelatedDirty'), false);

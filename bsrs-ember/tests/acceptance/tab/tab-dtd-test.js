@@ -387,7 +387,7 @@ test('opening a tab, making the model dirty and closing the tab should display t
   click('.t-tab-close:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
@@ -419,7 +419,7 @@ test('trying to close the tab with one of the dirty dtds that are dirty will sho
   andThen(() => {
     const DETAIL_URL_2 = `${BASE_DTD_URL}/${DTD.idTwo}`;
     assert.equal(currentURL(), DETAIL_URL_2);
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
@@ -429,7 +429,7 @@ test('trying to close the tab with one of the dirty dtds that are dirty will sho
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       const DETAIL_URL_2 = `${BASE_DTD_URL}/${DTD.idTwo}`;
       assert.equal(currentURL(), ADMIN_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));

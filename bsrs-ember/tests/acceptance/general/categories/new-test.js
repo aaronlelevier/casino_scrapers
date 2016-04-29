@@ -145,7 +145,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
   fillIn('.t-category-name', CD.nameOne);
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), CATEGORY_NEW_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -156,7 +156,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
   });
   click('.t-modal-footer .t-modal-cancel-btn');
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), CATEGORY_NEW_URL);
       assert.equal(find('.t-category-name').val(), CD.nameOne);
       assert.throws(Ember.$('.ember-modal-dialog'));
@@ -170,7 +170,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   fillIn('.t-category-name', CD.nameOne);
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), CATEGORY_NEW_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -183,7 +183,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
   click('.t-modal-footer .t-modal-rollback-btn');
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), CATEGORIES_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));
       let category = store.find('category', {id: UUID.value});

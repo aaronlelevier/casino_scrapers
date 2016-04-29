@@ -108,7 +108,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel', (ass
     fillIn('.t-third-party-name', TPD.nameOne);
     generalPage.cancel();
     andThen(() => {
-        waitFor(() => {
+        waitFor(assert, () => {
             assert.equal(currentURL(), THIRD_PARTY_NEW_URL);
             assert.ok(Ember.$('.ember-modal-dialog'));
             assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -119,7 +119,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel', (ass
     });
     click('.t-modal-footer .t-modal-cancel-btn');
     andThen(() => {
-        waitFor(() => {
+        waitFor(assert, () => {
             assert.equal(currentURL(), THIRD_PARTY_NEW_URL);
             assert.equal(find('.t-third-party-name').val(), TPD.nameOne);
             assert.throws(Ember.$('.ember-modal-dialog'));
@@ -132,7 +132,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     fillIn('.t-third-party-name', TPD.storeName);
     generalPage.cancel();
     andThen(() => {
-        waitFor(() => {
+        waitFor(assert, () => {
             assert.equal(currentURL(), THIRD_PARTY_NEW_URL);
             assert.ok(Ember.$('.ember-modal-dialog'));
             assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -145,7 +145,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     });
     click('.t-modal-footer .t-modal-rollback-btn');
     andThen(() => {
-        waitFor(() => {
+        waitFor(assert, () => {
             assert.equal(currentURL(), THIRD_PARTY_URL);
             let third_party = store.find('third-party', {id: UUID.value});
             assert.equal(third_party.get('length'), 0);

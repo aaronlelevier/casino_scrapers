@@ -164,7 +164,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   fillIn('.t-location-level-name', LLD.nameRegion);
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -175,7 +175,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
   generalPage.clickModalCancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(find('.t-location-name').val(), LLD.storeNameTwo);
       assert.throws(Ember.$('.ember-modal-dialog'));
@@ -199,7 +199,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -210,7 +210,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_LEVEL_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));
       let location_level = store.find('location-level', LLD.idOne);
@@ -225,7 +225,7 @@ test('when click delete, modal displays and when click ok, location-level is del
   await visit(DETAIL_URL);
   await generalPage.delete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
@@ -236,7 +236,7 @@ test('when click delete, modal displays and when click ok, location-level is del
   xhr(endpoint_detail, 'DELETE', null, {}, 204, {});
   generalPage.clickModalDelete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_LEVEL_URL);
       assert.equal(store.find('location-level', LLD.idOne).get('length'), undefined);
       assert.throws(Ember.$('.ember-modal-dialog'));

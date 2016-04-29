@@ -124,7 +124,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     });
     generalPage.cancel();
     andThen(() => {
-        waitFor(() => {
+        waitFor(assert, () => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.ok(generalPage.modalIsVisible);
             assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
@@ -132,7 +132,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     });
     generalPage.clickModalCancel();
     andThen(() => {
-        waitFor(() => {
+        waitFor(assert, () => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.equal(find('.t-third-party-name').val(), TPD.nameTwo);
             assert.ok(generalPage.modalIsHidden);
@@ -145,14 +145,14 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     fillIn('.t-third-party-name', TPD.nameTwo);
     generalPage.cancel();
     andThen(() => {
-        waitFor(() => {
+        waitFor(assert, () => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.ok(generalPage.modalIsVisible);
         });
     });
     generalPage.clickModalRollback();
     andThen(() => {
-        waitFor(() => {
+        waitFor(assert, () => {
             assert.equal(currentURL(), LIST_URL);
             let third_party = store.find('third-party', TPD.idOne);
             assert.equal(third_party.get('name'), TPD.nameOne);

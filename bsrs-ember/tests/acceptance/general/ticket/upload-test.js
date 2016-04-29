@@ -101,7 +101,7 @@ test('uploading a file, then rolling back should throw out any previously associ
   click('.t-tab-close:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
@@ -172,14 +172,14 @@ test('delete attachment is successful when the user confirms yes (before the fil
   ajax(ATTACHMENT_DELETE_URL, 'DELETE', null, {}, 204, {});
   click('.t-remove-attachment');
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.delete.confirm', {module:'ticket'}));
     });
   });
   generalPage.clickModalDelete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       model = store.find('ticket', TD.idOne);
       assert.equal(find(PROGRESS_BAR).length, 0);
@@ -334,7 +334,7 @@ test('rolling back should only remove files not yet associated with a given tick
   click('.t-tab-close:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(find('.t-modal-body').length, 1);
     });
   });
@@ -393,7 +393,7 @@ test('when multiple tabs are open only attachments associated with the rollback 
   click('.t-tab-close:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));

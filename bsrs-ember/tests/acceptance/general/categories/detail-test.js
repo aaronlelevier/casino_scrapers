@@ -144,7 +144,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   page.nameFill(CD.nameTwo);
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -155,7 +155,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   });
   generalPage.clickModalCancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(find('.t-category-name').val(), CD.nameTwo);
       assert.throws(Ember.$('.ember-modal-dialog'));
@@ -168,7 +168,7 @@ test('when click delete, modal displays and when click ok, category is deleted a
   await page.visitDetail();
   await generalPage.delete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
@@ -179,7 +179,7 @@ test('when click delete, modal displays and when click ok, category is deleted a
   xhr(`${PREFIX}${BASE_URL}/${CD.idOne}/`, 'DELETE', null, {}, 204, {});
   generalPage.clickModalDelete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), CATEGORIES_URL);
       assert.equal(store.find('category', CD.idOne).get('length'), undefined);
       assert.throws(Ember.$('.ember-modal-dialog'));
@@ -425,7 +425,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   page.nameFill(CD.nameTwo);
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
       assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
@@ -433,7 +433,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
   generalPage.clickModalCancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(find('.t-category-name').val(), CD.nameTwo);
       assert.ok(generalPage.modalIsHidden);
@@ -447,14 +447,14 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   page.subLabelFill(CD.subCatLabelOne);
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), CATEGORIES_URL);
       let category = store.find('category', CD.idOne);
       assert.equal(category.get('name'), CD.nameOne);

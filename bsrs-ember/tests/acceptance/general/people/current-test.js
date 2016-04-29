@@ -72,7 +72,7 @@ test('when rolling back the locale the current locale is also changed back', (as
   });
   click('.t-cancel-btn');
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), PERSON_CURRENT_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -83,7 +83,7 @@ test('when rolling back the locale the current locale is also changed back', (as
   });
   click('.t-modal-footer .t-modal-rollback-btn');
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_URL);
       var person = store.find('person', PCD.id);
       assert.equal(person.get('locale').get('locale'), PD.locale);

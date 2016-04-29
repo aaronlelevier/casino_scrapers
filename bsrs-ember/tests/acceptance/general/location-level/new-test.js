@@ -109,7 +109,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
   fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -120,7 +120,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
   });
   click('.t-modal-footer .t-modal-cancel-btn');
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
       assert.equal(find('.t-location-level-name').val(), LOCATION_LEVEL_DEFAULTS.nameCompany);
       assert.throws(Ember.$('.ember-modal-dialog'));
@@ -133,7 +133,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -146,7 +146,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
   click('.t-modal-footer .t-modal-rollback-btn');
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_LEVEL_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));
       let location_level = store.find('location-level', {id: UUID.value});

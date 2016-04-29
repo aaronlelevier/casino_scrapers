@@ -168,7 +168,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     fillIn('.t-location-name', LD.storeName);
     generalPage.cancel();
     andThen(() => {
-        waitFor(() => {
+        waitFor(assert, () => {
             assert.equal(currentURL(), LOCATION_NEW_URL);
             assert.ok(Ember.$('.ember-modal-dialog'));
             assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -179,7 +179,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     });
     click('.t-modal-footer .t-modal-cancel-btn');
     andThen(() => {
-        waitFor(() => {
+        waitFor(assert, () => {
             assert.equal(currentURL(), LOCATION_NEW_URL);
             assert.equal(find('.t-location-name').val(), LD.storeName);
             assert.throws(Ember.$('.ember-modal-dialog'));
@@ -193,7 +193,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     generalPage.cancel();
     let initLocationCount;
     andThen(() => {
-        waitFor(() => {
+        waitFor(assert, () => {
             assert.equal(currentURL(), LOCATION_NEW_URL);
             assert.ok(Ember.$('.ember-modal-dialog'));
             assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -206,7 +206,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     });
     click('.t-modal-footer .t-modal-rollback-btn');
     andThen(() => {
-        waitFor(() => {
+        waitFor(assert, () => {
             assert.equal(currentURL(), LOCATION_URL);
             assert.throws(Ember.$('.ember-modal-dialog'));
             let locations = store.find('location');

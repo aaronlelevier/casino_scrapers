@@ -156,7 +156,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   fillIn('.t-role-name', RD.namePut);
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -167,7 +167,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
   generalPage.clickModalCancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(find('.t-role-name').val(), RD.namePut);
       assert.throws(Ember.$('.ember-modal-dialog'));
@@ -182,7 +182,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   page.locationLevelClickOptionTwo();
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -193,7 +193,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), ROLE_URL);
       let role = store.find('role', RD.idOne);
       assert.equal(role.get('name'), RD.nameOne);
@@ -207,7 +207,7 @@ test('when click delete, modal displays and when click ok, role is deleted and r
   await visit(DETAIL_URL);
   await generalPage.delete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
@@ -218,7 +218,7 @@ test('when click delete, modal displays and when click ok, role is deleted and r
   xhr(`${PREFIX}${BASE_URL}/${RD.idOne}/`, 'DELETE', null, {}, 204, {});
   generalPage.clickModalDelete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), ROLE_URL);
       assert.equal(store.find('role', RD.idOne).get('length'), undefined);
       assert.throws(Ember.$('.ember-modal-dialog'));

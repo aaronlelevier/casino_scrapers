@@ -104,7 +104,7 @@ test('uploading a file, then rolling back should throw out previously associated
   await uploadFile('dtds/dtd-single', 'upload', image, model);
   await generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
       assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
@@ -113,7 +113,7 @@ test('uploading a file, then rolling back should throw out previously associated
   ajax(`${PREFIX}/admin/attachments/batch-delete/`, 'DELETE', {ids: [UUID.value]}, {}, 204, );
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsHidden);
       assert.equal(model.get('attachments').get('length'), 0);
@@ -165,7 +165,7 @@ test('delete attachment is successful when the user confirms yes (before the fil
   ajax(ATTACHMENT_DELETE_URL, 'DELETE', null, {}, 204, {});
   click('.t-remove-attachment');
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
@@ -175,7 +175,7 @@ test('delete attachment is successful when the user confirms yes (before the fil
   });
   generalPage.clickModalDelete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));
       model = store.find('dtd', DTD.idOne);
@@ -251,7 +251,7 @@ test('rolling back should only remove files not yet associated with a given dtd'
   await click('.t-tab-close:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.ok(Ember.$('.ember-modal-dialog'));
     });
   });

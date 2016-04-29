@@ -49,7 +49,7 @@ test('detail | header is translation key', (assert) => {
     clearxhr(list_xhr);
     visit(DETAIL_URL);
     andThen(() => {
-        waitFor(() => {
+        waitFor(assert, () => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.equal(find('.t-translation-key').text(), TD.keyOneGrid);
         });
@@ -60,7 +60,7 @@ test('detail | header is translation key, each Locale gets populated', (assert) 
     clearxhr(list_xhr);
     visit(DETAIL_URL);
     andThen(() => {
-        waitFor(() => {
+        waitFor(assert, () => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.equal(find('.t-translation-key').text(), TD.keyOneGrid);
             assert.equal(find('.t-translation-locale-name:eq(0)').text(), LOCALED.nameOneKey);

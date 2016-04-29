@@ -216,7 +216,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
   });
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), TICKET_NEW_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       // assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
@@ -227,7 +227,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
   });
   generalPage.clickModalCancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), TICKET_NEW_URL);
       assert.ok(generalPage.modalIsHidden);
       let components = page.powerSelectComponents;
@@ -242,7 +242,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
   });
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), TICKET_NEW_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -253,7 +253,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), TICKET_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });

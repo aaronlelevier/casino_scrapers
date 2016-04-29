@@ -909,7 +909,7 @@ test('grid debounces correctly with structured concurrency', (assert) => {
 //   xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 400, {});
 //   saveFilterSet(name, routePath);
 //   andThen(() => {
-//     waitFor(() => {
+//     waitFor(assert, () => {
 //       assert.equal(Ember.$('.t-save-filterset-error-msg').text(), exception);
 //     });
 //   });

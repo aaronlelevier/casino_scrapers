@@ -203,7 +203,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   fillIn('.t-person-username', PD_PUT.username);
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
       assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
@@ -211,7 +211,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
   generalPage.clickModalCancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(find('.t-person-username').val(), PD_PUT.username);
       assert.ok(generalPage.modalIsHidden);
@@ -224,14 +224,14 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   fillIn('.t-person-username', PD_PUT.username);
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_URL);
       var person = store.find('person', PD.idOne);
       assert.equal(person.get('username'), PD.username);
@@ -253,7 +253,7 @@ test('when click delete, modal displays and when click ok, person is deleted and
   await page.visitDetail();
   await generalPage.delete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
@@ -264,7 +264,7 @@ test('when click delete, modal displays and when click ok, person is deleted and
   xhr(`${PREFIX}${BASE_PEOPLE_URL}/${PD.idOne}/`, 'DELETE', null, {}, 204, {});
   generalPage.clickModalDelete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_URL);
       assert.equal(store.find('person', PD.idOne).get('length'), undefined);
       assert.throws(Ember.$('.ember-modal-dialog'));
@@ -277,7 +277,7 @@ test('when click delete, and click no modal disappears', async assert => {
   await page.visitDetail();
   await generalPage.delete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(store.find('person').get('length'), 2);
       assert.ok(Ember.$('.ember-modal-dialog'));
@@ -288,7 +288,7 @@ test('when click delete, and click no modal disappears', async assert => {
   });
   generalPage.clickModalCancelDelete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(store.find('person').get('length'), 2);
       assert.throws(Ember.$('.ember-modal-dialog'));
@@ -515,14 +515,14 @@ test('when user changes an attribute on email and clicks cancel we prompt them w
   fillIn('.t-multi-email-type:eq(0)', ETD.personalId);
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_URL);
       var person = store.find('person', PD.idOne);
       var emails = store.find('email', PD.idOne);
@@ -536,14 +536,14 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
   fillIn('.t-multi-phone-type:eq(0)', PNTD.mobileId);
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_URL);
       var person = store.find('person', PD.idOne);
       var phone_numbers = store.find('phonenumber', PD.idOne);
@@ -557,14 +557,14 @@ test('when user changes an attribute on address and clicks cancel we prompt them
   fillIn('.t-address-type:eq(0)', ATD.shippingId);
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_URL);
       var person = store.find('person', PD.idOne);
       var addresses = store.find('address', PD.idOne);
@@ -578,14 +578,14 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
   click('.t-del-email-btn:eq(0)');
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_URL);
       var person = store.find('person', PD.idOne);
       var emails = store.find('email', PD.idOne);
@@ -599,14 +599,14 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
   click('.t-del-btn:eq(0)');
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_URL);
       var person = store.find('person', PD.idOne);
       var phone_numbers = store.find('phonenumber', PD.idOne);
@@ -620,14 +620,14 @@ test('when user removes an address clicks cancel we prompt them with a modal and
   click('.t-del-address-btn:eq(0)');
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_URL);
       var person = store.find('person', PD.idOne);
       var addresses = store.find('address', PD.idOne);
@@ -851,14 +851,14 @@ test('when you deep link to the person detail view you can alter the role and ro
   });
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
       assert.ok(generalPage.modalIsVisible);
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_URL);
       var person = store.find('person', PD.idOne);
       assert.equal(person.get('role.id'), RD.idOne);
@@ -1150,7 +1150,7 @@ test('when you deep link to the person detail view you can alter the locations a
   page.locationClickOptionTwo();
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
       let person = store.find('person', PD.idOne);
@@ -1164,7 +1164,7 @@ test('when you deep link to the person detail view you can alter the locations a
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_URL);
       let person = store.find('person', PD.idOne);
       assert.equal(person.get('locations').get('length'), 0);

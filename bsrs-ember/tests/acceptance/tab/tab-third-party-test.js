@@ -367,7 +367,7 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
     click('.t-tab-close:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), THIRD_PARTY_URL);
-        waitFor(() => {
+        waitFor(assert, () => {
             assert.equal(find('.t-modal-body').length, 1);
         });
     });

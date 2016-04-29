@@ -183,7 +183,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   page.priorityClickOptionTwo();
   await generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -194,7 +194,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   });
   generalPage.clickModalCancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(page.priorityInput, TD.priorityTwo);
       assert.throws(Ember.$('.ember-modal-dialog'));
@@ -206,7 +206,7 @@ test('when click delete, modal displays and when click ok, ticket is deleted and
   page.visitDetail();
   generalPage.delete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
@@ -217,7 +217,7 @@ test('when click delete, modal displays and when click ok, ticket is deleted and
   xhr(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'DELETE', null, {}, 204, {});
   generalPage.clickModalDelete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), TICKET_URL);
       assert.equal(store.find('ticket', TD.idOne).get('length'), undefined);
       assert.throws(Ember.$('.ember-modal-dialog'));
@@ -230,7 +230,7 @@ test('when click delete, and click no modal disappears', async assert => {
   await page.visitDetail();
   await generalPage.delete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(store.find('ticket').get('length'), 1);
       assert.ok(Ember.$('.ember-modal-dialog'));
@@ -241,7 +241,7 @@ test('when click delete, and click no modal disappears', async assert => {
   });
   generalPage.clickModalCancelDelete();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(store.find('ticket').get('length'), 1);
       assert.throws(Ember.$('.ember-modal-dialog'));
@@ -279,14 +279,14 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   page.priorityClickOptionTwo();
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), TICKET_URL);
     });
   });
@@ -639,7 +639,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
   page.categoryThreeClickOptionOne();
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -650,7 +650,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
   });
   generalPage.clickModalCancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));
       let components = page.powerSelectComponents;
@@ -669,7 +669,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
   });
   generalPage.cancel();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -680,7 +680,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
   });
   generalPage.clickModalRollback();
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.equal(currentURL(), TICKET_URL);
     });
   });
@@ -995,7 +995,7 @@ test('textarea autoresize working for the request field', async assert => {
   let o_height = find('.t-ticket-request').innerHeight();
   await fillIn(find('.t-ticket-request'), 'this\nthat\nthis\nthat\nthis\n');
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       let n_height = find('.t-ticket-request').innerHeight();
       assert.ok(n_height > o_height);
     });
