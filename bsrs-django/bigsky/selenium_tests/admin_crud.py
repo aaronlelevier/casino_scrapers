@@ -73,6 +73,7 @@ class DtSeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCa
         buttons[1].click()
         # /dt/{2nd-node-id}
         description = self.wait_for_xhr_request('t-dtd-preview-description')
+        print(description.text)
         assert description.text == 'Repair'
 
 
