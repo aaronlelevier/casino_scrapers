@@ -39,9 +39,23 @@ class EtlUtilsTests(TestCase):
         self.assertEqual(ticket.priority, self.priority)
         self.assertEqual(ticket.status, self.status)
 
+    # get_location
+
     def test_get_location(self):
         ret = _etl_utils.get_location(self.number)
         self.assertEqual(ret, self.location)
+
+    # def test_get_location__DoesNotExist(self):
+    #     number = 'foo'
+    #     self.assertFalse(Location.objects.filter(number=number).exists())
+    #     with open(settings.LOGGING_INFO_FILE, 'w'): pass
+
+    #     with self.assertRaises(Location.DoesNotExist):
+    #         _etl_utils.get_location(number)
+
+    #         with open(settings.LOGGING_INFO_FILE, 'r') as f:
+    #             content = f.read()
+    #     self.assertIn("LocationLevel name:{} Not Found.".format(get_location_level(domino_role)), content)
 
     def test_get_status(self):
         ret = _etl_utils.get_status('1')

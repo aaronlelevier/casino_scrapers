@@ -22,8 +22,8 @@ from django.db import models
 
 
 class DominoTicket(models.Model):
-    ref_number = models.TextField()
-    location_number = models.TextField()
+    ref_number = models.TextField(db_index=True)
+    location_number = models.TextField(db_index=True)
     wo_number = models.TextField(blank=True, null=True)
     status = models.TextField()
     priority = models.TextField()

@@ -31,9 +31,9 @@ def run_ticket_migrations():
             location = get_location(dt.location_number)
             status = get_status(dt.status)
             priority = get_priority(dt.priority)
-        except Exception:
+        except (Location.DoesNotExist, Location.MultipleObjectsReturned, KeyError):
             # log dt that failed - location_number and ref_number
-            raise
+            return
 
         Ticket.objects.create(location=location, status=status, priority=priority)
 
