@@ -41,6 +41,7 @@ def run_ticket_migrations():
                 'request': format_subject_and_request(dt.subject, dt.request),
                 'assignee': get_assignee(dt.assigned_to),
                 'requester': dt.requester,
+                'completion_date': dt.complete_date
             })
             categories = get_categories(dt)
         except (Location.DoesNotExist, Location.MultipleObjectsReturned, Category.DoesNotExist,

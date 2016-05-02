@@ -1,5 +1,3 @@
-import datetime
-
 from django.utils.timezone import now
 
 from model_mommy import mommy
@@ -28,6 +26,6 @@ def create_domino_ticket():
         'issue': 'Microwave',
         'assigned_to': person.fullname,
         'create_date': now(),
-        'complete_date': datetime.datetime.now()
+        'complete_date': now()
     })
     return mommy.make(DominoTicket, **data)
