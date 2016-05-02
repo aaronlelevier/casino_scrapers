@@ -7,4 +7,4 @@ export default Ember.Controller.extend({
       return false;
     }
   } 
-})
+});
