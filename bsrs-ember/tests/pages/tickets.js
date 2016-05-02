@@ -1,5 +1,5 @@
 import PageObject from 'bsrs-ember/tests/page-object';
-let { value, visitable, fillable, clickable, count, text } = PageObject;
+let { value, visitable, fillable, clickable, count, text, hasClass } = PageObject;
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
@@ -106,9 +106,13 @@ var TicketPage = PageObject.create({
   // assigneeClickIdThree: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${PD.storeNameThree})`),
   assigneeOptionLength: count('li', { scope: DROPDOWN }),
 
+  request: value('.t-ticket-request'),
   requestFillIn: fillable('.t-ticket-request'),
   requesterFillIn: fillable('.t-ticket-requester'),
   commentFillIn: fillable('.t-ticket-comment'),
+
+  //validation
+  requestError: hasClass('has-error', '.t-ticket-request-validator'),
 });
 
 export default TicketPage;

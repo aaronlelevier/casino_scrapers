@@ -780,4 +780,18 @@ test('clicking on a link will not err out since action return false from dtd con
   assert.ok(page.previewButtonOn);
 });
 
+/* OTHER */
+test('textarea autoresize working for the request field', async assert => {
+  await page.visitDetail();
+  assert.equal(currentURL(), DETAIL_URL);
+  let o_height = find('.t-dtd-single-description').innerHeight();
+  await fillIn(find('.t-dtd-single-description'), 'this\nthat\nthis\nthat\nthis\n');
+  andThen(() => {
+    waitFor(assert, () => {
+      let n_height = find('.t-dtd-single-description').innerHeight();
+      assert.ok(n_height > o_height);
+    });
+  });
+});
+
 /* jshint ignore:end */

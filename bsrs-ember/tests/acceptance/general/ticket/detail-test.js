@@ -144,16 +144,6 @@ test('when you click cancel, you are redirected to the ticket list view', async 
   assert.equal(currentURL(), TICKET_URL);
 });
 
-test('validation works for request field', async assert => {
-  clearxhr(list_xhr);
-  await page.visitDetail();
-  fillIn('.t-ticket-request', '');
-  await generalPage.save();
-  assert.ok(find('.t-request-validation-error').is(':visible'));
-  await fillIn('.t-ticket-request', 'wat');
-  assert.ok(find('.t-request-validation-error').is(':hidden'));
-});
-
 test('validation works for non required fields and when hit save, we do same post', async assert => {
   //assignee, cc, request
   clearxhr(list_xhr);
@@ -1001,6 +991,7 @@ test('textarea autoresize working for the request field', async assert => {
     });
   });
 });
+
 test('making a ticket dirty causes the dirty indicator do show in the grid', async assert => {
   await page.visit();
   assert.equal(currentURL(), TICKET_URL);

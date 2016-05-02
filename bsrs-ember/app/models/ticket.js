@@ -11,10 +11,23 @@ import NewMixin from 'bsrs-ember/mixins/model/new';
 import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
 import { belongs_to, change_belongs_to_fk } from 'bsrs-components/attr/belongs-to';
 import { many_to_many } from 'bsrs-components/attr/many-to-many';
+import { validator, buildValidations } from 'ember-cp-validations';
+
+const Validations = buildValidations({
+  request: validator('presence', {
+    presence: true,
+    debounce: 300,
+    message: 'errors.ticket.request'
+  }),
+  assignee: validator(function(value, options, model, attribute) {
+    //if draft, can save w/o assignee
+    return model.get('status.name') === 'ticket.status.draft' ? true : model.get(`${attribute}.id`) ? true : false;
+  }),
+});
 
 const { run } = Ember;
 
-var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, OptConf, {
+var TicketModel = Model.extend(Validations, NewMixin, CategoriesMixin, TicketLocationMixin, OptConf, {
   init() {
     this.requestValues = []; //store array of values to be sent in dt post or put request field
     belongs_to.bind(this)('status', 'ticket');
