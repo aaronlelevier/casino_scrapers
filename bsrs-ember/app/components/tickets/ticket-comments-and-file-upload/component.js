@@ -2,16 +2,13 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import ChildValidationComponent from 'bsrs-ember/mixins/validation/child';
-import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-export default ChildValidationComponent.extend(ValidationMixin, {
+export default Ember.Component.extend({
   tabList: Ember.inject.service(),
   tagName: 'div',
   classNames: ['col-md-12'],
   uuid: injectUUID('uuid'),
   repository: inject('attachment'),
-  priorityValidation: validate('model.priority'),
-  statusValidation: validate('model.status'),
   error: Ember.inject.service(),
   attachmentErrMsg: Ember.computed('error.message.ticket-comments-and-file-upload.msg', function() {
     return this.get('error').getMsg('ticket-comments-and-file-upload');
