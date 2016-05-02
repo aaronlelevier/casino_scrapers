@@ -324,18 +324,49 @@ test('a dirty model should add the dirty class to the tab close icon and the gri
   });
 });
 
-test('closing a document via the cancel button should close it\'s related tab', (assert) => {
+test('clicking cancel on a not dirty model should not close tab', (assert) => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     const tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
   });
-  click('.t-cancel-btn:eq(0)');
+  generalPage.cancel();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     const tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
+  });
+});
+
+test('opening a tab, making the model dirty and closing the tab should display the confirm dialog', (assert) => {
+  visit(DETAIL_URL);
+  page.keyFillIn(DTD.keyTwo);
+  andThen(() => {
+    assert.ok(generalPage.isDirty);
+    assert.equal(currentURL(), DETAIL_URL);
+    let tabs = store.find('tab');
+    assert.equal(tabs.get('length'), 1);
+  });
+  generalPage.cancel();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    waitFor(assert, () => { 
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
+    });
+  });
+  generalPage.clickModalRollback();
+  andThen(() => {
+    waitFor(assert, () => {
+      let tabs = store.find('tab');
+      assert.equal(tabs.get('length'), 1);
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.throws(Ember.$('.ember-modal-dialog'));
+    });
   });
 });
 
@@ -358,7 +389,7 @@ test('closing a document via the cancel button should close it\'s related tab', 
 //  });
 //});
 
-test('opening a tab and closing the tab should remove the tab from the store', (assert) => {
+test('scott opening a tab and closing the tab should remove the tab from the store', (assert) => {
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -387,7 +418,7 @@ test('opening a tab, making the model dirty and closing the tab should display t
   click('.t-tab-close:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    waitFor(assert, () => {
+    waitFor(assert, () => { //TODO: leave in if animations are added to modal.  Otherwise waitFor is not needed
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
@@ -430,7 +461,6 @@ test('trying to close the tab with one of the dirty dtds that are dirty will sho
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
-      const DETAIL_URL_2 = `${BASE_DTD_URL}/${DTD.idTwo}`;
       assert.equal(currentURL(), ADMIN_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });

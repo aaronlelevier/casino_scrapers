@@ -26,8 +26,10 @@
     </div>
     <div class="modal-footer t-modal-footer">
       <button type="button" class="btn btn-default t-modal-cancel-btn" {{action "cancel_modal"}}>{{t 'crud.no'}}</button>
-      {{#if (is-equal tabList.action 'closeTab' 'cancel')}}
+      {{#if (is-equal tabList.action 'closeTab')}}
         <button type="button" class="btn btn-primary t-modal-rollback-btn" {{action "rollback_model"}}>{{t 'crud.close_tab'}}</button>
+      {{else if (is-equal tabList.action 'cancel')}}
+        <button type="button" class="btn btn-primary t-modal-rollback-btn" {{action "rollback_model"}}>{{t 'crud.yes'}}</button>
       {{else if (is-equal tabList.action 'delete' 'deleteAttachment')}}
         <button type="button" class="btn btn-primary t-modal-delete-btn" {{action "delete_model"}}>{{t 'crud.delete.button'}}</button>
       {{/if}}

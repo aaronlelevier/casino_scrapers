@@ -69,7 +69,7 @@ export default Ember.Service.extend({
    * @return {boolean}
    */
   showModal(tab, action, confirmed) {
-    /* if single tab need to check all models due to split pane */
+    /* if single tab need to check all models due to split pane only when closeTab and cancel actions are invoked */
     if (tab.get('tabType') === 'single' && (action === 'closeTab' || action === 'cancel')) {
       const store = this.get('simpleStore');
       /* if new model, only check the one tab single new model */
@@ -80,7 +80,7 @@ export default Ember.Service.extend({
       const models = store.find(tab.get('moduleList'));
       return models.isAny('isDirtyOrRelatedDirty');
     }
-    /* if deleting something, always return true as model might not be dirty */
+    /* if deleting something, always return true as model might not be dirty, otherwise return multiple tabType if dirty */
     return (!confirmed && action === 'delete' || action === 'deleteAttachment') ? true : tab.get('model.isDirtyOrRelatedDirty');
   },
   /*
@@ -140,8 +140,11 @@ export default Ember.Service.extend({
       newModel: newModel || false,
     });
   },
+  /*
+   * if single tab and action is either cancel or rollback, dont close the tab
+   */
   closeTab(tab, action){
-    if (action !== 'cancel' || tab.get('tabType') !== 'single') {
+    if (action === 'closeTab' || tab.get('tabType') === 'multiple') {
       this.get('simpleStore').remove('tab', tab.get('id'));
     }
   }

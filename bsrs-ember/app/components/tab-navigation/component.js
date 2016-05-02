@@ -22,7 +22,6 @@ export default Ember.Component.extend({
      * rollback_model
      * Rollback for multiple tabs should always close tab
      * Rollback for single tabs (dtd) should not close tab
-     * When closing single tab should send 'closeTab' action
      */
     rollback_model() {
       const tab = this.trx.attemptedTabModel;
@@ -35,9 +34,11 @@ export default Ember.Component.extend({
         this.get('tabList').rollbackAll(tab);
       }
       tab.toggleProperty('modalIsShowing');
+      /* When closing single tab should send 'closeTab' action */
       if (tab.get('tabType') === 'multiple' || closeTabAction === 'closeTab') {
         this.attrs.closeTabMaster(tab, {action:'closeTab'});
       }
+      /* Otherwise should not close the tab for single tabTypes, thus send rollback action that will prevent closing tab in closeTab method of tab service */
       this.attrs.closeTabMaster(tab, {action:'rollback'});
     },
     cancel_modal() {
