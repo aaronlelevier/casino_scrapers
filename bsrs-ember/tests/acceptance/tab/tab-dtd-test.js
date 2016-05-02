@@ -389,7 +389,7 @@ test('opening a tab, making the model dirty and closing the tab should display t
 //  });
 //});
 
-test('scott opening a tab and closing the tab should remove the tab from the store', (assert) => {
+test('opening a tab and closing the tab should remove the tab from the store', (assert) => {
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);

@@ -774,4 +774,10 @@ test('sending a put request with a 400 error will redirect you to the dtd-error 
   assert.equal(find('.t-error-message').text(), 'WAT');
 });
 
+test('clicking on a link will not err out since action return false from dtd controller', async assert => {
+  await page.visitDetail();
+  click('.t-dtd-preview-btn:eq(0)');
+  assert.ok(page.previewButtonOn);
+});
+
 /* jshint ignore:end */
