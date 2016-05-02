@@ -11,7 +11,7 @@ from utils.serializers import BaseCreateSerializer
 
 
 TICKET_FIELDS = ('id', 'location', 'status', 'priority', 'assignee',
-    'requester', 'categories', 'request')
+    'requester', 'categories', 'request', 'completion_date', 'creator')
 
 
 class TicketPrioritySerializer(serializers.ModelSerializer):

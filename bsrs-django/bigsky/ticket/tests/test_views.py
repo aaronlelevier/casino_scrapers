@@ -2,6 +2,8 @@ import json
 import uuid
 import datetime
 
+from django.utils.timezone import now
+
 from rest_framework.test import APITestCase
 
 from category.models import Category
@@ -149,6 +151,8 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
             self.ticket.created.strftime('%m/%d/%Y'),
             datetime.datetime.strptime(str(data['created']), '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%m/%d/%Y')
         )
+        self.assertIn('completion_date', data)
+        self.assertIn('creator', data)
 
     def test_location(self):
         response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
@@ -302,12 +306,13 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
         self.data.update({
             'id': str(uuid.uuid4()),
             'request': 'plumbing',
+            'completion_date': now()
         })
 
         response = self.client.post('/api/tickets/', self.data, format='json')
+
         data = json.loads(response.content.decode('utf8'))
         ticket = Ticket.objects.get(id=data['id'])
-
         self.assertEqual(data['id'], str(ticket.id))
         self.assertEqual(data['location'], str(ticket.location.id))
         self.assertEqual(data['status'], str(ticket.status.id))
@@ -319,6 +324,8 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
         self.assertEqual(data['attachments'],
             list(ticket.attachments.values_list('id', flat=True)))
         self.assertEqual(data['request'], ticket.request)
+        self.assertTrue(data['completion_date'])
+        self.assertEqual(data['creator'], str(self.person.id))
 
     def test_status_and_priority_required(self):
         self.data.pop('cc', None)

@@ -2,8 +2,6 @@ import random
 import sys
 import uuid
 
-from django.conf import settings
-
 from model_mommy import mommy
 
 from category.models import Category

@@ -43,6 +43,14 @@ class TicketViewSet(EagerLoadQuerySetMixin, TicketQuerySetFilters, CreateTicketM
         else:
             return TicketSerializer
 
+    def create(self, request, *args, **kwargs):
+        """
+        Add the User making the POST request as the 'creator' of this Ticket.
+        """
+        request.data['creator'] = request.user.id
+        return super(TicketViewSet, self).create(request, *args, **kwargs)
+
+
 
 class TicketActivityViewSet(BaseModelViewSet):
 

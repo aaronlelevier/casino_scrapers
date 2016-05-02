@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
                 ('requester', models.CharField(blank=True, max_length=150, null=True)),
                 ('request', models.CharField(blank=True, max_length=1000, null=True)),
-                ('number', models.IntegerField(blank=True, default=ticket.models.Ticket.no_ticket_models)),
+                ('number', models.IntegerField(blank=True, default=ticket.models.Ticket.next_number)),
                 ('assignee', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='assignee_tickets', to=settings.AUTH_USER_MODEL)),
                 ('categories', models.ManyToManyField(blank=True, to='category.Category')),
                 ('cc', models.ManyToManyField(blank=True, to=settings.AUTH_USER_MODEL)),

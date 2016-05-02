@@ -1,6 +1,8 @@
+from datetime import datetime
 import sys
 
-from django.conf import settings
+from django.db.models import Max
+from django.utils.timezone import now
 from django.test import TestCase
 
 from category.models import Category
@@ -53,7 +55,27 @@ class CreateTicketTests(TestCase):
         self.assertIsInstance(self.ticket.request, str)
 
     def test_number(self):
-        self.assertIsInstance(self.ticket.number, int)
+        number = 100
+        self.ticket.number = number
+        self.ticket.save()
+        self.assertEqual(Ticket.objects.all().aggregate(Max('number'))['number__max'], number)
+
+        ticket = factory.create_ticket()
+
+        self.assertIsInstance(ticket.number, int)
+        self.assertEqual(ticket.number, number+1)
+
+    def test_completion_date(self):
+        self.assertIsNone(self.ticket.completion_date)
+        self.ticket.completion_date = now()
+        self.ticket.save()
+        self.assertIsInstance(self.ticket.completion_date, datetime)
+
+    def test_creator(self):
+        self.assertIsNone(self.ticket.creator)
+        self.ticket.creator = self.person
+        self.ticket.save()
+        self.assertIsInstance(self.ticket.creator, Person)
 
 
 class GetOrCreateTicketStatusAndPriorityTests(TestCase):
@@ -141,7 +163,6 @@ class CreateTicketWithSingleCategoryKwargTests(TestCase):
             self.dm.role.categories.first(),
             ticket.categories.all()
         )
-
 
 
 class CreateExtraTicketWithCategoriesTests(TestCase):

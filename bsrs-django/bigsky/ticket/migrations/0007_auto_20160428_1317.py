@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='ticket',
             name='number',
-            field=models.IntegerField(blank=True, default=ticket.models.Ticket.no_ticket_models, unique=True),
+            field=models.IntegerField(blank=True, default=ticket.models.Ticket.next_number, unique=True),
         ),
     ]

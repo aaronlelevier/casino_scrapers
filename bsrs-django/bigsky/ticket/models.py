@@ -1,7 +1,7 @@
 import uuid
 
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, Max
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import JSONField
@@ -84,6 +84,14 @@ class TicketQuerySet(BaseQuerySet):
             Q(location__id__in=person.locations.objects_and_their_children())
         ).distinct()
 
+    def next_number(self):
+        """Auto incrementing number field"""
+        count = self.all().aggregate(Max('number'))['number__max']
+        if not count:
+            return 1
+        else:
+            return count + 1
+
 
 class TicketManager(BaseManager):
 
@@ -99,16 +107,14 @@ class TicketManager(BaseManager):
     def filter_on_categories_and_location(self, person):
         return self.get_queryset().filter_on_categories_and_location(person)
 
+    def next_number(self):
+        return self.get_queryset().next_number()
+
 
 class Ticket(BaseModel):
 
-    def no_ticket_models():
-        """Auto incrementing number field"""
-        count = Ticket.objects_all.count()
-        if not count:
-            return 1
-        else:
-            return count + 1
+    def next_number():
+        return Ticket.objects.next_number()
 
     # Keys
     location = models.ForeignKey(Location)
@@ -124,8 +130,11 @@ class Ticket(BaseModel):
     # Fields
     request = models.CharField(max_length=1000, blank=True, null=True)
     dt_path = JSONField(blank=True, default={})
+    completion_date = models.DateTimeField(null=True)
     # Auto-fields
-    number = models.IntegerField(blank=True, unique=True, default=no_ticket_models)
+    number = models.IntegerField(blank=True, unique=True, default=next_number)
+    creator = models.ForeignKey(Person, related_name='created_tickets', null=True, help_text="The logged in Person that \
+created the Ticket. If NULL, it was system created.")
 
     objects = TicketManager()
 

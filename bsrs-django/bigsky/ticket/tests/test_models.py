@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.db.models import Q
+from django.db.models import Q, Max
 from django.test import TestCase
 
 from model_mommy import mommy
@@ -106,6 +106,25 @@ class TicketManagerTests(TestCase):
         ret = Ticket.objects.filter_on_categories_and_location(self.person).values_list('id', flat=True)
 
         self.assertEqual(sorted(ret), sorted(raw_qs))
+
+    def test_next_number(self):
+        number = 100
+        self.ticket.number = number
+        self.ticket.save()
+        raw_max = Ticket.objects.all().aggregate(Max('number'))['number__max']
+
+        next_number = Ticket.objects.next_number()
+
+        self.assertEqual(raw_max+1, next_number)
+
+    def test_next_number__if_no_tickets(self):
+        for t in Ticket.objects_all.all():
+            t.delete(override=True)
+        self.assertEqual(Ticket.objects_all.count(), 0)
+
+        ret = Ticket.objects.next_number()
+
+        self.assertEqual(ret, 1)
 
 
 class TicketTests(TestCase):
