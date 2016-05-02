@@ -4,7 +4,7 @@ const { computed, defineProperty } = Ember;
 export default Ember.Component.extend({
   classNames: ['dt-modal'],
   /* 
-   * fieldsObj
+   * @method init - fieldsObj setup
    * contains {key}-(id of field), {num}-(0 or 1), {value}-ongoing value of field, {required}, and {label}
    * num of 0 indicates fields has been fullfilled, 1 means unfullfilled
    */
@@ -17,7 +17,7 @@ export default Ember.Component.extend({
     }); 
     defineProperty(this, 'fieldsObj', undefined, fieldsObj);
   },
-  /* fieldsCompleted
+  /* @method fieldsCompleted
    * switches link next button on and off as long as all required fields are fullfilled
    */
   fieldsCompleted: Ember.computed('ticket.requestValues.[]', function() {
@@ -41,7 +41,7 @@ export default Ember.Component.extend({
     this.get('eventbus').unsubscribe('bsrs-ember@component:field-element-display');
   }),
   /*
-   * onFieldUpdate
+   * @method onFieldUpdate
    * sets key, value in fieldsObj (Map)
    * updateRequest sent to controller to update ticket.requestValues based on 'label:value'
    * @param {string} id
@@ -54,7 +54,7 @@ export default Ember.Component.extend({
   },
   actions: {
     /* 
-     * linkClick
+     * @method linkClick
      * closure action calls linkClick on controller
      */
     linkClick(destination_id, link, ticket) {
