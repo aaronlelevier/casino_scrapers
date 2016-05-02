@@ -65,7 +65,7 @@ class GetOrCreateTicketStatusAndPriorityTests(TestCase):
 
         status = factory.get_or_create_ticket_status()
 
-        self.assertEqual(status, TicketStatus.objects.get(name=TICKET_STATUSES[0]))
+        self.assertTrue(status)
 
     def test_get_or_create_ticket_status__default_exists(self):
         factory.create_ticket_statuses()
@@ -83,7 +83,7 @@ class GetOrCreateTicketStatusAndPriorityTests(TestCase):
 
         priority = factory.get_or_create_ticket_priority()
 
-        self.assertEqual(priority, TicketPriority.objects.get(name=TICKET_PRIORITIES[0]))
+        self.assertTrue(priority)
 
     def test_get_or_create_ticket_priority__default_exists(self):
         factory.create_ticket_priorities()

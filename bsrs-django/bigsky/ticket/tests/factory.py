@@ -59,12 +59,12 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
 
 
 def get_or_create_ticket_status():
-    obj, _ = TicketStatus.objects.get_or_create(name=TICKET_STATUSES[0])
+    obj, _ = TicketStatus.objects.get_or_create(name=random.choice(TICKET_STATUSES))
     return obj
 
 
 def get_or_create_ticket_priority():
-    obj, _ = TicketPriority.objects.get_or_create(name=TICKET_PRIORITIES[0])
+    obj, _ = TicketPriority.objects.get_or_create(name=random.choice(TICKET_PRIORITIES))
     return obj
 
 
