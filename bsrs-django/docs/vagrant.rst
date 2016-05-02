@@ -249,6 +249,7 @@ Scott Note's for new vagrant setup
     sudo yum install postgresql-devel
     sudo yum install libevent-devel
     sudo yum install libjpeg-devel zlib-devel
+    sudo yum install gcc libffi-devel python-devel openssl-devel
     # pip install
     wget https://bootstrap.pypa.io/ez_setup.py -O - | sudo python
     unzip setup_tools...
