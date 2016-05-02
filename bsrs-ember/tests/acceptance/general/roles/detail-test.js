@@ -93,27 +93,22 @@ test('validation works and when hit save, we do same post', (assert) => {
   visit(DETAIL_URL);
   andThen(() => {
     assert.ok(find('.t-name-validation-error').is(':hidden'));
-    assert.ok(find('.t-role-category-validation-error').is(':hidden'));
   });
   fillIn('.t-role-name', '');
   page.categoryOneRemove();
   generalPage.save();
   andThen(() => {
     assert.ok(find('.t-name-validation-error').is(':visible'));
-    assert.ok(find('.t-role-category-validation-error').is(':visible'));
   });
   fillIn('.t-role-name', RD.nameOne);
-  generalPage.save();
   andThen(() => {
     assert.ok(find('.t-name-validation-error').is(':hidden'));
-    assert.ok(find('.t-role-category-validation-error').is(':visible'));
   });
   xhr(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
   page.categoryClickDropdown();
   page.categoryClickOptionOneEq();
   andThen(() => {
     assert.ok(find('.t-name-validation-error').is(':hidden'));
-    assert.ok(find('.t-role-category-validation-error').is(':hidden'));
   });
   let payload = RF.put({id: RD.idOne, categories: [CD.idOne]});
   let response = Ember.$.extend(true, {}, payload);
