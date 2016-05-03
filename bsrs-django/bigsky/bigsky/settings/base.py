@@ -158,11 +158,6 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 SYSTEM = platform.system()
 
-### FILES
-
-MAX_UPLOAD_SIZE = 2621440 # 2621440 # default - aka: 2.5MB
-
-
 ### 3RD PARTY APPS ###
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
