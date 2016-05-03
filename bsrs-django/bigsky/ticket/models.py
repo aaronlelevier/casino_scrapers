@@ -136,7 +136,7 @@ class Ticket(BaseModel):
     categories = models.ManyToManyField(Category, blank=True)
     attachments = GenericRelation(Attachment)
     # Fields
-    request = models.CharField(max_length=1000, blank=True, null=True)
+    request = models.TextField(blank=True, null=True)
     dt_path = JSONField(blank=True, default={})
     completion_date = models.DateTimeField(null=True)
     # Auto-fields
