@@ -87,7 +87,7 @@ class EtlUtilsTests(TestCase):
         self.assertIn("{} Location number MultipleObjectsReturned for ref # {}"
                       .format(self.dt.location_number, self.dt.ref_number), content)
 
-    def test_run_ticket_migrations__log_missing_category(self):
+    def test_run_ticket_migrations__log_category_DoesNotExist(self):
         name = 'foo'
         self.assertFalse(Category.objects.filter(name=name).exists())
         self.dt.type = name
@@ -96,10 +96,22 @@ class EtlUtilsTests(TestCase):
 
         _etl_utils.run_ticket_migrations()
 
-        # self.assertEqual(Ticket.objects.count(), 0)
         with open(settings.LOGGING_INFO_FILE, 'r') as f:
             content = f.read()
         self.assertIn("Level: {level}; Label: {label}; Name: {name} DoesNotExist"
+                      .format(level=0, label=LABEL_TYPE, name=self.dt.type), content)
+
+    def test_run_ticket_migrations__log_category_MultipleObjectsReturned(self):
+        category = Category.objects.get(name=self.dt.type)
+        mommy.make(Category, name=category.name, label=category.label, level=category.level)
+        self.assertEqual(Category.objects.filter(name=category.name, label=category.label, level=category.level).count(), 2)
+        with open(settings.LOGGING_INFO_FILE, 'w'): pass
+
+        _etl_utils.run_ticket_migrations()
+
+        with open(settings.LOGGING_INFO_FILE, 'r') as f:
+            content = f.read()
+        self.assertIn("Level: {level}; Label: {label}; Name: {name} MultipleObjectsReturned"
                       .format(level=0, label=LABEL_TYPE, name=self.dt.type), content)
 
     def test_run_ticket_migrations__log_missing_assinged_to(self):
@@ -110,7 +122,6 @@ class EtlUtilsTests(TestCase):
 
         _etl_utils.run_ticket_migrations()
 
-        # self.assertEqual(Ticket.objects.count(), 0)
         with open(settings.LOGGING_INFO_FILE, 'r') as f:
             content = f.read()
         self.assertIn("Assignee: {} DoesNotExist".format(fullname), content)

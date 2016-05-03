@@ -26,7 +26,7 @@ def run_ticket_migrations():
             })
             categories = get_categories(dt)
         except (Location.DoesNotExist, Location.MultipleObjectsReturned, Category.DoesNotExist,
-                Person.DoesNotExist):
+                Category.MultipleObjectsReturned, Person.DoesNotExist):
             pass
         else:
             ticket = Ticket.objects.create(**kwargs)
@@ -60,6 +60,9 @@ def get_category(**kwargs):
         return Category.objects.get(**kwargs)
     except Category.DoesNotExist:
         logger.info("Level: {level}; Label: {label}; Name: {name} DoesNotExist".format(**kwargs))
+        raise
+    except Category.MultipleObjectsReturned:
+        logger.info("Level: {level}; Label: {label}; Name: {name} MultipleObjectsReturned".format(**kwargs))
         raise
 
 
