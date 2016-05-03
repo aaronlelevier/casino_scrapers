@@ -79,6 +79,9 @@ div.buttonGroup {
 		@include truncate;
 	}
 }
+.input-group-addon{
+	background-color: $lightGray;
+}
 .input-group-vertical{
 	margin: 0 0 10px;
 	*{
@@ -123,6 +126,14 @@ div.buttonGroup {
 	.form-control,
 	.btn{
 		border-radius: 0;
+	}
+	.ember-power-select-trigger:focus{
+		z-index: 3;
+		border-radius: 0;
+		&[aria-expanded="true"]{
+			z-index: 3;
+			border-radius: 0;
+		}
 	}
 	.btn-default{
 		width: 100%;

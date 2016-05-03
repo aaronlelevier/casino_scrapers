@@ -72,6 +72,9 @@
 .ember-power-select-trigger:focus{
 	outline: none;
 	border: $borderStyle !important;
+	&[aria-expanded="true"]{
+		border: 1px solid $activeColor !important;
+	}
 }
 #ember-basic-dropdown-wormhole,
 .ember-basic-dropdown--in-place{
