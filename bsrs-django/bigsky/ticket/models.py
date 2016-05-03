@@ -22,7 +22,7 @@ TICKET_STATUS_MAP = {
     '6': 'ticket.status.problem_solved',
     '7': 'ticket.status.draft',
     '8': 'ticket.status.unsatisfactory_completion',
-    '9': 'ticket.status.canceled',
+    '9': 'ticket.status.cancelled',
     '10': 'ticket.status.pending'
 }
 
