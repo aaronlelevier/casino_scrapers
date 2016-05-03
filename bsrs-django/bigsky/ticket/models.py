@@ -135,6 +135,8 @@ class Ticket(BaseModel):
     number = models.IntegerField(blank=True, unique=True, default=next_number)
     creator = models.ForeignKey(Person, related_name='created_tickets', null=True, help_text="The logged in Person that \
 created the Ticket. If NULL, it was system created.")
+    legacy_ref_number = models.CharField(max_length=254, blank=True, null=True,
+        help_text="Legacy ticket number from Domino")
 
     objects = TicketManager()
 

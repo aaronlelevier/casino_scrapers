@@ -76,7 +76,7 @@ class TicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS + ('number', 'cc', 'attachments', 'created')
+        fields = TICKET_FIELDS + ('number', 'cc', 'attachments', 'created', 'legacy_ref_number')
 
     @staticmethod
     def eager_load(queryset):

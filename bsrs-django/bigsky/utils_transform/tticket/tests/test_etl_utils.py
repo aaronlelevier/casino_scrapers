@@ -51,6 +51,7 @@ class EtlUtilsTests(TestCase):
         self.assertEqual(ticket.requester, self.dt.requester)
         self.assertEqual(ticket.created, self.dt.create_date)
         self.assertEqual(ticket.completion_date, self.dt.complete_date)
+        self.assertEqual(ticket.legacy_ref_number, self.dt.ref_number)
         # categories
         self.assertEqual(ticket.categories.filter(label=LABEL_TYPE).count(), 1)
         self.assertEqual(ticket.categories.filter(label=LABEL_TRADE).count(), 1)

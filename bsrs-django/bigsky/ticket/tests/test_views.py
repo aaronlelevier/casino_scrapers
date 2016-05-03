@@ -154,6 +154,15 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
         self.assertIn('completion_date', data)
         self.assertIn('creator', data)
 
+    def test_legacy_ref_number(self):
+        self.ticket.legacy_ref_number = '42'
+        self.ticket.save()
+
+        response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['legacy_ref_number'], self.ticket.legacy_ref_number)
+
     def test_location(self):
         response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
 
