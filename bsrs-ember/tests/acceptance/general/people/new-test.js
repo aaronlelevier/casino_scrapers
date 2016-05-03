@@ -29,7 +29,7 @@ const NEW_URL = BASE_PEOPLE_URL + '/new/1';
 
 var application, store, payload, detail_xhr, list_xhr, original_uuid, people_detail_data, detailEndpoint, endpoint, username_search;
 
-module('Acceptance | people-new', {
+module('scott Acceptance | people-new', {
   beforeEach() {
     payload = {
       id: UUID.value,
@@ -46,7 +46,7 @@ module('Acceptance | people-new', {
     people_detail_data = {id: UUID.value, username: PD.username,
       role: RF.get() , phone_numbers:[], addresses: [], locations: [], status_fk: SD.activeId, locale: PD.locale_id};
     detail_xhr = xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
-    const username_response = {'count':1,'next':null,'previous':null,'results': [{'id': PD.idOne}]};
+    const username_response = {'count':0,'next':null,'previous':null,'results': []};
     username_search = xhr(endpoint + '?username=mgibson1', 'GET', null, {}, 200, username_response);
     original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
@@ -61,11 +61,14 @@ module('Acceptance | people-new', {
 
 test('username backend validation', (assert) => {
   clearxhr(detail_xhr);
+  clearxhr(username_search);
   clearxhr(list_xhr);
   visit(NEW_URL);
   andThen(() => {
     assert.equal(find('.t-existing-error').text().trim(), '');
   });
+  const username_response = {'count':1,'next':null,'previous':null,'results': [{'id': PD.idOne}]};
+  username_search = xhr(endpoint + '?username=mgibson1', 'GET', null, {}, 200, username_response);
   fillIn('.t-person-username', PD.username);
   andThen(() => {
     assert.equal(find('.t-existing-error').text().trim(), t(GLOBALMSG.existing_username, {value: PD.username}));
@@ -101,36 +104,6 @@ test('visiting /people/new and creating a new person', (assert) => {
     assert.equal(person.get('role_fk'), PD.role);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  });
-});
-
-test('validation works and when hit save, we do same post', (assert) => {
-  var response = Ember.$.extend(true, {}, payload);
-  var url = `${PREFIX}${BASE_PEOPLE_URL}/`;
-  xhr( url,'POST',JSON.stringify(payload),{},201,response );
-  visit(PEOPLE_URL);
-  click('.t-add-new');
-  andThen(() => {
-    assert.ok(find('.t-username-validation-error').is(':hidden'));
-    assert.ok(find('.t-password-validation-error').is(':hidden'));
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.ok(find('.t-username-validation-error').is(':visible'));
-    assert.equal(find('.t-username-validation-error').text(), GLOBALMSG.invalid_username);
-    assert.ok(find('.t-password-validation-error').is(':visible'));
-    assert.equal(find('.t-password-validation-error').text(), GLOBALMSG.invalid_password);
-  });
-  fillIn('.t-person-username', PD.username);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), NEW_URL);
-    assert.ok(find('.t-username-validation-error').is(':hidden'));
-  });
-  fillIn('.t-person-password', PD.password);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
   });
 });
 

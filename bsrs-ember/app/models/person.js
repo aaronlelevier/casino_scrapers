@@ -18,7 +18,11 @@ import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/person';
 
 const Validations = buildValidations({
-  username: validator('unique-username')
+  username: validator('unique-username'),
+  password: validator('format', {
+    regex: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$/,
+    message: 'errors.person.password'
+  })
 });
 
 var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin, LocationMixin, NewMixin, OptConf, RoleMixin, LocaleMixin, {

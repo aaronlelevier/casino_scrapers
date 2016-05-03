@@ -27,20 +27,18 @@ moduleForComponent('person-new', 'integration: person-new test', {
 });
 
 test('filling in invalid username reveal validation messages', function(assert) {
-  var done = assert.async();
   run(() => {
     this.set('model', store.push('person', {}));
   });
   this.render(hbs`{{people/person-new model=model}}`);
   let $component = this.$('.has-error');
   assert.equal($component.text().trim(), '');
-  this.$('.t-person-password').val('a').trigger('change');
+  this.$('.t-person-password').val(PD.password).trigger('change');
   var save_btn = this.$('.t-save-btn');
   save_btn.trigger('click').trigger('change');
-  const $component = this.$('.has-error');
+  $component = this.$('.has-error');
   assert.ok($component.is(':visible'));
   assert.equal($component.text().trim(), trans.t('errors.person.username'));
-  done();
 });
 
 test('filling in invalid password reveal validation messages', function(assert) {
@@ -48,12 +46,12 @@ test('filling in invalid password reveal validation messages', function(assert) 
     this.set('model', store.push('person', {}));
   });
   this.render(hbs`{{people/person-new model=model}}`);
-  var $component = this.$('.t-password-validation-error');
-  assert.ok($component);
+  this.$('.t-person-username').val('a').trigger('change');
+  let $component = this.$('.has-error');
+  assert.equal($component.text().trim(), '');
   var save_btn = this.$('.t-save-btn');
   save_btn.trigger('click').trigger('change');
-  assert.equal($('input.t-person-password').attr('type'), 'password');
+  $component = this.$('.has-error');
   assert.ok($component.is(':visible'));
-  this.$('.t-person-password').val('a').trigger('change');
-  assert.ok($component.is(':hidden'));
+  assert.equal($component.text().trim(), trans.t('errors.person.password'));
 });
