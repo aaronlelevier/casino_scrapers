@@ -1,26 +1,22 @@
 import Ember from 'ember';
-const { computed, defineProperty } = Ember;
+const { computed, defineProperty, observer } = Ember;
 
 export default Ember.Component.extend({
   type: 'text',
-  // rawInputValue: null,
+  wasSet: false,
   attributeValidation: null,
   classNameBindings: ['showErrorClass:has-error'],
   init() {
     this._super(...arguments);
     const valuePath = this.get('valuePath');
     defineProperty(this, 'attributeValidation', computed.oneWay(`model.validations.attrs.${valuePath}`));
-    // this.set('rawInputValue', this.get(`model.${valuePath}`));
-    // defineProperty(this, 'value', computed.alias(`model.${valuePath}`));
+    defineProperty(this, 'value', computed.alias(`model.${valuePath}`));
   },
-  // inputValueChange: observer('rawInputValue', function() {
-  //   run.debounce(this, this.setValue, 300, false);
-  // }),
-  // setValue() {
-  //   this.set('value', this.get('rawInputValue'));
-  // },
+  inputValueChange: observer('value', function() {
+    this.set('wasSet', true);
+  }),
   showMessage: computed('attributeValidation.isDirty', 'isInvalid', 'didValidate', function() {
-    return (this.get('model.isDirty') || this.get('didValidate')) && this.get('isInvalid');
+    return (this.get('model.isDirty') || this.get('didValidate') || this.get('wasSet')) && this.get('isInvalid');
   }),
   isValid: computed.oneWay('attributeValidation.isValid'),
   isInvalid: computed.oneWay('attributeValidation.isInvalid'),
