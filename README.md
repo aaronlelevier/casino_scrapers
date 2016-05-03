@@ -5,6 +5,10 @@ Refer to separate README's for `Ember` + `Django`
 - [bsrs-ember/README.md](https://github.com/bigskytech/bsrs/blob/master/bsrs-ember/README.md)
 - [bsrs-django/README.md](https://github.com/bigskytech/bsrs/blob/master/bsrs-django/README.md)
 
+### Web Stack Documentation Home
+
+[Wiki Docs](https://github.com/bigskytech/bsrs/wiki)
+
 To run the continuous integration script like jenkins
 
 ```
@@ -30,14 +34,12 @@ If you need to provision a macbook pro checkout this installer
 
 https://github.com/toranb/osx-workstation/blob/master/installer
 
-
 ### Jenkins Ports
 
-| Port | Build      | Service |
-| ---- | ---------- | ------- |
-| 8007 | Deploy     | Nginx   |
-| 8008 | Persistent | Nginx   |
-
+| Port | Build      |
+| ---- | ---------- |
+| 8007 | Deploy     |
+| 8008 | Persistent |
 
 ### Fixture Data
 
@@ -61,16 +63,16 @@ A. If no dependencies, can generate as normal.
 
 B. If has Foreign Keys to other Fixtures, then these need to be statically generated using the above function, so they are predictable, and won't cause any duplicate key errrors.
 
-
 #### Regenerating Fixtures
 
 Run `bash repopulate_jenkins_json.sh` to regenerate fixtures.
 
 Then, to **test**, run `bash build_project.sh`.  This will do the same fixture upload that is done in the `deploy.sh` script, so if this works, then then `deploy.sh` will work.
 
-
 #### Import Fixtures Notes
+
 ##### TRANSLATION
+
 1. Output "en" document on [Google Drive](https://drive.google.com/drive/folders/0B7dl5Hhfqk0NfkZWUndwVEFzR2RhTUNPRnFRcVA1UVNWTEUxUEFyaU5ZSVpFeHBFMUZBeTg)
 2. export to CSV and put in the file in `bsrs/bsrs-django/bigsky/media/translation` folder
 3. ipython notebook or shell_plus and execute:
