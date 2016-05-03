@@ -98,10 +98,11 @@ class TicketManagerTests(TestCase):
         self.assertEqual(ret, raw_qs_count)
 
     def test_filter_on_categories_and_location(self):
-        raw_qs = Ticket.objects.filter(
-            Q(categories__id__in=self.person.role.categories.filter(parent__isnull=True).values_list('id', flat=True)) &
-            Q(location__id__in=self.person.locations.values_list('id', flat=True))
-        ).distinct().values_list('id', flat=True)
+        q = Q()
+        q &= Q(location__id__in=self.person.locations.values_list('id', flat=True))
+        if self.person.role.categories.first():
+            q &= Q(categories__id__in=self.person.role.categories.filter(parent__isnull=True).values_list('id', flat=True))
+        raw_qs = Ticket.objects.filter(q).distinct().values_list('id', flat=True)
 
         ret = Ticket.objects.filter_on_categories_and_location(self.person).values_list('id', flat=True)
 

@@ -372,7 +372,6 @@ class Person(BaseModel, AbstractUser):
     objects_all = UserManager()
 
     class Meta:
-        ordering = ('fullname',)
         verbose_name_plural = 'People'
 
     def __str__(self):

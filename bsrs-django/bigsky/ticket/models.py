@@ -87,10 +87,11 @@ class TicketQuerySet(BaseQuerySet):
                     .exclude(categories__isnull=True))
 
     def filter_on_categories_and_location(self, person):
-        return self.filter(
-            Q(categories__id__in=person.role.categories.get_all_if_none(person.role)) &
-            Q(location__id__in=person.locations.objects_and_their_children())
-        ).distinct()
+        q = Q()
+        q &= Q(location__id__in=person.locations.values_list('id', flat=True))
+        if person.role.categories.first():
+            q &= Q(categories__id__in=person.role.categories.filter(parent__isnull=True))
+        return self.filter(q).distinct()
 
     def next_number(self):
         """Auto incrementing number field"""
