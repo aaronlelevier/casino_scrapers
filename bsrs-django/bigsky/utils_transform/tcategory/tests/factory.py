@@ -18,14 +18,14 @@ def get_random_data(fields):
     return data
 
 
-def create_category_type():
+def create_domino_category_type():
     fields = [f.name for f in CategoryType._meta.get_fields()
              if f.name != 'id']
     data = get_random_data(fields)
     return mommy.make(CategoryType, **data)
 
 
-def create_category_trade(type=None):
+def create_domino_category_trade(type=None):
     fields = [f.name for f in CategoryTrade._meta.get_fields()
              if f.name != 'id']
     data = get_random_data(fields)
@@ -38,7 +38,7 @@ def create_category_trade(type=None):
     return trade
 
 
-def create_category_issue(trade=None):
+def create_domino_category_issue(trade=None):
     fields = [f.name for f in CategoryIssue._meta.get_fields()
              if f.name != 'id']
     data = get_random_data(fields)

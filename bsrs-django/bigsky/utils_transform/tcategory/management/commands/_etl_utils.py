@@ -14,21 +14,35 @@ def resolve_cost_amount(cost_amount):
 
 def _create_category(domino_instance, label, subcategory_label, parent):
     cost_amount = resolve_cost_amount(domino_instance.cost_amount)
+    level = resolve_level(label)
 
-    return Category.objects.create(
-        name=domino_instance.name,
-        description=domino_instance.description,
-        label=label,
-        subcategory_label=subcategory_label,
-        cost_amount=cost_amount,
-        cost_code=domino_instance.cost_code,
-        parent=parent
-    )
+    try:
+        category = Category.objects.get(name=domino_instance.name, label=label, level=level)
+    except Category.DoesNotExist:
+        category = Category.objects.create(
+            name=domino_instance.name,
+            description=domino_instance.description,
+            label=label,
+            subcategory_label=subcategory_label,
+            cost_amount=cost_amount,
+            cost_code=domino_instance.cost_code,
+            parent=parent
+        )
+    return category
+
+
+def resolve_level(label):
+    level_map = {
+        LABEL_TYPE: 0,
+        LABEL_TRADE: 1,
+        LABEL_ISSUE: 2
+    }
+    return level_map[label]
 
 
 def run_category_type_migrations():
     for x in CategoryType.objects.all():
-        create_category_from_category_type(x)
+        create_type_from_domino(x)
 
 
 def run_category_trade_migrations():
@@ -39,7 +53,7 @@ def run_category_trade_migrations():
         except Category.DoesNotExist:
             parent = None
 
-        create_category_from_category_trade(x, parent=parent)
+        create_trade_from_domino(x, parent=parent)
 
 
 def run_category_issue_migrations():
@@ -50,16 +64,16 @@ def run_category_issue_migrations():
         except Category.DoesNotExist:
             parent = None
 
-        create_category_from_category_issue(x, parent=parent)
+        create_issue_from_domino(x, parent=parent)
 
 
-def create_category_from_category_type(domino_instance, label=LABEL_TYPE, subcategory_label=LABEL_TRADE, parent=None):
+def create_type_from_domino(domino_instance, label=LABEL_TYPE, subcategory_label=LABEL_TRADE, parent=None):
     return _create_category(domino_instance, label, subcategory_label, parent)
 
 
-def create_category_from_category_trade(domino_instance, label=LABEL_TRADE, subcategory_label=LABEL_ISSUE, parent=None):
+def create_trade_from_domino(domino_instance, label=LABEL_TRADE, subcategory_label=LABEL_ISSUE, parent=None):
     return _create_category(domino_instance, label, subcategory_label, parent)
 
 
-def create_category_from_category_issue(domino_instance, label=LABEL_ISSUE, subcategory_label=LABEL_SUB_ISSUE, parent=None):
+def create_issue_from_domino(domino_instance, label=LABEL_ISSUE, subcategory_label=LABEL_SUB_ISSUE, parent=None):
     return _create_category(domino_instance, label, subcategory_label, parent)
