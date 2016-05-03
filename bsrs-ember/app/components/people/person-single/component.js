@@ -13,22 +13,21 @@ function validatePassword(){
     return true;
   }
 }
-function validateSingleChar(middle_init){
-  if(middle_init) {
-    return middle_init.length < 2 ? true : false;
-  }
-  return true;
-}
+// function validateSingleChar(middle_init){
+//   if(middle_init) {
+//     return middle_init.length < 2 ? true : false;
+//   }
+//   return true;
+// }
 
 var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, EditMixin, {
+  didValidate: false,
   repository: inject('person'),
   locationRepo: inject('location'),
   child_components: ['input-multi-phone', 'input-multi-address', 'input-multi-email'],
   classNames: ['wrapper', 'form'],
   //TODO: what is this used for?
   attemptedTransition: '',
-  usernameValidation: validate('model.username'),
-  middleInitialValidation: validate('model.middle_initial', validateSingleChar),
   passwordValidation: validate('model.password', validatePassword),
   changingPassword: false,
   extra_params: Ember.computed(function(){
@@ -39,7 +38,10 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Edit
     save() {
       this.set('submitted', true);
       if (this.all_components_valid()) {
-        this._super();
+        if (this.get('model.validations.isValid')) {
+          this._super();
+        }
+        this.set('didValidate', true);
       }
     },
     localeChanged(locale){

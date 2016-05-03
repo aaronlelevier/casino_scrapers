@@ -18,11 +18,27 @@ import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/person';
 
 const Validations = buildValidations({
-  username: validator('unique-username'),
-  password: validator('format', {
-    regex: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$/,
-    message: 'errors.person.password'
-  })
+  username: [
+    validator('presence', {
+      presence: true,
+      message: 'errors.person.username'
+    }),
+    validator('unique-username', {
+      debounce: 300,
+      disabled() {
+        return this.get('model.isDirtyOrRelatedDirty') ? false : true;
+      }
+    }),
+  ],
+  // password: validator('format', {
+  //   regex: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$/,
+  //   message: 'errors.person.password'
+  // }),
+  middle_initial: validator('length', {
+    debounce: 300,
+    max: 2,
+    message: 'errors.person.middle_initial'
+  }),
 });
 
 var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin, LocationMixin, NewMixin, OptConf, RoleMixin, LocaleMixin, {

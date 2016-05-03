@@ -20,7 +20,7 @@ export default Ember.Component.extend({
   //   this.set('value', this.get('rawInputValue'));
   // },
   showMessage: computed('attributeValidation.isDirty', 'isInvalid', 'didValidate', function() {
-    return (this.get('attributeValidation.isDirty') || this.get('didValidate')) && this.get('isInvalid');
+    return (this.get('model.isDirty') || this.get('didValidate')) && this.get('isInvalid');
   }),
   isValid: computed.oneWay('attributeValidation.isValid'),
   isInvalid: computed.oneWay('attributeValidation.isInvalid'),

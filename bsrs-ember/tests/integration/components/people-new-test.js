@@ -41,17 +41,17 @@ test('filling in invalid username reveal validation messages', function(assert) 
   assert.equal($component.text().trim(), trans.t('errors.person.username'));
 });
 
-test('filling in invalid password reveal validation messages', function(assert) {
-  run(() => {
-    this.set('model', store.push('person', {}));
-  });
-  this.render(hbs`{{people/person-new model=model}}`);
-  this.$('.t-person-username').val('a').trigger('change');
-  let $component = this.$('.has-error');
-  assert.equal($component.text().trim(), '');
-  var save_btn = this.$('.t-save-btn');
-  save_btn.trigger('click').trigger('change');
-  $component = this.$('.has-error');
-  assert.ok($component.is(':visible'));
-  assert.equal($component.text().trim(), trans.t('errors.person.password'));
-});
+// test('filling in invalid password reveal validation messages', function(assert) {
+//   run(() => {
+//     this.set('model', store.push('person', {}));
+//   });
+//   this.render(hbs`{{people/person-new model=model}}`);
+//   this.$('.t-person-username').val('a').trigger('change');
+//   let $component = this.$('.has-error');
+//   assert.equal($component.text().trim(), '');
+//   var save_btn = this.$('.t-save-btn');
+//   save_btn.trigger('click').trigger('change');
+//   $component = this.$('.has-error');
+//   assert.ok($component.is(':visible'));
+//   assert.equal($component.text().trim(), trans.t('errors.person.password'));
+// });

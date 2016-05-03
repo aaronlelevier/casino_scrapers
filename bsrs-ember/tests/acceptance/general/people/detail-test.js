@@ -59,8 +59,8 @@ module('Acceptance | person detail test', {
     endpoint = PREFIX + BASE_PEOPLE_URL + '/';
     var people_list_data = PF.list();
     people_detail_data = PF.detail(PD.idOne);
-    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
-    detail_xhr = xhr(endpoint + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data);
+    list_xhr = xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, people_list_data);
+    detail_xhr = xhr(`${endpoint}${PD.idOne}/`, 'GET', null, {}, 200, people_detail_data);
     original_uuid = random.uuid;
     url = `${PREFIX}${DETAIL_URL}/`;
   },
@@ -78,6 +78,24 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
   click('.t-grid-data:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
+  });
+});
+
+test('username backend validation', (assert) => {
+  clearxhr(list_xhr);
+  clearxhr(detail_xhr);
+  let data = PF.detail(PD.idOne);
+  data.username = 'Watter1';
+  xhr(`${endpoint}${PD.idOne}/`, 'GET', null, {}, 200, data);
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(find('.t-existing-error').text().trim(), '');
+  });
+  const username_response = {'count':1,'next':null,'previous':null,'results': [{'id': PD.idOne}]};
+  xhr(endpoint + '?username=mgibson1', 'GET', null, {}, 200, username_response);
+  fillIn('.t-person-username', PD.username);
+  andThen(() => {
+    assert.equal(find('.t-existing-error').text().trim(), t(GLOBALMSG.existing_username, {value: PD.username}));
   });
 });
 
@@ -137,28 +155,30 @@ test('when you deep link to the person detail view you get bound attrs', (assert
   var payload = PF.put({id: PD.id, username: PD_PUT.username, first_name: PD_PUT.first_name,
                        middle_initial: PD_PUT.middle_initial, last_name: PD_PUT.last_name, title: PD_PUT.title,
                        employee_id: PD_PUT.employee_id, auth_amount: PD_PUT.auth_amount, locale: PD.locale_id });
-                       xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-                       fillIn('.t-person-username', PD_PUT.username);
-                       fillIn('.t-person-first-name', PD_PUT.first_name);
-                       fillIn('.t-person-middle-initial', PD_PUT.middle_initial );
-                       fillIn('.t-person-last-name', PD_PUT.last_name);
-                       fillIn('.t-person-title', PD_PUT.title);
-                       fillIn('.t-person-employee_id', PD_PUT.employee_id);
-                       fillIn('.t-amount', PD_PUT.auth_amount);
-                       andThen(() => {
-                         var person = store.find('person', PD.idOne);
-                         assert.ok(person.get('isDirty'));
-                         assert.ok(person.get('isDirtyOrRelatedDirty'));
-                         assert.ok(person.get('emailsIsNotDirty'));
-                       });
-                       generalPage.save();
-                       andThen(() => {
-                         assert.equal(currentURL(), PEOPLE_URL);
-                         var person = store.find('person', PD.idOne);
-                         assert.ok(person.get('isNotDirty'));
-                         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-                         assert.ok(person.get('emailsIsNotDirty'));
-                       });
+  const username_response = {'count':0,'next':null,'previous':null,'results': []};
+  xhr(`${endpoint}?username=${PD_PUT.username}`, 'get', null, {}, 200, username_response);
+   fillIn('.t-person-username', PD_PUT.username);
+   fillIn('.t-person-first-name', PD_PUT.first_name);
+   fillIn('.t-person-middle-initial', PD_PUT.middle_initial );
+   fillIn('.t-person-last-name', PD_PUT.last_name);
+   fillIn('.t-person-title', PD_PUT.title);
+   fillIn('.t-person-employee_id', PD_PUT.employee_id);
+   fillIn('.t-amount', PD_PUT.auth_amount);
+   andThen(() => {
+     var person = store.find('person', PD.idOne);
+     assert.ok(person.get('isDirty'));
+     assert.ok(person.get('isDirtyOrRelatedDirty'));
+     assert.ok(person.get('emailsIsNotDirty'));
+   });
+   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+   generalPage.save();
+   andThen(() => {
+     assert.equal(currentURL(), PEOPLE_URL);
+     var person = store.find('person', PD.idOne);
+     assert.ok(person.get('isNotDirty'));
+     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+     assert.ok(person.get('emailsIsNotDirty'));
+   });
 });
 
 test('when changing password to invalid, it checks for validation', (assert) => {
@@ -184,6 +204,8 @@ test('when changing password to invalid, it checks for validation', (assert) => 
 
 test('payload does not include password if blank or undefined', (assert) => {
   page.visitDetail();
+  const username_response = {'count':0,'next':null,'previous':null,'results': []};
+  xhr(`${endpoint}?username=${PD.sorted_username}`, 'GET', null, {}, 200, username_response);
   fillIn('.t-person-username', PD.sorted_username);
   let response = PF.detail(PD.idOne);
   let payload = PF.put({id: PD.id, username: PD.sorted_username});
@@ -200,6 +222,8 @@ test('payload does not include password if blank or undefined', (assert) => {
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
   clearxhr(list_xhr);
   page.visitDetail();
+  const username_response = {'count':1,'next':null,'previous':null,'results': [{'id': PD.idOne}]};
+  xhr(`${endpoint}?username=${PD_PUT.username}`, 'GET', null, {}, 200, username_response);
   fillIn('.t-person-username', PD_PUT.username);
   generalPage.cancel();
   andThen(() => {
@@ -221,6 +245,8 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
   page.visitDetail();
+  const username_response = {'count':1,'next':null,'previous':null,'results': [{'id': PD.idone}]};
+  xhr(`${endpoint}?username=${PD_PUT.username}`, 'get', null, {}, 200, username_response);
   fillIn('.t-person-username', PD_PUT.username);
   generalPage.cancel();
   andThen(() => {

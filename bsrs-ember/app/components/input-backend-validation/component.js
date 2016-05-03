@@ -11,7 +11,7 @@ export default Ember.Component.extend({
     defineProperty(this, 'attributeValidation', computed.oneWay(`model.validations.attrs.${valuePath}`));
   },
   showMessage: computed('attributeValidation.isDirty', 'isInvalid', 'didValidate', function() {
-    return (this.get('attributeValidation.isDirty') || this.get('didValidate')) && this.get('isInvalid');
+    return (this.get('model.isDirty') || this.get('didValidate')) && this.get('isInvalid');
   }),
   isValid: computed.oneWay('attributeValidation.isValid'),
   isInvalid: computed.oneWay('attributeValidation.isInvalid'),

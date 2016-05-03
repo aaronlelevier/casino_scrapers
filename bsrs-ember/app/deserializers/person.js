@@ -105,9 +105,11 @@ var PersonDeserializer = Ember.Object.extend({
       extract_person_location(model, store, location_level_fk, location_deserializer);
       extract_locale(model, store);
       model.detail = true;
-      person = store.push('person', model);
-      belongs_to_extract(model.status_fk, store, person, 'status', 'person', 'people');
-      person.save();
+      run(() => {
+        person = store.push('person', model);
+        belongs_to_extract(model.status_fk, store, person, 'status', 'person', 'people');
+        person.save();
+      });
     }
     return person;
   },

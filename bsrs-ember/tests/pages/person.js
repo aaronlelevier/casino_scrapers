@@ -7,7 +7,7 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
-let { visitable, text, clickable, count } = PageObject;
+let { visitable, text, clickable, count, fillable, value } = PageObject;
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
@@ -59,4 +59,8 @@ export default PageObject.create({
   // localeThree: text(`${DROPDOWN} > li:eq(2)`),
   // localeFour: text(`${DROPDOWN} > li:eq(3)`),
   localeOptionLength: count(`${DROPDOWN} > li`),
+
+  middleInitial: fillable('.t-person-middle-initial'),
+  usernameFillIn: fillable('.t-person-username'),
+  username: value('.t-person-username'),
 });
