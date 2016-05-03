@@ -92,7 +92,9 @@ class TranslationManager(BaseManager):
         credentials = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(self.translation_dir, 'i18n.json'), scope)
         gc = gspread.authorize(credentials)
         wks = gc.open(language).sheet1
+        self._write_to_csv(wks, language, locale)
 
+    def _write_to_csv(self, wks, language, locale):
         with open(os.path.join(self.translation_dir, '{}.csv'.format(locale)), 'w', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
             for row in wks.get_all_values():

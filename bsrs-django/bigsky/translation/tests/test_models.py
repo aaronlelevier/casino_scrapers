@@ -1,3 +1,4 @@
+from mock import patch
 import os
 
 from django.test import TestCase
@@ -48,18 +49,14 @@ class TranslationManagerTests(TestCase):
     def test_translation_dir(self):
         self.assertIn('translation', Translation.objects.translation_dir)
 
-    def test_gspread_get_all_csv(self):
-        # NOTE: This test makes a Google API call to get the spreadsheet
-        #   so takes 20~ seconds to run locally. Consider mocking?
+    @patch("translation.models.TranslationManager._write_to_csv")
+    def test_gspread_get_all_csv(self, mock_func):
         language = 'French'
         locale = Translation.objects.language_locales[language]
-        file_ = os.path.join(Translation.objects.translation_dir, '{}.csv'.format(locale))
-        if os.path.exists(file_):
-            os.remove(file_)
 
         Translation.objects.gspread_get_csv(language, locale)
 
-        self.assertTrue(os.path.exists(file_))
+        self.assertTrue(mock_func.was_called)
 
     def test_import_csv(self):
         self.assertEqual(Translation.objects.count(), 0)
