@@ -160,13 +160,18 @@ def update_admin(person):
     """
     update_login_person(person)
     add_top_level_location(person)
-    add_all_parent_categores(person)
+    remove_any_categories(person)
     update_locale(person)
 
 
 def update_locale(person):
     person.locale = Locale.objects.get(locale='en')
     person.save()
+
+
+def remove_any_categories(person):
+    for c in person.role.categories.all():
+        person.role.categories.remove(c)
 
 
 def add_top_level_location(person):
@@ -182,27 +187,11 @@ def add_top_level_location(person):
     person.locations.add(location)
 
 
-def add_all_locations(person):
-    for location in Location.objects.filter(location_level=person.role.location_level):
-        person.locations.add(location)
-
-
-def add_all_parent_categores(person):
-    for category in Category.objects.filter(parent__isnull=True):
-        person.role.categories.add(category)
-
-
 def remove_all_locations(person):
     for x in person.locations.all():
         person.locations.remove(x)
 
 
-"""
-Boilerplate create in shell code:
-
-from person.tests.factory import create_all_people
-create_all_people()
-"""
 def create_all_people():
     if not Location.objects.filter(name=LOCATION_COMPANY):
         create_locations()

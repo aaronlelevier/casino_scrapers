@@ -56,9 +56,9 @@
     "msg_stored_link": false,
     "settings": {
       "create_all": {
-        "type": "bool",
         "value": true,
-        "inherited_from": "role"
+        "inherited_from": "role",
+        "type": "bool"
       }
     },
     "categories": [
@@ -123,9 +123,9 @@
     "msg_stored_link": false,
     "settings": {
       "create_all": {
-        "type": "bool",
         "value": true,
-        "inherited_from": "role"
+        "inherited_from": "role",
+        "type": "bool"
       }
     },
     "categories": [
@@ -190,15 +190,12 @@
     "msg_stored_link": false,
     "settings": {
       "create_all": {
-        "type": "bool",
         "value": true,
-        "inherited_from": "role"
+        "inherited_from": "role",
+        "type": "bool"
       }
     },
-    "categories": [
-      "011530c4-ce6c-4724-9cfd-37a16e787001",
-      "011530c4-ce6c-4724-9cfd-37a16e787055"
-    ]
+    "categories": []
   }
 },
 {
@@ -258,9 +255,9 @@
     "msg_stored_link": false,
     "settings": {
       "create_all": {
-        "type": "bool",
         "value": true,
-        "inherited_from": "role"
+        "inherited_from": "role",
+        "type": "bool"
       }
     },
     "categories": [
@@ -325,9 +322,9 @@
     "msg_stored_link": false,
     "settings": {
       "create_all": {
-        "type": "bool",
         "value": true,
-        "inherited_from": "role"
+        "inherited_from": "role",
+        "type": "bool"
       }
     },
     "categories": [

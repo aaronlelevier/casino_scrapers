@@ -254,29 +254,15 @@ class UpdateAdminTests(TestCase):
         person_locations = person.locations.values_list('id', flat=True)
         self.assertIn(top_level_location.id, person_locations)
         self.assertEqual(person.role.location_level, top_level_location_level)
-        # Categories
-        person_role_categories = person.role.categories.values_list('id', flat=True)
-        for category in Category.objects.filter(parent__isnull=True).values_list('id', flat=True):
-            self.assertIn(category, person_role_categories)
+        self.assertFalse(person.role.categories.all())
 
-    def test_add_top_level_location(self):
+    def test_remove_any_categories(self):
         person = factory.create_single_person()
-        top_level_location = Location.objects.create_top_level()
+        self.assertTrue(person.role.categories.all())
 
-        factory.add_top_level_location(person)
+        factory.remove_any_categories(person)
 
-        self.assertEqual(person.locations.count(), 1)
-        self.assertEqual(person.locations.first(), top_level_location)
-        self.assertEqual(person.role.location_level, top_level_location.location_level)
-
-    def test_add_all_locations(self):
-        create_locations()
-        person = factory.create_single_person()
-
-        factory.add_all_locations(person)
-
-        for location in Location.objects.filter(location_level=person.role.location_level):
-            self.assertIn(location, person.locations.all())
+        self.assertFalse(person.role.categories.all())
 
     def test_remove_all_locations(self):
         create_locations()
@@ -285,15 +271,6 @@ class UpdateAdminTests(TestCase):
         factory.remove_all_locations(person)
 
         self.assertEqual(person.locations.count(), 0)
-
-    def test_add_all_parent_categores(self):
-        create_locations()
-        person = factory.create_single_person()
-
-        factory.add_all_parent_categores(person)
-
-        for category in Category.objects.filter(parent__isnull=True):
-            self.assertIn(category, person.role.categories.all())
 
 
 class CreateAllPeopleTests(TestCase):
