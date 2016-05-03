@@ -144,26 +144,41 @@ test('when you click cancel, you are redirected to the ticket list view', async 
   assert.equal(currentURL(), TICKET_URL);
 });
 
-test('validation works for non required fields and when hit save, we do same post', async assert => {
-  //assignee, cc, request
+test('validation works for assignee if ticket status is not draft', async assert => {
   clearxhr(list_xhr);
   detail_data.assignee = null;
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
-  assert.ok(find('.t-assignee-validation-error').is(':hidden'));
+  assert.ok(page.assigneeErrorHidden);
   await generalPage.save();
+  assert.ok(page.assigneeErrorVisible);
   assert.equal(currentURL(), DETAIL_URL);
-  assert.ok(find('.t-assignee-validation-error').is(':visible'));
-  assert.equal(find('.t-assignee-validation-error').text(), GLOBALMSG.invalid_assignee);
-  //assignee
+  assert.equal(page.assigneeErrorText, t('error.ticket.assignee'));
   xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy1`, 'GET', null, {}, 200, PF.search());
   await page.assigneeClickDropdown();
   fillIn(`${SEARCH}`, 'Boy1');
   await page.assigneeClickOptionOne();
+  assert.ok(page.assigneeErrorHidden);
   assert.equal(currentURL(), DETAIL_URL);
   const ticket = store.find('ticket', TD.idOne);
   assert.equal(ticket.get('assignee_fk'), undefined);
   assert.equal(ticket.get('assignee.id'), PD.idBoy);
+});
+
+test('validation does not show if ticket status is draft', async assert => {
+  clearxhr(list_xhr);
+  detail_data.assignee = null;
+  detail_data.status_fk = TD.statusSevenId;
+  await page.visitDetail();
+  assert.equal(currentURL(), DETAIL_URL);
+  assert.ok(page.assigneeErrorHidden);
+  const mod_ticket_payload = Ember.$.extend(true, {}, ticket_payload_detail)
+  mod_ticket_payload.status = TD.statusSevenId;
+  mod_ticket_payload.assignee = undefined;
+  xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(mod_ticket_payload), {}, 200, {});
+  xhr(endpoint + '?page=1', 'GET', null, {}, 200, TF.list());
+  await generalPage.save();
+  assert.equal(currentURL(), TICKET_URL);
 });
 
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async assert => {

@@ -19,15 +19,13 @@ const Validations = buildValidations({
     debounce: 300,
     message: 'errors.ticket.request'
   }),
-  assignee: validator(function(value, options, model, attribute) {
-    //if draft, can save w/o assignee
-    return model.get('status.name') === 'ticket.status.draft' ? true : model.get(`${attribute}.id`) ? true : false;
+  assignee: validator('ticket-status', {
   }),
 });
 
 const { run } = Ember;
 
-var TicketModel = Model.extend(Validations, NewMixin, CategoriesMixin, TicketLocationMixin, OptConf, {
+var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, OptConf, Validations, {
   init() {
     this.requestValues = []; //store array of values to be sent in dt post or put request field
     belongs_to.bind(this)('status', 'ticket');

@@ -61,109 +61,109 @@ module('Acceptance | ticket new test', {
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
-    page.visit();
-    andThen(() => {
-        patchRandom(counter);
-    });
-    click('.t-add-new');
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_NEW_URL);
-        assert.ok(find('.t-status-validation-error').is(':hidden'));
-        assert.equal(find('.t-status-validation-error').text(), GLOBALMSG.invalid_status);
-        assert.ok(find('.t-priority-validation-error').is(':hidden'));
-        assert.ok(find('.t-assignee-validation-error').is(':hidden'));
-        assert.ok(find('.t-location-validation-error').is(':hidden'));
-        assert.ok(find('.t-category-validation-error').is(':hidden'));
-        assert.ok(find('.t-requester-validation-error').is(':hidden'));
-    });
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_NEW_URL);
-        assert.ok(find('.t-assignee-validation-error').is(':visible'));
-        assert.ok(find('.t-location-validation-error').is(':visible'));
-        assert.ok(find('.t-category-validation-error').is(':visible'));
-        assert.ok(find('.t-requester-validation-error').is(':visible'));
-    });
-    page.requesterFillIn(TD.requesterOne);
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_NEW_URL);
-        assert.ok(find('.t-assignee-validation-error').is(':visible'));
-        assert.ok(find('.t-location-validation-error').is(':visible'));
-        assert.ok(find('.t-category-validation-error').is(':visible'));
-        assert.ok(find('.t-requester-validation-error').is(':hidden'));
-    });
-    page.statusClickDropdown();
-    page.statusClickOptionOne();
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_NEW_URL);
-        assert.equal(find('.t-priority-validation-error').text(), GLOBALMSG.invalid_priority);
-        assert.ok(find('.t-assignee-validation-error').is(':visible'));
-        assert.equal(find('.t-assignee-validation-error').text(), GLOBALMSG.invalid_assignee);
-        assert.ok(find('.t-location-validation-error').is(':visible'));
-        assert.equal(find('.t-location-validation-error').text(), GLOBALMSG.invalid_location);
-        assert.ok(find('.t-category-validation-error').is(':visible'));
-        assert.equal(find('.t-category-validation-error').text(), GLOBALMSG.invalid_category);
-    });
-    page.priorityClickDropdown();
-    page.priorityClickOptionOne();
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_NEW_URL);
-        assert.ok(find('.t-assignee-validation-error').is(':visible'));
-        assert.ok(find('.t-location-validation-error').is(':visible'));
-        assert.ok(find('.t-category-validation-error').is(':visible'));
-    });
-    people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PF.search());
-    page.assigneeClickDropdown();
-    fillIn(`${SEARCH}`, 'b');
-    page.assigneeClickOptionTwo();
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_NEW_URL);
-        assert.ok(find('.t-location-validation-error').is(':visible'));
-        assert.ok(find('.t-category-validation-error').is(':visible'));
-    });
-    page.locationClickDropdown();
-    fillIn(`${SEARCH}`, '6');
-    page.locationClickOptionTwo();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_NEW_URL);
-        assert.ok(find('.t-category-validation-error').is(':visible'));
-    });
-    let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
-    xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
-    page.categoryOneClickDropdown();
-    page.categoryOneClickOptionOne();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_NEW_URL);
-        assert.equal(find('.t-category-validation-error').length, 1);
-        assert.ok(find('.t-category-validation-error').is(':visible'));
-    });
-    const payload = CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1);
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, payload);
-    page.categoryTwoClickDropdown();
-    page.categoryTwoClickOptionOne();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_NEW_URL);
-        assert.equal(find('.t-category-validation-error').length, 1);
-        assert.ok(find('.t-category-validation-error').is(':visible'));
-    });
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
-    page.categoryThreeClickDropdown();
-    page.categoryThreeClickOptionOne();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_NEW_URL);
-        assert.ok(find('.t-category-validation-error').is(':hidden'));
-    });
-    fillIn('.t-ticket-request', TD.requestOne);
-    generalPage.save();
-    xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-        const ticket = store.find('ticket').objectAt(0);
-        assert.equal(ticket.get('created'), moment(new Date()).toISOString());
-    });
+  page.visit();
+  andThen(() => {
+    patchRandom(counter);
+  });
+  click('.t-add-new');
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.ok(find('.t-status-validation-error').is(':hidden'));
+    assert.equal(find('.t-status-validation-error').text(), GLOBALMSG.invalid_status);
+    assert.ok(find('.t-priority-validation-error').is(':hidden'));
+    assert.ok(find('.t-assignee-validation-error').is(':hidden'));
+    assert.ok(find('.t-location-validation-error').is(':hidden'));
+    assert.ok(find('.t-category-validation-error').is(':hidden'));
+    assert.ok(find('.t-requester-validation-error').is(':hidden'));
+  });
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.ok(find('.t-assignee-validation-error').is(':visible'));
+    assert.ok(find('.t-location-validation-error').is(':visible'));
+    assert.ok(find('.t-category-validation-error').is(':visible'));
+    assert.ok(find('.t-requester-validation-error').is(':visible'));
+  });
+  page.requesterFillIn(TD.requesterOne);
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.ok(find('.t-assignee-validation-error').is(':visible'));
+    assert.ok(find('.t-location-validation-error').is(':visible'));
+    assert.ok(find('.t-category-validation-error').is(':visible'));
+    assert.ok(find('.t-requester-validation-error').is(':hidden'));
+  });
+  page.statusClickDropdown();
+  page.statusClickOptionOne();
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.equal(find('.t-priority-validation-error').text(), GLOBALMSG.invalid_priority);
+    assert.ok(find('.t-assignee-validation-error').is(':visible'));
+    assert.equal(find('.t-assignee-validation-error').text(), 'Invalid Assignee');
+    assert.ok(find('.t-location-validation-error').is(':visible'));
+    assert.equal(find('.t-location-validation-error').text(), GLOBALMSG.invalid_location);
+    assert.ok(find('.t-category-validation-error').is(':visible'));
+    assert.equal(find('.t-category-validation-error').text(), GLOBALMSG.invalid_category);
+  });
+  page.priorityClickDropdown();
+  page.priorityClickOptionOne();
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.ok(find('.t-assignee-validation-error').is(':visible'));
+    assert.ok(find('.t-location-validation-error').is(':visible'));
+    assert.ok(find('.t-category-validation-error').is(':visible'));
+  });
+  people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PF.search());
+  page.assigneeClickDropdown();
+  fillIn(`${SEARCH}`, 'b');
+  page.assigneeClickOptionTwo();
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.ok(find('.t-location-validation-error').is(':visible'));
+    assert.ok(find('.t-category-validation-error').is(':visible'));
+  });
+  page.locationClickDropdown();
+  fillIn(`${SEARCH}`, '6');
+  page.locationClickOptionTwo();
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.ok(find('.t-category-validation-error').is(':visible'));
+  });
+  let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
+  xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
+  page.categoryOneClickDropdown();
+  page.categoryOneClickOptionOne();
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.equal(find('.t-category-validation-error').length, 1);
+    assert.ok(find('.t-category-validation-error').is(':visible'));
+  });
+  const payload = CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1);
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, payload);
+  page.categoryTwoClickDropdown();
+  page.categoryTwoClickOptionOne();
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.equal(find('.t-category-validation-error').length, 1);
+    assert.ok(find('.t-category-validation-error').is(':visible'));
+  });
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+  page.categoryThreeClickDropdown();
+  page.categoryThreeClickOptionOne();
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.ok(find('.t-category-validation-error').is(':hidden'));
+  });
+  fillIn('.t-ticket-request', TD.requestOne);
+  generalPage.save();
+  xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_URL);
+    const ticket = store.find('ticket').objectAt(0);
+    assert.equal(ticket.get('created'), moment(new Date()).toISOString());
+  });
 });
 
 test('selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
@@ -612,79 +612,79 @@ test('can remove and add back same cc and save empty cc', (assert) => {
 });
 
 test('all required fields persist correctly when the user submits a new ticket form', (assert) => {
-    page.visit();
-    andThen(() => {
-        patchRandom(counter);
-    });
-    click('.t-add-new');
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_NEW_URL);
-        assert.equal(store.find('ticket').get('length'), 1);
-        const ticket = store.find('ticket', UUID.value);
-        assert.ok(ticket.get('isNotDirty'));
-    });
-    people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PF.search());
-    page.assigneeClickDropdown();
-    fillIn(`${SEARCH}`, 'b');
-    page.assigneeClickOptionTwo();
-    andThen(() => {
-        assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
-        let ticket = store.findOne('ticket');
-        assert.ok(ticket.get('assignee'));
-        assert.equal(ticket.get('assignee').get('id'), PD.idSearch);
-        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    });
-    page.statusClickDropdown();
-    page.statusClickOptionOne();
-    page.priorityClickDropdown();
-    page.priorityClickOptionOne();
-    andThen(() => {
-        let ticket = store.find('ticket', UUID.value);
-        assert.equal(ticket.get('assignee').get('id'), PD.idSearch);
-        assert.equal(ticket.get('status.id'), TD.statusOneId);
-        assert.equal(ticket.get('priority.id'), TD.priorityOneId);
-    });
-    page.locationClickDropdown();
-    fillIn(`${SEARCH}`, '6');
-    andThen(() => {
-        //ensure route doesn't change current selections
-        assert.equal(page.locationOptionLength, 2);
-        let ticket = store.find('ticket', UUID.value);
-        assert.equal(ticket.get('assignee').get('id'), PD.idSearch);
-        assert.equal(ticket.get('status.id'), TD.statusOneId);
-        assert.equal(ticket.get('priority.id'), TD.priorityOneId);
-    });
-    page.locationClickOptionTwo();
-    let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
-    xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
-    ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
-    page.categoryOneClickDropdown();
-    page.categoryOneClickOptionOne();
-    page.categoryTwoClickDropdown();
-    page.categoryTwoClickOptionOne();
-    page.categoryThreeClickDropdown();
-    page.categoryThreeClickOptionOne();
-    page.requestFillIn(TD.requestOneGrid);
-    page.requesterFillIn(TD.requesterOne);
-    required_ticket_payload.request = TD.requestOneGrid;
-    xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-        assert.equal(store.find('ticket').get('length'), 1);
-        let persisted = store.find('ticket', UUID.value);
-        assert.ok(persisted.get('assignee'));
-        assert.equal(persisted.get('new'), undefined);
-        assert.equal(persisted.get('assignee.id'), PD.idSearch);
-        assert.equal(persisted.get('request'), TD.requestOneGrid);
-        assert.ok(persisted.get('location'));
-        assert.equal(persisted.get('location.id'), LD.idTwo);
-        assert.equal(persisted.get('status.id'), TD.statusOneId);
-        assert.ok(persisted.get('isNotDirty'));
-        assert.ok(persisted.get('isNotDirtyOrRelatedNotDirty'));
-    });
+  page.visit();
+  andThen(() => {
+    patchRandom(counter);
+  });
+  click('.t-add-new');
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.equal(store.find('ticket').get('length'), 1);
+    const ticket = store.find('ticket', UUID.value);
+    assert.ok(ticket.get('isNotDirty'));
+  });
+  people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PF.search());
+  page.assigneeClickDropdown();
+  fillIn(`${SEARCH}`, 'b');
+  page.assigneeClickOptionTwo();
+  andThen(() => {
+    assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
+    let ticket = store.findOne('ticket');
+    assert.ok(ticket.get('assignee'));
+    assert.equal(ticket.get('assignee').get('id'), PD.idSearch);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  });
+  page.statusClickDropdown();
+  page.statusClickOptionOne();
+  page.priorityClickDropdown();
+  page.priorityClickOptionOne();
+  andThen(() => {
+    let ticket = store.find('ticket', UUID.value);
+    assert.equal(ticket.get('assignee').get('id'), PD.idSearch);
+    assert.equal(ticket.get('status.id'), TD.statusOneId);
+    assert.equal(ticket.get('priority.id'), TD.priorityOneId);
+  });
+  page.locationClickDropdown();
+  fillIn(`${SEARCH}`, '6');
+  andThen(() => {
+    //ensure route doesn't change current selections
+    assert.equal(page.locationOptionLength, 2);
+    let ticket = store.find('ticket', UUID.value);
+    assert.equal(ticket.get('assignee').get('id'), PD.idSearch);
+    assert.equal(ticket.get('status.id'), TD.statusOneId);
+    assert.equal(ticket.get('priority.id'), TD.priorityOneId);
+  });
+  page.locationClickOptionTwo();
+  let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
+  xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+  page.categoryOneClickDropdown();
+  page.categoryOneClickOptionOne();
+  page.categoryTwoClickDropdown();
+  page.categoryTwoClickOptionOne();
+  page.categoryThreeClickDropdown();
+  page.categoryThreeClickOptionOne();
+  page.requestFillIn(TD.requestOneGrid);
+  page.requesterFillIn(TD.requesterOne);
+  required_ticket_payload.request = TD.requestOneGrid;
+  xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_URL);
+    assert.equal(store.find('ticket').get('length'), 1);
+    let persisted = store.find('ticket', UUID.value);
+    assert.ok(persisted.get('assignee'));
+    assert.equal(persisted.get('new'), undefined);
+    assert.equal(persisted.get('assignee.id'), PD.idSearch);
+    assert.equal(persisted.get('request'), TD.requestOneGrid);
+    assert.ok(persisted.get('location'));
+    assert.equal(persisted.get('location.id'), LD.idTwo);
+    assert.equal(persisted.get('status.id'), TD.statusOneId);
+    assert.ok(persisted.get('isNotDirty'));
+    assert.ok(persisted.get('isNotDirtyOrRelatedNotDirty'));
+  });
 });
 
 test('adding a new ticket should allow for another new ticket to be created after the first is persisted', (assert) => {

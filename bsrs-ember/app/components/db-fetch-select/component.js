@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import { task, timeout } from 'ember-concurrency';
+const { computed, defineProperty } = Ember;
 
 const DEBOUNCE_MS = config.APP.POWER_SELECT_DEBOUNCE;
 
@@ -13,6 +14,16 @@ var DBFetch = Ember.Component.extend({
     const json = yield repo[searchRepo](search);
     return json;
   }).restartable(),
+  init() {
+    this._super(...arguments);
+    const valuePath = this.get('valuePath');
+    defineProperty(this, 'attributeValidation', computed.oneWay(`model.validations.attrs.${valuePath}`));
+  },
+  showMessage: computed('attributeValidation.isDirty', 'isInvalid', 'didValidate', function() {
+    return (this.get('attributeValidation.isDirty') || this.get('didValidate')) && this.get('isInvalid');
+  }),
+  isValid: computed.oneWay('attributeValidation.isValid'),
+  isInvalid: computed.oneWay('attributeValidation.isInvalid'),
   actions: {
     selected(item) {
       const model = this.get('model');

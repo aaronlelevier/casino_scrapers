@@ -1,5 +1,5 @@
 import PageObject from 'bsrs-ember/tests/page-object';
-let { value, visitable, fillable, clickable, count, text, hasClass } = PageObject;
+let { value, visitable, fillable, clickable, count, text, hasClass, isHidden, isVisible } = PageObject;
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
@@ -113,6 +113,9 @@ var TicketPage = PageObject.create({
 
   //validation
   requestError: hasClass('has-error', '.t-ticket-request-validator'),
+  assigneeErrorHidden: isHidden('.t-ticket-assignee-error'),
+  assigneeErrorVisible: isVisible('.t-ticket-assignee-error'),
+  assigneeErrorText: text('.t-ticket-assignee-error'),
 });
 
 export default TicketPage;

@@ -329,6 +329,8 @@ var BSRS_TRANSLATION_FACTORY = (function() {
           'errors.dtd.key':'Key must be provided',
           'errors.dtd.description':'Description must be provided',
           'errors.link.text':'Text must be provided',
+          'errors.ticket.request':'Request must be provided',
+          'errors.ticket.assignee':'Assignee must be provided',
         },
       }
       break;

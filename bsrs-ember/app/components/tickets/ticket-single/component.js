@@ -13,8 +13,6 @@ var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMi
   child_components: ['parent-model-category-select'],
   repository: inject('ticket'),
   activityRepository: inject('activity'),
-  assigneeValidation: validate('model.assignee'),
-  locationValidation: validate('model.location'),
   actions: {
     save(update=false, updateActivities=false) {
       this.set('submitted', true);
@@ -22,7 +20,7 @@ var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMi
         if (this.get('model.validations.isValid')) {
           this._super(update, updateActivities);
         }
-        // this.set('didValidate', true);
+        this.set('didValidate', true);
       }
     },
     deleteAttachment(tab, callback) {

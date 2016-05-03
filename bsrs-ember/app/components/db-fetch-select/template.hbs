@@ -8,3 +8,8 @@
   {{get optionModel displayName}}
 {{/power-select}}
 
+{{#if showMessage}}
+<div class={{errorClass}}>
+  {{t (v-get model valuePath 'message')}}
+</div>
+{{/if}}
