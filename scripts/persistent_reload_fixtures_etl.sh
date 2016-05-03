@@ -18,6 +18,8 @@ wait
 ../venv/bin/python manage.py etl_location_district
 ../venv/bin/python manage.py etl_location_store
 wait
-../venv/bin/python manage.py create_all_people
+../venv/bin/python manage.py etl_role
 wait
-../venv/bin/python manage.py create_tickets
+../venv/bin/python manage.py etl_person
+wait
+../venv/bin/python manage.py etl_ticket
