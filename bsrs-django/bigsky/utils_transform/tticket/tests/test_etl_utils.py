@@ -148,7 +148,11 @@ class EtlUtilsTests(TestCase):
 
     def test_get_assingee(self):
         person = Person.objects.first()
+        person.delete()
+        self.assertTrue(Person.objects_all.filter(username=person.username).exists())
+
         ret = _etl_utils.get_assignee(person.fullname)
+
         self.assertEqual(ret, person)
 
     def test_get_status(self):

@@ -72,7 +72,7 @@ def format_subject_and_request(*args):
 
 def get_assignee(fullname):
     try:
-        return Person.objects.get(fullname=fullname)
+        return Person.objects_all.get(fullname=fullname)
     except Person.DoesNotExist:
         logger.info("Assignee: {} DoesNotExist".format(fullname))
         raise
