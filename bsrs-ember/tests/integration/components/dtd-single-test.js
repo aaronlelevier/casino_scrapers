@@ -33,7 +33,7 @@ moduleForComponent('dtds/dtd-single', 'integration: dtd-single test', {
     store = module_registry(this.container, this.registry, ['model:dtd', 'model:uuid']);
     trans = this.container.lookup('service:i18n');
     run(() => {
-      dtd = store.push('dtd', {});
+      dtd = store.push('dtd', {key: 'foo'});
     });
     dtd_repo = repository.initialize(this.container, this.registry, 'dtd');
     dtd_repo.update = () => { return new Ember.RSVP.Promise(() => {}); };

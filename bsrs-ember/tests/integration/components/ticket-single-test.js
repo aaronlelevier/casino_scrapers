@@ -30,7 +30,7 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
       category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: null});
       store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey});
       store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwoKey});
-      ticket = store.push('ticket', {id: TD.idOne});
+      ticket = store.push('ticket', {id: TD.idOne, request: 'foo'});
     });
   },
   afterEach() {
@@ -38,7 +38,7 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
   }
 });
 
-test('validation on ticket request works if clear out textarea', function(assert) {
+test('scott validation on ticket request works if clear out textarea', function(assert) {
   var done = assert.async();
   let statuses = store.find('ticket-status');
   this.set('model', ticket);
