@@ -38,7 +38,7 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
   }
 });
 
-test('scott validation on ticket request works if clear out textarea', function(assert) {
+test('validation on ticket request works if clear out textarea', function(assert) {
   var done = assert.async();
   let statuses = store.find('ticket-status');
   this.set('model', ticket);

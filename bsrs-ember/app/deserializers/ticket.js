@@ -122,7 +122,9 @@ var TicketDeserializer = Ember.Object.extend({
             ticket.save();
             belongs_to_extract(status_json, store, ticket, 'status', 'general', 'tickets');
             belongs_to_extract(priority_json, store, ticket, 'priority', 'ticket', 'tickets');
-            belongs_to_extract_nodetail(assignee_json, store, ticket, 'person', 'tickets');
+            if (assignee_json) {
+              belongs_to_extract_nodetail(assignee_json, store, ticket, 'person', 'tickets');
+            }
             belongs_to_extract_nodetail(location_json, store, ticket, 'location', 'tickets');
         });
     }
