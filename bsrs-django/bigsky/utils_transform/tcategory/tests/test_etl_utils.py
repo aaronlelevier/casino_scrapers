@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.test import TestCase
 
 from category.models import Category, LABEL_TYPE, LABEL_TRADE, LABEL_ISSUE, LABEL_SUB_ISSUE
@@ -128,3 +129,15 @@ class EtlUtilTests(TestCase):
 
         issue = Category.objects.get(label=LABEL_ISSUE, name=domino_issue.name)
         self.assertEqual(issue.parent, trade)
+
+    def test_run_category_migrations__log_parent_category_DoesNotExist(self):
+        domino_trade = create_domino_category_trade()
+        Category.objects.filter(name=domino_trade.type_name).delete()
+        with open(settings.LOGGING_INFO_FILE, 'w'): pass
+
+        run_category_trade_migrations()
+
+        with open(settings.LOGGING_INFO_FILE, 'r') as f:
+            content = f.read()
+        self.assertIn("Name: {}; Label: {} Parent Category DoesNotExist"
+                      .format(domino_trade.type_name, LABEL_TYPE), content)

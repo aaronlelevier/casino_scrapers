@@ -21,5 +21,3 @@ wait
 ../venv/bin/python manage.py etl_role
 wait
 ../venv/bin/python manage.py etl_person
-wait
-../venv/bin/python manage.py etl_ticket
