@@ -13,18 +13,34 @@ from person.models import Person
 from utils.models import BaseModel, BaseQuerySet, BaseManager, BaseNameModel
 
 
-TICKET_STATUSES = [
-    'ticket.status.draft',
-    'ticket.status.new',
-    'ticket.status.deferred',
-    'ticket.status.in_progress',
-    'ticket.status.complete',
-    'ticket.status.denied',
-    'ticket.status.problem_solved',
-    'ticket.status.unsatisfactory_completion',
-    'ticket.status.canceled',
-    'ticket.status.pending',
-]
+TICKET_STATUS_MAP = {
+    '1': 'ticket.status.new',
+    '2': 'ticket.status.deferred',
+    '3': 'ticket.status.in_progress',
+    '4': 'ticket.status.complete',
+    '5': 'ticket.status.denied',
+    '6': 'ticket.status.problem_solved',
+    '7': 'ticket.status.draft',
+    '8': 'ticket.status.unsatisfactory_completion',
+    '9': 'ticket.status.canceled',
+    '10': 'ticket.status.pending'
+}
+
+TICKET_STATUSES = [v for k,v in TICKET_STATUS_MAP.items()]
+
+TICKET_STATUS_DEFAULT = TICKET_STATUS_MAP['7']
+
+
+TICKET_PRIORITY_MAP = {
+    '1': 'ticket.priority.emergency',
+    '2': 'ticket.priority.high',
+    '3': 'ticket.priority.medium',
+    '4': 'ticket.priority.low',
+}
+
+TICKET_PRIORITIES = [v for k,v in TICKET_PRIORITY_MAP.items()]
+
+TICKET_PRIORITY_DEFAULT = TICKET_PRIORITY_MAP['3']
 
 
 class DefaultToDictMixin(object):
@@ -39,23 +55,15 @@ class DefaultToDictMixin(object):
 
 class TicketStatus(DefaultToDictMixin, BaseNameModel):
 
-    default = TICKET_STATUSES[0]
+    default = TICKET_STATUS_DEFAULT
 
     class Meta:
         verbose_name_plural = "Ticket statuses"
-    
-
-TICKET_PRIORITIES = [
-    'ticket.priority.medium',
-    'ticket.priority.low',
-    'ticket.priority.high',
-    'ticket.priority.emergency',
-]
 
 
 class TicketPriority(DefaultToDictMixin, BaseNameModel):
 
-    default = TICKET_PRIORITIES[0]
+    default = TICKET_PRIORITY_DEFAULT
 
     class Meta:
         verbose_name_plural = "Ticket priorities"

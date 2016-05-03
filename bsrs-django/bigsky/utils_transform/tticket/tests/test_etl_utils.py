@@ -8,7 +8,8 @@ from category.tests.factory import create_categories
 from location.models import Location, LocationLevel, LOCATION_STORE
 from location.tests.factory import create_location_levels
 from person.models import Person
-from ticket.models import Ticket, TicketStatus, TicketPriority
+from ticket.models import (Ticket, TicketStatus, TicketPriority,
+    TICKET_STATUS_MAP, TICKET_PRIORITY_MAP)
 from ticket.tests.factory import create_ticket_priorities, create_ticket_statuses
 from utils_transform.tticket.management.commands import _etl_utils
 from utils_transform.tticket.tests.factory import create_domino_ticket
@@ -27,8 +28,8 @@ class EtlUtilsTests(TestCase):
         # Ticket
         create_ticket_priorities()
         create_ticket_statuses()
-        self.priority = TicketPriority.objects.get(name=_etl_utils.priority_map['1'])
-        self.status = TicketStatus.objects.get(name=_etl_utils.status_map['1'])
+        self.priority = TicketPriority.objects.get(name=_etl_utils.TICKET_PRIORITY_MAP['1'])
+        self.status = TicketStatus.objects.get(name=_etl_utils.TICKET_STATUS_MAP['1'])
         # successful DominoTicet ETL setup
         self.dt = create_domino_ticket()
         self.dt.status = self.dt.priority = self.dt.location_number = '1'
@@ -143,7 +144,7 @@ class EtlUtilsTests(TestCase):
         ret = _etl_utils.get_status('1')
         self.assertIsInstance(ret, TicketStatus)
 
-    def test_get_status__raise_error_if_not_in_status_map(self):
+    def test_get_status__raise_error_if_not_in_TICKET_STATUS_MAP(self):
         with self.assertRaises(KeyError):
             _etl_utils.get_status('foo')
 
@@ -151,6 +152,6 @@ class EtlUtilsTests(TestCase):
         ret = _etl_utils.get_priority('1')
         self.assertIsInstance(ret, TicketPriority)
 
-    def test_get_priority__raise_error_if_not_in_priority_map(self):
+    def test_get_priority__raise_error_if_not_in_TICKET_PRIORITY_MAP(self):
         with self.assertRaises(KeyError):
             _etl_utils.get_priority('foo')

@@ -6,28 +6,8 @@ from utils_transform.tticket.models import DominoTicket
 from category.models import Category, LABEL_TYPE, LABEL_TRADE, LABEL_ISSUE
 from location.models import Location, LOCATION_STORE
 from person.models import Person
-from ticket.models import Ticket, TicketStatus, TicketPriority
-
-
-status_map = {
-    '1': 'ticket.status.new',
-    '2': 'ticket.status.deferred',
-    '3': 'ticket.status.in_progress',
-    '4': 'ticket.status.complete',
-    '5': 'ticket.status.denied',
-    '6': 'ticket.status.problem_solved',
-    '7': 'ticket.status.draft',
-    '8': 'ticket.status.unsatisfactory_completion',
-    '9': 'ticket.status.canceled',
-    '10': 'ticket.status.pending'
-}
-
-priority_map = {
-    '1': 'ticket.priority.emergency',
-    '2': 'ticket.priority.high',
-    '3': 'ticket.priority.medium',
-    '4': 'ticket.priority.low',
-}
+from ticket.models import (Ticket, TicketStatus, TicketPriority,
+    TICKET_STATUS_MAP, TICKET_PRIORITY_MAP)
 
 
 def run_ticket_migrations():
@@ -96,10 +76,10 @@ def get_assignee(fullname):
 
 
 def get_status(status):
-    name = status_map[status]
+    name = TICKET_STATUS_MAP[status]
     return TicketStatus.objects.get(name=name)
 
 
 def get_priority(priority):
-    name = priority_map[priority]
+    name = TICKET_PRIORITY_MAP[priority]
     return TicketPriority.objects.get(name=name)

@@ -7,7 +7,7 @@ from model_mommy import mommy
 from category.tests.factory import create_categories
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
-    TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES)
+    TicketActivity, TICKET_STATUSES, TICKET_STATUS_DEFAULT, TICKET_PRIORITIES, TICKET_PRIORITY_DEFAULT)
 from ticket.tests.factory import (create_ticket, create_tickets,
     create_ticket_statuses, create_ticket_priorities)
 from ticket.tests.mixins import TicketCategoryOrderingSetupMixin
@@ -20,7 +20,7 @@ class TicketStatusTests(TestCase):
         create_ticket_statuses()
 
     def test_to_dict__default(self):
-        status = TicketStatus.objects.get(name=TICKET_STATUSES[0])
+        status = TicketStatus.objects.get(name=TICKET_STATUS_DEFAULT)
 
         ret = status.to_dict()
 
@@ -30,7 +30,7 @@ class TicketStatusTests(TestCase):
         self.assertTrue(ret['default'])
 
     def test_to_dict__non_default(self):
-        status = TicketStatus.objects.get(name=TICKET_STATUSES[1])
+        status = TicketStatus.objects.exclude(name=TICKET_STATUS_DEFAULT).first()
 
         ret = status.to_dict()
 
@@ -46,7 +46,7 @@ class TicketPriorityTests(TestCase):
         create_ticket_priorities()
 
     def test_to_dict__default(self):
-        priority = TicketPriority.objects.get(name=TICKET_PRIORITIES[0])
+        priority = TicketPriority.objects.get(name=TICKET_PRIORITY_DEFAULT)
 
         ret = priority.to_dict()
 
@@ -56,7 +56,7 @@ class TicketPriorityTests(TestCase):
         self.assertTrue(ret['default'])
 
     def test_to_dict__non_default(self):
-        priority = TicketPriority.objects.get(name=TICKET_PRIORITIES[1])
+        priority = TicketPriority.objects.exclude(name=TICKET_PRIORITY_DEFAULT).first()
 
         ret = priority.to_dict()
 
