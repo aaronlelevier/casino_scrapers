@@ -1,0 +1,102 @@
+[
+{
+  "model": "ticket.ticketstatus",
+  "pk": "037530c4-ce6c-4724-9cfd-37a16e787001",
+  "fields": {
+    "created": "2016-05-03T14:04:25.998Z",
+    "modified": "2016-05-03T14:04:25.998Z",
+    "deleted": null,
+    "name": "ticket.status.draft"
+  }
+},
+{
+  "model": "ticket.ticketstatus",
+  "pk": "037530c4-ce6c-4724-9cfd-37a16e787002",
+  "fields": {
+    "created": "2016-05-03T14:04:26.002Z",
+    "modified": "2016-05-03T14:04:26.002Z",
+    "deleted": null,
+    "name": "ticket.status.new"
+  }
+},
+{
+  "model": "ticket.ticketstatus",
+  "pk": "037530c4-ce6c-4724-9cfd-37a16e787003",
+  "fields": {
+    "created": "2016-05-03T14:04:26.005Z",
+    "modified": "2016-05-03T14:04:26.005Z",
+    "deleted": null,
+    "name": "ticket.status.deferred"
+  }
+},
+{
+  "model": "ticket.ticketstatus",
+  "pk": "037530c4-ce6c-4724-9cfd-37a16e787004",
+  "fields": {
+    "created": "2016-05-03T14:04:26.008Z",
+    "modified": "2016-05-03T14:04:26.008Z",
+    "deleted": null,
+    "name": "ticket.status.in_progress"
+  }
+},
+{
+  "model": "ticket.ticketstatus",
+  "pk": "037530c4-ce6c-4724-9cfd-37a16e787005",
+  "fields": {
+    "created": "2016-05-03T14:04:26.011Z",
+    "modified": "2016-05-03T14:04:26.011Z",
+    "deleted": null,
+    "name": "ticket.status.complete"
+  }
+},
+{
+  "model": "ticket.ticketstatus",
+  "pk": "037530c4-ce6c-4724-9cfd-37a16e787006",
+  "fields": {
+    "created": "2016-05-03T14:04:26.014Z",
+    "modified": "2016-05-03T14:04:26.014Z",
+    "deleted": null,
+    "name": "ticket.status.denied"
+  }
+},
+{
+  "model": "ticket.ticketstatus",
+  "pk": "037530c4-ce6c-4724-9cfd-37a16e787007",
+  "fields": {
+    "created": "2016-05-03T14:04:26.016Z",
+    "modified": "2016-05-03T14:04:26.017Z",
+    "deleted": null,
+    "name": "ticket.status.problem_solved"
+  }
+},
+{
+  "model": "ticket.ticketstatus",
+  "pk": "037530c4-ce6c-4724-9cfd-37a16e787008",
+  "fields": {
+    "created": "2016-05-03T14:04:26.019Z",
+    "modified": "2016-05-03T14:04:26.019Z",
+    "deleted": null,
+    "name": "ticket.status.unsatisfactory_completion"
+  }
+},
+{
+  "model": "ticket.ticketstatus",
+  "pk": "037530c4-ce6c-4724-9cfd-37a16e787009",
+  "fields": {
+    "created": "2016-05-03T14:04:26.022Z",
+    "modified": "2016-05-03T14:04:26.022Z",
+    "deleted": null,
+    "name": "ticket.status.canceled"
+  }
+},
+{
+  "model": "ticket.ticketstatus",
+  "pk": "037530c4-ce6c-4724-9cfd-37a16e787010",
+  "fields": {
+    "created": "2016-05-03T14:04:26.025Z",
+    "modified": "2016-05-03T14:04:26.025Z",
+    "deleted": null,
+    "name": "ticket.status.pending"
+  }
+}
+]

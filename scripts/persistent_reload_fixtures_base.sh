@@ -31,5 +31,7 @@ wait
 ../venv/bin/python manage.py loaddata fixtures/contact.AddressType.json
 ../venv/bin/python manage.py loaddata fixtures/third_party.json
 ../venv/bin/python manage.py loaddata fixtures/auth.json
+../venv/bin/python manage.py loaddata fixtures/ticket.TicketStatus.json
+../venv/bin/python manage.py loaddata fixtures/ticket.TicketPriority.json
 wait
 ../venv/bin/python manage.py loaddata utils_transform/tlocation/fixtures/location_levels.json
