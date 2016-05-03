@@ -10,46 +10,50 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import GLOBAL from 'bsrs-ember/vendor/defaults/global-message';
 
-var store, run = Ember.run, person_repo;
+var store, run = Ember.run, person_repo, trans;
 
 moduleForComponent('person-new', 'integration: person-new test', {
-    integration: true,
-    setup() {
-        store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency']);
-        translation.initialize(this);
-        var service = this.container.lookup('service:i18n');
-        var json = translations.generate('en');
-        loadTranslations(service, json);
-        person_repo = repository.initialize(this.container, this.registry, 'person');
-        person_repo.findUsername = () => { return new Ember.RSVP.Promise(() => {}); };
-    }
+  integration: true,
+  setup() {
+    store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency']);
+    translation.initialize(this);
+    trans = this.container.lookup('service:i18n');
+    var service = this.container.lookup('service:i18n');
+    var json = translations.generate('en');
+    loadTranslations(service, json);
+    person_repo = repository.initialize(this.container, this.registry, 'person');
+    person_repo.findUsername = () => { return new Ember.RSVP.Promise(() => {}); };
+  }
 });
 
 test('filling in invalid username reveal validation messages', function(assert) {
-    run(() => {
-        this.set('model', store.push('person', {}));
-    });
-    this.render(hbs`{{people/person-new model=model}}`);
-    var $component = this.$('.t-username-validation-error');
-    assert.ok($component.is(':hidden'));
-    var save_btn = this.$('.t-save-btn');
-    save_btn.trigger('click').trigger('change');
-    assert.ok($component.is(':visible'));
-    this.$('.t-person-username').val('a').trigger('change');
-    assert.ok($component.is(':hidden'));
+  var done = assert.async();
+  run(() => {
+    this.set('model', store.push('person', {}));
+  });
+  this.render(hbs`{{people/person-new model=model}}`);
+  let $component = this.$('.has-error');
+  assert.equal($component.text().trim(), '');
+  this.$('.t-person-password').val('a').trigger('change');
+  var save_btn = this.$('.t-save-btn');
+  save_btn.trigger('click').trigger('change');
+  const $component = this.$('.has-error');
+  assert.ok($component.is(':visible'));
+  assert.equal($component.text().trim(), trans.t('errors.person.username'));
+  done();
 });
 
 test('filling in invalid password reveal validation messages', function(assert) {
-    run(() => {
-        this.set('model', store.push('person', {}));
-    });
-    this.render(hbs`{{people/person-new model=model}}`);
-    var $component = this.$('.t-password-validation-error');
-    assert.ok($component);
-    var save_btn = this.$('.t-save-btn');
-    save_btn.trigger('click').trigger('change');
-    assert.equal($('input.t-person-password').attr('type'), 'password');
-    assert.ok($component.is(':visible'));
-    this.$('.t-person-password').val('a').trigger('change');
-    assert.ok($component.is(':hidden'));
+  run(() => {
+    this.set('model', store.push('person', {}));
+  });
+  this.render(hbs`{{people/person-new model=model}}`);
+  var $component = this.$('.t-password-validation-error');
+  assert.ok($component);
+  var save_btn = this.$('.t-save-btn');
+  save_btn.trigger('click').trigger('change');
+  assert.equal($('input.t-person-password').attr('type'), 'password');
+  assert.ok($component.is(':visible'));
+  this.$('.t-person-password').val('a').trigger('change');
+  assert.ok($component.is(':hidden'));
 });

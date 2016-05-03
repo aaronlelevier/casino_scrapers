@@ -45,11 +45,11 @@ module('Acceptance | people-new', {
     detailEndpoint = `${PREFIX}${BASE_PEOPLE_URL}/`;
     people_detail_data = {id: UUID.value, username: PD.username,
       role: RF.get() , phone_numbers:[], addresses: [], locations: [], status_fk: SD.activeId, locale: PD.locale_id};
-      detail_xhr = xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
-      const username_response = {'count':1,'next':null,'previous':null,'results': [{'id': PD.idOne}]};
-      username_search = xhr(endpoint + '?username=mgibson1', 'GET', null, {}, 200, username_response);
-      original_uuid = random.uuid;
-      random.uuid = function() { return UUID.value; };
+    detail_xhr = xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
+    const username_response = {'count':1,'next':null,'previous':null,'results': [{'id': PD.idOne}]};
+    username_search = xhr(endpoint + '?username=mgibson1', 'GET', null, {}, 200, username_response);
+    original_uuid = random.uuid;
+    random.uuid = function() { return UUID.value; };
   },
   afterEach() {
     payload = null;
@@ -64,11 +64,11 @@ test('username backend validation', (assert) => {
   clearxhr(list_xhr);
   visit(NEW_URL);
   andThen(() => {
-    assert.equal(find('.t-existing-username-error').text().trim(), '');
+    assert.equal(find('.t-existing-error').text().trim(), '');
   });
   fillIn('.t-person-username', PD.username);
   andThen(() => {
-    assert.equal(find('.t-existing-username-error').text().trim(), t(GLOBALMSG.existing_username));
+    assert.equal(find('.t-existing-error').text().trim(), t(GLOBALMSG.existing_username, {value: PD.username}));
   });
 });
 

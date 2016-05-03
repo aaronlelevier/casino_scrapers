@@ -1,0 +1,7 @@
+{{input type=type value=value placeholder=placeholder class=className}}
+
+{{#if showMessage}}
+  <div class="error t-existing-error">
+    {{t (v-get model valuePath 'message') value=value}}
+  </div>
+{{/if}}

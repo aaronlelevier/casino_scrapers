@@ -9,9 +9,9 @@ export default BaseValidator.extend({
   i18n: Ember.inject.service(),
   validate(value, options, model, attribute) {
     const repository = this.get('repository');
-    if(Ember.isEmpty(value)){ return; }
+    if(Ember.isEmpty(value)){ return 'errors.person.username'; }
     return repository.findUsername(value).then(response => {
-      return response.count === 0 ? true : this.get('i18n').t(`Username ${value} already exists`);
+      return response.count === 0 ? true : `admin.person.unique_username`;
     });
   }
 });

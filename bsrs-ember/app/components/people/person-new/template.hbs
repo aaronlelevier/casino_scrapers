@@ -22,13 +22,7 @@
           <div class="row">
             <div class="col-sm-12">
               {{#form-group title="admin.person.label.username" for="username"}}
-              {{input type="text" value=model.username placeholder=(t "admin.person.label.username") class="form-control t-person-username" id="username"}}
-              {{#validation-error-field submitted=submitted field="username" className="validation validation-under t-username-validation-error" model=model validation=usernameValidation}}{{t "validation.invalid"}} {{t "admin.person.label.username"}}{{/validation-error-field}}
-              {{#if (v-get model "username" "isInvalid")}}
-              <div class="t-existing-username-error">
-                  {{v-get model "username" "message"}}
-              </div>
-              {{/if}}
+              {{input-backend-validation model=model value=model.username valuePath="username" placeholder=(t "admin.person.label.username") className="form-control t-person-username" didValidate=didValidate}}
               {{/form-group}}
             </div>
           </div>
