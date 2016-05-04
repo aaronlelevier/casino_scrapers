@@ -2,7 +2,7 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
-import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
+import { clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 
@@ -72,9 +72,7 @@ test('should be able to select new priority when one doesnt exist', function(ass
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-basic-dropdown-content').length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
-    run(() => {
-        $(`.ember-power-select-option:contains(${TD.priorityOneKey})`).mouseup();
-    });
+    nativeMouseUp(`.ember-power-select-option:contains(${TD.priorityOneKey})`);
     assert.equal($(DROPDOWN).length, 0);
     assert.equal($('.ember-basic-dropdown-content').length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
@@ -95,9 +93,7 @@ test('should be able to select same priority when ticket already has a priority'
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-basic-dropdown-content').length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
-    run(() => {
-        $(`.ember-power-select-option:contains(${TD.priorityOneKey})`).mouseup();
-    });
+    nativeMouseUp(`.ember-power-select-option:contains(${TD.priorityOneKey})`);
     assert.equal($(DROPDOWN).length, 0);
     assert.equal($('.ember-basic-dropdown-content').length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
@@ -118,9 +114,7 @@ test('should be able to select new priority when ticket already has a priority',
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-basic-dropdown-content').length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
-    run(() => {
-        $(`.ember-power-select-option:contains(${TD.priorityTwoKey})`).mouseup();
-    });
+    nativeMouseUp(`.ember-power-select-option:contains(${TD.priorityTwoKey})`);
     assert.equal($(DROPDOWN).length, 0);
     assert.equal($('.ember-basic-dropdown-content').length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);

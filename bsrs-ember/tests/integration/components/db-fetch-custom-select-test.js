@@ -4,11 +4,10 @@ import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
-import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
+import { typeInSearch, clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 // import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import LINK from 'bsrs-ember/vendor/defaults/person';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
-import typeInSearch from 'bsrs-ember/tests/helpers/type-in-search';
 import waitFor from 'ember-test-helpers/wait';
 
 let store, dtd, link_one, dtd_two, run = Ember.run, dtd_repo;
@@ -75,9 +74,7 @@ test('should be able to select new destination when one doesnt exist', function(
       assert.equal($(DROPDOWN).length, 1);
       assert.equal($('.ember-power-select-options > li').length, 3);
       assert.equal(link_one.get('destination.id'), undefined);
-      run(() => {
-        $(`.ember-power-select-option:contains(${DTD.keyOne})`).mouseup();
-      });
+      nativeMouseUp(`.ember-power-select-option:contains(${DTD.keyOne})`);
       assert.equal(link_one.get('destination.id'), DTD.idOne);
       assert.equal($(PowerSelect).text().trim(), `${DTD.keyOne} ${DTD.descriptionOne}`);
     });
@@ -94,9 +91,7 @@ test('should be able to select same dtd when dtd already has a dtd', function(as
       assert.equal($(DROPDOWN).length, 1);
       assert.equal($('.ember-basic-dropdown-content').length, 1);
       assert.equal($('.ember-power-select-options > li').length, 3);
-      run(() => {
-        $(`.ember-power-select-option:contains(${DTD.keyOne})`).mouseup();
-      });
+      nativeMouseUp(`.ember-power-select-option:contains(${DTD.keyOne})`);
       assert.equal($(DROPDOWN).length, 0);
       assert.equal($('.ember-basic-dropdown-content').length, 0);
       assert.equal($('.ember-power-select-options > li').length, 0);
@@ -117,9 +112,7 @@ test('should be able to select same dtd when dtd already has a dtd', function(as
       assert.equal($(DROPDOWN).length, 1);
       assert.equal($('.ember-basic-dropdown-content').length, 1);
       assert.equal($('.ember-power-select-options > li').length, 3);
-      run(() => {
-        $(`.ember-power-select-option:contains(${DTD.keyTwo})`).mouseup();
-      });
+      nativeMouseUp(`.ember-power-select-option:contains(${DTD.keyTwo})`);
       assert.equal($(DROPDOWN).length, 0);
       assert.equal($('.ember-basic-dropdown-content').length, 0);
       assert.equal($('.ember-power-select-options > li').length, 0);
@@ -136,9 +129,10 @@ test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
   this.model = link_one;
   this.set('repository', dtd_repo);
   this.render(hbs`{{db-fetch-custom-select model=model selectedAttr=model.destination className="t-link-destination-select" componentName="dtds/dtd-key-desc" selectedComponent="dtds/dtd-key-desc-selected" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}`);
+  clickTrigger();
   run(() => { typeInSearch('a'); });
   Ember.run.later(() => {
-    assert.equal($('.ember-power-select-options > li').length, 0);
+    assert.equal($('.ember-power-select-options > li').length, 1);
     done();
   }, 150);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
 });

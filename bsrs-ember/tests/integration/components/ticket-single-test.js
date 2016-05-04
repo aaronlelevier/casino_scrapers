@@ -5,7 +5,7 @@ import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
-import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
+import { clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
@@ -90,7 +90,7 @@ test('changing priority changes the class', function(assert) {
   let $component = this.$('.t-ticket-priority-select');
   assert.equal($component.length, 1);
   clickTrigger('.t-ticket-priority-select >');
-  $(`.ember-power-select-option:contains(${TD.priorityTwoKey})`).mouseup();
+  nativeMouseUp(`.ember-power-select-option:contains(${TD.priorityTwoKey})`);
   assert.ok(this.$('.tag:eq(0)').hasClass('ticket-priority-high'));
 });
 
@@ -107,6 +107,6 @@ test('changing status changes the class', function(assert) {
   let $component = this.$('.t-ticket-status-select');
   assert.equal($component.length, 1);
   clickTrigger('.t-ticket-status-select >');
-  $(`.ember-power-select-option:contains(${TD.statusTwoKey})`).mouseup();
+  nativeMouseUp(`.ember-power-select-option:contains(${TD.statusTwoKey})`);
   assert.ok(this.$('.tag:eq(1)').hasClass('ticket-status-deferred'));
 });
