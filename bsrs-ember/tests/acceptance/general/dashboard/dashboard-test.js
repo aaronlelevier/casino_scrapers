@@ -17,6 +17,7 @@ module('Acceptance | dashboard', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
+    xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft/`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   },
   afterEach() {
     Ember.run(application, 'destroy');
@@ -33,7 +34,6 @@ test('welcome h1 header', function(assert) {
 /* jshint ignore:start */
 
 test('draft tickets are shown', async assert => {
-  xhr(`${PREFIX}${BASE_URL}/?status__name=ticket.status.draft/`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   await visit('/dashboard');
   assert.equal(find('.t-ticket-draft').length, 10);
   const tickets = store.find('ticket-list')

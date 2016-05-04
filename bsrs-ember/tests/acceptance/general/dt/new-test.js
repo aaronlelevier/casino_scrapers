@@ -17,6 +17,8 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import DTF from 'bsrs-ember/vendor/dtd_fixtures';
 import LF from 'bsrs-ember/vendor/location_fixtures';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
+import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/dtd';
@@ -59,6 +61,7 @@ module('Acceptance | dt new', {
 });
 
 test('go to /dashboard, click button to get to /dt/new', assert => {
+  xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft/`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   visit(DASHBOARD_URL);
   andThen(() => {
     assert.equal(currentURL(), DASHBOARD_URL);
@@ -134,6 +137,7 @@ test('has_multi_locations === true, validation: cant click next until select loc
 
 test('has_multi_locations === false, can POST data, and transition to /dt/{start-id}', assert => {
   let person;
+  xhr(`${PREFIX}${BASE_URL}/?status__name=ticket.status.draft/`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   visit('/dashboard');
   andThen(() => {
     assert.equal(currentURL(), '/dashboard');

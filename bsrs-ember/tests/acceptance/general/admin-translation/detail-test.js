@@ -19,18 +19,18 @@ const DETAIL_URL = BASE_URL + '/' + TD.keyOneGrid;
 var application, store, endpoint, translation_list_data, translation_detail_data, list_xhr, detail_xhr;
 
 module('Acceptance | Admin Translation Detail-test', {
-    beforeEach() {
-        application = startApp();
-        store = application.__container__.lookup('service:simpleStore');
-        endpoint = PREFIX + BASE_URL + '/';
-        translation_list_data = TF.list();
-        translation_detail_data = TF.get();
-        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, translation_list_data);
-        detail_xhr = xhr(endpoint + TD.keyOneGrid + '/', 'GET', null, {}, 200, translation_detail_data);
-    },
-    afterEach() {
-       Ember.run(application, 'destroy');
-    }
+  beforeEach() {
+    application = startApp();
+    store = application.__container__.lookup('service:simpleStore');
+    endpoint = PREFIX + BASE_URL + '/';
+    translation_list_data = TF.list();
+    translation_detail_data = TF.get();
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, translation_list_data);
+    detail_xhr = xhr(endpoint + TD.keyOneGrid + '/', 'GET', null, {}, 200, translation_detail_data);
+  },
+  afterEach() {
+    Ember.run(application, 'destroy');
+  }
 });
 
 //TODO: FIREFOX discrepancy
@@ -46,27 +46,27 @@ module('Acceptance | Admin Translation Detail-test', {
 // });
 
 test('detail | header is translation key', (assert) => {
-    clearxhr(list_xhr);
-    visit(DETAIL_URL);
-    andThen(() => {
-        waitFor(assert, () => {
-            assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-translation-key').text(), TD.keyOneGrid);
-        });
+  clearxhr(list_xhr);
+  visit(DETAIL_URL);
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.equal(find('.t-translation-key').text(), TD.keyOneGrid);
     });
+  });
 });
 
 test('detail | header is translation key, each Locale gets populated', (assert) => {
-    clearxhr(list_xhr);
-    visit(DETAIL_URL);
-    andThen(() => {
-        waitFor(assert, () => {
-            assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-translation-key').text(), TD.keyOneGrid);
-            assert.equal(find('.t-translation-locale-name:eq(0)').text(), LOCALED.nameOneKey);
-            assert.equal(find('.t-translation-locale-name:eq(1)').text(), LOCALED.nameTwoKey);
-        });
+  clearxhr(list_xhr);
+  visit(DETAIL_URL);
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.equal(find('.t-translation-key').text(), TD.keyOneGrid);
+      assert.equal(find('.t-translation-locale-name:eq(0)').text(), LOCALED.nameOneKey);
+      assert.equal(find('.t-translation-locale-name:eq(1)').text(), LOCALED.nameTwoKey);
     });
+  });
 });
 
 // test('aaron detail | update model by changing first Locale trans', (assert) => {

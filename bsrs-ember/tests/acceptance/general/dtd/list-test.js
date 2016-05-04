@@ -5,6 +5,8 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
+import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import page from 'bsrs-ember/tests/pages/dtd';
@@ -47,6 +49,7 @@ test('visiting /dtds', (assert) => {
 });
 
 test('admin to dtds list to detail && preview', (assert) => {
+  xhr(`${PREFIX}${BASE_URL}/?status__name=ticket.status.draft/`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   generalPage.visitDashboard();
   andThen(() => {
     assert.equal(currentURL(), ADMIN_URL);
@@ -114,6 +117,7 @@ test('search grid', (assert) => {
 });
 
 test('detail && preview are bound and can save', (assert) => {
+  xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft/`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   generalPage.visitDashboard();
   andThen(() => {
     assert.equal(currentURL(), ADMIN_URL);

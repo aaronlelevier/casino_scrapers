@@ -16,38 +16,38 @@ const ADMINPANEL = '.t-side-menu';
 var application, store, endpoint, setting_data, detail_xhr;
 
 module('Acceptance | admin settings layout test', {
-    beforeEach() {
-        application = startApp();
-        store = application.__container__.lookup('service:simpleStore');
-        endpoint = PREFIX + SETTING_URL + '/';
-        setting_data = SF.detail();
-        detail_xhr = xhr(endpoint, 'GET', null, {}, 200, setting_data);
-    },
-    afterEach() {
-        Ember.run(application, 'destroy');
-    }
+  beforeEach() {
+    application = startApp();
+    store = application.__container__.lookup('service:simpleStore');
+    endpoint = PREFIX + SETTING_URL + '/';
+    setting_data = SF.detail();
+    detail_xhr = xhr(endpoint, 'GET', null, {}, 200, setting_data);
+  },
+  afterEach() {
+    Ember.run(application, 'destroy');
+  }
 });
 
 test('admin panel displays correct headers and section headers', function(assert) {
-    clearxhr(detail_xhr);
-    visit(ADMIN_URL);
-    andThen(() => {
-        assert.equal(find(ADMINPANEL + ' > section').length, 5);
-        assert.equal(find(ADMINPANEL + ' > section:eq(0) h3').text().trim(), "Settings");
-        assert.equal(find(ADMINPANEL + ' > section:eq(1) h3').text().trim(), "People");
-        assert.equal(find(ADMINPANEL + ' > section:eq(2) h3').text().trim(), "Locations");
-        assert.equal(find(ADMINPANEL + ' > section:eq(3) h3').text().trim(), "Categories");
-        assert.equal(find(ADMINPANEL + ' > section:eq(4) h3').text().trim(), "Contractors");
-    });
+  clearxhr(detail_xhr);
+  visit(ADMIN_URL);
+  andThen(() => {
+    assert.equal(find(ADMINPANEL + ' > section').length, 5);
+    assert.equal(find(ADMINPANEL + ' > section:eq(0) h3').text().trim(), "Settings");
+    assert.equal(find(ADMINPANEL + ' > section:eq(1) h3').text().trim(), "People");
+    assert.equal(find(ADMINPANEL + ' > section:eq(2) h3').text().trim(), "Locations");
+    assert.equal(find(ADMINPANEL + ' > section:eq(3) h3').text().trim(), "Categories");
+    assert.equal(find(ADMINPANEL + ' > section:eq(4) h3').text().trim(), "Contractors");
+  });
 });
 
 test('click and enter general settings', function(assert) {
-    visit(ADMIN_URL);
-    andThen(() => {
-        assert.equal(currentURL(), ADMIN_URL);
-    });
-    click('.t-general-settings');
-    andThen(() => {
-        assert.equal(currentURL(), SETTING_URL);
-    });
+  visit(ADMIN_URL);
+  andThen(() => {
+    assert.equal(currentURL(), ADMIN_URL);
+  });
+  click('.t-general-settings');
+  andThen(() => {
+    assert.equal(currentURL(), SETTING_URL);
+  });
 });
