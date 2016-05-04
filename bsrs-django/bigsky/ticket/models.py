@@ -88,9 +88,14 @@ class TicketQuerySet(BaseQuerySet):
 
     def filter_on_categories_and_location(self, person):
         q = Q()
-        q &= Q(location__id__in=person.locations.values_list('id', flat=True))
+
+        if not person.has_top_level_location:
+            q &= Q(location__id__in=person.locations.values_list('id', flat=True))
+
         if person.role.categories.first():
-            q &= Q(categories__id__in=person.role.categories.filter(parent__isnull=True))
+            q &= (Q(categories__id__in=person.role.categories.filter(parent__isnull=True)
+                                                             .values_list('id', flat=True)))
+
         return self.filter(q).distinct()
 
     def next_number(self):

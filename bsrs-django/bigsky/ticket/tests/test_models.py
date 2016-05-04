@@ -5,13 +5,15 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from category.tests.factory import create_categories
+from generic.tests.factory import create_file_attachment
+from location.models import Location
+from location.tests.factory import create_location
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_STATUS_DEFAULT, TICKET_PRIORITIES, TICKET_PRIORITY_DEFAULT)
 from ticket.tests.factory import (create_ticket, create_tickets,
     create_ticket_statuses, create_ticket_priorities)
 from ticket.tests.mixins import TicketCategoryOrderingSetupMixin
-from generic.tests.factory import create_file_attachment
 
 
 class TicketStatusTests(TestCase):
@@ -97,9 +99,12 @@ class TicketManagerTests(TestCase):
 
         self.assertEqual(ret, raw_qs_count)
 
+    # filter_on_categories_and_location
+
     def test_filter_on_categories_and_location(self):
         q = Q()
-        q &= Q(location__id__in=self.person.locations.values_list('id', flat=True))
+        if not self.person.has_top_level_location:
+            q &= Q(location__id__in=self.person.locations.values_list('id', flat=True))
         if self.person.role.categories.first():
             q &= Q(categories__id__in=self.person.role.categories.filter(parent__isnull=True).values_list('id', flat=True))
         raw_qs = Ticket.objects.filter(q).distinct().values_list('id', flat=True)
@@ -107,6 +112,114 @@ class TicketManagerTests(TestCase):
         ret = Ticket.objects.filter_on_categories_and_location(self.person).values_list('id', flat=True)
 
         self.assertEqual(sorted(ret), sorted(raw_qs))
+
+    def test_filter_on_categories_and_location__person_has_top_level_location(self):
+        """
+        Only filter on Category, b/c `person.has_top_level_location == True`
+        """
+        tickets = Ticket.objects.all()
+        self.assertEqual(tickets.count(), 2)
+        other_location = create_location()
+        self.assertNotIn(other_location, self.person.locations.all())
+        # categories - each ticket Category matches the Person
+        for t in tickets:
+            category = self.person.role.categories.first()
+            t.categories.add(category)
+            t.location = other_location
+            t.save()
+        # location - 'person' only has top level location
+        top_location = Location.objects.create_top_level()
+        for x in self.person.locations.all():
+            self.person.locations.remove(x)
+        self.person.locations.add(top_location)
+        self.assertTrue(self.person.has_top_level_location)
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), tickets.count())
+
+    def test_filter_on_categories_and_location__no_role_categories(self):
+        """
+        Only filter on Location, b/c `person.role.categories == []`
+        """
+        tickets = Ticket.objects.all()
+        self.assertEqual(tickets.count(), 2)
+        # 1 `ticket.location` belongs to 'self.person', one does not
+        other_location = create_location()
+        other_location_ticket = tickets.first()
+        other_location_ticket.location = other_location
+        other_location_ticket.save()
+        person_ticket_count = Ticket.objects.filter(location__id__in=self.person.locations.values_list('id', flat=True)).count()
+        self.assertEqual(person_ticket_count, 1)
+        # remove categories
+        for c in self.person.role.categories.all():
+            self.person.role.categories.remove(c)
+        self.assertEqual(self.person.role.categories.count(), 0)
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), person_ticket_count)
+
+    def test_filter_on_categories_and_location__no_filtering(self):
+        """
+        `person.has_top_level_location == True` and 
+        `person.role.categories == []`
+        """
+        tickets = Ticket.objects.all()
+        self.assertEqual(tickets.count(), 2)
+        other_location = create_location()
+        for t in tickets:
+            t.location = other_location
+            t.save()
+        person_ticket_count = Ticket.objects.filter(location__id__in=self.person.locations.values_list('id', flat=True)).count()
+        self.assertEqual(person_ticket_count, 0)
+        # remove categories
+        for c in self.person.role.categories.all():
+            self.person.role.categories.remove(c)
+        self.assertEqual(self.person.role.categories.count(), 0)
+        # location - 'person' only has top level location
+        top_location = Location.objects.create_top_level()
+        for x in self.person.locations.all():
+            self.person.locations.remove(x)
+        self.person.locations.add(top_location)
+        self.assertTrue(self.person.has_top_level_location)
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), tickets.count())
+
+    def test_filter_on_categories_and_location__all_filtering_enforced(self):
+        """
+        Only 1 Ticket is viewable based on Category and Location.
+        The other 2 meet 1 of the criteria, but not both.
+        """
+        self.assertEqual(self.person.role.categories.count(), 1)
+        create_ticket()
+        tickets = Ticket.objects.all()
+        self.assertEqual(tickets.count(), 3)
+        (ticket_one, ticket_two, ticket_three) = tickets
+        # ticket_one - location match; category match
+        self.assertIn(ticket_one.location, self.person.locations.all())
+        self.assertIn(self.person.role.categories.first(), ticket_one.categories.all())
+        # ticket_two - location no match; category match
+        other_location = create_location()
+        ticket_two.location = other_location
+        ticket_two.save()
+        self.assertNotIn(ticket_two.location, self.person.locations.all())
+        self.assertIn(self.person.role.categories.first(), ticket_two.categories.all())
+        # ticket_three - location match; category no match
+        ticket_three.location = other_location
+        ticket_three.save()
+        self.assertNotIn(ticket_three.location, self.person.locations.all())
+        for c in self.person.role.categories.all():
+            ticket_three.categories.remove(c)
+        self.assertNotIn(self.person.role.categories.first(), ticket_three.categories.all())
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), 1)
+
+    # next_number
 
     def test_next_number(self):
         number = 100

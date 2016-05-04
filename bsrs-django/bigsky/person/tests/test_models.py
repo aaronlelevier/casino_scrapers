@@ -415,6 +415,18 @@ class PersonTests(TestCase):
         self.assertEqual(str(db_category.id), data[0]['id'])
         self.assertEqual(db_category.name, data[0]['name'])
 
+    def test_has_top_level_location(self):
+        person = create_single_person()
+        top_location = Location.objects.create_top_level()
+        person.locations.add(top_location)
+
+        # add
+        self.assertTrue(person.has_top_level_location)
+
+        # remove
+        person.locations.remove(top_location)
+        self.assertFalse(person.has_top_level_location)
+
 
 ### PASSWORD
 
