@@ -47,7 +47,7 @@
 				padding: 0 3px 0 5px;
 				line-height: 20px;
 				max-width: 100%;
-		    @include trucate;
+		    @include truncate;
 				.ember-power-select-multiple-remove-btn:hover,
 				.ember-power-select-multiple-remove-btn:not(:hover){
 					opacity: 1;
