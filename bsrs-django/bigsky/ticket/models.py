@@ -73,13 +73,13 @@ class TicketQuerySet(BaseQuerySet):
 
     def search_multi(self, keyword):
         return self.filter(
-                Q(request__icontains=keyword) | \
-                Q(location__name__icontains=keyword) | \
-                Q(assignee__fullname__icontains=keyword) | \
-                Q(priority__name__icontains=keyword) | \
-                Q(status__name__icontains=keyword) | \
-                Q(categories__name__in=[keyword])
-            )
+            Q(request__icontains=keyword) | \
+            Q(location__name__icontains=keyword) | \
+            Q(assignee__fullname__icontains=keyword) | \
+            Q(priority__name__icontains=keyword) | \
+            Q(status__name__icontains=keyword) | \
+            Q(categories__name__in=[keyword])
+        )
 
     def next_number(self):
         """Auto incrementing number field"""
@@ -96,8 +96,11 @@ class TicketQuerySet(BaseQuerySet):
             q &= Q(location__id__in=person.locations.values_list('id', flat=True))
 
         if person.role.categories.first():
-            q &= (Q(categories__id__in=person.role.categories.filter(parent__isnull=True)
-                                                             .values_list('id', flat=True)))
+            q &= Q(
+                Q(categories__id__in=person.role.categories.filter(parent__isnull=True)
+                                                           .values_list('id', flat=True)) | \
+                Q(categories__isnull=True)
+            )
 
         return self.filter(q).distinct()
 

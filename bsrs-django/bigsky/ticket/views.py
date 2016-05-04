@@ -51,7 +51,6 @@ class TicketViewSet(EagerLoadQuerySetMixin, TicketQuerySetFilters, CreateTicketM
         return super(TicketViewSet, self).create(request, *args, **kwargs)
 
 
-
 class TicketActivityViewSet(BaseModelViewSet):
 
     model = TicketActivity

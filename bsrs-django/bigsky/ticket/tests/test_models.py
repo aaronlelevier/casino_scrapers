@@ -4,15 +4,16 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
+from category.models import Category
 from category.tests.factory import create_categories
 from generic.tests.factory import create_file_attachment
 from location.models import Location
 from location.tests.factory import create_location
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
-    TicketActivity, TICKET_STATUSES, TICKET_STATUS_DEFAULT, TICKET_PRIORITIES, TICKET_PRIORITY_DEFAULT)
+    TicketActivity, TICKET_STATUS_DEFAULT, TICKET_PRIORITY_DEFAULT)
 from ticket.tests.factory import (create_ticket, create_tickets,
-    create_ticket_statuses, create_ticket_priorities)
+    create_ticket_status, create_ticket_statuses, create_ticket_priorities)
 from ticket.tests.mixins import TicketCategoryOrderingSetupMixin
 
 
@@ -72,6 +73,7 @@ class TicketManagerTests(TestCase):
 
     def setUp(self):
         create_categories()
+        self.status_draft = create_ticket_status('ticket.status.draft')
         self.person = create_single_person()
         self.person_category = self.person.role.categories.first()
         self.person_location = self.person.locations.first()
@@ -92,13 +94,30 @@ class TicketManagerTests(TestCase):
         self.ticket_three.save()
         for c in self.person.role.categories.all():
             self.ticket_three.categories.remove(c)
+        other_category = Category.objects.exclude(id=self.person_category.id).first()
+        self.ticket_three.categories.add(other_category)
+        # ticket_four - location match; category no match (is NULL),
+        # but is a 'draft' status
+        self.ticket_four = create_ticket()
+        self.ticket_four.location = self.person_location
+        self.ticket_four.status = self.status_draft
+        self.ticket_four.save()
+        for c in self.person.role.categories.all():
+            self.ticket_four.categories.remove(c)
+        # only 1 ticket should be status 'draft'
+        self.status_new = create_ticket_status('ticket.status.new')
+        for t in Ticket.objects.exclude(id=self.ticket_four.id):
+            t.status = self.status_new
+            t.save()
 
     def test_ticket_setup(self):
         self.assertEqual(self.person.role.categories.count(), 1)
         self.assertEqual(self.person.locations.count(), 1)
-        self.assertEqual(Ticket.objects.count(), 3)
-        self.assertEqual(Ticket.objects.filter(location=self.person.locations.first()).count(), 2)
+        self.assertEqual(Ticket.objects.count(), 4)
+        self.assertEqual(Ticket.objects.filter(location=self.person.locations.first()).count(), 3)
         self.assertEqual(Ticket.objects.filter(categories=self.person.role.categories.all()).count(), 2)
+        self.assertEqual(Ticket.objects.filter(status=self.status_new).count(), 3)
+        self.assertEqual(Ticket.objects.filter(status=self.status_draft).count(), 1)
         # ticket_one
         self.assertIn(self.ticket_one.location, self.person.locations.all())
         self.assertIn(self.person.role.categories.first(), self.ticket_one.categories.all())
@@ -159,7 +178,10 @@ class TicketManagerTests(TestCase):
         if not self.person.has_top_level_location:
             q &= Q(location__id__in=self.person.locations.values_list('id', flat=True))
         if self.person.role.categories.first():
-            q &= Q(categories__id__in=self.person.role.categories.filter(parent__isnull=True).values_list('id', flat=True))
+            q &= Q(
+                    Q(categories__id__in=self.person.role.categories.filter(parent__isnull=True).values_list('id', flat=True)) | \
+                    Q(categories__isnull=True)
+                )
         raw_qs = Ticket.objects.filter(q).distinct().values_list('id', flat=True)
 
         ret = Ticket.objects.filter_on_categories_and_location(self.person).values_list('id', flat=True)
@@ -168,12 +190,14 @@ class TicketManagerTests(TestCase):
 
     def test_filter_on_categories_and_location__default_filtering(self):
         """
-        Only 1 Ticket is viewable based on Category and Location.
-        The other 2 meet 1 of the criteria, but not both.
+        Only 2 Ticket is viewable based on Category and Location.
+        1 that meets the Criteria, and 1 that is draft.
+        For the other 2, they only meet 1 of the criteria, but not both.
         """
         ret = Ticket.objects.filter_on_categories_and_location(self.person)
 
-        self.assertEqual(ret.count(), 1)
+        self.assertEqual(ret.count(), 2)
+        self.assertEqual(ret.filter(status=self.status_draft).count(), 1)
 
     def test_filter_on_categories_and_location__person_has_top_level_location(self):
         """
@@ -187,7 +211,7 @@ class TicketManagerTests(TestCase):
 
         ret = Ticket.objects.filter_on_categories_and_location(self.person)
 
-        self.assertEqual(ret.count(), 2)
+        self.assertEqual(ret.count(), 3)
 
     def test_filter_on_categories_and_location__no_role_categories(self):
         """
@@ -199,7 +223,7 @@ class TicketManagerTests(TestCase):
 
         ret = Ticket.objects.filter_on_categories_and_location(self.person)
 
-        self.assertEqual(ret.count(), 2)
+        self.assertEqual(ret.count(), 3)
 
     def test_filter_on_categories_and_location__top_location_and_no_role_categories(self):
         """
@@ -219,7 +243,7 @@ class TicketManagerTests(TestCase):
 
         ret = Ticket.objects.filter_on_categories_and_location(self.person)
 
-        self.assertEqual(ret.count(), 3)
+        self.assertEqual(ret.count(), 4)
 
 
 class TicketTests(TestCase):
