@@ -1,12 +1,12 @@
 {{#unless textarea}}
-  {{input type=type placeholder=placeholder value=value class=className}}
+  {{input type=type placeholder=placeholder value=value class=className id=idZ}}
   {{#if showMessage}}
     <div class="error">
       {{t (v-get model valuePath 'message')}}
     </div>
   {{/if}}
 {{else}}
-  {{textarea autoresize=true placeholder=placeholder value=value class=className}}
+  {{textarea autoresize=true placeholder=placeholder value=value class=className id=idZ}}
   {{#if showMessage}}
     <div class="error">
       {{t (v-get model valuePath 'message')}}
