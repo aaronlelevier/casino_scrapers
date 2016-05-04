@@ -37,31 +37,36 @@
 	.ember-power-select-trigger{
 		line-height: 0;
 		padding: 1px 36px 4px 4px !important;
-		.ember-power-select-multiple-option{
-			border-radius: $borderRadius;
-			border: $borderStyle;
-			background: $light;
-			margin: 4px 4px 0 0;
-			padding: 0 3px 0 5px;
-			line-height: 20px;
-			.ember-power-select-multiple-remove-btn:hover,
-			.ember-power-select-multiple-remove-btn:not(:hover){
-				opacity: 1;
-				color: $medGray;
+		.ember-power-select-multiple-options{
+			max-width: 100%;
+			.ember-power-select-multiple-option{
 				border-radius: $borderRadius;
-				background: $gray;
-				float: right;
-				height: 15px;
-				width: 15px;
-				line-height: 15px;
-				text-align: center;
-				margin: 3px 0 0 3px;
-			}
-			.ember-power-select-multiple-remove-btn:hover{
-				background: $orange;
-				color: $white;
-			}
+				border: $borderStyle;
+				background: $light;
+				margin: 4px 4px 0 0;
+				padding: 0 3px 0 5px;
+				line-height: 20px;
+				max-width: 100%;
+		    @include trucate;
+				.ember-power-select-multiple-remove-btn:hover,
+				.ember-power-select-multiple-remove-btn:not(:hover){
+					opacity: 1;
+					color: $medGray;
+					border-radius: $borderRadius;
+					background: $gray;
+					float: right;
+					height: 15px;
+					width: 15px;
+					line-height: 15px;
+					text-align: center;
+					margin: 3px 0 0 3px;
+				}
+				.ember-power-select-multiple-remove-btn:hover{
+					background: $orange;
+					color: $white;
+				}
 
+			}
 		}
 		.ember-power-select-trigger-multiple-input{
 			height: 22px;
