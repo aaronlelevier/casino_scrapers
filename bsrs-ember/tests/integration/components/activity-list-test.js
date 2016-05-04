@@ -2,7 +2,7 @@ import Ember from 'ember';
 import trim from 'bsrs-ember/utilities/trim';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
-import timemachine from 'vendor/timemachine';
+// import timemachine from 'vendor/timemachine';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
@@ -23,15 +23,14 @@ const ATTACHMENT_FILE = '.t-ticket-attachment-add-remove';
 
 let store, trans, run = Ember.run;
 
-moduleForComponent('activity-list', 'integration: activity-list', {
+moduleForComponent('activity-list', 'scott integration: activity-list', {
     integration: true,
     setup() {
         translation.initialize(this);
         store = module_registry(this.container, this.registry, ['model:ticket-status', 'model:ticket-priority', 'model:activity/cc-add', 'model:activity', 'model:activity/assignee', 'model:activity/person']);
-
-        timemachine.config({
-            dateString: 'December 25, 2015 13:12:59'
-        });
+        // timemachine.config({
+        //     dateString: 'December 25, 2015 13:12:59'
+        // });
         trans = this.container.lookup('service:i18n');
         loadTranslations(trans, translations.generate('en'));
         translation.initialize(this);

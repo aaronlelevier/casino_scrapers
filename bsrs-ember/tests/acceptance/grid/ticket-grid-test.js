@@ -15,7 +15,7 @@ import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
 import random from 'bsrs-ember/models/random';
-import timemachine from 'vendor/timemachine';
+// import timemachine from 'vendor/timemachine';
 import moment from 'moment';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -37,11 +37,11 @@ const FILTER_PRIORITY = '.t-filter-priority-translated-name';
 
 var application, store, endpoint, list_xhr, original_uuid;
 
-module('Acceptance | ticket grid test', {
+module('scott Acceptance | ticket grid test', {
   beforeEach() {
-    timemachine.config({
-      dateString: 'December 25, 2014 13:12:59'
-    });
+    // timemachine.config({
+    //   dateString: 'December 25, 2014 13:12:59'
+    // });
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';
@@ -51,7 +51,7 @@ module('Acceptance | ticket grid test', {
   afterEach() {
     random.uuid = original_uuid;
     Ember.run(application, 'destroy');
-    timemachine.reset();
+    // timemachine.reset();
   }
 });
 

@@ -2,7 +2,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import PD from 'bsrs-ember/vendor/defaults/person';
-import timemachine from 'vendor/timemachine';
+// import timemachine from 'vendor/timemachine';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
@@ -15,9 +15,9 @@ moduleForComponent('timestamp-created test', 'Integration | Component | timestam
     setup() {
         translation.initialize(this);
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:person']);
-        timemachine.config({
-            dateString: 'December 25, 2015 13:12:59'
-        });
+        // timemachine.config({
+        //     dateString: 'December 25, 2015 13:12:59'
+        // });
         trans = this.container.lookup('service:i18n');
         loadTranslations(trans, translations.generate('en'));
         translation.initialize(this);

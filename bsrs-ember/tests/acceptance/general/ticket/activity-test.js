@@ -5,7 +5,7 @@ import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
-import timemachine from 'vendor/timemachine';
+// import timemachine from 'vendor/timemachine';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
@@ -33,11 +33,11 @@ const ACTIVITY_ITEMS = '.t-activity-list-item';
 
 let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, original_uuid;
 
-module('Acceptance | ticket activity test', {
+module('scott Acceptance | ticket activity test', {
   beforeEach() {
-    timemachine.config({
-      dateString: 'December 25, 2015 13:12:59'
-    });
+    // timemachine.config({
+    //   dateString: 'December 25, 2015 13:12:59'
+    // });
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/`;
