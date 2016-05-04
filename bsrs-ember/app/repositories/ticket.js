@@ -53,6 +53,13 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMix
       return response;
     });
   },
+  findTicketDrafts(){
+    PromiseMixin.xhr(`${TICKETS_URL}?status__name=ticket.status.draft/`, 'GET').then((response) => {
+      this.get('TicketDeserializer').deserialize(response);
+    });
+    //TODO: be careful if allowed to have ticket grid and dashboard open at same time..revisit this later
+    return this.get('simpleStore').find('ticket-list');
+  }
 });
 
 export default TicketRepo;

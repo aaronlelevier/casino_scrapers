@@ -78,6 +78,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
         });
     },
     find(filter) {
+      //TODO: what is this doing here?  SHould be using grid repo???
         PromiseMixin.xhr(this.format_url(filter), 'GET').then((response) => {
             this.get('LocationDeserializer').deserialize(response);
         });

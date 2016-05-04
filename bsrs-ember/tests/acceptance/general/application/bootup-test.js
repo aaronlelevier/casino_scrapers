@@ -14,11 +14,15 @@ import ED from 'bsrs-ember/vendor/defaults/email-type';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import LD from 'bsrs-ember/vendor/defaults/ticket';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
+import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
 import SD from 'bsrs-ember/vendor/defaults/setting';
 
 const HOME_URL = '/';
+const PREFIX = config.APP.NAMESPACE;
+const BASE_URL = BASEURLS.base_tickets_url;
 
 var application, store, run = Ember.run;
 
@@ -26,6 +30,7 @@ module('Acceptance | bootup test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('service:simpleStore');
+        xhr(`${PREFIX}${BASE_URL}/?status__name=ticket.status.draft/`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
     },
     afterEach() {
         store = null;

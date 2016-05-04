@@ -24,11 +24,13 @@ var BSRS_TICKET_FACTORY = (function() {
     delete child_child_category.status;
     return [parent_category, child_category, child_child_category];
   };
-  factory.prototype.generate_list = function(i) {
+  factory.prototype.generate_list = function(i, statusId, statusName) {
     var ticket = this.generate(i);
     delete ticket.status_fk;
     delete ticket.priority_fk;
-    ticket.status = {id: this.ticket.statusOneId, name: this.ticket.statusOneKey}
+    var status_id = statusId || this.ticket.statusOneId;
+    var status_name = statusName || this.ticket.statusOneKey;
+    ticket.status = {id: status_id, name: status_name}
     ticket.priority = {id: this.ticket.priorityOneId, name: this.ticket.priorityOneKey}
     return ticket;
   };
@@ -52,7 +54,7 @@ var BSRS_TICKET_FACTORY = (function() {
       attachments: []
     }
   };
-  factory.prototype.list = function() {
+  factory.prototype.list = function(statusId, statusName) {
     var response = [];
     var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
     for (var i=1; i <= page_size; i++) {
@@ -62,7 +64,7 @@ var BSRS_TICKET_FACTORY = (function() {
       } else{
         uuid = uuid + i;
       }
-      var ticket = this.generate_list(uuid);
+      var ticket = this.generate_list(uuid, statusId, statusName);
       ticket.number = 'bye' + i;
       ticket.request = 'sub' + i;
       delete ticket.cc;
