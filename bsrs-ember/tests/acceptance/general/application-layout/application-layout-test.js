@@ -1,5 +1,7 @@
 import Ember from 'ember';
 import { test } from 'qunit';
+import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
+import config from 'bsrs-ember/config/environment';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import RD from 'bsrs-ember/vendor/defaults/role';
@@ -7,6 +9,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 
+const PREFIX = config.APP.NAMESPACE;
 const HOME_URL = '/';
 const NAVBAR = '.t-navbar-items';
 

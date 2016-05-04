@@ -137,7 +137,7 @@ test('has_multi_locations === true, validation: cant click next until select loc
 
 test('has_multi_locations === false, can POST data, and transition to /dt/{start-id}', assert => {
   let person;
-  xhr(`${PREFIX}${BASE_URL}/?status__name=ticket.status.draft/`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
+  xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft/`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   visit('/dashboard');
   andThen(() => {
     assert.equal(currentURL(), '/dashboard');
