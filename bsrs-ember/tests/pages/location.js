@@ -43,7 +43,8 @@ export default PageObject.create({
   locationLevelInput: text(LOCATIONLEVEL),
   locationLevelClickDropdown: clickable(LOCATIONLEVEL),
   locationLevelClickOptionOne: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${LLD.nameCompany})`),
-  locationLevelClickOptionTwo: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${LLD.nameRegion})`),
+  locationLevelClickOptionTwo: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${LLD.nameRegion})`, {multiple: true}),
+  locationLevelClickOptionLossRegion: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${LLD.nameLossPreventionRegion})`),
 
   statusInput: text(STATUS),
   statusClickDropdown: clickable(STATUS),

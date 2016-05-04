@@ -23,7 +23,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/tickets';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import timemachine from 'vendor/timemachine';
+// import timemachine from 'vendor/timemachine';
 import moment from 'moment';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
@@ -59,9 +59,9 @@ module('Acceptance | ticket detail', {
     list_xhr = xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, TF.list());
     detail_xhr = xhr(`${endpoint}${TD.idOne}/`, 'GET', null, {}, 200, detail_data);
     activity_one = xhr(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
-    timemachine.config({
-      dateString: 'December 25, 2015 13:12:59'
-    });
+    // timemachine.config({
+    //   dateString: 'December 25, 2015 13:12:59'
+    // });
   },
   afterEach() {
     Ember.run(application, 'destroy');

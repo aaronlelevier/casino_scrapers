@@ -5,13 +5,15 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from category.tests.factory import create_categories
+from generic.tests.factory import create_file_attachment
+from location.models import Location
+from location.tests.factory import create_location
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_STATUS_DEFAULT, TICKET_PRIORITIES, TICKET_PRIORITY_DEFAULT)
 from ticket.tests.factory import (create_ticket, create_tickets,
     create_ticket_statuses, create_ticket_priorities)
 from ticket.tests.mixins import TicketCategoryOrderingSetupMixin
-from generic.tests.factory import create_file_attachment
 
 
 class TicketStatusTests(TestCase):
@@ -71,16 +73,50 @@ class TicketManagerTests(TestCase):
     def setUp(self):
         create_categories()
         self.person = create_single_person()
-        self.ticket = create_ticket(assignee=self.person)
+        self.person_category = self.person.role.categories.first()
+        self.person_location = self.person.locations.first()
+        # ticket_one - location match; category match
+        self.ticket_one = create_ticket()
+        self.ticket_one.categories.add(self.person_category)
+        self.ticket_one.location = self.person_location
+        self.ticket_one.save()
+        # ticket_two - location no match; category match
         self.ticket_two = create_ticket()
+        self.ticket_two.categories.add(self.person_category)
+        other_location = create_location()
+        self.ticket_two.location = other_location
+        self.ticket_two.save()
+        # ticket_three - location match; category no match
+        self.ticket_three = create_ticket()
+        self.ticket_three.location = self.person_location
+        self.ticket_three.save()
+        for c in self.person.role.categories.all():
+            self.ticket_three.categories.remove(c)
+
+    def test_ticket_setup(self):
+        self.assertEqual(self.person.role.categories.count(), 1)
+        self.assertEqual(self.person.locations.count(), 1)
+        self.assertEqual(Ticket.objects.count(), 3)
+        self.assertEqual(Ticket.objects.filter(location=self.person.locations.first()).count(), 2)
+        self.assertEqual(Ticket.objects.filter(categories=self.person.role.categories.all()).count(), 2)
+        # ticket_one
+        self.assertIn(self.ticket_one.location, self.person.locations.all())
+        self.assertIn(self.person.role.categories.first(), self.ticket_one.categories.all())
+        # ticket_two
+        self.assertNotIn(self.ticket_two.location, self.person.locations.all())
+        self.assertIn(self.person.role.categories.first(), self.ticket_two.categories.all())
+        # ticket_three
+        self.assertIn(self.ticket_three.location, self.person.locations.all())
+        self.assertNotIn(self.person.role.categories.first(), self.ticket_three.categories.all())
 
     def test_deleted(self):
+        init_count = Ticket.objects_all.count()
         ticket = Ticket.objects.first()
 
         ticket.delete()
 
-        self.assertEqual(Ticket.objects.count(), 1)
-        self.assertEqual(Ticket.objects_all.count(), 2)
+        self.assertEqual(Ticket.objects.count(), init_count-1)
+        self.assertEqual(Ticket.objects_all.count(), init_count)
 
     def test_search_multi(self):
         search = TicketPriority.objects.first().name
@@ -97,21 +133,10 @@ class TicketManagerTests(TestCase):
 
         self.assertEqual(ret, raw_qs_count)
 
-    def test_filter_on_categories_and_location(self):
-        q = Q()
-        q &= Q(location__id__in=self.person.locations.values_list('id', flat=True))
-        if self.person.role.categories.first():
-            q &= Q(categories__id__in=self.person.role.categories.filter(parent__isnull=True).values_list('id', flat=True))
-        raw_qs = Ticket.objects.filter(q).distinct().values_list('id', flat=True)
-
-        ret = Ticket.objects.filter_on_categories_and_location(self.person).values_list('id', flat=True)
-
-        self.assertEqual(sorted(ret), sorted(raw_qs))
-
     def test_next_number(self):
         number = 100
-        self.ticket.number = number
-        self.ticket.save()
+        self.ticket_one.number = number
+        self.ticket_one.save()
         raw_max = Ticket.objects.all().aggregate(Max('number'))['number__max']
 
         next_number = Ticket.objects.next_number()
@@ -126,6 +151,75 @@ class TicketManagerTests(TestCase):
         ret = Ticket.objects.next_number()
 
         self.assertEqual(ret, 1)
+
+    # filter_on_categories_and_location
+
+    def test_filter_on_categories_and_location(self):
+        q = Q()
+        if not self.person.has_top_level_location:
+            q &= Q(location__id__in=self.person.locations.values_list('id', flat=True))
+        if self.person.role.categories.first():
+            q &= Q(categories__id__in=self.person.role.categories.filter(parent__isnull=True).values_list('id', flat=True))
+        raw_qs = Ticket.objects.filter(q).distinct().values_list('id', flat=True)
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person).values_list('id', flat=True)
+
+        self.assertEqual(sorted(ret), sorted(raw_qs))
+
+    def test_filter_on_categories_and_location__default_filtering(self):
+        """
+        Only 1 Ticket is viewable based on Category and Location.
+        The other 2 meet 1 of the criteria, but not both.
+        """
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), 1)
+
+    def test_filter_on_categories_and_location__person_has_top_level_location(self):
+        """
+        Only filter on Category, b/c `person.has_top_level_location == True`
+        """
+        top_location = Location.objects.create_top_level()
+        for x in self.person.locations.all():
+            self.person.locations.remove(x)
+        self.person.locations.add(top_location)
+        self.assertTrue(self.person.has_top_level_location)
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), 2)
+
+    def test_filter_on_categories_and_location__no_role_categories(self):
+        """
+        Only filter on Location, b/c `person.role.categories == []`
+        """
+        for c in self.person.role.categories.all():
+            self.person.role.categories.remove(c)
+        self.assertFalse(self.person.role.categories.first())
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), 2)
+
+    def test_filter_on_categories_and_location__top_location_and_no_role_categories(self):
+        """
+        `person.has_top_level_location == True` and 
+        `person.role.categories == []`
+        """
+        # remove categories
+        for c in self.person.role.categories.all():
+            self.person.role.categories.remove(c)
+        self.assertEqual(self.person.role.categories.count(), 0)
+        # location - 'person' only has top level location
+        top_location = Location.objects.create_top_level()
+        for x in self.person.locations.all():
+            self.person.locations.remove(x)
+        self.person.locations.add(top_location)
+        self.assertTrue(self.person.has_top_level_location)
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), 3)
 
 
 class TicketTests(TestCase):
@@ -253,13 +347,3 @@ class TicketCategoryOrderingTests(TicketCategoryOrderingSetupMixin, TestCase):
             " - ".join(ordered_categories),
             "Loss Prevention - Locks - Drawer Lock"
         )
-
-    def test_ticket_and_category_ordering(self):
-        manual = (Ticket.objects.all()
-                                .prefetch_related('categories')
-                                .exclude(categories__isnull=True))
-
-        queryset = Ticket.objects.all_with_ordered_categories()
-
-        for i, obj in enumerate(queryset):
-            self.assertEqual(manual[i].id, obj.id)

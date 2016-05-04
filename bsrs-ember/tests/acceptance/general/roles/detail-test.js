@@ -71,7 +71,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
   page.roleTypeClickDropdown();
   page.roleTypeClickOptionTwo();
   page.locationLevelClickDropdown();
-  page.locationLevelClickOptionTwo();
+  page.locationLevelClickOptionLossRegion();
   andThen(() => {
     let role = store.find('role').objectAt(0);
     assert.ok(role.get('isDirty'));

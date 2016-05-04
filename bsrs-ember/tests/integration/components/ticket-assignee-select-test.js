@@ -4,12 +4,11 @@ import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
-import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
-import typeInSearch from 'bsrs-ember/tests/helpers/type-in-search';
 import waitFor from 'ember-test-helpers/wait';
+import { typeInSearch, clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 
 let store, ticket, person_one, person_two, person_three, run = Ember.run, person_repo;
 const PowerSelect = '.ember-power-select-trigger';
@@ -75,9 +74,7 @@ test('should be able to select new person when one doesnt exist', function(asser
     then(() => {
       assert.equal($(`${DROPDOWN}`).length, 1);
       assert.equal($('.ember-power-select-options > li').length, 3);
-      run(() => {
-        $(`.ember-power-select-option:contains(${PD.nameOne})`).mouseup();
-      });
+      nativeMouseUp(`.ember-power-select-option:contains(${PD.nameOne})`);
       assert.equal($(`${PowerSelect}`).text().trim(), `${PD.nameOne} ${PD.lastNameOne}`);
       assert.equal(ticket.get('assignee').get('id'), PD.idOne);
     });
@@ -95,9 +92,7 @@ test('should be able to select same person when ticket already has a person', fu
       assert.equal($(`${DROPDOWN}`).length, 1);
       assert.equal($('.ember-basic-dropdown-content').length, 1);
       assert.equal($('.ember-power-select-options > li').length, 3);
-      run(() => {
-        $(`.ember-power-select-option:contains(${PD.nameOne})`).mouseup();
-      });
+      nativeMouseUp(`.ember-power-select-option:contains(${PD.nameOne})`);
       assert.equal($(`${DROPDOWN}`).length, 0);
       assert.equal($('.ember-basic-dropdown-content').length, 0);
       assert.equal($('.ember-power-select-options > li').length, 0);
@@ -120,9 +115,7 @@ test('should be able to select new person when ticket already has a person', fun
       assert.equal($(`${DROPDOWN}`).length, 1);
       assert.equal($('.ember-basic-dropdown-content').length, 1);
       assert.equal($('.ember-power-select-options > li').length, 3);
-      run(() => {
-        $(`.ember-power-select-option:contains(${PD.nameTwo})`).mouseup();
-      });
+      nativeMouseUp(`.ember-power-select-option:contains(${PD.nameTwo})`);
       assert.equal($(`${DROPDOWN}`).length, 0);
       assert.equal($('.ember-basic-dropdown-content').length, 0);
       assert.equal($('.ember-power-select-options > li').length, 0);
@@ -138,9 +131,10 @@ test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
   this.model = ticket;
   this.set('person_repo', person_repo);
   this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
+  clickTrigger();
   run(() => { typeInSearch('a'); });
   Ember.run.later(() => {
-    assert.equal($('.ember-power-select-options > li').length, 0);
+    assert.equal($('.ember-power-select-option').length, 1);
     done();
   }, 150);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
 });

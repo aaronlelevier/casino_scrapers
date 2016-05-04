@@ -20,7 +20,7 @@ from django.utils import timezone
 from accounting.models import Currency
 from category.models import Category
 from contact.models import PhoneNumber, Address, Email
-from location.models import LocationLevel, Location
+from location.models import LocationLevel, Location, LOCATION_COMPANY
 from person import config, helpers
 from person.settings import DEFAULT_ROLE_SETTINGS
 from setting.models import Setting
@@ -512,6 +512,13 @@ class Person(BaseModel, AbstractUser):
 
     def categories(self):
         return [{'id': str(x.id), 'name': x.name} for x in self.role.categories.all()]
+
+    @property
+    def has_top_level_location(self):
+        """
+        Return a `Bool` if the Person has the Top Level Location.
+        """
+        return LOCATION_COMPANY in self.locations.values_list('name', flat=True)
 
 
 @receiver(post_save, sender=Person)

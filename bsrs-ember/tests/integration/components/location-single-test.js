@@ -12,6 +12,7 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
 import waitFor from 'ember-test-helpers/wait';
+import { clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 
 var store, phone_number_types, default_phone_number_type, address_types, default_address_type, default_email_type, email_types, run = Ember.run;
 
@@ -77,12 +78,10 @@ test('filling in location level on location new template will set diabled to fal
     });
     this.all_location_levels = store.find('location-level');
     this.render(hbs`{{locations/location-detail model=model all_location_levels=all_location_levels}}`);
-    assert.equal(this.$('.t-location-children-select > .ember-basic-dropdown-trigger > input').attr('disabled'), 'disabled');
-    assert.equal(this.$('.t-location-parent-select > .ember-basic-dropdown-trigger > input').attr('disabled'), 'disabled');
-    this.$('.t-location-level-select-trigger').mousedown();
-    run(() => {
-        $(`.ember-power-select-option:contains(${LLD.nameDistrict})`).mouseup();
-    });
+    assert.equal(this.$('.t-location-children-select > .ember-basic-dropdown-trigger input').attr('disabled'), 'disabled');
+    assert.equal(this.$('.t-location-parent-select > .ember-basic-dropdown-trigger input').attr('disabled'), 'disabled');
+    clickTrigger('.t-location-level-select');
+    nativeMouseUp(`.ember-power-select-option:contains(${LLD.nameDistrict})`);
     assert.equal(this.$('.t-location-children-select-trigger > input').attr('disabled'), undefined);
     assert.equal(this.$('.t-location-parent-select-trigger > input').attr('disabled'), undefined);
 });

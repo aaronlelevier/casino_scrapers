@@ -30,6 +30,7 @@
     "triggerEvent",
     "find",
     "findWithAssert",
+    "selectSearch",
     "wait",
     "t",
     "require",

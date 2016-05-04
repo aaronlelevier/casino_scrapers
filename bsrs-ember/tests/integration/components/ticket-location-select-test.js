@@ -6,8 +6,7 @@ import translations from 'bsrs-ember/vendor/translation_fixtures';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
-import typeInSearch from 'bsrs-ember/tests/helpers/type-in-search';
-import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
+import { typeInSearch, clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 import waitFor from 'ember-test-helpers/wait';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import LD from 'bsrs-ember/vendor/defaults/location';
@@ -86,9 +85,7 @@ test('should be able to select new location when one doesnt exist', function(ass
     then(() => {
       assert.equal($(`${DROPDOWN}`).length, 1);
       assert.equal($('.ember-power-select-options > li').length, 3);
-      run(() => {
-        $(`.ember-power-select-option:contains(${LD.storeName})`).mouseup();
-      });
+      nativeMouseUp(`.ember-power-select-option:contains(${LD.storeName})`);
       assert.equal($component.find(`${PowerSelect}`).text().trim(), LD.storeName);
       assert.equal(ticket.get('location').get('id'), LD.idOne);
     });
@@ -107,9 +104,7 @@ test('should be able to select new location when ticket already has a location',
       assert.equal($(`${DROPDOWN}`).length, 1);
       assert.equal($('.ember-basic-dropdown-content').length, 1);
       assert.equal($('.ember-power-select-options > li').length, 3);
-      run(() => {
-        $(`.ember-power-select-option:contains(${LD.storeNameTwo})`).mouseup();
-      });
+      nativeMouseUp(`.ember-power-select-option:contains(${LD.storeNameTwo})`);
       assert.equal($(`${DROPDOWN}`).length, 0);
       assert.equal($('.ember-basic-dropdown-content').length, 0);
       assert.equal($('.ember-power-select-options > li').length, 0);
@@ -126,9 +121,10 @@ test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
   this.locationRepo = location_repo;
   this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket"}}`);
   let $component = this.$(`${COMPONENT}`);
+  clickTrigger();
   run(() => { typeInSearch('a'); });
   Ember.run.later(() => {
-    assert.equal($('.ember-power-select-options > li').length, 0);
+    assert.equal($('.ember-power-select-options > li').length, 1);
     done();
   }, 150);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
 });

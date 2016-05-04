@@ -2,15 +2,14 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
-import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import PERSON_LD from 'bsrs-ember/vendor/defaults/person';
 import LD from 'bsrs-ember/vendor/defaults/location';
-import typeInSearch from 'bsrs-ember/tests/helpers/type-in-search';
 import waitFor from 'ember-test-helpers/wait';
+import { typeInSearch, clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 
 var store, person, ticket, location_repo, trans, run = Ember.run;
 const PowerSelect = '.ember-power-select-trigger';
@@ -104,9 +103,7 @@ test('change selected location', function(assert) {
     then(() => {
         assert.equal($(DROPDOWN).length, 1);
         assert.equal($('.ember-power-select-option').length, 4);
-        run(() => {
-        $(`.ember-power-select-option:contains(${LD.storeNameTwo})`).mouseup();
-        });
+        nativeMouseUp(`.ember-power-select-option:contains(${LD.storeNameTwo})`);
         assert.equal($(DROPDOWN).length, 0);
         assert.equal($('.ember-basic-dropdown-content').length, 0);
         assert.equal($('.ember-power-select-options > li').length, 0);

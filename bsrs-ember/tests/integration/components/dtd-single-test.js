@@ -4,8 +4,7 @@ import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
-import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
-import typeInSearch from 'bsrs-ember/tests/helpers/type-in-search';
+import { typeInSearch, clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import DTDL from 'bsrs-ember/vendor/defaults/dtd-link';
 import LINK from 'bsrs-ember/vendor/defaults/link';
@@ -241,12 +240,12 @@ test('note type selector is present and has a selection', function(assert) {
   assert.ok(dtd.get('isNotDirty'));
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
   clickTrigger('.t-dtd-note_type');
-  $(`.ember-power-select-option:contains(${DTD.noteTypeTwo})`).mouseup();
+  nativeMouseUp(`.ember-power-select-option:contains(${DTD.noteTypeTwo})`);
   assert.equal(page.noteTypeInput, trans.t(DTD.noteTypeTwo));
   assert.ok(dtd.get('isDirty'));
   assert.ok(dtd.get('isDirtyOrRelatedDirty'));
   clickTrigger('.t-dtd-note_type');
-  $(`.ember-power-select-option:contains(${DTD.noteTypeOne})`).mouseup();
+  nativeMouseUp(`.ember-power-select-option:contains(${DTD.noteTypeOne})`);
   assert.equal(page.noteTypeInput, trans.t(DTD.noteTypeOne));
   assert.ok(dtd.get('isNotDirty'));
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
@@ -344,17 +343,17 @@ test('preview updates as fields changes are made to detail', function(assert) {
   //number
   clickTrigger(FIELD_TYPE);
   page.fieldTypeOneClickOptionTwo();
-  this.$(`.ember-power-select-option:contains(${FD.typeTwo})`).mouseup();
+  nativeMouseUp(`.ember-power-select-option:contains(${FD.typeTwo})`);
   assert.equal(this.$('input.t-dtd-field-preview').attr('type'), 'number');
   clickTrigger(FIELD_TYPE);
   //textarea
   page.fieldTypeOneClickOptionThree();
-  this.$(`.ember-power-select-option:contains(${FD.typeThree})`).mouseup();
+  nativeMouseUp(`.ember-power-select-option:contains(${FD.typeThree})`);
   assert.ok(this.$('textarea').hasClass('t-dtd-field-preview'));
   clickTrigger(FIELD_TYPE);
   page.fieldTypeOneClickOptionFourTranslated();
   //select
-  this.$(`.ember-power-select-option:contains(${FD.typeFour})`).mouseup();
+  nativeMouseUp(`.ember-power-select-option:contains(${FD.typeFour})`);
   assert.ok(this.$('.t-dtd-preview-field .ember-power-select').hasClass('t-dtd-field-select'));
   clickTrigger('.t-dtd-field-select');
   assert.equal(page.fieldOptionOne, 'yes');
@@ -365,7 +364,7 @@ test('preview updates as fields changes are made to detail', function(assert) {
   //checkbox
   clickTrigger(FIELD_TYPE);
   page.fieldTypeOneClickOptionSix();
-  this.$(`.ember-power-select-option:contains(${FD.typeSix})`).mouseup();
+  nativeMouseUp(`.ember-power-select-option:contains(${FD.typeSix})`);
   assert.equal(this.$('.t-dtd-preview-field-label').text().trim(), FD.labelTwo);
   assert.ok(this.$('div').hasClass('checkbox'));
   assert.equal(this.$('.t-dtd-preview-field div.checkbox:eq(0)').text().trim(), OD.textOne);
@@ -475,12 +474,12 @@ test('update a fields type', function(assert) {
   assert.ok(dtd.get('fieldsIsNotDirty'));
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
   clickTrigger(FIELD_TYPE);
-  $(`.ember-power-select-option:contains(${FD.typeTwo})`).mouseup();
+  nativeMouseUp(`.ember-power-select-option:contains(${FD.typeTwo})`);
   assert.equal(page.fieldTypeOne, trans.t(FD.typeTwo));
   assert.ok(dtd.get('fieldsIsDirty'));
   assert.ok(dtd.get('isDirtyOrRelatedDirty'));
   clickTrigger(FIELD_TYPE);
-  $(`.ember-power-select-option:contains(${FD.typeThree})`).mouseup();
+  nativeMouseUp(`.ember-power-select-option:contains(${FD.typeThree})`);
   assert.equal(page.fieldTypeOne, trans.t(FD.typeThree));
   assert.ok(dtd.get('fieldsIsNotDirty'));
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
