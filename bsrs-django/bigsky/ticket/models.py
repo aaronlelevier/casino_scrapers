@@ -81,10 +81,13 @@ class TicketQuerySet(BaseQuerySet):
                 Q(categories__name__in=[keyword])
             )
 
-    def all_with_ordered_categories(self):
-        return (self.all()
-                    .prefetch_related('categories')
-                    .exclude(categories__isnull=True))
+    def next_number(self):
+        """Auto incrementing number field"""
+        count = self.all().aggregate(Max('number'))['number__max']
+        if not count:
+            return 1
+        else:
+            return count + 1
 
     def filter_on_categories_and_location(self, person):
         q = Q()
@@ -98,14 +101,6 @@ class TicketQuerySet(BaseQuerySet):
 
         return self.filter(q).distinct()
 
-    def next_number(self):
-        """Auto incrementing number field"""
-        count = self.all().aggregate(Max('number'))['number__max']
-        if not count:
-            return 1
-        else:
-            return count + 1
-
 
 class TicketManager(BaseManager):
 
@@ -115,14 +110,11 @@ class TicketManager(BaseManager):
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
 
-    def all_with_ordered_categories(self):
-        return self.get_queryset().all_with_ordered_categories()
+    def next_number(self):
+        return self.get_queryset().next_number()
 
     def filter_on_categories_and_location(self, person):
         return self.get_queryset().filter_on_categories_and_location(person)
-
-    def next_number(self):
-        return self.get_queryset().next_number()
 
 
 class Ticket(BaseModel):
