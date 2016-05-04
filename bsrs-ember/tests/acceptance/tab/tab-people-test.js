@@ -218,6 +218,8 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     assert.equal(tabs.get('length'), 0);
   });
   click('.t-grid-data:eq(0)');
+  const username_response = {'count':0,'next':null,'previous':null,'results': []};
+  xhr(`${endpoint}?username=${PD_PUT.username}`, 'get', null, {}, 200, username_response);
   fillIn('.t-person-username', PD_PUT.username);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -253,6 +255,8 @@ test('clicking on a tab that is dirty from the role url (or any non related page
     assert.equal(tabs.get('length'), 0);
   });
   click('.t-grid-data:eq(0)');
+  const username_response = {'count':0,'next':null,'previous':null,'results': []};
+  xhr(`${endpoint}?username=${PD_PUT.username}`, 'get', null, {}, 200, username_response);
   fillIn('.t-person-username', PD_PUT.username);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
