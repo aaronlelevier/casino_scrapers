@@ -26,7 +26,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
 
     def setUp(self):
         self.driver = webdriver.Firefox()
-        self.driver.set_window_size(1200, 1200)
+        self.driver.set_window_size(1300, 1200)
         self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)
         self.login()
         # Wait
@@ -160,7 +160,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         ticket_location = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-location-select ')]/div")
         ticket_location.click()
         ticket_location_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-search ')]/input")
-        ticket_location_input.send_keys("a")
+        ticket_location_input.send_keys("Company")
         self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]", debounce=True)
         location_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]")
         location_option.click()
@@ -230,9 +230,9 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         ticket_location = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-location-select ')]/div")
         ticket_location.click()
         ticket_location_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-search ')]/input")
-        ticket_location_input.send_keys("c")
+        ticket_location_input.send_keys("Company")
         self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]", debounce=True)
-        location_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[2]")
+        location_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]")
         location_option.click()
         self.gen_elem_page.click_save_btn()
         # # List view contains new request
