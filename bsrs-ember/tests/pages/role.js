@@ -21,7 +21,8 @@ export default PageObject.create({
   locationLevelInput: text(LOCATIONLEVEL),
   locationLevelClickDropdown: clickable(LOCATIONLEVEL),
   locationLevelClickOptionOne: clickable(`${LOCATIONLEVEL_DROPDOWN} > .ember-power-select-option:contains(${LLD.nameCompany})`),
-  locationLevelClickOptionTwo: clickable(`${LOCATIONLEVEL_DROPDOWN} > .ember-power-select-option:contains(${LLD.nameRegion})`),
+  locationLevelClickOptionTwo: clickable(`${LOCATIONLEVEL_DROPDOWN} > .ember-power-select-option:contains(${LLD.nameRegion})`, {multiple: true}),
+  locationLevelClickOptionLossRegion: clickable(`${LOCATIONLEVEL_DROPDOWN} > .ember-power-select-option:contains(${LLD.nameLossPreventionRegion})`, {multiple: true}),
 
   roleTypeInput: text(ROLETYPE),
   roleTypeClickDropdown: clickable(ROLETYPE),

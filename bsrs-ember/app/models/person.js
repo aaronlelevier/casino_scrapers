@@ -31,6 +31,11 @@ const Validations = buildValidations({
     }),
   ],
   // password: validator('format', {
+  /*
+   * (?=) positive lookahead. requires express to match .*\d ..... .* matches any single character 0 or more times with one decimal
+   * () acts as a memory device to remember the match as it traverses through the string
+   * b/w 4-8 occurences of the previous look ahead assertions
+  */
   //   regex: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$/,
   //   message: 'errors.person.password'
   // }),

@@ -23,18 +23,18 @@ const ATTACHMENT_FILE = '.t-ticket-attachment-add-remove';
 
 let store, trans, run = Ember.run;
 
-moduleForComponent('activity-list', 'scott integration: activity-list', {
-    integration: true,
-    setup() {
-        translation.initialize(this);
-        store = module_registry(this.container, this.registry, ['model:ticket-status', 'model:ticket-priority', 'model:activity/cc-add', 'model:activity', 'model:activity/assignee', 'model:activity/person']);
-        // timemachine.config({
-        //     dateString: 'December 25, 2015 13:12:59'
-        // });
-        trans = this.container.lookup('service:i18n');
-        loadTranslations(trans, translations.generate('en'));
-        translation.initialize(this);
-    }
+moduleForComponent('activity-list', 'integration: activity-list', {
+  integration: true,
+  setup() {
+    translation.initialize(this);
+    store = module_registry(this.container, this.registry, ['model:ticket-status', 'model:ticket-priority', 'model:activity/cc-add', 'model:activity', 'model:activity/assignee', 'model:activity/person']);
+    // timemachine.config({
+    //     dateString: 'December 25, 2015 13:12:59'
+    // });
+    trans = this.container.lookup('service:i18n');
+    loadTranslations(trans, translations.generate('en'));
+    translation.initialize(this);
+  }
 });
 
 // test('activity list will dynamically generate a mix of activity types', function(assert) {
@@ -110,45 +110,45 @@ moduleForComponent('activity-list', 'scott integration: activity-list', {
 // });
 
 test('activity list can be filtered to show comments or status updates', function(assert) {
-    let person_to_and_from_json = TAF.get_assignee_person_and_to_from_json(TAD.idAssigneeOne);
-    run(function() {
-        store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
-        store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwo});
-        store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne});
-        store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityTwo});
-        store.push('activity/cc-add', {id: 1, fullname: 'person1', activities: [TAD.idCcAddOne]});
-        store.push('activity/cc-add', {id: 2, fullname: 'person2', activities: [TAD.idCcAddOne]});
-        store.push('activity/cc-remove', {id: 1, fullname: 'person1', activities: [TAD.idCcRemoveOne]});
-        store.push('activity/cc-remove', {id: 2, fullname: 'person2', activities: [TAD.idCcRemoveOne]});
-        store.push('activity/person', person_to_and_from_json.person);
-        store.push('activity/assignee', person_to_and_from_json.to);
-        store.push('activity/assignee', person_to_and_from_json.from);
-        store.push('activity/attachment-add', {id: TAD.idAttachmentAddOne, filename: GD.nameTicketAttachmentOne, file: TAD.fileAttachmentAddOne, activities: [TAD.idAttachmentAddOne]});
-        store.push('activity', TAF.get_create_json(TAD.idCreate));
-        store.push('activity', TAF.get_assignee_json(TAD.idAssigneeOne));
-        store.push('activity', TAF.get_status_json(TAD.idStatusOne));
-        store.push('activity', TAF.get_priority_json(TAD.idPriorityOne));
-        store.push('activity', TAF.get_cc_add_remove_json(TAD.idCcAddOne, 2, 'cc_add'));
-        store.push('activity', TAF.get_cc_add_remove_json(TAD.idCcRemoveOne, 2, 'cc_remove'));
-        store.push('activity', TAF.get_comment_json(TAD.idCommentOne));
-        store.push('activity', TAF.get_attachment_add_remove_json(TAD.idAttachmentAddOne, 1, 'attachment_add'));
-    });
-    let model = store.find('activity');
-    this.set('model', model);
-    this.render(hbs`{{activity-list model=model}}`);
-    let $component = this.$(`${ACTIVITY_ITEMS}`);
-    assert.equal($component.length, 8);
-    this.$(`${STATUS_TAB}`).click();
-    $component = this.$(`${ACTIVITY_ITEMS}`).filter(':visible');
-    assert.equal($component.length, 2);
-    this.$(`${COMMENT_TAB}`).click();
-    $component = this.$(`${ACTIVITY_ITEMS}`).filter(':visible');
-    assert.equal($component.length, 2);
-    this.$(`${ALL_TAB}`).click();
-    $component = this.$(`${ACTIVITY_ITEMS}`).filter(':visible');
-    assert.equal($component.length, 8);
-    // total activities count
-    assert.equal(parseInt(this.$(`${'.t-activity-all-counts'}`).text()), 8);
-    assert.equal(parseInt(this.$(`${'.t-activity-comment-counts'}`).text()), 1);
-    assert.equal(parseInt(this.$(`${'.t-activity-status-counts'}`).text()), 1);
+  let person_to_and_from_json = TAF.get_assignee_person_and_to_from_json(TAD.idAssigneeOne);
+  run(function() {
+    store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
+    store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwo});
+    store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne});
+    store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityTwo});
+    store.push('activity/cc-add', {id: 1, fullname: 'person1', activities: [TAD.idCcAddOne]});
+    store.push('activity/cc-add', {id: 2, fullname: 'person2', activities: [TAD.idCcAddOne]});
+    store.push('activity/cc-remove', {id: 1, fullname: 'person1', activities: [TAD.idCcRemoveOne]});
+    store.push('activity/cc-remove', {id: 2, fullname: 'person2', activities: [TAD.idCcRemoveOne]});
+    store.push('activity/person', person_to_and_from_json.person);
+    store.push('activity/assignee', person_to_and_from_json.to);
+    store.push('activity/assignee', person_to_and_from_json.from);
+    store.push('activity/attachment-add', {id: TAD.idAttachmentAddOne, filename: GD.nameTicketAttachmentOne, file: TAD.fileAttachmentAddOne, activities: [TAD.idAttachmentAddOne]});
+    store.push('activity', TAF.get_create_json(TAD.idCreate));
+    store.push('activity', TAF.get_assignee_json(TAD.idAssigneeOne));
+    store.push('activity', TAF.get_status_json(TAD.idStatusOne));
+    store.push('activity', TAF.get_priority_json(TAD.idPriorityOne));
+    store.push('activity', TAF.get_cc_add_remove_json(TAD.idCcAddOne, 2, 'cc_add'));
+    store.push('activity', TAF.get_cc_add_remove_json(TAD.idCcRemoveOne, 2, 'cc_remove'));
+    store.push('activity', TAF.get_comment_json(TAD.idCommentOne));
+    store.push('activity', TAF.get_attachment_add_remove_json(TAD.idAttachmentAddOne, 1, 'attachment_add'));
+  });
+  let model = store.find('activity');
+  this.set('model', model);
+  this.render(hbs`{{activity-list model=model}}`);
+  let $component = this.$(`${ACTIVITY_ITEMS}`);
+  assert.equal($component.length, 8);
+  this.$(`${STATUS_TAB}`).click();
+  $component = this.$(`${ACTIVITY_ITEMS}`).filter(':visible');
+  assert.equal($component.length, 2);
+  this.$(`${COMMENT_TAB}`).click();
+  $component = this.$(`${ACTIVITY_ITEMS}`).filter(':visible');
+  assert.equal($component.length, 2);
+  this.$(`${ALL_TAB}`).click();
+  $component = this.$(`${ACTIVITY_ITEMS}`).filter(':visible');
+  assert.equal($component.length, 8);
+  // total activities count
+  assert.equal(parseInt(this.$(`${'.t-activity-all-counts'}`).text()), 8);
+  assert.equal(parseInt(this.$(`${'.t-activity-comment-counts'}`).text()), 1);
+  assert.equal(parseInt(this.$(`${'.t-activity-status-counts'}`).text()), 1);
 });

@@ -70,7 +70,7 @@ var DTDPage = PageObject.create({
     textIsRequiredError: () => Ember.$('.t-dtd-link-text-error').text().trim(),
 
     isDirty: hasClass('dirty', 'i', {scope: '.t-tab-close'}),
-    clickPreviewToggle: clickable('.t-dtd-preview'),
+    clickPreviewToggle: clickable('button.t-dtd-preview'),
     clickDetailToggle: clickable('.t-dtd-detail'),
     clickListToggle: clickable('.t-dtd-list'),
 

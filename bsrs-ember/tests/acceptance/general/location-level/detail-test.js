@@ -105,7 +105,7 @@ test('a location level child can be selected and persisted', (assert) => {
     assert.equal(location_level.get('children').get('length'), 3);
     assert.ok(location_level.get('isDirty'));
   });
-  let children = [LLD.idStore, LLD.idLossRegion, LLD.idTwo];
+  let children = [LLD.idThree, LLD.idStore, LLD.idTwo];
   let payload = LLF.put({id: LLD.idDistrict, name: LLD.nameDistrict, children: children});
   xhr(PREFIX + DISTRICT_DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, {});
   let list = LLF.list();

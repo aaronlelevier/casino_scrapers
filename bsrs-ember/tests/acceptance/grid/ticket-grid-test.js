@@ -37,7 +37,7 @@ const FILTER_PRIORITY = '.t-filter-priority-translated-name';
 
 var application, store, endpoint, list_xhr, original_uuid;
 
-module('scott Acceptance | ticket grid test', {
+module('Acceptance | ticket grid test', {
   beforeEach() {
     // timemachine.config({
     //   dateString: 'December 25, 2014 13:12:59'
