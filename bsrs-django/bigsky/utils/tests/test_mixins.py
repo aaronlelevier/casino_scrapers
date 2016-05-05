@@ -98,16 +98,6 @@ class OrderingQuerySetMixinTests(APITestCase):
         else:
             return "Wat{}".format(chr(65+record))
 
-    def test_default_ordering(self):
-        # Should start with ID Ascending order
-        response = self.client.get('/api/admin/people/')
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(
-            data['results'][0]['id'],
-            str(Person.objects.first().id)
-            )
-
     def test_ordering_first_name_data(self):
         response = self.client.get('/api/admin/people/?ordering=first_name')
         self.assertEqual(response.status_code, 200)
