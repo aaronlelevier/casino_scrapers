@@ -14,11 +14,12 @@ services:
 
   django:  
     build: 
-      context: ./bsrs-django
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./bsrs-django/Dockerfile
     environment:
       - DATABASE_HOST=postgres
-    command: bash -c "sleep 3 && python bigsky/manage.py migrate"
+    command: [bash, -c, "sleep 3 && python bsrs-django/bigsky/manage.py collectstatic --noinput && python bsrs-django/bigsky/manage.py migrate && bash /scripts/_load_fixtures.sh"]
+    # entrypoint: ./entrypoint.sh
     volumes:
       - .:/www/src/bsrs-django
     expose:
@@ -63,3 +64,11 @@ networks:
   #     - /data/media:/media
   # nginx: sudo service nginx status
   # postgres: systemctl command postgres.rst, db deploy, username and password, 
+  #
+  #ci:
+    # image: jenkins:2.0
+    # ports:
+    #  - "8080:8080"
+    #  - "50000:50000"
+    # links:
+    # - django
