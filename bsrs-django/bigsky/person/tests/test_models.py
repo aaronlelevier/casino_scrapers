@@ -207,22 +207,6 @@ class PersonStatusTests(TestCase):
 
 ### PERSON
 
-class PersonManagerTests(TestCase):
-
-    def setUp(self):
-        create_locations()
-        self.person = create_person()
-        self.person_del = create_person()
-        self.person_del.delete()
-
-    def test_objects(self):
-        # filter out deleted records by default
-        self.assertEqual(Person.objects.count(), 1)
-
-    def test_objects_all(self):
-        self.assertEqual(Person.objects_all.count(), 2)
-
-
 class PersonTests(TestCase):
 
     def setUp(self):

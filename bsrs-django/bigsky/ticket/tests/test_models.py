@@ -161,7 +161,6 @@ class TicketManagerTests(TestCase):
 
         self.assertEqual(ret.count(), 2)
 
-
     def test_deleted(self):
         init_count = Ticket.objects_all.count()
         ticket = Ticket.objects.first()
