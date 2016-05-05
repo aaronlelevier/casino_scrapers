@@ -27,6 +27,7 @@ class TicketStatusSerializer(serializers.ModelSerializer):
         model = TicketStatus
         fields = ('id', 'name')
 
+
 class TicketCreateSerializer(BaseCreateSerializer):
 
     attachments = serializers.PrimaryKeyRelatedField(
@@ -34,7 +35,7 @@ class TicketCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS + ('cc', 'attachments')
+        fields = TICKET_FIELDS + ('cc', 'attachments', 'dt_path')
 
     def create(self, validated_data):
         validated_data.pop('attachments', None)
@@ -76,7 +77,8 @@ class TicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS + ('number', 'cc', 'attachments', 'created', 'legacy_ref_number')
+        fields = TICKET_FIELDS + ('number', 'cc', 'attachments', 'created',
+                                  'legacy_ref_number', 'dt_path')
 
     @staticmethod
     def eager_load(queryset):

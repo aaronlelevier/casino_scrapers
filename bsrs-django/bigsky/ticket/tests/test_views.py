@@ -153,6 +153,7 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
         )
         self.assertIn('completion_date', data)
         self.assertIn('creator', data)
+        self.assertIn('dt_path', data)
 
     def test_legacy_ref_number(self):
         self.ticket.legacy_ref_number = '42'
@@ -261,6 +262,15 @@ class TicketUpdateTests(TicketSetupMixin, APITestCase):
 
         self.assertEqual(self.ticket.attachments.count(), 0)
 
+    def test_dt_path(self):
+        self.assertEqual(self.data['dt_path'], [])
+        self.data['dt_path'] = [{'foo': 'bar'}]
+
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['dt_path'], self.data['dt_path'])
+
 
 class TicketCreateTests(TicketSetupMixin, APITestCase):
 
@@ -274,6 +284,7 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
         self.data.update({
             'id': str(uuid.uuid4()),
             'request': 'plumbing',
+            'dt_path': [{'foo': 'bar'}]
         })
 
         response = self.client.post('/api/tickets/', self.data, format='json')
@@ -282,6 +293,7 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(self.data['id'], data['id'])
         self.assertEqual(self.data['request'], data['request'])
+        self.assertEqual(self.data['dt_path'], data['dt_path'])
 
     def test_attachments_field_not_required(self):
         self.data.update({
