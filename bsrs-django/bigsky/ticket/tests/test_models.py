@@ -5,14 +5,15 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from category.models import Category
-from category.tests.factory import create_categories
+from category.tests.factory import create_categories, create_single_category
 from generic.tests.factory import create_file_attachment
 from location.models import Location
-from location.tests.factory import create_location
+from location.tests.factory import create_location, create_locations
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUS_DEFAULT, TICKET_PRIORITY_DEFAULT)
-from ticket.tests.factory import (create_ticket, create_tickets,
+from ticket.tests.factory import (
+    RegionManagerWithTickets, create_ticket, create_tickets,
     create_ticket_status, create_ticket_statuses, create_ticket_priorities)
 from ticket.tests.mixins import TicketCategoryOrderingSetupMixin
 
@@ -72,61 +73,94 @@ class TicketPriorityTests(TestCase):
 class TicketManagerTests(TestCase):
 
     def setUp(self):
-        create_categories()
-        self.status_draft = create_ticket_status('ticket.status.draft')
+        self.rm = RegionManagerWithTickets()
         self.person = create_single_person()
-        self.person_category = self.person.role.categories.first()
-        self.person_location = self.person.locations.first()
-        # ticket_one - location match; category match
-        self.ticket_one = create_ticket()
-        self.ticket_one.categories.add(self.person_category)
-        self.ticket_one.location = self.person_location
-        self.ticket_one.save()
-        # ticket_two - location no match; category match
-        self.ticket_two = create_ticket()
-        self.ticket_two.categories.add(self.person_category)
-        other_location = create_location()
-        self.ticket_two.location = other_location
-        self.ticket_two.save()
-        # ticket_three - location match; category no match
-        self.ticket_three = create_ticket()
-        self.ticket_three.location = self.person_location
-        self.ticket_three.save()
+        self.other_location = create_location()
+        self.other_category = create_single_category()
+        # start fresh w/ no locations or categories
+        for x in self.person.locations.all():
+            self.person.locations.remove(x)
         for c in self.person.role.categories.all():
-            self.ticket_three.categories.remove(c)
-        other_category = Category.objects.exclude(id=self.person_category.id).first()
-        self.ticket_three.categories.add(other_category)
-        # ticket_four - location match; category no match (is NULL),
-        # but is a 'draft' status
-        self.ticket_four = create_ticket()
-        self.ticket_four.location = self.person_location
-        self.ticket_four.status = self.status_draft
-        self.ticket_four.save()
-        for c in self.person.role.categories.all():
-            self.ticket_four.categories.remove(c)
-        # only 1 ticket should be status 'draft'
-        self.status_new = create_ticket_status('ticket.status.new')
-        for t in Ticket.objects.exclude(id=self.ticket_four.id):
-            t.status = self.status_new
-            t.save()
+            self.person.role.categories.remove(c)
 
-    def test_ticket_setup(self):
-        self.assertEqual(self.person.role.categories.count(), 1)
-        self.assertEqual(self.person.locations.count(), 1)
-        self.assertEqual(Ticket.objects.count(), 4)
-        self.assertEqual(Ticket.objects.filter(location=self.person.locations.first()).count(), 3)
-        self.assertEqual(Ticket.objects.filter(categories=self.person.role.categories.all()).count(), 2)
-        self.assertEqual(Ticket.objects.filter(status=self.status_new).count(), 3)
-        self.assertEqual(Ticket.objects.filter(status=self.status_draft).count(), 1)
-        # ticket_one
-        self.assertIn(self.ticket_one.location, self.person.locations.all())
-        self.assertIn(self.person.role.categories.first(), self.ticket_one.categories.all())
-        # ticket_two
-        self.assertNotIn(self.ticket_two.location, self.person.locations.all())
-        self.assertIn(self.person.role.categories.first(), self.ticket_two.categories.all())
-        # ticket_three
-        self.assertIn(self.ticket_three.location, self.person.locations.all())
-        self.assertNotIn(self.person.role.categories.first(), self.ticket_three.categories.all())
+    def test_ticket_filter__person_top_level_location_and_no_role_categories(self):
+        self.person.locations.add(self.rm.top_location)
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), 16)
+
+    def test_ticket_filter__person_location_and_no_role_categories(self):
+        self.person.locations.add(self.rm.location)
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), 8)
+
+    def test_ticket_filter__person_child_location_and_no_role_categories(self):
+        self.person.locations.add(self.rm.child_location)
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), 4)
+
+    def test_ticket_filter__person_other_location_and_no_role_categories(self):
+        self.person.locations.add(self.other_location)
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), 0)
+
+    def test_ticket_filter__person_top_location_and_category(self):
+        self.person.locations.add(self.rm.top_location)
+        self.person.role.categories.add(self.rm.category)
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), 8)
+
+    def test_ticket_filter__person_location_and_category(self):
+        self.person.locations.add(self.rm.location)
+        self.person.role.categories.add(self.rm.category)
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), 4)
+
+    def test_ticket_filter__person_child_location_and_category(self):
+        self.person.locations.add(self.rm.child_location)
+        self.person.role.categories.add(self.rm.category)
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), 2)
+
+    def test_ticket_filter__person_other_location_and_category(self):
+        self.person.locations.add(self.other_location)
+        self.person.role.categories.add(self.rm.category)
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), 0)
+
+    def test_ticket_filter__person_top_location_and_other_category(self):
+        """Top level location Person can see all ticket drafts."""
+        self.person.locations.add(self.rm.top_location)
+        self.person.role.categories.add(self.other_category)
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), 4)
+
+    def test_ticket_filter__person_location_and_other_category(self):
+        """Can see location and child location ticket drafts."""
+        self.person.locations.add(self.rm.location)
+        self.person.role.categories.add(self.other_category)
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person)
+
+        self.assertEqual(ret.count(), 2)
+
 
     def test_deleted(self):
         init_count = Ticket.objects_all.count()
@@ -154,8 +188,9 @@ class TicketManagerTests(TestCase):
 
     def test_next_number(self):
         number = 100
-        self.ticket_one.number = number
-        self.ticket_one.save()
+        ticket = Ticket.objects.first()
+        ticket.number = number
+        ticket.save()
         raw_max = Ticket.objects.all().aggregate(Max('number'))['number__max']
 
         next_number = Ticket.objects.next_number()
@@ -170,80 +205,6 @@ class TicketManagerTests(TestCase):
         ret = Ticket.objects.next_number()
 
         self.assertEqual(ret, 1)
-
-    # filter_on_categories_and_location
-
-    def test_filter_on_categories_and_location(self):
-        q = Q()
-        if not self.person.has_top_level_location:
-            q &= Q(location__id__in=self.person.locations.values_list('id', flat=True))
-        if self.person.role.categories.first():
-            q &= Q(
-                    Q(categories__id__in=self.person.role.categories.filter(parent__isnull=True).values_list('id', flat=True)) | \
-                    Q(categories__isnull=True)
-                )
-        raw_qs = Ticket.objects.filter(q).distinct().values_list('id', flat=True)
-
-        ret = Ticket.objects.filter_on_categories_and_location(self.person).values_list('id', flat=True)
-
-        self.assertEqual(sorted(ret), sorted(raw_qs))
-
-    def test_filter_on_categories_and_location__default_filtering(self):
-        """
-        Only 2 Ticket is viewable based on Category and Location.
-        1 that meets the Criteria, and 1 that is draft.
-        For the other 2, they only meet 1 of the criteria, but not both.
-        """
-        ret = Ticket.objects.filter_on_categories_and_location(self.person)
-
-        self.assertEqual(ret.count(), 2)
-        self.assertEqual(ret.filter(status=self.status_draft).count(), 1)
-
-    def test_filter_on_categories_and_location__person_has_top_level_location(self):
-        """
-        Only filter on Category, b/c `person.has_top_level_location == True`
-        """
-        top_location = Location.objects.create_top_level()
-        for x in self.person.locations.all():
-            self.person.locations.remove(x)
-        self.person.locations.add(top_location)
-        self.assertTrue(self.person.has_top_level_location)
-
-        ret = Ticket.objects.filter_on_categories_and_location(self.person)
-
-        self.assertEqual(ret.count(), 3)
-
-    def test_filter_on_categories_and_location__no_role_categories(self):
-        """
-        Only filter on Location, b/c `person.role.categories == []`
-        """
-        for c in self.person.role.categories.all():
-            self.person.role.categories.remove(c)
-        self.assertFalse(self.person.role.categories.first())
-
-        ret = Ticket.objects.filter_on_categories_and_location(self.person)
-
-        self.assertEqual(ret.count(), 3)
-
-    def test_filter_on_categories_and_location__top_location_and_no_role_categories(self):
-        """
-        `person.has_top_level_location == True` and 
-        `person.role.categories == []`
-        """
-        # remove categories
-        for c in self.person.role.categories.all():
-            self.person.role.categories.remove(c)
-        self.assertEqual(self.person.role.categories.count(), 0)
-        # location - 'person' only has top level location
-        top_location = Location.objects.create_top_level()
-        for x in self.person.locations.all():
-            self.person.locations.remove(x)
-        self.person.locations.add(top_location)
-        self.assertTrue(self.person.has_top_level_location)
-
-        ret = Ticket.objects.filter_on_categories_and_location(self.person)
-
-        self.assertEqual(ret.count(), 4)
 
 
 class TicketTests(TestCase):

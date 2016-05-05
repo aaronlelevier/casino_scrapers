@@ -1,3 +1,4 @@
+from collections import namedtuple
 import random
 import sys
 import uuid
@@ -5,12 +6,82 @@ import uuid
 from model_mommy import mommy
 
 from category.models import Category
+from category.tests.factory import create_single_category
 from generic.tests.factory import create_file_attachment
+from location.models import Location, LOCATION_COMPANY
+from location.tests.factory import create_locations
 from person.models import Person
+from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
 from utils.create import _generate_chars
 from utils.helpers import generate_uuid
+
+
+class RegionManagerWithTickets(object):
+    """
+    Refer to this grid for ticket config:
+    https://docs.google.com/spreadsheets/d/1IhSbGCppJfS6sXpK-9nJIdAPlnLf5RhnjiJPYUvnE_0/edit#gid=0
+    """
+    def __init__(self):
+        self.setup_locations()
+        self.setup_categories()
+        self.setup_ticket_statuses()
+
+        self.setup_tickets()
+
+    def setup_locations(self):
+        create_locations()
+        self.top_location = Location.objects.get(name=LOCATION_COMPANY)
+        self.location = (Location.objects.exclude(id=self.top_location.id)
+                                         .filter(children__isnull=False).first())
+        self.child_location = self.location.children.first()
+        self.other_location = Location.objects.exclude(
+            id__in=[self.top_location.id, self.location.id, self.child_location.id]).first()
+
+    def setup_categories(self):
+        self.category = create_single_category('Repair')
+        self.other_category = create_single_category('Maintenance')
+
+    def setup_ticket_statuses(self):
+        self.status = create_ticket_status('ticket.status.draft')
+        self.other_status = create_ticket_status('ticket.status.new')
+
+    def setup_tickets(self):
+        for x in self.ticket_config:
+            TicketData = namedtuple('TicketData', ['location', 'category', 'status'])
+            data = TicketData._make(x)._asdict()
+            category = data.pop('category', None)
+            ticket = mommy.make(Ticket, **data)
+            if category:
+                ticket.categories.add(category)
+
+    @property
+    def ticket_config(self):
+        """
+        (Location, Category, TicketStatus)
+        """
+        return [
+            (self.top_location, None, self.status),
+            (self.top_location, self.category, self.status),
+            (self.top_location, self.other_category, self.status),
+            (self.top_location, self.other_category, self.other_status),
+
+            (self.location, None, self.status),
+            (self.location, self.category, self.status),
+            (self.location, self.other_category, self.status),
+            (self.location, self.other_category, self.other_status),
+
+            (self.child_location, None, self.status),
+            (self.child_location, self.category, self.status),
+            (self.child_location, self.other_category, self.status),
+            (self.child_location, self.other_category, self.other_status),
+
+            (self.other_location, None, self.status),
+            (self.other_location, self.category, self.status),
+            (self.other_location, self.other_category, self.status),
+            (self.other_location, self.other_category, self.other_status),
+        ]
 
 
 def construct_tree(category, tree):

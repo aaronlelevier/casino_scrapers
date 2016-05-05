@@ -93,13 +93,13 @@ class TicketQuerySet(BaseQuerySet):
         q = Q()
 
         if not person.has_top_level_location:
-            q &= Q(location__id__in=person.locations.values_list('id', flat=True))
+            q &= Q(location__id__in=person.locations.objects_and_their_children())
 
         if person.role.categories.first():
             q &= Q(
                 Q(categories__id__in=person.role.categories.filter(parent__isnull=True)
                                                            .values_list('id', flat=True)) | \
-                Q(categories__isnull=True)
+                Q(categories__isnull=True, status__name=TICKET_STATUS_DEFAULT)
             )
 
         return self.filter(q).distinct()

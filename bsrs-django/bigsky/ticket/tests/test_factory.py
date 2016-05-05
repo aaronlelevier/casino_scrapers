@@ -8,13 +8,45 @@ from django.test import TestCase
 from category.models import Category
 from category.tests.factory import create_categories
 from generic.models import Attachment
-from location.models import Location
+from location.models import Location, LOCATION_COMPANY
 from person.models import Person
 from person.tests.factory import create_single_person, DistrictManager
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
 from ticket.tests import factory
 from utils.helpers import generate_uuid
+
+
+class RegionManagerWithTicketsTests(TestCase):
+
+    def setUp(self):
+        self.rm = factory.RegionManagerWithTickets()
+
+    def test_setup_locations(self):
+        self.assertEqual(self.rm.top_location.name, LOCATION_COMPANY)
+        self.assertIsInstance(self.rm.location, Location)
+        self.assertIn(self.rm.child_location, self.rm.location.children.all())
+        self.assertNotIn(self.rm.other_location, self.rm.location.children.all())
+
+    def test_setup_categories(self):
+        self.assertEqual(self.rm.category.name, 'Repair')
+        self.assertEqual(self.rm.other_category.name, 'Maintenance')
+
+    def test_setup_ticket_statuses(self):
+        self.assertEqual(self.rm.status.name, 'ticket.status.draft')
+        self.assertEqual(self.rm.other_status.name, 'ticket.status.new')
+
+    def test_setup_tickets(self):
+        self.assertEqual(Ticket.objects.count(), 16)
+        self.assertEqual(Ticket.objects.filter(categories__isnull=True).count(), 4)
+        self.assertEqual(Ticket.objects.filter(location=self.rm.top_location,
+                                               status=self.rm.other_status).count(), 1)
+        self.assertEqual(Ticket.objects.filter(location=self.rm.location,
+                                               status=self.rm.other_status).count(), 1)
+        self.assertEqual(Ticket.objects.filter(location=self.rm.child_location,
+                                               status=self.rm.other_status).count(), 1)
+        self.assertEqual(Ticket.objects.filter(location=self.rm.other_location,
+                                               status=self.rm.other_status).count(), 1)
 
 
 class CreateTicketTests(TestCase):
