@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import config from 'bsrs-ember/config/environment';
 import { task, timeout } from 'ember-concurrency';
 
@@ -19,9 +20,13 @@ var DBFetch = Ember.Component.extend({
       const change_func = this.get('change_func');
       const remove_func = this.get('remove_func');
       if (item) {
-        model[change_func](item);
+        run(() => {
+          model[change_func](item);
+        });
       } else {
-        model[remove_func]();
+        run(() => {
+          model[remove_func]();
+        });
       }
     }
   }
