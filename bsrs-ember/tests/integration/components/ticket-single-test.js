@@ -41,8 +41,8 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
 test('validation on ticket request works if clear out textarea', function(assert) {
   var done = assert.async();
   let statuses = store.find('ticket-status');
-  this.set('model', ticket);
-  this.set('statuses', statuses);
+  this.model = ticket;
+  this.statuses = statuses;
   this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
   let $component = this.$('.has-error');
   assert.equal($component.text().trim(), '');
