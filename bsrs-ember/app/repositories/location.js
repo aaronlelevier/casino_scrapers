@@ -73,7 +73,10 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
         return PromiseMixin.xhr(url, 'GET').then((response) => {
             return response.results.filter((location) => {
                 const location_level_fk = location.location_level;
-                return location_level_fk === filter.location_level;
+                if (filter) {
+                  return location_level_fk === filter.location_level;
+                }
+                return location;
             });
         });
     },

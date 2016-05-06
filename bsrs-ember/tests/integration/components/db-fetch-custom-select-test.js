@@ -15,7 +15,7 @@ const PowerSelect = '.ember-power-select-trigger';
 const DROPDOWN = '.ember-power-select-dropdown';
 const COMPONENT = '.t-link-destination-select';
 
-moduleForComponent('db-fetch-custom-select', 'scott integration: db-fetch-custom-select test', {
+moduleForComponent('db-fetch-custom-select', 'integration: db-fetch-custom-select test', {
   integration: true,
   setup() {
     store = module_registry(this.container, this.registry, ['model:dtd', 'model:link']);

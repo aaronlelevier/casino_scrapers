@@ -30,7 +30,7 @@ moduleForComponent('power-select-location', 'integration: power-select-location'
             store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
         });
         location_repo = repository.initialize(this.container, this.registry, 'dtd');
-        location_repo.findDTD = function() {
+        location_repo.findLocationSelect = function() {
             return [
                 {id: LD.idOne, name: LD.storeName},
                 {id: LD.idTwo, name: LD.storeNameTwo},
@@ -48,7 +48,6 @@ test('default and disable if has_multi_locations === false', function(assert) {
         store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, person_locations_fks: [PERSON_LD.idTwo]});
         store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idTwo, location_pk: LD.idTwo});
     });
-    this.person = person;
     let locations = person.get('locations');
     assert.equal(locations.get('length'), 1);
     this.disabled = !person.get('has_multi_locations');
@@ -61,7 +60,6 @@ test('default and disable if has_multi_locations === false', function(assert) {
 });
 
 test('if has_multi_locations === true, no default location, and render a selectbox with options after type ahead for search', function(assert) {
-    this.person = person;
     let locations = store.find('location');
     assert.equal(locations.get('length'), 3);
     this.options = locations;
@@ -78,31 +76,30 @@ test('if has_multi_locations === true, no default location, and render a selectb
     return waitFor().
     then(() => {
         assert.equal($(DROPDOWN).length, 1);
-        assert.equal($('.ember-power-select-option').length, 4);
-        assert.equal($('.ember-power-select-option:eq(1)').text().trim(), LD.storeName);
-        assert.equal($('.ember-power-select-option:eq(2)').text().trim(), LD.storeNameTwo);
-        assert.equal($('.ember-power-select-option:eq(3)').text().trim(), LD.storeNameThree);
+        assert.equal($('.ember-power-select-option').length, 3);
+        assert.equal($('.ember-power-select-option:eq(0)').text().trim(), LD.storeName);
+        assert.equal($('.ember-power-select-option:eq(1)').text().trim(), LD.storeNameTwo);
+        assert.equal($('.ember-power-select-option:eq(2)').text().trim(), LD.storeNameThree);
     });
 });
 
 test('change selected location', function(assert) {
-    this.set('person', person);
     let locations = store.find('location');
     assert.equal(locations.get('length'), 3);
-    this.set('options', locations);
+    this.options = locations;
     let disabled = !person.get('has_multi_locations');
-    this.set('disabled', disabled);
+    this.disabled = disabled;
     let defaultLocation = person.get('locations').objectAt(0);
-    this.set('selected', disabled ? defaultLocation : null);
-    this.set('repository', location_repo);
-    this.set('ticket', ticket);
+    this.selected = disabled ? defaultLocation : null;
+    this.repository = location_repo;
+    this.ticket = ticket;
     this.render(hbs`{{power-select-location options=options selected=selected disabled=disabled repository=repository ticket=ticket}}`);
     clickTrigger();
     run(() => { typeInSearch('a'); });
     return waitFor().
     then(() => {
         assert.equal($(DROPDOWN).length, 1);
-        assert.equal($('.ember-power-select-option').length, 4);
+        assert.equal($('.ember-power-select-option').length, 3);
         nativeMouseUp(`.ember-power-select-option:contains(${LD.storeNameTwo})`);
         assert.equal($(DROPDOWN).length, 0);
         assert.equal($('.ember-basic-dropdown-content').length, 0);

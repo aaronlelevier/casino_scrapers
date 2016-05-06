@@ -10,14 +10,13 @@ var DBFetch = Ember.Component.extend({
     if (Ember.isBlank(search)) { return []; }
     yield timeout(DEBOUNCE_MS);
     const repo = this.get('repository');
-    let find = `name:${search}`;
-    const json = yield repo['findWithQuery'](null, null, null, find, null);
+    const json = yield repo['findLocationSelect'](search);
     return json;
   }).restartable(),
   actions: {
     change_location(location) {
       const ticket = this.get('ticket');
-      const locationId = location.get('id');
+      const locationId = location.id;
       run(() => {
         ticket.change_location({id: locationId});
         this.set('selected', location);
