@@ -7,6 +7,8 @@ import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
+import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
+import page from 'bsrs-ember/tests/pages/tickets';
 
 var application, store, endpoint;
 const PREFIX = config.APP.NAMESPACE;
@@ -38,7 +40,13 @@ test('draft tickets are shown', async assert => {
   assert.equal(find('.t-ticket-draft').length, 10);
   const tickets = store.find('ticket-list')
   assert.equal(tickets.get('length'), 10);
-
+  let endpoint = `${PREFIX}${BASE_URL}/`;
+  detail_data = TF.detail(TD.idOne, TD.statusSevenId);
+  xhr(`${endpoint}${TD.idOne}/`, 'GET', null, {}, 200, detail_data);
+  xhr(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
+  await click('.t-ticket-status-draft-link');
+  assert.equal(currentURL(), `${BASE_URL}/${TD.idOne}`);
+  assert.equal(page.statusInput, TD.statusSeven);
 });
 
 /* jshint ignore:end */

@@ -124,9 +124,9 @@ var BSRS_TICKET_FACTORY = (function() {
     }
     return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
   };
-  factory.prototype.detail = function(i) {
+  factory.prototype.detail = function(i, status_id) {
     var pk = i || this.ticket.idOne;
-    var detail = this.generate(pk);
+    var detail = this.generate(pk, status_id);
     detail.attachments = [];
     return detail;
   };
