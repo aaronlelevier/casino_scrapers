@@ -57,8 +57,8 @@ export default Ember.Component.extend({
      * @method linkClick
      * closure action calls linkClick on controller
      */
-    linkClick(destination_id, link, ticket) {
-      this.attrs.linkClick(destination_id, link, ticket);
+    linkClick(destination_id, link, ticket, dtd_id) {
+      this.attrs.linkClick(destination_id, link, ticket, dtd_id);
     }
   }
 });

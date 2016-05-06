@@ -8,6 +8,8 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
+import LD from 'bsrs-ember/vendor/defaults/location';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
 import DT from 'bsrs-ember/vendor/defaults/dtd';
 import TICKET from 'bsrs-ember/vendor/defaults/ticket';
 import DTF from 'bsrs-ember/vendor/dtd_fixtures';
@@ -39,6 +41,25 @@ module('Acceptance | dt detail', {
     dtd = store.find('dtd', DT.idOne);
     original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
+    const ticket = {
+      id: UUID.value,
+      requester: TD.requesterOne,
+      location: LD.idThree,
+      status: TD.statusZeroId,
+      priority: TD.priorityZeroId,
+      categories: [],
+      cc: [],
+      attachments: [],
+    };
+    const dt_path = [{
+      ticket
+    }];
+    run(() => {
+      store.push('ticket', {id: ticket.id, location_fk: LD.idThree, status_fk: TD.statusZeroId, priority_fk: TD.priorityZeroId, new_pk: DT.idOne, dt_path});
+      store.push('location', {id: LD.idThree, tickets: [ticket.id]});
+      store.push('ticket-status', {id: TD.statusZeroId, tickets: [ticket.id]});
+      store.push('ticket-priority', {id: TD.priorityZeroId, tickets: [ticket.id]});
+    });
   },
   afterEach() {
     random.uuid = original_uuid;
@@ -49,9 +70,6 @@ module('Acceptance | dt detail', {
 /* jshint ignore:start */
 
 test('decision tree displays data and can click to next destination after updating option (patch ticket)', async assert => {
-  run(() => {
-    store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
-  });
   const detail_data = DTF.detail(DT.idOne);
   const detail_xhr = xhr(`${endpoint}${DT.idOne}/`, 'GET', null, {}, 200, detail_data);
   await visit(DETAIL_URL);
@@ -61,6 +79,11 @@ test('decision tree displays data and can click to next destination after updati
   const requestValue = `${FD.labelOne}: ${OD.textOne}`;
   assert.deepEqual(ticket.get('requestValues'), [requestValue]);
   assert.equal(ticket.get('request'), requestValue);
+  assert.equal(ticket.get('dt_path')[0]['dt_id'], undefined);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['request'], undefined);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['location'], LD.idThree);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['status'], TD.statusZeroId);
+  assert.equal(ticket.get('status.id'), TD.statusZeroId);
   assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
   let dtd_payload = DTF.generate(DT.idTwo);
   const link = dtd.get('links').objectAt(0);
@@ -68,12 +91,18 @@ test('decision tree displays data and can click to next destination after updati
   xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
   await page.clickNextBtn();
   assert.equal(currentURL(), DEST_URL);
+  assert.equal(ticket.get('dt_path')[0]['dt_id'], undefined);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['request'], undefined);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['location'], LD.idThree);
+  assert.equal(ticket.get('dt_path')[1]['dt_id'], DT.idOne);
+  assert.equal(ticket.get('dt_path')[1]['ticket']['request'], requestValue);
+  assert.equal(ticket.get('dt_path')[1]['ticket']['location'], LD.idThree);
+  assert.equal(ticket.get('status.id'), TD.statusZeroId);
+  assert.equal(ticket.get('dt_path')[1]['ticket']['status'], TD.statusZeroId);
+  assert.equal(ticket.get('dt_path')[1]['ticket']['priority'], TD.priorityZeroId);
 });
 
 test('updating field text (patch ticket)', async assert => {
-  run(() => {
-    store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
-  });
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeOne;
   const detail_xhr = xhr(`${endpoint}${DT.idOne}/`, 'GET', null, {}, 200, detail_data);
@@ -95,9 +124,6 @@ test('updating field text (patch ticket)', async assert => {
 });
 
 test('updating field text no label (patch ticket)', async assert => {
-  run(() => {
-    store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
-  });
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeOne;
   detail_data['fields'][0]['label'] = undefined;
@@ -120,9 +146,6 @@ test('updating field text no label (patch ticket)', async assert => {
 });
 
 test('updating field number (patch ticket)', async assert => {
-  run(() => {
-    store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
-  });
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeTwo;
   detail_data['fields'][0]['label'] = FD.labelTwo;
@@ -145,9 +168,6 @@ test('updating field number (patch ticket)', async assert => {
 });
 
 test('updating field textarea (patch ticket)', async assert => {
-  run(() => {
-    store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
-  });
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeThree;
   detail_data['fields'][0]['label'] = FD.labelThree;
@@ -170,9 +190,6 @@ test('updating field textarea (patch ticket)', async assert => {
 });
 
 test('updating field select (patch ticket)', async assert => {
-  run(() => {
-    store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
-  });
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeFour;
   detail_data['fields'][0]['label'] = FD.labelFour;
@@ -195,9 +212,6 @@ test('updating field select (patch ticket)', async assert => {
 });
 
 test('can\'t click to next destination if field is required (patch ticket)', async assert => {
-  run(() => {
-    store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
-  });
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeThree;
   detail_data['fields'][0]['label'] = FD.labelThree;
@@ -227,9 +241,6 @@ test('can\'t click to next destination if field is required (patch ticket)', asy
 });
 
 test('can click to next destination if field is not required and don\'t fill in field value (patch ticket)', async assert => {
-  run(() => {
-    store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
-  });
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeThree;
   detail_data['fields'][0]['label'] = FD.labelThree;
@@ -247,9 +258,6 @@ test('can click to next destination if field is not required and don\'t fill in 
 });
 
 test('can click to next destination after updating multiple fields select (patch ticket)', async assert => {
-  run(() => {
-    store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
-  });
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeOne;
   detail_data['fields'][0]['label'] = FD.labelFour;
@@ -289,9 +297,6 @@ test('can click to next destination after updating multiple fields select (patch
 });
 
 test('fill out: number, text, textarea, and select (patch ticket)', async assert => {
-  run(() => {
-    store.push('ticket', {id: UUID.value, new_pk: DT.idOne})
-  });
   let detail_data = DTF.detailWithAllFields(DT.idOne);
   const detail_xhr = xhr(`${endpoint}${DT.idOne}/`, 'GET', null, {}, 200, detail_data);
   await visit(DETAIL_URL);
