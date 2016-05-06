@@ -15,7 +15,7 @@ const PowerSelect = '.ember-power-select-trigger';
 const DROPDOWN = '.ember-power-select-dropdown';
 const COMPONENT = '.t-link-destination-select';
 
-moduleForComponent('db-fetch-custom-select', 'integration: db-fetch-custom-select test', {
+moduleForComponent('db-fetch-custom-select', 'scott integration: db-fetch-custom-select test', {
   integration: true,
   setup() {
     store = module_registry(this.container, this.registry, ['model:dtd', 'model:link']);
@@ -36,8 +36,8 @@ moduleForComponent('db-fetch-custom-select', 'integration: db-fetch-custom-selec
 });
 
 test('should render a selectbox when dtd options are empty (initial state of power select)', function(assert) {
-  this.set('link', link_one);
-  this.set('repository', dtd_repo);
+  this.link = link_one;
+  this.repository = dtd_repo;
   this.render(hbs`{{db-fetch-custom-select model=link selectedAttr=model.destination className="t-link-destination-select" componentName="dtds/dtd-key-desc" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}`);
   clickTrigger();
   assert.equal($(DROPDOWN).length, 1);
@@ -46,7 +46,7 @@ test('should render a selectbox when dtd options are empty (initial state of pow
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
   assert.equal(link_one.get('destination').get('id'), dtd.get('id'));
   this.model = link_one;
-  this.set('repository', dtd_repo);
+  this.repository = dtd_repo;
   this.render(hbs`{{db-fetch-custom-select model=model selectedAttr=model.destination className="t-link-destination-select" componentName="dtds/dtd-key-desc" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}`);
   clickTrigger();
   run(() => { typeInSearch('a'); });

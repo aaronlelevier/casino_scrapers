@@ -16,11 +16,11 @@ const PowerSelect = '.ember-power-select-trigger';
 const DROPDOWN = '.ember-power-select-dropdown';
 const COMPONENT = '.t-link-destination-select';
 
-moduleForComponent('power-select-foreign-key', 'integration: power-select-foreign-key dt test', {
+moduleForComponent('power-select-location', 'integration: power-select-location', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:location', 'model:person', 'model:person-location']);
-        run(function() {
+        run(() => {
             ticket = store.push('ticket', {id: TD.idOne});
             person = store.push('person', {id: PD.idOne, has_multi_locations: true});
             store.push('location', {id: LD.idOne, name: LD.storeName, person_locations_fks: [PERSON_LD.idOne]});

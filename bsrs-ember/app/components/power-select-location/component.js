@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import config from 'bsrs-ember/config/environment';
 import { task, timeout } from 'ember-concurrency';
 
@@ -17,8 +18,10 @@ var DBFetch = Ember.Component.extend({
     change_location(location) {
       const ticket = this.get('ticket');
       const locationId = location.get('id');
-      ticket.change_location({id: locationId});
-      this.set('selected', location);
+      run(() => {
+        ticket.change_location({id: locationId});
+        this.set('selected', location);
+      });
     }
   }
 });
