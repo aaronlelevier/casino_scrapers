@@ -21,7 +21,7 @@ var ticket_payload_base = {
       ticket: {
         id: TD.idOne,
         requester: '',
-        location: TD.statusOneId,
+        location: TD.locationOneId,
         status: TD.statusOneId,
         priority: TD.priorityOneId,
         request: ["label: wat", "label: foo"],
@@ -34,7 +34,7 @@ var ticket_payload_base = {
       ticket: {
         id: TD.idTwo,
         requester: '',
-        location: TD.statusOneId,
+        location: TD.locationOneId,
         status: TD.statusOneId,
         priority: TD.priorityOneId,
         request: ["label: wat", "label: foo"],
@@ -82,7 +82,7 @@ var ticket_dt_new_payload = {
     categories: [],
     requester: TD.requesterOne,
     location: LD.idThree,
-    attachments: []
+    attachments: [],
 };
 
 var ticket_dt_new_payload_PATCH = Ember.$.extend(true, {}, ticket_dt_new_payload);

@@ -35,7 +35,7 @@ moduleForComponent('db-fetch-custom-select', 'integration: db-fetch-custom-selec
   }
 });
 
-test('scott should render a selectbox when dtd options are empty (initial state of power select)', function(assert) {
+test('should render a selectbox when dtd options are empty (initial state of power select)', function(assert) {
   this.link = link_one;
   this.repository = dtd_repo;
   this.render(hbs`{{db-fetch-custom-select model=link selectedAttr=model.destination className="t-link-destination-select" componentName="dtds/dtd-key-desc" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}`);

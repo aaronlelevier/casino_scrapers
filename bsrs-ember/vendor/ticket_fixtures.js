@@ -57,7 +57,7 @@ var BSRS_TICKET_FACTORY = (function() {
         ticket: {
           id: this.ticket.idOne,
           requester: '',
-          location: this.ticket.statusOneId,
+          location: this.ticket.locationOneId,
           status: this.ticket.statusOneId,
           priority: this.ticket.priorityOneId,
           request: ["label: wat", "label: foo"],
@@ -70,7 +70,7 @@ var BSRS_TICKET_FACTORY = (function() {
         ticket: {
           id: this.ticket.idTwo,
           requester: '',
-          location: this.ticket.statusOneId,
+          location: this.ticket.locationOneId,
           status: this.ticket.statusOneId,
           priority: this.ticket.priorityOneId,
           request: ["label: wat", "label: foo"],
