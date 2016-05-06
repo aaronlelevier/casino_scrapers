@@ -1,6 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
+import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TICKET_PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-person';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
@@ -36,6 +37,7 @@ module('unit: ticket deserializer test', {
       store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
       ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne]});
       ticket_status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: [TD.idOne]});
+      store.push('ticket-status', {id: TD.statusSevenId, name: TD.statusSeven, tickets: []});
       ticket = store.push('ticket', {id: TD.idOne, priority_fk: TD.priorityOneId, status_fk: TD.statusOneId});
       location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, locations: [LD.idOne]});
       store.push('status', {id: SD.activeId, name: SD.activeName});
@@ -833,6 +835,22 @@ test('attachment added for each attachment on ticket (when ticket has existing a
   assert.ok(ticket.get('isNotDirty'));
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(store.find('attachment').get('length'), 2);
+});
+
+/* DT Path */
+
+test('dt path deserialized correctly', assert => {
+  let json = TF.generate(TD.idOne, TD.statusSevenId);
+  json.assignee = null;
+  run(() => {
+    subject.deserialize(json, json.id);
+  });
+  ticket = store.find('ticket', TD.idOne);
+  assert.equal(ticket.get('status_fk'), TD.statusSevenId);
+  assert.equal(ticket.get('status.id'), TD.statusSevenId);
+  assert.equal(ticket.get('dt_path').length, 2);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['id'], TD.idOne);
+  assert.equal(ticket.get('dt_path')[0]['dt_id'], DTD.idOne);
 });
 
 //TODO: when attachments can be deleted (from ticket) we need a "server is the truth" test that removes in-memory relationships
