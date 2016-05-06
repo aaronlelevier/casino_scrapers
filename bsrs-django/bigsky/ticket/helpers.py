@@ -31,7 +31,7 @@ class TicketActivityToRepresentation(object):
 
     def set_assignee_data(self):
         for k,v in self.data['content'].items():
-            person = Person.objects.get(id=v)
+            person = Person.objects_all.get(id=v)
             self.data['content'][k] = person.to_simple_fullname_dict()
 
     def set_person_list_data_with_key(self, key):
@@ -39,7 +39,7 @@ class TicketActivityToRepresentation(object):
         self.data['content'] = {key: []}
 
         for id in person_ids:
-            person = Person.objects.get(id=id)
+            person = Person.objects_all.get(id=id)
             self.data['content'][key].append(person.to_simple_fullname_dict())
 
     def set_attachment_list_data_with_key(self, key):
@@ -47,7 +47,7 @@ class TicketActivityToRepresentation(object):
         self.data['content'] = {key: []}
 
         for id in attachment_ids:
-            attachment = Attachment.objects.get(id=id)
+            attachment = Attachment.objects_all.get(id=id)
             self.data['content'][key].append(attachment.to_dict())
 
     def set_category_data(self):
@@ -59,7 +59,7 @@ class TicketActivityToRepresentation(object):
         self.data['content'].update({key: []})
 
         for id in categories:
-            category = Category.objects.get(id=id)
+            category = Category.objects_all.get(id=id)
             self.data['content'][key].append(category.to_simple_dict())
 
         for i, _ in enumerate(self.data['content'][key]):
@@ -69,4 +69,3 @@ class TicketActivityToRepresentation(object):
             self.data['content']['from'].sort(key=lambda x: x['level'])
         if 'to' in self.data['content']:
             self.data['content']['to'].sort(key=lambda x: x['level'])
-
