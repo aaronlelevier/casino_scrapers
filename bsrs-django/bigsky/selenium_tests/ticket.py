@@ -14,13 +14,9 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from helpers import (
     LoginMixin, FillInHelper, JavascriptMixin, InputHelper,
-    NavPage, GeneralElementsPage, Wait, ModelPage
+    NavPage, GeneralElementsPage, Wait, ModelPage, rand_chars
 )
 from helpers.element import is_present
-
-
-def rand_chars(number=10):
-    return 'aa'+''.join([str(random.choice(string.ascii_letters)) for x in range(number)])
 
 
 class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):

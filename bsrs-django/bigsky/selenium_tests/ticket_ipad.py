@@ -4,6 +4,7 @@ import os
 import unittest
 import random
 import string
+import time
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, InvalidSelectorException
@@ -13,13 +14,8 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from helpers import (
     LoginMixin, FillInHelper, JavascriptMixin, InputHelper,
-    NavPage, GeneralElementsPage, Wait, ModelPage
+    NavPage, GeneralElementsPage, Wait, ModelPage, rand_chars, is_present
 )
-from helpers.element import is_present
-
-
-def rand_chars(number=10):
-    return ''.join([str(random.choice(string.ascii_letters)) for x in range(number)])
 
 
 class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
@@ -34,15 +30,15 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         # Generic Elements
         self.gen_elem_page = GeneralElementsPage(self.driver)
         self.nav_page = NavPage(self.driver)
-        import time; time.sleep(3)
+        time.sleep(3)
         # Go to Ticket Area
         # self.nav_page.find_ticket_link().click()
         self.driver.find_element_by_class_name('t-hamburger').click()
-        import time; time.sleep(2)
+        time.sleep(2)
         self.nav_page.find_ticket_link().click()
-        import time; time.sleep(2)
+        time.sleep(2)
         self.driver.find_element_by_class_name('t-hamburger').click()
-        import time; time.sleep(2)
+        time.sleep(2)
 
     def tearDown(self):
         self.driver.close()
@@ -120,11 +116,11 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         # Go to Ticket Area
         self.driver.execute_script("window.scrollTo(0, 0);")
         self.driver.find_element_by_class_name('t-hamburger').click()
-        import time; time.sleep(2)
+        time.sleep(2)
         self.nav_page.find_ticket_link().click()
-        import time; time.sleep(2)
+        time.sleep(2)
         self.driver.find_element_by_class_name('t-hamburger').click()
-        import time; time.sleep(2)
+        time.sleep(2)
         tab = self.wait_for_xhr_request("t-tab-close")
         # tab.click()
         # self.wait_for_xhr_request("application-modal", debounce=True).click()

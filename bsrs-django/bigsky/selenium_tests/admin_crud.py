@@ -13,21 +13,8 @@ from selenium.webdriver.support.ui import Select
 from helpers import (
     LoginMixin, FillInHelper, JavascriptMixin, InputHelper,
     NavPage, GeneralElementsPage, Wait, ModelPage,
-    ModelContactPage
+    ModelContactPage, rand_chars, rand_num, get_text_excluding_children
 )
-
-def get_text_excluding_children(driver, element):
-    return driver.execute_script("""
-    return jQuery(arguments[0]).contents().filter(function() {
-        return this.nodeType == Node.TEXT_NODE;
-    }).text();
-    """, element)
-
-def rand_chars(number=10):
-    return "a"+''.join([str(random.choice(string.ascii_letters)) for x in range(number)])
-
-def rand_num():
-    return ''.join([str(random.randrange(0, 10)) for x in range(10)])
 
 
 # NOTE: Comment out - b/c button is currently disabled, and not able to click on 'checkbox'.
