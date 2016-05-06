@@ -185,6 +185,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
       assignee: this.get('assignee.id'),
       location: this.get('location.id'),
       attachments: this.get('attachment_ids'),
+      dt_path: this.get('dt_path'),
     };
     if (this.get('comment')) {
       payload.comment = this.get('comment');

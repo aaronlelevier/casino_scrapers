@@ -2,6 +2,7 @@ import Ember from 'ember';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
+import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import CD from 'bsrs-ember/vendor/defaults/category';
 
@@ -16,6 +17,33 @@ var ticket_payload_base = {
     assignee: PD.idSearch,
     location: LD.idTwo,
     attachments: [],
+    dt_path: [{
+      ticket: {
+        id: TD.idOne,
+        requester: '',
+        location: TD.statusOneId,
+        status: TD.statusOneId,
+        priority: TD.priorityOneId,
+        request: ["label: wat", "label: foo"],
+        categories: [CD.idOne, CD.idTwo],
+        cc: [],
+        attachments: [],
+      },
+      dt_id: DTD.idOne
+    }, {
+      ticket: {
+        id: TD.idTwo,
+        requester: '',
+        location: TD.statusOneId,
+        status: TD.statusOneId,
+        priority: TD.priorityOneId,
+        request: ["label: wat", "label: foo"],
+        categories: [CD.idOne, CD.idTwo],
+        cc: [],
+        attachments: [],
+      },
+      dt_id: DTD.idTwo
+    }],
 };
 
 var ticket_payload = Ember.$.extend(true, {}, ticket_payload_base);
@@ -62,5 +90,6 @@ ticket_dt_new_payload_PATCH.status = TD.statusOneId;
 
 var required_ticket_payload = Ember.$.extend(true, {}, ticket_payload);
 delete required_ticket_payload.subject;
+delete required_ticket_payload.dt_path;
 
 export {ticket_payload, ticket_payload_with_comment, required_ticket_payload, ticket_payload_detail_with_assignee, ticket_payload_detail, ticket_payload_detail_one_category, ticket_payload_with_attachment, ticket_payload_with_attachments, ticket_dt_new_payload, ticket_dt_new_payload_PATCH};
