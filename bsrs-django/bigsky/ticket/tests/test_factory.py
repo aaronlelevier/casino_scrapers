@@ -7,12 +7,14 @@ from django.test import TestCase
 
 from category.models import Category
 from category.tests.factory import create_categories
+from dtd.models import TreeData
 from generic.models import Attachment
 from location.models import Location, LOCATION_COMPANY
 from person.models import Person
 from person.tests.factory import create_single_person, DistrictManager
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
+from ticket.serializers import TicketCreateSerializer
 from ticket.tests import factory
 from utils.helpers import generate_uuid
 
@@ -108,6 +110,15 @@ class CreateTicketTests(TestCase):
         self.ticket.creator = self.person
         self.ticket.save()
         self.assertIsInstance(self.ticket.creator, Person)
+
+    def test_dt_path(self):
+        start_dtd = TreeData.objects.get_start()
+        self.assertEqual(len(self.ticket.dt_path), 1)
+        self.assertEqual(self.ticket.dt_path[0]['dtd'], {'id': str(start_dtd.id)})
+        self.assertEqual(
+            self.ticket.dt_path[0]['ticket'].keys(),
+            TicketCreateSerializer(self.ticket).data.keys()
+        )
 
 
 class GetOrCreateTicketStatusAndPriorityTests(TestCase):

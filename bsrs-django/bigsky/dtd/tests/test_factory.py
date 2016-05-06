@@ -208,3 +208,9 @@ class FixtureGenerationTests(TestCase):
         self.assertEqual(dtds.count(), 3)
         for dtd in dtds:
             self.assertEqual(dtd.fields.count(), 5)
+
+    def test_create_dtd_fixture_data__uuids_are_sequential(self):
+        factory.create_dtd_fixture_data()
+
+        self.assertEqual(str(TreeData.objects.order_by('id')[0].id)[-3:], '001')
+        self.assertEqual(str(TreeData.objects.order_by('-id')[0].id)[-3:], '023')

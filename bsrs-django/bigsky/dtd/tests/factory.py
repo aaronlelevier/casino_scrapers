@@ -9,6 +9,7 @@ from dtd.model_choices import FIELD_TYPES
 from ticket.models import TicketStatus, TicketPriority
 from ticket.tests.factory import create_ticket_status, create_ticket_priority
 from utils.create import _generate_chars, random_lorem
+from utils.helpers import generate_uuid
 
 
 def _link_get_or_create_related(model, factory_create_func):
@@ -107,9 +108,11 @@ def create_dtd_fixtures_only():
     for x in DTD_DATA:
         DTDData = namedtuple('DTDData', ['id', 'name', 'parent_id'])
         data = DTDData._make(x)._asdict()
+        id = generate_uuid(TreeData)
         key = _generate_chars()
 
         dtd = TreeData.objects.create(
+            id=id,
             key=data['name'],
             note=data['id'],
             description=data['name'],

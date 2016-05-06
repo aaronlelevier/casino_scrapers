@@ -20,6 +20,18 @@ from setting.settings import DEFAULT_GENERAL_SETTINGS
 Base Model, Manager, and QuerySet for which all Models will inherit 
 from. This will enforce not deleting, but just hiding records.
 '''
+
+from json import JSONEncoder
+
+JSONEncoder_olddefault = JSONEncoder.default
+
+def JSONEncoder_newdefault(self, o):
+    if isinstance(o, uuid.UUID): return str(o)
+    return JSONEncoder_olddefault(self, o)
+
+JSONEncoder.default = JSONEncoder_newdefault
+
+
 class BaseQuerySet(models.query.QuerySet):
     pass
 

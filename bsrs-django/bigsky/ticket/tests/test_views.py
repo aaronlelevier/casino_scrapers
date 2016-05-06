@@ -263,7 +263,6 @@ class TicketUpdateTests(TicketSetupMixin, APITestCase):
         self.assertEqual(self.ticket.attachments.count(), 0)
 
     def test_dt_path(self):
-        self.assertEqual(self.data['dt_path'], [])
         self.data['dt_path'] = [{'foo': 'bar'}]
 
         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')

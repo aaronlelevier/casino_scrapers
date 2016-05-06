@@ -7,6 +7,7 @@ from model_mommy import mommy
 
 from category.models import Category
 from category.tests.factory import create_single_category
+from dtd.models import TreeData
 from generic.tests.factory import create_file_attachment
 from location.models import Location, LOCATION_COMPANY
 from location.tests.factory import create_locations
@@ -14,6 +15,7 @@ from person.models import Person
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
+from ticket.serializers import TicketCreateSerializer
 from utils.create import _generate_chars
 from utils.helpers import generate_uuid
 
@@ -123,6 +125,13 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
     if add_attachment:
         a = create_file_attachment()
         ticket.attachments.add(a)
+
+    start_dtd = TreeData.objects.get_start()
+    ticket.dt_path = [{
+        'dtd': {'id': str(start_dtd.id)},
+        'ticket': TicketCreateSerializer(ticket).data
+    }]
+    ticket.save()
 
     return ticket
 
