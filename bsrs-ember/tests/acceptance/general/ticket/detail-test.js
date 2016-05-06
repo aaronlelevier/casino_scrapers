@@ -7,7 +7,7 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
-import {ticket_payload, ticket_payload_with_comment, required_ticket_payload, ticket_payload_detail_with_assignee, ticket_payload_detail, ticket_payload_detail_one_category} from 'bsrs-ember/tests/helpers/payloads/ticket';
+import {ticket_payload, ticket_payload_with_comment, ticket_payload_detail_with_assignee, ticket_payload_detail, ticket_payload_detail_one_category} from 'bsrs-ember/tests/helpers/payloads/ticket';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import PEOPLE_CURRENT_DEFAULTS from 'bsrs-ember/vendor/defaults/person-current';
 import PF from 'bsrs-ember/vendor/people_fixtures';
