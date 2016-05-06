@@ -25,8 +25,8 @@ moduleForComponent('ticket-location-select', 'integration: ticket-location-selec
     translation.initialize(this);
 
     store = module_registry(this.container, this.registry, ['model:ticket', 'model:location']);
-    ticket = store.push('ticket', {id: TD.idOne, location_fk: LD.idOne});
     run(function() {
+      ticket = store.push('ticket', {id: TD.idOne, location_fk: LD.idOne});
       location_one = store.push('location', {id: LD.idOne, name: LD.storeName});
       location_two = store.push('location', {id: LD.idTwo, name: LD.storeNameTwo});
       location_three = store.push('location', {id: LD.unusedId, name: LD.storeNameThree});
