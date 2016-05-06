@@ -67,8 +67,10 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
     findLocationSelect(search_criteria, filter) {
         let url = this.format_url(filter);
         // search_criteria = search_criteria ? search_criteria.trim() : search_criteria;
-        if (search_criteria) {
+        if (filter && search_criteria) {
             url += `&name__icontains=${search_criteria}`;
+        } else if (search_criteria) {
+            url += `?name__icontains=${search_criteria}`;
         }
         return PromiseMixin.xhr(url, 'GET').then((response) => {
             return response.results.filter((location) => {

@@ -86,7 +86,7 @@ test('has_multi_locations === true, can POST data, and transition to /dt/{start-
     assert.equal(store.findOne('ticket').get('requester'), TICKET.requesterOne);
   });
   // location
-  xhr(`${PREFIX}/admin/locations/&name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
+  xhr(`${PREFIX}/admin/locations/?name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
   dtPage.locationsClickDropdown();
   fillIn(`${SEARCH}`, 'a');
   andThen(() => {
@@ -125,7 +125,7 @@ test('has_multi_locations === true, validation: cant click next until select loc
     assert.ok(find('.t-dt-start').attr('disabled'));
   });
   // location
-  xhr(`${PREFIX}/admin/locations/&name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
+  xhr(`${PREFIX}/admin/locations/?name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
   dtPage.locationsClickDropdown();
   fillIn(`${SEARCH}`, 'a');
   dtPage.locationsOptionOneClick();
@@ -187,7 +187,7 @@ test('after POST, redirected to next DT, and DT is rendered', assert => {
   });
   // fill out form
   dtPage.requesterFillin(TICKET.requesterOne);
-  xhr(`${PREFIX}/admin/locations/&name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
+  xhr(`${PREFIX}/admin/locations/?name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
   dtPage.locationsClickDropdown();
   fillIn(`${SEARCH}`, 'a');
   dtPage.locationsOptionOneClick();
@@ -220,7 +220,7 @@ test('POST then PATCH - to demonstrate starting the DT and maintaining traversin
   });
   // fill out form
   dtPage.requesterFillin(TICKET.requesterOne);
-  xhr(`${PREFIX}/admin/locations/&name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
+  xhr(`${PREFIX}/admin/locations/?name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
   dtPage.locationsClickDropdown();
   fillIn(`${SEARCH}`, 'a');
   dtPage.locationsOptionOneClick();
