@@ -58,7 +58,7 @@ class ModelPage(JavascriptMixin):
             new_model, count = self._loop_over_names(name, new_model, count)
             if new_model:
                 break
-            pagination = self.wait_for_xhr_request("t-pages")
+            pagination = self.wait_for_xhr_request("t-pages", debounce=True)
             element_list = pagination.find_elements_by_class_name("t-page")
             next_elem = element_list[count]
             next_elem.find_element_by_xpath("a").click()

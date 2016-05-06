@@ -4,6 +4,7 @@ import os
 import unittest
 import random
 import string
+import time
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, InvalidSelectorException
@@ -19,7 +20,7 @@ from helpers.element import is_present
 
 
 def rand_chars(number=10):
-    return ''.join([str(random.choice(string.ascii_letters)) for x in range(number)])
+    return 'aa'+''.join([str(random.choice(string.ascii_letters)) for x in range(number)])
 
 
 class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
@@ -34,7 +35,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         # Generic Elements
         self.gen_elem_page = GeneralElementsPage(self.driver)
         self.nav_page = NavPage(self.driver)
-        import time; time.sleep(3)
+        time.sleep(3)
         # Go to Ticket Area
         self.nav_page.find_ticket_link().click()
 
@@ -196,6 +197,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         self.gen_elem_page.click_save_btn()
         # Go to newly created ticket's Detail view
         ticket_page.find_list_data()
+        self.wait_for_xhr_request("t-sort-request-dir").click()
         self.driver.refresh()
         ticket_list_view = ticket_page.find_list_name()
         new_ticket = ticket_page.click_name_in_list_pages(ticket_request, new_model=None)
@@ -249,7 +251,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         ticket_page.find_wait_and_assert_elem("t-ticket-request", ticket_request_two)
         self.gen_elem_page.click_dropdown_delete()
         self.gen_elem_page.click_delete_btn()
-        import time; time.sleep(1)
+        time.sleep(1)
         self.gen_elem_page.click_delete_yes()
         # check Ticket is deleted
         tickets = ticket_page.find_list_data()
