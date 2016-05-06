@@ -83,6 +83,18 @@ var ticket_dt_new_payload = {
     requester: TD.requesterOne,
     location: LD.idThree,
     attachments: [],
+    dt_path: [{
+      ticket: {
+        id: 1,
+        requester: TD.requesterOne,
+        location: LD.idThree,
+        status: TD.statusZeroId,
+        priority: TD.priorityZeroId,
+        categories: [],
+        cc: [],
+        attachments: [],
+      },
+    }],
 };
 
 var ticket_dt_new_payload_PATCH = Ember.$.extend(true, {}, ticket_dt_new_payload);

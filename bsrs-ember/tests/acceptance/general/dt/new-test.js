@@ -72,42 +72,43 @@ test('go to /dashboard, click button to get to /dt/new', assert => {
   });
 });
 
-test('has_multi_locations === true, can POST data, and transition to /dt/{start-id}', assert => {
-  visit(DT_NEW_URL);
-  andThen(() => {
-    assert.equal(currentURL(), DT_NEW_URL);
-    assert.equal(dtPage.requester, '');
-    assert.equal(dtPage.locationsValue, '');
-  });
+/* jshint ignore:start */
+
+test('has_multi_locations === true, can POST data, and transition to /dt/{start-id}', async assert => {
+  await visit(DT_NEW_URL);
+  assert.equal(currentURL(), DT_NEW_URL);
+  assert.equal(dtPage.requester, '');
+  assert.equal(dtPage.locationsValue, '');
   // requester
-  dtPage.requesterFillin(TICKET.requesterOne);
-  andThen(() => {
-    assert.equal(dtPage.requester, TICKET.requesterOne);
-    assert.equal(store.findOne('ticket').get('requester'), TICKET.requesterOne);
-  });
+  await dtPage.requesterFillin(TICKET.requesterOne);
+  assert.equal(dtPage.requester, TICKET.requesterOne);
+  let ticket = store.findOne('ticket');
+  assert.equal(ticket.get('requester'), TICKET.requesterOne);
+  assert.equal(ticket.get('dt_path'), undefined);
   // location
   xhr(`${PREFIX}/admin/locations/?name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
-  dtPage.locationsClickDropdown();
-  fillIn(`${SEARCH}`, 'a');
-  andThen(() => {
-    assert.equal(currentURL(), DT_NEW_URL);
-    assert.equal(ticketPage.locationOptionLength, 1);
-  });
-  dtPage.locationsOptionOneClick();
-  andThen(() => {
-    assert.equal(dtPage.locationsValue, LD.storeNameThree);
-    assert.equal(store.findOne('ticket').get('location.id'), LD.idThree);
-  });
+  await dtPage.locationsClickDropdown();
+  await fillIn(`${SEARCH}`, 'a');
+  assert.equal(currentURL(), DT_NEW_URL);
+  assert.equal(ticketPage.locationOptionLength, 1);
+  await dtPage.locationsOptionOneClick();
+  assert.equal(dtPage.locationsValue, LD.storeNameThree);
+  assert.equal(store.findOne('ticket').get('location.id'), LD.idThree);
   // POST
   let dtd_response = DTF.generate(DT.idOne);
   xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(ticket_dt_new_payload), {}, 201, dtd_response);
-  dtPage.clickStart();
-  andThen(() => {
-    assert.equal(currentURL(), DT_START_URL);
-    let ticket = store.findOne('ticket');
-    assert.equal(ticket.get('dtd_fk'), dtd_response.id);
-  });
+  await dtPage.clickStart();
+  assert.equal(currentURL(), DT_START_URL);
+  assert.equal(ticket.get('dtd_fk'), dtd_response.id);
+  assert.equal(ticket.get('dt_path')[0]['dt_id'], undefined);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['id'], 1);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['location'], LD.idThree);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['status'], TD.statusZeroId);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['priority'], TD.priorityZeroId);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['requester'], TD.requesterOne);
 });
+
+/* jshint ignore:end */
 
 test('has_multi_locations === true, validation: cant click next until select location if multiple', assert => {
   // disabled
@@ -169,7 +170,19 @@ test('has_multi_locations === false, can POST data, and transition to /dt/{start
     categories: [],
     requester: TICKET.requesterOne,
     location: LD.idZero,
-    attachments: []
+    attachments: [],
+    dt_path: [{
+      ticket: {
+        id: 1,
+        requester: TD.requesterOne,
+        location: LD.idZero,
+        status: TD.statusZeroId,
+        priority: TD.priorityZeroId,
+        categories: [],
+        cc: [],
+        attachments: [],
+      },
+    }],
   };
   xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(payload), {}, 201, dtd_response);
   dtPage.clickStart();
