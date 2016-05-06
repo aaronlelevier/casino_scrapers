@@ -5,7 +5,7 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import CD from 'bsrs-ember/vendor/defaults/category';
 
-var ticket_payload = {
+var ticket_payload_base = {
     id: UUID.value,
     request: TD.requestOne,
     status: TD.statusOneId,
@@ -18,73 +18,33 @@ var ticket_payload = {
     attachments: [],
 };
 
-var ticket_payload_detail_with_assignee = {
-    id: TD.idOne,
-    request: TD.requestOne,
-    status: TD.statusOneId,
-    priority: TD.priorityOneId,
-    cc: [PD.idOne],
-    categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
-    assignee: PD.idBoy,
-    location: LD.idOne,
-    attachments: [],
-};
+var ticket_payload = Ember.$.extend(true, {}, ticket_payload_base);
 
-var ticket_payload_detail = {
-    id: TD.idOne,
-    request: TD.requestOne,
-    status: TD.statusOneId,
-    priority: TD.priorityOneId,
-    cc: [PD.idOne],
-    categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
-    requester: PD.nameMel,
-    assignee: PD.idOne,
-    location: LD.idOne,
-    attachments: [],
-};
+var ticket_payload_detail_with_assignee = Ember.$.extend(true, {}, ticket_payload);
+ticket_payload_detail_with_assignee.id = TD.idOne;
+ticket_payload_detail_with_assignee.cc = [PD.idOne];
+ticket_payload_detail_with_assignee.categories = [CD.idOne, CD.idPlumbing, CD.idPlumbingChild];
+ticket_payload_detail_with_assignee.assignee = PD.idBoy;
+ticket_payload_detail_with_assignee.location = LD.idOne;
 
-var ticket_payload_with_comment = {
-    id: TD.idOne,
-    request: TD.requestOne,
-    status: TD.statusOneId,
-    priority: TD.priorityOneId,
-    cc: [PD.idOne],
-    categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
-    requester: PD.nameMel,
-    assignee: PD.idOne,
-    location: LD.idOne,
-    comment: TD.commentOne,
-    attachments: [],
-};
+var ticket_payload_detail = Ember.$.extend(true, {}, ticket_payload_detail_with_assignee);
+ticket_payload_detail.assignee = PD.idOne;
+ticket_payload_detail.requester = PD.nameMel;
 
-var ticket_payload_with_attachment = {
-    id: TD.idOne,
-    request: TD.requestOne,
-    status: TD.statusOneId,
-    priority: TD.priorityOneId,
-    cc: [PD.idOne],
-    categories: [CD.idOne, CD.idPlumbing, CD.idPlumbingChild],
-    requester: PD.nameMel,
-    assignee: PD.idOne,
-    location: LD.idOne,
-    attachments: [UUID.value]
-};
+var ticket_payload_with_comment = Ember.$.extend(true, {}, ticket_payload_detail);
+ticket_payload_with_comment.comment = TD.commentOne;
+
+var ticket_payload_with_attachment = Ember.$.extend(true, {}, ticket_payload_detail);
+ticket_payload_with_attachment.attachments = [UUID.value];
 
 var ticket_payload_with_attachments = Ember.$.extend(true, {}, ticket_payload_with_attachment);
 ticket_payload_with_attachments.attachments = ['abc123', 'def456'];
 
-var ticket_payload_detail_one_category = {
-    id: TD.idOne,
-    request: TD.requestOneGrid,
-    status: TD.statusTwoId,
-    priority: TD.priorityTwoId,
-    cc: [PD.idOne],
-    categories: [CD.idThree],
-    requester: PD.nameMel,
-    assignee: PD.idOne,
-    location: LD.idOne,
-    attachments: [],
-};
+var ticket_payload_detail_one_category = Ember.$.extend(true, {}, ticket_payload_detail);
+ticket_payload_detail_one_category.request = TD.requestOneGrid;
+ticket_payload_detail_one_category.status = TD.statusTwoId;
+ticket_payload_detail_one_category.priority = TD.priorityTwoId;
+ticket_payload_detail_one_category.categories = [CD.idThree];
 
 var ticket_dt_new_payload = {
     id: 1,

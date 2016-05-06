@@ -48,11 +48,11 @@ test('default and disable if has_multi_locations === false', function(assert) {
         store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, person_locations_fks: [PERSON_LD.idTwo]});
         store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idTwo, location_pk: LD.idTwo});
     });
-    this.set('person', person);
+    this.person = person;
     let locations = person.get('locations');
     assert.equal(locations.get('length'), 1);
-    this.set('disabled', !person.get('has_multi_locations'));
-    this.set('selected', locations.objectAt(0));
+    this.disabled = !person.get('has_multi_locations');
+    this.selected = locations.objectAt(0);
     this.render(hbs`{{power-select-location selected=selected disabled=disabled}}`);
     let $component = this.$(PowerSelect);
     assert.equal($component.find(PowerSelect).text().trim(), '');
@@ -61,15 +61,15 @@ test('default and disable if has_multi_locations === false', function(assert) {
 });
 
 test('if has_multi_locations === true, no default location, and render a selectbox with options after type ahead for search', function(assert) {
-    this.set('person', person);
+    this.person = person;
     let locations = store.find('location');
     assert.equal(locations.get('length'), 3);
-    this.set('options', locations);
+    this.options = locations;
     let disabled = !person.get('has_multi_locations');
-    this.set('disabled', disabled);
+    this.disabled = disabled;
     let defaultLocation = person.get('locations').objectAt(0);
-    this.set('selected', disabled ? defaultLocation : null);
-    this.set('repository', location_repo);
+    this.selected = disabled ? defaultLocation : null;
+    this.repository = location_repo;
     this.render(hbs`{{power-select-location options=options selected=selected disabled=disabled repository=repository}}`);
     assert.equal($(PowerSelect).attr('aria-disabled'), "false");
     assert.equal($('.ember-basic-dropdown-trigger').text().trim(), '');
