@@ -37,33 +37,34 @@ moduleForComponent('ticket-assignee-select', 'integration: ticket-assignee-selec
 });
 
 test('should render a selectbox when person options are empty (initial state of power select)', function(assert) {
-  // this.set('ticket', ticket);
-  // this.render(hbs`{{db-fetch-select model=ticket}}`);
-  assert.equal(1,1);
-  // clickTrigger();
-  // assert.equal($(`${DROPDOWN}`).length, 1);
-  // assert.equal(this.$('.ember-power-select-placeholder').text(), GLOBALMSG.assignee_power_select);
-  // assert.equal($('.ember-power-select-options > li').length, 1);
-  // assert.ok(!ticket.get('assignee'));
+  this.ticket = ticket;
+  this.render(hbs`{{db-fetch-select model=ticket}}`);
+  run(() => {
+    clickTrigger();
+  });
+  assert.equal($(`${DROPDOWN}`).length, 1);
+  assert.equal(this.$('.ember-power-select-placeholder').text(), GLOBALMSG.assignee_power_select);
+  assert.equal($('.ember-power-select-options > li').length, 1);
+  assert.ok(!ticket.get('assignee'));
 });
 
-// test('should render a selectbox with bound options after type ahead for search', function(assert) {
-//   person_one.set('assigned_tickets', [TD.idOne]);
-//   this.model = ticket;
-//   this.set('person_repo', person_repo);
-//   this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
-//   clickTrigger();
-//   run(() => { typeInSearch('a'); });
-//   return waitFor().
-//     then(() => {
-//       assert.equal($(`${DROPDOWN}`).length, 1);
-//       assert.equal($('.ember-power-select-option').length, 3);
-//       assert.equal($('li.ember-power-select-option:eq(0)').text().trim(), `${PD.nameOne} ${PD.lastNameOne}`);
-//       assert.equal($('li.ember-power-select-option:eq(1)').text().trim(), `${PD.nameTwo} ${PD.lastNameTwo}`);
-//       assert.equal($('li.ember-power-select-option:eq(2)').text().trim(), `${PD.nameThree} ${PD.lastNameThree}`);
-//       assert.equal($(`${PowerSelect}`).text().trim(), `${PD.nameOne} ${PD.lastNameOne}`);
-//     });
-// });
+test('should render a selectbox with bound options after type ahead for search', function(assert) {
+  person_one.set('assigned_tickets', [TD.idOne]);
+  this.model = ticket;
+  this.set('person_repo', person_repo);
+  this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
+  clickTrigger();
+  run(() => { typeInSearch('a'); });
+  return waitFor().
+    then(() => {
+      assert.equal($(`${DROPDOWN}`).length, 1);
+      assert.equal($('.ember-power-select-option').length, 3);
+      assert.equal($('li.ember-power-select-option:eq(0)').text().trim(), `${PD.nameOne} ${PD.lastNameOne}`);
+      assert.equal($('li.ember-power-select-option:eq(1)').text().trim(), `${PD.nameTwo} ${PD.lastNameTwo}`);
+      assert.equal($('li.ember-power-select-option:eq(2)').text().trim(), `${PD.nameThree} ${PD.lastNameThree}`);
+      assert.equal($(`${PowerSelect}`).text().trim(), `${PD.nameOne} ${PD.lastNameOne}`);
+    });
+});
 
 test('should be able to select new person when one doesnt exist', function(assert) {
   this.model = ticket;
