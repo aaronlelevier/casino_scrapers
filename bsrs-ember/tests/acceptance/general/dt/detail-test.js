@@ -12,6 +12,7 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import DT from 'bsrs-ember/vendor/defaults/dtd';
 import TICKET from 'bsrs-ember/vendor/defaults/ticket';
+import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import DTF from 'bsrs-ember/vendor/dtd_fixtures';
 import FD from 'bsrs-ember/vendor/defaults/field';
 import LINK from 'bsrs-ember/vendor/defaults/link';
@@ -31,7 +32,7 @@ const DETAIL_URL = `${BASE_URL}/${DT.idOne}/ticket/${TD.idOne}`;
 const DEST_URL = `${BASE_URL}/${DT.idTwo}/ticket/${TD.idOne}`;
 const TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
 
-let application, store, endpoint, original_uuid, link, dtd;
+let application, store, endpoint, original_uuid, link, dtd, dt_path, returned_ticket;
 
 module('Acceptance | dt detail', {
   beforeEach() {
@@ -51,9 +52,10 @@ module('Acceptance | dt detail', {
       cc: [],
       attachments: [],
     };
-    const dt_path = [{
+    dt_path = [{
       ticket
     }];
+    returned_ticket = TF.detail(TD.idOne, null, dt_path);
     run(() => {
       store.push('ticket', {id: ticket.id, location_fk: LD.idThree, status_fk: TD.statusZeroId, priority_fk: TD.priorityZeroId, new_pk: DT.idOne, dt_path});
       store.push('location', {id: LD.idThree, tickets: [ticket.id]});
@@ -71,7 +73,7 @@ module('Acceptance | dt detail', {
 
 test('decision tree displays data and can click to next destination after updating option (patch ticket)', async assert => {
   const detail_data = DTF.detail(DT.idOne);
-  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, detail_data);
+  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
   assert.equal(currentURL(), DETAIL_URL);
   await page.fieldClickCheckboxOne();
@@ -105,7 +107,7 @@ test('decision tree displays data and can click to next destination after updati
 test('updating field text (patch ticket)', async assert => {
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeOne;
-  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, detail_data);
+  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
   assert.equal(currentURL(), DETAIL_URL);
   await fillIn('.t-dtd-field-text:eq(0)', 'wat');
@@ -127,7 +129,7 @@ test('updating field text no label (patch ticket)', async assert => {
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeOne;
   detail_data['fields'][0]['label'] = undefined;
-  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, detail_data);
+  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
   assert.equal(currentURL(), DETAIL_URL);
   await fillIn('.t-dtd-field-text:eq(0)', 'wat');
@@ -149,7 +151,7 @@ test('updating field number (patch ticket)', async assert => {
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeTwo;
   detail_data['fields'][0]['label'] = FD.labelTwo;
-  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, detail_data);
+  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
   assert.equal(currentURL(), DETAIL_URL);
   await fillIn('.t-dtd-field-number:eq(0)', 92);
@@ -171,7 +173,7 @@ test('updating field textarea (patch ticket)', async assert => {
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeThree;
   detail_data['fields'][0]['label'] = FD.labelThree;
-  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, detail_data);
+  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
   assert.equal(currentURL(), DETAIL_URL);
   await fillIn('.t-dtd-field-textarea:eq(0)', 'wat');
@@ -193,7 +195,7 @@ test('updating field select (patch ticket)', async assert => {
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeFour;
   detail_data['fields'][0]['label'] = FD.labelFour;
-  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, detail_data);
+  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
   assert.equal(currentURL(), DETAIL_URL);
   await page.selectClickDropdown()
@@ -216,7 +218,7 @@ test('can\'t click to next destination if field is required (patch ticket)', asy
   detail_data['fields'][0]['type'] = FD.typeThree;
   detail_data['fields'][0]['label'] = FD.labelThree;
   detail_data['fields'][0]['required'] = FD.requiredTwo;
-  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, detail_data);
+  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
   assert.equal(currentURL(), DETAIL_URL);
   assert.ok(find('.t-dtd-preview-btn').attr('disabled'));
@@ -245,7 +247,7 @@ test('can click to next destination if field is not required and don\'t fill in 
   detail_data['fields'][0]['type'] = FD.typeThree;
   detail_data['fields'][0]['label'] = FD.labelThree;
   detail_data['fields'][0]['required'] = FD.requiredOne;
-  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, detail_data);
+  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(find('.t-dtd-preview-btn').attr('disabled'), undefined);
@@ -273,7 +275,7 @@ test('can click to next destination after updating multiple fields select (patch
       order: OD.orderOne
     }]
   });
-  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, detail_data);
+  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
   const ticket = store.find('ticket', TD.idOne);
   assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
@@ -298,7 +300,7 @@ test('can click to next destination after updating multiple fields select (patch
 
 test('fill out: number, text, textarea, and select (patch ticket)', async assert => {
   let detail_data = DTF.detailWithAllFields(DT.idOne);
-  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, detail_data);
+  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
   assert.equal(currentURL(), DETAIL_URL);
   // checkbox

@@ -35,7 +35,7 @@ var BSRS_TICKET_FACTORY = (function() {
     ticket.priority = {id: this.ticket.priorityOneId, name: this.ticket.priorityOneKey}
     return ticket;
   };
-  factory.prototype.generate = function(i, status_id) {
+  factory.prototype.generate = function(i, status_id, dt_path) {
     var id = i || this.ticket.idOne;
     var categories = this.categories();
     var location = this.location_fixtures.get();
@@ -53,7 +53,7 @@ var BSRS_TICKET_FACTORY = (function() {
       assignee: this.people_fixtures.get(),
       location: location,
       attachments: [],
-      dt_path: [{
+      dt_path: dt_path || [{
         ticket: {
           id: this.ticket.idOne,
           requester: '',
@@ -124,9 +124,9 @@ var BSRS_TICKET_FACTORY = (function() {
     }
     return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
   };
-  factory.prototype.detail = function(i, status_id) {
+  factory.prototype.detail = function(i, status_id, dt_path) {
     var pk = i || this.ticket.idOne;
-    var detail = this.generate(pk, status_id);
+    var detail = this.generate(pk, status_id, dt_path);
     detail.attachments = [];
     return detail;
   };
