@@ -8,6 +8,7 @@ import repository from 'bsrs-ember/tests/helpers/repository';
 import { clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import CD from 'bsrs-ember/vendor/defaults/category';
+import LD from 'bsrs-ember/vendor/defaults/location';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 import page from 'bsrs-ember/tests/pages/tickets';
 
@@ -30,7 +31,17 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
       category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: null});
       store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey});
       store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwoKey});
-      ticket = store.push('ticket', {id: TD.idOne, request: 'foo'});
+      const dt_path = [{
+        id: TD.idOne,
+        requester: TD.requesterOne,
+        location: LD.idThree,
+        status: TD.statusZeroId,
+        priority: TD.priorityZeroId,
+        categories: [],
+        cc: [],
+        attachments: [],
+      }];
+      ticket = store.push('ticket', {id: TD.idOne, request: 'foo', dt_path: dt_path});
     });
   },
   afterEach() {
