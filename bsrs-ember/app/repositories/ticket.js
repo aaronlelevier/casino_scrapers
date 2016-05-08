@@ -39,11 +39,10 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMix
       model.saveRelated();
     });
   },
-  patch(destination_id, model, link) {
-    //model is the ticket
-    return PromiseMixin.xhr(`${PREFIX}/dt/${destination_id}${TICKET_URL}/`, 'PATCH', {data: JSON.stringify(model.patchSerialize(link))}).then((response) => {
-      model.save();
-      model.saveRelated();
+  patch(destination_id, ticket, link) {
+    return PromiseMixin.xhr(`${PREFIX}/dt/${destination_id}${TICKET_URL}/`, 'PATCH', {data: JSON.stringify(ticket.patchSerialize(link))}).then((response) => {
+      ticket.save();
+      ticket.saveRelated();
       return response;
     });
   },

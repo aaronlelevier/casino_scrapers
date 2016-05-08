@@ -31,7 +31,7 @@ export default Ember.Controller.extend({
       this.get('ticketRepository').patch(destination_id, ticket, link).then((response) => {
         const dtd = this.get('DTDDeserializer').deserialize(response, response.id);
         ticket = this.get('simpleStore').push('ticket', {id: ticket.id, dtd_fk: response.id});
-        this.transitionToRoute('dt.dt', {id: response.id, model: dtd, ticket: ticket});
+        this.transitionToRoute('dt.dt', {id: response.id, model: dtd, ticket: ticket, dt_id: response.id, ticket_id: ticket.id});
       });
     }
   }

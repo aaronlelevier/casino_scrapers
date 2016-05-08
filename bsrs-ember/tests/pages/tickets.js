@@ -116,6 +116,9 @@ var TicketPage = PageObject.create({
   assigneeErrorHidden: isHidden('.t-ticket-assignee-error'),
   assigneeErrorVisible: isVisible('.t-ticket-assignee-error'),
   assigneeErrorText: text('.t-ticket-assignee-error'),
+
+  //DT
+  continueDT: clickable('.t-dt-continue'),
 });
 
 export default TicketPage;

@@ -6,6 +6,8 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
+import DTD from 'bsrs-ember/vendor/defaults/dtd';
+import DTF from 'bsrs-ember/vendor/dtd_fixtures';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import page from 'bsrs-ember/tests/pages/tickets';
@@ -35,7 +37,7 @@ test('welcome h1 header', function(assert) {
 
 /* jshint ignore:start */
 
-test('draft tickets are shown', async assert => {
+test('draft tickets are shown and can click to ticket detail and start up decision tree', async assert => {
   await visit('/dashboard');
   assert.equal(find('.t-ticket-draft').length, 10);
   const tickets = store.find('ticket-list')
@@ -47,6 +49,13 @@ test('draft tickets are shown', async assert => {
   await click('.t-ticket-status-draft-link');
   assert.equal(currentURL(), `${BASE_URL}/${TD.idOne}`);
   assert.equal(page.statusInput, TD.statusSeven);
+  assert.equal(page.statusInput, TD.statusSeven);
+  const ticket = store.find('ticket', TD.idOne);
+  assert.equal(ticket.get('dt_path')[0]['dt_id'], DTD.idOne);
+  const dt_data = DTF.detail(DTD.idOne);
+  xhr(`${PREFIX}/dt/${DTD.idTwo}/ticket/?ticket=${TD.idOne}`, 'GET', null, {}, 200, dt_data);
+  await click('.t-dt-continue');
+  assert.equal(currentURL(), `/dt/${DTD.idTwo}/ticket/${TD.idOne}`);
 });
 
 /* jshint ignore:end */

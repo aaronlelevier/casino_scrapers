@@ -64,7 +64,7 @@ Router.map(function() {
   });
   this.route('dt', function() {
     this.route('new', {path: '/new'});
-    this.route('dt', {path: '/:dt_id'});
+    this.route('dt', {path: '/:dt_id/ticket/:ticket_id'});
   });
   this.route('work-orders');
   this.route('purchase-orders');

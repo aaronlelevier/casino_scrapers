@@ -13,6 +13,11 @@ var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMi
   child_components: ['parent-model-category-select'],
   repository: inject('ticket'),
   activityRepository: inject('activity'),
+  continueDTId: Ember.computed(function() {
+    const ticket = this.get('model');
+    const last_dt = ticket.get('dt_path').slice(-1);
+    return last_dt[0]['dt_id'];
+  }),
   actions: {
     save(update=false, updateActivities=false) {
       this.set('submitted', true);

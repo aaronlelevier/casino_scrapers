@@ -41,6 +41,17 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
         });
       });
     }
+  },
+  deepLinkDT(dt_id, ticket_id) {
+    return PromiseMixin.xhr(`${PREFIX}/dt/${dt_id}/ticket/?ticket=${ticket_id}`, 'GET').then((response) => {
+      return this.get('deserializer').deserialize(response, dt_id);
+    }, (xhr) => {
+      if(xhr.status === 400 || xhr.status === 404){
+        const err = xhr.responseJSON;
+        const key = Object.keys(err);
+        return Ember.RSVP.Promise.reject(err[key[0]]);
+      } 
+    });
   }
 });
 
