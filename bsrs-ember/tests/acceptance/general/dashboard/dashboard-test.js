@@ -53,7 +53,8 @@ test('draft tickets are shown and can click to ticket detail and start up decisi
   const ticket = store.find('ticket', TD.idOne);
   assert.equal(ticket.get('dt_path')[0]['dt_id'], DTD.idOne);
   const dt_data = DTF.detail(DTD.idOne);
-  xhr(`${PREFIX}/dt/${DTD.idTwo}/ticket/?ticket=${TD.idOne}`, 'GET', null, {}, 200, dt_data);
+  const returned_ticket = TF.detail(TD.idOne, null);
+  xhr(`${PREFIX}/dt/${DTD.idTwo}/ticket/?ticket=${TD.idOne}`, 'GET', null, {}, 200, {dtd: dt_data, ticket:returned_ticket});
   await click('.t-dt-continue');
   assert.equal(currentURL(), `/dt/${DTD.idTwo}/ticket/${TD.idOne}`);
 });
