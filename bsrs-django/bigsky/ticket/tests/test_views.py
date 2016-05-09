@@ -8,6 +8,7 @@ from rest_framework.test import APITestCase
 
 from category.models import Category
 from category.tests.factory import create_categories, create_single_category
+from category.serializers import CategoryIDNameSerializerTicket
 from location.models import Location
 from location.tests.factory import create_location, create_locations
 from generic.models import Attachment
@@ -125,6 +126,55 @@ class TicketListTests(TicketSetupMixin, APITestCase):
         self.assertEqual(
             data['count'],
             Ticket.objects.filter(categories=self.category.id).count()
+        )
+
+
+class TicketDjaTests(TicketSetupMixin, APITestCase):
+
+    def setUp(self):
+        super(TicketDjaTests, self).setUp()
+        # add 2nd ticket with categorie, so 'included' will be a list
+        ticket = create_ticket()
+        category = create_single_category()
+        ticket.categories.add(category)
+
+        response = self.client.get('/api/dja/tickets/')
+        self.data = json.loads(response.content.decode('utf8'))
+
+    def test_data_and_included_keys(self):
+        self.assertIn('data', self.data['results'])
+        self.assertIn('included', self.data['results'])
+
+    def test_category_ids(self):
+        # categories - should be a list of ids
+        all_category_ids = set()
+        for t in self.data['results']['data']:
+            category_ids = set()
+            for c in t['categories']:
+                category_ids.update([c['id']])
+            self.assertEqual(
+                sorted(list(category_ids)),
+                sorted(t['category_ids'])
+            )
+            all_category_ids.update(category_ids)
+        # side loaded 'categories'
+        self.assertEqual(
+            sorted([c['id'] for c in self.data['results']['included']]),
+            sorted(list(all_category_ids))
+        )
+
+    def test_included_obj_keys(self):
+        category = Category.objects.get(id=self.data['results']['included'][0]['id'])
+        self.assertEqual(
+            sorted([x for x in self.data['results']['included'][0].keys() if x != 'type']),
+            sorted(CategoryIDNameSerializerTicket(category).data.keys())
+        )
+
+    def test_resource_name(self):
+        self.assertIn('type', self.data['results']['included'][0])
+        self.assertEqual(
+            self.data['results']['included'][0]['type'],
+            Category._meta.verbose_name_plural.lower()
         )
 
 

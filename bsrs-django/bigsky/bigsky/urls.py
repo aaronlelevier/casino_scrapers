@@ -60,6 +60,7 @@ router.register(r'admin/roles', person_views.RoleViewSet)
 router.register(r'admin/third-parties', third_party_views.ThirdPartyViewSet)
 # Tickets
 router.register(r'tickets', tickets_views.TicketViewSet)
+router.register(r'dja/tickets', tickets_views.TicketDjaViewSet)
 # Work Orders
 router.register(r'work-orders', work_orders_views.WorkOrderViewSet)
 # TRANSLATION

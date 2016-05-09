@@ -4,17 +4,15 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from category.models import Category
 from category.tests.factory import create_categories, create_single_category
 from generic.tests.factory import create_file_attachment
-from location.models import Location
-from location.tests.factory import create_location, create_locations
+from location.tests.factory import create_location
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUS_DEFAULT, TICKET_PRIORITY_DEFAULT)
 from ticket.tests.factory import (
     RegionManagerWithTickets, create_ticket, create_tickets,
-    create_ticket_status, create_ticket_statuses, create_ticket_priorities)
+    create_ticket_statuses, create_ticket_priorities)
 from ticket.tests.mixins import TicketCategoryOrderingSetupMixin
 
 

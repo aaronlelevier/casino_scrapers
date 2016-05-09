@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from category.models import Category
 from category.serializers import CategoryIDNameSerializerTicket
 from generic.serializers import Attachment
 from location.serializers import LocationStatusFKSerializer, LocationTicketListSerializer
@@ -46,13 +47,16 @@ class TicketListSerializer(serializers.ModelSerializer):
 
     location = LocationTicketListSerializer()
     categories = CategoryIDNameSerializerTicket(many=True)
+    category_ids = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(), source='categories',
+        many=True, required=False)
     assignee = PersonTicketSerializer(required=False)
     status = TicketStatusSerializer(required=False)
     priority = TicketPrioritySerializer(required=False)
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS + ('number', 'created',)
+        fields = TICKET_FIELDS + ('number', 'created', 'category_ids')
 
     @staticmethod
     def eager_load(queryset):

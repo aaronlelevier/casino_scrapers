@@ -12,7 +12,6 @@ from generic.tests.factory import create_file_attachment
 from location.models import Location, LOCATION_COMPANY
 from location.tests.factory import create_locations
 from person.models import Person
-from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
 from ticket.serializers import TicketCreateSerializer
