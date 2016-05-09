@@ -19,16 +19,20 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import DTF from 'bsrs-ember/vendor/dtd_fixtures';
+import DT from 'bsrs-ember/vendor/defaults/dtd';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/tickets';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import dtPage from 'bsrs-ember/tests/pages/dtd';
 // import timemachine from 'vendor/timemachine';
 import moment from 'moment';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
+const BASE_DT_URL = BASEURLS.base_dt_url;
 const TICKET_URL = `${BASE_URL}/index`;
 const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
 const TICKET_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
@@ -69,11 +73,12 @@ module('Acceptance | ticket detail', {
 });
 
 /* jshint ignore:start */
-test('clicking a tickets will redirect to the given detail view and can save to ensure validation mixins are working', async assert => {
+test('clicking a tickets will redirect to the given detail view and can save to ensure validation mixins are working (completed ticket)', async assert => {
   await page.visit();
   assert.equal(currentURL(), TICKET_URL);
   await click('.t-grid-data:eq(0)');
   assert.equal(currentURL(), DETAIL_URL);
+  assert.equal(find('.t-dt-continue').text(), '');
   assert.equal(page.ccSelected.indexOf(PD.first_name), 2);
   assert.equal(find('.t-ticket-header').text().trim().split('  ')[0].trim(), 'Toilet Leak');
   let response = TF.detail(TD.idOne);
@@ -1065,4 +1070,21 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(find('.t-error-message').text(), 'WAT');
 });
+
+test('dt continue button will show up if ticket has a status of draft and can click on it to restart dt', async assert => {
+  clearxhr(list_xhr);
+  clearxhr(detail_xhr);
+  detail_data = TF.detail(TD.idOne, TD.statusSevenId);
+  detail_xhr = xhr(`${endpoint}${TD.idOne}/`, 'GET', null, {}, 200, detail_data);
+  await page.visitDetail();
+  assert.equal(currentURL(), DETAIL_URL);
+  assert.equal(find('.t-dt-continue').text(), t('ticket.continue'));
+  const dt_data = DTF.detailWithAllFields(DT.idOne);
+  const returned_ticket = TF.detail(TD.idOne);
+  const dt_endpoint = `${PREFIX}${BASE_DT_URL}/${DT.idTwo}/ticket/?ticket=${TD.idOne}`;
+  xhr(dt_endpoint, 'GET', null, {}, 200, {dtd: dt_data, ticket: returned_ticket});
+  await page.continueDT();
+  assert.ok(dtPage.previewActionButton);
+});
+
 /* jshint ignore:end */
