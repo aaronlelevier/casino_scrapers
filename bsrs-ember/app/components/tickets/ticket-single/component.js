@@ -16,7 +16,7 @@ var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMi
   continueDTId: Ember.computed(function() {
     const ticket = this.get('model');
     const last_dt = ticket.get('dt_path').slice(-1);
-    return last_dt[0]['dt']['id'];
+    return last_dt[0]['dtd']['id'];
   }),
   actions: {
     save(update=false, updateActivities=false) {
