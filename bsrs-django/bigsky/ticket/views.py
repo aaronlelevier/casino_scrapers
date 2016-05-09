@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 from django.conf import settings
 
 from rest_framework.exceptions import MethodNotAllowed
@@ -19,7 +22,7 @@ class TicketQuerySetFilters(object):
 
         if settings.TICKET_FILTERING_ON:
             queryset = queryset.filter_on_categories_and_location(self.request.user)
-
+            logging.info(queryset.query)
         return queryset
 
 
