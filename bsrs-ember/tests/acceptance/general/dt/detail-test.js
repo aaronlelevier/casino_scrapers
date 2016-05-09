@@ -73,10 +73,13 @@ module('Acceptance | dt detail', {
 
 test('decision tree displays data and can click to next destination after updating option (patch ticket)', async assert => {
   const detail_data = DTF.detail(DT.idOne);
+  detail_data.fields[0].required = true;
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
   assert.equal(currentURL(), DETAIL_URL);
+  assert.ok(find('.t-dtd-preview-btn').attr('disabled'));
   await page.fieldClickCheckboxOne();
+  assert.notOk(find('.t-dtd-preview-btn').attr('disabled'));
   const ticket = store.find('ticket', TD.idOne);
   const requestValue = `${FD.labelOne}: ${OD.textOne}`;
   assert.deepEqual(ticket.get('requestValues'), [requestValue]);

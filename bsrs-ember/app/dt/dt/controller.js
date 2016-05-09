@@ -9,20 +9,26 @@ export default Ember.Controller.extend({
   DTDDeserializer: injectDeserializer('dtd'),
   actions: {
     /*
-     * updatRequest 
+     * @method updatRequest 
      * updates ticket request based on fieldsObj (Map) that holds the current value for a field
+     * checkbox needs to update value based on if checked, not option value
      */
     updateRequest(fieldsObj, ticket) {
       let requestValues = [];
       const objs = fieldsObj.values();
       for (var obj of objs) {
         /* jshint ignore:start */
-        obj.label ? requestValues.push(`${obj.label}: ${obj.value}`) : requestValues.push(obj.value);
+        if(obj.label && obj.value) {
+          requestValues.push(`${obj.label}: ${obj.value}`);
+        } else if (obj.value) {
+          requestValues.push(obj.value);
+        }
         /* jshint ignore:end */
       }
       this.get('simpleStore').push('ticket', {id: ticket.get('id'), request: requestValues.join(', '), requestValues: requestValues});
     },
     /*
+     * @method linkClick 
      * modifies ticket dt_path attribute
      * send off patch request
      */

@@ -32,6 +32,21 @@ export default Ember.Component.extend({
       } else if (value) {
         this.processValid(field, 0, value, ticket);
       }
+    },
+    /*
+     * @method updateCheckbox
+     * checked property to determine if should increment num count in dtd-preview
+     * toggle option isChecked in order to handle processValid below
+     */
+    updateCheckbox(value, ticket, option) {
+      option.toggleProperty('isChecked');
+      const event = arguments[3];
+      const field = this.get('field');
+      if (!event.currentTarget.checked) {
+        this.processValid(field, 1, '', ticket);
+      } else {
+        this.processValid(field, 0, value, ticket);
+      }
     }
   },
 });

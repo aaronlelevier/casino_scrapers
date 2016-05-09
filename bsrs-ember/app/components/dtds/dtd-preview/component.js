@@ -19,6 +19,7 @@ export default Ember.Component.extend({
   },
   /* @method fieldsCompleted
    * switches link next button on and off as long as all required fields are fullfilled
+   * uses the num property to increment required length
    */
   fieldsCompleted: Ember.computed('ticket.requestValues.[]', function() {
     const objs = this.get('fieldsObj').values();

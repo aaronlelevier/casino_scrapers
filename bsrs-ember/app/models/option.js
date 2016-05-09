@@ -4,6 +4,8 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 
 export default Model.extend({
   simpleStore: Ember.inject.service(),
+  //used to toggle checked in list view.  Each loops makes managing checked property quite difficult except in model
+  isChecked: false,
   text: attr(''),
   order: attr(''),
   removeRecord(){

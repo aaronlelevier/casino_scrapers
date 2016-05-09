@@ -224,8 +224,6 @@ test('after POST, redirected to next DT, and DT is rendered', assert => {
   });
 });
 
-// TODO (ayl): Can't get checkbox to display value in DOM, and can't submit PATCH because button is disabled
-//  and trying to enable button means getting value of checkbox.
 test('POST then PATCH - to demonstrate starting the DT and maintaining traversing the DT Tree and updating the same Ticket', assert => {
   visit(DT_NEW_URL);
   andThen(() => {
