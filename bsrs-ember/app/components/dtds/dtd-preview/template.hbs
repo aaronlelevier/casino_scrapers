@@ -4,9 +4,9 @@
   </div>
   <div class="row">
     <header class="col-md-12">
-      {{#each model.ticket.dt_path as |path_object|}}
-        <ol class="breadcrumb">
-          <li>{{#link-to "dt.dt" path_object.dt.id ticket.id}}{{dt-breadcrumb-text path_objects.dt}}{{/link-to}}</li>
+      {{#each ticket.dt_path as |path_object|}}
+        <ol class="breadcrumb t-dt-breadcrumb">
+          <li>{{#link-to "dt.dt" path_object.dt.id ticket.id}}{{dt-breadcrumb-text path_object.dt}}{{/link-to}}</li>
         </ol>
       {{/each}}
     </header>

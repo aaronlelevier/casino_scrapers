@@ -7,6 +7,7 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import random from 'bsrs-ember/models/random';
 import './ember-i18n/test-helpers';
 import substring_up_to_num from './substring_up_to_num';
+import substringBreadcrumb from './substring-breadcrumb';
 import registerPowerSelectHelpers from '../../tests/helpers/ember-power-select';
 
 registerPowerSelectHelpers();
