@@ -9,7 +9,7 @@ export default Ember.Controller.extend({
   DTDDeserializer: injectDeserializer('dtd'),
   actions: {
     /*
-     * @method updatRequest 
+     * @method updateRequest 
      * updates ticket request based on fieldsObj (Map) that holds the current value for a field
      * checkbox needs to update value based on if checked, not option value
      */
@@ -29,13 +29,14 @@ export default Ember.Controller.extend({
     },
     /*
      * @method linkClick 
-     * modifies ticket dt_path attribute
+     * @function dtPathMunge modifies ticket dt_path attribute that sets dt_id in json object in order to allow user to navigate back
      * send off patch request
      */
-    linkClick(destination_id, link, ticket, dtd_id) {
-      dtPathMunge(ticket, dtd_id, this.get('simpleStore'));
-      this.get('ticketRepository').patch(destination_id, ticket, link).then((response) => {
+    linkClick(link, ticket, dtd_model) {
+      dtPathMunge(ticket, dtd_model, this.get('simpleStore'));
+      this.get('ticketRepository').patch(ticket, link).then((response) => {
         const dtd = this.get('DTDDeserializer').deserialize(response, response.id);
+        //TODO: what is dtd_fk used for?
         ticket = this.get('simpleStore').push('ticket', {id: ticket.id, dtd_fk: response.id});
         this.transitionToRoute('dt.dt', {id: response.id, model: dtd, ticket: ticket, dt_id: response.id, ticket_id: ticket.id});
       });

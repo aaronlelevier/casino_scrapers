@@ -3,7 +3,13 @@
     <h2 class="col-md-12">{{t 'admin.dtd.preview'}}</h2>
   </div>
   <div class="row">
-    <header class="col-md-12"></header>
+    <header class="col-md-12">
+      {{#each model.ticket.dt_path as |path_object|}}
+        <ol class="breadcrumb">
+          <li>{{#link-to "dt.dt" path_object.dt.id ticket.id}}{{dt-breadcrumb-text path_objects.dt}}{{/link-to}}</li>
+        </ol>
+      {{/each}}
+    </header>
   </div>
   <div class="row">
     <div class="dtd-live">
@@ -48,7 +54,7 @@
       {{#if (is-equal model.link_type model.link_types.[0])}}
       <div class="text-center dtd-links dtd-buttons t-dtd-preview-links">
         {{#each model.links as |link|}}
-        <button type="button" disabled={{fieldsCompleted}} class="btn t-dtd-preview-btn {{if link.action_button 'btn-primary' 'btn-default'}}" {{action "linkClick" link.destination.id link ticket model.id}}>{{link.text}}</button>
+        <button type="button" disabled={{fieldsCompleted}} class="btn t-dtd-preview-btn {{if link.action_button 'btn-primary' 'btn-default'}}" {{action "linkClick" link ticket model}}>{{link.text}}</button>
         {{/each}}
       </div>
       {{/if}}

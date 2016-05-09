@@ -100,7 +100,7 @@ test('has_multi_locations === true, can POST data, and transition to /dt/{start-
   await dtPage.clickStart();
   assert.equal(currentURL(), DT_START_URL);
   assert.equal(ticket.get('dtd_fk'), dtd_response.id);
-  assert.equal(ticket.get('dt_path')[0]['dt_id'], undefined);
+  assert.equal(ticket.get('dt_path')[0]['dt']['id'], undefined);
   assert.equal(ticket.get('dt_path')[0]['ticket']['id'], 1);
   assert.equal(ticket.get('dt_path')[0]['ticket']['location'], LD.idThree);
   assert.equal(ticket.get('dt_path')[0]['ticket']['status'], TD.statusZeroId);
@@ -182,6 +182,7 @@ test('has_multi_locations === false, can POST data, and transition to /dt/{start
         cc: [],
         attachments: [],
       },
+      dt: {}
     }],
   };
   xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(payload), {}, 201, dtd_response);

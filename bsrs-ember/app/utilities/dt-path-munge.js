@@ -1,4 +1,4 @@
-var dtPathMunge = function(ticket, dt_id, simpleStore) {
+var dtPathMunge = function(ticket, dtd, simpleStore) {
   let dt_path = ticket.get('dt_path') || [];
   dt_path = dt_path.concat([{
     ticket: {
@@ -12,7 +12,9 @@ var dtPathMunge = function(ticket, dt_id, simpleStore) {
       cc: ticket.get('cc_ids'),
       attachments: ticket.get('attachment_ids')
     },
-    dt_id: dt_id
+    dt: {
+      id: dtd ? dtd.get('id') : undefined
+    }
   }]);
   simpleStore.push('ticket', {id: ticket.get('id'), dt_path: dt_path});
 };

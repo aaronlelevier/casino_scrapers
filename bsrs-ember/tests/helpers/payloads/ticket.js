@@ -94,6 +94,7 @@ var ticket_dt_new_payload = {
         cc: [],
         attachments: [],
       },
+      dt: {}
     }],
 };
 

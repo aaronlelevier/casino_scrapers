@@ -850,7 +850,7 @@ test('dt path deserialized correctly', assert => {
   assert.equal(ticket.get('status.id'), TD.statusSevenId);
   assert.equal(ticket.get('dt_path').length, 2);
   assert.equal(ticket.get('dt_path')[0]['ticket']['id'], TD.idOne);
-  assert.equal(ticket.get('dt_path')[0]['dt_id'], DTD.idOne);
+  assert.equal(ticket.get('dt_path')[0]['dt']['id'], DTD.idOne);
 });
 
 //TODO: when attachments can be deleted (from ticket) we need a "server is the truth" test that removes in-memory relationships
