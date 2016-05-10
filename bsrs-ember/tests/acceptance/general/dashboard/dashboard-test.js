@@ -21,7 +21,7 @@ module('Acceptance | dashboard', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
-    xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft/`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
+    xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   },
   afterEach() {
     Ember.run(application, 'destroy');
@@ -37,7 +37,7 @@ test('welcome h1 header', function(assert) {
 
 /* jshint ignore:start */
 
-test('draft tickets are shown and can click to ticket detail and start up decision tree', async assert => {
+test('scott draft tickets are shown and can click to ticket detail and start up decision tree', async assert => {
   await visit('/dashboard');
   assert.equal(find('.t-ticket-draft').length, 10);
   const tickets = store.find('ticket-list')
@@ -51,7 +51,7 @@ test('draft tickets are shown and can click to ticket detail and start up decisi
   assert.equal(page.statusInput, TD.statusSeven);
   assert.equal(page.statusInput, TD.statusSeven);
   const ticket = store.find('ticket', TD.idOne);
-  assert.equal(ticket.get('dt_path')[0]['dt_id'], DTD.idOne);
+  assert.equal(ticket.get('dt_path')[0]['dtd']['id'], DTD.idOne);
   const dt_data = DTF.detail(DTD.idOne);
   const returned_ticket = TF.detail(TD.idOne, null);
   xhr(`${PREFIX}/dt/${DTD.idTwo}/ticket/?ticket=${TD.idOne}`, 'GET', null, {}, 200, {dtd: dt_data, ticket:returned_ticket});
