@@ -24,6 +24,14 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
         link.destination = mommy.make(TreeData)
         link.save()
 
+    def test_get_start_page(self):
+        start = TreeData.objects.get_start()
+        response = self.client.get('/api/dt/dt-start/')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['id'], str(start.id))
+        self.assertEqual(data['key'], start.key)
+
     def test_post__ticket_created_and_dtd_response_returned(self):
         """
         Response is the DTD start point, which is configured as a General Setting.

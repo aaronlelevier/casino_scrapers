@@ -9,7 +9,7 @@ from django.contrib.auth import views as auth_views, forms
 from django.contrib.auth.decorators import login_required
 
 from rest_framework import routers
-from rest_framework.routers import Route, SimpleRouter
+from rest_framework.routers import Route, SimpleRouter, DynamicListRoute
 
 from accounting import views as accounting_views
 from bigsky import views as bigsky_views
@@ -101,6 +101,11 @@ class DecisionTreeRouter(SimpleRouter):
             },
             name='{basename}-create',
             initkwargs={'suffix': 'create'}
+        ),
+        DynamicListRoute(
+            url=r'^{prefix}/{methodnamehyphen}/$',
+            name='{basename}-{methodnamehyphen}',
+            initkwargs={}
         )
     ]
 

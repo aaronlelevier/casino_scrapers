@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.decorators import list_route
 
 from dtd.models import TreeData
 from dtd.serializers import TreeDataDetailSerializer
@@ -14,6 +15,8 @@ from utils.views import BaseModelViewSet
 class DTTicketViewSet(BaseModelViewSet):
     """
     **API Endpoint:**
+
+      - GET: `/api/dt/start-page/`
 
       - GET: `/api/dt/{dt-id}/ticket/?ticket={ticket-id}`
 
@@ -80,3 +83,9 @@ class DTTicketViewSet(BaseModelViewSet):
     def _get_ticket(data):
         id = data.get('id', None)
         return get_object_or_404(Ticket, id=id)
+
+    @list_route()
+    def dt_start(self, request):
+        tree_data = TreeData.objects.get_start()
+        dt_serializer = TreeDataDetailSerializer(tree_data)
+        return Response(dt_serializer.data)
