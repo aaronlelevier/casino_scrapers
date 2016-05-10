@@ -16,7 +16,7 @@ class DTTicketViewSet(BaseModelViewSet):
     """
     **API Endpoint:**
 
-      - GET: `/api/dt/start-page/`
+      - GET: `/api/dt/dt-start/`
 
       - GET: `/api/dt/{dt-id}/ticket/?ticket={ticket-id}`
 
