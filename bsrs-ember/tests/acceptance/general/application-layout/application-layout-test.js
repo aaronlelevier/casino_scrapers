@@ -18,7 +18,7 @@ var application;
 module('Acceptance | application layout test', {
   beforeEach() {
     application = startApp();
-    xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft/`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
+    xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   },
   afterEach() {
     Ember.run(application, 'destroy');

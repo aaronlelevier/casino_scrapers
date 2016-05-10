@@ -61,7 +61,7 @@ module('Acceptance | dt new', {
 });
 
 test('go to /dashboard, click button to get to /dt/new', assert => {
-  xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft/`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
+  xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   visit(DASHBOARD_URL);
   andThen(() => {
     assert.equal(currentURL(), DASHBOARD_URL);
@@ -100,7 +100,7 @@ test('has_multi_locations === true, can POST data, and transition to /dt/{start-
   await dtPage.clickStart();
   assert.equal(currentURL(), DT_START_URL);
   assert.equal(ticket.get('dtd_fk'), dtd_response.id);
-  assert.equal(ticket.get('dt_path')[0]['dt']['id'], undefined);
+  assert.equal(ticket.get('dt_path')[0]['dtd']['id'], undefined);
   assert.equal(ticket.get('dt_path')[0]['ticket']['id'], 1);
   assert.equal(ticket.get('dt_path')[0]['ticket']['location'], LD.idThree);
   assert.equal(ticket.get('dt_path')[0]['ticket']['status'], TD.statusZeroId);
@@ -138,7 +138,7 @@ test('has_multi_locations === true, validation: cant click next until select loc
 
 test('has_multi_locations === false, can POST data, and transition to /dt/{start-id}', assert => {
   let person;
-  xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft/`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
+  xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   visit('/dashboard');
   andThen(() => {
     assert.equal(currentURL(), '/dashboard');
@@ -182,7 +182,7 @@ test('has_multi_locations === false, can POST data, and transition to /dt/{start
         cc: [],
         attachments: [],
       },
-      dt: {}
+      dtd: {}
     }],
   };
   xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(payload), {}, 201, dtd_response);
