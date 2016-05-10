@@ -12,7 +12,7 @@ var dtPathMunge = function(ticket, dtd, simpleStore) {
       cc: ticket.get('cc_ids'),
       attachments: ticket.get('attachment_ids')
     },
-    dt: {
+    dtd: {
       id: dtd ? dtd.get('id') : undefined
     }
   }]);

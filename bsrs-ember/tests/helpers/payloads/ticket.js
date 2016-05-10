@@ -29,7 +29,9 @@ var ticket_payload_base = {
         cc: [],
         attachments: [],
       },
-      dt_id: DTD.idOne
+      dtd: {
+        id: DTD.idOne
+      }
     }, {
       ticket: {
         id: TD.idTwo,
@@ -42,7 +44,9 @@ var ticket_payload_base = {
         cc: [],
         attachments: [],
       },
-      dt_id: DTD.idTwo
+      dtd: {
+        id: DTD.idTwo
+      }
     }],
 };
 
@@ -94,7 +98,7 @@ var ticket_dt_new_payload = {
         cc: [],
         attachments: [],
       },
-      dt: {}
+      dtd: {}
     }],
 };
 

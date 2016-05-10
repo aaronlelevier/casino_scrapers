@@ -99,7 +99,7 @@ test('decision tree displays data and can click to next destination after updati
   assert.equal(ticket.get('dt_path')[0]['dt_id'], undefined);
   assert.equal(ticket.get('dt_path')[0]['ticket']['request'], undefined);
   assert.equal(ticket.get('dt_path')[0]['ticket']['location'], LD.idThree);
-  assert.equal(ticket.get('dt_path')[1]['dt']['id'], DT.idOne);
+  assert.equal(ticket.get('dt_path')[1]['dtd']['id'], DT.idOne);
   assert.equal(ticket.get('dt_path')[1]['ticket']['request'], requestValue);
   assert.equal(ticket.get('dt_path')[1]['ticket']['location'], LD.idThree);
   assert.equal(ticket.get('status.id'), TD.statusZeroId);
