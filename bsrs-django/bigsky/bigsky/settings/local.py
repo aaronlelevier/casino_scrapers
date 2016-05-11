@@ -10,9 +10,9 @@ LOCAL_APPS = [
     'django_extensions',
     ]
 
-THIRD_PARTY_APPS = [
-    'debug_toolbar',
-    ]
+# THIRD_PARTY_APPS = [
+#     'debug_toolbar',
+#     ]
 
 # Data tranformation apps (from Domino -> to -> PostgreSQL)
 # Docs: https://docs.djangoproject.com/en/1.8/topics/db/multi-db/
