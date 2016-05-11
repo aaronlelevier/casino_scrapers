@@ -49,7 +49,7 @@ var ticket_payload_base = {
       },
       dtd: {
         id: DTD.idTwo,
-        description: DTD.descriptionOne,
+        description: DTD.descriptionTwo,
         prompt: DTD.promptOne,
         note: DTD.noteOne,
       }
