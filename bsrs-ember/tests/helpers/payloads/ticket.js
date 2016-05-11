@@ -100,7 +100,12 @@ var ticket_dt_new_payload = {
         cc: [],
         attachments: [],
       },
-      dtd: {id: DTD.idOne}
+      dtd: {
+        id: DTD.idOne,
+        description: DTD.descriptionOne,
+        prompt: DTD.promptOne,
+        note: DTD.noteOne,
+      }
     }],
 };
 
