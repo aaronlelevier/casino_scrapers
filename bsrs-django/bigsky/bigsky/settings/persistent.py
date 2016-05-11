@@ -2,6 +2,8 @@ import platform
 
 from .prod import *
 
+# Turn on for debug mode in 'debug_toolbar'
+INTERNAL_IPS = ('127.0.0.1',)
 
 PERSISTENT_APPS = [
     'utils_transform.tcategory',
@@ -11,7 +13,15 @@ PERSISTENT_APPS = [
     'utils_transform.tticket',
     ]
 
-INSTALLED_APPS = INSTALLED_APPS + PERSISTENT_APPS
+THIRD_PARTY_APPS = [
+    'debug_toolbar',
+    ]
+
+MIDDLEWARE_CLASSES += [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    ]
+
+INSTALLED_APPS = INSTALLED_APPS + PERSISTENT_APPS + THIRD_PARTY_APPS
 
 
 DATABASES['default'] = {
