@@ -30,6 +30,7 @@ const DTD_URL = BASEURLS.base_dtd_url;//Request
 const TICKET_URL = BASEURLS.base_tickets_url;//Ticket
 const DETAIL_URL = `${BASE_URL}/${DT.idOne}/ticket/${TD.idOne}`;
 const DEST_URL = `${BASE_URL}/${DT.idTwo}/ticket/${TD.idOne}`;
+const DTD_THREE_URL = `${BASE_URL}/${DT.idThree}/ticket/${TD.idOne}`;
 const TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
 
 let application, store, endpoint, original_uuid, link, dtd, dt_path, returned_ticket;
@@ -42,10 +43,17 @@ module('Acceptance | dt detail', {
     dtd = store.find('dtd', DT.idOne);
     original_uuid = random.uuid;
     random.uuid = function() { return TD.idOne; };
+    /*
+     * ticket object is used for current ticket and dt_path object
+     * dt_path is previous state of ticket && dtd state
+     * returned_ticket is the ticket w/ the dt_path, which will be different and is returned on a get requests
+     * current store state of ticket hasSaved: true in order to force patch requests and relationships setup b/c ticket one
+     * all tests are assuming deep linking (i.e. clicking from ticket detail)
+     */
     const ticket = {
       id: TD.idOne,
       requester: TD.requesterOne,
-      location: LD.idThree,
+      location: LD.idOne,
       status: TD.statusZeroId,
       priority: TD.priorityZeroId,
       categories: [],
@@ -57,10 +65,7 @@ module('Acceptance | dt detail', {
     }];
     returned_ticket = TF.detail(TD.idOne, null, dt_path);
     run(() => {
-      store.push('ticket', {id: ticket.id, location_fk: LD.idThree, status_fk: TD.statusZeroId, priority_fk: TD.priorityZeroId, new_pk: DT.idOne, dt_path, hasSaved: true});
-      store.push('location', {id: LD.idThree, tickets: [ticket.id]});
-      store.push('ticket-status', {id: TD.statusZeroId, tickets: [ticket.id]});
-      store.push('ticket-priority', {id: TD.priorityZeroId, tickets: [ticket.id]});
+      store.push('ticket', {id: ticket.id, hasSaved: true});
     });
   },
   afterEach() {
@@ -86,9 +91,10 @@ test('decision tree displays data and can click to next destination after updati
   assert.equal(ticket.get('request'), requestValue);
   assert.equal(ticket.get('dt_path')[0]['dt_id'], undefined);
   assert.equal(ticket.get('dt_path')[0]['ticket']['request'], undefined);
-  assert.equal(ticket.get('dt_path')[0]['ticket']['location'], LD.idThree);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['location'], LD.idOne);
   assert.equal(ticket.get('dt_path')[0]['ticket']['status'], TD.statusZeroId);
-  assert.equal(ticket.get('status.id'), TD.statusZeroId);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['priority'], TD.priorityZeroId);
+  assert.equal(ticket.get('status.id'), TD.statusOneId);
   assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
   let dtd_payload = DTF.generate(DT.idTwo);
   const link = dtd.get('links').objectAt(0);
@@ -98,13 +104,13 @@ test('decision tree displays data and can click to next destination after updati
   assert.equal(currentURL(), DEST_URL);
   assert.equal(ticket.get('dt_path')[0]['dt_id'], undefined);
   assert.equal(ticket.get('dt_path')[0]['ticket']['request'], undefined);
-  assert.equal(ticket.get('dt_path')[0]['ticket']['location'], LD.idThree);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['location'], LD.idOne);
   assert.equal(ticket.get('dt_path')[1]['dtd']['id'], DT.idOne);
   assert.equal(ticket.get('dt_path')[1]['ticket']['request'], requestValue);
-  assert.equal(ticket.get('dt_path')[1]['ticket']['location'], LD.idThree);
-  assert.equal(ticket.get('status.id'), TD.statusZeroId);
-  assert.equal(ticket.get('dt_path')[1]['ticket']['status'], TD.statusZeroId);
-  assert.equal(ticket.get('dt_path')[1]['ticket']['priority'], TD.priorityZeroId);
+  assert.equal(ticket.get('dt_path')[1]['ticket']['location'], LD.idOne);
+  assert.equal(ticket.get('status.id'), TD.statusOneId);
+  assert.equal(ticket.get('dt_path')[1]['ticket']['status'], TD.statusOneId);
+  assert.equal(ticket.get('dt_path')[1]['ticket']['priority'], TD.priorityOneId);
 });
 
 test('updating field text (patch ticket)', async assert => {
@@ -256,7 +262,7 @@ test('can click to next destination if field is not required and don\'t fill in 
   assert.equal(find('.t-dtd-preview-btn').attr('disabled'), undefined);
   let dtd_payload = DTF.generate(DT.idTwo);
   const link = dtd.get('links').objectAt(0);
-  let ticket_payload = { id: TD.idOne, priority: LINK.priorityOne, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id') };
+  let ticket_payload = { id: TD.idOne, priority: LINK.priorityOne, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id'), request: TD.requestOne };
   xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
   await page.clickNextBtn();
   assert.equal(currentURL(), DEST_URL);
@@ -362,6 +368,19 @@ test('will show breadcrumbs if note present', async assert => {
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
   assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.noteOne));
+});
+
+test('can click back on breadcrumb and ticket updates dtd_path', async assert => {
+  let detail_data = DTF.detailWithAllFields(DT.idOne);
+  returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: DT.descriptionOne};
+  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
+  await visit(DETAIL_URL);
+  assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.descriptionOne));
+  const detail_data_3 = DTF.detailWithAllFields(DT.idThree);
+  const endpoint_3 = `${PREFIX}${BASE_URL}/${DT.idThree}/ticket/?ticket=${TD.idOne}`;
+  xhr(endpoint_3, 'GET', null, {}, 200, {dtd: detail_data_3, ticket: returned_ticket});
+  await click('.t-ticket-breadcrumb-back');
+  assert.equal(currentURL(), DTD_THREE_URL);
 });
 
 //multiple pages

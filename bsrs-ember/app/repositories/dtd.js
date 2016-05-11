@@ -46,14 +46,21 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
   getStart() {
     return PromiseMixin.xhr(`${PREFIX}/dt/dt-start/`, 'GET');
   },
+  /*
+   * @method deepLinkDT
+   * when click continue from ticket route or get link to continue DT 
+   * if deep link, ticket needs to be full object and deserialized to setup relationships in order for dt-munge to work
+   */
   deepLinkDT(dt_id, ticket_id) {
     return PromiseMixin.xhr(`${PREFIX}/dt/${dt_id}/ticket/?ticket=${ticket_id}`, 'GET').then((response) => {
       const { dtd: model, ticket } = response;
+      this.get('simpleStore').push('ticket', {id: ticket_id, hasSaved: true});
       return {
         model: this.get('deserializer').deserialize(model, dt_id),
-        ticket: this.get('simpleStore').push('ticket', {id: ticket_id, dt_path: ticket.dt_path, hasSaved: true})
+        ticket: this.get('ticketDeserializer').deserialize(ticket, ticket.id),
       };
     }, (xhr) => {
+      //TODO: need to test this and extract error handling to util function
       if(xhr.status === 400 || xhr.status === 404){
         const err = xhr.responseJSON;
         const key = Object.keys(err);
