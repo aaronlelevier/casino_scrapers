@@ -23,7 +23,6 @@ moduleForComponent('ticket-location-select', 'integration: ticket-location-selec
     trans = this.container.lookup('service:i18n');
     loadTranslations(trans, translations.generate('en'));
     translation.initialize(this);
-
     store = module_registry(this.container, this.registry, ['model:ticket', 'model:location']);
     run(function() {
       ticket = store.push('ticket', {id: TD.idOne, location_fk: LD.idOne});
@@ -42,37 +41,37 @@ moduleForComponent('ticket-location-select', 'integration: ticket-location-selec
   }
 });
 
-test('should render a selectbox when location options are empty (initial state of power select)', function(assert) {
-  this.model = ticket;
-  this.locationRepo = location_repo;
-  this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket"}}`);
-  let $component = this.$(`${COMPONENT}`);
-  clickTrigger();
-  assert.equal($(`${DROPDOWN}`).length, 1);
-  assert.equal($('.ember-power-select-options > li').length, 1);
-  assert.equal($('li.ember-power-select-option').text(), GLOBALMSG.power_search);
-  assert.equal(this.$('.ember-power-select-placeholder').text(), GLOBALMSG.location_power_select);
-  assert.ok(!ticket.get('location'));
-});
+// test('should render a selectbox when location options are empty (initial state of power select)', function(assert) {
+//   this.model = ticket;
+//   this.locationRepo = location_repo;
+//   this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket"}}`);
+//   let $component = this.$(`${COMPONENT}`);
+//   clickTrigger();
+//   assert.equal($(`${DROPDOWN}`).length, 1);
+//   assert.equal($('.ember-power-select-options > li').length, 1);
+//   assert.equal($('li.ember-power-select-option').text(), GLOBALMSG.power_search);
+//   assert.equal(this.$('.ember-power-select-placeholder').text(), GLOBALMSG.location_power_select);
+//   assert.ok(!ticket.get('location'));
+// });
 
-test('should render a selectbox with bound options after type ahead for search', function(assert) {
-  location_one.set('tickets', [TD.idOne]);
-  this.model = ticket;
-  this.locationRepo = location_repo;
-  this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket"}}`);
-  let $component = this.$(`${COMPONENT}`);
-  clickTrigger();
-  run(() => { typeInSearch('a'); });
-  return waitFor().
-    then(() => {
-      assert.equal($(`${DROPDOWN}`).length, 1);
-      assert.equal($('.ember-power-select-options > li').length, 3);
-      assert.equal($('li.ember-power-select-option:eq(0)').text().trim(), LD.storeName);
-      assert.equal($('li.ember-power-select-option:eq(1)').text().trim(), LD.storeNameTwo);
-      assert.equal($('li.ember-power-select-option:eq(2)').text().trim(), LD.storeNameThree);
-      assert.equal($(`${PowerSelect}`).text().trim(), LD.storeName);
-    });
-});
+// test('should render a selectbox with bound options after type ahead for search', function(assert) {
+//   location_one.set('tickets', [TD.idOne]);
+//   this.model = ticket;
+//   this.locationRepo = location_repo;
+//   this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket"}}`);
+//   let $component = this.$(`${COMPONENT}`);
+//   clickTrigger();
+//   run(() => { typeInSearch('a'); });
+//   return waitFor().
+//     then(() => {
+//       assert.equal($(`${DROPDOWN}`).length, 1);
+//       assert.equal($('.ember-power-select-options > li').length, 3);
+//       assert.equal($('li.ember-power-select-option:eq(0)').text().trim(), LD.storeName);
+//       assert.equal($('li.ember-power-select-option:eq(1)').text().trim(), LD.storeNameTwo);
+//       assert.equal($('li.ember-power-select-option:eq(2)').text().trim(), LD.storeNameThree);
+//       assert.equal($(`${PowerSelect}`).text().trim(), LD.storeName);
+//     });
+// });
 
 test('should be able to select new location when one doesnt exist', function(assert) {
   this.model = ticket;
