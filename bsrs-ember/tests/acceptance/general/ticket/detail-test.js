@@ -25,7 +25,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/tickets';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import dtPage from 'bsrs-ember/tests/pages/dtd';
+import dtdPage from 'bsrs-ember/tests/pages/dtd';
 // import timemachine from 'vendor/timemachine';
 import moment from 'moment';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
@@ -1084,7 +1084,10 @@ test('dt continue button will show up if ticket has a status of draft and can cl
   const dt_endpoint = `${PREFIX}${BASE_DT_URL}/${DT.idTwo}/ticket/?ticket=${TD.idOne}`;
   xhr(dt_endpoint, 'GET', null, {}, 200, {dtd: dt_data, ticket: returned_ticket});
   await page.continueDT();
-  assert.ok(dtPage.previewActionButton);
+  assert.ok(dtdPage.previewActionButton);
+  assert.equal(dtdPage.breadcrumbOne, substringBreadcrumb(DT.descriptionOne));
+  const ticket = store.find('ticket', TD.idOne);
+  assert.ok(ticket.get('hasSaved'));//prevents POST request from being sent off
 });
 
 /* jshint ignore:end */

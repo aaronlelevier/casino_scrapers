@@ -51,7 +51,7 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
       const { dtd: model, ticket } = response;
       return {
         model: this.get('deserializer').deserialize(model, dt_id),
-        ticket: this.get('simpleStore').push('ticket', {id: ticket_id, dt_path: ticket.dt_path})
+        ticket: this.get('simpleStore').push('ticket', {id: ticket_id, dt_path: ticket.dt_path, hasSaved: true})
       };
     }, (xhr) => {
       if(xhr.status === 400 || xhr.status === 404){
