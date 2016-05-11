@@ -19,7 +19,8 @@ from person.models import Role, PersonStatus
 from setting.models import Setting
 from ticket.models import TicketStatus, TicketPriority
 from translation.models import Locale
-from utils.helpers import model_to_json, model_to_json_select_related
+from utils.helpers import (model_to_json, model_to_json_select_related,
+    model_to_json_prefetch_related)
 
 
 class IndexView(TemplateView):
@@ -53,7 +54,7 @@ class IndexView(TemplateView):
             'role_config': model_to_json_select_related(Role, select=['location_level']),
             'role_types_config': json.dumps(ROLE_TYPES),
             'person_status_config': model_to_json(PersonStatus),
-            'location_level_config': model_to_json(LocationLevel),
+            'location_level_config': model_to_json_prefetch_related(LocationLevel, ['children', 'parents']),
             'location_status_config': model_to_json(LocationStatus),
             'locales': model_to_json(Locale),
             'currencies': json.dumps({c.code: c.to_dict()

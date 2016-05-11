@@ -5,10 +5,11 @@ from django.conf import settings
 from django.contrib.auth.models import ContentType
 from django.test import TestCase
 
+from location.models import LocationLevel
 from person.models import Role
 from person.tests.factory import create_role
 from utils.helpers import (BASE_UUID, model_to_json, model_to_json_select_related,
-     generate_uuid, get_content_type_number, media_path)
+    model_to_json_prefetch_related, generate_uuid, get_content_type_number, media_path)
 
 
 class ModelToJsonTests(TestCase):
@@ -35,6 +36,18 @@ class ModelToJsonTests(TestCase):
         self.assertEqual(ret[0]['name'], self.role.name)
         self.assertEqual(ret[0]['location_level'], str(self.role.location_level.id))
         self.assertEqual(ret[0]['default'], True)
+
+    def test_model_to_json_prefetch_related(self):
+        location_level = self.role.location_level
+
+        ret = model_to_json_prefetch_related(LocationLevel, prefetch=['children', 'parents'])
+
+        ret = json.loads(ret)
+        self.assertEqual(len(ret), 1)
+        self.assertEqual(ret[0]['id'], str(location_level.id))
+        self.assertEqual(ret[0]['name'], location_level.name)
+        self.assertIn('children', ret[0])
+        self.assertIn('parents', ret[0])
 
 
 class GenerateUuidTests(TestCase):
