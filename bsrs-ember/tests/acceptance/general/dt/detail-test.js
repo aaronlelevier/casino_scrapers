@@ -342,7 +342,7 @@ test('start page does not show breadcrumb', async assert => {
 
 test('will show breadcrumbs if description present', async assert => {
   let detail_data = DTF.detailWithAllFields(DT.idOne);
-  returned_ticket.dt_path[0]['dt'] = {id: DT.idThree, description: DT.descriptionOne};
+  returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: DT.descriptionOne};
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
   assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.descriptionOne));
@@ -350,7 +350,7 @@ test('will show breadcrumbs if description present', async assert => {
 
 test('will show breadcrumbs if prompt present', async assert => {
   let detail_data = DTF.detailWithAllFields(DT.idOne);
-  returned_ticket.dt_path[0]['dt'] = {id: DT.idThree, prompt: DT.promptOne};
+  returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, prompt: DT.promptOne};
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
   assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.promptOne));
@@ -358,7 +358,7 @@ test('will show breadcrumbs if prompt present', async assert => {
 
 test('will show breadcrumbs if note present', async assert => {
   let detail_data = DTF.detailWithAllFields(DT.idOne);
-  returned_ticket.dt_path[0]['dt'] = {id: DT.idThree, note: DT.noteOne};
+  returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, note: DT.noteOne};
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
   assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.noteOne));
