@@ -11,7 +11,7 @@ from dtd.models import TreeOption, TreeData
 from dtd.serializers import TreeDataCreateUpdateSerializer
 from dtd.tests.mixins import TreeDataTestSetUpMixin
 from generic.tests.factory import create_file_attachment
-from ticket.tests.factory import create_ticket_status, create_ticket_priority
+from ticket.tests.factory_related import create_ticket_status, create_ticket_priority
 from utils.create import random_lorem, _generate_chars
 from utils.helpers import media_path
 

@@ -16,9 +16,9 @@ from generic.tests.factory import create_file_attachment
 from person.tests.factory import PASSWORD, create_single_person, DistrictManager
 from ticket.models import Ticket, TicketActivity, TicketActivityType
 from ticket.serializers import TicketCreateSerializer
+from ticket.tests.factory_related import (create_ticket_priority, create_ticket_status)
 from ticket.tests.factory import (create_ticket, create_ticket_activity,
-    create_ticket_activity_type, create_ticket_activity_types,
-    create_ticket_status, create_ticket_priority)
+    create_ticket_activity_type, create_ticket_activity_types,)
 from ticket.tests.mixins import TicketSetupNoLoginMixin, TicketSetupMixin
 from utils.helpers import media_path
 

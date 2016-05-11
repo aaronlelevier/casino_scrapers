@@ -4,8 +4,8 @@ from category.models import Category
 from category.tests.factory import create_categories
 from person.tests.factory import PASSWORD, DistrictManager
 from ticket.models import Ticket
-from ticket.tests.factory import (create_ticket, create_ticket_statuses,
-    create_ticket_priorities)
+from ticket.tests.factory_related import (create_ticket_priorities, create_ticket_statuses)
+from ticket.tests.factory import create_ticket
 
 
 class TicketSetupNoLoginMixin(object):

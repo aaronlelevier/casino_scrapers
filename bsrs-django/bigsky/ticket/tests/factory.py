@@ -7,14 +7,17 @@ from model_mommy import mommy
 
 from category.models import Category
 from category.tests.factory import create_single_category
-from dtd.models import TreeData
+from dtd.models import TreeData, DTD_START_KEY
+from dtd.tests.factory import create_tree_data
 from generic.tests.factory import create_file_attachment
 from location.models import Location, LOCATION_COMPANY
 from location.tests.factory import create_locations
 from person.models import Person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
-from ticket.serializers import TicketCreateSerializer
+from ticket.serializers import TicketSerializer
+from ticket.tests.factory_related import (create_ticket_status, get_or_create_ticket_status, 
+    get_or_create_ticket_priority)
 from utils.create import _generate_chars
 from utils.helpers import generate_uuid
 
@@ -94,6 +97,7 @@ def construct_tree(category, tree):
     return tree
 
 
+# Main Ticket create function
 def _create_ticket(request=None, assignee=None, add_attachment=False):
     people = Person.objects.all()
 
@@ -125,7 +129,11 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
         a = create_file_attachment()
         ticket.attachments.add(a)
 
-    start_dtd = TreeData.objects.get_start()
+    start_dtd = TreeData.objects.get_start()# or create_tree_data(key=DTD_START_KEY)
+    # Already have a created ticket, dt_path is snapshot of ticket at previous time and dtd at that time
+    munged_ticket = TicketSerializer(ticket).data
+    munged_ticket.priority = TicketPriority.objects.order_by('?')[0]
+    munged_ticket.status = TicketStatus.objects.order_by('?')[0]
     ticket.dt_path = [{
         'dtd': {
             'id': str(start_dtd.id),
@@ -133,21 +141,11 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
             'prompt': start_dtd.prompt,
             'note': start_dtd.note,
             },
-        'ticket': TicketCreateSerializer(ticket).data
+        'ticket': munged_ticket
     }]
     ticket.save()
 
     return ticket
-
-
-def get_or_create_ticket_status():
-    obj, _ = TicketStatus.objects.get_or_create(name=random.choice(TICKET_STATUSES))
-    return obj
-
-
-def get_or_create_ticket_priority():
-    obj, _ = TicketPriority.objects.get_or_create(name=random.choice(TICKET_PRIORITIES))
-    return obj
 
 
 def create_ticket(request=None, assignee=None, add_attachment=False):
@@ -192,39 +190,6 @@ def create_extra_ticket_with_categories():
     seven.categories.add(a_locks)
 
 
-def create_ticket_status(name=None):
-    id = generate_uuid(TicketStatus)
-    if not name:
-        name = random.choice(TICKET_STATUSES)
-    try:
-        obj = TicketStatus.objects.get(name=name)
-    except TicketStatus.DoesNotExist:
-        obj = TicketStatus.objects.create(id=id, name=name)
-    return obj
-
-
-def create_ticket_statuses():
-    [create_ticket_status(s) for s in TICKET_STATUSES]
-    return TicketStatus.objects.all()
-
-
-def create_ticket_priority(name=None):
-    id = generate_uuid(TicketPriority)
-
-    if not name:
-        name = random.choice(TICKET_PRIORITIES)
-
-    try:
-        obj = TicketPriority.objects.get(name=name)
-    except TicketPriority.DoesNotExist:
-        obj = TicketPriority.objects.create(id=id, name=name)
-
-    return obj
-
-
-def create_ticket_priorities():
-    [create_ticket_priority(p) for p in TICKET_PRIORITIES]
-    return TicketPriority.objects.all()
 
 
 def create_ticket_activity(ticket=None, type=None, content=None):

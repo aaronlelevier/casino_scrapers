@@ -10,7 +10,7 @@ from location.tests.factory import create_location_levels
 from person.models import Person
 from ticket.models import (Ticket, TicketStatus, TicketPriority,
     TICKET_STATUS_MAP, TICKET_PRIORITY_MAP)
-from ticket.tests.factory import create_ticket_priorities, create_ticket_statuses
+from ticket.tests.factory_related import create_ticket_priorities, create_ticket_statuses
 from utils_transform.tticket.management.commands import _etl_utils
 from utils_transform.tticket.tests.factory import create_domino_ticket
 
