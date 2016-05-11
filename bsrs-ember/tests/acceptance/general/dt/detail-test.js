@@ -338,13 +338,13 @@ test('fill out: number, text, textarea, and select (patch ticket)', async assert
   assert.equal(currentURL(), DEST_URL);
 });
 
-test('start page does not show breadcrumb', async assert => {
-  let detail_data = DTF.detailWithAllFields(DT.idOne);
-  returned_ticket.dt_path[0]['dt'] = {};
-  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
-  await visit(DETAIL_URL);
-  assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), '');
-});
+// test('scott start page does not show breadcrumb', async assert => {
+//   let detail_data = DTF.detailWithAllFields(DT.idOne);
+//   returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: DT.descriptionOne};
+//   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
+//   await visit(DETAIL_URL);
+//   assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), '');
+// });
 
 test('will show breadcrumbs if description present', async assert => {
   let detail_data = DTF.detailWithAllFields(DT.idOne);

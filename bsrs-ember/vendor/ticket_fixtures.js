@@ -85,7 +85,7 @@ var BSRS_TICKET_FACTORY = (function() {
         },
         dtd: {
           id: this.dtd_defaults.idTwo,
-          description: this.dtd_defaults.descriptionOne,
+          description: this.dtd_defaults.descriptionTwo,
           prompt: this.dtd_defaults.promptOne,
           note: this.dtd_defaults.noteOne,
         }

@@ -73,7 +73,7 @@ module('Acceptance | ticket detail', {
 });
 
 /* jshint ignore:start */
-test('scott clicking a tickets will redirect to the given detail view and can save to ensure validation mixins are working (completed ticket)', async assert => {
+test('clicking a tickets will redirect to the given detail view and can save to ensure validation mixins are working (completed ticket)', async assert => {
   await page.visit();
   assert.equal(currentURL(), TICKET_URL);
   await click('.t-grid-data:eq(0)');
@@ -1085,7 +1085,7 @@ test('dt continue button will show up if ticket has a status of draft and can cl
   xhr(dt_endpoint, 'GET', null, {}, 200, {dtd: dt_data, ticket: returned_ticket});
   await page.continueDT();
   assert.ok(dtdPage.previewActionButton);
-  assert.equal(dtdPage.breadcrumbOne, substringBreadcrumb(DT.descriptionOne));
+  assert.equal(dtdPage.breadcrumbOne, `${substringBreadcrumb(DT.descriptionOne)} ${substringBreadcrumb(DT.descriptionTwo)}`);
   const ticket = store.find('ticket', TD.idOne);
   assert.ok(ticket.get('hasSaved'));//prevents POST request from being sent off
 });
