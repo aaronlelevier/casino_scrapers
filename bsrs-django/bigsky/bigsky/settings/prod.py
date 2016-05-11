@@ -2,6 +2,10 @@ from .base import *
 
 DEBUG = True
 
+MIDDLEWARE_CLASSES += [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    ]
+
 
 # SSL_ENABLED = True
 # CSRF_COOKIE_SECURE = True
