@@ -65,12 +65,6 @@ class TicketListSerializer(serializers.ModelSerializer):
                         .prefetch_related('categories', 'categories__children'))
 
 
-class TicketDTSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Ticket
-        fields = ('id', 'dt_path')
-
-
 class TicketSerializer(serializers.ModelSerializer):
 
     location = LocationStatusFKSerializer()

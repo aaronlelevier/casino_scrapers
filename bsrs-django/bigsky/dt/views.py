@@ -8,7 +8,7 @@ from rest_framework.decorators import list_route
 from dtd.models import TreeData
 from dtd.serializers import TreeDataDetailSerializer
 from ticket.models import Ticket
-from ticket.serializers import TicketCreateSerializer, TicketDTSerializer
+from ticket.serializers import TicketCreateSerializer, TicketSerializer
 from utils.views import BaseModelViewSet
 
 
@@ -44,7 +44,7 @@ class DTTicketViewSet(BaseModelViewSet):
         ticket_id = request.query_params.get('ticket', None)
         if ticket_id:
             ticket = self._get_ticket({'id': ticket_id})
-            ticket_serializer = TicketDTSerializer(ticket)
+            ticket_serializer = TicketSerializer(ticket)
             data = {
                 'ticket': ticket_serializer.data,
                 'dtd': dt_serializer.data
