@@ -114,6 +114,7 @@ class CreateTicketTests(TestCase):
     def test_dt_path(self):
         start_dtd = TreeData.objects.get_start()
         self.assertEqual(len(self.ticket.dt_path), 1)
+        self.assertTrue(start_dtd.links.first().destination)
         self.assertEqual(self.ticket.dt_path[0]['dtd']['id'], str(start_dtd.id))
         self.assertEqual(self.ticket.dt_path[0]['dtd']['description'], start_dtd.description)
         self.assertEqual(self.ticket.dt_path[0]['dtd']['prompt'], start_dtd.prompt)
