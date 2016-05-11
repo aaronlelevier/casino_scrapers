@@ -129,7 +129,7 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
         a = create_file_attachment()
         ticket.attachments.add(a)
 
-    start_dtd = TreeData.objects.get_start()# or create_tree_data(key=DTD_START_KEY)
+    start_dtd = TreeData.objects.get_start() or create_tree_data(key=DTD_START_KEY, destination=mommy.make(TreeData))
     # Already have a created ticket, dt_path is snapshot of ticket at previous time and dtd at that time
     munged_ticket = TicketSerializer(ticket).data
     munged_ticket.priority = TicketPriority.objects.order_by('?')[0]

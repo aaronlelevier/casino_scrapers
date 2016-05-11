@@ -3,7 +3,8 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from dtd.models import TreeData, TreeDataManager
+from dtd.models import TreeData, TreeDataManager, DTD_START_KEY
+from dtd.tests.factory import create_tree_data
 from setting.tests.factory import create_general_setting
 
 
@@ -24,6 +25,7 @@ class TreeDataManagerTests(TestCase):
         self.assertEqual(len(ret), len(raw_ret))
 
     def test_get_start(self):
+        create_tree_data(key=DTD_START_KEY)
         general_settings = create_general_setting()
 
         ret = TreeData.objects.get_start()

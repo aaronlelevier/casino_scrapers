@@ -31,8 +31,10 @@ class TreeDataManager(BaseManager):
         return self.get_queryset().search_multi(keyword)
 
     def get_start(self):
-        obj, _ = self.get_or_create(key=DTD_START_KEY)
-        return obj
+        try:
+            return self.get(key=DTD_START_KEY)
+        except:
+            pass
 
 
 class TreeData(BaseModel):
