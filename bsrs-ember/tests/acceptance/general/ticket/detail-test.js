@@ -73,7 +73,7 @@ module('Acceptance | ticket detail', {
 });
 
 /* jshint ignore:start */
-test('clicking a tickets will redirect to the given detail view and can save to ensure validation mixins are working (completed ticket)', async assert => {
+test('scott clicking a tickets will redirect to the given detail view and can save to ensure validation mixins are working (completed ticket)', async assert => {
   await page.visit();
   assert.equal(currentURL(), TICKET_URL);
   await click('.t-grid-data:eq(0)');

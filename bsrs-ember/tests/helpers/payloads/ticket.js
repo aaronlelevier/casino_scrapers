@@ -30,7 +30,10 @@ var ticket_payload_base = {
         attachments: [],
       },
       dtd: {
-        id: DTD.idOne
+        id: DTD.idOne,
+        description: DTD.descriptionOne,
+        prompt: DTD.promptOne,
+        note: DTD.noteOne,
       }
     }, {
       ticket: {
@@ -45,7 +48,10 @@ var ticket_payload_base = {
         attachments: [],
       },
       dtd: {
-        id: DTD.idTwo
+        id: DTD.idTwo,
+        description: DTD.descriptionOne,
+        prompt: DTD.promptOne,
+        note: DTD.noteOne,
       }
     }],
 };
