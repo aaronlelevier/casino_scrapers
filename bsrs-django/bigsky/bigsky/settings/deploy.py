@@ -1,7 +1,7 @@
 from .prod import *
 
 # Turn on for debug mode in 'debug_toolbar'
-INTERNAL_IPS = ('127.0.0.1',)
+INTERNAL_IPS = ('127.0.0.1', '10.18.6.34')
 
 DATABASES['default'] = {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
