@@ -13,15 +13,8 @@ PERSISTENT_APPS = [
     'utils_transform.tticket',
     ]
 
-THIRD_PARTY_APPS = [
-    'debug_toolbar',
-    ]
 
-MIDDLEWARE_CLASSES += [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-    ]
-
-INSTALLED_APPS = INSTALLED_APPS + PERSISTENT_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS = INSTALLED_APPS + PERSISTENT_APPS
 
 
 DATABASES['default'] = {

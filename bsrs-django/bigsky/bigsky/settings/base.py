@@ -33,6 +33,7 @@ THIRD_PARTY_APPS = [
     'psycopg2',
     'corsheaders',
     'rest_framework',
+    'debug_toolbar',
     ]
 
 LOCAL_APPS = [
