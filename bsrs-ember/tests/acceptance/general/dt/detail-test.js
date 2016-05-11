@@ -49,6 +49,7 @@ module('Acceptance | dt detail', {
      * returned_ticket is the ticket w/ the dt_path, which will be different and is returned on a get requests
      * current store state of ticket hasSaved: true in order to force patch requests and relationships setup b/c ticket one
      * all tests are assuming deep linking (i.e. clicking from ticket detail)
+     * dt_path dtd has idThree by chance.  Just need to give it something
      */
     const ticket = {
       id: TD.idOne,
@@ -61,7 +62,10 @@ module('Acceptance | dt detail', {
       attachments: [],
     };
     dt_path = [{
-      ticket
+      ticket,
+      dtd: {
+        id: DT.idThree
+      }
     }];
     returned_ticket = TF.detail(TD.idOne, null, dt_path);
     run(() => {
@@ -89,7 +93,7 @@ test('decision tree displays data and can click to next destination after updati
   const requestValue = `${FD.labelOne}: ${OD.textOne}`;
   assert.deepEqual(ticket.get('requestValues'), [requestValue]);
   assert.equal(ticket.get('request'), requestValue);
-  assert.equal(ticket.get('dt_path')[0]['dt_id'], undefined);
+  assert.equal(ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
   assert.equal(ticket.get('dt_path')[0]['ticket']['request'], undefined);
   assert.equal(ticket.get('dt_path')[0]['ticket']['location'], LD.idOne);
   assert.equal(ticket.get('dt_path')[0]['ticket']['status'], TD.statusZeroId);
@@ -102,7 +106,7 @@ test('decision tree displays data and can click to next destination after updati
   xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
   await page.clickNextBtn();
   assert.equal(currentURL(), DEST_URL);
-  assert.equal(ticket.get('dt_path')[0]['dt_id'], undefined);
+  assert.equal(ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
   assert.equal(ticket.get('dt_path')[0]['ticket']['request'], undefined);
   assert.equal(ticket.get('dt_path')[0]['ticket']['location'], LD.idOne);
   assert.equal(ticket.get('dt_path')[1]['dtd']['id'], DT.idOne);
@@ -338,20 +342,28 @@ test('fill out: number, text, textarea, and select (patch ticket)', async assert
   assert.equal(currentURL(), DEST_URL);
 });
 
-// test('scott start page does not show breadcrumb', async assert => {
-//   let detail_data = DTF.detailWithAllFields(DT.idOne);
-//   returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: DT.descriptionOne};
-//   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
-//   await visit(DETAIL_URL);
-//   assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), '');
-// });
+test('if dt_path length is 1 and deep link, wont push another dt_path object in (deep linking from old decision tree)', async assert => {
+  let detail_data = DTF.detailWithAllFields(DT.idOne);
+  returned_ticket.dt_path[0]['dtd'] = {id: DT.idOne, description: 'Start'};
+  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
+  await visit(DETAIL_URL);
+  assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb('Start'));
+  assert.ok(find('.t-ticket-breadcrumb-back:eq(0)').hasClass('active'));
+  let dtd_payload = DTF.generate(DT.idTwo);
+  const link = dtd.get('links').objectAt(0);
+  let ticket_payload = { id: TD.idOne, request: TD.requestOne, priority: LINK.priorityOne, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id') };
+  xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
+  await page.clickNextBtn();
+  const ticket = store.find('ticket', TD.idOne);
+  assert.equal(ticket.get('dt_path').length, 1);
+});
 
 test('will show breadcrumbs if description present', async assert => {
   let detail_data = DTF.detailWithAllFields(DT.idOne);
-  returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: DT.descriptionOne};
+  returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: 'Start'};
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
-  assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.descriptionOne));
+  assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb('Start'));
 });
 
 test('will show breadcrumbs if prompt present', async assert => {
