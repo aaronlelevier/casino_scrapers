@@ -127,7 +127,12 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
 
     start_dtd = TreeData.objects.get_start()
     ticket.dt_path = [{
-        'dtd': {'id': str(start_dtd.id)},
+        'dtd': {
+            'id': str(start_dtd.id),
+            'description': start_dtd.description,
+            'prompt': start_dtd.prompt,
+            'note': start_dtd.note,
+            },
         'ticket': TicketCreateSerializer(ticket).data
     }]
     ticket.save()
