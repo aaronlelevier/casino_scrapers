@@ -1,9 +1,5 @@
 from .base import *
 
-MIDDLEWARE_CLASSES += [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-    ]
-
 
 # SSL_ENABLED = True
 # CSRF_COOKIE_SECURE = True
