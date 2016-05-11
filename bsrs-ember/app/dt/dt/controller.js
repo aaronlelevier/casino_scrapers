@@ -29,17 +29,24 @@ export default Ember.Controller.extend({
     },
     /*
      * @method linkClick 
-     * @function dtPathMunge modifies ticket dt_path attribute that sets dt_id in json object in order to allow user to navigate back
-     * send off patch request
+     * @function dtPathMunge modifies ticket dt_path attribute that sets dt {id: xxx} in json object in order to allow user to navigate back
+     * send off patch request if hasSaved: true, otherwise send of post request
      */
     linkClick(link, ticket, dtd_model) {
       dtPathMunge(ticket, dtd_model, this.get('simpleStore'));
-      this.get('ticketRepository').patch(ticket, link).then((response) => {
-        const dtd = this.get('DTDDeserializer').deserialize(response, response.id);
-        //TODO: what is dtd_fk used for?
-        ticket = this.get('simpleStore').push('ticket', {id: ticket.id, dtd_fk: response.id});
-        this.transitionToRoute('dt.dt', {id: response.id, model: dtd, ticket: ticket, dt_id: response.id, ticket_id: ticket.id});
-      });
+      if (ticket.get('hasSaved')) {
+        this.get('ticketRepository').patch(ticket, link).then((response) => {
+          const dtd = this.get('DTDDeserializer').deserialize(response, response.id);
+          ticket = this.get('simpleStore').push('ticket', {id: ticket.id, hasSaved: true});
+          this.transitionToRoute('dt.dt', {id: response.id, model: dtd, ticket: ticket, dt_id: response.id, ticket_id: ticket.id});
+        });
+      } else {
+        this.get('ticketRepository').dtPost(ticket).then((response) => {
+          const dtd = this.get('DTDDeserializer').deserialize(response, response.id);
+          this.get('simpleStore').push('ticket', {id: ticket.id, hasSaved: true});
+          this.transitionToRoute('dt.dt', {id: response.id, model: dtd, ticket: ticket, dt_id: response.id, ticket_id: ticket.id});
+        });
+      }
     }
   }
 });

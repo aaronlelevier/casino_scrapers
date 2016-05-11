@@ -43,6 +43,9 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
       });
     }
   },
+  getStart() {
+    return PromiseMixin.xhr(`${PREFIX}/dt/dt-start/`, 'GET');
+  },
   deepLinkDT(dt_id, ticket_id) {
     return PromiseMixin.xhr(`${PREFIX}/dt/${dt_id}/ticket/?ticket=${ticket_id}`, 'GET').then((response) => {
       const { dtd: model, ticket } = response;

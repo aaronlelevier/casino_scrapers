@@ -37,7 +37,7 @@ test('welcome h1 header', function(assert) {
 
 /* jshint ignore:start */
 
-test('scott draft tickets are shown and can click to ticket detail and start up decision tree', async assert => {
+test('draft tickets are shown and can click to ticket detail and start up decision tree', async assert => {
   await visit('/dashboard');
   assert.equal(find('.t-ticket-draft').length, 10);
   const tickets = store.find('ticket-list')

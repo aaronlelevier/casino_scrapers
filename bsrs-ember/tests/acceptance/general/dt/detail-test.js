@@ -57,7 +57,7 @@ module('Acceptance | dt detail', {
     }];
     returned_ticket = TF.detail(TD.idOne, null, dt_path);
     run(() => {
-      store.push('ticket', {id: ticket.id, location_fk: LD.idThree, status_fk: TD.statusZeroId, priority_fk: TD.priorityZeroId, new_pk: DT.idOne, dt_path});
+      store.push('ticket', {id: ticket.id, location_fk: LD.idThree, status_fk: TD.statusZeroId, priority_fk: TD.priorityZeroId, new_pk: DT.idOne, dt_path, hasSaved: true});
       store.push('location', {id: LD.idThree, tickets: [ticket.id]});
       store.push('ticket-status', {id: TD.statusZeroId, tickets: [ticket.id]});
       store.push('ticket-priority', {id: TD.priorityZeroId, tickets: [ticket.id]});

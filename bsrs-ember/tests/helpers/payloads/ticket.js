@@ -80,6 +80,7 @@ ticket_payload_detail_one_category.categories = [CD.idThree];
 
 var ticket_dt_new_payload = {
     id: 1,
+    request: "name: yes",
     status: TD.statusZeroId,
     priority: TD.priorityZeroId,
     cc: [],
@@ -94,11 +95,12 @@ var ticket_dt_new_payload = {
         location: LD.idThree,
         status: TD.statusZeroId,
         priority: TD.priorityZeroId,
+        request: "name: yes",
         categories: [],
         cc: [],
         attachments: [],
       },
-      dtd: {}
+      dtd: {id: DTD.idOne}
     }],
 };
 
