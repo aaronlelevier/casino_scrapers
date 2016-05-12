@@ -47,7 +47,7 @@ class EtlUtilsTests(TestCase):
         self.assertEqual(ticket.location, self.location)
         self.assertEqual(ticket.priority, self.priority)
         self.assertEqual(ticket.status, self.status)
-        self.assertEqual(ticket.request, "{}\n{}\n".format(self.dt.subject, self.dt.request))
+        self.assertEqual(ticket.request, "{}\n{}".format(self.dt.subject, self.dt.request))
         self.assertEqual(ticket.assignee, Person.objects.get(fullname=self.dt.assigned_to))
         self.assertEqual(ticket.requester, self.dt.requester)
         self.assertEqual(ticket.created, self.dt.create_date)
@@ -140,11 +140,11 @@ class EtlUtilsTests(TestCase):
 
     def test_format_subject_and_request(self):
         subject = 'foo'
-        request = 'bar'
+        request = 'bar\n'
 
         ret = _etl_utils.format_subject_and_request(subject, request)
 
-        self.assertEqual(ret, '{}\n{}\n'.format(subject, request))
+        self.assertEqual(ret, 'foo\nbar')
 
     def test_get_assingee(self):
         person = Person.objects.first()

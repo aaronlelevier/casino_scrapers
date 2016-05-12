@@ -1,3 +1,5 @@
+import re
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -67,7 +69,8 @@ def get_category(**kwargs):
 
 
 def format_subject_and_request(*args):
-    return ''.join(['{}\n'.format(a) for a in args])
+    s = ''.join(['{}\n'.format(a) for a in args])
+    return re.sub(r'\n+$', '', s)
 
 
 def get_assignee(fullname):
