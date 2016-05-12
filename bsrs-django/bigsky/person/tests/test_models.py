@@ -1,13 +1,15 @@
 import copy
 from datetime import date
 
-from django.test import TestCase
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, Group
 from django.core.exceptions import ValidationError
+from django.test import TestCase
+from django.utils.timezone import localtime, now
 
 from model_mommy import mommy
 
+from accounting.models import Currency
 from category.models import Category
 from category.tests.factory import create_single_category
 from contact.models import Email
@@ -213,6 +215,7 @@ class PersonTests(TestCase):
         create_locations()
         self.password = PASSWORD
         self.person = create_single_person()
+        self.person_default_status, _ = PersonStatus.objects.get_or_create_default()
 
     def test_person_is_user_subclass(self):
         self.assertIsInstance(self.person, AbstractUser)
@@ -230,14 +233,43 @@ class PersonTests(TestCase):
         self.assertTrue(self.person.accept_assign)
 
     def test_update_defaults(self):
-        self.person.middle_initial = 'A'
         self.person.status = None
-        self.assertIsNone(self.person.status)
+        self.person.auth_amount = None
+        self.person.auth_currency = None
+        self.person.locale = None
+        self.person.password_expire_date = None
+        self.person.middle_initial = 'A'
 
         self.person._update_defaults()
 
-        self.assertIsNotNone(self.person.status)
+        self.assertEqual(self.person.status, self.person_default_status)
+        self.assertEqual(self.person.auth_amount, self.person.role.default_auth_amount)
+        self.assertEqual(self.person.auth_currency, self.person.role.default_auth_currency)
+        self.assertEqual(self.person.locale, Locale.objects.system_default())
         self.assertIsNotNone(self.person.password_expire_date)
+        self.assertEqual(self.person.fullname, self.person.get_full_name())
+
+    def test_update_defaults__not_defaulted_if_value(self):
+        status = mommy.make(PersonStatus)
+        auth_amount = mommy.make(Role).default_auth_amount
+        auth_currency = Currency.objects.default()
+        locale = mommy.make(Locale)
+        today = localtime(now()).date
+        # init person
+        self.person.status = status
+        self.person.auth_amount = auth_amount
+        self.person.auth_currency = auth_currency
+        self.person.locale = locale
+        self.person.password_expire_date = today
+        self.person.middle_initial = 'A'
+
+        self.person._update_defaults()
+
+        self.assertEqual(self.person.status, status)
+        self.assertEqual(self.person.auth_amount, auth_amount)
+        self.assertEqual(self.person.auth_currency, auth_currency)
+        self.assertEqual(self.person.locale, locale)
+        self.assertEqual(self.person.password_expire_date, today)
         self.assertEqual(self.person.fullname, self.person.get_full_name())
 
     def test_get_fullname(self):
