@@ -17,6 +17,7 @@ en,activity.ticket.create,created this ticket ${{timestamp}},created this ticket
 en,activity.ticket.to_from,changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}},changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}},,"'activity.ticket.to_from':'changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}}',",changed the {{type_var_ from ${{from_var_ $to ${{to_var_ ${{timestamp_var_,changed the _type_var_ from $_from_var_ $to $_to_var_ $_timestamp_var_
 en,admin.address_type.office,Office,Office,,"'admin.address_type.office':'Office',",Office,Office
 en,admin.address_type.shipping,Shipping,Shipping,,"'admin.address_type.shipping':'Shipping',",Shipping,Shipping
+en,admin.address_type.location,Location,Location,,"'admin.address_type.location':'Location',",Location,Location
 en,admin.address.add,Add Address,Add Address,,"'admin.address.add':'Add Address',",Add Address,Add Address
 en,admin.address.address,Street Address,Street Address,,"'admin.address.address':'Street Address',",Street Address,Street Address
 en,admin.address.city,City,City,,"'admin.address.city':'City',",City,City
@@ -122,6 +123,8 @@ en,admin.dtd.title.navigation,Navigation,Navigation,,"'admin.dtd.title.navigatio
 en,admin.email.add,Add Email,Add Email,,"'admin.email.add':'Add Email',",Add Email,Add Email
 en,admin.emailtype.personal,Personal,Personal,,"'admin.emailtype.personal':'Personal',",Personal,Personal
 en,admin.emailtype.work,Work,Work,,"'admin.emailtype.work':'Work',",Work,Work
+en,admin.emailtype.location,Location,Location,,"'admin.emailtype.location':'Location',",Work,Work
+en,admin.emailtype.sms,SMS,SMS,,"'admin.emailtype.sms':'SMS',",Work,Work
 en,admin.general.one,General Setting,General Setting,,"'admin.general.one':'General Setting',",General Setting,General Setting
 en,admin.general.other,General Settings,General Settings,,"'admin.general.other':'General Settings',",General Settings,General Settings
 en,admin.invoice.draft,Draft,Draft,,"'admin.invoice.draft':'Draft',",Draft,Draft
@@ -195,12 +198,15 @@ en,admin.person.search,Search People,Search People,,"'admin.person.search':'Sear
 en,admin.person.status.active,Active,Active,,"'admin.person.status.active':'Active',",Active,Active
 en,admin.person.status.expired,Expired,Expired,,"'admin.person.status.expired':'Expired',",Expired,Expired
 en,admin.person.status.inactive,Inactive,Inactive,,"'admin.person.status.inactive':'Inactive',",Inactive,Inactive
-en,admin.person.unique-username,Username {{value}} is already taken,Username {{value}} is already taken,,"'admin.person.unique-username':'Username {{value}} is already taken',",Username {{value_var_ is already taken,Username _value_var_ is already taken
+en,admin.person.unique_username,Username {{value}} is already taken,Username {{value}} is already taken,,"'admin.person.unique_username':'Username {{value}} is already taken',",Username {{value_var_ is already taken,Username _value_var_ is already taken
 en,admin.phone.add,Add Phone Number,Add Phone Number,,"'admin.phone.add':'Add Phone Number',",Add Phone Number,Add Phone Number
 en,admin.phone.number,Phone Number,Phone Number,,"'admin.phone.number':'Phone Number',",Phone Number,Phone Number
 en,admin.phone.numbers,Phone Numbers,Phone Numbers,,"'admin.phone.numbers':'Phone Numbers',",Phone Numbers,Phone Numbers
-en,admin.phonenumbertype.mobile,Cell,Cell,,"'admin.phonenumbertype.mobile':'Cell',",Cell,Cell
+en,admin.phonenumbertype.mobile,Mobile,Mobile,,"'admin.phonenumbertype.mobile':'Mobile',",Mobile,Mobile
 en,admin.phonenumbertype.office,Office,Office,,"'admin.phonenumbertype.office':'Office',",Office,Office
+en,admin.phonenumbertype.cell,Cell,Cell,,"'admin.phonenumbertype.cell':'Cell',",Cell,Cell
+en,admin.phonenumbertype.telephone,Telephone,Telephone,,"'admin.phonenumbertype.telephone':'Telephone',",Telephone,Telephone
+en,admin.phonenumbertype.fax,Fax,Fax,,"'admin.phonenumbertype.fax':'Fax',",Fax,Fax
 en,admin.role.label.category,Category,Category,,"'admin.role.label.category':'Category',",Category,Category
 en,admin.role.label.general,General,General,,"'admin.role.label.general':'General',",General,General
 en,admin.role.label.location_level,Location Organization,Location Organization,,"'admin.role.label.location_level':'Location Organization',",Location Organization,Location Organization
@@ -236,6 +242,7 @@ en,admin.translation.search,Search Translations,Search Translations,,"'admin.tra
 en,admin.work_order.close.checked,Checked,Checked,,"'admin.work_order.close.checked':'Checked',",Work,Work
 en,admin.work_order.close.do_not_display,Do not display,Do not display,,"'admin.work_order.close.do_not_display':'Do not display',",Work,Work
 en,admin.work_order.close.unchecked,Unchecked,Unchecked,,"'admin.work_order.close.unchecked':'Unchecked',",Work,Work
+en,attachment.too_large,File is too large,File is too large,,"'attachment.too_large':'File is too large',",Work,Work
 en,attachment.fail,File failed to upload,File failed to upload,,"'attachment.fail':'File failed to upload',",Work,Work
 en,button.add,Add new {{model}},Add new {{model}},,"'button.add':'Add new {{model}}',",Add new {{model_var_,Add new _model_var_
 en,button.upload,Attach file,Attach file,,"'button.upload':'Attach file',",Attach file,Attach file
@@ -273,6 +280,11 @@ en,dt.ticket.launch,Lauch Ticket Decision Tree,Lauch Ticket Decision Tree,,"'dt.
 en,errors.dtd.key,Key must be provided,Key must be provided,,"'errors.dtd.key':'Key must be provided',",Key must be provided,Key must be provided
 en,errors.dtd.description,Description must be provided,Description must be provided,,"'errors.dtd.description':'Description must be provided',",Description must be provided,Description must be provided
 en,errors.link.text,Text must be provided,Text must be provided,,"'errors.link.text':'Text must be provided',",Text must be provided,Text must be provided
+en,errors.person.username,Username must be provided,Username must be provided,,"'errors.person.username':'Username must be provided',",Username must be provided,Username must be provided
+en,errors.person.middle_initial,Middle Initial must be less than 2 characters,Middle Initial must be less than 2 characters,,"'errors.person.middle_initial':'Middle Initial must be less than 2 characters',",Middle Initial must be less than 2 characters,Middle Initial must be less than 2 characters
+en,errors.person.password,"Password must include at least one upper case letter, one lower case letter, and a number","Password must include at least one upper case letter, one lower case letter, and a number",,"'errors.person.password':'Password must include at least one upper case letter, one lower case letter, and a number',","Password must include at least one upper case letter, one lower case letter, and a number","Password must include at least one upper case letter, one lower case letter, and a number"
+en,errors.ticket.request,Request must be provided,Request must be provided,,"'errors.ticket.request':'Request must be provided',",Request must be provided,Request must be provided
+en,errors.ticket.assignee,Assignee must be provided,Assignee must be provided,,"'errors.ticket.assignee':'Assignee must be provided',",Assignee must be provided,Assignee must be provided
 en,grid.filter,Filter,Filter,,"'grid.filter':'Filter',",Filter,Filter
 en,grid.filterset_name,Name your filter,Name your filter,,"'grid.filterset_name':'Name your filter',",Name your filter,Name your filter
 en,grid.per_page,{{size}} per page,{{size}} per page,,"'grid.per_page':'{{size}} per page',",{{size_var_ per page,_size_var_ per page
@@ -292,6 +304,7 @@ en,selects.loading,Loading,Loading,,"'selects.loading':'Loading',",Loading,Loadi
 en,selects.noMatchesMessage,No Matches,No Matches,,"'selects.noMatchesMessage':'No Matches',",No Matches,No Matches
 en,selects.searchMessage,Type to search,Type to search,,"'selects.searchMessage':'Type to search',",Type to search,Type to search
 en,selects.searchPlaceholder,Search,Search,,"'selects.searchPlaceholder':'Search',",Search,Search
+en,ticket.continue,Continue,Continue,,"'ticket.continue':'Continue',",Continue,Continue
 en,ticket.created,{{requester}} created this ticket {{timestamp}},{{requester}} created this ticket {{timestamp}},,"'ticket.created':'{{requester}} created this ticket {{timestamp}}',",{{requester_var_ created this ticket {{timestamp_var_,_requester_var_ created this ticket _timestamp_var_
 en,ticket.label.assignee-fullname,Assignee,Assignee,,"'ticket.label.assignee-fullname':'Assignee',",Assignee,Assignee
 en,ticket.label.category-name,Category,Category,,"'ticket.label.category-name':'Category',",Category,Category
@@ -322,6 +335,8 @@ en,ticket.status.in_progress,In Progress,In Progress,,"'ticket.status.in_progres
 en,ticket.status.new,New,New,,"'ticket.status.new':'New',",New,New
 en,ticket.status.problem_solved,Problem solved,Problem solved,,"'ticket.status.problem_solved':'Problem solved',",Problem solved,Problem solved
 en,ticket.status.unsatisfactory_completion,Unsatisfactory,Unsatisfactory,,"'ticket.status.unsatisfactory_completion':'Unsatisfactory',",Unsatisfactory,Unsatisfactory
+en,ticket.status.cancelled,Cancelled,Cancelled,,"'ticket.status.cancelled':'Cancelled',",Cancelled,Cancelled
+en,ticket.status.pending,Pending,Pending,,"'ticket.status.pending':'Pending',",Pending,Pending
 en,upload.progress,Progress,Progress,,"'upload.progress':'Progress',",Progress,Progress
 en,validation.invalid,Invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid,Invalid
 en,validation.valid,Valid,Valid,,"'validation.valid':'Valid',",Valid,Valid
