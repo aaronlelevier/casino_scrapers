@@ -12,18 +12,17 @@ export default Ember.Controller.extend({
      * @method updateRequest 
      * updates ticket request based on fieldsObj (Map) that holds the current value for a field
      * checkbox needs to update value based on if checked, not option value
+     * fieldsObj will contain any existing request values from deep linked dt (setup in init of dtd-preview)
      */
     updateRequest(fieldsObj, ticket) {
       let requestValues = [];
       const objs = fieldsObj.values();
       for (var obj of objs) {
-        /* jshint ignore:start */
         if(obj.label && obj.value) {
           requestValues.push(`${obj.label}: ${obj.value}`);
         } else if (obj.value) {
           requestValues.push(obj.value);
         }
-        /* jshint ignore:end */
       }
       this.get('simpleStore').push('ticket', {id: ticket.get('id'), request: requestValues.join(', '), requestValues: requestValues});
     },
