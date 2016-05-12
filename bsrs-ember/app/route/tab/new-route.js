@@ -23,12 +23,10 @@ var TabNewRoute = Ember.Route.extend({
     parentAction(tab){
       let model = this.get('simpleStore').find(tab.get('module'), tab.get('id'));
       if (model && model.get('isDirtyOrRelatedDirty')) {
-        // Ember.$('.t-modal').modal('show');
         this.trx.attemptedTabModel = tab;
         this.trx.attemptedTransitionModel = model;
         this.trx.attemptedAction = 'parentAction';
       } else {
-        Ember.$('.t-modal').modal('hide');
         let temp = this.router.generate(this.routeName);
         temp = temp.split('/').pop();
         if(temp === tab.get('id') || tab.get('newModel')){
