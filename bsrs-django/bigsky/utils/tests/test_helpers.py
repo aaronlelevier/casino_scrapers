@@ -28,7 +28,7 @@ class ModelToJsonTests(TestCase):
         self.assertEqual(ret[0]['default'], True)
 
     def test_model_to_json_select_related(self):
-        ret = model_to_json_select_related(Role, select=['location_level'])
+        ret = model_to_json_select_related(Role, 'location_level')
 
         ret = json.loads(ret)
         self.assertEqual(len(ret), 1)
@@ -40,7 +40,7 @@ class ModelToJsonTests(TestCase):
     def test_model_to_json_prefetch_related(self):
         location_level = self.role.location_level
 
-        ret = model_to_json_prefetch_related(LocationLevel, prefetch=['children', 'parents'])
+        ret = model_to_json_prefetch_related(LocationLevel, 'children', 'parents')
 
         ret = json.loads(ret)
         self.assertEqual(len(ret), 1)

@@ -51,10 +51,10 @@ class IndexView(TemplateView):
             'address_types': model_to_json(AddressType),
             'states_us': model_to_json(State),
             'countries': model_to_json(Country),
-            'role_config': model_to_json_select_related(Role, select=['location_level']),
+            'role_config': model_to_json_select_related(Role, 'location_level'),
             'role_types_config': json.dumps(ROLE_TYPES),
             'person_status_config': model_to_json(PersonStatus),
-            'location_level_config': model_to_json_prefetch_related(LocationLevel, ['children', 'parents']),
+            'location_level_config': model_to_json_prefetch_related(LocationLevel, 'children', 'parents'),
             'location_status_config': model_to_json(LocationStatus),
             'locales': model_to_json(Locale),
             'currencies': json.dumps({c.code: c.to_dict()

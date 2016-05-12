@@ -130,9 +130,9 @@ class DocumentViewTests(TestCase):
         )
 
     def test_logged_out(self):
-        response = self.client.get(reverse('media'))
+        response = self.client.get(reverse('password_change'))
 
-        self.assertRedirects(response, '{}?next={}'.format(reverse('login'), reverse('media')))
+        self.assertRedirects(response, '{}?next={}'.format(reverse('login'), reverse('password_change')))
 
 
 class LogoutTests(TestCase):

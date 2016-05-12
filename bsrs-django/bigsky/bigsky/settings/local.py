@@ -4,7 +4,8 @@ from .base import *
 
 
 # Turn on for debug mode in 'debug_toolbar'
-INTERNAL_IPS = ('127.0.0.1',)
+# INTERNAL_IPS = ('127.0.0.1',)
+
 
 LOCAL_APPS = [
     'django_extensions',

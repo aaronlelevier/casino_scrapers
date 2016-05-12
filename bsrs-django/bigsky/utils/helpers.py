@@ -12,12 +12,12 @@ def model_to_json(model):
     return json.dumps([m.to_dict() for m in model.objects.all()])
 
 
-def model_to_json_select_related(model, select=[]):
-    return json.dumps([m.to_dict() for m in model.objects.all().select_related(*select)])
+def model_to_json_select_related(model, *args):
+    return json.dumps([m.to_dict() for m in model.objects.all().select_related(*args)])
 
 
-def model_to_json_prefetch_related(model, prefetch=[]):
-    return json.dumps([m.to_dict() for m in model.objects.all().prefetch_related(*prefetch)])
+def model_to_json_prefetch_related(model, *args):
+    return json.dumps([m.to_dict() for m in model.objects.all().prefetch_related(*args)])
 
 
 def get_content_type_number(model):
