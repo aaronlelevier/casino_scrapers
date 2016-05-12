@@ -14,7 +14,7 @@ from location.models import Location, LOCATION_COMPANY
 from location.tests.factory import create_locations
 from person.models import Person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
-    TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
+    TicketActivity, TICKET_ACTIVITY_TYPES)
 from ticket.serializers import TicketSerializer
 from ticket.tests.factory_related import (create_ticket_status, get_or_create_ticket_status, 
     get_or_create_ticket_priority)

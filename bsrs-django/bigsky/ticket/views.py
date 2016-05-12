@@ -1,5 +1,3 @@
-import copy
-import itertools
 import logging
 logger = logging.getLogger(__name__)
 
@@ -9,7 +7,6 @@ from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from category.models import Category
 from ticket.mixins import CreateTicketModelMixin, UpdateTicketModelMixin
 from ticket.models import Ticket, TicketActivity
 from ticket.serializers import (TicketSerializer, TicketCreateSerializer,
@@ -55,45 +52,6 @@ class TicketViewSet(EagerLoadQuerySetMixin, TicketQuerySetFilters, CreateTicketM
         """
         request.data['creator'] = request.user.id
         return super(TicketViewSet, self).create(request, *args, **kwargs)
-
-
-class TicketDjaViewSet(TicketViewSet):
-    """
-    Sideloading of Categories spike.
-    """
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-
-            data = copy.copy(serializer.data)
-            return_data = {
-                'data': data,
-                'included': self.get_included(data)
-            }
-            return self.get_paginated_response(return_data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def get_included(self, data):
-        """Return distinct category objects."""
-        categories = []
-
-        ids = set(itertools.chain(*[d['category_ids'] for d in data]))
-        collected_ids = set()
-
-        for ticket in data:
-            for category in ticket['categories']:
-                if category['id'] not in collected_ids:
-                    collected_ids.update([category['id']])
-                    category['type'] = Category._meta.verbose_name_plural.lower()
-                    categories.append(category)
-
-        return categories
 
 
 class TicketActivityViewSet(BaseModelViewSet):
