@@ -144,7 +144,7 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
         'ticket': munged_ticket
         }, {
             'dtd': {
-                'id': str(start_dtd.links.first().destination.id),
+                'id': str(start_dtd.links.first().destination.id) if start_dtd.links.first().destination else None,
                 'description': 'You are almost done'
                 }
             }]
