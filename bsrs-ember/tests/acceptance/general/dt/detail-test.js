@@ -34,10 +34,11 @@ const TICKET_DETAIL_URL = `${TICKET_URL}/${TD.idOne}`;
 const DEST_URL = `${BASE_URL}/${DT.idTwo}/ticket/${TD.idOne}`;
 const DTD_THREE_URL = `${BASE_URL}/${DT.idThree}/ticket/${TD.idOne}`;
 const TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
+const BAIL_TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idOne}/ticket/`;
 
 let application, store, endpoint, original_uuid, link, dtd, dt_path, returned_ticket;
 
-module('scott Acceptance | dt detail', {
+module('Acceptance | dt detail', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
@@ -49,7 +50,6 @@ module('scott Acceptance | dt detail', {
      * ticket object is used for current ticket and dt_path object
      * dt_path is previous state of ticket && dtd state
      * returned_ticket is the ticket w/ the dt_path, which will be different and is returned on a get requests
-     * current store state of ticket hasSaved: true in order to force patch requests and relationships setup b/c ticket one
      * all tests are assuming deep linking (i.e. clicking from ticket detail)
      * dt_path dtd has idThree by chance.  Just need to give it something
      */
@@ -71,7 +71,7 @@ module('scott Acceptance | dt detail', {
     }];
     returned_ticket = TF.detail(TD.idOne, null, dt_path);
     run(() => {
-      store.push('ticket', {id: ticket.id, hasSaved: true});
+      store.push('ticket', {id: ticket.id});
     });
   },
   afterEach() {
@@ -385,43 +385,51 @@ test('will show breadcrumbs if note present', async assert => {
   assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.noteOne));
 });
 
-test('can click back on breadcrumb and ticket updates dtd_path', async assert => {
-  let detail_data = DTF.detailWithAllFields(DT.idOne);
-  returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: DT.descriptionOne};
-  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
-  await visit(DETAIL_URL);
-  assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.descriptionOne));
-  const detail_data_3 = DTF.detailWithAllFields(DT.idThree);
-  const endpoint_3 = `${PREFIX}${BASE_URL}/${DT.idThree}/ticket/?ticket=${TD.idOne}`;
-  xhr(endpoint_3, 'GET', null, {}, 200, {dtd: detail_data_3, ticket: returned_ticket});
-  await click('.t-ticket-breadcrumb-back');
-  assert.equal(currentURL(), DTD_THREE_URL);
-});
-
-//test('scott navigating away from start page will save data', async assert => {
+//test('scott can click back on breadcrumb and ticket updates dtd_path', async assert => {
 //  let detail_data = DTF.detailWithAllFields(DT.idOne);
-//  returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: 'Start'};
+//  returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: DT.descriptionOne};
 //  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
 //  await visit(DETAIL_URL);
-//  // checkbox
-//  await dtPage.fieldOneCheckboxCheck();
-//  const updated_ticket = store.find('ticket', TD.idOne);
-//  const requestValue = `${TD.requestOne}, name: ${OD.textOne}`;
-//  assert.equal(updated_ticket.get('request'), requestValue);
-//  assert.deepEqual(updated_ticket.get('requestValues'), [TD.requestOne, `name: ${OD.textOne}`]);
-//  assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb('Start'));
-//  const ticket_detail_data = TF.detail(TD.idOne);
-//  ////Ticket PATCH
-//  //let dtd_payload = DTF.generate(DT.idTwo);
-//  //const link = dtd.get('links').objectAt(0);
-//  //let ticket_payload = { id: TD.idOne, priority: LINK.priorityOne, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id'), request: requestValue };
-//  //xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
-//  //Ticket GET
+//  assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.descriptionOne));
+//  const detail_data_3 = DTF.detailWithAllFields(DT.idThree);
+//  const endpoint_3 = `${PREFIX}${BASE_URL}/${DT.idThree}/ticket/?ticket=${TD.idOne}`;
+//  xhr(endpoint_3, 'GET', null, {}, 200, {dtd: detail_data_3, ticket: returned_ticket});
+//  await click('.t-ticket-breadcrumb-back');
+//  assert.equal(currentURL(), DTD_THREE_URL);
+//  //Ticket PATCH - hack to cause willDestroy method execution to have some time to execute PATCH
+//  let dtd_payload = DTF.generate(DT.idTwo);
+//  let ticket_payload = { id: TD.idOne, request: TD.requestOne };
+//  // xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
 //  xhr(`${PREFIX}${TICKET_URL}/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
-//  // xhr(`${PREFIX}${TICKET_URL}/${TD.idOne}/`, 'GET', null, {}, 200, ticket_detail_data);
+//  xhr(`${PREFIX}${TICKET_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
 //  await visit(TICKET_DETAIL_URL);
-//  assert.equal(currentURL(), `${TICKET_URL}/${TD.idOne}`);
 //});
+
+test('navigating away from start page will save data', async assert => {
+  let detail_data = DTF.detailWithAllFields(DT.idOne);
+  returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: 'Start'};
+  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
+  await visit(DETAIL_URL);
+  // checkbox
+  await dtPage.fieldOneCheckboxCheck();
+  const updated_ticket = store.find('ticket', TD.idOne);
+  const requestValue = `${TD.requestOne}, name: ${OD.textOne}`;
+  assert.equal(updated_ticket.get('request'), requestValue);
+  assert.deepEqual(updated_ticket.get('requestValues'), [TD.requestOne, `name: ${OD.textOne}`]);
+  assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb('Start'));
+  assert.equal(updated_ticket.get('dt_path').length, 1);
+  //Ticket PATCH
+  let dtd_payload = DTF.generate(DT.idTwo);
+  let ticket_payload = { id: TD.idOne, request: requestValue };
+  xhr(BAIL_TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
+  //Ticket GET
+  xhr(`${PREFIX}${TICKET_URL}/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
+  await visit(TICKET_DETAIL_URL);
+  assert.equal(currentURL(), `${TICKET_URL}/${TD.idOne}`);
+  assert.equal(updated_ticket.get('dt_path').length, 2);
+  assert.equal(updated_ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
+  assert.equal(updated_ticket.get('dt_path')[1]['dtd']['id'], DT.idOne);
+});
 
 //multiple pages
 

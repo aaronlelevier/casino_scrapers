@@ -58,7 +58,7 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
   deepLinkDT(dt_id, ticket_id) {
     return PromiseMixin.xhr(`${PREFIX}/dt/${dt_id}/ticket/?ticket=${ticket_id}`, 'GET').then((response) => {
       const { dtd: model, ticket } = response;
-      this.get('simpleStore').push('ticket', {id: ticket_id, hasSaved: true});
+      this.get('simpleStore').push('ticket', {id: ticket_id});
       return {
         model: this.get('deserializer').deserialize(model, dt_id),
         ticket: this.get('ticketDeserializer').deserialize(ticket, ticket.id),

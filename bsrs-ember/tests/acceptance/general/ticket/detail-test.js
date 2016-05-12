@@ -1088,7 +1088,7 @@ test('dt continue button will show up if ticket has a status of draft and can cl
   assert.ok(dtdPage.previewActionButton);
   assert.equal(dtdPage.breadcrumbOne, `${substringBreadcrumb(DT.descriptionOne)} ${substringBreadcrumb(DT.descriptionTwo)}`);
   const ticket = store.find('ticket', TD.idOne);
-  assert.ok(ticket.get('hasSaved'));//prevents POST request from being sent off
+  assert.notOk(ticket.get('hasSaved'));//prevents PATCH when bail on existing dtd
 });
 
 /* jshint ignore:end */

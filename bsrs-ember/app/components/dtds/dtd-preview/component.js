@@ -30,14 +30,17 @@ export default Ember.Component.extend({
   /*
    * @method willDestroy
    * send off patch request in order to add new dt_path if user bails on page based on current dtd id instead of destination id
-   * need to prevent patch if transitioning from one to another
+   * need to prevent patch if transitioning from one to another when ticket has already been saved
    */
-  // willDestroy() {
-  //   const ticket = this.get('ticket');
-  //   const model = this.get('model');
-  //   this.attrs.linkClick(model, ticket, model);
-  //   this._super();
-  // },
+  willDestroy() {
+    const ticket = this.get('ticket');
+    const model = this.get('model');
+    const action = this.get('action');
+    if (action === 'patch' && ticket.get('isDirty') && !ticket.get('hasSaved')) {
+      this.attrs.linkClick(undefined, ticket, model, 'patch', false);
+    }
+    this._super(...arguments);
+  },
   /* @method fieldsCompleted
    * switches link next button on and off as long as all required fields are fullfilled
    * uses the num property to increment required length
