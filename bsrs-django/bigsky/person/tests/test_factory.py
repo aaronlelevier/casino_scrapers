@@ -6,7 +6,6 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from accounting.models import Currency
-from category.models import Category
 from category.tests.factory import create_single_category, create_categories
 from location.models import (Location, LocationLevel, LOCATION_COMPANY, LOCATION_DISTRICT,
     LOCATION_REGION)

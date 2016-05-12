@@ -105,52 +105,6 @@ class BaseNameOrderModel(BaseNameModel):
         abstract = True
 
 
-class BaseStatusQuerySet(models.query.QuerySet):
-
-    def default(self):
-        try:
-            return self.get(default=True)
-        except ObjectDoesNotExist:
-            return
-    
-    def update_non_defaults(self, id):
-        self.exclude(id=id).update(default=False)
-
-
-class BaseStatusManager(BaseManager):
-
-    def get_queryset(self):
-        return BaseStatusQuerySet(self.model, using=self._db).filter(deleted__isnull=True)
-
-    def default(self):
-        return self.get_queryset().default()
-
-    def update_non_defaults(self, id):
-        self.get_queryset().update_non_defaults(id)
-
-
-class BaseStatusModel(BaseNameModel):
-    """
-    To be used with all leaf node `Status` models, and provide a 
-    unique name with a single default record.
-    """
-    default = models.BooleanField(blank=True, default=False)
-
-    objects = BaseStatusManager()
-
-    class Meta:
-        ordering = ('name',)
-        abstract = True
-
-    @property
-    def _status_model(self):
-        """
-        If a Model has this `property` and it is set to `True`, then it will 
-        be loaded into the `Boostrap` data under a single Array of Statuses.
-        """
-        return True
-
-
 class SettingMixin(object):
     """
     Settings interface mixin for models with 'settings' JSONField's.

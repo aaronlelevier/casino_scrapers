@@ -26,7 +26,7 @@ from person.settings import DEFAULT_ROLE_SETTINGS
 from setting.models import Setting
 from setting.settings import DEFAULT_GENERAL_SETTINGS
 from translation.models import Locale
-from utils.models import BaseModel, BaseStatusModel, BaseStatusManager, SettingMixin
+from utils.models import BaseModel, BaseNameModel, BaseManager, SettingMixin
 from utils.validators import (contains_digit, contains_upper_char, contains_lower_char,
     contains_special_char, contains_no_whitespaces)
 from work_order.models import WorkOrderStatus
@@ -270,23 +270,18 @@ class ProxyRole(BaseModel):
     role = models.ForeignKey(Role)
 
 
-class PersonStatusManager(BaseStatusManager):
+class PersonStatusManager(BaseManager):
 
     def get_or_create_default(self):
         return self.get_or_create(name=config.PERSON_STATUSES[0])
 
 
-class PersonStatus(BaseStatusModel):
+class PersonStatus(BaseNameModel):
 
     objects = PersonStatusManager()
 
     class Meta:
         verbose_name_plural = 'Person statuses'
-
-    def save(self, *args, **kwargs):
-        if self.default:
-            PersonStatus.objects.update_non_defaults(self.id)
-        return super(PersonStatus, self).save(*args, **kwargs)
 
 
 class PersonQuerySet(models.query.QuerySet):
