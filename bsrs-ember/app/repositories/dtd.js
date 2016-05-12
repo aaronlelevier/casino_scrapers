@@ -43,6 +43,10 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
       });
     }
   },
+  /*
+   * @method getStart
+   * called from dt/new/controller
+   */
   getStart() {
     return PromiseMixin.xhr(`${PREFIX}/dt/dt-start/`, 'GET');
   },

@@ -16,13 +16,11 @@ export default Ember.Controller.extend({
       /*
        * @method start
        * sends of get request to get the start page
-       * ensures ticket hasSaved flag is false since Ticket create will happen after filling out start page
+       * ensures action is undefined to call POST method in linkClick in dt/dt/controller
        */
       this.get('dtdRepository').getStart().then((response) => {
-      // this.get('ticketRepository').dtPost(ticket).then((response) => {
         const dtd = this.get('DTDDeserializer').deserialize(response, response.id);
-        // dtPathMunge(ticket, dtd, this.get('simpleStore'));
-        ticket = this.get('simpleStore').push('ticket', {id: ticket.id, hasSaved: false});
+        ticket = this.get('simpleStore').push('ticket', {id: ticket.id});
         this.transitionToRoute('dt.dt', {id: response.id, model: dtd, ticket: ticket, dt_id: response.id, ticket_id: ticket.id});
       });
     }

@@ -27,6 +27,17 @@ export default Ember.Component.extend({
     }); 
     defineProperty(this, 'fieldsObj', undefined, fieldsObj);
   },
+  /*
+   * @method willDestroy
+   * send off patch request in order to add new dt_path if user bails on page based on current dtd id instead of destination id
+   * need to prevent patch if transitioning from one to another
+   */
+  // willDestroy() {
+  //   const ticket = this.get('ticket');
+  //   const model = this.get('model');
+  //   this.attrs.linkClick(model, ticket, model);
+  //   this._super();
+  // },
   /* @method fieldsCompleted
    * switches link next button on and off as long as all required fields are fullfilled
    * uses the num property to increment required length
@@ -67,9 +78,10 @@ export default Ember.Component.extend({
     /* 
      * @method linkClick
      * closure action calls linkClick on controller
+     * action is either 'post' or 'patch'
      */
-    linkClick(link, ticket, model) {
-      this.attrs.linkClick(link, ticket, model);
+    linkClick(link, ticket, model, action) {
+      this.attrs.linkClick(link, ticket, model, action);
     }
   }
 });

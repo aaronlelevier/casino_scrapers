@@ -29,11 +29,11 @@ export default Ember.Controller.extend({
     /*
      * @method linkClick 
      * @function dtPathMunge modifies ticket dt_path attribute that sets dt {id: xxx} in json object in order to allow user to navigate back
-     * send off patch request if hasSaved: true, otherwise send of post request
+     * send off patch request if action is 'patch', post if action is 'post'
      */
-    linkClick(link, ticket, dtd_model) {
+    linkClick(link, ticket, dtd_model, action) {
       dtPathMunge(ticket, dtd_model, this.get('simpleStore'));
-      if (ticket.get('hasSaved')) {
+      if (action === 'patch') {
         this.get('ticketRepository').patch(ticket, link).then((response) => {
           const dtd = this.get('DTDDeserializer').deserialize(response, response.id);
           ticket = this.get('simpleStore').push('ticket', {id: ticket.id, hasSaved: true});

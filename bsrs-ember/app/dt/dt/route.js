@@ -11,7 +11,7 @@ var DTRoute = Ember.Route.extend(FindById, {
     const repository = this.get('repository');
     return new Ember.RSVP.Promise((resolve, reject) => {
       this.get('repository').deepLinkDT(pk, ticket_id).then(({model, ticket}) => {
-        resolve({model, ticket});
+        resolve({model, ticket, action: 'patch'});
       });
     });
   },
