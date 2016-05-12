@@ -20,5 +20,5 @@ def import_all_csv():
 
 @shared_task
 def update_translations():
-    gspread_get_all_csv.delay()
-    import_all_csv.delay()
+    gspread_get_all_csv.apply_async(queue='default')
+    import_all_csv.apply_async(queue='default')

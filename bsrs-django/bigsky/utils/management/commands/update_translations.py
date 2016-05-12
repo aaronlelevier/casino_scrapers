@@ -6,4 +6,4 @@ from translation.tasks import update_translations
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        update_translations.delay()
+        update_translations.apply_async(queue='default')
