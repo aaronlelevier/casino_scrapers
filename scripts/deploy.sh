@@ -52,6 +52,8 @@ echo "DJANGO - MIGRATE DATABASE SCHEMA"
 
 DB_NAME="deploy"
 export PGPASSWORD=tango
+psql -U bsdev -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity \
+WHERE pg_stat_activity.datname = '${DB_NAME}' AND pid <> pg_backend_pid();"
 wait
 dropdb $DB_NAME -U bsdev
 wait
