@@ -7,6 +7,8 @@ from accounting.models import Currency
 from category.models import Category, CategoryStatus
 from category.tests import factory
 from person.tests.factory import create_single_person
+from utils.models import DefaultNameManager
+from utils.tests.test_helpers import create_default
 
 
 class CategorySetupMixin(object):
@@ -18,6 +20,21 @@ class CategorySetupMixin(object):
         self.child = Category.objects.filter(subcategory_label='Sub-Issue').first()
         # Category Status
         self.statuses = CategoryStatus.objects.all()
+
+
+class CategoryStatusTests(TestCase):
+
+    def setUp(self):
+        self.default_status = create_default(CategoryStatus)
+
+    def test_default(self):
+        self.assertEqual(CategoryStatus.objects.default(), self.default_status)
+
+    def test_manager(self):
+        self.assertIsInstance(CategoryStatus.objects, DefaultNameManager)
+
+    def test_meta__verbose_name_plural(self):
+        self.assertEqual(CategoryStatus._meta.verbose_name_plural, "Category statuses")
 
 
 class CategoryManagerTests(TestCase):

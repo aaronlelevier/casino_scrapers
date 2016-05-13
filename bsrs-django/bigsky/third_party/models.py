@@ -6,23 +6,17 @@ from accounting.models import Currency
 from category.models import Category
 from contact.models import PhoneNumber, Address, Email
 from third_party.config import THIRD_PARTY_STATUSES
-from utils.models import BaseNameModel, BaseManager
-
-
-class ThirdPartyStatusManager(BaseManager):
-
-    def default(self):
-        obj, _ = self.get_or_create(name=THIRD_PARTY_STATUSES[0])
-        return obj
+from utils.models import BaseManager, BaseNameModel, DefaultNameManager
 
 
 class ThirdPartyStatus(BaseNameModel):
     description = models.CharField(max_length=100, blank=True)
 
+    default = THIRD_PARTY_STATUSES[0]
+    objects = DefaultNameManager()
+
     class Meta:
         verbose_name_plural = 'Third party statuses'
-
-    objects = ThirdPartyStatusManager()
 
 
 class ThirdParty(BaseNameModel):

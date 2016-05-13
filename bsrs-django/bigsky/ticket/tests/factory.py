@@ -5,12 +5,12 @@ import uuid
 
 from model_mommy import mommy
 
-from category.models import Category
+from category.models import Category, CategoryStatus
 from category.tests.factory import create_single_category
 from dtd.models import TreeData, DTD_START_KEY
 from dtd.tests.factory import create_tree_data
 from generic.tests.factory import create_file_attachment
-from location.models import Location, LOCATION_COMPANY
+from location.models import Location, LocationStatus, LocationType, LOCATION_COMPANY
 from location.tests.factory import create_locations
 from person.models import Person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
@@ -19,7 +19,7 @@ from ticket.serializers import TicketSerializer
 from ticket.tests.factory_related import (create_ticket_status, get_or_create_ticket_status, 
     get_or_create_ticket_priority)
 from utils.create import _generate_chars
-from utils.helpers import generate_uuid
+from utils.helpers import generate_uuid, create_default
 
 
 class RegionManagerWithTickets(object):
@@ -28,6 +28,7 @@ class RegionManagerWithTickets(object):
     https://docs.google.com/spreadsheets/d/1IhSbGCppJfS6sXpK-9nJIdAPlnLf5RhnjiJPYUvnE_0/edit#gid=0
     """
     def __init__(self):
+        create_default(LocationStatus)
         self.setup_locations()
         self.setup_categories()
         self.setup_ticket_statuses()
@@ -97,8 +98,9 @@ def construct_tree(category, tree):
     return tree
 
 
-# Main Ticket create function
 def _create_ticket(request=None, assignee=None, add_attachment=False):
+    """Main Ticket create function"""
+
     people = Person.objects.all()
 
     request = request or _generate_chars()
@@ -184,17 +186,19 @@ def create_extra_ticket_with_categories():
     of the ordering.
     """
     # Category
+    create_default(CategoryStatus)
     loss_prevention, _ = Category.objects.get_or_create(name="Loss Prevention", subcategory_label="trade")
     locks, _ = Category.objects.get_or_create(name="Locks", parent=loss_prevention, subcategory_label="issue")
     a_locks, _ = Category.objects.get_or_create(name="A Lock", parent=locks)
     # Ticket
+    create_default(TicketStatus)
+    create_default(LocationStatus)
+    create_default(LocationType)
     seven = mommy.make(Ticket, request="seven")
     # Join them
     seven.categories.add(loss_prevention)
     seven.categories.add(locks)
     seven.categories.add(a_locks)
-
-
 
 
 def create_ticket_activity(ticket=None, type=None, content=None):

@@ -1,13 +1,12 @@
 import random
-import uuid
-from datetime import datetime
 from django.utils import timezone
 
-from work_order.models import (WorkOrderStatus, WorkOrderPriority, WorkOrder)
+from work_order.models import WorkOrderStatus, WorkOrderPriority, WorkOrder
 from person.models import Person
-from location.models import Location
 from work_order.models import WORKORDER_STATUSES
 from utils.helpers import generate_uuid
+from utils.tests.test_helpers import create_default
+
 
 TIME = timezone.now()
 
@@ -16,6 +15,8 @@ def create_work_orders(_many=1):
     
 
 def create_work_order():
+    create_default(WorkOrderStatus)
+    create_default(WorkOrderPriority)
     people = Person.objects.all()
     requester = random.choice(people)
     assignee = random.choice(people)
@@ -36,13 +37,10 @@ def create_work_order():
 
 
 def create_work_order_status(name=None):
-    id = generate_uuid(WorkOrderStatus)
     if not name:
         name = random.choice(WORKORDER_STATUSES)
-    try:
-        obj = WorkOrderStatus.objects.get(name=name)
-    except WorkOrderStatus.DoesNotExist:
-        obj = WorkOrderStatus.objects.create(id=id, name=name)
+
+    obj, _ = WorkOrderStatus.objects.get_or_create(name=name)
     return obj
 
 

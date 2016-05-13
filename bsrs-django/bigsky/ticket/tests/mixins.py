@@ -1,11 +1,13 @@
 from model_mommy import mommy
 
-from category.models import Category
+from category.models import Category, CategoryStatus
 from category.tests.factory import create_categories
+from location.models import LocationStatus, LocationType
 from person.tests.factory import PASSWORD, DistrictManager
 from ticket.models import Ticket
 from ticket.tests.factory_related import (create_ticket_priorities, create_ticket_statuses)
 from ticket.tests.factory import create_ticket
+from utils.tests.test_helpers import create_default
 
 
 class TicketSetupNoLoginMixin(object):
@@ -49,6 +51,10 @@ class TicketCategoryOrderingSetupMixin(object):
         5. Repair - Plumbing - Leak
         6. Repair - Plumbing - Toilet
         """
+        # default statuses
+        create_default(CategoryStatus)
+        create_default(LocationStatus)
+        create_default(LocationType)
         # 1: Loss Prevention - Locks - Drawer Lock
         loss_prevention = Category.objects.create(name="Loss Prevention", subcategory_label="trade")
         locks = Category.objects.create(name="Locks", parent=loss_prevention, subcategory_label="issue")

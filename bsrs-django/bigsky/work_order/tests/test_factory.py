@@ -1,30 +1,47 @@
 from django.test import TestCase
-from datetime import datetime
 
+from location.models import Location
+from person.models import Person
 from person.tests.factory import create_single_person
+from work_order.models import (WorkOrder, WorkOrderStatus, WorkOrderPriority,
+    WORKORDER_STATUSES)
 from work_order.tests import factory
-from work_order.models import (WORKORDER_STATUSES, WorkOrderStatus,)
 
 
-class WorkOrderFactory(TestCase):
+class FactoryTests(TestCase):
     
-    def test_factory(self):
+    def setUp(self):
         create_single_person()
-        wo = factory.create_work_orders()
-        self.assertIsNotNone(wo[0].id)
-        self.assertIsNotNone(wo[0].assignee)
-        self.assertIsNotNone(wo[0].requester)
-        self.assertIsNotNone(wo[0].location)
-        self.assertIsNotNone(wo[0].status.id)
-        self.assertIsNotNone(wo[0].priority.id)
-        self.assertEqual(wo[0].date_due, factory.TIME)
 
+    def test_create_work_orders(self):
+        number = 2
+        work_orders = factory.create_work_orders(number)
 
-class CreateStatusTests(TestCase):
+        self.assertEqual(len(work_orders), number)
+        self.assertIsInstance(work_orders[0], WorkOrder)
 
-    def test_single(self):
+    def test_create_work_order(self):
+        wo = factory.create_work_order()
+
+        self.assertIsInstance(wo, WorkOrder)
+        self.assertIsInstance(wo.location, Location)
+        self.assertIsInstance(wo.status, WorkOrderStatus)
+        self.assertIsInstance(wo.priority, WorkOrderPriority)
+        self.assertIsInstance(wo.assignee, Person)
+        self.assertIsInstance(wo.requester, Person)
+        self.assertEqual(wo.date_due, factory.TIME)
+
+    def test_create_work_order_status(self):
         obj = factory.create_work_order_status()
+
         self.assertIsInstance(obj, WorkOrderStatus)
         self.assertIn(obj.name, WORKORDER_STATUSES)
 
+    def test_create_work_order_statuses(self):
+        ret = factory.create_work_order_statuses()
 
+        self.assertIsInstance(ret[0], WorkOrderStatus)
+        self.assertEqual(
+            sorted(WORKORDER_STATUSES),
+            sorted([x.name for x in ret])
+        )

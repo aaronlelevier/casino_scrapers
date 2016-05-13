@@ -2,8 +2,8 @@ from django.conf import settings
 
 from model_mommy import mommy
 
-from location.models import (Location, LocationLevel, LOCATION_COMPANY,
-LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE, LOCATION_FMU,)
+from location.models import (Location, LocationStatus, LocationType, LocationLevel,
+    LOCATION_COMPANY, LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE, LOCATION_FMU,)
 from utils.create import _generate_chars
 
 
@@ -31,6 +31,16 @@ def create_location_level(name=None):
     return obj
 
 
+def create_location_related_defaults(wrapped_function):
+    def _wrapper(*args, **kwargs):
+        LocationStatus.objects.get_or_create(name=LocationStatus.default)
+        LocationType.objects.get_or_create(name=LocationType.default)
+        result = wrapped_function(*args, **kwargs)
+        return result
+    return _wrapper
+
+
+@create_location_related_defaults
 def create_locations(_many=None):
     create_location_levels()
     company = Location.objects.create_top_level()
@@ -69,6 +79,7 @@ def create_locations(_many=None):
             mommy.make(Location, number=_generate_chars(), location_level=store_ll, name=_generate_chars())
 
 
+@create_location_related_defaults
 def create_location(location_level=None):
     location_level = location_level or create_location_level()
     return mommy.make(Location, name=_generate_chars(), number=_generate_chars(),

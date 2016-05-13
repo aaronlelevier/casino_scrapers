@@ -3,7 +3,7 @@ from django.conf import settings
 
 from accounting.models import Currency
 from location.models import SelfReferencingQuerySet, SelfReferencingManager
-from utils.models import BaseModel, BaseManager, BaseNameModel
+from utils.models import BaseModel, BaseManager, BaseNameModel, DefaultNameManager
 
 
 CATEGORY_STATUSES = [
@@ -17,16 +17,11 @@ LABEL_ISSUE = 'Issue'
 LABEL_SUB_ISSUE = 'Sub-Issue'
 
 
-class CategoryStatusManager(BaseManager):
-
-    def default(self):
-        obj, _ = self.get_or_create(name=CATEGORY_STATUSES[0])
-        return obj
-
-
 class CategoryStatus(BaseNameModel):
 
-    objects = CategoryStatusManager()
+    default = CATEGORY_STATUSES[0]
+
+    objects = DefaultNameManager()
 
     class Meta:
         verbose_name_plural = "Category statuses"

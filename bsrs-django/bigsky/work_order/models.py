@@ -3,7 +3,7 @@ from django.db import models
 
 from location.models import Location
 from third_party.models import ThirdParty
-from utils.models import BaseModel, BaseQuerySet, BaseManager, BaseNameModel
+from utils.models import BaseModel, BaseNameModel, DefaultToDictMixin, DefaultNameManager
 
 
 WORKORDER_STATUSES = [
@@ -19,27 +19,15 @@ WORKORDER_STATUSES = [
 ]
 
 
-class WorkOrderStatusManager(BaseManager):
+class WorkOrderStatus(DefaultToDictMixin, BaseNameModel):
 
-    def default(self):
-        obj, _ = self.get_or_create(name=settings.DEFAULTS_WORKORDER_STATUS)
-        return obj
+    default = settings.DEFAULTS_WORKORDER_STATUS
 
-
-class WorkOrderStatus(BaseNameModel):
-
-    objects = WorkOrderStatusManager()
+    objects = DefaultNameManager()
 
     class Meta:
         verbose_name_plural = "Work order statuses"
 
-    def to_dict(self):
-        return {
-            "id": str(self.pk),
-            "name": self.name,
-            "default": True if self.name == settings.DEFAULTS_WORKORDER_STATUS else False
-        }
-    
 
 WORKORDER_PRIORITIES = [
     'work_order.priority.emergency',
@@ -49,16 +37,11 @@ WORKORDER_PRIORITIES = [
 ]
 
 
-class WorkOrderPriorityManager(BaseManager):
-
-    def default(self):
-        obj, _ = self.get_or_create(name=WORKORDER_PRIORITIES[0])
-        return obj
-
-
 class WorkOrderPriority(BaseNameModel):
 
-    objects = WorkOrderPriorityManager()
+    default = WORKORDER_PRIORITIES[0]
+
+    objects = DefaultNameManager()
 
     class Meta:
         verbose_name_plural = "Work order priorities"

@@ -4,19 +4,29 @@ from django.conf import settings
 from third_party.config import THIRD_PARTY_STATUSES
 from third_party.models import ThirdParty, ThirdPartyStatus
 from third_party.tests import factory
+from utils.models import DefaultNameManager
+from utils.tests.test_helpers import create_default
 
 
-class ThirdPartyStatusManagerTests(TestCase):
+class ThirdPartyStatusTests(TestCase):
+
+    def setUp(self):
+        self.default_status = create_default(ThirdPartyStatus)
 
     def test_default(self):
-        default = ThirdPartyStatus.objects.default()
-        self.assertIsInstance(default, ThirdPartyStatus)
-        self.assertEqual(default.name, THIRD_PARTY_STATUSES[0])
+        self.assertEqual(ThirdPartyStatus.objects.default(), self.default_status)
+
+    def test_meta__verbose_name_plural(self):
+        self.assertEqual(ThirdPartyStatus._meta.verbose_name_plural, 'Third party statuses')
+
+    def test_manager(self):
+        self.assertIsInstance(ThirdPartyStatus.objects, DefaultNameManager)
 
 
 class ThirdPartyTests(TestCase):
 
     def setUp(self):
+        create_default(ThirdPartyStatus)
         self.third_party = factory.create_third_party()
 
     def test_model(self):

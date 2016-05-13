@@ -5,17 +5,18 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from location.tests.factory import create_locations
+from location.tests.factory import create_location, create_locations
 from location.models import (LocationLevel, LocationStatus, LocationType, Location,
     LOCATION_COMPANY, LOCATION_REGION, LOCATION_FMU, LOCATION_STORE,)
 from person.tests.factory import create_single_person
+from utils.models import DefaultNameManager
+from utils.tests.test_helpers import create_default
 
 
 class SelfReferencingManagerTests(TestCase):
     '''
     ``LocationLevel`` Model used for testing of: ``SelfReferencingManager``
     '''
-
     def setUp(self):
         self.region = mommy.make(LocationLevel, name='region')
         self.district = mommy.make(LocationLevel, name='district')
@@ -95,14 +96,14 @@ class LocationLevelManagerTests(TestCase):
 class LocationLevelTests(TestCase):
 
     def setUp(self):
-        self.location = mommy.make(Location)
+        self.location = create_location()
 
     def test_name(self):
         # confirm that the "mixin-inheritance" worked for the ``name`` field
         self.assertTrue(hasattr(self.location, 'name'))
 
     def test_is_top_level(self):
-        location_level = mommy.make(LocationLevel, name=LOCATION_COMPANY)
+        location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_COMPANY)
         self.assertTrue(location_level.is_top_level)
 
     def test_is_top_level__false(self):
@@ -123,12 +124,35 @@ class LocationLevelTests(TestCase):
         self.assertEqual(location_level.parents.first().children.first().pk, location_level.pk)
 
 
-class LocationStatusManagerTests(TestCase):
+class LocationStatusTests(TestCase):
+
+    def setUp(self):
+        self.default_status = create_default(LocationStatus)
 
     def test_default(self):
-        d = LocationStatus.objects.default()
-        self.assertIsInstance(d, LocationStatus)
-        self.assertEqual(d.name, settings.DEFAULT_LOCATION_STATUS)
+        self.assertEqual(LocationStatus.objects.default(), self.default_status)
+
+    def test_manager(self):
+        self.assertIsInstance(LocationStatus.objects, DefaultNameManager)
+
+    def test_to_dict(self):
+        ret = self.default_status.to_dict()
+
+        self.assertEqual(ret["id"], str(self.default_status.id))
+        self.assertEqual(ret["name"], self.default_status.name)
+        self.assertEqual(ret["default"], True if self.default_status.name == self.default_status.default else False)
+
+
+class LocationTypeTests(TestCase):
+
+    def setUp(self):
+        self.default_type = create_default(LocationType)
+
+    def test_default(self):
+        self.assertEqual(LocationType.objects.default(), self.default_type)
+
+    def test_manager(self):
+        self.assertIsInstance(LocationType.objects, DefaultNameManager)
 
 
 class LocationManagerTests(TestCase):
@@ -243,7 +267,7 @@ class LocationManagerTests(TestCase):
 class LocationTests(TestCase):
 
     def test_joins_n_create(self):
-        l = mommy.make(Location)
+        l = create_location()
         self.assertIsInstance(l, Location)
         self.assertIsInstance(l.location_level, LocationLevel)
         self.assertIsInstance(l.status, LocationStatus)

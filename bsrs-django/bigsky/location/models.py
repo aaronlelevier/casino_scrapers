@@ -5,7 +5,8 @@ from django.db import models
 from django.db.models import Q
 
 from contact.models import PhoneNumber, Address, Email
-from utils.models import BaseNameModel, BaseModel, BaseManager
+from utils.models import (BaseModel, BaseManager, BaseNameModel, DefaultNameManager,
+    DefaultToDictMixin)
 
 
 LOCATION_COMPANY = 'Company'
@@ -162,52 +163,25 @@ class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
 
 ### LOCATION STATUS
 
-class LocationStatusManager(BaseManager):
-    '''
-    Return the **default** status for the initial Location 
-    ``.create()`` if one isn't specified.
-    '''
+class LocationStatus(DefaultToDictMixin, BaseNameModel):
 
-    def default(self):
-        obj, _ = self.get_or_create(name=settings.DEFAULT_LOCATION_STATUS)
-        return obj
+    default = settings.DEFAULT_LOCATION_STATUS
 
-
-class LocationStatus(BaseNameModel):
-    '''
-    Tells whether the store is: *Open, Closed, Future, etc...*
-
-    Single *name* field, with more configuration on this 
-    model planned.
-    '''
-    
-    objects = LocationStatusManager()
-
-    def to_dict(self):
-        default = True if LocationStatus.objects.default().name == self.name else False
-        return {"id": str(self.pk), "name": self.name, "default": default}
+    objects = DefaultNameManager()
 
 
 ### LOCATION TYPE
 
-class LocationTypeManager(BaseManager):
-    ''' '''
-
-    def default(self):
-        obj, _ = self.get_or_create(name=settings.DEFAULT_LOCATION_TYPE)
-        return obj
-
-
 class LocationType(BaseNameModel):
-    ''' '''
+
+    default = settings.DEFAULT_LOCATION_TYPE
     
-    objects = LocationTypeManager()
+    objects = DefaultNameManager()
 
 
 ### LOCATION
 
 class LocationQuerySet(SelfReferencingQuerySet):
-    ''' '''
 
     def get_level_children(self, level_id, pk):
         '''

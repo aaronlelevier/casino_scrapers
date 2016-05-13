@@ -1,17 +1,15 @@
+from datetime import datetime
 import json
 import uuid
-from rest_framework import status
-from datetime import datetime
 
-from rest_framework.test import APITestCase, APITransactionTestCase
-from work_order.models import (WorkOrderStatus, WorkOrder,)
-from work_order.serializers import WorkOrderCreateSerializer
+from rest_framework import status
+
+from rest_framework.test import APITestCase
 from person.tests.factory import PASSWORD, create_single_person
-from person.models import Person
 from location.tests.factory import create_location
-from location.models import Location
-from work_order.tests.factory import (create_work_orders, create_work_order, 
-        create_work_order_status, TIME)
+from work_order.models import WorkOrder
+from work_order.serializers import WorkOrderCreateSerializer
+from work_order.tests.factory import create_work_order, create_work_order_status, TIME
 
 
 class WorkOrderListTests(APITestCase):

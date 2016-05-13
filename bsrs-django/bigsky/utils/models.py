@@ -52,8 +52,8 @@ class BaseModel(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     deleted = models.DateTimeField(blank=True, null=True,
-        help_text="If NULL the record is not deleted, otherwise this is the \
-timestamp of when the record was deleted.")
+        help_text="""If NULL the record is not deleted, otherwise this is the \
+timestamp of when the record was deleted.""")
 
     objects = BaseManager()
     objects_all = models.Manager()
@@ -62,8 +62,8 @@ timestamp of when the record was deleted.")
         abstract = True
 
     def __str__(self):
-        return "id: {self.id}; class: {self.__class__.__name__}; deleted: \
-{self.deleted}".format(self=self)
+        return """id: {self.id}; class: {self.__class__.__name__}; deleted: \
+{self.deleted}""".format(self=self)
 
     def delete(self, override=None, *args, **kwargs):
         '''
@@ -102,6 +102,16 @@ class BaseNameOrderModel(BaseNameModel):
 
     class Meta:
         abstract = True
+
+
+class DefaultToDictMixin(object):
+
+    def to_dict(self):
+        return {
+            "id": str(self.id),
+            "name": self.name,
+            "default": True if self.name == self.default else False
+        }
 
 
 class DefaultNameManager(BaseManager):
@@ -187,9 +197,9 @@ class SettingMixin(object):
         raise NotImplementedError("Must implent 'get_settings_name' on the concrete class")
 
     def get_all_class_settings(self):
-        raise NotImplementedError("Must implent 'get_all_class_settings' on the concrete \
-class because these are specific to the class.")
+        raise NotImplementedError("""Must implent 'get_all_class_settings' on the concrete \
+class because these are specific to the class.""")
 
     def get_all_instance_settings(self):
-        raise NotImplementedError("Must implent 'get_all_instance_settings', so the \
-model instance has access to all if it's inherited and concrete settings.")
+        raise NotImplementedError("""Must implent 'get_all_instance_settings', so the \
+model instance has access to all if it's inherited and concrete settings.""")

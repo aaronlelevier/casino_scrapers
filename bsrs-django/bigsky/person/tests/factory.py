@@ -6,10 +6,10 @@ from django.core.exceptions import ValidationError
 from model_mommy import mommy
 
 from accounting.models import Currency
-from category.models import Category
+from category.models import Category, CategoryStatus
 from category.tests.factory import create_single_category
-from location.models import (LocationLevel, Location, LOCATION_COMPANY, LOCATION_DISTRICT,
-    LOCATION_REGION,)
+from location.models import (LocationLevel, Location, LocationStatus, LocationType,
+    LOCATION_COMPANY, LOCATION_DISTRICT, LOCATION_REGION,)
 from location.tests.factory import create_location, create_locations, create_location_levels
 from person.models import Person, Role, PersonStatus
 from translation.tests.factory import create_locale, LOCALES
@@ -30,12 +30,17 @@ PERSON_STATUSES = [
 class DistrictManager(object):
     
     def __init__(self, *args, **kwargs):
+        CategoryStatus.objects.get_or_create(name=CategoryStatus.default)
         self.repair = Category.objects.create(name=CATEGORY_REPAIR, subcategory_label="trade")
 
         self.location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_DISTRICT)
         self.role = create_role('district-manager', self.location_level, category=self.repair)
+
+        LocationStatus.objects.get_or_create(name=LocationStatus.default)
+        LocationType.objects.get_or_create(name=LocationType.default)
         self.location = Location.objects.create(location_level=self.location_level,
                                                 name='district-1', number='district-1')
+
         self.person = create_single_person('district-manager-1', self.role, self.location)        
 
 

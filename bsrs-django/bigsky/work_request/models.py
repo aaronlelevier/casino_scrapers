@@ -1,11 +1,7 @@
-import uuid
-
 from django.conf import settings
 from django.db import models
 
 from django_fsm import FSMKeyField, FSMFieldMixin, transition
-
-from person.models import Person
 
 
 class FSMUuidField(FSMFieldMixin, models.UUIDField):

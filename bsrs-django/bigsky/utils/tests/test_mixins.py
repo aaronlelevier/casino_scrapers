@@ -78,8 +78,7 @@ class OrderingQuerySetMixinTests(APITestCase):
         # Person Records w/ specific Username
         for i in range(20):
             name = self._get_name(i)
-            Person.objects.create_user(name, 'myemail@mail.com', PASSWORD,
-                first_name=name, role=self.role)
+            create_single_person(name)
             
         self.people = Person.objects.count()
         # Login
@@ -103,8 +102,6 @@ class OrderingQuerySetMixinTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         record = 0
-        #TODO: inconsistent results on jenkins
-        # self.assertEqual(data['results'][record]['first_name'], self._get_name(26))
 
     def test_ordering_first_name_data_reverse(self):
         response = self.client.get('/api/admin/people/?ordering=-first_name')

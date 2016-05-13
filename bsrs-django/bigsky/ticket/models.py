@@ -10,7 +10,8 @@ from category.models import Category
 from generic.models import Attachment
 from location.models import Location
 from person.models import Person
-from utils.models import BaseModel, BaseQuerySet, BaseManager, BaseNameModel
+from utils.models import (BaseModel, BaseQuerySet, BaseManager, BaseNameModel,
+    DefaultToDictMixin)
 
 
 TICKET_STATUS_MAP = {
@@ -41,16 +42,6 @@ TICKET_PRIORITY_MAP = {
 TICKET_PRIORITIES = [v for k,v in TICKET_PRIORITY_MAP.items()]
 
 TICKET_PRIORITY_DEFAULT = TICKET_PRIORITY_MAP['3']
-
-
-class DefaultToDictMixin(object):
-
-    def to_dict(self):
-        return {
-            "id": str(self.id),
-            "name": self.name,
-            "default": True if self.name == self.default else False
-        }
 
 
 class TicketStatus(DefaultToDictMixin, BaseNameModel):
