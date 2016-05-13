@@ -13,6 +13,7 @@ export default Ember.Controller.extend({
      * updates ticket request based on fieldsObj (Map) that holds the current value for a field
      * checkbox needs to update value based on if checked, not option value
      * fieldsObj will contain any existing request values from deep linked dt (setup in init of dtd-preview)
+     * need to update existing obj if on existing dtd (go back and change a field to update ticket)
      */
     updateRequest(fieldsObj, ticket) {
       let requestValues = [];
@@ -29,19 +30,20 @@ export default Ember.Controller.extend({
     /*
      * @method linkClick 
      * @function dtPathMunge modifies ticket dt_path attribute that sets dt {id: xxx} in json object in order to allow user to have breadcrumbs
-     * send off patch request if action is 'patch', post if action is 'post'
+     * @param action - send off patch request if action is 'patch', post if action is undefined
      * patch may send current DTD id (bail on existing) or link destination (click button)
+     * @param fieldsObj - persist field and option state in dt_path
      */
-    linkClick(link, ticket, dtd_model, action, transition=true) {
-      dtPathMunge(ticket, dtd_model, this.get('simpleStore'));
+    linkClick(link, ticket, dtd_model, action, fieldsObj) {
+      dtPathMunge(ticket, dtd_model, fieldsObj, this.get('simpleStore'));
       if (action === 'patch') {
         const patch_id = link && link.get('destination.id') || dtd_model.get('id');
         this.get('ticketRepository').patch(ticket, link, patch_id).then((response) => {
           const dtd = this.get('DTDDeserializer').deserialize(response, response.id);
           ticket = this.get('simpleStore').push('ticket', {id: ticket.id, hasSaved: true});
-          if(transition) {
+          // if(transition) {
             this.transitionToRoute('dt.dt', {id: response.id, model: dtd, ticket: ticket, dt_id: response.id, ticket_id: ticket.id});
-          }
+          // }
         });
       } else {
         this.get('ticketRepository').dtPost(ticket).then((response) => {

@@ -1,7 +1,13 @@
-var dtPathMunge = function(ticket, dtd, simpleStore) {
+var dtPathMunge = function(ticket, dtd, fieldsObj, simpleStore) {
   let dt_path = ticket.get('dt_path') || [];
   const dtd_ids = dt_path.mapBy('dtd.id');
   const indx = dtd_ids.indexOf(dtd.get('id'));
+  // build fields array
+  let fields = [];
+  for (let obj of fieldsObj) {
+    fields.push({id: obj[0], value: obj[1].value});
+  }
+  // build options array
   const new_ticket = {
     id: ticket.get('id'),
     requester: ticket.get('requester'),
@@ -18,10 +24,13 @@ var dtPathMunge = function(ticket, dtd, simpleStore) {
     description: dtd.get('description'),
     prompt: dtd.get('prompt'),
     note: dtd.get('note'),
+    fields,
   };
   if (indx === 0) {
-    dt_path[indx] = new_ticket;
-    dt_path[indx] = new_dtd;
+    // if modifying existing dt_path obj
+    dt_path[indx] = {ticket: {}, dtd: {}};
+    dt_path[indx]['ticket'] = new_ticket;
+    dt_path[indx]['dtd'] = new_dtd;
   } else {
     dt_path = dt_path.concat([{
       ticket: new_ticket,

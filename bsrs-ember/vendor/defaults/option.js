@@ -9,6 +9,7 @@ var BSRS_OPTIONS_DEFAULTS_OBJECT = (function() {
       textOne: 'yes',
       textTwo: 'no',
       textThree: 'maybe',
+      textFour: 'another yes',
       orderOne: 0,
       orderTwo: 1,
       orderThree: 2

@@ -37,6 +37,8 @@ var DTPage = PageObject.create({
     fieldOneName: text('.t-dtd-preview-field-label:eq(0)'),
     fieldOneCheckboxIsChecked: () => Ember.$('.t-dtd-field-checkbox:eq(0)').is(':checked'),
     fieldOneCheckboxCheck: clickable('.t-dtd-field-checkbox:eq(0)'),
+    fieldTwoCheckboxIsChecked: () => Ember.$('.t-dtd-field-checkbox:eq(1)').is(':checked'),
+    fieldTwoCheckboxCheck: clickable('.t-dtd-field-checkbox:eq(1)'),
     prompt: text('.t-dtd-preview-prompt'),
     btnCount: count('.t-dtd-preview-btn'),
     btnOneText: text('.t-dtd-preview-btn:eq(0)'),

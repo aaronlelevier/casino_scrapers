@@ -3,11 +3,11 @@
   {{if field.required "*" ""}}
 </label>
 {{#if (eq field.type field.types.[0])}}
-  {{input type="text" class="form-control t-dtd-field-preview t-dtd-field-text" key-up=(action "updateRequest" undefined ticket) }}
+  {{input type="text" value=field.displayValue class="form-control t-dtd-field-preview t-dtd-field-text" key-up=(action "updateRequest" undefined ticket) }}
 {{else if (eq field.type field.types.[1])}}
-  {{input type="number" class="form-control t-dtd-field-preview t-dtd-field-number" key-up=(action "updateRequest" undefined ticket) }}
+  {{input type="number" value=field.displayValue class="form-control t-dtd-field-preview t-dtd-field-number" key-up=(action "updateRequest" undefined ticket) }}
 {{else if (eq field.type field.types.[2])}}
-  {{textarea autoresize=true class="form-control t-dtd-field-preview t-dtd-field-textarea" key-up=(action "updateRequest" undefined ticket) }}
+  {{textarea autoresize=true value=field.displayValue class="form-control t-dtd-field-preview t-dtd-field-textarea" key-up=(action "updateRequest" undefined ticket) }}
 {{else if (eq field.type field.types.[3])}}
   {{power-select-action mainModel=field displayName="text" relatedModels=field.options relatedModelName='dtd-field' notTranslated=true action=(action "updateRequest") ticket=ticket}}
 {{else if (eq field.type field.types.[4])}}

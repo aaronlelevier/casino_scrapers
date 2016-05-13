@@ -10,6 +10,7 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import DT from 'bsrs-ember/vendor/defaults/dtd';
 import FD from 'bsrs-ember/vendor/defaults/field';
+import OD from 'bsrs-ember/vendor/defaults/option';
 import TICKET from 'bsrs-ember/vendor/defaults/ticket';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import LINK from 'bsrs-ember/vendor/defaults/link';
@@ -75,7 +76,7 @@ test('go to /dashboard, click button to get to /dt/new', assert => {
 
 /* jshint ignore:start */
 
-test('has_multi_locations === true, can POST data, and transition to /dt/{start-id}', async assert => {
+test('scott has_multi_locations === true, can POST data with multiple options, and transition to /dt/{start-id}', async assert => {
   await visit(DT_NEW_URL);
   assert.equal(currentURL(), DT_NEW_URL);
   assert.equal(dtPage.requester, '');
@@ -97,16 +98,34 @@ test('has_multi_locations === true, can POST data, and transition to /dt/{start-
   assert.equal(store.findOne('ticket').get('location.id'), LD.idThree);
   // POST
   let dtd_response = DTF.generate(DT.idOne);
-  // xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(ticket_dt_new_payload), {}, 201, dtd_response);
+  dtd_response.fields[0].options.push({id: OD.idTwo, text: OD.textFour, order: OD.orderTwo })
   xhr(DT_START_ENDPOINT, 'GET', null, {}, 200, dtd_response);
   await dtPage.clickStart();
   assert.equal(currentURL(), DT_START_URL);
-  // assert.equal(ticket.get('dt_path')[0]['dtd']['id'], undefined);
-  // assert.equal(ticket.get('dt_path')[0]['ticket']['id'], 1);
-  // assert.equal(ticket.get('dt_path')[0]['ticket']['location'], LD.idThree);
-  // assert.equal(ticket.get('dt_path')[0]['ticket']['status'], TD.statusZeroId);
-  // assert.equal(ticket.get('dt_path')[0]['ticket']['priority'], TD.priorityZeroId);
-  // assert.equal(ticket.get('dt_path')[0]['ticket']['requester'], TD.requesterOne);
+  await dtPage.fieldOneCheckboxCheck();
+  await dtPage.fieldTwoCheckboxCheck();
+  // click multiple options
+  const requestValue = `${OD.textOne}, ${OD.textFour}`;
+  const ticketRequestValue = `name: ${requestValue}`;
+  assert.deepEqual(ticket.get('requestValues'), [ticketRequestValue]);
+  assert.equal(ticket.get('dt_path'), undefined);
+  const mod_new_payload = Ember.$.extend(true, {}, ticket_dt_new_payload);
+  mod_new_payload.request = ticketRequestValue; 
+  mod_new_payload['dt_path'][0]['ticket'].request = ticketRequestValue; 
+  mod_new_payload['dt_path'][0]['dtd']['fields'] = [{id: FD.idOne, value: requestValue}]; 
+  xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(mod_new_payload), {}, 201, dtd_response);
+  await page.clickNextBtn();
+  // Post updates ticket fields, adds fields/options do dtd object
+  assert.equal(ticket.get('dt_path')[0]['dtd']['id'], DT.idOne);
+  assert.equal(ticket.get('dt_path')[0]['dtd']['fields'].length, 1);
+  assert.equal(ticket.get('dt_path')[0]['dtd']['fields'][0]['id'], FD.idOne);
+  assert.equal(ticket.get('dt_path')[0]['dtd']['fields'][0]['value'], requestValue);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['id'], 1);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['location'], LD.idThree);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['status'], TD.statusZeroId);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['priority'], TD.priorityZeroId);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['requester'], TD.requesterOne);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['request'], ticketRequestValue);
 });
 
 /* jshint ignore:end */
@@ -269,6 +288,7 @@ test('POST then PATCH - to demonstrate starting the DT and maintaining traversin
   // xhr(DT_TICKET_PATCH_URL, 'PATCH', JSON.stringify(patch_payload), {}, 200, dtd_response_two);
   // POST
   let mod_payload = Ember.$.extend(true, {}, ticket_dt_new_payload);
+  mod_payload['dt_path'][0]['dtd']['fields'] = [{id: FD.idOne, value: OD.textOne}]; 
   xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(mod_payload), {}, 201, dtd_response_two);
   dtPage.btnOneClick();
   andThen(() => {

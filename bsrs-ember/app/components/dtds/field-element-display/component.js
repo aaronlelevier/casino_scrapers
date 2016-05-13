@@ -12,6 +12,9 @@ export default Ember.Component.extend({
   processValid(field, num, value, ticket) {
     this.get('eventbus').publish('bsrs-ember@component:field-element-display', this, 'onFieldUpdate', { field, num, value, ticket });
   },
+  processClickOption(field, num, value, ticket, option) {
+    this.get('eventbus').publish('bsrs-ember@component:field-element-display:option', this, 'onOptionUpdate', { field, num, value, ticket, option });
+  },
 
   classNames: ['form-group'],
   actions: {
@@ -36,16 +39,16 @@ export default Ember.Component.extend({
     /*
      * @method updateCheckbox
      * checked property to determine if should increment num count in dtd-preview
-     * toggle option isChecked in order to handle processValid below
+     * toggle option isChecked property in order to handle processValid below
      */
     updateCheckbox(value, ticket, option) {
       option.toggleProperty('isChecked');
       const event = arguments[3];
       const field = this.get('field');
       if (!event.currentTarget.checked) {
-        this.processValid(field, 1, '', ticket);
+        this.processClickOption(field, 1, '', ticket, option);
       } else {
-        this.processValid(field, 0, value, ticket);
+        this.processClickOption(field, 0, value, ticket, option);
       }
     }
   },
