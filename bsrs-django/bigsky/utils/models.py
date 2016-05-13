@@ -5,7 +5,6 @@ should be Abstract.
 import copy
 import uuid
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
 
@@ -103,6 +102,12 @@ class BaseNameOrderModel(BaseNameModel):
 
     class Meta:
         abstract = True
+
+
+class DefaultNameManager(BaseManager):
+
+    def default(self):
+        return self.get(name=self.model.default)
 
 
 class SettingMixin(object):

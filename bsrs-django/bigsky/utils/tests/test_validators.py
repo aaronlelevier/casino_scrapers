@@ -1,7 +1,6 @@
 import json
 
 from django.test import TestCase
-from django.utils.translation import ugettext_lazy as _
 
 from rest_framework.test import APITestCase
 
@@ -10,8 +9,6 @@ from location.models import Location
 from location.serializers import LocationUpdateSerializer
 from person.serializers import RoleUpdateSerializer
 from person.tests.factory import create_person, create_single_person, PASSWORD
-from setting.serializers import SettingSerializer
-from setting.tests.factory import create_general_setting
 from utils.validators import (regex_check_contains, contains_digit, contains_upper_char,
     contains_lower_char, contains_special_char, contains_no_whitespaces,
     SettingsValidator, valid_email, valid_phone,)

@@ -38,3 +38,8 @@ def media_path(path, prefix=settings.MEDIA_URL):
     if not path:
         return ""
     return "{}{}".format(prefix, path)
+
+
+def create_default(klass):
+    obj, created = klass.objects.get_or_create(name=klass.default)
+    return obj

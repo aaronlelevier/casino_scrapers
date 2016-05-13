@@ -6,10 +6,12 @@ from django.contrib.auth.models import ContentType
 from django.test import TestCase
 
 from location.models import LocationLevel
-from person.models import Role
+from person import config
+from person.models import Role, PersonStatus
 from person.tests.factory import create_role
 from utils.helpers import (BASE_UUID, model_to_json, model_to_json_select_related,
-    model_to_json_prefetch_related, generate_uuid, get_content_type_number, media_path)
+    model_to_json_prefetch_related, generate_uuid, get_content_type_number, media_path,
+    create_default)
 
 
 class ModelToJsonTests(TestCase):
@@ -111,3 +113,12 @@ class MediaPathTests(TestCase):
         ret = media_path(path)
 
         self.assertEqual(ret, "")
+
+
+class MiscTestHelperTests(TestCase):
+
+    def test_create_default(self):
+        ret = create_default(PersonStatus)
+        self.assertIsInstance(ret, PersonStatus)
+        self.assertEqual(ret.name, PersonStatus.default)
+        self.assertEqual(ret.name, config.PERSON_STATUSES[0])

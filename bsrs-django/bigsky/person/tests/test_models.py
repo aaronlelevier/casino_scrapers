@@ -16,13 +16,15 @@ from contact.models import Email
 from contact.tests.factory import create_contact
 from location.models import Location
 from location.tests.factory import create_locations
-from person.models import Person, PersonStatus, PersonStatusManager, Role
+from person.models import Person, PersonStatus, Role
 from person.settings import DEFAULT_ROLE_SETTINGS
 from person.tests.factory import PASSWORD, create_person, create_role, create_single_person
 from setting.settings import DEFAULT_GENERAL_SETTINGS
 from setting.tests.factory import create_general_setting
 from translation.models import Locale
 from utils import create
+from utils.models import DefaultNameManager
+from utils.tests.test_helpers import create_default
 from utils.tests.test_validators import (DIGITS, NO_DIGITS, UPPER_CHARS, NO_UPPER_CHARS,
     LOWER_CHARS, NO_LOWER_CHARS, SPECIAL_CHARS, NO_SPECIAL_CHARS)
 
@@ -191,16 +193,19 @@ class RolePasswordTests(TestCase):
 
 class PersonStatusManagerTests(TestCase):
 
-    def test_get_or_create_default(self):
-        default, created = PersonStatus.objects.get_or_create_default()
+    def setUp(self):
+        self.status = create_default(PersonStatus)
+
+    def test_default(self):
+        default = PersonStatus.objects.default()
         self.assertIsInstance(default, PersonStatus)
-        self.assertTrue(created)
+        self.assertEqual(default.name, self.status.name)
 
 
 class PersonStatusTests(TestCase):
 
     def test_manager(self):
-        self.assertIsInstance(PersonStatus.objects, PersonStatusManager)
+        self.assertIsInstance(PersonStatus.objects, DefaultNameManager)
 
     def test_meta__verbose_name_plural(self):
         status = mommy.make(PersonStatus)
@@ -215,7 +220,8 @@ class PersonTests(TestCase):
         create_locations()
         self.password = PASSWORD
         self.person = create_single_person()
-        self.person_default_status, _ = PersonStatus.objects.get_or_create_default()
+        create_default(PersonStatus)
+        self.person_default_status = PersonStatus.objects.default()
 
     def test_person_is_user_subclass(self):
         self.assertIsInstance(self.person, AbstractUser)

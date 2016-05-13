@@ -16,7 +16,7 @@ from contact.tests.factory import create_contact, create_contacts
 from location.models import Location, LocationLevel
 from location.tests.factory import create_location
 from person import config as person_config
-from person.models import Person, Role
+from person.models import Person, Role, PersonStatus
 from person.serializers import PersonUpdateSerializer, RoleCreateSerializer
 from person.settings import DEFAULT_ROLE_SETTINGS
 from person.tests.factory import (PASSWORD, create_single_person, create_role, create_roles,
@@ -28,6 +28,7 @@ from setting.settings import DEFAULT_GENERAL_SETTINGS
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from utils import create
+from utils.tests.test_helpers import create_default
 
 
 ### ROLE ###
@@ -242,7 +243,7 @@ class PersonCreateTests(APITestCase):
     def setUp(self):
         self.person = create_single_person()
         self.client.login(username=self.person.username, password=PASSWORD)
-
+        create_default(PersonStatus)
         self.ph_num_type = mommy.make(PhoneNumberType)
 
         # update for mock data
