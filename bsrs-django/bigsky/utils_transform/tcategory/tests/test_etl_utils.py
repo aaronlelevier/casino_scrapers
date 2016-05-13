@@ -1,7 +1,9 @@
 from django.conf import settings
 from django.test import TestCase
 
-from category.models import Category, LABEL_TYPE, LABEL_TRADE, LABEL_ISSUE, LABEL_SUB_ISSUE
+from category.models import (Category, CategoryStatus, LABEL_TYPE, LABEL_TRADE,
+    LABEL_ISSUE, LABEL_SUB_ISSUE)
+from utils.tests.test_helpers import create_default
 from utils_transform.tcategory.management.commands._etl_utils import (
     resolve_cost_amount, create_type_from_domino,
     create_trade_from_domino, create_issue_from_domino,
@@ -12,6 +14,9 @@ from utils_transform.tcategory.tests.factory import (create_domino_category_type
 
 
 class EtlUtilTests(TestCase):
+
+    def setUp(self):
+        create_default(CategoryStatus)
 
     def test_resolve_cost_amount(self):
         cost_amount = ''

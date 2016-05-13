@@ -5,12 +5,12 @@ from model_mommy import mommy
 
 from category.models import Category, LABEL_TYPE, LABEL_TRADE, LABEL_ISSUE
 from category.tests.factory import create_categories
-from location.models import Location, LocationLevel, LOCATION_STORE
+from location.models import Location, LocationStatus, LocationType, LocationLevel, LOCATION_STORE
 from location.tests.factory import create_location_levels
 from person.models import Person
-from ticket.models import (Ticket, TicketStatus, TicketPriority,
-    TICKET_STATUS_MAP, TICKET_PRIORITY_MAP)
+from ticket.models import Ticket, TicketStatus, TicketPriority
 from ticket.tests.factory_related import create_ticket_priorities, create_ticket_statuses
+from utils.tests.test_helpers import create_default
 from utils_transform.tticket.management.commands import _etl_utils
 from utils_transform.tticket.tests.factory import create_domino_ticket
 
@@ -23,6 +23,8 @@ class EtlUtilsTests(TestCase):
         create_categories()
         self.store_level = LocationLevel.objects.get(name=LOCATION_STORE)
         self.number = '1'
+        create_default(LocationStatus)
+        create_default(LocationType)
         self.location = mommy.make(Location, number=self.number,
             location_level=self.store_level)
         # Ticket

@@ -1,9 +1,9 @@
 from model_mommy import mommy
 
 from category.tests.factory import create_single_category
+from location.models import LOCATION_REGION
 from location.tests.factory import create_location_level
 from utils.create import _generate_chars
-from utils_transform.tlocation.models import LOCATION_REGION
 from utils_transform.trole.models import DominoRole
 
 

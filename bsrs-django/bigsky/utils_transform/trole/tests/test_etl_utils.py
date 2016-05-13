@@ -6,14 +6,14 @@ from django.contrib.auth.models import Group
 from django.test import TestCase
 
 from category.models import Category
-from location.models import LocationLevel
+from location.models import (LocationLevel, LOCATION_COMPANY, LOCATION_FMU,
+    LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE)
 from location.tests.factory import create_location_levels
 from person.models import Role
-from utils_transform.tlocation.models import (LOCATION_COMPANY, LOCATION_FMU,
-    LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE)
-from utils_transform.trole.management.commands._etl_utils import (create_role, run_role_migrations,
-get_location_level, ROLE_TYPE_INTERNAL, ROLE_TYPE_THIRD_PARTY, SELECTION_CONTRACTOR,
-SELECTION_REGION, SELECTION_DISTRICT, SELECTION_STORE, SELECTION_FMU,)
+from utils_transform.trole.management.commands._etl_utils import (
+    create_role, run_role_migrations, get_location_level, ROLE_TYPE_INTERNAL,
+    ROLE_TYPE_THIRD_PARTY, SELECTION_CONTRACTOR, SELECTION_REGION, 
+    SELECTION_DISTRICT, SELECTION_STORE, SELECTION_FMU,)
 from utils_transform.trole.tests.factory import create_domino_role, create_domino_role_and_related
 
 

@@ -1,8 +1,7 @@
 from django.test import TestCase
 
 from category.models import Category
-from location.models import LocationLevel
-from utils_transform.tlocation.models import LOCATION_REGION
+from location.models import LocationLevel, LOCATION_REGION
 from utils_transform.trole.models import DominoRole
 from utils_transform.trole.tests import factory
 

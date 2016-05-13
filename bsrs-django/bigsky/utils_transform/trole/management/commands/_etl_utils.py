@@ -4,11 +4,10 @@ logger = logging.getLogger(__name__)
 from django.conf import settings
 
 from category.models import Category
-from location.models import LocationLevel
+from location.models import (LocationLevel, LOCATION_COMPANY, LOCATION_FMU,
+    LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE)
 from person.models import Role
 from utils_transform.trole.models import DominoRole
-from utils_transform.tlocation.models import (LOCATION_COMPANY, LOCATION_FMU,
-    LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE)
 
 ROLE_TYPE_INTERNAL = "admin.role.type.internal"
 ROLE_TYPE_THIRD_PARTY = "admin.role.type.third_party"

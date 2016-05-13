@@ -3,18 +3,25 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from contact.models import State, Country, PhoneNumber, Email, Address
-from contact.tests.factory import create_phone_number_types
-from location.models import Location, LocationLevel
+from location.models import (Location, LocationStatus, LocationType, LocationLevel,
+    LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE)
+from utils.tests.test_helpers import create_default
 from utils_transform.tlocation.management.commands._etl_utils import (
     create_phone_numbers, create_email, create_address, _resolve_none_str, _resolve_state,
     _resolve_country, join_company_to_region, join_region_to_district, join_district_to_store)
-from utils_transform.tlocation.models import (LocationRegion,
-    LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE)
+from utils_transform.tlocation.models import LocationRegion
 from utils_transform.tlocation.tests.factory import (
     create_location_region, create_location_district, create_location_store)
 
 
-class LocationRegionTests(TestCase):
+class LocationSetupMixin(object):
+
+    def setUp(self):
+        create_default(LocationStatus)
+        create_default(LocationType)
+
+
+class LocationRegionTests(LocationSetupMixin, TestCase):
     """
     Also tests ``Base methods`` for Contact Models shared by 
     Domino -> to -> Django flat table transforms.
@@ -23,6 +30,7 @@ class LocationRegionTests(TestCase):
     fixtures = ['location_levels.json', 'contact_types.json']
 
     def setUp(self):
+        super(LocationRegionTests, self).setUp()
         self.company = Location.objects.create_top_level()
         self.location_region = create_location_region()
 
@@ -209,11 +217,12 @@ class LocationRegionTests(TestCase):
         self.assertEqual(self.company.children.first(), self.location)
 
 
-class LocationDistrictTests(TestCase):
+class LocationDistrictTests(LocationSetupMixin, TestCase):
 
     fixtures = ['location_levels.json', 'contact_types.json']
 
     def setUp(self):
+        super(LocationDistrictTests, self).setUp()
         self.domino_region = create_location_region()
         self.domino_district = create_location_district(self.domino_region)
 
@@ -251,11 +260,12 @@ class LocationDistrictTests(TestCase):
         self.assertNotIn(self.district_location, self.region_location.children.all())
 
 
-class LocationStore(TestCase):
+class LocationStoreTests(LocationSetupMixin, TestCase):
 
     fixtures = ['location_levels.json', 'contact_types.json']
 
     def setUp(self):
+        super(LocationStoreTests, self).setUp()
         self.domino_region = create_location_region()
         self.domino_district = create_location_district(self.domino_region)
         self.domino_store = create_location_store(self.domino_district)

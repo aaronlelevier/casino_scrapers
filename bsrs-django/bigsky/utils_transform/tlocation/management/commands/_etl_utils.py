@@ -3,8 +3,7 @@ logger = logging.getLogger(__name__)
 
 from contact.models import (State, Country, PhoneNumber, PhoneNumberType,
     Email, EmailType, Address, AddressType)
-from location.models import Location
-from utils_transform.tlocation.models import LOCATION_REGION, LOCATION_DISTRICT
+from location.models import Location, LOCATION_REGION, LOCATION_DISTRICT
 
 
 def create_phone_numbers(domino_location, related_instance):

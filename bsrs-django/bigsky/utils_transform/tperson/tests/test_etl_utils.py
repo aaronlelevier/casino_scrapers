@@ -7,15 +7,16 @@ from model_mommy import mommy
 
 from contact.models import PhoneNumber, Email
 from contact.tests.factory import create_phone_number_type, create_email_type
-from location.models import Location, LocationLevel, LOCATION_COMPANY, LOCATION_REGION
+from location.models import (Location, LocationStatus, LocationType, LocationLevel,
+    LOCATION_COMPANY, LOCATION_REGION)
 from location.tests.factory import create_location_level
 from person.models import Role, Person, PersonStatus
 from person.tests.factory import create_single_person, create_person_status, create_role
 from utils.create import LOREM_IPSUM_WORDS, _generate_chars
+from utils.tests.test_helpers import create_default
 from utils_transform.tperson.management.commands._etl_utils import (create_phone_numbers,
     create_email, create_person, run_person_migrations, top_level_with_locations,
-    non_top_level_with_no_locations, get_person_status, shorten_strings,
-    log_top_level_with_locations)
+    non_top_level_with_no_locations, get_person_status, shorten_strings)
 from utils_transform.tperson.models import DominoPerson
 from utils_transform.tperson.tests.factory import create_domino_person
 
@@ -111,6 +112,8 @@ class CreatePersonTests(TestCase):
         create_phone_number_type(name='admin.phonenumbertype.telephone')
         create_email_type(name='admin.emailtype.personal')
         create_email_type(name='admin.emailtype.sms')
+        create_default(LocationStatus)
+        create_default(LocationType)
         company_location = Location.objects.create_top_level()
         create_role(name='Internal Audit', location_level=company_location.location_level, category=None)
 

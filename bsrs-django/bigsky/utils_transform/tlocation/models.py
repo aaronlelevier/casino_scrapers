@@ -1,8 +1,5 @@
 from django.db import models
 
-from location.models import (LOCATION_COMPANY, LOCATION_REGION, LOCATION_DISTRICT,
-    LOCATION_STORE, LOCATION_FMU,)
-
 
 class LocationRegion(models.Model):
     number = models.TextField()
