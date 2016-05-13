@@ -308,9 +308,11 @@ class Location(SelfRefrencingBaseModel, BaseModel):
         return "{}: {}".format(self.name, self.location_level.name)
 
     def save(self, *args, **kwargs):
+        self._update_defaults()
+        return super(Location, self).save(*args, **kwargs)
+
+    def _update_defaults(self):
         if not self.status:
             self.status = LocationStatus.objects.default()
         if not self.type:
             self.type = LocationType.objects.default()
-
-        return super(Location, self).save(*args, **kwargs)

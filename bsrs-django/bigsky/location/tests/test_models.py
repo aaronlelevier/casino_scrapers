@@ -5,9 +5,10 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from location.tests.factory import create_location, create_locations
-from location.models import (LocationLevel, LocationStatus, LocationType, Location,
+from location.models import (
+    LocationManager, LocationLevel, LocationStatus, LocationType, Location,
     LOCATION_COMPANY, LOCATION_REGION, LOCATION_FMU, LOCATION_STORE,)
+from location.tests.factory import create_location, create_locations
 from person.tests.factory import create_single_person
 from utils.models import DefaultNameManager
 from utils.tests.test_helpers import create_default
@@ -266,9 +267,26 @@ class LocationManagerTests(TestCase):
 
 class LocationTests(TestCase):
 
-    def test_joins_n_create(self):
-        l = create_location()
-        self.assertIsInstance(l, Location)
-        self.assertIsInstance(l.location_level, LocationLevel)
-        self.assertIsInstance(l.status, LocationStatus)
-        self.assertIsInstance(l.type, LocationType)
+    def setUp(self):
+        self.location = create_location()
+
+    def test_manager(self):
+        self.assertIsInstance(Location.objects, LocationManager)
+
+    def test_meta__ordering(self):
+        self.assertEqual(Location._meta.ordering, ("name", "number",))
+
+    def test_str(self):
+        self.assertEqual(
+            str(self.location),
+            "{}: {}".format(self.location.name, self.location.location_level.name)
+        )
+
+    def test_update_defaults(self):
+        self.location.status = None
+        self.location.type = None
+
+        self.location._update_defaults()
+
+        self.assertEqual(self.location.status, LocationStatus.objects.default())
+        self.assertEqual(self.location.type, LocationType.objects.default())
