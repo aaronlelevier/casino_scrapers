@@ -102,7 +102,7 @@ DATABASES = {
         'NAME': 'ci',
         'USER': 'bsdev',
         'PASSWORD': 'tango',
-        'HOST': 'localhost',
+        'HOST': os.environ.get('DATABASE_HOST', 'localhost'),
         'PORT': '5432',
     }
 }

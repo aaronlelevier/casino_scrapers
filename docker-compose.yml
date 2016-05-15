@@ -14,12 +14,11 @@ services:
 
   django:  
     build: 
-      context: .
-      dockerfile: ./bsrs-django/Dockerfile
+      context: ./bsrs-django
+      dockerfile: ./docker/dev/Dockerfile
     environment:
-      - DATABASE_HOST=postgres
-    command: [bash, -c, "sleep 3 && python bsrs-django/bigsky/manage.py collectstatic --noinput && python bsrs-django/bigsky/manage.py migrate && bash /scripts/_load_fixtures.sh"]
-    # entrypoint: ./entrypoint.sh
+      DJANGO_SETTINGS_MODULE: bigsky.settings.ci
+      DATABASE_HOST: postgres
     volumes:
       - .:/www/src/bsrs-django
     expose:
