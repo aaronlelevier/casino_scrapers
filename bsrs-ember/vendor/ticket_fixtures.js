@@ -90,14 +90,6 @@ var BSRS_TICKET_FACTORY = (function() {
           description: this.dtd_defaults.descriptionTwo,
           prompt: this.dtd_defaults.promptOne,
           note: this.dtd_defaults.noteOne,
-          fields: [{
-            id: this.field_defaults.idOne,
-            value: '',
-            options: [{
-              id: this.option_defaults.idOne,
-              value: ''
-            }]
-          }]
         }
       }],
     }

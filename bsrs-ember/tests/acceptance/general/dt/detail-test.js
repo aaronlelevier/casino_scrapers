@@ -385,7 +385,7 @@ test('will show breadcrumbs if note present', async assert => {
   assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.noteOne));
 });
 
-test('visit 1 url, go back to 0, then go back to 1 url after updating some info', async assert => {
+test('scott visit 1 url, go back to 0, then go back to 1 url after updating some info', async assert => {
   //DTD idOne
   let detail_data = DTF.detailWithAllFields(DT.idOne);
   //DTD.idThree in dt_path should have fields and options if value was set 
@@ -408,15 +408,14 @@ test('visit 1 url, go back to 0, then go back to 1 url after updating some info'
   const field = store.find('field', FD.idOne);
   assert.equal(field.get('displayValue')['dtd_id'], DT.idThree);
   assert.equal(field.get('displayValue')['value'], 'filled in field');
-  const option = store.find('option', OD.idOne);
-  assert.equal(option.get('displayValue')['dtd_id'], DT.idThree);
-  assert.ok(option.get('displayValue')['value']);
+  // const option = store.find('option', OD.idOne);
+  // assert.equal(option.get('displayValue')['dtd_id'], DT.idThree);
+  // assert.ok(option.get('displayValue')['value']);
 
-
-  //click checkbox on DTD.idOne
-  // assert.notOk(dtPage.fieldOneCheckboxIsChecked());
-  // await dtPage.fieldOneCheckboxCheck();
-  // assert.ok(dtPage.fieldOneCheckboxIsChecked());
+  // click checkbox on DTD.idOne
+  assert.notOk(dtPage.fieldOneCheckboxIsChecked());
+  await dtPage.fieldOneCheckboxCheck();
+  assert.ok(dtPage.fieldOneCheckboxIsChecked());
 
   //DTD previous data with an extra link
   const detail_data_3 = DTF.detailWithAllFields(DT.idThree);
@@ -436,10 +435,10 @@ test('visit 1 url, go back to 0, then go back to 1 url after updating some info'
   //snapshot with idOne not in there yet but checkbox for 'no' on idThree is checked
   assert.equal(updated_ticket.get('dt_path').length, 1);
   assert.equal(updated_ticket.get('dt_path')[0]['ticket']['priority'], LINK.priorityTwo);
-  ////TODO: this will be updated when uncheck 'no'
-  //assert.equal(updated_ticket.get('dt_path')[0]['ticket']['request'], `name: ${OD.textTwo}`);
-  //assert.equal(updated_ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
-  //assert.ok(dtPage.fieldOneCheckboxIsChecked());
+  //TODO: this will be updated when uncheck 'no'
+  assert.equal(updated_ticket.get('dt_path')[0]['ticket']['request'], `name: ${OD.textTwo}`);
+  assert.equal(updated_ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
+  // assert.ok(dtPage.fieldOneCheckboxIsChecked());
 
   ////Go back to idOne which should have checkbox still checked
   //let dtd_payload = DTF.generate(DT.idOne);

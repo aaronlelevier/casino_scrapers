@@ -2,12 +2,15 @@ var dtPathMunge = function(ticket, dtd, fieldsObj, simpleStore) {
   let dt_path = ticket.get('dt_path') || [];
   const dtd_ids = dt_path.mapBy('dtd.id');
   const indx = dtd_ids.indexOf(dtd.get('id'));
-  // build fields array
+  // build fields array && build options array
   let fields = [];
   for (let obj of fieldsObj) {
     fields.push({id: obj[0], value: obj[1].value});
+    //options id array that is used on init to set isChecked property.  presence of id indicates the value is checked
+    if (obj.optionValues) {
+      fields['options'] =  obj.optionValues;
+    }
   }
-  // build options array
   const new_ticket = {
     id: ticket.get('id'),
     requester: ticket.get('requester'),

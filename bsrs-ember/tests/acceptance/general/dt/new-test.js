@@ -76,7 +76,7 @@ test('go to /dashboard, click button to get to /dt/new', assert => {
 
 /* jshint ignore:start */
 
-test('scott has_multi_locations === true, can POST data with multiple options, and transition to /dt/{start-id}', async assert => {
+test('has_multi_locations === true, can POST data with multiple options, and transition to /dt/{start-id}', async assert => {
   await visit(DT_NEW_URL);
   assert.equal(currentURL(), DT_NEW_URL);
   assert.equal(dtPage.requester, '');

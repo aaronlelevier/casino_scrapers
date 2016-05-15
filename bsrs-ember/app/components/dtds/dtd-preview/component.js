@@ -29,6 +29,7 @@ export default Ember.Component.extend({
     }
     fields.forEach((field) => {
       const field_id = field.get('id');
+      //TODO: need to incldue option values in here
       fieldsObj.set(field_id, { label: field.get('label'), num: 1, value: '', required: field.get('required') });
     }); 
     const fields_ids = fields.mapBy('id');
@@ -43,18 +44,16 @@ export default Ember.Component.extend({
           //displayValue needs to be associated with certain dtd, because might use same field in different dtd
           store.push('field', { id: _id, displayValue: {dtd_id: dt_obj['dtd']['id'], value: dt_field.value} });
         }
-        // options - set displayValue
+        // options - set displayValue if field object has options and dt_path has options w/ same id
         const field = store.find('field', dt_field.id);
         const options_ids = field.get('options').map((option) => {
           return option.get('id');
         }) || [];
-        dt_field['options'] && dt_field['options'].forEach((dt_option) => {
-          const _id = dt_option.id;
-          if (options_ids.includes(_id)) {
+        dt_field['options'] && dt_field['options'].forEach((dt_option_id) => {
+          if (options_ids.includes(dt_option_id)) {
             const store = this.get('simpleStore');
-            const option = store.find('option', {id: _id});
-            //TODO: isChecked or displayValue necessary?
-            store.push('option', { id: _id, isChecked: true, displayValue: {dtd_id: dt_obj['dtd']['id'], value: dt_option.value} });
+            const option = store.find('option', {id: dt_option_id});
+            store.push('option', { id: dt_option_id, isChecked: true });
           }
         });
       });
@@ -126,6 +125,7 @@ export default Ember.Component.extend({
    * sets key, value in fieldsObj (Map)
    * updateRequest sent to controller to update ticket.requestValues based on 'label:value'
    * optionValues: [] - fields may have multiple options that need to be included in value field.
+   * "yes", "", "no", "yes" --> "label: no, yes"
    * @param {string} id
    * @param {number} num  0 (fullfilled) or 1 (unfullfilled)
    */
@@ -133,13 +133,18 @@ export default Ember.Component.extend({
     let fieldsObj = this.get('fieldsObj');
     const fieldObj = fieldsObj.get(field.get('id'));
     const optionValues = fieldObj.optionValues || [];
-    const indx = optionValues.indexOf(value);
-    if (indx > -1) {
+    const indx = optionValues.indexOf(option.get('id'));
+    if (indx > -1 && !value) {
       optionValues.splice(indx, 1);
     } else {
       optionValues.push(value);
     }
-    fieldsObj.set(field.get('id'), { num: num, value: optionValues.join(', '), label: field.get('label'), required: field.get('required'), optionValues: optionValues });
+    const store = this.get('simpleStore');
+    const fieldValue = optionValues.reduce((prev, opt) => {
+      const option = store.find('option', opt.id);
+      return prev += ', ' + option.text;
+    }, '');
+    fieldsObj.set(field.get('id'), { num: num, value: fieldValue, label: field.get('label'), required: field.get('required'), optionValues: optionValues });
     this.attrs.updateRequest(fieldsObj, ticket);
   },
   actions: {
