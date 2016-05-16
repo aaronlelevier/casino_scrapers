@@ -13,9 +13,9 @@ ENV TERM=xterm-256color
 RUN apt-get update && \
     apt-get install -y \
     -o APT::Install-Recommend=false -o APT::Install-Suggests=false \
-    python python-virtualenv
+    python3.4-venv
 
-RUN virtualenv /appenv && \
+RUN python3 -m venv /appenv && \
     . /appenv/bin/activate && \
     pip install pip --upgrade
 

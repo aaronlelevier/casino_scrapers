@@ -12,9 +12,14 @@ MAINTAINER Scott Newcomer
 
 # run tests && build application artifacts
 #compile python pkg dependencies.  python-dev builds python pkgs from source
+#needed to install postgresql and psycopg2 otherwise test run had values as unicode
 
 RUN apt-get update && \
-    apt-get install -qy -y python3-dev python-dev git
+    apt-get install -qy -y \ 
+    python3-dev python-dev \
+    git \
+    postgresql python-psycopg2 \
+    libpq-dev libevent-dev libjpeg-dev libfreetype6-dev zlib1g-dev
 
 RUN . /appenv/bin/activate && \
     pip install wheel --upgrade
