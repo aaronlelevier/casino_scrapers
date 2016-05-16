@@ -1,8 +1,9 @@
 import re
 
-from rest_framework.exceptions import ValidationError
-
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.contenttypes.models import ContentType
+
+from rest_framework.exceptions import ValidationError
 
 
 class UniqueForActiveValidator(object):
@@ -71,8 +72,10 @@ class SettingsValidator(object):
                 else:
                     value = self.get_value(new_value)
                     type_str = default_settings[k]['type']
+                    related_model = default_settings[k].get('related_model', None)
 
-                    error = self.validate_new_value(value, new_value, type_str)
+                    error = self.validate_new_value(value, new_value, type_str=type_str,
+                                                    related_model=related_model)
                     if error:
                         errors[k] = error
             else:
@@ -86,11 +89,16 @@ class SettingsValidator(object):
         except TypeError:
             return v
 
-    def validate_new_value(self, value, new_value, type_str):
+    def validate_new_value(self, value, new_value, **kwargs):
+        type_str = kwargs.get('type_str')
+
         if type_str == 'email':
             return self.validate_email(value)
         elif type_str == 'phone':
             return self.validate_phone(value)
+        elif type_str == 'foreignkey':
+            related_model = kwargs.get('related_model')
+            return self.validate_foreignkey(value, related_model)
         else:
             required_type = self.get_required_type(type_str)
             if not isinstance(value, required_type):
@@ -103,6 +111,18 @@ class SettingsValidator(object):
     def validate_phone(self, phone):
         if not valid_phone(phone):
             return _('{} is not a valid phone'.format(phone))
+
+    def validate_foreignkey(self, fk, related_model):
+        """
+        :related_model: (app_label, model)
+        """
+        app_label = related_model[0]
+        model = related_model[1]
+        currency = ContentType.objects.get(app_label=app_label, model=model)
+        klass = currency.model_class()
+        if not klass.objects.filter(id=fk).exists():
+            return _('{} is not a valid foreignkey for {}.{}'
+                     .format(fk, app_label, model))
 
     @staticmethod
     def get_required_type(t):

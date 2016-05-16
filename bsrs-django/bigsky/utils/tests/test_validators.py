@@ -1,4 +1,5 @@
 import json
+import uuid
 
 from django.test import TestCase
 
@@ -9,6 +10,7 @@ from location.models import Location
 from location.serializers import LocationUpdateSerializer
 from person.serializers import RoleUpdateSerializer
 from person.tests.factory import create_person, create_single_person, PASSWORD
+from setting.tests.factory import create_general_setting
 from utils.validators import (regex_check_contains, contains_digit, contains_upper_char,
     contains_lower_char, contains_special_char, contains_no_whitespaces,
     SettingsValidator, valid_email, valid_phone,)
@@ -55,6 +57,7 @@ class SettingsValidatorTests(APITestCase):
         self.person = create_single_person()
         self.role = self.person.role
         # Settings
+        create_general_setting()
         serializer = RoleUpdateSerializer(self.role)
         self.data = serializer.data
         self.error_message = SettingsValidator.message
@@ -88,6 +91,20 @@ class SettingsValidatorTests(APITestCase):
         self.assertEqual(
             json.loads(response.content.decode('utf8'))['test_contractor_phone'],
             ['{} is not a valid phone'.format(phone)]
+        )
+
+    def test_valid_foreignkey(self):
+        foreignkey = str(uuid.uuid4())
+        self.data["settings"]["auth_currency"] = {'value': foreignkey}
+
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        # TODO: should this return the related model name in the error msg?
+        self.assertEqual(
+            json.loads(response.content.decode('utf8'))['auth_currency'],
+            ['{} is not a valid foreignkey for accounting.currency'.format(foreignkey)]
         )
 
     def test_valid__builtins(self):
