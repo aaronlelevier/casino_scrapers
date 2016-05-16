@@ -62,7 +62,7 @@ class CreateRoleTests(TestCase):
         init_count = Role.objects.count()
         role = factory.create_role()
         self.assertIsInstance(role, Role)
-        self.assertIsInstance(role.default_auth_currency, Currency)
+        self.assertIsInstance(role.auth_currency, Currency)
         self.assertEqual(init_count+1, Role.objects.count())
         self.assertEqual(role.location_level.name, LOCATION_REGION)
 

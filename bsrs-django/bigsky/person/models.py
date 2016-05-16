@@ -78,9 +78,9 @@ class Role(SettingMixin, BaseModel):
     default_accept_notify = models.BooleanField(blank=True, default=True)
     accept_notify = models.BooleanField(blank=True, default=False)
     # Auth Amounts
-    default_auth_amount = models.DecimalField(
+    auth_amount = models.DecimalField(
         max_digits=15, decimal_places=4, blank=True, default=0)
-    default_auth_currency = models.ForeignKey(Currency, blank=True, null=True)
+    auth_currency = models.ForeignKey(Currency, blank=True, null=True)
     # Approvals
     allow_approval = models.BooleanField(blank=True, default=False)
     proxy_approval_bypass = models.BooleanField(blank=True, default=False)
@@ -153,8 +153,8 @@ class Role(SettingMixin, BaseModel):
             except IntegrityError:
                 raise
 
-        if not self.default_auth_currency:
-            self.default_auth_currency = Currency.objects.default()
+        if not self.auth_currency:
+            self.auth_currency = Currency.objects.default()
 
         if not self.settings:
             self.settings = copy.copy(DEFAULT_ROLE_SETTINGS)
@@ -461,9 +461,9 @@ class Person(BaseModel, AbstractUser):
         if not self.status:
             self.status = PersonStatus.objects.default()
         if not self.auth_amount:
-            self.auth_amount = self.role.default_auth_amount
+            self.auth_amount = self.role.auth_amount
         if not self.auth_currency:
-            self.auth_currency = self.role.default_auth_currency
+            self.auth_currency = self.role.auth_currency
         if not self.locale:
             self.locale = Locale.objects.system_default()
         if not self.password_expire_date:

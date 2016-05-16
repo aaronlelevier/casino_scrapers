@@ -249,15 +249,15 @@ class PersonTests(TestCase):
         self.person._update_defaults()
 
         self.assertEqual(self.person.status, self.person_default_status)
-        self.assertEqual(self.person.auth_amount, self.person.role.default_auth_amount)
-        self.assertEqual(self.person.auth_currency, self.person.role.default_auth_currency)
+        self.assertEqual(self.person.auth_amount, self.person.role.auth_amount)
+        self.assertEqual(self.person.auth_currency, self.person.role.auth_currency)
         self.assertEqual(self.person.locale, Locale.objects.system_default())
         self.assertIsNotNone(self.person.password_expire_date)
         self.assertEqual(self.person.fullname, self.person.get_full_name())
 
     def test_update_defaults__not_defaulted_if_value(self):
         status = mommy.make(PersonStatus)
-        auth_amount = mommy.make(Role).default_auth_amount
+        auth_amount = mommy.make(Role).auth_amount
         auth_currency = Currency.objects.default()
         locale = mommy.make(Locale)
         today = localtime(now()).date
