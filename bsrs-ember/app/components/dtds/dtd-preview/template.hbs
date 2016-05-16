@@ -31,7 +31,7 @@
           {{#if model.fields}}
             {{#each model.fields as |field|}}
               <div class="t-dtd-preview-field">
-                {{dtds/field-element-display field=field ticket=ticket}}
+                {{dtds/field-element-display field=field ticket=ticket model_id=model.id}}
               </div>
             {{/each}}
           {{/if}}
