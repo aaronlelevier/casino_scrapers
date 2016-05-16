@@ -9,6 +9,8 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
 from model_mommy import mommy
 
+from accounting.models import Currency
+from accounting.tests.factory import create_currencies
 from category.models import Category
 from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
@@ -208,6 +210,24 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         self.assertIsNone(data['settings']['welcome_text']['value'])
         self.assertEqual(data['settings']['welcome_text']['inherited_value'], raw_data['settings']['welcome_text'])
         self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
+
+    def test_update__auth_currency(self):
+        role = create_role()
+        serializer = RoleCreateSerializer(role)
+        raw_data = serializer.data
+        create_currencies()
+        other_currency = Currency.objects.exclude(id=role.auth_currency.id).first()
+        raw_data['settings'] = {'auth_currency': str(other_currency.id)}
+        # detail
+        response = self.client.get('/api/admin/roles/{}/'.format(role.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings']['auth_currency']['value'], str(role.auth_currency.id))
+
+        response = self.client.put('/api/admin/roles/{}/'.format(role.id), raw_data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings']['auth_currency']['value'], raw_data['settings']['auth_currency'])
 
 
 ### PERSON ###

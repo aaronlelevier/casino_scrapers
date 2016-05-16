@@ -1,8 +1,6 @@
 from django.test import TestCase
 from django.utils.text import capfirst
 
-from model_mommy import mommy
-
 from accounting.models import Currency, CurrencyManager, DEFAULT_CURRENCY
 
 

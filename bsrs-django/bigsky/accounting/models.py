@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import capfirst
 
+from utils.helpers import generate_uuid
 from utils.fields import UpperCaseCharField
 from utils.models import BaseModel, BaseManager
 
@@ -17,8 +18,11 @@ DEFAULT_CURRENCY = {
 class CurrencyManager(BaseManager):
 
     def default(self):
-        obj, _ = self.get_or_create(**DEFAULT_CURRENCY)
-        return obj
+        try:
+            return self.get(code=DEFAULT_CURRENCY['code'])
+        except Currency.DoesNotExist:
+            DEFAULT_CURRENCY['id'] = generate_uuid(Currency)
+            return self.create(**DEFAULT_CURRENCY)
 
 
 class Currency(BaseModel):
