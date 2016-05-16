@@ -23,62 +23,57 @@ export default Ember.Component.extend({
      * Need to setup a computed property everytime the model.id changes
      */
     this._super(...arguments);
-    Ember.defineProperty(this, 'fieldsObj', Ember.computed(function() {
-      const dt_id = this.get('model').get('id');
-      const fields = this.get('model.fields');
-      const existing_ticket_request = this.get('ticket.request');
-      const dt_path = this.get('ticket.dt_path');
-      const fieldsObj = new Map(); 
-      if (existing_ticket_request) {
-        //this covers existing fields and options values
-        //TODO: what if label is the different?
-        //TODO: what if existing_ticket_request_value gets mutated by user going back? No way to find it via the field.id, thus lives in fieldObjs forever
-        //'name: yes, age: no'
-        const request_label = existing_ticket_request.split(/[:]/)[0];
-        let request_value = existing_ticket_request.match(/:(.*),?/);
-        if (request_value) {
-          request_value = request_value && request_value[1].trim();
-          request_value = request_value.replace(`${request_label}:`, '').trim();
-        }
-        if (request_label) {
-          console.log('label: ', request_label, 'request_value: ', request_value, 'request', existing_ticket_request);
-          fieldsObj.set(this.get('uuid').v4(), { label: request_value ? request_label : '', num: 0, value: request_value || request_label });
-        }
-      }
-      fields.forEach((field) => {
-        const field_id = field.get('id');
-        const optionValues = field.get('options').map((option) => {
-          return option.get('id');
-        });
-        fieldsObj.set(field_id, { label: field.get('label'), num: 1, value: '', required: field.get('required'), optionValues: optionValues });
-      }); 
-      const fields_ids = fields.mapBy('id');
-      /* jshint ignore:start */
-      dt_path && dt_path.forEach((dt_obj) => {
-        // fields - set displayValue
-        dt_obj['dtd']['fields'] && dt_obj['dtd']['fields'].forEach((dt_field) => {
-          const _id = dt_field.id;
-          const store = this.get('simpleStore');
-          // if (fields_ids.includes(_id)) {
-            const field = store.find('field', {id: _id});
-            //displayValue needs to be associated with certain dtd, because might use same field in different dtd
-            store.push('field', { id: _id, displayValue: {dtd_id: dt_obj['dtd']['id'], value: dt_field.value} });
-          // }
-          // options - set displayValue if field object has options and dt_path has options w/ same id
-          // const options_ids = field.get('options').map((option) => {
-          //   return option.get('id');
-          // }) || [];
-          dt_field['options'] && dt_field['options'].forEach((dt_option_id) => {
-            // if (options_ids.includes(dt_option_id)) {
-              const option = store.find('option', {id: dt_option_id});
-              store.push('option', { id: dt_option_id, isCheckedObj: {dtd_id: dt_obj['dtd']['id'], value: true} });
-            // }
-          });
-        });
+    const dt_id = this.get('model').get('id');
+    const fields = this.get('model.fields');
+    const existing_ticket_request = this.get('ticket.request');
+    const dt_path = this.get('ticket.dt_path');
+    const fieldsObj = this.get('fieldsObj') || new Map(); 
+    if (existing_ticket_request) {
+      //this covers existing fields and options values
+      //TODO: what if label is the different?
+      //TODO: what if existing_ticket_request_value gets mutated by user going back? No way to find it via the field.id, thus lives in fieldObjs forever
+      //'name: yes, age: no'
+      // const request_label = existing_ticket_request.split(/[:]/)[0];
+      // let request_value = existing_ticket_request.match(/:(.*),?/);
+      // if (request_value) {
+      //   request_value = request_value && request_value[1].trim();
+      //   request_value = request_value.replace(`${request_label}:`, '').trim();
+      // }
+      // if (request_label) {
+      //   console.log('label: ', request_label, 'request_value: ', request_value, 'request', existing_ticket_request);
+      //   fieldsObj.set(this.get('uuid').v4(), { label: request_value ? request_label : '', num: 0, value: request_value || request_label });
+      // }
+    }
+    //Initial Map() setup
+    fields.forEach((field) => {
+      const field_id = field.get('id');
+      const optionValues = field.get('options').map((option) => {
+        return option.get('id');
       });
-      /* jshint ignore:end */
-      return fieldsObj;
-    }).property('model.id'));
+      fieldsObj.set(field_id, { label: field.get('label'), num: 1, value: '', required: field.get('required'), optionValues: optionValues });
+    }); 
+    /* jshint ignore:start */
+    dt_path && dt_path.forEach((dt_obj) => {
+      // fields && options - set displayValue and isChecked
+      dt_obj['dtd']['fields'] && dt_obj['dtd']['fields'].forEach((dt_field) => {
+        const _id = dt_field.id;
+        const store = this.get('simpleStore');
+
+        const field = store.find('field', {id: _id});
+        store.push('field', { id: _id, displayValue: dt_field.value });
+
+        const dtOptionValues = [];
+        dt_field['options'] && dt_field['options'].forEach((dt_option_id) => {
+          const option = store.find('option', {id: dt_option_id});
+          store.push('option', { id: dt_option_id, isChecked: true });
+          dtOptionValues.push(dt_option_id);
+        });
+        //Old Map() setup from (dt_path)
+        fieldsObj.set(_id, { label: dt_field.label, num: 0, value: dt_field.value, required: dt_field.required, optionValues: dt_field['options'] });
+      });
+    });
+    /* jshint ignore:end */
+    defineProperty(this, 'fieldsObj', undefined, fieldsObj);
   },
   /*
    * @method willDestroy
@@ -157,7 +152,6 @@ export default Ember.Component.extend({
       return prev += ` ${option.get('text')}`;
     }, '');
     fieldValue = fieldValue.trim().replace(/\s+/g, ', ');
-    console.log('component', field.get('id'), 'label: ' + field.get('label'), 'value: ' + value);
     fieldsObj.set(field.get('id'), { num: num, value: fieldValue, label: field.get('label'), required: field.get('required'), optionValues: optionValues });
     this.attrs.updateRequest(fieldsObj, ticket);
   },

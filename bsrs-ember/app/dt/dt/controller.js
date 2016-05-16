@@ -19,14 +19,12 @@ export default Ember.Controller.extend({
       let requestValues = [];
       const objs = fieldsObj.values();
       for (var obj of objs) {
-        console.log('controller', 'label: ' + obj.label, 'value: ' + obj.value);
         if(obj.label && obj.value) {
           requestValues.push(`${obj.label}: ${obj.value}`);
         } else if (obj.value) {
           requestValues.push(obj.value);
         }
       }
-      console.log('updateRequest: ', requestValues.join(', '));
       this.get('simpleStore').push('ticket', {id: ticket.get('id'), request: requestValues.join(', '), requestValues: requestValues});
     },
     /*

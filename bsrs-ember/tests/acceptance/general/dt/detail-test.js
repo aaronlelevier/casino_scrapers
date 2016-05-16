@@ -51,7 +51,7 @@ module('Acceptance | dt detail', {
      * dt_path is previous state of ticket && dtd state
      * returned_ticket is the ticket w/ the dt_path, which will be different and is returned on a get requests
      * all tests are assuming deep linking (i.e. clicking from ticket detail)
-     * dt_path dtd has idThree by chance.  Just need to give it something
+     * dt_path dtd has idThree
      */
     const ticket = {
       id: TD.idOne,
@@ -66,7 +66,10 @@ module('Acceptance | dt detail', {
     dt_path = [{
       ticket,
       dtd: {
-        id: DT.idThree
+        id: DT.idThree,
+        fields: [
+          { id: FD.idRandom, label: '', value: TD.requestOne, required: true }
+        ]
       }
     }];
     returned_ticket = TF.detail(TD.idOne, null, dt_path);
@@ -93,8 +96,8 @@ test('decision tree displays data and can click to next destination after updati
   assert.notOk(find('.t-dtd-preview-btn').attr('disabled'));
   const ticket = store.find('ticket', TD.idOne);
   const checkbox_ticket_value = `${FD.labelOne}: ${OD.textOne}`
-  const requestValue = `${TD.requestOne}, ${checkbox_ticket_value}`;
-  assert.deepEqual(ticket.get('requestValues'), [TD.requestOne, checkbox_ticket_value]);
+  const requestValue = `${checkbox_ticket_value}, ${TD.requestOne}`;
+  assert.deepEqual(ticket.get('requestValues'), [checkbox_ticket_value, TD.requestOne]);
   assert.equal(ticket.get('request'), requestValue);
   assert.equal(ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
   assert.equal(ticket.get('dt_path')[0]['ticket']['request'], undefined);
@@ -130,7 +133,7 @@ test('updating field text (patch ticket)', async assert => {
   const LETTER_W = {keyCode: 87};
   await triggerEvent('.t-dtd-field-text:eq(0)', 'keyup', LETTER_W);
   const ticket = store.find('ticket', TD.idOne);
-  const requestValue = `${TD.requestOne}, ${FD.labelOne}: wat`;
+  const requestValue = `${FD.labelOne}: wat, ${TD.requestOne}`;
   assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
   assert.equal(dtd.get('fields').objectAt(0).get('type'), FD.typeOne);
   let dtd_payload = DTF.generate(DT.idTwo);
@@ -152,7 +155,7 @@ test('updating field text no label (patch ticket)', async assert => {
   const LETTER_W = {keyCode: 87};
   await triggerEvent('.t-dtd-field-text:eq(0)', 'keyup', LETTER_W);
   const ticket = store.find('ticket', TD.idOne);
-  const requestValue = `${TD.requestOne}, wat`;
+  const requestValue = `wat, ${TD.requestOne}`;
   assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
   assert.equal(dtd.get('fields').objectAt(0).get('type'), FD.typeOne);
   let dtd_payload = DTF.generate(DT.idTwo);
@@ -174,7 +177,7 @@ test('updating field number (patch ticket)', async assert => {
   const NUMBER = {keyCode: 57};
   await triggerEvent('.t-dtd-field-number:eq(0)', 'keyup', NUMBER);
   const ticket = store.find('ticket', TD.idOne);
-  const requestValue = `${TD.requestOne}, ${FD.labelTwo}: 92`;
+  const requestValue = `${FD.labelTwo}: 92, ${TD.requestOne}`;
   assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
   assert.equal(dtd.get('fields').objectAt(0).get('type'), FD.typeTwo);
   let dtd_payload = DTF.generate(DT.idTwo);
@@ -196,7 +199,7 @@ test('updating field textarea (patch ticket)', async assert => {
   const LETTER_W = {keyCode: 87};
   await triggerEvent('.t-dtd-field-textarea:eq(0)', 'keyup', LETTER_W);
   const ticket = store.find('ticket', TD.idOne);
-  const requestValue = `${TD.requestOne}, ${FD.labelThree}: wat`;
+  const requestValue = `${FD.labelThree}: wat, ${TD.requestOne}`;
   assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
   assert.equal(dtd.get('fields').objectAt(0).get('type'), FD.typeThree);
   let dtd_payload = DTF.generate(DT.idTwo);
@@ -217,7 +220,7 @@ test('updating field select (patch ticket)', async assert => {
   await page.selectClickDropdown()
     .selectOneOption();
   const ticket = store.find('ticket', TD.idOne);
-  const requestValue = `${TD.requestOne}, ${FD.labelFour}: ${OD.textOne}`;
+  const requestValue = `${FD.labelFour}: ${OD.textOne}, ${TD.requestOne}`;
   assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
   assert.equal(dtd.get('fields').objectAt(0).get('type'), FD.typeFour);
   assert.equal(page.selectOneValue, OD.textOne);
@@ -251,7 +254,7 @@ test('can\'t click to next destination if field is required (patch ticket)', asy
   assert.equal(dtd.get('fields').objectAt(0).get('type'), FD.typeThree);
   let dtd_payload = DTF.generate(DT.idTwo);
   const link = dtd.get('links').objectAt(0);
-  const requestValue = `${TD.requestOne}, ${FD.labelThree}: wats`;
+  const requestValue = `${FD.labelThree}: wats, ${TD.requestOne}`;
   let ticket_payload = { id: TD.idOne, request: requestValue, priority: LINK.priorityOne, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id') };
   xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
   await page.clickNextBtn();
@@ -304,7 +307,7 @@ test('can click to next destination after updating multiple fields select (patch
   await fillIn('.t-dtd-field-text:eq(1)', 'sat');
   const LETTER_S = {keyCode: 83};
   await triggerEvent('.t-dtd-field-text:eq(1)', 'keyup', LETTER_W);
-  const requestValue = `${TD.requestOne}, ${FD.labelFour}: wat`, requestValueTwo = 'another: sat'; 
+  const requestValue = `${FD.labelFour}: wat`, requestValueTwo = `another: sat, ${TD.requestOne}`; 
   let dtd_payload = DTF.generate(DT.idTwo);
   const joinedRequest = `${requestValue}, ${requestValueTwo}`;
   const link = dtd.get('links').objectAt(0);
@@ -334,7 +337,7 @@ test('fill out: number, text, textarea, and select (patch ticket)', async assert
   await fillIn('.t-dtd-field-textarea:eq(0)', '123 St.');
   await triggerEvent('.t-dtd-field-textarea:eq(0)', 'keyup', LETTER_W);
   const ticket = store.find('ticket', TD.idOne);
-  const requestValue = `${TD.requestOne}, ${FD.labelOne}: yes, ${FD.labelFour}: wat, ${FD.labelTwo}: 92, ${FD.labelThree}: 123 St.`;
+  const requestValue = `${FD.labelOne}: yes, ${FD.labelFour}: wat, ${FD.labelTwo}: 92, ${FD.labelThree}: 123 St., ${TD.requestOne}`;
   assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
   assert.equal(dtd.get('fields').objectAt(0).get('type'), FD.typeSix);
   let dtd_payload = DTF.generate(DT.idTwo);
@@ -385,90 +388,82 @@ test('will show breadcrumbs if note present', async assert => {
   assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.noteOne));
 });
 
-//test('scott visit 1 url, go back to 0, then go back to 1 url after updating some info (same field)', async assert => {
-//  //DTD idOne
-//  let detail_data = DTF.detailWithAllFields(DT.idOne);
-//  //DT.idThree in dt_path should have fields and options if value was set 
-//  //DT.idThree has same fields and options as DT.idOne which presents a problem so only set isChecked and displayValue if current dtd id === id in dt_path, which means the user went backwards
-//  returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: DT.descriptionStart, fields: [{ id: FD.idOne, value: 'filled in field', options: [OD.idTwo] }] };
-//  returned_ticket.priority_fk = LINK.priorityTwo;
-//  returned_ticket.dt_path[0]['ticket']['priority'] = LINK.priorityTwo;
-//  returned_ticket.dt_path[0]['ticket']['request'] = `name: ${OD.textTwo}`;
-//  returned_ticket.request = `name: ${OD.textTwo}`;
+test('visit 1 url, go back to 0, then go back to 1 url after updating some info (same field)', async assert => {
+  //DTD idOne
+  let detail_data = DTF.detailWithAllFields(DT.idOne);
+  returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: DT.descriptionStart, fields: [{ id: FD.idTwo, label: FD.labelTwo, value: 23, required: true }] };
+  returned_ticket.priority_fk = LINK.priorityTwo;
+  returned_ticket.dt_path[0]['ticket']['priority'] = LINK.priorityTwo;
+  returned_ticket.dt_path[0]['ticket']['request'] = `${FD.labelTwo}: 23`;
+  returned_ticket.request = `${FD.labelTwo}: 23`;
 
-//  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
-//  await visit(DETAIL_URL);
-//  assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.descriptionStart));
+  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
+  await visit(DETAIL_URL);
+  assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.descriptionStart));
 
-//  //snapshot
-//  const updated_ticket = store.find('ticket', TD.idOne);
-//  assert.equal(updated_ticket.get('request'), `name: ${OD.textTwo}`);
-//  assert.equal(updated_ticket.get('dt_path').length, 1);
-//  assert.equal(updated_ticket.get('dt_path')[0]['ticket']['priority'], LINK.priorityTwo);
-//  assert.equal(updated_ticket.get('dt_path')[0]['ticket']['request'], `name: ${OD.textTwo}`);
-//  assert.equal(updated_ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
-//  //previous dtd stored values that get transformed to store field and option instances to display values if navigate back
-//  const field = store.find('field', FD.idOne);
-//  assert.equal(field.get('displayValue')['dtd_id'], DT.idThree);
-//  assert.equal(field.get('displayValue')['value'], 'filled in field');
-//  const option = store.find('option', OD.idTwo);
-//  assert.equal(option.get('isCheckedObj')['dtd_id'], DT.idThree);
-//  assert.equal(option.get('isCheckedObj')['value'], true);
+  // snapshot
+  const updated_ticket = store.find('ticket', TD.idOne);
+  assert.equal(updated_ticket.get('request'), `${FD.labelTwo}: 23`);
+  assert.equal(updated_ticket.get('dt_path').length, 1);
+  assert.equal(updated_ticket.get('dt_path')[0]['ticket']['priority'], LINK.priorityTwo);
+  assert.equal(updated_ticket.get('dt_path')[0]['ticket']['request'], `${FD.labelTwo}: 23`);
+  assert.equal(updated_ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
+  const field = store.find('field', FD.idTwo);
+  assert.equal(field.get('displayValue'), 23);
 
-//  // click checkbox off on DTD.idOne
-//  assert.notOk(dtPage.fieldOneCheckboxIsChecked());
-//  await dtPage.fieldOneCheckboxCheck();
-//  assert.ok(dtPage.fieldOneCheckboxIsChecked());
-//  assert.equal(updated_ticket.get('request'), `name: ${OD.textTwo}, name: ${OD.textOne}`);
+  // click checkbox on on DTD.idOne and should add OD.textOne to request field
+  assert.notOk(dtPage.fieldOneCheckboxIsChecked());
+  await dtPage.fieldOneCheckboxCheck();
+  assert.ok(dtPage.fieldOneCheckboxIsChecked());
+  assert.equal(updated_ticket.get('request'), `${FD.labelOne}: ${OD.textOne}, ${FD.labelTwo}: 23`);
 
-//  //DTD previous data with an extra link
-//  const detail_data_3 = DTF.detailWithAllFields(DT.idThree);
-//  detail_data_3.fields.splice(-3);
-//  detail_data_3.fields[0].options = [{id: OD.idTwo, text: OD.textTwo, order: OD.orderOne}];
-//  detail_data_3.links[0].text = LINK.textThree;
-//  detail_data_3.links[0].priority_fk = LINK.priorityTwo;
-//  detail_data_3.links[0].destination = {id: DT.idOne};
-//  detail_data_3.links.push({id: LINK.idTwo, text: 'wat', status_fk: LINK.statusTwo, priority_fk: LINK.priorityTwo});
-//  //Go back to idThree
-//  const endpoint_3 = `${PREFIX}${BASE_URL}/${DT.idThree}/ticket/?ticket=${TD.idOne}`;
-//  xhr(endpoint_3, 'GET', null, {}, 200, {dtd: detail_data_3, ticket: returned_ticket});
-//  assert.equal(currentURL(), DETAIL_URL);
-//  await click('.t-ticket-breadcrumb-back');
-//  assert.equal(currentURL(), DTD_THREE_URL);
+  // DTD previous data with an extra link
+  const detail_data_3 = DTF.detailWithAllFields(DT.idThree);
+  detail_data_3.fields = [{
+      id: FD.idTwo,
+      label: FD.labelTwo,
+      type: FD.typeTwo,
+      required: FD.requiredOne,
+      order: FD.orderOne,
+      options: []
+  }];
+  detail_data_3.links[0].text = LINK.textThree;
+  detail_data_3.links[0].priority_fk = LINK.priorityTwo;
+  detail_data_3.links[0].destination = {id: DT.idOne};
+  detail_data_3.links.push({id: LINK.idTwo, text: 'wat', status_fk: LINK.statusTwo, priority_fk: LINK.priorityTwo});
+  // Go back to idThree
+  const endpoint_3 = `${PREFIX}${BASE_URL}/${DT.idThree}/ticket/?ticket=${TD.idOne}`;
+  xhr(endpoint_3, 'GET', null, {}, 200, {dtd: detail_data_3, ticket: returned_ticket});
+  assert.equal(currentURL(), DETAIL_URL);
+  await click('.t-ticket-breadcrumb-back');
+  assert.equal(currentURL(), DTD_THREE_URL);
 
-//  //snapshot with idOne not in there yet but checkbox for 'no' on idThree is checked
-//  assert.equal(updated_ticket.get('dt_path').length, 1);
-//  assert.equal(updated_ticket.get('dt_path')[0]['ticket']['priority'], LINK.priorityTwo);
-//  //TODO: this will be updated when uncheck 'no'
-//  assert.equal(updated_ticket.get('request'), `name: ${OD.textTwo}, name: ${OD.textOne}`);
-//  assert.equal(updated_ticket.get('dt_path')[0]['ticket']['request'], `name: ${OD.textTwo}`);
-//  assert.equal(updated_ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
+  assert.equal(updated_ticket.get('dt_path').length, 1);
+  assert.equal(updated_ticket.get('dt_path')[0]['ticket']['priority'], LINK.priorityTwo);
+  assert.equal(updated_ticket.get('request'), `${FD.labelOne}: ${OD.textOne}, ${FD.labelTwo}: 23`);
+  assert.equal(updated_ticket.get('dt_path')[0]['ticket']['request'], `${FD.labelTwo}: 23`);
+  assert.equal(updated_ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
 
-//  // click checkbox off on DTD.idThree
-//  assert.ok(dtPage.fieldOneCheckboxIsChecked());
-//  await dtPage.fieldOneCheckboxCheck();
-//  assert.notOk(dtPage.fieldOneCheckboxIsChecked());
-//  assert.equal(updated_ticket.get('request'), `name: ${OD.textOne}`);
+  // click checkbox off on DTD.idThree so removing OD.textTwo from ticket request and updating dt_path
+  assert.equal(find('.t-dtd-field-number').val(), 23);
+  await fillIn('.t-dtd-field-number', 24);
+  const NUM2 = {keyCode: 50};
+  await triggerEvent('.t-dtd-field-number:eq(0)', 'keyup', NUM2);
+  assert.equal(find('.t-dtd-field-number').val(), 24);
+  assert.equal(updated_ticket.get('request'), `name: ${OD.textOne}, ${FD.labelTwo}: 24`);
 
-//  ////Go back to idOne which should have checkbox still checked
-//  //let dtd_payload = DTF.generate(DT.idOne);
-//  //const link = dtd.get('links').objectAt(0);
-//  //let ticket_payload = { id: TD.idOne, priority: LINK.priorityTwo, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id'), request: `${TD.requestOne}, name: ${OD.textOne}` };
-//  //xhr(BAIL_TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
-//  //await click('.t-dtd-preview-btn:eq(0)');
-//  //assert.ok(dtPage.fieldOneCheckboxIsChecked());
-//  //assert.equal(updated_ticket.get('dt_path').length, 1);
-//  //assert.equal(updated_ticket.get('dt_path')[0]['ticket']['priority'], LINK.priorityTwo);
-//  //assert.equal(updated_ticket.get('dt_path')[0]['ticket']['request'], `name: ${OD.textTwo}`);
-//  //assert.equal(updated_ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
-  
-//  // assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.descriptionStart));
-//  // assert.ok(dtPage.fieldOneCheckboxIsChecked());
-  
-//  //xhr(`${PREFIX}${TICKET_URL}/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
-//  //xhr(`${PREFIX}${TICKET_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
-//  //await visit(TICKET_DETAIL_URL);
-//});
+  //Go back to idOne which should have checkbox still checked
+  let dtd_payload = DTF.generate(DT.idOne);
+  const link = dtd.get('links').objectAt(0);
+  let ticket_payload = { id: TD.idOne, priority: LINK.priorityTwo, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id'), request: `${FD.labelOne}: ${OD.textOne}, ${FD.labelTwo}: 24` };
+  xhr(BAIL_TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
+  await click('.t-dtd-preview-btn:eq(0)');
+  assert.ok(dtPage.fieldOneCheckboxIsChecked());
+  assert.equal(updated_ticket.get('dt_path').length, 1);
+  assert.equal(updated_ticket.get('dt_path')[0]['ticket']['priority'], LINK.priorityTwo);
+  assert.equal(updated_ticket.get('dt_path')[0]['ticket']['request'], `${FD.labelOne}: ${OD.textOne}, ${FD.labelTwo}: 24`);
+  assert.equal(updated_ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
+});
 
 //test('navigating away from start page will save data', async assert => {
 //  let detail_data = DTF.detailWithAllFields(DT.idOne);
