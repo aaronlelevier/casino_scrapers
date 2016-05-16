@@ -15,6 +15,6 @@ class GeneralSettingsTests(TestCase):
         self.assertEqual(self.general['exchange_rates'], {'value': 1.0, 'type': 'float', 'inherited_from': 'general'})
         self.assertEqual(self.general['modules'], {'value': [], 'type': 'list', 'inherited_from': 'general'})
         self.assertEqual(self.general['test_mode'], {'value': False, 'type': 'bool', 'inherited_from': 'general'})
-        self.assertEqual(self.general['email'], {'value': '', 'type': 'email', 'inherited_from': 'general'})
-        self.assertEqual(self.general['test_contractor_phone'], {'value': '', 'type': 'phone', 'inherited_from': 'general'})
+        self.assertEqual(self.general['email'], {'value': 'test@bigskytech.com', 'type': 'email', 'inherited_from': 'general'})
+        self.assertEqual(self.general['test_contractor_phone'], {'value': '+18587155000', 'type': 'phone', 'inherited_from': 'general'})
         self.assertEqual(self.general['dt_start_key'], {'value': 'Start', 'type': 'str', 'inherited_from': 'general'})

@@ -3,12 +3,21 @@ import uuid
 
 from rest_framework.test import APITestCase
 
+from person.tests.factory import PASSWORD, create_single_person
 from setting.serializers import SettingSerializer
 from setting.settings import DEFAULT_GENERAL_SETTINGS
-from setting.tests.mixins import SettingSetupMixin
+from setting.tests.factory import create_general_setting
 
 
-class SettingTests(SettingSetupMixin, APITestCase):
+class SettingTests(APITestCase):
+
+    def setUp(self):
+        self.person = create_single_person()
+        self.client.login(username=self.person.username, password=PASSWORD)
+        self.general_setting = create_general_setting()
+
+    def tearDown(self):
+        self.client.logout()
 
     def test_list(self):
         response = self.client.get('/api/admin/settings/')
@@ -32,7 +41,7 @@ class SettingTests(SettingSetupMixin, APITestCase):
             for field in ['value', 'inherited_from']:
                 self.assertEqual(data['settings'][key][field], DEFAULT_GENERAL_SETTINGS[key][field])
 
-    def test_create__does_not_have_settings(self):
+    def test_create(self):
         raw_data = {
             'id': str(uuid.uuid4()),
             'name': 'foo'
@@ -44,7 +53,7 @@ class SettingTests(SettingSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(raw_data['id'], data['id'])
         self.assertEqual(raw_data['name'], data['name'])
-        self.assertNotIn('settings', data)
+        self.assertIn('settings', data)
 
     def test_update(self):
         new_welcome_text = "Bueno"

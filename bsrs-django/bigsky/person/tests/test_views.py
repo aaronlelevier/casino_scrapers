@@ -155,8 +155,7 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         role = create_role()
         serializer = RoleCreateSerializer(role)
         raw_data = serializer.data
-        k = 'welcome_text'
-        raw_data['settings'] = {k: 'new dashboard text'}
+        raw_data['settings'] = {'welcome_text': 'new dashboard text'}
 
         # detail
         response = self.client.get('/api/admin/roles/{}/'.format(role.id))
