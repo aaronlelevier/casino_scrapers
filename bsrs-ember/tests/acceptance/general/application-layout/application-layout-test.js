@@ -38,7 +38,7 @@ test('navbar and tray have correct items', function(assert) {
     // assert.equal(find(NAVBAR + ' > li:eq(5)').text(), t('modules.rfqs.titleShort'));
     // assert.equal(find(NAVBAR + ' > li:eq(6)').text(), t('modules.pms.titleShort'));
     // assert.equal(find(NAVBAR + ' > li:eq(7)').text(), t('modules.assets.titleShort'));
-    assert.equal(find(NAVBAR + ' > li:eq(8)').text(), t('modules.invoices.titleShort'));
+    assert.equal(find(NAVBAR + ' > li:eq(2)').text(), t('modules.invoices.titleShort'));
   });
 });
 
