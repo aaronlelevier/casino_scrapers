@@ -39,24 +39,8 @@ var dtPathMunge = function(ticket, dtd, fieldsObj, simpleStore) {
   if (indx === 0) {
     // if modifying existing dt_path obj
     // need to rebuild ticket request based on updated values in fieldsObj and all other ticket requests in the dt_path containing this value
-    let mod_existing_request = dt_path[indx]['dtd']['fields'].reduce((prev, field) => {
-      const fieldObj = fieldsObj.get(field.id);
-      return prev += ` ${fieldObj.label}: ${fieldObj.value},`;
-    }, '');
-    mod_existing_request = mod_existing_request && mod_existing_request.trim().replace(/,+$/, '');
-    /* jshint ignore:start */
-    const existing_ticket = {
-      ...dt_path[indx]['ticket'],
-      request: mod_existing_request
-    };
-    const existing_dtd = {
-      ...dt_path[indx]['dtd']
-    };
-    dt_path[indx] = {ticket: {}, dtd: {}};
-    dt_path[indx]['ticket'] = existing_ticket;
-    dt_path[indx]['dtd'] = existing_dtd;
-    //loop through remaining dt_paths
-    for(let i=indx+1; i<dt_path.length; i++) {
+    for(let i=indx; i<dt_path.length; i++) {
+      /* jshint ignore:start */
       let mod_existing_request = dt_path[i]['dtd']['fields'].reduce((prev, field) => {
         const fieldObj = fieldsObj.get(field.id);
         return prev += ` ${fieldObj.label}: ${fieldObj.value},`;
@@ -72,9 +56,9 @@ var dtPathMunge = function(ticket, dtd, fieldsObj, simpleStore) {
       dt_path[i] = {ticket: {}, dtd: {}};
       dt_path[i]['ticket'] = existing_ticket;
       dt_path[i]['dtd'] = existing_dtd;
+      /* jshint ignore:end */
     }
 
-    /* jshint ignore:end */
   } else {
     dt_path = dt_path.concat([{
       ticket: new_ticket,
