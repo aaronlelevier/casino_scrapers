@@ -467,7 +467,8 @@ test('visit 1 url, go back to 0, then go back to 1 url after updating some info'
 });
 
 test('visit 2 url, go back to 0, then go back to 1 url after updating some info should keep info around and update ticket request', async assert => {
-  // DTD idOne
+  // DTD idOne is 3rd
+  // DTD idThree is 1st
   // Note: fields and options are completely separate
   let detail_data = DTF.detailWithAllFields(DT.idOne);
   returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: DT.descriptionStart, fields: [{ id: FD.idTwo, label: FD.labelTwo, value: 23, required: true }] };
@@ -478,7 +479,8 @@ test('visit 2 url, go back to 0, then go back to 1 url after updating some info 
   //current ticket state
   returned_ticket.request = `${FD.labelTwo}: 23, ${FD.labelRandom}: Im second`;
   //previous ticket (which has same request value as current) and dt state
-  returned_ticket.dt_path.push({ticket: {id: TD.idOne, request: `${FD.labelTwo}: 23, ${FD.labelRandom}: Im second`}, dtd: {id: DT.idTwo, description: DT.descriptionTwo, fields: [{ id: FD.idRandom, label: FD.labelRandom, value: 'Im second', required: true }]}});
+  returned_ticket.dt_path.push({ticket: {id: TD.idOne, request: `${FD.labelTwo}: 23, ${FD.labelRandom}: Im second`}, dtd: {id: DT.idTwo, description: DT.descriptionTwo, 
+                               fields: [{id: FD.idTwo, label: FD.labelTwo, value: 23, required: true}, { id: FD.idRandom, label: FD.labelRandom, value: 'Im second', required: true }]}});
 
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
@@ -548,7 +550,7 @@ test('visit 2 url, go back to 0, then go back to 1 url after updating some info 
   assert.equal(updated_ticket.get('dt_path').length, 2);
   // assert.equal(updated_ticket.get('dt_path')[1]['ticket']['priority'], LINK.priorityTwo);
   assert.equal(updated_ticket.get('dt_path')[0]['ticket']['request'], `${FD.labelTwo}: 24`);
-  // assert.equal(updated_ticket.get('dt_path')[1]['ticket']['request'], `${FD.labelTwo}: 24, ${FD.labelRandom}: Im second`);
+  assert.equal(updated_ticket.get('dt_path')[1]['ticket']['request'], `${FD.labelTwo}: 24, ${FD.labelRandom}: Im second`);
 });
 
 //test('navigating away from start page will save data', async assert => {
