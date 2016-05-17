@@ -1,16 +1,16 @@
 var dtPathMunge = function(ticket, dtd, fieldsObj, simpleStore) {
   let dt_path = ticket.get('dt_path') || [];
-  const dtd_ids = dt_path.mapBy('dtd.id');
-  const indx = dtd_ids.indexOf(dtd.get('id'));
-  // build fields array && build options array
+
+  // build fields array && build options array for a new dtd that is not in dt_path
   let fields = [];
   for (let obj of fieldsObj) {
-    fields.push({id: obj[0], value: obj[1].value});
+    fields.push({id: obj[0], label: obj[1].label, value: obj[1].value, required: obj[1].required, options: obj.optionValues ? obj.optionValues : undefined});
     //options id array that is used on init to set isChecked property.  presence of id indicates the value is checked
     if (obj.optionValues) {
       fields['options'] =  obj.optionValues;
     }
   }
+  // if not existing
   const new_ticket = {
     id: ticket.get('id'),
     requester: ticket.get('requester'),
@@ -29,11 +29,33 @@ var dtPathMunge = function(ticket, dtd, fieldsObj, simpleStore) {
     note: dtd.get('note'),
     fields,
   };
+
+
+  // fieldObjs values build up current ticket request value
+  // dt_path stores fields and their values at that time
+  // if on old dtd
+  const dtd_ids = dt_path.mapBy('dtd.id');
+  const indx = dtd_ids.indexOf(dtd.get('id'));
   if (indx === 0) {
     // if modifying existing dt_path obj
+    // need to rebuild request based on updated values
+    let mod_existing_request = dt_path[indx]['dtd']['fields'].reduce((prev, field) => {
+      const fieldObj = fieldsObj.get(field.id);
+      return prev += ` ${fieldObj.label}: ${fieldObj.value},`;
+    }, '');
+    mod_existing_request = mod_existing_request && mod_existing_request.trim().replace(/,+$/, '');
+    /* jshint ignore:start */
+    const existing_ticket = {
+      ...dt_path[indx]['ticket'],
+      request: mod_existing_request
+    };
+    const existing_dtd = {
+      ...dt_path[indx]['dtd']
+    };
     dt_path[indx] = {ticket: {}, dtd: {}};
-    dt_path[indx]['ticket'] = new_ticket;
-    dt_path[indx]['dtd'] = new_dtd;
+    dt_path[indx]['ticket'] = existing_ticket;
+    dt_path[indx]['dtd'] = existing_dtd;
+    /* jshint ignore:end */
   } else {
     dt_path = dt_path.concat([{
       ticket: new_ticket,

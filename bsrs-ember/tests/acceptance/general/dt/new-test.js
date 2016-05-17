@@ -288,7 +288,7 @@ test('POST then PATCH - to demonstrate starting the DT and maintaining traversin
   // xhr(DT_TICKET_PATCH_URL, 'PATCH', JSON.stringify(patch_payload), {}, 200, dtd_response_two);
   // POST
   let mod_payload = Ember.$.extend(true, {}, ticket_dt_new_payload);
-  mod_payload['dt_path'][0]['dtd']['fields'] = [{id: FD.idOne, value: OD.textOne}]; 
+  mod_payload['dt_path'][0]['dtd']['fields'] = [{id: FD.idOne, label: FD.labelOne, value: OD.textOne, required: false}]; 
   xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(mod_payload), {}, 201, dtd_response_two);
   dtPage.btnOneClick();
   andThen(() => {
