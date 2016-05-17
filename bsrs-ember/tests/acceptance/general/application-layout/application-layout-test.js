@@ -29,7 +29,7 @@ test('navbar and tray have correct items', function(assert) {
   visit(HOME_URL);
   andThen(() => {
     assert.equal(find('.t-tray-items > li').length, 4);
-    assert.equal(find(NAVBAR + ' > li').length, 9);
+    assert.equal(find(NAVBAR + ' > li').length, 3);
     assert.equal(find(NAVBAR + ' > li:eq(0)').text(), t('modules.tickets.titleShort'));
     assert.equal(find(NAVBAR + ' > li:eq(1)').text(), t('modules.workOrders.titleShort'));
     // assert.equal(find(NAVBAR + ' > li:eq(2)').text(), t('modules.purchaseOrders.titleShort'));
