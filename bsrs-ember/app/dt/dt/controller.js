@@ -31,16 +31,16 @@ export default Ember.Controller.extend({
      * @method linkClick 
      * @function dtPathMunge modifies ticket dt_path attribute that sets dt {id: xxx} in json object in order to allow user to have breadcrumbs
      * @param action - send off patch request if action is 'patch', post if action is undefined
-     * patch may send current DTD id (bail on existing) or link destination (click button)
+     * patch may send current DTD id (bail on existing) or link destination (click button) (patch_id)
      * @param fieldsObj - persist field and option state in dt_path
      */
     linkClick(link, ticket, dtd_model, action, fieldsObj) {
-      dtPathMunge(ticket, dtd_model, fieldsObj, this.get('simpleStore'));
+      dtPathMunge(ticket, dtd_model, fieldsObj, link, this.get('simpleStore'));
       if (action === 'patch') {
         const patch_id = link && link.get('destination.id') || dtd_model.get('id');
         this.get('ticketRepository').patch(ticket, link, patch_id).then((response) => {
           const dtd = this.get('DTDDeserializer').deserialize(response, response.id);
-          ticket = this.get('simpleStore').push('ticket', {id: ticket.id, hasSaved: true});
+          ticket = this.get('simpleStore').push('ticket', {id: ticket.get('id'), hasSaved: true});
           // if(transition) {
             this.transitionToRoute('dt.dt', {id: response.id, model: dtd, ticket: ticket, dt_id: response.id, ticket_id: ticket.id});
           // }

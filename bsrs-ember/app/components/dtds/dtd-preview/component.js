@@ -50,11 +50,11 @@ export default Ember.Component.extend({
       const optionValues = field.get('options').map((option) => {
         return option.get('id');
       });
-      fieldsObj.set(field_id, { label: field.get('label'), num: 1, value: '', required: field.get('required'), optionValues: optionValues });
+      fieldsObj.set(field_id, { dtd_id: dt_id, label: field.get('label'), num: 1, value: '', required: field.get('required'), optionValues: optionValues });
     }); 
     /* jshint ignore:start */
     dt_path && dt_path.forEach((dt_obj) => {
-      // fields && options - set displayValue and isChecked
+      // fields && options - set displayValue and isChecked if user navigates back
       dt_obj['dtd']['fields'] && dt_obj['dtd']['fields'].forEach((dt_field) => {
         const _id = dt_field.id;
         const store = this.get('simpleStore');
@@ -69,7 +69,7 @@ export default Ember.Component.extend({
           dtOptionValues.push(dt_option_id);
         });
         //Old Map() setup from (dt_path)
-        fieldsObj.set(_id, { label: dt_field.label, num: 0, value: dt_field.value, required: dt_field.required, optionValues: dt_field['options'] });
+        fieldsObj.set(_id, { dtd_id: dt_obj['dtd']['id'], label: dt_field.label, num: 0, value: dt_field.value, required: dt_field.required, optionValues: dt_field['options'] });
       });
     });
     /* jshint ignore:end */
@@ -93,13 +93,17 @@ export default Ember.Component.extend({
   /* @method fieldsCompleted
    * switches link next button on and off as long as all required fields are fullfilled
    * uses the num property to increment required length
+   * needs to only look at fieldObjs that are specific to a dtd.  User can not fill out all required fields and can navigate backwards and not have links disabled
    */
   fieldsCompleted: Ember.computed('ticket.requestValues.[]', function() {
     const objs = this.get('fieldsObj').values();
+    const model_id = this.get('model').get('id');
     let len = 0;
     for (var obj of objs) {
       /* jshint ignore:start */
-      obj.required ? len += obj.num : null;
+      if (obj.dtd_id === model_id) {
+        obj.required ? len += obj.num : null;
+      }
       /* jshint ignore:end */
     }
     return len === 0 ? undefined : 'disabled';

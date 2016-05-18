@@ -237,7 +237,7 @@ test('after POST, redirected to next DT, and DT is rendered', assert => {
     assert.equal(dtPage.note, DT.noteOne);
     assert.equal(dtPage.description, DT.descriptionOne);
     assert.equal(dtPage.fieldCount, 1);
-    assert.equal(dtPage.fieldOneName, FD.labelOne);
+    assert.equal(dtPage.fieldOneName, `${FD.labelOne} *`);
     assert.ok(!dtPage.fieldOneCheckboxIsChecked());
     assert.equal(dtPage.prompt, DT.promptOne);
     assert.equal(dtPage.btnCount, 1);
@@ -288,7 +288,7 @@ test('POST then PATCH - to demonstrate starting the DT and maintaining traversin
   // xhr(DT_TICKET_PATCH_URL, 'PATCH', JSON.stringify(patch_payload), {}, 200, dtd_response_two);
   // POST
   let mod_payload = Ember.$.extend(true, {}, ticket_dt_new_payload);
-  mod_payload['dt_path'][0]['dtd']['fields'] = [{id: FD.idOne, label: FD.labelOne, value: OD.textOne, required: false}]; 
+  mod_payload['dt_path'][0]['dtd']['fields'] = [{id: FD.idOne, label: FD.labelOne, value: OD.textOne, required: FD.requiredTwo}]; 
   xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(mod_payload), {}, 201, dtd_response_two);
   dtPage.btnOneClick();
   andThen(() => {

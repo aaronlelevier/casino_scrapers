@@ -208,7 +208,8 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
       id: this.get('id'),
       priority: link && link.get('priority.id'),
       status: link && link.get('status.id'),
-      categories: link && link.get('sorted_categories').mapBy('id')
+      categories: link && link.get('sorted_categories').mapBy('id'),
+      dt_path: this.get('dt_path')
     };
     dirtyFields.forEach((field) => {
       payload[field] = this.get(field);

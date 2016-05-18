@@ -24,7 +24,7 @@ var BSRS_DTD_FACTORY = (function() {
           id: this.field.idOne,
           label: this.field.labelOne,
           type: this.field.typeSix, // because `typeOne` is text which has no options
-          required: this.field.requiredOne,
+          required: this.field.requiredTwo,
           order: this.field.orderOne,
           options: [
             {
@@ -60,7 +60,7 @@ var BSRS_DTD_FACTORY = (function() {
       id: this.field.idFour,
       label: this.field.labelFour,
       type: this.field.typeOne,
-      required: this.field.requiredOne,
+      required: this.field.requiredTwo,
       order: this.field.orderOne,
       options: []
     });
@@ -69,7 +69,7 @@ var BSRS_DTD_FACTORY = (function() {
       id: this.field.idTwo,
       label: this.field.labelTwo,
       type: this.field.typeTwo,
-      required: this.field.requiredOne,
+      required: this.field.requiredTwo,
       order: this.field.orderOne,
       options: []
     });
@@ -78,7 +78,7 @@ var BSRS_DTD_FACTORY = (function() {
       id: this.field.idThree,
       label: this.field.labelThree,
       type: this.field.typeThree,
-      required: this.field.requiredOne,
+      required: this.field.requiredTwo,
       order: this.field.orderOne,
       options: []
     });

@@ -21,7 +21,7 @@ var dtd_payload = {
     id: FD.idOne,
     label: FD.labelOne,
     type: FD.typeSix,
-    required: FD.requiredOne,
+    required: FD.requiredTwo,
     order: FD.orderOne,
     options: [{
       id: OD.idOne,
@@ -56,7 +56,7 @@ var dtd_payload_two = {
     id: FD.idOne,
     label: FD.labelOne,
     type: FD.typeSix,
-    required: FD.requiredOne,
+    required: FD.requiredTwo,
     order: FD.orderOne,
     options: [{
       id: OD.idOne,

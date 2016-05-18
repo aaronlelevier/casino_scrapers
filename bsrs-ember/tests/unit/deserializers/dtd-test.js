@@ -71,7 +71,7 @@ test('dtd deserializer returns correct data', (assert) => {
   assert.equal(field.get('id'), FD.idOne);
   assert.equal(field.get('label'), FD.labelOne);
   assert.equal(field.get('type'), FD.typeSix);
-  assert.equal(field.get('required'), FD.requiredOne);
+  assert.equal(field.get('required'), FD.requiredTwo);
   assert.equal(field.get('order'), FD.orderOne);
   // options
   assert.equal(dtd.get('fields').objectAt(0).get('options').get('length'), 1);
