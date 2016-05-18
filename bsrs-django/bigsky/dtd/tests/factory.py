@@ -59,11 +59,6 @@ def create_tree_data(links=1, destination=None, **kwargs):
     return tree_data
 
 
-def create_multi_node_tree():
-    three = create_tree_data(key="three")
-    two = create_tree_data(key="two", destination=three)
-    one = create_tree_data(key="one", destination=two)
-
 
 # Fixture Generation code
 DTD_DATA = [

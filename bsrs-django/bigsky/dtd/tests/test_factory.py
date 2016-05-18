@@ -80,23 +80,6 @@ class FactoryTests(TestCase):
         self.assertEqual(tree_data.links.count(), 1)
         self.assertEqual(tree_data.links.first().destination, destination)
 
-    def test_create_multi_node_tree(self):
-        factory.create_multi_node_tree()
-
-        one = TreeData.objects.get(key="one")
-        two = TreeData.objects.get(key="two")
-        three = TreeData.objects.get(key="three")
-
-        # one
-        self.assertEqual(one.links.count(), 1)
-        self.assertEqual(one.links.first().destination, two)
-        # two
-        self.assertEqual(two.links.count(), 1)
-        self.assertEqual(two.links.first().destination, three)
-        # three
-        self.assertEqual(three.links.count(), 1)
-        self.assertIsNone(three.links.first().destination)
-
 
 class FixtureGenerationTests(TestCase):
 
