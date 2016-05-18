@@ -152,7 +152,25 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['settings']['settings']['create_all']['value'], False)
         self.assertEqual(data['settings']['settings']['create_all']['type'], 'bool')
 
-    # def test_update__setting__inherited(self):
+    def test_update__setting__inherited(self):
+        # init test
+        self.assertEqual(self.role.settings.settings['dashboard_text']['inherits_from'], 'general')
+        self.assertNotIn('value', self.role.settings.settings['dashboard_text'])
+        # setup
+        role_data = copy.copy(self.data)
+        role_data['settings'] = {
+            'id': str(self.role.settings.id),
+            'settings': self.role.settings.settings
+        }
+        role_data['settings']['settings']['dashboard_text'] = 'hola'
+
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
+            role_data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings']['settings']['dashboard_text']['value'], 'hola')
+        self.assertEqual(data['settings']['settings']['dashboard_text']['inherits_from'], 'general')
 
 
 class RoleSettingTests(RoleSetupMixin, APITestCase):
