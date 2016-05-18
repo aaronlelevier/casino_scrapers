@@ -62,10 +62,6 @@ class RoleTests(TestCase):
         self.role.save()
         self.assertEqual(self.role.categories.count(), 0)
 
-    def test_settings_default(self):
-        role = create_role()
-        self.assertEqual(role.settings, ROLE_SETTINGS)
-
     # JSON settings
 
     def test_get_settings_name(self):

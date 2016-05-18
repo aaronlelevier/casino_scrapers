@@ -3,6 +3,7 @@ import copy
 from rest_framework import serializers
 
 from contact.models import PhoneNumber, Address, Email
+from setting.models import Setting
 from utils import create
 
 class BaseCreateSerializer(serializers.ModelSerializer):
@@ -96,44 +97,27 @@ class RemovePasswordSerializerMixin(object):
         return data
 
 
-# TODO: should prbly rename to smthn like: NestedSettingUpdateMixin
-class SettingSerializerMixin(object):
+class NestedSettingUpdateMixin(object):
     """
     Needed as a Mixin b/c General, Role, and Person will need this
     custom update logic for 'settings' JsonField.
     """
     def update(self, instance, validated_data):
         settings_obj = validated_data.pop('settings', {})
-        # if settings_obj:
-        #     all_settings = instance.get_all_instance_settings_full()
-        #     validated_data = self.update_settings(all_settings, validated_data)
-        return super(SettingSerializerMixin, self).update(instance, validated_data)
+        self.update_settings(instance, settings_obj)
+        return super(NestedSettingUpdateMixin, self).update(instance, validated_data)
 
-    def update_settings(self, all_settings, validated_data):
-        name = validated_data.get('name')
-        default_settings = self.Meta.model.get_class_default_settings(name)
-        final_settings = copy.copy(default_settings)
-        settings_inherited_from = self.Meta.model.get_settings_name()
+    @staticmethod
+    def update_settings(instance, settings_obj):
+        init_settings = copy.copy(instance.settings.settings)
+        settings = copy.copy(settings_obj.get('settings', {}))
 
-        for k,v in all_settings.items():
-            try:
-                new_value = validated_data['settings'][k]
-                # to defend agains key's w/ no values that don't match the req'd type
-                # allow 'False' b/c still want to catch Boolean False's                
-                if new_value is not None:
-                    if k not in final_settings:
-                        final_settings[k] = {}
+        for k,v in settings.items():
+            init_settings[k]['value'] = v
 
-                    final_settings[k]['value'] = new_value
-                    final_settings[k]['inherited_from'] = settings_inherited_from
-            except KeyError:
-                # Silently pass b/c if a 'value' isn't being posted for
-                # a Role setting, we're going to use the default.
-                pass
-        else:
-            validated_data.update({'settings': final_settings})
-
-        return validated_data
+        setting_instance = Setting.objects.get(id=settings_obj['id'])
+        setting_instance.settings = settings
+        setting_instance.save()
 
 
 ### Fields

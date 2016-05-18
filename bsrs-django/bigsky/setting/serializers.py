@@ -1,7 +1,7 @@
 import copy
 
 from setting.models import Setting
-from utils.serializers import BaseCreateSerializer, SettingSerializerMixin
+from utils.serializers import BaseCreateSerializer
 from utils.validators import SettingsValidator
 
 

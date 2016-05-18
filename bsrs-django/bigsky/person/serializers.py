@@ -10,7 +10,7 @@ from person.validators import RoleLocationValidator, RoleCategoryValidator
 from setting.models import Setting
 from setting.serializers import SettingSerializer
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
-    RemovePasswordSerializerMixin, SettingSerializerMixin)
+    RemovePasswordSerializerMixin, NestedSettingUpdateMixin)
 from utils.validators import SettingsValidator
 
 
@@ -31,7 +31,7 @@ class RoleCreateSerializer(BaseCreateSerializer):
         fields = ('id', 'name', 'role_type', 'location_level', 'categories',)
 
 
-class RoleUpdateSerializer(BaseCreateSerializer):
+class RoleUpdateSerializer(NestedSettingUpdateMixin, BaseCreateSerializer):
     settings = SettingSerializer()
 
     class Meta:
@@ -39,23 +39,6 @@ class RoleUpdateSerializer(BaseCreateSerializer):
         validators = [RoleCategoryValidator()]
         fields = ('id', 'name', 'role_type', 'location_level', 'categories',
             'settings',)
-
-    def update(self, instance, validated_data):
-        settings_obj = validated_data.pop('settings', {})
-        self.update_settings(instance, settings_obj)
-        return super(RoleUpdateSerializer, self).update(instance, validated_data)
-
-    @staticmethod
-    def update_settings(instance, settings_obj):
-        init_settings = copy.copy(instance.settings.settings)
-        settings = copy.copy(settings_obj.get('settings', {}))
-
-        for k,v in settings.items():
-            init_settings[k]['value'] = v
-
-        setting_instance = Setting.objects.get(id=settings_obj['id'])
-        setting_instance.settings = settings
-        setting_instance.save()
 
 
 class RoleDetailSerializer(BaseCreateSerializer):
