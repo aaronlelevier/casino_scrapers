@@ -1456,7 +1456,8 @@ test('patchSerialize - show full serialized object', assert => {
     request: undefined,
     priority: TP.priorityOneId,
     status: TD.statusOneId,
-    categories: [CD.idThree]
+    categories: [CD.idThree],
+    dt_path: undefined,
   });
 });
 
@@ -1475,6 +1476,7 @@ test('patchSerialize - show full serialized object (with optional values not pre
     request: undefined,
     priority: undefined,
     status: undefined,
-    categories: []
+    categories: [],
+    dt_path: undefined,
   });
 });
