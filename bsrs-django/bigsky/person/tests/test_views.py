@@ -19,7 +19,8 @@ from location.models import Location, LocationLevel
 from location.tests.factory import create_location
 from person import config as person_config
 from person.models import Person, Role, PersonStatus
-from person.serializers import PersonUpdateSerializer, RoleCreateSerializer
+from person.serializers import (PersonUpdateSerializer, RoleCreateSerializer,
+    RoleUpdateSerializer)
 from person.tests.factory import (PASSWORD, create_single_person, create_role, create_roles,
     create_all_people, create_person_statuses)
 from person.tests.mixins import RoleSetupMixin
@@ -65,6 +66,9 @@ class RoleDetailTests(RoleSetupMixin, APITestCase):
         self.assertIn('name', data['categories'][0])
         self.assertIn('status', data['categories'][0])
         self.assertIn('parent', data['categories'][0])
+        self.assertEqual(data['settings']['id'], str(self.role.settings.id))
+        self.assertEqual(data['settings']['name'], self.role.settings.name)
+        self.assertEqual(data['settings']['settings'], self.role.settings.settings)
 
 
 class RoleCreateTests(RoleSetupMixin, APITestCase):
@@ -89,10 +93,12 @@ class RoleCreateTests(RoleSetupMixin, APITestCase):
 
 class RoleUpdateTests(RoleSetupMixin, APITestCase):
 
+    def setUp(self):
+        super(RoleUpdateTests, self).setUp()
+        self.data = RoleUpdateSerializer(self.role).data
+
     def test_update(self):
         category = mommy.make(Category)
-        serializer = RoleCreateSerializer(self.role)
-        self.data = serializer.data
         role_data = self.data
         role_data['name'] = 'new name here'
         role_data['categories'].append(str(category.id))
@@ -108,15 +114,17 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['location_level'], str(self.role.location_level.id))
         self.assertIsInstance(data['categories'], list)
 
-    def test_update_location_level(self):
+    def test_update__location_level(self):
         role_data = copy.copy(self.data)
         role_data['location_level'] = str(mommy.make(LocationLevel).id)
         self.assertNotEqual(
             self.data['location_level'],
             role_data['location_level']
         )
+
         response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
             role_data, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         new_role_data = json.loads(response.content.decode('utf8'))
         self.assertEqual(

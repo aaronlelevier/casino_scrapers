@@ -51,30 +51,34 @@ class SettingsValidator(object):
 
     message = _("{value} must be type {type}")
 
-    def __init__(self, model):
-        self.model = model
+    def set_context(self, serializer_field):
+        """
+        This hook is called by the serializer instance,
+        prior to the validation call being made.
+        """
+        self.instance = serializer_field.instance
 
     def __call__(self, kwargs):
-        default_settings = self.model.cls_get_all_class_settings()
+        combined_settings = self.instance.combined_settings
 
         errors = {}
 
         settings = kwargs.get('settings', None)
+
         if settings:
-            for k,v in default_settings.items():
+            for k,v in combined_settings.items():
 
                 try:
-                    new_value = settings[k]
+                    value = settings[k]
                 except KeyError:
                     # Silently pass because, if a 'value' isn't being posted
                     # for the setting, we're going to use the default.
                     pass
                 else:
-                    value = self.get_value(new_value)
-                    type_str = default_settings[k]['type']
-                    related_model = default_settings[k].get('related_model', None)
+                    type_str = combined_settings[k]['type']
+                    related_model = combined_settings[k].get('related_model', None)
 
-                    error = self.validate_new_value(value, new_value, type_str=type_str,
+                    error = self.validate_new_value(value, type_str=type_str,
                                                     related_model=related_model)
                     if error:
                         errors[k] = error
@@ -82,23 +86,13 @@ class SettingsValidator(object):
                 if errors:
                     raise ValidationError(errors)
 
-    @staticmethod
-    def get_value(v):
-        try:
-            return v['value']
-        except TypeError:
-            return v
-
-    def validate_new_value(self, value, new_value, **kwargs):
+    def validate_new_value(self, value, **kwargs):
         type_str = kwargs.get('type_str')
 
         if type_str == 'email':
             return self.validate_email(value)
         elif type_str == 'phone':
             return self.validate_phone(value)
-        elif type_str == 'foreignkey':
-            related_model = kwargs.get('related_model')
-            return self.validate_foreignkey(value, related_model)
         else:
             required_type = self.get_required_type(type_str)
             if not isinstance(value, required_type):
@@ -111,18 +105,6 @@ class SettingsValidator(object):
     def validate_phone(self, phone):
         if not valid_phone(phone):
             return _('{} is not a valid phone'.format(phone))
-
-    def validate_foreignkey(self, fk, related_model):
-        """
-        :related_model: (app_label, model)
-        """
-        app_label = related_model[0]
-        model = related_model[1]
-        currency = ContentType.objects.get(app_label=app_label, model=model)
-        klass = currency.model_class()
-        if not klass.objects.filter(id=fk).exists():
-            return _('{} is not a valid foreignkey for {}.{}'
-                     .format(fk, app_label, model))
 
     @staticmethod
     def get_required_type(t):
@@ -148,8 +130,11 @@ def valid_email(email):
 
 def valid_phone(phone):
     if phone:
-        pattern = re.compile(r'(?:\+1){0,1}(\d{10})')
-        return re.match(pattern, phone)
+        try:
+            pattern = re.compile(r'(?:\+1){0,1}(\d{10})')
+            return re.match(pattern, phone)
+        except TypeError:
+            pass
 
 
 def regex_check_contains(regex, chars):

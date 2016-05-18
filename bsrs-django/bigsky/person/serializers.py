@@ -5,6 +5,7 @@ from contact.serializers import PhoneNumberSerializer, EmailSerializer, AddressS
 from location.serializers import LocationIdNameOnlySerializer, LocationStatusFKSerializer
 from person.models import Person, Role, PersonStatus
 from person.validators import RoleLocationValidator, RoleCategoryValidator
+from setting.serializers import SettingSerializer
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
     RemovePasswordSerializerMixin, SettingSerializerMixin)
 from utils.validators import SettingsValidator
@@ -25,16 +26,17 @@ class RoleCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Role
-        validators = [RoleCategoryValidator(), SettingsValidator(model)]
+        validators = [RoleCategoryValidator()]
         fields = ('id', 'name', 'role_type', 'location_level', 'categories',)
 
 
 class RoleUpdateSerializer(SettingSerializerMixin, BaseCreateSerializer):
     "Serializer used for create ``Role`` API Endpoint operations."
+    settings = SettingSerializer()
 
     class Meta:
         model = Role
-        validators = [RoleCategoryValidator(), SettingsValidator(model)]
+        validators = [RoleCategoryValidator()]
         fields = ('id', 'name', 'role_type', 'location_level', 'categories',
             'settings',)
 
@@ -42,6 +44,7 @@ class RoleUpdateSerializer(SettingSerializerMixin, BaseCreateSerializer):
 class RoleDetailSerializer(BaseCreateSerializer):
     
     categories = CategoryRoleSerializer(many=True)
+    settings = SettingSerializer()
 
     class Meta:
         model = Role
@@ -52,13 +55,13 @@ class RoleDetailSerializer(BaseCreateSerializer):
     def eager_load(queryset):
         return queryset.prefetch_related('categories')
 
-    def to_representation(self, instance):
-        """
-        GeneralSettings > RoleSettings = CombinedSettings
-        """
-        data = super(RoleDetailSerializer, self).to_representation(instance)
-        data['settings'] = instance.get_class_combined_settings('general', data['settings'])
-        return data
+    # def to_representation(self, instance):
+    #     """
+    #     GeneralSettings > RoleSettings = CombinedSettings
+    #     """
+    #     data = super(RoleDetailSerializer, self).to_representation(instance)
+    #     data['settings'] = instance.get_class_combined_settings('general', data['settings'])
+    #     return data
 
 
 class RoleIdNameSerializer(serializers.ModelSerializer):

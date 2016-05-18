@@ -96,11 +96,17 @@ class RemovePasswordSerializerMixin(object):
         return data
 
 
+# TODO: should prbly rename to smthn like: NestedSettingUpdateMixin
 class SettingSerializerMixin(object):
-
+    """
+    Needed as a Mixin b/c General, Role, and Person will need this
+    custom update logic for 'settings' JsonField.
+    """
     def update(self, instance, validated_data):
-        all_settings = instance.get_all_instance_settings_full()
-        validated_data = self.update_settings(all_settings, validated_data)
+        settings_obj = validated_data.pop('settings', {})
+        # if settings_obj:
+        #     all_settings = instance.get_all_instance_settings_full()
+        #     validated_data = self.update_settings(all_settings, validated_data)
         return super(SettingSerializerMixin, self).update(instance, validated_data)
 
     def update_settings(self, all_settings, validated_data):

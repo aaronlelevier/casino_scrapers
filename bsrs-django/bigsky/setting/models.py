@@ -21,8 +21,8 @@ class Setting(SettingMixin, BaseModel):
         Retuns it's settings plus all inherited settings.
         """
         inherits_from_map = self.inherits_from_map
-        self.populate_inherited_settings()
-        return self.settings
+        _settings = copy.copy(self.settings)
+        return self.inherited_settings(_settings)
 
     @property
     def inherits_from_names(self):
@@ -35,15 +35,17 @@ class Setting(SettingMixin, BaseModel):
                 for s in (Setting.objects.filter(name__in=self.inherits_from_names)
                                          .values('name', 'settings'))}
 
-    def populate_inherited_settings(self):
-        for k,v in self.settings.items():
+    def inherited_settings(self, settings):
+        for k,v in settings.items():
             if 'value' not in v:
+                print(v)
                 inherits_from = v['inherits_from']
-                inherited_settings = self.inherits_from_map[inherits_from]
-                inherited_setting_obj = inherited_settings[k]
-                self.settings[k].update({
+                inherited_setting_objs = self.inherits_from_map[inherits_from]
+                inherited_setting_obj = inherited_setting_objs[k]
+                settings[k].update({
                     'value': None,
                     'type': inherited_setting_obj['type'],
                     # 'inherited_from' already exists in 'role' setting
                     'inherited_value': inherited_setting_obj['value']
                     })
+        return settings

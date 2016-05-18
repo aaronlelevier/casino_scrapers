@@ -2,7 +2,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from setting.models import Setting
 from setting.serializers import (
-    SettingSerializer, SettingListSerializer)
+    SettingSerializer, SettingListSerializer, SettingUpdateSerializer)
 from utils.views import BaseModelViewSet
 
 
@@ -18,5 +18,7 @@ class SettingViewSet(BaseModelViewSet):
         """
         if self.action == 'list':
             return SettingListSerializer
+        elif self.action == 'update':
+            return SettingUpdateSerializer
         else:
             return SettingSerializer
