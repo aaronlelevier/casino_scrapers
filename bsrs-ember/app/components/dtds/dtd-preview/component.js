@@ -54,7 +54,7 @@ export default Ember.Component.extend({
     }); 
     /* jshint ignore:start */
     dt_path && dt_path.forEach((dt_obj) => {
-      // fields && options - set displayValue and isChecked if user navigates back
+      // fields && options - set displayValue and isChecked on dt_path (existing) fieldsObjs to handle the case when user navigates back
       dt_obj['dtd']['fields'] && dt_obj['dtd']['fields'].forEach((dt_field) => {
         const _id = dt_field.id;
         const store = this.get('simpleStore');
@@ -68,13 +68,14 @@ export default Ember.Component.extend({
           store.push('option', { id: dt_option_id, isChecked: true });
           dtOptionValues.push(dt_option_id);
         });
-        //Old Map() setup from (dt_path)
+        //Old Map() setup from (dt_path) thus num = 0 since is fullfilled
         fieldsObj.set(_id, { dtd_id: dt_obj['dtd']['id'], label: dt_field.label, num: 0, value: dt_field.value, required: dt_field.required, optionValues: dt_field['options'] });
       });
     });
     /* jshint ignore:end */
     defineProperty(this, 'fieldsObj', undefined, fieldsObj);
   },
+
   /*
    * @method willDestroy
    * if user closes browser with in flight changes
@@ -90,6 +91,7 @@ export default Ember.Component.extend({
   //   }
   //   this._super(...arguments);
   // },
+
   /* @method fieldsCompleted
    * switches link next button on and off as long as all required fields are fullfilled
    * uses the num property to increment required length
@@ -123,7 +125,6 @@ export default Ember.Component.extend({
    * @method onFieldUpdate
    * sets key, value in fieldsObj (Map)
    * updateRequest sent to controller to update ticket.requestValues based on 'label:value'
-   * fields may have multiple options that need to be included in value field.
    * @param {string} id
    * @param {number} num  0 (fullfilled) or 1 (unfullfilled)
    */
@@ -136,7 +137,8 @@ export default Ember.Component.extend({
    * @method onOptionUpdate
    * sets key, value in fieldsObj (Map)
    * updateRequest sent to controller to update ticket.requestValues based on 'label:value'
-   * optionValues: [] - fields may have multiple options that need to be included in value field.
+   * all options from dt_path are pushed into the store
+   * optionValues: [] - fields may have multiple options that need to be included in value field. Initial setup populates fields optionValues
    * "yes", "", "no", "yes" --> "label: no, yes"
    * @param {string} id
    * @param {number} num  0 (fullfilled) or 1 (unfullfilled)
@@ -144,9 +146,11 @@ export default Ember.Component.extend({
   onOptionUpdate(child, eventName, {field, num, value, ticket, option}) {
     const option_id = option.get('id');
     let fieldsObj = this.get('fieldsObj');
+    // find single fieldObj representing option's field
     const fieldObj = fieldsObj.get(field.get('id'));
     const optionValues = fieldObj.optionValues || [];
     const indx = optionValues.indexOf(option_id);
+    // if option already in array from initial setup or dt_path && unselected, remove
     if (indx > -1 && !value) {
       optionValues.splice(indx, 1);
     } 

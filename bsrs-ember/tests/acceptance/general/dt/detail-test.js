@@ -113,12 +113,14 @@ test('decision tree displays data and can click to next destination after updati
   let dtd_payload = DTF.generate(DT.idTwo);
   const link = dtd.get('links').objectAt(0);
   // dt_path object added based on 
+  let mod_dt_one = Ember.$.extend(true, {}, dt_one);
+  mod_dt_one['dtd']['fields'][0]['options'] = [OD.idOne];
   const mock_dt_path = [...dt_path,
     {'ticket':{'id':TD.idOne,'requester':'Mel1 Gibson1','location': LD.idOne,
       'status':TD.statusOneId,'priority':TD.priorityOneId,
       'request':`${FD.labelOne}: ${OD.textOne}, working`,'categories':[...ticket.get('categories_ids')],
       'cc':['139543cf-8fea-426a-8bc3-09778cd79901'],'attachments':[]},
-      ...dt_one}];
+      ...mod_dt_one}];
   let ticket_payload = { id: TD.idOne, priority: LINK.priorityOne, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id'), dt_path: mock_dt_path, request: requestValue };
   xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
   await page.clickNextBtn();
@@ -132,6 +134,8 @@ test('decision tree displays data and can click to next destination after updati
   assert.equal(ticket.get('status.id'), TD.statusOneId);
   assert.equal(ticket.get('dt_path')[1]['ticket']['status'], TD.statusOneId);
   assert.equal(ticket.get('dt_path')[1]['ticket']['priority'], TD.priorityOneId);
+  assert.deepEqual(ticket.get('dt_path')[1]['dtd']['fields'][0]['options'], [OD.idOne]);
+  assert.deepEqual(ticket.get('request'), requestValue);
 });
 
 test('updating field text (patch ticket)', async assert => {
@@ -329,6 +333,7 @@ test('can click to next destination if field is not required and don\'t fill in 
   mod_dt_one['dtd']['fields'][0]['label'] = FD.labelThree;
   mod_dt_one['dtd']['fields'][0]['value'] = '';
   mod_dt_one['dtd']['fields'][0]['required'] = FD.requiredOne;
+  mod_dt_one['dtd']['fields'][0]['options'] = [OD.idOne];
   const ticket = store.find('ticket', TD.idOne);
   const mock_dt_path = [...dt_path,
     {'ticket':{'id':TD.idOne,'requester':'Mel1 Gibson1','location': LD.idOne,
@@ -340,6 +345,8 @@ test('can click to next destination if field is not required and don\'t fill in 
   xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
   await page.clickNextBtn();
   assert.equal(currentURL(), DEST_URL);
+  assert.deepEqual(ticket.get('dt_path')[1]['dtd']['fields'][0]['options'], [OD.idOne]);
+  assert.deepEqual(ticket.get('request'), TD.requestOne);
 });
 
 test('can click to next destination after updating multiple fields select (patch ticket)', async assert => {
@@ -420,6 +427,7 @@ test('fill out: number, text, textarea, and select (patch ticket)', async assert
   mod_dt_one['dtd']['fields'].splice(1, 0, {'id': FD.idFour,'label': FD.labelFour,'value': OD.textOne,'required': FD.requiredTwo});
   mod_dt_one['dtd']['fields'].splice(2, 0, {'id': FD.idTwo,'label': FD.labelTwo,'value': '92','required': FD.requiredTwo});
   mod_dt_one['dtd']['fields'].splice(3, 0, {'id': FD.idThree,'label': FD.labelThree,'value': '123 St.','required': FD.requiredTwo});
+  mod_dt_one['dtd']['fields'][0]['options'] = [OD.idOne];
   const mock_dt_path = [...dt_path,
     {'ticket':{'id':TD.idOne,'requester':'Mel1 Gibson1','location': LD.idOne,
       'status':TD.statusOneId,'priority':TD.priorityOneId,
@@ -430,6 +438,8 @@ test('fill out: number, text, textarea, and select (patch ticket)', async assert
   xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
   await page.clickNextBtn();
   assert.equal(currentURL(), DEST_URL);
+  assert.deepEqual(ticket.get('dt_path')[1]['dtd']['fields'][0]['options'], [OD.idOne]);
+  assert.deepEqual(ticket.get('request'), requestValue);
 });
 
 // test('if dt_path length is 1 and deep link, wont push another dt_path object in (deep linking from old decision tree)', async assert => {

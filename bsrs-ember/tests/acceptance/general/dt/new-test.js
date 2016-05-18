@@ -41,7 +41,7 @@ const SEARCH = '.ember-power-select-search input';
 const DTD_URL = BASEURLS.base_dtd_url;
 const DTD_API_URL = `${PREFIX}${DTD_URL}/`;
 const TICKET_URL = BASEURLS.base_tickets_url;
-const DT_TICKET_POST_URL = `${PREFIX}/dt/ticket/`;
+const DT_TICKET_POST_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
 const DT_TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
 const DT_START_URL = `${DT_URL}/${DT.idOne}/ticket/1`;
 const DT_TWO_URL = `${DT_URL}/${DT.idTwo}/ticket/1`;
@@ -76,57 +76,95 @@ test('go to /dashboard, click button to get to /dt/new', assert => {
 
 /* jshint ignore:start */
 
-// test('has_multi_locations === true, can POST data with multiple options, and transition to /dt/{start-id}', async assert => {
-//   await visit(DT_NEW_URL);
-//   assert.equal(currentURL(), DT_NEW_URL);
-//   assert.equal(dtPage.requester, '');
-//   assert.equal(dtPage.locationsValue, '');
-//   // requester
-//   await dtPage.requesterFillin(TICKET.requesterOne);
-//   assert.equal(dtPage.requester, TICKET.requesterOne);
-//   let ticket = store.findOne('ticket');
-//   assert.equal(ticket.get('requester'), TICKET.requesterOne);
-//   assert.equal(ticket.get('dt_path'), undefined);
-//   // location
-//   xhr(`${PREFIX}/admin/locations/?name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
-//   await dtPage.locationsClickDropdown();
-//   await fillIn(`${SEARCH}`, 'a');
-//   assert.equal(currentURL(), DT_NEW_URL);
-//   assert.equal(ticketPage.locationOptionLength, 1);
-//   await dtPage.locationsOptionOneClick();
-//   assert.equal(dtPage.locationsValue, LD.storeNameThree);
-//   assert.equal(store.findOne('ticket').get('location.id'), LD.idThree);
-//   // POST
-//   let dtd_response = DTF.generate(DT.idOne);
-//   dtd_response.fields[0].options.push({id: OD.idTwo, text: OD.textFour, order: OD.orderTwo })
-//   xhr(DT_START_ENDPOINT, 'GET', null, {}, 200, dtd_response);
-//   await dtPage.clickStart();
-//   assert.equal(currentURL(), DT_START_URL);
-//   await dtPage.fieldOneCheckboxCheck();
-//   await dtPage.fieldTwoCheckboxCheck();
-//   // click multiple options
-//   const requestValue = `${OD.textOne}, ${OD.textFour}`;
-//   const ticketRequestValue = `name: ${requestValue}`;
-//   assert.deepEqual(ticket.get('requestValues'), [ticketRequestValue]);
-//   assert.equal(ticket.get('dt_path'), undefined);
-//   const mod_new_payload = Ember.$.extend(true, {}, ticket_dt_new_payload);
-//   mod_new_payload.request = ticketRequestValue; 
-//   mod_new_payload['dt_path'][0]['ticket'].request = ticketRequestValue; 
-//   mod_new_payload['dt_path'][0]['dtd']['fields'] = [{id: FD.idOne, value: requestValue}]; 
-//   xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(mod_new_payload), {}, 201, dtd_response);
-//   await page.clickNextBtn();
-//   // Post updates ticket fields, adds fields/options do dtd object
-//   assert.equal(ticket.get('dt_path')[0]['dtd']['id'], DT.idOne);
-//   assert.equal(ticket.get('dt_path')[0]['dtd']['fields'].length, 1);
-//   assert.equal(ticket.get('dt_path')[0]['dtd']['fields'][0]['id'], FD.idOne);
-//   assert.equal(ticket.get('dt_path')[0]['dtd']['fields'][0]['value'], requestValue);
-//   assert.equal(ticket.get('dt_path')[0]['ticket']['id'], 1);
-//   assert.equal(ticket.get('dt_path')[0]['ticket']['location'], LD.idThree);
-//   assert.equal(ticket.get('dt_path')[0]['ticket']['status'], TD.statusZeroId);
-//   assert.equal(ticket.get('dt_path')[0]['ticket']['priority'], TD.priorityZeroId);
-//   assert.equal(ticket.get('dt_path')[0]['ticket']['requester'], TD.requesterOne);
-//   assert.equal(ticket.get('dt_path')[0]['ticket']['request'], ticketRequestValue);
-// });
+test('POST then PATCH - to demonstrate starting the DT and maintaining traversing the DT Tree and updating the same Ticket', async assert => {
+  await visit(DT_NEW_URL);
+  assert.equal(currentURL(), DT_NEW_URL);
+  // fill out initial form
+  await dtPage.requesterFillin(TICKET.requesterOne);
+  xhr(`${PREFIX}/admin/locations/?name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
+  await dtPage.locationsClickDropdown();
+  await fillIn(`${SEARCH}`, 'a');
+  await dtPage.locationsOptionOneClick();
+  // DTD start returned from GET
+  let dtd_response = DTF.generate(DT.idOne);
+  xhr(DT_START_ENDPOINT, 'GET', null, {}, 200, dtd_response);
+  await dtPage.clickStart();
+  assert.equal(currentURL(), DT_START_URL);
+  // fill out checkbox Field
+  assert.ok(!dtPage.fieldOneCheckboxIsChecked());
+  await dtPage.fieldOneCheckboxCheck();
+  assert.ok(dtPage.fieldOneCheckboxIsChecked());
+  let dtd_response_two = DTF.generate(DT.idTwo);
+  // POST
+  let mod_payload = Ember.$.extend(true, {}, ticket_dt_new_payload);
+  mod_payload['dt_path'][0]['dtd']['fields'] = [{id: FD.idOne, label: FD.labelOne, value: OD.textOne, required: FD.requiredTwo, options: [OD.idOne]}]; 
+  xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(mod_payload), {}, 201, dtd_response_two);
+  await dtPage.btnOneClick();
+  assert.equal(currentURL(), DT_TWO_URL);
+  let ticket = store.findOne('ticket');
+  assert.equal(ticket.get('dt_path')[0]['dtd']['id'], DT.idOne);
+  assert.equal(ticket.get('dt_path')[0]['dtd']['fields'][0]['id'], FD.idOne);
+  assert.equal(ticket.get('dt_path')[0]['dtd']['fields'][0]['required'], FD.requiredTwo);
+  assert.equal(ticket.get('dt_path')[0]['dtd']['fields'][0]['value'], OD.textOne);
+  assert.deepEqual(ticket.get('dt_path')[0]['dtd']['fields'][0]['options'], [OD.idOne]);
+  assert.equal(ticket.get('dt_path')[0]['dtd']['fields'][0]['label'], FD.labelOne);
+  assert.equal(ticket.get('request'), `${FD.labelOne}: ${OD.textOne}`);
+});
+
+test('has_multi_locations === true, transition to /dt/{start-id}, can POST data with multiple options, ', async assert => {
+  await visit(DT_NEW_URL);
+  assert.equal(currentURL(), DT_NEW_URL);
+  assert.equal(dtPage.requester, '');
+  assert.equal(dtPage.locationsValue, '');
+  // requester
+  await dtPage.requesterFillin(TICKET.requesterOne);
+  assert.equal(dtPage.requester, TICKET.requesterOne);
+  let ticket = store.findOne('ticket');
+  assert.equal(ticket.get('requester'), TICKET.requesterOne);
+  assert.equal(ticket.get('dt_path'), undefined);
+  // location
+  xhr(`${PREFIX}/admin/locations/?name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
+  await dtPage.locationsClickDropdown();
+  await fillIn(`${SEARCH}`, 'a');
+  assert.equal(currentURL(), DT_NEW_URL);
+  assert.equal(ticketPage.locationOptionLength, 1);
+  await dtPage.locationsOptionOneClick();
+  assert.equal(dtPage.locationsValue, LD.storeNameThree);
+  assert.equal(store.findOne('ticket').get('location.id'), LD.idThree);
+  let dtd_response = DTF.generate(DT.idOne);
+  dtd_response['fields'][0]['options'].push({id: OD.idTwo, text: OD.textTwo, order: OD.orderTwo});
+  xhr(DT_START_ENDPOINT, 'GET', null, {}, 200, dtd_response);
+  await dtPage.clickStart();
+  assert.equal(currentURL(), DT_START_URL);
+  await dtPage.fieldOneCheckboxCheck();
+  await dtPage.fieldTwoCheckboxCheck();
+  // click multiple options
+  const requestValue = `${OD.textOne}, ${OD.textTwo}`;
+  const ticketRequestValue = `name: ${requestValue}`;
+  assert.deepEqual(ticket.get('requestValues'), [ticketRequestValue]);
+  assert.equal(ticket.get('dt_path'), undefined);
+  const mod_new_payload = Ember.$.extend(true, {}, ticket_dt_new_payload);
+  mod_new_payload.request = ticketRequestValue; 
+  mod_new_payload['dt_path'][0]['ticket'].request = ticketRequestValue; 
+  mod_new_payload['dt_path'][0]['dtd']['fields'] = [{id: FD.idOne, label: FD.labelOne, value: requestValue, required: FD.requiredTwo, options: [OD.idOne, OD.idTwo]}]; 
+  xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(mod_new_payload), {}, 201, dtd_response);
+  await page.clickNextBtn();
+  // Post updates ticket fields, adds fields/options do dtd object
+  assert.equal(ticket.get('dt_path')[0]['dtd']['id'], DT.idOne);
+  assert.equal(ticket.get('dt_path')[0]['dtd']['fields'].length, 1);
+  assert.equal(ticket.get('dt_path')[0]['dtd']['fields'][0]['id'], FD.idOne);
+  assert.equal(ticket.get('dt_path')[0]['dtd']['fields'][0]['value'], requestValue);
+  assert.equal(ticket.get('dt_path')[0]['dtd']['fields'][0]['required'], FD.requiredTwo);
+  assert.deepEqual(ticket.get('dt_path')[0]['dtd']['fields'][0]['options'], [OD.idOne, OD.idTwo]);
+  assert.equal(ticket.get('dt_path')[0]['dtd']['fields'][0]['label'], FD.labelOne);
+  assert.equal(ticket.get('request'), `${FD.labelOne}: ${OD.textOne}, ${OD.textTwo}`);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['id'], 1);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['location'], LD.idThree);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['status'], TD.statusZeroId);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['priority'], TD.priorityZeroId);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['requester'], TD.requesterOne);
+  assert.equal(ticket.get('dt_path')[0]['ticket']['request'], ticketRequestValue);
+});
 
 /* jshint ignore:end */
 
@@ -156,7 +194,7 @@ test('has_multi_locations === true, validation: cant click next until select loc
   });
 });
 
-test('has_multi_locations === false, can POST data, and transition to /dt/{start-id}', assert => {
+test('has_multi_locations === false, transitions to /dt/{start-id}', assert => {
   let person;
   xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   visit('/dashboard');
@@ -204,7 +242,6 @@ test('has_multi_locations === false, can POST data, and transition to /dt/{start
       dtd: {}
     }],
   };
-  // xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(payload), {}, 201, dtd_response);
   let dtd_response = DTF.generate(DT.idOne);
   xhr(DT_START_ENDPOINT, 'GET', null, {}, 200, dtd_response);
   dtPage.clickStart();
@@ -214,7 +251,7 @@ test('has_multi_locations === false, can POST data, and transition to /dt/{start
   });
 });
 
-test('after POST, redirected to next DT, and DT is rendered', assert => {
+test('redirected to start DT after filling out requester and location', assert => {
   visit(DT_NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), DT_NEW_URL);
@@ -225,8 +262,6 @@ test('after POST, redirected to next DT, and DT is rendered', assert => {
   dtPage.locationsClickDropdown();
   fillIn(`${SEARCH}`, 'a');
   dtPage.locationsOptionOneClick();
-  // POST
-  // xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(ticket_dt_new_payload), {}, 201, dtd_response);
   let dtd_response = DTF.generate(DT.idOne);
   xhr(DT_START_ENDPOINT, 'GET', null, {}, 200, dtd_response);
   dtPage.clickStart();
@@ -245,63 +280,3 @@ test('after POST, redirected to next DT, and DT is rendered', assert => {
   });
 });
 
-test('POST then PATCH - to demonstrate starting the DT and maintaining traversing the DT Tree and updating the same Ticket', assert => {
-  visit(DT_NEW_URL);
-  andThen(() => {
-    assert.equal(currentURL(), DT_NEW_URL);
-  });
-  // fill out form
-  dtPage.requesterFillin(TICKET.requesterOne);
-  xhr(`${PREFIX}/admin/locations/?name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
-  dtPage.locationsClickDropdown();
-  fillIn(`${SEARCH}`, 'a');
-  dtPage.locationsOptionOneClick();
-  // DTD start returned from GET
-  let dtd_response = DTF.generate(DT.idOne);
-  xhr(DT_START_ENDPOINT, 'GET', null, {}, 200, dtd_response);
-  dtPage.clickStart();
-  andThen(() => {
-    assert.equal(currentURL(), DT_START_URL);
-    let ticket = store.findOne('ticket');
-  });
-  // fill out checkbox Field
-  andThen(() => {
-    assert.ok(!dtPage.fieldOneCheckboxIsChecked());
-  });
-  dtPage.fieldOneCheckboxCheck();
-  andThen(() => {
-    // assert.ok(dtPage.fieldOneCheckboxIsChecked());
-  });
-  // // PATCH
-  // let patch_payload = {
-  //   id: 1,
-  //   status: TICKET.statusOneId,
-  //   priority: TICKET.priorityOneId,
-  //   categories: [
-  //     CD.idOne,
-  //     CD.idPlumbing,
-  //     CD.idPlumbingChild
-  //   ],
-  //   request: "name: yes"
-  // };
-  let dtd_response_two = DTF.generate(DT.idTwo);
-  // xhr(DT_TICKET_PATCH_URL, 'PATCH', JSON.stringify(patch_payload), {}, 200, dtd_response_two);
-  // POST
-  let mod_payload = Ember.$.extend(true, {}, ticket_dt_new_payload);
-  mod_payload['dt_path'][0]['dtd']['fields'] = [{id: FD.idOne, label: FD.labelOne, value: OD.textOne, required: FD.requiredTwo}]; 
-  xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(mod_payload), {}, 201, dtd_response_two);
-  dtPage.btnOneClick();
-  andThen(() => {
-    assert.equal(currentURL(), DT_TWO_URL);
-    // let ticket = store.findOne('ticket');
-    // // can preview second DT start node elements
-    // assert.equal(dtPage.note, DT.noteOne);
-    // assert.equal(dtPage.description, DT.descriptionOne);
-    // assert.equal(dtPage.fieldCount, 1);
-    // assert.equal(dtPage.fieldOneName, FD.labelOne);
-    // // assert.ok(dtPage.fieldOneCheckboxIsChecked());
-    // assert.equal(dtPage.prompt, DT.promptOne);
-    // assert.equal(dtPage.btnCount, 1);
-    // assert.equal(dtPage.btnOneText, LINK.textOne);
-  });
-});

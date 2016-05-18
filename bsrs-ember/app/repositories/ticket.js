@@ -46,8 +46,9 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMix
       return response;
     });
   },
-  dtPost(model) {
-    return PromiseMixin.xhr(`${PREFIX}/dt${TICKET_URL}/`, 'POST', {data: JSON.stringify(model.serialize())}).then((response) => {
+  dtPost(model, link) {
+    const post_id = link.get('destination').get('id');
+    return PromiseMixin.xhr(`${PREFIX}/dt/${post_id}${TICKET_URL}/`, 'POST', {data: JSON.stringify(model.serialize())}).then((response) => {
       model.save();
       model.saveRelated();
       return response;

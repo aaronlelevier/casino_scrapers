@@ -11,13 +11,13 @@ var dtPathMunge = function(ticket, dtd, fieldsObj, link, simpleStore) {
   let dt_path = ticket.get('dt_path') || [];
 
   // build fields array && build options array for a new dtd that is not in dt_path
+  //options id array that is used on init to set isChecked property.  presence of id indicates the value is checked
   let fields = [];
   for (let obj of fieldsObj) {
-    fields.push({id: obj[0], label: obj[1].label, value: obj[1].value, required: obj[1].required, options: obj.optionValues ? obj.optionValues : undefined});
-    //options id array that is used on init to set isChecked property.  presence of id indicates the value is checked
-    if (obj.optionValues) {
-      fields['options'] =  obj.optionValues;
-    }
+    fields.push({id: obj[0], label: obj[1].label, value: obj[1].value, required: obj[1].required, options: obj[1].optionValues ? obj[1].optionValues : undefined});
+    // if (obj[1].optionValues) {
+    //   fields['options'] =  obj[1].optionValues;
+    // }
   }
   // if not existing
   const new_ticket = {
