@@ -88,3 +88,12 @@ class DTTicketViewSet(BaseModelViewSet):
         tree_data = TreeData.objects.get_start()
         dt_serializer = TreeDataDetailSerializer(tree_data)
         return Response(dt_serializer.data)
+
+    @list_route(methods=['PATCH'], url_path=r"submit")
+    def submit(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self._get_ticket(request.data)
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)

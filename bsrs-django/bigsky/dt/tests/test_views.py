@@ -45,9 +45,7 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
             'id': str(uuid.uuid4()),
             'request': 'plumbing'
         })
-
         response = self.client.post('/api/dt/{}/ticket/'.format(self.destination.id), self.data, format='json')
-        print(response.content)
         self.assertEqual(response.status_code, 201)
         # Ticket
         self.assertTrue(Ticket.objects.get(id=self.data['id']))
@@ -69,7 +67,6 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
 
         response = self.client.patch('/api/dt/{}/ticket/'.format(self.destination.id),
             self.data, format='json')
-        print(response.content)
         self.assertEqual(response.status_code, 200)
         # Ticket
         ticket = Ticket.objects.get(id=self.data['id'])
@@ -78,6 +75,25 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.destination.id))
         self.assertEqual(data.keys(), TreeDataDetailSerializer(self.destination).data.keys())
+
+    def test_patch__ticket_submit_and_ticket_response_returned(self):
+        """
+        Submit will use custom list patch route defined in the view and will return ticket that was updated
+        Backend logic for determining if status or priority are different will be added in the future
+        """
+        self.data.update({
+            'request': 'plumbing'
+        })
+        self.assertNotEqual(self.data['request'], self.ticket.request)
+        response = self.client.patch('/api/dt/submit/'.format(self.destination.id),
+            self.data, format='json')
+        self.assertEqual(response.status_code, 200)
+        # Ticket
+        ticket = Ticket.objects.get(id=self.data['id'])
+        self.assertEqual(ticket.request, self.data['request'])
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['id'], str(ticket.id))
+        # TODO: settings will result in ticket status possibly changing for example
 
     def test_patch__404_if_dtd_not_found(self):
         id = uuid.uuid4()
