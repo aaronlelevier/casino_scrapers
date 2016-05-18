@@ -60,18 +60,15 @@ class SettingTests(APITestCase):
         new_test_mode = False
         serializer = SettingSerializer(self.general_setting)
         raw_data = serializer.data
+        self.assertEqual(raw_data['settings']['dashboard_text'], {'value': 'Welcome', 'type': 'str'})
         raw_data['settings'] = {
             'dashboard_text': new_dashboard_text,
-            'test_mode': new_test_mode
         }
 
         response = self.client.put('/api/admin/settings/{}/'.format(self.general_setting.id), raw_data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
-        # dashboard_text
+        # import pdb; pdb.set_trace()
         self.assertEqual(data['settings']['dashboard_text']['value'], new_dashboard_text)
         self.assertEqual(data['settings']['dashboard_text']['type'], 'str')
-        # test_mode
-        self.assertEqual(data['settings']['test_mode']['value'], new_test_mode)
-        self.assertEqual(data['settings']['test_mode']['type'], 'bool')

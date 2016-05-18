@@ -68,46 +68,30 @@ class SettingsValidatorTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-    # def test_valid__email(self):
-    #     serializer = SettingUpdateSerializer(self.setting)
-    #     data = copy.copy(serializer.data)
-    #     email = 'foo@bar'
-    #     data["settings"]["email"] = email
+    def test_valid__email(self):
+        email = 'foo@bar'
+        self.data["settings"]["test_contractor_email"] = email
 
-    #     response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id),
-    #         data, format='json')
+        response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id),
+            self.data, format='json')
 
-    #     self.assertEqual(response.status_code, 400)
-    #     self.assertEqual(
-    #         json.loads(response.content.decode('utf8'))['email'],
-    #         ['{} is not a valid email'.format(email)]
-    #     )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            json.loads(response.content.decode('utf8'))['test_contractor_email'],
+            ['{} is not a valid email'.format(email)]
+        )
 
     # def test_valid__phone(self):
     #     phone = "+1800"
-    #     self.data["settings"]["test_contractor_phone"] = {'value': phone}
+    #     self.data["settings"]["test_contractor_phone"] = phone
 
-    #     response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
+    #     response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id),
     #         self.data, format='json')
 
     #     self.assertEqual(response.status_code, 400)
     #     self.assertEqual(
     #         json.loads(response.content.decode('utf8'))['test_contractor_phone'],
     #         ['{} is not a valid phone'.format(phone)]
-    #     )
-
-    # def test_valid_foreignkey(self):
-    #     foreignkey = str(uuid.uuid4())
-    #     self.data["settings"]["auth_currency"] = {'value': foreignkey}
-
-    #     response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
-    #         self.data, format='json')
-
-    #     self.assertEqual(response.status_code, 400)
-    #     # TODO: should this return the related model name in the error msg?
-    #     self.assertEqual(
-    #         json.loads(response.content.decode('utf8'))['auth_currency'],
-    #         ['{} is not a valid foreignkey for accounting.currency'.format(foreignkey)]
     #     )
 
     def test_valid__builtins(self):

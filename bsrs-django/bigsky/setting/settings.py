@@ -27,7 +27,7 @@ GENERAL_SETTINGS = {
         "value": False,
         "type": "bool",
     },
-    "email": {
+    "test_contractor_email": {
         "value": "test@bigskytech.com",
         "type": "email",
     },

@@ -1,3 +1,4 @@
+import copy
 import re
 
 from django.utils.translation import ugettext_lazy as _
@@ -56,18 +57,13 @@ class SettingsValidator(object):
         This hook is called by the serializer instance,
         prior to the validation call being made.
         """
-        self.instance = serializer_field.instance
+        self.init_settings = copy.copy(serializer_field.instance.settings)
 
     def __call__(self, kwargs):
-        combined_settings = self.instance.combined_settings
-
         errors = {}
-
-        settings = kwargs.get('settings', None)
-
+        settings = copy.copy(kwargs.get('settings', None))
         if settings:
-            for k,v in combined_settings.items():
-
+            for k,v in self.init_settings.items():
                 try:
                     value = settings[k]
                 except KeyError:
@@ -75,8 +71,8 @@ class SettingsValidator(object):
                     # for the setting, we're going to use the default.
                     pass
                 else:
-                    type_str = combined_settings[k]['type']
-                    related_model = combined_settings[k].get('related_model', None)
+                    type_str = self.init_settings[k]['type']
+                    related_model = self.init_settings[k].get('related_model', None)
 
                     error = self.validate_new_value(value, type_str=type_str,
                                                     related_model=related_model)
@@ -125,16 +121,20 @@ class SettingsValidator(object):
 def valid_email(email):
     if email:
         pattern = re.compile(r'[^@]+@[^@]+\.[^@]+')
-        return re.match(pattern, email)
+        return get_re_match(pattern, email)
 
 
 def valid_phone(phone):
     if phone:
-        try:
-            pattern = re.compile(r'(?:\+1){0,1}(\d{10})')
-            return re.match(pattern, phone)
-        except TypeError:
-            pass
+        pattern = re.compile(r'(?:\+1){0,1}(\d{10})')
+        return get_re_match(pattern, phone)
+
+
+def get_re_match(pattern, string):
+    try:
+        return re.match(pattern, string)
+    except TypeError:
+        pass
 
 
 def regex_check_contains(regex, chars):

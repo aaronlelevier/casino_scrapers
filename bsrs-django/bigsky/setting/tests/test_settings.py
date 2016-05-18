@@ -14,7 +14,7 @@ class SettingsTests(TestCase):
             'exchange_rates',
             'modules',
             'test_mode',
-            'email',
+            'test_contractor_email',
             'test_contractor_phone',
             'dt_start_key'
         ]
