@@ -59,8 +59,7 @@ class DTTicketViewSet(BaseModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         # custom: return response with TreeData
-        tree_data = TreeData.objects.get_start()
-        dt_serializer = TreeDataDetailSerializer(tree_data)
+        dt_serializer = self._get_tree_data(kwargs)
         return Response(dt_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def update(self, request, *args, **kwargs):
