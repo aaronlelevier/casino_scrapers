@@ -59,7 +59,6 @@ def create_tree_data(links=1, destination=None, **kwargs):
     return tree_data
 
 
-
 # Fixture Generation code
 DTD_DATA = [
     [0, 'Start', None],

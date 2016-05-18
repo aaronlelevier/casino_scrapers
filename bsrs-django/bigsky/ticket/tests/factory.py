@@ -145,7 +145,7 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
             'fields': [{
                 'id': str(start_dtd.fields.first().id),
                 'label': start_dtd.fields.first().label,
-                'value': 'random value for start',
+                'options': [str(start_dtd.fields.first().options.first().id)],
                 'required': start_dtd.fields.first().required,
                     }]
             },
