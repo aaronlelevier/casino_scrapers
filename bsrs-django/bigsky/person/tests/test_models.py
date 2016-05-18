@@ -17,9 +17,8 @@ from contact.tests.factory import create_contact
 from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
-from person.settings import DEFAULT_ROLE_SETTINGS
 from person.tests.factory import PASSWORD, create_person, create_role, create_single_person
-from setting.settings import DEFAULT_GENERAL_SETTINGS
+from setting.settings import GENERAL_SETTINGS, ROLE_SETTINGS
 from setting.tests.factory import create_general_setting
 from translation.models import Locale
 from utils import create
@@ -65,7 +64,7 @@ class RoleTests(TestCase):
 
     def test_settings_default(self):
         role = create_role()
-        self.assertEqual(role.settings, DEFAULT_ROLE_SETTINGS)
+        self.assertEqual(role.settings, ROLE_SETTINGS)
 
     # JSON settings
 
@@ -74,15 +73,15 @@ class RoleTests(TestCase):
 
     def test_get_class_default_settings(self):
         ret = self.role.get_class_default_settings()
-        self.assertEqual(ret, DEFAULT_ROLE_SETTINGS)
+        self.assertEqual(ret, ROLE_SETTINGS)
 
     def test_get_class_default_settings__general(self):
         ret = self.role.get_class_default_settings('general')
-        self.assertEqual(ret, DEFAULT_GENERAL_SETTINGS)
+        self.assertEqual(ret, GENERAL_SETTINGS)
 
     def test_get_all_class_settings(self):
-        combined = copy.copy(DEFAULT_GENERAL_SETTINGS)
-        combined.update(DEFAULT_ROLE_SETTINGS)
+        combined = copy.copy(GENERAL_SETTINGS)
+        combined.update(ROLE_SETTINGS)
 
         ret = self.role.get_all_class_settings()
 
@@ -90,8 +89,8 @@ class RoleTests(TestCase):
             self.assertIn(k, ret.keys())
 
     def test_cls_get_all_class_settings(self):
-        combined = copy.copy(DEFAULT_GENERAL_SETTINGS)
-        combined.update(DEFAULT_ROLE_SETTINGS)
+        combined = copy.copy(GENERAL_SETTINGS)
+        combined.update(ROLE_SETTINGS)
 
         ret = Role.cls_get_all_class_settings()
 
@@ -106,7 +105,7 @@ class RoleTests(TestCase):
 
     def test_get_all_instance_settings_full(self):
         role = create_role()
-        combined = copy.copy(DEFAULT_GENERAL_SETTINGS)
+        combined = copy.copy(GENERAL_SETTINGS)
         combined.update(role.settings)
 
         ret = self.role.get_all_instance_settings_full()

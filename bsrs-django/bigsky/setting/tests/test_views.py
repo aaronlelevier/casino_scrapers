@@ -5,7 +5,7 @@ from rest_framework.test import APITestCase
 
 from person.tests.factory import PASSWORD, create_single_person
 from setting.serializers import SettingSerializer
-from setting.settings import DEFAULT_GENERAL_SETTINGS
+from setting.settings import GENERAL_SETTINGS
 from setting.tests.factory import create_general_setting
 
 
@@ -37,9 +37,9 @@ class SettingTests(APITestCase):
         self.assertEqual(data['id'], str(self.general_setting.id))
         self.assertEqual(data['name'], self.general_setting.name)
         # settings
-        for key in DEFAULT_GENERAL_SETTINGS.keys():
+        for key in GENERAL_SETTINGS.keys():
             for field in ['value', 'inherited_from']:
-                self.assertEqual(data['settings'][key][field], DEFAULT_GENERAL_SETTINGS[key][field])
+                self.assertEqual(data['settings'][key][field], GENERAL_SETTINGS[key][field])
 
     def test_create(self):
         raw_data = {

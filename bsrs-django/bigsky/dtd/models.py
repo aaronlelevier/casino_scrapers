@@ -5,12 +5,12 @@ from django.db.models import Q
 from dtd.model_choices import LINK_TYPES, NOTE_TYPES, FIELD_TYPES
 from category.models import Category
 from generic.models import Attachment
-from setting.settings import DEFAULT_GENERAL_SETTINGS
+from setting.settings import GENERAL_SETTINGS
 from ticket.models import TicketStatus, TicketPriority
 from utils.models import BaseModel, BaseQuerySet, BaseManager
 
 
-DTD_START_KEY = DEFAULT_GENERAL_SETTINGS['dt_start_key']['value']
+DTD_START_KEY = GENERAL_SETTINGS['dt_start_key']['value']
 
 
 class TreeDataQuerySet(BaseQuerySet):

@@ -22,9 +22,8 @@ from category.models import Category
 from contact.models import PhoneNumber, Address, Email
 from location.models import LocationLevel, Location, LOCATION_COMPANY
 from person import config, helpers
-from person.settings import DEFAULT_ROLE_SETTINGS
 from setting.models import Setting
-from setting.settings import DEFAULT_GENERAL_SETTINGS
+from setting.settings import GENERAL_SETTINGS, ROLE_SETTINGS
 from translation.models import Locale
 from utils.models import BaseModel, BaseNameModel, DefaultNameManager, SettingMixin
 from utils.validators import (contains_digit, contains_upper_char, contains_lower_char,
@@ -114,7 +113,7 @@ class Role(SettingMixin, BaseModel):
     msg_copy_email = models.BooleanField(blank=True, default=False)
     msg_copy_default = models.BooleanField(blank=True, default=False)
     msg_stored_link = models.BooleanField(blank=True, default=False)
-    settings = JSONField(blank=True, default={})
+    settings = models.ForeignKey(Setting, null=True)
 
     __original_values = {}
 
@@ -155,9 +154,6 @@ class Role(SettingMixin, BaseModel):
 
         if not self.auth_currency:
             self.auth_currency = Currency.objects.default()
-
-        if not self.settings:
-            self.settings = copy.copy(DEFAULT_ROLE_SETTINGS)
 
     def _update_password_history_length(self):
         """
@@ -237,9 +233,9 @@ class Role(SettingMixin, BaseModel):
         if name == 'general':
             setting = Setting.objects.get(name=name)
             return copy.copy(setting.settings)
-            # return copy.copy(DEFAULT_GENERAL_SETTINGS)
+            # return copy.copy(GENERAL_SETTINGS)
         else:
-            return copy.copy(DEFAULT_ROLE_SETTINGS)
+            return copy.copy(ROLE_SETTINGS)
 
     def get_all_class_settings(self):
         role_settings = self.get_class_default_settings()
@@ -251,8 +247,8 @@ class Role(SettingMixin, BaseModel):
         """
         For use w/ API Validators for types, so they have a hook on the model class.
         """
-        combined = copy.copy(DEFAULT_GENERAL_SETTINGS)
-        combined.update(DEFAULT_ROLE_SETTINGS)
+        combined = copy.copy(GENERAL_SETTINGS)
+        combined.update(ROLE_SETTINGS)
         return combined
 
     def get_all_instance_settings(self):
@@ -351,12 +347,12 @@ class Person(BaseModel, AbstractUser):
     proxy_end_date = models.DateField("Out of the Office Status End Date", max_length=100,
                                       blank=True, null=True)
     proxy_user = models.ForeignKey("self", related_name='coveringuser', blank=True, null=True)
-
-    # TODO: add logs for: user_history
-
+    # Contact Models
     phone_numbers = GenericRelation(PhoneNumber)
     addresses = GenericRelation(Address)
     emails = GenericRelation(Email)
+    # Inheritable Settings
+    settings = models.ForeignKey(Setting, null=True)
 
     # Managers
     objects = PersonManager()

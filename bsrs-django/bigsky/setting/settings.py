@@ -1,47 +1,65 @@
-DEFAULT_GENERAL_SETTINGS = {
+GENERAL_SETTINGS = {
+    "company_code": {
+        "value": "One",
+        "type": "str"
+    },
     "company_name": {
         "value": "Andy's Pianos",
         "type": "str",
-        "inherited_from": "general"
     },
-    "welcome_text": {
+    "dashboard_text": {
         "value": "Welcome",
         "type": "str",
-        "inherited_from": "general"
     },
     "login_grace": {
         "value": 1,
         "type": "int",
-        "inherited_from": "general"
     },
     "exchange_rates": {
         "value": 1.0,
         "type": "float",
-        "inherited_from": "general"
     },
     "modules": {
         "value": [],
         "type": "list",
-        "inherited_from": "general"
     },
     "test_mode": {
         "value": False,
         "type": "bool",
-        "inherited_from": "general"
     },
     "email": {
         "value": "test@bigskytech.com",
         "type": "email",
-        "inherited_from": "general"
     },
     "test_contractor_phone": {
         "value": "+18587155000",
         "type": "phone",
-        "inherited_from": "general"
     },
     "dt_start_key": {
         "value": "Start",
         "type": "str",
-        "inherited_from": "general"
+    }
+}
+
+ROLE_SETTINGS = {
+    "create_all": {
+        "value": True,
+        "type": "bool",
+    },
+    "dashboard_text": {
+        "inherits_from": "general",
+    }
+}
+
+PERSON_SETTINGS = {
+    "accept_assign": {
+        "inherits_from": "role"
+    },
+    "accept_notify": {
+        "inherits_from": "role"
+    },
+    "password_one_time": {
+        "value": False,
+        "type": "bool"
     }
 }

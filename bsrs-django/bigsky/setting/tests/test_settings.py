@@ -1,20 +1,42 @@
 from django.test import TestCase
 
-from setting.settings import DEFAULT_GENERAL_SETTINGS
+from setting.settings import GENERAL_SETTINGS, ROLE_SETTINGS, PERSON_SETTINGS
 
 
-class GeneralSettingsTests(TestCase):
+class SettingsTests(TestCase):
 
-    def setUp(self):
-        self.general = DEFAULT_GENERAL_SETTINGS
+    def test_general(self):
+        keys = [
+            'company_code',
+            'company_name',
+            'dashboard_text',
+            'login_grace',
+            'exchange_rates',
+            'modules',
+            'test_mode',
+            'email',
+            'test_contractor_phone',
+            'dt_start_key'
+        ]
 
-    def test_all_values(self):
-        self.assertEqual(self.general['company_name'], {'value': "Andy's Pianos", 'type': 'str', 'inherited_from': 'general'})
-        self.assertEqual(self.general['welcome_text'], {'value': "Welcome", 'type': 'str', 'inherited_from': 'general'})
-        self.assertEqual(self.general['login_grace'], {'value': 1, 'type': 'int', 'inherited_from': 'general'})
-        self.assertEqual(self.general['exchange_rates'], {'value': 1.0, 'type': 'float', 'inherited_from': 'general'})
-        self.assertEqual(self.general['modules'], {'value': [], 'type': 'list', 'inherited_from': 'general'})
-        self.assertEqual(self.general['test_mode'], {'value': False, 'type': 'bool', 'inherited_from': 'general'})
-        self.assertEqual(self.general['email'], {'value': 'test@bigskytech.com', 'type': 'email', 'inherited_from': 'general'})
-        self.assertEqual(self.general['test_contractor_phone'], {'value': '+18587155000', 'type': 'phone', 'inherited_from': 'general'})
-        self.assertEqual(self.general['dt_start_key'], {'value': 'Start', 'type': 'str', 'inherited_from': 'general'})
+        for k in keys:
+            self.assertIn(k, GENERAL_SETTINGS)
+
+    def test_role(self):
+        keys = [
+            'create_all',
+            'dashboard_text'
+        ]
+
+        for k in keys:
+            self.assertIn(k, ROLE_SETTINGS)
+
+    def test_person(self):
+        keys = [
+            'accept_assign',
+            'accept_notify',
+            'password_one_time'
+        ]
+
+        for k in keys:
+            self.assertIn(k, PERSON_SETTINGS)

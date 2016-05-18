@@ -6,9 +6,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from model_mommy import mommy
 
 from contact.models import Country
-from person.settings import DEFAULT_ROLE_SETTINGS
 from person.tests.factory import create_single_person, create_role
-from setting.settings import DEFAULT_GENERAL_SETTINGS
+from setting.settings import GENERAL_SETTINGS, ROLE_SETTINGS
 from utils import create
 from utils.models import Tester, SettingMixin
 from utils.permissions import perms_map
@@ -141,11 +140,11 @@ class SettingMixinTests(TestCase):
 
     def test_get_class_default_settings__general(self):
         ret = self.settings.get_class_default_settings('general')
-        self.assertEqual(DEFAULT_GENERAL_SETTINGS, ret)
+        self.assertEqual(GENERAL_SETTINGS, ret)
 
     def test_get_class_default_settings__role(self):
         ret = self.settings.get_class_default_settings('role')
-        self.assertEqual(DEFAULT_ROLE_SETTINGS, ret)
+        self.assertEqual(ROLE_SETTINGS, ret)
 
     def test_get_class_default_settings__no_memory_leak(self):
         ret = self.settings.get_class_default_settings('general')
@@ -157,17 +156,17 @@ class SettingMixinTests(TestCase):
 
     def test_get_class_combined_settings_full(self):
         raw_ret = {}
-        raw_ret.update(DEFAULT_GENERAL_SETTINGS)
-        raw_ret.update(DEFAULT_ROLE_SETTINGS)
+        raw_ret.update(GENERAL_SETTINGS)
+        raw_ret.update(ROLE_SETTINGS)
 
-        ret = self.settings.get_class_combined_settings_full('general', DEFAULT_ROLE_SETTINGS)
+        ret = self.settings.get_class_combined_settings_full('general', ROLE_SETTINGS)
 
         self.assertEqual(ret, raw_ret)
 
     def test_get_combined_settings_file__inherited(self):
         k = 'welcome_text'
-        # with patch.dict(DEFAULT_GENERAL_SETTINGS, {k: {'value': "Welcome", 'type': 'str', 'inherited_from': 'general'}}, clear=True):
-        ret = self.settings.get_class_combined_settings('general', DEFAULT_ROLE_SETTINGS)
+        # with patch.dict(GENERAL_SETTINGS, {k: {'value': "Welcome", 'type': 'str', 'inherited_from': 'general'}}, clear=True):
+        ret = self.settings.get_class_combined_settings('general', ROLE_SETTINGS)
 
         self.assertIsNone(ret['welcome_text']['value'])
         self.assertEqual(ret['welcome_text']['inherited_value'], 'Welcome')

@@ -20,13 +20,12 @@ from location.tests.factory import create_location
 from person import config as person_config
 from person.models import Person, Role, PersonStatus
 from person.serializers import PersonUpdateSerializer, RoleCreateSerializer
-from person.settings import DEFAULT_ROLE_SETTINGS
 from person.tests.factory import (PASSWORD, create_single_person, create_role, create_roles,
     create_all_people, create_person_statuses)
 from person.tests.mixins import RoleSetupMixin
 from setting.models import Setting
 from setting.serializers import SettingSerializer
-from setting.settings import DEFAULT_GENERAL_SETTINGS
+from setting.settings import GENERAL_SETTINGS, ROLE_SETTINGS
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from utils import create
@@ -149,7 +148,7 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['settings']['welcome_text']['inherited_value'], 'Welcome')
         self.assertEqual(data['settings']['welcome_text']['inherited_from'], 'general')
         # non-inherited
-        self.assertEqual(data['settings']['create_all']['value'], DEFAULT_ROLE_SETTINGS['create_all']['value'])
+        self.assertEqual(data['settings']['create_all']['value'], ROLE_SETTINGS['create_all']['value'])
         self.assertIsNone(data['settings']['create_all']['inherited_value'])
         self.assertEqual(data['settings']['create_all']['inherited_from'], 'role')
 
@@ -164,7 +163,7 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertIsNone(data['settings']['welcome_text']['value'])
         self.assertEqual(data['settings']['welcome_text']['inherited_value'],  'Welcome')
-        self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
+        self.assertEqual(data['settings']['welcome_text']['inherited_from'], GENERAL_SETTINGS['welcome_text']['inherited_from'])
 
         response = self.client.put('/api/admin/roles/{}/'.format(role.id), raw_data, format='json')
 
@@ -177,7 +176,7 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['settings']['welcome_text']['value'], raw_data['settings']['welcome_text'])
         self.assertEqual(data['settings']['welcome_text']['inherited_value'],  'Welcome')
-        self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
+        self.assertEqual(data['settings']['welcome_text']['inherited_from'], GENERAL_SETTINGS['welcome_text']['inherited_from'])
 
     def test_update__general_and_then_reflected_in_role(self):
         role = create_role()
@@ -193,7 +192,7 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertIsNone(data['settings']['welcome_text']['value'])
         self.assertEqual(data['settings']['welcome_text']['inherited_value'],  'Welcome')
-        self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
+        self.assertEqual(data['settings']['welcome_text']['inherited_from'], GENERAL_SETTINGS['welcome_text']['inherited_from'])
 
         response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id), raw_data, format='json')
 
@@ -209,7 +208,7 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertIsNone(data['settings']['welcome_text']['value'])
         self.assertEqual(data['settings']['welcome_text']['inherited_value'], raw_data['settings']['welcome_text'])
-        self.assertEqual(data['settings']['welcome_text']['inherited_from'], DEFAULT_GENERAL_SETTINGS['welcome_text']['inherited_from'])
+        self.assertEqual(data['settings']['welcome_text']['inherited_from'], GENERAL_SETTINGS['welcome_text']['inherited_from'])
 
     def test_update__auth_currency(self):
         role = create_role()

@@ -8,8 +8,7 @@ import uuid
 from django.db import models
 from django.utils import timezone
 
-from person.settings import DEFAULT_ROLE_SETTINGS
-from setting.settings import DEFAULT_GENERAL_SETTINGS
+from setting.settings import GENERAL_SETTINGS, ROLE_SETTINGS
 
 
 ########
@@ -128,9 +127,9 @@ class SettingMixin(object):
         name = name or type(self).__name__.lower()
 
         if name == 'general':
-            return copy.copy(DEFAULT_GENERAL_SETTINGS)
+            return copy.copy(GENERAL_SETTINGS)
         elif name == 'role':
-            return copy.copy(DEFAULT_ROLE_SETTINGS)
+            return copy.copy(ROLE_SETTINGS)
         else:
             return {}
 

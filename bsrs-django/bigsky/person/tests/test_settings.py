@@ -1,12 +1,12 @@
 from django.test import TestCase
 
-from person.settings import DEFAULT_ROLE_SETTINGS
+from setting.settings import ROLE_SETTINGS
 
 
 class RoleSettingsTests(TestCase):
 
     def setUp(self):
-        self.settings = DEFAULT_ROLE_SETTINGS
+        self.settings = ROLE_SETTINGS
 
     def test_main(self):
         self.assertEqual(len(self.settings), 2)
