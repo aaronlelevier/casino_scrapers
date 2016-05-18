@@ -39,7 +39,7 @@ class RoleListTests(RoleSetupMixin, APITestCase):
 
     def test_list(self):
         response = self.client.get('/api/admin/roles/')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         role = data['results'][0]
         self.assertEqual(role['id'], str(self.role.pk))
@@ -125,12 +125,34 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
         response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
             role_data, format='json')
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
         new_role_data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             role_data['location_level'],
             str(Role.objects.get(id=self.data['id']).location_level.id)
         )
+
+    def test_update__setting__on_role(self):
+        # init test
+        self.assertEqual(self.role.settings.settings['create_all']['value'], True)
+        self.assertEqual(self.role.settings.settings['create_all']['type'], 'bool')
+        # setup
+        role_data = copy.copy(self.data)
+        role_data['settings'] = {
+            'id': str(self.role.settings.id),
+            'settings': self.role.settings.settings
+        }
+        role_data['settings']['settings']['create_all'] = False
+
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
+            role_data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings']['settings']['create_all']['value'], False)
+        self.assertEqual(data['settings']['settings']['create_all']['type'], 'bool')
+
+    # def test_update__setting__inherited(self):
 
 
 class RoleSettingTests(RoleSetupMixin, APITestCase):

@@ -1,3 +1,5 @@
+import copy
+
 from rest_framework import serializers
 
 from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer
@@ -5,6 +7,7 @@ from contact.serializers import PhoneNumberSerializer, EmailSerializer, AddressS
 from location.serializers import LocationIdNameOnlySerializer, LocationStatusFKSerializer
 from person.models import Person, Role, PersonStatus
 from person.validators import RoleLocationValidator, RoleCategoryValidator
+from setting.models import Setting
 from setting.serializers import SettingSerializer
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
     RemovePasswordSerializerMixin, SettingSerializerMixin)
@@ -14,7 +17,6 @@ from utils.validators import SettingsValidator
 ### ROLE ###
 
 class RoleSerializer(BaseCreateSerializer):
-    "Serializer used for all ``Role`` API Endpoint operations."
 
     class Meta:
         model = Role
@@ -22,7 +24,6 @@ class RoleSerializer(BaseCreateSerializer):
 
 
 class RoleCreateSerializer(BaseCreateSerializer):
-    "Serializer used for create ``Role`` API Endpoint operations."
 
     class Meta:
         model = Role
@@ -30,8 +31,7 @@ class RoleCreateSerializer(BaseCreateSerializer):
         fields = ('id', 'name', 'role_type', 'location_level', 'categories',)
 
 
-class RoleUpdateSerializer(SettingSerializerMixin, BaseCreateSerializer):
-    "Serializer used for create ``Role`` API Endpoint operations."
+class RoleUpdateSerializer(BaseCreateSerializer):
     settings = SettingSerializer()
 
     class Meta:
@@ -39,6 +39,48 @@ class RoleUpdateSerializer(SettingSerializerMixin, BaseCreateSerializer):
         validators = [RoleCategoryValidator()]
         fields = ('id', 'name', 'role_type', 'location_level', 'categories',
             'settings',)
+
+    def update(self, instance, validated_data):
+        settings_obj = validated_data.pop('settings', {})
+
+        init_settings = copy.copy(instance.settings.settings)
+        settings = copy.copy(settings_obj.get('settings', {}))
+
+        for k,v in settings.items():
+            init_settings[k]['value'] = v
+
+        setting_instance = Setting.objects.get(id=settings_obj['id'])
+        setting_instance.settings = settings
+        setting_instance.save()
+
+        return super(RoleUpdateSerializer, self).update(instance, validated_data)
+
+    # def update_settings(self, all_settings, validated_data):
+    #     name = validated_data.get('name')
+    #     default_settings = self.Meta.model.get_class_default_settings(name)
+    #     final_settings = copy.copy(default_settings)
+    #     settings_inherited_from = self.Meta.model.get_settings_name()
+
+    #     for k,v in all_settings.items():
+    #         try:
+    #             new_value = validated_data['settings'][k]
+    #             # to defend agains key's w/ no values that don't match the req'd type
+    #             # allow 'False' b/c still want to catch Boolean False's
+    #             if new_value is not None:
+    #                 if k not in final_settings:
+    #                     final_settings[k] = {}
+
+    #                 final_settings[k]['value'] = new_value
+    #                 final_settings[k]['inherited_from'] = settings_inherited_from
+    #         except KeyError:
+    #             # Silently pass b/c if a 'value' isn't being posted for
+    #             # a Role setting, we're going to use the default.
+    #             pass
+    #     else:
+    #         validated_data.update({'settings': final_settings})
+
+    #     return validated_data
+
 
 
 class RoleDetailSerializer(BaseCreateSerializer):
