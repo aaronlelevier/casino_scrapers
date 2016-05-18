@@ -68,44 +68,15 @@ class SettingsValidatorTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_valid__email(self):
-        email = 'foo@bar'
-        self.data["settings"]["test_contractor_email"] = email
-
-        response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id),
-            self.data, format='json')
-
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            json.loads(response.content.decode('utf8'))['test_contractor_email'],
-            ['{} is not a valid email'.format(email)]
-        )
-
-    # def test_valid__phone(self):
-    #     phone = "+1800"
-    #     self.data["settings"]["test_contractor_phone"] = phone
-
-    #     response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id),
-    #         self.data, format='json')
-
-    #     self.assertEqual(response.status_code, 400)
-    #     self.assertEqual(
-    #         json.loads(response.content.decode('utf8'))['test_contractor_phone'],
-    #         ['{} is not a valid phone'.format(phone)]
-    #     )
-
-    def test_valid__builtins(self):
-        """
-        the supplied values are all the wrong type:
-
-        str, int, float, list, bool
-        """
-        self.data["settings"] = {
-            "dashboard_text": 0,
-            "login_grace": 'foo',
-            "exchange_rates": 'foo',
-            "modules": 0,
-            "test_mode": 0
+    def test_main(self):
+        self.data['settings'] = {
+            'dashboard_text': 0,
+            'login_grace': 'foo',
+            'exchange_rates': 'foo',
+            'modules': 0,
+            'test_mode': 0,
+            'test_contractor_email': 'foo@bar',
+            'test_contractor_phone': '+1800'
         }
 
         response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id),
@@ -118,6 +89,8 @@ class SettingsValidatorTests(APITestCase):
         self.assertEqual(error['exchange_rates'], [self.error_message.format(value='foo', type='float')])
         self.assertEqual(error['modules'], [self.error_message.format(value=0, type='list')])
         self.assertEqual(error['test_mode'], [self.error_message.format(value=0, type='bool')])
+        self.assertEqual(error['test_contractor_email'], ['{} is not a valid email'.format('foo@bar')])
+        self.assertEqual(error['test_contractor_phone'], ['{} is not a valid phone'.format('+1800')])
 
 
 DIGITS = "Bobby123"
