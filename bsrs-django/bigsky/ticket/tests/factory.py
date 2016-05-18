@@ -142,6 +142,12 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
             'description': start_dtd.description,
             'prompt': start_dtd.prompt,
             'note': start_dtd.note,
+            'fields': [{
+                'id': str(start_dtd.fields.first().id),
+                'label': start_dtd.fields.first().label,
+                'value': 'random value for start',
+                'required': start_dtd.fields.first().required,
+                    }]
             },
         'ticket': munged_ticket
         }, {

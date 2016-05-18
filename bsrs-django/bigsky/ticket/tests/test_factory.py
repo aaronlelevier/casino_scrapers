@@ -119,6 +119,11 @@ class CreateTicketTests(TestCase):
         self.assertEqual(self.ticket.dt_path[0]['dtd']['description'], start_dtd.description)
         self.assertEqual(self.ticket.dt_path[0]['dtd']['prompt'], start_dtd.prompt)
         self.assertEqual(self.ticket.dt_path[0]['dtd']['note'], start_dtd.note)
+        self.assertEqual(len(self.ticket.dt_path[0]['dtd']['fields']), 1)
+        self.assertEqual(self.ticket.dt_path[0]['dtd']['fields'][0]['id'], str(start_dtd.fields.first().id))
+        self.assertEqual(self.ticket.dt_path[0]['dtd']['fields'][0]['value'], 'random value for start')
+        self.assertEqual(self.ticket.dt_path[0]['dtd']['fields'][0]['required'], start_dtd.fields.first().required)
+        self.assertEqual(self.ticket.dt_path[0]['dtd']['fields'][0]['label'], start_dtd.fields.first().label)
         self.assertEqual(
             self.ticket.dt_path[0]['ticket'].keys(),
             TicketSerializer(self.ticket).data.keys()
