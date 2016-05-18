@@ -1,46 +1,42 @@
 from django.test import TestCase
 
-from setting.settings import GENERAL_SETTINGS
-from setting.tests.factory import create_general_setting
+from person.tests.factory import create_role
+from setting.tests.factory import create_general_setting, create_role_setting
 
 
 class SettingModelTests(TestCase):
 
     def setUp(self):
         self.setting = create_general_setting()
+        self.role = create_role()
+        self.role_setting = create_role_setting(self.role)
 
-    def test_get_combined_settings_file__override(self):
-        k = 'welcome_text'
-        override  = {k: {'value': "foo", 'type': 'str', 'inherited_from': 'override'}}
+    def test_combined_settings__no_override(self):
+        ret = self.setting.combined_settings
 
-        ret = self.setting.get_class_combined_settings('general', override)
+        self.assertEqual(ret['dashboard_text']['value'], 'Welcome')
+        self.assertEqual(ret['dashboard_text']['type'], 'str')
 
-        self.assertEqual(ret['welcome_text']['inherited_value'], 'Welcome')
-        self.assertEqual(ret['welcome_text']['value'], 'foo')
-        self.assertEqual(ret['welcome_text']['inherited_from'], 'general')
+    def test_combined_settings__role_has_overrides(self):
+        ret = self.role_setting.combined_settings
 
-    def test_get_combined_settings_file__append(self):
-        k = 'welcome_text'
-        override  = {'create_all': {'value': "foo", 'type': 'str', 'inherited_from': 'override'}}
+        # not overridden
+        self.assertEqual(ret['create_all']['value'], True)
+        self.assertEqual(ret['create_all']['type'], 'bool')
+        # overridden
+        self.assertEqual(ret['dashboard_text']['value'], None)
+        self.assertEqual(ret['dashboard_text']['type'], 'str')
+        self.assertEqual(ret['dashboard_text']['inherits_from'], 'general')
+        self.assertEqual(ret['dashboard_text']['inherited_value'], 'Welcome')
 
-        ret = self.setting.get_class_combined_settings('general', override)
+    def test_inherits_from_names(self):
+        s = set()
+        s.update(['general'])
+        ret = self.role_setting.inherits_from_names
+        self.assertEqual(ret, s)
 
-        # not overrode
-        self.assertEqual(ret['welcome_text']['inherited_value'], 'Welcome')
-        self.assertIsNone(ret['welcome_text']['value'])
-        self.assertEqual(ret['welcome_text']['inherited_from'], 'general')
-        # appended
-        self.assertEqual(ret['create_all']['value'], 'foo')
-        self.assertIsNone(ret['create_all']['inherited_value'])
-        self.assertEqual(ret['create_all']['inherited_from'], 'override')
-
-    def test_get_all_class_settings(self):
-        self.assertEqual(self.setting.get_all_class_settings(), GENERAL_SETTINGS)
-
-    def test_get_all_instance_settings(self):
-        ret = self.setting.get_all_instance_settings()
-        self.assertEqual(ret, self.setting.settings)
-
-    def test_get_all_instance_settings_full(self):
-        ret = self.setting.get_all_instance_settings_full()
-        self.assertEqual(ret, self.setting.settings)
+    def test_inherits_from_map(self):
+        ret = self.role_setting.inherits_from_map
+        self.assertEqual(len(ret), 1)
+        self.assertIsInstance(ret, dict)
+        self.assertEqual(ret, {'general': self.setting.settings})

@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from setting.models import Setting
-from setting.settings import GENERAL_SETTINGS, ROLE_SETTINGS
+from setting.settings import GENERAL_SETTINGS, ROLE_SETTINGS, PERSON_SETTINGS
 from setting.tests import factory
 from person.tests.factory import create_single_person
 
@@ -21,6 +21,10 @@ class FactoryTests(TestCase):
         self.assertEqual(name, ret.name)
         self.assertEqual(ret.settings, GENERAL_SETTINGS)
 
+        # get-or-create: so call a 2nd time, returns original
+        ret_two = factory.create_general_setting()
+        self.assertEqual(ret_two, ret)
+
     def test_create_role_setting(self):
         self.assertIsNone(self.role.settings)
 
@@ -29,3 +33,12 @@ class FactoryTests(TestCase):
         self.assertIsInstance(ret, Setting)
         self.assertEqual(ret.settings, ROLE_SETTINGS)
         self.assertEqual(self.role.settings.settings, ret.settings)
+
+    def test_create_person_setting(self):
+        self.assertIsNone(self.person.settings)
+
+        ret = factory.create_person_setting(self.person)
+
+        self.assertIsInstance(ret, Setting)
+        self.assertEqual(ret.settings, PERSON_SETTINGS)
+        self.assertEqual(self.person.settings.settings, ret.settings)

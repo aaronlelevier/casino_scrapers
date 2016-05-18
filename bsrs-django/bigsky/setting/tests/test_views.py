@@ -38,7 +38,7 @@ class SettingTests(APITestCase):
         self.assertEqual(data['name'], self.general_setting.name)
         # settings
         for key in GENERAL_SETTINGS.keys():
-            for field in ['value', 'inherited_from']:
+            for field in ['value', 'type']:
                 self.assertEqual(data['settings'][key][field], GENERAL_SETTINGS[key][field])
 
     def test_create(self):
@@ -56,18 +56,22 @@ class SettingTests(APITestCase):
         self.assertIn('settings', data)
 
     def test_update(self):
-        new_welcome_text = "Bueno"
+        new_dashboard_text = "Bueno"
+        new_test_mode = False
         serializer = SettingSerializer(self.general_setting)
         raw_data = serializer.data
         raw_data['settings'] = {
-            'welcome_text': new_welcome_text,
-            'test_mode': False
+            'dashboard_text': new_dashboard_text,
+            'test_mode': new_test_mode
         }
 
         response = self.client.put('/api/admin/settings/{}/'.format(self.general_setting.id), raw_data, format='json')
-        data = json.loads(response.content.decode('utf8'))
 
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
-        # welcome_text
-        self.assertEqual(data['settings']['welcome_text']['value'], new_welcome_text)
-        self.assertEqual(data['settings']['welcome_text']['inherited_from'], 'general')
+        # dashboard_text
+        self.assertEqual(data['settings']['dashboard_text']['value'], new_dashboard_text)
+        self.assertEqual(data['settings']['dashboard_text']['type'], 'str')
+        # test_mode
+        self.assertEqual(data['settings']['test_mode']['value'], new_test_mode)
+        self.assertEqual(data['settings']['test_mode']['type'], 'bool')
