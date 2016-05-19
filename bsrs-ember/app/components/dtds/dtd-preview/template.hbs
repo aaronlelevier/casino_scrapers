@@ -6,7 +6,7 @@
     <header class="col-md-12">
       <ol class="breadcrumb t-dt-breadcrumb">
         {{#each ticket.dt_path as |path_object|}}
-          <li>{{#link-to "dt.dt" path_object.dtd.id ticket.id class="t-ticket-breadcrumb-back"}}{{dt-breadcrumb-text path_object.dtd}}{{/link-to}}</li>
+          <li class="t-breadcrumb-list">{{#link-to "dt.dt" path_object.dtd.id ticket.id class="t-ticket-breadcrumb-back"}}{{dt-breadcrumb-text path_object.dtd}}{{/link-to}}</li>
         {{/each}}
       </ol>
     </header>

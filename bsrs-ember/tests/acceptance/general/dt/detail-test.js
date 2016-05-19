@@ -593,8 +593,9 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
 
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
-  assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim().split('  ')[0].trim(), substringBreadcrumb(DT.descriptionStart));
-  assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim().split('  ').slice(-1)[0], substringBreadcrumb(DT.descriptionTwo));
+  assert.equal(page.breadcrumbOne, substringBreadcrumb(DT.descriptionStart));
+  assert.equal(page.breadcrumbTwo, substringBreadcrumb(DT.descriptionTwo));
+  assert.equal(find('.t-dt-breadcrumb > .t-breadcrumb-list').length, 2);
 
   // snapshot of Start && Middle 
   const updated_ticket = store.find('ticket', TD.idOne);
@@ -631,6 +632,10 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
   xhr(endpoint_3, 'GET', null, {}, 200, {dtd: detail_data_3, ticket: returned_ticket});
   assert.equal(currentURL(), DETAIL_URL);
   await click('.t-ticket-breadcrumb-back');
+  //Breadcrumbs should be the same
+  assert.equal(page.breadcrumbOne, substringBreadcrumb(DT.descriptionStart));
+  assert.equal(page.breadcrumbTwo, substringBreadcrumb(DT.descriptionTwo));
+  assert.equal(find('.t-dt-breadcrumb > .t-breadcrumb-list').length, 2);
   assert.equal(currentURL(), DTD_THREE_URL);
 
   assert.equal(updated_ticket.get('dt_path').length, 2);
@@ -665,6 +670,10 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
   const DT_IDTWO_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
   xhr(DT_IDTWO_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
   await click('.t-dtd-preview-btn:eq(0)');
+  //Breadcrumbs should be the same
+  assert.equal(page.breadcrumbOne, substringBreadcrumb(DT.descriptionStart));
+  assert.equal(page.breadcrumbTwo, substringBreadcrumb(DT.descriptionTwo));
+  assert.equal(find('.t-dt-breadcrumb > .t-breadcrumb-list').length, 2);
   assert.ok(dtPage.fieldOneCheckboxIsChecked());
   assert.equal(updated_ticket.get('dt_path').length, 2);
   // assert.equal(updated_ticket.get('dt_path')[1]['ticket']['priority'], LINK.priorityTwo);
