@@ -5,6 +5,10 @@ Refer to separate README's for `Ember` + `Django`
 - [bsrs-ember/README.md](https://github.com/bigskytech/bsrs/blob/master/bsrs-ember/README.md)
 - [bsrs-django/README.md](https://github.com/bigskytech/bsrs/blob/master/bsrs-django/README.md)
 
+### Submitting Major Issues and Ideas
+
+[Aha! Idea Portal](https://bigsky.ideas.aha.io/ideas/new)
+
 ### Web Stack Documentation Home
 
 [Wiki Docs](https://github.com/bigskytech/bsrs/wiki)
