@@ -60,6 +60,7 @@ def create_tree_data(links=1, destination=None, **kwargs):
 
 
 # Fixture Generation code
+# id, name, parent_id
 DTD_DATA = [
     [0, 'Start', None],
     [1, 'Repair', 0],
@@ -83,7 +84,7 @@ DTD_DATA = [
     [19, 'Sink', 17],
     [20, 'Water Heater', 17],
     [21, 'Urinals', 17],
-    [22, 'Pipes', 17]
+    [22, 'Pipes', 17],
 ]
 
 
@@ -110,11 +111,9 @@ def create_dtd_fixtures_only():
             key=data['name'],
             note=data['id'],
             description=data['name'],
-            prompt=data['parent_id']
+            prompt=_generate_chars()
         )
-
-        if data['parent_id'] in (None, 0):
-            add_field_of_each_type(dtd)
+        add_field_of_each_type(dtd)
 
 
 def add_field_of_each_type(dtd):
@@ -136,7 +135,7 @@ def create_link_fixtures_only():
         TreeLink.objects.create(
             order=data['id'],
             text=data['name'],
-            request=data['parent_id']
+            request=_generate_chars()
         )
 
 

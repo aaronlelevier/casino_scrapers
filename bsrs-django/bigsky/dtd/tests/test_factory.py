@@ -183,14 +183,6 @@ class FixtureGenerationTests(TestCase):
 
         self.assertEqual(TreeData.objects.count(), 23)
         self.assertEqual(TreeLink.objects.count(), 23)
-        # dtds with fields
-        dtds = TreeData.objects.filter(
-            Q(prompt__isnull=True) | \
-            Q(prompt=0)
-        )
-        self.assertEqual(dtds.count(), 3)
-        for dtd in dtds:
-            self.assertEqual(dtd.fields.count(), 5)
 
     def test_create_dtd_fixture_data__uuids_are_sequential(self):
         factory.create_dtd_fixture_data()
