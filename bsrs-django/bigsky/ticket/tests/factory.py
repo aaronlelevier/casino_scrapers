@@ -136,6 +136,7 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
     munged_ticket = TicketSerializer(ticket).data
     munged_ticket.priority = TicketPriority.objects.order_by('?')[0]
     munged_ticket.status = TicketStatus.objects.order_by('?')[0]
+    options = start_dtd.fields.first().options
     ticket.dt_path = [{
         'dtd': {
             'id': str(start_dtd.id),
@@ -145,7 +146,7 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
             'fields': [{
                 'id': str(start_dtd.fields.first().id),
                 'label': start_dtd.fields.first().label,
-                'options': [str(start_dtd.fields.first().options.first().id)],
+                'options': [options.first().id] if options.first() else None,
                 'required': start_dtd.fields.first().required,
                     }]
             },
