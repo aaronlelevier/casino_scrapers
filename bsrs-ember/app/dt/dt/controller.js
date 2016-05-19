@@ -38,8 +38,7 @@ export default Ember.Controller.extend({
     linkClick(link, ticket, dtd_model, action, fieldsObj) {
       dtPathMunge(ticket, dtd_model, fieldsObj, link, this.get('simpleStore'));
       if (action === 'patch') {
-        //TODO: remove link &&
-        const patch_id = link && link.get('destination.id') || dtd_model.get('id');
+        const patch_id = link.get('destination.id') || dtd_model.get('id');
         if (link.get('destination.id')) {
           this.get('ticketRepository').patch(ticket, link, patch_id).then((response) => {
             const dtd = this.get('DTDDeserializer').deserialize(response, response.id);
