@@ -202,61 +202,61 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         except AttributeError as e:
             raise e("new ticket not found")
         ### UPDATE
-        # Go to ticket Detail view, Change request and hit "save"
-        ticket_page.find_wait_and_assert_elem("t-ticket-request", ticket_request)
-        ticket_request_two = rand_chars()
-        self.driver.find_element_by_class_name("t-ticket-request").clear()
-        ticket = InputHelper(ticket_request=ticket_request_two)
-        self._fill_in_using_class(ticket)
-        ticket_priority_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-priority-select ')]/div")
-        ticket_priority_input.click()
-        priority_option = self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]/li[2]")
-        priority_option.click()
-        ticket_status_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-status-select ')]/div")
-        ticket_status_input.click()
-        status_option = self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]/li[2]")
-        status_option.click()
-        ticket_cc_input = self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-trigger-multiple-input')]")
-        ticket_cc_input.click()
-        ticket_cc_input.send_keys("a")
-        cc_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
-        cc_option.click()
-        ticket_cc_input.click()
-        ticket_cc_input.send_keys("l")
-        cc_option_2 = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
-        cc_option_2.click()
-        ticket_location = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-location-select ')]/div")
-        ticket_location.click()
-        ticket_location_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-search ')]/input")
-        ticket_location_input.send_keys("Company")
-        self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]", debounce=True)
-        location_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]")
-        location_option.click()
-        self.gen_elem_page.click_save_btn()
-        # # List view contains new request
-        ticket_page.find_list_data()
-        self.driver.refresh()
-        ticket_list_view_two = ticket_page.find_list_name()
-        new_ticket_two = ticket_page.click_name_in_list_pages(ticket_request_two, new_model=None)
-        try:
-            new_ticket_two.click()
-        except AttributeError as e:
-            raise e("new ticket not found")
-        ### DELETE
-        # Go to Ticket Detail view click Delete
-        ticket_page.find_wait_and_assert_elem("t-ticket-request", ticket_request_two)
-        self.gen_elem_page.click_dropdown_delete()
-        self.gen_elem_page.click_delete_btn()
-        time.sleep(1)
-        self.gen_elem_page.click_delete_yes()
-        # check Ticket is deleted
-        tickets = ticket_page.find_list_data()
-        ticket_list_view = ticket_page.find_list_name()
-        # this needs to be improved to look through all the pages
-        self.assertNotIn(
-            ticket_request_two,
-            [r.text for r in ticket_list_view]
-        )
+        # # Go to ticket Detail view, Change request and hit "save"
+        # ticket_page.find_wait_and_assert_elem("t-ticket-request", ticket_request)
+        # ticket_request_two = rand_chars()
+        # self.driver.find_element_by_class_name("t-ticket-request").clear()
+        # ticket = InputHelper(ticket_request=ticket_request_two)
+        # self._fill_in_using_class(ticket)
+        # ticket_priority_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-priority-select ')]/div")
+        # ticket_priority_input.click()
+        # priority_option = self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]/li[2]")
+        # priority_option.click()
+        # ticket_status_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-status-select ')]/div")
+        # ticket_status_input.click()
+        # status_option = self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]/li[2]")
+        # status_option.click()
+        # ticket_cc_input = self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-trigger-multiple-input')]")
+        # ticket_cc_input.click()
+        # ticket_cc_input.send_keys("a")
+        # cc_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
+        # cc_option.click()
+        # ticket_cc_input.click()
+        # ticket_cc_input.send_keys("l")
+        # cc_option_2 = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]", debounce=True)
+        # cc_option_2.click()
+        # ticket_location = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-location-select ')]/div")
+        # ticket_location.click()
+        # ticket_location_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-search ')]/input")
+        # ticket_location_input.send_keys("Company")
+        # self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]", debounce=True)
+        # location_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]")
+        # location_option.click()
+        # self.gen_elem_page.click_save_btn()
+        # # # List view contains new request
+        # ticket_page.find_list_data()
+        # self.driver.refresh()
+        # ticket_list_view_two = ticket_page.find_list_name()
+        # new_ticket_two = ticket_page.click_name_in_list_pages(ticket_request_two, new_model=None)
+        # try:
+        #     new_ticket_two.click()
+        # except AttributeError as e:
+        #     raise e("new ticket not found")
+        # ### DELETE
+        # # Go to Ticket Detail view click Delete
+        # ticket_page.find_wait_and_assert_elem("t-ticket-request", ticket_request_two)
+        # self.gen_elem_page.click_dropdown_delete()
+        # self.gen_elem_page.click_delete_btn()
+        # time.sleep(1)
+        # self.gen_elem_page.click_delete_yes()
+        # # check Ticket is deleted
+        # tickets = ticket_page.find_list_data()
+        # ticket_list_view = ticket_page.find_list_name()
+        # # this needs to be improved to look through all the pages
+        # self.assertNotIn(
+        #     ticket_request_two,
+        #     [r.text for r in ticket_list_view]
+        # )
 
 
 if __name__ == "__main__":
