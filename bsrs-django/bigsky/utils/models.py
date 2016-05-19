@@ -83,7 +83,12 @@ class Tester(BaseModel):
     pass
     
 
-class BaseNameModel(BaseModel):
+class ToDictNameMixin(object):
+    def to_dict(self):
+        return {"id": str(self.pk), "name": self.name}
+
+
+class BaseNameModel(ToDictNameMixin, BaseModel):
     name = models.CharField(max_length=100, unique=True)
 
     class Meta:
@@ -91,9 +96,6 @@ class BaseNameModel(BaseModel):
 
     def __str__(self):
         return self.name
-
-    def to_dict(self):
-        return {"id": str(self.pk), "name": self.name}
 
 
 class BaseNameOrderModel(BaseNameModel):

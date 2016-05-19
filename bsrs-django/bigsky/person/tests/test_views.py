@@ -26,7 +26,6 @@ from person.tests.factory import (PASSWORD, create_single_person, create_role, c
 from person.tests.mixins import RoleSetupMixin
 from setting.models import Setting
 from setting.serializers import SettingSerializer
-from setting.settings import GENERAL_SETTINGS, ROLE_SETTINGS
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from utils import create
@@ -189,8 +188,8 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
        
         # non-inherited
-        self.assertEqual(data['settings']['settings']['create_all']['value'], ROLE_SETTINGS['create_all']['value'])
-        self.assertEqual(data['settings']['settings']['create_all']['type'], ROLE_SETTINGS['create_all']['type'])
+        self.assertEqual(data['settings']['settings']['create_all']['value'], True)
+        self.assertEqual(data['settings']['settings']['create_all']['type'], 'bool')
         # inherited
         self.assertEqual(data['settings']['settings']['dashboard_text']['value'], None)
         self.assertEqual(data['settings']['settings']['dashboard_text']['inherited_value'], 'Welcome')
@@ -212,22 +211,16 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['settings']['settings']['dashboard_text']['inherits_from'], 'general')
 
     def test_update__general_and_then_reflected_in_role(self):
-        # role = create_role()
         serializer = SettingSerializer(self.setting)
-        raw_data = serializer.data
-        k = 'dashboard_text'
+        raw_data = copy.copy(serializer.data)
         new_value = 'new text'
-        raw_data['settings'][k] = new_value
-        raw_data['settings']['test_mode'] = True # will raise error if not included b/c 'required'
-
+        raw_data['settings']['dashboard_text'] = new_value
         # detail
         response = self.client.get('/api/admin/roles/{}/'.format(self.role.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['settings']['settings']['dashboard_text']['inherits_from'], 'general')
 
         response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id), raw_data, format='json')
-
-        print(json.loads(response.content.decode('utf8')))
 
         # update
         self.assertEqual(response.status_code, 200)

@@ -22,8 +22,7 @@ NOSE_ARGS = [
     '--exclude-dir={}'.format(os.path.join(BASE_DIR, "utils_transform/tperson/tests")),
     '--exclude-dir={}'.format(os.path.join(BASE_DIR, "utils_transform/trole/tests")),
     '--exclude-dir={}'.format(os.path.join(BASE_DIR, "utils_transform/tticket/tests")),
-    '--cover-package=accounting,bigsky,category,contact,generic,location,order,person,session,\
-third_party,ticket,translation,utils,work_request',
+    '--cover-package=accounting,bigsky,category,contact,generic,location,order,person,session,third_party,ticket,translation,utils,work_request',
 ]
 
 ### ATTACHMENTS

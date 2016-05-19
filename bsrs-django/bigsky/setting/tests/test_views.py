@@ -4,6 +4,7 @@ import uuid
 from rest_framework.test import APITestCase
 
 from person.tests.factory import PASSWORD, create_single_person
+from setting.models import Setting
 from setting.serializers import SettingSerializer
 from setting.settings import GENERAL_SETTINGS
 from setting.tests.factory import create_general_setting
@@ -14,7 +15,7 @@ class SettingTests(APITestCase):
     def setUp(self):
         self.person = create_single_person()
         self.client.login(username=self.person.username, password=PASSWORD)
-        self.setting = create_general_setting()
+        self.setting = Setting.objects.create(name='general', settings=GENERAL_SETTINGS)
 
     def tearDown(self):
         self.client.logout()
@@ -39,7 +40,10 @@ class SettingTests(APITestCase):
         # settings
         for key in GENERAL_SETTINGS.keys():
             for field in ['value', 'type']:
-                self.assertEqual(data['settings'][key][field], GENERAL_SETTINGS[key][field])
+                self.assertEqual(
+                    data['settings'][key][field],
+                    GENERAL_SETTINGS[key][field]
+                )
 
     def test_create(self):
         raw_data = {

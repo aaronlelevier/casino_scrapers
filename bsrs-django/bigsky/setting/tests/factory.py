@@ -6,21 +6,26 @@ from setting.settings import GENERAL_SETTINGS, ROLE_SETTINGS, PERSON_SETTINGS
 
 def create_general_setting():
     try:
-        return Setting.objects.get(name='general')
+        s = Setting.objects.get(name='general')
     except Setting.DoesNotExist:
-        return Setting.objects.create(name='general', settings=GENERAL_SETTINGS)
+        pass
+    else:
+        s.delete(override=True)
+
+    settings_dict = copy.copy(GENERAL_SETTINGS)
+    return Setting.objects.create(name='general', settings=settings_dict)
 
 
 def create_role_setting(instance):
-    settings_dict = copy.copy(ROLE_SETTINGS)
-    settings = Setting.objects.create(settings=settings_dict)
-    instance.settings = settings
-    instance.save()
-    return settings
+    return create_with_settings(instance, ROLE_SETTINGS)
 
 
 def create_person_setting(instance):
-    settings_dict = copy.copy(PERSON_SETTINGS)
+    return create_with_settings(instance, PERSON_SETTINGS)
+
+
+def create_with_settings(instance, init_settings):
+    settings_dict = copy.copy(init_settings)
     settings = Setting.objects.create(settings=settings_dict)
     instance.settings = settings
     instance.save()
