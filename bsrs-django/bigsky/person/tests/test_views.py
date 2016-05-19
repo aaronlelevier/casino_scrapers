@@ -9,8 +9,6 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
 from model_mommy import mommy
 
-from accounting.models import Currency
-from accounting.tests.factory import create_currencies
 from category.models import Category
 from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
@@ -19,8 +17,7 @@ from location.models import Location, LocationLevel
 from location.tests.factory import create_location
 from person import config as person_config
 from person.models import Person, Role, PersonStatus
-from person.serializers import (PersonUpdateSerializer, RoleCreateSerializer,
-    RoleUpdateSerializer)
+from person.serializers import PersonUpdateSerializer, RoleUpdateSerializer
 from person.tests.factory import (PASSWORD, create_single_person, create_role, create_roles,
     create_all_people, create_person_statuses)
 from person.tests.mixins import RoleSetupMixin

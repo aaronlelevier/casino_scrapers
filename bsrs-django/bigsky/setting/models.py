@@ -1,7 +1,6 @@
 import copy
 
 from django.contrib.postgres.fields import JSONField
-from django.core.exceptions import ValidationError
 from django.db import models
 
 from utils.models import BaseModel, ToDictNameMixin

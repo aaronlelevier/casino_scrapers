@@ -7,7 +7,6 @@ from model_mommy import mommy
 
 from contact.models import Country
 from person.tests.factory import create_single_person, create_role
-from setting.settings import GENERAL_SETTINGS, ROLE_SETTINGS
 from utils import create
 from utils.models import Tester
 from utils.permissions import perms_map

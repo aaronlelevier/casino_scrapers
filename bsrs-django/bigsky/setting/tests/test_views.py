@@ -7,7 +7,6 @@ from person.tests.factory import PASSWORD, create_single_person
 from setting.models import Setting
 from setting.serializers import SettingSerializer
 from setting.settings import GENERAL_SETTINGS
-from setting.tests.factory import create_general_setting
 
 
 class SettingTests(APITestCase):

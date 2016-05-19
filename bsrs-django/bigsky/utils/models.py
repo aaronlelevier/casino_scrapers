@@ -2,13 +2,10 @@
 All Model, Manager, and QuerySet definitions in this module 
 should be Abstract.
 """
-import copy
 import uuid
 
 from django.db import models
 from django.utils import timezone
-
-from setting.settings import GENERAL_SETTINGS, ROLE_SETTINGS
 
 
 ########

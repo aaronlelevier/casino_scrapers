@@ -1,4 +1,3 @@
-import copy
 from datetime import date
 
 from django.conf import settings
@@ -18,7 +17,6 @@ from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_role, create_single_person
-from setting.settings import GENERAL_SETTINGS, ROLE_SETTINGS
 from setting.tests.factory import create_general_setting
 from translation.models import Locale
 from utils import create

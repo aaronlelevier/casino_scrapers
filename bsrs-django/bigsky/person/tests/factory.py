@@ -6,7 +6,6 @@ from django.core.exceptions import ValidationError
 from model_mommy import mommy
 
 from accounting.models import Currency
-from accounting.tests.factory import create_currencies
 from category.models import Category, CategoryStatus
 from category.tests.factory import create_single_category
 from location.models import (LocationLevel, Location, LocationStatus, LocationType,

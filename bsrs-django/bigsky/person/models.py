@@ -1,4 +1,3 @@
-import copy
 import re
 from datetime import timedelta
 
@@ -7,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import UserManager, Group, AbstractUser
 from django.contrib.auth.hashers import make_password, identify_hasher
 from django.contrib.contenttypes.fields import GenericRelation
-from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -23,7 +22,6 @@ from contact.models import PhoneNumber, Address, Email
 from location.models import LocationLevel, Location, LOCATION_COMPANY
 from person import config, helpers
 from setting.models import Setting
-from setting.settings import GENERAL_SETTINGS, ROLE_SETTINGS
 from translation.models import Locale
 from utils.models import BaseModel, BaseNameModel, DefaultNameManager
 from utils.validators import (contains_digit, contains_upper_char, contains_lower_char,

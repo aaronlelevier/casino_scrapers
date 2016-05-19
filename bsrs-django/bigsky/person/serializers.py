@@ -1,5 +1,3 @@
-import copy
-
 from rest_framework import serializers
 
 from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer
@@ -7,11 +5,9 @@ from contact.serializers import PhoneNumberSerializer, EmailSerializer, AddressS
 from location.serializers import LocationIdNameOnlySerializer, LocationStatusFKSerializer
 from person.models import Person, Role, PersonStatus
 from person.validators import RoleLocationValidator, RoleCategoryValidator
-from setting.models import Setting
 from setting.serializers import SettingSerializer
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
     RemovePasswordSerializerMixin, NestedSettingUpdateMixin)
-from utils.validators import SettingsValidator
 
 
 ### ROLE ###
