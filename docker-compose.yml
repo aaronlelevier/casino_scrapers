@@ -28,6 +28,36 @@ services:
     networks:
       - bsrs_default
 
+  builder:
+    build:
+      context: ./bsrs-django
+      dockerfile: ./docker/dev/Dockerfile
+    volumes:
+      - ./target:/wheelhouse
+    volumes_from:
+      - cache
+    entrypoint: "entrypoint.sh"
+    command: ["pip", "wheel", "--no-index", "-f /build", "."]
+
+  # agent:
+  #   image: bsrs/ansible
+  #   volumes:
+  #     - ./bsrs-django/docker/ansible/probe.yml:/ansible/site.yml
+  #   links:
+  #     - postgres 
+  #   environment:
+  #     PROBE_HOST: "postgres"
+  #     PROBE_PORT: "5432"
+
+  cache:
+    build: 
+      context: ./bsrs-django
+      dockerfile: ./docker/dev/Dockerfile
+    volumes:
+      - /tmp/cache:/cache
+      - /build
+    entrypoint: "true"
+
 networks:
   bsrs_default:
     driver: bridge

@@ -26,7 +26,12 @@ RUN . /appenv/bin/activate && \
 
 ENV WHEELHOUSE=/wheelhouse PIP_WHEEL_DIR=/wheelhouse PIP_FIND_LINKS=/wheelhouse XDG_CACHE_HOME=/cache
 
+# Build artifacts
 VOLUME /wheelhouse
+
+# Build cache
+VOLUME /build
+
 VOLUME /reports
 
 COPY scripts/test.sh /usr/local/bin/test.sh
@@ -34,7 +39,7 @@ RUN chmod +x /usr/local/bin/test.sh
 
 # override entrypoint of parent image
 ENTRYPOINT ["test.sh"]
-CMD ["python", "manage.py", "test", "--noinput"]
+CMD ["python", "manage.py", "test", "ticket.tests.test_factory", "--noinput"]
 
 COPY . /application
 WORKDIR /application

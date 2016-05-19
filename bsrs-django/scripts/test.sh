@@ -3,10 +3,12 @@
 # activate virtualenv
 . /appenv/bin/activate
 
-pip install -r requirements_ci.txt
+# setup.py puts src in /build so have full setup
+pip download -d /build -r requirements_ci.txt --no-input 
+
+pip install --no-index -f /build -r requirements_ci.txt
 cd bigsky
-# ./manage.py collectstatic --noinput
-# ./manage.py migrate
+# ./bigsky/manage.py collectstatic --noinput
+# ./bigsky/manage.py migrate
 
 exec $@
-
