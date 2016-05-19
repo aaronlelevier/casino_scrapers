@@ -28,7 +28,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
-            },
-            bases=(utils.models.SettingMixin, models.Model),
+            }
         ),
     ]

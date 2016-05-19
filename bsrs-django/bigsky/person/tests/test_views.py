@@ -66,9 +66,6 @@ class RoleDetailTests(RoleSetupMixin, APITestCase):
         self.assertIn('name', data['categories'][0])
         self.assertIn('status', data['categories'][0])
         self.assertIn('parent', data['categories'][0])
-        self.assertEqual(data['settings']['id'], str(self.role.settings.id))
-        self.assertEqual(data['settings']['name'], self.role.settings.name)
-        self.assertEqual(data['settings']['settings'], self.role.settings.settings)
 
 
 class RoleCreateTests(RoleSetupMixin, APITestCase):
@@ -187,94 +184,64 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         self.assertNotIn('settings', data['results'][0])
 
     def test_detail(self):
-        response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
+        response = self.client.get('/api/admin/roles/{}/'.format(self.role.id))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
        
-        # inherited
-        self.assertIsNone(data['settings']['welcome_text']['value'])
-        self.assertEqual(data['settings']['welcome_text']['inherited_value'], 'Welcome')
-        self.assertEqual(data['settings']['welcome_text']['inherited_from'], 'general')
         # non-inherited
-        self.assertEqual(data['settings']['create_all']['value'], ROLE_SETTINGS['create_all']['value'])
-        self.assertIsNone(data['settings']['create_all']['inherited_value'])
-        self.assertEqual(data['settings']['create_all']['inherited_from'], 'role')
+        self.assertEqual(data['settings']['settings']['create_all']['value'], ROLE_SETTINGS['create_all']['value'])
+        self.assertEqual(data['settings']['settings']['create_all']['type'], ROLE_SETTINGS['create_all']['type'])
+        # inherited
+        self.assertEqual(data['settings']['settings']['dashboard_text']['value'], None)
+        self.assertEqual(data['settings']['settings']['dashboard_text']['inherited_value'], 'Welcome')
+        self.assertEqual(data['settings']['settings']['dashboard_text']['inherits_from'], 'general')
 
-    def test_update(self):
-        role = create_role()
-        serializer = RoleCreateSerializer(role)
+    def test_update__inherited_setting(self):
+        serializer = RoleUpdateSerializer(self.role)
         raw_data = serializer.data
-        raw_data['settings'] = {'welcome_text': 'new dashboard text'}
+        new_dashboard_text = 'new dashboard text'
+        raw_data['settings']['settings'].update({
+            'dashboard_text': new_dashboard_text
+        })
 
-        # detail
-        response = self.client.get('/api/admin/roles/{}/'.format(role.id))
-        data = json.loads(response.content.decode('utf8'))
-        self.assertIsNone(data['settings']['welcome_text']['value'])
-        self.assertEqual(data['settings']['welcome_text']['inherited_value'],  'Welcome')
-        self.assertEqual(data['settings']['welcome_text']['inherited_from'], GENERAL_SETTINGS['welcome_text']['inherited_from'])
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id), raw_data, format='json')
 
-        response = self.client.put('/api/admin/roles/{}/'.format(role.id), raw_data, format='json')
-
-        # update
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings']['welcome_text']['value'], raw_data['settings']['welcome_text'])
-        # get
-        response = self.client.get('/api/admin/roles/{}/'.format(role.id))
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings']['welcome_text']['value'], raw_data['settings']['welcome_text'])
-        self.assertEqual(data['settings']['welcome_text']['inherited_value'],  'Welcome')
-        self.assertEqual(data['settings']['welcome_text']['inherited_from'], GENERAL_SETTINGS['welcome_text']['inherited_from'])
+        self.assertEqual(data['settings']['settings']['dashboard_text']['value'], new_dashboard_text)
+        self.assertEqual(data['settings']['settings']['dashboard_text']['inherits_from'], 'general')
 
     def test_update__general_and_then_reflected_in_role(self):
-        role = create_role()
+        # role = create_role()
         serializer = SettingSerializer(self.setting)
         raw_data = serializer.data
-        k = 'welcome_text'
+        k = 'dashboard_text'
         new_value = 'new text'
         raw_data['settings'][k] = new_value
         raw_data['settings']['test_mode'] = True # will raise error if not included b/c 'required'
 
         # detail
-        response = self.client.get('/api/admin/roles/{}/'.format(role.id))
+        response = self.client.get('/api/admin/roles/{}/'.format(self.role.id))
         data = json.loads(response.content.decode('utf8'))
-        self.assertIsNone(data['settings']['welcome_text']['value'])
-        self.assertEqual(data['settings']['welcome_text']['inherited_value'],  'Welcome')
-        self.assertEqual(data['settings']['welcome_text']['inherited_from'], GENERAL_SETTINGS['welcome_text']['inherited_from'])
+        self.assertEqual(data['settings']['settings']['dashboard_text']['inherits_from'], 'general')
 
         response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id), raw_data, format='json')
+
+        print(json.loads(response.content.decode('utf8')))
 
         # update
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings']['welcome_text']['value'], raw_data['settings']['welcome_text'])
+        self.assertEqual(data['settings']['dashboard_text']['value'], raw_data['settings']['dashboard_text'])
         # DB reflects change
         setting = Setting.objects.get(id=self.setting.id)
-        self.assertEqual(setting.settings['welcome_text']['value'], new_value)
+        self.assertEqual(setting.settings['dashboard_text']['value'], new_value)
         # get
-        response = self.client.get('/api/admin/roles/{}/'.format(role.id))
+        response = self.client.get('/api/admin/roles/{}/'.format(self.role.id))
         data = json.loads(response.content.decode('utf8'))
-        self.assertIsNone(data['settings']['welcome_text']['value'])
-        self.assertEqual(data['settings']['welcome_text']['inherited_value'], raw_data['settings']['welcome_text'])
-        self.assertEqual(data['settings']['welcome_text']['inherited_from'], GENERAL_SETTINGS['welcome_text']['inherited_from'])
-
-    def test_update__auth_currency(self):
-        role = create_role()
-        serializer = RoleCreateSerializer(role)
-        raw_data = serializer.data
-        create_currencies()
-        other_currency = Currency.objects.exclude(id=role.auth_currency.id).first()
-        raw_data['settings'] = {'auth_currency': str(other_currency.id)}
-        # detail
-        response = self.client.get('/api/admin/roles/{}/'.format(role.id))
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings']['auth_currency']['value'], str(role.auth_currency.id))
-
-        response = self.client.put('/api/admin/roles/{}/'.format(role.id), raw_data, format='json')
-
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings']['auth_currency']['value'], raw_data['settings']['auth_currency'])
+        self.assertIsNone(data['settings']['settings']['dashboard_text']['value'])
+        self.assertEqual(data['settings']['settings']['dashboard_text']['inherited_value'], raw_data['settings']['dashboard_text'])
+        self.assertEqual(data['settings']['settings']['dashboard_text']['inherits_from'], 'general')
 
 
 ### PERSON ###

@@ -4,10 +4,10 @@ from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
 from django.db import models
 
-from utils.models import BaseModel, SettingMixin
+from utils.models import BaseModel
 
 
-class Setting(SettingMixin, BaseModel):
+class Setting(BaseModel):
     '''
     ``Setting`` records will be either Standard or Custom. and be set
     at levels. ex - General > Role > Person.

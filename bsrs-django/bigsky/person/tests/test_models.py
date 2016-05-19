@@ -62,52 +62,6 @@ class RoleTests(TestCase):
         self.role.save()
         self.assertEqual(self.role.categories.count(), 0)
 
-    # JSON settings
-
-    def test_get_settings_name(self):
-        self.assertEqual(Role.get_settings_name(), 'role')
-
-    def test_get_class_default_settings(self):
-        ret = self.role.get_class_default_settings()
-        self.assertEqual(ret, ROLE_SETTINGS)
-
-    def test_get_class_default_settings__general(self):
-        ret = self.role.get_class_default_settings('general')
-        self.assertEqual(ret, GENERAL_SETTINGS)
-
-    def test_get_all_class_settings(self):
-        combined = copy.copy(GENERAL_SETTINGS)
-        combined.update(ROLE_SETTINGS)
-
-        ret = self.role.get_all_class_settings()
-
-        for k in combined.keys():
-            self.assertIn(k, ret.keys())
-
-    def test_cls_get_all_class_settings(self):
-        combined = copy.copy(GENERAL_SETTINGS)
-        combined.update(ROLE_SETTINGS)
-
-        ret = Role.cls_get_all_class_settings()
-
-        self.assertEqual(ret, combined)
-
-    def test_get_all_instance_settings(self):
-        raw_combined_settings = self.role.get_class_combined_settings('general', self.role.settings)
-
-        ret = self.role.get_all_instance_settings()
-
-        self.assertEqual(ret, raw_combined_settings)
-
-    def test_get_all_instance_settings_full(self):
-        role = create_role()
-        combined = copy.copy(GENERAL_SETTINGS)
-        combined.update(role.settings)
-
-        ret = self.role.get_all_instance_settings_full()
-
-        self.assertEqual(ret, combined)
-
 
 class RolePasswordTests(TestCase):
 

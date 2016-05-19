@@ -65,7 +65,8 @@ class SettingsValidator(object):
         if settings:
             for k,v in self.init_settings.items():
                 try:
-                    value = settings[k]
+                    raw_value = settings[k]
+                    value = self.strip_value(raw_value)
                 except KeyError:
                     # Silently pass because, if a 'value' isn't being posted
                     # for the setting, we're going to use the default.
@@ -81,6 +82,13 @@ class SettingsValidator(object):
             else:
                 if errors:
                     raise ValidationError(errors)
+
+    @staticmethod
+    def strip_value(value):
+        try:
+            return value['value']
+        except TypeError:
+            return value
 
     def validate_new_value(self, value, **kwargs):
         type_str = kwargs.get('type_str')

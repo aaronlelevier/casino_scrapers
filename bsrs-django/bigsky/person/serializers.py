@@ -55,13 +55,14 @@ class RoleDetailSerializer(BaseCreateSerializer):
     def eager_load(queryset):
         return queryset.prefetch_related('categories')
 
-    # def to_representation(self, instance):
-    #     """
-    #     GeneralSettings > RoleSettings = CombinedSettings
-    #     """
-    #     data = super(RoleDetailSerializer, self).to_representation(instance)
-    #     data['settings'] = instance.get_class_combined_settings('general', data['settings'])
-    #     return data
+    def to_representation(self, instance):
+        """
+        GeneralSettings > RoleSettings = CombinedSettings
+        """
+        data = super(RoleDetailSerializer, self).to_representation(instance)
+        if instance.settings:
+            data['settings']['settings'] = instance.settings.combined_settings()
+        return data
 
 
 class RoleIdNameSerializer(serializers.ModelSerializer):

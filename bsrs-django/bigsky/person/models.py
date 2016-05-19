@@ -25,13 +25,13 @@ from person import config, helpers
 from setting.models import Setting
 from setting.settings import GENERAL_SETTINGS, ROLE_SETTINGS
 from translation.models import Locale
-from utils.models import BaseModel, BaseNameModel, DefaultNameManager, SettingMixin
+from utils.models import BaseModel, BaseNameModel, DefaultNameManager
 from utils.validators import (contains_digit, contains_upper_char, contains_lower_char,
     contains_special_char, contains_no_whitespaces)
 from work_order.models import WorkOrderStatus
 
 
-class Role(SettingMixin, BaseModel):
+class Role(BaseModel):
     # keys
     group = models.OneToOneField(Group, blank=True, null=True)
     location_level = models.ForeignKey(LocationLevel, null=True, blank=True)
@@ -222,40 +222,6 @@ class Role(SettingMixin, BaseModel):
         if child_categories:
             raise ValidationError("Role can't have related child categories: {}."
                                  .format(', '.join(child_categories)))
-
-    # JSON settings
-
-    @classmethod
-    def get_settings_name(cls):
-        return 'role'
-
-    def get_class_default_settings(self, name=None):
-        if name == 'general':
-            setting = Setting.objects.get(name=name)
-            return copy.copy(setting.settings)
-            # return copy.copy(GENERAL_SETTINGS)
-        else:
-            return copy.copy(ROLE_SETTINGS)
-
-    def get_all_class_settings(self):
-        role_settings = self.get_class_default_settings()
-        combined_settings = self.get_class_combined_settings('general', role_settings)
-        return combined_settings
-
-    @classmethod
-    def cls_get_all_class_settings(cls):
-        """
-        For use w/ API Validators for types, so they have a hook on the model class.
-        """
-        combined = copy.copy(GENERAL_SETTINGS)
-        combined.update(ROLE_SETTINGS)
-        return combined
-
-    def get_all_instance_settings(self):
-        return self.get_class_combined_settings('general', self.settings)
-
-    def get_all_instance_settings_full(self):
-        return self.get_class_combined_settings_full('general', self.settings)
 
 
 class ProxyRole(BaseModel):
