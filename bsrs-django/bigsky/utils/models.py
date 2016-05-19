@@ -8,14 +8,11 @@ from django.db import models
 from django.utils import timezone
 
 
-########
-# BASE #
-########
-'''
-Base Model, Manager, and QuerySet for which all Models will inherit 
-from. This will enforce not deleting, but just hiding records.
-'''
-
+"""
+Monkey patch the JSONEncoder to cast UUID's as strings.
+This is needed for ``Ticket.dt_path`` JsonField to populate
+using ``ticket_serializer_instance.data``
+"""
 from json import JSONEncoder
 
 JSONEncoder_olddefault = JSONEncoder.default
@@ -26,6 +23,14 @@ def JSONEncoder_newdefault(self, o):
 
 JSONEncoder.default = JSONEncoder_newdefault
 
+
+########
+# BASE #
+########
+'''
+Base Model, Manager, and QuerySet for which all Models will inherit
+from. This will enforce not deleting, but just hiding records.
+'''
 
 class BaseQuerySet(models.query.QuerySet):
     pass
