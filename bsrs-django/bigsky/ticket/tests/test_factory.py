@@ -123,7 +123,7 @@ class CreateTicketTests(TestCase):
         self.assertEqual(self.ticket.dt_path[0]['dtd']['fields'][0]['id'], str(start_dtd.fields.first().id))
         self.assertEqual(self.ticket.dt_path[0]['dtd']['fields'][0]['required'], start_dtd.fields.first().required)
         self.assertEqual(self.ticket.dt_path[0]['dtd']['fields'][0]['label'], start_dtd.fields.first().label)
-        self.assertEqual(self.ticket.dt_path[0]['dtd']['fields'][0]['options'], [str(start_dtd.fields.first().options.first().id)])
+        self.assertEqual(self.ticket.dt_path[0]['dtd']['fields'][0]['options'], [start_dtd.fields.first().options.first().id])
         self.assertEqual(
             self.ticket.dt_path[0]['ticket'].keys(),
             TicketSerializer(self.ticket).data.keys()
