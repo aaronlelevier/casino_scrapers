@@ -46,7 +46,7 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
     assert.equal(find('.t-grid-title').text(), 'Roles');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-role-name').text().trim(), RD.nameOne);
-    assert.equal(find('.t-grid-data:eq(0) .t-role-role_type').text().trim(), RD.roleTypeGeneral);
+    assert.equal(find('.t-grid-data:eq(0) .t-role-role_type').text().trim(), t(RD.t_roleTypeGeneral));
     assert.equal(find('.t-grid-data:eq(0) .t-role-location_level').text().trim(), RD.locationLevelNameOne);
     var pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 2);
@@ -163,7 +163,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
   andThen(() => {
     assert.equal(currentURL(), ROLE_URL + '?page=2&sort=name');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-    assert.equal(find('.t-grid-data:eq(0) .t-role-role_type').text().trim(), RD.roleTypeContractor);
+    assert.equal(find('.t-grid-data:eq(0) .t-role-role_type').text().trim(), t(RD.t_roleTypeContractor));
   });
   click('.t-sort-role-type-dir');
   andThen(() => {

@@ -33,7 +33,7 @@ module('Acceptance | role-new', {
     payload = {
       id: UUID.value,
       name: RD.nameOne,
-      role_type: RD.roleTypeGeneral,
+      role_type: RD.t_roleTypeGeneral,
       location_level: RD.locationLevelOne,
       categories: [CD.idOne],
       settings: {}
@@ -68,16 +68,14 @@ test('visiting role/new', (assert) => {
     assert.equal(store.find('role-type').get('length'), 2);
     assert.equal(store.find('location-level').get('length'), 8);
     //assert.equal(page.locationLevelInput(), 'Select One');
-    assert.equal(page.roleTypeInput, RD.roleTypeGeneral);
+    assert.equal(page.roleTypeInput, t(RD.t_roleTypeGeneral));
     assert.ok(store.find('role').objectAt(1).get('isNotDirty'));
     const role = store.find('role', UUID.value);
     assert.ok(role.get('new'));
   });
   fillIn('.t-role-name', RD.nameOne);
-  page.roleTypeClickDropdown();
-  page.roleTypeClickOptionOne();
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
+  selectChoose('.t-role-role-type', RD.roleTypeGeneral);
+  selectChoose('.t-location-level-select', LLD.nameCompany);
   ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
   page.categoryClickDropdown();
   page.categoryClickOptionOneEq();
@@ -88,7 +86,7 @@ test('visiting role/new', (assert) => {
     let role = store.find('role', UUID.value);
     assert.equal(role.get('new'), undefined);
     assert.equal(role.get('name'), RD.nameOne);
-    assert.equal(role.get('role_type'), RD.roleTypeGeneral);
+    assert.equal(role.get('role_type'), RD.t_roleTypeGeneral);
     assert.equal(role.get('location_level.id'), RD.locationLevelOne);
     assert.ok(role.get('isNotDirty'));
   });

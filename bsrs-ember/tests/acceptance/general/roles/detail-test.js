@@ -65,13 +65,11 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
   });
   let response = RF.detail(RD.idOne);
   let location_level = LLF.put({id: LLD.idLossRegion, name: LLD.nameLossPreventionRegion});
-  let payload = RF.put({id: RD.idOne, name: RD.namePut, role_type: RD.roleTypeContractor, location_level: location_level.id, categories: [CD.idOne]});
+  let payload = RF.put({id: RD.idOne, name: RD.namePut, role_type: RD.t_roleTypeContractor, location_level: location_level.id, categories: [CD.idOne]});
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
   fillIn('.t-role-name', RD.namePut);
-  page.roleTypeClickDropdown();
-  page.roleTypeClickOptionTwo();
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionLossRegion();
+  selectChoose('.t-role-role-type', RD.roleTypeContractor);
+  selectChoose('.t-location-level-select', LLD.nameLossPreventionRegion);
   andThen(() => {
     let role = store.find('role').objectAt(0);
     assert.ok(role.get('isDirty'));

@@ -184,7 +184,7 @@ test('on boot we should fetch and load the role configuration', function(assert)
     assert.equal(role_models.objectAt(0).get('name'), RD.nameOne);
     assert.equal(role_models.objectAt(0).get('location_level').get('id'), LLD.idOne);
     assert.equal(role_models.objectAt(0).get('location_level').get('name'), LLD.nameCompany);
-    assert.equal(role_models.objectAt(0).get('role_type'), RD.roleTypeGeneral);
+    assert.equal(role_models.objectAt(0).get('role_type'), RD.t_roleTypeGeneral);
     assert.equal(role_models.objectAt(0).get('location_level').get('id'), LLD.idOne);
     assert.equal(role_models.objectAt(1).get('location_level').get('id'), LLD.idDistrict);
     assert.equal(role_models.objectAt(2).get('location_level').get('id'), LLD.idThree);
@@ -198,7 +198,7 @@ test('on boot we should fetch and load the role types configuration', function(a
     var role_types_models = store.find('role-type');
     assert.equal(role_types_models.get('length'), 2);
     assert.ok(role_types_models.objectAt(0).get('id') > 0);
-    assert.equal(role_types_models.objectAt(0).get('name'), RD.roleTypeGeneral);
+    assert.equal(role_types_models.objectAt(0).get('name'), RD.t_roleTypeGeneral);
   });
 });
 

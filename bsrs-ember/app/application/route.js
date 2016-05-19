@@ -86,6 +86,7 @@ var ApplicationRoute = Ember.Route.extend({
     });
     const role_types_list = Ember.$('[data-preload-role-types]').data('configuration');
     role_types_list.forEach((model, index) => {
+      /* Used for dropdown select.  role_type is str field */
       store.push('role-type', {id: index+1, name: model});
     });
     const filterset_list = Ember.$('[data-preload-saved-filterset]').data('configuration');
