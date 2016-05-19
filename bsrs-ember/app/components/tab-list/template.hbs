@@ -27,11 +27,11 @@
     {{/each}}
     <li class="new">
       {{#if homeModalShowing}}
-        {{#modal-dialog translucentOverlay=true clickOutsideToClose=true}}
-          {{#link-to "dt.new" tagName="button" class="btn btn-success t-launch-dt-ticket"}}{{t "dt.ticket.launch"}}{{/link-to}}
+        {{#modal-dialog translucentOverlay=true close="homeModalShowing"}}
+        <span {{action "homeModalShowing"}}>{{#link-to "dt.new" tagName="button" class="btn btn-success t-launch-dt-ticket" action="homeModalShowing"}}{{t "dt.ticket.launch"}}{{/link-to}}</span>
         {{/modal-dialog}}
       {{/if}}
-      <span class="t-home-modal-show" {{action 'homeModalShowing'}}>{{fa-icon "plus"}}</span>
+      <span class="t-home-modal-show" {{action "homeModalShowing"}}>{{fa-icon "plus"}}</span>
     </li>
   </ul>
 </nav>

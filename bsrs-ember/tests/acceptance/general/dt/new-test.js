@@ -69,8 +69,12 @@ test('go to /dashboard, click button to get to /dt/new', assert => {
     assert.equal(currentURL(), DASHBOARD_URL);
   });
   generalPage.clickHomeModalShow();
+  andThen(() => {
+    assert.ok(Ember.$('.ember-modal-dialog'));
+  });
   generalPage.clickLaunchDTTicket();
   andThen(() => {
+    assert.throws(Ember.$('.ember-modal-dialog'));
     assert.equal(currentURL(), DT_NEW_URL);
   });
 });
