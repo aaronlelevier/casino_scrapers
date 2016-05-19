@@ -1086,7 +1086,7 @@ test('dt continue button will show up if ticket has a status of draft and can cl
   xhr(dt_endpoint, 'GET', null, {}, 200, {dtd: dt_data, ticket: returned_ticket});
   await page.continueDT();
   assert.ok(dtdPage.previewActionButton);
-  assert.equal(dtdPage.breadcrumbOne, `${substringBreadcrumb(DT.descriptionOne)} ${substringBreadcrumb(DT.descriptionTwo)}`);
+  assert.equal(dtdPage.breadcrumbText, `${substringBreadcrumb(DT.descriptionOne)} ${substringBreadcrumb(DT.descriptionTwo)}`);
   const ticket = store.find('ticket', TD.idOne);
   assert.notOk(ticket.get('hasSaved'));//prevents PATCH when bail on existing dtd
 });

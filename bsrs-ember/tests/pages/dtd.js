@@ -159,7 +159,9 @@ var DTDPage = PageObject.create({
     selectOneOption: clickable(`.ember-power-select-option:contains(${OD.textOne})`, { scope: DROPDOWN }),
     selectOneValue: text(FIELD_SELECT_OPTION),
 
-    breadcrumbOne: text('.t-dt-breadcrumb:eq(0)'),
+    breadcrumbText: text('.t-dt-breadcrumb'),
+    breadcrumbOne: text('.t-ticket-breadcrumb-back:eq(0)'),
+    breadcrumbTwo: text('.t-ticket-breadcrumb-back:eq(1)'),
 });
 
 export default DTDPage;

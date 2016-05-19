@@ -73,6 +73,7 @@ module('Acceptance | dt detail', {
       ticket,
       dtd: {
         id: DT.idThree,
+        description: DT.descriptionOne,
         fields: [
           { id: FD.idRandom, label: '', value: TD.requestOne, required: FD.requiredTwo }
         ]
@@ -422,6 +423,8 @@ test('fill out: number, text, textarea, and select (patch ticket)', async assert
   const requestValue = `${FD.labelOne}: yes, ${FD.labelFour}: ${OD.textOne}, ${FD.labelTwo}: 92, ${FD.labelThree}: 123 St., ${TD.requestOne}`;
   assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
   assert.equal(dtd.get('fields').objectAt(0).get('type'), FD.typeSix);
+  assert.deepEqual(ticket.get('dt_path').length, 1);
+  assert.equal(page.breadcrumbOne, substringBreadcrumb(DT.descriptionOne));
   let dtd_payload = DTF.generate(DT.idTwo);
   const link = dtd.get('links').objectAt(0);
   let mod_dt_one = Ember.$.extend(true, {}, dt_one);
@@ -440,6 +443,9 @@ test('fill out: number, text, textarea, and select (patch ticket)', async assert
   xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
   await page.clickNextBtn();
   assert.equal(currentURL(), DEST_URL);
+  assert.deepEqual(ticket.get('dt_path').length, 2);
+  assert.equal(page.breadcrumbOne, substringBreadcrumb(DT.descriptionOne));
+  assert.equal(page.breadcrumbTwo, substringBreadcrumb(DT.descriptionOne));
   assert.deepEqual(ticket.get('dt_path')[1]['dtd']['fields'][0]['options'], [OD.idOne]);
   assert.deepEqual(ticket.get('request'), requestValue);
 });
