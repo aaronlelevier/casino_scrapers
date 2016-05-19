@@ -64,8 +64,6 @@ class NestedContactSerializerMixin(object):
         phone_numbers = validated_data.pop('phone_numbers', [])
         addresses = validated_data.pop('addresses', [])
         emails = validated_data.pop('emails', [])
-        # Update Person
-        instance = create.update_model(instance, validated_data)
         # Create/Update PhoneNumbers
         for contacts, model in [(phone_numbers, PhoneNumber), (addresses, Address),
             (emails, Email)]:
@@ -86,7 +84,7 @@ class NestedContactSerializerMixin(object):
             for m in (model.objects.filter(object_id=instance.id)
                                    .exclude(id__in=[x for x in contact_ids])):
                 m.delete()
-        return instance
+        return super(NestedContactSerializerMixin, self).update(instance, validated_data)
 
 
 class RemovePasswordSerializerMixin(object):

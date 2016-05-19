@@ -23,7 +23,7 @@ from person.tests.factory import (PASSWORD, create_single_person, create_role, c
 from person.tests.mixins import RoleSetupMixin
 from setting.models import Setting
 from setting.serializers import SettingSerializer
-from setting.tests.factory import create_person_setting
+from setting.tests.factory import create_role_setting, create_person_setting
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from utils import create
@@ -199,8 +199,6 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         })
 
         response = self.client.put('/api/admin/roles/{}/'.format(self.role.id), raw_data, format='json')
-
-        print(json.loads(response.content.decode('utf8')))
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -535,8 +533,10 @@ class PersonPutTests(APITestCase):
     def setUp(self):
         self.password = PASSWORD
         self.role = create_role()
+        self.role_setting = create_role_setting(self.role)
         self.location = create_location(location_level=self.role.location_level)
         self.person = create_single_person()
+        self.person_setting = create_person_setting(self.person)
         self.client.login(username=self.person.username, password=self.password)
         # Create ``contact.Model`` Objects not yet JOINed to a ``Person`` or ``Location``
         self.email_type = mommy.make(EmailType)
@@ -549,6 +549,7 @@ class PersonPutTests(APITestCase):
         # Person2 w/ some contact info doesn't affect Person1's Contact
         # counts / updates / deletes
         self.person2 = create_single_person()
+        create_person_setting(self.person2)
         create_contacts(self.person2)
 
         serializer = PersonUpdateSerializer(self.person)
@@ -641,14 +642,15 @@ class PersonPutTests(APITestCase):
         )
 
     def test_change_password_other_persons_password(self):
-
         serializer = PersonUpdateSerializer(self.person2)
         self.data = serializer.data
-
         new_password = 'new_password'
         self.data['password'] = new_password
+
         response = self.client.put('/api/admin/people/{}/'.format(self.person2.id),
             self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
         self.client.logout()
         with self.assertRaises(KeyError):
             self.client.session['_auth_user_id']
@@ -950,7 +952,29 @@ class PersonSettingTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['settings']['settings']['accept_assign']['inherited_value'], False)
         self.assertEqual(data['settings']['settings']['accept_assign']['inherits_from'], 'role')
 
-    # def test_update__non_inherited(self):
+    def test_update__non_inherited(self):
+        serializer = PersonUpdateSerializer(self.person)
+        raw_data = copy.copy(serializer.data)
+        self.assertEqual(raw_data['settings']['settings']['password_one_time']['value'], False)
+        raw_data['settings']['settings']['password_one_time'] = True
 
-    # def test_update__inherited_from_role(self):        
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            raw_data, format='json')
 
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings']['settings']['password_one_time']['value'], True)
+        self.assertEqual(data['settings']['settings']['password_one_time']['type'], 'bool')
+
+    def test_update__inherited_from_role(self):
+        serializer = PersonUpdateSerializer(self.person)
+        raw_data = copy.copy(serializer.data)
+        raw_data['settings']['settings']['accept_assign'] = True
+
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            raw_data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings']['settings']['accept_assign']['value'], True)
+        self.assertEqual(data['settings']['settings']['accept_assign']['inherits_from'], 'role')

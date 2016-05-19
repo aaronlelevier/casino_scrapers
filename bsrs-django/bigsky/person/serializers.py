@@ -113,9 +113,7 @@ class PersonTicketSerializer(serializers.ModelSerializer):
         fields = ('id', 'first_name', 'middle_initial', 'last_name', 'status', 'role')
 
 
-class PersonDetailSerializer(NestedSettingUpdateMixin,
-                             NestedSettingsToRepresentationMixin,
-                             serializers.ModelSerializer):
+class PersonDetailSerializer(NestedSettingsToRepresentationMixin, serializers.ModelSerializer):
 
     locations = LocationStatusFKSerializer(many=True)
     emails = EmailSerializer(required=False, many=True)
@@ -151,7 +149,7 @@ class PersonCurrentSerializer(PersonDetailSerializer):
 
 
 class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSerializerMixin,
-    serializers.ModelSerializer):
+    NestedSettingUpdateMixin, serializers.ModelSerializer):
     '''
     Update a ``Person`` and all nested related ``Contact`` Models.
 
@@ -159,27 +157,27 @@ class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSeriali
         A Person's Location can only be:
 
         `person.location.location_level == person.role.location.location_level`
-
     '''
     password = serializers.CharField(required=False, style={'input_type': 'password'})
     emails = EmailSerializer(required=False, many=True)
     phone_numbers = PhoneNumberSerializer(required=False, many=True)
     addresses = AddressSerializer(required=False, many=True)
+    settings = SettingSerializer(required=False)
 
     class Meta:
         model = Person
         validators = [RoleLocationValidator('role', 'locations')]
         write_only_fields = ('password',)
         fields = PERSON_FIELDS + ('password', 'locale', 'locations',
-            'emails', 'phone_numbers', 'addresses',)
+            'emails', 'phone_numbers', 'addresses', 'settings',)
 
     def update(self, instance, validated_data):
         # Pasword
-        self.update_password(instance, validated_data)
+        self._update_password(instance, validated_data)
         # Contacts
         return super(PersonUpdateSerializer, self).update(instance, validated_data)
 
-    def update_password(self, instance, validated_data):
+    def _update_password(self, instance, validated_data):
         raw_password = validated_data.pop('password', None)
         if raw_password:
             instance.set_password(raw_password)
