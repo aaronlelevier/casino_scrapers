@@ -7,7 +7,8 @@ from person.models import Person, Role, PersonStatus
 from person.validators import RoleLocationValidator, RoleCategoryValidator
 from setting.serializers import SettingSerializer
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
-    RemovePasswordSerializerMixin, NestedSettingUpdateMixin)
+    RemovePasswordSerializerMixin, NestedSettingUpdateMixin,
+    NestedSettingsToRepresentationMixin)
 
 
 ### ROLE ###
@@ -37,7 +38,7 @@ class RoleUpdateSerializer(NestedSettingUpdateMixin, BaseCreateSerializer):
             'settings',)
 
 
-class RoleDetailSerializer(BaseCreateSerializer):
+class RoleDetailSerializer(NestedSettingsToRepresentationMixin, BaseCreateSerializer):
     
     categories = CategoryRoleSerializer(many=True)
     settings = SettingSerializer()
@@ -50,15 +51,6 @@ class RoleDetailSerializer(BaseCreateSerializer):
     @staticmethod
     def eager_load(queryset):
         return queryset.prefetch_related('categories')
-
-    def to_representation(self, instance):
-        """
-        GeneralSettings > RoleSettings = CombinedSettings
-        """
-        data = super(RoleDetailSerializer, self).to_representation(instance)
-        if instance.settings:
-            data['settings']['settings'] = instance.settings.combined_settings()
-        return data
 
 
 class RoleIdNameSerializer(serializers.ModelSerializer):
@@ -87,7 +79,6 @@ class PersonCreateSerializer(RemovePasswordSerializerMixin, BaseCreateSerializer
     Base Create serializer because ``Role`` needed before second step 
     of configuration for the ``Person``.
     '''
-
     class Meta:
         model = Person
         write_only_fields = ('password',)
@@ -122,16 +113,19 @@ class PersonTicketSerializer(serializers.ModelSerializer):
         fields = ('id', 'first_name', 'middle_initial', 'last_name', 'status', 'role')
 
 
-class PersonDetailSerializer(serializers.ModelSerializer):
+class PersonDetailSerializer(NestedSettingUpdateMixin,
+                             NestedSettingsToRepresentationMixin,
+                             serializers.ModelSerializer):
 
     locations = LocationStatusFKSerializer(many=True)
     emails = EmailSerializer(required=False, many=True)
     phone_numbers = PhoneNumberSerializer(required=False, many=True)
     addresses = AddressSerializer(required=False, many=True)
+    settings = SettingSerializer()
 
     class Meta:
         model = Person
-        fields = PERSON_DETAIL_FIELDS
+        fields = PERSON_DETAIL_FIELDS + ('settings',)
 
     @staticmethod
     def eager_load(queryset):
@@ -139,8 +133,8 @@ class PersonDetailSerializer(serializers.ModelSerializer):
                         .prefetch_related('emails', 'phone_numbers', 'addresses',
                                           'locations', 'locations__location_level'))
 
-    def to_representation(self, obj):
-        data = super(PersonDetailSerializer, self).to_representation(obj)
+    def to_representation(self, instance):
+        data = super(PersonDetailSerializer, self).to_representation(instance)
         data['status_fk'] = data.pop('status', [])
         return data
 

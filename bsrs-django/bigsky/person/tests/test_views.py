@@ -23,6 +23,7 @@ from person.tests.factory import (PASSWORD, create_single_person, create_role, c
 from person.tests.mixins import RoleSetupMixin
 from setting.models import Setting
 from setting.serializers import SettingSerializer
+from setting.tests.factory import create_person_setting
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from utils import create
@@ -168,9 +169,6 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
 
 class RoleSettingTests(RoleSetupMixin, APITestCase):
 
-    def setUp(self):
-        super(RoleSettingTests, self).setUp()
-
     def test_list(self):
         response = self.client.get('/api/admin/roles/')
 
@@ -181,9 +179,9 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
 
     def test_detail(self):
         response = self.client.get('/api/admin/roles/{}/'.format(self.role.id))
+
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-       
         # non-inherited
         self.assertEqual(data['settings']['settings']['create_all']['value'], True)
         self.assertEqual(data['settings']['settings']['create_all']['type'], 'bool')
@@ -201,6 +199,8 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         })
 
         response = self.client.put('/api/admin/roles/{}/'.format(self.role.id), raw_data, format='json')
+
+        print(json.loads(response.content.decode('utf8')))
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -929,3 +929,28 @@ class PasswordTests(APITestCase):
         self.client.logout()
         self.client.login(username=self.person2.username, password=new_password)
         self.assertIn('_auth_user_id', self.client.session)
+
+
+class PersonSettingTests(RoleSetupMixin, APITestCase):
+
+    def setUp(self):
+        super(PersonSettingTests, self).setUp()
+        self.person_settings = create_person_setting(self.person)
+
+    def test_detail(self):
+        response = self.client.get('/api/admin/people/{}/'.format(self.person.id))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        # non-inherited
+        self.assertEqual(data['settings']['settings']['password_one_time']['value'], False)
+        self.assertEqual(data['settings']['settings']['password_one_time']['type'], 'bool')
+        # inherited
+        self.assertEqual(data['settings']['settings']['accept_assign']['value'], None)
+        self.assertEqual(data['settings']['settings']['accept_assign']['inherited_value'], False)
+        self.assertEqual(data['settings']['settings']['accept_assign']['inherits_from'], 'role')
+
+    # def test_update__non_inherited(self):
+
+    # def test_update__inherited_from_role(self):        
+

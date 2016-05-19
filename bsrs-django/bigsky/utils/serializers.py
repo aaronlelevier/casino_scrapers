@@ -120,6 +120,19 @@ class NestedSettingUpdateMixin(object):
         setting_instance.save()
 
 
+class NestedSettingsToRepresentationMixin(object):
+    """
+    Replace settings on Model w/ inherited settings.
+    
+    Ex: GeneralSettings > RoleSettings = CombinedSettings
+    """
+    def to_representation(self, instance):
+        data = super(NestedSettingsToRepresentationMixin, self).to_representation(instance)
+        if instance.settings:
+            data['settings']['settings'] = instance.settings.combined_settings()
+        return data
+
+
 ### Fields
 
 class UpperCaseSerializerField(serializers.CharField):

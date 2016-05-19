@@ -46,6 +46,14 @@ ROLE_SETTINGS = {
         "value": True,
         "type": "bool",
     },
+    "accept_assign": {
+        "value": False,
+        "type": "bool"
+    },
+    "accept_notify": {
+        "value": False,
+        "type": "bool"
+    },
     "dashboard_text": {
         "inherits_from": "general",
     }

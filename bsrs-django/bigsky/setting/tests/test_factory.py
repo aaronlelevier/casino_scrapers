@@ -33,6 +33,9 @@ class FactoryTests(TestCase):
         ret = factory.create_role_setting(self.role)
 
         self.assertIsInstance(ret, Setting)
+        self.assertEqual(ret, self.role.settings)
+        self.assertEqual(ret.name, 'role')
+        self.assertEqual(ret.related_id, self.role.id)
         self.assertEqual(ret.settings, ROLE_SETTINGS)
         self.assertEqual(self.role.settings.settings, ret.settings)
 
@@ -42,5 +45,23 @@ class FactoryTests(TestCase):
         ret = factory.create_person_setting(self.person)
 
         self.assertIsInstance(ret, Setting)
+        self.assertEqual(ret, self.person.settings)
+        self.assertEqual(ret.name, 'person')
+        self.assertEqual(ret.related_id, self.person.id)
         self.assertEqual(ret.settings, PERSON_SETTINGS)
         self.assertEqual(self.person.settings.settings, ret.settings)
+
+    def test_remove_prior_settings(self):
+        for s in Setting.objects.all():
+            s.delete(override=True)
+        self.assertEqual(Setting.objects.count(), 0)
+
+        # remove setting with "name" if exists
+        factory.create_general_setting()
+        self.assertEqual(Setting.objects.count(), 1)
+        factory.remove_prior_settings(name='general')
+        self.assertEqual(Setting.objects.count(), 0)
+
+        # no affect if none
+        factory.remove_prior_settings(name='general')
+        self.assertEqual(Setting.objects.count(), 0)

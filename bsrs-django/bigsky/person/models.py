@@ -111,7 +111,7 @@ class Role(BaseModel):
     msg_copy_email = models.BooleanField(blank=True, default=False)
     msg_copy_default = models.BooleanField(blank=True, default=False)
     msg_stored_link = models.BooleanField(blank=True, default=False)
-    settings = models.ForeignKey(Setting, null=True)
+    settings = models.OneToOneField(Setting, null=True)
 
     __original_values = {}
 
@@ -316,7 +316,7 @@ class Person(BaseModel, AbstractUser):
     addresses = GenericRelation(Address)
     emails = GenericRelation(Email)
     # Inheritable Settings
-    settings = models.ForeignKey(Setting, null=True)
+    settings = models.OneToOneField(Setting, null=True)
 
     # Managers
     objects = PersonManager()
