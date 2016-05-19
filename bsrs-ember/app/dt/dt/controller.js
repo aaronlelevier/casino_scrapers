@@ -7,6 +7,7 @@ export default Ember.Controller.extend({
   repository: inject('ticket'),
   ticketRepository: inject('ticket'),
   DTDDeserializer: injectDeserializer('dtd'),
+  TicketDeserializer: injectDeserializer('ticket'),
   actions: {
     /*
      * @method updateRequest 
@@ -37,15 +38,21 @@ export default Ember.Controller.extend({
     linkClick(link, ticket, dtd_model, action, fieldsObj) {
       dtPathMunge(ticket, dtd_model, fieldsObj, link, this.get('simpleStore'));
       if (action === 'patch') {
+        //TODO: remove link &&
         const patch_id = link && link.get('destination.id') || dtd_model.get('id');
-        this.get('ticketRepository').patch(ticket, link, patch_id).then((response) => {
-          const dtd = this.get('DTDDeserializer').deserialize(response, response.id);
-          // TODO: what does hasSaved do?
-          ticket = this.get('simpleStore').push('ticket', {id: ticket.get('id'), hasSaved: true});
-          // if(transition) {
+        if (link.get('destination.id')) {
+          this.get('ticketRepository').patch(ticket, link, patch_id).then((response) => {
+            const dtd = this.get('DTDDeserializer').deserialize(response, response.id);
+            // TODO: what does hasSaved do?
+            ticket = this.get('simpleStore').push('ticket', {id: ticket.get('id'), hasSaved: true});
             this.transitionToRoute('dt.dt', {id: response.id, model: dtd, ticket: ticket, dt_id: response.id, ticket_id: ticket.id});
-          // }
-        });
+          });
+        } else {
+          this.get('ticketRepository').submit(ticket, link).then((ticket_server) => {
+            const returned_ticket = this.get('TicketDeserializer').deserialize(ticket_server, ticket_server.id);
+            this.transitionToRoute('dt.completed', {ticket_id: returned_ticket.get('id'), ticket: returned_ticket});
+          });
+        }
       } else {
         this.get('ticketRepository').dtPost(ticket, link).then((response) => {
           const dtd = this.get('DTDDeserializer').deserialize(response, response.id);

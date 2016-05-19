@@ -32,9 +32,11 @@ const TICKET_URL = BASEURLS.base_tickets_url;//Ticket
 const DETAIL_URL = `${BASE_URL}/${DT.idOne}/ticket/${TD.idOne}`;
 const TICKET_DETAIL_URL = `${TICKET_URL}/${TD.idOne}`;
 const DEST_URL = `${BASE_URL}/${DT.idTwo}/ticket/${TD.idOne}`;
+const ENDPAGE_URL = `${BASE_URL}/completed/${TD.idOne}`;
 const DTD_TWO_URL = `${BASE_URL}/${DT.idTwo}/ticket/${TD.idOne}`;
 const DTD_THREE_URL = `${BASE_URL}/${DT.idThree}/ticket/${TD.idOne}`;
 const TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
+const TICKET_SUBMIT_URL = `${PREFIX}/dt/submit/`;
 const BAIL_TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idOne}/ticket/`;
 
 let application, store, endpoint, original_uuid, link, dtd, dt_path, returned_ticket, dt_one;
@@ -754,6 +756,34 @@ test('visit 2 url, go back to step 0, then go a different route should save tick
   await click('.t-dtd-preview-btn:eq(1)');
   const DTD_GRIDTWO_URL = `${BASE_URL}/${DT.idGridTwo}/ticket/${TD.idOne}`;
   assert.equal(currentURL(), DTD_GRIDTWO_URL);
+});
+
+test('submit dtd (w/ empty destination) will patch ticket and navigate to dt.endpage route', async assert => {
+  const detail_data = DTF.detail(DT.idOne);
+  detail_data['links'][0]['destination'] = undefined;
+  detail_data['links'][0]['text'] = LINK.textSubmit;
+  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
+  await visit(DETAIL_URL);
+  assert.equal(currentURL(), DETAIL_URL);
+  dtPage.fieldOneCheckboxCheck();
+  assert.equal(page.previewButtonOne, t('dt.link.submit'));
+  const requestValue = `${FD.labelOne}: ${OD.textOne}, ${TD.requestOne}`;
+  let ticket_return_payload = TF.detail();
+  const link = dtd.get('links').objectAt(0);
+  const ticket = store.find('ticket', TD.idOne);
+  let mod_dt_one = Ember.$.extend(true, {}, dt_one);
+  mod_dt_one['dtd']['fields'][0]['options'] = [OD.idOne];
+  const mock_dt_path = [...dt_path,
+    {'ticket':{'id':TD.idOne,'requester':'Mel1 Gibson1','location': LD.idOne,
+      'status':TD.statusOneId,'priority':TD.priorityOneId,
+      'request':`${FD.labelOne}: ${OD.textOne}, ${TD.requestOne}`,'categories':[...ticket.get('categories_ids')],
+      'cc':['139543cf-8fea-426a-8bc3-09778cd79901'],'attachments':[]},
+      ...mod_dt_one}];
+  let ticket_payload = { id: TD.idOne, priority: LINK.priorityOne, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id'), dt_path: mock_dt_path, request: requestValue };
+  let ticket_server = TF.detail();
+  xhr(TICKET_SUBMIT_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, ticket_server);
+  await page.clickNextBtn();
+  assert.equal(currentURL(), ENDPAGE_URL);
 });
 
 //test('navigating away from start page will save data', async assert => {

@@ -71,6 +71,7 @@ test('validation on fields when click save', function(assert) {
   assert.equal($component.text().trim(), '');
   const add_btn = this.$('.t-add-link-btn');
   add_btn.trigger('click').trigger('change');
+  assert.equal($('.t-link-destination-select .ember-power-select-placeholder').text(), trans.t('dt.placeholder_submit'));
   generalPage.save();
   Ember.run.later(() => {
     const $key_component = this.$('.t-dtd-key');
@@ -257,11 +258,12 @@ test('preview updates as changes are made to detail (w/ no fields)', function(as
       id: DTD.idOne,
       dtd_links_fks: [DTDL.idOne],
       link_type: DTD.linkTypeOne,
-      link_types: [DTD.linkTypeOne, DTD.linkTypeTwo]
+      link_types: [DTD.linkTypeOne, DTD.linkTypeTwo],
+      destination_links: [LINK.idOne]
     });
     store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
     store.push('link', {id: LINK.idOne, request: LINK.requestOne, text: LINK.textOne,
-               action_button: LINK.action_buttonOne, is_header: LINK.is_headerOne});
+               action_button: LINK.action_buttonOne, is_header: LINK.is_headerOne, destination_fk: DTD.idOne});
   });
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}{{dtds/dtd-preview model=model}}`);
@@ -376,12 +378,13 @@ test('selecting link destination will populate dropdown with key', function(asse
     store.clear('dtd');
     dtd = store.push('dtd', {id: DTD.idOne, key: DTD.keyOne, destination_links: [LINK.idTwo], dtd_links_fks: [DTDL.idOne]});
     store.push('link', {id: LINK.idTwo, destination_fk: DTD.idOne});
-    store.push('dtd', {id: DTD.idTwo, key: DTD.keyTwo});
+    store.push('dtd', {id: DTD.idTwo, key: DTD.keyTwo, destination_pk: LINK.idTwo});
     store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idTwo});
   });
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}`);
   const COMPONENT = '.t-link-destination-select';
+  assert.equal($('.ember-power-select-option').length, 0);
   clickTrigger(COMPONENT);
   run(() => { typeInSearch('a'); });
   return waitFor().

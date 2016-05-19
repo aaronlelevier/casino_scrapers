@@ -19,6 +19,7 @@ var BSRS_LINKS_DEFAULTS_OBJECT = (function() {
             textOne: 'next',
             textTwo: 'finished',
             textThree: 'start',
+            textSubmit: 'dt.link.submit',
             priorityOne: this.priority_defaults.priorityOneId,
             priorityTwo: this.priority_defaults.priorityTwoId,
             statusOne: this.ticket_defaults.statusOneId,
