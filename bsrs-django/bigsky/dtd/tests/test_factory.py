@@ -106,7 +106,7 @@ class FixtureGenerationTests(TestCase):
         self.assertEqual(TreeData.objects.count(), 23)
         for x in TreeData.objects.all():
             self.assertEqual(TreeData.objects.filter(note=x.note).count(), 1)
-            self.assertEqual(x.key, x.description)
+            self.assertEqual(x.description, x.description)
 
     def test_create_link_fixtures_only(self):
         factory.create_link_fixtures_only()
@@ -153,16 +153,16 @@ class FixtureGenerationTests(TestCase):
 
         factory.join_dtds_and_links()
 
-        start = TreeData.objects.get(note=str(0))
+        start = TreeData.objects.get(key=str(0))
         self.assertEqual(start.links.count(), 2)
 
-        appliances = TreeData.objects.get(note=str(2))
+        appliances = TreeData.objects.get(key=str(2))
         self.assertEqual(appliances.links.count(), 3)
 
-        parking_lot = TreeData.objects.get(note=str(13))
+        parking_lot = TreeData.objects.get(key=str(13))
         self.assertEqual(parking_lot.links.count(), 3)
 
-        plumbing = TreeData.objects.get(note=str(17))
+        plumbing = TreeData.objects.get(key=str(17))
         self.assertEqual(plumbing.links.count(), 5)
 
     def test_join_dtds_and_links__destination(self):

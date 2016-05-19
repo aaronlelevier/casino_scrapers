@@ -8,7 +8,7 @@ from model_mommy import mommy
 from category.models import Category, CategoryStatus
 from category.tests.factory import create_single_category
 from dtd.models import TreeData, DTD_START_KEY
-from dtd.tests.factory import create_tree_data
+from dtd.tests.factory import create_tree_data, create_dtd_fixtures_only
 from generic.tests.factory import create_file_attachment
 from location.models import Location, LocationStatus, LocationType, LOCATION_COMPANY
 from location.tests.factory import create_locations
@@ -143,12 +143,14 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
             'description': start_dtd.description,
             'prompt': start_dtd.prompt,
             'note': start_dtd.note,
-            'fields': [{
+            'fields': [
+                {
                 'id': str(start_dtd.fields.first().id),
                 'label': start_dtd.fields.first().label,
                 'options': [options.first().id] if options.first() else None,
                 'required': start_dtd.fields.first().required,
-                    }]
+                }
+                ]
             },
         'ticket': munged_ticket
         }, {

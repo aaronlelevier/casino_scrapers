@@ -99,7 +99,7 @@ def dtd_clear_all():
     TreeOption.objects_all.all().delete()
 
 
-def create_dtd_fixtures_only():
+def create_dtd_fixtures_only(splice=None):
     for x in DTD_DATA:
         DTDData = namedtuple('DTDData', ['id', 'name', 'parent_id'])
         data = DTDData._make(x)._asdict()
@@ -108,8 +108,8 @@ def create_dtd_fixtures_only():
 
         dtd = TreeData.objects.create(
             id=id,
-            key=data['name'],
-            note=data['id'],
+            key=data['id'],
+            note=_generate_chars(),
             description=data['name'],
             prompt=_generate_chars()
         )
@@ -150,14 +150,14 @@ def join_dtds_and_links():
 
             # set the links destination
             if dtd_data['id'] == link_data['id']:
-                dtd = TreeData.objects.get(note=str(dtd_data['id']))
+                dtd = TreeData.objects.get(key=str(dtd_data['id']))
                 link = TreeLink.objects.get(order=link_data['id'])
                 link.destination = dtd
                 link.save()
 
             # set which dtd the link belongs to
             if dtd_data['id'] == link_data['parent_id']:
-                dtd = TreeData.objects.get(note=str(dtd_data['id']))
+                dtd = TreeData.objects.get(key=str(dtd_data['id']))
                 link = TreeLink.objects.get(order=link_data['id'])
                 link.dtd = dtd
                 link.save()
