@@ -56,7 +56,7 @@ class FactoryTests(TestCase):
         self.assertIsInstance(tree_data, TreeData)
         self.assertEqual(tree_data.key, key)
         # Fields
-        self.assertEqual(tree_data.fields.count(), 1)
+        self.assertEqual(tree_data.fields.count(), 5)
         self.assertIsInstance(tree_data.fields.first(), TreeField)
         # Links
         self.assertEqual(tree_data.links.count(), 1)

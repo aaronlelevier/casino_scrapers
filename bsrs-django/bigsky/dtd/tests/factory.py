@@ -46,8 +46,9 @@ def create_tree_field(options=2):
 def create_tree_data(links=1, destination=None, **kwargs):
     tree_data = mommy.make(TreeData, **kwargs)
     # Fields
-    field = create_tree_field()
-    tree_data.fields.add(field)
+    # field = create_tree_field()
+    # tree_data.fields.add(field)
+    add_field_of_each_type(tree_data)
 
     for i in range(links):
         if i == 0:
