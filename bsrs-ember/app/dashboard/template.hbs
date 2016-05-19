@@ -1,14 +1,13 @@
 <div class="side-panel">
-    <header>
-        <h1 class="t-admin-h1">{{t "dashboard.welcome"}}</h1>
-    </header>
-  {{#link-to "dt.new" tagName="button" class="btn btn-success t-launch-dt-ticket"}}{{t "dt.ticket.launch"}}{{/link-to}}
+  <header>
+    <h1 class="t-admin-h1">{{t "dashboard.welcome"}}</h1>
+  </header>
 </div>
 <article class="main">{{outlet}}</article>
 
 <section>
   {{#each model as |ticket|}}
-    <div class="t-ticket-draft">{{ticket.number}}</div>
-    {{#link-to "tickets.ticket" ticket.id tagName="button" class="btn btn-info t-ticket-status-draft-link"}}{{t "ticket.one"}}{{/link-to}}
+  <div class="t-ticket-draft">{{ticket.number}}</div>
+  {{#link-to "tickets.ticket" ticket.id tagName="button" class="btn btn-info t-ticket-status-draft-link"}}{{t "ticket.one"}}{{/link-to}}
   {{/each}}
 </section>

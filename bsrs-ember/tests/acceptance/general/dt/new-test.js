@@ -68,6 +68,7 @@ test('go to /dashboard, click button to get to /dt/new', assert => {
   andThen(() => {
     assert.equal(currentURL(), DASHBOARD_URL);
   });
+  generalPage.clickHomeModalShow();
   generalPage.clickLaunchDTTicket();
   andThen(() => {
     assert.equal(currentURL(), DT_NEW_URL);
@@ -197,7 +198,7 @@ test('has_multi_locations === true, validation: cant click next until select loc
 test('has_multi_locations === false, transitions to /dt/{start-id}', assert => {
   let person;
   xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
-  visit('/dashboard');
+  visit(DASHBOARD_URL);
   andThen(() => {
     assert.equal(currentURL(), '/dashboard');
     let person_current = store.findOne('person-current');

@@ -16,13 +16,12 @@ var GeneralPage = PageObject.create({
   clickModalCancelDelete: clickable('.t-modal-footer .t-modal-cancel-btn'),
   modalIsVisible: PageObject.isVisible('.ember-modal-dialog'),
   modalIsHidden: PageObject.isHidden('.t-modal'),
-  // deleteModalIsVisible: PageObject.isVisible('.t-delete-modal'),
-  // deleteModalIsHidden: PageObject.isHidden('.t-delete-modal'),
   visitDashboard: visitable(ADMIN_URL),
   clickAdmin: clickable('.t-nav-admin'),
   clickDTD: clickable('.t-nav-admin-dtd'),
   errorText: text('.t-error-message'),
   clickLaunchDTTicket: clickable('.t-launch-dt-ticket'),
+  clickHomeModalShow: clickable('.t-home-modal-show'),
   isDirty: hasClass('dirty', 'i', {scope: '.t-tab-close'}),
 });
 
