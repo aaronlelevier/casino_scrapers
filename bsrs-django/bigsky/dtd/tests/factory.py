@@ -6,11 +6,13 @@ from category.models import Category
 from category.tests.factory import create_single_category
 from dtd.models import TreeField, TreeOption, TreeData, TreeLink
 from dtd.model_choices import FIELD_TYPES
+from setting.settings import GENERAL_SETTINGS
 from ticket.models import TicketStatus, TicketPriority
 from ticket.tests.factory_related import create_ticket_status, create_ticket_priority
 from utils.create import _generate_chars, random_lorem
 from utils.helpers import generate_uuid
 
+DTD_START_KEY = GENERAL_SETTINGS['dt_start_key']['value']
 
 def _link_get_or_create_related(model, factory_create_func):
     try:
@@ -46,15 +48,10 @@ def create_tree_field(options=2):
 def create_tree_data(links=1, destination=None, **kwargs):
     tree_data = mommy.make(TreeData, **kwargs)
     # Fields
-    # field = create_tree_field()
-    # tree_data.fields.add(field)
     add_field_of_each_type(tree_data)
 
     for i in range(links):
-        if i == 0:
-            link = create_tree_link(destination)
-        else:
-            link = create_tree_link()
+        link = create_tree_link(destination)
         tree_data.links.add(link)
 
     return tree_data
@@ -107,9 +104,10 @@ def create_dtd_fixtures_only(splice=None):
         id = generate_uuid(TreeData)
         key = _generate_chars()
 
+        # Key needs to be Start
         dtd = TreeData.objects.create(
             id=id,
-            key=data['id'],
+            key=DTD_START_KEY if data['id'] == 0 else data['id'],
             note=_generate_chars(),
             description=data['name'],
             prompt=_generate_chars()
@@ -151,14 +149,16 @@ def join_dtds_and_links():
 
             # set the links destination
             if dtd_data['id'] == link_data['id']:
-                dtd = TreeData.objects.get(key=str(dtd_data['id']))
+                key = DTD_START_KEY if dtd_data['id'] == 0 else str(dtd_data['id']) 
+                dtd = TreeData.objects.get(key=key)
                 link = TreeLink.objects.get(order=link_data['id'])
                 link.destination = dtd
                 link.save()
 
             # set which dtd the link belongs to
             if dtd_data['id'] == link_data['parent_id']:
-                dtd = TreeData.objects.get(key=str(dtd_data['id']))
+                key = DTD_START_KEY if dtd_data['id'] == 0 else str(dtd_data['id']) 
+                dtd = TreeData.objects.get(key=key)
                 link = TreeLink.objects.get(order=link_data['id'])
                 link.dtd = dtd
                 link.save()

@@ -8,6 +8,7 @@ from category.tests.factory import create_single_category
 from dtd.models import TreeField, TreeOption, TreeData, TreeLink
 from dtd.model_choices import FIELD_TYPES
 from dtd.tests import factory
+from setting.settings import GENERAL_SETTINGS
 from ticket.models import TicketStatus, TicketPriority
 
 
@@ -153,7 +154,7 @@ class FixtureGenerationTests(TestCase):
 
         factory.join_dtds_and_links()
 
-        start = TreeData.objects.get(key=str(0))
+        start = TreeData.objects.get(key=GENERAL_SETTINGS['dt_start_key']['value'])
         self.assertEqual(start.links.count(), 2)
 
         appliances = TreeData.objects.get(key=str(2))

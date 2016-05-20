@@ -7,6 +7,7 @@ from django.test import TestCase
 
 from category.models import Category
 from category.tests.factory import create_categories
+from dtd.tests.factory import create_dtd_fixture_data
 from dtd.models import TreeData
 from generic.models import Attachment
 from location.models import Location, LOCATION_COMPANY
@@ -56,6 +57,8 @@ class CreateTicketTests(TestCase):
     def setUp(self):
         create_categories()
         self.person = create_single_person()
+        # Put before create_ticket to ensure building dt_path has DT objects to pull from
+        create_dtd_fixture_data()
         self.ticket = factory.create_ticket()
 
     def test_location(self):
