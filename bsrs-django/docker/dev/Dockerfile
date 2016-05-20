@@ -29,7 +29,7 @@ ENV WHEELHOUSE=/wheelhouse PIP_WHEEL_DIR=/wheelhouse PIP_FIND_LINKS=/wheelhouse 
 # Build artifacts
 VOLUME /wheelhouse
 
-# Build cache
+# Build cache. Shared b/w test and builder service
 VOLUME /build
 
 VOLUME /reports

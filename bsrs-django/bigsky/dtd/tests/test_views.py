@@ -41,7 +41,7 @@ class TreeDataDetailTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(data['attachments'][0]['image_full'], media_path(str(self.attachment.image_full)))
         self.assertEqual(data['prompt'], self.tree_data.prompt)
         self.assertEqual(data['link_type'], self.tree_data.link_type)
-        # Fields
+        # Fields - 5 fields for dtd
         self.assertEqual(len(data['fields']), 5)
         field = self.tree_data.fields.first()
         self.assertTrue(data['fields'][0]['id'])

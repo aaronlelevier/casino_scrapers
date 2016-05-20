@@ -8,7 +8,7 @@ from model_mommy import mommy
 from category.models import Category, CategoryStatus
 from category.tests.factory import create_single_category
 from dtd.models import TreeData, DTD_START_KEY
-from dtd.tests.factory import create_tree_data, create_dtd_fixtures_only
+from dtd.tests.factory import create_tree_data
 from generic.tests.factory import create_file_attachment
 from location.models import Location, LocationStatus, LocationType, LOCATION_COMPANY
 from location.tests.factory import create_locations
@@ -131,32 +131,33 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
         a = create_file_attachment()
         ticket.attachments.add(a)
 
-    start_dtd = TreeData.objects.get_start() or create_tree_data(key=DTD_START_KEY, destination=mommy.make(TreeData, description='wat'))
     # Already have a created ticket, dt_path is snapshot of ticket at previous time and dtd at that time
-    munged_ticket = TicketSerializer(ticket).data
-    munged_ticket.priority = TicketPriority.objects.order_by('?')[0]
-    munged_ticket.status = TicketStatus.objects.order_by('?')[0]
-    options = start_dtd.fields.first().options
+    start_dtd = TreeData.objects.get_start() or create_tree_data(key=DTD_START_KEY, destination=mommy.make(TreeData, description='wat', prompt='who', note='dt following START'))
+    destination = start_dtd.links.first().destination
+    destination_id = str(destination.id) if destination else None
+    # Create dt_path which are the old dt objects which should be the START DTD
+    # DTD Fields are an array (id, label, value, required, options) where options is an array of ids
+    dtd_obj = {'id': str(start_dtd.id), 'description': start_dtd.description, 'prompt': start_dtd.prompt, 'note': start_dtd.note, 'fields': []}
+    # dict comprehension
+    fields = start_dtd.fields.all()
+    {dtd_obj['fields'].append({'id':str(field.id), 'value':_generate_chars(), 'required': 'true' if field.required else 'false', 'label': field.label, 
+        'options': [str(opt.id) for opt in field.options.all() if opt]}) for field in fields}
+    # second item in array is partially done with a field value and no label
     ticket.dt_path = [{
-        'dtd': {
-            'id': str(start_dtd.id),
-            'description': start_dtd.description,
-            'prompt': start_dtd.prompt,
-            'note': start_dtd.note,
-            'fields': [
-                {
-                'id': str(start_dtd.fields.first().id),
-                'label': start_dtd.fields.first().label,
-                'options': [options.first().id] if options.first() else None,
-                'required': start_dtd.fields.first().required,
-                }
-                ]
-            },
-        'ticket': munged_ticket
+        'dtd': dtd_obj,
+        'ticket': {
+            'id': str(ticket.id),
+            'request': 'existing request',
+            'status': str(ticket.status.id),
+            'priority': str(ticket.priority.id),
+            'requester': ticket.requester,
+            'location': str(ticket.location.id)
+            }
         }, {
             'dtd': {
-                'id': str(start_dtd.links.first().destination.id) if start_dtd.links.first().destination else None,
-                'description': 'You are almost done'
+                'id': destination_id,
+                'description': 'You are almost done',
+                'fields': [{'id': str(uuid.uuid4()), 'value': 'partially done', 'required': 'false'}]
                 }
             }]
     ticket.save()
