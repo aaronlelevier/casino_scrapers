@@ -99,7 +99,7 @@ test('POST then PATCH - to demonstrate starting the DT and maintaining traversin
   assert.ok(!dtPage.fieldOneCheckboxIsChecked());
   await dtPage.fieldOneCheckboxCheck();
   assert.ok(dtPage.fieldOneCheckboxIsChecked());
-  let dtd_response_two = DTF.generate(DT.idTwo);
+  let dtd_response_two = DTF.generate(DT.idTwo, '', FD.idTwo, FD.labelTwo);
   // POST
   let mod_payload = Ember.$.extend(true, {}, ticket_dt_new_payload);
   mod_payload['dt_path'][0]['dtd']['fields'] = [{id: FD.idOne, label: FD.labelOne, value: OD.textOne, required: FD.requiredTwo, options: [OD.idOne]}]; 
@@ -114,6 +114,10 @@ test('POST then PATCH - to demonstrate starting the DT and maintaining traversin
   assert.deepEqual(ticket.get('dt_path')[0]['dtd']['fields'][0]['options'], [OD.idOne]);
   assert.equal(ticket.get('dt_path')[0]['dtd']['fields'][0]['label'], FD.labelOne);
   assert.equal(ticket.get('request'), `${FD.labelOne}: ${OD.textOne}`);
+  // check checkbox to ensure field and option was put into fieldsObj in patch callback in controller
+  assert.notOk(dtPage.fieldOneCheckboxIsChecked());
+  await dtPage.fieldOneCheckboxCheck();
+  assert.ok(dtPage.fieldOneCheckboxIsChecked());
 });
 
 test('has_multi_locations === true, transition to /dt/{start-id}, can POST data with multiple options, ', async assert => {

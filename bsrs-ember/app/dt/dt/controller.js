@@ -62,6 +62,14 @@ export default Ember.Controller.extend({
         }
       } else {
         this.get('ticketRepository').dtPost(ticket, link).then((response) => {
+          //TODO: consolidate method with method in dtd-component
+          response.fields.forEach((field) => {
+            const field_id = field.id;
+            const optionValues = field.options.map((option) => {
+              return option.id;
+            });
+            fieldsObj.set(field_id, { dtd_id: response.id, label: field.label, num: 1, value: '', required: field.required, optionValues: optionValues });
+          });
           const dtd = this.get('DTDDeserializer').deserialize(response, response.id);
           this.get('simpleStore').push('ticket', {id: ticket.id, hasSaved: true});
           this.transitionToRoute('dt.dt', {id: response.id, model: dtd, ticket: ticket, dt_id: response.id, ticket_id: ticket.id});
