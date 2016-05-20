@@ -18,9 +18,10 @@ export default Ember.Component.extend({
     /*
      * @property fieldsObj - used to keep track of state of field (and options if present)
      * key = field id / value is { num (0 or 1), value, label of field, required, and options }
+     * field type is not needed since field id from template will be mapped to field in fieldsObj
      * values determine joined ticket request value when patched up
      * fields and options save in ticket dt_path object in dtPathMunge method
-     * Need to setup a computed property everytime the model.id changes
+     * fieldsObj is updated with new fields in response of patch
      */
     this._super(...arguments);
     const dt_id = this.get('model').get('id');

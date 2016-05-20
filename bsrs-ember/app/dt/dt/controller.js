@@ -41,6 +41,14 @@ export default Ember.Controller.extend({
         const patch_id = link.get('destination.id') || dtd_model.get('id');
         if (link.get('destination.id')) {
           this.get('ticketRepository').patch(ticket, link, patch_id).then((response) => {
+            //TODO: consolidate method with method in dtd-component
+            response.fields.forEach((field) => {
+              const field_id = field.id;
+              const optionValues = field.options.map((option) => {
+                return option.id;
+              });
+              fieldsObj.set(field_id, { dtd_id: response.id, label: field.label, num: 1, value: '', required: field.required, optionValues: optionValues });
+            });
             const dtd = this.get('DTDDeserializer').deserialize(response, response.id);
             // TODO: what does hasSaved do?
             ticket = this.get('simpleStore').push('ticket', {id: ticket.get('id'), hasSaved: true});

@@ -8,9 +8,13 @@ var BSRS_DTD_FACTORY = (function() {
     this.category_defaults = category_defaults.default || category_defaults;
     this.config = config;
   };
-  factory.prototype.generate = function(i, key) {
+  factory.prototype.generate = function(i, key, fieldId, fieldLabel) {
     var id = i || this.dtd.idOne;
     var key = key || this.dtd.keyOne;
+    // fieldId is passed in b/c need diff field and option if navigating to next dt
+    var field_id = fieldId || this.field.idOne;
+    var option_id = fieldId ? this.option.idTwo : this.option.idOne;
+    var field_label = fieldLabel || this.field.labelOne;
     var categories = this.categories();
     return {
       id: id,
@@ -21,14 +25,14 @@ var BSRS_DTD_FACTORY = (function() {
       note_type: this.dtd.noteTypeOne,
       fields: [
         {
-          id: this.field.idOne,
-          label: this.field.labelOne,
+          id: field_id,
+          label: field_label,
           type: this.field.typeSix, // because `typeOne` is text which has no options
           required: this.field.requiredTwo,
           order: this.field.orderOne,
           options: [
             {
-              id: this.option.idOne,
+              id: option_id,
               text: this.option.textOne,
               order: this.option.orderOne
             }

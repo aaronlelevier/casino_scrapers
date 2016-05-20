@@ -102,7 +102,7 @@ test('decision tree displays data and can click to next destination after updati
   await page.fieldClickCheckboxOne();
   assert.notOk(find('.t-dtd-preview-btn').attr('disabled'));
   const ticket = store.find('ticket', TD.idOne);
-  const checkbox_ticket_value = `${FD.labelOne}: ${OD.textOne}`
+  const checkbox_ticket_value = `${FD.labelOne}: ${OD.textOne}`;
   const requestValue = `${checkbox_ticket_value}, ${TD.requestOne}`;
   assert.deepEqual(ticket.get('requestValues'), [checkbox_ticket_value, TD.requestOne]);
   assert.equal(ticket.get('request'), requestValue);
@@ -113,7 +113,7 @@ test('decision tree displays data and can click to next destination after updati
   assert.equal(ticket.get('dt_path')[0]['ticket']['priority'], TD.priorityZeroId);
   assert.equal(ticket.get('status.id'), TD.statusOneId);
   assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
-  let dtd_payload = DTF.generate(DT.idTwo);
+  let dtd_payload = DTF.generate(DT.idTwo, '', FD.idTwo, FD.labelTwo);
   const link = dtd.get('links').objectAt(0);
   // dt_path object added based on 
   let mod_dt_one = Ember.$.extend(true, {}, dt_one);
@@ -137,8 +137,14 @@ test('decision tree displays data and can click to next destination after updati
   assert.equal(ticket.get('status.id'), TD.statusOneId);
   assert.equal(ticket.get('dt_path')[1]['ticket']['status'], TD.statusOneId);
   assert.equal(ticket.get('dt_path')[1]['ticket']['priority'], TD.priorityOneId);
+  assert.deepEqual(ticket.get('dt_path')[1]['dtd']['id'], DT.idOne);
   assert.deepEqual(ticket.get('dt_path')[1]['dtd']['fields'][0]['options'], [OD.idOne]);
   assert.deepEqual(ticket.get('request'), requestValue);
+  assert.equal(dtPage.label.split(' ')[0], FD.labelTwo);
+  // check checkbox to ensure field and option was put into fieldsObj in patch callback in controller
+  assert.notOk(dtPage.fieldOneCheckboxIsChecked());
+  await dtPage.fieldOneCheckboxCheck();
+  assert.ok(dtPage.fieldOneCheckboxIsChecked());
 });
 
 test('updating field text (patch ticket)', async assert => {
