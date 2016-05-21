@@ -1,0 +1,72 @@
+version: '2'
+
+services:
+  app:  
+    build: 
+      context: ../../
+      dockerfile: ./docker/release/Dockerfile
+    environment:
+      DJANGO_SETTINGS_MODULE: bigsky.settings.prod
+      DATABASE_HOST: postgres
+    volumes_from: 
+      - webroot
+    # expose:
+    #   - "8000"
+    links: 
+      - postgres
+    # networks:
+    #   - bsrs_default
+    command:
+      - uwsgi
+      - "--socket /var/run/nginx-persistent.sock"
+      - "--chmod-socket=666"
+      - "--module bigsky.wsgi"
+      - "--master"
+      - "--die-on-term"
+
+  # link to app service will bring it up when start nginx service
+  nginx: 
+    image: nginx
+    links:
+      - app
+    volumes:
+      - ../../builds/nginx.conf:/etc/nginx/conf.d/nginx.conf
+    ports: 
+      - "8000:8000"
+    volumes_from:
+      - webroot
+
+  # hosts socketfile that communicates with app and static content served by nginx
+  webroot:
+    build: 
+      context: ../../
+      dockerfile: ./docker/release/Dockerfile
+    volumes:
+      - /var/www/bsrs
+    entrypoint: "true"
+
+  postgres:  
+    build:
+      context: ../../
+      dockerfile: Dockerfile-psql
+    env_file:
+      - ../../bsrs-django/env/app.${APP_ENV}.env
+    expose:
+      - "5432"
+    # networks:
+    #   - bsrs_default
+
+  agent:
+    image: bsrs/ansible
+    volumes:
+      - ./bsrs-django/docker/ansible/probe.yml:/ansible/site.yml
+    links:
+      - postgres 
+    environment:
+      PROBE_HOST: "postgres"
+      PROBE_PORT: "5432"
+
+# networks:
+#   bsrs_default:
+#     driver: bridge
+

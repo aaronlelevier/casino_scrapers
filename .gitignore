@@ -6,6 +6,7 @@
 .DS_Store
 .coverage
 /dist/assets/
+/target
 htmlcov/
 /__pycache__
 *.ipynb*

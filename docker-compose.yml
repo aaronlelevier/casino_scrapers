@@ -19,8 +19,8 @@ services:
     environment:
       DJANGO_SETTINGS_MODULE: bigsky.settings.ci
       DATABASE_HOST: postgres
-    volumes:
-      - .:/www/src/bsrs-django
+    volumes_from: 
+      - cache
     expose:
       - "8000"
     links: 
@@ -28,6 +28,8 @@ services:
     networks:
       - bsrs_default
 
+  # map folder at root of app to wheelhouse.  Builder will output to wheelhouse and will be available outside of container
+  # use cache folder to find (-f) wheels
   builder:
     build:
       context: ./bsrs-django

@@ -1,0 +1,3 @@
+recursive-include bigsky/static
+recursive-include bigsky/templates
+
