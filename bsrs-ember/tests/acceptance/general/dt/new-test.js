@@ -45,6 +45,7 @@ const DT_TICKET_POST_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
 const DT_TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
 const DT_START_URL = `${DT_URL}/${DT.idOne}/ticket/1`;
 const DT_TWO_URL = `${DT_URL}/${DT.idTwo}/ticket/1`;
+const TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
 
 let application, store, endpoint, original_uuid;
 
@@ -118,6 +119,23 @@ test('POST then PATCH - to demonstrate starting the DT and maintaining traversin
   assert.notOk(dtPage.fieldOneCheckboxIsChecked());
   await dtPage.fieldOneCheckboxCheck();
   assert.ok(dtPage.fieldOneCheckboxIsChecked());
+  let dtd_payload = DTF.generate(DT.idTwo, '', FD.idTwo, FD.labelTwo);
+  const requestValue = `${FD.labelOne}: ${OD.textOne}, ${FD.labelTwo}: ${OD.textOne}`
+  const dt_one = { 'dtd':{'id': DT.idOne,'description': DT.descriptionOne,'prompt': DT.promptOne,'note': DT.noteOne,
+      'fields':[{'id': FD.idOne,'label': FD.labelOne,'value': OD.textOne,'required':FD.requiredTwo, options: [OD.idOne]}]}};
+  const dt_two = { 'dtd':{'id': DT.idTwo,'description': DT.descriptionOne,'prompt': DT.promptOne,'note': DT.noteOne,
+      'fields':[{'id': FD.idOne,'label': FD.labelOne,'value': OD.textOne,'required':FD.requiredTwo, options: [OD.idOne]}]}};
+  dt_two['dtd']['fields'].push({'id': FD.idTwo, 'label': FD.labelTwo, 'value': OD.textOne, 'required': FD.requiredTwo, 'options': [OD.idTwo]});
+  const ticket_path1 = {'ticket':{'id':1,'requester': TD.requesterOne, 'location': LD.idThree, 'status':TD.statusZeroId,'priority':TD.priorityZeroId,
+      'request':`${FD.labelOne}: ${OD.textOne}`,'categories':[], 'cc':[],'attachments':[]}};
+  let ticket_path2 = {'ticket':{'id':1,'requester': TD.requesterOne, 'location': LD.idThree, 'status':TD.statusZeroId,'priority':TD.priorityZeroId,
+      'request':requestValue,'categories':[], 'cc':[],'attachments':[]}};
+  ticket_path2['ticket']['request'] = requestValue;
+  const mock_dt_path = [ {...ticket_path1, ...dt_one}, {...ticket_path2, ...dt_two} ];
+  // const link = store.find('dtd', DT.idTwo).get('links').objectAt(0);
+  let ticket_payload = { id: 1, priority: LINK.priorityOne, status: LINK.statusOne, categories: [CD.idOne, CD.idWatChild, CD.idPlumbingChild], dt_path: mock_dt_path, request: requestValue };
+  xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
+  await dtPage.btnOneClick();
 });
 
 test('has_multi_locations === true, transition to /dt/{start-id}, can POST data with multiple options, ', async assert => {

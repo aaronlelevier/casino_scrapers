@@ -52,7 +52,7 @@ export default Ember.Controller.extend({
             const dtd = this.get('DTDDeserializer').deserialize(response, response.id);
             // TODO: what does hasSaved do?
             ticket = this.get('simpleStore').push('ticket', {id: ticket.get('id'), hasSaved: true});
-            this.transitionToRoute('dt.dt', {id: response.id, model: dtd, ticket: ticket, dt_id: response.id, ticket_id: ticket.id});
+            this.transitionToRoute('dt.dt', {id: response.id, model: dtd, ticket: ticket, dt_id: response.id, ticket_id: ticket.id, action: 'patch'});
           });
         } else {
           this.get('ticketRepository').submit(ticket, link).then((ticket_server) => {
@@ -72,7 +72,7 @@ export default Ember.Controller.extend({
           });
           const dtd = this.get('DTDDeserializer').deserialize(response, response.id);
           this.get('simpleStore').push('ticket', {id: ticket.id, hasSaved: true});
-          this.transitionToRoute('dt.dt', {id: response.id, model: dtd, ticket: ticket, dt_id: response.id, ticket_id: ticket.id});
+          this.transitionToRoute('dt.dt', {id: response.id, model: dtd, ticket: ticket, dt_id: response.id, ticket_id: ticket.id, action: 'patch'});
         });
       }
     }
