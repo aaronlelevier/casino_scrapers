@@ -1,44 +1,53 @@
 [
 {
   "model": "setting.setting",
-  "pk": "e009579a-535e-439c-a3bf-7f127599a0d4",
+  "pk": "034530c4-ce6c-4724-9cfd-37a16e787001",
   "fields": {
-    "created": "2016-02-18T23:06:48.103Z",
-    "modified": "2016-02-18T23:06:48.104Z",
+    "created": "2016-05-23T20:51:26.295Z",
+    "modified": "2016-05-23T20:51:26.295Z",
     "deleted": null,
     "name": "general",
+    "related_id": null,
     "settings": {
+      "modules": {
+        "value": [],
+        "type": "list"
+      },
+      "test_contractor_phone": {
+        "value": "+18587155000",
+        "type": "phone"
+      },
+      "test_mode": {
+        "value": false,
+        "type": "bool"
+      },
       "company_name": {
-        "inherited_from": "general",
-        "inherited_value": null,
-        "inherited": false,
-        "type": "str",
-        "required": false,
-        "value": "Andy's Pianos"
+        "value": "Andy's Pianos",
+        "type": "str"
+      },
+      "test_contractor_email": {
+        "value": "test@bigskytech.com",
+        "type": "email"
+      },
+      "dashboard_text": {
+        "value": "Welcome",
+        "type": "str"
+      },
+      "dt_start_key": {
+        "value": "Start",
+        "type": "str"
       },
       "login_grace": {
-        "inherited_from": "general",
-        "inherited_value": null,
-        "inherited": false,
-        "type": "int",
-        "required": true,
-        "value": 1
+        "value": 1,
+        "type": "int"
       },
-      "modules": {
-        "inherited_from": "general",
-        "inherited_value": null,
-        "inherited": false,
-        "type": "list",
-        "required": true,
-        "value": []
+      "exchange_rates": {
+        "value": 1.0,
+        "type": "float"
       },
-      "welcome_text": {
-        "inherited_from": "general",
-        "inherited_value": null,
-        "inherited": false,
-        "type": "str",
-        "required": false,
-        "value": "Welcome"
+      "company_code": {
+        "value": "One",
+        "type": "str"
       }
     }
   }

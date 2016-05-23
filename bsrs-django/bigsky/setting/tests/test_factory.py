@@ -18,13 +18,14 @@ class FactoryTests(TestCase):
         ret = factory.create_general_setting()
 
         self.assertIsInstance(ret, Setting)
+        self.assertEqual(str(ret.id)[-3:], '001')
         self.assertEqual(name, ret.name)
         self.assertEqual(ret.settings, GENERAL_SETTINGS)
 
         # get-or-create: so call a 2nd time, returns a fresh instance
         # so don't get leaky state from 'dicts' across tests
         ret_two = factory.create_general_setting()
-        self.assertNotEqual(ret_two, ret)
+        self.assertEqual(ret_two, ret)
         self.assertEqual(ret_two.name, ret.name)
 
     def test_create_role_setting(self):
