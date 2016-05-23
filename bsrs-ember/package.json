@@ -62,7 +62,6 @@
     "ember-power-select": "0.10.3",
     "ember-promise": "1.2.0",
     "ember-resolver": "^2.0.3",
-    "ember-responsive": "^0.2.5",
     "ember-route-action-helper": "0.3.0",
     "ember-test-helpers": "^0.5.19",
     "ember-tether": "0.1.3",

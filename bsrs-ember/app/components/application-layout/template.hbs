@@ -1,22 +1,8 @@
-
-{{#if media.isMobile}}
-    <header class="main">
-        {{nav-bar showing=false}}
-    </header>
-    <section class="main">
-        {{outlet}}
-    </section>
-    <footer class="main">
-        {{tray-main}}
-        {{user-menu showing=false}}
-    </footer>
-{{else}}
-    <header class="main">
-        {{nav-bar showing=true}}
-    </header>
-    {{tab-list tabs=tabs closeTabMaster=(action "closeTabMaster")}}
-    {{tray-main}}
-    <section class="wrap">
-        {{liquid-outlet}}
-    </section>
-{{/if}}
+<header class="main">
+    {{nav-bar showing=true}}
+</header>
+{{tab-list tabs=tabs closeTabMaster=(action "closeTabMaster")}}
+{{tray-main}}
+<section class="wrap">
+    {{liquid-outlet}}
+</section>
