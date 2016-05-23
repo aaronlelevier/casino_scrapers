@@ -50,11 +50,11 @@ module('Acceptance | dt detail', {
     original_uuid = random.uuid;
     random.uuid = function() { return TD.idOne; };
     /*
-     * ticket object is used for current ticket and dt_path object
-     * dt_path is previous state of ticket && dtd state
+     * dt_path is previous state of ticket && dtd state (label, value, required, fields, options (array of ids))
      * returned_ticket is the ticket w/ the dt_path, which will be different and is returned on a get requests
      * all tests are assuming deep linking (i.e. clicking from ticket detail)
-     * dt_path dtd has idThree
+     * fieldsObj is not tested but is created upon initialization of dtd-preview component (only happens once) and then updated on subsequent requests in dt/controller
+     * TODO: need to make sure request is in order when created
      */
     dt_one = { 'dtd':{'id': DT.idOne,'description': DT.descriptionOne,'prompt': DT.promptOne,'note': DT.noteOne,
         'fields':[{'id': FD.idOne,'label': FD.labelOne,'value': OD.textOne,'required':FD.requiredTwo},
