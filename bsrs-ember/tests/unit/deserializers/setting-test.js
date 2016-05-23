@@ -22,7 +22,7 @@ test('setting correctly deserialized settings object', (assert) => {
     run(()=>{
         deserializer.deserialize(json, SD.id);
     });
-    assert.equal(setting.get('welcome_text'), SD.welcome_text);
+    assert.equal(setting.get('dashboard_text'), SD.dashboard_text);
     assert.equal(setting.get('login_grace'), SD.login_grace);
     assert.equal(setting.get('company_name'), SD.company_name);
 assert.notOk(setting.get('settings'));

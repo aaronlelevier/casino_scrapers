@@ -390,23 +390,23 @@ test('role_categories_ids computed returns a flat list of ids for each category'
   assert.deepEqual(role.get('role_categories_ids'), [ROLE_CD.idTwo]);
 });
 
-test('welcome_text isDirty test', (assert) => {
+test('dashboard_text isDirty test', (assert) => {
   role = store.push('role', {id: RD.idOne, name: RD.nameOne, role_type: RD.roleTypeGeneral});
   assert.notOk(role.get('isDirty'));
-  role.set('welcome_text', 'foo');
+  role.set('dashboard_text', 'foo');
   assert.ok(role.get('isDirty'));
-  role.set('welcome_text', '');
+  role.set('dashboard_text', '');
   assert.ok(!role.get('isDirty'));
 });
 
 test('settings', (assert) => {
-  var welcome_text = 'hi';
+  var dashboard_text = 'hi';
   var create_all = true;
   var login_grace = 2;
   var company_name = "Andys Piano";
-  role = store.push('role', {id: RD.idOne, welcome_text, create_all, login_grace, company_name});
+  role = store.push('role', {id: RD.idOne, dashboard_text, create_all, login_grace, company_name});
   var settings = role.get('settings');
-  assert.equal(settings.welcome_text, welcome_text);
+  assert.equal(settings.dashboard_text, dashboard_text);
 });
 
 test('serialize', (assert) => {

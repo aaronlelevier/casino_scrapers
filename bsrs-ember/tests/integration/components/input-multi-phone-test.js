@@ -76,7 +76,7 @@ test('once added a button for phone number type appears with a button to delete 
     //NOTE: If we modify from select to div / ul the below needs to be updated
     assert.equal($first_type_select.find('option').length, 2);
     assert.equal($first_type_select.find('option:eq(0)').text(), 'Office');
-    assert.equal($first_type_select.find('option:eq(1)').text(), 'Cell');
+    assert.equal($first_type_select.find('option:eq(1)').text(), 'Mobile');
     assert.equal(model.objectAt(0).get("type"), PHONE_NUMBER_TYPE_DEFAULTS.officeId);
 });
 

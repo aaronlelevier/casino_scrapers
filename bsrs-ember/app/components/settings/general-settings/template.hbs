@@ -35,9 +35,9 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            {{#form-group title="admin.setting.welcome_text" for="welcome_text"}}
-                                {{textarea autoresize=true placeholder=(t "admin.setting.welcome_text") value=model.welcome_text class="form-control t-settings-welcome_text" id="welcome_text"}}
-                                {{#validation-error-field submitted=submitted field="welcome_text" className="validation validation-under t-welcome-text-validation-error" model=model validation=welcomeTextValidation}}{{t "validation.invalid"}} {{t "admin.setting.welcome_text"}}{{/validation-error-field}}
+                            {{#form-group title="admin.setting.dashboard_text" for="dashboard_text"}}
+                                {{textarea autoresize=true placeholder=(t "admin.setting.dashboard_text") value=model.dashboard_text class="form-control t-settings-dashboard_text" id="dashboard_text"}}
+                                {{#validation-error-field submitted=submitted field="dashboard_text" className="validation validation-under t-welcome-text-validation-error" model=model validation=dashboardTextValidation}}{{t "validation.invalid"}} {{t "admin.setting.dashboard_text"}}{{/validation-error-field}}
                             {{/form-group}}
                         </div>
                     </div>

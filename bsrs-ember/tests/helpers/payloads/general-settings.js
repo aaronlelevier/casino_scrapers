@@ -6,7 +6,7 @@ var setting_payload = {
     title: SD.title,
     settings: {
         login_grace: SD.login_grace,
-        welcome_text: SD.welcome_text,
+        dashboard_text: SD.dashboard_text,
         company_name: SD.company_name
     }
 };
@@ -17,7 +17,7 @@ var setting_payload_other = {
     title: SD.title,
     settings: {
         login_grace: SD.login_graceOther,
-        welcome_text: SD.welcome_textOther,
+        dashboard_text: SD.dashboard_textOther,
         company_name: SD.company_nameOther
     }
 };

@@ -28,7 +28,7 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
       categories: [],
       unusedId: 'af34ee9b-833c-4f3e-a584-b6851d1e04b3',
       settings: {
-        welcome_text:{
+        dashboard_text:{
           value: null,
           inherited_value: 'Welcome',
           inherited_from: 'general'

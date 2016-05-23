@@ -3,13 +3,13 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
     factory.prototype.defaults = function() {
         var one = {
             login_grace: 1,
-            welcome_text: 'Welcome',
+            dashboard_text: 'Welcome',
             company_name: 'Andys Pianos',
             create_all: true,
         };
         var other = {
             login_graceOther: 2,
-            welcome_textOther: '1234',
+            dashboard_textOther: '1234',
             company_nameOther: 'Bobs Pianos',
             create_allOther: false
         };
@@ -19,34 +19,28 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             title: 'admin.general.other',
             'settings': {
                 'login_grace': {
-                    'required': true,
                     'type': 'int',
                     'value': one.login_grace
                 },
-                'welcome_text': {
-                    'required': false,
+                'dashboard_text': {
                     'type': 'str',
-                    'value': one.welcome_text
+                    'value': one.dashboard_text
                 },
                 'company_name': {
-                    'required': false,
                     'type': 'str',
                     'value': one.company_name
                 }
             },
             'settingsOther': {
                 'login_grace': {
-                    'required': true,
                     'type': 'int',
                     'value': other.login_graceOther
                 },
-                'welcome_text': {
-                    'required': false,
+                'dashboard_text': {
                     'type': 'str',
-                    'value': other.welcome_textOther
+                    'value': other.dashboard_textOther
                 },
                 'company_name': {
-                    'required': false,
                     'type': 'str',
                     'value': other.company_nameOther
                 }

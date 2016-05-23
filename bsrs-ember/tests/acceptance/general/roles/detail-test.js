@@ -341,15 +341,15 @@ test('settings update and redirected to list with clean model', (assert) => {
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
   });
-  var welcome_text = 'hi';
-  fillIn('.t-settings-welcome_text', welcome_text);
+  var dashboard_text = 'hi';
+  fillIn('.t-settings-dashboard_text', dashboard_text);
   //fillIn('.t-settings-login_grace', login_grace);
   //click('.t-settings-create_all');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.ok(role.get('isDirtyOrRelatedDirty'));
   });
-  let payload = RF.put({id: RD.idOne, categories: [CD.idOne], settings: {welcome_text}});
+  let payload = RF.put({id: RD.idOne, categories: [CD.idOne], settings: {dashboard_text}});
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
@@ -362,7 +362,7 @@ test('settings - translation keys', (assert) => {
   clearxhr(list_xhr);
   visit(DETAIL_URL);
   andThen(() => {
-    assert.equal(getLabelText('welcome_text'), translations['admin.setting.welcome_text']);
+    assert.equal(getLabelText('dashboard_text'), translations['admin.setting.dashboard_text']);
     // assert.equal(getLabelText('login_grace'), translations['admin.setting.login_grace']);
     // assert.ok(find(`span:contains('${translations['admin.settings.create_all']}')`));
   });
@@ -375,13 +375,13 @@ test('settings - inherited value from parent', (assert) => {
   let inherited = true;
   let inherited_from = 'general';
   let inherited_value = 'Welcome';
-  detail_data = RF.detail(RD.idOne, null, {welcome_text: {value, inherited, inherited_from, inherited_value}});
+  detail_data = RF.detail(RD.idOne, null, {dashboard_text: {value, inherited, inherited_from, inherited_value}});
   xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
   visit(DETAIL_URL);
   andThen(() => {
-    assert.equal(find('.t-settings-welcome_text').get(0)['placeholder'], 'Default: ' + inherited_value);
-    assert.equal(find('.t-inherited-msg-welcome_text').text(), 'Inherited from: ' + inherited_from);
-    assert.equal(find('.t-settings-welcome_text').val(), '');
+    assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + inherited_value);
+    assert.equal(find('.t-inherited-msg-dashboard_text').text(), 'Inherited from: ' + inherited_from);
+    assert.equal(find('.t-settings-dashboard_text').val(), '');
   });
 });
 
@@ -392,13 +392,13 @@ test('settings - override value from parent', (assert) => {
   let inherited = true;
   let inherited_from = 'general';
   let inherited_value = 'Welcome';
-  detail_data = RF.detail(RD.idOne, null, {welcome_text: {value, inherited, inherited_from, inherited_value}});
+  detail_data = RF.detail(RD.idOne, null, {dashboard_text: {value, inherited, inherited_from, inherited_value}});
   xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
   visit(DETAIL_URL);
   andThen(() => {
-    assert.equal(find('.t-settings-welcome_text').get(0)['placeholder'], 'Default: ' + inherited_value);
-    assert.equal(find('.t-inherited-msg-welcome_text').text(), 'Inherited from: ' + inherited_from);
-    assert.equal(find('.t-settings-welcome_text').val(), value);
+    assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + inherited_value);
+    assert.equal(find('.t-inherited-msg-dashboard_text').text(), 'Inherited from: ' + inherited_from);
+    assert.equal(find('.t-settings-dashboard_text').val(), value);
   });
 });
 
@@ -411,12 +411,12 @@ test('settings - override value from parent', (assert) => {
 //     let value = 'foo';
 //     let inherited = false;
 //     let inherited_from = 'general';
-//     detail_data = RF.detail(RD.idOne, null, {welcome_text: {value, inherited, inherited_from}});
+//     detail_data = RF.detail(RD.idOne, null, {dashboard_text: {value, inherited, inherited_from}});
 //     xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
 //     visit(DETAIL_URL);
 //     andThen(() => {
-//         assert.equal(find('.t-settings-welcome_text').get(0)['placeholder'], translations['admin.setting.company_name']);
-//         assert.equal(find('.t-settings-welcome_text').val(), value);
+//         assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], translations['admin.setting.company_name']);
+//         assert.equal(find('.t-settings-dashboard_text').val(), value);
 //     });
 // });
 
@@ -442,15 +442,15 @@ test('settings - override value from parent', (assert) => {
 //     andThen(() => {
 //         assert.equal(currentURL(), DETAIL_URL);
 //         assert.equal(find('.t-settings-title').text().trim(), t(setting_data.title));
-//         assert.equal(find('.t-settings-welcome').val(), SD.welcome_text);
+//         assert.equal(find('.t-settings-welcome').val(), SD.dashboard_text);
 //     });
-//     fillIn('.t-settings-welcome', SD.welcome_textOther);
+//     fillIn('.t-settings-welcome', SD.dashboard_textOther);
 //     fillIn('.t-settings-login_grace', SD.login_graceOther);
 //     fillIn('.t-settings-company_name', SD.company_nameOther);
 //     click('.t-settings-create_all');
 //     andThen(() => {
 //         let setting = store.find('setting', SD.id);
-//         assert.equal(setting.get('welcome_text'), SD.welcome_textOther);
+//         assert.equal(setting.get('dashboard_text'), SD.dashboard_textOther);
 //         assert.equal(setting.get('login_grace'), SD.login_graceOther);
 //         assert.equal(setting.get('company_name'), SD.company_nameOther);
 //         assert.equal(setting.get('create_all'), SD.create_allOther);
@@ -469,7 +469,7 @@ test('settings - override value from parent', (assert) => {
 // test('translations - for labels', (assert) => {
 //     visit(DETAIL_URL);
 //     andThen(() => {
-//         assert.equal(getLabelText('welcome_text'), translations['admin.setting.welcome_text']);
+//         assert.equal(getLabelText('dashboard_text'), translations['admin.setting.dashboard_text']);
 //         assert.equal(getLabelText('login_grace'), translations['admin.setting.login_grace']);
 //         assert.equal(getLabelText('company_name'), translations['admin.setting.company_name']);
 //         assert.ok(find(`span:contains('${translations['admin.settings.create_all']}')`));

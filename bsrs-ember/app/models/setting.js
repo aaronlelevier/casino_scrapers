@@ -3,9 +3,11 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 
 var SettingModel = Model.extend({
     i18n: Ember.inject.service(),
+    // settings: start
     company_name: attr(''),
-    welcome_text: attr(''),
+    dashboard_text: attr(''),
     login_grace: attr(''),
+    // settings: end
     translated_title: Ember.computed(function(){
         return this.get('i18n').t('admin.general', { count: 2 });
     }),
@@ -21,7 +23,7 @@ var SettingModel = Model.extend({
             title: this.get('title'),
             settings: {
                 company_name: this.get('company_name'),
-                welcome_text: this.get('welcome_text'),
+                dashboard_text: this.get('dashboard_text'),
                 login_grace: parseInt(this.get('login_grace'))
             }
         };

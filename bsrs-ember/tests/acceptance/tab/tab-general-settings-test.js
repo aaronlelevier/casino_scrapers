@@ -110,7 +110,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
         assert.equal(tabs.get('length'), 0);
     });
     click(general_settings_link);
-    fillIn('.t-settings-welcome_text:eq(0)', '1234');
+    fillIn('.t-settings-dashboard_text:eq(0)', '1234');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let setting = store.find('setting', SD.id);
@@ -171,7 +171,7 @@ test('a dirty model should add the dirty class to the tab close icon', (assert) 
         assert.equal(tabs.get('length'), 1);
         assert.equal(find('.t-tab-title:eq(0)').text(), t(SD.title));
     });
-    fillIn('.t-settings-welcome_text:eq(0)', '1234');
+    fillIn('.t-settings-dashboard_text:eq(0)', '1234');
     andThen(() => {
         assert.equal(find('.dirty').length, 1);
     });
@@ -217,7 +217,7 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
         assert.equal(tabs.get('length'), 1);
         assert.equal(find('.t-tab-title:eq(0)').text(), t(SD.title));
     });
-    fillIn('.t-settings-welcome_text:eq(0)', '1234');
+    fillIn('.t-settings-dashboard_text:eq(0)', '1234');
     andThen(() => {
         assert.equal(find('.dirty').length, 1);
         assert.equal(find('.t-tab-title:eq(0)').text(), t(SD.title));

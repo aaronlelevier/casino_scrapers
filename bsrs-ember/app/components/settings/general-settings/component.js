@@ -7,7 +7,7 @@ import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 var GeneralSettings = Ember.Component.extend(TabMixin, EditMixin, {
     repository: inject('setting'),
     classNames: ['wrapper', 'form'],
-    welcomeTextValidation: validate('model.welcome_text'),
+    dashboardTextValidation: validate('model.dashboard_text'),
     actions: {
         save() {
             this.set('submitted', true);

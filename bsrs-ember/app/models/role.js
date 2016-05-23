@@ -22,15 +22,16 @@ var RoleModel = Model.extend(NewMixin, OptConf, {
   people: [],
   role_type: attr(),
   location_level_fk: undefined,
-  // Settings
-  welcome_text: attr(''),
+  // settings: start
+  dashboard_text: attr(''),
   //DON'T make these attrs until they are tested
   // create_all: ,
   // login_grace: ,
   // company_name: ,
+  // settings: end
   settings:  Ember.computed(function() {
     return {
-      welcome_text: this.get('welcome_text') || undefined
+      dashboard_text: this.get('dashboard_text') || undefined
     };
   }),
   role_categories_fks: [],
