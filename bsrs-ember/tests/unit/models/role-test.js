@@ -6,6 +6,7 @@ import ROLE_CD from 'bsrs-ember/vendor/defaults/role-category';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import PD from 'bsrs-ember/vendor/defaults/person';
+import SD from 'bsrs-ember/vendor/defaults/setting';
 
 var store, uuid, role, run = Ember.run;
 
@@ -390,14 +391,45 @@ test('role_categories_ids computed returns a flat list of ids for each category'
   assert.deepEqual(role.get('role_categories_ids'), [ROLE_CD.idTwo]);
 });
 
+// settings: dirty track: start
+
 test('dashboard_text isDirty test', (assert) => {
-  role = store.push('role', {id: RD.idOne, name: RD.nameOne, role_type: RD.roleTypeGeneral});
-  assert.notOk(role.get('isDirty'));
+  role = store.push('role', {id: RD.idOne, name: RD.nameOne, dashboard_text: SD.dashboard_text});
+  assert.equal(role.get('isDirty'), false);
   role.set('dashboard_text', 'foo');
-  assert.ok(role.get('isDirty'));
-  role.set('dashboard_text', '');
-  assert.ok(!role.get('isDirty'));
+  assert.equal(role.get('isDirty'), true);
+  role.set('dashboard_text', SD.dashboard_text);
+  assert.equal(role.get('isDirty'), false);
 });
+
+test('create_all isDirty test', (assert) => {
+  role = store.push('role', {id: RD.idOne, name: RD.nameOne, create_all: SD.create_all});
+  assert.equal(role.get('isDirty'), false);
+  role.set('create_all', 'foo');
+  assert.equal(role.get('isDirty'), true);
+  role.set('create_all', SD.create_all);
+  assert.equal(role.get('isDirty'), false);
+});
+
+test('accept_assign isDirty test', (assert) => {
+  role = store.push('role', {id: RD.idOne, name: RD.nameOne, accept_assign: SD.accept_assign});
+  assert.equal(role.get('isDirty'), false);
+  role.set('accept_assign', 'foo');
+  assert.equal(role.get('isDirty'), true);
+  role.set('accept_assign', SD.accept_assign);
+  assert.equal(role.get('isDirty'), false);
+});
+
+test('accept_notify isDirty test', (assert) => {
+  role = store.push('role', {id: RD.idOne, name: RD.nameOne, accept_notify: SD.accept_notify});
+  assert.equal(role.get('isDirty'), false);
+  role.set('accept_notify', 'foo');
+  assert.equal(role.get('isDirty'), true);
+  role.set('accept_notify', SD.accept_notify);
+  assert.equal(role.get('isDirty'), false);
+});
+
+// settings: dirty track: end
 
 test('settings', (assert) => {
   var dashboard_text = 'hi';

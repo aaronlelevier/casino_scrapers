@@ -24,10 +24,9 @@ var RoleModel = Model.extend(NewMixin, OptConf, {
   location_level_fk: undefined,
   // settings: start
   dashboard_text: attr(''),
-  //DON'T make these attrs until they are tested
-  // create_all: ,
-  // login_grace: ,
-  // company_name: ,
+  create_all: attr(),
+  accept_assign: attr(),
+  accept_notify: attr(),
   // settings: end
   settings:  Ember.computed(function() {
     return {

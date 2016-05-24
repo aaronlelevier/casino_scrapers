@@ -31,7 +31,7 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
         dashboard_text:{
           value: null,
           inherited_value: 'Welcome',
-          inherited_from: 'general'
+          inherits_from: 'general'
         }
       }
     };

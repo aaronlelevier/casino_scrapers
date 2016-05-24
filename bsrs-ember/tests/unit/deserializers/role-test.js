@@ -275,12 +275,12 @@ test('role-category m2m does not delete other role-category m2m models', (assert
     assert.equal(role_two.get('role_categories').get('length'), 1);
 });
 
-test('settings copySettingsToFirstLevel', (assert) => {
+test('aaron settings copySettingsToFirstLevel', (assert) => {
     let value = 'foo';
     let inherited = true;
-    let inherited_from = 'general';
+    let inherits_from = 'general';
     let inherited_value = 'Welcome';
-    let response = RF.generate(RD.idOne, null, {welcome_text: {value, inherited, inherited_from, inherited_value}});
+    let response = RF.generate(RD.idOne, null, {welcome_text: {value, inherited, inherits_from, inherited_value}});
     run(() => {
         subject.deserialize(response, RD.idOne);
     });
@@ -288,5 +288,5 @@ test('settings copySettingsToFirstLevel', (assert) => {
     assert.equal(role.get('welcome_text'), value);
     assert.equal(role.get('welcome_text_inherited'), inherited);
     assert.equal(role.get('welcome_text_inherited_value'), inherited_value);
-    assert.equal(role.get('welcome_text_inherited_from'), inherited_from);
+    assert.equal(role.get('welcome_text_inherits_from'), inherits_from);
 });
