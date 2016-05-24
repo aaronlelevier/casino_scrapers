@@ -183,12 +183,12 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         # non-inherited
-        self.assertEqual(data['settings']['settings']['create_all']['value'], True)
-        self.assertEqual(data['settings']['settings']['create_all']['type'], 'bool')
+        self.assertEqual(data['settings']['create_all']['value'], True)
+        self.assertEqual(data['settings']['create_all']['type'], 'bool')
         # inherited
-        self.assertEqual(data['settings']['settings']['dashboard_text']['value'], None)
-        self.assertEqual(data['settings']['settings']['dashboard_text']['inherited_value'], 'Welcome')
-        self.assertEqual(data['settings']['settings']['dashboard_text']['inherits_from'], 'general')
+        self.assertEqual(data['settings']['dashboard_text']['value'], None)
+        self.assertEqual(data['settings']['dashboard_text']['inherited_value'], 'Welcome')
+        self.assertEqual(data['settings']['dashboard_text']['inherits_from'], 'general')
 
     def test_update__inherited_setting(self):
         serializer = RoleUpdateSerializer(self.role)
@@ -213,7 +213,7 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         # detail
         response = self.client.get('/api/admin/roles/{}/'.format(self.role.id))
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings']['settings']['dashboard_text']['inherits_from'], 'general')
+        self.assertEqual(data['settings']['dashboard_text']['inherits_from'], 'general')
 
         response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id), raw_data, format='json')
 
@@ -227,9 +227,9 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         # get
         response = self.client.get('/api/admin/roles/{}/'.format(self.role.id))
         data = json.loads(response.content.decode('utf8'))
-        self.assertIsNone(data['settings']['settings']['dashboard_text']['value'])
-        self.assertEqual(data['settings']['settings']['dashboard_text']['inherited_value'], raw_data['settings']['dashboard_text'])
-        self.assertEqual(data['settings']['settings']['dashboard_text']['inherits_from'], 'general')
+        self.assertIsNone(data['settings']['dashboard_text']['value'])
+        self.assertEqual(data['settings']['dashboard_text']['inherited_value'], raw_data['settings']['dashboard_text'])
+        self.assertEqual(data['settings']['dashboard_text']['inherits_from'], 'general')
 
 
 ### PERSON ###
@@ -945,12 +945,12 @@ class PersonSettingTests(RoleSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         # non-inherited
-        self.assertEqual(data['settings']['settings']['password_one_time']['value'], False)
-        self.assertEqual(data['settings']['settings']['password_one_time']['type'], 'bool')
+        self.assertEqual(data['settings']['password_one_time']['value'], False)
+        self.assertEqual(data['settings']['password_one_time']['type'], 'bool')
         # inherited
-        self.assertEqual(data['settings']['settings']['accept_assign']['value'], None)
-        self.assertEqual(data['settings']['settings']['accept_assign']['inherited_value'], False)
-        self.assertEqual(data['settings']['settings']['accept_assign']['inherits_from'], 'role')
+        self.assertEqual(data['settings']['accept_assign']['value'], None)
+        self.assertEqual(data['settings']['accept_assign']['inherited_value'], False)
+        self.assertEqual(data['settings']['accept_assign']['inherits_from'], 'role')
 
     def test_update__non_inherited(self):
         serializer = PersonUpdateSerializer(self.person)
