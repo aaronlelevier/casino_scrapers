@@ -7,6 +7,7 @@ import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import SD from 'bsrs-ember/vendor/defaults/setting';
 import SF from 'bsrs-ember/vendor/setting_fixtures';
+import page from 'bsrs-ember/tests/pages/settings';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import {setting_payload, setting_payload_other} from 'bsrs-ember/tests/helpers/payloads/general-settings';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
@@ -39,16 +40,40 @@ test('general settings title and fields populated correctly', function(assert) {
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-settings-title').text().trim(), t(setting_data.title));
+        assert.equal(find('.t-settings-company_name').val(), SD.company_name);
+        assert.equal(find('.t-settings-company_code').val(), SD.company_code);
         assert.equal(find('.t-settings-dashboard_text').val(), SD.dashboard_text);
+        assert.equal(find('.t-settings-login_grace').val(), SD.login_grace);
+        assert.equal(find('.t-settings-exchange_rates').val(), SD.exchange_rates);
+        assert.equal(find('.t-settings-modules').val(), SD.modules);
+        assert.equal(find('.t-settings-test_mode').prop('checked'), SD.test_mode);
+        assert.equal(find('.t-settings-test_contractor_email').val(), SD.test_contractor_email);
+        assert.equal(find('.t-settings-test_contractor_phone').val(), SD.test_contractor_phone);
+        assert.equal(find('.t-settings-dt_start_key').val(), SD.dt_start_key);
     });
+    fillIn('.t-settings-company_code', SD.company_codeOther);
+    fillIn('.t-settings-company_name', SD.company_nameOther);
     fillIn('.t-settings-dashboard_text', SD.dashboard_textOther);
     fillIn('.t-settings-login_grace', SD.login_graceOther);
-    fillIn('.t-settings-company_name', SD.company_nameOther);
+    fillIn('.t-settings-exchange_rates', SD.exchange_ratesOther);
+    fillIn('.t-settings-modules', SD.modulesOther);
+    page.test_modeClick();
+    fillIn('.t-settings-test_contractor_email', SD.test_contractor_emailOther);
+    fillIn('.t-settings-test_contractor_phone', SD.test_contractor_phoneOther);
+    fillIn('.t-settings-dt_start_key', SD.dt_start_keyOther);
     andThen(() => {
         let setting = store.find('setting', SD.id);
+        assert.equal(setting.get('company_name'), SD.company_nameOther);
+        assert.equal(setting.get('company_code'), SD.company_codeOther);
         assert.equal(setting.get('dashboard_text'), SD.dashboard_textOther);
         assert.equal(setting.get('login_grace'), SD.login_graceOther);
-        assert.equal(setting.get('company_name'), SD.company_nameOther);
+        assert.equal(setting.get('exchange_rates'), SD.exchange_ratesOther);
+        assert.equal(setting.get('modules'), SD.modulesOther);
+        assert.equal(setting.get('test_mode'), SD.test_modeOther);
+        assert.equal(setting.get('test_contractor_email'), SD.test_contractor_emailOther);
+        assert.equal(setting.get('test_contractor_phone'), SD.test_contractor_phoneOther);
+        assert.equal(setting.get('dt_start_key'), SD.dt_start_keyOther);
+        // dirty tracking
         assert.ok(setting.get('isDirty'));
         assert.ok(setting.get('isDirtyOrRelatedDirty'));
     });
@@ -74,15 +99,17 @@ test('general settings are properly dirty tracked', function(assert) {
     visit(DETAIL_URL);
     andThen(() => {
         let setting = store.find('setting', SD.id);
+        assert.ok(setting.get('isNotDirty'));
         assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-settings-login_grace').val(), SD.login_grace);
+        assert.equal(find('.t-settings-company_code').val(), SD.company_code);
     });
-    fillIn('.t-settings-login_grace', SD.login_graceOther);
+    fillIn('.t-settings-company_code', SD.company_codeOther);
     andThen(() => {
+        assert.equal(find('.t-settings-company_code').val(), SD.company_codeOther);
         let setting = store.find('setting', SD.id);
         assert.ok(setting.get('isDirty'));
     });
-    fillIn('.t-settings-login_grace', SD.login_grace);
+    fillIn('.t-settings-company_code', SD.company_code);
     andThen(() => {
         let setting = store.find('setting', SD.id);
         assert.ok(setting.get('isNotDirty'));

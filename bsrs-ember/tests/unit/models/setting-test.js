@@ -28,31 +28,106 @@ test('test computed title', (assert) => {
     assert.equal(setting.get('title'), 'general.patton');
 });
 
+// dirty tracking tests: start
+
+test('company_code', (assert) => {
+    setting = store.push('setting', {id: SD.id, company_code: SD.company_code});
+    assert.equal(setting.get('isDirty'), false);
+    setting.set('company_code', 'x');
+    assert.equal(setting.get('isDirty'), true);
+});
+
 test('company_name', (assert) => {
-    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, company_name: SD.company_name});
+    setting = store.push('setting', {id: SD.id, company_name: SD.company_name});
     assert.equal(setting.get('isDirty'), false);
     setting.set('company_name', 'x');
     assert.equal(setting.get('isDirty'), true);
 });
 
 test('dashboard_text', (assert) => {
-    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, dashboard_text: SD.dashboard_text});
+    setting = store.push('setting', {id: SD.id, name: SD.name, dashboard_text: SD.dashboard_text});
     assert.equal(setting.get('isDirty'), false);
     setting.set('dashboard_text', 'x');
     assert.equal(setting.get('isDirty'), true);
 });
 
 test('login_grace', (assert) => {
-    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, dashboard_text: SD.dashboard_text});
+    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, login_grace: SD.login_grace});
     assert.equal(setting.get('isDirty'), false);
     setting.set('login_grace', 'x');
     assert.equal(setting.get('isDirty'), true);
 });
 
+test('exchange_rates', (assert) => {
+    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, exchange_rates: SD.exchange_rates});
+    assert.equal(setting.get('isDirty'), false);
+    setting.set('exchange_rates', 'x');
+    assert.equal(setting.get('isDirty'), true);
+});
+
+test('modules', (assert) => {
+    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, modules: SD.modules});
+    assert.equal(setting.get('isDirty'), false);
+    setting.set('modules', 'x');
+    assert.equal(setting.get('isDirty'), true);
+});
+
+test('test_mode', (assert) => {
+    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, test_mode: SD.test_mode});
+    assert.equal(setting.get('isDirty'), false);
+    setting.set('test_mode', 'x');
+    assert.equal(setting.get('isDirty'), true);
+});
+
+test('test_contractor_email', (assert) => {
+    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, test_contractor_email: SD.test_contractor_email});
+    assert.equal(setting.get('isDirty'), false);
+    setting.set('test_contractor_email', 'x');
+    assert.equal(setting.get('isDirty'), true);
+});
+
+test('test_contractor_phone', (assert) => {
+    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, test_contractor_phone: SD.test_contractor_phone});
+    assert.equal(setting.get('isDirty'), false);
+    setting.set('test_contractor_phone', 'x');
+    assert.equal(setting.get('isDirty'), true);
+});
+
+test('dt_start_key', (assert) => {
+    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, dt_start_key: SD.dt_start_key});
+    assert.equal(setting.get('isDirty'), false);
+    setting.set('dt_start_key', 'x');
+    assert.equal(setting.get('isDirty'), true);
+});
+
+// dirty tracking tests: end
+
 test('serialize', (assert) => {
-    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, company_name: SD.company_name, dashboard_text: SD.dashboard_text, login_grace: SD.login_grace});
+    setting = store.push('setting', {
+        id: SD.id,
+        name: SD.name,
+        title: SD.title,
+        company_code: SD.company_code,
+        company_name: SD.company_name,
+        dashboard_text: SD.dashboard_text,
+        login_grace: SD.login_grace,
+        exchange_rates: SD.exchange_rates,
+        modules: SD.modules,
+        test_mode: SD.test_mode,
+        test_contractor_email: SD.test_contractor_email,
+        test_contractor_phone: SD.test_contractor_phone,
+        dt_start_key: SD.dt_start_key
+    });
     var serialize = setting.serialize();
-    assert.equal(serialize.settings.dashboard_text, SD.dashboard_text);
+    assert.equal(serialize.settings.company_code, SD.company_code);
     assert.equal(serialize.settings.company_name, SD.company_name);
+    assert.equal(serialize.settings.dashboard_text, SD.dashboard_text);
     assert.equal(serialize.settings.login_grace, SD.login_grace);
+    assert.equal(serialize.settings.exchange_rates, SD.exchange_rates);
+    assert.equal(serialize.settings.modules, SD.modules);
+    assert.equal(serialize.settings.test_mode, SD.test_mode);
+    assert.equal(serialize.settings.test_contractor_email, SD.test_contractor_email);
+    assert.equal(serialize.settings.test_contractor_phone, SD.test_contractor_phone);
+    assert.equal(serialize.settings.dt_start_key, SD.dt_start_key);
+
 });

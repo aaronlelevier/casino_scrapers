@@ -5,9 +5,9 @@ var setting_payload = {
     name: SD.name,
     title: SD.title,
     settings: {
-        login_grace: SD.login_grace,
+        company_name: SD.company_name,
         dashboard_text: SD.dashboard_text,
-        company_name: SD.company_name
+        login_grace: SD.login_grace
     }
 };
 
@@ -16,9 +16,16 @@ var setting_payload_other = {
     name: SD.name,
     title: SD.title,
     settings: {
-        login_grace: SD.login_graceOther,
+        company_name: SD.company_nameOther,
+        company_code: SD.company_codeOther,
         dashboard_text: SD.dashboard_textOther,
-        company_name: SD.company_nameOther
+        login_grace: SD.login_graceOther,
+        exchange_rates: SD.exchange_ratesOther,
+        modules: SD.modulesOther,
+        test_mode: SD.test_modeOther,
+        test_contractor_email: SD.test_contractor_emailOther,
+        test_contractor_phone: SD.test_contractor_phoneOther,
+        dt_start_key: SD.dt_start_keyOther
     }
 };
 

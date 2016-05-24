@@ -33,6 +33,13 @@
                             {{/form-group}}
                         </div>
                     </div>
+                    <div>
+                        <div class="col-md-12">
+                            {{#form-group title="admin.setting.company_code" for="company_code"}}
+                                {{input type="text" placeholder=(t "admin.setting.company_code") value=model.company_code class="form-control t-settings-company_code" id="company_code"}}
+                            {{/form-group}}
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-12">
                             {{#form-group title="admin.setting.dashboard_text" for="dashboard_text"}}
@@ -45,6 +52,51 @@
                         <div class="col-md-12">
                             {{#form-group title="admin.setting.login_grace" for="login_grace"}}
                                 {{input type="number" placeholder=(t "admin.setting.login_grace") value=model.login_grace class="form-control t-settings-login_grace" id="login_grace"}}
+                            {{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.setting.exchange_rates" for="exchange_rates"}}
+                                {{input type="number" step="0.01" placeholder=(t "admin.setting.exchange_rates") value=model.exchange_rates class="form-control t-settings-exchange_rates" id="exchange_rates"}}
+                            {{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.setting.modules" for="modules"}}
+                                {{input type="text" placeholder=(t "admin.setting.modules") value=model.modules class="form-control t-settings-modules" id="modules"}}
+                            {{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="radio radio-inline">
+                                <label>
+                                    <input type="radio" value={{model.test_mode}} onchange={{action 'changeBool' 'test_mode' model.test_mode}} checked={{model.test_mode}} class="t-settings-test_mode" name="test_mode">
+                                    <span class="t-dtd-test_mode-label">{{t "admin.setting.test_mode"}}</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.setting.test_contractor_email" for="test_contractor_email"}}
+                                {{input type="email" placeholder=(t "admin.setting.test_contractor_email") value=model.test_contractor_email class="form-control t-settings-test_contractor_email" id="test_contractor_email"}}
+                            {{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.setting.test_contractor_phone" for="test_contractor_phone"}}
+                                {{input type="text" placeholder=(t "admin.setting.test_contractor_phone") value=model.test_contractor_phone class="form-control t-settings-test_contractor_phone" id="test_contractor_phone"}}
+                            {{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.setting.dt_start_key" for="dt_start_key"}}
+                                {{input type="text" placeholder=(t "admin.setting.dt_start_key") value=model.dt_start_key class="form-control t-settings-dt_start_key" id="dt_start_key"}}
                             {{/form-group}}
                         </div>
                     </div>
