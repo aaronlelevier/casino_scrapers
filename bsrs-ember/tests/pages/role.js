@@ -36,4 +36,9 @@ export default PageObject.create({
   categoryClickOptionTwoEq: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:eq(1)`),
   categoryOptionLength: count(`${CATEGORY_DROPDOWN} > li`),
   categoriesSelected: count(CATEGORIES),
+
+  // settings
+  create_allClick: clickable('.t-settings-create_all-label'),
+  accept_assignClick: clickable('.t-settings-accept_assign-label'),
+  accept_notifyClick: clickable('.t-settings-accept_notify-label'),
 });

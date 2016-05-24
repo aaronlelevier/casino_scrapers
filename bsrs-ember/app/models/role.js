@@ -30,7 +30,10 @@ var RoleModel = Model.extend(NewMixin, OptConf, {
   // settings: end
   settings:  Ember.computed(function() {
     return {
-      dashboard_text: this.get('dashboard_text') || undefined
+      dashboard_text: this.get('dashboard_text'),
+      create_all: this.get('create_all'),
+      accept_assign: this.get('accept_assign'),
+      accept_notify: this.get('accept_notify')
     };
   }),
   role_categories_fks: [],

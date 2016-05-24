@@ -66,28 +66,50 @@
           <div class="row">
             <div class="col-md-12">
               {{#form-group title="admin.setting.dashboard_text" for="dashboard_text"}}
-              <p class="inherited-msg t-inherited-msg-dashboard_text">{{t 'crud.inherited_from' from=model.dashboard_text_inherited_from}}</p>
+              <p class="inherited-msg t-inherited-msg-dashboard_text">{{t 'crud.inherited_from' from=model.dashboard_text_inherits_from}}</p>
               {{textarea autoresize=true placeholder=(t 'crud.default_value' value=model.dashboard_text_inherited_value) value=model.dashboard_text class="form-control t-settings-dashboard_text" id="dashboard_text"}}
               {{/form-group}}
             </div>
           </div>
-          <!-- <div class="row">
+          <div class="row">
             <div class="col-md-12">
-            {{#form-group title="admin.setting.login_grace" for="login_grace"}}
-            {{input type="number" placeholder=(t "admin.setting.login_grace") value=model.login_grace class="form-control t-settings-login_grace" id="login_grace"}}
-            {{/form-group}}
+              <div class="radio radio-inline">
+                <label>
+                  <input type="radio" value={{model.create_all}} onclick={{action 'changeBool' 'create_all'}} checked={{model.create_all}} class="t-settings-create_all" name="create_all">
+                  <span class="t-settings-create_all-label">{{t "admin.setting.create_all"}}</span>
+                  {{#if model.create_all_inherits_from}}
+                    <span class="t-settings-create_all-label-inherits_from"><small>Inherits from: {{model.create_all_inherits_from}}</small></span>
+                  {{/if}}
+                </label>
+              </div>
             </div>
-            </div>
-            <div class="row">
+          </div>
+          <div class="row">
             <div class="col-md-12">
-            <div class="checkbox form-group">
-            <label>
-            {{input type="checkbox" checked=model.create_all class="form-control t-settings-create_all" id="create_all"}}
-            <span>{{t "admin.setting.create_all"}}</span>
-            </label>
+              <div class="radio radio-inline">
+                <label>
+                  <input type="radio" value={{model.accept_assign}} onclick={{action 'changeBool' 'accept_assign'}} checked={{model.accept_assign}} class="t-settings-accept_assign" name="accept_assign">
+                  <span class="t-settings-accept_assign-label">{{t "admin.setting.accept_assign"}}</span>
+                  {{#if model.accept_assign_inherits_from}}
+                    <span class="t-settings-accept_assign-label-inherits_from"><small>Inherits from: {{model.accept_assign_inherits_from}}</small></span>
+                  {{/if}}
+                </label>
+              </div>
             </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="radio radio-inline">
+                <label>
+                  <input type="radio" value={{model.accept_notify}} onclick={{action 'changeBool' 'accept_notify'}} checked={{model.accept_notify}} class="t-settings-accept_notify" name="accept_notify">
+                  <span class="t-settings-accept_notify-label">{{t "admin.setting.accept_notify"}}</span>
+                  {{#if model.accept_notify_inherits_from}}
+                    <span class="t-settings-accept_notify-label-inherits_from"><small>Inherits from: {{model.accept_notify_inherits_from}}</small></span>
+                  {{/if}}
+                </label>
+              </div>
             </div>
-            </div> -->
+          </div>
         </section>
       </div>
     </div>

@@ -10,11 +10,13 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import LLF from 'bsrs-ember/vendor/location_level_fixtures';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import CD from 'bsrs-ember/vendor/defaults/category';
+import SD from 'bsrs-ember/vendor/defaults/setting';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
-import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/role';
+import generalPage from 'bsrs-ember/tests/pages/general';
+import {role_settings, role_settingsOther} from 'bsrs-ember/tests/helpers/payloads/role';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
 
@@ -41,8 +43,9 @@ module('Acceptance | role-detail', {
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, RF.list());
     detail_xhr = xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
     url = `${PREFIX}${DETAIL_URL}/`;
+    //used for category selection to prevent fillIn helper firing more than once
     run(() => {
-      store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
+      store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});
     });
     translations = BSRS_TRANSLATION_FACTORY.generate('en')['en'];
   },
@@ -65,7 +68,14 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
   });
   let response = RF.detail(RD.idOne);
   let location_level = LLF.put({id: LLD.idLossRegion, name: LLD.nameLossPreventionRegion});
-  let payload = RF.put({id: RD.idOne, name: RD.namePut, role_type: RD.t_roleTypeContractor, location_level: location_level.id, categories: [CD.idOne]});
+  let payload = RF.put({
+    id: RD.idOne,
+    name: RD.namePut,
+    role_type: RD.t_roleTypeContractor,
+    location_level: location_level.id,
+    categories: [CD.idOne],
+    settings: role_settings
+  });
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
   fillIn('.t-role-name', RD.namePut);
   selectChoose('.t-role-role-type', RD.roleTypeContractor);
@@ -108,7 +118,7 @@ test('validation works and when hit save, we do same post', (assert) => {
   andThen(() => {
     assert.ok(find('.t-name-validation-error').is(':hidden'));
   });
-  let payload = RF.put({id: RD.idOne, categories: [CD.idOne]});
+  let payload = RF.put({id: RD.idOne, categories: [CD.idOne], settings: role_settings});
   let response = Ember.$.extend(true, {}, payload);
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
   generalPage.save();
@@ -120,7 +130,7 @@ test('validation works and when hit save, we do same post', (assert) => {
 test('when you change a related location level it will be persisted correctly', (assert) => {
   visit(DETAIL_URL);
   let location_level = LLF.put({id: LLD.idOne, name: LLD.nameRegion});
-  let payload = RF.put({id: RD.idOne, location_level: location_level.id});
+  let payload = RF.put({id: RD.idOne, location_level: location_level.id, settings: role_settings});
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
@@ -246,7 +256,7 @@ test('clicking select for categories will fire off xhr request for all parent ca
     assert.ok(role.get('isDirtyOrRelatedDirty'));
     assert.equal(page.categoriesSelected, 2);
   });
-  const payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: [CD.idOne, CD.idThree]});
+  const payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: [CD.idOne, CD.idThree], settings: role_settings});
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
@@ -287,7 +297,7 @@ test('starting with multiple categories, can remove all categories (while not po
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(page.categoriesSelected, 2);
   });
-  let payload = RF.put({id: RD.idOne, categories: [CD.idOne, CD.idThree]});
+  let payload = RF.put({id: RD.idOne, categories: [CD.idOne, CD.idThree], settings: role_settings});
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
@@ -324,7 +334,7 @@ test('search will filter down on categories in store correctly by removing and a
     assert.deepEqual(role.get('categories_ids'), ['abc123', CD.idGridOne]);
     assert.equal(page.categoriesSelected, 2);
   });
-  let payload = RF.put({id: RD.idOne, categories: ['abc123', CD.idGridOne]});
+  let payload = RF.put({id: RD.idOne, categories: ['abc123', CD.idGridOne], settings: role_settings});
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
@@ -332,7 +342,7 @@ test('search will filter down on categories in store correctly by removing and a
   });
 });
 
-// Role Settings
+// Role Settings: start
 
 test('settings update and redirected to list with clean model', (assert) => {
   let role;
@@ -340,16 +350,24 @@ test('settings update and redirected to list with clean model', (assert) => {
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + SD.dashboard_text);
+    assert.equal(find('.t-settings-create_all').prop('checked'), SD.create_all);
+    assert.equal(find('.t-settings-accept_assign').prop('checked'), SD.accept_assign);
+    assert.equal(find('.t-settings-accept_notify').prop('checked'), SD.accept_notify);
   });
-  var dashboard_text = 'hi';
-  fillIn('.t-settings-dashboard_text', dashboard_text);
-  //fillIn('.t-settings-login_grace', login_grace);
-  //click('.t-settings-create_all');
+  fillIn('.t-settings-dashboard_text', SD.dashboard_textOther);
+  page.create_allClick();
+  page.accept_assignClick();
+  page.accept_notifyClick();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-settings-dashboard_text').val(), SD.dashboard_textOther);
+    assert.equal(find('.t-settings-create_all').prop('checked'), SD.create_allOther);
+    assert.equal(find('.t-settings-accept_assign').prop('checked'), SD.accept_assignOther);
+    assert.equal(find('.t-settings-accept_notify').prop('checked'), SD.accept_notifyOther);
     assert.ok(role.get('isDirtyOrRelatedDirty'));
   });
-  let payload = RF.put({id: RD.idOne, categories: [CD.idOne], settings: {dashboard_text}});
+  let payload = RF.put({id: RD.idOne, categories: [CD.idOne], settings: role_settingsOther});
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
@@ -363,25 +381,24 @@ test('settings - translation keys', (assert) => {
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(getLabelText('dashboard_text'), translations['admin.setting.dashboard_text']);
-    // assert.equal(getLabelText('login_grace'), translations['admin.setting.login_grace']);
-    // assert.ok(find(`span:contains('${translations['admin.settings.create_all']}')`));
+    assert.equal(find('.t-settings-create_all-label').text(), translations['admin.setting.create_all']);
+    assert.equal(find('.t-settings-accept_notify-label').text(), translations['admin.setting.accept_notify']);
+    assert.equal(find('.t-settings-accept_assign-label').text(), translations['admin.setting.accept_assign']);
   });
 });
 
-test('settings - inherited value from parent', (assert) => {
+test('settings - UI is populated for inherited correctly - inherited value from parent', (assert) => {
   clearxhr(list_xhr);
-  clearxhr(detail_xhr);
-  let value = null;
-  let inherited = true;
-  let inherited_from = 'general';
-  let inherited_value = 'Welcome';
-  detail_data = RF.detail(RD.idOne, null, {dashboard_text: {value, inherited, inherited_from, inherited_value}});
-  xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
   visit(DETAIL_URL);
   andThen(() => {
-    assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + inherited_value);
-    assert.equal(find('.t-inherited-msg-dashboard_text').text(), 'Inherited from: ' + inherited_from);
+    assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + SD.dashboard_text);
+    assert.equal(find('.t-inherited-msg-dashboard_text').text(), 'Inherited from: ' + SD.inherits_from_general);
     assert.equal(find('.t-settings-dashboard_text').val(), '');
+    // checkboxes are populated based on defaults, but should show where they are getting
+    // defaulted from somewhere in the UI
+    assert.equal(find('.t-settings-create_all-label-inherits_from').text(), "");
+    assert.equal(find('.t-settings-accept_notify-label-inherits_from').text(), "");
+    assert.equal(find('.t-settings-accept_assign-label-inherits_from').text(), "");
   });
 });
 
@@ -390,91 +407,19 @@ test('settings - override value from parent', (assert) => {
   clearxhr(detail_xhr);
   let value = 'foo';
   let inherited = true;
-  let inherited_from = 'general';
+  let inherits_from = 'general';
   let inherited_value = 'Welcome';
-  detail_data = RF.detail(RD.idOne, null, {dashboard_text: {value, inherited, inherited_from, inherited_value}});
+  detail_data = RF.detail(RD.idOne, null, {dashboard_text: {value, inherited, inherits_from, inherited_value}});
   xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + inherited_value);
-    assert.equal(find('.t-inherited-msg-dashboard_text').text(), 'Inherited from: ' + inherited_from);
+    assert.equal(find('.t-inherited-msg-dashboard_text').text(), 'Inherited from: ' + inherits_from);
     assert.equal(find('.t-settings-dashboard_text').val(), value);
   });
 });
 
-//TODO: Tabs, role settings, third party were all things that were terribly written.  I wonder when Aaron and Andy will notice this.  Again, don't write bad code just to get things done. 
-// BRING THESE BACK WHEN WE HAVE FIRST LEVEL SETTINGS ON THE ROLE
-
-// test('settings - has a value, and is not inherited', (assert) => {
-//     clearxhr(list_xhr);
-//     clearxhr(detail_xhr);
-//     let value = 'foo';
-//     let inherited = false;
-//     let inherited_from = 'general';
-//     detail_data = RF.detail(RD.idOne, null, {dashboard_text: {value, inherited, inherited_from}});
-//     xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], translations['admin.setting.company_name']);
-//         assert.equal(find('.t-settings-dashboard_text').val(), value);
-//     });
-// });
-
-// test('settings - no value, and not inherited', (assert) => {
-//     clearxhr(list_xhr);
-//     clearxhr(detail_xhr);
-//     let value = null;
-//     let inherited = false;
-//     let inherited_from = 'general';
-//     detail_data = RF.detail(RD.idOne, null, {company_name: {value, inherited, inherited_from}});
-//     xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         assert.equal(find('.t-settings-company_name').get(0)['placeholder'], translations['admin.setting.company_name']);
-//         assert.equal(find('.t-settings-company_name').val(), translations['admin.setting.company_name']);
-//     });
-// });
-
-// SAVE FOR 'create_all' TEST METHODS
-
-// test('aaron general settings title and fields populated correctly', function(assert) {
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find('.t-settings-title').text().trim(), t(setting_data.title));
-//         assert.equal(find('.t-settings-welcome').val(), SD.dashboard_text);
-//     });
-//     fillIn('.t-settings-welcome', SD.dashboard_textOther);
-//     fillIn('.t-settings-login_grace', SD.login_graceOther);
-//     fillIn('.t-settings-company_name', SD.company_nameOther);
-//     click('.t-settings-create_all');
-//     andThen(() => {
-//         let setting = store.find('setting', SD.id);
-//         assert.equal(setting.get('dashboard_text'), SD.dashboard_textOther);
-//         assert.equal(setting.get('login_grace'), SD.login_graceOther);
-//         assert.equal(setting.get('company_name'), SD.company_nameOther);
-//         assert.equal(setting.get('create_all'), SD.create_allOther);
-//         assert.ok(setting.get('isDirty'));
-//         assert.ok(setting.get('isDirtyOrRelatedDirty'));
-//     });
-//     xhr(url, 'PUT', JSON.stringify(setting_payload_other), {}, 200, {});
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), '/' + BASE_ADMIN_URL);
-//         let setting = store.find('setting', SD.id);
-//         assert.ok(setting.get('isNotDirty'));
-//     });
-// });
-
-// test('translations - for labels', (assert) => {
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         assert.equal(getLabelText('dashboard_text'), translations['admin.setting.dashboard_text']);
-//         assert.equal(getLabelText('login_grace'), translations['admin.setting.login_grace']);
-//         assert.equal(getLabelText('company_name'), translations['admin.setting.company_name']);
-//         assert.ok(find(`span:contains('${translations['admin.settings.create_all']}')`));
-//     });
-// });
+// Role Settings: end
 
 test('deep linking with an xhr with a 404 status code will show up in the error component (role)', (assert) => {
   clearxhr(detail_xhr);

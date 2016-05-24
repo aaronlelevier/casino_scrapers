@@ -13,8 +13,10 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             test_contractor_phone: '+18587155000',
             dt_start_key: 'Start',
 
-            // TODO: delete this attr b/c will be in Role
+            // Role
             create_all: true,
+            accept_assign: false,
+            accept_notify: false
         };
         var other = {
             company_codeOther: 'two',
@@ -28,9 +30,14 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             test_contractor_phoneOther: '+18587154000',
             dt_start_keyOther: 'StartTwo',
 
-            create_allOther: false
+            create_allOther: false,
+            accept_assignOther: true,
+            accept_notifyOther: true
         };
-        return Object.assign(one, other, {
+        var inherits = {
+            inherits_from_general: 'general'
+        };
+        return Object.assign(one, other, inherits, {
             id: 'b783a238-1131-4623-8d24-81a672bb4e00',
             name: 'general',
             title: 'admin.general.other',

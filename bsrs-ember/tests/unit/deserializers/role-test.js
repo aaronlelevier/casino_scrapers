@@ -6,6 +6,7 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
+import SD from 'bsrs-ember/vendor/defaults/setting';
 import RoleDeserializer from 'bsrs-ember/deserializers/role';
 import CategoryDeserializer from 'bsrs-ember/deserializers/category';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
@@ -276,17 +277,19 @@ test('role-category m2m does not delete other role-category m2m models', (assert
 });
 
 test('settings copySettingsToFirstLevel', (assert) => {
-    let value = 'foo';
-    let inherited = true;
-    let inherits_from = 'general';
-    let inherited_value = 'Welcome';
-    let response = RF.generate(RD.idOne, null, {welcome_text: {value, inherited, inherits_from, inherited_value}});
+    let response = RF.generate(RD.idOne);
     run(() => {
         subject.deserialize(response, RD.idOne);
     });
     role = store.find('role', RD.idOne);
-    assert.equal(role.get('welcome_text'), value);
-    assert.equal(role.get('welcome_text_inherited'), inherited);
-    assert.equal(role.get('welcome_text_inherited_value'), inherited_value);
-    assert.equal(role.get('welcome_text_inherits_from'), inherits_from);
+    assert.equal(role.get('dashboard_text'), null);
+    assert.equal(role.get('dashboard_text_type'), 'str');
+    assert.equal(role.get('dashboard_text_inherited_value'), SD.dashboard_text);
+    assert.equal(role.get('dashboard_text_inherits_from'), SD.inherits_from_general);
+    assert.equal(role.get('create_all'), true);
+    assert.equal(role.get('create_all_type'), 'bool');
+    assert.equal(role.get('accept_assign'), false);
+    assert.equal(role.get('accept_assign_type'), 'bool');
+    assert.equal(role.get('accept_notify'), false);
+    assert.equal(role.get('accept_notify_type'), 'bool');
 });

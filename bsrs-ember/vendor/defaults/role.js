@@ -1,6 +1,7 @@
 var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
-  var factory = function(location_level) {
+  var factory = function(location_level, setting) {
     this.location_level = location_level;
+    this.setting = setting;
   };
   factory.prototype.defaults = function() {
     return {
@@ -30,8 +31,21 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
       settings: {
         dashboard_text:{
           value: null,
+          type: 'str',
           inherited_value: 'Welcome',
           inherits_from: 'general'
+        },
+        create_all: {
+          value: this.setting.create_all,
+          type: 'bool'
+        },
+        accept_assign: {
+          value: this.setting.accept_assign,
+          type: 'bool'
+        },
+        accept_notify: {
+          value: this.setting.accept_notify,
+          type: 'bool'
         }
       }
     };
@@ -41,10 +55,12 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
 
 if (typeof window === 'undefined') {
   var location_level = require('../../vendor/defaults/location-level.js');
-  module.exports = new BSRS_ROLE_DEFAULTS_OBJECT(location_level).defaults();
+  var setting = require('../../vendor/defaults/setting.js');
+  module.exports = new BSRS_ROLE_DEFAULTS_OBJECT(location_level, setting).defaults();
 } else {
-  define('bsrs-ember/vendor/defaults/role', ['exports', 'bsrs-ember/vendor/defaults/location-level'], function (exports, location_level) {
+  define('bsrs-ember/vendor/defaults/role',
+    ['exports', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/defaults/setting'], function (exports, location_level, setting) {
     'use strict';
-    return new BSRS_ROLE_DEFAULTS_OBJECT(location_level).defaults();
+    return new BSRS_ROLE_DEFAULTS_OBJECT(location_level, setting).defaults();
   });
 }
