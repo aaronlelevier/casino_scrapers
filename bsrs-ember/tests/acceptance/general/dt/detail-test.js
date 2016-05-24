@@ -580,7 +580,7 @@ test('visit 1 url, go back to step 0, then go back to 1 url after updating some 
   assert.equal(updated_ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
 });
 
-test('visit 2 url, go back to step 0, then go back to 1 url after updating some info should keep info around and update ticket request', async assert => {
+test('visit 2 url, go back to step 0, then go back to 1 url after updating some info (input/text area) should keep info around and update ticket request', async assert => {
   // DT.idOne is 3rd
   // DT.idTwo is 2nd
   // DT.idThree is 1st (Start)
@@ -589,7 +589,7 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
   returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: DT.descriptionStart, fields: [{ id: FD.idTwo, label: FD.labelTwo, value: 23, required: true }] };
   returned_ticket.priority_fk = LINK.priorityTwo;
   returned_ticket.dt_path[0]['ticket']['priority'] = LINK.priorityTwo;
-  //old ticket requeset state
+  //old ticket request state
   returned_ticket.dt_path[0]['ticket']['request'] = `${FD.labelTwo}: 23`;
   //current ticket state
   returned_ticket.request = `${FD.labelTwo}: 23, ${FD.labelRandom}: Im second`;
@@ -652,7 +652,7 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
   assert.equal(updated_ticket.get('dt_path')[1]['ticket']['request'], `${FD.labelTwo}: 23, ${FD.labelRandom}: Im second`);
   assert.equal(updated_ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
 
-  // Update age and expect request to be updated and dt_path[0][ticket][reqeust] to be updated after clicking link in dtPathMunge function
+  // Update age and expect request to be updated and dt_path[0][ticket][request] to be updated after clicking link in dtPathMunge function
   assert.equal(find('.t-dtd-field-number').val(), 23);
   await fillIn('.t-dtd-field-number', 24);
   const NUM2 = {keyCode: 50};
@@ -661,7 +661,7 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
   assert.equal(updated_ticket.get('request'), `${FD.labelOne}: ${OD.textOne}, ${FD.labelTwo}: 24, ${FD.labelRandom}: Im second`);
   assert.equal(updated_ticket.get('dt_path')[0]['ticket']['request'], `${FD.labelTwo}: 23`);
 
-  //Go back to idOne which should have checkbox still checked
+  //Go back to idTwo which should have Im second filled in
   let updated_dt_path = Ember.$.extend(true, [], dt_path);
   // update ticket request and dtd fields value
   updated_dt_path[0]['dtd']['fields'][0]['value'] = '24';
@@ -670,21 +670,129 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
   // updated_dt_path[1]['dtd']['fields'][0]['value'] = 'Im second'; 
   updated_dt_path[1]['dtd']['fields'][0]['required'] = FD.requiredTwo;
   updated_dt_path[1]['ticket']['request'] = `${FD.labelTwo}: 24, ${FD.labelRandom}: Im second`;
-  let dtd_payload = DTF.generate(DT.idTwo);
+  // DTD.idTwo has FD.labelRandom w/ field value of Im second
+  let dtd_payload = DTF.generate(DT.idTwo, '', FD.idRandom, FD.labelRandom);
+  dtd_payload['fields'][0]['type'] = FD.typeOne;
   const link = dtd.get('links').objectAt(0);
   let ticket_payload = { id: TD.idOne, priority: LINK.priorityTwo, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id'), dt_path: updated_dt_path, request: `${FD.labelTwo}: 24, ${FD.labelRandom}: Im second` };
   const DT_IDTWO_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
   xhr(DT_IDTWO_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
   await click('.t-dtd-preview-btn:eq(0)');
+  assert.equal(currentURL(), DTD_TWO_URL);
   //Breadcrumbs should be the same
   assert.equal(page.breadcrumbOne, substringBreadcrumb(DT.descriptionStart));
   assert.equal(page.breadcrumbTwo, substringBreadcrumb(DT.descriptionTwo));
   assert.equal(find('.t-dt-breadcrumb > .t-breadcrumb-list').length, 2);
-  assert.ok(dtPage.fieldOneCheckboxIsChecked());
   assert.equal(updated_ticket.get('dt_path').length, 2);
   // assert.equal(updated_ticket.get('dt_path')[1]['ticket']['priority'], LINK.priorityTwo);
   assert.equal(updated_ticket.get('dt_path')[0]['ticket']['request'], `${FD.labelTwo}: 24`);
   assert.equal(updated_ticket.get('dt_path')[1]['ticket']['request'], `${FD.labelTwo}: 24, ${FD.labelRandom}: Im second`);
+  assert.equal(find('.t-dtd-field-preview').val(), 'Im second');
+});
+
+test('visit 2 url, go back to step 0, then go back to 1 url after updating some info (checkbox) should keep info around and update ticket request', async assert => {
+  // DT.idOne is 3rd
+  // DT.idTwo is 2nd
+  // DT.idThree is 1st (Start) - w/ fields and options array of ids that were selected
+  let detail_data = DTF.detailWithAllFields(DT.idOne);
+  returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: DT.descriptionStart, fields: [{ id: FD.idRandom2, label: FD.labelFour, value: OD.textOne, required: true, options: [OD.idRando] }] };
+  returned_ticket.priority_fk = LINK.priorityTwo;
+  returned_ticket.dt_path[0]['ticket']['priority'] = LINK.priorityTwo;
+  //old ticket request state
+  returned_ticket.dt_path[0]['ticket']['request'] = `${FD.labelFour}: ${OD.textOne}`;
+  //current ticket state
+  returned_ticket.request = `${FD.labelFour}: ${OD.textOne}, ${FD.labelRandom}: Im second`;
+  //previous ticket (which has same request value as current) and dt state
+  returned_ticket.dt_path.push({ticket: {id: TD.idOne, request: `${FD.labelFour}: ${OD.textOne}, ${FD.labelRandom}: Im second`}, dtd: {id: DT.idTwo, description: DT.descriptionTwo, 
+                               fields: [{ id: FD.idRandom, label: FD.labelRandom, value: 'Im second', required: true }]}});
+
+  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
+  await visit(DETAIL_URL);
+  assert.equal(page.breadcrumbOne, substringBreadcrumb(DT.descriptionStart));
+  assert.equal(page.breadcrumbTwo, substringBreadcrumb(DT.descriptionTwo));
+  assert.equal(find('.t-dt-breadcrumb > .t-breadcrumb-list').length, 2);
+
+  // snapshot of Start && Middle 
+  const updated_ticket = store.find('ticket', TD.idOne);
+  assert.equal(updated_ticket.get('dt_path').length, 2);
+  assert.equal(updated_ticket.get('dt_path')[0]['ticket']['priority'], LINK.priorityTwo);
+  assert.equal(updated_ticket.get('dt_path')[0]['ticket']['request'], `${FD.labelFour}: ${OD.textOne}`);
+  assert.equal(updated_ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
+  assert.equal(updated_ticket.get('dt_path')[1]['ticket']['request'], `${FD.labelFour}: ${OD.textOne}, ${FD.labelRandom}: Im second`);
+
+  // click checkbox on on DTD.idOne and should add OD.textOne to request field
+  assert.equal(updated_ticket.get('request'), `${FD.labelFour}: ${OD.textOne}, ${FD.labelRandom}: Im second`);
+  assert.notOk(dtPage.fieldOneCheckboxIsChecked());
+  await dtPage.fieldOneCheckboxCheck();
+  assert.ok(dtPage.fieldOneCheckboxIsChecked());
+  assert.equal(updated_ticket.get('request'), `${FD.labelOne}: ${OD.textOne}, ${FD.labelFour}: ${OD.textOne}, ${FD.labelRandom}: Im second`);
+
+  // DTD start data with an extra link.  OD.idOne is checked 'yes' with random ids so that doesnt clash with previous dtd field and option models
+  const detail_data_3 = DTF.detailWithAllFields(DT.idThree);
+  detail_data_3.fields = [{
+      id: FD.idRandom2,
+      label: FD.labelFour,
+      type: FD.typeSix,
+      required: FD.requiredOne,
+      order: FD.orderOne,
+      options: [{ id: OD.idRando, text: OD.textOne, order: OD.orderOne }, { id: OD.idRando2, text: OD.textTwo, order: OD.orderTwo }]
+  }];
+  detail_data_3.links[0].text = LINK.textThree;
+  detail_data_3.links[0].priority_fk = LINK.priorityTwo;
+  // Destination is step 1 which is DT.idTwo
+  detail_data_3.links[0].destination = {id: DT.idTwo};
+  detail_data_3.links.push({id: LINK.idTwo, text: 'wat', status_fk: LINK.statusTwo, priority_fk: LINK.priorityTwo});
+  // Go back to idThree which is 2 back from where we were at
+  const endpoint_3 = `${PREFIX}${BASE_URL}/${DT.idThree}/ticket/?ticket=${TD.idOne}`;
+  xhr(endpoint_3, 'GET', null, {}, 200, {dtd: detail_data_3, ticket: returned_ticket});
+  assert.equal(currentURL(), DETAIL_URL);
+  await click('.t-ticket-breadcrumb-back');
+  //Breadcrumbs should be the same
+  assert.equal(page.breadcrumbOne, substringBreadcrumb(DT.descriptionStart));
+  assert.equal(page.breadcrumbTwo, substringBreadcrumb(DT.descriptionTwo));
+  assert.equal(find('.t-dt-breadcrumb > .t-breadcrumb-list').length, 2);
+  assert.equal(currentURL(), DTD_THREE_URL);
+
+  assert.equal(updated_ticket.get('dt_path').length, 2);
+  assert.equal(updated_ticket.get('dt_path')[0]['ticket']['priority'], LINK.priorityTwo);
+  assert.equal(updated_ticket.get('request'), `${FD.labelOne}: ${OD.textOne}, ${FD.labelFour}: ${OD.textOne}, ${FD.labelRandom}: Im second`);
+  assert.equal(updated_ticket.get('dt_path')[0]['ticket']['request'], `${FD.labelFour}: ${OD.textOne}`);
+  assert.equal(updated_ticket.get('dt_path')[1]['ticket']['request'], `${FD.labelFour}: ${OD.textOne}, ${FD.labelRandom}: Im second`);
+  assert.equal(updated_ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
+  assert.ok(dtPage.fieldOneCheckboxIsChecked());
+  await dtPage.fieldOneCheckboxCheck();
+  assert.notOk(dtPage.fieldOneCheckboxIsChecked());
+  // ticket request removes fields label: value
+  assert.equal(updated_ticket.get('request'), `${FD.labelOne}: ${OD.textOne}, ${FD.labelRandom}: Im second`);
+  // dt_path still has ticket request
+  assert.equal(updated_ticket.get('dt_path')[0]['ticket']['request'], `${FD.labelFour}: ${OD.textOne}`);
+
+  //Go back to idOne which should have Im second filled in
+  let updated_dt_path = Ember.$.extend(true, [], dt_path);
+  // update ticket request and dtd fields value
+  updated_dt_path[0]['dtd']['fields'][0]['value'] = '';
+  updated_dt_path[0]['dtd']['fields'][0]['required'] = FD.requiredOne;
+  updated_dt_path[0]['dtd']['fields'][0]['options'] = undefined;
+  updated_dt_path[0]['ticket']['request'] = '';
+  updated_dt_path[1]['dtd']['fields'][0]['value'] = 'Im second'; 
+  updated_dt_path[1]['ticket']['request'] = `${FD.labelRandom}: Im second`;
+  let dtd_payload = DTF.generate(DT.idTwo, '', FD.idRandom, FD.labelRandom);
+  dtd_payload['fields'][0]['type'] = FD.typeOne;
+  const link = dtd.get('links').objectAt(0);
+  let ticket_payload = { id: TD.idOne, priority: LINK.priorityTwo, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id'), dt_path: updated_dt_path, request: `${FD.labelRandom}: Im second` };
+  const DT_IDTWO_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
+  xhr(DT_IDTWO_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
+  await click('.t-dtd-preview-btn:eq(0)');
+  assert.equal(currentURL(), DTD_TWO_URL);
+  // Breadcrumbs should be the same
+  assert.equal(page.breadcrumbOne, substringBreadcrumb(DT.descriptionStart));
+  assert.equal(page.breadcrumbTwo, substringBreadcrumb(DT.descriptionTwo));
+  assert.equal(find('.t-dt-breadcrumb > .t-breadcrumb-list').length, 2);
+  assert.equal(updated_ticket.get('dt_path').length, 2);
+  // assert.equal(updated_ticket.get('dt_path')[1]['ticket']['priority'], LINK.priorityTwo);
+  assert.equal(updated_ticket.get('dt_path')[0]['ticket']['request'], '');
+  assert.equal(updated_ticket.get('dt_path')[1]['ticket']['request'], `${FD.labelRandom}: Im second`);
+  assert.equal(find('.t-dtd-field-preview').val(), 'Im second');
 });
 
 test('visit 2 url, go back to step 0, then go a different route should save ticket request and blow away dt_path ahead of step 0', async assert => {

@@ -42,7 +42,7 @@ var dtPathMunge = function(ticket, dtd, fieldsObj, link, simpleStore) {
   const dtd_ids = dt_path.mapBy('dtd.id');
   const indx = dtd_ids.indexOf(dtd.get('id'));
   if (indx === 0) {
-    /* wipe out dt_path ahead of indx if link destination id is not in dt_path array of dtd */
+    /* wipe out dt_path ahead of indx if link destination id is not in dt_path array of dtd (i.e. transitioned back and then took a different route)*/
     if (Ember.$.inArray(link.get('destination').get('id'), dtd_ids) < 0) {
       dt_path.splice(indx+1);
     }
@@ -51,12 +51,11 @@ var dtPathMunge = function(ticket, dtd, fieldsObj, link, simpleStore) {
     for (let i=indx; i<dt_path.length; i++) {
       let mod_existing_request = '';
       /* jshint ignore:start */
-      /* fields in dt_path are all since start. Should be just those fields in that DTD and then to build mod_existing_request, need to have array of fields from previous dt_path dtds */
       // DOWN
       for (let sub=0; sub<=i; sub++) {
         mod_existing_request += dt_path[sub]['dtd']['fields'].reduce((prev, field) => {
           const fieldObj = fieldsObj.get(field.id);
-          return prev += ` ${fieldObj.label}: ${fieldObj.value},`;
+          return prev += fieldObj.value ? ` ${fieldObj.label}: ${fieldObj.value},` : '';
         }, '');
       }
       mod_existing_request = mod_existing_request && mod_existing_request.trim().replace(/,+$/, '');
