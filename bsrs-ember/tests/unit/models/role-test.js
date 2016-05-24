@@ -394,11 +394,11 @@ test('role_categories_ids computed returns a flat list of ids for each category'
 // settings: dirty track: start
 
 test('dashboard_text isDirty test', (assert) => {
-  role = store.push('role', {id: RD.idOne, name: RD.nameOne, dashboard_text: SD.dashboard_text});
+  role = store.push('role', {id: RD.idOne});
   assert.equal(role.get('isDirty'), false);
   role.set('dashboard_text', 'foo');
   assert.equal(role.get('isDirty'), true);
-  role.set('dashboard_text', SD.dashboard_text);
+  role.set('dashboard_text', '');
   assert.equal(role.get('isDirty'), false);
 });
 

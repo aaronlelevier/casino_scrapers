@@ -14,13 +14,10 @@ var GeneralSettings = Ember.Component.extend(TabMixin, EditMixin, {
             this.set('submitted', true);
             this._super();
         },
-        changeBool(key, value) {
+        changeBool(key) {
             const store = this.get('simpleStore');
             let setting = store.find('setting', this.get('model.id'));
-            var obj = {};
-            obj['id'] = setting.get('id');
-            obj[key] = !value;
-            store.push('setting', obj);
+            setting.toggleProperty(key);
         }
     }
 });

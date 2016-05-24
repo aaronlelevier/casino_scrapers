@@ -31,73 +31,85 @@ test('test computed title', (assert) => {
 // dirty tracking tests: start
 
 test('company_code', (assert) => {
-    setting = store.push('setting', {id: SD.id, company_code: SD.company_code});
+    setting = store.push('setting', {id: SD.id});
     assert.equal(setting.get('isDirty'), false);
     setting.set('company_code', 'x');
     assert.equal(setting.get('isDirty'), true);
+    setting.set('company_code', '');
+    assert.equal(setting.get('isDirty'), false);
 });
 
 test('company_name', (assert) => {
-    setting = store.push('setting', {id: SD.id, company_name: SD.company_name});
+    setting = store.push('setting', {id: SD.id});
     assert.equal(setting.get('isDirty'), false);
     setting.set('company_name', 'x');
     assert.equal(setting.get('isDirty'), true);
+    setting.set('company_name', '');
+    assert.equal(setting.get('isDirty'), false);
 });
 
 test('dashboard_text', (assert) => {
-    setting = store.push('setting', {id: SD.id, name: SD.name, dashboard_text: SD.dashboard_text});
+    setting = store.push('setting', {id: SD.id});
     assert.equal(setting.get('isDirty'), false);
     setting.set('dashboard_text', 'x');
     assert.equal(setting.get('isDirty'), true);
+    setting.set('dashboard_text', '');
+    assert.equal(setting.get('isDirty'), false);
 });
 
 test('login_grace', (assert) => {
-    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, login_grace: SD.login_grace});
+    setting = store.push('setting', {id: SD.id});
     assert.equal(setting.get('isDirty'), false);
     setting.set('login_grace', 'x');
     assert.equal(setting.get('isDirty'), true);
 });
 
 test('exchange_rates', (assert) => {
-    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, exchange_rates: SD.exchange_rates});
+    setting = store.push('setting', {id: SD.id});
     assert.equal(setting.get('isDirty'), false);
     setting.set('exchange_rates', 'x');
     assert.equal(setting.get('isDirty'), true);
 });
 
 test('modules', (assert) => {
-    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, modules: SD.modules});
+    setting = store.push('setting', {id: SD.id});
     assert.equal(setting.get('isDirty'), false);
     setting.set('modules', 'x');
     assert.equal(setting.get('isDirty'), true);
 });
 
 test('test_mode', (assert) => {
-    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, test_mode: SD.test_mode});
+    setting = store.push('setting', {id: SD.id});
     assert.equal(setting.get('isDirty'), false);
     setting.set('test_mode', 'x');
     assert.equal(setting.get('isDirty'), true);
 });
 
 test('test_contractor_email', (assert) => {
-    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, test_contractor_email: SD.test_contractor_email});
+    setting = store.push('setting', {id: SD.id});
     assert.equal(setting.get('isDirty'), false);
     setting.set('test_contractor_email', 'x');
     assert.equal(setting.get('isDirty'), true);
+    setting.set('test_contractor_email', '');
+    assert.equal(setting.get('isDirty'), false);
 });
 
 test('test_contractor_phone', (assert) => {
-    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, test_contractor_phone: SD.test_contractor_phone});
+    setting = store.push('setting', {id: SD.id});
     assert.equal(setting.get('isDirty'), false);
     setting.set('test_contractor_phone', 'x');
     assert.equal(setting.get('isDirty'), true);
+    setting.set('test_contractor_phone', '');
+    assert.equal(setting.get('isDirty'), false);
 });
 
 test('dt_start_key', (assert) => {
-    setting = store.push('setting', {id: SD.id, name: SD.name, title: SD.title, dt_start_key: SD.dt_start_key});
+    setting = store.push('setting', {id: SD.id});
     assert.equal(setting.get('isDirty'), false);
     setting.set('dt_start_key', 'x');
     assert.equal(setting.get('isDirty'), true);
+    setting.set('dt_start_key', '');
+    assert.equal(setting.get('isDirty'), false);
 });
 
 // dirty tracking tests: end

@@ -275,7 +275,7 @@ test('role-category m2m does not delete other role-category m2m models', (assert
     assert.equal(role_two.get('role_categories').get('length'), 1);
 });
 
-test('aaron settings copySettingsToFirstLevel', (assert) => {
+test('settings copySettingsToFirstLevel', (assert) => {
     let value = 'foo';
     let inherited = true;
     let inherits_from = 'general';
