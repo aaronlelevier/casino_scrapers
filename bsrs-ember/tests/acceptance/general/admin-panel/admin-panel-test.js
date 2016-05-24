@@ -40,14 +40,3 @@ test('admin panel displays correct headers and section headers', function(assert
     assert.equal(find(ADMINPANEL + ' > section:eq(4) h3').text().trim(), "Contractors");
   });
 });
-
-test('click and enter general settings', function(assert) {
-  visit(ADMIN_URL);
-  andThen(() => {
-    assert.equal(currentURL(), ADMIN_URL);
-  });
-  click('.t-general-settings');
-  andThen(() => {
-    assert.equal(currentURL(), SETTING_URL);
-  });
-});
