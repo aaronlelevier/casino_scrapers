@@ -172,7 +172,7 @@ if (typeof window === 'undefined') {
   var category_defaults = require('../vendor/defaults/category');
   var dtd_defaults = require('../vendor/defaults/dtd');
   var field_defaults = require('../vendor/defaults/field');
-  var options_defaults = require('../vendor/defaults/options');
+  var options_defaults = require('../vendor/defaults/option');
   var config = require('../config/environment');
   objectAssign(BSRS_TICKET_FACTORY.prototype, mixin.prototype);
   module.exports = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, people_fixtures, location_fixtures, category_fixtures, category_defaults, dtd_defaults, field_defaults, options_defaults, config);
