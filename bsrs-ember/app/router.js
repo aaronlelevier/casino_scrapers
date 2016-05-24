@@ -68,15 +68,8 @@ Router.map(function() {
     this.route('completed', {path: '/completed/:ticket_id'});
   });
   this.route('work-orders');
-  this.route('purchase-orders');
-  this.route('tasks');
-  this.route('projects');
-  this.route('rfqs');
-  this.route('pm');
-  this.route('assets');
   this.route('calendar');
   this.route('search');
-  this.route('pms');
   this.route('invoices');
   this.route('reports');
   this.route('phone-number');
