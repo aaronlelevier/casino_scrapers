@@ -23,7 +23,7 @@
     "body-parser": "^1.12.2",
     "broccoli-asset-rev": "^2.4.2",
     "broccoli-funnel": "^1.0.1",
-    "bsrs-components": "git+ssh://git@github.com:bigskytech/bsrs-components.git#0.0.68",
+    "bsrs-components": "file:addons/bsrs-components",
     "ember-ajax": "0.7.1",
     "ember-autoresize": "0.5.16",
     "ember-basic-dropdown": "0.9.1",
