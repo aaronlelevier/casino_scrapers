@@ -6,13 +6,13 @@
 .add-btn,
 .add-btn:hover,
 .add-btn:focus {
-	background-color: $activeColor;
-	border-color: $activeColor;
-	color: $white;
+	background-color: $lightGray;
+	border-color: $gray;
+	color: $darkGray;
 	&:active{
-		background-color: $darkGreen;
-		border-color: $darkGreen;
-		color: $light;
+		background-color: $gray;
+		border-color: $gray;
+		color: $dark;
 	}
 }
 .btn-file {

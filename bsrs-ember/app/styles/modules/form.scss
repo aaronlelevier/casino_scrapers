@@ -221,16 +221,14 @@ textarea.ticket-request{
 	}
 	&.admin-person-status-expired,
 	&.ticket-priority-high{
-		background: $orange;
-		border-color: $orange;
-	}
-	&.ticket-priority-medium{
-		color: $darkGray;
 		background: $darkYellow;
 		border-color: $darkYellow;
 	}
+	&.ticket-priority-medium{
+		background: $orange;
+		border-color: $orange;
+	}
 	&.ticket-priority-low{
-		color: $darkGray;
 		background: $yellow;
 		border-color: $yellow;
 	}
