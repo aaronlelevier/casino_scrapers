@@ -21,32 +21,7 @@ button group on form
 select option[default]{
 	color: $gray;
 }
-div.buttonGroup {
-	margin-top: 5rem;
-	button {
-		margin: 0 1rem;
-	}
-}//buttonGroup
-.validation{
-	display: block;
-	background-color: $orange;
-	padding: 2px 12px;
-	border: 1px solid $orange;
-	color: $white;
-	&.category-validation-error{
-		float: left;
-	    margin: 0px;
-	    height: 26px;
-	    line-height: 26px;
-	    font-size: 1.1rem;
-	    padding: 0 10px;
-	}
-}
-.validation-under{
-	border-width: 0 1px 1px;
-	border-radius: $borderRadiusBottom;
-	margin-top: -2px;
-}
+
 .input-group{
 	margin-bottom: 10px;
 	.validation-under{
