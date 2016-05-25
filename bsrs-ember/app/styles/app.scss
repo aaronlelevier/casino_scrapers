@@ -1,8 +1,8 @@
 @import "pod-styles.scss";
+@import 'app/styles/mixins/_mixins.scss';
 @import 'bootstrap';
 @import 'app/styles/globals/_variables.scss';
 @import 'app/styles/globals/animate.scss';
-@import 'app/styles/mixins/_mixins.scss';
 @import 'app/styles/resets/bootstrap.scss';
 @import 'app/styles/resets/browser.scss';
 @import 'app/styles/resets/ember-modal.scss';
