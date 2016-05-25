@@ -1,3 +1,4 @@
+@import "pod-styles.scss";
 @import 'bootstrap';
 @import 'app/styles/globals/_variables.scss';
 @import 'app/styles/globals/animate.scss';
@@ -10,6 +11,7 @@
 @import 'app/styles/globals/components.scss';
 @import 'app/styles/globals/buttons.scss';
 @import 'app/styles/globals/validation.scss';
+@import 'app/styles/globals/file.scss';
 @import 'app/styles/modules/activity-list.scss';
 
 @import 'app/styles/modules/header.scss';
