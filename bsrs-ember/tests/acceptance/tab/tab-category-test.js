@@ -20,7 +20,6 @@ const CATEGORY_URL = BASE_CATEGORY_URL + '/index';
 const NEW_URL = BASE_CATEGORY_URL + '/new/1';
 const NEW_URL_2 = BASE_CATEGORY_URL + '/new/2';
 const DETAIL_URL = BASE_CATEGORY_URL + '/' + CD.idGridOne;
-const SUBMIT_BTN = '.submit_btn';
 const ROLE_URL = BASE_ROLE_URL + '/index';
 const NEW_ROUTE = 'admin.categories.new';
 const INDEX_ROUTE = 'admin.categories.index';

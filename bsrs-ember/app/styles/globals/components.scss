@@ -290,30 +290,6 @@ input.cmn-toggle-round:checked + label:after {
   user-select: none;
 }
 
-
-/* ============================================================
-  Submit Btn
-============================================================ */
-.submit_btn {//color is bootstrap btn-info color
-
-  &:hover {
-    background-color: $lightBlue;
-  }
-  &:active {
-    background-color: $lightGreen;
-  }
-}//.submit_login
-
-.delete_btn {
-  &:hover {
-    background-color: $fadeRed;
-  }
-  &:active {
-    background-color: $activeColor;
-  }
-}//delete_btn
-
-
 /* ============================================================
   Comment
 ============================================================ */
@@ -332,10 +308,4 @@ input.cmn-toggle-round:checked + label:after {
         width: 20px;
         text-align: center;
     }
-}
-/* ============================================================
-  Grid columns
-============================================================ */
-.twenty-percent {
-    width: 20%;
 }

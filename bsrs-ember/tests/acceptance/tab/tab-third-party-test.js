@@ -18,7 +18,6 @@ const THIRD_PARTY_URL = BASE_THIRD_PARTY_URL + '/index';
 const NEW_URL = BASE_THIRD_PARTY_URL + '/new/1';
 const NEW_URL_2 = BASE_THIRD_PARTY_URL + '/new/2';
 const DETAIL_URL = BASE_THIRD_PARTY_URL + '/' + TPD.idOne;
-const SUBMIT_BTN = '.submit_btn';
 const NEW_ROUTE = 'admin.third-parties.new';
 const INDEX_ROUTE = 'admin.third-parties.index';
 const DETAIL_ROUTE = 'admin.third-parties.third-party';

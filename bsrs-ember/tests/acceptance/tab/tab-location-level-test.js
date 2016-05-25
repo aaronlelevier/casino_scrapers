@@ -20,7 +20,6 @@ const NEW_URL = BASE_URL + '/new/1';
 const NEW_URL_2 = BASE_URL + '/new/2';
 const DJANGO_DETAIL_URL = PREFIX + BASE_URL + '/' + LLD.idOne + '/';
 const DETAIL_URL = BASE_URL + '/' + LLD.idOne;
-const SUBMIT_BTN = '.submit_btn';
 const ROLE_URL = BASE_ROLE_URL + '/index';
 const NEW_ROUTE = 'admin.location-levels.new';
 const INDEX_ROUTE = 'admin.location-levels.index';

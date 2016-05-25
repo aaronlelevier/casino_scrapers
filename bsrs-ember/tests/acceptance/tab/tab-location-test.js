@@ -20,7 +20,6 @@ const LOCATION_URL = BASE_LOCATION_URL + '/index';
 const NEW_URL = BASE_LOCATION_URL + '/new/1';
 const NEW_URL_2 = BASE_LOCATION_URL + '/new/2';
 const DETAIL_URL = BASE_LOCATION_URL + '/' + LD.idOne;
-const SUBMIT_BTN = '.submit_btn';
 const ROLE_URL = BASE_ROLE_URL + '/index';
 const NEW_ROUTE = 'admin.locations.new';
 const INDEX_ROUTE = 'admin.locations.index';
