@@ -1,127 +1,63 @@
 nav.userMenu{
+  float: right;
+  padding: 0 15px 0 0;
+
+  .userWrap{
+
     float: right;
-    padding: 0 15px 0 0;
+    li {
+      position: relative;
 
-    .userWrap{
+      .menuIcon{
+        padding: 0;
+        font-size: 1.15em;
+      }//.menuIcon
 
-        float: right;
-        li {
-            position: relative;
+      /* notification incrementer */
+      span.badge{
+        position: absolute;
+        top: 4px;
+        right: 0px;
+        font-size: 0.8em;
+      }//.count
+    }//li
 
-            .menuIcon{
-                padding: 0;
-                font-size: 1.15em;
-            }//.menuIcon
+    //user dropdown
+    li.current-user{
+      line-height: 1.2em;
+      padding: 0;
+      margin: 0 0 0 15px;
+      position: relative;
+      height: $menuHeight;
+      a {
+        color: white;
+        span.user{
+          padding-top: 6px;
+          display: block;
+          // text-shadow:0 1px 0 #000;
+        }
+        span.role{
+          font-size: .75em;
+          display: block;
+        }
+        span.caret {
+          position: absolute;
+          top: 28px;
+          right: 2px;
+          -webkit-transition: transform .25s ease-out;
+          -moz-transition: transform .25s ease-out;
+          -o-transition: transform .25s ease-out;
+          transition: transform .25s ease-out;
+        }
+      }//a
 
-            /* notification incrementer */
-            span.badge{
-                position: absolute;
-                top: 4px;
-                right: 0px;
-                font-size: 0.8em;
-            }//.count
-        }//li
-
-        //user dropdown
-        li.current-user{
-            line-height: 1.2em;
-            padding: 0;
-            margin: 0 0 0 15px;
-            position: relative;
-            height: $menuHeight;
-            a {
-                color: white;
-                span.user{
-                    padding-top: 6px;
-                    display: block;
-                    // text-shadow:0 1px 0 #000;
-                }
-                span.role{
-                    font-size: .75em;
-                    display: block;
-                }
-                span.caret {
-                    position: absolute;
-                    top: 28px;
-                    right: 2px;
-                    -webkit-transition: transform .25s ease-out;
-                    -moz-transition: transform .25s ease-out;
-                    -o-transition: transform .25s ease-out;
-                    transition: transform .25s ease-out;
-                }
-            }//a
-
-            //dropdown logout and profile links
-            ul.submenu {
-                width: 100%;
-                height: 0px;
-                opacity: 0;
-                visibility: hidden;
-                background-color: $white;
-                position: absolute;
-                -webkit-box-shadow: 0 2px 2px $medGray;
-                -moz-box-shadow: 0 2px 2px $medGray;
-                -ms-box-shadow: 0 2px 2px $medGray;
-                -o-box-shadow: 0 2px 2px $medGray;
-                box-shadow: 0 2px 2px $medGray;
-                -webkit-transition:opacity 0.3s ease-out, visibility 0.1s linear, height 0.2s ease;
-                -moz-transition:opacity 0.3s ease-out, visibility 0.1s linear, height 0.2s ease;
-                -o-transition:opacity 0.3s ease-out, visibility 0.1s linear, height 0.2s ease;
-                transition:opacity 0.3s ease-out, visibility 0.1s linear, height 0.2s ease;
-                overflow: hidden;
-                li {
-                    margin-top: -15px;
-                    clear: both;
-                    position: relative;
-                    width: 100%;
-                    line-height: 40px;
-                    border-bottom: 2px solid $lightGray;
-                    -moz-transition:opacity 0.1s 0.15s ease-out, margin 0.3s 0.1s ease-out;
-                    -webkit-transition:opacity 0.1s 0.15s ease-out, margin 0.3s 0.1s ease-out;
-                    -o-transition:opacity 0.15s 0.15s ease-out, margin 0.3s 0.1s ease-out;
-                    transition:opacity 0.15s 0.15s ease-out, margin 0.3s 0.1s ease-out;
-                    a {
-                        width: 100%;
-                        color:rgba(255,255,255,0);
-                        -webkit-transition:color 0.3s ease-out;
-                        -o-transition:color 0.3s ease-out;
-                        transition:color 0.3s ease-out;
-                        &:hover {
-                            background-color: $activeColor !important;
-                        }
-                        &.active {
-                            color: white;
-                        }
-                    }//a
-                    &:hover {
-                        background-color: $activeColor !important;
-                        a {
-                            color: $white;
-                            cursor: pointer;
-                        }
-                    }//hover
-                }//li
-            }//ul.submenu
-
-            //hover .current-user li
-            &:hover {
-                background-color: $hoverColor;
-                span.caret {
-                    transform: translateY(5px);
-                }
-                ul.submenu {
-                    height: 80px;
-                    opacity: 1;
-                    visibility: visible;
-                    li {
-                        margin-top: 0px;
-                        opacity: 1;
-                        a {
-                            color: $darkGray;
-                        }
-                    }
-                }//submenu
-            }//hover
-        }// li.currentUser
-    }
+      //hover .current-user li
+      &:hover {
+        background-color: $hoverColor;
+        span.caret {
+          transform: translateY(5px);
+        }
+      }//hover
+    }// li.currentUser
+  }
 }//nav.userOptions
