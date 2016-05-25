@@ -57,7 +57,7 @@ select option[default]{
 .input-group-addon{
 	background-color: $lightGray;
 }
-.input-group-vertical{
+.input-group-vertical {
 	margin: 0 0 10px;
 	*{
 		font-size: 1.2rem;
@@ -116,47 +116,7 @@ select option[default]{
 		border-radius: 0;
 	}
 }
-.ticket-actions{
-	.ticket-action{
-		margin: 0 0 5px 5px;
-		float: right;
 
-		.btn{
-			min-height: 30px;
-			line-height: 16px;
-			font-size: 1.2rem;
-			display: block;
-
-		}
-		.ember-power-select-trigger{
-			font-size: 1.2rem;
-			height: 30px;
-			min-height: auto;
-			max-height: none;
-			line-height: 30px;
-		}
-		&.status,
-		&.priority{
-			.ember-power-select-trigger{
-				min-width: 140px;
-			}
-		}
-	}
-}
-.request-wrap{
-	margin: 0 0 15px;
-	*{
-		font-size: 1.2rem;
-	}
-}
-textarea.ticket-request{
-	font-size: 1.2rem;
-	resize: none;
-}
-.meta-data{
-	line-height: 30px;
-	margin: 0 0 8px;
-}
 .create-date{
 	font-size: 1.2rem;
 	color: $darkGray;
@@ -218,108 +178,7 @@ textarea.ticket-request{
 	text-align:center;
 	color: $gray;
 }
-label.small-label{
-	display: block;
-	height: 26px;
-	line-height: 23px;
-	font-size: 1rem !important;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	margin: 0 -1px -1px 0;
-	float: left;
-	background: $lightGray;
-	border: $borderStyle;
-	color: $medGray !important;
-	padding: 0 12px;
-}
 .ember-power-select.ember-basic-dropdown--opened input[type="search"]{
 	padding: 0 7px;
 }
-.request-wrap{
-	label.small-label{
-		float: none;
-	}
-}
-.ticket-categories{
-	*{
-		font-size: 1.2rem;
-	}
-	.category{
-		float: left;
-    margin-right: -1px;
-    min-width: 120px;
-    display: block;
-		.input-group-addon{
-			float: left;
-	    font-size: 1.2rem;
-	    width: auto;
-			height: 26px;
-			line-height: 24px;
-			padding-top: 0;
-			padding-bottom: 0;
-		}
-		.category-select {
-			float: left;
-		    .ember-power-select-trigger{
-					font-size: 1.2rem;
-					min-height: 26px;
-					min-width: 120px;
-					height: 26px;
-					line-height: 24px;
-					border-radius: 0;
-					width: 100%;
-					position: relative;
-				&:focus{
-					z-index: 3;
-				}
-		  }
-			.ember-power-select-dropdown{
-				top: 26px;
-			}
-		  .ember-power-select-option,
-			.ember-power-select-search input{
-		        font-size: 1.2rem;
-		    }
-		}
-	}
-}
-//file attachment
-.progress-wrap{
-	.progress{
-		margin-bottom: 10px;
-		border-radius: $borderRadius;
-		background-color: $light;
-		.remove-attachment{
-			margin-left: 5px;
-			&:hover{
-				cursor: pointer;
-				color: $orange;
-			}
-		}
-		.progress-bar{
-			background-color: $lightBlue;
-			text-align: right;
-			padding: 0 10px;
-			text-overflow: ellipsis;
-		    overflow: hidden;
-		    white-space: nowrap;
-			transition: all 1s ease;
-		}
-		&.complete{
-			background: none;
-			box-shadow: none;
-			.progress-bar{
-				background: $light;
-				border: $borderStyle;
-				color: $darkGray;
-				line-height: 18px;
-				height: 20px;
-				box-shadow: none;
-				width: auto !important;
-				float: right;
-			}
-		}
-	}
-}
-//file upload
+
