@@ -3,15 +3,15 @@
 @import "foundation"; */
 //@import 'bower_components/bootstrap-sass-official/assets/stylesheets/_bootstrap';
 @import 'bootstrap';
-@import 'app/styles/base/_variables.scss';
-@import 'app/styles/base/animate.scss';
+@import 'app/styles/globals/_variables.scss';
+@import 'app/styles/globals/animate.scss';
 @import 'app/styles/mixins/_mixins.scss';
 @import 'app/styles/resets/bootstrap.scss';
 @import 'app/styles/resets/browser.scss';
 @import 'app/styles/resets/ember-modal.scss';
 @import 'app/styles/resets/ember-power-select.scss';
-@import 'app/styles/base/index.scss';
-@import 'app/styles/base/components.scss';
+@import 'app/styles/globals/index.scss';
+@import 'app/styles/globals/components.scss';
 @import 'app/styles/modules/buttons.scss';
 @import 'app/styles/modules/activity-list.scss';
 
