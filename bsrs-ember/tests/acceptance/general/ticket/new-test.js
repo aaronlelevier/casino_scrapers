@@ -43,7 +43,7 @@ const SEARCH = '.ember-power-select-search input';
 
 let application, store, list_xhr, location_xhr, people_xhr, original_uuid, counter;
 
-module('Acceptance | ticket new test', {
+module('scott Acceptance | ticket new test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
@@ -149,7 +149,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     assert.equal(find('.t-category-validation-error').length, 1);
     assert.ok(find('.t-category-validation-error').is(':visible'));
   });
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
   page.categoryThreeClickDropdown();
   page.categoryThreeClickOptionOne();
   andThen(() => {
@@ -295,7 +295,7 @@ test('selecting category tree and removing a top level category will remove chil
     assert.equal(components, 3);
   });
   //third select
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
   page.categoryThreeClickDropdown();
   page.categoryThreeClickOptionOne();
   andThen(() => {
@@ -363,7 +363,7 @@ test('when selecting a new parent cateogry it should remove previously selected 
     assert.equal(components, 3);
   });
   //third select
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
   page.categoryThreeClickDropdown();
   page.categoryThreeClickOptionOne();
   andThen(() => {
@@ -659,7 +659,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
 //  xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
 //  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
 //  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
-//  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+//  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
 //  page.categoryOneClickDropdown();
 //  page.categoryOneClickOptionOne();
 //  page.categoryTwoClickDropdown();
@@ -708,7 +708,7 @@ test('adding a new ticket should allow for another new ticket to be created afte
   xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
   ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
   ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
   page.categoryOneClickDropdown();
   page.categoryOneClickOptionOne();
   page.categoryTwoClickDropdown();
