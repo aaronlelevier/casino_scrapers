@@ -15,9 +15,9 @@ en,activity.ticket.cc_remove,removed ${{removed}} $from CC ${{timestamp}},remove
 en,activity.ticket.comment,commented ${{timestamp}} ${{comment}},commented ${{timestamp}} ${{comment}},,"'activity.ticket.comment':'commented ${{timestamp}} ${{comment}}',",commented ${{timestamp_var_ ${{comment_var_,commented $_timestamp_var_ $_comment_var_
 en,activity.ticket.create,created this ticket ${{timestamp}},created this ticket ${{timestamp}},,"'activity.ticket.create':'created this ticket ${{timestamp}}',",created this ticket ${{timestamp_var_,created this ticket $_timestamp_var_
 en,activity.ticket.to_from,changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}},changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}},,"'activity.ticket.to_from':'changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}}',",changed the {{type_var_ from ${{from_var_ $to ${{to_var_ ${{timestamp_var_,changed the _type_var_ from $_from_var_ $to $_to_var_ $_timestamp_var_
+en,admin.address_type.location,Location,Location,,"'admin.address_type.location':'Location',",Location,Location
 en,admin.address_type.office,Office,Office,,"'admin.address_type.office':'Office',",Office,Office
 en,admin.address_type.shipping,Shipping,Shipping,,"'admin.address_type.shipping':'Shipping',",Shipping,Shipping
-en,admin.address_type.location,Location,Location,,"'admin.address_type.location':'Location',",Location,Location
 en,admin.address.add,Add Address,Add Address,,"'admin.address.add':'Add Address',",Add Address,Add Address
 en,admin.address.address,Street Address,Street Address,,"'admin.address.address':'Street Address',",Street Address,Street Address
 en,admin.address.city,City,City,,"'admin.address.city':'City',",City,City
@@ -121,10 +121,10 @@ en,admin.dtd.title.display,Display,Display,,"'admin.dtd.title.display':'Display'
 en,admin.dtd.title.fields,Fields,Fields,,"'admin.dtd.title.fields':'Fields',",Fields,Fields
 en,admin.dtd.title.navigation,Navigation,Navigation,,"'admin.dtd.title.navigation':'Navigation',",Navigation,Navigation
 en,admin.email.add,Add Email,Add Email,,"'admin.email.add':'Add Email',",Add Email,Add Email
-en,admin.emailtype.personal,Personal,Personal,,"'admin.emailtype.personal':'Personal',",Personal,Personal
-en,admin.emailtype.work,Work,Work,,"'admin.emailtype.work':'Work',",Work,Work
 en,admin.emailtype.location,Location,Location,,"'admin.emailtype.location':'Location',",Work,Work
+en,admin.emailtype.personal,Personal,Personal,,"'admin.emailtype.personal':'Personal',",Personal,Personal
 en,admin.emailtype.sms,SMS,SMS,,"'admin.emailtype.sms':'SMS',",Work,Work
+en,admin.emailtype.work,Work,Work,,"'admin.emailtype.work':'Work',",Work,Work
 en,admin.general.one,General Setting,General Setting,,"'admin.general.one':'General Setting',",General Setting,General Setting
 en,admin.general.other,General Settings,General Settings,,"'admin.general.other':'General Settings',",General Settings,General Settings
 en,admin.invoice.draft,Draft,Draft,,"'admin.invoice.draft':'Draft',",Draft,Draft
@@ -202,11 +202,11 @@ en,admin.person.unique_username,Username {{value}} is already taken,Username {{v
 en,admin.phone.add,Add Phone Number,Add Phone Number,,"'admin.phone.add':'Add Phone Number',",Add Phone Number,Add Phone Number
 en,admin.phone.number,Phone Number,Phone Number,,"'admin.phone.number':'Phone Number',",Phone Number,Phone Number
 en,admin.phone.numbers,Phone Numbers,Phone Numbers,,"'admin.phone.numbers':'Phone Numbers',",Phone Numbers,Phone Numbers
+en,admin.phonenumbertype.cell,Cell,Cell,,"'admin.phonenumbertype.cell':'Cell',",Cell,Cell
+en,admin.phonenumbertype.fax,Fax,Fax,,"'admin.phonenumbertype.fax':'Fax',",Fax,Fax
 en,admin.phonenumbertype.mobile,Mobile,Mobile,,"'admin.phonenumbertype.mobile':'Mobile',",Mobile,Mobile
 en,admin.phonenumbertype.office,Office,Office,,"'admin.phonenumbertype.office':'Office',",Office,Office
-en,admin.phonenumbertype.cell,Cell,Cell,,"'admin.phonenumbertype.cell':'Cell',",Cell,Cell
 en,admin.phonenumbertype.telephone,Telephone,Telephone,,"'admin.phonenumbertype.telephone':'Telephone',",Telephone,Telephone
-en,admin.phonenumbertype.fax,Fax,Fax,,"'admin.phonenumbertype.fax':'Fax',",Fax,Fax
 en,admin.role.label.category,Category,Category,,"'admin.role.label.category':'Category',",Category,Category
 en,admin.role.label.general,General,General,,"'admin.role.label.general':'General',",General,General
 en,admin.role.label.location_level,Location Organization,Location Organization,,"'admin.role.label.location_level':'Location Organization',",Location Organization,Location Organization
@@ -220,12 +220,21 @@ en,admin.role.other,Roles,Roles,,"'admin.role.other':'Roles',",Roles,Roles
 en,admin.role.search,Search Role,Search Role,,"'admin.role.search':'Search Role',",Search Role,Search Role
 en,admin.role.type.internal,Internal,Internal,,"'admin.role.type.internal':'Internal',",Internal,Internal
 en,admin.role.type.third_party,Third Party,Third Party,,"'admin.role.type.third_party':'Third Party',",Third Party,Third Party
+en,admin.setting.accept_assign,Accept Assign,Accept Assign,,"'admin.setting.accept_assign':'Accept Assign',",Accept Assign,Accept Assign
+en,admin.setting.accept_notify,Accept Notify,Accept Notify,,"'admin.setting.accept_notify':'Accept Notify',",Accept Notify,Accept Notify
+en,admin.setting.company_code,Company Code,Company Code,,"'admin.setting.company_code':'Company Code',",Company Code,Company Code
 en,admin.setting.company_name,Company Name,Company Name,,"'admin.setting.company_name':'Company Name',",Company Name,Company Name
 en,admin.setting.create_all,Create All,Create All,,"'admin.setting.create_all':'Create All',",Create All,Create All
+en,admin.setting.dashboard_text,Welcome Message,Welcome Message,,"'admin.setting.dashboard_text':'Welcome Message',",Welcome Message,Welcome Message
+en,admin.setting.dt_start_key,Start,Start,,"'admin.setting.dt_start_key':'Start',",Start,Start
+en,admin.setting.exchange_rates,Exchange Rates,Exchange Rates,,"'admin.setting.exchange_rates':'Exchange Rates',",Exchange Rates,Exchange Rates
 en,admin.setting.login_grace,Login Grace,Login Grace,,"'admin.setting.login_grace':'Login Grace',",Login Grace,Login Grace
+en,admin.setting.modules,Modules,Modules,,"'admin.setting.modules':'Modules',",Modules,Modules
 en,admin.setting.one,Setting,Setting,,"'admin.setting.one':'Setting',",Setting,Setting
 en,admin.setting.other,Settings,Settings,,"'admin.setting.other':'Settings',",Settings,Settings
-en,admin.setting.welcome_text,Welcome Message,Welcome Message,,"'admin.setting.welcome_text':'Welcome Message',",Welcome Message,Welcome Message
+en,admin.setting.test_contractor_email,Test Contractor Email,Test Contractor Email,,"'admin.setting.test_contractor_email':'Test Contractor Email',",Test Contractor Email,Test Contractor Email
+en,admin.setting.test_contractor_phone,Test Contractor Phone,Test Contractor Phone,,"'admin.setting.test_contractor_phone':'Test Contractor Phone',",Test Contractor Phone,Test Contractor Phone
+en,admin.setting.test_mode,Test Mode,Test Mode,,"'admin.setting.test_mode':'Test Mode',",Test Mode,Test Mode
 en,admin.template.one,Template,Template,,"'admin.template.one':'Template',",Template,Template
 en,admin.template.other,Templates,Templates,,"'admin.template.other':'Templates',",Templates,Templates
 en,admin.third_party.label.name,Name,Name,,"'admin.third_party.label.name':'Name',",Name,Name
@@ -242,30 +251,31 @@ en,admin.translation.search,Search Translations,Search Translations,,"'admin.tra
 en,admin.work_order.close.checked,Checked,Checked,,"'admin.work_order.close.checked':'Checked',",Work,Work
 en,admin.work_order.close.do_not_display,Do not display,Do not display,,"'admin.work_order.close.do_not_display':'Do not display',",Work,Work
 en,admin.work_order.close.unchecked,Unchecked,Unchecked,,"'admin.work_order.close.unchecked':'Unchecked',",Work,Work
-en,attachment.too_large,File is too large,File is too large,,"'attachment.too_large':'File is too large',",Work,Work
 en,attachment.fail,File failed to upload,File failed to upload,,"'attachment.fail':'File failed to upload',",Work,Work
+en,attachment.too_large,File is too large,File is too large,,"'attachment.too_large':'File is too large',",Work,Work
 en,button.add,Add new {{model}},Add new {{model}},,"'button.add':'Add new {{model}}',",Add new {{model_var_,Add new _model_var_
 en,button.upload,Attach file,Attach file,,"'button.upload':'Attach file',",Attach file,Attach file
 en,crud.cancel.button,Cancel,Cancel,,"'crud.cancel.button':'Cancel',",Cancel,Cancel
+en,crud.close_tab,Close Tab,Close Tab,,"'crud.close_tab':'Close Tab',",Close Tab,Close Tab
 en,crud.create.button,Create,Create,,"'crud.create.button':'Create',",Create,Create
 en,crud.create.error,Error creating {{model}}.,Error creating {{model}}.,,"'crud.create.error':'Error creating {{model}}.',",Error creating {{model_var_.,Error creating _model_var_.
 en,crud.create.success,{{model}} created successfully.,{{model}} created successfully.,,"'crud.create.success':'{{model}} created successfully.',",{{model_var_ created successfully.,_model_var_ created successfully.
 en,crud.default_value,Default: {{value}},Default: {{value}},,"'crud.default_value':'Default: {{value}}',",Default: {{value_var_,Default: _value_var_
 en,crud.delete.button,Delete,Delete,,"'crud.delete.button':'Delete',",Delete,Delete
-en,crud.delete.title,Delete Record,Delete Record,,"'crud.delete.title':'Delete Record',",Delete Record,Delete Record
 en,crud.delete.confirm,Are you sure you want to delete this {{module}}?,Are you sure you want to delete this {{module}}?,,"'crud.delete.confirm':'Are you sure you want to delete this {{module}}?',",Are you sure you want to delete this {{module_var_?,Are you sure you want to delete this _module_var_?
 en,crud.delete.error,Error deleting {{model}}.,Error deleting {{model}}.,,"'crud.delete.error':'Error deleting {{model}}.',",Error deleting {{model_var_.,Error deleting _model_var_.
+en,crud.delete.title,Delete Record,Delete Record,,"'crud.delete.title':'Delete Record',",Delete Record,Delete Record
 en,crud.discard_changes,Unsaved Changes,Unsaved Changes,,"'crud.discard_changes':'Unsaved Changes',",Unsaved Changes,Unsaved Changes
 en,crud.discard_changes_confirm,All unsaved changes will be lost.  Are you sure you want to continue?,All unsaved changes will be lost.  Are you sure you want to continue?,,"'crud.discard_changes_confirm':'All unsaved changes will be lost.  Are you sure you want to continue?',",All unsaved changes will be lost.  Are you sure you want to continue?,All unsaved changes will be lost.  Are you sure you want to continue?
 en,crud.duplicate.button,Duplicate,Duplicate,,"'crud.duplicate.button':'Duplicate',",Duplicate,Duplicate
 en,crud.inherited_from,Inherited from: {{from}},Inherited from: {{from}},,"'crud.inherited_from':'Inherited from: {{from}}',",Inherited from: {{from_var_,Inherited from: _from_var_
-en,crud.close_tab,Close Tab,Close Tab,,"'crud.close_tab':'Close Tab',",Close Tab,Close Tab
 en,crud.no,No,No,,"'crud.no':'No',",No,No
 en,crud.print.button,Print,Print,,"'crud.print.button':'Print',",Print,Print
 en,crud.restore.button,Restore,Restore,,"'crud.restore.button':'Restore',",Restore,Restore
 en,crud.restore.error,Error restoring {{model}},Error restoring {{model}},,"'crud.restore.error':'Error restoring {{model}}',",Error restoring {{model_var_,Error restoring _model_var_
 en,crud.restore.success,{{model}} restored successfully.,{{model}} restored successfully.,,"'crud.restore.success':'{{model}} restored successfully.',",{{model_var_ restored successfully.,_model_var_ restored successfully.
 en,crud.save_only.button,Save,Save,,"'crud.save_only.button':'Save',",Save,Save
+en,crud.save_progress,You currently have unsaved changes.  Would you like to save your progress?,You currently have unsaved changes.  Would you like to save your progress?,,"'crud.save_progress':'You currently have unsaved changes.  Would you like to save your progress?',",You currently have unsaved changes.  Would you like to save your progress?,You currently have unsaved changes.  Would you like to save your progress?
 en,crud.save.button,Save and Close,Save and Close,,"'crud.save.button':'Save and Close',",Save and Close,Save and Close
 en,crud.save.error,Error saving {{model}}.,Error saving {{model}}.,,"'crud.save.error':'Error saving {{model}}.',",Error saving {{model_var_.,Error saving _model_var_.
 en,crud.save.success,{{model}} saved successfully.,{{model}} saved successfully.,,"'crud.save.success':'{{model}} saved successfully.',",{{model_var_ saved successfully.,_model_var_ saved successfully.
@@ -274,17 +284,20 @@ en,crud.titles.new,New {{model}},New {{model}},,"'crud.titles.new':'New {{model}
 en,crud.update.button,Update,Update,,"'crud.update.button':'Update',",Update,Update
 en,crud.yes,Yes,Yes,,"'crud.yes':'Yes',",Yes,Yes
 en,dashboard.welcome,Welcome,Welcome,,"'dashboard.welcome':'Welcome',",Welcome,Welcome
+en,dt.link.submit,Submit,Submit,,"'dt.link.submit':'Submit',",Submit,Submit
 en,dt.new,New,New,,"'dt.new':'New',",New,New
+en,dt.placeholder_submit,Leave blank if Submit,Leave blank if Submit,,"'dt.placeholder_submit':'Leave blank if Submit',",Leave blank if Submit,Leave blank if Submit
 en,dt.start,Start,Start,,"'dt.start':'Start',",Start,Start
 en,dt.ticket.launch,Lauch Ticket Decision Tree,Lauch Ticket Decision Tree,,"'dt.ticket.launch':'Lauch Ticket Decision Tree',",Lauch Ticket Decision Tree,Lauch Ticket Decision Tree
-en,errors.dtd.key,Key must be provided,Key must be provided,,"'errors.dtd.key':'Key must be provided',",Key must be provided,Key must be provided
 en,errors.dtd.description,Description must be provided,Description must be provided,,"'errors.dtd.description':'Description must be provided',",Description must be provided,Description must be provided
+en,errors.dtd.key,Key must be provided,Key must be provided,,"'errors.dtd.key':'Key must be provided',",Key must be provided,Key must be provided
 en,errors.link.text,Text must be provided,Text must be provided,,"'errors.link.text':'Text must be provided',",Text must be provided,Text must be provided
-en,errors.person.username,Username must be provided,Username must be provided,,"'errors.person.username':'Username must be provided',",Username must be provided,Username must be provided
 en,errors.person.middle_initial,Middle Initial must be less than 2 characters,Middle Initial must be less than 2 characters,,"'errors.person.middle_initial':'Middle Initial must be less than 2 characters',",Middle Initial must be less than 2 characters,Middle Initial must be less than 2 characters
 en,errors.person.password,"Password must include at least one upper case letter, one lower case letter, and a number","Password must include at least one upper case letter, one lower case letter, and a number",,"'errors.person.password':'Password must include at least one upper case letter, one lower case letter, and a number',","Password must include at least one upper case letter, one lower case letter, and a number","Password must include at least one upper case letter, one lower case letter, and a number"
-en,errors.ticket.request,Request must be provided,Request must be provided,,"'errors.ticket.request':'Request must be provided',",Request must be provided,Request must be provided
+en,errors.person.username,Username must be provided,Username must be provided,,"'errors.person.username':'Username must be provided',",Username must be provided,Username must be provided
 en,errors.ticket.assignee,Assignee must be provided,Assignee must be provided,,"'errors.ticket.assignee':'Assignee must be provided',",Assignee must be provided,Assignee must be provided
+en,errors.ticket.request,Request must be provided,Request must be provided,,"'errors.ticket.request':'Request must be provided',",Request must be provided,Request must be provided
+en,general.new,New,New,,"'general.new':'New',",New,New
 en,grid.filter,Filter,Filter,,"'grid.filter':'Filter',",Filter,Filter
 en,grid.filterset_name,Name your filter,Name your filter,,"'grid.filterset_name':'Name your filter',",Name your filter,Name your filter
 en,grid.per_page,{{size}} per page,{{size}} per page,,"'grid.per_page':'{{size}} per page',",{{size_var_ per page,_size_var_ per page
@@ -326,6 +339,7 @@ en,ticket.priority.high,High,High,,"'ticket.priority.high':'High',",High,High
 en,ticket.priority.low,Low,Low,,"'ticket.priority.low':'Low',",Low,Low
 en,ticket.priority.medium,Medium,Medium,,"'ticket.priority.medium':'Medium',",Medium,Medium
 en,ticket.search,Search Tickets,Search Tickets,,"'ticket.search':'Search Tickets',",Search Tickets,Search Tickets
+en,ticket.status.cancelled,Cancelled,Cancelled,,"'ticket.status.cancelled':'Cancelled',",Cancelled,Cancelled
 en,ticket.status.closed,Closed,Closed,,"'ticket.status.closed':'Closed',",Closed,Closed
 en,ticket.status.complete,Complete,Complete,,"'ticket.status.complete':'Complete',",Complete,Complete
 en,ticket.status.deferred,Deferred,Deferred,,"'ticket.status.deferred':'Deferred',",Deferred,Deferred
@@ -333,10 +347,9 @@ en,ticket.status.denied,Denied,Denied,,"'ticket.status.denied':'Denied',",Denied
 en,ticket.status.draft,Draft,Draft,,"'ticket.status.draft':'Draft',",Draft,Draft
 en,ticket.status.in_progress,In Progress,In Progress,,"'ticket.status.in_progress':'In Progress',",In Progress,In Progress
 en,ticket.status.new,New,New,,"'ticket.status.new':'New',",New,New
+en,ticket.status.pending,Pending,Pending,,"'ticket.status.pending':'Pending',",Pending,Pending
 en,ticket.status.problem_solved,Problem solved,Problem solved,,"'ticket.status.problem_solved':'Problem solved',",Problem solved,Problem solved
 en,ticket.status.unsatisfactory_completion,Unsatisfactory,Unsatisfactory,,"'ticket.status.unsatisfactory_completion':'Unsatisfactory',",Unsatisfactory,Unsatisfactory
-en,ticket.status.cancelled,Cancelled,Cancelled,,"'ticket.status.cancelled':'Cancelled',",Cancelled,Cancelled
-en,ticket.status.pending,Pending,Pending,,"'ticket.status.pending':'Pending',",Pending,Pending
 en,upload.progress,Progress,Progress,,"'upload.progress':'Progress',",Progress,Progress
 en,validation.invalid,Invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid,Invalid
 en,validation.valid,Valid,Valid,,"'validation.valid':'Valid',",Valid,Valid
