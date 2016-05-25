@@ -76,34 +76,34 @@ test('log location will update all tabs currentLocation property', function(asse
 //  *
 // */
 
-// test('showModal will return a boolean to tell modal to show', function(assert) {
-  // let service = this.subject();
-  // const tab = service.findTab(TD.idOne);
-  // assert.notOk(service.showModal(tab), 'closeTab');
-  // ticket.set('request', 'wat');
-  // assert.ok(service.showModal(tab, 'closeTab'));
-  // const tab_dtd = service.findTab(DTD.idOne);
-  // assert.equal(tab_dtd.get('moduleList'), 'dtd-list');
-  // assert.ok(service.showModal(tab_dtd, 'delete'));
-  // dtd.set('key', '456');
-  // assert.ok(service.showModal(tab_dtd, 'delete'));
-  // dtd.save();
-  // let dtd_2;
-  // run(() => {
-  //   dtd_2 = store.push('dtd-list', {id: DTD.idTwo});
-  //   store.push('dtd', {id: DTD.idTwo});
-  //   store.push('dtd-list', {id: DTD.idOne});
-  // });
-  // assert.notOk(service.showModal(tab_dtd, 'closeTab'));
-  // run(() => {
-  //   store.push('dtd', {id: DTD.idOne, key: DTD.keyOne});
-  // });
-  // assert.ok(service.showModal(tab_dtd, 'closeTab'));
-  // dtd.save();
-  // assert.notOk(service.showModal(tab_dtd, 'closeTab'));
-  // run(() => {
-  //   store.push('dtd', {id: DTD.idTwo, key: DTD.keyOne});
-  // });
-  // assert.ok(dtd_2.get('isDirtyOrRelatedDirty'));
-  // assert.ok(service.showModal(tab_dtd, 'closeTab'));
-// });
+test('showModal will return a boolean to tell modal to show', function(assert) {
+  let service = this.subject();
+  const tab = service.findTab(TD.idOne);
+  assert.notOk(service.showModal(tab), 'closeTab');
+  ticket.set('request', 'wat');
+  assert.ok(service.showModal(tab, 'closeTab'));
+  const tab_dtd = service.findTab(DTD.idOne);
+  assert.equal(tab_dtd.get('moduleList'), 'dtd-list');
+  assert.ok(service.showModal(tab_dtd, 'delete'));
+  dtd.set('key', '456');
+  assert.ok(service.showModal(tab_dtd, 'delete'));
+  dtd.save();
+  let dtd_2;
+  run(() => {
+    dtd_2 = store.push('dtd-list', {id: DTD.idTwo});
+    store.push('dtd', {id: DTD.idTwo});
+    store.push('dtd-list', {id: DTD.idOne});
+  });
+  assert.notOk(service.showModal(tab_dtd, 'closeTab'));
+  run(() => {
+    store.push('dtd', {id: DTD.idOne, key: DTD.keyOne});
+  });
+  assert.ok(service.showModal(tab_dtd, 'closeTab'));
+  dtd.save();
+  assert.notOk(service.showModal(tab_dtd, 'closeTab'));
+  run(() => {
+    store.push('dtd', {id: DTD.idTwo, key: DTD.keyOne});
+  });
+  assert.ok(dtd_2.get('isDirtyOrRelatedDirty'));
+  assert.ok(service.showModal(tab_dtd, 'closeTab'));
+});
