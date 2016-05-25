@@ -1,0 +1,47 @@
+.tag {
+	display: inline-block;
+	height: 20px;
+	line-height: 17px;
+	font-size: 1.1rem;
+	background: $medGray;
+	border: 1px solid $medGray;
+	color: $white;
+	padding: 0 7px;
+	border-radius: 3px;
+	text-transform: uppercase;
+	margin: 0 8px 0 0;
+	position: relative;
+	white-space: nowrap;
+	i{
+		margin-right: 3px;
+	}
+	&.admin-location-status-open,
+	&.ticket-status-new{
+		background: $lightGreen;
+		border-color: $lightGreen;
+	}
+	&.admin-location-status-future,
+	&.admin-person-status-active,
+	&.ticket-status-in_progress{
+		background: $lightBlue;
+		border-color: $lightBlue;
+	}
+	&.ticket-priority-emergency{
+		background: $darkOrange;
+		border-color: $darkOrange;
+	}
+	&.admin-person-status-expired,
+	&.ticket-priority-high{
+		background: $darkYellow;
+		border-color: $darkYellow;
+	}
+	&.ticket-priority-medium{
+		background: $orange;
+		border-color: $orange;
+	}
+	&.ticket-priority-low{
+		background: $yellow;
+		border-color: $yellow;
+	}
+}
+
