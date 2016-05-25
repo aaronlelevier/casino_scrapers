@@ -39,15 +39,6 @@ class CategoryListTests(APITestCase):
         self.assertFalse(self.top_level.parent)
         self.assertTrue(self.top_level.children)
 
-    def test_list_endpoint_returns_data_including_id(self):
-        Category.objects.all().delete()
-        first = create_single_category()
-
-        response = self.client.get('/api/admin/categories/?page_size=1000')
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertTrue(len(data['results']) > 0)
-        self.assertIn(str(first.id), [c['id'] for c in data['results']])
 
     def test_data(self):
         response = self.client.get('/api/admin/categories/')
@@ -404,6 +395,18 @@ class CategoryFilterTests(APITransactionTestCase):
         self.assertIn('name', data['results'][0])
         self.assertIn('label', data['results'][0])
         self.assertIn('subcategory_label', data['results'][0])
+
+    def test_filter_by_parent_with_page_size(self):
+        '''
+        This is the behavior of ember power selects that fetch this url on open
+        should be greater than PAGE_SIZE=10
+        '''
+        self.repair = Category.objects.filter(name='Repair').first()
+        create_single_category(name='Wat', parent=self.repair)
+        self.assertEqual(Category.objects.filter(parent=self.repair.id).count(), 11)
+        response = self.client.get('/api/admin/categories/?parent={}&page_size=1000'.format(self.repair.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 11)
 
     def test_filter_by_name(self):
         mommy.make(Category, name="cat")
