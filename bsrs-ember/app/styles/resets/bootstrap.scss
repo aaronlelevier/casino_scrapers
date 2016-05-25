@@ -16,7 +16,7 @@
   margin-bottom: 0;
   border: none;
   border-radius: 0;
-  background: $blue;
+  background: $darkGray;
   color: $white;
   .navbar-brand{
     height: $menuHeight;
@@ -289,7 +289,7 @@ fieldset[disabled] .form-control,
 }
 .alert-success{
   background: $lightBlue;
-  border-color: $blue;
+  border-color: $lightBlue;
   color: $white;
 }
 .alert-warning{
@@ -304,6 +304,6 @@ fieldset[disabled] .form-control,
 }
 .alert-danger{
   background: $orange;
-  border-color: $darkOrange;
+  border-color: $orange;
   color: $white;
 }
