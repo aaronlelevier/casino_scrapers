@@ -38,12 +38,13 @@ class Setting(ToDictNameMixin, BaseModel):
         ret = {}
         for s in Setting.objects.filter(name__in=names):
             if s.name == 'general':
-                ret[s.name] = copy.copy(s.settings)
+                ret[s.name] = s.settings
             elif s.name == 'role' and s.related_id == self.person.role.id:
-                ret[s.name] = copy.copy(self.get_role_settings(s.related_id))
+                ret[s.name] = self.get_role_settings(s.related_id)
         return ret
 
-    def get_role_settings(self, role_id):
+    @staticmethod
+    def get_role_settings(role_id):
         role_type = ContentType.objects.get(app_label='person', model='role')
         role = role_type.get_object_for_this_type(id=role_id)
         return role.settings.settings
