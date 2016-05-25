@@ -457,7 +457,7 @@ test('click add-link, and fill in', async assert => {
   assert.equal(currentURL(), DETAIL_URL);
 });
 
-/* CATEGORIES */
+/*  */
 test('categories selector is wired up and working', async assert => {
   await page.visitDetail();
   const top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
@@ -466,7 +466,7 @@ test('categories selector is wired up and working', async assert => {
   .categoryOneClickDropdown()
   .categoryOneClickOptionOne();
   assert.equal(ticketPage.categoryOneInput.split(/\s/)[0], CD.nameOne);
-  const second_level_categories_endpoint = PREFIX + `/admin/categories/?parent=${CD.idOne}`;
+  const second_level_categories_endpoint = PREFIX + `/admin/categories/?parent=${CD.idOne}&page_size=1000`;
   xhr(second_level_categories_endpoint, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [], CD.idOne, 1));
   await ticketPage
   .categoryTwoClickDropdown()
@@ -500,11 +500,11 @@ test('power select options are rendered immediately when enter detail route and 
   assert.equal(ticketPage.categoryOneInput.split(/\s/)[0], CD.nameOne);
   assert.equal(ticketPage.categoryOneOptionLength, 2);
   await ticketPage.categoryOneClickDropdown();
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get(CD.idTwo, CD.nameTwo));
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get(CD.idTwo, CD.nameTwo));
   await ticketPage.categoryTwoClickDropdown();
   assert.equal(ticketPage.categoryTwoInput.split(/\s/)[0], CD.nameRepairChild);
   ticketPage.categoryTwoClickDropdown();
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idPlumbing}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild));
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idPlumbing}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild));
   await ticketPage.categoryThreeClickDropdown();
   assert.equal(`${ticketPage.categoryThreeInput.split(/\s/)[0]} ${ticketPage.categoryThreeInput.split(/\s/)[1]}`, CD.namePlumbingChild);
   assert.equal(ticketPage.categoryThreeOptionLength, 1);
@@ -523,7 +523,7 @@ test('power select options are rendered immediately when enter detail route and 
   assert.equal(ticketPage.categoryOneOptionLength, 2);
   await ticketPage.categoryOneClickDropdown();
   const security = CF.get_list(CD.idLossPreventionChild, CD.nameLossPreventionChild, [], CD.idThree, 1);
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idThree}`, 'GET', null, {}, 200, security);
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idThree}&page_size=1000`, 'GET', null, {}, 200, security);
   await ticketPage.categoryTwoClickDropdown();
   assert.equal(ticketPage.categoryTwoOptionLength, 1);
   await ticketPage.categoryTwoClickOptionSecurity();
@@ -565,7 +565,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
   components = ticketPage.powerSelectComponents;
   assert.equal(components, 3);
   //select electrical from second level
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id:CD.idChild}], CD.idOne, 1));
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id:CD.idChild}], CD.idOne, 1));
   await ticketPage.categoryTwoClickDropdown();
   await ticketPage.categoryTwoClickOptionElectrical();
   assert.equal(store.find('category').get('length'), 5);
@@ -578,7 +578,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
   components = ticketPage.powerSelectComponents;
   assert.equal(components, 3);
   const payload = CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2);
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, payload);
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, payload);
   await ticketPage.categoryThreeClickDropdown();
   await ticketPage.categoryThreeClickOptionOne();
   await generalPage.cancel();
@@ -650,22 +650,22 @@ test('changing tree and reverting tree should not show as dirty', async assert =
   assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(link.get('categoriesIsNotDirty'));
   //select electrical from second level
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
   await ticketPage.categoryTwoClickDropdown();
   await ticketPage.categoryTwoClickOptionElectrical();
   assert.ok(link.get('isDirtyOrRelatedDirty'));
   assert.ok(link.get('categoriesIsDirty'));
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
   await ticketPage.categoryThreeClickDropdown();
   await ticketPage.categoryThreeClickOptionOne();
   assert.ok(link.get('isDirtyOrRelatedDirty'));
   assert.ok(link.get('categoriesIsDirty'));
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [{id:CD.idPlumbingChild}], CD.idOne, 1));
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [{id:CD.idPlumbingChild}], CD.idOne, 1));
   await ticketPage.categoryTwoClickDropdown();
   await ticketPage.categoryTwoClickOptionPlumbing();
   assert.ok(link.get('isDirtyOrRelatedDirty'));
   assert.ok(link.get('categoriesIsDirty'));
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idPlumbing}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbingChild, CD.namePlumbingChild, [], CD.idPlumbing, 2));
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idPlumbing}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbingChild, CD.namePlumbingChild, [], CD.idPlumbing, 2));
   await ticketPage.categoryThreeClickDropdown();
   //reset tree back to original
   await ticketPage.categoryThreeClickOptionToilet();
@@ -694,14 +694,14 @@ test('when selecting a new parent category it should remove previously selected 
   await page.visitDetail();
   let dtd = store.find('dtd', DTD.idOne);
   let link = store.find('link', dtd.get('links').objectAt(0).get('id'));
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [{id: CD.idChild}], CD.idOne, 1));
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [{id: CD.idChild}], CD.idOne, 1));
   await ticketPage.categoryTwoClickDropdown();
   await ticketPage.categoryTwoClickOptionPlumbing();
   assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(link.get('categories').get('length'), 3);
   let components = ticketPage.powerSelectComponents;
   assert.equal(components, 3);
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
   await ticketPage.categoryTwoClickDropdown();
   await ticketPage.categoryTwoClickOptionElectrical();
   assert.ok(link.get('isDirtyOrRelatedDirty'));
@@ -718,7 +718,7 @@ test('when selecting a new parent category it should remove previously selected 
   assert.equal(components, 1);
   await ticketPage.categoryOneClickDropdown();
   await ticketPage.categoryOneClickOptionOne();
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
   await ticketPage.categoryTwoClickDropdown();
   await ticketPage.categoryTwoClickOptionOne();
   await ticketPage.categoryThreeClickDropdown();
@@ -759,7 +759,7 @@ test('can clear out leaf category', async assert => {
   assert.equal(components, 3);
   assert.equal(link.get('categories.length'), 2);
 });
-/*END CATEGORIES */
+/*END  */
 
 test('sending a put request with a 400 error will redirect you to the dtd-error page', async assert => {
   await page.visitDetail();
