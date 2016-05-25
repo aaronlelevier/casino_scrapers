@@ -60,7 +60,6 @@ class SettingTests(APITestCase):
 
     def test_update(self):
         new_dashboard_text = "Bueno"
-        new_test_mode = False
         serializer = SettingSerializer(self.setting)
         raw_data = serializer.data
         self.assertEqual(raw_data['settings']['dashboard_text'], {'value': 'Welcome', 'type': 'str'})

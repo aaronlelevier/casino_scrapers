@@ -10,7 +10,7 @@ from accounting.models import Currency
 from accounting.serializers import CurrencySerializer
 from location.models import LocationLevel
 from location.tests.factory import create_location
-from person.models import Person
+from person.models import Person, Role
 from person.tests.factory import create_single_person, create_role, create_roles, PASSWORD
 from utils import create
 
@@ -149,15 +149,15 @@ class OrderingQuerySetMixinTests(APITestCase):
         self.assertEqual(str(raw_qs_first.id), data['results'][0]['id'])
 
     def test_ordering_data_type__int(self):
-        person = create_single_person()
-        person.auth_amount = 1
-        person.save()
-        person_two = create_single_person()
-        person_two.auth_amount = 2
-        person.save()
-        raw_qs_first = Person.objects.order_by('-auth_amount').first()
+        role = create_role()
+        role.auth_amount = 1
+        role.save()
+        role_two = create_role()
+        role_two.auth_amount = 2
+        role.save()
+        raw_qs_first = Role.objects.order_by('-auth_amount').first()
 
-        response = self.client.get('/api/admin/people/?ordering=-auth_amount')
+        response = self.client.get('/api/admin/roles/?ordering=-auth_amount')
         data = json.loads(response.content.decode('utf8'))
 
         self.assertEqual(str(raw_qs_first.id), data['results'][0]['id'])

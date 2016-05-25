@@ -13,15 +13,11 @@ def create_general_setting():
     return Setting.objects.create(id=id, name=name, settings=settings_dict)
 
 
-def create_role_setting(instance):
-    name = 'role'
-    remove_prior_settings(name=name, related_id=instance.id)
+def create_role_setting(instance, name='role'):
     return create_with_settings(instance, name, ROLE_SETTINGS)
 
 
-def create_person_setting(instance):
-    name = 'person'
-    remove_prior_settings(name=name, related_id=instance.id)
+def create_person_setting(instance, name='person'):
     return create_with_settings(instance, name, PERSON_SETTINGS)
 
 
@@ -35,6 +31,8 @@ def remove_prior_settings(**kwargs):
 
 
 def create_with_settings(instance, name, init_settings):
+    remove_prior_settings(name=name, related_id=instance.id)
+
     settings_dict = copy.copy(init_settings)
     settings = Setting.objects.create(name=name, related_id=instance.id,
                                       settings=settings_dict)

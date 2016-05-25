@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from person.tests.factory import create_single_person, create_role
+from person.tests.factory import create_single_person
 from setting.tests.factory import (create_general_setting,
     create_role_setting, create_person_setting)
 
@@ -33,14 +33,26 @@ class SettingModelTests(TestCase):
         self.assertEqual(ret['dashboard_text']['inherited_value'], 'Welcome')
 
     def test_combined_settings__person_inherits_from_role(self):
-        # make sure other Role w/ settings doesn't conflict
-        role = create_role()
-        create_role_setting(role)
-        # modify Person's Setting
-        self.role_setting.settings['accept_assign']['value'] = True
-        self.role_setting.save()
+        # Person's initial inherited value
+        person = create_single_person()
+        person_setting = create_person_setting(person)
+        role = person.role
+        role_setting = create_role_setting(role)
+        self.assertEqual(role_setting.settings['accept_assign']['value'], False)
 
-        ret = self.person_setting.combined_settings()
+        ret = person_setting.combined_settings()
+
+        self.assertEqual(ret['accept_assign']['value'], None)
+        self.assertEqual(ret['accept_assign']['type'], 'bool')
+        self.assertEqual(ret['accept_assign']['inherits_from'], 'role')
+        self.assertEqual(ret['accept_assign']['inherited_value'], False)
+
+        # modify Person's Setting
+        self.assertEqual(role_setting.settings['accept_assign']['value'], False)
+        role_setting.settings['accept_assign']['value'] = True
+        role_setting.save()
+
+        ret = person_setting.combined_settings()
 
         # not overridden
         self.assertEqual(ret['password_one_time']['value'], False)

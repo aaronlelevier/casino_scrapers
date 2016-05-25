@@ -17,7 +17,8 @@ from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_role, create_single_person
-from setting.tests.factory import create_general_setting
+from setting.tests.factory import (create_general_setting,
+    create_role_setting, create_person_setting)
 from translation.models import Locale
 from utils import create
 from utils.models import DefaultNameManager
@@ -196,7 +197,6 @@ class PersonTests(TestCase):
         self.person._update_defaults()
 
         self.assertEqual(self.person.status, self.person_default_status)
-        self.assertEqual(self.person.auth_amount, self.person.role.auth_amount)
         self.assertEqual(self.person.auth_currency, self.person.role.auth_currency)
         self.assertEqual(self.person.locale, Locale.objects.system_default())
         self.assertIsNotNone(self.person.password_expire_date)
@@ -439,3 +439,28 @@ class PersonPasswordHistoryTests(TestCase):
             init_password_change,
             post_password_change
         )
+
+
+class PersonProxyFieldTests(TestCase):
+
+    def setUp(self):
+        self.person = create_single_person()
+        create_person_setting(self.person)
+        self.role = self.person.role
+        create_role_setting(self.role)
+
+    def test_settings_populates_withough_get_on_proxy_descriptor__inherited(self):
+        combined_settings = self.person.combined_settings()
+        self.assertEqual(combined_settings['auth_amount']['value'], None)
+        self.assertEqual(combined_settings['auth_amount']['type'], 'float')
+        self.assertEqual(combined_settings['auth_amount']['inherited_value'], self.role.auth_amount)
+        self.assertEqual(combined_settings['auth_amount']['inherits_from'], 'role')
+
+    def test_settings_populates_withough_get_on_proxy_descriptor__not_inherited(self):
+        new_amount = 99
+        self.person.auth_amount = new_amount
+        combined_settings = self.person.combined_settings()
+        self.assertEqual(combined_settings['auth_amount']['value'], new_amount)
+        self.assertEqual(combined_settings['auth_amount']['type'], 'float')
+        self.assertNotIn('inherited_value', combined_settings['auth_amount'])
+        self.assertNotIn('inherits_from', combined_settings['auth_amount'])

@@ -1,5 +1,6 @@
-import re
+import copy
 from datetime import timedelta
+import re
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -23,6 +24,7 @@ from location.models import LocationLevel, Location, LOCATION_COMPANY
 from person import config, helpers
 from setting.models import Setting
 from translation.models import Locale
+from utils.fields import InheritedValueDescriptor
 from utils.models import BaseModel, BaseNameModel, DefaultNameManager
 from utils.validators import (contains_digit, contains_upper_char, contains_lower_char,
     contains_special_char, contains_no_whitespaces)
@@ -129,6 +131,10 @@ class Role(BaseModel):
         self._update_password_history_length()
         self._validate_related_categories()
         return super(Role, self).save(*args, **kwargs)
+
+    def combined_settings(self):
+        data = copy.copy(self.settings.combined_settings())
+        return data
 
     @property
     def _name(self):
@@ -281,7 +287,7 @@ class Person(BaseModel, AbstractUser):
     # required
     # Auth Amounts - can be defaulted by the Role
     fullname = models.CharField(max_length=100, blank=True)
-    auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
+    auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, null=True)
     auth_currency = models.ForeignKey(Currency, blank=True, null=True)
     accept_assign = models.BooleanField(default=True, blank=True)
     accept_notify = models.BooleanField(default=True, blank=True)
@@ -317,6 +323,14 @@ class Person(BaseModel, AbstractUser):
     emails = GenericRelation(Email)
     # Inheritable Settings
     settings = models.OneToOneField(Setting, null=True)
+
+    def combined_settings(self):
+        data = copy.copy(self.settings.combined_settings())
+        data['auth_amount'] = self.proxy_auth_amount
+        return data
+
+    # proxy fields (won't create a field in the database)
+    proxy_auth_amount = InheritedValueDescriptor('role', 'auth_amount', 'float')
 
     # Managers
     objects = PersonManager()
@@ -420,8 +434,6 @@ class Person(BaseModel, AbstractUser):
     def _update_defaults(self):
         if not self.status:
             self.status = PersonStatus.objects.default()
-        if not self.auth_amount:
-            self.auth_amount = self.role.auth_amount
         if not self.auth_currency:
             self.auth_currency = self.role.auth_currency
         if not self.locale:

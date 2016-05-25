@@ -376,7 +376,6 @@ class PersonListTests(TestCase):
 
     def test_data_auth_amount(self):
         results = self.data['results'][0]
-        self.assertEqual(results['auth_amount'], "{0:.4f}".format(self.person.auth_amount))
         self.assertEqual(results['auth_currency'], str(self.person.auth_currency.id))
 
 
@@ -427,7 +426,6 @@ class PersonDetailTests(TestCase):
         self.assertIn('date_joined', self.data)
 
     def test_data_auth_amount(self):
-        self.assertEqual(self.data['auth_amount'], "{0:.4f}".format(self.person.auth_amount))
         self.assertEqual(self.data['auth_currency'], str(self.person.auth_currency.id))
 
     def test_data_status(self):
@@ -949,8 +947,28 @@ class PersonSettingTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['settings']['password_one_time']['type'], 'bool')
         # inherited
         self.assertEqual(data['settings']['accept_assign']['value'], None)
+        self.assertEqual(data['settings']['accept_assign']['type'], 'bool')
         self.assertEqual(data['settings']['accept_assign']['inherited_value'], False)
         self.assertEqual(data['settings']['accept_assign']['inherits_from'], 'role')
+        # inherited - from person's Role
+        self.assertEqual(data['settings']['auth_amount']['value'], None)
+        self.assertEqual(data['settings']['auth_amount']['type'], 'float')
+        self.assertEqual(data['settings']['auth_amount']['inherited_value'], self.role.auth_amount)
+        self.assertEqual(data['settings']['auth_amount']['inherits_from'], 'role')
+
+    def test_detail__auth_amount_not_inherited(self):
+        new_auth_amount = 25
+        self.person.auth_amount = new_auth_amount
+        self.person.save()
+
+        response = self.client.get('/api/admin/people/{}/'.format(self.person.id))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings']['auth_amount']['value'], new_auth_amount)
+        self.assertEqual(data['settings']['auth_amount']['type'], 'float')
+        self.assertNotIn('inherited_value', data['settings']['auth_amount'])
+        self.assertNotIn('inherits_from', data['settings']['auth_amount'])
 
     def test_update__non_inherited(self):
         serializer = PersonUpdateSerializer(self.person)
