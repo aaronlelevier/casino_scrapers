@@ -34,8 +34,9 @@ class UpperCaseCharField(models.CharField):
 
 class InheritedValueDescriptor(object):
     """
-    To look up inherited values from a related model that uses the same
-    field names, when the main model doesn't have a value for the field.
+    Resolves an inherited value. If the main model doesn't have the value,
+    then fetch the value from the related model. The field name must be the
+    same for this to work.
 
     :related_model:
         (str) name of the related model to inherit setting from if it
@@ -51,7 +52,7 @@ class InheritedValueDescriptor(object):
     def __get__(self, obj, type=None):
         if not getattr(obj, self.field):
             related_model = getattr(obj, self.related_model)
-            value = getattr(related_model, self.field)
+            value = self._getvalue(related_model)
             return {
                 'value': None,
                 'type': self.type,
@@ -59,8 +60,14 @@ class InheritedValueDescriptor(object):
                 'inherits_from': self.related_model
             }
         else:
-            value = getattr(obj, self.field)
+            value = self._getvalue(obj)
             return {
                 'value': value,
                 'type': self.type
             }
+
+    def _getvalue(self, object):
+        o = getattr(object, self.field)
+        if issubclass(o.__class__, models.Model):
+            return str(o.id)
+        return o

@@ -327,10 +327,12 @@ class Person(BaseModel, AbstractUser):
     def combined_settings(self):
         data = copy.copy(self.settings.combined_settings())
         data['auth_amount'] = self.proxy_auth_amount
+        data['auth_currency'] = self.proxy_auth_currency
         return data
 
     # proxy fields (won't create a field in the database)
     proxy_auth_amount = InheritedValueDescriptor('role', 'auth_amount', 'float')
+    proxy_auth_currency = InheritedValueDescriptor('role', 'auth_currency', 'uuid')
 
     # Managers
     objects = PersonManager()
@@ -434,8 +436,6 @@ class Person(BaseModel, AbstractUser):
     def _update_defaults(self):
         if not self.status:
             self.status = PersonStatus.objects.default()
-        if not self.auth_currency:
-            self.auth_currency = self.role.auth_currency
         if not self.locale:
             self.locale = Locale.objects.system_default()
         if not self.password_expire_date:

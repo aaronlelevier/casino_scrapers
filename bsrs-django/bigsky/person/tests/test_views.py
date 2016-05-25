@@ -5,10 +5,11 @@ import uuid
 from django.test import TestCase
 from django.contrib.auth.models import ContentType
 
+from model_mommy import mommy
 from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
-from model_mommy import mommy
 
+from accounting.models import Currency
 from category.models import Category
 from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
@@ -374,10 +375,6 @@ class PersonListTests(TestCase):
         self.assertEqual(data['title'], person.title)
         self.assertEqual(data['employee_id'], person.employee_id)
 
-    def test_data_auth_amount(self):
-        results = self.data['results'][0]
-        self.assertEqual(results['auth_currency'], str(self.person.auth_currency.id))
-
 
 class PersonDetailTests(TestCase):
 
@@ -424,9 +421,6 @@ class PersonDetailTests(TestCase):
         self.assertEqual(self.data['employee_id'], self.person.employee_id)
         self.assertIn('last_login', self.data)
         self.assertIn('date_joined', self.data)
-
-    def test_data_auth_amount(self):
-        self.assertEqual(self.data['auth_currency'], str(self.person.auth_currency.id))
 
     def test_data_status(self):
         self.assertEqual(self.data['status_fk'], str(self.person.status.id))
@@ -574,7 +568,6 @@ class PersonPutTests(APITestCase):
         self.assertEqual(data['role'], str(self.person.role.id))
         self.assertEqual(data['title'], self.person.title)
         self.assertEqual(data['employee_id'], self.person.employee_id)
-        self.assertEqual(data['auth_currency'], str(self.person.auth_currency.id))
 
     def test_no_change(self):
         # Confirm the ``self.data`` structure is correct
@@ -950,11 +943,16 @@ class PersonSettingTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['settings']['accept_assign']['type'], 'bool')
         self.assertEqual(data['settings']['accept_assign']['inherited_value'], False)
         self.assertEqual(data['settings']['accept_assign']['inherits_from'], 'role')
-        # inherited - from person's Role
+        # inherited - auth_amount - from person's Role
         self.assertEqual(data['settings']['auth_amount']['value'], None)
         self.assertEqual(data['settings']['auth_amount']['type'], 'float')
         self.assertEqual(data['settings']['auth_amount']['inherited_value'], self.role.auth_amount)
         self.assertEqual(data['settings']['auth_amount']['inherits_from'], 'role')
+        # inherited - auth_currency - from person's Role
+        self.assertEqual(data['settings']['auth_currency']['value'], None)
+        self.assertEqual(data['settings']['auth_currency']['type'], 'uuid')
+        self.assertEqual(data['settings']['auth_currency']['inherited_value'], str(self.role.auth_currency.id))
+        self.assertEqual(data['settings']['auth_currency']['inherits_from'], 'role')
 
     def test_detail__auth_amount_not_inherited(self):
         new_auth_amount = 25
@@ -969,6 +967,20 @@ class PersonSettingTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['settings']['auth_amount']['type'], 'float')
         self.assertNotIn('inherited_value', data['settings']['auth_amount'])
         self.assertNotIn('inherits_from', data['settings']['auth_amount'])
+
+    def test_detail__auth_currency_not_inherited(self):
+        currency = mommy.make(Currency, code='ABC')
+        self.person.auth_currency = currency
+        self.person.save()
+
+        response = self.client.get('/api/admin/people/{}/'.format(self.person.id))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings']['auth_currency']['value'], str(currency.id))
+        self.assertEqual(data['settings']['auth_currency']['type'], 'uuid')
+        self.assertNotIn('inherited_value', data['settings']['auth_currency'])
+        self.assertNotIn('inherits_from', data['settings']['auth_currency'])
 
     def test_update__non_inherited(self):
         serializer = PersonUpdateSerializer(self.person)

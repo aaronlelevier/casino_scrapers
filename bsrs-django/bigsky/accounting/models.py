@@ -49,7 +49,7 @@ class Currency(BaseModel):
 
     def _update_defaults(self):
         if not self.name_plural:
-            self.name_plural = capfirst(self.name+'s')
+            self.name_plural = capfirst(self.name+'s')[:50]
 
         if not self.symbol_native:
             self.symbol_native = self.symbol
