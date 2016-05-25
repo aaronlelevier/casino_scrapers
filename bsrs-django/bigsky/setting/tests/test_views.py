@@ -13,14 +13,14 @@ class SettingTests(APITestCase):
 
     def setUp(self):
         self.person = create_single_person()
+        self.setting = Setting.objects.get(name='general')
         self.client.login(username=self.person.username, password=PASSWORD)
-        self.setting = Setting.objects.create(name='general', settings=GENERAL_SETTINGS)
 
     def tearDown(self):
         self.client.logout()
 
     def test_list(self):
-        response = self.client.get('/api/admin/settings/')
+        response = self.client.get('/api/admin/settings/?name=general')
         data = json.loads(response.content.decode('utf8'))
 
         self.assertEqual(response.status_code, 200)

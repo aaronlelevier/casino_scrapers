@@ -365,9 +365,9 @@ class BootstrappedDataTests(TestCase):
     def test_settings(self):
         data = json.loads(self.response.context['settings'])
 
-        self.assertEqual(1, len(data))
-        self.assertEqual(str(self.settings.id), data[0]['id'])
-        self.assertEqual(self.settings.name, data[0]['name'])
+        self.assertEqual(3, len(data))
+        for name in ['general', 'role', 'person']:
+            self.assertIn(name, [x['name'] for x in data])
 
     def test_ticket_statuses(self):
         data = json.loads(self.response.context['ticket_statuses'])

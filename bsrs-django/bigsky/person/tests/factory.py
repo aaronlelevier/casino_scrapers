@@ -12,6 +12,8 @@ from location.models import (LocationLevel, Location, LocationStatus, LocationTy
     LOCATION_COMPANY, LOCATION_DISTRICT, LOCATION_REGION,)
 from location.tests.factory import create_location, create_locations, create_location_levels
 from person.models import Person, Role, PersonStatus
+from setting.tests.factory import (create_general_setting,
+    create_role_setting, create_person_setting)
 from translation.tests.factory import create_locale, LOCALES
 from translation.models import Locale
 from utils import create
@@ -51,13 +53,16 @@ def create_role(name=None, location_level=None, category=None):
     name = name or create._generate_chars()
     category = category or create_single_category(create._generate_chars())
 
+    # system default models needed
     Currency.objects.default()
+    create_general_setting()
 
     if not location_level:
         location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_REGION)
 
     role = mommy.make(Role, name=name, location_level=location_level)
     role.categories.add(category)
+    create_role_setting(role)
 
     return role
 
@@ -118,6 +123,7 @@ def create_single_person(name=None, role=None, location=None, status=None, local
             employee_id=create._generate_ph()
         )
         person.locations.add(location)
+        create_person_setting(person)
 
     return person
 

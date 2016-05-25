@@ -11,6 +11,7 @@ class SettingViewSet(BaseModelViewSet):
     model = Setting
     permission_classes = (IsAuthenticated,)
     queryset = Setting.objects.all()
+    filter_fields = [f.name for f in model._meta.get_fields()]
 
     def get_serializer_class(self):
         """

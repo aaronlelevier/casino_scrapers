@@ -15,7 +15,7 @@ class FactoryTests(TestCase):
     def test_create_general_setting(self):
         name = 'general'
 
-        ret = factory.create_general_setting()
+        ret = Setting.objects.get(name='general')
 
         self.assertIsInstance(ret, Setting)
         self.assertEqual(str(ret.id)[-3:], '001')
@@ -25,12 +25,9 @@ class FactoryTests(TestCase):
         # get-or-create: so call a 2nd time, returns a fresh instance
         # so don't get leaky state from 'dicts' across tests
         ret_two = factory.create_general_setting()
-        self.assertEqual(ret_two, ret)
         self.assertEqual(ret_two.name, ret.name)
 
     def test_create_role_setting(self):
-        self.assertIsNone(self.role.settings)
-
         ret = factory.create_role_setting(self.role)
 
         self.assertIsInstance(ret, Setting)
@@ -41,8 +38,6 @@ class FactoryTests(TestCase):
         self.assertEqual(self.role.settings.settings, ret.settings)
 
     def test_create_person_setting(self):
-        self.assertIsNone(self.person.settings)
-
         ret = factory.create_person_setting(self.person)
 
         self.assertIsInstance(ret, Setting)
