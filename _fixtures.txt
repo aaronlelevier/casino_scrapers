@@ -1,3 +1,4 @@
+manage.py loaddata fixtures/setting.json
 manage.py loaddata fixtures/contact.Country.json
 manage.py loaddata fixtures/contact.State.json
 manage.py loaddata fixtures/setting.Setting.json
