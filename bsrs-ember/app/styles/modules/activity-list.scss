@@ -1,175 +1,175 @@
 .activity-list-wrap{
+  border: $borderStyle;
+  border-width: 1px 0 0;
+  .activity-list-tabs{
+    margin: 0;
+    padding: 0;
     border: $borderStyle;
-    border-width: 1px 0 0;
-    .activity-list-tabs{
-        margin: 0;
-        padding: 0;
-        border: $borderStyle;
-        border-width: 0 0 1px 0;
-        overflow: auto;
-        ul{
-            margin: 0;
-            padding: 0;
-            li{
-                list-style-type: none;
-                float: left;
-                padding: 0 32px;
-                line-height: 38px;
-                height: 38px;
-                text-align: center;
-                cursor: pointer;
-                position: relative;
-                &:hover{
-                    border-bottom: 3px solid $light;
-                }
-                &.active{
-                    color: $activeColor;
-                    border-bottom: 3px solid $activeColor;
-                    cursor: default;
-                    &:hover{
-                        border-bottom: 3px solid $activeColor;
-                    }
-                }
-                .badge{
-                    position: absolute;
-                    top: 5px;
-                    right: 5px;
-                }
-            }
-        }
-    }
-    .activity-list{
-        overflow: hidden;
+    border-width: 0 0 1px 0;
+    overflow: auto;
+    ul{
+      margin: 0;
+      padding: 0;
+      li{
+        list-style-type: none;
+        float: left;
+        padding: 0 32px;
+        line-height: 38px;
+        height: 38px;
+        text-align: center;
+        cursor: pointer;
         position: relative;
-        padding-bottom: 50px;
-        border: $borderStyle;
-        border-width: 0 0 1px;
-        &:before{
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 49px;
-            display: block;
-            width: 1px;
-            border: $borderStyle;
-            border-width: 0 0 0 1px;
-            content: "";
+        &:hover{
+          border-bottom: 3px solid $light;
         }
+        &.active{
+          color: $activeColor;
+          border-bottom: 3px solid $activeColor;
+          cursor: default;
+          &:hover{
+            border-bottom: 3px solid $activeColor;
+          }
+        }
+        .badge{
+          position: absolute;
+          top: 5px;
+          right: 5px;
+        }
+      }
     }
-    .activity-spacer,
-    .activity-list-item{
-        margin: 0 0 0 50px;
-        padding: 15px 15px 15px 40px;
-        position: relative;
-        font-size: 1.15rem;
+  }
+  .activity-list{
+    overflow: hidden;
+    position: relative;
+    padding-bottom: 50px;
+    border: $borderStyle;
+    border-width: 0 0 1px;
+    &:before{
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 49px;
+      display: block;
+      width: 1px;
+      border: $borderStyle;
+      border-width: 0 0 0 1px;
+      content: "";
+    }
+  }
+  .activity-spacer,
+  .activity-list-item{
+    margin: 0 0 0 50px;
+    padding: 15px 15px 15px 40px;
+    position: relative;
+    font-size: 1.15rem;
 
+    .activity-icon{
+      position: absolute;
+      top: 10px;
+      left: -15px;
+      height: 30px;
+      width: 30px;
+      border-radius: 50%;
+      border: $borderStyle;
+      background-color: $light;
+      text-align: center;
+      line-height: 27px;
+      color: $darkGray;
+      i{
+        margin-left: -1px;
+      }
+    }
+    .activity-timestamp {
+      color: $medGray;
+    }
+    &:last-child{
+      padding-bottom: 0;
+    }
+    a{
+      &:link,
+      &:visited{
+        color: $dark;
+        font-weight: bold;
+      }
+    }
+    // Styling for File uploads and Comments only
+    &.activity-attachment_add,
+    &.activity-comment{
+      .activity-wrap{
+        padding: 15px;
+        border: $borderStyle;
+        font-size: 1.3rem;
         .activity-icon{
-            position: absolute;
-            top: 10px;
-            left: -15px;
-            height: 30px;
-            width: 30px;
-            border-radius: 50%;
-            border: $borderStyle;
-            background-color: $light;
-            text-align: center;
-            line-height: 27px;
-            color: $darkGray;
-            i{
-                margin-left: -1px;
-            }
+          height: 50px;
+          line-height: 45px;
+          width: 50px;
+          left: -25px;
+          top: 15px;
+          font-size: 2rem;
         }
         .activity-timestamp {
-            color: $medGray;
+          display: block;
+          font-size: 1.2rem;
         }
-        &:last-child{
-            padding-bottom: 0;
+        .activity-comment {
+          padding: 15px 0 5px;
+          display: block;
         }
-        a{
-            &:link,
-            &:visited{
-                color: $dark;
-                font-weight: bold;
-            }
-        }
-        // Styling for File uploads and Comments only
-        &.activity-attachment_add,
-        &.activity-comment{
-            .activity-wrap{
-                padding: 15px;
-                border: $borderStyle;
-                font-size: 1.3rem;
-                .activity-icon{
-                    height: 50px;
-                    line-height: 45px;
-                    width: 50px;
-                    left: -25px;
-                    top: 15px;
-                    font-size: 2rem;
-                }
-                .activity-timestamp {
-                    display: block;
-                    font-size: 1.2rem;
-                }
-                .activity-comment {
-                    padding: 15px 0 5px;
-                    display: block;
-                }
-                .activity-files {
-                    overflow: auto;
-                    .activity-file {
-                        float: left;
-                        max-width: 100px;
-                        text-align: center;
-                        font-size: 1rem;
-                        font-weight: normal;
-                        margin: 15px 15px 5px 0;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
-                        a{
-                            font-weight: normal;
-                            &:hover{
-                                text-decoration: none;
-                            }
+        .activity-files {
+          overflow: auto;
+          .activity-file {
+            float: left;
+            max-width: 100px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: normal;
+            margin: 15px 15px 5px 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            a{
+              font-weight: normal;
+              &:hover{
+                text-decoration: none;
+              }
 
-                            span.activity-thumb{
-                                display: block;
-                                width: 100px;
-                                height: 100px;
-                                line-height: 92px;
-                                text-align: center;
-                                font-size: 40px;
-                                border: $borderStyle;
-                                background: $light;
-                                color: $medGray;
-                                margin: 0 0 5px;
-                                overflow: hidden;
-                                &.t-ext-jpg{
-                                    border-color: $white;
-                                    background: $white;
-                                }
-                                img {
-                                    vertical-align: middle;
-                                    max-width: 102px;
-                                    max-height: 102px;
-                                }
-                            }
-                        }
-                    }
+              span.activity-thumb{
+                display: block;
+                width: 100px;
+                height: 100px;
+                line-height: 92px;
+                text-align: center;
+                font-size: 40px;
+                border: $borderStyle;
+                background: $light;
+                color: $medGray;
+                margin: 0 0 5px;
+                overflow: hidden;
+                &.t-ext-jpg{
+                  border-color: $white;
+                  background: $white;
                 }
+                img {
+                  vertical-align: middle;
+                  max-width: 102px;
+                  max-height: 102px;
+                }
+              }
             }
+          }
         }
+      }
     }
-    .activity-spacer{
-        padding-top: 20px;
-        padding-bottom: 0;
-    }
-    .activity-empty {
-        color: $gray;
-        padding: 40px 20px;
-        text-align: center;
-        font-size: 1.8rem;
-        font-weight: bold;
-    }
+  }
+  .activity-spacer{
+    padding-top: 20px;
+    padding-bottom: 0;
+  }
+  .activity-empty {
+    color: $gray;
+    padding: 40px 20px;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
 }

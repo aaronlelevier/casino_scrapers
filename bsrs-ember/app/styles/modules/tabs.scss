@@ -1,97 +1,97 @@
 nav.tabs{
-    font-size: 1.1rem;
-    position: absolute;
-    top: $tabTop;
-    right: 0;
-    left: $tabLeft;
-    height: $tabHeight;
+  font-size: 1.1rem;
+  position: absolute;
+  top: $tabTop;
+  right: 0;
+  left: $tabLeft;
+  height: $tabHeight;
+  overflow: hidden;
+  z-index: 1;
+  ul{
+    margin-left: 0px;
+    margin-right: -100px;
     overflow: hidden;
-    z-index: 1;
-    ul{
-        margin-left: 0px;
-        margin-right: -100px;
-        overflow: hidden;
-        li{
-            height: $tabHeight;
-            line-height: $tabHeight;
-            background: $light;
-            border: $borderStyle;
-            padding: 0;
-            float: left;
-            font-size: 1.2rem;
-            width: $tabWidth;
-            margin: 0 3px 0 0;
-            border-radius: $borderRadiusTop;
-            position: relative;
+    li{
+      height: $tabHeight;
+      line-height: $tabHeight;
+      background: $light;
+      border: $borderStyle;
+      padding: 0;
+      float: left;
+      font-size: 1.2rem;
+      width: $tabWidth;
+      margin: 0 3px 0 0;
+      border-radius: $borderRadiusTop;
+      position: relative;
 
-            -webkit-transition: width .25s ease-in-out;
-            -moz-transition: width .25s ease-in-out;
-            -o-transition: width .25s ease-in-out;
-            transition: width .25s ease-in-out;
+      -webkit-transition: width .25s ease-in-out;
+      -moz-transition: width .25s ease-in-out;
+      -o-transition: width .25s ease-in-out;
+      transition: width .25s ease-in-out;
 
-            a{
-                height: $tabHeightMinus2;
-                line-height: $tabHeightMinus2;
-                background: $light;
-                padding: 0 10px;
-                display: block;
-                color: $darkGray;
-                @include truncate;
-                &:hover,
-                &:focus{
-                    text-decoration: none;
-                    cursor: pointer;
-                }
-                &.active{
-                    height: $tabHeightMinus1;
-                    background: $lightGray;
-                    border-bottom-color: $lightGray;
-                }
-                &.active{
-                    &:hover{
-                        cursor: default;
-                    }
-                }
+      a{
+        height: $tabHeightMinus2;
+        line-height: $tabHeightMinus2;
+        background: $light;
+        padding: 0 10px;
+        display: block;
+        color: $darkGray;
+        @include truncate;
+        &:hover,
+        &:focus{
+          text-decoration: none;
+          cursor: pointer;
+        }
+        &.active{
+          height: $tabHeightMinus1;
+          background: $lightGray;
+          border-bottom-color: $lightGray;
+        }
+        &.active{
+          &:hover{
+            cursor: default;
+          }
+        }
+      }
+
+      .close-wrap{
+        .close-icon{
+          height: 12px;
+          width: 12px;
+          position: absolute;
+          top: 3px;
+          right: 3px;
+          color: $darkGray;
+          padding: 0;
+          &:hover{
+            color: $dark;
+            cursor: pointer;
+            text-decoration: none;
+          }
+          i{
+            display: block;
+            &.dirty{
+              color: $lightGreen;
+              &:hover{
+                color: $darkGreen;
+              }
             }
+          }
 
-            .close-wrap{
-                .close-icon{
-                    height: 12px;
-                    width: 12px;
-                    position: absolute;
-                    top: 3px;
-                    right: 3px;
-                    color: $darkGray;
-                    padding: 0;
-                    &:hover{
-                        color: $dark;
-                        cursor: pointer;
-                        text-decoration: none;
-                    }
-                    i{
-                        display: block;
-                        &.dirty{
-                            color: $lightGreen;
-                            &:hover{
-                                color: $darkGreen;
-                            }
-                        }
-                    }
+        }
+      }
+    }//li
 
-                }
-            }
-        }//li
-
-        li.new{
-            width: 36px;
-            text-align: center;
-            color: $darkGray;
-            &:hover{
-                color: $hoverColor;
-            }
-            &:active{
-                color: $activeColor;
-            }
-        }//li.new
-    }//ul
+    li.new{
+      width: 36px;
+      text-align: center;
+      color: $darkGray;
+      &:hover{
+        color: $hoverColor;
+      }
+      &:active{
+        color: $activeColor;
+      }
+    }//li.new
+  }//ul
 }//nav.tabs

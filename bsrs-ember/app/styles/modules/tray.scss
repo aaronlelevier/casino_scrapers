@@ -1,37 +1,37 @@
 aside.tray{
-    font-size: 1.4rem;
-    position: absolute;
-    top: $mainTop;
-    left: 0;
-    right: $mainLeft;
-    bottom: 0;
-    width: $mainLeft;
-    overflow: hidden;
+  font-size: 1.4rem;
+  position: absolute;
+  top: $mainTop;
+  left: 0;
+  right: $mainLeft;
+  bottom: 0;
+  width: $mainLeft;
+  overflow: hidden;
 
-    nav.trayMain{
-        ul{
-            li{
-                font-size: 2.33rem;
-                text-align: center;
-                margin: 15px 0 0;
-                color: $medGray;
+  nav.trayMain{
+    ul{
+      li{
+        font-size: 2.33rem;
+        text-align: center;
+        margin: 15px 0 0;
+        color: $medGray;
 
-                a {
-                    color: $medGray;
-                    //order matters w/ visited and active
-                    &:visited {
-                        color: $medGray;
-                    }
-                    &:hover{
-                        cursor: pointer;
-                        color: $hoverColor;
-                    }
-                    &.active{
-                        color: $activeColor;
-                        cursor: default;
-                    }
-                }//a
-            }//li
-        }//ul
-    }//nav
+        a {
+          color: $medGray;
+          //order matters w/ visited and active
+          &:visited {
+            color: $medGray;
+          }
+          &:hover{
+            cursor: pointer;
+            color: $hoverColor;
+          }
+          &.active{
+            color: $activeColor;
+            cursor: default;
+          }
+        }//a
+      }//li
+    }//ul
+  }//nav
 }//aside.tray
