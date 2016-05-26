@@ -4,7 +4,7 @@ header.main{
     top: 0;
     right: 0;
     left: 0;
-    background: $darkGray;
+    background: $menuColor;
     color: $light;
     line-height: $menuHeight;
     height: $menuHeight;
@@ -12,31 +12,31 @@ header.main{
     -moz-box-shadow: 0 0 7px $darkGray;
     box-shadow: 0 0 7px $darkGray;
     z-index: 3;
-    .bs-navbar {
+    nav.bs-navbar {
       height: inherit;
       margin-bottom: 0;
       border: none;
       border-radius: 0;
-      background: $darkGray;
+      background: $menuColor;
       color: $white;
       ul.nav-items {
-        width: 50%;
+        width: auto;
         padding: 0;
         margin: 0;
         height: $menuHeight;
-        display: flex;
+        // display: flex;
         float: left;
         li {
+          position: relative;
           list-style: none;
-          width: 100px;
-          vertical-align: top;
           text-align: center;
           float: left;
           a {
             display: inline-block;
-            width: 100%;
+            // width: 100%;
             color: $light;
             text-decoration: none;
+            padding: 0 2rem;
             &:hover {
               background: $hoverColor;
               color: $light;
@@ -45,13 +45,6 @@ header.main{
               background: $activeColor;
               color: $light;
             }
-            // need rethinking
-            // .badge {
-            //   position: absolute;
-            //   right: -7px;
-            //   top: 3px;
-            //   z-index: 1;
-            // }
           }
         }//li
       }//ul
@@ -60,10 +53,20 @@ header.main{
         float: right;
         width: auto;
         li {
-          width: 50px; 
+          a {
+            padding: 0 1.5rem;
+            .badge {
+              position: absolute;
+              right: -7px;
+              top: 3px;
+              z-index: 1;
+            }
+          }
         }
         li.current-user {
-          width: 150px;
+          height: $menuHeight;
+          text-align: left;
+          margin: 0 10px;
           a.dropdown-toggle {
             height: $menuHeight;
             padding: 0 25px 0 15px;
@@ -86,23 +89,48 @@ header.main{
             }
           }
           ul.dropdown-menu {
-            right: -1px;
-            border: $borderStyle;
-            border-radius: $borderRadiusBottom;
+            border: none;
+            border-radius: $borderRadius;
             padding: 0;
+            margin: .8rem 0 0;
+            background: $menuColor;
+            right: 0;
+            left: auto;
+            li.dropdown-menu-caret {
+              position: absolute;
+              right: 20px;
+              top: -4px;
+              width: 0; 
+              height: 0; 
+              border-left: 5px solid transparent;
+              border-right: 5px solid transparent;
+              border-bottom: 5px solid $menuColor;
+            }
             li {
-              width: 100%;
+              float: none;
+              text-align: left;
               a {
+                display: block;
                 line-height: 40px;
-                color: $darkGray;
+                color: $light;
                 font-size: 1.2rem;
-                padding: 0;
+                padding: 0 1.5rem;
                 &:hover {
                   color: $light;
                 }
                 &.active {
                   background: $activeColor;
                   color: $light;
+                }
+              }
+              &:nth-child(2) {
+                a {
+                  border-radius: $borderRadiusTop;
+                }
+              }
+              &:last-child {
+                a {
+                  border-radius: $borderRadiusBottom;
                 }
               }
             }
@@ -119,6 +147,7 @@ header.main{
 }
 
 .nav-brand {
+  font-size: 18px;
   height: $menuHeight;
   padding: 0 25px 0 15px;
   line-height: $menuHeight;

@@ -4,6 +4,7 @@
 	<span class="role t-current-user-role">{{instance.person.role.name}}</span>
 </a>
 <ul class="dropdown-menu">
+  <li class="dropdown-menu-caret"></li>
 	<li>{{#link-to "admin.people.person" instance.id title="Profile" class="t-person-profile-link" id="profile"}}Profile{{/link-to}}</li>
 	<li><a href="#" title="Log Out" class="t-logout" id="logout" {{action 'logout'}}>Logout</a></li>
 </ul>
