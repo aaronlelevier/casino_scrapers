@@ -42,4 +42,10 @@ amazon-ecs:latest
 aws-credentials:latest
 aws-java-sdk:latest
 jackson2-api:latest
-
+build-pipeline-plugin:latest
+pipeline-build-step:latest	
+pipeline-input-step:latest
+pipeline-stage-step:latest
+pipeline-stage-view:latest	
+pipeline-rest-api:latest
+pipeline-utility-steps:latest
