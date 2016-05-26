@@ -83,11 +83,13 @@ def create_roles():
             name = '{}-role'.format(location_level.name)
 
         try:
-            Role.objects.get(name=name, location_level=location_level)
+            role = Role.objects.get(name=name, location_level=location_level)
         except Role.DoesNotExist:
             role = mommy.make(Role, name=name, location_level=location_level)
             if category:
                 role.categories.add(category)
+        finally:
+            create_role_setting(role)
 
     return Role.objects.all()
 
@@ -206,6 +208,8 @@ def remove_all_locations(person):
 def create_all_people():
     if not Location.objects.filter(name=LOCATION_COMPANY):
         create_locations()
+
+    create_general_setting()
 
     # initial Roles
     create_roles()
