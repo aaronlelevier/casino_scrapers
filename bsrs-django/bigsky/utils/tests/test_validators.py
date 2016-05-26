@@ -90,6 +90,22 @@ class SettingsValidatorTests(APITestCase):
         self.assertEqual(error['test_contractor_email'], ['{} is not a valid email'.format('foo@bar')])
         self.assertEqual(error['test_contractor_phone'], ['{} is not a valid phone'.format('+1800')])
 
+    def test_coerce_float(self):
+        # Javascript `parseFloat` which returns 1.00 as "1.00" should be
+        # able to coerce the string to a float, and if that still fails,
+        # then it's a validation error
+        setting = create_general_setting()
+        serializer = SettingUpdateSerializer(setting)
+        data = copy.copy(serializer.data)
+        data['settings']['exchange_rates'] = '1.00'
+
+        response = self.client.put('/api/admin/settings/{}/'.format(setting.id),
+            data, format='json')
+
+        error = json.loads(response.content.decode('utf8'))
+        print(error)
+        self.assertEqual(response.status_code, 200)
+
 
 DIGITS = "Bobby123"
 NO_DIGITS = "django"

@@ -96,10 +96,18 @@ class SettingsValidator(object):
             return self.validate_email(value)
         elif type_str == 'phone':
             return self.validate_phone(value)
+        elif type_str == 'float':
+            return self.validate_float(value)
         else:
             required_type = self.get_required_type(type_str)
             if not isinstance(value, required_type):
                 return self.message.format(value=value, type=type_str)
+
+    def validate_float(self, value):
+        try:
+            value = float(value)
+        except ValueError:
+            return self.message.format(value=value, type='float')
 
     def validate_email(self, email):
         if not valid_email(email):
