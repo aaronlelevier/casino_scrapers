@@ -184,12 +184,12 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         # non-inherited
-        self.assertEqual(data['settings']['create_all']['value'], True)
-        self.assertEqual(data['settings']['create_all']['type'], 'bool')
+        self.assertEqual(data['settings']['settings']['create_all']['value'], True)
+        self.assertEqual(data['settings']['settings']['create_all']['type'], 'bool')
         # inherited
-        self.assertEqual(data['settings']['dashboard_text']['value'], None)
-        self.assertEqual(data['settings']['dashboard_text']['inherited_value'], 'Welcome')
-        self.assertEqual(data['settings']['dashboard_text']['inherits_from'], 'general')
+        self.assertEqual(data['settings']['settings']['dashboard_text']['value'], None)
+        self.assertEqual(data['settings']['settings']['dashboard_text']['inherited_value'], 'Welcome')
+        self.assertEqual(data['settings']['settings']['dashboard_text']['inherits_from'], 'general')
 
     def test_update__inherited_setting(self):
         serializer = RoleUpdateSerializer(self.role)
@@ -214,7 +214,7 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         # detail
         response = self.client.get('/api/admin/roles/{}/'.format(self.role.id))
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings']['dashboard_text']['inherits_from'], 'general')
+        self.assertEqual(data['settings']['settings']['dashboard_text']['inherits_from'], 'general')
 
         response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id), raw_data, format='json')
 
@@ -228,9 +228,9 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         # get
         response = self.client.get('/api/admin/roles/{}/'.format(self.role.id))
         data = json.loads(response.content.decode('utf8'))
-        self.assertIsNone(data['settings']['dashboard_text']['value'])
-        self.assertEqual(data['settings']['dashboard_text']['inherited_value'], raw_data['settings']['dashboard_text'])
-        self.assertEqual(data['settings']['dashboard_text']['inherits_from'], 'general')
+        self.assertIsNone(data['settings']['settings']['dashboard_text']['value'])
+        self.assertEqual(data['settings']['settings']['dashboard_text']['inherited_value'], raw_data['settings']['dashboard_text'])
+        self.assertEqual(data['settings']['settings']['dashboard_text']['inherits_from'], 'general')
 
 
 ### PERSON ###
@@ -482,6 +482,8 @@ class PersonDetailTests(TestCase):
 
     def test_current(self):
         # 'self.person' is the currently logged in 'Person'
+        self.assertIsInstance(self.person.settings, Setting)
+
         response = self.client.get('/api/admin/people/current/'.format(self.person.id))
 
         data = json.loads(response.content.decode('utf8'))
@@ -936,23 +938,23 @@ class PersonSettingTests(RoleSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         # non-inherited
-        self.assertEqual(data['settings']['password_one_time']['value'], False)
-        self.assertEqual(data['settings']['password_one_time']['type'], 'bool')
+        self.assertEqual(data['settings']['settings']['password_one_time']['value'], False)
+        self.assertEqual(data['settings']['settings']['password_one_time']['type'], 'bool')
         # inherited
-        self.assertEqual(data['settings']['accept_assign']['value'], None)
-        self.assertEqual(data['settings']['accept_assign']['type'], 'bool')
-        self.assertEqual(data['settings']['accept_assign']['inherited_value'], False)
-        self.assertEqual(data['settings']['accept_assign']['inherits_from'], 'role')
+        self.assertEqual(data['settings']['settings']['accept_assign']['value'], None)
+        self.assertEqual(data['settings']['settings']['accept_assign']['type'], 'bool')
+        self.assertEqual(data['settings']['settings']['accept_assign']['inherited_value'], False)
+        self.assertEqual(data['settings']['settings']['accept_assign']['inherits_from'], 'role')
         # inherited - auth_amount - from person's Role
-        self.assertEqual(data['settings']['auth_amount']['value'], None)
-        self.assertEqual(data['settings']['auth_amount']['type'], 'float')
-        self.assertEqual(data['settings']['auth_amount']['inherited_value'], self.role.auth_amount)
-        self.assertEqual(data['settings']['auth_amount']['inherits_from'], 'role')
+        self.assertEqual(data['settings']['settings']['auth_amount']['value'], None)
+        self.assertEqual(data['settings']['settings']['auth_amount']['type'], 'float')
+        self.assertEqual(data['settings']['settings']['auth_amount']['inherited_value'], self.role.auth_amount)
+        self.assertEqual(data['settings']['settings']['auth_amount']['inherits_from'], 'role')
         # inherited - auth_currency - from person's Role
-        self.assertEqual(data['settings']['auth_currency']['value'], None)
-        self.assertEqual(data['settings']['auth_currency']['type'], 'uuid')
-        self.assertEqual(data['settings']['auth_currency']['inherited_value'], str(self.role.auth_currency.id))
-        self.assertEqual(data['settings']['auth_currency']['inherits_from'], 'role')
+        self.assertEqual(data['settings']['settings']['auth_currency']['value'], None)
+        self.assertEqual(data['settings']['settings']['auth_currency']['type'], 'uuid')
+        self.assertEqual(data['settings']['settings']['auth_currency']['inherited_value'], str(self.role.auth_currency.id))
+        self.assertEqual(data['settings']['settings']['auth_currency']['inherits_from'], 'role')
 
     def test_detail__auth_amount_not_inherited(self):
         new_auth_amount = 25
@@ -963,10 +965,10 @@ class PersonSettingTests(RoleSetupMixin, APITestCase):
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings']['auth_amount']['value'], new_auth_amount)
-        self.assertEqual(data['settings']['auth_amount']['type'], 'float')
-        self.assertNotIn('inherited_value', data['settings']['auth_amount'])
-        self.assertNotIn('inherits_from', data['settings']['auth_amount'])
+        self.assertEqual(data['settings']['settings']['auth_amount']['value'], new_auth_amount)
+        self.assertEqual(data['settings']['settings']['auth_amount']['type'], 'float')
+        self.assertNotIn('inherited_value', data['settings']['settings']['auth_amount'])
+        self.assertNotIn('inherits_from', data['settings']['settings']['auth_amount'])
 
     def test_detail__auth_currency_not_inherited(self):
         currency = mommy.make(Currency, code='ABC')
@@ -977,10 +979,10 @@ class PersonSettingTests(RoleSetupMixin, APITestCase):
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings']['auth_currency']['value'], str(currency.id))
-        self.assertEqual(data['settings']['auth_currency']['type'], 'uuid')
-        self.assertNotIn('inherited_value', data['settings']['auth_currency'])
-        self.assertNotIn('inherits_from', data['settings']['auth_currency'])
+        self.assertEqual(data['settings']['settings']['auth_currency']['value'], str(currency.id))
+        self.assertEqual(data['settings']['settings']['auth_currency']['type'], 'uuid')
+        self.assertNotIn('inherited_value', data['settings']['settings']['auth_currency'])
+        self.assertNotIn('inherits_from', data['settings']['settings']['auth_currency'])
 
     def test_update__non_inherited(self):
         serializer = PersonUpdateSerializer(self.person)

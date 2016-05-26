@@ -113,7 +113,12 @@ class NestedSettingUpdateMixin(object):
         for k,v in settings.items():
             init_settings[k]['value'] = v
 
-        setting_instance = Setting.objects.get(id=settings_obj['id'])
+        # retrieve a current DB copy of the instance in order to
+        # get the unaltered Setting related object.
+        klass = instance.__class__
+        i = klass.objects.get(id=instance.id)
+
+        setting_instance = i.settings
         setting_instance.settings = settings
         setting_instance.save()
 
@@ -127,7 +132,7 @@ class NestedSettingsToRepresentationMixin(object):
     def to_representation(self, instance):
         data = super(NestedSettingsToRepresentationMixin, self).to_representation(instance)
         if instance.settings:
-            data['settings'] = instance.combined_settings()
+            data['settings']['settings'] = instance.combined_settings()
         return data
 
 

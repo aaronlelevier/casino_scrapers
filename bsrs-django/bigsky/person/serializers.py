@@ -71,7 +71,7 @@ PERSON_FIELDS = (
 
 
 PERSON_DETAIL_FIELDS = PERSON_FIELDS + ('locale', 'locations', 'last_login', 'date_joined',
-    'emails', 'phone_numbers', 'addresses',)
+    'emails', 'phone_numbers', 'addresses', 'settings',)
 
 
 class PersonCreateSerializer(RemovePasswordSerializerMixin, BaseCreateSerializer):
@@ -123,7 +123,7 @@ class PersonDetailSerializer(NestedSettingsToRepresentationMixin, serializers.Mo
 
     class Meta:
         model = Person
-        fields = PERSON_DETAIL_FIELDS + ('settings',)
+        fields = PERSON_DETAIL_FIELDS
 
     @staticmethod
     def eager_load(queryset):
