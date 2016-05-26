@@ -33,7 +33,7 @@ export default Ember.Controller.extend({
      * @function dtPathMunge modifies ticket dt_path attribute that sets dt {id: xxx} in json object in order to allow user to have breadcrumbs
      * @param action - send off patch request if action is 'patch', post if action is undefined
      * patch may send current DTD id (bail on existing) or link destination (click button) (patch_id); post always goes to next dtd based on link dest id
-     * @param fieldsObj - persist field and option state in dt_path
+     * @param fieldsObj - persist field and option state in dt_path. optionValues are all options related to that field that came back from the server
      */
     linkClick(link, ticket, dtd_model, action, fieldsObj) {
       dtPathMunge(ticket, dtd_model, fieldsObj, link, this.get('simpleStore'));

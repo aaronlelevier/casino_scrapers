@@ -55,7 +55,7 @@ var BSRS_TICKET_FACTORY = (function() {
       assignee: this.people_fixtures.get(),
       location: location,
       attachments: [],
-      dt_path: dt_path || [{
+      dt_path: dt_path || [{ //need to improve this dt_path object to reflect what it will actually look like (dtd needs more)
         ticket: {
           id: this.ticket.idOne,
           requester: '',

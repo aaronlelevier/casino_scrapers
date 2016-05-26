@@ -21,6 +21,7 @@ export default Ember.Component.extend({
      * values determine joined ticket request value when patched up to server
      * fields and options save in ticket dt_path object in dtPathMunge method
      * fieldsObj is updated with new fields in response of patch
+     * optionValues - all options related to a field. Should just be those selected
      */
     this._super(...arguments);
     const dt_id = this.get('model').get('id');
@@ -28,29 +29,30 @@ export default Ember.Component.extend({
     const existing_ticket_request = this.get('ticket.request');
     const dt_path = this.get('ticket.dt_path');
     const fieldsObj = this.get('fieldsObj') || new Map(); 
-    //Initial Map() setup
+    //Initial Map() setup - Current DTD
     fields.forEach((field) => {
       const field_id = field.get('id');
-      const optionValues = field.get('options').map((option) => {
-        return option.get('id');
-      });
-      fieldsObj.set(field_id, { dtd_id: dt_id, label: field.get('label'), num: 1, value: '', required: field.get('required'), optionValues: optionValues });
+      // const optionValues = field.get('options').map((option) => {
+      //   return option.get('id');
+      // });
+      fieldsObj.set(field_id, { dtd_id: dt_id, label: field.get('label'), num: 1, value: '', required: field.get('required'), }); //optionValues: optionValues });
     }); 
     /* jshint ignore:start */
     dt_path && dt_path.forEach((dt_obj) => {
       // fields && options - set displayValue and isChecked on dt_path (existing) fieldsObjs to handle the case when user navigates back
+      // select needs an option for that field to attach to and set it to selected. field.optionSelected. Cant use m2m setup as it is acting like a belongsTo when selected
       dt_obj['dtd']['fields'] && dt_obj['dtd']['fields'].forEach((dt_field) => {
         const _id = dt_field.id;
         const store = this.get('simpleStore');
 
-        const field = store.find('field', {id: _id});
         store.push('field', { id: _id, displayValue: dt_field.value });
 
-        const dtOptionValues = [];
+        // const dtOptionValues = [];
+        //TODO: this is setting each option with isChecked.  This is wrong
         dt_field['options'] && dt_field['options'].forEach((dt_option_id) => {
-          const option = store.find('option', {id: dt_option_id});
+          // const option = store.find('option', {id: dt_option_id});
           store.push('option', { id: dt_option_id, isChecked: true });
-          dtOptionValues.push(dt_option_id);
+          // dtOptionValues.push(dt_option_id);
         });
         //Old Map() setup from (dt_path) thus num = 0 since is fullfilled
         fieldsObj.set(_id, { dtd_id: dt_obj['dtd']['id'], label: dt_field.label, num: 0, value: dt_field.value, required: dt_field.required, optionValues: dt_field['options'] });
@@ -134,9 +136,11 @@ export default Ember.Component.extend({
     const fieldObj = fieldsObj.get(field.get('id'));
     const optionValues = fieldObj.optionValues || [];
     const indx = optionValues.indexOf(option_id);
-    // if option already in array from initial setup or dt_path && unselected, remove
+    // if option already in array from initial setup or dt_path && no value passed, remove
     if (indx > -1 && !value) {
       optionValues.splice(indx, 1);
+    } else if (indx === -1 && value) {
+      optionValues.push(option_id);
     } 
     const store = this.get('simpleStore');
     let fieldValue = optionValues.reduce((prev, opt) => {

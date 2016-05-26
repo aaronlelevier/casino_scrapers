@@ -30,13 +30,11 @@ var BSRS_DTD_FACTORY = (function() {
           type: this.field.typeSix, // because `typeOne` is text which has no options
           required: this.field.requiredTwo,
           order: this.field.orderOne,
-          options: [
-            {
+          options: [{
               id: option_id,
               text: this.option.textOne,
               order: this.option.orderOne
-            }
-          ]
+            }]
         }
       ],
       link_type: this.dtd.linkTypeOne,
