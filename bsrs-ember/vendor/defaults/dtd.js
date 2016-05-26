@@ -33,6 +33,8 @@ var BSRS_DTD_DEFAULTS_OBJECT = (function() {
       linkTypeTwo: 'admin.dtd.link_type.links',
       attachmentOneId: '40f530c4-ce6c-4724-9cfd-37a16e787001',
       attachmentTwoId: '40f530c4-ce6c-4724-9cfd-37a16e787002',
+
+      fieldTypeSelectValue: 'Im selected',
     };
   };
   return factory;

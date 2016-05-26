@@ -8,18 +8,17 @@ export default Ember.Component.extend({
   simpleStore: Ember.inject.service(),
   /* 
    * @method init - fieldsObj setup
-   * contains {key}-(id of field), {num}-(0 or 1), {value}-ongoing value of field, {required}, and {label}
-   * num of 0 indicates fields has been fullfilled, 1 means unfullfilled
    * existing_ticket_request strings are parsed and a Map object is created for deep linking. May or may not contain a label
    * dt_path sets properties on fields/options to persist values on deep link
-   * displayValue is set for fields and options to display value if deep link or user navigates back
+   * displayValue is set for fields and options to display value in template if deep link or user navigates back
    */
   init() {
     /*
      * @property fieldsObj - used to keep track of state of field (and options if present)
-     * key = field id / value is { num (0 or 1), value, label of field, required, and options }
+     * key = field id ... value is { num (0 or 1), value (based on user action), label of field, required, and options (array of ids)}
+     * num of 0 indicates fields has been fullfilled, 1 means unfullfilled
      * field type is not needed since field id from template will be mapped to field in fieldsObj
-     * values determine joined ticket request value when patched up
+     * values determine joined ticket request value when patched up to server
      * fields and options save in ticket dt_path object in dtPathMunge method
      * fieldsObj is updated with new fields in response of patch
      */
@@ -29,22 +28,6 @@ export default Ember.Component.extend({
     const existing_ticket_request = this.get('ticket.request');
     const dt_path = this.get('ticket.dt_path');
     const fieldsObj = this.get('fieldsObj') || new Map(); 
-    if (existing_ticket_request) {
-      //this covers existing fields and options values
-      //TODO: what if label is the different?
-      //TODO: what if existing_ticket_request_value gets mutated by user going back? No way to find it via the field.id, thus lives in fieldObjs forever
-      //'name: yes, age: no'
-      // const request_label = existing_ticket_request.split(/[:]/)[0];
-      // let request_value = existing_ticket_request.match(/:(.*),?/);
-      // if (request_value) {
-      //   request_value = request_value && request_value[1].trim();
-      //   request_value = request_value.replace(`${request_label}:`, '').trim();
-      // }
-      // if (request_label) {
-      //   console.log('label: ', request_label, 'request_value: ', request_value, 'request', existing_ticket_request);
-      //   fieldsObj.set(this.get('uuid').v4(), { label: request_value ? request_label : '', num: 0, value: request_value || request_label });
-      // }
-    }
     //Initial Map() setup
     fields.forEach((field) => {
       const field_id = field.get('id');

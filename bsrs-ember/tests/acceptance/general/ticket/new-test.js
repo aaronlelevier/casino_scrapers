@@ -43,7 +43,7 @@ const SEARCH = '.ember-power-select-search input';
 
 let application, store, list_xhr, location_xhr, people_xhr, original_uuid, counter;
 
-module('scott Acceptance | ticket new test', {
+module('Acceptance | ticket new test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
