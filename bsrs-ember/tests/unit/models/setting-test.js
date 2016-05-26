@@ -143,3 +143,13 @@ test('serialize', (assert) => {
     assert.equal(serialize.settings.dt_start_key, SD.dt_start_key);
 
 });
+
+test('serialize casts exchange_rates input as a 2 digit float', assert => {
+    setting = store.push('setting', {
+        id: SD.id,
+        exchange_rates: "1.00"
+    });
+    var serialize = setting.serialize();
+    // debugger;
+    assert.deepEqual(serialize.settings.exchange_rates, parseFloat("1.00", 10).toFixed(4));
+});
