@@ -5,30 +5,19 @@ import windowProxy from 'bsrs-ember/utilities/window-proxy';
 import config from 'bsrs-ember/config/environment';
 
 export default Ember.Component.extend({
-    simpleStore: Ember.inject.service(),
-    tagName: 'li',
-    classNames: ['dropdown current-user t-current-user'],
-    personCurrent: Ember.inject.service(),
-    instance: Ember.computed(function(){
-        var service = this.get('personCurrent');
-        return service.get('model');
-    }),
-    actions: {
-        logout() {
-            Ember.$.get('/api-auth/logout/', function(data){
-                windowProxy.changeLocation('/');
-            });
-            /*
-            TODO:
-
-            The ember promise mixin expects JSON back
-            Django is currently returning html
-
-            PromiseMixin.xhr('/api-auth/logout/', 'GET').then(() => {
-                windowProxy.changeLocation('/login');
-            });
-            */
-
-        }
+  simpleStore: Ember.inject.service(),
+  tagName: 'li',
+  classNames: ['dropdown current-user t-current-user'],
+  personCurrent: Ember.inject.service(),
+  instance: Ember.computed(function(){
+    var service = this.get('personCurrent');
+    return service.get('model');
+  }),
+  actions: {
+    logout() {
+      Ember.$.get('/api-auth/logout/', function(data){
+        windowProxy.changeLocation('/');
+      });
     }
+  }
 });

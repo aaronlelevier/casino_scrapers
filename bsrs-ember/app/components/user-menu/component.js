@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-    tagName: 'ul',
-    classNames: ['nav navbar-nav navbar-right'],
+  tagName: 'ul',
+  classNames: ['nav-items-right'],
 });
