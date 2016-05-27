@@ -7,6 +7,11 @@ from django.db import models
 from utils.models import BaseModel, ToDictNameMixin
 
 
+SETTING_TITLE_GENERAL = 'admin.setting.name.general'
+SETTING_TITLE_PERSON = 'admin.setting.name.person'
+SETTING_TITLE_ROLE = 'admin.setting.name.role'
+
+
 class Setting(ToDictNameMixin, BaseModel):
     '''
     ``Setting`` records will be either Standard or Custom. and be set
@@ -15,6 +20,8 @@ class Setting(ToDictNameMixin, BaseModel):
     For Person who inherits Settings from a particular Role, use
     ``related_id`` as the Role's ID in combination with name='role'
     '''
+    title = models.CharField(max_length=100, null=True,
+        help_text="i18n key used on front end. General settings uses this, others may as well.")
     name = models.CharField(max_length=100, null=True)
     related_id = models.UUIDField(null=True)
     settings = JSONField(blank=True, default={})

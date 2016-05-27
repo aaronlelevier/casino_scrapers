@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from person.tests.factory import create_single_person
+from setting import models as setting_models
 from setting.tests.factory import (create_general_setting,
     create_role_setting, create_person_setting)
 
@@ -13,6 +14,11 @@ class SettingModelTests(TestCase):
         self.role = self.person.role
         self.role_setting = create_role_setting(self.role)
         self.person_setting = create_person_setting(self.person)
+
+    def test_titles(self):
+        self.assertEqual(setting_models.SETTING_TITLE_GENERAL, 'admin.setting.name.general')
+        self.assertEqual(setting_models.SETTING_TITLE_PERSON, 'admin.setting.name.person')
+        self.assertEqual(setting_models.SETTING_TITLE_ROLE, 'admin.setting.name.role')
 
     def test_combined_settings__no_override(self):
         ret = self.setting.combined_settings()

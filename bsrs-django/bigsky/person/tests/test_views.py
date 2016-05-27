@@ -183,6 +183,9 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings']['id'], str(self.role.settings.id))
+        self.assertEqual(data['settings']['name'], self.role.settings.name)
+        self.assertEqual(data['settings']['title'], self.role.settings.title)
         # non-inherited
         self.assertEqual(data['settings']['settings']['create_all']['value'], True)
         self.assertEqual(data['settings']['settings']['create_all']['type'], 'bool')
@@ -937,6 +940,9 @@ class PersonSettingTests(RoleSetupMixin, APITestCase):
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings']['id'], str(self.person.settings.id))
+        self.assertEqual(data['settings']['name'], self.person.settings.name)
+        self.assertEqual(data['settings']['title'], self.person.settings.title)
         # non-inherited
         self.assertEqual(data['settings']['settings']['password_one_time']['value'], False)
         self.assertEqual(data['settings']['settings']['password_one_time']['type'], 'bool')

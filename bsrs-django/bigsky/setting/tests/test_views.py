@@ -36,6 +36,7 @@ class SettingTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['id'], str(self.setting.id))
         self.assertEqual(data['name'], self.setting.name)
+        self.assertEqual(data['title'], self.setting.title)
         # settings
         for key in GENERAL_SETTINGS.keys():
             for field in ['value', 'type']:

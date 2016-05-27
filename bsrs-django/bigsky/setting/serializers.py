@@ -16,7 +16,7 @@ class SettingSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Setting
-        fields = ('id', 'name', 'settings',)
+        fields = ('id', 'name', 'title', 'settings',)
 
 
 class SettingUpdateSerializer(BaseCreateSerializer):
