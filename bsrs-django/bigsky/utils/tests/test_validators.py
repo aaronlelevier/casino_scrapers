@@ -11,9 +11,10 @@ from location.serializers import LocationUpdateSerializer
 from person.tests.factory import create_person, create_single_person, PASSWORD
 from setting.serializers import SettingUpdateSerializer
 from setting.tests.factory import create_general_setting
-from utils.validators import (regex_check_contains, contains_digit, contains_upper_char,
+from utils.validators import (
+    regex_check_contains, contains_digit, contains_upper_char,
     contains_lower_char, contains_special_char, contains_no_whitespaces,
-    SettingsValidator, valid_email, valid_phone,)
+    SettingsValidator, valid_email, valid_phone, SettingsValidator)
 
 
 class UniqueForActiveValidatorTests(APITestCase):
@@ -65,6 +66,9 @@ class SettingsValidatorTests(APITestCase):
 
     def tearDown(self):
         self.client.logout()
+
+    def test_types(self):
+        self.assertIsInstance(SettingsValidator.types, dict)
 
     def test_main(self):
         self.data['settings'] = {

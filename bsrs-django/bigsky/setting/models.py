@@ -69,7 +69,6 @@ class Setting(ToDictNameMixin, BaseModel):
                 inherited_setting_obj = inherited_setting_objs[k]
                 settings[k].update({
                     'value': None,
-                    'type': inherited_setting_obj['type'],
                     # 'inherits_from' already exists in 'role' setting
                     'inherited_value': inherited_setting_obj['value']
                     })

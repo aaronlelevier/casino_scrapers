@@ -24,17 +24,14 @@ class SettingModelTests(TestCase):
         ret = self.setting.combined_settings()
 
         self.assertEqual(ret['dashboard_text']['value'], 'Welcome')
-        self.assertEqual(ret['dashboard_text']['type'], 'str')
 
     def test_combined_settings__role_has_overrides(self):
         ret = self.role_setting.combined_settings()
 
         # not overridden
         self.assertEqual(ret['create_all']['value'], True)
-        self.assertEqual(ret['create_all']['type'], 'bool')
         # overridden
         self.assertEqual(ret['dashboard_text']['value'], None)
-        self.assertEqual(ret['dashboard_text']['type'], 'str')
         self.assertEqual(ret['dashboard_text']['inherits_from'], 'general')
         self.assertEqual(ret['dashboard_text']['inherited_value'], 'Welcome')
 
@@ -49,7 +46,6 @@ class SettingModelTests(TestCase):
         ret = person_setting.combined_settings()
 
         self.assertEqual(ret['accept_assign']['value'], None)
-        self.assertEqual(ret['accept_assign']['type'], 'bool')
         self.assertEqual(ret['accept_assign']['inherits_from'], 'role')
         self.assertEqual(ret['accept_assign']['inherited_value'], False)
 
@@ -62,10 +58,8 @@ class SettingModelTests(TestCase):
 
         # not overridden
         self.assertEqual(ret['password_one_time']['value'], False)
-        self.assertEqual(ret['password_one_time']['type'], 'bool')
         # overridden
         self.assertEqual(ret['accept_assign']['value'], None)
-        self.assertEqual(ret['accept_assign']['type'], 'bool')
         self.assertEqual(ret['accept_assign']['inherits_from'], 'role')
         self.assertEqual(ret['accept_assign']['inherited_value'], True)
 

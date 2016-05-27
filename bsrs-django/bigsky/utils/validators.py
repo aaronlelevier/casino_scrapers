@@ -51,6 +51,23 @@ class SettingsValidator(object):
 
     message = _("{value} must be type {type}")
 
+    types = {
+        "company_code": "str",
+        "company_name": "str",
+        "dashboard_text": "str",
+        "login_grace": "int",
+        "exchange_rates": "float",
+        "modules": "list",
+        "test_mode": "bool",
+        "test_contractor_email": "email",
+        "test_contractor_phone": "phone",
+        "dt_start_key": "str",
+        "create_all": "bool",
+        "accept_assign": "bool",
+        "accept_notify": "bool",
+        "password_one_time": "bool"
+    }
+
     def set_context(self, serializer_field):
         """
         This hook is called by the serializer instance,
@@ -71,7 +88,7 @@ class SettingsValidator(object):
                     # for the setting, we're going to use the default.
                     pass
                 else:
-                    type_str = self.init_settings[k]['type']
+                    type_str = self.types[k]
                     related_model = self.init_settings[k].get('related_model', None)
 
                     error = self.validate_new_value(value, type_str=type_str,

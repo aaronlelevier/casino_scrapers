@@ -40,3 +40,9 @@ class SettingsTests(TestCase):
 
         for k in keys:
             self.assertIn(k, PERSON_SETTINGS)
+
+    def test_type_not_in_defaults(self):
+        settings = [GENERAL_SETTINGS, PERSON_SETTINGS, ROLE_SETTINGS]
+        for setting in settings:
+            for k,v in setting.items():
+                self.assertNotIn('type', v)

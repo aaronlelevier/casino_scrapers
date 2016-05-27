@@ -39,11 +39,11 @@ class SettingTests(APITestCase):
         self.assertEqual(data['title'], self.setting.title)
         # settings
         for key in GENERAL_SETTINGS.keys():
-            for field in ['value', 'type']:
-                self.assertEqual(
-                    data['settings'][key][field],
-                    GENERAL_SETTINGS[key][field]
-                )
+            self.assertEqual(
+                data['settings'][key]['value'],
+                GENERAL_SETTINGS[key]['value']
+            )
+            self.assertNotIn('type', data['settings'][key])
 
     def test_create(self):
         raw_data = {
@@ -63,7 +63,7 @@ class SettingTests(APITestCase):
         new_dashboard_text = "Bueno"
         serializer = SettingSerializer(self.setting)
         raw_data = serializer.data
-        self.assertEqual(raw_data['settings']['dashboard_text'], {'value': 'Welcome', 'type': 'str'})
+        self.assertEqual(raw_data['settings']['dashboard_text'], {'value': 'Welcome'})
         raw_data['settings'] = {
             'dashboard_text': new_dashboard_text,
         }
@@ -73,11 +73,10 @@ class SettingTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['settings']['dashboard_text']['value'], new_dashboard_text)
-        self.assertEqual(data['settings']['dashboard_text']['type'], 'str')
+        self.assertNotIn('type', data['settings']['dashboard_text'])
 
         # next GET request, desired structure is maintained
         response = self.client.get('/api/admin/settings/{}/'.format(self.setting.id))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['settings']['dashboard_text']['value'], new_dashboard_text)
-        self.assertEqual(data['settings']['dashboard_text']['type'], 'str')
