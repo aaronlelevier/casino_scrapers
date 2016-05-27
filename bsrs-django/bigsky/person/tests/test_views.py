@@ -195,6 +195,12 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         raw_data['settings']['settings'].update({
             'dashboard_text': new_dashboard_text
         })
+        # remove all keys on 'settings' object except for 'settings' jsonfield
+        keys = [k for k in raw_data['settings'].keys() if k != 'settings']
+        for k in keys:
+            raw_data['settings'].pop(k, None)
+        self.assertEqual(len(raw_data['settings']), 1)
+        self.assertIsInstance(raw_data['settings'], dict)
 
         response = self.client.put('/api/admin/roles/{}/'.format(self.role.id), raw_data, format='json')
 
@@ -212,6 +218,8 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         response = self.client.get('/api/admin/roles/{}/'.format(self.role.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['settings']['dashboard_text']['inherits_from'], 'general')
+        # remove all keys on 'settings' object except for 'settings' jsonfield
+        keys = [k for k in raw_data['settings'].keys() if k != 'settings']
 
         response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id), raw_data, format='json')
 

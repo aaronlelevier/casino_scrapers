@@ -1,5 +1,7 @@
 import copy
 
+from rest_framework import serializers
+
 from setting.models import Setting
 from utils.serializers import BaseCreateSerializer
 from utils.validators import SettingsValidator
@@ -13,6 +15,8 @@ class SettingListSerializer(BaseCreateSerializer):
 
 
 class SettingSerializer(BaseCreateSerializer):
+
+    id = serializers.UUIDField(required=False)
 
     class Meta:
         model = Setting
