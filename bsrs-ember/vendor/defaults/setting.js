@@ -30,6 +30,7 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             test_contractor_phoneOther: '+18587154000',
             dt_start_keyOther: 'StartTwo',
 
+            // Role
             create_allOther: false,
             accept_assignOther: true,
             accept_notifyOther: true
@@ -43,86 +44,66 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             title: 'admin.setting.name.general',
             settings: {
                 company_code: {
-                    type: 'str',
                     value: one.company_code
                 },
                 company_name: {
-                    type: 'str',
                     value: one.company_name
                 },
                 dashboard_text: {
-                    type: 'str',
                     value: one.dashboard_text
                 },
                 login_grace: {
-                    type: 'int',
                     value: one.login_grace
                 },
                 exchange_rates: {
-                    type: 'float',
                     value: one.exchange_rates
                 },
                 modules: {
                     value: one.modules,
-                    type: 'list',
                 },
                 test_mode: {
                     value: one.test_mode,
-                    type: 'bool',
                 },
                 test_contractor_email: {
                     value: one.test_contractor_email,
-                    type: 'email',
                 },
                 test_contractor_phone: {
                     value: one.test_contractor_phone,
-                    type: 'phone',
                 },
                 dt_start_key: {
                     value: one.dt_start_key,
-                    type: 'str',
                 }
             },
             settingsOther: {
                 company_code: {
-                    type: 'str',
                     value: one.company_codeOther
                 },
                 company_name: {
-                    type: 'str',
                     value: other.company_nameOther
                 },
                 dashboard_text: {
-                    type: 'str',
                     value: other.dashboard_textOther
                 },
                 login_grace: {
-                    type: 'int',
                     value: other.login_graceOther
                 },
                 exchange_rates: {
-                    type: 'float',
                     value: one.exchange_ratesOther
                 },
                 modules: {
                     value: one.modulesOther,
-                    type: 'list',
                 },
                 test_mode: {
                     value: one.test_modeOther,
-                    type: 'bool',
                 },
                 test_contractor_email: {
                     value: one.test_contractor_emailOther,
-                    type: 'email',
                 },
                 test_contractor_phone: {
                     value: one.test_contractor_phoneOther,
-                    type: 'phone',
                 },
                 dt_start_key: {
                     value: one.dt_start_keyOther,
-                    type: 'str',
                 }
             }
         });

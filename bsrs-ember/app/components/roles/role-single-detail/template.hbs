@@ -66,8 +66,8 @@
           <div class="row">
             <div class="col-md-12">
               {{#form-group title="admin.setting.dashboard_text" for="dashboard_text"}}
-              <p class="inherited-msg t-inherited-msg-dashboard_text">{{t 'crud.inherited_from' from=model.dashboard_text_inherits_from}}</p>
-              {{textarea autoresize=true placeholder=(t 'crud.default_value' value=model.dashboard_text_inherited_value) value=model.dashboard_text class="form-control t-settings-dashboard_text" id="dashboard_text"}}
+              <p class="inherited-msg t-inherited-msg-dashboard_text">{{t 'crud.inherited_from' from=model.settings_object.dashboard_text.inherits_from}}</p>
+              {{textarea autoresize=true placeholder=(t 'crud.default_value' value=model.settings_object.dashboard_text.inherited_value) value=model.dashboard_text class="form-control t-settings-dashboard_text" id="dashboard_text"}}
               {{/form-group}}
             </div>
           </div>

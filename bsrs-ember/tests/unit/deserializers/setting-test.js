@@ -24,7 +24,6 @@ test('setting correctly deserialized settings object', (assert) => {
     });
     assert.equal(setting.get('name'), SD.name);
     assert.equal(setting.get('title'), SD.title);
-    assert.equal(setting.get('related_id'), SD.related_id);
     //settings
     assert.equal(setting.get('company_code'), SD.company_code);
     assert.equal(setting.get('company_name'), SD.company_name);

@@ -27,7 +27,6 @@ var RoleModel = Model.extend(NewMixin, OptConf, {
   create_all: attr(),
   accept_assign: attr(),
   accept_notify: attr(),
-  // settings: end
   settings:  Ember.computed(function() {
     return {
       dashboard_text: this.get('dashboard_text'),
@@ -36,6 +35,8 @@ var RoleModel = Model.extend(NewMixin, OptConf, {
       accept_notify: this.get('accept_notify')
     };
   }),
+  settings_object: undefined, // the POJO from Django where inherited info is stored
+  // settings: end
   role_categories_fks: [],
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'categoriesIsDirty', function() {
     return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('categoriesIsDirty');

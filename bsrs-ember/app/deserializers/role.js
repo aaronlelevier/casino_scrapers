@@ -79,11 +79,10 @@ var copySettingsToFirstLevel = (obj) => {
       var key = keys[i];
       if(key === 'value') {
         newState[s] = obj.settings[s][key];
-      } else {
-        newState[s.concat('_'+key)] = obj.settings[s][key];
       }
     }
   }
+  newState.settings_object = obj.settings;
   delete obj.settings;
   return Object.assign({}, obj, newState);
 };

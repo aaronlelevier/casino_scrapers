@@ -31,21 +31,17 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
       settings: {
         dashboard_text:{
           value: null,
-          type: 'str',
           inherited_value: 'Welcome',
           inherits_from: 'general'
         },
         create_all: {
           value: this.setting.create_all,
-          type: 'bool'
         },
         accept_assign: {
           value: this.setting.accept_assign,
-          type: 'bool'
         },
         accept_notify: {
           value: this.setting.accept_notify,
-          type: 'bool'
         }
       }
     };
