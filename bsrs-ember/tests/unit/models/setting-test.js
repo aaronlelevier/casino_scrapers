@@ -119,7 +119,6 @@ test('serialize', (assert) => {
         id: SD.id,
         name: SD.name,
         title: SD.title,
-        related_id: SD.related_id_role,
         company_code: SD.company_code,
         company_name: SD.company_name,
         dashboard_text: SD.dashboard_text,
@@ -135,7 +134,6 @@ test('serialize', (assert) => {
     assert.equal(serialize.id, SD.id);
     assert.equal(serialize.name, SD.name);
     assert.equal(serialize.title, SD.title);
-    assert.equal(serialize.related_id, SD.related_id_role);
     assert.equal(serialize.settings.company_code, SD.company_code);
     assert.equal(serialize.settings.company_name, SD.company_name);
     assert.equal(serialize.settings.dashboard_text, SD.dashboard_text);

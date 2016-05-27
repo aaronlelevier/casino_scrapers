@@ -8,7 +8,6 @@ var BSRS_SETTING_FACTORY = (function() {
             id: id,
             name: this.setting_defaults.name,
             title: this.setting_defaults.title,
-            related_id: this.setting_defaults.related_id,
             settings: this.setting_defaults.settings
         }
     };

@@ -28,7 +28,6 @@ var SettingModel = Model.extend({
             id: this.get('id'),
             name: this.get('name'),
             title: this.get('title'),
-            related_id: this.get('related_id'),
             settings: {
                 company_code: this.get('company_code'),
                 company_name: this.get('company_name'),
