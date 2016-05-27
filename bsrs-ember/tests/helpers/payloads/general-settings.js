@@ -15,6 +15,7 @@ var setting_payload_other = {
     id: SD.id,
     name: SD.name,
     title: SD.title,
+    related_id: SD.related_id,
     settings: {
         company_name: SD.company_nameOther,
         company_code: SD.company_codeOther,

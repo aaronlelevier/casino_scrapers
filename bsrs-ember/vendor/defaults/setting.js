@@ -34,13 +34,15 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             accept_assignOther: true,
             accept_notifyOther: true
         };
-        var inherits = {
-            inherits_from_general: 'general'
+        var misc = {
+            inherits_from_general: 'general',
+            related_id_role: 'af34ee9b-833c-4f3e-a584-b6851d1e04b1',
         };
-        return Object.assign(one, other, inherits, {
+        return Object.assign(one, other, misc, {
             id: 'b783a238-1131-4623-8d24-81a672bb4e00',
             name: 'general',
             title: 'admin.general.other',
+            related_id: null,
             settings: {
                 company_code: {
                     type: 'str',

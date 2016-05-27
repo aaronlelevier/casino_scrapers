@@ -28,6 +28,7 @@ var SettingModel = Model.extend({
             id: this.get('id'),
             name: this.get('name'),
             title: this.get('title'),
+            related_id: this.get('related_id'),
             settings: {
                 company_code: this.get('company_code'),
                 company_name: this.get('company_name'),
@@ -42,7 +43,6 @@ var SettingModel = Model.extend({
                 test_contractor_email: this.get('test_contractor_email'),
                 test_contractor_phone: this.get('test_contractor_phone'),
                 dt_start_key: this.get('dt_start_key'),
-
             }
         };
     }
