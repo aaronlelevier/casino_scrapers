@@ -41,7 +41,7 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
         return Object.assign(one, other, misc, {
             id: 'b783a238-1131-4623-8d24-81a672bb4e00',
             name: 'general',
-            title: 'admin.general.other',
+            title: 'admin.setting.name.general',
             related_id: null,
             settings: {
                 company_code: {
