@@ -230,6 +230,9 @@ en,admin.setting.dt_start_key,Start,Start,,"'admin.setting.dt_start_key':'Start'
 en,admin.setting.exchange_rates,Exchange Rates,Exchange Rates,,"'admin.setting.exchange_rates':'Exchange Rates',",Exchange Rates,Exchange Rates
 en,admin.setting.login_grace,Login Grace,Login Grace,,"'admin.setting.login_grace':'Login Grace',",Login Grace,Login Grace
 en,admin.setting.modules,Modules,Modules,,"'admin.setting.modules':'Modules',",Modules,Modules
+en,admin.setting.name.general,General Settings,General Settings,,"'admin.setting.name.general':'General Settings',",General Settings,General Settings
+en,admin.setting.name.person,Person Settings,Person Settings,,"'admin.setting.name.person':'Person Settings',",Person Settings,Person Settings
+en,admin.setting.name.role,Role Settings,Role Settings,,"'admin.setting.name.role':'Role Settings',",Role Settings,Role Settings
 en,admin.setting.one,Setting,Setting,,"'admin.setting.one':'Setting',",Setting,Setting
 en,admin.setting.other,Settings,Settings,,"'admin.setting.other':'Settings',",Settings,Settings
 en,admin.setting.test_contractor_email,Test Contractor Email,Test Contractor Email,,"'admin.setting.test_contractor_email':'Test Contractor Email',",Test Contractor Email,Test Contractor Email
