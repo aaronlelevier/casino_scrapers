@@ -9,7 +9,7 @@
 {{else if (eq field.type field.types.[2])}}
   {{textarea autoresize=true value=field.displayValue class="form-control t-dtd-field-preview t-dtd-field-textarea" key-up=(action "updateRequest" undefined ticket) }}
 {{else if (eq field.type field.types.[3])}}
-  {{power-select-action mainModel=field displayName="text" relatedModels=field.options selected=field.selectedOption relatedModelName='dtd-field' notTranslated=true action=(action "updateRequest") ticket=ticket}}
+  {{power-select-action field=field displayName="text" relatedModels=field.options relatedModelName='dtd-field' action=(action "updateSelect") ticket=ticket}}
 {{else if (eq field.type field.types.[4])}}
   {{#each field.options as |option|}}
     <div class="checkbox">

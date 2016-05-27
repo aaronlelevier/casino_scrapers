@@ -32,10 +32,7 @@ export default Ember.Component.extend({
     //Initial Map() setup - Current DTD
     fields.forEach((field) => {
       const field_id = field.get('id');
-      // const optionValues = field.get('options').map((option) => {
-      //   return option.get('id');
-      // });
-      fieldsObj.set(field_id, { dtd_id: dt_id, label: field.get('label'), num: 1, value: '', required: field.get('required'), }); //optionValues: optionValues });
+      fieldsObj.set(field_id, { dtd_id: dt_id, label: field.get('label'), num: 1, value: '', required: field.get('required'), });
     }); 
     /* jshint ignore:start */
     dt_path && dt_path.forEach((dt_obj) => {
@@ -47,12 +44,9 @@ export default Ember.Component.extend({
 
         store.push('field', { id: _id, displayValue: dt_field.value });
 
-        // const dtOptionValues = [];
         //TODO: this is setting each option with isChecked.  This is wrong
         dt_field['options'] && dt_field['options'].forEach((dt_option_id) => {
-          // const option = store.find('option', {id: dt_option_id});
           store.push('option', { id: dt_option_id, isChecked: true });
-          // dtOptionValues.push(dt_option_id);
         });
         //Old Map() setup from (dt_path) thus num = 0 since is fullfilled
         fieldsObj.set(_id, { dtd_id: dt_obj['dtd']['id'], label: dt_field.label, num: 0, value: dt_field.value, required: dt_field.required, optionValues: dt_field['options'] });
@@ -103,6 +97,7 @@ export default Ember.Component.extend({
   _setup: Ember.on('init', function() {
     this.get('eventbus').subscribe('bsrs-ember@component:field-element-display', this, 'onFieldUpdate');
     this.get('eventbus').subscribe('bsrs-ember@component:field-element-display:option', this, 'onOptionUpdate');
+    this.get('eventbus').subscribe('bsrs-ember@component:field-element-display:select', this, 'onSelectUpdate');
   }),
   _teardown: Ember.on('willDestroyElement', function() {
     this.get('eventbus').unsubscribe('bsrs-ember@component:field-element-display');
@@ -117,6 +112,24 @@ export default Ember.Component.extend({
   onFieldUpdate(child, eventName, {field, num, value, ticket}) {
     let fieldsObj = this.get('fieldsObj');
     fieldsObj.set(field.get('id'), { num: num, value: value, label: field.get('label'), required: field.get('required') });
+    this.attrs.updateRequest(fieldsObj, ticket);
+  },
+  /*
+   * @method onSelectUpdate
+   * need to reset optionValues because dt_path needs them if user navigates back to change selected option
+   * @param option - may be undefined.  If no option, then set optionValues to []; otherwise set to option_id
+   */
+  onSelectUpdate(child, eventName, {field, num, value, ticket, option}) {
+    const option_id = option ? option.get('id') : null;
+    let fieldsObj = this.get('fieldsObj');
+    const fieldObj = fieldsObj.get(field.get('id'));
+    let optionValues = fieldObj.optionValues || [];
+    if (!value) {
+      optionValues = undefined;
+    } else if (option_id) {
+      optionValues = [option_id];
+    } 
+    fieldsObj.set(field.get('id'), { num: num, value: value, label: field.get('label'), required: field.get('required'), optionValues: optionValues });
     this.attrs.updateRequest(fieldsObj, ticket);
   },
   /*

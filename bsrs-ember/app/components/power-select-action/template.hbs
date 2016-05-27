@@ -1,10 +1,10 @@
 {{#power-select
   class=(concat relatedModelName '-select' ' t-' relatedModelName '-select')
-  selected=selected
+  selected=objSelected
   onchange=(action "selected")
   searchEnabled=false
   options=relatedModels
   as |optionModel|
 }}
-  {{unless notTranslated (t (get optionModel displayName)) (get optionModel displayName)}}
+  {{get optionModel displayName}}
 {{/power-select}}

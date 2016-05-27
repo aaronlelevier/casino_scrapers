@@ -67,7 +67,7 @@ var dtPathMunge = function(ticket, dtd, fieldsObj, link, simpleStore) {
       let fields = [];
       dt_path[i]['dtd']['fields'].forEach((field) => {
         const obj = fieldsObj.get(field.id);
-        fields.push({ id: field.id, label: obj.label, value: obj.value, required: obj.required }); //, options: obj.optionValues ? obj.optionValues : undefined});
+        fields.push({ id: field.id, label: obj.label, value: obj.value, required: obj.required, options: obj.optionValues ? obj.optionValues : undefined});
       });
 
       const existing_dtd = {

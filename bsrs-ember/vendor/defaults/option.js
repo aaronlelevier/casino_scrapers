@@ -10,6 +10,7 @@ var BSRS_OPTIONS_DEFAULTS_OBJECT = (function() {
       idRando2: '333bc4dd-c727-4e00-b6d5-9c55f1f179f4',
       textOne: 'yes',
       textTwo: 'no',
+      fieldTypeSelectValue: 'Im selected',
       textThree: 'maybe',
       textFour: 'another yes',
       orderOne: 0,

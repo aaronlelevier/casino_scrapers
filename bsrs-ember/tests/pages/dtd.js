@@ -141,6 +141,7 @@ var DTDPage = PageObject.create({
     fieldTwoOptionText: value('.t-dtd-field-option-text:eq(1)'),
     fieldTwoOptionTextFillin: fillable('.t-dtd-field-option-text:eq(1)'),
 
+    fieldOptionSelected: text('.t-dtd-field-select .ember-power-select-selected-item'),
     fieldOptionOne: text('.t-dtd-field-select li:eq(0)'),
     fieldOptionTwo: text('.t-dtd-field-select li:eq(1)'),
 

@@ -12,6 +12,9 @@ export default Ember.Component.extend({
   processValid(field, num, value, ticket) {
     this.get('eventbus').publish('bsrs-ember@component:field-element-display', this, 'onFieldUpdate', { field, num, value, ticket });
   },
+  processSelect(field, num, value, ticket, option) {
+    this.get('eventbus').publish('bsrs-ember@component:field-element-display:select', this, 'onSelectUpdate', { field, num, value, ticket, option });
+  },
   processClickOption(field, num, value, ticket, option) {
     this.get('eventbus').publish('bsrs-ember@component:field-element-display:option', this, 'onOptionUpdate', { field, num, value, ticket, option });
   },
@@ -19,7 +22,7 @@ export default Ember.Component.extend({
   classNames: ['form-group'],
   actions: {
     /*
-     * updateRequest 1 unfullfilled; 0 fullfilled field 
+     * @method updateRequest 1 unfullfilled; 0 fullfilled field 
      * @param {string} value ...passed from option
      * @param {string} ticket 
      * @param {object} opts ...passed from textarea or input as last argument
@@ -35,6 +38,19 @@ export default Ember.Component.extend({
       } else if (value) {
         this.processValid(field, 0, value, ticket);
       }
+    },
+    /*
+     * @method updateSelect 1 unfullfilled; 0 fullfilled field 
+     * TODO: user needs to be able to unselect an option
+     * @return processSelect
+     */
+    updateSelect(value, ticket, option) {
+      const field = this.get('field');
+      // if (!value) {
+      //   this.processSelect(field, 1, value, ticket);
+      // } else if (value) {
+        this.processSelect(field, 0, value, ticket, option);
+      // }
     },
     /*
      * @method updateCheckbox
