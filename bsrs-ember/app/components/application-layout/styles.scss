@@ -3,6 +3,9 @@ div.bs-mobile {
     width: 100%;
     left: 0;
   }
+  section.wrap {
+    bottom: $mobileFooterHeight;
+  }
   input.nav-trigger {
     position: absolute;
     clip: rect(0, 0, 0, 0);

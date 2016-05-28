@@ -1,0 +1,27 @@
+footer.mobile-footer {
+  position: absolute;
+  height: $mobileFooterHeight;
+  line-height: $mobileFooterHeight;
+  background: $lightGray;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-top: 2px solid $gray;
+  ul {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    li {
+      list-style: none;
+      display: inline-block;
+      width: 19%;
+      margin: 0 auto;
+      text-align: center;
+      a {
+        color: $medGray;
+        font-size: 3rem;
+        padding: 0 2rem;
+      }
+    }
+  }
+}
