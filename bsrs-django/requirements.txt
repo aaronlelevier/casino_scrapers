@@ -47,7 +47,7 @@ gspread>=0.3.0
 requests>=2.9.1
 
 # celery
-amqp==1.4.9
+amqp>=1.4.9,<2.0
 anyjson>=0.3.3
 billiard>=3.3.0.23
 celery>=3.1.23
