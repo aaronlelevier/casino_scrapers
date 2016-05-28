@@ -111,8 +111,10 @@ div.rowTable {
           width: 80px;
         }
         &.ticket-created{
-          width: 140px;
-          white-space: nowrap;
+          width: 180px;
+          div{
+            @include truncate;  
+          }
         }
         &.ticket-location{
           width: 180px;
