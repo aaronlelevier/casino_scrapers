@@ -1,8 +1,7 @@
 import Ember from 'ember';
-import getOwner from '../../../helpers/get-owner';
 import { test } from 'qunit';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
-import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
+import module from 'bsrs-ember/tests/helpers/module';
 import config from 'bsrs-ember/config/environment';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import RD from 'bsrs-ember/vendor/defaults/role';
@@ -15,9 +14,12 @@ const PREFIX = config.APP.NAMESPACE;
 const HOME_URL = '/';
 const NAVBAR = '.t-navbar-items';
 
-moduleForAcceptance('scott Acceptance | application layout mobile test', {
+let application;
+
+module('Acceptance | application layout mobile test', {
   beforeEach(assert) {
-    assert.deviceLayout = getOwner(this).lookup('service:device/layout');
+    application = startApp();
+    assert.deviceLayout = application.__container__.lookup('service:device/layout');
     let breakpoints = assert.deviceLayout.get('breakpoints');
     let bp = {};
     breakpoints.forEach((point) => {
@@ -27,15 +29,8 @@ moduleForAcceptance('scott Acceptance | application layout mobile test', {
     xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   },
   afterEach(assert) {
-    assert.deviceLayout = getOwner(this).lookup('service:device/layout');
-    let breakpoints = assert.deviceLayout.get('breakpoints');
-    let bp = {};
-    breakpoints.forEach((point) => {
-      bp[point.name] = point.begin + 5;
-    });
-    Ember.run(() => {
-      assert.deviceLayout.set('width', bp.huge);
-    });
+    Ember.run(application, 'destroy');
+    assert.deviceLayout = undefined;
   }
 });
 
