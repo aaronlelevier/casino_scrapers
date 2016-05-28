@@ -1,8 +1,10 @@
 import Ember from 'ember';
 import { test } from 'qunit';
+import getOwner from '../../../helpers/get-owner';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
-import module from 'bsrs-ember/tests/helpers/module';
+// import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
@@ -15,13 +17,28 @@ const NAVBAR = '.t-navbar-items';
 
 var application;
 
-module('Acceptance | application layout test', {
-  beforeEach() {
-    application = startApp();
+moduleForAcceptance('Acceptance | application layout test', {
+  beforeEach(assert) {
+    // application = startApp();
     xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
+    assert.deviceLayout = getOwner(this).lookup('service:device/layout');
+    let breakpoints = assert.deviceLayout.get('breakpoints');
+    let bp = {};
+    breakpoints.forEach((point) => {
+      bp[point.name] = point.begin + 5;
+    });
+    assert.deviceLayout.set('width', bp.huge);
   },
-  afterEach() {
-    Ember.run(application, 'destroy');
+  afterEach(assert) {
+    assert.deviceLayout = getOwner(this).lookup('service:device/layout');
+    let breakpoints = assert.deviceLayout.get('breakpoints');
+    let bp = {};
+    breakpoints.forEach((point) => {
+      bp[point.name] = point.begin + 5;
+    });
+    Ember.run(() => {
+      assert.deviceLayout.set('width', bp.huge);
+    });
   }
 });
 

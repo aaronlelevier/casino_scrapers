@@ -23,17 +23,13 @@ header.main{
         width: auto;
         padding: 0;
         margin: 0;
-        height: $menuHeight;
-        // display: flex;
         float: left;
         li {
           position: relative;
           list-style: none;
-          text-align: center;
           float: left;
           a {
             display: inline-block;
-            // width: 100%;
             color: $light;
             text-decoration: none;
             padding: 0 2rem;

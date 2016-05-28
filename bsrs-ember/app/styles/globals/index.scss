@@ -5,6 +5,7 @@ html, body{
   width: 100%;
   font-family: $fontfamily;
   background-color: $light;
+  overflow: hidden;
   .wrapper {
     padding: 0;
     margin: 0;

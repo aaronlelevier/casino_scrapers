@@ -1,4 +1,3 @@
-@import "pod-styles.scss";
 @import 'app/styles/mixins/_mixins.scss';
 @import 'bootstrap';
 @import 'app/styles/globals/_variables.scss';
@@ -29,3 +28,10 @@
 @import 'ember-modal-dialog/ember-modal-appearance';
 @import "ember-power-select";
 @import 'app/styles/modules/modal.scss';
+
+//mobile
+@import 'app/styles/mobile/nav.scss';
+@import 'app/styles/mobile/application.scss';
+
+//ember-component-css don't move me please please please.
+@import "pod-styles.scss";

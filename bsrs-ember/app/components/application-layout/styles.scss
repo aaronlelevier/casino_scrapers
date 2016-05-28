@@ -1,0 +1,77 @@
+div.bs-mobile {
+  header.main, section.wrap {
+    width: 100%;
+    left: 0;
+  }
+  input.nav-trigger {
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
+  }
+  label[for="nav-trigger"] {
+    position: fixed;
+    left: 15px; 
+    z-index: 4;
+
+    font-size: 26px;
+    line-height: $menuHeight;
+    color: $light;
+  }
+
+  .nav-trigger:checked + label {
+    left: $mobileDrawerWidth + 15px;
+  }
+  .nav-trigger:checked ~ header.main, 
+  .nav-trigger:checked ~ section.wrap {
+    left: $mobileDrawerWidth;
+  }
+  .nav-trigger:checked ~ nav.navigation {
+    left: 0;
+  }
+  .nav-trigger + label, 
+  header.main, 
+  section.wrap, 
+  nav.navigation {
+    transition: left 0.2s;
+  }
+
+  nav.navigation {
+    background: $dark;
+    width: $mobileDrawerWidth;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: -$mobileDrawerWidth;
+    overflow: hidden;
+    ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    li.nav-section {
+      background: $darkGray;
+      padding: 20px;
+      border-bottom: 1px solid $dark;
+      li.nav-item {
+        padding: 0;
+        a {
+          font-size: 18px;
+          padding: 2px 0;
+          display: block;
+          color: $medGray;
+          text-decoration: none;
+        }
+      }
+    }
+    li.nav-search {
+      padding: 8px;
+      background: $dark;
+      input {
+        height: 26px;
+        border: none;
+        background: $darker;
+        width: 100%;
+      }
+    }
+  }
+}

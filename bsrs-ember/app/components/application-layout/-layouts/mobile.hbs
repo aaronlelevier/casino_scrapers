@@ -1,8 +1,40 @@
-<header class="main">
+<div class="bs-mobile">
+  <input type="checkbox" id="nav-trigger" class="nav-trigger t-nav-trigger" />
+  <label for="nav-trigger">{{fa-icon "reorder"}}</label>
+  
+  <nav class="navigation">
+    <ul>
+      <li class="nav-search"><input type="search"></li>
+      <li class="nav-section">
+        <ul class="nav-section-inner">
+          <li class="nav-item">{{#link-to "dashboard"}}{{t "modules.tickets.newTickets"}}{{/link-to}}</li>
+          <li class="nav-item">{{#link-to "dashboard"}}{{t "modules.tickets.openTickets"}}{{/link-to}}</li>
+          <li class="nav-item">{{#link-to "dashboard"}}{{t "modules.workOrders.overdue"}}{{/link-to}}</li>
+          <li class="nav-item">{{#link-to "dashboard"}}{{t "admin.approval.other"}}{{/link-to}}</li>
+          <li class="nav-item">{{#link-to "dashboard"}}Delayed{{/link-to}}</li>
+        </ul>
+      </li>
+
+      <li class="nav-section">
+        <ul class="nav-section-inner">
+          <li class="nav-item">{{#link-to "dashboard"}}{{t "modules.tickets.titleShort"}}{{/link-to}}</li>
+          <li class="nav-item">{{#link-to "dashboard"}}{{t "modules.workOrders.titleShort"}}{{/link-to}}</li>
+          <li class="nav-item">{{#link-to "dashboard"}}{{t "modules.invoices.titleShort"}}{{/link-to}}</li>
+        </ul>
+      </li>
+      <li class="nav-section">
+        <ul class="nav-section-inner">
+          <li class="nav-item">{{#link-to "dashboard"}}{{t "admin.title"}}{{/link-to}}</li>
+        </ul>
+      </li>
+    </ul>
+    {{people/person-current}}
+  </nav>
+
+  <header class="main">
     {{nav-bar}}
-</header>
-{{tab-list tabs=tabs closeTabMaster=(action "closeTabMaster")}}
-{{tray-main}}
-<section class="wrap">
+  </header>
+  <section class="wrap">
     {{liquid-outlet}}
-</section>
+  </section>
+</div>

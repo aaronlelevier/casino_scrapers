@@ -769,7 +769,7 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
   assert.equal(find('.t-dtd-field-preview').val(), 'Im second');
 });
 
-test('scott visit 2 url, go back to step 0, then go back to 1 url after updating some info (checkbox) should keep info around and update ticket request', async assert => {
+test('visit 2 url, go back to step 0, then go back to 1 url after updating some info (checkbox) should keep info around and update ticket request', async assert => {
   // DT.idOne is 3rd
   // DT.idTwo is 2nd
   // DT.idThree is 1st (Start) - w/ fields and options array of ids that were selected
