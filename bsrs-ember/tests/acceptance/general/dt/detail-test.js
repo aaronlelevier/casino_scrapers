@@ -279,7 +279,7 @@ test('updating field select (patch ticket)', async assert => {
   const requestValue = `${FD.labelFour}: ${OD.textOne}, ${TD.requestOne}`;
   assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
   assert.equal(dtd.get('fields').objectAt(0).get('type'), FD.typeFour);
-  assert.equal(page.selectOneValue, OD.textOne);
+  assert.equal(page.selectOneValue, `${OD.textOne} ${$('<div>&times;</div>').html()}`);
   let dtd_payload = DTF.generate(DT.idTwo);
   const link = dtd.get('links').objectAt(0);
   let mod_dt_one = Ember.$.extend(true, {}, dt_one);
@@ -358,7 +358,7 @@ test('can click to next destination if field is not required and don\'t fill in 
   assert.deepEqual(ticket.get('request'), TD.requestOne);
 });
 
-test('can click to next destination after updating multiple fields select (patch ticket)', async assert => {
+test('can click to next destination after updating multiple fields (patch ticket)', async assert => {
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeOne;
   detail_data['fields'][0]['label'] = FD.labelFour;
@@ -632,12 +632,14 @@ test('visit 1 url, go back to step 0, then go back to 1 url after updating some 
 
   assert.equal(updated_ticket.get('dt_path').length, 1);
   assert.equal(updated_ticket.get('dt_path')[0]['ticket']['priority'], LINK.priorityTwo);
-  assert.equal(updated_ticket.get('request'), `${FD.labelOne}: ${OD.textOne}, ${FD.labelSelect}: ${OD.fieldTypeSelectValue}`);
   assert.equal(updated_ticket.get('dt_path')[0]['ticket']['request'], `${FD.labelSelect}: ${OD.fieldTypeSelectValue}`);
   assert.equal(updated_ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
+  assert.equal(updated_ticket.get('request'), `${FD.labelOne}: ${OD.textOne}, ${FD.labelSelect}: ${OD.fieldTypeSelectValue}`);
 
-  // select diff select on DTD.idThree 
+  // select diff select on DTD.idThree but first cleaer out current and ensure ticket req is updated
   assert.equal(page.fieldOptionSelected, OD.fieldTypeSelectValue);
+  await click('.ember-power-select-clear-btn');
+  assert.equal(updated_ticket.get('request'), `${FD.labelOne}: ${OD.textOne}`);
   await selectChoose('.t-dtd-field-select', OD.textOne);
   assert.equal(page.fieldOptionSelected, OD.textOne);
   assert.equal(updated_ticket.get('request'), `${FD.labelOne}: ${OD.textOne}, ${FD.labelSelect}: ${OD.textOne}`);
