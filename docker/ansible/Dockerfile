@@ -15,7 +15,7 @@ RUN apt-get update -qy && \
     apt-get install -qy ansible
 
 # # Copy baked in playbooks
-# COPY ansible /ansible
+COPY probe.yml /ansible
 
 # Add volume for Ansible playbooks
 VOLUME /ansible
@@ -24,4 +24,3 @@ WORKDIR /ansible
 # Entrypoint
 ENTRYPOINT ["ansible-playbook"]
 CMD ["site.yml"]
-

@@ -1,72 +1,79 @@
 version: '2'
 
+# by default they are specific to docker-compose env, and will cleanup after each workflow run and recreated at start of new workflow
+# external is useful that persists across runs (hosts pip cache)
+# webroot hosts socketfile that communicates with app and static content served by nginx
+volumes:
+  webroot:
+    driver: local
+
 services:
-  app:  
-    build: 
+  app:
+    build:
       context: ../../
-      dockerfile: ./docker/release/Dockerfile
+      dockerfile: bsrs-django/docker/release/Dockerfile
     environment:
-      DJANGO_SETTINGS_MODULE: bigsky.settings.prod
+      DJANGO_SETTINGS_MODULE: bsrs.settings.production
       DATABASE_HOST: postgres
-    volumes_from: 
-      - webroot
+    volumes:
+      - webroot:/var/www/bsrs
     # expose:
     #   - "8000"
-    links: 
+    links:
       - postgres
     # networks:
     #   - bsrs_default
     command:
       - uwsgi
-      - "--socket /var/run/nginx-persistent.sock"
+      - "--socket /var/www/bsrs/bsrs.sock"
       - "--chmod-socket=666"
-      - "--module bigsky.wsgi"
+      - "--module bsrs.wsgi"
       - "--master"
       - "--die-on-term"
 
   # link to app service will bring it up when start nginx service
-  nginx: 
-    image: nginx
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
     links:
       - app
-    volumes:
-      - ../../builds/nginx.conf:/etc/nginx/conf.d/nginx.conf
-    ports: 
+    ports:
       - "8000:8000"
-    volumes_from:
-      - webroot
-
-  # hosts socketfile that communicates with app and static content served by nginx
-  webroot:
-    build: 
-      context: ../../
-      dockerfile: ./docker/release/Dockerfile
     volumes:
-      - /var/www/bsrs
-    entrypoint: "true"
+      - webroot:/var/www/bsrs
 
-  postgres:  
+  ember:
+    build:
+      context: ../../bsrs-ember
+      dockerfile: docker/dev/Dockerfile
+    environment:
+      - EMBER_ENV=production
+    ports:
+      - "4200:4200"
+      - "49512:49512"
+
+  postgres:
     build:
       context: ../../
       dockerfile: Dockerfile-psql
-    env_file:
-      - ../../bsrs-django/env/app.${APP_ENV}.env
+    # env_file:
+    #   - ../../bsrs-django/env/app.${APP_ENV}.env
     expose:
       - "5432"
     # networks:
     #   - bsrs_default
 
-  agent:
-    image: bsrs/ansible
-    volumes:
-      - ./bsrs-django/docker/ansible/probe.yml:/ansible/site.yml
-    links:
-      - postgres 
-    environment:
-      PROBE_HOST: "postgres"
-      PROBE_PORT: "5432"
+  # agent:
+  #   image: bsrs/ansible
+  #   volumes:
+  #     - ./bsrs-django/docker/ansible/probe.yml:/ansible/site.yml
+  #   links:
+  #     - postgres
+  #   environment:
+  #     PROBE_HOST: "postgres"
+  #     PROBE_PORT: "5432"
 
 # networks:
 #   bsrs_default:
 #     driver: bridge
-

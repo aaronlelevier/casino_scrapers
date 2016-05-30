@@ -1,0 +1,74 @@
+version: '2'
+
+# by default they are specific to docker-compose env, and will cleanup after each workflow run and recreated at start of new workflow
+# external is useful that persists across runs (hosts pip cache)
+volumes:
+  build:
+    driver: local
+  cache:
+    external: true
+
+services:
+  postgres:
+    build:
+      context: ../../
+      dockerfile: Dockerfile-psql
+    env_file:
+      - ../../bsrs-django/env/app.${APP_ENV}.env
+    ports:
+      - "5432:5432"
+    networks:
+      - bsrs_default
+
+  django:
+    build:
+      context: ../../bsrs-django
+      dockerfile: docker/dev/Dockerfile
+    volumes:
+      - cache:/cache
+      - build:/build
+    expose:
+      - "8000"
+    links:
+      - postgres
+    environment:
+      DJANGO_SETTINGS_MODULE: bsrs.settings.base
+      BSRS_DB_CI_USER: dev
+      BSRS_DB_CI_PASSWORD: puekey
+      TEST_OUTPUT_DIR: /reports
+      DATABASE_HOST: postgres
+    networks:
+      - bsrs_default
+
+  ember:
+    build:
+      context: ../../bsrs-ember
+      dockerfile: docker/dev/Dockerfile
+    environment:
+      - EMBER_ENV=production
+    ports:
+      - "4200:4200"
+      - "49512:49512"
+
+  # build wheels based on contents of build snapshot
+  builder:
+    build:
+      context: ../../bsrs-django
+      dockerfile: docker/dev/Dockerfile
+    volumes:
+      - build:/build
+    entrypoint: "entrypoint.sh"
+    command: ["pip", "wheel", "--no-index", "-f /build", "."]
+
+  # agent:
+  #   image: ansible
+  #   links:
+  #     - postgres
+  #   environment:
+  #     PROBE_HOST: "postgres"
+  #     PROBE_PORT: "5432"
+  #   command: ["probe.yml"]
+
+networks:
+  bsrs_default:
+    driver: bridge

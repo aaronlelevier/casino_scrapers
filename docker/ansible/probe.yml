@@ -11,7 +11,7 @@
       probe_delay: "{{ lookup('env','PROBE_DELAY') | default(0, true) }}"
       probe_timeout: "{{ lookup('env','PROBE_TIMEOUT') | default (180, true) }}"
   - name: Message
-    debug: 
+    debug:
       msg: >
         Probing {{ probe_host }}:{{ probe_port }} with delay={{ probe_delay }}s
         and timeout={{ probe_timeout}}s
@@ -21,4 +21,3 @@
       port={{ probe_port }}
       delay={{ probe_delay }}
       timeout={{ probe_timeout }}
-
