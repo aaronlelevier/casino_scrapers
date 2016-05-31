@@ -1,7 +1,9 @@
-{{dtds/dtd-preview 
-  model=model 
-  linkClick=(action "linkClick") 
-  updateRequest=(action "updateRequest") 
-  ticket=ticket
-  action=action
-}}
+{{#modal-dialog translucentOverlay=true}}
+  {{dtds/dtd-preview
+    model=model
+    linkClick=(action "linkClick")
+    updateRequest=(action "updateRequest")
+    ticket=ticket
+    action=action
+  }}
+{{/modal-dialog}}

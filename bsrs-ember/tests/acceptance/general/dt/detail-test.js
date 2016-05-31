@@ -93,11 +93,12 @@ module('Acceptance | dt detail', {
 
 /* jshint ignore:start */
 
-test('decision tree displays data and can click to next destination after updating option (patch ticket)', async assert => {
+test('scott decision tree displays data and can click to next destination after updating option (patch ticket)', async assert => {
   const detail_data = DTF.detail(DT.idOne);
   detail_data.fields[0].required = true;
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
+  assert.ok(find('.modal-overlay'));
   assert.equal(currentURL(), DETAIL_URL);
   assert.ok(find('.t-dtd-preview-btn').attr('disabled'));
   await page.fieldClickCheckboxOne();
@@ -116,7 +117,7 @@ test('decision tree displays data and can click to next destination after updati
   assert.equal(dtd.get('links').objectAt(0).get('destination.id'), DT.idTwo);
   let dtd_payload = DTF.generate(DT.idTwo, '', FD.idTwo, FD.labelTwo);
   const link = dtd.get('links').objectAt(0);
-  // dt_path object added based on 
+  // dt_path object added based on
   let mod_dt_one = Ember.$.extend(true, {}, dt_one);
   mod_dt_one['dtd']['fields'][0]['options'] = [OD.idOne];
   const mock_dt_path = [...dt_path,
@@ -387,7 +388,7 @@ test('can click to next destination after updating multiple fields (patch ticket
   await fillIn('.t-dtd-field-text:eq(1)', OD.textOne);
   const LETTER_S = {keyCode: 83};
   await triggerEvent('.t-dtd-field-text:eq(1)', 'keyup', LETTER_W);
-  const requestValue = `${FD.labelFour}: ${OD.textOne}`, requestValueTwo = `another: ${OD.textOne}, ${TD.requestOne}`; 
+  const requestValue = `${FD.labelFour}: ${OD.textOne}`, requestValueTwo = `another: ${OD.textOne}, ${TD.requestOne}`;
   let dtd_payload = DTF.generate(DT.idTwo);
   const joinedRequest = `${requestValue}, ${requestValueTwo}`;
   const link = dtd.get('links').objectAt(0);
@@ -675,7 +676,7 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
   //current ticket state
   returned_ticket.request = `${FD.labelTwo}: 23, ${FD.labelRandom}: Im second`;
   //previous ticket (which has same request value as current) and dt state
-  returned_ticket.dt_path.push({ticket: {id: TD.idOne, request: `${FD.labelTwo}: 23, ${FD.labelRandom}: Im second`}, dtd: {id: DT.idTwo, description: DT.descriptionTwo, 
+  returned_ticket.dt_path.push({ticket: {id: TD.idOne, request: `${FD.labelTwo}: 23, ${FD.labelRandom}: Im second`}, dtd: {id: DT.idTwo, description: DT.descriptionTwo,
                                fields: [{ id: FD.idRandom, label: FD.labelRandom, value: 'Im second', required: true }]}});
 
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
@@ -684,7 +685,7 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
   assert.equal(page.breadcrumbTwo, substringBreadcrumb(DT.descriptionTwo));
   assert.equal(find('.t-dt-breadcrumb > .t-breadcrumb-list').length, 2);
 
-  // snapshot of Start && Middle 
+  // snapshot of Start && Middle
   const updated_ticket = store.find('ticket', TD.idOne);
   assert.equal(updated_ticket.get('dt_path').length, 2);
   assert.equal(updated_ticket.get('dt_path')[0]['ticket']['priority'], LINK.priorityTwo);
@@ -748,7 +749,7 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
   updated_dt_path[0]['dtd']['fields'][0]['value'] = '24';
   updated_dt_path[0]['dtd']['fields'][0]['required'] = FD.requiredOne;
   updated_dt_path[0]['ticket']['request'] = `${FD.labelTwo}: 24`;
-  // updated_dt_path[1]['dtd']['fields'][0]['value'] = 'Im second'; 
+  // updated_dt_path[1]['dtd']['fields'][0]['value'] = 'Im second';
   updated_dt_path[1]['dtd']['fields'][0]['required'] = FD.requiredTwo;
   updated_dt_path[1]['ticket']['request'] = `${FD.labelTwo}: 24, ${FD.labelRandom}: Im second`;
   // DTD.idTwo has FD.labelRandom w/ field value of Im second
@@ -784,7 +785,7 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
   //current ticket state
   returned_ticket.request = `${FD.labelFour}: ${OD.textOne}, ${FD.labelRandom}: Im second`;
   //previous ticket (which has same request value as current) and dt state
-  returned_ticket.dt_path.push({ticket: {id: TD.idOne, request: `${FD.labelFour}: ${OD.textOne}, ${FD.labelRandom}: Im second`}, dtd: {id: DT.idTwo, description: DT.descriptionTwo, 
+  returned_ticket.dt_path.push({ticket: {id: TD.idOne, request: `${FD.labelFour}: ${OD.textOne}, ${FD.labelRandom}: Im second`}, dtd: {id: DT.idTwo, description: DT.descriptionTwo,
                                fields: [{ id: FD.idRandom, label: FD.labelRandom, value: 'Im second', required: true }]}});
 
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
@@ -793,7 +794,7 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
   assert.equal(page.breadcrumbTwo, substringBreadcrumb(DT.descriptionTwo));
   assert.equal(find('.t-dt-breadcrumb > .t-breadcrumb-list').length, 2);
 
-  // snapshot of Start && Middle 
+  // snapshot of Start && Middle
   const updated_ticket = store.find('ticket', TD.idOne);
   assert.equal(updated_ticket.get('dt_path').length, 2);
   assert.equal(updated_ticket.get('dt_path')[0]['ticket']['priority'], LINK.priorityTwo);
@@ -856,7 +857,7 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
   updated_dt_path[0]['dtd']['fields'][0]['required'] = FD.requiredOne;
   updated_dt_path[0]['dtd']['fields'][0]['options'] = [];
   updated_dt_path[0]['ticket']['request'] = '';
-  updated_dt_path[1]['dtd']['fields'][0]['value'] = 'Im second'; 
+  updated_dt_path[1]['dtd']['fields'][0]['value'] = 'Im second';
   updated_dt_path[1]['ticket']['request'] = `${FD.labelRandom}: Im second`;
   let dtd_payload = DTF.generate(DT.idTwo, '', FD.idRandom, FD.labelRandom);
   dtd_payload['fields'][0]['type'] = FD.typeOne;
@@ -887,7 +888,7 @@ test('visit 2 url, go back to step 0, then go a different route should save tick
   //current ticket state
   returned_ticket.request = `${FD.labelTwo}: 23, ${FD.labelRandom}: Im second`;
   //previous ticket (which has same request value as current) and dt state
-  returned_ticket.dt_path.push({ticket: {id: TD.idOne, request: `${FD.labelTwo}: 23, ${FD.labelRandom}: Im second`, priority: TD.priorityZeroId, status: TD.statusZeroId}, dtd: {id: DT.idTwo, description: DT.descriptionTwo, 
+  returned_ticket.dt_path.push({ticket: {id: TD.idOne, request: `${FD.labelTwo}: 23, ${FD.labelRandom}: Im second`, priority: TD.priorityZeroId, status: TD.statusZeroId}, dtd: {id: DT.idTwo, description: DT.descriptionTwo,
                                fields: [{ id: FD.idRandom, label: FD.labelRandom, value: 'Im second', required: true }]}});
 
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
@@ -895,7 +896,7 @@ test('visit 2 url, go back to step 0, then go a different route should save tick
   assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim().split('  ')[0].trim(), substringBreadcrumb(DT.descriptionStart));
   assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim().split('  ').slice(-1)[0], substringBreadcrumb(DT.descriptionTwo));
 
-  // snapshot of Start && Middle 
+  // snapshot of Start && Middle
   const updated_ticket = store.find('ticket', TD.idOne);
   assert.equal(updated_ticket.get('dt_path').length, 2);
   assert.equal(updated_ticket.get('dt_path')[0]['ticket']['priority'], TD.priorityZeroId);
