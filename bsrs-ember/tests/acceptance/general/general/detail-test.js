@@ -86,9 +86,15 @@ test('general settings title and fields populated correctly', function(assert) {
 test('translations - for labels', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
+        assert.equal(getLabelText('company_name'), translations['admin.setting.company_name']);
+        assert.equal(getLabelText('company_code'), translations['admin.setting.company_code']);
         assert.equal(getLabelText('dashboard_text'), translations['admin.setting.dashboard_text']);
         assert.equal(getLabelText('login_grace'), translations['admin.setting.login_grace']);
-        assert.equal(getLabelText('company_name'), translations['admin.setting.company_name']);
+        assert.equal(getLabelText('modules'), translations['admin.setting.modules']);
+        assert.equal(find('.t-dtd-test_mode-label').text(), translations['admin.setting.test_mode']);
+        assert.equal(getLabelText('test_contractor_email'), translations['admin.setting.test_contractor_email']);
+        assert.equal(getLabelText('test_contractor_phone'), translations['admin.setting.test_contractor_phone']);
+        assert.equal(getLabelText('dt_start_key'), translations['admin.setting.dt_start_key']);
     });
 });
 
