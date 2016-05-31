@@ -44,7 +44,6 @@ test('general settings title and fields populated correctly', function(assert) {
         assert.equal(find('.t-settings-company_code').val(), SD.company_code);
         assert.equal(find('.t-settings-dashboard_text').val(), SD.dashboard_text);
         assert.equal(find('.t-settings-login_grace').val(), SD.login_grace);
-        assert.equal(find('.t-settings-exchange_rates').val(), SD.exchange_rates);
         assert.equal(find('.t-settings-modules').val(), SD.modules);
         assert.equal(find('.t-settings-test_mode').prop('checked'), SD.test_mode);
         assert.equal(find('.t-settings-test_contractor_email').val(), SD.test_contractor_email);
@@ -55,7 +54,6 @@ test('general settings title and fields populated correctly', function(assert) {
     fillIn('.t-settings-company_name', SD.company_nameOther);
     fillIn('.t-settings-dashboard_text', SD.dashboard_textOther);
     fillIn('.t-settings-login_grace', SD.login_graceOther);
-    fillIn('.t-settings-exchange_rates', SD.exchange_ratesOther);
     fillIn('.t-settings-modules', SD.modulesOther);
     page.test_modeClick();
     fillIn('.t-settings-test_contractor_email', SD.test_contractor_emailOther);
@@ -67,7 +65,6 @@ test('general settings title and fields populated correctly', function(assert) {
         assert.equal(setting.get('company_code'), SD.company_codeOther);
         assert.equal(setting.get('dashboard_text'), SD.dashboard_textOther);
         assert.equal(setting.get('login_grace'), SD.login_graceOther);
-        assert.equal(setting.get('exchange_rates'), SD.exchange_ratesOther);
         assert.equal(setting.get('modules'), SD.modulesOther);
         assert.equal(setting.get('test_mode'), SD.test_modeOther);
         assert.equal(setting.get('test_contractor_email'), SD.test_contractor_emailOther);

@@ -64,13 +64,6 @@ test('login_grace', (assert) => {
     assert.equal(setting.get('isDirty'), true);
 });
 
-test('exchange_rates', (assert) => {
-    setting = store.push('setting', {id: SD.id});
-    assert.equal(setting.get('isDirty'), false);
-    setting.set('exchange_rates', 'x');
-    assert.equal(setting.get('isDirty'), true);
-});
-
 test('modules', (assert) => {
     setting = store.push('setting', {id: SD.id});
     assert.equal(setting.get('isDirty'), false);
@@ -123,7 +116,6 @@ test('serialize', (assert) => {
         company_name: SD.company_name,
         dashboard_text: SD.dashboard_text,
         login_grace: SD.login_grace,
-        exchange_rates: SD.exchange_rates,
         modules: SD.modules,
         test_mode: SD.test_mode,
         test_contractor_email: SD.test_contractor_email,
@@ -138,21 +130,10 @@ test('serialize', (assert) => {
     assert.equal(serialize.settings.company_name, SD.company_name);
     assert.equal(serialize.settings.dashboard_text, SD.dashboard_text);
     assert.equal(serialize.settings.login_grace, SD.login_grace);
-    assert.equal(serialize.settings.exchange_rates, SD.exchange_rates);
     assert.equal(serialize.settings.modules, SD.modules);
     assert.equal(serialize.settings.test_mode, SD.test_mode);
     assert.equal(serialize.settings.test_contractor_email, SD.test_contractor_email);
     assert.equal(serialize.settings.test_contractor_phone, SD.test_contractor_phone);
     assert.equal(serialize.settings.dt_start_key, SD.dt_start_key);
 
-});
-
-test('serialize casts exchange_rates input as a 2 digit float', assert => {
-    setting = store.push('setting', {
-        id: SD.id,
-        exchange_rates: "1.00"
-    });
-    var serialize = setting.serialize();
-    // debugger;
-    assert.deepEqual(serialize.settings.exchange_rates, parseFloat("1.00", 10).toFixed(4));
 });

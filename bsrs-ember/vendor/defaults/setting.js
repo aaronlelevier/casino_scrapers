@@ -6,7 +6,6 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             company_name: 'Andys Pianos',
             dashboard_text: 'Welcome',
             login_grace: 1,
-            exchange_rates: 1.0,
             modules: [],
             test_mode: false,
             test_contractor_email: 'test@bigskytech.com',
@@ -23,7 +22,6 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             company_nameOther: 'Bobs Pianos',
             dashboard_textOther: '1234',
             login_graceOther: 2,
-            exchange_ratesOther: 1.0,
             modulesOther: ['foo'],
             test_modeOther: true,
             test_contractor_emailOther: 'foo@bigskytech.com',
@@ -55,9 +53,6 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
                 login_grace: {
                     value: one.login_grace
                 },
-                exchange_rates: {
-                    value: one.exchange_rates
-                },
                 modules: {
                     value: one.modules,
                 },
@@ -86,9 +81,6 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
                 },
                 login_grace: {
                     value: other.login_graceOther
-                },
-                exchange_rates: {
-                    value: one.exchange_ratesOther
                 },
                 modules: {
                     value: one.modulesOther,

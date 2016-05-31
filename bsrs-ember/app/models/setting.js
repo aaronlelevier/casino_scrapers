@@ -8,7 +8,6 @@ var SettingModel = Model.extend({
     company_name: attr(''),
     dashboard_text: attr(''),
     login_grace: attr(),
-    exchange_rates: attr(),
     modules: attr(),
     test_mode: attr(),
     test_contractor_email: attr(''),
@@ -33,8 +32,6 @@ var SettingModel = Model.extend({
                 company_name: this.get('company_name'),
                 dashboard_text: this.get('dashboard_text'),
                 login_grace: parseInt(this.get('login_grace')),
-                // TODO: how should a Float be formatted here?
-                exchange_rates: parseFloat(this.get('exchange_rates'), 10).toFixed(4),
                 // TODO: Needs to be a "power-select" multi
                 // ternary for Array casting then needs to be removed
                 modules: Array.isArray(this.get('modules')) === true ? this.get('modules') : [this.get('modules')],

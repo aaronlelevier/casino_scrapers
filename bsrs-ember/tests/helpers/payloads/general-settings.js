@@ -21,7 +21,6 @@ var setting_payload_other = {
         company_code: SD.company_codeOther,
         dashboard_text: SD.dashboard_textOther,
         login_grace: SD.login_graceOther,
-        exchange_rates: parseFloat(SD.exchange_ratesOther, 10).toFixed(4),
         modules: SD.modulesOther,
         test_mode: SD.test_modeOther,
         test_contractor_email: SD.test_contractor_emailOther,
