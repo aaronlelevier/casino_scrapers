@@ -230,6 +230,9 @@ en,admin.setting.dt_start_key,Start,Start,,"'admin.setting.dt_start_key':'Start'
 en,admin.setting.exchange_rates,Exchange Rates,Exchange Rates,,"'admin.setting.exchange_rates':'Exchange Rates',",Exchange Rates,Exchange Rates
 en,admin.setting.login_grace,Login Grace,Login Grace,,"'admin.setting.login_grace':'Login Grace',",Login Grace,Login Grace
 en,admin.setting.modules,Modules,Modules,,"'admin.setting.modules':'Modules',",Modules,Modules
+en,admin.setting.modules.tickets,Tickets,Tickets,,"'admin.setting.modules.tickets':'Tickets',",Tickets,Tickets
+en,admin.setting.modules.work_orders,Work Orders,Work Orders,,"'admin.setting.modules.work_orders':'Work Orders',",Work Orders,Work Orders
+en,admin.setting.modules.invoices,Invoices,Invoices,,"'admin.setting.modules.invoices':'Invoices',",Invoices,Invoices
 en,admin.setting.name.general,General Settings,General Settings,,"'admin.setting.name.general':'General Settings',",General Settings,General Settings
 en,admin.setting.name.person,Person Settings,Person Settings,,"'admin.setting.name.person':'Person Settings',",Person Settings,Person Settings
 en,admin.setting.name.role,Role Settings,Role Settings,,"'admin.setting.name.role':'Role Settings',",Role Settings,Role Settings
@@ -314,7 +317,10 @@ en,modules.projects.titleShort,Projects,Projects,,"'modules.projects.titleShort'
 en,modules.purchaseOrders.titleShort,Purchase Orders,Purchase Orders,,"'modules.purchaseOrders.titleShort':'Purchase Orders',",Purchase Orders,Purchase Orders
 en,modules.rfqs.titleShort,RFQs,RFQs,,"'modules.rfqs.titleShort':'RFQs',",RFQs,RFQs
 en,modules.tasks.titleShort,Tasks,Tasks,,"'modules.tasks.titleShort':'Tasks',",Tasks,Tasks
+en,modules.tickets.openTickets,Open Tickets,Open Tickets,,"'modules.tickets.openTickets':'Open Tickets',",Open Tickets,Open Tickets
+en,modules.tickets.newTickets,New Tickets,New Tickets,,"'modules.tickets.newTickets':'New Tickets',",New Tickets,New Tickets
 en,modules.tickets.titleShort,Tickets,Tickets,,"'modules.tickets.titleShort':'Tickets',",Tickets,Tickets
+en,modules.workOrders.overdue,Overdue Work Orders,Overdue Work Orders,,"'modules.workOrders.overdue':'Overdue Work Orders',",Overdue Work Orders,Overdue Work Orders
 en,modules.workOrders.titleShort,Work Orders,Work Orders,,"'modules.workOrders.titleShort':'Work Orders',",Work Orders,Work Orders
 en,selects.loading,Loading,Loading,,"'selects.loading':'Loading',",Loading,Loading
 en,selects.noMatchesMessage,No Matches,No Matches,,"'selects.noMatchesMessage':'No Matches',",No Matches,No Matches
