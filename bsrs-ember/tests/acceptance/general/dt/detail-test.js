@@ -98,7 +98,7 @@ test('scott decision tree displays data and can click to next destination after 
   detail_data.fields[0].required = true;
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
-  assert.ok(find('.modal-overlay'));
+  // assert.ok(find('.modal-overlay'));
   assert.equal(currentURL(), DETAIL_URL);
   assert.ok(find('.t-dtd-preview-btn').attr('disabled'));
   await page.fieldClickCheckboxOne();
