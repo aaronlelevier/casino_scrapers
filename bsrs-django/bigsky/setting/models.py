@@ -68,7 +68,7 @@ class Setting(ToDictNameMixin, BaseModel):
                 inherited_setting_objs = self.inherits_from_map[inherits_from]
                 inherited_setting_obj = inherited_setting_objs[k]
                 settings[k].update({
-                    'value': None,
+                    'value': None if 'value' not in v else v['value'],
                     # 'inherits_from' already exists in 'role' setting
                     'inherited_value': inherited_setting_obj['value']
                     })

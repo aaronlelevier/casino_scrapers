@@ -170,6 +170,16 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['settings']['settings']['dashboard_text']['value'], new_dashboard_text)
         self.assertEqual(data['settings']['settings']['dashboard_text']['inherits_from'], 'general')
+        # self.role.settings.settings
+        self.role = Role.objects.get(id=self.role.id)
+        self.assertEqual(self.role.settings.settings['dashboard_text']['value'], new_dashboard_text)
+        self.assertEqual(self.role.settings.settings['dashboard_text']['inherits_from'], 'general')
+        # get - reflects all 3 keys now that 'dashboard_text' is being overridden
+        response = self.client.get('/api/admin/roles/{}/'.format(self.role.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['settings']['dashboard_text']['value'], new_dashboard_text)
+        self.assertEqual(data['settings']['dashboard_text']['inherited_value'], 'Welcome')
+        self.assertEqual(data['settings']['dashboard_text']['inherits_from'], 'general')
 
     def test_update__general_and_then_reflected_in_role(self):
         serializer = SettingSerializer(self.setting)
