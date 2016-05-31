@@ -130,7 +130,7 @@ test('serialize', (assert) => {
     assert.equal(serialize.settings.company_name, SD.company_name);
     assert.equal(serialize.settings.dashboard_text, SD.dashboard_text);
     assert.equal(serialize.settings.login_grace, SD.login_grace);
-    assert.equal(serialize.settings.modules, SD.modules);
+    assert.deepEqual(serialize.settings.modules, SD.modules);
     assert.equal(serialize.settings.test_mode, SD.test_mode);
     assert.equal(serialize.settings.test_contractor_email, SD.test_contractor_email);
     assert.equal(serialize.settings.test_contractor_phone, SD.test_contractor_phone);

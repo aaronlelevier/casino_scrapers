@@ -57,9 +57,19 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            {{#form-group title="admin.setting.modules" for="modules"}}
-                                {{input type="text" placeholder=(t "admin.setting.modules") value=model.modules class="form-control t-settings-modules" id="modules"}}
-                            {{/form-group}}
+                            {{#form-group title="admin.setting.modules" for="modules"}}{{/form-group}}
+                            <label>
+                                <input type="checkbox" value={{model.modules.tickets}} onclick={{action 'addRemoveModule' 'tickets'}} checked={{model.modules.tickets}} class="t-settings-modules-tickets" name="modules-tickets">
+                                <span class="t-settings-modules-tickets-label">{{t "admin.setting.modules.tickets"}}</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" value={{model.modules.work_orders}} onclick={{action 'addRemoveModule' 'work_orders'}} checked={{model.modules.work_orders}} class="t-settings-modules-work_orders" name="modules-work_orders">
+                                <span class="t-settings-modules-work_orders-label">{{t "admin.setting.modules.work_orders"}}</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" value={{model.modules.invoices}} onclick={{action 'addRemoveModule' 'invoices'}} checked={{model.modules.invoices}} class="t-settings-modules-invoices" name="modules-invoices">
+                                <span class="t-settings-modules-invoices-label">{{t "admin.setting.modules.invoices"}}</span>
+                            </label>
                         </div>
                     </div>
                     <div class="row">
@@ -67,7 +77,7 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" value={{model.test_mode}} onclick={{action 'changeBool' 'test_mode'}} checked={{model.test_mode}} class="t-settings-test_mode" name="test_mode">
-                                    <span class="t-dtd-test_mode-label">{{t "admin.setting.test_mode"}}</span>
+                                    <span class="t-settings-test_mode-label">{{t "admin.setting.test_mode"}}</span>
                                 </label>
                             </div>
                         </div>

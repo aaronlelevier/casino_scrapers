@@ -6,7 +6,11 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             company_name: 'Andys Pianos',
             dashboard_text: 'Welcome',
             login_grace: 1,
-            modules: [],
+            modules: {
+                tickets: true,
+                work_orders: true,
+                invoices: true
+            },
             test_mode: false,
             test_contractor_email: 'test@bigskytech.com',
             test_contractor_phone: '+18587155000',
@@ -22,7 +26,11 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             company_nameOther: 'Bobs Pianos',
             dashboard_textOther: '1234',
             login_graceOther: 2,
-            modulesOther: ['foo'],
+            modulesOther: {
+                tickets: false,
+                work_orders: false,
+                invoices: false
+            },
             test_modeOther: true,
             test_contractor_emailOther: 'foo@bigskytech.com',
             test_contractor_phoneOther: '+18587154000',

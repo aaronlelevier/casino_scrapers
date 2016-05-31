@@ -23,6 +23,7 @@ var SettingModel = Model.extend({
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     rollback() {},
     serialize() {
+        let modules = this.get('modules');
         return {
             id: this.get('id'),
             name: this.get('name'),
@@ -32,9 +33,11 @@ var SettingModel = Model.extend({
                 company_name: this.get('company_name'),
                 dashboard_text: this.get('dashboard_text'),
                 login_grace: parseInt(this.get('login_grace')),
-                // TODO: Needs to be a "power-select" multi
-                // ternary for Array casting then needs to be removed
-                modules: Array.isArray(this.get('modules')) === true ? this.get('modules') : [this.get('modules')],
+                modules: {
+                    tickets: modules.tickets,
+                    work_orders: modules.work_orders,
+                    invoices: modules.invoices
+                },
                 test_mode: this.get('test_mode'),
                 test_contractor_email: this.get('test_contractor_email'),
                 test_contractor_phone: this.get('test_contractor_phone'),

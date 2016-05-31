@@ -44,7 +44,9 @@ test('general settings title and fields populated correctly', function(assert) {
         assert.equal(find('.t-settings-company_code').val(), SD.company_code);
         assert.equal(find('.t-settings-dashboard_text').val(), SD.dashboard_text);
         assert.equal(find('.t-settings-login_grace').val(), SD.login_grace);
-        assert.equal(find('.t-settings-modules').val(), SD.modules);
+        assert.equal(find('.t-settings-modules-tickets').prop('checked'), SD.modules.tickets);
+        assert.equal(find('.t-settings-modules-work_orders').prop('checked'), SD.modules.work_orders);
+        assert.equal(find('.t-settings-modules-invoices').prop('checked'), SD.modules.invoices);
         assert.equal(find('.t-settings-test_mode').prop('checked'), SD.test_mode);
         assert.equal(find('.t-settings-test_contractor_email').val(), SD.test_contractor_email);
         assert.equal(find('.t-settings-test_contractor_phone').val(), SD.test_contractor_phone);
@@ -54,8 +56,10 @@ test('general settings title and fields populated correctly', function(assert) {
     fillIn('.t-settings-company_name', SD.company_nameOther);
     fillIn('.t-settings-dashboard_text', SD.dashboard_textOther);
     fillIn('.t-settings-login_grace', SD.login_graceOther);
-    fillIn('.t-settings-modules', SD.modulesOther);
-    page.test_modeClick();
+    page.modulesTicketsClick();
+    page.modulesWorkordersClick();
+    page.modulesInvoicesClick();
+    page.testmodeClick();
     fillIn('.t-settings-test_contractor_email', SD.test_contractor_emailOther);
     fillIn('.t-settings-test_contractor_phone', SD.test_contractor_phoneOther);
     fillIn('.t-settings-dt_start_key', SD.dt_start_keyOther);
@@ -65,7 +69,9 @@ test('general settings title and fields populated correctly', function(assert) {
         assert.equal(setting.get('company_code'), SD.company_codeOther);
         assert.equal(setting.get('dashboard_text'), SD.dashboard_textOther);
         assert.equal(setting.get('login_grace'), SD.login_graceOther);
-        assert.equal(setting.get('modules'), SD.modulesOther);
+        assert.equal(find('.t-settings-modules-tickets').prop('checked'), SD.modulesOther.tickets);
+        assert.equal(find('.t-settings-modules-work_orders').prop('checked'), SD.modulesOther.work_orders);
+        assert.equal(find('.t-settings-modules-invoices').prop('checked'), SD.modulesOther.invoices);
         assert.equal(setting.get('test_mode'), SD.test_modeOther);
         assert.equal(setting.get('test_contractor_email'), SD.test_contractor_emailOther);
         assert.equal(setting.get('test_contractor_phone'), SD.test_contractor_phoneOther);
@@ -91,7 +97,10 @@ test('translations - for labels', (assert) => {
         assert.equal(getLabelText('dashboard_text'), translations['admin.setting.dashboard_text']);
         assert.equal(getLabelText('login_grace'), translations['admin.setting.login_grace']);
         assert.equal(getLabelText('modules'), translations['admin.setting.modules']);
-        assert.equal(find('.t-dtd-test_mode-label').text(), translations['admin.setting.test_mode']);
+        assert.equal(find('.t-settings-modules-tickets-label').text(), translations['admin.setting.modules.tickets']);
+        assert.equal(find('.t-settings-modules-work_orders-label').text(), translations['admin.setting.modules.work_orders']);
+        assert.equal(find('.t-settings-modules-invoices-label').text(), translations['admin.setting.modules.invoices']);
+        assert.equal(find('.t-settings-test_mode-label').text(), translations['admin.setting.test_mode']);
         assert.equal(getLabelText('test_contractor_email'), translations['admin.setting.test_contractor_email']);
         assert.equal(getLabelText('test_contractor_phone'), translations['admin.setting.test_contractor_phone']);
         assert.equal(getLabelText('dt_start_key'), translations['admin.setting.dt_start_key']);
