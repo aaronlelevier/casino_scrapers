@@ -20,38 +20,30 @@ module('Acceptance | application layout test', {
   beforeEach(assert) {
     application = startApp();
     xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
-    assert.deviceLayout = application.__container__.lookup('service:device/layout');
-    let breakpoints = assert.deviceLayout.get('breakpoints');
-    let bp = {};
-    breakpoints.forEach((point) => {
-      bp[point.name] = point.begin + 5;
-    });
-    assert.deviceLayout.set('width', bp.huge);
   },
   afterEach(assert) {
     Ember.run(application, 'destroy');
-    assert.deviceLayout = undefined;
   }
 });
 
-test('navbar and tray have correct items', function(assert) {
-  visit(HOME_URL);
-  andThen(() => {
-    assert.equal(find('.t-tray-items > li').length, 4);
-    assert.equal(find(NAVBAR + ' > li').length, 4);
-    assert.equal(find(NAVBAR + ' > li:eq(1)').text(), t('modules.tickets.titleShort'));
-    assert.equal(find(NAVBAR + ' > li:eq(2)').text(), t('modules.workOrders.titleShort'));
-    assert.equal(find(NAVBAR + ' > li:eq(3)').text(), t('modules.invoices.titleShort'));
-  });
-});
+// test('navbar and tray have correct items', function(assert) {
+//   visit(HOME_URL);
+//   andThen(() => {
+//     assert.equal(find('.t-tray-items > li').length, 4);
+//     assert.equal(find(NAVBAR + ' > li').length, 4);
+//     assert.equal(find(NAVBAR + ' > li:eq(1)').text(), t('modules.tickets.titleShort'));
+//     assert.equal(find(NAVBAR + ' > li:eq(2)').text(), t('modules.workOrders.titleShort'));
+//     assert.equal(find(NAVBAR + ' > li:eq(3)').text(), t('modules.invoices.titleShort'));
+//   });
+// });
 
-test('current user is set from bootstrap data', function(assert) {
-  visit(HOME_URL);
-  andThen(() => {
-    assert.equal(find('.t-current-user-fullname').text(), 'Donald Trump');
-    assert.equal(find('.t-current-user-role').text(), RD.nameOne);
-  });
-});
+// test('current user is set from bootstrap data', function(assert) {
+//   visit(HOME_URL);
+//   andThen(() => {
+//     assert.equal(find('.t-current-user-fullname').text(), 'Donald Trump');
+//     assert.equal(find('.t-current-user-role').text(), RD.nameOne);
+//   });
+// });
 
 test('navigating to unkown route will redirect to dashboard', (assert) => {
   visit('/wat');
