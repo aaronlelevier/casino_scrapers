@@ -119,7 +119,7 @@ class NestedSettingUpdateMixin(object):
         i = klass.objects.get(id=instance.id)
 
         setting_instance = i.settings
-        setting_instance.settings = settings
+        setting_instance.settings = init_settings
         setting_instance.save()
 
 
