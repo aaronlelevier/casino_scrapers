@@ -15,7 +15,11 @@ GENERAL_SETTINGS = {
         "value": 1.0,
     },
     "modules": {
-        "value": [],
+        "value": {
+            "tickets": True,
+            "work_orders": True,
+            "invoices": True
+        },
     },
     "test_mode": {
         "value": False,

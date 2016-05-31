@@ -57,7 +57,7 @@ class SettingsValidator(object):
         "dashboard_text": "str",
         "login_grace": "int",
         "exchange_rates": "float",
-        "modules": "list",
+        "modules": "dict",
         "test_mode": "bool",
         "test_contractor_email": "email",
         "test_contractor_phone": "phone",
@@ -146,6 +146,8 @@ class SettingsValidator(object):
             return float
         elif t == 'list':
             return list
+        elif t == 'dict':
+            return dict
 
 
 ### REGEX VALIDATORS
