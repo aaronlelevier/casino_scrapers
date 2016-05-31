@@ -438,7 +438,7 @@ test('settings', (assert) => {
   var company_name = "Andys Piano";
   role = store.push('role', {id: RD.idOne, dashboard_text, create_all, login_grace, company_name});
   var settings = role.get('settings');
-  assert.equal(settings.dashboard_text, dashboard_text);
+  assert.equal(settings.settings.dashboard_text, dashboard_text);
 });
 
 test('serialize', (assert) => {

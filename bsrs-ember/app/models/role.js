@@ -29,10 +29,12 @@ var RoleModel = Model.extend(NewMixin, OptConf, {
   accept_notify: attr(),
   settings:  Ember.computed(function() {
     return {
-      dashboard_text: this.get('dashboard_text'),
-      create_all: this.get('create_all'),
-      accept_assign: this.get('accept_assign'),
-      accept_notify: this.get('accept_notify')
+      settings: {
+        dashboard_text: this.get('dashboard_text'),
+        create_all: this.get('create_all'),
+        accept_assign: this.get('accept_assign'),
+        accept_notify: this.get('accept_notify')
+      }
     };
   }),
   settings_object: undefined, // the POJO from Django where inherited info is stored

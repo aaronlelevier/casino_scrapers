@@ -36,7 +36,9 @@ module('Acceptance | role-new', {
       role_type: RD.t_roleTypeGeneral,
       location_level: RD.locationLevelOne,
       categories: [CD.idOne],
-      settings: {}
+      settings: {
+        settings: {}
+      }
     };
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
