@@ -283,9 +283,17 @@ test('settings copySettingsToFirstLevel', (assert) => {
     });
     role = store.find('role', RD.idOne);
     assert.equal(role.get('dashboard_text'), null);
-    assert.equal(role.get('settings_object').dashboard_text.inherited_value, SD.dashboard_text);
-    assert.equal(role.get('settings_object').dashboard_text.inherits_from, SD.inherits_from_general);
     assert.equal(role.get('create_all'), true);
     assert.equal(role.get('accept_assign'), false);
     assert.equal(role.get('accept_notify'), false);
+    // settings
+    assert.equal(role.get('settings').settings.dashboard_text, null);
+    assert.equal(role.get('settings').settings.create_all, true);
+    assert.equal(role.get('settings').settings.accept_assign, false);
+    assert.equal(role.get('settings').settings.accept_notify, false);
+    // settings_object
+    assert.equal(role.get('settings_object').dashboard_text, RD.settings.dashboard_text);
+    assert.equal(role.get('settings_object').create_all, RD.settings.create_all);
+    assert.equal(role.get('settings_object').accept_assign, RD.settings.accept_assign);
+    assert.equal(role.get('settings_object').accept_notify, RD.settings.accept_notify);
 });
