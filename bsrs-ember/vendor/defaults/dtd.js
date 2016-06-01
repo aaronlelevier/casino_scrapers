@@ -10,6 +10,7 @@ var BSRS_DTD_DEFAULTS_OBJECT = (function() {
       idGridTwo: 'cf2b9c85-f6bd-4345-9834-e5d22ap05p12',
       keyOne: '1.1.1',
       keyTwo: '1.2.11',
+      keyTwoGrid: '1.1.2',
       keySearchFiveOne: '1.2.15',
       keySearchFiveTwo: '1.1.5',
       keySearch14: '1.2.14',

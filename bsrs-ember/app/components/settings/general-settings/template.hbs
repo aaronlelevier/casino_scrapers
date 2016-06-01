@@ -99,7 +99,18 @@
                     <div class="row">
                         <div class="col-md-12">
                             {{#form-group title="admin.setting.dt_start_id" for="dt_start_id"}}
-                                {{input type="text" placeholder=(t "admin.setting.dt_start_id") value=model.dt_start_id class="form-control t-settings-dt_start_id" id="dt_start_id"}}
+                                {{#power-select
+                                selected=model.dt_start
+                                options=options
+                                class="t-settings-dt_start-select"
+                                onchange=(action "selected")
+                                search=(action "searchRepo")
+                                searchEnabled=true
+                                allowClear=false
+                                as |dtd|
+                                }}
+                                    {{dtd.key}}
+                                {{/power-select}}
                             {{/form-group}}
                         </div>
                     </div>

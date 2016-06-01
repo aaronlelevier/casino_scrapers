@@ -7,6 +7,8 @@ import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import SD from 'bsrs-ember/vendor/defaults/setting';
 import SF from 'bsrs-ember/vendor/setting_fixtures';
+import DTD from 'bsrs-ember/vendor/defaults/dtd';
+import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
 import page from 'bsrs-ember/tests/pages/settings';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import {setting_payload, setting_payload_other} from 'bsrs-ember/tests/helpers/payloads/general-settings';
@@ -35,7 +37,7 @@ module('Acceptance | general settings', {
     }
 });
 
-test('general settings title and fields populated correctly', function(assert) {
+test('general settings title and fields populated correctly', assert => {
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -50,7 +52,7 @@ test('general settings title and fields populated correctly', function(assert) {
         assert.equal(find('.t-settings-test_mode').prop('checked'), SD.test_mode);
         assert.equal(find('.t-settings-test_contractor_email').val(), SD.test_contractor_email);
         assert.equal(find('.t-settings-test_contractor_phone').val(), SD.test_contractor_phone);
-        assert.equal(find('.t-settings-dt_start_id').val(), SD.dt_start_id);
+        assert.equal(page.startDtdInput, SD.dt_start_key);
     });
     fillIn('.t-settings-company_code', SD.company_codeOther);
     fillIn('.t-settings-company_name', SD.company_nameOther);
@@ -62,7 +64,17 @@ test('general settings title and fields populated correctly', function(assert) {
     page.testmodeClick();
     fillIn('.t-settings-test_contractor_email', SD.test_contractor_emailOther);
     fillIn('.t-settings-test_contractor_phone', SD.test_contractor_phoneOther);
-    fillIn('.t-settings-dt_start_id', SD.dt_start_idOther);
+    const param = 's';
+    xhr(`/api/dtds/?search=${param}`, 'GET', null, {}, 200, DTDF.list());
+    page.startDtdClickDropdown();
+    andThen(() => {
+        fillIn('.ember-power-select-search input', param);
+    });
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(page.startDtdTextOne, DTD.keyTwoGrid);
+    });
+    page.startDtdClickOne();
     andThen(() => {
         let setting = store.find('setting', SD.id);
         assert.equal(setting.get('company_name'), SD.company_nameOther);
@@ -75,7 +87,7 @@ test('general settings title and fields populated correctly', function(assert) {
         assert.equal(setting.get('test_mode'), SD.test_modeOther);
         assert.equal(setting.get('test_contractor_email'), SD.test_contractor_emailOther);
         assert.equal(setting.get('test_contractor_phone'), SD.test_contractor_phoneOther);
-        assert.equal(setting.get('dt_start_id'), SD.dt_start_idOther);
+        assert.equal(page.startDtdInput, DTD.keyTwoGrid);
         // dirty tracking
         assert.ok(setting.get('isDirty'));
         assert.ok(setting.get('isDirtyOrRelatedDirty'));

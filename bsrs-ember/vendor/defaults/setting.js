@@ -1,5 +1,7 @@
 var DEFAULT_GENERIAL_SETTINGS = (function() {
-    var factory = function() {};
+    var factory = function(dtd) {
+        this.dtd = dtd;
+    };
     factory.prototype.defaults = function() {
         var one = {
             company_code: 'one',
@@ -14,7 +16,8 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             test_mode: false,
             test_contractor_email: 'test@bigskytech.com',
             test_contractor_phone: '+18587155000',
-            dt_start_id: 'Start',
+            dt_start_id: this.dtd.idOne,
+            dt_start_key: 'Start',
 
             // Role
             create_all: true,
@@ -34,7 +37,8 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             test_modeOther: true,
             test_contractor_emailOther: 'foo@bigskytech.com',
             test_contractor_phoneOther: '+18587154000',
-            dt_start_idOther: 'StartTwo',
+            dt_start_idOther: this.dtd.idTwo,
+            dt_start_keyOther: 'StartTwo',
 
             // Role
             create_allOther: false,
@@ -75,6 +79,12 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
                 },
                 dt_start_id: {
                     value: one.dt_start_id,
+                },
+                dt_start: {
+                    value: {
+                        id: one.dt_start_id,
+                        key: one.dt_start_key
+                    }
                 }
             },
             settingsOther: {
@@ -104,6 +114,12 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
                 },
                 dt_start_id: {
                     value: one.dt_start_idOther,
+                },
+                dt_start: {
+                    value: {
+                        id: one.dt_start_idOther,
+                        key: one.dt_start_keyOther
+                    }
                 }
             }
         });
@@ -112,11 +128,13 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
 })();
 
 if (typeof window === 'undefined') {
-    module.exports = new DEFAULT_GENERIAL_SETTINGS().defaults();
+    var dtd = require('./dtd');
+    module.exports = new DEFAULT_GENERIAL_SETTINGS(dtd).defaults();
 } else {
-    define('bsrs-ember/vendor/defaults/setting', ['exports'],
-        function(exports) {
+    define('bsrs-ember/vendor/defaults/setting',
+        ['exports', 'bsrs-ember/vendor/defaults/dtd'],
+        function(exports, dtd) {
             'use strict';
-            return new DEFAULT_GENERIAL_SETTINGS().defaults();
+            return new DEFAULT_GENERIAL_SETTINGS(dtd).defaults();
         });
 }

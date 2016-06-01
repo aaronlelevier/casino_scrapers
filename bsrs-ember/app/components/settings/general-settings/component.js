@@ -1,11 +1,17 @@
 import Ember from 'ember';
+import config from 'bsrs-ember/config/environment';
+import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/inject';
 import { validate } from 'ember-cli-simple-validation/mixins/validate';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 
+var PREFIX = config.APP.NAMESPACE;
+var DTD_URL = `${PREFIX}/dtds/`;
+
 var GeneralSettings = Ember.Component.extend(TabMixin, EditMixin, {
     repository: inject('setting'),
+    repositoryDtd: inject('dtd'),
     classNames: ['wrapper', 'form'],
     simpleStore: Ember.inject.service(),
     dashboardTextValidation: validate('model.dashboard_text'),
@@ -32,6 +38,18 @@ var GeneralSettings = Ember.Component.extend(TabMixin, EditMixin, {
             modules[moduleKey] = !modules[moduleKey];
 
             setting.set('modules', modules);
+        },
+        selected(dtd) {
+            let model = this.get('model');
+            model.set('dt_start_id', dtd.id);
+            model.set('dt_start', {id: dtd.id, key: dtd.key});
+        },
+        searchRepo(param) {
+            const url = `${DTD_URL}?search=${param}`;
+            const _this = this;
+            PromiseMixin.xhr(url, 'GET').then((response) => {
+                _this.set('options', response.results);
+            });
         }
     }
 });
