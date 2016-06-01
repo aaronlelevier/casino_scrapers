@@ -57,7 +57,8 @@ class InheritedValueDescriptor(object):
                 'value': None,
                 'type': self.type,
                 'inherited_value': value,
-                'inherits_from': self.related_model
+                'inherits_from': self.related_model,
+                'inherits_from_id': str(related_model.id)
             }
         else:
             value = self._getvalue(obj)

@@ -41,20 +41,25 @@ class Setting(ToDictNameMixin, BaseModel):
                                    if 'inherits_from' in v}
 
     def get_inherits_from_map(self):
+        """
+        Returns a dict where:
+          - key: is 'inherits from name',
+          - value: is a tuple => (<inherits_from_id>, <inherits_from_settings>)
+        """
         names = self.get_inherits_from_names()
         ret = {}
         for s in Setting.objects.filter(name__in=names):
             if s.name == 'general':
-                ret[s.name] = s.settings
+                ret[s.name] = (str(s.id), s.settings)
             elif s.name == 'role' and s.related_id == self.person.role.id:
-                ret[s.name] = self.get_role_settings(s.related_id)
+                role = self.get_role_settings(s.related_id)
+                ret[s.name] = (str(role.id), role.settings.settings)
         return ret
 
     @staticmethod
     def get_role_settings(role_id):
         role_type = ContentType.objects.get(app_label='person', model='role')
-        role = role_type.get_object_for_this_type(id=role_id)
-        return role.settings.settings
+        return role_type.get_object_for_this_type(id=role_id)
 
     def inherited_settings(self):
         settings = copy.copy(self.settings)
@@ -63,13 +68,14 @@ class Setting(ToDictNameMixin, BaseModel):
             if not isinstance(v, dict):
                 raise TypeError("'{}' is not a dict".format(v))
 
-            if 'value' not in v or 'inherits_from' in v:
+            if 'inherits_from' in v:
                 inherits_from = v['inherits_from']
-                inherited_setting_objs = self.inherits_from_map[inherits_from]
+                (inherits_from_id, inherited_setting_objs) = self.inherits_from_map[inherits_from]
                 inherited_setting_obj = inherited_setting_objs[k]
                 settings[k].update({
                     'value': None if 'value' not in v else v['value'],
                     # 'inherits_from' already exists in 'role' setting
+                    'inherits_from_id': inherits_from_id,
                     'inherited_value': inherited_setting_obj['value']
                     })
         return settings

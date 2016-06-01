@@ -402,7 +402,6 @@ class Person(BaseModel, AbstractUser):
 
         return str(Locale.objects.system_default().id)
 
-
     @property
     def _password_expire_date(self):
         return timezone.now().date() + timedelta(days=self.role.password_expire)

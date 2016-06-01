@@ -33,6 +33,7 @@ class SettingModelTests(TestCase):
         # overridden
         self.assertEqual(ret['dashboard_text']['value'], None)
         self.assertEqual(ret['dashboard_text']['inherits_from'], 'general')
+        self.assertEqual(ret['dashboard_text']['inherits_from_id'], str(self.setting.id))
         self.assertEqual(ret['dashboard_text']['inherited_value'], 'Welcome')
 
     def test_combined_settings__person_inherits_from_role(self):
@@ -71,6 +72,9 @@ class SettingModelTests(TestCase):
 
     def test_get_inherits_from_map(self):
         ret = self.role_setting.get_inherits_from_map()
-        self.assertEqual(len(ret), 1)
         self.assertIsInstance(ret, dict)
-        self.assertEqual(ret, {'general': self.setting.settings})
+        self.assertEqual(len(ret), 1)
+        self.assertIsInstance(ret['general'], tuple)
+        self.assertEqual(len(ret['general']), 2)
+        self.assertEqual(ret['general'][0], str(self.setting.id))
+        self.assertEqual(ret['general'][1], self.setting.settings)
