@@ -107,15 +107,15 @@
 			background-color: $light;
 		}
 		&.ember-power-select-option[aria-current=true]{
-			color: $white;
-			background-color: $hoverColor;
+			color: $hoverColor;
+			background-color: $hoverColorLight;
 		}
 	}
 	.ember-power-select-option[aria-selected=true]{
 		background: $light;
 	}
 	&.ember-power-select-option[aria-current=true]{
-		background: $hoverColor;
+		background: $hoverColorLight;
 	}
 	.ember-basic-dropdown--below{
 		border-radius: 0 0 2px 2px;

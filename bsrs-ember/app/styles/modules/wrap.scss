@@ -77,8 +77,8 @@ section.wrap{
               display: block;
               &:hover{
                 cursor: pointer;
-                color: $white;
-                background-color: $hoverColor;
+                color: $hoverColor;
+                background-color: $hoverColorLight;
                 .fa{
                   color: $white;
                   &:hover{
@@ -150,7 +150,7 @@ section.wrap{
       border: $borderStyle;
       border-width: 0 0 1px 0;
       position: relative;
-      //z-index: 5;
+      z-index: 3;
 
       h1{
         vertical-align: baseline;
