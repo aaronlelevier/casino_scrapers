@@ -4,8 +4,9 @@ import uuid
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
-from dtd.models import TreeData
+from dtd.models import TreeData, DTD_START_ID
 from dtd.serializers import TreeDataDetailSerializer
+from dtd.tests.factory import create_tree_data
 from dtd.tests.mixins import TreeDataTestSetUpMixin
 from ticket.models import Ticket
 from ticket.serializers import TicketCreateSerializer, TicketSerializer
@@ -20,7 +21,6 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
         self.ticket = create_ticket(assignee=self.person)
         serializer = TicketCreateSerializer(self.ticket)
         self.data = serializer.data
-        # Aaron why are these never used?  All patches should use dt_id of the link id
         link = self.tree_data.links.first()
         link.destination = mommy.make(TreeData)
         link.save()
@@ -30,8 +30,11 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
         """
         Response is the DTD start point, which is configured as a General Setting.
         """
+        create_tree_data(id=DTD_START_ID)
         start = TreeData.objects.get_start()
+
         response = self.client.get('/api/dt/dt-start/')
+
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(start.id))

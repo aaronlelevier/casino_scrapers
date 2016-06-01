@@ -4,15 +4,13 @@ from model_mommy import mommy
 
 from category.models import Category
 from category.tests.factory import create_single_category
-from dtd.models import TreeField, TreeOption, TreeData, TreeLink
+from dtd.models import TreeField, TreeOption, TreeData, TreeLink, DTD_START_KEY
 from dtd.model_choices import FIELD_TYPES
-from setting.settings import GENERAL_SETTINGS
 from ticket.models import TicketStatus, TicketPriority
 from ticket.tests.factory_related import create_ticket_status, create_ticket_priority
 from utils.create import _generate_chars, random_lorem
 from utils.helpers import generate_uuid
 
-DTD_START_KEY = 'Start'
 
 def _link_get_or_create_related(model, factory_create_func):
     try:

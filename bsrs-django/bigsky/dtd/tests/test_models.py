@@ -3,12 +3,16 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from dtd.models import TreeData, TreeDataManager, DTD_START_KEY
-from dtd.tests.factory import create_tree_data
+from dtd.models import TreeData, TreeDataManager, DTD_START_ID
+from dtd.tests.factory import create_tree_data, create_dtd_fixture_data
 from setting.tests.factory import create_general_setting
 
 
 class TreeDataManagerTests(TestCase):
+
+    def setUp(self):
+        create_dtd_fixture_data()
+        create_general_setting()
 
     def test_search_multi(self):
         keyword = 'a'
@@ -25,13 +29,10 @@ class TreeDataManagerTests(TestCase):
         self.assertEqual(len(ret), len(raw_ret))
 
     def test_get_start(self):
-        create_tree_data(key=DTD_START_KEY)
-        general_settings = create_general_setting()
-
         ret = TreeData.objects.get_start()
 
         self.assertIsInstance(ret, TreeData)
-        self.assertEqual(ret.key, general_settings.settings['dt_start_id']['value'])
+        self.assertEqual(str(ret.id), DTD_START_ID)
 
 
 class TreeDataTests(TestCase):

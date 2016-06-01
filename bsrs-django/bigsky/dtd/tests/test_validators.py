@@ -5,11 +5,10 @@ import uuid
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
-from dtd.model_choices import FIELD_TYPES
 from dtd.models import TreeField
 from dtd.serializers import TreeDataCreateUpdateSerializer
 from dtd.tests.mixins import TreeDataTestSetUpMixin
-from utils.create import random_lorem, _generate_chars
+from utils.create import _generate_chars
 
 
 class UniqueDtdFieldValidatorTests(TreeDataTestSetUpMixin, APITestCase):

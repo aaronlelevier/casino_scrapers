@@ -417,13 +417,17 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(len(self.data['fields'][0]['options']), 1)
 
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
+        data = json.loads(response.content.decode('utf8'))
+
+        for f in data['fields']:
+            if f['id'] == self.data['fields'][0]['id']:
+                post_field = f
 
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data['fields'][0]['options']), 1)
-        self.assertEqual(data['fields'][0]['options'][0]['id'], self.data['fields'][0]['options'][0]['id'])
-        self.assertEqual(data['fields'][0]['options'][0]['order'], self.data['fields'][0]['options'][0]['order'])
-        self.assertEqual(data['fields'][0]['options'][0]['text'], self.data['fields'][0]['options'][0]['text'])
+        self.assertEqual(len(post_field['options']), 1)
+        self.assertEqual(post_field['options'][0]['id'], self.data['fields'][0]['options'][0]['id'])
+        self.assertEqual(post_field['options'][0]['order'], self.data['fields'][0]['options'][0]['order'])
+        self.assertEqual(post_field['options'][0]['text'], self.data['fields'][0]['options'][0]['text'])
 
     def test_remove_option(self):
         self.assertEqual(len(self.data['fields'][0]['options']), 2)
@@ -437,21 +441,23 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         self.assertEqual(len(data['fields'][0]['options']), 0)
 
     def test_update_existing_option(self):
-        del self.data['fields'][0]['options'][-1]
-        self.assertEqual(len(self.data['fields'][0]['options']), 1)
         self.data['fields'][0]['options'][0].update({
             'text': random_lorem(),
             'order': 3
         })
-        self.data['attachments'] = [obj['id'] for obj in self.data['attachments']]
+        self.data['attachments'] = []
 
         response = self.client.put('/api/dtds/{}/'.format(self.tree_data.id), self.data, format='json')
+        data = json.loads(response.content.decode('utf8'))
+
+        for f in data['fields']:
+            for op in f['options']:
+                if op['id'] == self.data['fields'][0]['options'][0]['id']:
+                    post_option = op
 
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data['fields'][0]['options']), 1)
-        self.assertEqual(data['fields'][0]['options'][0]['text'], self.data['fields'][0]['options'][0]['text'])
-        self.assertEqual(data['fields'][0]['options'][0]['order'], self.data['fields'][0]['options'][0]['order'])
+        self.assertEqual(post_option['text'], self.data['fields'][0]['options'][0]['text'])
+        self.assertEqual(post_option['order'], self.data['fields'][0]['options'][0]['order'])
 
     def test_add_link(self):
         category = create_single_category()

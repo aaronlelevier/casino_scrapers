@@ -10,7 +10,8 @@ from ticket.models import TicketStatus, TicketPriority
 from utils.models import BaseModel, BaseQuerySet, BaseManager
 
 
-DTD_START_KEY = GENERAL_SETTINGS['dt_start_id']['value']
+DTD_START_ID = GENERAL_SETTINGS['dt_start_id']['value']
+DTD_START_KEY = 'Start'
 
 
 class TreeDataQuerySet(BaseQuerySet):
@@ -32,7 +33,7 @@ class TreeDataManager(BaseManager):
 
     def get_start(self):
         try:
-            return self.get(key=DTD_START_KEY)
+            return self.get(id=DTD_START_ID)
         except:
             pass
 

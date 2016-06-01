@@ -1,14 +1,12 @@
-from django.db.models import Q
 from django.test import TestCase
 
 from model_mommy import mommy
 
 from category.models import Category
 from category.tests.factory import create_single_category
-from dtd.models import TreeField, TreeOption, TreeData, TreeLink
+from dtd.models import TreeField, TreeOption, TreeData, TreeLink, DTD_START_KEY
 from dtd.model_choices import FIELD_TYPES
 from dtd.tests import factory
-from setting.settings import GENERAL_SETTINGS
 from ticket.models import TicketStatus, TicketPriority
 
 
@@ -148,18 +146,23 @@ class FixtureGenerationTests(TestCase):
         self.assertEqual(TreeData.objects.count(), 23)
         self.assertEqual(TreeLink.objects.count(), 23)
 
-    # def test_join_dtds_and_links__tree_link_join_counts(self):
-    #     factory.create_dtd_fixtures_only()
-    #     factory.create_link_fixtures_only()
-    #     factory.join_dtds_and_links()
-    #     start = TreeData.objects.get(key=GENERAL_SETTINGS['dt_start_id']['value'])
-    #     self.assertEqual(start.links.count(), 2)
-    #     appliances = TreeData.objects.get(key=str(2))
-    #     self.assertEqual(appliances.links.count(), 3)
-    #     parking_lot = TreeData.objects.get(key=str(13))
-    #     self.assertEqual(parking_lot.links.count(), 3)
-    #     plumbing = TreeData.objects.get(key=str(17))
-    #     self.assertEqual(plumbing.links.count(), 5)
+    def test_join_dtds_and_links__tree_link_join_counts(self):
+        factory.create_dtd_fixtures_only()
+        factory.create_link_fixtures_only()
+
+        factory.join_dtds_and_links()
+
+        start = TreeData.objects.get(key=DTD_START_KEY)
+        self.assertEqual(start.links.count(), 2)
+
+        appliances = TreeData.objects.get(key=str(2))
+        self.assertEqual(appliances.links.count(), 3)
+
+        parking_lot = TreeData.objects.get(key=str(13))
+        self.assertEqual(parking_lot.links.count(), 3)
+
+        plumbing = TreeData.objects.get(key=str(17))
+        self.assertEqual(plumbing.links.count(), 5)
 
     def test_join_dtds_and_links__destination(self):
         factory.create_dtd_fixtures_only()
