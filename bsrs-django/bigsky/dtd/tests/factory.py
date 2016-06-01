@@ -12,7 +12,7 @@ from ticket.tests.factory_related import create_ticket_status, create_ticket_pri
 from utils.create import _generate_chars, random_lorem
 from utils.helpers import generate_uuid
 
-DTD_START_KEY = GENERAL_SETTINGS['dt_start_id']['value']
+DTD_START_KEY = 'Start'
 
 def _link_get_or_create_related(model, factory_create_func):
     try:

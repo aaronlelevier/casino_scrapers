@@ -3,6 +3,8 @@ import uuid
 
 from rest_framework.test import APITestCase
 
+from dtd.models import TreeData
+from dtd.tests.factory import create_dtd_fixture_data
 from person.tests.factory import PASSWORD, create_single_person
 from setting.models import Setting
 from setting.serializers import SettingSerializer
@@ -12,6 +14,8 @@ from setting.settings import GENERAL_SETTINGS
 class SettingTests(APITestCase):
 
     def setUp(self):
+        create_dtd_fixture_data()
+        self.start_dtd = TreeData.objects.get(key='Start')
         self.person = create_single_person()
         self.setting = Setting.objects.get(name='general')
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -44,6 +48,10 @@ class SettingTests(APITestCase):
                 GENERAL_SETTINGS[key]['value']
             )
             self.assertNotIn('type', data['settings'][key])
+
+        # dt_start_id is used to get 'key' as well on detail request
+        self.assertEqual(data['settings']['dt_start']['value']['id'], str(self.start_dtd.id))
+        self.assertEqual(data['settings']['dt_start']['value']['key'], self.start_dtd.key)
 
     def test_create(self):
         raw_data = {
