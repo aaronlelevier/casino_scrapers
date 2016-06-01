@@ -226,7 +226,7 @@ zh-cn,admin.setting.company_code,Company Code,Company Code,Company Code,公司�
 zh-cn,admin.setting.company_name,Company Name,Company Name,Company Name,公司名,公司名,公司名,公司名,"'admin.setting.company_name':'公司名',",
 zh-cn,admin.setting.create_all,Create All,Create All,Create All,创建所有,创建所有,创建所有,创建所有,"'admin.setting.create_all':'创建所有',",
 zh-cn,admin.setting.dashboard_text,Welcome Message,Welcome Message,Welcome Message,欢迎辞,欢迎辞,欢迎辞,欢迎辞,"'admin.setting.dashboard_text':'欢迎辞',",
-zh-cn,admin.setting.dt_start_key,Start,Start,Start,开始,开始,开始,开始,"'admin.setting.dt_start_key':'开始',",
+zh-cn,admin.setting.dt_start_id,Start,Start,Start,开始,开始,开始,开始,"'admin.setting.dt_start_id':'开始',",
 zh-cn,admin.setting.exchange_rates,Exchange Rates,Exchange Rates,Exchange Rates,汇率,汇率,汇率,汇率,"'admin.setting.exchange_rates':'汇率',",
 zh-cn,admin.setting.login_grace,Login Grace,Login Grace,Login Grace,登录格雷斯,登录格雷斯,登录格雷斯,登录格雷斯,"'admin.setting.login_grace':'登录格雷斯',",
 zh-cn,admin.setting.modules,Modules,Modules,Modules,模块,模块,模块,模块,"'admin.setting.modules':'模块',",

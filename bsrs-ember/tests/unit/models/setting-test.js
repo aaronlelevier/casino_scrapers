@@ -96,12 +96,12 @@ test('test_contractor_phone', (assert) => {
     assert.equal(setting.get('isDirty'), false);
 });
 
-test('dt_start_key', (assert) => {
+test('dt_start_id', (assert) => {
     setting = store.push('setting', {id: SD.id});
     assert.equal(setting.get('isDirty'), false);
-    setting.set('dt_start_key', 'x');
+    setting.set('dt_start_id', 'x');
     assert.equal(setting.get('isDirty'), true);
-    setting.set('dt_start_key', '');
+    setting.set('dt_start_id', '');
     assert.equal(setting.get('isDirty'), false);
 });
 
@@ -120,7 +120,7 @@ test('serialize', (assert) => {
         test_mode: SD.test_mode,
         test_contractor_email: SD.test_contractor_email,
         test_contractor_phone: SD.test_contractor_phone,
-        dt_start_key: SD.dt_start_key
+        dt_start_id: SD.dt_start_id
     });
     var serialize = setting.serialize();
     assert.equal(serialize.id, SD.id);
@@ -134,6 +134,6 @@ test('serialize', (assert) => {
     assert.equal(serialize.settings.test_mode, SD.test_mode);
     assert.equal(serialize.settings.test_contractor_email, SD.test_contractor_email);
     assert.equal(serialize.settings.test_contractor_phone, SD.test_contractor_phone);
-    assert.equal(serialize.settings.dt_start_key, SD.dt_start_key);
+    assert.equal(serialize.settings.dt_start_id, SD.dt_start_id);
 
 });

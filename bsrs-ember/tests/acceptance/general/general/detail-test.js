@@ -50,7 +50,7 @@ test('general settings title and fields populated correctly', function(assert) {
         assert.equal(find('.t-settings-test_mode').prop('checked'), SD.test_mode);
         assert.equal(find('.t-settings-test_contractor_email').val(), SD.test_contractor_email);
         assert.equal(find('.t-settings-test_contractor_phone').val(), SD.test_contractor_phone);
-        assert.equal(find('.t-settings-dt_start_key').val(), SD.dt_start_key);
+        assert.equal(find('.t-settings-dt_start_id').val(), SD.dt_start_id);
     });
     fillIn('.t-settings-company_code', SD.company_codeOther);
     fillIn('.t-settings-company_name', SD.company_nameOther);
@@ -62,7 +62,7 @@ test('general settings title and fields populated correctly', function(assert) {
     page.testmodeClick();
     fillIn('.t-settings-test_contractor_email', SD.test_contractor_emailOther);
     fillIn('.t-settings-test_contractor_phone', SD.test_contractor_phoneOther);
-    fillIn('.t-settings-dt_start_key', SD.dt_start_keyOther);
+    fillIn('.t-settings-dt_start_id', SD.dt_start_idOther);
     andThen(() => {
         let setting = store.find('setting', SD.id);
         assert.equal(setting.get('company_name'), SD.company_nameOther);
@@ -75,7 +75,7 @@ test('general settings title and fields populated correctly', function(assert) {
         assert.equal(setting.get('test_mode'), SD.test_modeOther);
         assert.equal(setting.get('test_contractor_email'), SD.test_contractor_emailOther);
         assert.equal(setting.get('test_contractor_phone'), SD.test_contractor_phoneOther);
-        assert.equal(setting.get('dt_start_key'), SD.dt_start_keyOther);
+        assert.equal(setting.get('dt_start_id'), SD.dt_start_idOther);
         // dirty tracking
         assert.ok(setting.get('isDirty'));
         assert.ok(setting.get('isDirtyOrRelatedDirty'));
@@ -103,7 +103,7 @@ test('translations - for labels', (assert) => {
         assert.equal(find('.t-settings-test_mode-label').text(), translations['admin.setting.test_mode']);
         assert.equal(getLabelText('test_contractor_email'), translations['admin.setting.test_contractor_email']);
         assert.equal(getLabelText('test_contractor_phone'), translations['admin.setting.test_contractor_phone']);
-        assert.equal(getLabelText('dt_start_key'), translations['admin.setting.dt_start_key']);
+        assert.equal(getLabelText('dt_start_id'), translations['admin.setting.dt_start_id']);
     });
 });
 

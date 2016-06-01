@@ -154,7 +154,7 @@ class FixtureGenerationTests(TestCase):
 
         factory.join_dtds_and_links()
 
-        start = TreeData.objects.get(key=GENERAL_SETTINGS['dt_start_key']['value'])
+        start = TreeData.objects.get(key=GENERAL_SETTINGS['dt_start_id']['value'])
         self.assertEqual(start.links.count(), 2)
 
         appliances = TreeData.objects.get(key=str(2))

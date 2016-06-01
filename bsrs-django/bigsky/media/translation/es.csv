@@ -226,7 +226,7 @@ es,admin.setting.company_code,Company Code,Company Code,Company Code,Codigo de c
 es,admin.setting.company_name,Company Name,Company Name,Company Name,nombre de empresa,nombre de empresa,nombre de empresa,nombre de empresa,"'admin.setting.company_name':'nombre de empresa',",
 es,admin.setting.create_all,Create All,Create All,Create All,crear todos,crear todos,crear todos,crear todos,"'admin.setting.create_all':'crear todos',",
 es,admin.setting.dashboard_text,Welcome Message,Welcome Message,Welcome Message,Mensaje de bienvenida,Mensaje de bienvenida,Mensaje de bienvenida,Mensaje de bienvenida,"'admin.setting.dashboard_text':'Mensaje de bienvenida',",
-es,admin.setting.dt_start_key,Start,Start,Start,comienzo,comienzo,comienzo,comienzo,"'admin.setting.dt_start_key':'comienzo',",
+es,admin.setting.dt_start_id,Start,Start,Start,comienzo,comienzo,comienzo,comienzo,"'admin.setting.dt_start_id':'comienzo',",
 es,admin.setting.exchange_rates,Exchange Rates,Exchange Rates,Exchange Rates,Los tipos de cambio,Los tipos de cambio,Los tipos de cambio,Los tipos de cambio,"'admin.setting.exchange_rates':'Los tipos de cambio',",
 es,admin.setting.login_grace,Login Grace,Login Grace,Login Grace,entrada de gracia,entrada de gracia,entrada de gracia,entrada de gracia,"'admin.setting.login_grace':'entrada de gracia',",
 es,admin.setting.modules,Modules,Modules,Modules,módulos,módulos,módulos,módulos,"'admin.setting.modules':'módulos',",

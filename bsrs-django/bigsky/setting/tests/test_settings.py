@@ -16,7 +16,7 @@ class SettingsTests(TestCase):
             'test_mode',
             'test_contractor_email',
             'test_contractor_phone',
-            'dt_start_key'
+            'dt_start_id'
         ]
 
         for k in keys:

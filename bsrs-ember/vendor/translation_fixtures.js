@@ -233,7 +233,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
           'admin.setting.company_name':'Company Name',
           'admin.setting.create_all':'Create All',
           'admin.setting.dashboard_text':'Welcome Message',
-          'admin.setting.dt_start_key':'Start',
+          'admin.setting.dt_start_id':'Start',
           'admin.setting.exchange_rates':'Exchange Rates',
           'admin.setting.login_grace':'Login Grace',
           'admin.setting.modules':'Modules',

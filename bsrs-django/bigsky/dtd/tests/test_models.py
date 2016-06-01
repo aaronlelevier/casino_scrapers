@@ -31,7 +31,7 @@ class TreeDataManagerTests(TestCase):
         ret = TreeData.objects.get_start()
 
         self.assertIsInstance(ret, TreeData)
-        self.assertEqual(ret.key, general_settings.settings['dt_start_key']['value'])
+        self.assertEqual(ret.key, general_settings.settings['dt_start_id']['value'])
 
 
 class TreeDataTests(TestCase):

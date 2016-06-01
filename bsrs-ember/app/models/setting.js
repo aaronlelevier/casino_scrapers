@@ -12,7 +12,7 @@ var SettingModel = Model.extend({
     test_mode: attr(),
     test_contractor_email: attr(''),
     test_contractor_phone: attr(''),
-    dt_start_key: attr(''),
+    dt_start_id: attr(''),
     // settings: end
     translated_title: Ember.computed(function(){
         return this.get('i18n').t('admin.general', { count: 2 });
@@ -41,7 +41,7 @@ var SettingModel = Model.extend({
                 test_mode: this.get('test_mode'),
                 test_contractor_email: this.get('test_contractor_email'),
                 test_contractor_phone: this.get('test_contractor_phone'),
-                dt_start_key: this.get('dt_start_key'),
+                dt_start_id: this.get('dt_start_id'),
             }
         };
     }

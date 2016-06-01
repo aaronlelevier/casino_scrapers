@@ -14,7 +14,7 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             test_mode: false,
             test_contractor_email: 'test@bigskytech.com',
             test_contractor_phone: '+18587155000',
-            dt_start_key: 'Start',
+            dt_start_id: 'Start',
 
             // Role
             create_all: true,
@@ -34,7 +34,7 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             test_modeOther: true,
             test_contractor_emailOther: 'foo@bigskytech.com',
             test_contractor_phoneOther: '+18587154000',
-            dt_start_keyOther: 'StartTwo',
+            dt_start_idOther: 'StartTwo',
 
             // Role
             create_allOther: false,
@@ -73,8 +73,8 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
                 test_contractor_phone: {
                     value: one.test_contractor_phone,
                 },
-                dt_start_key: {
-                    value: one.dt_start_key,
+                dt_start_id: {
+                    value: one.dt_start_id,
                 }
             },
             settingsOther: {
@@ -102,8 +102,8 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
                 test_contractor_phone: {
                     value: one.test_contractor_phoneOther,
                 },
-                dt_start_key: {
-                    value: one.dt_start_keyOther,
+                dt_start_id: {
+                    value: one.dt_start_idOther,
                 }
             }
         });

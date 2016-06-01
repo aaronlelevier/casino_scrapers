@@ -25,7 +25,7 @@ var setting_payload_other = {
         test_mode: SD.test_modeOther,
         test_contractor_email: SD.test_contractor_emailOther,
         test_contractor_phone: SD.test_contractor_phoneOther,
-        dt_start_key: SD.dt_start_keyOther
+        dt_start_id: SD.dt_start_idOther
     }
 };
 

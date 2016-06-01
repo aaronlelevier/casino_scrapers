@@ -61,7 +61,7 @@ class SettingsValidator(object):
         "test_mode": "bool",
         "test_contractor_email": "email",
         "test_contractor_phone": "phone",
-        "dt_start_key": "str",
+        "dt_start_id": "str",
         "create_all": "bool",
         "accept_assign": "bool",
         "accept_notify": "bool",

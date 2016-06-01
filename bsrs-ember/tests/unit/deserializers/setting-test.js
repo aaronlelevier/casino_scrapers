@@ -33,7 +33,7 @@ test('setting correctly deserialized settings object', (assert) => {
     assert.equal(setting.get('test_mode'), SD.test_mode);
     assert.equal(setting.get('test_contractor_email'), SD.test_contractor_email);
     assert.equal(setting.get('test_contractor_phone'), SD.test_contractor_phone);
-    assert.equal(setting.get('dt_start_key'), SD.dt_start_key);
+    assert.equal(setting.get('dt_start_id'), SD.dt_start_id);
     // received settings object is destroyed after destructing
     assert.notOk(setting.get('settings'));
 });

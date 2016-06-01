@@ -30,7 +30,7 @@ GENERAL_SETTINGS = {
     "test_contractor_phone": {
         "value": "+18587155000",
     },
-    "dt_start_key": {
+    "dt_start_id": {
         "value": "Start",
     }
 }
