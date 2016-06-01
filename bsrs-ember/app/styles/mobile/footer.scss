@@ -6,7 +6,8 @@ footer.mobile-footer {
   left: 0;
   right: 0;
   bottom: 0;
-  border-top: 2px solid $gray;
+  border: $borderStyle;
+  border-width: 1px 0 0;
   ul {
     width: 100%;
     padding: 0;
@@ -19,7 +20,7 @@ footer.mobile-footer {
       text-align: center;
       a {
         color: $medGray;
-        font-size: 3rem;
+        font-size: 26px;
         padding: 0 2rem;
       }
     }
