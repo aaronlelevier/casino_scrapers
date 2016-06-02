@@ -66,11 +66,11 @@ var GridRepositoryMixin = Ember.Mixin.create({
     const all = store.find(type);
     let grid_count = store.find('grid-count', 1);
     if(!grid_count.get('content')){
+      /* sets a default count while the payload is being deserialized */
       run(() => {
         grid_count = store.push('grid-count', {id: 1, count: 100});
       });
     }
-    /* sets a default count while the payload is being deserialized */
     all.set('count', grid_count.get('count'));
     PromiseMixin.xhr(endpoint).then((response) => {
       garbage_collection.forEach((type) => {
