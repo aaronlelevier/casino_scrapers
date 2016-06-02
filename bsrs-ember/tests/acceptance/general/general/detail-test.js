@@ -12,7 +12,7 @@ import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
 import page from 'bsrs-ember/tests/pages/settings';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import {setting_payload, setting_payload_other} from 'bsrs-ember/tests/helpers/payloads/general-settings';
+import {setting_payload, setting_payload_other, setting_payload_only_change_dt_start} from 'bsrs-ember/tests/helpers/payloads/general-settings';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
 
@@ -65,17 +65,6 @@ test('general settings title and fields populated correctly', assert => {
     page.testmodeClick();
     fillIn('.t-settings-test_contractor_email', SD.test_contractor_emailOther);
     fillIn('.t-settings-test_contractor_phone', SD.test_contractor_phoneOther);
-    const param = 's';
-    xhr(`/api/dtds/?search=${param}`, 'GET', null, {}, 200, DTDF.list());
-    page.startDtdClickDropdown();
-    andThen(() => {
-        fillIn('.ember-power-select-search input', param);
-    });
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(page.startDtdTextOne, DTD.keyTwoGrid);
-    });
-    page.startDtdClickOne();
     andThen(() => {
         let setting = store.find('setting', SD.id);
         assert.equal(setting.get('company_name'), SD.company_nameOther);
@@ -88,7 +77,7 @@ test('general settings title and fields populated correctly', assert => {
         assert.equal(setting.get('test_mode'), SD.test_modeOther);
         assert.equal(setting.get('test_contractor_email'), SD.test_contractor_emailOther);
         assert.equal(setting.get('test_contractor_phone'), SD.test_contractor_phoneOther);
-        assert.equal(page.startDtdInput, DTD.keyTwoGrid);
+        assert.equal(page.startDtdInput, SD.dt_start_key);
         // dirty tracking
         assert.ok(setting.get('isDirty'));
         assert.ok(setting.get('isDirtyOrRelatedDirty'));
@@ -101,6 +90,24 @@ test('general settings title and fields populated correctly', assert => {
         assert.ok(setting.get('isNotDirty'));
     });
 });
+
+/* jshint ignore:start */
+test('change dt_start', async assert => {
+    await visit(DETAIL_URL);
+    assert.equal(currentURL(), DETAIL_URL);
+    const param = '1';
+    xhr(`/api/dtds/?search=${param}`, 'GET', null, {}, 200, DTDF.list());
+    await page.startDtdClickDropdown();
+    fillIn('.ember-power-select-search input', param);
+    assert.equal(currentURL(), DETAIL_URL);
+    await page.startDtdClickOne();
+    xhr(url, 'PUT', JSON.stringify(setting_payload_only_change_dt_start), {}, 200, {});
+    await generalPage.save();
+    assert.equal(currentURL(), ADMIN_URL);
+    let setting = store.find('setting', SD.id);
+    assert.ok(setting.get('isNotDirty'));
+});
+/* jshint ignore:end */
 
 test('translations - for labels', assert => {
     visit(DETAIL_URL);

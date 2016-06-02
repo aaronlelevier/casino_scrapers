@@ -21,6 +21,10 @@ var SettingModel = Model.extend({
         return this.get('isDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+    changeStartDtd(dtd) {
+        this.set('dt_start_id', dtd.id);
+        this.set('dt_start', {id: dtd.id, key: dtd.key});
+    },
     serialize() {
         let modules = this.get('modules');
         return {

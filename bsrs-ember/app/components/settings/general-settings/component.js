@@ -38,18 +38,6 @@ var GeneralSettings = Ember.Component.extend(TabMixin, EditMixin, {
             modules[moduleKey] = !modules[moduleKey];
 
             setting.set('modules', modules);
-        },
-        selected(dtd) {
-            let model = this.get('model');
-            model.set('dt_start_id', dtd.id);
-            model.set('dt_start', {id: dtd.id, key: dtd.key});
-        },
-        searchRepo(param) {
-            const url = `${DTD_URL}?search=${param}`;
-            const _this = this;
-            PromiseMixin.xhr(url, 'GET').then((response) => {
-                _this.set('options', response.results);
-            });
         }
     }
 });
