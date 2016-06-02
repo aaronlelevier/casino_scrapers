@@ -47,6 +47,7 @@ class SavedSearchTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['endpoint_name'], self.saved_search.endpoint_name)
+        self.assertTrue(data['results'][0]['created'])
 
     def test_detail(self):
         response = self.client.get('/api/admin/saved-searches/{}/'.format(self.saved_search.id))

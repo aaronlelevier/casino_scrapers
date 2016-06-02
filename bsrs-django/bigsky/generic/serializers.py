@@ -6,7 +6,7 @@ class SavedSearchSerializer(BaseCreateSerializer):
 
     class Meta:
         model = SavedSearch
-        fields = ('id', 'name', 'endpoint_name', 'endpoint_uri')
+        fields = ('id', 'name', 'endpoint_name', 'endpoint_uri', 'created')
 
 
 class AttachmentSerializer(BaseCreateSerializer):
