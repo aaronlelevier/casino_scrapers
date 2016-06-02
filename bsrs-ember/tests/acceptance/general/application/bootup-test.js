@@ -260,9 +260,9 @@ test('on boot we should fetch and load the saved filterset configuration', funct
   visit(HOME_URL);
   andThen(() => {
     var filtersets = store.find('filterset');
-    assert.equal(filtersets.get('length'), 3);
-    assert.equal(filtersets.objectAt(0).get('endpoint_name'), 'admin.people.index');
-    assert.deepEqual(filtersets.objectAt(0).get('endpoint_uri'), '?sort=title');
+    assert.equal(filtersets.get('length'), 4);
+    assert.equal(filtersets.objectAt(0).get('endpoint_name'), 'tickets.index');
+    assert.deepEqual(filtersets.objectAt(0).get('endpoint_uri'), '?sort=assignee.fullname');
   });
 });
 
