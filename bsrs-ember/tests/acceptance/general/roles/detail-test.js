@@ -11,11 +11,13 @@ import LLF from 'bsrs-ember/vendor/location_level_fixtures';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import SD from 'bsrs-ember/vendor/defaults/setting';
+import SF from 'bsrs-ember/vendor/setting_fixtures';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import page from 'bsrs-ember/tests/pages/role';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import settingPage from 'bsrs-ember/tests/pages/settings';
 import {role_settings, role_settingsOther} from 'bsrs-ember/tests/helpers/payloads/role';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
@@ -25,6 +27,7 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_roles_url;
 const ROLE_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + RD.idOne;
+const SETTINGS_URL = BASEURLS.base_setting_url;
 const LETTER_A = {keyCode: 65};
 const LETTER_S = {keyCode: 83};
 const LETTER_R = {keyCode: 82};
@@ -392,7 +395,7 @@ test('settings - UI is populated for inherited correctly - inherited value from 
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + SD.dashboard_text);
-    assert.equal(find('.t-inherited-msg-dashboard_text').text(), 'Inherited from: ' + SD.inherits_from_general);
+    assert.equal(find('.t-inherited-msg-dashboard_text').text().trim(), 'Inherited from: ' + SD.inherits_from_general);
     assert.equal(find('.t-settings-dashboard_text').val(), '');
     // checkboxes are populated based on defaults, but should show where they are getting
     // defaulted from somewhere in the UI
@@ -404,18 +407,16 @@ test('settings - UI is populated for inherited correctly - inherited value from 
 
 test('settings - override value from parent', (assert) => {
   clearxhr(list_xhr);
-  clearxhr(detail_xhr);
-  let value = 'foo';
-  let inherited = true;
-  let inherits_from = 'general';
-  let inherited_value = 'Welcome';
-  detail_data = RF.detail(RD.idOne, null, {dashboard_text: {value, inherited, inherits_from, inherited_value}});
-  xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
   visit(DETAIL_URL);
   andThen(() => {
-    assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + inherited_value);
-    assert.equal(find('.t-inherited-msg-dashboard_text').text(), 'Inherited from: ' + inherits_from);
-    assert.equal(find('.t-settings-dashboard_text').val(), value);
+    assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + SD.dashboard_text);
+    assert.equal(settingPage.dashboardTextInheritedFrom, 'Inherited from: ' + SD.inherits_from_general);
+    assert.equal(find('.t-settings-dashboard_text').val(), "");
+  });
+  xhr(`${PREFIX}${SETTINGS_URL}/${SD.id}/`, 'GET', null, {}, 200, SF.detail());
+  settingPage.dashboardTextInheritedFromClick();
+  andThen(() => {
+    assert.equal(currentURL(), `${SETTINGS_URL}/${SD.id}`);
   });
 });
 

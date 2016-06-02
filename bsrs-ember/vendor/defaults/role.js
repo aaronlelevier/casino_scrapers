@@ -32,7 +32,8 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
         dashboard_text:{
           value: null,
           inherited_value: 'Welcome',
-          inherits_from: 'general'
+          inherits_from: this.setting.name,
+          inherits_from_id: this.setting.id
         },
         create_all: {
           value: this.setting.create_all,
@@ -50,8 +51,8 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
 })();
 
 if (typeof window === 'undefined') {
-  var location_level = require('../../vendor/defaults/location-level.js');
-  var setting = require('../../vendor/defaults/setting.js');
+  var location_level = require('./location-level');
+  var setting = require('./setting');
   module.exports = new BSRS_ROLE_DEFAULTS_OBJECT(location_level, setting).defaults();
 } else {
   define('bsrs-ember/vendor/defaults/role',
