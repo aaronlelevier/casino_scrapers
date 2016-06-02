@@ -139,3 +139,14 @@ test('general settings are properly dirty tracked', function(assert) {
         assert.ok(setting.get('isNotDirty'));
     });
 });
+
+test('no delete button on dropdown', assert => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+    page.deleteDropdownClick();
+    andThen(() => {
+        assert.equal(find('.t-delete-btn').text(), "");
+    });
+});

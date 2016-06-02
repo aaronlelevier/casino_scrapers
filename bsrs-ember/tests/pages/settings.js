@@ -32,7 +32,9 @@ var SettingsPage = PageObject.create({
   startDtdInput: text(START_DTD_SELECT),
   startDtdClickDropdown: clickable(START_DTD_SELECT),
   startDtdClickOne: clickable('.ember-power-select-option:eq(1)', { scope: DROPDOWN }),
-  startDtdTextOne: text('.ember-power-select-option:eq(1)')
+  startDtdTextOne: text('.ember-power-select-option:eq(1)'),
+
+  deleteDropdownClick: clickable('.t-dropdown-delete'),
 });
 
 export default SettingsPage;
