@@ -21,7 +21,6 @@ var SettingModel = Model.extend({
         return this.get('isDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-    rollback() {},
     serialize() {
         let modules = this.get('modules');
         return {

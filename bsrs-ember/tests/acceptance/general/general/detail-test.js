@@ -3,6 +3,7 @@ import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
+import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import SD from 'bsrs-ember/vendor/defaults/setting';
@@ -16,7 +17,7 @@ import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
 
 const PREFIX = config.APP.NAMESPACE;
-const BASE_ADMIN_URL = 'admin';
+const ADMIN_URL = BASEURLS.base_admin_url;
 const BASE_SETTINGS_URL = BASEURLS.base_setting_url;
 const DETAIL_URL = BASE_SETTINGS_URL + '/' + SD.id;
 
@@ -95,13 +96,13 @@ test('general settings title and fields populated correctly', assert => {
     xhr(url, 'PUT', JSON.stringify(setting_payload_other), {}, 200, {});
     generalPage.save();
     andThen(() => {
-        assert.equal(currentURL(), '/' + BASE_ADMIN_URL);
+        assert.equal(currentURL(), ADMIN_URL);
         let setting = store.find('setting', SD.id);
         assert.ok(setting.get('isNotDirty'));
     });
 });
 
-test('translations - for labels', (assert) => {
+test('translations - for labels', assert => {
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(getLabelText('company_name'), translations['admin.setting.company_name']);
@@ -119,7 +120,7 @@ test('translations - for labels', (assert) => {
     });
 });
 
-test('general settings are properly dirty tracked', function(assert) {
+test('general settings are properly dirty tracked', assert => {
     visit(DETAIL_URL);
     andThen(() => {
         let setting = store.find('setting', SD.id);
@@ -148,5 +149,61 @@ test('no delete button on dropdown', assert => {
     page.deleteDropdownClick();
     andThen(() => {
         assert.equal(find('.t-delete-btn').text(), "");
+    });
+});
+
+test('click cancel on modal, and submit no and will stay on page', assert => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+    fillIn('.t-settings-company_code', SD.company_codeOther);
+    andThen(() => {
+        let setting = store.find('setting', SD.id);
+        assert.ok(setting.get('isDirty'));
+    });
+    generalPage.cancel();
+    andThen(() => {
+        waitFor(assert, () => {
+            assert.ok(Ember.$('.ember-modal-dialog'));
+            assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+            assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+            assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+            assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
+        });
+    });
+    generalPage.clickModalCancel();
+    andThen(() => {
+        waitFor(assert, () => {
+            assert.equal(currentURL(), DETAIL_URL);
+            let setting = store.find('setting', SD.id);
+            assert.ok(setting.get('isDirty'));
+        });
+    });
+});
+
+test('click cancel on modal, and submit yes when dirty in order to rollback', assert => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+    fillIn('.t-settings-company_code', SD.company_codeOther);
+    andThen(() => {
+        let setting = store.find('setting', SD.id);
+        assert.ok(setting.get('isDirty'));
+    });
+    generalPage.cancel();
+    andThen(() => {
+        waitFor(assert, () => {
+            assert.ok(Ember.$('.ember-modal-dialog'));
+        });
+    });
+    generalPage.clickModalRollback();
+    andThen(() => {
+        waitFor(assert, () => {
+            assert.equal(currentURL(), ADMIN_URL);
+            let setting = store.find('setting', SD.id);
+            assert.ok(!setting.get('isDirty'));
+        });
     });
 });
