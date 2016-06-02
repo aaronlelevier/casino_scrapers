@@ -1,0 +1,13 @@
+<div class="pull-right btn-group btn-group-sm center-block grid-options">
+  <button class="t-show-save-filterset-modal btn btn-default" {{action "toggleSaveFilterSetModal"}}>{{fa-icon "star-o"}}</button>
+  <button class="t-show-save-filterset-modal btn btn-default" {{action "toggleSaveFilterSetModal"}}>{{fa-icon "search"}}</button>
+  <button class="t-show-save-filterset-modal btn btn-default" {{action "toggleMobileSortFilter"}}>{{fa-icon "filter"}}</button>
+</div>
+<h1 class="grid-title t-mobile-grid-title" {{action "toggleMobileFilterset"}}>{{grid_title}}<span class="show-filtersets">{{fa-icon "arrow-circle-down"}}</span></h1>
+
+{{#if mobileFilterset}}
+  <div class="filtersets t-filterset-wrap">
+    {{filterset-navigation filtersets=filtersets route=routeName}}
+  </div>
+{{else if mobileSortFilter}}
+{{/if}}
