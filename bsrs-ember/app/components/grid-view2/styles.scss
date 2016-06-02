@@ -1,17 +1,54 @@
+.filtersets{
+  clear: both;
+  ul{
+    overflow: auto;
+    margin: 0;
+    padding: 0;
+    li{
+      list-style: none;
+      float: left;
+      margin: 0 5px 5px 0;
+      a{
+        font-size: 1.1rem;
+        border: $borderStyle;
+        border-radius: $borderRadius;
+        background: $light;
+        padding: 3px 5px;
+        display: block;
+        color: $darkGray;
+        text-decoration: none;
+        &:hover{
+          cursor: pointer;
+          text-decoration: none;
+          border-color: $hoverColor;
+          background-color: $hoverColor;
+          color: $white;
+        }
+        &.active{
+          border-color: $activeColor;
+          background-color: $activeColor;
+          color: $white;
+        }
+        i{
+          margin: 0 0 0 5px;
+        }
+      }
+    }
+  }
+}
+
 header.mobile {
-  height: $mobileDocHeaderHeight;
-  line-height: $mobileDocHeaderHeight;
   padding: 0 15px;
   border: $borderStyle;
   border-width: 0 0 1px;
   h1.grid-title {
     height: $mobileDocHeaderHeight;
     line-height: $mobileDocHeaderHeight;
-    font-size: 20px;
+    font-size: 2rem;
     color: $blue;
     margin: 0;
     span.show-filtersets {
-      font-size: 16px;
+      font-size: 1.6rem;
       color: $medGray;
       padding: 0 0 0 5px;
     }
@@ -20,10 +57,32 @@ header.mobile {
     margin: 14px 0 0;
     button {
       color: $medGray;
-      font-size: 20px;
+      font-size: 2rem;
       border: none;
       background: none;
       margin: 0 0 0 5px;
+    }
+  }
+  .filtersets {//duplicated b/c need diff styles in mobile
+    ul{
+      overflow: auto;
+      margin: 0 0 .7em;
+      padding: 0;
+      li{
+        list-style: none;
+        float: none;
+        margin: 5px 0;
+        a {
+          font-size: 1.4rem;
+          height: 3rem;
+          line-height: 2.8rem;
+          padding: 0 .7em;
+          i {
+            line-height: inherit;
+            float: right;
+          }
+        }
+      }
     }
   }
 }

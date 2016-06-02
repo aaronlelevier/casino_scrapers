@@ -1,17 +1,17 @@
 {{#grid-view2 as |t|}}
 <div class="rowTable">
   <header class="container-fluid">
-<div class="row">
-  <div class="col-md-12">
-    {{t.head
-      add_model_text=add_model_text
-      hasActiveFilterSet=hasActiveFilterSet
-      count=count
-      add_model_url=add_model_url
-      savingFilter=savingFilter
-    }}
-  </div>
-</div>
+    <div class="row">
+      <div class="col-md-12">
+        {{t.head
+          add_model_text=add_model_text
+          hasActiveFilterSet=hasActiveFilterSet
+          count=count
+          add_model_url=add_model_url
+          savingFilter=savingFilter
+        }}
+      </div>
+    </div>
   </header>
   {{t.savingFilter
     savingFilter=savingFilter
@@ -48,12 +48,12 @@
     filterField=filterField
     filterPlaceholder=filterPlaceholder
   }}
-  {{t.footer 
-    model=model 
-    plural=plural 
-    list_url=list_url 
-    page=page 
+  {{t.footer
+    model=model
+    plural=plural
+    list_url=list_url
+    page=page
     page_size=page_size
-    }}
+  }}
 </div>
 {{/grid-view2}}
