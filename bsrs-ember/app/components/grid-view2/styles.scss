@@ -1,0 +1,29 @@
+header.mobile {
+  height: $mobileDocHeaderHeight;
+  line-height: $mobileDocHeaderHeight;
+  padding: 0 15px;
+  border: $borderStyle;
+  border-width: 0 0 1px;
+  h1.grid-title {
+    height: $mobileDocHeaderHeight;
+    line-height: $mobileDocHeaderHeight;
+    font-size: 20px;
+    color: $blue;
+    margin: 0;
+    span.show-filtersets {
+      font-size: 16px;
+      color: $medGray;
+      padding: 0 0 0 5px;
+    }
+  }
+  div.grid-options {
+    margin: 14px 0 0;
+    button {
+      color: $medGray;
+      font-size: 20px;
+      border: none;
+      background: none;
+      margin: 0 0 0 5px;
+    }
+  }
+}

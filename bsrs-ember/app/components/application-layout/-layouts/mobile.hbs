@@ -1,7 +1,7 @@
 <div class="bs-mobile">
-  <input type="checkbox" id="nav-trigger" class="nav-trigger t-nav-trigger" />
+  {{input type="checkbox" checked=drawerOpen id="nav-trigger" class="nav-trigger t-nav-trigger"}}
   <label for="nav-trigger">{{fa-icon "reorder"}}</label>
-  
+
   <nav class="navigation">
     <ul>
       <li class="nav-search"><input type="search"></li>
@@ -17,7 +17,7 @@
 
       <li class="nav-section">
         <ul class="nav-section-inner">
-          <li class="nav-item">{{#link-to "dashboard"}}{{t "modules.tickets.titleShort"}}{{/link-to}}</li>
+          <li class="nav-item" {{action "closeDrawer"}}>{{#link-to "tickets.index"}}{{t "modules.tickets.titleShort"}}{{/link-to}}</li>
           <li class="nav-item">{{#link-to "dashboard"}}{{t "modules.workOrders.titleShort"}}{{/link-to}}</li>
           <li class="nav-item">{{#link-to "dashboard"}}{{t "modules.invoices.titleShort"}}{{/link-to}}</li>
         </ul>
@@ -31,11 +31,14 @@
     {{people/person-current}}
   </nav>
 
-  <header class="main">
-    {{nav-bar}}
-  </header>
-  <section class="wrap">
-    {{liquid-outlet}}
-  </section>
-  {{mobile-footer}}
+  <div class="wrapper-main">
+    <header class="main">
+      {{nav-bar}}
+    </header>
+    {{tab-list tabs=tabs closeTabMaster=(action "closeTabMaster")}}
+    <section class="wrap-mobile">
+      {{liquid-outlet}}
+    </section>
+    {{mobile-footer}}
+  </div>
 </div>

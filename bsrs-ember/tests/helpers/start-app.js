@@ -16,7 +16,7 @@ function ajax(app, url, verb, data, headers, status, response) {
   Ember.run(function() {
     Ember.$.fauxjax.removeExisting(url, verb);
     var request = { url: url , method: verb };
-    if (data) { 
+    if (data) {
       request.data = data;
       if(verb !== 'DELETE') {
         request.contentType = 'application/json';
@@ -47,7 +47,7 @@ function alterPageSize(app, selector, size) {
 
 function patchRandom(app, counter) {
   Ember.run(function() {
-    random.uuid = function() { 
+    random.uuid = function() {
       counter++;
       if (counter === 1) {
         return UUID.value;
@@ -60,7 +60,7 @@ function patchRandom(app, counter) {
 
 function patchRandomAsync(app, counter) {
   Ember.run(function() {
-    random.uuid = function() { 
+    random.uuid = function() {
       counter++;
       if (counter === 1) {
         return 'abc123';
@@ -168,6 +168,14 @@ export default function startApp(attrs) {
     application.setupForTesting();
     application.injectTestHelpers();
   });
+
+  let flexi = application.__container__.lookup('service:device/layout');
+  let breakpoints = flexi.get('breakpoints');
+  let bp = {};
+  breakpoints.forEach((point) => {
+    bp[point.name] = point.begin + 5;
+  });
+  flexi.set('width', bp.huge);
 
   windowProxy.locationUrl = null;
   windowProxy.changeLocation = function(url) {
