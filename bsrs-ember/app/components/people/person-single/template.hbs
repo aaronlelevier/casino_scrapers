@@ -97,9 +97,9 @@
                 <label>
                   <input type="checkbox" value={{model.accept_assign}} onclick={{action 'changeBool' 'accept_assign'}} checked={{model.accept_assign}} class="t-person-accept_assign" name="accept_assign">
                   <span class="t-person-accept_assign-label">{{t "admin.setting.accept_assign"}}</span>
-                  {{#if model.settings_object.accept_assign.inherits_from}}
+                  {{#link-to "admin.roles.role" model.settings_object.accept_assign.inherits_from_id class="t-inherited-msg-accept_assign-link"}}
                     <span class="t-person-accept_assign-label-inherits_from">Inherits from: {{model.settings_object.accept_assign.inherits_from}}</span>
-                  {{/if}}
+                  {{/link-to}}
                 </label>
               </div>
             </div>
@@ -110,9 +110,9 @@
                 <label>
                   <input type="checkbox" value={{model.accept_notify}} onclick={{action 'changeBool' 'accept_notify'}} checked={{model.accept_notify}} class="t-person-accept_notify" name="accept_notify">
                   <span class="t-person-accept_notify-label">{{t "admin.setting.accept_notify"}}</span>
-                  {{#if model.settings_object.accept_notify.inherits_from}}
+                  {{#link-to "admin.roles.role" model.settings_object.accept_notify.inherits_from_id class="t-inherited-msg-accept_notify-link"}}
                     <span class="t-person-accept_notify-label-inherits_from">Inherits from: {{model.settings_object.accept_notify.inherits_from}}</span>
-                  {{/if}}
+                  {{/link-to}}
                 </label>
               </div>
             </div>

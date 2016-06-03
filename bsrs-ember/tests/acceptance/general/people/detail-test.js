@@ -1350,3 +1350,29 @@ test('update all settings', assert => {
     assert.equal(currentURL(), PEOPLE_URL);
   });
 });
+
+test('link-to for accept_assign setting, and link routes to person.role', assert => {
+  clearxhr(list_xhr);
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
+  xhr(`${PREFIX}${BASEURLS.base_roles_url}/${RD.idOne}/`, 'GET', null, {}, 200, RF.detail(RD.idOne));
+  page.acceptAssignInheritedFromClick();
+  andThen(() => {
+    assert.equal(currentURL(), `${BASEURLS.base_roles_url}/${RD.idOne}`);
+  });
+});
+
+test('link-to for accept_notify setting, and link routes to person.role', assert => {
+  clearxhr(list_xhr);
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
+  xhr(`${PREFIX}${BASEURLS.base_roles_url}/${RD.idOne}/`, 'GET', null, {}, 200, RF.detail(RD.idOne));
+  page.acceptNotifyInheritedFromClick();
+  andThen(() => {
+    assert.equal(currentURL(), `${BASEURLS.base_roles_url}/${RD.idOne}`);
+  });
+});

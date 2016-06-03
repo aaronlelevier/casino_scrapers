@@ -70,11 +70,13 @@ export default PageObject.create({
   acceptAssignClick: clickable('.t-person-accept_assign-label'),
   acceptAssignInheritedFromLabelText: text('.t-person-accept_assign-label-inherits_from'),
   acceptAssignLabelText: text('.t-person-accept_assign-label'),
+  acceptAssignInheritedFromClick: clickable('.t-inherited-msg-accept_assign-link'),
 
   acceptNotifyChecked: () => Ember.$('.t-person-accept_notify').is(':checked'),
   acceptNotifyClick: clickable('.t-person-accept_notify-label'),
   acceptNotifyInheritedFromLabelText: text('.t-person-accept_notify-label-inherits_from'),
   acceptNotifyLabelText: text('.t-person-accept_notify-label'),
+  acceptNotifyInheritedFromClick: clickable('.t-inherited-msg-accept_notify-link'),
 
   passwordOneTimeChecked: () => Ember.$('.t-person-password_one_time').is(':checked'),
   passwordOneTimeClick: clickable('.t-person-password_one_time-label'),
