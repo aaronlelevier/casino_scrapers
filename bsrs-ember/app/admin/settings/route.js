@@ -7,7 +7,6 @@ export
 default TabRoute.extend({
   simpleStore: Ember.inject.service(),
   repository: inject('setting'),
-  dtdRepo: inject('dtd'),
   redirectRoute: Ember.computed(function() {
     return 'admin';
   }),
@@ -20,13 +19,6 @@ default TabRoute.extend({
   model(params) {
     const id = params.id;
     const repository = this.get('repository');
-    return {
-      model: repository.findById(id),
-      dtdRepo: this.get('dtdRepo')
-    };
-  },
-  setupController: function(controller, hash) {
-    controller.set('model', hash.model);
-    controller.set('dtdRepo', hash.dtdRepo);
+    return repository.findById(id);
   }
 });

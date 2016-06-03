@@ -11,6 +11,7 @@ var DTD_URL = `${PREFIX}/dtds/`;
 
 var GeneralSettings = Ember.Component.extend(TabMixin, EditMixin, {
   repository: inject('setting'),
+  dtdRepo: inject('dtd'),
   repositoryDtd: inject('dtd'),
   classNames: ['wrapper', 'form'],
   simpleStore: Ember.inject.service(),
