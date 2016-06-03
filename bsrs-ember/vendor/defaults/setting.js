@@ -22,7 +22,8 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             // Role
             create_all: true,
             accept_assign: false,
-            accept_notify: false
+            accept_notify: false,
+            password_one_time: false
         };
         var other = {
             company_codeOther: 'two',
@@ -43,7 +44,8 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             // Role
             create_allOther: false,
             accept_assignOther: true,
-            accept_notifyOther: true
+            accept_notifyOther: true,
+            password_one_timeOther: true
         };
         var misc = {
             inherits_from_general: 'general'

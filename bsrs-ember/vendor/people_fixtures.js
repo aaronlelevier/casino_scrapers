@@ -135,6 +135,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
     response.role = this.role_defaults.idOne;
     response.locale = this.person_defaults.locale_id;
     response.locations = [this.location_defaults.idOne];
+    response.settings = {settings: {}};
     for(var key in person) {
       response[key] = person[key];
     }

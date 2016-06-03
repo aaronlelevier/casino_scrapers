@@ -13,7 +13,7 @@ const PEOPLE_URL = BASE_PEOPLE_LIST_URL + '/index';
 
 var application;
 
-module('Acceptance | people-list', {
+module('Acceptance | person list test', {
   beforeEach() {
     application = startApp();
     var endpoint = PREFIX + BASE_PEOPLE_LIST_URL + '/';

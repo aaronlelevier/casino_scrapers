@@ -17,6 +17,7 @@ import AD from 'bsrs-ember/vendor/defaults/address';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import PERSON_LD from 'bsrs-ember/vendor/defaults/person-location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
+import StgD from 'bsrs-ember/vendor/defaults/setting';
 
 var store, uuid, person, role, run = Ember.run;
 
@@ -1448,4 +1449,17 @@ test('person-location join models are correctly filtered on for the current User
   person.change_role(new_role);
   assert.equal(person.get('locations').get('length'), 1);
   assert.equal(person.get('locationsIsDirty'), false);
+});
+
+test('serialize for settings object', assert => {
+  let person = store.push('person', {id: PD.idOne, accept_assign: SD.accept_assign, accept_notify: SD.accept_notify, password_one_time: SD.password_one_time});
+  let ret = person.serialize();
+  assert.deepEqual(ret.settings,
+    {
+      settings: {
+        accept_assign: SD.accept_assign,
+        accept_notify: SD.accept_notify,
+        password_one_time: SD.password_one_time
+    }
+  });
 });

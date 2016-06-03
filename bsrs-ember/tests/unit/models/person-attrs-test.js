@@ -1,11 +1,19 @@
-import {test, module} from 'qunit';
+import Ember from 'ember';
+import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import Person from 'bsrs-ember/models/person';
 import PD from 'bsrs-ember/vendor/defaults/person';
+import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-module('unit: person attrs test');
+let store, person;
+
+module('unit: person attrs test', {
+    beforeEach() {
+        store = module_registry(this.container, this.registry, ['model:person']);
+    }
+});
 
 test('default state for username on person model is undefined', (assert) => {
-    var person = Person.create({id: PD.idOne, username: undefined});
+    person = Person.create({id: PD.idOne, username: undefined});
     assert.ok(person.get('isNotDirty'));
     person.set('username', 'scott');
     assert.ok(person.get('isDirty'));
@@ -14,7 +22,7 @@ test('default state for username on person model is undefined', (assert) => {
 });
 
 test('default state for first name, middle initial, and last name on person model is undefined', (assert) => {
-    var person = Person.create({id: PD.idOne, first_name: undefined, middle_initial: undefined, last_name: undefined});
+    person = Person.create({id: PD.idOne, first_name: undefined, middle_initial: undefined, last_name: undefined});
     assert.ok(person.get('isNotDirty'));
     person.set('first_name', 'Katy');
     assert.ok(person.get('isDirty'));
@@ -31,7 +39,7 @@ test('default state for first name, middle initial, and last name on person mode
 });
 
 test('default state for employee number, and title on person model is undefined', (assert) => {
-    var person = Person.create({id: PD.idOne, employee_id: undefined, title: undefined});
+    person = Person.create({id: PD.idOne, employee_id: undefined, title: undefined});
     assert.ok(person.get('isNotDirty'));
     person.set('employee_id', '1222');
     assert.ok(person.get('isDirty'));
@@ -44,10 +52,32 @@ test('default state for employee number, and title on person model is undefined'
 });
 
 test('default state for auth amount on person model is undefined', (assert) => {
-    var person = Person.create({id: PD.idOne, auth_amount: undefined});
+    person = Person.create({id: PD.idOne, auth_amount: undefined});
     assert.ok(person.get('isNotDirty'));
     person.set('auth_amount', '50,000');
     assert.ok(person.get('isDirty'));
     person.set('auth_amount', '');
     assert.ok(person.get('isNotDirty'));
 });
+
+test('accept_assign', assert => {
+    person = store.push('person', {id: PD.idOne});
+    assert.ok(person.get('isNotDirty'));
+    person.set('accept_assign', true);
+    assert.ok(person.get('isDirty'));
+});
+
+test('accept_notify', assert => {
+    person = store.push('person', {id: PD.idOne});
+    assert.ok(person.get('isNotDirty'));
+    person.set('accept_notify', true);
+    assert.ok(person.get('isDirty'));
+});
+
+test('password_one_time', assert => {
+    person = store.push('person', {id: PD.idOne});
+    assert.ok(person.get('isNotDirty'));
+    person.set('password_one_time', true);
+    assert.ok(person.get('isDirty'));
+});
+
