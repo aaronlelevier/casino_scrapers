@@ -24,7 +24,7 @@ from location.models import LocationLevel, Location, LOCATION_COMPANY
 from person import config, helpers
 from setting.models import Setting
 from translation.models import Locale
-from utils.fields import InheritedValueDescriptor
+from utils.fields import InheritedValueField
 from utils.models import BaseModel, BaseNameModel, DefaultNameManager
 from utils.validators import (contains_digit, contains_upper_char, contains_lower_char,
     contains_special_char, contains_no_whitespaces)
@@ -331,8 +331,8 @@ class Person(BaseModel, AbstractUser):
         return data
 
     # proxy fields (won't create a field in the database)
-    proxy_auth_amount = InheritedValueDescriptor('role', 'auth_amount', 'float')
-    proxy_auth_currency = InheritedValueDescriptor('role', 'auth_currency', 'uuid')
+    proxy_auth_amount = InheritedValueField('role', 'auth_amount', 'float')
+    proxy_auth_currency = InheritedValueField('role', 'auth_currency', 'uuid')
 
     # Managers
     objects = PersonManager()

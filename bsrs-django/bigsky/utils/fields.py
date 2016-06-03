@@ -32,7 +32,7 @@ class UpperCaseCharField(models.CharField):
             return super(UpperCaseCharField, self).pre_save(model_instance, add)
 
 
-class InheritedValueDescriptor(object):
+class InheritedValueField(object):
     """
     Resolves an inherited value. If the main model doesn't have the value,
     then fetch the value from the related model. The field name must be the
