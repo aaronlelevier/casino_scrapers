@@ -34,7 +34,7 @@ module('Acceptance | mobile/grid/ticket test.js', {
   }
 });
 
-test('scott visiting mobile ticket grid show correct layout', function(assert) {
+test('visiting mobile ticket grid show correct layout', function(assert) {
   visit(TICKET_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);

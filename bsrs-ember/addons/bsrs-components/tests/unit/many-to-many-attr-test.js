@@ -3,7 +3,7 @@ import {test, module} from '../helpers/qunit';
 import module_registry from '../helpers/module_registry';
 import plural from 'bsrs-components/utils/plural';
 
-var store, run = Ember.run, user; 
+var store, run = Ember.run, user;
 
 module('unit: many to many test', {
   beforeEach() {
@@ -407,7 +407,7 @@ test('many_to_many_dirty_unlessAddedM2M - removing feet and adding new feet will
 });
 
 //TODO: test main_model config. Need to generate a mixin that is shared across model instances
-// test('scott save feet with main_model config', assert => {
+// test('save feet with main_model config', assert => {
 //   let user = store.push('user', {id: 1, user_feet_fks: [3]});
 //   store.push('feet', {id: 2});
 //   store.push('user-feet', {id: 3, user_pk: 1, feet_pk: 2});
