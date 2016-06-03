@@ -40,7 +40,7 @@ class InheritedValueDescriptor(object):
 
     :related_model:
         (str) name of the related model to inherit setting from if it
-        doesn't exist on the ``obj``
+        doesn't exist on the ``obj``. obj is a the primary model instance
     :field: (str) model field name to look up
     :type: (str) python type name
     """
@@ -50,22 +50,20 @@ class InheritedValueDescriptor(object):
         self.type = type
 
     def __get__(self, obj, type=None):
+        related_model = getattr(obj, self.related_model)
+
+        ret = {
+            'inherited_value': self._getvalue(related_model),
+            'inherits_from': self.related_model,
+            'inherits_from_id': str(related_model.id)
+        }
+
         if not getattr(obj, self.field):
-            related_model = getattr(obj, self.related_model)
-            value = self._getvalue(related_model)
-            return {
-                'value': None,
-                'type': self.type,
-                'inherited_value': value,
-                'inherits_from': self.related_model,
-                'inherits_from_id': str(related_model.id)
-            }
+            ret['value'] = None
         else:
-            value = self._getvalue(obj)
-            return {
-                'value': value,
-                'type': self.type
-            }
+            ret['value'] = self._getvalue(obj)
+
+        return ret
 
     def _getvalue(self, object):
         o = getattr(object, self.field)

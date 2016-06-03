@@ -66,7 +66,6 @@ class RoleIdNameSerializer(serializers.ModelSerializer):
 PERSON_FIELDS = (
     'id', 'username', 'first_name', 'middle_initial',
     'last_name', 'fullname', 'status', 'role', 'title', 'employee_id',
-    'auth_amount', 'auth_currency',
 )
 
 
@@ -168,8 +167,8 @@ class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSeriali
         model = Person
         validators = [RoleLocationValidator('role', 'locations')]
         write_only_fields = ('password',)
-        fields = PERSON_FIELDS + ('password', 'locale', 'locations',
-            'emails', 'phone_numbers', 'addresses', 'settings',)
+        fields = PERSON_FIELDS + ('auth_amount', 'auth_currency', 'password', 'locale',
+                                  'locations', 'emails', 'phone_numbers', 'addresses', 'settings',)
 
     def update(self, instance, validated_data):
         # Pasword

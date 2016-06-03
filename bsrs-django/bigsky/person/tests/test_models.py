@@ -451,31 +451,31 @@ class PersonProxyFieldTests(TestCase):
     def test_auth_amount__inherited(self):
         combined_settings = self.person.combined_settings()
         self.assertEqual(combined_settings['auth_amount']['value'], None)
-        self.assertEqual(combined_settings['auth_amount']['type'], 'float')
         self.assertEqual(combined_settings['auth_amount']['inherited_value'], self.role.auth_amount)
         self.assertEqual(combined_settings['auth_amount']['inherits_from'], 'role')
+        self.assertEqual(combined_settings['auth_amount']['inherits_from_id'], str(self.person.role.id))
 
     def test_auth_amount__not_inherited(self):
         new_amount = 99
         self.person.auth_amount = new_amount
         combined_settings = self.person.combined_settings()
         self.assertEqual(combined_settings['auth_amount']['value'], new_amount)
-        self.assertEqual(combined_settings['auth_amount']['type'], 'float')
-        self.assertNotIn('inherited_value', combined_settings['auth_amount'])
-        self.assertNotIn('inherits_from', combined_settings['auth_amount'])
+        self.assertEqual(combined_settings['auth_amount']['inherited_value'], self.person.role.auth_amount)
+        self.assertEqual(combined_settings['auth_amount']['inherits_from'], 'role')
+        self.assertEqual(combined_settings['auth_amount']['inherits_from_id'], str(self.person.role.id))
 
     def test_auth_currency__inherited(self):
         combined_settings = self.person.combined_settings()
         self.assertEqual(combined_settings['auth_currency']['value'], None)
-        self.assertEqual(combined_settings['auth_currency']['type'], 'uuid')
         self.assertEqual(combined_settings['auth_currency']['inherited_value'], str(self.role.auth_currency.id))
         self.assertEqual(combined_settings['auth_currency']['inherits_from'], 'role')
+        self.assertEqual(combined_settings['auth_currency']['inherits_from_id'], str(self.person.role.id))
 
     def test_auth_currency__not_inherited(self):
         currency = mommy.make(Currency, code='ABC')
         self.person.auth_currency = currency
         combined_settings = self.person.combined_settings()
         self.assertEqual(combined_settings['auth_currency']['value'], str(currency.id))
-        self.assertEqual(combined_settings['auth_currency']['type'], 'uuid')
-        self.assertNotIn('inherited_value', combined_settings['auth_currency'])
-        self.assertNotIn('inherits_from', combined_settings['auth_currency'])
+        self.assertEqual(combined_settings['auth_currency']['inherited_value'], str(self.person.role.auth_currency.id))
+        self.assertEqual(combined_settings['auth_currency']['inherits_from'], 'role')
+        self.assertEqual(combined_settings['auth_currency']['inherits_from_id'], str(self.person.role.id))
