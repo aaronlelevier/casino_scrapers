@@ -11,7 +11,7 @@ var Mixin = Ember.Mixin.create({
     };
     for (let f in fields) {
       let field = fields[f];
-      if (typeof(field) == 'string') {
+      if (typeof(field) === 'string') {
         obj.settings[field] = this.get(field);
       }
     }

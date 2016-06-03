@@ -339,6 +339,21 @@ test('person-location m2m added even when person did not exist before the deseri
   assert.equal(store.find('person-location').get('length'), 1);
 });
 
+test('settings', assert => {
+  let response = PF.generate(PD.idOne);
+  run(() => {
+    subject.deserialize(response, PD.idOne);
+  });
+  // setting attrs
+  assert.equal(person.get('accept_assign'), PD.settings.accept_assign.value);
+  assert.equal(person.get('accept_notify'), PD.settings.accept_notify.value);
+  assert.equal(person.get('password_one_time'), PD.settings.password_one_time.value);
+  // settings_object
+  assert.deepEqual(person.get('settings_object').accept_assign, PD.settings.accept_assign);
+  assert.deepEqual(person.get('settings_object').accept_notify, PD.settings.accept_notify);
+  assert.deepEqual(person.get('settings_object').password_one_time, PD.settings.password_one_time);
+});
+
 // TODO: Need to add Currency to Person Deserializer
 // test('currency - fk related model', assert => {
 //     store.clear('person');

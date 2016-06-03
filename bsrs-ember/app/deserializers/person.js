@@ -1,8 +1,9 @@
 import Ember from 'ember';
+const { run } = Ember;
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 import { belongs_to_extract, belongs_to_extract_contacts } from 'bsrs-components/repository/belongs-to';
+import copySettingsToFirstLevel from 'bsrs-ember/utilities/copy-settings-to-first-level';
 
-const { run } = Ember;
 
 var extract_role_location_level = function(model, store) {
   let role = store.find('role', model.role);
@@ -105,6 +106,7 @@ var PersonDeserializer = Ember.Object.extend({
       extract_person_location(model, store, location_level_fk, location_deserializer);
       extract_locale(model, store);
       model.detail = true;
+      model = copySettingsToFirstLevel(model);
       run(() => {
         person = store.push('person', model);
         belongs_to_extract(model.status_fk, store, person, 'status', 'person', 'people');
