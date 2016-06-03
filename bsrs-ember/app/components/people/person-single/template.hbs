@@ -91,6 +91,42 @@
               {{/form-group}}
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value={{model.accept_assign}} onclick={{action 'changeBool' 'accept_assign'}} checked={{model.accept_assign}} class="t-person-accept_assign" name="accept_assign">
+                  <span class="t-person-accept_assign-label">{{t "admin.setting.accept_assign"}}</span>
+                  {{#if model.settings_object.accept_assign.inherits_from}}
+                    <span class="t-person-accept_assign-label-inherits_from">Inherits from: {{model.settings_object.accept_assign.inherits_from}}</span>
+                  {{/if}}
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value={{model.accept_notify}} onclick={{action 'changeBool' 'accept_notify'}} checked={{model.accept_notify}} class="t-person-accept_notify" name="accept_notify">
+                  <span class="t-person-accept_notify-label">{{t "admin.setting.accept_notify"}}</span>
+                  {{#if model.settings_object.accept_notify.inherits_from}}
+                    <span class="t-person-accept_notify-label-inherits_from">Inherits from: {{model.settings_object.accept_notify.inherits_from}}</span>
+                  {{/if}}
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value={{model.password_one_time}} onclick={{action 'changeBool' 'password_one_time'}} checked={{model.password_one_time}} class="t-person-password_one_time" name="password_one_time">
+                  <span class="t-person-password_one_time-label">{{t "admin.setting.password_one_time"}}</span>
+                </label>
+              </div>
+            </div>
+          </div>
         </section>
       </div>
     </div>

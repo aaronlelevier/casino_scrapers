@@ -8,6 +8,7 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import SD from 'bsrs-ember/vendor/defaults/status';
+import StgD from 'bsrs-ember/vendor/defaults/setting';
 import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import RD from 'bsrs-ember/vendor/defaults/role';
@@ -34,6 +35,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/person';
 import random from 'bsrs-ember/models/random';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
 
 const PREFIX = config.APP.NAMESPACE;
 const POWER_SELECT_LENGTH = 10;
@@ -50,7 +52,7 @@ const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-options > .ember-p
 const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-var application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid, url, run = Ember.run;
+var application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid, url, translations, run = Ember.run;
 
 module('Acceptance | person detail test', {
   beforeEach() {
@@ -63,6 +65,7 @@ module('Acceptance | person detail test', {
     detail_xhr = xhr(`${endpoint}${PD.idOne}/`, 'GET', null, {}, 200, people_detail_data);
     original_uuid = random.uuid;
     url = `${PREFIX}${DETAIL_URL}/`;
+    translations = BSRS_TRANSLATION_FACTORY.generate('en')['en'];
   },
   afterEach() {
     random.uuid = original_uuid;
@@ -1294,5 +1297,56 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-error-message').text(), 'WAT');
+  });
+});
+
+test('settings values, placeholers, and inherited froms', assert => {
+  clearxhr(list_xhr);
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    // inherited
+    assert.equal(page.acceptAssignLabelText, translations['admin.setting.accept_assign']);
+    assert.equal(page.acceptAssignChecked(), PD.settings.accept_assign.inherited_value);
+    assert.equal(page.acceptAssignInheritedFromLabelText, 'Inherits from: ' + StgD.inherits_from_role);
+    assert.equal(page.acceptNotifyLabelText, translations['admin.setting.accept_notify']);
+    assert.equal(page.acceptNotifyChecked(), PD.settings.accept_notify.inherited_value);
+    assert.equal(page.acceptNotifyInheritedFromLabelText, 'Inherits from: ' + StgD.inherits_from_role);
+    // not inherited
+    assert.equal(page.passwordOneTimeLabelText, translations['admin.setting.password_one_time']);
+    assert.equal(page.passwordOneTimeChecked(), PD.settings.password_one_time.value);
+  });
+});
+
+test('update all settings', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(page.acceptAssignChecked(), PD.settings.accept_assign.inherited_value);
+    assert.equal(page.acceptNotifyChecked(), PD.settings.accept_notify.inherited_value);
+    assert.equal(page.passwordOneTimeChecked(), PD.settings.password_one_time.value);
+  });
+  page.acceptAssignClick();
+  page.acceptNotifyClick();
+  page.passwordOneTimeClick();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(page.acceptAssignChecked(), !PD.settings.accept_assign.inherited_value);
+    assert.equal(page.acceptNotifyChecked(), !PD.settings.accept_notify.inherited_value);
+    assert.equal(page.passwordOneTimeChecked(), !PD.settings.password_one_time.value);
+  });
+  let person = store.find('person', {id: PD.id});
+  let settings = {
+    settings: {
+      accept_assign: !PD.settings.accept_assign.inherited_value,
+      accept_notify: !PD.settings.accept_notify.inherited_value,
+      password_one_time: !PD.settings.password_one_time.inherited_value
+    }
+  };
+  let payload = PF.put({id: PD.id}, settings);
+  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), PEOPLE_URL);
   });
 });

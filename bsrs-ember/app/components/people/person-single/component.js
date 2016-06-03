@@ -22,6 +22,7 @@ function validatePassword(){
 
 var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, EditMixin, {
   didValidate: false,
+  simpleStore: Ember.inject.service(),
   repository: inject('person'),
   locationRepo: inject('location'),
   child_components: ['input-multi-phone', 'input-multi-address', 'input-multi-email'],
@@ -50,6 +51,11 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Edit
     changePassword(){
       this.toggleProperty('changingPassword');
       this.get('model').clearPassword();
+    },
+    changeBool(key) {
+        const store = this.get('simpleStore');
+        let setting = store.find('person', this.get('model.id'));
+        setting.toggleProperty(key);
     }
   }
 });

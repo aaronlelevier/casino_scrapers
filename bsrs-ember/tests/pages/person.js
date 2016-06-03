@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import PageObject from 'bsrs-ember/tests/page-object';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
@@ -63,4 +64,19 @@ export default PageObject.create({
   middleInitial: fillable('.t-person-middle-initial'),
   usernameFillIn: fillable('.t-person-username'),
   username: value('.t-person-username'),
+
+  //settings
+  acceptAssignChecked: () => Ember.$('.t-person-accept_assign').is(':checked'),
+  acceptAssignClick: clickable('.t-person-accept_assign-label'),
+  acceptAssignInheritedFromLabelText: text('.t-person-accept_assign-label-inherits_from'),
+  acceptAssignLabelText: text('.t-person-accept_assign-label'),
+
+  acceptNotifyChecked: () => Ember.$('.t-person-accept_notify').is(':checked'),
+  acceptNotifyClick: clickable('.t-person-accept_notify-label'),
+  acceptNotifyInheritedFromLabelText: text('.t-person-accept_notify-label-inherits_from'),
+  acceptNotifyLabelText: text('.t-person-accept_notify-label'),
+
+  passwordOneTimeChecked: () => Ember.$('.t-person-password_one_time').is(':checked'),
+  passwordOneTimeClick: clickable('.t-person-password_one_time-label'),
+  passwordOneTimeLabelText: text('.t-person-password_one_time-label'),
 });

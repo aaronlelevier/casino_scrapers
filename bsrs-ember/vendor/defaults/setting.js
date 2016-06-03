@@ -48,7 +48,8 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             password_one_timeOther: true
         };
         var misc = {
-            inherits_from_general: 'general'
+            inherits_from_general: 'general',
+            inherits_from_role: 'role'
         };
         return Object.assign(one, other, misc, {
             id: 'b783a238-1131-4623-8d24-81a672bb4e00',
