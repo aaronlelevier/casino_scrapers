@@ -14,6 +14,17 @@ export default Ember.Component.extend({
     toggleMobileSortFilter() {
       this.toggleProperty('mobileSortFilter');
       this.set('mobileFilterset', false);
-    }
+    },
+    /*
+    * MOBILE - Need to see how Ember modularization RFC pans out.  Same component functions duplicated right now
+    */
+    sortBy(column) {
+      const current = this.get('sort');
+      const sorted = this.reorder(current, column);
+      this.setProperties({page: 1, sort: sorted});
+    },
+    toggleFilterModal(column) {
+      this.toggle(column);
+    },
   }
 });

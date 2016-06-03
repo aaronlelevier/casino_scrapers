@@ -4,11 +4,12 @@ import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-let store;
+let store, trans;
 
 moduleForComponent('grid/grid-head', 'Integration | Component | grid-head', {
   integration: true,
   beforeEach() {
+    trans = this.container.lookup('service:i18n');
     store = module_registry(this.container, this.registry, ['model:filterset']);
     const flexi = this.container.lookup('service:device/layout');
     let breakpoints = flexi.get('breakpoints');
@@ -35,4 +36,27 @@ test('it renders and can click on title to show saved filtersets', function(asse
   assert.equal(this.$('.t-mobile-grid-title').text(), 'Tickets');
   this.$('.t-mobile-grid-title').click();
   assert.equal(this.$('ul > li:eq(0)').text(), 'ordered by assignee');
+});
+
+test('can click on filter icon to columns w/ sort and filter options', function(assert) {
+  const columns = [{
+      field: 'priority.translated_name',
+      headerLabel: 'ticket.label.priority-name',
+      headerIsTranslatable: true,
+      isFilterable: true,
+      isSearchable: true,
+      templateName: 'tickets/ticket-priority-tag',
+      classNames: ['ticket-priority']
+    }, { field: 'number',
+      headerLabel: 'ticket.label.numberSymbol',
+      headerIsTranslatable: true,
+      isSortable: true,
+      isSearchable: true,
+      classNames: ['ticket-number']
+    }];
+  this.columns = columns;
+  this.render(hbs`{{grid/helpers/grid-head columns=columns}}`);
+  this.$('.t-mobile-filter').click();
+  assert.equal(this.$('.t-sort-number').text(), trans.t('ticket.label.numberSymbol'));
+  assert.equal(this.$('th:eq(0)').text().trim(), trans.t('ticket.label.priority-name'));
 });

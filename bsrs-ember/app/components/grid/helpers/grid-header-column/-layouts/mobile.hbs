@@ -1,0 +1,19 @@
+<hbox>
+  {{#if column.isSortable}}
+    {{log sortClass}}
+    <span {{action "sortBy" column.field}} class="mobile-sort up {{sortByClass}} fa-arrow-up"></span>
+    <span {{action "sortBy" column.field}} class="mobile-sort down {{sortByClass}} fa-arrow-down"></span>
+  {{/if}}
+</hbox>
+
+<hbox>
+  <span class={{sortClass}}>{{if column.headerIsTranslatable (t column.headerLabel) column.headerLabel}}</span>
+</hbox>
+
+<hbox>
+  {{#if column.isFilterable}}
+    <span class="mobile-filter {{filterClass}} {{if (fulltext-active column.field find) 'on' ''}}" {{action "toggleFilterModal" column.field}}></span>
+  {{else}}
+    <span class="{{filterClass}} {{if (fulltext-active column.field find) 'on' ''}}"></span>
+  {{/if}}
+</hbox>
