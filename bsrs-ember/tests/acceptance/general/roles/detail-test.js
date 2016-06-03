@@ -405,7 +405,7 @@ test('settings - UI is populated for inherited correctly - inherited value from 
   });
 });
 
-test('settings - override value from parent', (assert) => {
+test('settings - override value from parent, can click link-to to get to inherited setting', (assert) => {
   clearxhr(list_xhr);
   visit(DETAIL_URL);
   andThen(() => {

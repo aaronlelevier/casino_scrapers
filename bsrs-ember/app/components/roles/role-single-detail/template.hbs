@@ -81,9 +81,6 @@
                 <label>
                   <input type="checkbox" value={{model.create_all}} onclick={{action 'changeBool' 'create_all'}} checked={{model.create_all}} class="t-settings-create_all" name="create_all">
                   <span class="t-settings-create_all-label">{{t "admin.setting.create_all"}}</span>
-                  {{#if model.create_all_inherits_from}}
-                    <span class="t-settings-create_all-label-inherits_from"><small>Inherits from: {{model.create_all_inherits_from}}</small></span>
-                  {{/if}}
                 </label>
               </div>
             </div>
@@ -94,9 +91,6 @@
                 <label>
                   <input type="checkbox" value={{model.accept_assign}} onclick={{action 'changeBool' 'accept_assign'}} checked={{model.accept_assign}} class="t-settings-accept_assign" name="accept_assign">
                   <span class="t-settings-accept_assign-label">{{t "admin.setting.accept_assign"}}</span>
-                  {{#if model.accept_assign_inherits_from}}
-                    <span class="t-settings-accept_assign-label-inherits_from"><small>Inherits from: {{model.accept_assign_inherits_from}}</small></span>
-                  {{/if}}
                 </label>
               </div>
             </div>
@@ -107,9 +101,6 @@
                 <label>
                   <input type="checkbox" value={{model.accept_notify}} onclick={{action 'changeBool' 'accept_notify'}} checked={{model.accept_notify}} class="t-settings-accept_notify" name="accept_notify">
                   <span class="t-settings-accept_notify-label">{{t "admin.setting.accept_notify"}}</span>
-                  {{#if model.accept_notify_inherits_from}}
-                    <span class="t-settings-accept_notify-label-inherits_from"><small>Inherits from: {{model.accept_notify_inherits_from}}</small></span>
-                  {{/if}}
                 </label>
               </div>
             </div>

@@ -122,7 +122,7 @@ test('translations - for labels', assert => {
     assert.equal(page.testmodelLableText, translations['admin.setting.test_mode']);
     assert.equal(getLabelText('test_contractor_email'), translations['admin.setting.test_contractor_email']);
     assert.equal(getLabelText('test_contractor_phone'), translations['admin.setting.test_contractor_phone']);
-    assert.equal(getLabelText('dt_start_id'), translations['admin.setting.dt_start_id']);
+    assert.equal(getLabelText('dt_start_id'), translations['admin.setting.dt_start_key']);
   });
 });
 
