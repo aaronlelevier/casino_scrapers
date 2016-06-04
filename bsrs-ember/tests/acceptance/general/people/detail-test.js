@@ -151,7 +151,6 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     assert.equal(page.localeOne, PD.localeFull);
     assert.equal(page.localeTwo, PD.localeTwoFull);
     assert.equal(page.roleInput, RD.nameOne);
-    assert.equal(find('.t-amount').val(), PD.auth_amount);
     assert.equal(find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol);
   });
   var response = PF.detail(PD.idOne);
@@ -268,14 +267,15 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('currency helper displays correct currency format', (assert) => {
-  clearxhr(list_xhr);
-  page.visitDetail();
-  var symbol = '$';
-  andThen(() => {
-    assert.equal(find('.t-amount').val(), PD.auth_amount);
-  });
-});
+// TODO: refactor, should show placeholder, etc... if inherited
+// test('aaron currency helper displays correct currency format', (assert) => {
+//   clearxhr(list_xhr);
+//   page.visitDetail();
+//   var symbol = '$';
+//   andThen(() => {
+//     assert.equal(find('.t-amount').val(), PD.auth_amount);
+//   });
+// });
 
 /* jshint ignore:start */
 test('when click delete, modal displays and when click ok, person is deleted and removed from store', async assert => {

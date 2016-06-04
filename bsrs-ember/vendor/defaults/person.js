@@ -104,6 +104,12 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
         },
         password_one_time: {
           value: this.setting_defaults.password_one_time
+        },
+        auth_amount: {
+          value: null,
+          inherited_value: BSRS_PERSON_AUTH_AMOUNT,
+          inherits_from: 'role',
+          inherits_from_id: this.role_defaults.idOne
         }
       }
     };
