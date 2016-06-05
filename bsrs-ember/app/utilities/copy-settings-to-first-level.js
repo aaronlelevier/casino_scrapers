@@ -15,7 +15,7 @@ var copySettingsToFirstLevel = (obj) => {
   }
   newState.settings_object = obj.settings;
   delete obj.settings;
-  return Object.assign({}, obj, newState);
+  return Ember.assign(obj, newState);
 };
 
 export default copySettingsToFirstLevel;
