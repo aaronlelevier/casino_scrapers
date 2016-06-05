@@ -662,7 +662,7 @@ test('visit 1 url, go back to step 0, then go back to 1 url after updating some 
   assert.equal(updated_ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
 });
 
-test('visit 2 url, go back to step 0, then go back to 1 url after updating some info (input/text area) should keep info around and update ticket request', async assert => {
+test('scott visit 2 url, go back to step 0, then go back to 1 url after updating some info (input/text area) should keep info around and update ticket request', async assert => {
   // DT.idOne is 3rd
   // DT.idTwo is 2nd
   // DT.idThree is 1st (Start)
