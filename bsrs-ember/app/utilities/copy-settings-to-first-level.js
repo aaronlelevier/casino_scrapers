@@ -1,3 +1,5 @@
+import Ember from 'ember';
+
 var copySettingsToFirstLevel = (obj) => {
   var newState = {};
   var settings = obj.settings || {};
