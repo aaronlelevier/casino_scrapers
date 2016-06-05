@@ -5,7 +5,7 @@ var EditMixin = Ember.Mixin.create({
     save(update, updateActivities=false) {//update arg determines if transition or not and close out tab
       const model = this.get('model');
       if(update && model.get('isNotDirtyOrRelatedNotDirty')){
-        return; 
+        return;
       }
       const pk = this.get('model').get('id');
       const persisted = model.get('new');
@@ -31,6 +31,10 @@ var EditMixin = Ember.Mixin.create({
         }
       });
     },
+    /*
+    * @method delete
+    * deleteCB call site is in tab-navigation in delete_model function upon clicking Yes in modal
+    */
     delete() {
       let id = this.get('model').get('id');
       let repository = this.get('repository');

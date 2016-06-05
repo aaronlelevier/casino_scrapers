@@ -25,6 +25,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
     const type = this.get('type');
     return PromiseMixin.xhr(this.get('url') + id + '/', 'DELETE').then(() => {
       this.get('simpleStore').remove(type, id);
+      this.get('simpleStore').remove(`${type}-list`, id);
     });
   },
   findCount() {
