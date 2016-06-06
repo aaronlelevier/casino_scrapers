@@ -78,6 +78,11 @@ export default PageObject.create({
   acceptNotifyLabelText: text('.t-person-accept_notify-label'),
   acceptNotifyInheritedFromClick: clickable('.t-inherited-msg-accept_notify-link'),
 
+  authAmountInheritedFromClick: clickable('.t-inherited-msg-auth_amount-link'),
+  authAmountInheritedFromText: text('.t-inherited-msg-auth_amount'),
+  authAmountPlaceholder: () => Ember.$('.t-amount').get(0)['placeholder'],
+  authAmountValue: value('.t-amount'),
+
   passwordOneTimeChecked: () => Ember.$('.t-person-password_one_time').is(':checked'),
   passwordOneTimeClick: clickable('.t-person-password_one_time-label'),
   passwordOneTimeLabelText: text('.t-person-password_one_time-label'),

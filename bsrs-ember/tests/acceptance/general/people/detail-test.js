@@ -267,15 +267,22 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-// TODO: refactor, should show placeholder, etc... if inherited
-// test('aaron currency helper displays correct currency format', (assert) => {
-//   clearxhr(list_xhr);
-//   page.visitDetail();
-//   var symbol = '$';
-//   andThen(() => {
-//     assert.equal(find('.t-amount').val(), PD.auth_amount);
-//   });
-// });
+test('currency helper displays inherited auth_amount, and can click link-to to go to roles inherited value', (assert) => {
+  clearxhr(list_xhr);
+  page.visitDetail();
+  andThen(() => {
+    // input field
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(page.authAmountPlaceholder(), 'Default: ' + PD.auth_amount);
+    assert.equal(page.authAmountInheritedFromText, 'Inherited from: ' + StgD.inherits_from_role);
+    assert.equal(page.authAmountValue, "");
+  });
+  xhr(`${PREFIX}${BASEURLS.base_roles_url}/${RD.idOne}/`, 'GET', null, {}, 200, RF.detail(RD.idOne));
+  page.authAmountInheritedFromClick();
+  andThen(() => {
+    assert.equal(currentURL(), `${BASEURLS.base_roles_url}/${RD.idOne}`);
+  });
+});
 
 /* jshint ignore:start */
 test('when click delete, modal displays and when click ok, person is deleted and removed from store', async assert => {
