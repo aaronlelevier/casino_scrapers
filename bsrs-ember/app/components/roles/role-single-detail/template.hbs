@@ -79,7 +79,7 @@
             <div class="col-md-12">
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" value={{model.create_all}} onclick={{action 'changeBool' 'create_all'}} checked={{model.create_all}} class="t-settings-create_all" name="create_all">
+                  <input type="checkbox" value={{model.create_all}} onclick={{action 'changeBool' 'role' 'create_all'}} checked={{model.create_all}} class="t-settings-create_all" name="create_all">
                   <span class="t-settings-create_all-label">{{t "admin.setting.create_all"}}</span>
                 </label>
               </div>
@@ -89,7 +89,7 @@
             <div class="col-md-12">
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" value={{model.accept_assign}} onclick={{action 'changeBool' 'accept_assign'}} checked={{model.accept_assign}} class="t-settings-accept_assign" name="accept_assign">
+                  <input type="checkbox" value={{model.accept_assign}} onclick={{action 'changeBool' 'role' 'accept_assign'}} checked={{model.accept_assign}} class="t-settings-accept_assign" name="accept_assign">
                   <span class="t-settings-accept_assign-label">{{t "admin.setting.accept_assign"}}</span>
                 </label>
               </div>
@@ -99,7 +99,7 @@
             <div class="col-md-12">
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" value={{model.accept_notify}} onclick={{action 'changeBool' 'accept_notify'}} checked={{model.accept_notify}} class="t-settings-accept_notify" name="accept_notify">
+                  <input type="checkbox" value={{model.accept_notify}} onclick={{action 'changeBool' 'role' 'accept_notify'}} checked={{model.accept_notify}} class="t-settings-accept_notify" name="accept_notify">
                   <span class="t-settings-accept_notify-label">{{t "admin.setting.accept_notify"}}</span>
                 </label>
               </div>

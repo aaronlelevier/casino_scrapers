@@ -3,6 +3,7 @@ import inject from 'bsrs-ember/utilities/inject';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
+import ChangeBoolMixin from 'bsrs-ember/mixins/components/change-bool';
 
 var RoleSingle = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, {
   repository: inject('role'),
