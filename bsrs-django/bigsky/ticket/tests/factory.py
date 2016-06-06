@@ -15,7 +15,7 @@ from person.models import Person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_ACTIVITY_TYPES)
 from ticket.serializers import TicketSerializer
-from ticket.tests.factory_related import (create_ticket_status, get_or_create_ticket_status, 
+from ticket.tests.factory_related import (create_ticket_status, get_or_create_ticket_status,
     get_or_create_ticket_priority)
 from utils.create import _generate_chars
 from utils.helpers import generate_uuid, create_default
@@ -130,7 +130,7 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
         a = create_file_attachment()
         ticket.attachments.add(a)
 
-    # Already have a created ticket, dt_path is snapshot of ticket at previous time and dtd at that time.  
+    # Already have a created ticket, dt_path is snapshot of ticket at previous time and dtd at that time.
     # By having conditional, it prevents from this code from running in all other ticket tests
     start_dtd = TreeData.objects.get_start()
     if start_dtd:
@@ -139,10 +139,13 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
         # Create dt_path which are the old dt objects which should be the START DTD
         # DTD Fields are an array (id, label, value, required, options) where options is an array of ids
         dtd_obj = {'id': str(start_dtd.id), 'description': start_dtd.description, 'prompt': start_dtd.prompt, 'note': start_dtd.note, 'fields': []}
-        # dict comprehension
         fields = start_dtd.fields.all()
-        {dtd_obj['fields'].append({'id':str(field.id), 'value':_generate_chars(), 'required': 'true' if field.required else 'false', 'label': field.label, 
-            'options': [str(opt.id) for opt in field.options.all() if opt]}) for field in fields}
+        # create dtd_obj w/ all fields using dict comprehension
+        {
+        dtd_obj['fields'].append({'id':str(field.id), 'value':_generate_chars() if not field.type == 'admin.dtd.label.field.number' else 1234,
+            'required': 'true' if field.required else 'false', 'label': field.label,
+            'options': [str(opt.id) for opt in field.options.all() if opt]}) for field in fields
+        }
         # second item in array is partially done with a field value and no label
         ticket.dt_path = [{
             'dtd': dtd_obj,
@@ -193,7 +196,7 @@ def create_tickets_with_single_category(assignee=None, _many=0):
 
 def create_extra_ticket_with_categories():
     """
-    Used in Ticket / Category ordering tests to test that ordering still holds 
+    Used in Ticket / Category ordering tests to test that ordering still holds
     when new Tickets are added, but the Category would insert them in the middle
     of the ordering.
     """
