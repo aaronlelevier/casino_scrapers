@@ -42,12 +42,14 @@
       "company_code": {
         "value": "One"
       },
-      "modules": {
-        "value": {
-          "tickets": true,
-          "work_orders": true,
-          "invoices": true
-        }
+      "invoices_module": {
+        "value": true
+      },
+      "work_orders_module": {
+        "value": true
+      },
+      "tickets_module": {
+        "value": true
       },
       "login_grace": {
         "value": 1

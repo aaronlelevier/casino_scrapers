@@ -17,7 +17,7 @@ GENERAL_SETTINGS = {
     "tickets_module": {
         "value": True
     },
-    "work_order_module": {
+    "work_orders_module": {
         "value": True
     },
     "invoices_module": {

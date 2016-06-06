@@ -58,7 +58,7 @@ class SettingsValidator(object):
         "login_grace": "int",
         "exchange_rates": "float",
         "tickets_module": "bool",
-        "work_order_module": "bool",
+        "work_orders_module": "bool",
         "invoices_module": "bool",
         "test_mode": "bool",
         "test_contractor_email": "email",

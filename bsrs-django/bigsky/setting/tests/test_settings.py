@@ -13,7 +13,7 @@ class SettingsTests(TestCase):
             'login_grace',
             'exchange_rates',
             'tickets_module',
-            'work_order_module',
+            'work_orders_module',
             'invoices_module',
             'test_mode',
             'test_contractor_email',
