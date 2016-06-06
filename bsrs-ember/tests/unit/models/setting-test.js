@@ -64,10 +64,24 @@ test('login_grace', (assert) => {
     assert.equal(setting.get('isDirty'), true);
 });
 
-test('modules', (assert) => {
+test('tickets_module', (assert) => {
     setting = store.push('setting', {id: SD.id});
     assert.equal(setting.get('isDirty'), false);
-    setting.set('modules', 'x');
+    setting.set('tickets_module', 'x');
+    assert.equal(setting.get('isDirty'), true);
+});
+
+test('work_orders_module', (assert) => {
+    setting = store.push('setting', {id: SD.id});
+    assert.equal(setting.get('isDirty'), false);
+    setting.set('work_orders_module', 'x');
+    assert.equal(setting.get('isDirty'), true);
+});
+
+test('invoices_module', (assert) => {
+    setting = store.push('setting', {id: SD.id});
+    assert.equal(setting.get('isDirty'), false);
+    setting.set('invoices_module', 'x');
     assert.equal(setting.get('isDirty'), true);
 });
 
@@ -116,7 +130,9 @@ test('serialize', (assert) => {
         company_name: SD.company_name,
         dashboard_text: SD.dashboard_text,
         login_grace: SD.login_grace,
-        modules: SD.modules,
+        tickets_module: SD.tickets_module,
+        work_orders_module: SD.work_orders_module,
+        invoices_module: SD.invoices_module,
         test_mode: SD.test_mode,
         test_contractor_email: SD.test_contractor_email,
         test_contractor_phone: SD.test_contractor_phone,
@@ -130,7 +146,9 @@ test('serialize', (assert) => {
     assert.equal(serialize.settings.company_name, SD.company_name);
     assert.equal(serialize.settings.dashboard_text, SD.dashboard_text);
     assert.equal(serialize.settings.login_grace, SD.login_grace);
-    assert.deepEqual(serialize.settings.modules, SD.modules);
+    assert.equal(serialize.settings.tickets_module, SD.tickets_module);
+    assert.equal(serialize.settings.work_orders_module, SD.work_orders_module);
+    assert.equal(serialize.settings.invoices_module, SD.invoices_module);
     assert.equal(serialize.settings.test_mode, SD.test_mode);
     assert.equal(serialize.settings.test_contractor_email, SD.test_contractor_email);
     assert.equal(serialize.settings.test_contractor_phone, SD.test_contractor_phone);

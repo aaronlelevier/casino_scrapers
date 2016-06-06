@@ -25,20 +25,6 @@ var GeneralSettings = Ember.Component.extend(TabMixin, EditMixin, {
       const store = this.get('simpleStore');
       let setting = store.find('setting', this.get('model.id'));
       setting.toggleProperty(key);
-    },
-    addRemoveModule(moduleKey) {
-      const store = this.get('simpleStore');
-      let setting = store.find('setting', this.get('model.id'));
-
-      let init_modules = setting.get('modules');
-      let modules = {
-        tickets: init_modules.tickets,
-        work_orders: init_modules.work_orders,
-        invoices: init_modules.invoices
-      };
-      modules[moduleKey] = !modules[moduleKey];
-
-      setting.set('modules', modules);
     }
   }
 });

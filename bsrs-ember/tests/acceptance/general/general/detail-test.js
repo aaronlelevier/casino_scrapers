@@ -46,9 +46,9 @@ test('general settings title and fields populated correctly', assert => {
     assert.equal(page.companyCodeValue, SD.company_code);
     assert.equal(page.dashboardTextValue, SD.dashboard_text);
     assert.equal(page.loginGraceValue, SD.login_grace);
-    assert.equal(page.modulesTicketsChecked(), SD.modules.tickets);
-    assert.equal(page.modulesWorkordersChecked(), SD.modules.work_orders);
-    assert.equal(page.modulesInvoicesChecked(), SD.modules.invoices);
+    assert.equal(page.modulesTicketsChecked(), SD.tickets_module);
+    assert.equal(page.modulesWorkordersChecked(), SD.work_orders_module);
+    assert.equal(page.modulesInvoicesChecked(), SD.invoices_module);
     assert.equal(page.testmodeChecked(), SD.test_mode);
     assert.equal(page.testContractorEmailValue, SD.test_contractor_email);
     assert.equal(page.testContractorPhoneValue, SD.test_contractor_phone);
@@ -70,9 +70,9 @@ test('general settings title and fields populated correctly', assert => {
     assert.equal(setting.get('company_code'), SD.company_codeOther);
     assert.equal(setting.get('dashboard_text'), SD.dashboard_textOther);
     assert.equal(setting.get('login_grace'), SD.login_graceOther);
-    assert.equal(page.modulesTicketsChecked(), SD.modulesOther.tickets);
-    assert.equal(page.modulesWorkordersChecked(), SD.modulesOther.work_orders);
-    assert.equal(page.modulesInvoicesChecked(), SD.modulesOther.invoices);
+    assert.equal(page.modulesTicketsChecked(), SD.tickets_moduleOther);
+    assert.equal(page.modulesWorkordersChecked(), SD.work_orders_moduleOther);
+    assert.equal(page.modulesInvoicesChecked(), SD.invoices_moduleOther);
     assert.equal(setting.get('test_mode'), SD.test_modeOther);
     assert.equal(setting.get('test_contractor_email'), SD.test_contractor_emailOther);
     assert.equal(setting.get('test_contractor_phone'), SD.test_contractor_phoneOther);
@@ -143,6 +143,38 @@ test('general settings are properly dirty tracked', assert => {
   });
   fillIn('.t-settings-company_code', SD.company_code);
   andThen(() => {
+    let setting = store.find('setting', SD.id);
+    assert.ok(setting.get('isNotDirty'));
+  });
+});
+
+test('modules are dirty tracked, and will be clean if returned to original state', assert => {
+  visit(DETAIL_URL);
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(page.modulesTicketsChecked(), SD.tickets_module);
+    assert.equal(page.modulesWorkordersChecked(), SD.work_orders_module);
+    assert.equal(page.modulesInvoicesChecked(), SD.invoices_module);
+    let setting = store.find('setting', SD.id);
+    assert.ok(setting.get('isNotDirty'));
+  });
+  page.modulesTicketsClick();
+  page.modulesWorkordersClick();
+  page.modulesInvoicesClick();
+  andThen(() => {
+    assert.equal(page.modulesTicketsChecked(), SD.tickets_moduleOther);
+    assert.equal(page.modulesWorkordersChecked(), SD.work_orders_moduleOther);
+    assert.equal(page.modulesInvoicesChecked(), SD.invoices_moduleOther);
+    let setting = store.find('setting', SD.id);
+    assert.ok(setting.get('isDirty'));
+  });
+  page.modulesTicketsClick();
+  page.modulesWorkordersClick();
+  page.modulesInvoicesClick();
+  andThen(() => {
+    assert.equal(page.modulesTicketsChecked(), SD.tickets_module);
+    assert.equal(page.modulesWorkordersChecked(), SD.work_orders_module);
+    assert.equal(page.modulesInvoicesChecked(), SD.invoices_module);
     let setting = store.find('setting', SD.id);
     assert.ok(setting.get('isNotDirty'));
   });

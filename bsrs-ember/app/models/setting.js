@@ -8,7 +8,9 @@ var SettingModel = Model.extend({
   company_name: attr(''),
   dashboard_text: attr(''),
   login_grace: attr(),
-  modules: attr(),
+  tickets_module: attr(),
+  work_orders_module: attr(),
+  invoices_module: attr(),
   test_mode: attr(),
   test_contractor_email: attr(''),
   test_contractor_phone: attr(''),
@@ -31,7 +33,6 @@ var SettingModel = Model.extend({
     });
   },
   serialize() {
-    let modules = this.get('modules');
     return {
       id: this.get('id'),
       name: this.get('name'),
@@ -41,11 +42,9 @@ var SettingModel = Model.extend({
         company_name: this.get('company_name'),
         dashboard_text: this.get('dashboard_text'),
         login_grace: parseInt(this.get('login_grace')),
-        modules: {
-          tickets: modules.tickets,
-          work_orders: modules.work_orders,
-          invoices: modules.invoices
-        },
+        tickets_module: this.get('tickets_module'),
+        work_orders_module: this.get('work_orders_module'),
+        invoices_module: this.get('invoices_module'),
         test_mode: this.get('test_mode'),
         test_contractor_email: this.get('test_contractor_email'),
         test_contractor_phone: this.get('test_contractor_phone'),

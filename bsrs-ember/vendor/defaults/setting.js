@@ -3,125 +3,132 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
         this.dtd = dtd;
     };
     factory.prototype.defaults = function() {
-        var one = {
+        var base = {
+            // Initial
             company_code: 'one',
             company_name: 'Andys Pianos',
             dashboard_text: 'Welcome',
             login_grace: 1,
-            modules: {
-                tickets: true,
-                work_orders: true,
-                invoices: true
-            },
+            tickets_module: true,
+            work_orders_module: true,
+            invoices_module: true,
             test_mode: false,
             test_contractor_email: 'test@bigskytech.com',
             test_contractor_phone: '+18587155000',
             dt_start_id: this.dtd.idOne,
             dt_start_key: 'Start',
-
-            // Role
+            // Initial Role
             create_all: true,
             accept_assign: false,
             accept_notify: false,
-            password_one_time: false
-        };
-        var other = {
+            password_one_time: false,
+
+            // Other
             company_codeOther: 'two',
             company_nameOther: 'Bobs Pianos',
             dashboard_textOther: '1234',
             login_graceOther: 2,
-            modulesOther: {
-                tickets: false,
-                work_orders: false,
-                invoices: false
-            },
+            tickets_moduleOther: false,
+            work_orders_moduleOther: false,
+            invoices_moduleOther: false,
             test_modeOther: true,
             test_contractor_emailOther: 'foo@bigskytech.com',
             test_contractor_phoneOther: '+18587154000',
             dt_start_idOther: this.dtd.idTwo,
             dt_start_keyOther: 'StartTwo',
-
-            // Role
+            // Other Role
             create_allOther: false,
             accept_assignOther: true,
             accept_notifyOther: true,
-            password_one_timeOther: true
-        };
-        var misc = {
+            password_one_timeOther: true,
+
+            // Misc.
             inherits_from_general: 'general',
-            inherits_from_role: 'role'
+            inherits_from_role: 'role',
         };
-        return Object.assign(one, other, misc, {
+        return Object.assign(base, {
             id: 'b783a238-1131-4623-8d24-81a672bb4e00',
             name: 'general',
             title: 'admin.setting.name.general',
             settings: {
                 company_code: {
-                    value: one.company_code
+                    value: base.company_code
                 },
                 company_name: {
-                    value: one.company_name
+                    value: base.company_name
                 },
                 dashboard_text: {
-                    value: one.dashboard_text
+                    value: base.dashboard_text
                 },
                 login_grace: {
-                    value: one.login_grace
+                    value: base.login_grace
                 },
-                modules: {
-                    value: one.modules,
+                tickets_module: {
+                    value: base.tickets_module,
+                },
+                work_orders_module: {
+                    value: base.work_orders_module,
+                },
+                invoices_module: {
+                    value: base.invoices_module,
                 },
                 test_mode: {
-                    value: one.test_mode,
+                    value: base.test_mode,
                 },
                 test_contractor_email: {
-                    value: one.test_contractor_email,
+                    value: base.test_contractor_email,
                 },
                 test_contractor_phone: {
-                    value: one.test_contractor_phone,
+                    value: base.test_contractor_phone,
                 },
                 dt_start_id: {
-                    value: one.dt_start_id,
+                    value: base.dt_start_id,
                 },
                 dt_start: {
                     value: {
-                        id: one.dt_start_id,
-                        key: one.dt_start_key
+                        id: base.dt_start_id,
+                        key: base.dt_start_key
                     }
                 }
             },
             settingsOther: {
                 company_code: {
-                    value: one.company_codeOther
+                    value: base.company_codeOther
                 },
                 company_name: {
-                    value: other.company_nameOther
+                    value: base.company_nameOther
                 },
                 dashboard_text: {
-                    value: other.dashboard_textOther
+                    value: base.dashboard_textOther
                 },
                 login_grace: {
-                    value: other.login_graceOther
+                    value: base.login_graceOther
                 },
-                modules: {
-                    value: one.modulesOther,
+                tickets_module: {
+                    value: base.tickets_moduleOther,
+                },
+                work_orders_module: {
+                    value: base.work_orders_moduleOther,
+                },
+                invoices_module: {
+                    value: base.invoices_moduleOther,
                 },
                 test_mode: {
-                    value: one.test_modeOther,
+                    value: base.test_modeOther,
                 },
                 test_contractor_email: {
-                    value: one.test_contractor_emailOther,
+                    value: base.test_contractor_emailOther,
                 },
                 test_contractor_phone: {
-                    value: one.test_contractor_phoneOther,
+                    value: base.test_contractor_phoneOther,
                 },
                 dt_start_id: {
-                    value: one.dt_start_idOther,
+                    value: base.dt_start_idOther,
                 },
                 dt_start: {
                     value: {
-                        id: one.dt_start_idOther,
-                        key: one.dt_start_keyOther
+                        id: base.dt_start_idOther,
+                        key: base.dt_start_keyOther
                     }
                 }
             }
