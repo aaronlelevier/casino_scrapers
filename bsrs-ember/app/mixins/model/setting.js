@@ -9,8 +9,7 @@ var Mixin = Ember.Mixin.create({
     let obj = {
       settings: {}
     };
-    for (let f in fields) {
-      let field = fields[f];
+    for (let field of fields) {
       if (typeof(field) === 'string') {
         obj.settings[field] = this.get(field);
       }
@@ -19,5 +18,4 @@ var Mixin = Ember.Mixin.create({
   }),
 });
 
-export
-default Mixin;
+export default Mixin;
