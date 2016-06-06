@@ -1315,10 +1315,10 @@ test('settings values, placeholers, and inherited froms', assert => {
     // inherited
     assert.equal(page.acceptAssignLabelText, translations['admin.setting.accept_assign']);
     assert.equal(page.acceptAssignChecked(), PD.settings.accept_assign.inherited_value);
-    assert.equal(page.acceptAssignInheritedFromLabelText, 'Inherits from: ' + StgD.inherits_from_role);
+    assert.equal(page.acceptAssignInheritedFromLabelText, 'Inherited from: ' + StgD.inherits_from_role);
     assert.equal(page.acceptNotifyLabelText, translations['admin.setting.accept_notify']);
     assert.equal(page.acceptNotifyChecked(), PD.settings.accept_notify.inherited_value);
-    assert.equal(page.acceptNotifyInheritedFromLabelText, 'Inherits from: ' + StgD.inherits_from_role);
+    assert.equal(page.acceptNotifyInheritedFromLabelText, 'Inherited from: ' + StgD.inherits_from_role);
     // not inherited
     assert.equal(page.passwordOneTimeLabelText, translations['admin.setting.password_one_time']);
     assert.equal(page.passwordOneTimeChecked(), PD.settings.password_one_time.value);
