@@ -75,7 +75,6 @@ class SettingsValidatorTests(APITestCase):
             'dashboard_text': 0,
             'login_grace': 'foo',
             'exchange_rates': 'foo',
-            'modules': 0,
             'test_mode': 0,
             'test_contractor_email': 'foo@bar',
             'test_contractor_phone': '+1800'
@@ -89,7 +88,6 @@ class SettingsValidatorTests(APITestCase):
         self.assertEqual(error['dashboard_text'], [self.error_message.format(value=0, type='str')])
         self.assertEqual(error['login_grace'], [self.error_message.format(value='foo', type='int')])
         self.assertEqual(error['exchange_rates'], [self.error_message.format(value='foo', type='float')])
-        self.assertEqual(error['modules'], [self.error_message.format(value=0, type='dict')])
         self.assertEqual(error['test_mode'], [self.error_message.format(value=0, type='bool')])
         self.assertEqual(error['test_contractor_email'], ['{} is not a valid email'.format('foo@bar')])
         self.assertEqual(error['test_contractor_phone'], ['{} is not a valid phone'.format('+1800')])

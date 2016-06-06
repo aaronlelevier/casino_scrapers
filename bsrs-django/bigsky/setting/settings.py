@@ -14,12 +14,14 @@ GENERAL_SETTINGS = {
     "exchange_rates": {
         "value": 1.0,
     },
-    "modules": {
-        "value": {
-            "tickets": True,
-            "work_orders": True,
-            "invoices": True
-        },
+    "tickets_module": {
+        "value": True
+    },
+    "work_order_module": {
+        "value": True
+    },
+    "invoices_module": {
+        "value": True
     },
     "test_mode": {
         "value": False,
