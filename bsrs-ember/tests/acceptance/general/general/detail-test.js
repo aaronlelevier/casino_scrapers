@@ -94,12 +94,13 @@ test('general settings title and fields populated correctly', assert => {
 test('change dt_start', async assert => {
   await visit(DETAIL_URL);
   assert.equal(currentURL(), DETAIL_URL);
+  assert.equal(page.startDtdInput, SD.dt_start_key);
   const param = '1';
-  xhr(`/api/dtds/?search=${param}`, 'GET', null, {}, 200, DTDF.list());
-  await page.startDtdClickDropdown();
-  fillIn('.ember-power-select-search input', param);
-  assert.equal(currentURL(), DETAIL_URL);
+  let listResponse = DTDF.list();
+  xhr(`/api/dtds/?search=${param}`, 'GET', null, {}, 200, listResponse);
+  selectSearch('.t-settings-dt_start-select', param);
   await page.startDtdClickOne();
+  assert.equal(page.startDtdInput, listResponse.results[1].key);
   xhr(url, 'PUT', JSON.stringify(setting_payload_only_change_dt_start), {}, 200, {});
   await generalPage.save();
   assert.equal(currentURL(), ADMIN_URL);
