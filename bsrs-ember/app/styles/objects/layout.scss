@@ -1,3 +1,7 @@
+/*
+* Absolute positioning to set at top of section.wrap
+* keeps scrollbar within article.main and keep nav/side-bar/admin-panel fixed to screen
+*/
 article.main {
   position: absolute;
   left: $documentLeft;
