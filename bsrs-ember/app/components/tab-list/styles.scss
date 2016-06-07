@@ -7,36 +7,53 @@ nav.tabs{
   height: $tabHeight;
   overflow: hidden;
   z-index: 1;
-  ul{
-    margin-left: 0px;
-    margin-right: -100px;
-    overflow: hidden;
-    li{
-      height: $tabHeight;
-      line-height: $tabHeight;
-      background: $light;
-      border: $borderStyle;
-      padding: 0;
-      float: left;
-      font-size: 1.2rem;
-      width: $tabWidth;
-      margin: 0 3px 0 0;
-      border-radius: $borderRadiusTop;
-      position: relative;
-
-      -webkit-transition: width .25s ease-in-out;
-      -moz-transition: width .25s ease-in-out;
-      -o-transition: width .25s ease-in-out;
-      transition: width .25s ease-in-out;
-
+  // ul{
+  //   margin-left: 0px;
+  //   margin-right: -100px;
+  //   overflow: hidden;
+  div.tab {
+    width: $tabWidth;
+    height: $tabHeight;
+    line-height: $tabHeight;
+    background: $light;
+    border: $borderStyle;
+    padding: 0;
+    font-size: 1.2rem;
+    margin: 0 3px 0 0;
+    border-radius: $borderRadiusTop;
+    position: relative;
+    -webkit-transition: width .25s ease-in-out;
+    -moz-transition: width .25s ease-in-out;
+    -o-transition: width .25s ease-in-out;
+    transition: width .25s ease-in-out;
+  }
+    // li{
+    //   height: $tabHeight;
+    //   line-height: $tabHeight;
+    //   background: $light;
+    //   border: $borderStyle;
+    //   padding: 0;
+    //   float: left;
+    //   font-size: 1.2rem;
+    //   width: $tabWidth;
+    //   margin: 0 3px 0 0;
+    //   border-radius: $borderRadiusTop;
+    //   position: relative;
+    //
+    //   -webkit-transition: width .25s ease-in-out;
+    //   -moz-transition: width .25s ease-in-out;
+    //   -o-transition: width .25s ease-in-out;
+    //   transition: width .25s ease-in-out;
+    //
       a{
         height: $tabHeightMinus2;
         line-height: $tabHeightMinus2;
         background: $light;
-        padding: 0 10px;
+        padding: 0 18px 0 10px;
         display: block;
         color: $darkGray;
-        @include truncate;
+        text-overflow: ellipsis;
+        overflow: hidden;
         &:hover,
         &:focus{
           text-decoration: none;
@@ -80,18 +97,25 @@ nav.tabs{
 
         }
       }
-    }//li
+    // }//li
 
-    li.new{
-      width: 36px;
+    .new {
+      flex-basis: content;
+      max-width: 36px;
       text-align: center;
       color: $darkGray;
+      align-self: center;
       &:hover{
-        color: $hoverColor;
+        cursor: pointer;
+        background: $activeColor;
+        border-color: $activeColor;
+        color: $white;
       }
       &:active{
-        color: $activeColor;
+        background: $activeColor;
+        border-color: $activeColor;
+        color: $white;
       }
     }//li.new
-  }//ul
+  // }//ul
 }//nav.tabs

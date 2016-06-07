@@ -1,5 +1,5 @@
 <nav class="tabs">
-  <ul id="tabs" class="list-inline">
+  <box horizontal>
     {{#each tabs as |tab|}}
       {{#if tab.model.new}}
         {{tab-navigation
@@ -25,13 +25,13 @@
         }}
       {{/if}}
     {{/each}}
-    <li class="new">
+    <div class="new tab" {{action "homeModalShowing"}}>
       {{#if homeModalShowing}}
         {{#modal-dialog translucentOverlay=true close="homeModalShowing"}}
         <span {{action "homeModalShowing"}}>{{#link-to "dt.new" tagName="button" class="btn btn-success t-launch-dt-ticket" action="homeModalShowing"}}{{t "dt.ticket.launch"}}{{/link-to}}</span>
         {{/modal-dialog}}
       {{/if}}
-      <span class="t-home-modal-show" {{action "homeModalShowing"}}>{{fa-icon "plus"}}</span>
-    </li>
-  </ul>
+      <span class="t-home-modal-show">{{fa-icon "plus"}}</span>
+    </div>
+  </box>
 </nav>

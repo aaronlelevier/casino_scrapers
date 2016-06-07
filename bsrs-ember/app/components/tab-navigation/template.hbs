@@ -1,4 +1,4 @@
-<li style="width:{{tab-width tab.tab_count.length}}">
+<div class="tab">
   {{#link-to tab.routeName (if link_id link_id) classNames="t-tab"}}
   <span class="t-tab-title">{{tab.parent}}</span>
   <span class="close-wrap">
@@ -13,7 +13,7 @@
     </a>
   </span>
   {{/link-to}}
-</li>
+</div>
 
 {{#if tab.modalIsShowing}}
 {{#modal-dialog translucentOverlay=true}}
