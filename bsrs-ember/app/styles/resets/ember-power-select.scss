@@ -3,13 +3,13 @@
 		min-height: 34px;
 		min-width: 120px;
 		background-image: none;
-		line-height: 34px;
-		padding: 0 36px 0 12px !important;
+		// line-height: 34px;
+		// padding: 0 36px 0 12px !important;
 		text-overflow: ellipsis;
 		overflow: hidden;
 		border-radius: $borderRadius;
-		border-color: $gray;
-		color: $dark;
+		// border-color: $gray;
+		// color: $dark;
 
 		.ember-power-select-status-icon {
 			right: 10px;
@@ -44,7 +44,7 @@
 				border: $borderStyle;
 				background: $light;
 				margin: 4px 4px 0 0;
-				padding: 0 3px 0 5px;
+				// padding: 0 3px 0 5px;
 				line-height: 20px;
 				max-width: 100%;
 		    @include truncate;
@@ -76,7 +76,7 @@
 }
 .ember-power-select-trigger:focus{
 	outline: none;
-	border: $borderStyle !important;
+	// border: $borderStyle !important;
 	&[aria-expanded="true"]{
 		border: 1px solid $activeColor !important;
 	}
@@ -124,7 +124,7 @@
 	.ember-basic-dropdown--above{
 		border-radius: 2px 2px 0 0;
 	}
-
+	//Ticket and DTD styles
 	.ticket-priority-select,
 	.ticket-status-select{
 		li{

@@ -1,0 +1,115 @@
+aside.side-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: $documentLeft;
+  overflow: hidden;
+  header {
+    height: $documentHeaderHeight;
+    line-height: $documentHeaderHeight;
+    border: $borderStyle;
+    border-width: 0 0 1px;
+    padding: 0 10px;
+    position: relative;
+    background: $lightGray;
+    h1 {
+      vertical-align: middle;
+      font-size: 1.3em;
+      font-weight: normal;
+      display: inline;
+    }//h1
+  }
+  menu {
+    position: absolute;
+    top: $documentHeaderHeight;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    padding: 0;
+    margin: 0;
+    overflow: auto;
+    background-color: $lightGray;
+    border: $borderStyle;
+    border-width: 0 1px 0 0;
+    section {
+      margin: 5px 0;
+      h3 {
+        margin: 0;
+        color: $darkGray;
+        font-size: 1.1em;
+        padding: 10px 5px;
+        i.menuIcon{
+          width: 25px;
+          text-align: center;
+          color: $darkGray;
+        }
+      }//h3
+
+      ul {
+        padding: 0;
+        margin: 0;
+        font-size: 0.9em;
+        li {
+          clear: both;
+          line-height: 2rem;
+          a {
+            color: $darkGray;
+            text-decoration: none;
+            padding: 3px 8px 3px 30px;
+            display: block;
+            &:hover {
+              cursor: pointer;
+              color: $hoverColor;
+              background-color: $hoverColorLight;
+              .fa {
+                color: $white;
+                &:hover {
+                  color: $orange;
+                }
+              }
+            }
+            &.active {
+              color: $white;
+              background-color: $activeColor;
+              .fa {
+                color: $white;
+                &:hover {
+                  color: $orange;
+                }
+              }
+            }
+            &.active:hover {
+              cursor: default;
+              .fa {
+                color: $white;
+                &:hover {
+                  cursor: pointer;
+                  color: $orange;
+                }
+              }
+            }
+
+            .fa {
+              line-height: 1.7rem;
+              margin-right: 7px;
+              &:hover{
+                color: $orange;
+              }
+            }
+          }//a
+          ul {
+            list-style-type: none;
+            li {
+              font-size: 1em;
+              line-height: 1.7rem;
+              a {
+                padding: 3px 8px 3px 40px;
+              }
+            }
+          }//ul
+        }//li
+      }//ul
+    }//section
+  }//menu
+}// aside.side-panel

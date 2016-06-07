@@ -1,3 +1,146 @@
+div.rowTable {
+  section.docSection{
+    h1, h2{
+      .reset-grid{
+        font-size: 1.1rem;
+        font-weight: normal;
+        text-decoration: underline;
+        cursor: pointer;
+        color: $darkGray;
+        margin-left: 10px;
+      }
+    }
+    table.table-hover {
+      tr:hover td{
+        cursor: pointer;
+      }
+    }//table
+    .table-responsive{
+      border: none !important;
+    }
+    table{
+      &.table{
+        table-layout: fixed;
+      }
+      th{
+        span{
+          display: inline-block;
+          height: 18px;
+          line-height: 18px;
+          vertical-align: bottom;
+          &.title{
+            float: left;
+            max-width: 80%;
+            margin-right: 5%;
+            @include truncate;
+          }
+        }
+        .fa-sort,
+        .fa-filter{
+          color: $gray;
+        }
+        .fa-filter.on,
+        .fa-sort-asc,
+        .fa-sort-desc{
+          color: $lightGreen;
+        }
+        .fa-sort,
+        .fa-filter,
+        .fa-sort-asc,
+        .fa-sort-desc{
+          cursor: pointer;
+        }
+      }
+      //table column widths
+      td, th{
+        font-size: 1.2rem;
+        vertical-align: middle;
+        &.ticket-priority{
+          width: 120px;
+          .tag{
+            max-width: 110px;
+            @include truncate;
+          }
+        }
+        &.ticket-status{
+          width: 120px;
+          .tag{
+            max-width: 110px;
+            @include truncate;
+          }
+        }
+        &.ticket-number{
+          width: 80px;
+        }
+        &.ticket-created{
+          width: 180px;
+          div{
+            @include truncate;
+          }
+        }
+        &.ticket-location{
+          width: 180px;
+        }
+        &.ticket-assignee{
+          width: 180px;
+        }
+        &.ticket-location{
+          width: 180px;
+          @include truncate;
+        }
+        &.model-category{
+          width: 200px;
+        }
+        &.ticket-request{
+          width: 200px;
+          @include truncate;
+        }
+        &.dtd-key{
+          width: 20%;
+          @include truncate;
+        }
+        &.dtd-description{
+          width: 80%;
+          @include truncate;
+        }
+        &.selector{
+          width: 28px;
+          .dirty{
+            font-size: 1.2rem;
+            color: $lightGreen;
+          }
+        }
+      }
+    }
+  }
+  footer{
+    nav{
+      ul.pagination{
+        margin: 4px 0 0;
+        li{
+          a.active{
+            background: $activeColor;
+            border-color: $activeColor;
+            color: $white;
+          }
+        }
+      }
+    }
+    .t-page-count{
+      @include truncate;
+      width: 100%;
+    }
+    .page-size{
+      margin: 4px 0 0;
+    }
+  }
+}//div.rowTable
+
+.tableSearch {
+  position: absolute;
+  right: 20px;
+  border-radius: 15px;
+}
 .filtersets{
   clear: both;
   ul{
