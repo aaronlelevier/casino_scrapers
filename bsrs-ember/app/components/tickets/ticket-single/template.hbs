@@ -1,6 +1,6 @@
 <form {{action "return false" this on="submit"}}>
   <article class="main">
-    <div class="wrapper form">
+    <div class="form">
       <header>
         {{base-component
         model=model
@@ -37,7 +37,7 @@
                   <div class="input-group">
                     <span class="input-group-addon">{{t "ticket.label.request"}}</span>
                     {{validated-input model=model value=model.request placeholder=(t "ticket.label.request") valuePath="request" className="form-control t-ticket-request ticket-request" didValidate=didValidate textarea=true class="t-ticket-request-validator"}}
-                  </div>                  
+                  </div>
                 </div>
               </div>
             </section>

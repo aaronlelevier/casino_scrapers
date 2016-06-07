@@ -10,3 +10,12 @@
   white-space: nowrap;
   overflow: hidden;
 }
+
+@mixin input-group-dropdown($min-width: 6em) {
+	min-width: $min-width;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	margin-left: -1px;
+	margin-right: -1px;
+}

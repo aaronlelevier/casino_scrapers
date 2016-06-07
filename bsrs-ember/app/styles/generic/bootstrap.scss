@@ -37,6 +37,9 @@
 }
 
 
+.input-group-addon{
+	background-color: $lightGray;
+}
 .input-group-addon:first-child{
   border-radius: $borderRadiusLeft;
 }
@@ -57,6 +60,7 @@
   height: 34px !important; //Remove after bootstrap fix released
 }
 .input-group{
+	margin-bottom: 10px;
   .input-group-btn{
     .ember-power-select .ember-power-select-trigger{
       font-size: 14px;

@@ -357,7 +357,7 @@ test('newly added email without a valid name are ignored and removed when user n
 
 test('newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
   page.visitDetail();
-  click('.t-add-btn:eq(0)');
+  click('.t-btn-add:eq(0)');
   andThen(() => {
     assert.equal(store.find('phonenumber').get('length'), 3);
     let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
@@ -430,7 +430,7 @@ test('emails without a valid name are ignored and removed on save', (assert) => 
 
 test('phone numbers without a valid number are ignored and removed on save', (assert) => {
   page.visitDetail();
-  click('.t-add-btn:eq(0)');
+  click('.t-btn-add:eq(0)');
   andThen(() => {
     let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
     assert.equal(visible_errors.length, 0);
@@ -738,7 +738,7 @@ test('when you deep link to the person detail view you can add and remove a new 
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(find('.t-input-multi-phone').find('input').length, 2);
   });
-  click('.t-add-btn:eq(0)');
+  click('.t-btn-add:eq(0)');
   click('.t-del-btn:eq(2)');
   andThen(() => {
     var person = store.find('person', PD.idOne);
@@ -769,7 +769,7 @@ test('when you deep link to the person detail view you can change the phone numb
   random.uuid = function() { return UUID.value; };
   page.visitDetail();
   fillIn('.t-input-multi-phone select:eq(0)', PNTD.mobileId);
-  click('.t-add-btn:eq(0)');
+  click('.t-btn-add:eq(0)');
   fillIn('.t-new-entry:eq(2)', PND.numberThree);
   var phone_numbers = PNF.put();
   phone_numbers[0].type = PNTD.mobileId;

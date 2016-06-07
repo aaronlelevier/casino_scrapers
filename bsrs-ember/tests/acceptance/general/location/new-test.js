@@ -252,7 +252,7 @@ test('adding a new location should allow for another new location to be created 
 /* PHONE NUMBER AND ADDRESS */
 test('newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
     page.visitNew();
-    click('.t-add-btn:eq(0)');
+    click('.t-btn-add:eq(0)');
     andThen(() => {
         assert.equal(store.find('phonenumber').get('length'), 1);
         let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
@@ -321,7 +321,7 @@ test('phone numbers without a valid number are ignored and removed on save', (as
     page.locationLevelClickOptionOne();
     page.statusClickDropdown();
     page.statusClickOptionOne();
-    click('.t-add-btn:eq(0)');
+    click('.t-btn-add:eq(0)');
     andThen(() => {
         let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
         assert.equal(visible_errors.length, 0);
@@ -469,7 +469,7 @@ test('when you change a related phone numbers type it will be persisted correctl
     page.statusClickDropdown();
     page.statusClickOptionOne();
     var phone_numbers = PNF.put({id: PND.idOne, type: PNTD.officeId});
-    click('.t-add-btn:eq(0)');
+    click('.t-btn-add:eq(0)');
     fillIn('.t-new-entry:eq(0)', PND.numberOne);
     xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(phone_number_payload), {}, 201);
     generalPage.save();

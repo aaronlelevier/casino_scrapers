@@ -32,7 +32,7 @@ moduleForComponent('input-multi-address', 'integration: input-multi-address test
     }
 });
 
-test('renders a single button with a class of t-add-btn', function(assert){
+test('renders a single button with a class of t-btn-add', function(assert){
     run(function() {
         person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     });

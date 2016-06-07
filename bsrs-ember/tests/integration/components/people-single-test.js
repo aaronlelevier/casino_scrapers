@@ -150,7 +150,7 @@ test('filling in invalid phone number reveal validation messages', function(asse
   this.render(hbs`{{people/person-single model=model phone_number_types=phone_number_types default_phone_number_type=default_phone_number_type}}`);
   var $component = this.$('.t-input-multi-phone-validation-format-error');
   assert.equal($component.length, 0);
-  this.$('.t-add-btn:eq(0)').click();
+  this.$('.t-btn-add:eq(0)').click();
   $component = this.$('.t-input-multi-phone-validation-format-error');
   assert.ok($component.is(':hidden'));
   assert.equal($component.length, 1);
@@ -208,7 +208,7 @@ test('can remove a new phone number', function(assert) {
   this.phone_number_types = phone_number_types;
   this.default_phone_number_type = default_phone_number_type;
   this.render(hbs`{{people/person-single model=model phone_number_types=phone_number_types default_phone_number_type=default_phone_number_type}}`);
-  this.$('.t-add-btn:eq(0)').click();
+  this.$('.t-btn-add:eq(0)').click();
   assert.equal(this.$('.t-new-entry').length, 1);
   this.$('.t-del-btn:eq(0)').click();
   assert.equal(this.$('.t-new-entry').length, 0);

@@ -15,4 +15,4 @@
   {{#validation-error-field field="email" class="t-input-multi-email-validation-format-error" submitted=submitted model=email index=index validation="emailFormat"}}{{t "validation.invalid"}} {{t "admin.person.label.email"}}{{/validation-error-field}}
 </div>
 {{/each}}
-<button class="t-add-email-btn add-btn btn btn-default btn-sm" type="button" {{action 'append'}}><span class="btn-label">{{fa-icon "plus"}} {{t "admin.email.add"}}</span></button>
+<button class="t-add-email-btn btn-add btn btn-default btn-sm" type="button" {{action 'append'}}><span class="btn-label">{{fa-icon "plus"}} {{t "admin.email.add"}}</span></button>

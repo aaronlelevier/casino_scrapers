@@ -1,11 +1,11 @@
-.delete{
+.btn-delete	{
 	&:hover{
-		color: $orange;
+		color: $deleteColor !important;
 	}
 }
-.add-btn,
-.add-btn:hover,
-.add-btn:focus {
+.btn-add,
+.btn-add:hover,
+.btn-add:focus {
 	background-color: $lightGray;
 	border-color: $gray;
 	color: $darkGray;
@@ -34,4 +34,3 @@
     cursor: inherit;
     display: block;
 }
-

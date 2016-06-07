@@ -39,7 +39,7 @@ test('defaults to use phone number model with field name of number', function(as
     assert.equal(model.get('content.length'), 0);
     var $component = this.$('.t-input-multi-phone');
     assert.equal(this.$('.t-new-entry').length, 0);
-    var $first_btn = $component.find('.t-add-btn:eq(0)');
+    var $first_btn = $component.find('.t-btn-add:eq(0)');
     $first_btn.trigger('click').trigger('change');
     assert.equal(this.$('.t-new-entry').length, 1);
     assert.equal(store.find('phonenumber').get('length'), 1);
@@ -63,7 +63,7 @@ test('once added a button for phone number type appears with a button to delete 
     this.set('default_type', default_type);
     this.render(hbs`{{input-multi-phone model=model types=phone_number_types related_pk=related_pk related_field=related_field default_type=default_type}}`);
     var $component = this.$('.t-input-multi-phone');
-    var $first_btn = $component.find('.t-add-btn:eq(0)');
+    var $first_btn = $component.find('.t-btn-add:eq(0)');
     var $first_type_select = $component.find('.t-multi-phone-type');
     var $first_del = $component.find('.t-del-btn:eq(0)');
     assert.equal($first_type_select.length, 0);
@@ -90,7 +90,7 @@ test('changing the phone number type will alter the bound value', function(asser
     this.set('default_type', default_type);
     this.render(hbs`{{input-multi-phone model=model types=phone_number_types related_pk=related_pk related_field=related_field default_type=default_type}}`);
     var $component = this.$('.t-input-multi-phone');
-    var $first_btn = $component.find('.t-add-btn:eq(0)');
+    var $first_btn = $component.find('.t-btn-add:eq(0)');
     var $first_type_select = $component.find('.t-multi-phone-type');
     assert.equal($first_type_select.length, 0);
     $first_btn.trigger('click');
@@ -158,7 +158,7 @@ test('filling in invalid phone number reveals validation message', function(asse
     this.set('phone_number_types', phone_number_types);
     this.set('default_type', default_type);
     this.render(hbs`{{input-multi-phone model=model types=phone_number_types related_pk=related_pk related_field=related_field default_type=default_type}}`);
-    var $first_btn = this.$('.t-add-btn:eq(0)');
+    var $first_btn = this.$('.t-btn-add:eq(0)');
     var $first_type_select = this.$('.t-multi-phone-type');
     assert.equal($first_type_select.length, 0);
     $first_btn.trigger('click').trigger('change');

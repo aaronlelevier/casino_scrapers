@@ -289,23 +289,3 @@ input.cmn-toggle-round:checked + label:after {
   -ms-user-select: none;
   user-select: none;
 }
-
-/* ============================================================
-  Comment
-============================================================ */
-
-.comment{
-    min-height: 7em;
-    padding: 9px 12px;
-    resize: none;
-}
-
-/* ============================================================
-  Dropdown Menu
-============================================================ */
-.dropdown-menu {
-    i.fa{
-        width: 20px;
-        text-align: center;
-    }
-}

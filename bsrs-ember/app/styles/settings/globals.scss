@@ -1,0 +1,31 @@
+// Borders
+$borderStyle: 1px solid $borderColor;
+$borderRadius: 2px;
+$borderRadiusTopLeft: 2px 0 0 0;
+$borderRadiusTop: 2px 2px 0 0;
+$borderRadiusTopRight: 0 2px 0 0;
+$borderRadiusRight: 0 2px 2px 0;
+$borderRadiusBottomRight: 0 0 2px 0;
+$borderRadiusBottom: 0 0 2px 2px;
+$borderRadiusBottomLeft: 0 0 0 2px;
+$borderRadiusLeft: 2px 0 0 2px;
+
+//checkbox border when highlighted - a bit darker
+$fieldBorder: #CCC;
+$fieldBoxShadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+
+//tables
+$hoverRow: $gray;
+$activeRow: $gray;
+$tableHeadRow: $lightGray;
+
+////Ember Power select
+//$ember-power-select-text-color: $dark !default;
+//$ember-power-select-border-color: $gray !default;
+//// $ember-power-select-focus-border-color: $borderStyle !default;
+
+//// $ember-power-select-search-field-focus-border: $activeColor !important;
+//// $ember-power-select-dropdown-border: $activeColor !important;
+//$ember-power-select-line-height: 34px !default;
+//$ember-power-select-trigger-ltr-padding: 0 36px 0 12px !default;
+//$ember-power-select-multiple-option-padding: 0 3px 0 5px !default;

@@ -285,7 +285,7 @@ test('newly added phone numbers without a valid number are ignored and removed w
   andThen(() => {
     assert.equal(store.find('phonenumber').get('length'), 2);
   });
-  click('.t-add-btn:eq(0)');
+  click('.t-btn-add:eq(0)');
   andThen(() => {
     assert.equal(store.find('phonenumber').get('length'), 3);
     let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
@@ -348,7 +348,7 @@ test('newly added addresses without a valid name are ignored and removed when us
 
 test('phone numbers without a valid number are ignored and removed on save', (assert) => {
   visit(DETAIL_URL);
-  click('.t-add-btn:eq(0)');
+  click('.t-btn-add:eq(0)');
   andThen(() => {
     let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
     assert.equal(visible_errors.length, 0);
@@ -709,7 +709,7 @@ test('when you deep link to the location detail view you can change the phone nu
   random.uuid = function() { return UUID.value; };
   visit(DETAIL_URL);
   fillIn('.t-input-multi-phone select:eq(0)', PNTD.mobileId);
-  click('.t-add-btn:eq(0)');
+  click('.t-btn-add:eq(0)');
   fillIn('.t-new-entry:eq(2)', PND.numberThree);
   var phone_numbers = PNF.put();
   phone_numbers[0].type = PNTD.mobileId;

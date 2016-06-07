@@ -1,20 +1,92 @@
-@import 'app/styles/mixins/_mixins.scss';
-@import 'bootstrap-custom';
-@import 'app/styles/globals/_variables.scss';
-@import 'app/styles/globals/animate.scss';
-@import 'app/styles/resets/bootstrap.scss';
-@import 'app/styles/resets/browser.scss';
-@import 'app/styles/resets/ember-modal.scss';
-@import 'app/styles/resets/ember-power-select.scss';
-@import 'app/styles/globals/index.scss';
-@import 'app/styles/globals/components.scss';
-@import 'app/styles/globals/buttons.scss';
+/**
+* TRUMPS
+* Clearfix.............I can’t believe we still need this in 2014.
+* Widths...............Simple width helper classes.
+* Widths-responsive....Polyfill for responsive width classes.
+* Spacing..............Micro-level spacing.
+* Show/hide............Helpers to show and side stuff.
+*/
+
+/*
+* EXTERNAL LIBRARIES
+* Bootstrap............customized to only import necessary bootstrap modules - https://getbootstrap.com/
+* Animate..............https://daneden.github.io/animate.css/
+*/
+@import 'bootstrap-custom'; //_boostrap-custom.scss :: must live at style/ root
+@import 'app/styles/external/animate.scss';
+
+/*
+* SETTINGS
+* Global...............Globally-available variables and settings/config.
+* Variables...............Manage our color palette and layout in isolation.
+*/
+@import 'app/styles/settings/colors.scss';
+@import 'app/styles/settings/type.scss';
+@import 'app/styles/settings/layout.scss';
+@import 'app/styles/settings/globals.scss';
+
+/*
+* TOOLS
+* Mixins...............
+*/
+@import 'app/styles/tools/mixins.scss';
+
+/*
+* GENERIC
+* Reset................A pared back reset to remove margins.
+*/
+@import 'app/styles/generic/bootstrap.scss';
+@import 'app/styles/generic/ember-modal.scss';
+@import 'app/styles/generic/ember-power-select.scss';
+
+/*
+* BASE - no classes, just basic html elements
+* Headings.............Heading styles
+* Type.................Misc type styles
+* Links................Hyperlink styles
+* Body................Restrict app viewport to 100% of height and width
+* Form...............Styling for form elements
+*/
+@import 'app/styles/base/body.scss';
+@import 'app/styles/base/form.scss';
+
 @import 'app/styles/globals/validation.scss';
 @import 'app/styles/globals/file.scss';
 @import 'app/styles/globals/tag.scss';
 @import 'app/styles/modules/activity-list.scss';
 
-@import 'app/styles/modules/header.scss';
+/*
+* COMPONENTS
+* Page-head............Page header styles.
+* Bands................Full-width page bands.
+* Promo................Lead promo blocks on the home page.
+* Page-foot............Page footer styles.
+* Page-micro...........Page copyright styles.
+* Site-nav.............Site’s main nav area.
+* Nav-secondary........Smaller, in-page nav.
+* Boxes................Extension of inuitcss’ box object
+* Post.................Post-specific styles.
+* Pull-quote...........Large, featured quotes.
+* Carousel.............Pure CSS carousel component.
+* Iconic...............Iconic icon styles.
+* Sprites..............Image sprite styles.
+* Feature list.........Big blocky lists of feature items.
+* Annotate.............Pure CSS figure annotations.
+* Ads..................AdPacks overrides.
+* Client-list..........Amazing people I’ve had the pleasure of working with.
+
+* Buttons..............add, delete, file upload
+* Checkbox.............checkbox, radio, switch
+* Dropdown.............extending bootstrap dropdown class on single view print/delete/duplicate
+* Inherited-msg........display inherited meta data in single forms (person/role/etc)
+* input-group-vertical.......groups inputs and labels vertically
+*/
+@import 'app/styles/components/checkbox.scss';
+@import 'app/styles/components/dropdown.scss';
+@import 'app/styles/components/buttons.scss';
+@import 'app/styles/components/inherited-msg.scss';
+@import 'app/styles/components/input-group-vertical.scss';
+
 @import 'app/styles/modules/tabs.scss';
 @import 'app/styles/modules/tray.scss';
 @import 'app/styles/modules/wrap.scss';

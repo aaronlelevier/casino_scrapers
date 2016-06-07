@@ -1,0 +1,65 @@
+.input-group-vertical {
+	margin: 0 0 10px;
+	*{
+		font-size: 1.2rem;
+	}
+	select{
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+	}
+	.input-group{
+		margin-bottom: -1px;
+		.checkbox{
+			border: $borderStyle;
+			margin: 0;
+			height: 34px;
+			line-height: 34px;
+			vertical-align: middle;
+			padding: 5px 12px;
+		}
+		.input-group-addon {
+			min-width: 10em;
+			text-align: left;
+			font-size: 0.9em;
+			@include truncate;
+		}
+		&:first-child button{
+			border-radius: 3px 0 0 0;
+		}
+		&:first-child select{
+			border-radius: 0 3px 0 0;
+		}
+		&:first-child input{
+			border-radius: 0 3px 0 0;
+		}
+		&:last-child button{
+			border-radius: 0 0 3px 3px;
+		}
+		&:last-child .input-group-addon{
+			border-radius: 0 0 0 3px;
+		}
+		&:last-child .form-control{
+			border-radius: 0 0 3px 0;
+		}
+	}
+	.ember-power-select-trigger,
+	.input-group-addon,
+	.form-control,
+	.btn{
+		border-radius: 0;
+	}
+	.ember-power-select-trigger:focus{
+		z-index: 3;
+		border-radius: 0;
+		&[aria-expanded="true"]{
+			z-index: 3;
+			border-radius: 0;
+		}
+	}
+	.btn-default{
+		width: 100%;
+		border: $borderStyle;
+		border-radius: 0;
+	}
+}
