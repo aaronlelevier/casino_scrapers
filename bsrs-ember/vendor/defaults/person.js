@@ -110,6 +110,12 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
           inherited_value: BSRS_PERSON_AUTH_AMOUNT,
           inherits_from: 'role',
           inherits_from_id: this.role_defaults.idOne
+        },
+        auth_currency: {
+          value: null,
+          inherited_value: this.currency_defaults.id,
+          inherits_from: 'role',
+          inherits_from_id: this.role_defaults.idOne
         }
       }
     };

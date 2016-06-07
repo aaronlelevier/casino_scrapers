@@ -65,6 +65,13 @@ export default PageObject.create({
   usernameFillIn: fillable('.t-person-username'),
   username: value('.t-person-username'),
 
+  currencyCodeDropdown: clickable('.t-currency-code-select  > .ember-basic-dropdown-trigger'),
+  currencyCodeOptionOne: text('.ember-power-select-option:eq(1)'),
+  currencyCodeOptionOneClick: clickable('.ember-power-select-option:eq(1)'),
+  currencyCodeText: text('.t-currency-code'),
+
+  currencySymbolText: text('.t-currency-symbol'),
+
   //settings
   acceptAssignChecked: () => Ember.$('.t-person-accept_assign').is(':checked'),
   acceptAssignClick: clickable('.t-person-accept_assign-label'),

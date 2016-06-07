@@ -353,6 +353,7 @@ class Person(BaseModel, AbstractUser):
     def to_dict(self, locale):
         locations = [{'id': str(x.id), 'name': x.name, 'status_fk': str(x.status.id), 
             'location_level': str(x.location_level.id), 'number': x.number} for x in self.locations.all()]
+
         return {
             'id': str(self.id),
             'first_name': self.first_name,
@@ -364,7 +365,8 @@ class Person(BaseModel, AbstractUser):
             'locale': str(self.locale.id if self.locale else self._get_locale(locale)),
             'role': str(self.role.id),
             'locations': locations,
-            'status_fk': str(self.status.id)
+            'status_fk': str(self.status.id),
+            'settings': self.combined_settings()
         }
 
     def to_simple_dict(self):

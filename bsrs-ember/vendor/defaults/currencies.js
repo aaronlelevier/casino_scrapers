@@ -19,7 +19,10 @@ var BSRS_CURRENCY_DEFAULTS_OBJECT = (function() {
             codeEuro: 'EUR', 
             name_pluralEuro: 'Euros',
             roundingEuro: 0,
-            symbol_nativeEuro: '€'
+            symbol_nativeEuro: '€',
+            // CAD
+            idCAD: '7c6b8e17-05ba-4f67-be42-15348df790ba',
+            codeCAD: 'CAD',
         };
     };
     return factory;

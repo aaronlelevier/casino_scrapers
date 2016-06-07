@@ -2,6 +2,7 @@
 All Model, Manager, and QuerySet definitions in this module 
 should be Abstract.
 """
+import decimal
 import uuid
 
 from django.db import models
@@ -19,6 +20,7 @@ JSONEncoder_olddefault = JSONEncoder.default
 
 def JSONEncoder_newdefault(self, o):
     if isinstance(o, uuid.UUID): return str(o)
+    if isinstance(o, decimal.Decimal): return float(o)
     return JSONEncoder_olddefault(self, o)
 
 JSONEncoder.default = JSONEncoder_newdefault

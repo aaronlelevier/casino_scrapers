@@ -15,6 +15,7 @@ moduleForComponent('input-currency', 'integration: input-currency test', {
     setup() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:currency', 'service:currency']);
         run(function() {
+            store.push('person-current', {id: PD.id});
             store.push('currency', {id:CD.id, symbol:CD.symbol, name:CD.name, decimal_digits:CD.decimal_digits, code:CD.code, name_plural:CD.name_plural, rounding:CD.rounding, symbol_native:CD.symbol_native});
         });
         translation.initialize(this);
@@ -23,7 +24,7 @@ moduleForComponent('input-currency', 'integration: input-currency test', {
 
 test('renders a component with no value when bound attr is undefined', function(assert) {
     run(function() {
-        model = store.push('person', {id: PD.id, auth_amount: undefined});
+        model = store.push('person', {id: PD.id, auth_amount: undefined, settings_object: PD.settings});
     });
     this.set('model', model);
     this.render(hbs`{{input-currency model=model field="auth_amount"}}`);
@@ -33,7 +34,7 @@ test('renders a component with no value when bound attr is undefined', function(
 
 test('renders a component with 0.00 when the field returns a truly zero value', function(assert) {
     run(function() {
-        model = store.push('person', {id: PD.id, auth_amount: 0, currency: CD.idEuro});
+        model = store.push('person', {id: PD.id, auth_amount: 0, auth_currency: CD.idEuro, settings_object: PD.settings});
         store.push('currency', {id:CD.idEuro, symbol:CD.symbolEuro, name:CD.nameEuro, decimal_digits:CD.decimal_digitsEuro, code:CD.codeEuro, name_plural:CD.name_pluralEuro, rounding:CD.roundingEuro, symbol_native:CD.symbol_nativeEuro});
     });
     this.set('model', model);
@@ -47,7 +48,7 @@ test('renders a component with 0.00 when the field returns a truly zero value', 
 
 test('if the person does not have a currency, give them the first object from the store', function(assert) {
     run(function() {
-        model = store.push('person', {id: PD.id, auth_amount: 0});
+        model = store.push('person', {id: PD.id, auth_amount: 0, settings_object: PD.settings});
     });
     this.set('model', model);
     this.render(hbs`{{input-currency model=model field="auth_amount"}}`);
@@ -60,7 +61,7 @@ test('if the person does not have a currency, give them the first object from th
 
 test('renders a component with currency and label', function(assert) {
     run(function() {
-        model = store.push('person', {id: PD.id, auth_amount: LONG_AUTH_AMOUNT, currency: CD.id});
+        model = store.push('person', {id: PD.id, auth_amount: LONG_AUTH_AMOUNT, currency: CD.id, settings_object: PD.settings});
     });
     this.set('model', model);
     this.render(hbs`{{input-currency model=model field="auth_amount"}}`);
@@ -73,7 +74,7 @@ test('renders a component with currency and label', function(assert) {
 
 test('the models bound field will update both the formatted input value and the model itself', function(assert) {
     run(function() {
-        model = store.push('person', {id: PD.id, auth_amount: LONG_AUTH_AMOUNT, currency: CD.id});
+        model = store.push('person', {id: PD.id, auth_amount: LONG_AUTH_AMOUNT, currency: CD.id, settings_object: PD.settings});
     });
     this.set('model', model);
     this.render(hbs`{{input-currency model=model field="auth_amount"}}`);

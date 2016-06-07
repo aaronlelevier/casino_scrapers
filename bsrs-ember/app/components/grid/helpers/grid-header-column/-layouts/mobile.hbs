@@ -1,6 +1,5 @@
 <hbox>
   {{#if column.isSortable}}
-    {{log sortClass}}
     <span {{action "sortBy" column.field}} class="mobile-sort up {{sortByClass}} fa-arrow-up"></span>
     <span {{action "sortBy" column.field}} class="mobile-sort down {{sortByClass}} fa-arrow-down"></span>
   {{/if}}

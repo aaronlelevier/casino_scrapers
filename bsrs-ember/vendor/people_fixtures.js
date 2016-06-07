@@ -135,6 +135,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
     response.role = this.role_defaults.idOne;
     response.locale = this.person_defaults.locale_id;
     response.locations = [this.location_defaults.idOne];
+    response.auth_currency = response.auth_currency || null
     response.settings = settings || {
       settings: {
         accept_assign: this.person_defaults.settings.accept_assign.value,

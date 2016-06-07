@@ -271,7 +271,6 @@ test('currency helper displays inherited auth_amount, and can click link-to to g
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
-    // input field
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(page.authAmountPlaceholder(), 'Default: ' + PD.auth_amount);
     assert.equal(page.authAmountInheritedFromText, 'Inherited from: ' + StgD.inherits_from_role);
@@ -281,6 +280,30 @@ test('currency helper displays inherited auth_amount, and can click link-to to g
   page.authAmountInheritedFromClick();
   andThen(() => {
     assert.equal(currentURL(), `${BASEURLS.base_roles_url}/${RD.idOne}`);
+  });
+});
+
+test('can change currency by clicking it and selecting another currency', assert => {
+  page.visitDetail();
+  andThen(() => {
+  assert.equal(currentURL(), DETAIL_URL);
+  assert.equal(page.currencySymbolText, CURRENCY_DEFAULTS.symbol);
+  let person = store.find('person', PD.id);
+  assert.equal(person.get('settings_object').auth_currency.inherited_value, CURRENCY_DEFAULTS.id);
+  assert.equal(page.currencyCodeText, CURRENCY_DEFAULTS.code);
+  });
+  selectChoose('.t-currency-code', CURRENCY_DEFAULTS.codeCAD);
+  andThen(() => {
+    assert.equal(page.currencyCodeText, CURRENCY_DEFAULTS.codeCAD);
+    let person = store.find('person', PD.id);
+    assert.equal(person.get('auth_currency'), CURRENCY_DEFAULTS.idCAD);
+    assert.equal(person.get('isDirty'), true);
+  });
+  var payload = PF.put({id: PD.id, auth_currency: CURRENCY_DEFAULTS.idCAD});
+  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), PEOPLE_URL);
   });
 });
 

@@ -24,6 +24,7 @@ moduleForComponent('person-single', 'integration: person-single test', {
     var json = translations.generate('en');
     loadTranslations(trans, json);
     run(function() {
+      store.push('person-current', {id: PD.id});
       store.push('currency', {id:CD.id, symbol:CD.symbol, name:CD.name, decimal_digits:CD.decimal_digits, code:CD.code, name_plural:CD.name_plural, rounding:CD.rounding, symbol_native:CD.symbol_native});
     });
     let pn_types = [{ 'id': '2bff27c7-ca0c-463a-8e3b-6787dffbe7de', 'name': 'admin.phonenumbertype.office' },
@@ -61,7 +62,7 @@ moduleForComponent('person-single', 'integration: person-single test', {
 
 test('dropdown displays correct print and duplicate text', function(assert) {
   run(() => {
-    this.set('model', store.push('person', {}));
+    this.set('model', store.push('person', {id: PD.id, settings_object: PD.settings}));
   });
   this.render(hbs`{{people/person-single model=model}}`);
   this.$('.t-dropdown-delete').click();
@@ -72,7 +73,7 @@ test('dropdown displays correct print and duplicate text', function(assert) {
 test('validation on person username works if clear out username', function(assert) {
   var done = assert.async();
   run(() => {
-    this.set('model', store.push('person', {username: 'foo'}));
+    this.set('model', store.push('person', {id: PD.id, username: 'foo', settings_object: PD.settings}));
   });
   this.render(hbs`{{people/person-single model=model}}`);
   let $component = this.$('.has-error');
@@ -91,7 +92,7 @@ test('validation on person username works if clear out username', function(asser
 
 test('filling in valid one char middle initial will not reveal validation messages', function(assert) {
   run(() => {
-    this.set('model', store.push('person', {}));
+    this.set('model', store.push('person', {id: PD.id, settings_object: PD.settings}));
   });
   this.render(hbs`{{people/person-single model=model}}`);
   var $component = this.$('.t-middle-initial-validator .error');
@@ -104,7 +105,7 @@ test('filling in valid one char middle initial will not reveal validation messag
 test('filling in invalid one char middle initial will reveal validation messages', function(assert) {
   var done = assert.async();
   run(() => {
-    this.set('model', store.push('person', {}));
+    this.set('model', store.push('person', {id: PD.id, settings_object: PD.settings}));
   });
   this.render(hbs`{{people/person-single model=model}}`);
   var $component = this.$('.t-middle-initial-validator .error');
@@ -120,7 +121,7 @@ test('filling in invalid one char middle initial will reveal validation messages
 
 test('filling in invalid email reveal validation messages', function(assert) {
   run(() => {
-    this.model = store.push('person', {});
+    this.model = store.push('person', {id: PD.id, settings_object: PD.settings});
   });
   this.email_types = email_types;
   this.default_email_type = default_email_type;
@@ -143,7 +144,7 @@ test('filling in invalid email reveal validation messages', function(assert) {
 
 test('filling in invalid phone number reveal validation messages', function(assert) {
   run(() => {
-    this.model = store.push('person', {});
+    this.model = store.push('person', {id: PD.id, settings_object: PD.settings});
   });
   this.phone_number_types = phone_number_types;
   this.default_phone_number_type = default_phone_number_type;
@@ -166,7 +167,7 @@ test('filling in invalid phone number reveal validation messages', function(asse
 
 test('filling in invalid address reveals validation messages', function(assert) {
   run(() => {
-    this.model = store.push('person', {});
+    this.model = store.push('person', {id: PD.id, settings_object: PD.settings});
   });
   this.address_types = address_types;
   this.default_address_type = default_address_type;
@@ -203,7 +204,7 @@ test('filling in invalid address reveals validation messages', function(assert) 
 
 test('can remove a new phone number', function(assert) {
   run(() => {
-    this.model = store.push('person', {});
+    this.model = store.push('person', {id: PD.id, settings_object: PD.settings});
   });
   this.phone_number_types = phone_number_types;
   this.default_phone_number_type = default_phone_number_type;
@@ -216,7 +217,7 @@ test('can remove a new phone number', function(assert) {
 
 test('can add and remove new email', function(assert) {
   run(() => {
-    this.model = store.push('person', {});
+    this.model = store.push('person', {id: PD.id, settings_object: PD.settings});
   });
   this.email_types = email_types;
   this.default_email_type = default_email_type;
@@ -229,7 +230,7 @@ test('can add and remove new email', function(assert) {
 
 test('can add and remove new address', function(assert) {
   run(() => {
-    this.model = store.push('person', {});
+    this.model = store.push('person', {id: PD.id, settings_object: PD.settings});
   });
   this.address_types = address_types;
   this.default_address_type = default_address_type;

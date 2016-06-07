@@ -121,7 +121,7 @@ test('filter tickets by their location matching the logged in Persons location',
     const person = store.find('person', PD.idDonald);
     assert.equal(person.get('locations').get('length'), 0);
   });
-  let payload = PF.put({id: PD.idDonald});
+  let payload = PF.put({id: PD.idDonald, auth_currency: null});
   payload.locations = [];
   ajax(`${PREFIX}${BASEURLS.base_people_url}/${PD.idDonald}/`, 'PUT', JSON.stringify(payload), {}, 200, {});
   ajax(`${PREFIX}${BASEURLS.base_people_url}/?page=1`, 'GET', null, {}, 200, PF.list());

@@ -3,24 +3,22 @@ import inject from 'bsrs-ember/utilities/store';
 
 let CurrencyService = Ember.Service.extend({
     simpleStore: Ember.inject.service(),
-    getCurrency(person) {
+    getCurrency() {
+        // should always be using the person-current here.
         let store = this.get('simpleStore');
-        let currencyId = person.get('currency') !== undefined ? person.get('currency') : store.find('currency').objectAt(0).get('id');
+        let person = store.find('person-current').objectAt(0).get('person');
+        let currencyId = person.get('auth_currency') ? person.get('auth_currency') : person.get('settings_object').auth_currency.inherited_value;
         return store.find('currency', currencyId);
+    },
+    getCurrencies() {
+        let store = this.get('simpleStore');
+        return store.find('currency');
     },
     format_currency(val, attr, currency) {
         let store = this.get('simpleStore');
         let currency_found = store.find('currency').objectAt(0);
         let formatted_value = parseInt(val, 10);
         return formatted_value || formatted_value === 0 ? formatted_value.toFixed(currency_found[attr]) : '';
-    },
-    format_symbol(person) {
-        let currency = this.getCurrency(person);
-        return currency.get('symbol');
-    },
-    format_code(person) {
-        let currency = this.getCurrency(person);
-        return currency.get('code');
     }
 });
 

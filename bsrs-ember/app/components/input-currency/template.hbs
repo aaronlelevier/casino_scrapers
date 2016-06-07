@@ -7,10 +7,19 @@
 {{/if}}
 <div class="input-group">
     <div class="input-group-addon t-currency-symbol">
-        {{currency_symbol}}
+        {{currencyObject.symbol}}
     </div>
     {{input type="text" placeholder=(if placeholder placeholder (t "admin.amount")) focus-out="format_currency" value=bound_field class="form-control t-amount" id="amount" disabled=editPrivilege}}
     <div class="input-group-addon t-currency-code">
-        {{currency_code}}
+      {{#power-select
+        selected=currencyObject
+        options=currencyObjects
+        onchange=(action "selected")
+        class="t-currency-code-select"
+        searchEnabled=false
+        as |op|
+      }}
+        {{op.code}}
+      {{/power-select}}
     </div>
 </div>
