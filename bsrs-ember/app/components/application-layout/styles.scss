@@ -72,10 +72,12 @@ input.nav-trigger {
   position: absolute;
   clip: rect(0, 0, 0, 0);
 }
+
+$hamburgerTop: 10px;
 label[for="nav-trigger"] {
   position: fixed;
   left: 15px;
-  top: 10px;
+  top: $hamburgerTop;
   z-index: 4;
   font-size: 26px;
   line-height: $menuHeight;
@@ -83,7 +85,7 @@ label[for="nav-trigger"] {
 }
 
 .nav-trigger:checked + label {
-  top: 10px;
+  top: $hamburgerTop;
   right: 0;
   bottom: 0;
   left: $mobileDrawerWidth;
