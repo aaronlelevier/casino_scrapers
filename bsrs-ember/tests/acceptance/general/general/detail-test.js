@@ -148,38 +148,6 @@ test('general settings are properly dirty tracked', assert => {
   });
 });
 
-test('modules are dirty tracked, and will be clean if returned to original state', assert => {
-  visit(DETAIL_URL);
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.modulesTicketsChecked(), SD.tickets_module);
-    assert.equal(page.modulesWorkordersChecked(), SD.work_orders_module);
-    assert.equal(page.modulesInvoicesChecked(), SD.invoices_module);
-    let setting = store.find('setting', SD.id);
-    assert.ok(setting.get('isNotDirty'));
-  });
-  page.modulesTicketsClick();
-  page.modulesWorkordersClick();
-  page.modulesInvoicesClick();
-  andThen(() => {
-    assert.equal(page.modulesTicketsChecked(), SD.tickets_moduleOther);
-    assert.equal(page.modulesWorkordersChecked(), SD.work_orders_moduleOther);
-    assert.equal(page.modulesInvoicesChecked(), SD.invoices_moduleOther);
-    let setting = store.find('setting', SD.id);
-    assert.ok(setting.get('isDirty'));
-  });
-  page.modulesTicketsClick();
-  page.modulesWorkordersClick();
-  page.modulesInvoicesClick();
-  andThen(() => {
-    assert.equal(page.modulesTicketsChecked(), SD.tickets_module);
-    assert.equal(page.modulesWorkordersChecked(), SD.work_orders_module);
-    assert.equal(page.modulesInvoicesChecked(), SD.invoices_module);
-    let setting = store.find('setting', SD.id);
-    assert.ok(setting.get('isNotDirty'));
-  });
-});
-
 test('no delete button on dropdown', assert => {
   visit(DETAIL_URL);
   andThen(() => {
