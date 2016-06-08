@@ -1,7 +1,5 @@
 // Layout
-$mobileDrawerWidth: 300px;
 $menuHeight: 42px;
-$mobileFooterHeight: 55px;
 $tabTop: 57px;
 $tabLeft: 56px;
 $tabHeight: 30px;
@@ -16,6 +14,11 @@ $documentLeft: 250px;
 $documentHeaderHeight: 41px;
 $documentHeaderHeightPlus1: 42px;
 $documentFooterHeight: 41px;
+
+//mobile
 $mobileDocHeaderHeight: 68px;
 $mobileHeaderHeight: 60px;
 $mobileLogoHeight: 26px;
+$mobileDrawerWidth: 90%;
+$mobileFooterHeight: 55px;
+$mobileNavItemPadding: 20px;

@@ -1,5 +1,9 @@
-{{!--
-  Layout: bsrs-ember
-  This template will be rendered with the route controller's
-  context when `device/layout.isComponents/people/person-current/mobile` is true.
---}}
+<hbox class="person-current-mobile">
+	{{#link-to "admin.people.person" instance.id tagName="div" class="person-meta flex-item--auto"}}
+  	<div class="person-meta__user">{{instance.person.fullname}}</div>
+  	<div class="person-meta__role">{{instance.person.role.name}}</div>
+  {{/link-to}}
+  <div class="logout flex-item--none" {{action 'logout'}}>
+    {{fa-icon "sign-out"}}
+  </div>
+</hbox>

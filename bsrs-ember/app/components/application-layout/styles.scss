@@ -1,9 +1,8 @@
+/*
+* Variables
+*/
 $hamburgerTop: 10px;
-@mixin nav-box-shadow {
-  -webkit-box-shadow: 0 0 7px $darkGray;
-  -moz-box-shadow: 0 0 7px $darkGray;
-  box-shadow: 0 0 7px $darkGray;
-}
+
 /*
 * Absolute positioning
 * DESKTOP AND MOBILE START
@@ -36,6 +35,7 @@ header.main {
   line-height: $menuHeight;
   height: $menuHeight;
   @include nav-box-shadow;
+  z-index: 3; //dropdown in header needs to drumpf section.docSection z-index
 }
 /*
 * DESKTOP AND MOBILE END
@@ -59,11 +59,9 @@ div.bs-mobile {
       height: $mobileHeaderHeight;
       position: relative;
       @include nav-box-shadow;
-      flex: 0 0 auto;
     }
     section.mobile-main {
-      -webkit-overflow-scrolling: touch;
-      flex: auto;
+      -webkit-overflow-scrolling: touch; //DO NOT REMOVE
       overflow: auto;
     }
   }
@@ -95,17 +93,17 @@ label[for="nav-trigger"] {
 .nav-trigger:checked ~ .mobile-wrap {
   left: $mobileDrawerWidth;
 }
-.nav-trigger:checked ~ nav.navigation {
+.nav-trigger:checked ~ vbox.navigation {
   left: 0;
 }
 
 .nav-trigger + label,
 .mobile-wrap ,
-nav.navigation {
+vbox.navigation {
   transition: left 0.2s;
 }
 
-nav.navigation {
+vbox.navigation {
   background: $dark;
   width: $mobileDrawerWidth;
   height: 100%;
@@ -113,7 +111,11 @@ nav.navigation {
   top: 0;
   bottom: 0;
   left: -$mobileDrawerWidth;
-  overflow: hidden;
+  // overflow: hidden;
+  div.navigation__inner {
+    -webkit-overflow-scrolling: touch; //DO NOT REMOVE
+    overflow: auto;
+  }
   ul {
     padding: 0;
     margin: 0;
@@ -121,7 +123,7 @@ nav.navigation {
   }
   li.nav-section {
     background: $darkGray;
-    padding: 20px;
+    padding: $mobileNavItemPadding;
     border-bottom: 1px solid $dark;
     li.nav-item {
       padding: 0;
@@ -135,10 +137,11 @@ nav.navigation {
     }
   }
   li.nav-search {
-    padding: 8px;
+    height: $mobileHeaderHeight;
+    padding: 10px;
     background: $dark;
     input {
-      height: 26px;
+      height: $mobileHeaderHeight - 20px;
       border: none;
       background: $darker;
       width: 100%;
