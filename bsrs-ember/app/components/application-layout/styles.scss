@@ -1,3 +1,9 @@
+$hamburgerTop: 10px;
+@mixin nav-box-shadow {
+  -webkit-box-shadow: 0 0 7px $darkGray;
+  -moz-box-shadow: 0 0 7px $darkGray;
+  box-shadow: 0 0 7px $darkGray;
+}
 /*
 * Absolute positioning
 * DESKTOP AND MOBILE START
@@ -29,10 +35,7 @@ header.main {
   color: $light;
   line-height: $menuHeight;
   height: $menuHeight;
-  -webkit-box-shadow: 0 0 7px $darkGray;
-  -moz-box-shadow: 0 0 7px $darkGray;
-  box-shadow: 0 0 7px $darkGray;
-  z-index: 3;
+  @include nav-box-shadow;
 }
 /*
 * DESKTOP AND MOBILE END
@@ -42,6 +45,7 @@ header.main {
 /*
 * Flexbox w/ absolute postioning on flex container
 * MOBILE START
+* flex container :: vbox.mobile-wrap
 */
 div.bs-mobile {
   vbox.mobile-wrap {
@@ -54,9 +58,7 @@ div.bs-mobile {
       overflow: hidden;
       height: $mobileHeaderHeight;
       position: relative;
-      -webkit-box-shadow: 0 0 7px $darkGray;
-      -moz-box-shadow: 0 0 7px $darkGray;
-      box-shadow: 0 0 7px $darkGray;
+      @include nav-box-shadow;
       flex: 0 0 auto;
     }
     section.mobile-main {
@@ -73,7 +75,6 @@ input.nav-trigger {
   clip: rect(0, 0, 0, 0);
 }
 
-$hamburgerTop: 10px;
 label[for="nav-trigger"] {
   position: fixed;
   left: 15px;
