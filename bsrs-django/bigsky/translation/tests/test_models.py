@@ -59,9 +59,16 @@ class TranslationManagerTests(TestCase):
         self.assertTrue(mock_func.was_called)
 
     def test_import_csv(self):
+        locale = 'en'
         self.assertEqual(Translation.objects.count(), 0)
-        t = Translation.objects.import_csv('en')
+
+        t = Translation.objects.import_csv(locale)
+
         self.assertEqual(Translation.objects.count(), 1)
+        # Locale
+        locale = Locale.objects.get(locale=locale)
+        self.assertEqual(t.locale, locale)
+        self.assertEqual(locale.name, 'admin.locale.{}'.format(locale))
 
     def test_export_csv(self):
         mypath = Translation.objects.translation_dir

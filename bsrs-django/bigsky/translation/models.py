@@ -102,6 +102,9 @@ class TranslationManager(BaseManager):
 
     @property
     def language_locales(self):
+        """
+        The values of this `dict` should be i18b strings b/c are needed in UI dropdown as i18n strings.
+        """
         return {
             'Chinese (Traditional)': 'zh-cn',
             'English (Master)': 'en',
@@ -140,6 +143,8 @@ class TranslationManager(BaseManager):
                     values.update({row['KEY']: row['VALUE']})
             
             locale, _ = Locale.objects.get_or_create(locale=locale_name, name=locale_name)
+            locale.name = 'admin.locale.{}'.format(locale_name)
+            locale.save()
             
             ret, _ = Translation.objects.get_or_create(locale=locale)
             ret.values = values

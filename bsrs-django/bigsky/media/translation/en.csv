@@ -133,6 +133,11 @@ en,admin.invoice.select_assign.all,All,All,,"'admin.invoice.select_assign.all':'
 en,admin.invoice.select_assign.managers,Managers,Managers,,"'admin.invoice.select_assign.managers':'Managers',",Managers,Managers
 en,admin.locale.english,English,English,,"'admin.locale.english':'English',",English,English
 en,admin.locale.spanish,Spanish,Spanish,,"'admin.locale.spanish':'Spanish',",Spanish,Spanish
+en,admin.locale.zh-cn,Chinese,Chinese,,"'admin.locale.zh-cn':'Chinese',",Chinese,Chinese
+en,admin.locale.en,English,English,,"'admin.locale.en':'English',",English,English
+en,admin.locale.fr,French,French,,"'admin.locale.fr':'French',",French,French
+en,admin.locale.ja,Japanese,Japanese,,"'admin.locale.ja':'Japanese',",Japanese,Japanese
+en,admin.locale.es,Spanish,Spanish,,"'admin.locale.es':'Spanish',",Spanish,Spanish
 en,admin.location.label.address.one,Address,Address,,"'admin.location.label.address.one':'Address',",Address,Address
 en,admin.location.label.address.other,Addresses,Addresses,,"'admin.location.label.address.other':'Addresses',",Addresses,Addresses
 en,admin.location.label.children-name,Child Locations,Child Locations,,"'admin.location.label.children-name':'Child Locations',",Child Locations,Child Locations
@@ -141,7 +146,7 @@ en,admin.location.label.email.one,Email,Email,,"'admin.location.label.email.one'
 en,admin.location.label.email.other,Email,Email,,"'admin.location.label.email.other':'Email',",Email,Email
 en,admin.location.label.general,General,General,,"'admin.location.label.general':'General',",General,General
 en,admin.location.label.location_level,Organization,Organization,,"'admin.location.label.location_level':'Organization',",Organization,Organization
-en,admin.location.label.name,Name,Name,,"'admin.location.label.name':'Name',",Name,Name
+en,power-select-foreign-key,Name,Name,,"'power-select-foreign-key':'Name',",Name,Name
 en,admin.location.label.number,Number,Number,,"'admin.location.label.number':'Number',",Number,Number
 en,admin.location.label.parents-name,Parent Locations,Parent Locations,,"'admin.location.label.parents-name':'Parent Locations',",Parent Locations,Parent Locations
 en,admin.location.label.phone_number.one,Phone Number,Phone Number,,"'admin.location.label.phone_number.one':'Phone Number',",Phone Number,Phone Number
@@ -226,7 +231,7 @@ en,admin.setting.company_code,Company Code,Company Code,,"'admin.setting.company
 en,admin.setting.company_name,Company Name,Company Name,,"'admin.setting.company_name':'Company Name',",Company Name,Company Name
 en,admin.setting.create_all,Create All,Create All,,"'admin.setting.create_all':'Create All',",Create All,Create All
 en,admin.setting.dashboard_text,Welcome Message,Welcome Message,,"'admin.setting.dashboard_text':'Welcome Message',",Welcome Message,Welcome Message
-en,admin.setting.dt_start_id,Start,Start,,"'admin.setting.dt_start_id':'Start',",Start,Start
+en,admin.setting.dt_start_key,Start,Start,,"'admin.setting.dt_start_key':'Start',",Start,Start
 en,admin.setting.exchange_rates,Exchange Rates,Exchange Rates,,"'admin.setting.exchange_rates':'Exchange Rates',",Exchange Rates,Exchange Rates
 en,admin.setting.login_grace,Login Grace,Login Grace,,"'admin.setting.login_grace':'Login Grace',",Login Grace,Login Grace
 en,admin.setting.modules,Modules,Modules,,"'admin.setting.modules':'Modules',",Modules,Modules
@@ -238,6 +243,7 @@ en,admin.setting.name.person,Person Settings,Person Settings,,"'admin.setting.na
 en,admin.setting.name.role,Role Settings,Role Settings,,"'admin.setting.name.role':'Role Settings',",Role Settings,Role Settings
 en,admin.setting.one,Setting,Setting,,"'admin.setting.one':'Setting',",Setting,Setting
 en,admin.setting.other,Settings,Settings,,"'admin.setting.other':'Settings',",Settings,Settings
+en,admin.setting.password_one_time,One Time Password,One Time Password,,"'admin.setting.password_one_time':'One Time Password',",One Time Password,One Time Password
 en,admin.setting.test_contractor_email,Test Contractor Email,Test Contractor Email,,"'admin.setting.test_contractor_email':'Test Contractor Email',",Test Contractor Email,Test Contractor Email
 en,admin.setting.test_contractor_phone,Test Contractor Phone,Test Contractor Phone,,"'admin.setting.test_contractor_phone':'Test Contractor Phone',",Test Contractor Phone,Test Contractor Phone
 en,admin.setting.test_mode,Test Mode,Test Mode,,"'admin.setting.test_mode':'Test Mode',",Test Mode,Test Mode
@@ -294,7 +300,7 @@ en,dt.link.submit,Submit,Submit,,"'dt.link.submit':'Submit',",Submit,Submit
 en,dt.new,New,New,,"'dt.new':'New',",New,New
 en,dt.placeholder_submit,Leave blank if Submit,Leave blank if Submit,,"'dt.placeholder_submit':'Leave blank if Submit',",Leave blank if Submit,Leave blank if Submit
 en,dt.start,Start,Start,,"'dt.start':'Start',",Start,Start
-en,dt.ticket.launch,Lauch Ticket Decision Tree,Lauch Ticket Decision Tree,,"'dt.ticket.launch':'Lauch Ticket Decision Tree',",Lauch Ticket Decision Tree,Lauch Ticket Decision Tree
+en,dt.ticket.launch,Launch Ticket Decision Tree,Launch Ticket Decision Tree,,"'dt.ticket.launch':'Launch Ticket Decision Tree',",Launch Ticket Decision Tree,Launch Ticket Decision Tree
 en,errors.dtd.description,Description must be provided,Description must be provided,,"'errors.dtd.description':'Description must be provided',",Description must be provided,Description must be provided
 en,errors.dtd.key,Key must be provided,Key must be provided,,"'errors.dtd.key':'Key must be provided',",Key must be provided,Key must be provided
 en,errors.link.text,Text must be provided,Text must be provided,,"'errors.link.text':'Text must be provided',",Text must be provided,Text must be provided
