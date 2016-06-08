@@ -19,7 +19,7 @@ section.wrap {
     }
   }
 }//section.wrap
-header.main{
+header.main {
   font-size: 1.3rem;
   position: fixed;
   top: 0;
@@ -51,12 +51,16 @@ div.bs-mobile {
     left: 0;
     width: 100%;
     header.mobile-header {
+      overflow: hidden;
+      height: $mobileHeaderHeight;
       position: relative;
       -webkit-box-shadow: 0 0 7px $darkGray;
       -moz-box-shadow: 0 0 7px $darkGray;
       box-shadow: 0 0 7px $darkGray;
+      flex: 0 0 auto;
     }
     section.mobile-main {
+      -webkit-overflow-scrolling: touch;
       flex: auto;
       overflow: auto;
     }
@@ -71,6 +75,7 @@ input.nav-trigger {
 label[for="nav-trigger"] {
   position: fixed;
   left: 15px;
+  top: 10px;
   z-index: 4;
   font-size: 26px;
   line-height: $menuHeight;
