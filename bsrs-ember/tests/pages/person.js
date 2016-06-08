@@ -87,6 +87,7 @@ export default PageObject.create({
 
   authAmountInheritedFromClick: clickable('.t-inherited-msg-auth_amount-link'),
   authAmountInheritedFromText: text('.t-inherited-msg-auth_amount'),
+  authAmountLabel: text('.admin.person.label.auth_amount'),
   authAmountPlaceholder: () => Ember.$('.t-amount').get(0)['placeholder'],
   authAmountValue: value('.t-amount'),
 

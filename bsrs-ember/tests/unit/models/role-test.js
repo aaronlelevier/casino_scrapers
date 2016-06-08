@@ -5,6 +5,7 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import ROLE_CD from 'bsrs-ember/vendor/defaults/role-category';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import CD from 'bsrs-ember/vendor/defaults/category';
+import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import SD from 'bsrs-ember/vendor/defaults/setting';
 
@@ -445,14 +446,14 @@ test('serialize', (assert) => {
   store.push('location-level', {id: LLD.idOne, name: LLD.nameRegion, roles: [RD.idOne]});
   store.push('category', {id: CD.idOne});
   store.push('role-category', {id: ROLE_CD.idOne, category_pk: CD.idOne, role_pk: RD.idOne});
-  role = store.push('role', {id: RD.idOne, name: RD.nameOne, role_type: RD.roleTypeGeneral});
-
+  role = store.push('role',{id: RD.idOne, name: RD.nameOne, role_type: RD.roleTypeGeneral, auth_amount: CURRENCY_DEFAULTS.authAmountOne, auth_currency: CURRENCY_DEFAULTS.id});
   var serialize = role.serialize();
-
   assert.equal(serialize.id, role.get('id'));
   assert.equal(serialize.name, role.get('name'));
   assert.equal(serialize.role_type, role.get('role_type'));
   assert.equal(serialize.location_level, role.get('location_level.id'));
   assert.equal(serialize.categories, role.get('categories_ids'));
+  assert.equal(serialize.auth_amount, role.get('auth_amount'));
+  assert.equal(serialize.auth_currency, role.get('auth_currency'));
   assert.equal(serialize.settings, role.get('settings'));
 });

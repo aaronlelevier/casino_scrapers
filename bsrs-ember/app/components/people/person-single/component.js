@@ -23,6 +23,7 @@ function validatePassword(){
 var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, EditMixin, {
   didValidate: false,
   simpleStore: Ember.inject.service(),
+  currency: Ember.inject.service(),
   repository: inject('person'),
   locationRepo: inject('location'),
   child_components: ['input-multi-phone', 'input-multi-address', 'input-multi-email'],
@@ -34,6 +35,12 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Edit
   extra_params: Ember.computed(function(){
     const model = this.get('model');
     return {location_level: model.get('location_level_pk')};
+  }),
+  currencyObject: Ember.computed('model.auth_currency', function() {
+      let currency_service = this.get('currency');
+      let person = this.get('model');
+      let store = this.get('simpleStore');
+      return person.get('auth_currency') ? store.find('currency', person.get('auth_currency')) : currency_service.getCurrency();
   }),
   actions: {
     save() {

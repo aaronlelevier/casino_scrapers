@@ -217,7 +217,7 @@ test('clicking power select for parent categories will fire off xhr request for 
   page.locationLevelClickDropdown();
   page.locationLevelClickOptionOne();
   let category = CF.put({id: CD.idOne, name: CD.nameOne});
-  let payload = RF.put({id: UUID.value, location_level: LLD.idOne});
+  let payload = RF.put({id: UUID.value, location_level: LLD.idOne, auth_amount: undefined, auth_currency: undefined, settings: {settings:{}}});
   xhr(url, 'POST', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
@@ -289,7 +289,7 @@ test('can add multiple categories', (assert) => {
   fillIn('.t-role-name', RD.nameOne);
   page.locationLevelClickDropdown();
   page.locationLevelClickOptionOne();
-  let payload = RF.put({id: UUID.value, categories: [CD.idOne, CD.idThree]});
+  let payload = RF.put({id: UUID.value, categories: [CD.idOne, CD.idThree], auth_amount: undefined, auth_currency: undefined, settings: {settings:{}}});
   xhr(url, 'POST', JSON.stringify(payload), {}, 201);
   generalPage.save();
   andThen(() => {

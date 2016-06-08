@@ -32,6 +32,8 @@ var RoleModel = Model.extend(NewMixin, SettingMixin, OptConf, {
   accept_assign: attr(),
   accept_notify: attr(),
   // settings: end
+  auth_amount: attr(),
+  auth_currency: attr(),
   role_categories_fks: [],
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'categoriesIsDirty', function() {
     return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('categoriesIsDirty');
@@ -49,6 +51,8 @@ var RoleModel = Model.extend(NewMixin, SettingMixin, OptConf, {
       role_type: this.get('role_type'),
       location_level: location_level_id || null,
       categories: this.get('categories_ids'),
+      auth_amount: this.get('auth_amount'),
+      auth_currency: this.get('auth_currency'),
       settings: this.get('settings')
     };
   },

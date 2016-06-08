@@ -6,6 +6,7 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
+import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import SD from 'bsrs-ember/vendor/defaults/setting';
 import RoleDeserializer from 'bsrs-ember/deserializers/role';
 import CategoryDeserializer from 'bsrs-ember/deserializers/category';
@@ -274,6 +275,16 @@ test('role-category m2m does not delete other role-category m2m models', (assert
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(store.find('role-category').get('length'), 3);
     assert.equal(role_two.get('role_categories').get('length'), 1);
+});
+
+test('auth_amount and auth_currency', assert => {
+    let response = RF.generate(RD.idOne);
+    run(() => {
+        subject.deserialize(response, RD.idOne);
+    });
+    role = store.find('role', RD.idOne);
+    assert.equal(role.get('auth_amount'), CURRENCY_DEFAULTS.authAmountOne);
+    assert.equal(role.get('auth_currency'), CURRENCY_DEFAULTS.id);
 });
 
 test('settings copySettingsToFirstLevel', (assert) => {

@@ -10,12 +10,14 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import LLF from 'bsrs-ember/vendor/location_level_fixtures';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import CD from 'bsrs-ember/vendor/defaults/category';
+import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import SD from 'bsrs-ember/vendor/defaults/setting';
 import SF from 'bsrs-ember/vendor/setting_fixtures';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import page from 'bsrs-ember/tests/pages/role';
+import personPage from 'bsrs-ember/tests/pages/person';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import settingPage from 'bsrs-ember/tests/pages/settings';
 import {role_settings, role_settingsOther} from 'bsrs-ember/tests/helpers/payloads/role';
@@ -431,5 +433,33 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-error-message').text(), 'WAT');
+  });
+});
+
+test('role has an auth_amount and auth_currency', assert => {
+  visit(DETAIL_URL);
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-inherited-msg-auth_amount').text(), "");
+    let role = store.find('role', RD.idOne);
+    let currency = store.find('currency', role.get('auth_currency'));
+    assert.equal(role.get('isDirty'), false);
+    assert.equal(currency.get('id'), CURRENCY_DEFAULTS.id);
+    assert.equal(personPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
+    assert.equal(page.authAmountValue, role.get('auth_amount'));
+    assert.equal(personPage.currencyCodeText, CURRENCY_DEFAULTS.code);
+  });
+  selectChoose('.t-currency-code', CURRENCY_DEFAULTS.codeCAD);
+  andThen(() => {
+    assert.equal(personPage.currencyCodeText, CURRENCY_DEFAULTS.codeCAD);
+    let role = store.find('role', RD.idOne);
+    assert.equal(role.get('auth_currency'), CURRENCY_DEFAULTS.idCAD);
+    assert.equal(role.get('isDirty'), true);
+  });
+  var payload = RF.put({id: RD.idOne, auth_currency: CURRENCY_DEFAULTS.idCAD});
+  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), ROLE_URL);
   });
 });

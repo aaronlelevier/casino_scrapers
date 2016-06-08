@@ -21,3 +21,16 @@ test('default state for role type on role model is location', (assert) => {
     assert.ok(role.get('isNotDirty'));
 });
 
+test('auth_amount', assert => {
+    var role = Role.create({id: ROLE_DEFAULTS.idOne});
+    assert.ok(role.get('isNotDirty'));
+    role.set('auth_amount', 1);
+    assert.ok(role.get('isDirty'));
+});
+
+test('auth_currency', assert => {
+    var role = Role.create({id: ROLE_DEFAULTS.idOne});
+    assert.ok(role.get('isNotDirty'));
+    role.set('auth_currency', 1);
+    assert.ok(role.get('isDirty'));
+});

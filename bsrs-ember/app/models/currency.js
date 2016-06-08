@@ -1,3 +1,3 @@
-import Ember from 'ember';
+import { Model } from 'ember-cli-simple-store/model';
 
-export default Ember.Object.extend({});
+export default Model.extend({});

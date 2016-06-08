@@ -4,7 +4,7 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
-let { text, visitable, fillable, clickable, count } = PageObject;
+let { text, visitable, fillable, clickable, count, value } = PageObject;
 const ROLETYPE = '.t-role-role-type > .ember-basic-dropdown-trigger';
 const ROLETYPE_DROPDOWN = options;
 const LOCATIONLEVEL = '.t-location-level-select > .ember-basic-dropdown-trigger';
@@ -41,4 +41,6 @@ export default PageObject.create({
   create_allClick: clickable('.t-settings-create_all-label'),
   accept_assignClick: clickable('.t-settings-accept_assign-label'),
   accept_notifyClick: clickable('.t-settings-accept_notify-label'),
+
+  authAmountValue: value('.t-amount'),
 });

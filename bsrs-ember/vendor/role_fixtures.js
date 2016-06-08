@@ -1,6 +1,7 @@
 var BSRS_ROLE_FACTORY = (function() {
-  var factory = function(role_defaults, category_fixtures, location_level_fixtures, config) {
+  var factory = function(role_defaults, currency_defaults, category_fixtures, location_level_fixtures, config) {
     this.role_defaults = role_defaults;
+    this.currency_defaults = currency_defaults;
     this.category_fixtures = category_fixtures.default || category_fixtures;
     this.location_level_fixtures = location_level_fixtures.default || location_level_fixtures;
     this.config = config;
@@ -12,6 +13,8 @@ var BSRS_ROLE_FACTORY = (function() {
       role_type: this.role_defaults.t_roleTypeGeneral,
       location_level: this.location_level_fixtures.detail().id,
       categories: [this.category_fixtures.detail()],
+      auth_amount: this.currency_defaults.authAmountOne,
+      auth_currency: this.currency_defaults.id,
       settings: settings || this.role_defaults.settings
     }
   };
@@ -41,7 +44,6 @@ var BSRS_ROLE_FACTORY = (function() {
       response.push(role);
     }
     return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
-    //return {'count':2,'next':null,'previous':null,'results': response};
   };
   factory.prototype.list_two = function() {
     var response = [];
@@ -65,7 +67,12 @@ var BSRS_ROLE_FACTORY = (function() {
     response.location_level = this.location_level_fixtures.detail().id;
     response.categories = [response.categories[0].id];
     response.settings = {
-      settings: {}
+      settings: {
+        dashboard_text: this.role_defaults.settings.dashboard_text.value,
+        create_all: this.role_defaults.settings.create_all.value,
+        accept_assign: this.role_defaults.settings.accept_assign.value,
+        accept_notify: this.role_defaults.settings.accept_notify.value
+      }
     };
     for (var key in role) {
       response[key] = role[key];
@@ -82,16 +89,21 @@ if (typeof window === 'undefined') {
   var objectAssign = require('object-assign');
   var mixin = require('../vendor/mixin');
   var role_defaults = require('../vendor/defaults/role');
+  var currency_defaults = require('../vendor/defaults/currencies');
   var category_fixtures = require('../vendor/category_fixtures');
   var location_level_fixtures = require('../vendor/location_level_fixtures');
   var config = require('../config/environment');
   objectAssign(BSRS_ROLE_FACTORY.prototype, mixin.prototype);
-  module.exports = new BSRS_ROLE_FACTORY(role_defaults, category_fixtures, location_level_fixtures, config);
-} else {
-  define('bsrs-ember/vendor/role_fixtures', ['exports','bsrs-ember/vendor/defaults/role', 'bsrs-ember/vendor/category_fixtures', 'bsrs-ember/vendor/location_level_fixtures', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'], function (exports, role_defaults, category_fixtures, location_level_fixtures, mixin, config) {
-    'use strict';
-    Object.assign(BSRS_ROLE_FACTORY.prototype, mixin.prototype);
-    var Factory = new BSRS_ROLE_FACTORY(role_defaults, category_fixtures, location_level_fixtures, config);
-    return {default: Factory};
-  });
+  module.exports = new BSRS_ROLE_FACTORY(role_defaults, currency_defaults, category_fixtures, location_level_fixtures, config);
+}
+else {
+  define('bsrs-ember/vendor/role_fixtures', ['exports', 'bsrs-ember/vendor/defaults/role', 'bsrs-ember/vendor/defaults/currencies', 'bsrs-ember/vendor/category_fixtures', 'bsrs-ember/vendor/location_level_fixtures', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
+    function(exports, role_defaults, currency_defaults, category_fixtures, location_level_fixtures, mixin, config) {
+      'use strict';
+      Object.assign(BSRS_ROLE_FACTORY.prototype, mixin.prototype);
+      var Factory = new BSRS_ROLE_FACTORY(role_defaults, currency_defaults, category_fixtures, location_level_fixtures, config);
+      return {
+        default: Factory
+      };
+    });
 }

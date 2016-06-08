@@ -23,6 +23,10 @@ var BSRS_CURRENCY_DEFAULTS_OBJECT = (function() {
             // CAD
             idCAD: '7c6b8e17-05ba-4f67-be42-15348df790ba',
             codeCAD: 'CAD',
+
+            // auth amounts
+            authAmountOne: 100,
+            authAmountTwo: 200
         };
     };
     return factory;
