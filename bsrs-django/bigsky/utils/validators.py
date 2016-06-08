@@ -1,5 +1,6 @@
 import copy
 import re
+import uuid
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -67,7 +68,9 @@ class SettingsValidator(object):
         "create_all": "bool",
         "accept_assign": "bool",
         "accept_notify": "bool",
-        "password_one_time": "bool"
+        "password_one_time": "bool",
+        "dt_start_id": "uuid",
+        "default_currency_id": "uuid"
     }
 
     def set_context(self, serializer_field):
@@ -117,16 +120,12 @@ class SettingsValidator(object):
             return self.validate_phone(value)
         elif type_str == 'float':
             return self.validate_float(value)
+        elif type_str == 'uuid':
+            return self.validate_uuid(value)
         else:
             required_type = self.get_required_type(type_str)
             if not isinstance(value, required_type):
                 return self.message.format(value=value, type=type_str)
-
-    def validate_float(self, value):
-        try:
-            value = float(value)
-        except ValueError:
-            return self.message.format(value=value, type='float')
 
     def validate_email(self, email):
         if not valid_email(email):
@@ -135,6 +134,18 @@ class SettingsValidator(object):
     def validate_phone(self, phone):
         if not valid_phone(phone):
             return _('{} is not a valid phone'.format(phone))
+
+    def validate_float(self, value):
+        try:
+            value = float(value)
+        except ValueError:
+            return self.message.format(value=value, type='float')
+
+    def validate_uuid(self, value):
+        try:
+            uuid.UUID(value)
+        except AttributeError:
+            return _('{} is not a valid uuid'.format(value))
 
     @staticmethod
     def get_required_type(t):

@@ -72,12 +72,19 @@ class SettingsValidatorTests(APITestCase):
 
     def test_main(self):
         self.data['settings'] = {
+            'company_code': 0,
+            'company_name': 0,
             'dashboard_text': 0,
             'login_grace': 'foo',
             'exchange_rates': 'foo',
+            'tickets_module': 0,
+            'work_orders_module': 0,
+            'invoices_module': 0,
             'test_mode': 0,
             'test_contractor_email': 'foo@bar',
-            'test_contractor_phone': '+1800'
+            'test_contractor_phone': '+1800',
+            'dt_start_id': 1,
+            'default_currency_id': 1
         }
 
         response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id),
@@ -85,12 +92,19 @@ class SettingsValidatorTests(APITestCase):
 
         error = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(error['company_code'], [self.error_message.format(value=0, type='str')])
+        self.assertEqual(error['company_name'], [self.error_message.format(value=0, type='str')])
         self.assertEqual(error['dashboard_text'], [self.error_message.format(value=0, type='str')])
         self.assertEqual(error['login_grace'], [self.error_message.format(value='foo', type='int')])
         self.assertEqual(error['exchange_rates'], [self.error_message.format(value='foo', type='float')])
+        self.assertEqual(error['tickets_module'], [self.error_message.format(value=0, type='bool')])
+        self.assertEqual(error['work_orders_module'], [self.error_message.format(value=0, type='bool')])
+        self.assertEqual(error['invoices_module'], [self.error_message.format(value=0, type='bool')])
         self.assertEqual(error['test_mode'], [self.error_message.format(value=0, type='bool')])
         self.assertEqual(error['test_contractor_email'], ['{} is not a valid email'.format('foo@bar')])
         self.assertEqual(error['test_contractor_phone'], ['{} is not a valid phone'.format('+1800')])
+        self.assertEqual(error['dt_start_id'], ['{} is not a valid uuid'.format(1)])
+        self.assertEqual(error['default_currency_id'], ['{} is not a valid uuid'.format(1)])
 
     def test_coerce_float(self):
         # Javascript `parseFloat` which returns 1.00 as "1.00" should be
