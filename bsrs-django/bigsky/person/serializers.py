@@ -13,11 +13,14 @@ from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixi
 
 ### ROLE ###
 
+ROLE_FIELDS = ('id', 'name', 'role_type', 'auth_amount', 'auth_currency', 'location_level')
+
+
 class RoleSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Role
-        fields = ('id', 'name', 'role_type', 'location_level')
+        fields = ROLE_FIELDS
 
 
 class RoleCreateSerializer(BaseCreateSerializer):
@@ -25,17 +28,17 @@ class RoleCreateSerializer(BaseCreateSerializer):
     class Meta:
         model = Role
         validators = [RoleCategoryValidator()]
-        fields = ('id', 'name', 'role_type', 'location_level', 'categories',)
+        fields = ROLE_FIELDS + ('categories',)
 
 
 class RoleUpdateSerializer(NestedSettingUpdateMixin, BaseCreateSerializer):
+
     settings = SettingSerializer()
 
     class Meta:
         model = Role
         validators = [RoleCategoryValidator()]
-        fields = ('id', 'name', 'role_type', 'location_level', 'categories',
-            'settings',)
+        fields = ROLE_FIELDS + ('categories', 'settings',)
 
 
 class RoleDetailSerializer(NestedSettingsToRepresentationMixin, BaseCreateSerializer):
@@ -45,8 +48,7 @@ class RoleDetailSerializer(NestedSettingsToRepresentationMixin, BaseCreateSerial
 
     class Meta:
         model = Role
-        fields = ('id', 'name', 'role_type', 'location_level', 'categories',
-            'settings',)
+        fields = ROLE_FIELDS + ('categories', 'settings',)
 
     @staticmethod
     def eager_load(queryset):
