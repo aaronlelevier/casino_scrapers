@@ -33,12 +33,6 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Edit
       location_level: model.get('location_level_pk')
     };
   }),
-  currencyObject: Ember.computed('model.auth_currency', function() {
-    let currency_service = this.get('currency');
-    let person = this.get('model');
-    let store = this.get('simpleStore');
-    return person.get('auth_currency') ? store.find('currency', person.get('auth_currency')) : currency_service.getCurrency();
-  }),
   actions: {
     save() {
       this.set('submitted', true);
@@ -64,5 +58,4 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Edit
   }
 });
 
-export
-default PersonSingle;
+export default PersonSingle;

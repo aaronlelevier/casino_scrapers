@@ -297,7 +297,6 @@ test('can change currency by clicking it and selecting another currency', assert
     assert.equal(page.currencyCodeText, CURRENCY_DEFAULTS.codeCAD);
     let person = store.find('person', PD.id);
     assert.equal(person.get('auth_currency'), CURRENCY_DEFAULTS.idCAD);
-    assert.equal(person.get('isDirty'), true);
   });
   var payload = PF.put({id: PD.id, auth_currency: CURRENCY_DEFAULTS.idCAD});
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});

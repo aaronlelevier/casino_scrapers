@@ -1,6 +1,6 @@
 {{#if inheritsFrom}}
 <span class="t-inherited-msg-auth_amount">
-  {{#link-to "admin.roles.role" model.settings_object.auth_amount.inherits_from_id class="t-inherited-msg-auth_amount-link"}}
+  {{#link-to "admin.roles.role" inheritsFromId class="t-inherited-msg-auth_amount-link"}}
   {{t "crud.inherited_from" from=inheritsFrom}}
   {{/link-to}}
 </span>

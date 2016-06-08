@@ -5,6 +5,19 @@ default Ember.Component.extend({
   currency: Ember.inject.service(),
   simpleStore: Ember.inject.service(),
   classNames: ['input-currency t-input-currency'],
+  currencyObject: Ember.computed('model.auth_currency', function() {
+    let store = this.get('simpleStore');
+    let field = this.get('currencyField');
+    let inheritsFrom = this.get('inheritsFrom');
+    if (this.get(`model.${field}`)) {
+      return store.find('currency', this.get(`model.${field}`));
+    } else {
+      if (inheritsFrom) {
+        let currency_service = this.get('currency');
+        return currency_service.getCurrency();
+      }
+    }
+  }),
   currencyObjects: Ember.computed(function() {
     let currency_service = this.get('currency');
     let person = this.get('model');
@@ -21,9 +34,9 @@ default Ember.Component.extend({
       this.set('model.' + field, currency_service.format_currency(this.get('bound_field'), 'decimal_digits', 'USD'));
     },
     selected(obj) {
-      let currency_service = this.get('currency');
       let model = this.get('model');
-      model.set('auth_currency', obj.get('id'));
+      let field = this.get('currencyField');
+      model.set(field, obj.get('id'));
     }
   }
 });

@@ -443,7 +443,6 @@ test('role has an auth_amount and auth_currency', assert => {
     assert.equal(find('.t-inherited-msg-auth_amount').text(), "");
     let role = store.find('role', RD.idOne);
     let currency = store.find('currency', role.get('auth_currency'));
-    assert.equal(role.get('isDirty'), false);
     assert.equal(currency.get('id'), CURRENCY_DEFAULTS.id);
     assert.equal(personPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
     assert.equal(page.authAmountValue, role.get('auth_amount'));
@@ -454,7 +453,6 @@ test('role has an auth_amount and auth_currency', assert => {
     assert.equal(personPage.currencyCodeText, CURRENCY_DEFAULTS.codeCAD);
     let role = store.find('role', RD.idOne);
     assert.equal(role.get('auth_currency'), CURRENCY_DEFAULTS.idCAD);
-    assert.equal(role.get('isDirty'), true);
   });
   var payload = RF.put({id: RD.idOne, auth_currency: CURRENCY_DEFAULTS.idCAD});
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});

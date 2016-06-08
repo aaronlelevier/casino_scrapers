@@ -76,9 +76,10 @@
               {{input-currency
                 model=model
                 field="auth_amount"
+                currencyField="auth_currency"
                 placeholder=(t 'crud.default_value' value=model.settings_object.auth_amount.inherited_value)
                 inheritsFrom=model.settings_object.auth_amount.inherits_from
-                currencyObject=currencyObject
+                inheritsFromId=model.settings_object.auth_amount.inherits_from_id
               }}
               {{/form-group}}
             </div>
