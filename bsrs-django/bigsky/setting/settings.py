@@ -34,6 +34,9 @@ GENERAL_SETTINGS = {
     },
     "dt_start_id": {
         "value": "010530c4-ce6c-4724-9cfd-37a16e787001",
+    },
+    "default_currency_id": {
+        "value": "009530c4-ce6c-4724-9cfd-37a16e787001"
     }
 }
 
