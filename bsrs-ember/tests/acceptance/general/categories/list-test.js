@@ -14,7 +14,7 @@ const CATEGORIES_URL = BASE_URL + '/index';
 
 let application;
 
-module('Acceptance | category-list', {
+module('Acceptance | category list test', {
   beforeEach() {
     application = startApp();
     let endpoint = PREFIX + BASE_URL + '/';

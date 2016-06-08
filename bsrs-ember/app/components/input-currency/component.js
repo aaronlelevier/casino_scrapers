@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   currency: Ember.inject.service(),
   simpleStore: Ember.inject.service(),
   classNames: ['input-currency t-input-currency'],
-  currencyObject: Ember.computed('model.auth_currency', function() {
+  currencyObject: Ember.computed('model.auth_currency', 'model.cost_currency', function() {
     let store = this.get('simpleStore');
     let field = this.get('currencyField');
     let inheritsFrom = this.get('inheritsFrom');

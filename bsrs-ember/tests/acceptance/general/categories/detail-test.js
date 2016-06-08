@@ -9,9 +9,12 @@ import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CF from 'bsrs-ember/vendor/category_fixtures';
+import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
-import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/category';
+import generalPage from 'bsrs-ember/tests/pages/general';
+import personPage from 'bsrs-ember/tests/pages/person';
+import rolePage from 'bsrs-ember/tests/pages/role';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -27,7 +30,7 @@ const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 let application, store, endpoint, detail_xhr, list_xhr, detail_data;
 
-module('Acceptance | detail test', {
+module('Acceptance | category detail test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
@@ -472,5 +475,32 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-error-message').text(), 'WAT');
+  });
+});
+
+test('auth_amount and auth_currency populate and can update values', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-inherited-msg-auth_amount').text(), "");
+    let category = store.find('category', CD.idOne);
+    let currency = store.find('currency', category.get('cost_currency'));
+    assert.equal(currency.get('id'), CURRENCY_DEFAULTS.id);
+    assert.equal(personPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
+    assert.equal(rolePage.authAmountValue, category.get('cost_amount'));
+    assert.equal(personPage.currencyCodeText, CURRENCY_DEFAULTS.code);
+  });
+  selectChoose('.t-currency-code', CURRENCY_DEFAULTS.codeCAD);
+  andThen(() => {
+    assert.equal(personPage.currencyCodeText, CURRENCY_DEFAULTS.codeCAD);
+    let category = store.find('category', CD.idOne);
+    assert.equal(category.get('cost_currency'), CURRENCY_DEFAULTS.idCAD);
+  });
+  let url = PREFIX + DETAIL_URL + "/";
+  var payload = CF.put({id: CD.idOne, cost_currency: CURRENCY_DEFAULTS.idCAD});
+  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), CATEGORIES_URL);
   });
 });
