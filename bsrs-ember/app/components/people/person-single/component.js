@@ -6,19 +6,14 @@ import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 import RelaxedMixin from 'bsrs-ember/mixins/validation/relaxed';
 
-function validatePassword(){
-  if(this.changingPassword && this.get('model.password').length > 0){
+function validatePassword() {
+  if (this.changingPassword && this.get('model.password').length > 0) {
     return true;
-  }else if(!this.changingPassword){
+  }
+  else if (!this.changingPassword) {
     return true;
   }
 }
-// function validateSingleChar(middle_init){
-//   if(middle_init) {
-//     return middle_init.length < 2 ? true : false;
-//   }
-//   return true;
-// }
 
 var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, EditMixin, {
   didValidate: false,
@@ -32,15 +27,17 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Edit
   attemptedTransition: '',
   passwordValidation: validate('model.password', validatePassword),
   changingPassword: false,
-  extra_params: Ember.computed(function(){
+  extra_params: Ember.computed(function() {
     const model = this.get('model');
-    return {location_level: model.get('location_level_pk')};
+    return {
+      location_level: model.get('location_level_pk')
+    };
   }),
   currencyObject: Ember.computed('model.auth_currency', function() {
-      let currency_service = this.get('currency');
-      let person = this.get('model');
-      let store = this.get('simpleStore');
-      return person.get('auth_currency') ? store.find('currency', person.get('auth_currency')) : currency_service.getCurrency();
+    let currency_service = this.get('currency');
+    let person = this.get('model');
+    let store = this.get('simpleStore');
+    return person.get('auth_currency') ? store.find('currency', person.get('auth_currency')) : currency_service.getCurrency();
   }),
   actions: {
     save() {
@@ -52,19 +49,20 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Edit
         this.set('didValidate', true);
       }
     },
-    localeChanged(locale){
+    localeChanged(locale) {
       this.sendAction('localeChanged', locale);
     },
-    changePassword(){
+    changePassword() {
       this.toggleProperty('changingPassword');
       this.get('model').clearPassword();
     },
     changeBool(key) {
-        const store = this.get('simpleStore');
-        let setting = store.find('person', this.get('model.id'));
-        setting.toggleProperty(key);
+      const store = this.get('simpleStore');
+      let setting = store.find('person', this.get('model.id'));
+      setting.toggleProperty(key);
     }
   }
 });
 
-export default PersonSingle;
+export
+default PersonSingle;
