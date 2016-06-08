@@ -83,7 +83,7 @@ label[for="nav-trigger"] {
 }
 
 .nav-trigger:checked + label {
-  top: 0;
+  top: 10px;
   right: 0;
   bottom: 0;
   left: $mobileDrawerWidth;
