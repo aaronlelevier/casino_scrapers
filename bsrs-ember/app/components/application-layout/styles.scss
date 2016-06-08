@@ -1,7 +1,7 @@
 /*
 * Absolute positioning
+* DESKTOP AND MOBILE START
 */
-//DESKTOP AND MOBILE
 section.wrap {
   position: absolute;
   top: $mainTop;
@@ -34,100 +34,109 @@ header.main{
   box-shadow: 0 0 7px $darkGray;
   z-index: 3;
 }
+/*
+* DESKTOP AND MOBILE END
+*/
 
 
-//MOBILE
+/*
+* Flexbox w/ absolute postioning on flex container
+* MOBILE START
+*/
 div.bs-mobile {
-  div.wrapper-main {
-    width: 100%;
-    height: 100%;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    position: fixed;
-    header.main {
-      position: absolute;
-    }
-    section.wrap-mobile {
-      position: absolute;
-      width: 100%;
-      bottom: $mobileFooterHeight;
-      top: $menuHeight;
-      left: 0;
-      border: none;
-    }
-  }
-  input.nav-trigger {
+  vbox.mobile-wrap {
     position: absolute;
-    clip: rect(0, 0, 0, 0);
-  }
-  label[for="nav-trigger"] {
-    position: fixed;
-    left: 15px;
-    z-index: 4;
-    font-size: 26px;
-    line-height: $menuHeight;
-    color: $light;
-  }
-
-  .nav-trigger:checked + label {
     top: 0;
-    right: 0;
     bottom: 0;
-    left: $mobileDrawerWidth;
-    padding-left: 15px;
-  }
-  .nav-trigger:checked ~ div.wrapper-main {
-    left: $mobileDrawerWidth;
-  }
-  .nav-trigger:checked ~ nav.navigation {
     left: 0;
-  }
-
-  .nav-trigger + label,
-  div.wrapper-main,
-  nav.navigation {
-    transition: left 0.2s;
-  }
-
-  nav.navigation {
-    background: $dark;
-    width: $mobileDrawerWidth;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: -$mobileDrawerWidth;
-    overflow: hidden;
-    ul {
-      padding: 0;
-      margin: 0;
-      list-style: none;
+    width: 100%;
+    header.mobile-header {
+      position: relative;
+      -webkit-box-shadow: 0 0 7px $darkGray;
+      -moz-box-shadow: 0 0 7px $darkGray;
+      box-shadow: 0 0 7px $darkGray;
     }
-    li.nav-section {
-      background: $darkGray;
-      padding: 20px;
-      border-bottom: 1px solid $dark;
-      li.nav-item {
-        padding: 0;
-        a {
-          font-size: 18px;
-          padding: 2px 0;
-          display: block;
-          color: $medGray;
-          text-decoration: none;
-        }
-      }
-    }
-    li.nav-search {
-      padding: 8px;
-      background: $dark;
-      input {
-        height: 26px;
-        border: none;
-        background: $darker;
-        width: 100%;
-      }
+    section.mobile-main {
+      flex: auto;
+      overflow: auto;
     }
   }
 }
+
+//MOBILE TRAY
+input.nav-trigger {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+}
+label[for="nav-trigger"] {
+  position: fixed;
+  left: 15px;
+  z-index: 4;
+  font-size: 26px;
+  line-height: $menuHeight;
+  color: $light;
+}
+
+.nav-trigger:checked + label {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: $mobileDrawerWidth;
+  padding-left: 15px;
+}
+.nav-trigger:checked ~ .mobile-wrap {
+  left: $mobileDrawerWidth;
+}
+.nav-trigger:checked ~ nav.navigation {
+  left: 0;
+}
+
+.nav-trigger + label,
+.mobile-wrap ,
+nav.navigation {
+  transition: left 0.2s;
+}
+
+nav.navigation {
+  background: $dark;
+  width: $mobileDrawerWidth;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: -$mobileDrawerWidth;
+  overflow: hidden;
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  li.nav-section {
+    background: $darkGray;
+    padding: 20px;
+    border-bottom: 1px solid $dark;
+    li.nav-item {
+      padding: 0;
+      a {
+        font-size: 18px;
+        padding: 2px 0;
+        display: block;
+        color: $medGray;
+        text-decoration: none;
+      }
+    }
+  }
+  li.nav-search {
+    padding: 8px;
+    background: $dark;
+    input {
+      height: 26px;
+      border: none;
+      background: $darker;
+      width: 100%;
+    }
+  }
+}
+/*
+* MOBILE END
+*/

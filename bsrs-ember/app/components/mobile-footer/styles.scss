@@ -1,27 +1,17 @@
-footer.mobile-footer {
-  position: absolute;
+& {
   height: $mobileFooterHeight;
   line-height: $mobileFooterHeight;
   background: $lightGray;
-  left: 0;
-  right: 0;
-  bottom: 0;
   border: $borderStyle;
   border-width: 1px 0 0;
-  ul {
+  hbox {
     width: 100%;
-    padding: 0;
-    margin: 0;
-    li {
-      list-style: none;
-      display: inline-block;
-      width: 19%;
-      margin: 0 auto;
+    div {
       text-align: center;
+      flex: auto;
       a {
         color: $medGray;
         font-size: 26px;
-        padding: 0 2rem;
       }
     }
   }

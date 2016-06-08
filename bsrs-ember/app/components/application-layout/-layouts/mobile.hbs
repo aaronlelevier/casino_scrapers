@@ -1,7 +1,6 @@
 <div class="bs-mobile">
   {{input type="checkbox" checked=drawerOpen id="nav-trigger" class="nav-trigger t-nav-trigger"}}
   <label for="nav-trigger">{{fa-icon "reorder"}}</label>
-
   <nav class="navigation">
     <ul>
       <li class="nav-search"><input type="search"></li>
@@ -30,15 +29,14 @@
     </ul>
     {{people/person-current}}
   </nav>
-
-  <div class="wrapper-main">
-    <header class="main">
+  <vbox class="mobile-wrap">
+    <header class="mobile-header">
       {{nav-bar}}
     </header>
     {{tab-list tabs=tabs closeTabMaster=(action "closeTabMaster")}}
-    <section class="wrap-mobile">
+    <section class="mobile-main">
       {{liquid-outlet}}
     </section>
     {{mobile-footer}}
-  </div>
+  </vbox>
 </div>
