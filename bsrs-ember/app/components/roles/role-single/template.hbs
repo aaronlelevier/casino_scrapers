@@ -58,5 +58,68 @@
         </section>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-12">
+        <section>
+          <div class="row card-title">
+            <h2 class="col-md-12">{{t "admin.role.label.settings"}}</h2>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              {{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
+              {{input-currency
+                model=model
+                field="auth_amount"
+                currencyField="auth_currency"
+                placeholder=(t 'crud.default_value' value=model.settings_object.auth_amount.inherited_value)
+              }}
+              {{/form-group}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              {{#form-group title="admin.setting.dashboard_text" for="dashboard_text"}}
+                <p class="inherited-msg t-inherited-msg-dashboard_text">
+                  {{#link-to "admin.settings" model.settings_object.dashboard_text.inherits_from_id class="t-inherited-msg-dashboard_text-link"}}
+                    {{t 'crud.inherited_from' from=model.settings_object.dashboard_text.inherits_from}}
+                  {{/link-to}}
+                </p>
+              {{textarea autoresize=true placeholder=(t 'crud.default_value' value=model.settings_object.dashboard_text.inherited_value) value=model.dashboard_text class="form-control t-settings-dashboard_text" id="dashboard_text"}}
+              {{/form-group}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value={{model.create_all}} onclick={{action 'changeBool' 'role' 'create_all'}} checked={{model.create_all}} class="t-settings-create_all" name="create_all">
+                  <span class="t-settings-create_all-label">{{t "admin.setting.create_all"}}</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value={{model.accept_assign}} onclick={{action 'changeBool' 'role' 'accept_assign'}} checked={{model.accept_assign}} class="t-settings-accept_assign" name="accept_assign">
+                  <span class="t-settings-accept_assign-label">{{t "admin.setting.accept_assign"}}</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value={{model.accept_notify}} onclick={{action 'changeBool' 'role' 'accept_notify'}} checked={{model.accept_notify}} class="t-settings-accept_notify" name="accept_notify">
+                  <span class="t-settings-accept_notify-label">{{t "admin.setting.accept_notify"}}</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
   </section>
 </form>

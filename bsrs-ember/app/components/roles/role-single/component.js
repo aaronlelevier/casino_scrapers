@@ -5,8 +5,9 @@ import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 import ChangeBoolMixin from 'bsrs-ember/mixins/components/change-bool';
 
-var RoleSingle = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, {
+var RoleSingle = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, ChangeBoolMixin, {
   repository: inject('role'),
+  simpleStore: Ember.inject.service(),
   nameValidation: validate('model.name'),
   locationLevelValidation: validate('model.location_level'),
   actions: {

@@ -12,6 +12,7 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
+import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import random from 'bsrs-ember/models/random';
@@ -28,7 +29,7 @@ const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-selec
 
 let application, store, payload, list_xhr, original_uuid, url, counter, run = Ember.run;
 
-module('Acceptance | role-new', {
+module('Acceptance | role new', {
   beforeEach() {
     payload = {
       id: UUID.value,
@@ -36,6 +37,7 @@ module('Acceptance | role-new', {
       role_type: RD.t_roleTypeGeneral,
       location_level: RD.locationLevelOne,
       categories: [CD.idOne],
+      auth_amount: null,
       settings: {
         settings: {}
       }
@@ -61,17 +63,19 @@ module('Acceptance | role-new', {
 
 test('visiting role/new', (assert) => {
   visit(ROLE_URL);
-  let response = Ember.$.extend(true, {}, payload);
-  xhr(url, 'POST', JSON.stringify(payload), {}, 201, response);
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
     assert.equal(store.find('role').get('length'), 7);
     assert.equal(store.find('role-type').get('length'), 2);
-    assert.equal(store.find('location-level').get('length'), 8);
-    //assert.equal(page.locationLevelInput(), 'Select One');
     assert.equal(page.roleTypeInput, t(RD.t_roleTypeGeneral));
-    assert.ok(store.find('role').objectAt(1).get('isNotDirty'));
+    assert.equal(store.find('location-level').get('length'), 8);
+    assert.equal(page.categorySelectText, "");
+    assert.equal(page.authAmountValue, "");
+    assert.equal(page.dashboard_textValue, "");
+    assert.equal(find('.t-settings-create_all').prop('checked'), false);
+    assert.equal(find('.t-settings-accept_assign').prop('checked'), false);
+    assert.equal(find('.t-settings-accept_notify').prop('checked'), false);
     const role = store.find('role', UUID.value);
     assert.ok(role.get('new'));
   });
@@ -81,6 +85,12 @@ test('visiting role/new', (assert) => {
   ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
   page.categoryClickDropdown();
   page.categoryClickOptionOneEq();
+  fillIn('.t-amount', CURRENCY_DEFAULTS.authAmountOne);
+  page.create_allClick();
+  page.accept_assignClick();
+  page.accept_notifyClick();
+  let postPayload = Object.assign(payload, {auth_amount: CURRENCY_DEFAULTS.authAmountOne, settings: {settings:{create_all:true,accept_assign:true,accept_notify:true}}});
+  xhr(url, 'POST', JSON.stringify(postPayload), {}, 201, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ROLE_URL);
@@ -90,6 +100,10 @@ test('visiting role/new', (assert) => {
     assert.equal(role.get('name'), RD.nameOne);
     assert.equal(role.get('role_type'), RD.t_roleTypeGeneral);
     assert.equal(role.get('location_level.id'), RD.locationLevelOne);
+    assert.equal(role.get('auth_amount'), CURRENCY_DEFAULTS.authAmountOne);
+    assert.equal(role.get('create_all'), true);
+    assert.equal(role.get('accept_assign'), true);
+    assert.equal(role.get('accept_notify'), true);
     assert.ok(role.get('isNotDirty'));
   });
 });
@@ -217,8 +231,8 @@ test('clicking power select for parent categories will fire off xhr request for 
   page.locationLevelClickDropdown();
   page.locationLevelClickOptionOne();
   let category = CF.put({id: CD.idOne, name: CD.nameOne});
-  let payload = RF.put({id: UUID.value, location_level: LLD.idOne, auth_amount: undefined, auth_currency: undefined, settings: {settings:{}}});
-  xhr(url, 'POST', JSON.stringify(payload), {}, 200);
+  let postPayload = Object.assign(payload, {location_level: LLD.idOne});
+  xhr(url, 'POST', JSON.stringify(postPayload), {}, 200);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ROLE_URL);
@@ -289,8 +303,8 @@ test('can add multiple categories', (assert) => {
   fillIn('.t-role-name', RD.nameOne);
   page.locationLevelClickDropdown();
   page.locationLevelClickOptionOne();
-  let payload = RF.put({id: UUID.value, categories: [CD.idOne, CD.idThree], auth_amount: undefined, auth_currency: undefined, settings: {settings:{}}});
-  xhr(url, 'POST', JSON.stringify(payload), {}, 201);
+  let postPayload = Object.assign(payload, {categories: [CD.idOne, CD.idThree]});
+  xhr(url, 'POST', JSON.stringify(postPayload), {}, 201);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ROLE_URL);

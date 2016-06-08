@@ -30,6 +30,7 @@ export default PageObject.create({
   roleTypeClickOptionTwo: clickable(`${ROLETYPE_DROPDOWN} > .ember-power-select-option:contains(${RD.roleTypeContractor})`),
 
   categoryClickDropdown: clickable(CATEGORY),
+  categorySelectText: text('.t-role-category-select > .ember-basic-dropdown-trigger'),
   categorySelected: text(CATEGORY_ONE),
   categoryOneRemove: clickable(`${CATEGORY_ONE} > .ember-power-select-multiple-remove-btn`),
   categoryClickOptionOneEq: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:eq(0)`),
@@ -41,6 +42,7 @@ export default PageObject.create({
   create_allClick: clickable('.t-settings-create_all-label'),
   accept_assignClick: clickable('.t-settings-accept_assign-label'),
   accept_notifyClick: clickable('.t-settings-accept_notify-label'),
+  dashboard_textValue: value('.t-settings-dashboard_text'),
 
   authAmountValue: value('.t-amount'),
 });
