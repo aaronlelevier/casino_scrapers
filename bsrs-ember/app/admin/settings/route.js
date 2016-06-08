@@ -3,8 +3,7 @@ import inject from 'bsrs-ember/utilities/inject';
 import injectStore from 'bsrs-ember/utilities/store';
 import TabRoute from 'bsrs-ember/route/tab/route';
 
-export
-default TabRoute.extend({
+export default TabRoute.extend({
   simpleStore: Ember.inject.service(),
   repository: inject('setting'),
   redirectRoute: Ember.computed(function() {

@@ -25,5 +25,4 @@ var GeneralSettings = Ember.Component.extend(TabMixin, EditMixin, ChangeBoolMixi
   }
 });
 
-export
-default GeneralSettings;
+export default GeneralSettings;

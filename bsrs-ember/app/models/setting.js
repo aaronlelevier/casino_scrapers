@@ -54,5 +54,4 @@ var SettingModel = Model.extend({
   }
 });
 
-export
-default SettingModel;
+export default SettingModel;

@@ -10,5 +10,4 @@ var ChangeBoolMixin = Ember.Mixin.create({
   }
 });
 
-export
-default ChangeBoolMixin;
+export default ChangeBoolMixin;
