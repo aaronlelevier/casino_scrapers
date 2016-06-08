@@ -7,7 +7,7 @@ var BSRS_LOCALE_DEFAULTS_OBJECT = (function() {
             native_nameOne: '',
             localeOne: 'en',
             nameOne: 'English',
-            nameOneKey: 'admin.locale.english',
+            nameOneKey: 'admin.locale.en',
             presentation_nameOne: '',
             rtlOne: false,
             // two
@@ -15,7 +15,7 @@ var BSRS_LOCALE_DEFAULTS_OBJECT = (function() {
             native_nameTwo: 'Español',
             localeTwo: 'es',
             nameTwo: 'Spanish',
-            nameTwoKey: 'admin.locale.spanish',
+            nameTwoKey: 'admin.locale.es',
             presentation_nameTwo: 'Español',
             rtlTwo: false,
             // three
