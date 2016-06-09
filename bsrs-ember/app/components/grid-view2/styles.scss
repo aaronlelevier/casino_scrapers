@@ -143,11 +143,11 @@ div.rowTable {
 }
 .filtersets{
   clear: both;
-  ul,hbox{
+  ul,hbox {
     overflow: auto;
     margin: 0;
     padding: 0;
-    li,div{
+    li,div {
       list-style: none;
       float: left;
       margin: 0 5px 5px 0;
@@ -192,13 +192,8 @@ header.mobile {
     height: $mobileDocHeaderHeight;
     line-height: $mobileDocHeaderHeight;
     font-size: 2rem;
-    color: $blue;
+    color: $darkGray;
     margin: 0;
-    span.show-filtersets {
-      font-size: 1.6rem;
-      color: $medGray;
-      padding: 0 0 0 5px;
-    }
   }
   div.grid-options {
     padding: 0 15px;
@@ -214,15 +209,11 @@ header.mobile {
   .filtersets {//mobile styles
     border-top: $borderStyle;
     background: $white;
-    hbox{
+    hbox {
       overflow: auto;
-      padding: 0;
-      padding-bottom: 6px;
       flex-wrap: nowrap;
-      justify-content: space-between;
-      div{
-        list-style: none;
-        margin: 5px;
+      div {
+        margin: 5px 0 5px 5px;
         white-space: nowrap;
         a {
           font-size: 1.4rem;
