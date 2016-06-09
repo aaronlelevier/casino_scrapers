@@ -445,7 +445,7 @@ test('role has an auth_amount and auth_currency', assert => {
     let currency = store.find('currency', role.get('auth_currency'));
     assert.equal(currency.get('id'), CURRENCY_DEFAULTS.id);
     assert.equal(personPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
-    assert.equal(page.authAmountValue, role.get('auth_amount'));
+    assert.equal(page.authAmountValue, CURRENCY_DEFAULTS.authAmountOne);
     assert.equal(personPage.currencyCodeText, CURRENCY_DEFAULTS.code);
   });
   selectChoose('.t-currency-code', CURRENCY_DEFAULTS.codeCAD);

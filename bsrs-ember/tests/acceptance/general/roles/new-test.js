@@ -11,6 +11,7 @@ import RF from 'bsrs-ember/vendor/role_fixtures';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
+import SD from 'bsrs-ember/vendor/defaults/setting';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
@@ -71,7 +72,10 @@ test('visiting role/new', (assert) => {
     assert.equal(page.roleTypeInput, t(RD.t_roleTypeGeneral));
     assert.equal(store.find('location-level').get('length'), 8);
     assert.equal(page.categorySelectText, "");
+    assert.equal(find('.t-amount').get(0)['placeholder'], 'Amount');
     assert.equal(page.authAmountValue, "");
+    assert.equal(find('.t-inherited-msg-dashboard_text-link').text().trim(), 'Inherited from: general');
+    assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + SD.dashboard_text);
     assert.equal(page.dashboard_textValue, "");
     assert.equal(find('.t-settings-create_all').prop('checked'), false);
     assert.equal(find('.t-settings-accept_assign').prop('checked'), false);

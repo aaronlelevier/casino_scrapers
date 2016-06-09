@@ -273,5 +273,6 @@ test('setting - load id,name of setting model on boot', (assert) => {
     assert.equal(settings.get('length'), 1);
     assert.equal(settings.objectAt(0).get('id'), SD.id);
     assert.equal(settings.objectAt(0).get('name'), SD.name);
+    assert.deepEqual(settings.objectAt(0).get('settings'), {dashboard_text: "Welcome"});
   });
 });

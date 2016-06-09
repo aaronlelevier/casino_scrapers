@@ -71,7 +71,7 @@
                 model=model
                 field="auth_amount"
                 currencyField="auth_currency"
-                placeholder=(t 'crud.default_value' value=model.settings_object.auth_amount.inherited_value)
+                placeholder=(if inheritedFrom (t 'crud.default_value' value=model.settings_object.auth_amount.inherited_value))
               }}
               {{/form-group}}
             </div>
@@ -81,10 +81,10 @@
               {{#form-group title="admin.setting.dashboard_text" for="dashboard_text"}}
                 <p class="inherited-msg t-inherited-msg-dashboard_text">
                   {{#link-to "admin.settings" model.settings_object.dashboard_text.inherits_from_id class="t-inherited-msg-dashboard_text-link"}}
-                    {{t 'crud.inherited_from' from=model.settings_object.dashboard_text.inherits_from}}
+                    {{t 'crud.inherited_from' from="general"}}
                   {{/link-to}}
                 </p>
-              {{textarea autoresize=true placeholder=(t 'crud.default_value' value=model.settings_object.dashboard_text.inherited_value) value=model.dashboard_text class="form-control t-settings-dashboard_text" id="dashboard_text"}}
+              {{textarea autoresize=true placeholder=(t 'crud.default_value' value=generalSettings.dashboard_text) value=model.dashboard_text class="form-control t-settings-dashboard_text" id="dashboard_text"}}
               {{/form-group}}
             </div>
           </div>
