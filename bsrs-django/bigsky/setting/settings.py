@@ -33,7 +33,7 @@ GENERAL_SETTINGS = {
         "value": "+18587155000",
     },
     "dt_start_id": {
-        "value": "010530c4-ce6c-4724-9cfd-37a16e787001",
+        "value": "011530c4-ce6c-4724-9cfd-37a16e787001",
     },
     "default_currency_id": {
         "value": "009530c4-ce6c-4724-9cfd-37a16e787001"
