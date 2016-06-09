@@ -583,7 +583,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
   let name = 'foobar';
   let routePath = 'admin.roles.index';
   let query = '?foo=bar';
-  let navigation = '.t-filterset-wrap li';
+  let navigation = '.t-filterset-wrap div';
   let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
   visit(ROLE_URL);
   clearAll(store, 'filterset');
@@ -685,7 +685,7 @@ test('applying a saved filterset will reset the page to 1 by default', function(
   visit(ROLE_URL);
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
-    assert.equal(find('.t-filterset-wrap li:eq(0) a').text().trim(), filter_name);
+    assert.equal(find('.t-filterset-wrap div:eq(0) a').text().trim(), filter_name);
   });
   ajax(`${PREFIX}${BASE_URL}/?page=2`, 'GET',null,{},200,RF.list_two());
   click('.t-page:eq(1) a');
@@ -693,7 +693,7 @@ test('applying a saved filterset will reset the page to 1 by default', function(
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
   });
   ajax(`${PREFIX}${BASE_URL}/?page=1&ordering=name&name__icontains=xav` ,'GET',null,{},200,RF.paginated(updated_pg_size));
-  click('.t-filterset-wrap li:eq(0) a');
+  click('.t-filterset-wrap div:eq(0) a');
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
     assert.equal(currentURL(), '/admin/roles/index?find=name%3Axav&sort=name');
@@ -718,26 +718,26 @@ test('each time you apply a saved filterset the query params are reset to reflec
   visit(ROLE_URL);
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
-    assert.equal(find('.t-filterset-wrap li:eq(0) a').text().trim(), filter_one);
-    assert.equal(find('.t-filterset-wrap li:eq(1) a').text().trim(), filter_two);
-    assert.ok(!find('.t-filterset-wrap li:eq(0) a').hasClass('active'));
-    assert.ok(!find('.t-filterset-wrap li:eq(1) a').hasClass('active'));
+    assert.equal(find('.t-filterset-wrap div:eq(0) a').text().trim(), filter_one);
+    assert.equal(find('.t-filterset-wrap div:eq(1) a').text().trim(), filter_two);
+    assert.ok(!find('.t-filterset-wrap div:eq(0) a').hasClass('active'));
+    assert.ok(!find('.t-filterset-wrap div:eq(1) a').hasClass('active'));
   });
   ajax(`${PREFIX}${BASE_URL}/?page=1&search=zap&name__icontains=xav` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
-  click('.t-filterset-wrap li:eq(0) a');
+  click('.t-filterset-wrap div:eq(0) a');
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
     assert.equal(currentURL(), '/admin/roles/index?find=name%3Axav&search=zap');
-    assert.ok(find('.t-filterset-wrap li:eq(0) a').hasClass('active'));
-    assert.ok(!find('.t-filterset-wrap li:eq(1) a').hasClass('active'));
+    assert.ok(find('.t-filterset-wrap div:eq(0) a').hasClass('active'));
+    assert.ok(!find('.t-filterset-wrap div:eq(1) a').hasClass('active'));
   });
   ajax(`${PREFIX}${BASE_URL}/?page=1&ordering=name&search=admin` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
-  click('.t-filterset-wrap li:eq(1) a');
+  click('.t-filterset-wrap div:eq(1) a');
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
     assert.equal(currentURL(), '/admin/roles/index?search=admin&sort=name');
-    assert.ok(!find('.t-filterset-wrap li:eq(0) a').hasClass('active'));
-    assert.ok(find('.t-filterset-wrap li:eq(1) a').hasClass('active'));
+    assert.ok(!find('.t-filterset-wrap div:eq(0) a').hasClass('active'));
+    assert.ok(find('.t-filterset-wrap div:eq(1) a').hasClass('active'));
   });
 });
 
@@ -778,43 +778,43 @@ test('when a filterset that has a search is applied both the querystring and the
   visit(ROLE_URL);
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
-    assert.equal(find('.t-filterset-wrap li:eq(0) a').text().trim(), filter_one);
-    assert.equal(find('.t-filterset-wrap li:eq(1) a').text().trim(), filter_two);
-    assert.equal(find('.t-filterset-wrap li:eq(2) a').text().trim(), filter_three);
+    assert.equal(find('.t-filterset-wrap div:eq(0) a').text().trim(), filter_one);
+    assert.equal(find('.t-filterset-wrap div:eq(1) a').text().trim(), filter_two);
+    assert.equal(find('.t-filterset-wrap div:eq(2) a').text().trim(), filter_three);
     assert.equal(find('.t-grid-search-input').val(), '');
-    assert.ok(!find('.t-filterset-wrap li:eq(0) a').hasClass('active'));
-    assert.ok(!find('.t-filterset-wrap li:eq(1) a').hasClass('active'));
-    assert.ok(!find('.t-filterset-wrap li:eq(2) a').hasClass('active'));
+    assert.ok(!find('.t-filterset-wrap div:eq(0) a').hasClass('active'));
+    assert.ok(!find('.t-filterset-wrap div:eq(1) a').hasClass('active'));
+    assert.ok(!find('.t-filterset-wrap div:eq(2) a').hasClass('active'));
   });
   ajax(`${PREFIX}${BASE_URL}/?page=1&search=zap&name__icontains=xav` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
-  click('.t-filterset-wrap li:eq(0) a');
+  click('.t-filterset-wrap div:eq(0) a');
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
     assert.equal(currentURL(), '/admin/roles/index?find=name%3Axav&search=zap');
     assert.equal(find('.t-grid-search-input').val(), 'zap');
-    assert.ok(find('.t-filterset-wrap li:eq(0) a').hasClass('active'));
-    assert.ok(!find('.t-filterset-wrap li:eq(1) a').hasClass('active'));
-    assert.ok(!find('.t-filterset-wrap li:eq(2) a').hasClass('active'));
+    assert.ok(find('.t-filterset-wrap div:eq(0) a').hasClass('active'));
+    assert.ok(!find('.t-filterset-wrap div:eq(1) a').hasClass('active'));
+    assert.ok(!find('.t-filterset-wrap div:eq(2) a').hasClass('active'));
   });
   ajax(`${PREFIX}${BASE_URL}/?page=1&ordering=name&search=admin` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
-  click('.t-filterset-wrap li:eq(1) a');
+  click('.t-filterset-wrap div:eq(1) a');
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
     assert.equal(currentURL(), '/admin/roles/index?search=admin&sort=name');
     assert.equal(find('.t-grid-search-input').val(), 'admin');
-    assert.ok(!find('.t-filterset-wrap li:eq(0) a').hasClass('active'));
-    assert.ok(find('.t-filterset-wrap li:eq(1) a').hasClass('active'));
-    assert.ok(!find('.t-filterset-wrap li:eq(2) a').hasClass('active'));
+    assert.ok(!find('.t-filterset-wrap div:eq(0) a').hasClass('active'));
+    assert.ok(find('.t-filterset-wrap div:eq(1) a').hasClass('active'));
+    assert.ok(!find('.t-filterset-wrap div:eq(2) a').hasClass('active'));
   });
   ajax(`${PREFIX}${BASE_URL}/?page=1&ordering=name` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
-  click('.t-filterset-wrap li:eq(2) a');
+  click('.t-filterset-wrap div:eq(2) a');
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
     assert.equal(currentURL(), '/admin/roles/index?sort=name');
     assert.equal(find('.t-grid-search-input').val(), '');
-    assert.ok(!find('.t-filterset-wrap li:eq(0) a').hasClass('active'));
-    assert.ok(!find('.t-filterset-wrap li:eq(1) a').hasClass('active'));
-    assert.ok(find('.t-filterset-wrap li:eq(2) a').hasClass('active'));
+    assert.ok(!find('.t-filterset-wrap div:eq(0) a').hasClass('active'));
+    assert.ok(!find('.t-filterset-wrap div:eq(1) a').hasClass('active'));
+    assert.ok(find('.t-filterset-wrap div:eq(2) a').hasClass('active'));
   });
 });
 

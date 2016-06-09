@@ -596,7 +596,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
     let name = 'foobar';
     let routePath = 'admin.locations.index';
     let query = '?foo=bar';
-    let navigation = '.t-filterset-wrap li';
+    let navigation = '.t-filterset-wrap div';
     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
     visit(LOCATION_URL);
     clearAll(store, 'filterset');

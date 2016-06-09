@@ -223,14 +223,14 @@ test('typing a search will reset page to 1 and require an additional xhr and res
         assert.equal(currentURL(),TP_URL + '?search=&sort=status.name');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameVz);
-        // assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'10'); 
+        // assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'10');
     });
     click(`${PAGE}:eq(1) a`);
     andThen(() => {
         assert.equal(currentURL(),`${TP_URL}?page=2&search=&sort=status.name`);
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
-        // assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameGridBase+'2'); 
-        assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'2'); 
+        // assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameGridBase+'2');
+        assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'2');
     });
     fillIn(`${SEARCH_INPUT}`, '14');
     triggerEvent(`${SEARCH_INPUT}`, 'keyup', NUMBER_ONE);
@@ -611,7 +611,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
     let name = 'foobar';
     let routePath = 'admin.third-parties.index';
     let query = '?foo=bar';
-    let navigation = '.t-filterset-wrap li';
+    let navigation = '.t-filterset-wrap div';
     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
     visit(TP_URL);
     clearAll(store, 'filterset');
