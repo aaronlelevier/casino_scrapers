@@ -14,16 +14,18 @@ class Command(StartAppCommand):
 
     def handle(self, **options):
         app_name = options.get('name')
+        top_dir = path.join(os.getcwd(), app_name)
 
         super(Command, self).handle(**options)
 
-        # remove tests.py, and create a test dir instead
-        top_dir = path.join(os.getcwd(), app_name)
-
-        # remove
+        # Remove
         os.remove(path.join(top_dir, 'tests.py'))
 
-        # add
+        # Add
+        # app files
+        with open(path.join(top_dir, 'serializers.py'), 'wb') as f: pass
+
+        # test dir, and files
         test_dir = path.join(top_dir, 'tests')
         os.mkdir(test_dir)
 
