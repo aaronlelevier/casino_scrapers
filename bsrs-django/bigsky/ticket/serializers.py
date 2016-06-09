@@ -4,7 +4,7 @@ from category.models import Category
 from category.serializers import CategoryIDNameSerializerTicket
 from generic.serializers import Attachment
 from location.serializers import LocationStatusFKSerializer, LocationTicketListSerializer
-from person.serializers import PersonTicketSerializer
+from person.serializers import PersonTicketSerializer, PersonTicketListSerializer
 from person.serializers_leaf import PersonSimpleSerializer
 from ticket.helpers import TicketActivityToRepresentation
 from ticket.models import Ticket, TicketActivity, TicketPriority, TicketStatus
@@ -50,7 +50,7 @@ class TicketListSerializer(serializers.ModelSerializer):
     category_ids = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(), source='categories',
         many=True, required=False)
-    assignee = PersonTicketSerializer(required=False)
+    assignee = PersonTicketListSerializer(required=False)
     status = TicketStatusSerializer(required=False)
     priority = TicketPrioritySerializer(required=False)
 

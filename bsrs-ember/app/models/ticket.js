@@ -30,7 +30,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     this.requestValues = []; //store array of values to be sent in dt post or put request field
     belongs_to.bind(this)('status', 'ticket');
     belongs_to.bind(this)('priority', 'ticket');
-    belongs_to.bind(this)('assignee', 'ticket', {change_func:false, rollback:false});
+    belongs_to.bind(this)('assignee', 'ticket', {change_func:false, rollback:false});//change_assignee_container (below): change_belongs_to_fk
     belongs_to.bind(this)('location', 'ticket', {bootstrapped:false, change_func:false});
     many_to_many.bind(this)('cc', 'ticket');
     many_to_many.bind(this)('category', 'model', {plural:true, add_func:false});

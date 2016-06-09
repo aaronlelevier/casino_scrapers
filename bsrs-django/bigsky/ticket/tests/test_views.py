@@ -96,8 +96,8 @@ class TicketListTests(TicketSetupMixin, APITestCase):
         self.assertEqual(assignee['first_name'], self.ticket.assignee.first_name)
         self.assertEqual(assignee['middle_initial'], self.ticket.assignee.middle_initial)
         self.assertEqual(assignee['last_name'], self.ticket.assignee.last_name)
-        self.assertEqual(assignee['status'], str(self.ticket.assignee.status.id))
-        self.assertEqual(assignee['role'], str(self.ticket.assignee.role.id))
+        self.assertNotIn('status', assignee)
+        self.assertNotIn('role', assignee)
 
     # Ticket specific "filter" tests
 

@@ -114,6 +114,13 @@ class PersonTicketSerializer(serializers.ModelSerializer):
         fields = ('id', 'first_name', 'middle_initial', 'last_name', 'status', 'role')
 
 
+class PersonTicketListSerializer(serializers.ModelSerializer):
+    # Role and Status is not needed in Ticket Grid
+    class Meta:
+        model = Person
+        fields = ('id', 'first_name', 'middle_initial', 'last_name')
+
+
 class PersonDetailSerializer(NestedSettingsToRepresentationMixin, serializers.ModelSerializer):
 
     locations = LocationStatusFKSerializer(many=True)
