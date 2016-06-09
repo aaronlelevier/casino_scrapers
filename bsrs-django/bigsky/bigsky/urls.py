@@ -12,6 +12,7 @@ from rest_framework import routers
 from rest_framework.routers import Route, SimpleRouter, DynamicListRoute
 
 from accounting import views as accounting_views
+from assignment import views as assignment_views
 from bigsky import views as bigsky_views
 from bigsky.forms import BsAuthenticationForm
 from category import views as category_views
@@ -33,6 +34,8 @@ router = routers.DefaultRouter()
 
 # ACCOUNTING
 router.register(r'admin/currencies', accounting_views.CurrencyViewSet)
+# ASSIGNMENT
+router.register(r'profiles/assignment', assignment_views.ProfileViewSet)
 # DECISION TREE
 router.register(r'dtds', dtd_views.TreeDataViewSet)
 # CATEGORY
