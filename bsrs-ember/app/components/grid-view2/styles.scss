@@ -142,12 +142,12 @@ div.rowTable {
   border-radius: 15px;
 }
 .filtersets{
-  clear: both;
+  // clear: both;
   ul,hbox {
     overflow: auto;
     margin: 0;
     padding: 0;
-    li,div {
+    li, div {
       list-style: none;
       float: left;
       margin: 0 5px 5px 0;
@@ -206,28 +206,33 @@ header.mobile {
       margin: 0 0 0 5px;
     }
   }
-  .filtersets {//mobile styles
+  .filtersets { // mobile styles
     border-top: $borderStyle;
     background: $white;
     hbox {
       overflow: auto;
       flex-wrap: nowrap;
       div {
-        margin: 5px 0 5px 5px;
-        white-space: nowrap;
+        margin: 5px 0px 5px 5px;
+        &:first-child {
+          margin-left: 5px;
+        }
+        &:last-child {
+          padding-right: 5px;
+        }
         a {
           font-size: 1.4rem;
           height: 3rem;
           line-height: 2.8rem;
           padding: 0 .7em;
-          i {
+          i{
             line-height: inherit;
             float: right;
           }
         }
       }
     }
-  }//filtersets
+  } // filtersets
   th {
     display: block;
     padding: 0.8rem;
