@@ -87,8 +87,9 @@
 */
 .person-current-mobile {
   height: 90px;
-  background: $dark;
+  background: $darkGray;
   color: $medGray;
+  border-top: 3px solid $dark;
   .person-meta {
     align-self: center;
     padding: $mobileNavItemPadding;
@@ -106,6 +107,6 @@
     font-size: 3.3rem;
     text-align: center;
     line-height: 90px;
-    border-left: 1px solid $darkGray;
+    border-left: 1px solid $dark;
   }
 }

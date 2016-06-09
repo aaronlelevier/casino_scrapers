@@ -143,11 +143,11 @@ div.rowTable {
 }
 .filtersets{
   clear: both;
-  ul{
+  ul,hbox{
     overflow: auto;
     margin: 0;
     padding: 0;
-    li{
+    li,div{
       list-style: none;
       float: left;
       margin: 0 5px 5px 0;
@@ -180,11 +180,15 @@ div.rowTable {
   }
 }
 
+/*
+* Mobile
+*/
 header.mobile {
-  padding: 0 15px;
   border: $borderStyle;
   border-width: 0 0 1px;
+  //TODO: Flex it
   h1.grid-title {
+    padding: 0 15px;
     height: $mobileDocHeaderHeight;
     line-height: $mobileDocHeaderHeight;
     font-size: 2rem;
@@ -197,6 +201,7 @@ header.mobile {
     }
   }
   div.grid-options {
+    padding: 0 15px;
     margin: 14px 0 0;
     button {
       color: $medGray;
@@ -207,14 +212,18 @@ header.mobile {
     }
   }
   .filtersets {//mobile styles
-    ul{
+    border-top: $borderStyle;
+    background: $white;
+    hbox{
       overflow: auto;
-      margin: 0 0 .7em;
       padding: 0;
-      li{
+      padding-bottom: 6px;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      div{
         list-style: none;
-        float: none;
-        margin: 5px 0;
+        margin: 5px;
+        white-space: nowrap;
         a {
           font-size: 1.4rem;
           height: 3rem;

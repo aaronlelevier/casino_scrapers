@@ -1,125 +1,128 @@
 /*
 * Absolute positioning to set at top of section.wrap
 * keeps scrollbar within article.main and keep nav/side-bar/admin-panel fixed to screen
+* .bs-desktop class is a wrapper for the desktop view and ensures absolute positioning on article.main
 */
-article.main {
-  position: absolute;
-  left: $documentLeft;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  overflow: hidden;
-  //if no side panel
-  &.full{
-    left: 0;
-  }
-  header,
-  footer{
-    height: $documentHeaderHeight;
-    line-height: $documentHeaderHeight;
-    background: $lightGray;
-    padding: 0 10px;
-    border: $borderStyle;
-    border-width: 0 0 1px 0;
-    position: relative;
-    z-index: 3;
-    h1{
-      vertical-align: baseline;
-      font-size: 1.6em;
-      font-weight: normal;
-      display: inline-block;
-      margin: 0;
-      height: $documentHeaderHeight;
-      line-height: $documentHeaderHeight;
-    }//h1
-    .reset-grid{
-      display: inline-block;
-      height: $documentHeaderHeight;
-      line-height: $documentHeaderHeight;
-      vertical-align: baseline;
-      font-size: 0.9em;
-      text-decoration: underline;
-      cursor: pointer;
-      margin: 0 0 0 10px;
-      color: $darkGray;
-    }
-    .btn-group{
-      z-index: 2;
-      margin: 5px 0 0;
-    }
-    .search-wrap{
-      margin: 5px 0 0;
-    }
-  }//header
-
-  section.docSection {
+.bs-desktop {
+  article.main {
     position: absolute;
-    top: $documentHeaderHeight;
+    left: $documentLeft;
     right: 0;
     bottom: 0;
-    left: 0;
-    background: $white;
-    overflow: auto;
-    &.docSectionWithFooter{
-      margin-bottom: $documentFooterHeight;
+    top: 0;
+    overflow: hidden;
+    //if no admin side panel
+    &.full{
+      left: 0;
     }
-    section{
-      &.sub-section{
-        padding: 0 0 16px;
-      }
+    header,
+    footer{
+      height: $documentHeaderHeight;
+      line-height: $documentHeaderHeight;
+      background: $lightGray;
+      padding: 0 10px;
+      border: $borderStyle;
+      border-width: 0 0 1px 0;
+      position: relative;
+      z-index: 3;
       h1{
-        color: $dark;
-        font-size: 2.8rem;
+        vertical-align: baseline;
+        font-size: 1.6em;
+        font-weight: normal;
+        display: inline-block;
         margin: 0;
-        padding-bottom: 10px;
-        small{
-          font-size: 2.5rem;
-          color: $medGray;
-        }
-        .new{
-          color: $medGray;
-        }
+        height: $documentHeaderHeight;
+        line-height: $documentHeaderHeight;
+      }//h1
+      .reset-grid{
+        display: inline-block;
+        height: $documentHeaderHeight;
+        line-height: $documentHeaderHeight;
+        vertical-align: baseline;
+        font-size: 0.9em;
+        text-decoration: underline;
+        cursor: pointer;
+        margin: 0 0 0 10px;
+        color: $darkGray;
       }
-      h2{
-        color: $dark;
-        margin: 0;
-        font-size: 1.3em;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        text-transform: uppercase;
-      }//h2
-      h3{
-        color: $dark;
-        background: $lightGray;
-        border: $borderStyle;
-        border-width: 1px 0;
-        font-size: 1.3em;
-        padding: 16px 11px;
-        margin-top: -1px;
+      .btn-group{
+        z-index: 2;
+        margin: 5px 0 0;
       }
-    }
+      .search-wrap{
+        margin: 5px 0 0;
+      }
+    }//header
 
-    .row {
-      /* margin: 15px -7.5px; */
-      .row{
-        margin: 8px -4px;
-        &.card-title{
-          margin: 15px -15px 20px;
-          padding: 11px;
+    section.docSection {
+      position: absolute;
+      top: $documentHeaderHeight;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: $white;
+      overflow: auto;
+      &.docSectionWithFooter{
+        margin-bottom: $documentFooterHeight;
+      }
+      section{
+        &.sub-section{
+          padding: 0 0 16px;
+        }
+        h1{
+          color: $dark;
+          font-size: 2.8rem;
+          margin: 0;
+          padding-bottom: 10px;
+          small{
+            font-size: 2.5rem;
+            color: $medGray;
+          }
+          .new{
+            color: $medGray;
+          }
+        }
+        h2{
+          color: $dark;
+          margin: 0;
+          font-size: 1.3em;
+          padding-top: 10px;
+          padding-bottom: 10px;
+          text-transform: uppercase;
+        }//h2
+        h3{
+          color: $dark;
+          background: $lightGray;
           border: $borderStyle;
-          border-width: 0 0 1px 0;
+          border-width: 1px 0;
+          font-size: 1.3em;
+          padding: 16px 11px;
+          margin-top: -1px;
         }
       }
+
+      .row {
+        /* margin: 15px -7.5px; */
+        .row{
+          margin: 8px -4px;
+          &.card-title{
+            margin: 15px -15px 20px;
+            padding: 11px;
+            border: $borderStyle;
+            border-width: 0 0 1px 0;
+          }
+        }
+      }
+    }//docSection
+    footer{
+      height: $documentFooterHeight;
+      position: absolute;
+      top: auto;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border: $borderStyle;
+      border-width: 1px 0 0;
     }
-  }//docSection
-  footer{
-    height: $documentFooterHeight;
-    position: absolute;
-    top: auto;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    border: $borderStyle;
-    border-width: 1px 0 0;
-  }
-}//article.main
+  }//article.main
+}
