@@ -2,7 +2,7 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 
 var FilterSetNavigation = Ember.Component.extend({
-  tagName: 'ul',
+  tagName: 'hbox',
   repository: inject('filterset'),
   saved: Ember.computed('filtersets', 'filtersets.[]', function() {
     let route = this.get('route');

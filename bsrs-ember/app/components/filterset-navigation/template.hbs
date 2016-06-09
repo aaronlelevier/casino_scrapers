@@ -1,3 +1,3 @@
 {{#each saved as |filterset|}}
-<li>{{#link-to filterset.endpoint_name (filterset-params filterset)}}{{filterset.name}}<i class="fa fa-minus-circle t-remove-filterset" aria-hidden="true" {{action "removeFilterSet" filterset.id}}></i>{{/link-to}}</li>
+<div class="flex-item--none">{{#link-to filterset.endpoint_name (filterset-params filterset)}}{{filterset.name}}<i class="fa fa-minus-circle t-remove-filterset" aria-hidden="true" {{action "removeFilterSet" filterset.id}}></i>{{/link-to}}</div>
 {{/each}}

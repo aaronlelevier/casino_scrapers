@@ -5,11 +5,10 @@
 </div>
 <h1 class="grid-title t-mobile-grid-title" {{action "toggleMobileFilterset"}}>{{grid_title}}<span class="show-filtersets">{{fa-icon "arrow-circle-down"}}</span></h1>
 
-{{#if mobileFilterset}}
-  <div class="filtersets t-filterset-wrap">
-    {{filterset-navigation filtersets=filtersets route=routeName}}
-  </div>
-{{else if mobileSortFilter}}
+<div class="filtersets t-filterset-wrap">
+  {{filterset-navigation filtersets=filtersets route=routeName}}
+</div>
+{{#if mobileSortFilter}}
   {{#each columns as |column|}}
     {{grid/helpers/grid-header-column column=column sort=sort find=find toggleFilterModal=(action "toggleFilterModal") sortBy=(action "sortBy")}}
   {{/each}}
