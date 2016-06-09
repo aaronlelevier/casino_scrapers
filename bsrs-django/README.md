@@ -40,6 +40,15 @@ source ~/.virtualenvs/bs/bin/activate
 deactivate
 ```
 
+#### Start new app
+
+
+This will create the boiler plate app for DRF with a separate test directory.
+
+```
+./manage.py startappdrf <app_name>
+```
+
 #### Python 3
 
 [Download Python 3.4.3](https://www.python.org/downloads/release/python-343/)
