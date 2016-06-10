@@ -191,6 +191,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
           'admin.person.label.first_name':'First Name',
           'admin.person.label.fullname':'Name',
           'admin.person.label.general':'General',
+          'admin.person.label.settings':'Settings',
           'admin.person.label.language':'Language',
           'admin.person.label.last_name':'Last Name',
           'admin.person.label.location':'Location',

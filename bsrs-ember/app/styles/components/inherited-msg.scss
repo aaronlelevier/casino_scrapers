@@ -1,7 +1,16 @@
 .inherited-msg{
-  font-size: 0.9em;
-  color: $medGray;
+  font-size: 1.1rem;
   margin: 0 0 5px 0;
   float: right;
   font-style: italic;
+}
+.inherited-msg--under{
+  font-size: 1.1rem;
+  margin: 0 0 5px 0;
+  font-style: italic;
+}
+.checkbox{
+  .inherited-msg--under{
+    margin: 0 0 5px 30px;
+  }
 }

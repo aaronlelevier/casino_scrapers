@@ -4,5 +4,9 @@
 		font-weight: normal;
 		font-size: 0.9em;
 		color: $darkGray;
+		@include truncate;
+	}
+	.checkbox{
+	
 	}
 }

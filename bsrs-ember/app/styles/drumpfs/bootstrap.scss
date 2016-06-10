@@ -1,3 +1,10 @@
 .input-group-addon {
   color: $dark !important;
 }
+.input-group{
+  .input-group-btn:last-child{
+    .ember-power-select{
+      margin-left: -1px;
+    }
+  }
+}
