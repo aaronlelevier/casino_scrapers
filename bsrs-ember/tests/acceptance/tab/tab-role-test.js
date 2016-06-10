@@ -11,6 +11,8 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import CF from 'bsrs-ember/vendor/category_fixtures';
+import SD from 'bsrs-ember/vendor/defaults/setting';
+import SF from 'bsrs-ember/vendor/setting_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
 
@@ -40,6 +42,10 @@ module('Acceptance | tab role test', {
         run(function() {
             store.push('role', {id: RD.idGridOne, name: 'wat', categories: [CF.detail()]});
         });
+        // Settings
+        let setting_endpoint = `${PREFIX}${BASEURLS.base_setting_url}/${SD.id}/`;
+        let setting_data = SF.detail();
+        xhr(setting_endpoint, 'GET', null, {}, 200, setting_data);
     },
     afterEach() {
         random.uuid = original_uuid;

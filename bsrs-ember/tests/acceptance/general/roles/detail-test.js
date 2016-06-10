@@ -37,7 +37,7 @@ const SPACEBAR = {keyCode: 32};
 const CATEGORY = '.t-role-category-select > .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-select-options';
 
-let application, store, list_xhr, detail_xhr, endpoint, detail_data, url, translations, run = Ember.run;
+let application, store, list_xhr, detail_xhr, setting_detail_xhr, endpoint, detail_data, url, translations, run = Ember.run;
 
 module('Acceptance | role-detail', {
   beforeEach() {
@@ -53,6 +53,10 @@ module('Acceptance | role-detail', {
       store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});
     });
     translations = BSRS_TRANSLATION_FACTORY.generate('en')['en'];
+    // Settings
+    let setting_endpoint = `${PREFIX}${BASEURLS.base_setting_url}/${SD.id}/`;
+    let setting_data = SF.detail();
+    setting_detail_xhr = xhr(setting_endpoint, 'GET', null, {}, 200, setting_data);
   },
   afterEach() {
     Ember.run(application, 'destroy');
@@ -408,6 +412,7 @@ test('settings - UI is populated for inherited correctly - inherited value from 
 });
 
 test('settings - override value from parent, can click link-to to get to inherited setting', (assert) => {
+  clearxhr(setting_detail_xhr);
   clearxhr(list_xhr);
   visit(DETAIL_URL);
   andThen(() => {
@@ -425,6 +430,7 @@ test('settings - override value from parent, can click link-to to get to inherit
 // Role Settings: end
 
 test('deep linking with an xhr with a 404 status code will show up in the error component (role)', (assert) => {
+  clearxhr(setting_detail_xhr);
   clearxhr(detail_xhr);
   clearxhr(list_xhr);
   const exception = `This record does not exist.`;

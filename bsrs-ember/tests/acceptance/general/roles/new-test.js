@@ -12,6 +12,7 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import SD from 'bsrs-ember/vendor/defaults/setting';
+import SF from 'bsrs-ember/vendor/setting_fixtures';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
@@ -54,6 +55,10 @@ module('Acceptance | role new', {
     run(function() {
       store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
     });
+    // Settings
+    let setting_endpoint = `${PREFIX}${BASEURLS.base_setting_url}/${SD.id}/`;
+    let setting_data = SF.detail();
+    xhr(setting_endpoint, 'GET', null, {}, 200, setting_data);
   },
   afterEach() {
     counter=0;

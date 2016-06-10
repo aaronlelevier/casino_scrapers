@@ -9,6 +9,7 @@ import config from 'bsrs-ember/config/environment';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import StgD from 'bsrs-ember/vendor/defaults/setting';
+import StgF from 'bsrs-ember/vendor/setting_fixtures';
 import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import RD from 'bsrs-ember/vendor/defaults/role';
@@ -52,7 +53,7 @@ const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-options > .ember-p
 const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-var application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid, url, translations, run = Ember.run;
+var application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid, url, translations, setting_endpoint, setting_data, run = Ember.run;
 
 module('Acceptance | person detail test', {
   beforeEach() {
@@ -66,6 +67,8 @@ module('Acceptance | person detail test', {
     original_uuid = random.uuid;
     url = `${PREFIX}${DETAIL_URL}/`;
     translations = BSRS_TRANSLATION_FACTORY.generate('en')['en'];
+    setting_endpoint = `${PREFIX}${BASEURLS.base_setting_url}/${StgD.id}/`;
+    setting_data = StgF.detail();
   },
   afterEach() {
     random.uuid = original_uuid;
@@ -268,6 +271,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 test('currency helper displays inherited auth_amount, and can click link-to to go to roles inherited value', (assert) => {
+  xhr(setting_endpoint, 'GET', null, {}, 200, setting_data);
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
@@ -1381,6 +1385,7 @@ test('update all settings', assert => {
 });
 
 test('link-to for accept_assign setting, and link routes to person.role', assert => {
+  xhr(setting_endpoint, 'GET', null, {}, 200, setting_data);
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
@@ -1394,6 +1399,7 @@ test('link-to for accept_assign setting, and link routes to person.role', assert
 });
 
 test('link-to for accept_notify setting, and link routes to person.role', assert => {
+  xhr(setting_endpoint, 'GET', null, {}, 200, setting_data);
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
