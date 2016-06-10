@@ -187,13 +187,8 @@ test('when you deep link to the person detail view you get bound attrs', (assert
 });
 
 test('when changing password to invalid, it checks for validation', (assert) => {
-  visit(DETAIL_URL);
-  click('.t-person-change-password');
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-password-validation-error').text().trim(), GLOBALMSG.invalid_password);
-  });
+  page.visitDetail();
+  page.clickChangePassword();
   fillIn('.t-person-password', PD.password);
   let url = PREFIX + DETAIL_URL + '/';
   let response = PF.detail(PD.idOne);
@@ -1346,8 +1341,12 @@ test('settings values, placeholers, and inherited froms', assert => {
     assert.equal(page.acceptNotifyChecked(), PD.settings.accept_notify.inherited_value);
     assert.equal(page.acceptNotifyInheritedFromLabelText, 'Inherited from: ' + StgD.inherits_from_role);
     // not inherited
-    assert.equal(page.passwordOneTimeLabelText, translations['admin.setting.password_one_time']);
-    assert.equal(page.passwordOneTimeChecked(), PD.settings.password_one_time.value);
+
+    page.clickChangePassword();
+    andThen(() => {
+      assert.equal(page.passwordOneTimeLabelText, translations['admin.setting.password_one_time']);
+      assert.equal(page.passwordOneTimeChecked(), PD.settings.password_one_time.value);
+    });
   });
 });
 
@@ -1357,8 +1356,12 @@ test('update all settings', assert => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(page.acceptAssignChecked(), PD.settings.accept_assign.inherited_value);
     assert.equal(page.acceptNotifyChecked(), PD.settings.accept_notify.inherited_value);
-    assert.equal(page.passwordOneTimeChecked(), PD.settings.password_one_time.value);
+    page.clickChangePassword();
+    andThen(() => {
+      assert.equal(page.passwordOneTimeChecked(), PD.settings.password_one_time.value);
+    });
   });
+
   page.acceptAssignClick();
   page.acceptNotifyClick();
   page.passwordOneTimeClick();

@@ -91,6 +91,7 @@ export default PageObject.create({
   authAmountPlaceholder: () => Ember.$('.t-amount').get(0)['placeholder'],
   authAmountValue: value('.t-amount'),
 
+  clickChangePassword: clickable('.t-person-change-password'),
   passwordOneTimeChecked: () => Ember.$('.t-person-password_one_time').is(':checked'),
   passwordOneTimeClick: clickable('.t-person-password_one_time-label'),
   passwordOneTimeLabelText: text('.t-person-password_one_time-label'),

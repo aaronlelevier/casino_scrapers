@@ -7,10 +7,9 @@ import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 import RelaxedMixin from 'bsrs-ember/mixins/validation/relaxed';
 
 function validatePassword() {
-  if (this.changingPassword && this.get('model.password').length > 0) {
+  if (this.changingPassword && (this.get('model.password').length > 0 || this.get('model.password') === '')) {
     return true;
-  }
-  else if (!this.changingPassword) {
+  } else if (!this.changingPassword) {
     return true;
   }
 }
