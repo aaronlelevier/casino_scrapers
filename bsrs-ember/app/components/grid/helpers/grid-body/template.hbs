@@ -28,7 +28,7 @@
         <tr class="head">
           <th class="selector"></th>
           {{#each columns as |column|}}
-          {{grid/helpers/grid-header-column column=column sort=sort find=find toggleFilterModal=(action "toggleFilterModal") sortBy=(action "sortBy")}}
+          {{grid/helpers/grid-header-column tagName="th" column=column sort=sort find=find toggleFilterModal=(action "toggleFilterModal") sortBy=(action "sortBy")}}
           {{/each}}
         </tr>
       </thead>
@@ -49,4 +49,3 @@
     </table>
   </div>
 </section>
-

@@ -8,8 +8,22 @@
 <div class="filtersets t-filterset-wrap">
   {{filterset-navigation filtersets=filtersets route=routeName}}
 </div>
+
 {{#if mobileSortFilter}}
-  {{#each columns as |column|}}
-    {{grid/helpers/grid-header-column column=column sort=sort find=find toggleFilterModal=(action "toggleFilterModal") sortBy=(action "sortBy")}}
-  {{/each}}
+{{#ember-wormhole to="mobile-grid-filter-wormhole"}}
+<div class="filters animated slideInUp t-mobile-filters">
+  <header class="mobile-header flex-item--none">
+    <hbox class="filters__head">
+      <button class="filters__head__btn mobile-btn t-mobile-filter-first-btn" {{action "toggleMobileSortFilter"}}>{{t "crud.cancel.button"}}</button>
+      <h1 class="filters__head__title t-mobile-filter-title">{{t "grid.filter" count=2}}</h1>
+      <button class="filters__head__btn filters__head__btn--action mobile-btn t-mobile-filter-second-btn">{{t "grid.filter"}}</button>
+    </hbox>
+  </header>
+  <section class="mobile-main flex-item--auto">
+    {{#each columns as |column|}}
+      {{grid/helpers/grid-header-column tagName="div" column=column sort=sort find=find toggleFilterModal=(action "toggleFilterModal") sortBy=(action "sortBy")}}
+    {{/each}}
+  </section>
+</div>
+{{/ember-wormhole}}
 {{/if}}

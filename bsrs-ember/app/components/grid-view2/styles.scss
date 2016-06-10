@@ -183,9 +183,10 @@ div.rowTable {
 /*
 * Mobile
 */
-header.mobile {
+header.mobile-grid-head {
   border: $borderStyle;
   border-width: 0 0 1px;
+  z-index: 40;
   //TODO: Flex it
   h1.grid-title {
     padding: 0 15px;
@@ -206,6 +207,8 @@ header.mobile {
       margin: 0 0 0 5px;
     }
   }
+
+  /* wraps filterset-navigation component */
   .filtersets { // mobile styles
     border-top: $borderStyle;
     background: $white;
@@ -233,43 +236,4 @@ header.mobile {
       }
     }
   } // filtersets
-  th {
-    display: block;
-    padding: 0.8rem;
-    font-size: 1.5rem;
-    border: $borderStyle;
-    border-radius: $borderRadius;
-    clear: both;
-    &:after {
-      content: " ";
-      display: block;
-      height: 0;
-      clear: both;
-    }
-    hbox {
-      width: 33.3%;
-      float: left;
-      span.mobile-filter {
-        font-size: 1.5rem;
-        padding: 0 1rem;
-      }
-      span.mobile-sort {
-        font-size: 1.5rem;
-        padding: 0 1rem;
-      }
-      &:nth-child(2) {
-        span {
-          display: block;
-          margin: 0 auto;
-        }
-      }
-      &:last-child {
-        justify-content: flex-end;
-      }
-    }
-    // display: flex;
-    // flex-direction: row;
-    // flex-wrap: nowrap;
-    // justify-content: space-between;
-  }
-}
+} // header.mobile-grid-head

@@ -1,0 +1,26 @@
+/*
+* Flexbox w/ absolute postioning on flex container
+* flex container :: vbox.mobile-wrap
+*/
+vbox.mobile-wrap { //wraps header/section/footer
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+/* DO NOT NEST since this class declaration is used in nav-bar and in outer wormhole */
+header.mobile-header {
+  overflow: hidden;
+  height: $mobileHeaderHeight;
+  position: relative;
+  @include nav-box-shadow;
+  @include headerColors;
+}
+
+/* DO NOT NEST since this class declaration is used in nav-bar and in outer wormhole */
+section.mobile-main {
+  -webkit-overflow-scrolling: touch; // DO NOT REMOVE
+  overflow: auto;
+}

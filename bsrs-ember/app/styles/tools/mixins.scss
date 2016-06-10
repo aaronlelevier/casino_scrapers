@@ -25,3 +25,11 @@
   -moz-box-shadow: 0 0 $blurRadius $dark;
   box-shadow: 0 0 $blurRadius $dark;
 }
+
+/*
+* Used for general desktop and mobile
+*/
+@mixin headerColors() {
+  background: $menuColor;
+  color: $light;
+}

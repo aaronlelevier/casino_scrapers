@@ -318,6 +318,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
           'errors.ticket.assignee':'Assignee must be provided',
           'errors.ticket.request':'Request must be provided',
           'general.new':'New',
+          'grid.filter.other':'Filters',
           'grid.filter':'Filter',
           'grid.filterset_name':'Name your filter',
           'grid.per_page':'{{size}} per page',

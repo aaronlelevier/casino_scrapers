@@ -1,6 +1,7 @@
+// 0 1 auto
 .flex-item--none {
   flex: 0 0 auto;
 }
-.flex-item--auto {
+.flex-item--auto { //1 1 auto
   flex: auto;
 }

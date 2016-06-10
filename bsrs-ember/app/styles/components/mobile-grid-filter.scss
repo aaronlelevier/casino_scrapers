@@ -1,0 +1,35 @@
+.filters { // fixed positioning filters for the grid that comes up from the bottom
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 40;
+  background: $light;
+  hbox.filters__head {
+    align-items: center;
+    height: $mobileHeaderHeight;
+  }
+  button.filters__head__btn {
+    margin: 3%;
+  }
+  button.filters__head__btn--action {
+    background: $activeColor;
+  }
+  h1.filters__head__title {
+    flex-grow: 1;
+    font-size: 2.2rem;
+    font-weight: normal;
+    margin: 0;
+    text-align: center;
+  }
+}
+
+.mobile-btn {
+  border: none;
+  background: $dark;
+  padding: 0.5em 0.8em;
+  border-radius: $borderRadius;
+}

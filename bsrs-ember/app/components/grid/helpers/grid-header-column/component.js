@@ -2,7 +2,6 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   i18n: Ember.inject.service(),
-  tagName: 'th',
   classNameBindings: ['className'],
   className: Ember.computed(function() {
     let classNames = this.get('column.classNames') || [];
