@@ -14,8 +14,8 @@ let CurrencyService = Ember.Service.extend({
         let store = this.get('simpleStore');
         return store.find('currency');
     },
-    format_currency(val, attr, currency) {
-        return val ? parseFloat(val).toFixed(4) : '';
+    format_currency(val, precision) {
+        return val ? parseFloat(val).toFixed(precision) : '';
     }
 });
 

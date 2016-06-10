@@ -53,8 +53,8 @@ test('renders a component with 0.00 when the field returns a truly zero value', 
   run(function() {
     model = store.push('person', {
       id: PD.id,
-      auth_amount: 0,
-      auth_currency: CD.idEuro,
+      auth_amount: CD.authAmountOne,
+      auth_currency: CD.id,
       settings_object: PD.settings
     });
   });
@@ -65,7 +65,8 @@ test('renders a component with 0.00 when the field returns a truly zero value', 
   $component.find('.t-amount').trigger('blur');
   assert.equal($component.find('.t-currency-symbol').text().trim(), CD.symbol_native);
   assert.equal($component.find('.t-currency-code').text().trim(), CD.code);
-  assert.equal($component.find('.t-amount').val(), '0.0000');
+  // shows precision is adjusted based upon Currency record
+  assert.equal($component.find('.t-amount').val(), parseFloat(CD.authAmountOne).toFixed(CD.decimal_digits));
 });
 
 test('if the person does not have a currency, use their inherited currency from the Role (in their settings obj)', function(assert) {

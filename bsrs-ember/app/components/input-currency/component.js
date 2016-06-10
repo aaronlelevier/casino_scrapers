@@ -28,7 +28,9 @@ export default Ember.Component.extend({
     format_currency() {
       let field = this.get('field');
       let currency_service = this.get('currency');
-      this.set('model.' + field, currency_service.format_currency(this.get('bound_field'), 'decimal_digits', 'USD'));
+      let store = this.get('simpleStore');
+      let precision = this.get('model.auth_currency') ? store.find('currency', this.get('model.auth_currency')).get('decimal_digits') : 4;
+      this.set('model.' + field, currency_service.format_currency(this.get('bound_field'), precision));
     },
     selected(obj) {
       let model = this.get('model');
