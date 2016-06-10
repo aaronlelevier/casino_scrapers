@@ -7,6 +7,7 @@ import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
+import SD from 'bsrs-ember/vendor/defaults/setting';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import page from 'bsrs-ember/tests/pages/dtd';
@@ -14,7 +15,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import { dtd_payload, dtd_payload_update_priority, dtd_payload_no_priority, dtd_payload_two } from 'bsrs-ember/tests/helpers/payloads/dtd';
 
-const ADMIN_URL = BASEURLS.dashboard_url;
+const DASHBOARD_URL = BASEURLS.dashboard_url;
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_dtd_url;
@@ -49,14 +50,15 @@ test('visiting /dtds', (assert) => {
 });
 
 test('admin to dtds list to detail && preview', (assert) => {
+  xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: SD.dashboard_text}});
   xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   generalPage.visitDashboard();
   andThen(() => {
-    assert.equal(currentURL(), ADMIN_URL);
+    assert.equal(currentURL(), DASHBOARD_URL);
   });
   generalPage
-  .clickAdmin()
-  .clickDTD();
+    .clickAdmin()
+    .clickDTD();
   andThen(() => {
     assert.equal(find('.t-grid-search-input').attr('placeholder'), t('admin.dtd.search'));
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
@@ -117,10 +119,11 @@ test('search grid', (assert) => {
 });
 
 test('detail && preview are bound and can save', (assert) => {
+  xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: SD.dashboard_text}});
   xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   generalPage.visitDashboard();
   andThen(() => {
-    assert.equal(currentURL(), ADMIN_URL);
+    assert.equal(currentURL(), DASHBOARD_URL);
   });
   generalPage
   .clickAdmin()

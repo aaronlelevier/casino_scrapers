@@ -25,6 +25,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 const HOME_URL = '/';
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
+const DASHBOARD_URL = BASEURLS.dashboard_url;
 
 var application, store, run = Ember.run;
 
@@ -32,6 +33,7 @@ module('Acceptance | bootup test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
+    xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: SD.dashboard_text}});
     xhr(`${PREFIX}${BASE_URL}/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   },
   afterEach() {

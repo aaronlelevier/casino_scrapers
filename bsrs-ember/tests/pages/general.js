@@ -2,7 +2,7 @@ import PageObject from 'bsrs-ember/tests/page-object';
 let { visitable, clickable, text, hasClass } = PageObject;
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
-const ADMIN_URL = BASEURLS.dashboard_url;
+const DASHBOARD_URL = BASEURLS.dashboard_url;
 
 var GeneralPage = PageObject.create({
   save: clickable('.t-save-btn'),
@@ -15,7 +15,7 @@ var GeneralPage = PageObject.create({
   clickModalCancelDelete: clickable('.t-modal-footer .t-modal-cancel-btn'),
   modalIsVisible: PageObject.isVisible('.ember-modal-dialog'),
   modalIsHidden: PageObject.isHidden('.t-modal'),
-  visitDashboard: visitable(ADMIN_URL),
+  visitDashboard: visitable(DASHBOARD_URL),
   clickAdmin: clickable('.t-nav-admin'),
   clickDTD: clickable('.t-nav-admin-dtd'),
   errorText: text('.t-error-message'),
