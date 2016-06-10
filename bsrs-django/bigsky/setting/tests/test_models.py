@@ -2,6 +2,7 @@ from django.test import TestCase
 
 from person.tests.factory import create_single_person
 from setting import models as setting_models
+from setting.settings import GENERAL_SETTINGS
 from setting.tests.factory import (create_general_setting,
     create_role_setting, create_person_setting)
 
@@ -78,3 +79,11 @@ class SettingModelTests(TestCase):
         self.assertEqual(len(ret['general']), 2)
         self.assertEqual(ret['general'][0], str(self.setting.id))
         self.assertEqual(ret['general'][1], self.setting.settings)
+
+    def test_nonverbose_combined_settings(self):
+        ret = self.setting.nonverbose_combined_settings()
+
+        self.assertEqual(sorted(ret.keys()), sorted(self.setting.combined_settings().keys()))
+
+        for k,v in GENERAL_SETTINGS.items():
+            self.assertEqual(ret[k], GENERAL_SETTINGS[k]['value'])

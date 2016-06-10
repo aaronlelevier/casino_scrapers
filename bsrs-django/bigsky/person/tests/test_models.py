@@ -17,6 +17,7 @@ from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_role, create_single_person
+from setting.settings import ROLE_SETTINGS, PERSON_SETTINGS
 from setting.tests.factory import (create_general_setting,
     create_role_setting, create_person_setting)
 from translation.models import Locale
@@ -60,6 +61,17 @@ class RoleTests(TestCase):
         self.role.categories.remove(category)  
         self.role.save()
         self.assertEqual(self.role.categories.count(), 0)
+
+    def test_nonverbose_combined_settings(self):
+        ret = self.role.nonverbose_combined_settings()
+
+        self.assertEqual(sorted(ret.keys()), sorted(self.role.combined_settings().keys()))
+
+        for k,v in self.role.combined_settings().items():
+            if 'value' in v and v is not None:
+                self.assertEqual(ret[k], v['value'])
+            else:
+                self.assertEqual(ret[k], v['inherited_value'])
 
 
 class RolePasswordTests(TestCase):
@@ -394,6 +406,17 @@ class PersonTests(TestCase):
         # remove
         person.locations.remove(top_location)
         self.assertFalse(person.has_top_level_location)
+
+    def test_nonverbose_combined_settings(self):
+        ret = self.person.nonverbose_combined_settings()
+
+        self.assertEqual(sorted(ret.keys()), sorted(self.person.combined_settings().keys()))
+
+        for k,v in self.person.combined_settings().items():
+            if 'value' in v and v is not None:
+                self.assertEqual(ret[k], v['value'])
+            else:
+                self.assertEqual(ret[k], v['inherited_value'])
 
 
 ### PASSWORD

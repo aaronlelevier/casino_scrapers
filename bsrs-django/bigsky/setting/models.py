@@ -4,6 +4,7 @@ from django.contrib.auth.models import ContentType
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
+from setting.mixins import SettingMixin
 from utils.models import BaseModel, ToDictNameMixin
 
 
@@ -12,7 +13,7 @@ SETTING_TITLE_PERSON = 'admin.setting.name.person'
 SETTING_TITLE_ROLE = 'admin.setting.name.role'
 
 
-class Setting(ToDictNameMixin, BaseModel):
+class Setting(ToDictNameMixin, SettingMixin, BaseModel):
     '''
     ``Setting`` records will be either Standard or Custom. and be set
     at levels. ex - General > Role > Person.
@@ -31,6 +32,10 @@ class Setting(ToDictNameMixin, BaseModel):
 
     def combined_settings(self):
         """
+        This should always be called on the person `instance`, role `instance`,
+        etc... because may have inherited field values. Not called on the
+        related settings model instance.
+
         Returns it's settings plus all inherited settings.
         """
         self.inherits_from_map = self.get_inherits_from_map()

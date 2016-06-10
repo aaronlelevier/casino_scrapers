@@ -22,6 +22,7 @@ from category.models import Category
 from contact.models import PhoneNumber, Address, Email
 from location.models import LocationLevel, Location, LOCATION_COMPANY
 from person import config, helpers
+from setting.mixins import SettingMixin
 from setting.models import Setting
 from translation.models import Locale
 from utils.fields import InheritedValueField
@@ -31,7 +32,7 @@ from utils.validators import (contains_digit, contains_upper_char, contains_lowe
 from work_order.models import WorkOrderStatus
 
 
-class Role(BaseModel):
+class Role(SettingMixin, BaseModel):
     # keys
     group = models.OneToOneField(Group, blank=True, null=True)
     location_level = models.ForeignKey(LocationLevel, null=True, blank=True)
@@ -271,7 +272,7 @@ class PersonManager(UserManager):
         return self.get_queryset().search_multi(keyword)
 
 
-class Person(BaseModel, AbstractUser):
+class Person(SettingMixin, BaseModel, AbstractUser):
     '''
     :pw: password
     :ooto: out-of-the-office
