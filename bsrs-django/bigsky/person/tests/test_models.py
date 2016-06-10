@@ -68,7 +68,7 @@ class RoleTests(TestCase):
         self.assertEqual(sorted(ret.keys()), sorted(self.role.combined_settings().keys()))
 
         for k,v in self.role.combined_settings().items():
-            if 'value' in v and v is not None:
+            if 'value' in v and v['value'] is not None:
                 self.assertEqual(ret[k], v['value'])
             else:
                 self.assertEqual(ret[k], v['inherited_value'])
@@ -413,7 +413,7 @@ class PersonTests(TestCase):
         self.assertEqual(sorted(ret.keys()), sorted(self.person.combined_settings().keys()))
 
         for k,v in self.person.combined_settings().items():
-            if 'value' in v and v is not None:
+            if 'value' in v and v['value'] is not None:
                 self.assertEqual(ret[k], v['value'])
             else:
                 self.assertEqual(ret[k], v['inherited_value'])

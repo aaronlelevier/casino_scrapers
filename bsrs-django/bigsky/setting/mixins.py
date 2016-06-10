@@ -14,9 +14,9 @@ class SettingMixin(object):
         """
         d = {}
         for k,v in self.combined_settings().items():
-            print(k, v)
-            if 'value' in v and v is not None:
+            if 'value' in v and v['value'] is not None:
                 d[k] = v['value']
             else:
                 d[k] = v['inherited_value']
+
         return d

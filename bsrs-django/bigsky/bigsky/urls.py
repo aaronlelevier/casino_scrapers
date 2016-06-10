@@ -14,6 +14,7 @@ from rest_framework.routers import Route, SimpleRouter, DynamicListRoute
 from accounting import views as accounting_views
 from assignment import views as assignment_views
 from bigsky import views as bigsky_views
+from bigsky import views_api as bigsky_views_api
 from bigsky.forms import BsAuthenticationForm
 from category import views as category_views
 from contact import views as contact_views
@@ -114,6 +115,8 @@ urlpatterns = [
     url(r'^api/', include(ticket_activity_router.urls)),
     url(r'^api/', include(dt_ticket_router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    # APIViews (not ViewSets)
+    url(r'^api/dashboard/$', bigsky_views_api.DashboardView.as_view()),
 ]
 
 # No Requirement
