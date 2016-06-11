@@ -24,6 +24,7 @@ from person.tests.factory import (PASSWORD, create_single_person, create_role, c
 from person.tests.mixins import RoleSetupMixin
 from setting.models import Setting
 from setting.serializers import SettingSerializer
+from setting.settings import GENERAL_SETTINGS
 from setting.tests.factory import create_role_setting, create_person_setting
 from translation.models import Locale
 from translation.tests.factory import create_locales
@@ -223,6 +224,19 @@ class RoleSettingTests(RoleSetupMixin, APITestCase):
         self.assertIsNone(data['settings']['dashboard_text']['value'])
         self.assertEqual(data['settings']['dashboard_text']['inherited_value'], raw_data['settings']['dashboard_text'])
         self.assertEqual(data['settings']['dashboard_text']['inherits_from'], 'general')
+
+
+class RoleRouteDataTests(RoleSetupMixin, APITestCase):
+
+    def test_settings_data(self):
+        response = self.client.get('/api/admin/roles/route-data/new/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 1)
+        self.assertEqual(
+            data['settings'],
+            {'dashboard_text': GENERAL_SETTINGS['dashboard_text']['value']}
+        )
 
 
 ### PERSON ###

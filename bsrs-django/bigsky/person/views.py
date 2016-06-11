@@ -9,6 +9,7 @@ from rest_framework.response import Response
 
 from person import serializers as ps
 from person.models import Person, Role
+from setting.models import Setting
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.views import BaseModelViewSet
 
@@ -34,6 +35,14 @@ class RoleViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
             return ps.RoleUpdateSerializer
         else:
             return ps.RoleSerializer
+
+    @list_route(methods=['get'], url_path=r"route-data/new")
+    def route_data_new(self, request):
+        d = {}
+        general = Setting.objects.get(name='general')
+        for f in ['dashboard_text']:
+            d[f] = general.settings[f]['value']
+        return Response({'settings': d})
 
 
 ### PERSON
