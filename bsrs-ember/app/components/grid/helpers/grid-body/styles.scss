@@ -1,3 +1,6 @@
+/*
+* MOBILE GRID items
+*/
 .mobile-grid-row{
   padding: 4%;
   background: $white;
@@ -8,30 +11,20 @@
     font-weight: bold;
     width: 100%;
   }
-  .ticket-request{
-    @include truncate;
-    padding: 2px 0;
-    width: 100%;
-  }
   .ticket-status,
   .ticket-priority{
     padding: 2px 0;
   }
-  .ticket-location{
-    padding: 2px 0;
-    width: 100%;
-  }
-  .ticket-assignee{
-    padding: 2px 0;
-    width: 100%;
-  }
-  .ticket-created{
-    width: 100%;
-    padding: 2px 0;
-  }
+  .ticket-location,
+  .ticket-assignee,
+  .ticket-created,
   .ticket-number{
     width: 100%;
     padding: 2px 0;
+  }
+  .ticket-request{
+    @include truncate;
+    @extend .ticket-location;
   }
 }
 .mobile-grid-row::after{
