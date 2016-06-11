@@ -88,7 +88,7 @@ div.rowTable {
           width: 180px;
           @include truncate;
         }
-        &.model-category{
+        &.ticket-category{
           width: 200px;
         }
         &.ticket-request{
@@ -231,6 +231,13 @@ header.mobile-grid-head {
           i{
             line-height: inherit;
             float: right;
+          }
+          &:hover{
+            cursor: default;;
+            text-decoration: none;
+            border-color: $borderColor;
+            background-color: $light;
+            color: inherit;
           }
         }
       }

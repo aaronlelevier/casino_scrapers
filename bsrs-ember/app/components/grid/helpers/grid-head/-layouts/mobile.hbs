@@ -3,7 +3,12 @@
   <button class="t-show-save-filterset-modal btn btn-default" {{action "toggleSaveFilterSetModal"}}>{{fa-icon "search"}}</button>
   <button class="t-show-save-filterset-modal btn btn-default t-mobile-filter" {{action "toggleMobileSortFilter"}}>{{fa-icon "filter"}}</button>
 </div>
-<h1 class="grid-title t-mobile-grid-title">{{grid_title}}</h1>
+<h1 class="grid-title t-mobile-grid-title">
+  {{grid_title}}
+  {{#unless model.isLoaded}}
+  {{grid-loading-graphic}}
+  {{/unless}}
+</h1>
 
 <div class="filtersets t-filterset-wrap">
   {{filterset-navigation filtersets=filtersets route=routeName}}

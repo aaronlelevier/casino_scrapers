@@ -15,6 +15,7 @@ header.mobile-header {
   overflow: hidden;
   height: $mobileHeaderHeight;
   position: relative;
+  z-index: 1;
   @include nav-box-shadow;
   @include headerColors;
 }

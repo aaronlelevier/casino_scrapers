@@ -10,7 +10,8 @@ export default GridViewComponent.extend({
       isFilterable: true,
       isSearchable: true,
       templateName: 'tickets/ticket-priority-tag',
-      classNames: ['ticket-priority']
+      classNames: ['ticket-priority'],
+      mobileOrder: 40
     },
     {
       field: 'status.translated_name',
@@ -19,7 +20,8 @@ export default GridViewComponent.extend({
       isFilterable: true,
       isSearchable: true,
       templateName: 'tickets/ticket-status-tag',
-      classNames: ['ticket-status']
+      classNames: ['ticket-status'],
+      mobileOrder: 30
     },
     {
       field: 'number',
@@ -27,7 +29,8 @@ export default GridViewComponent.extend({
       headerIsTranslatable: true,
       isSortable: true,
       isSearchable: true,
-      classNames: ['ticket-number']
+      classNames: ['ticket-number'],
+      mobileOrder: 80
     },
     {
       field: 'created',
@@ -35,7 +38,8 @@ export default GridViewComponent.extend({
       headerIsTranslatable: true,
       isSortable: true,
       templateName: 'grid/helpers/grid-date',
-      classNames: ['ticket-created']
+      classNames: ['ticket-created'],
+      mobileOrder: 70
     },
     {
       field: 'location.name',
@@ -44,7 +48,8 @@ export default GridViewComponent.extend({
       isSortable: true,
       isFilterable: true,
       isSearchable: true,
-      classNames: ['ticket-location']
+      classNames: ['ticket-location'],
+      mobileOrder: 50
     },
     {
       field: 'assignee.fullname',
@@ -53,13 +58,15 @@ export default GridViewComponent.extend({
       isSortable: true,
       isFilterable: true,
       isSearchable: true,
-      classNames: ['ticket-assignee']
+      classNames: ['ticket-assignee'],
+      mobileOrder: 60
     },
     {
       field: 'categories',
       headerLabel: 'ticket.label.category-name',
       headerIsTranslatable: true,
-      classNames: ['model-category']
+      classNames: ['ticket-category'],
+      mobileOrder: 10
     },
     {
       field: 'request',
@@ -68,7 +75,8 @@ export default GridViewComponent.extend({
       isSortable: true,
       isFilterable: true,
       isSearchable: true,
-      classNames: ['ticket-request']
+      classNames: ['ticket-request'],
+      mobileOrder: 20
     }
   ]
 });

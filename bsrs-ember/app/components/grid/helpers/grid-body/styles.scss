@@ -1,0 +1,73 @@
+.mobile-grid-row{
+  padding: 4%;
+  background: $white;
+  border: $borderStyle;
+  border-width: 0 0 1px;
+  .ticket-category{
+    font-size: 1.6rem;
+    font-weight: bold;
+    width: 100%;
+  }
+  .ticket-request{
+    @include truncate;
+    padding: 2px 0;
+    width: 100%;
+  }
+  .ticket-status,
+  .ticket-priority{
+    padding: 2px 0;
+  }
+  .ticket-location{
+    padding: 2px 0;
+    width: 100%;
+  }
+  .ticket-assignee{
+    padding: 2px 0;
+    width: 100%;
+  }
+  .ticket-created{
+    width: 100%;
+    padding: 2px 0;
+  }
+  .ticket-number{
+    width: 100%;
+    padding: 2px 0;
+  }
+}
+.mobile-grid-row::after{
+  content: "";
+  width: 100%;
+  display: block;
+  order: 41;
+}
+
+.flex-order-1{
+  order: 1;
+}
+.flex-order-20{
+  order: 20;
+}
+.flex-order-30{
+  order: 30;
+}
+.flex-order-40{
+  order: 40;
+}
+.flex-order-50{
+  order: 50;
+}
+.flex-order-60{
+  order: 60;
+}
+.flex-order-70{
+  order: 70;
+}
+.flex-order-80{
+  order: 80;
+}
+.flex-order-90{
+  order: 90;
+}
+.flex-order-100{
+  order: 100;
+}

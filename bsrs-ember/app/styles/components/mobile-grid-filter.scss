@@ -8,6 +8,7 @@
   left: 0;
   z-index: 40;
   background: $light;
+  @include nav-box-shadow(25px);
   hbox.filters__head {
     align-items: center;
     height: $mobileHeaderHeight;

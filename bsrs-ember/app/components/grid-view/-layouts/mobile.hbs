@@ -4,6 +4,7 @@
       columns=columns
       sort=sort
       find=find
+      model=model
       add_model_text=add_model_text
       hasActiveFilterSet=hasActiveFilterSet
       count=count
@@ -14,4 +15,21 @@
       routeName=routeName
     }}
   </header>
+  <div class="mobile-grid-body">
+    {{t.body
+      columns=columns
+      filter=filter
+      model=model
+      page=page
+      sort=sort
+      search=search
+      find=find
+      requested=requested
+      page_size=page_size
+      routeName=routeName
+      defaultSort=defaultSort
+      list_url=list_url
+      detail_url=detail_url
+    }}
+  </div>
 {{/grid-view2}}

@@ -20,10 +20,10 @@
 	margin-right: -1px;
 }
 
-@mixin nav-box-shadow($blurRadius: 7px) {
-  -webkit-box-shadow: 0 0 $blurRadius $dark;
-  -moz-box-shadow: 0 0 $blurRadius $dark;
-  box-shadow: 0 0 $blurRadius $dark;
+@mixin nav-box-shadow($blurRadius: 10px, $color: $dark) {
+  -webkit-box-shadow: 0 0 $blurRadius $color;
+  -moz-box-shadow: 0 0 $blurRadius $color;
+  box-shadow: 0 0 $blurRadius $color;
 }
 
 /*

@@ -28,7 +28,7 @@ test('field will be the actual value shown in the td element when isTranslatable
     this.set('column', {
         field: 'hat'
     });
-    this.render(hbs`{{grid/helpers/grid-body-column noun=noun item=item column=column}}`);
+    this.render(hbs`{{grid/helpers/grid-body-column tagName='td' noun=noun item=item column=column}}`);
     let $component = this.$('td');
     assert.equal($component.length, 1);
     assert.equal($component.text().trim(), TRANSLATION_KEY);
@@ -39,7 +39,7 @@ test('the value will be translated when isTranslatable is true', function(assert
         field: 'hat',
         isTranslatable: true
     });
-    this.render(hbs`{{grid/helpers/grid-body-column noun=noun item=item column=column}}`);
+    this.render(hbs`{{grid/helpers/grid-body-column tagName='td' noun=noun item=item column=column}}`);
     let $component = this.$('td');
     assert.equal($component.length, 1);
     assert.equal($component.text().trim(), TRANSLATION_VALUE);
@@ -50,7 +50,7 @@ test('the value will not be translated when isTranslatable is false', function(a
         field: 'hat',
         isTranslatable: false
     });
-    this.render(hbs`{{grid/helpers/grid-body-column noun=noun item=item column=column}}`);
+    this.render(hbs`{{grid/helpers/grid-body-column tagName='td' noun=noun item=item column=column}}`);
     let $component = this.$('td');
     assert.equal($component.length, 1);
     assert.equal($component.text().trim(), TRANSLATION_KEY);
@@ -61,7 +61,7 @@ test('any classNames present are applied to the component', function(assert) {
         field: 'hat',
         classNames: ['one', 'two', 'three']
     });
-    this.render(hbs`{{grid/helpers/grid-body-column noun=noun item=item column=column}}`);
+    this.render(hbs`{{grid/helpers/grid-body-column tagName='td' noun=noun item=item column=column}}`);
     let $component = this.$('td');
     assert.equal($component.length, 1);
     assert.ok($component.hasClass('one'));
@@ -74,7 +74,7 @@ test('noun is used to set a developer friendly class for the content', function(
         field: 'hat'
     });
     this.set('noun', 'zap');
-    this.render(hbs`{{grid/helpers/grid-body-column noun=noun item=item column=column}}`);
+    this.render(hbs`{{grid/helpers/grid-body-column tagName='td' noun=noun item=item column=column}}`);
     let $component = this.$('td');
     assert.equal($component.length, 1);
     assert.ok($component.hasClass('t-zap-hat'));
@@ -85,7 +85,7 @@ test('developer friendly class replaces any dot with a dash', function(assert) {
         field: 'hat.cat.wat'
     });
     this.set('noun', 'zap');
-    this.render(hbs`{{grid/helpers/grid-body-column noun=noun item=item column=column}}`);
+    this.render(hbs`{{grid/helpers/grid-body-column tagName='td' noun=noun item=item column=column}}`);
     let $component = this.$('td');
     assert.equal($component.length, 1);
     assert.ok($component.hasClass('t-zap-hat-cat-wat'));
@@ -97,7 +97,7 @@ test('the entire template will be replaced when a custom templateName is defined
         field: 'hat',
         templateName: 'zap-zap'
     });
-    this.render(hbs`{{grid/helpers/grid-body-column noun=noun item=item column=column}}`);
+    this.render(hbs`{{grid/helpers/grid-body-column tagName='td' noun=noun item=item column=column}}`);
     let $component = this.$('td');
     assert.equal($component.length, 1);
     assert.equal($component.text().trim(), `AXE ${TRANSLATION_KEY}`);
@@ -110,7 +110,7 @@ test('htmlbars will blow up when component is not found', function(assert) {
         templateName: 'abc-abc'
     });
     try {
-        this.render(hbs`{{grid/helpers/grid-body-column noun=noun item=item column=column}}`);
+        this.render(hbs`{{grid/helpers/grid-body-column tagName='td' noun=noun item=item column=column}}`);
     } catch(e) {
         assert.ok(e.message.indexOf('Could not find component') > -1);
     }
@@ -121,7 +121,7 @@ test('formattedField will be the actual value shown in the td element when prese
         field: 'hat',
         formattedField: 'nice_hat'
     });
-    this.render(hbs`{{grid/helpers/grid-body-column noun=noun item=item column=column}}`);
+    this.render(hbs`{{grid/helpers/grid-body-column tagName='td' noun=noun item=item column=column}}`);
     let $component = this.$('td');
     assert.equal($component.length, 1);
     assert.equal($component.text().trim(), `${TRANSLATION_KEY} !!`);
