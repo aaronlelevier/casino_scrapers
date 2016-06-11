@@ -18,6 +18,8 @@ var role_settingsOther = {
   }
 };
 
+var roleNewData = {settings: {dashboard_text: 'Welcome'}};
+
 export {
-  role_settings, role_settingsOther
+  role_settings, role_settingsOther, roleNewData
 };

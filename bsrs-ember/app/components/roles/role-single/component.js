@@ -7,15 +7,12 @@ import ChangeBoolMixin from 'bsrs-ember/mixins/components/change-bool';
 
 var RoleSingle = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, ChangeBoolMixin, {
   repository: inject('role'),
-  settingRepo: inject('setting'),
   simpleStore: Ember.inject.service(),
   nameValidation: validate('model.name'),
   locationLevelValidation: validate('model.location_level'),
-  generalSettings: Ember.computed(function() {
-    let store = this.get('simpleStore');
-    let settingId = store.findOne('setting').get('id');
-    let settingRepo = this.get('settingRepo');
-    return settingRepo.findById(settingId);
+  roleNew: Ember.computed(function() {
+    let repository = this.get('repository');
+    return repository.getRouteData();
   }),
   actions: {
     save() {

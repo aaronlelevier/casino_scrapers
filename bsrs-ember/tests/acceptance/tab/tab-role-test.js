@@ -15,6 +15,7 @@ import SD from 'bsrs-ember/vendor/defaults/setting';
 import SF from 'bsrs-ember/vendor/setting_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
+import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_ROLE_URL = BASEURLS.base_roles_url;
@@ -43,9 +44,8 @@ module('Acceptance | tab role test', {
             store.push('role', {id: RD.idGridOne, name: 'wat', categories: [CF.detail()]});
         });
         // Settings
-        let setting_endpoint = `${PREFIX}${BASEURLS.base_setting_url}/${SD.id}/`;
-        let setting_data = SF.detail();
-        xhr(setting_endpoint, 'GET', null, {}, 200, setting_data);
+        let setting_endpoint = `${PREFIX}${BASEURLS.base_roles_url}/route-data/new/`;
+        xhr(setting_endpoint, 'GET', null, {}, 200, roleNewData);
     },
     afterEach() {
         random.uuid = original_uuid;

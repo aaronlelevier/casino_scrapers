@@ -19,6 +19,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/role';
+import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -56,9 +57,8 @@ module('Acceptance | role new', {
       store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
     });
     // Settings
-    let setting_endpoint = `${PREFIX}${BASEURLS.base_setting_url}/${SD.id}/`;
-    let setting_data = SF.detail();
-    xhr(setting_endpoint, 'GET', null, {}, 200, setting_data);
+    let setting_endpoint = `${PREFIX}${BASEURLS.base_roles_url}/route-data/new/`;
+    xhr(setting_endpoint, 'GET', null, {}, 200, roleNewData);
   },
   afterEach() {
     counter=0;

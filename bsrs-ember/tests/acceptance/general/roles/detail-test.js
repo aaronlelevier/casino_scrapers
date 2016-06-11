@@ -23,6 +23,7 @@ import settingPage from 'bsrs-ember/tests/pages/settings';
 import {role_settings, role_settingsOther} from 'bsrs-ember/tests/helpers/payloads/role';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
+import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -54,9 +55,8 @@ module('Acceptance | role-detail', {
     });
     translations = BSRS_TRANSLATION_FACTORY.generate('en')['en'];
     // Settings
-    let setting_endpoint = `${PREFIX}${BASEURLS.base_setting_url}/${SD.id}/`;
-    let setting_data = SF.detail();
-    setting_detail_xhr = xhr(setting_endpoint, 'GET', null, {}, 200, setting_data);
+    let setting_endpoint = `${PREFIX}${BASEURLS.base_roles_url}/route-data/new/`;
+    setting_detail_xhr = xhr(setting_endpoint, 'GET', null, {}, 200, roleNewData);
   },
   afterEach() {
     Ember.run(application, 'destroy');
@@ -412,7 +412,6 @@ test('settings - UI is populated for inherited correctly - inherited value from 
 });
 
 test('settings - override value from parent, can click link-to to get to inherited setting', (assert) => {
-  clearxhr(setting_detail_xhr);
   clearxhr(list_xhr);
   visit(DETAIL_URL);
   andThen(() => {

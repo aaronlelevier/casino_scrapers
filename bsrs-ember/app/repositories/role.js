@@ -16,6 +16,7 @@ var RoleRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
     garbage_collection: Ember.computed(function() { return ['role-list']; }),
     url: Ember.computed(function() { return ROLE_URL; }),
     uuid: injectUUID('uuid'),
+    simpleStore: Ember.inject.service(),
     RoleDeserializer: inject('role'),
     deserializer: Ember.computed.alias('RoleDeserializer'),
     create(role_type, new_pk) {
@@ -35,6 +36,14 @@ var RoleRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
     },
     get_default() {
         return this.get('simpleStore').find('role');
+    },
+    getRouteData() {
+        let store = this.get('simpleStore');
+        PromiseMixin.xhr(ROLE_URL + 'route-data/new/', 'GET').then((response) => {
+            const pk = this.get('uuid').v4();
+            store.push('role-new', {id: pk, settings: response.settings});
+        });
+        return store.findOne('role-new');
     }
 });
 
