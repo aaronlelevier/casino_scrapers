@@ -113,27 +113,6 @@ div.rowTable {
       }
     }
   }
-  footer{
-    nav{
-      ul.pagination{
-        margin: 4px 0 0;
-        li{
-          a.active{
-            background: $activeColor;
-            border-color: $activeColor;
-            color: $white;
-          }
-        }
-      }
-    }
-    .t-page-count{
-      @include truncate;
-      width: 100%;
-    }
-    .page-size{
-      margin: 4px 0 0;
-    }
-  }
 }//div.rowTable
 
 .tableSearch {
@@ -195,6 +174,7 @@ header.mobile-grid-head {
     font-size: 2rem;
     color: $darkGray;
     margin: 0;
+    @include truncate;
   }
   div.grid-options {
     padding: 0 15px;

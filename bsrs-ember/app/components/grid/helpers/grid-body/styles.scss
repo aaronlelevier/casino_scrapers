@@ -5,7 +5,12 @@
   padding: 4%;
   background: $white;
   border: $borderStyle;
-  border-width: 0 0 1px;
+  border-width: 1px 0;
+  margin: 0 0 2% 0;
+  cursor: pointer;
+  &:first-child{
+    margin-top: -1px;
+  }
   .ticket-category{
     font-size: 1.6rem;
     font-weight: bold;

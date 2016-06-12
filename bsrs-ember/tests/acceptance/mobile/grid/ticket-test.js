@@ -46,7 +46,7 @@ test('amk initial load should only show first ${PAGE_SIZE} records ordered by id
   visit(TICKET_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
-    assert.equal(find('.t-mobile-grid-title').text().trim(), 'Tickets');
+    assert.equal(find('.t-mobile-grid-title').text().trim(), '19 Tickets');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     // assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text().trim(), LD.storeName);
@@ -66,5 +66,15 @@ test('mobile order attribute displays items in the correct order', function(asse
   visit(TICKET_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
+  });
+});
+test('mobile footer displays amk', function(assert) {
+  visit(TICKET_URL);
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_URL);
+    assert.equal(find('.t-pages').length, 1);
+    assert.equal(find('.t-previous').length, 1);
+    assert.equal(find('.t-next').length, 1);
+    assert.equal(find('.t-pages li').length, 2);
   });
 });

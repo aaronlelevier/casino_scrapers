@@ -4,7 +4,7 @@
   <button class="t-show-save-filterset-modal btn btn-default t-mobile-filter" {{action "toggleMobileSortFilter"}}>{{fa-icon "filter"}}</button>
 </div>
 <h1 class="grid-title t-mobile-grid-title">
-  {{grid_title}}
+  {{model.count}} {{grid_title}}
   {{#unless model.isLoaded}}
   {{grid-loading-graphic}}
   {{/unless}}
