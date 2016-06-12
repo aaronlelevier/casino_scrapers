@@ -33,3 +33,16 @@
   background: $menuColor;
   color: $light;
 }
+
+/*
+* Used to include font-awesome icons using CSS
+*/
+@mixin font-awesome($content: "", $width: 1em, $height: 1em) {
+  content: $content;
+  width: $width;
+  height: $height;
+  text-align: center;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+}

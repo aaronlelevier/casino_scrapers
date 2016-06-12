@@ -8,6 +8,7 @@
   border-width: 1px 0;
   margin: 0 0 2% 0;
   cursor: pointer;
+  overflow: auto;
   &:first-child{
     margin-top: -1px;
   }
@@ -19,17 +20,48 @@
   .ticket-status,
   .ticket-priority{
     padding: 2px 0;
+    float: left;
   }
-  .ticket-location,
-  .ticket-assignee,
-  .ticket-created,
-  .ticket-number{
+
+  .ticket-request{
     width: 100%;
     padding: 2px 0;
   }
+  .ticket-location,
+  .ticket-assignee{
+    clear: both;
+  }
+  .ticket-location{
+    padding: 4px 0 0;
+  }
+  .ticket-assignee{
+    padding: 0 0 4px;
+  }
+  .ticket-created,
+  .ticket-number{
+    padding: 2px 0;
+    float: left;
+    width: 50%;
+    font-size: 1.2rem;
+    color: $medGray;
+  }
+  .ticket-number{
+    text-align: right;
+  }
   .ticket-request{
     @include truncate;
-    @extend .ticket-location;
+  }
+  .ticket-location:before{
+    margin-right: 2%;
+    color: $medGray;
+    display: inline-block;
+    @include font-awesome("\f041");
+  }
+  .ticket-assignee:before{
+    margin-right: 2%;
+    color: $medGray;
+    display: inline-block;
+    @include font-awesome("\f007");
   }
 }
 .mobile-grid-row::after{
