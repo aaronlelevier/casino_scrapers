@@ -16,7 +16,7 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
 
-module('Acceptance | mobile/grid/ticket test.js', {
+module('Acceptance | grid mobile test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
@@ -35,46 +35,24 @@ module('Acceptance | mobile/grid/ticket test.js', {
   }
 });
 
-test('visiting mobile ticket grid show correct layout', function(assert) {
+test('visiting mobile ticket grid show correct layout', (assert) => {
   visit(TICKET_URL);
   andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
-  });
-});
-
-test('amk initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr', function(assert) {
-  visit(TICKET_URL);
-  andThen(() => {
+    const ticket = store.findOne('ticket-list');
     assert.equal(currentURL(), TICKET_URL);
     assert.equal(find('.t-mobile-grid-title').text().trim(), '19 Tickets');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
-    // assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text().trim(), LD.storeName);
-    assert.ok(find('.t-grid-data:eq(0) .t-ticket-priority-emergency'));
-    assert.ok(find('.t-grid-data:eq(0) .t-ticket-status-new'));
-    // const time = moment(new Date()).calendar();
-    // assert.equal(find('.t-grid-data:eq(0) .t-ticket-created').text().trim(), `${time}`);
-    // const pagination = find('.t-pages');
-    // assert.equal(pagination.find('.t-page').length, 2);
-    // assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
-    // assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
-    // assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
-    // assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
-  });
-});
-test('mobile order attribute displays items in the correct order', function(assert) {
-  visit(TICKET_URL);
-  andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
-  });
-});
-test('mobile footer displays amk', function(assert) {
-  visit(TICKET_URL);
-  andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
-    assert.equal(find('.t-pages').length, 1);
-    assert.equal(find('.t-previous').length, 1);
-    assert.equal(find('.t-next').length, 1);
-    assert.equal(find('.t-pages li').length, 2);
+    assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').text().trim());
+    assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').hasClass('t-ticket-categories'));
+    assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
+    assert.equal(find('.t-grid-data:eq(0) > div:eq(2)').text().trim(), t('ticket.status.new'));
+    assert.ok(find('.t-grid-data:eq(0) > div:eq(2)').hasClass('t-ticket-status-translated_name'));
+    assert.equal(find('.t-grid-data:eq(0) > div:eq(3)').text().trim(), t('ticket.priority.emergency'));
+    assert.ok(find('.t-grid-data:eq(0) > div:eq(3)').hasClass('t-ticket-priority-translated_name'));
+    assert.equal(find('.t-grid-data:eq(0) > div:eq(4)').text().trim(), 'Company');
+    assert.equal(find('.t-grid-data:eq(0) > div:eq(5)').text().trim(), ticket.get('assignee').get('fullname'));
+    assert.equal(find('.t-grid-data:eq(0) > div:eq(6)').text().trim().split(' ')[0], 'Today');
+    assert.equal(find('.t-grid-data:eq(0) > div:eq(6)').text().trim().split(' ')[1], 'at');
+    assert.equal(find('.t-grid-data:eq(0) > div:eq(7)').text().trim(), ticket.get('number'));
   });
 });
