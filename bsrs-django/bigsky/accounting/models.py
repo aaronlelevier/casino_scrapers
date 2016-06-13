@@ -63,5 +63,6 @@ class Currency(BaseModel):
             'symbol': self.symbol,
             'symbol_native': self.symbol_native,
             'decimal_digits': self.decimal_digits,
-            'rounding': self.rounding
+            'rounding': self.rounding,
+            'default': True if self.code == 'USD' else False
         }

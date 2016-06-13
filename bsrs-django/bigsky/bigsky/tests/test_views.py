@@ -326,6 +326,9 @@ class BootstrappedDataTests(TestCase):
         self.assertEqual(usd['symbol_native'], currency.symbol_native)
         self.assertEqual(usd['decimal_digits'], currency.decimal_digits)
         self.assertEqual(usd['rounding'], currency.rounding)
+        # default check
+        self.assertEqual(currency.code, 'USD')
+        self.assertTrue(usd['default'])
 
     def test_person_current(self):
         Currency.objects.default()
