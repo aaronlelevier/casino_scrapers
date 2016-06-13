@@ -17,3 +17,17 @@ class ListObject(object):
     
     def count(self):
         return len(self.x)
+
+
+class classproperty(object):
+    """
+    When used to decorate a method in a class, that method will behave
+    like as a class property.
+    """
+    def __init__(self, f):
+        # f - the func that's being decorated
+        self.f = f
+
+    def __get__(self, obj, cls):
+        # call the func on the class
+        return self.f(cls)
