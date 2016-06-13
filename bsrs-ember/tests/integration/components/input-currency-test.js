@@ -137,7 +137,7 @@ test('t-amount placeholder should be defaulted if is not passed into component',
   this.set('currencyObject', currencyObject);
   this.render(hbs `{{input-currency model=model field="auth_amount"}}`);
   var $component = this.$('.t-input-currency');
-  assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('admin.amount'));
+  assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('admin.amount_and_default_value'));
 });
 
 test('t-amount placeholder is not defaulted if is passed into component', function(assert) {

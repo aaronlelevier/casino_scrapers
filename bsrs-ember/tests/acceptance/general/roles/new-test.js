@@ -19,6 +19,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/role';
+import personPage from 'bsrs-ember/tests/pages/person';
 import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -40,7 +41,7 @@ module('Acceptance | role new', {
       role_type: RD.t_roleTypeGeneral,
       location_level: RD.locationLevelOne,
       categories: [CD.idOne],
-      auth_amount: null,
+      auth_amount: undefined,
       settings: {
         settings: {}
       }
@@ -77,8 +78,10 @@ test('visiting role/new', (assert) => {
     assert.equal(page.roleTypeInput, t(RD.t_roleTypeGeneral));
     assert.equal(store.find('location-level').get('length'), 8);
     assert.equal(page.categorySelectText, "");
-    assert.equal(find('.t-amount').get(0)['placeholder'], 'Amount');
+    assert.equal(find('.t-amount').get(0)['placeholder'], 'Amount: 0.00');
     assert.equal(page.authAmountValue, "");
+    assert.equal(personPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
+    assert.equal(personPage.currencyCodeText, CURRENCY_DEFAULTS.code);
     assert.equal(find('.t-inherited-msg-dashboard_text-link').text().trim(), 'Inherited from: general');
     assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + SD.dashboard_text);
     assert.equal(page.dashboard_textValue, "");
@@ -148,8 +151,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     assert.ok(find('.t-name-validation-error').is(':hidden'));
     assert.ok(find('.t-location-level-validation-error').is(':hidden'));
   });
-  let response = Ember.$.extend(true, {}, payload);
-  xhr(url, 'POST', JSON.stringify(payload), {}, 201, response);
+  xhr(url, 'POST', JSON.stringify(payload), {}, 201, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ROLE_URL);

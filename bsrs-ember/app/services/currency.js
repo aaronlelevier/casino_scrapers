@@ -1,4 +1,4 @@
-import Ember from 'ember';
+    import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/store';
 
 let CurrencyService = Ember.Service.extend({
@@ -9,6 +9,12 @@ let CurrencyService = Ember.Service.extend({
         let person = store.find('person-current').objectAt(0).get('person');
         let currencyId = person.get('auth_currency') ? person.get('auth_currency') : person.get('settings_object').auth_currency.inherited_value;
         return store.find('currency', currencyId);
+    },
+    getDefaultCurrency() {
+        // a single Currency will be marked as the default server side
+        // based on the Tenant's General Settings. Then return default here.
+        let store = this.get('simpleStore');
+        return store.find('currency', {default: 'true'}).objectAt(0);
     },
     getCurrencies() {
         let store = this.get('simpleStore');

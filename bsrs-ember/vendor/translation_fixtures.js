@@ -39,6 +39,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
           'admin.addresstype.office':'Office',
           'admin.addresstype.shipping':'Shipping',
           'admin.amount':'Amount',
+          'admin.amount_and_default_value':'Amount: {{value}}',
           'admin.approval.one':'Approval',
           'admin.approval.other':'Approvals',
           'admin.assignment.one':'Assignment Profile',
