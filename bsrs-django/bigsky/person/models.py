@@ -79,7 +79,7 @@ class Role(SettingMixin, BaseModel):
     accept_notify = models.BooleanField(blank=True, default=False)
     # Auth Amounts
     auth_amount = models.DecimalField(
-        max_digits=15, decimal_places=4, blank=True, default=0)
+        max_digits=15, decimal_places=4, blank=True, null=True, default=0)
     auth_currency = models.ForeignKey(Currency, blank=True, null=True)
     # Approvals
     allow_approval = models.BooleanField(blank=True, default=False)
@@ -156,6 +156,9 @@ class Role(SettingMixin, BaseModel):
                     name=self.name)
             except IntegrityError:
                 raise
+
+        if not self.auth_amount:
+            self.auth_amount = 0
 
         if not self.auth_currency:
             self.auth_currency = Currency.objects.default()

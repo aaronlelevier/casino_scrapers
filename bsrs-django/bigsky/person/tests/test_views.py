@@ -74,9 +74,11 @@ class RoleDetailTests(RoleSetupMixin, APITestCase):
 
 class RoleCreateTests(RoleSetupMixin, APITestCase):
 
-    def test_create(self):
+    def setUp(self):
+        super(RoleCreateTests, self).setUp()
+
         currency = mommy.make(Currency, code='foo')
-        role_data = {
+        self.role_data = {
             "id": str(uuid.uuid4()),
             "name": "Admin",
             "role_type": person_config.ROLE_TYPES[0],
@@ -86,17 +88,26 @@ class RoleCreateTests(RoleSetupMixin, APITestCase):
             "auth_currency": str(currency.id)
         }
 
-        response = self.client.post('/api/admin/roles/', role_data, format='json')
+    def test_create(self):
+        response = self.client.post('/api/admin/roles/', self.role_data, format='json')
 
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['id'], role_data['id'])
-        self.assertEqual(data['name'], role_data['name'])
-        self.assertEqual(data['role_type'], role_data['role_type'])
-        self.assertEqual(data['auth_amount'], "{:.4f}".format(role_data['auth_amount']))
-        self.assertEqual(data['auth_currency'], role_data['auth_currency'])
-        self.assertEqual(data['location_level'], role_data['location_level'])
-        self.assertEqual(sorted(data['categories']), sorted(role_data['categories']))
+        self.assertEqual(data['id'], self.role_data['id'])
+        self.assertEqual(data['name'], self.role_data['name'])
+        self.assertEqual(data['role_type'], self.role_data['role_type'])
+        self.assertEqual(data['auth_amount'], "{:.4f}".format(self.role_data['auth_amount']))
+        self.assertEqual(data['auth_currency'], self.role_data['auth_currency'])
+        self.assertEqual(data['location_level'], self.role_data['location_level'])
+        self.assertEqual(sorted(data['categories']), sorted(self.role_data['categories']))
+
+    def test_create__auth_amount_nulll(self):
+        self.role_data["auth_amount"] = None
+        response = self.client.post('/api/admin/roles/', self.role_data, format='json')
+        self.assertEqual(response.status_code, 201)
+        # DB record
+        role = Role.objects.get(id=self.role_data['id'])
+        self.assertEqual(role.auth_amount, 0)
 
 
 class RoleUpdateTests(RoleSetupMixin, APITestCase):
