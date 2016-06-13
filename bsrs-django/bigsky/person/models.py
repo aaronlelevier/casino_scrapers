@@ -335,8 +335,8 @@ class Person(SettingMixin, BaseModel, AbstractUser):
         return data
 
     # proxy fields (won't create a field in the database)
-    proxy_auth_amount = InheritedValueField('role', 'auth_amount', 'float')
-    proxy_auth_currency = InheritedValueField('role', 'auth_currency', 'uuid')
+    proxy_auth_amount = InheritedValueField('role', 'auth_amount')
+    proxy_auth_currency = InheritedValueField('role', 'auth_currency')
 
     # Managers
     objects = PersonManager()

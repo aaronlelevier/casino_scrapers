@@ -44,10 +44,9 @@ class InheritedValueField(object):
     :field: (str) model field name to look up
     :type: (str) python type name
     """
-    def __init__(self, related_model, field, type):
+    def __init__(self, related_model, field):
         self.related_model = related_model
         self.field = field
-        self.type = type
 
     def __get__(self, obj, type=None):
         related_model = getattr(obj, self.related_model)
