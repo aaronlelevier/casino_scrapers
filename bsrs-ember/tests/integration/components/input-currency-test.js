@@ -27,7 +27,8 @@ moduleForComponent('input-currency', 'integration: input-currency test', {
         code: CD.code,
         name_plural: CD.name_plural,
         rounding: CD.rounding,
-        symbol_native: CD.symbol_native
+        symbol_native: CD.symbol_native,
+        default: true,
       });
     });
     translation.initialize(this);

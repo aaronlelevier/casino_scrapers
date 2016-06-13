@@ -13,7 +13,7 @@ export default Ember.Component.extend({
     if (this.get(`model.${currencyField}`)) {
       return store.find('currency', this.get(`model.${currencyField}`));
     } else if (inheritsFrom) {
-      return currency_service.getCurrency();
+      return currency_service.getPersonCurrency();
     } else if (this.get('model.new')) {
       return currency_service.getDefaultCurrency();
     }
@@ -27,13 +27,10 @@ export default Ember.Component.extend({
     let field = this.get('field');
     Ember.Binding.from('model.' + field).to('bound_field').connect(this);
   }),
-  defaultNewAmount: Ember.computed(function() {
-    let model = this.get('model');
-    if (this.get('model.new')) {
-      let currency_service = this.get('currency');
-      let currency = currency_service.getDefaultCurrency();
-      return parseFloat('0.0000').toFixed(currency.get('decimal_digits'));
-    }
+  placeholderAmount: Ember.computed(function() {
+    let currency_service = this.get('currency');
+    let currency = currency_service.getDefaultCurrency();
+    return parseFloat('0.0000').toFixed(currency.get('decimal_digits'));
   }),
   actions: {
     format_currency() {

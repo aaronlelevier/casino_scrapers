@@ -1,9 +1,9 @@
-    import Ember from 'ember';
+import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/store';
 
 let CurrencyService = Ember.Service.extend({
     simpleStore: Ember.inject.service(),
-    getCurrency() {
+    getPersonCurrency() {
         // should always be using the person-current here.
         let store = this.get('simpleStore');
         let person = store.find('person-current').objectAt(0).get('person');
@@ -14,7 +14,7 @@ let CurrencyService = Ember.Service.extend({
         // a single Currency will be marked as the default server side
         // based on the Tenant's General Settings. Then return default here.
         let store = this.get('simpleStore');
-        return store.find('currency', {default: 'true'}).objectAt(0);
+        return store.find('currency', {default: true}).objectAt(0);
     },
     getCurrencies() {
         let store = this.get('simpleStore');
