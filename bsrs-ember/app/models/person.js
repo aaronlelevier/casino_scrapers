@@ -42,7 +42,7 @@ const Validations = buildValidations({
   // }),
   middle_initial: validator('length', {
     debounce: 300,
-    max: 2,
+    max: 1,
     message: 'errors.person.middle_initial'
   }),
 });

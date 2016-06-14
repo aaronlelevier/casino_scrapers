@@ -102,7 +102,7 @@ test('filling in valid one char middle initial will not reveal validation messag
   assert.equal($component.text().trim(), '');
 });
 
-test('filling in invalid one char middle initial will reveal validation messages', function(assert) {
+test('filling in more than 1 char middle initial will reveal validation messages', function(assert) {
   var done = assert.async();
   run(() => {
     this.set('model', store.push('person', {id: PD.id, settings_object: PD.settings}));
@@ -110,7 +110,7 @@ test('filling in invalid one char middle initial will reveal validation messages
   this.render(hbs`{{people/person-single model=model}}`);
   var $component = this.$('.t-middle-initial-validator .error');
   assert.equal($component.text().trim(), '');
-  page.middleInitial('wat');
+  page.middleInitial('wa');
   Ember.run.later(() => {
     const $component = this.$('.t-middle-initial-validator .error');
     assert.ok($component.is(':visible'));
