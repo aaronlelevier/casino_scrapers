@@ -24,8 +24,8 @@ var BSRS_CURRENCY_DEFAULTS_OBJECT = (function() {
       codeCAD: 'CAD',
 
       // auth amounts
-      authAmountOne: 123.1222,
-      authAmountTwo: 234.1222
+      authAmountOne: 123.11,
+      authAmountTwo: 234.12
     };
   };
   return factory;

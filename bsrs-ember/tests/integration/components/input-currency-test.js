@@ -6,14 +6,15 @@ import translations from 'bsrs-ember/vendor/translation_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import CD from 'bsrs-ember/vendor/defaults/currencies';
+import CatD from 'bsrs-ember/vendor/defaults/category';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import page from 'bsrs-ember/tests/pages/input-currency';
 
 const LONG_AUTH_AMOUNT = '50000.0000';
 
-var container, registry, store, model, currencyObject, service, trans, run = Ember.run;
+var container, registry, store, model, service, trans, run = Ember.run;
 
-moduleForComponent('input-currency', 'aaron integration: input-currency test', {
+moduleForComponent('input-currency', 'integration: input-currency test', {
   integration: true,
   setup() {
     page.setContext(this);
@@ -22,7 +23,7 @@ moduleForComponent('input-currency', 'aaron integration: input-currency test', {
       store.push('person-current', {
         id: PD.id
       });
-      currencyObject = store.push('currency', {
+      store.push('currency', {
         id: CD.id,
         symbol: CD.symbol,
         name: CD.name,
@@ -52,7 +53,6 @@ test('person detail example setup', function(assert) {
     });
   });
   this.set('model', model);
-  this.set('currencyObject', currencyObject);
   this.render(hbs `{{input-currency
                 model=model
                 field="auth_amount"
@@ -72,7 +72,7 @@ test('person detail example setup', function(assert) {
   assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('crud.default_value'));
 });
 
-test('role new example setup', function(assert) {
+test('role example setup', function(assert) {
   run(function() {
     model = store.push('role', {
       id: RD.id,
@@ -80,7 +80,6 @@ test('role new example setup', function(assert) {
     });
   });
   this.set('model', model);
-  this.set('currencyObject', currencyObject);
   this.render(hbs `{{input-currency
                 model=model
                 field="auth_amount"
@@ -96,6 +95,31 @@ test('role new example setup', function(assert) {
   assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('admin.amount_and_default_value'));
 });
 
+test('category example setup', function(assert) {
+  run(function() {
+    model = store.push('category', {
+      id: CatD.id,
+      cost_amount: CD.authAmountOne,
+      cost_currency: CD.id
+    });
+  });
+  this.set('model', model);
+  this.render(hbs `{{input-currency
+                model=model
+                field="cost_amount"
+                currencyField="cost_currency"
+              }}`);
+  var $component = this.$('.t-input-currency');
+  $component.find('.t-amount').trigger('blur');
+  assert.equal($component.find('.t-currency-symbol').text().trim(), CD.symbol);
+  assert.equal($component.find('.t-currency-code').text().trim(), CD.code);
+  assert.equal($component.find('.t-amount').val(), parseFloat(CD.authAmountOne).toFixed(CD.decimal_digits));
+  // default to inherited value placeholder if blank
+  page.authAmountFillin('');
+  assert.equal($component.find('.t-amount').val(), "");
+  assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('admin.amount_and_default_value'));
+});
+
 test('renders a component with no value when bound attr is undefined', function(assert) {
   run(function() {
     model = store.push('person', {
@@ -105,7 +129,12 @@ test('renders a component with no value when bound attr is undefined', function(
     });
   });
   this.set('model', model);
-  this.render(hbs `{{input-currency model=model field="auth_amount"}}`);
+  this.render(hbs `{{input-currency
+                     model=model
+                     field="auth_amount"
+                     currencyField="auth_currency"
+                     inheritsFrom=model.settings_object.auth_amount.inherits_from
+                   }}`);
   var $component = this.$('.t-input-currency');
   assert.equal($component.find('.t-amount').val(), '');
 });
@@ -119,13 +148,21 @@ test('if the person does not have a currency, use their inherited currency from 
     });
   });
   this.set('model', model);
-  this.set('currencyObject', currencyObject);
-  this.render(hbs `{{input-currency model=model field="auth_amount" currencyObject=currencyObject}}`);
+  this.render(hbs `{{input-currency
+                model=model
+                field="auth_amount"
+                currencyField="auth_currency"
+                inheritsFrom=model.settings_object.auth_amount.inherits_from
+              }}`);
   var $component = this.$('.t-input-currency');
   $component.find('.t-amount').trigger('blur');
-  assert.equal($component.find('.t-currency-symbol').text().trim(), CD.symbol_native);
+  assert.equal($component.find('.t-currency-symbol').text().trim(), CD.symbol);
   assert.equal($component.find('.t-currency-code').text().trim(), CD.code);
-  assert.equal($component.find('.t-amount').val(), '0.0000');
+  assert.equal($component.find('.t-amount').val(), '0.00');
+  // clear amount, and show placeholder
+  page.authAmountFillin('');
+  assert.equal($component.find('.t-amount').val(), '');
+  assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('admin.amount_and_default_value'));
 });
 
 test('renders a component with currency and label', function(assert) {
@@ -138,13 +175,17 @@ test('renders a component with currency and label', function(assert) {
     });
   });
   this.set('model', model);
-  this.set('currencyObject', currencyObject);
-  this.render(hbs `{{input-currency model=model field="auth_amount" currencyObject=currencyObject}}`);
+  this.render(hbs `{{input-currency
+                model=model
+                field="auth_amount"
+                currencyField="auth_currency"
+                inheritsFrom=model.settings_object.auth_amount.inherits_from
+              }}`);
   var $component = this.$('.t-input-currency');
   $component.find('.t-amount').trigger('blur');
   assert.equal($component.find('.t-currency-symbol').text().trim(), CD.symbol_native);
   assert.equal($component.find('.t-currency-code').text().trim(), CD.code);
-  assert.equal($component.find('.t-amount').val(), PD.auth_amount);
+  assert.equal($component.find('.t-amount').val(), parseFloat(PD.auth_amount).toFixed(CD.decimal_digits));
 });
 
 test('the models bound field will update both the formatted input value and the model itself', function(assert) {
@@ -157,13 +198,17 @@ test('the models bound field will update both the formatted input value and the 
     });
   });
   this.set('model', model);
-  this.set('currencyObject', currencyObject);
-  this.render(hbs `{{input-currency model=model field="auth_amount" currencyObject=currencyObject}}`);
+  this.render(hbs `{{input-currency
+                model=model
+                field="auth_amount"
+                currencyField="auth_currency"
+                inheritsFrom=model.settings_object.auth_amount.inherits_from
+              }}`);
   var $component = this.$('.t-input-currency');
   $component.find('.t-amount').val('30').trigger('blur');
   assert.equal($component.find('.t-currency-symbol').text().trim(), CD.symbol_native);
   assert.equal($component.find('.t-currency-code').text().trim(), CD.code);
-  assert.equal($component.find('.t-amount').val(), '30.0000');
+  assert.equal($component.find('.t-amount').val(), parseFloat('30.0000').toFixed(CD.decimal_digits));
   $component.find('.t-amount').val('30').trigger('blur');
   assert.equal(model.get('auth_amount'), '30');
 });
@@ -172,11 +217,16 @@ test('t-amount placeholder should be defaulted if is not passed into component',
   run(function() {
     model = store.push('person', {
       id: PD.id,
+      settings_object: PD.settings
     });
   });
   this.set('model', model);
-  this.set('currencyObject', currencyObject);
-  this.render(hbs `{{input-currency model=model field="auth_amount"}}`);
+  this.render(hbs `{{input-currency
+                model=model
+                field="auth_amount"
+                currencyField="auth_currency"
+                inheritsFrom=model.settings_object.auth_amount.inherits_from
+              }}`);
   var $component = this.$('.t-input-currency');
   assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('admin.amount_and_default_value'));
 });
@@ -185,11 +235,17 @@ test('t-amount placeholder is not defaulted if is passed into component', functi
   run(function() {
     model = store.push('person', {
       id: PD.id,
+      settings_object: PD.settings
     });
   });
   this.set('model', model);
-  this.set('currencyObject', currencyObject);
-  this.render(hbs `{{input-currency model=model field="auth_amount" placeholder="foo"}}`);
+  this.render(hbs `{{input-currency
+                model=model
+                field="auth_amount"
+                currencyField="auth_currency"
+                inheritsFrom=model.settings_object.auth_amount.inherits_from
+                placeholder="foo"
+              }}`);
   var $component = this.$('.t-input-currency');
   assert.equal($component.find('.t-amount').get(0)['placeholder'], "foo");
 });

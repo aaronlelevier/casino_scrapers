@@ -14,9 +14,8 @@ export default Ember.Component.extend({
       return store.find('currency', this.get(`model.${currencyField}`));
     } else if (inheritsFrom) {
       return currency_service.getPersonCurrency();
-    } else if (this.get('model.new')) {
-      return currency_service.getDefaultCurrency();
     }
+    return currency_service.getDefaultCurrency();
   }),
   currencyObjects: Ember.computed(function() {
     let currency_service = this.get('currency');
@@ -28,16 +27,16 @@ export default Ember.Component.extend({
     Ember.Binding.from('model.' + field).to('bound_field').connect(this);
   }),
   placeholderAmount: Ember.computed(function() {
-    let currency_service = this.get('currency');
-    let currency = currency_service.getDefaultCurrency();
-    return parseFloat('0.0000').toFixed(currency.get('decimal_digits'));
+    let currency = this.get('currencyObject');
+    let field = this.get('field');
+    let amount = currency.get(`model.${field}`) ? currency.get(`model.${field}`) : 0;
+    return parseFloat(amount).toFixed(currency.get('decimal_digits'));
   }),
   actions: {
     format_currency() {
       let field = this.get('field');
       let currency_service = this.get('currency');
-      let store = this.get('simpleStore');
-      let precision = this.get('model.auth_currency') ? store.find('currency', this.get('model.auth_currency')).get('decimal_digits') : 4;
+      let precision = this.get('currencyObject').get('decimal_digits');
       this.set('model.' + field, currency_service.format_currency(this.get('bound_field'), precision));
     },
     selected(obj) {

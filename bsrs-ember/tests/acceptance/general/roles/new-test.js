@@ -101,7 +101,16 @@ test('visiting role/new', (assert) => {
   page.create_allClick();
   page.accept_assignClick();
   page.accept_notifyClick();
-  let postPayload = Object.assign(payload, {auth_amount: CURRENCY_DEFAULTS.authAmountOne, settings: {settings:{create_all:true,accept_assign:true,accept_notify:true}}});
+  let postPayload = Object.assign(payload, {
+    auth_amount: parseFloat(CURRENCY_DEFAULTS.authAmountOne).toFixed(2),
+    settings: {
+      settings: {
+        create_all: true,
+        accept_assign: true,
+        accept_notify: true
+      }
+    }
+  });
   xhr(url, 'POST', JSON.stringify(postPayload), {}, 201, {});
   generalPage.save();
   andThen(() => {
@@ -112,7 +121,7 @@ test('visiting role/new', (assert) => {
     assert.equal(role.get('name'), RD.nameOne);
     assert.equal(role.get('role_type'), RD.t_roleTypeGeneral);
     assert.equal(role.get('location_level.id'), RD.locationLevelOne);
-    assert.equal(role.get('auth_amount'), CURRENCY_DEFAULTS.authAmountOne);
+    assert.equal(role.get('auth_amount'), parseFloat(CURRENCY_DEFAULTS.authAmountOne).toFixed(2));
     assert.equal(role.get('create_all'), true);
     assert.equal(role.get('accept_assign'), true);
     assert.equal(role.get('accept_notify'), true);

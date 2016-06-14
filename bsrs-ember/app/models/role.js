@@ -51,7 +51,7 @@ var RoleModel = Model.extend(NewMixin, SettingMixin, OptConf, {
       role_type: this.get('role_type'),
       location_level: location_level_id || null,
       categories: this.get('categories_ids'),
-      auth_amount: this.get('auth_amount') ? parseFloat(this.get('auth_amount')) : undefined,
+      auth_amount: this.get('auth_amount') ? this.get('auth_amount') : undefined,
       auth_currency: this.get('auth_currency'),
       settings: this.get('settings')
     };

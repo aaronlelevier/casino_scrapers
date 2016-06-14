@@ -73,39 +73,45 @@ test('when you deep link to the category detail view you get bound attrs', (asse
   });
   let url = PREFIX + DETAIL_URL + '/';
   let response = CF.detail(CD.idOne);
-  let payload = CF.put({id: CD.idOne, name: CD.nameTwo, description: CD.descriptionMaintenance,
-                       label: CD.labelTwo, cost_amount: CD.costAmountTwo, cost_code: CD.costCodeTwo});
-                       xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-                       page.nameFill(CD.nameTwo);
-                       page.descriptionFill(CD.descriptionMaintenance);
-                       page.labelFill(CD.labelTwo);
-                       page.amountFill(CD.costAmountTwo);
-                       page.costCodeFill(CD.costCodeTwo);
-                       andThen(() => {
-                         let category = store.find('category', CD.idOne);
-                         assert.ok(category.get('isDirty'));
-                       });
-                       let list = CF.list();
-                       list.results[0].name = CD.nameTwo;
-                       list.results[0].description = CD.descriptionMaintenance;
-                       list.results[0].label = CD.labelTwo;
-                       list.results[0].cost_amount = CD.costAmountTwo;
-                       list.results[0].cost_code = CD.costCodeTwo;
-                       //just leaving here until I can figure out how to do destructuring w/o jshint blowing up on me.
-                       // let results = list.results[0];
-                       // ({nameTwo: results.name, descriptionMaintenance: results.description, labelTwo: results.label, costAmountTwo: results.cost_amount, costCodeTwo: results.cost_code} = CD);
-                       xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
-                       generalPage.save();
-                       andThen(() => {
-                         assert.equal(currentURL(), CATEGORIES_URL);
-                         let category = store.find('category', CD.idOne);
-                         assert.equal(category.get('name'), CD.nameTwo);
-                         assert.equal(category.get('description'), CD.descriptionMaintenance);
-                         assert.equal(category.get('label'), CD.labelTwo);
-                         assert.equal(category.get('cost_amount'), CD.costAmountTwo);
-                         assert.equal(category.get('cost_code'), CD.costCodeTwo);
-                         assert.ok(category.get('isNotDirty'));
-                       });
+  let payload = CF.put({
+    id: CD.idOne,
+    name: CD.nameTwo,
+    description: CD.descriptionMaintenance,
+    label: CD.labelTwo,
+    cost_amount: CD.costAmountTwo,
+    cost_code: CD.costCodeTwo
+  });
+  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+  page.nameFill(CD.nameTwo);
+  page.descriptionFill(CD.descriptionMaintenance);
+  page.labelFill(CD.labelTwo);
+  page.amountFill(CD.costAmountTwo);
+  page.costCodeFill(CD.costCodeTwo);
+  andThen(() => {
+    let category = store.find('category', CD.idOne);
+    assert.ok(category.get('isDirty'));
+  });
+  let list = CF.list();
+  list.results[0].name = CD.nameTwo;
+  list.results[0].description = CD.descriptionMaintenance;
+  list.results[0].label = CD.labelTwo;
+  list.results[0].cost_amount = CD.costAmountTwo;
+  list.results[0].cost_code = CD.costCodeTwo;
+  //just leaving here until I can figure out how to do destructuring w/o jshint blowing up on me.
+  // let results = list.results[0];
+  // ({nameTwo: results.name, descriptionMaintenance: results.description, labelTwo: results.label, costAmountTwo: results.cost_amount, costCodeTwo: results.cost_code} = CD);
+  xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), CATEGORIES_URL);
+    let category = store.find('category', CD.idOne);
+    assert.equal(category.get('name'), CD.nameTwo);
+    assert.equal(category.get('description'), CD.descriptionMaintenance);
+    assert.equal(category.get('label'), CD.labelTwo);
+    assert.equal(category.get('cost_amount'), CD.costAmountTwo);
+    assert.equal(category.get('cost_code'), CD.costCodeTwo);
+    assert.ok(category.get('isNotDirty'));
+  });
 });
 
 test('when you click cancel, you are redirected to the category list view', (assert) => {
