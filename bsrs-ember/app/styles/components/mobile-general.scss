@@ -24,4 +24,5 @@ header.mobile-header {
 section.mobile-main {
   -webkit-overflow-scrolling: touch; // DO NOT REMOVE
   overflow: auto;
+  z-index: 0;
 }

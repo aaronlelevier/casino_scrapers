@@ -17,6 +17,7 @@ section.wrap {
   border-width: 1px 0 0 1px;
   background: $white;
   font-size: 1.3rem;
+  z-index: 0;
   .liquid-container{
     height: 100%;
     .liquid-child{
@@ -34,7 +35,7 @@ header.main {
   line-height: $menuHeight;
   height: $menuHeight;
   @include nav-box-shadow;
-  z-index: 3; //dropdown in header needs to drumpf section.docSection z-index
+  z-index: 1; //dropdown in header needs to drumpf section.wrap z-index = 0
 }
 /*
 * DESKTOP AND MOBILE END
@@ -54,7 +55,7 @@ label[for="nav-trigger"] {
   position: fixed;
   left: 15px;
   top: $hamburgerTop;
-  z-index: 4;
+  z-index: 1; //hamburger must drumpf header.mobile-header z-index = 0
   font-size: 26px;
   line-height: $menuHeight;
   color: $light;
