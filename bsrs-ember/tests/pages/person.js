@@ -90,6 +90,7 @@ export default PageObject.create({
   authAmountLabel: text('.admin.person.label.auth_amount'),
   authAmountPlaceholder: () => Ember.$('.t-amount').get(0)['placeholder'],
   authAmountValue: value('.t-amount'),
+  authAmountFillin: fillable('.t-amount'),
 
   clickChangePassword: clickable('.t-person-change-password'),
   passwordOneTimeChecked: () => Ember.$('.t-person-password_one_time').is(':checked'),

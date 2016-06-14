@@ -477,30 +477,3 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
     assert.equal(find('.t-error-message').text(), 'WAT');
   });
 });
-
-test('auth_amount and auth_currency populate and can update values', assert => {
-  page.visitDetail();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-inherited-msg-auth_amount').text(), "");
-    let category = store.find('category', CD.idOne);
-    let currency = store.find('currency', category.get('cost_currency'));
-    assert.equal(currency.get('id'), CURRENCY_DEFAULTS.id);
-    assert.equal(personPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
-    assert.equal(rolePage.authAmountValue, category.get('cost_amount'));
-    assert.equal(personPage.currencyCodeText, CURRENCY_DEFAULTS.code);
-  });
-  selectChoose('.t-currency-code', CURRENCY_DEFAULTS.codeCAD);
-  andThen(() => {
-    assert.equal(personPage.currencyCodeText, CURRENCY_DEFAULTS.codeCAD);
-    let category = store.find('category', CD.idOne);
-    assert.equal(category.get('cost_currency'), CURRENCY_DEFAULTS.idCAD);
-  });
-  let url = PREFIX + DETAIL_URL + "/";
-  var payload = CF.put({id: CD.idOne, cost_currency: CURRENCY_DEFAULTS.idCAD});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), CATEGORIES_URL);
-  });
-});

@@ -4,16 +4,19 @@ import { moduleForComponent, test } from 'ember-qunit';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
+import RD from 'bsrs-ember/vendor/defaults/role';
 import CD from 'bsrs-ember/vendor/defaults/currencies';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import page from 'bsrs-ember/tests/pages/input-currency';
 
 const LONG_AUTH_AMOUNT = '50000.0000';
 
 var container, registry, store, model, currencyObject, service, trans, run = Ember.run;
 
-moduleForComponent('input-currency', 'integration: input-currency test', {
+moduleForComponent('input-currency', 'aaron integration: input-currency test', {
   integration: true,
   setup() {
+    page.setContext(this);
     store = module_registry(this.container, this.registry, ['model:person', 'model:currency', 'service:currency']);
     run(function() {
       store.push('person-current', {
@@ -33,7 +36,64 @@ moduleForComponent('input-currency', 'integration: input-currency test', {
     });
     translation.initialize(this);
     trans = this.container.lookup('service:i18n');
+  },
+  afterEach() {
+    page.removeContext(this);
   }
+});
+
+test('person detail example setup', function(assert) {
+  run(function() {
+    model = store.push('person', {
+      id: PD.id,
+      auth_amount: CD.authAmountOne,
+      auth_currency: CD.id,
+      settings_object: PD.settings
+    });
+  });
+  this.set('model', model);
+  this.set('currencyObject', currencyObject);
+  this.render(hbs `{{input-currency
+                model=model
+                field="auth_amount"
+                currencyField="auth_currency"
+                placeholder=(t 'crud.default_value' value=model.settings_object.auth_amount.inherited_value)
+                inheritsFrom=model.settings_object.auth_amount.inherits_from
+              }}`);
+  var $component = this.$('.t-input-currency');
+  $component.find('.t-amount').trigger('blur');
+  assert.equal($component.find('.t-currency-symbol').text().trim(), CD.symbol);
+  assert.equal($component.find('.t-currency-code').text().trim(), CD.code);
+  // shows precision is adjusted based upon Currency record
+  assert.equal($component.find('.t-amount').val(), parseFloat(CD.authAmountOne).toFixed(CD.decimal_digits));
+  // default to inherited value placeholder if blank
+  page.authAmountFillin('');
+  assert.equal($component.find('.t-amount').val(), "");
+  assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('crud.default_value'));
+});
+
+test('role new example setup', function(assert) {
+  run(function() {
+    model = store.push('role', {
+      id: RD.id,
+      new: true
+    });
+  });
+  this.set('model', model);
+  this.set('currencyObject', currencyObject);
+  this.render(hbs `{{input-currency
+                model=model
+                field="auth_amount"
+                currencyField="auth_currency"
+              }}`);
+  var $component = this.$('.t-input-currency');
+  $component.find('.t-amount').trigger('blur');
+  assert.equal($component.find('.t-currency-symbol').text().trim(), CD.symbol);
+  assert.equal($component.find('.t-currency-code').text().trim(), CD.code);
+  // default to inherited value placeholder if blank
+  page.authAmountFillin('');
+  assert.equal($component.find('.t-amount').val(), "");
+  assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('admin.amount_and_default_value'));
 });
 
 test('renders a component with no value when bound attr is undefined', function(assert) {
@@ -48,26 +108,6 @@ test('renders a component with no value when bound attr is undefined', function(
   this.render(hbs `{{input-currency model=model field="auth_amount"}}`);
   var $component = this.$('.t-input-currency');
   assert.equal($component.find('.t-amount').val(), '');
-});
-
-test('renders a component with 0.00 when the field returns a truly zero value', function(assert) {
-  run(function() {
-    model = store.push('person', {
-      id: PD.id,
-      auth_amount: CD.authAmountOne,
-      auth_currency: CD.id,
-      settings_object: PD.settings
-    });
-  });
-  this.set('model', model);
-  this.set('currencyObject', currencyObject);
-  this.render(hbs `{{input-currency model=model field="auth_amount" currencyObject=currencyObject}}`);
-  var $component = this.$('.t-input-currency');
-  $component.find('.t-amount').trigger('blur');
-  assert.equal($component.find('.t-currency-symbol').text().trim(), CD.symbol_native);
-  assert.equal($component.find('.t-currency-code').text().trim(), CD.code);
-  // shows precision is adjusted based upon Currency record
-  assert.equal($component.find('.t-amount').val(), parseFloat(CD.authAmountOne).toFixed(CD.decimal_digits));
 });
 
 test('if the person does not have a currency, use their inherited currency from the Role (in their settings obj)', function(assert) {
