@@ -1,4 +1,4 @@
-// import Ember from 'ember';
+import Ember from 'ember';
 import EmberPowerSelectMulti from 'ember-power-select/components/power-select-multiple';
 
 export default EmberPowerSelectMulti.extend({
