@@ -11,6 +11,7 @@ CATEGORY_FIELDS = ('id', 'name', 'description', 'label',
     'cost_amount', 'cost_currency', 'cost_code',)
 
 
+# Leaf Node
 
 class CategoryChildrenSerializer(BaseCreateSerializer):
 
@@ -19,7 +20,6 @@ class CategoryChildrenSerializer(BaseCreateSerializer):
         fields = ('id', 'name', 'level',)
 
 
-# Leaf Node
 class CategoryIDNameOnlySerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -27,22 +27,14 @@ class CategoryIDNameOnlySerializer(serializers.ModelSerializer):
         fields = ('id', 'name',)
 
 
-class CategoryIDNameSerializerTicket(BaseCreateSerializer):
+class SetParentIdMixin(object):
 
-    children = CategoryChildrenSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Category
-        fields = ('id', 'name', 'level', 'children', 'parent', 'label', 'subcategory_label')
-
-    # TODO: Scott...this needs cleanup
     def to_representation(self, obj):
-        data = super(CategoryIDNameSerializerTicket, self).to_representation(obj)
+        data = super(SetParentIdMixin, self).to_representation(obj)
         data['parent_id'] = data.pop('parent', [])
         return data
 
 
-#TODO: parent_id is preventing us from using above serializer. Need to modify frontend
 class CategoryIDNameSerializer(BaseCreateSerializer):
 
     children = CategoryChildrenSerializer(many=True, read_only=True)
@@ -51,6 +43,9 @@ class CategoryIDNameSerializer(BaseCreateSerializer):
         model = Category
         fields = ('id', 'name', 'level', 'parent', 'children', 'label', 'subcategory_label')
 
+
+class CategoryIDNameSerializerTicket(SetParentIdMixin, CategoryIDNameSerializer):
+    pass
 
 
 class CategoryRoleSerializer(BaseCreateSerializer):
@@ -61,9 +56,6 @@ class CategoryRoleSerializer(BaseCreateSerializer):
 
 
 class CategoryParentSerializer(BaseCreateSerializer):
-
-    # parent = CategoryIDNameSerializer(read_only=True)
-    # children = CategoryIDNameSerializer(many=True, read_only=True)
 
     class Meta:
         model = Category
