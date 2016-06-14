@@ -10,10 +10,6 @@ var RoleSingle = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, Ch
   simpleStore: Ember.inject.service(),
   nameValidation: validate('model.name'),
   locationLevelValidation: validate('model.location_level'),
-  roleNew: Ember.computed(function() {
-    let repository = this.get('repository');
-    return repository.getRouteData();
-  }),
   actions: {
     save() {
       this.set('submitted', true);

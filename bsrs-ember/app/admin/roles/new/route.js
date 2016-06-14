@@ -18,16 +18,16 @@ var RoleNewRoute = TabNewRoute.extend({
             const default_role_type = all_role_types.objectAt(0).get('name');
             model = this.get('repository').create(default_role_type, new_pk);
         }
-        return {
-            model: model,
-            all_role_types: all_role_types,
-            all_location_levels: all_location_levels,
-        };
+        const otherXhrs = [repository.getRouteData()];
+        return Ember.RSVP.hash({
+          model,
+          all_role_types,
+          all_location_levels,
+          otherXhrs: Ember.RSVP.all(otherXhrs)
+        });
     },
     setupController: function(controller, hash) {
-        controller.set('model', hash.model);
-        controller.set('all_role_types', hash.all_role_types);
-        controller.set('all_location_levels', hash.all_location_levels);
+      controller.setProperties(hash);
     }
 });
 

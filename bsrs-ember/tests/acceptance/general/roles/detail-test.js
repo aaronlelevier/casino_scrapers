@@ -429,7 +429,6 @@ test('settings - override value from parent, can click link-to to get to inherit
 // Role Settings: end
 
 test('deep linking with an xhr with a 404 status code will show up in the error component (role)', (assert) => {
-  clearxhr(setting_detail_xhr);
   clearxhr(detail_xhr);
   clearxhr(list_xhr);
   const exception = `This record does not exist.`;

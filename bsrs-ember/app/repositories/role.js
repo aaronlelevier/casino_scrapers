@@ -38,12 +38,9 @@ var RoleRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
         return this.get('simpleStore').find('role');
     },
     getRouteData() {
-        let store = this.get('simpleStore');
-        PromiseMixin.xhr(ROLE_URL + 'route-data/new/', 'GET').then((response) => {
-            const pk = this.get('uuid').v4();
-            store.push('role-new', {id: pk, settings: response.settings});
+        return PromiseMixin.xhr(ROLE_URL + 'route-data/new/', 'GET').then((response) => {
+          return response;
         });
-        return store.findOne('role-new');
     }
 });
 
