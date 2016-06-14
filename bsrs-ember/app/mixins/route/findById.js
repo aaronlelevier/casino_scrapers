@@ -13,16 +13,12 @@ var FindById = Ember.Mixin.create({
   findByIdScenario(model, pk, deps, override=false, otherXhrs=[]){
     /* jshint ignore:start */
     if (override || !model.get('id')) {
-      return new Ember.RSVP.Promise((resolve, reject) => {
-        Ember.RSVP.hash({
-          model: this.get('repository').findById(pk).then(response => response).catch(response => reject(response)),
-          otherXhrs: Ember.RSVP.all(otherXhrs),
-          ...deps
-        }).then((modelHash) => {
-          resolve(modelHash);
-        }).catch((response) => {
-          reject(response);
-        });
+      return Ember.RSVP.hash({
+        model: this.get('repository').findById(pk),
+        otherXhrs: Ember.RSVP.all(otherXhrs),
+        ...deps
+      }).then((modelHash) => {
+        return modelHash;
       });
     }else if(model.get('isNotDirtyOrRelatedNotDirty')){
       model = this.get('repository').findById(pk, model);
