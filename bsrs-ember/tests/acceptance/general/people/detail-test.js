@@ -34,6 +34,7 @@ import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/person';
+import inputCurrencyPage from 'bsrs-ember/tests/pages/input-currency';
 import random from 'bsrs-ember/models/random';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
@@ -271,12 +272,12 @@ test('currency helper displays inherited auth_amount, and can click link-to to g
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.authAmountPlaceholder(), 'Default: ' + PD.auth_amount);
-    assert.equal(page.authAmountInheritedFromText, 'Inherited from: ' + StgD.inherits_from_role);
-    assert.equal(page.authAmountValue, "");
+    assert.equal(inputCurrencyPage.authAmountPlaceholder(), 'Default: ' + PD.auth_amount);
+    assert.equal(inputCurrencyPage.authAmountInheritedFromText, 'Inherited from: ' + StgD.inherits_from_role);
+    assert.equal(inputCurrencyPage.authAmountValue, "");
   });
   xhr(`${PREFIX}${BASEURLS.base_roles_url}/${RD.idOne}/`, 'GET', null, {}, 200, RF.detail(RD.idOne));
-  page.authAmountInheritedFromClick();
+  inputCurrencyPage.authAmountInheritedFromClick();
   andThen(() => {
     assert.equal(currentURL(), `${BASEURLS.base_roles_url}/${RD.idOne}`);
   });
@@ -286,14 +287,14 @@ test('can change currency by clicking it and selecting another currency', assert
   page.visitDetail();
   andThen(() => {
   assert.equal(currentURL(), DETAIL_URL);
-  assert.equal(page.currencySymbolText, CURRENCY_DEFAULTS.symbol);
+  assert.equal(inputCurrencyPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
   let person = store.find('person', PD.id);
   assert.equal(person.get('settings_object').auth_currency.inherited_value, CURRENCY_DEFAULTS.id);
-  assert.equal(page.currencyCodeText, CURRENCY_DEFAULTS.code);
+  assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.code);
   });
   selectChoose('.t-currency-code', CURRENCY_DEFAULTS.codeCAD);
   andThen(() => {
-    assert.equal(page.currencyCodeText, CURRENCY_DEFAULTS.codeCAD);
+    assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.codeCAD);
     let person = store.find('person', PD.id);
     assert.equal(person.get('auth_currency'), CURRENCY_DEFAULTS.idCAD);
   });

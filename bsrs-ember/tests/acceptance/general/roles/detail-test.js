@@ -20,6 +20,7 @@ import page from 'bsrs-ember/tests/pages/role';
 import personPage from 'bsrs-ember/tests/pages/person';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import settingPage from 'bsrs-ember/tests/pages/settings';
+import inputCurrencyPage from 'bsrs-ember/tests/pages/input-currency';
 import {role_settings, role_settingsOther} from 'bsrs-ember/tests/helpers/payloads/role';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
@@ -40,7 +41,7 @@ const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-selec
 
 let application, store, list_xhr, detail_xhr, setting_detail_xhr, endpoint, detail_data, url, translations, run = Ember.run;
 
-module('Acceptance | role-detail', {
+module('Acceptance | role detail', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
@@ -448,13 +449,13 @@ test('role has an auth_amount and auth_currency', assert => {
     let role = store.find('role', RD.idOne);
     let currency = store.find('currency', role.get('auth_currency'));
     assert.equal(currency.get('id'), CURRENCY_DEFAULTS.id);
-    assert.equal(personPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
-    assert.equal(page.authAmountValue, CURRENCY_DEFAULTS.authAmountOne);
-    assert.equal(personPage.currencyCodeText, CURRENCY_DEFAULTS.code);
+    assert.equal(inputCurrencyPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
+    assert.equal(inputCurrencyPage.authAmountValue, CURRENCY_DEFAULTS.authAmountOne);
+    assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.code);
   });
   selectChoose('.t-currency-code', CURRENCY_DEFAULTS.codeCAD);
   andThen(() => {
-    assert.equal(personPage.currencyCodeText, CURRENCY_DEFAULTS.codeCAD);
+    assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.codeCAD);
     let role = store.find('role', RD.idOne);
     assert.equal(role.get('auth_currency'), CURRENCY_DEFAULTS.idCAD);
   });

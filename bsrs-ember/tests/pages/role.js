@@ -43,6 +43,4 @@ export default PageObject.create({
   accept_assignClick: clickable('.t-settings-accept_assign-label'),
   accept_notifyClick: clickable('.t-settings-accept_notify-label'),
   dashboard_textValue: value('.t-settings-dashboard_text'),
-
-  authAmountValue: value('.t-amount'),
 });

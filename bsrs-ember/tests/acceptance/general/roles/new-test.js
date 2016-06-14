@@ -20,6 +20,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/role';
 import personPage from 'bsrs-ember/tests/pages/person';
+import inputCurrencyPage from 'bsrs-ember/tests/pages/input-currency';
 import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -79,9 +80,9 @@ test('visiting role/new', (assert) => {
     assert.equal(store.find('location-level').get('length'), 8);
     assert.equal(page.categorySelectText, "");
     assert.equal(find('.t-amount').get(0)['placeholder'], 'Amount: 0.00');
-    assert.equal(page.authAmountValue, "");
-    assert.equal(personPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
-    assert.equal(personPage.currencyCodeText, CURRENCY_DEFAULTS.code);
+    assert.equal(inputCurrencyPage.authAmountValue, "");
+    assert.equal(inputCurrencyPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
+    assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.code);
     assert.equal(find('.t-inherited-msg-dashboard_text-link').text().trim(), 'Inherited from: general');
     assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + SD.dashboard_text);
     assert.equal(page.dashboard_textValue, "");
