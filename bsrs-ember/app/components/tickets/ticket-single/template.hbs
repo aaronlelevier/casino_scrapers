@@ -1,75 +1,73 @@
-<form {{action "return false" this on="submit"}}>
-  <article class="main">
-    <div class="form">
-      <header>
-        {{base-component
+<article class="main">
+  <div class="form">
+    <header>
+      {{base-component
         model=model
         save="save"
         cancel="cancel"
         delete="delete"
-        }}
-      </header>
-      <section class="docSection container-fluid">
-        <div class="row">
-          {{#if (eq model.status.name "ticket.status.draft")}}
-          <div class="btn-group btn-group-sm pull-right center-block">
-            {{#link-to "dt.dt" continueDTId model.id tagName="button" class="btn btn-info t-dt-continue"}}{{t "ticket.continue"}}{{/link-to}}
-          </div>
-          {{/if}}
-          <div class="col-md-12">
-            <section style="padding-bottom: 0">
-              <div class="row card-title">
-                <h1 class="col-md-12 t-ticket-header">
-                  {{model.sorted_categories.lastObject.name}}
-                  <small>{{t 'ticket.label.numberSymbol'}}{{model.number}}</small>
-                </h1>
-                <div class="col-md-12 meta-data">
-                  {{tickets/ticket-priority-tag item=model}}
-                  {{tickets/ticket-status-tag item=model}}
-                  {{timestamp-created model=model}}
-                </div>
-                <div class="col-md-12 ticket-categories">
-                  {{#parent-model-category-select ticket=model as |child_valid|}}
-                  <span class="validation validation-under category-validation-error t-category-validation-error {{child-validation submitted child_valid}}">{{t "validation.invalid"}} {{t "admin.category.label.name"}}</span>
-                  {{/parent-model-category-select}}
-                </div>
-                <div class="col-md-12 request-wrap">
-                  <div class="input-group">
-                    <span class="input-group-addon">{{t "ticket.label.request"}}</span>
-                    {{validated-input model=model value=model.request placeholder=(t "ticket.label.request") valuePath="request" className="form-control t-ticket-request ticket-request" didValidate=didValidate textarea=true class="t-ticket-request-validator"}}
-                  </div>
+      }}
+    </header>
+    <section class="docSection container-fluid">
+      <div class="row">
+        {{#if (eq model.status.name "ticket.status.draft")}}
+        <div class="btn-group btn-group-sm pull-right center-block">
+          {{#link-to "dt.dt" continueDTId model.id tagName="button" class="btn btn-info t-dt-continue"}}{{t "ticket.continue"}}{{/link-to}}
+        </div>
+        {{/if}}
+        <div class="col-md-12">
+          <section style="padding-bottom: 0">
+            <div class="row card-title">
+              <h1 class="col-md-12 t-ticket-header">
+                {{model.sorted_categories.lastObject.name}}
+                <small>{{t 'ticket.label.numberSymbol'}}{{model.number}}</small>
+              </h1>
+              <div class="col-md-12 meta-data">
+                {{tickets/ticket-priority-tag item=model}}
+                {{tickets/ticket-status-tag item=model}}
+                {{timestamp-created model=model}}
+              </div>
+              <div class="col-md-12 ticket-categories">
+                {{#parent-model-category-select ticket=model as |child_valid|}}
+                <span class="validation validation-under category-validation-error t-category-validation-error {{child-validation submitted child_valid}}">{{t "validation.invalid"}} {{t "admin.category.label.name"}}</span>
+                {{/parent-model-category-select}}
+              </div>
+              <div class="col-md-12 request-wrap">
+                <div class="input-group">
+                  <span class="input-group-addon">{{t "ticket.label.request"}}</span>
+                  {{validated-input model=model value=model.request placeholder=(t "ticket.label.request") valuePath="request" className="form-control t-ticket-request ticket-request" didValidate=didValidate textarea=true class="t-ticket-request-validator"}}
                 </div>
               </div>
-            </section>
-          </div>
-          {{tickets/ticket-comments-and-file-upload model=model priorities=priorities statuses=statuses deleteAttachment="deleteAttachment" save=(action "save" "update" "updateActivities")}}
+            </div>
+          </section>
         </div>
-        {{activity-list model=activities}}
-      </section>
-    </div>
-  </article>
-  <aside class="side-panel">
-    <header>
-      <h1></h1>
-    </header>
-    <menu class="t-side-menu">
-      <section>
-        <div class="col-md-12">
-          {{#form-group title="ticket.label.location-name" for="location"}}
-          {{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket" valuePath="location" didValidate=didValidate errorClass="error t-ticket-location-error"}}
-          {{/form-group}}
-        </div>
-        <div class="col-md-12">
-          {{#form-group title="ticket.label.assignee-fullname" for="assignee"}}
-          {{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=personRepo searchMethod="findTicketAssignee" valuePath="assignee" didValidate=didValidate errorClass="error t-ticket-assignee-error"}}
-          {{/form-group}}
-        </div>
-        <div class="col-md-12">
-          {{#form-group title="ticket.label.cc" for="cc"}}
-          {{db-fetch-multi-select model=model multiAttr="cc" multiAttrIds="cc_ids" selectedAttr=model.cc className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=personRepo searchMethod="findTicketPeople"}}
-          {{/form-group}}
-        </div>
-      </section>
-    </menu>
-  </aside>
-</form>
+        {{tickets/ticket-comments-and-file-upload model=model priorities=priorities statuses=statuses deleteAttachment="deleteAttachment" save=(action "save" "update" "updateActivities")}}
+      </div>
+      {{activity-list model=activities}}
+    </section>
+  </div>
+</article>
+<aside class="side-panel">
+  <header>
+    <h1></h1>
+  </header>
+  <menu class="t-side-menu">
+    <section>
+      <div class="col-md-12">
+        {{#form-group title="ticket.label.location-name" for="location"}}
+        {{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket" valuePath="location" didValidate=didValidate errorClass="error t-ticket-location-error"}}
+        {{/form-group}}
+      </div>
+      <div class="col-md-12">
+        {{#form-group title="ticket.label.assignee-fullname" for="assignee"}}
+        {{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=personRepo searchMethod="findTicketAssignee" valuePath="assignee" didValidate=didValidate errorClass="error t-ticket-assignee-error"}}
+        {{/form-group}}
+      </div>
+      <div class="col-md-12">
+        {{#form-group title="ticket.label.cc" for="cc"}}
+        {{db-fetch-multi-select model=model multiAttr="cc" multiAttrIds="cc_ids" selectedAttr=model.cc className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=personRepo searchMethod="findTicketPeople"}}
+        {{/form-group}}
+      </div>
+    </section>
+  </menu>
+</aside>

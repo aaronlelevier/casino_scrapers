@@ -1,237 +1,234 @@
-<form {{action "return false" this on="submit"}}>
-
-  {{base-component
+{{base-component
   model=model
   save="save"
   cancel="cancel"
   delete="delete"
-  }}
+}}
 
-  <section class="docSection container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <section style="padding-bottom: 0">
-          <div class="row card-title">
-            <h1 class="col-md-12">{{model.first_name}} {{model.middle_initial}} {{model.last_name}} <small>{{model.title}}</small></h1>
-            <p class="col-md-12">{{model.role.name}}</p>
-          </div>
-        </section>
-      </div>
-      <div class="col-md-4 user-info">
-        <section>
-          <div class="row">
-            <div class="col-md-12">
-              {{form-photo icon="user"}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-8">
-              {{#form-group title="admin.person.label.first_name" for="first_name"}}
-              {{input type="text" placeholder=(t "admin.person.label.first_name") value=model.first_name class="form-control t-person-first-name" id="first_name"}}
-              {{/form-group}}
-            </div>
-            <div class="col-md-4">
-              {{#form-group title="admin.person.label.middle_initial" for="middle_initial"}}
-              {{validated-input model=model value=model.middle_initial placeholder=(t "admin.person.label.middle_initial") valuePath="middle_initial" className="form-control t-person-middle-initial" didValidate=didValidate class="t-middle-initial-validator" id="middle_initial"}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.person.label.last_name" for="last_name"}}
-              {{input type="text" placeholder=(t "admin.person.label.last_name") value=model.last_name class="form-control t-person-last-name" id="last_name"}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.person.label.title" for="title"}}
-              {{input type="text" placeholder=(t "admin.person.label.title") value=model.title class="form-control t-person-title" id="title"}}
-              {{/form-group}}
-            </div>
-          </div>
-        </section>
-
-      </div>
-
-      <div class="col-md-8">
-        <section>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.person.label.role-name" for="role"}}
-              {{role-select model=model options=roles role_change=role_change}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.person.label.location" for="location"}}
-              {{db-fetch-multi-select model=model multiAttr="locations" multiAttrIds="locations_ids" selectedAttr=model.locations className="t-person-locations-select" displayName="name" add_func="add_locations" remove_func="remove_location" repository=locationRepo searchMethod="findLocationSelect" extra_params=extra_params}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
-                {{#if model.settings_object.auth_amount.inherits_from}}
-                  <p class="inherited-msg t-inherited-msg-auth_amount">
-                    {{#link-to "admin.roles.role" model.settings_object.auth_amount.inherits_from_id class="t-inherited-msg-auth_amount-link"}}
-                      {{t "crud.inherited_from" from=model.settings_object.auth_amount.inherits_from}}
-                    {{/link-to}}
-                  </p>
-                {{/if}}
-                {{input-currency
-                  model=model
-                  field="auth_amount"
-                  currencyField="auth_currency"
-                  placeholder=(t 'crud.default_value' value=model.settings_object.auth_amount.inherited_value)
-                  inheritsFrom=model.settings_object.auth_amount.inherits_from
-                }}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.person.label.employee_id" for="employee_id"}}
-              {{input type="text" placeholder=(t "admin.person.label.employee_id") value=model.employee_id class="form-control t-person-employee_id" id="employee_id"}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.person.label.language" for="locale"}}
-              {{power-select-foreign-key mainModel=model selected=model.locale change_method="change_locale" relatedModels=locales relatedModelName="locale"}}
-              {{/form-group}}
-            </div>
-          </div>
-        </section>
-      </div>
+<section class="docSection container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <section style="padding-bottom: 0">
+        <div class="row card-title">
+          <h1 class="col-md-12">{{model.first_name}} {{model.middle_initial}} {{model.last_name}} <small>{{model.title}}</small></h1>
+          <p class="col-md-12">{{model.role.name}}</p>
+        </div>
+      </section>
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <section>
-          <div class="row card-title">
-            <h2 class="col-md-12">{{t "admin.person.label.credentials"}}</h2>
+    <div class="col-md-4 user-info">
+      <section>
+        <div class="row">
+          <div class="col-md-12">
+            {{form-photo icon="user"}}
           </div>
-          <div class="row">
-            <div class="col-md-4">
-              {{#form-group title="admin.person.label.status" for="status"}}
-              {{power-select-foreign-key mainModel=model selected=model.status change_method="change_status" relatedModels=statuses relatedModelName="status"}}
-              {{/form-group}}
-            </div>
-            <div class="col-md-4">
-              {{#form-group title="admin.person.label.username" for="username"}}
-              {{input-backend-validation model=model value=model.username valuePath="username" placeholder=(t "admin.person.label.username") className="form-control t-person-username" didValidate=didValidate idZ="username"}}
-              {{/form-group}}
-            </div>
-            <div class="col-md-4">
-              {{#form-group title="admin.person.label.password" for="password"}}
-              {{#if changingPassword}}
-              {{input-focus type="password" placeholder=(t "admin.person.label.password") value=model.password class="form-control t-person-password" id="password"}}
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value={{model.password_one_time}} onclick={{action 'changeBool' 'password_one_time'}} checked={{model.password_one_time}} class="t-person-password_one_time" name="password_one_time">
-                  <span class="t-person-password_one_time-label">{{t "admin.setting.password_one_time"}}</span>
-                </label>
-              </div>
-              <div><button class="btn btn-default btn-sm" {{action "changePassword"}}>{{fa-icon "ban"}} {{t "crud.cancel.button"}}</button></div>
-              {{#validation-error-field submitted=submitted field="password" className="t-password-validation-error" model=model validation=passwordValidation}}{{t "validation.invalid"}} {{t "admin.person.label.password"}}{{/validation-error-field}}
-              {{else}}
-              <div><button class="btn btn-default btn-sm t-person-change-password" {{action "changePassword"}}>{{fa-icon "key"}} {{t "admin.person.label.change_password"}}</button></div>
-              {{/if}}
-              {{/form-group}}
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            {{#form-group title="admin.person.label.first_name" for="first_name"}}
+            {{input type="text" placeholder=(t "admin.person.label.first_name") value=model.first_name class="form-control t-person-first-name" id="first_name"}}
+            {{/form-group}}
+          </div>
+          <div class="col-md-4">
+            {{#form-group title="admin.person.label.middle_initial" for="middle_initial"}}
+            {{validated-input model=model value=model.middle_initial placeholder=(t "admin.person.label.middle_initial") valuePath="middle_initial" className="form-control t-person-middle-initial" didValidate=didValidate class="t-middle-initial-validator" id="middle_initial"}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.person.label.last_name" for="last_name"}}
+            {{input type="text" placeholder=(t "admin.person.label.last_name") value=model.last_name class="form-control t-person-last-name" id="last_name"}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.person.label.title" for="title"}}
+            {{input type="text" placeholder=(t "admin.person.label.title") value=model.title class="form-control t-person-title" id="title"}}
+            {{/form-group}}
+          </div>
+        </div>
+      </section>
 
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <section>
-          <div class="row card-title">
-            <h2 class="col-md-12">{{t "admin.person.label.contact"}}</h2>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.person.label.phone_number.other"}}
-              {{input-multi-phone placeholder=(t "admin.person.label.phone_number.one")
-              model=model.phone_numbers
-              types=phone_number_types
-              default_type=default_phone_number_type
-              related_pk=model.id
-              }}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.person.label.email"}}
-              {{input-multi-email
-              placeholder=(t "admin.person.label.email.one")
-              model=model.emails
-              types=email_types
-              default_type=default_email_type
-              related_pk=model.id
-              }}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.person.label.address"}}
-              {{input-multi-address
-              model=model.addresses
-              state_list=state_list
-              countries=countries
-              types=address_types
-              default_type=default_address_type
-              related_pk=model.id
-              }}
-              {{/form-group}}
-            </div>
-          </div>
-
-        </section>
-      </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-12">
-        <section>
-          <div class="row card-title">
-            <h2 class="col-md-12">{{t "admin.person.label.settings"}}</h2>
+    <div class="col-md-8">
+      <section>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.person.label.role-name" for="role"}}
+            {{role-select model=model options=roles role_change=role_change}}
+            {{/form-group}}
           </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group}}
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value={{model.accept_assign}} onclick={{action 'changeBool' 'accept_assign'}} checked={{model.accept_assign}} class="t-person-accept_assign" name="accept_assign">
-                  <span class="t-person-accept_assign-label">{{t "admin.setting.accept_assign"}}</span>
-                </label>
-                <p class="inherited-msg--under">
-                  {{#link-to "admin.roles.role" model.settings_object.accept_assign.inherits_from_id class="t-inherited-msg-accept_assign-link"}}
-                    <span class="t-person-accept_assign-label-inherits_from">{{t "crud.inherited_from" from=model.settings_object.accept_assign.inherits_from}}</span>
-                  {{/link-to}}
-                </p>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value={{model.accept_notify}} onclick={{action 'changeBool' 'accept_notify'}} checked={{model.accept_notify}} class="t-person-accept_notify" name="accept_notify">
-                  <span class="t-person-accept_notify-label">{{t "admin.setting.accept_notify"}}</span>
-                </label>
-                <p class="inherited-msg--under">
-                  {{#link-to "admin.roles.role" model.settings_object.accept_notify.inherits_from_id class="t-inherited-msg-accept_notify-link"}}
-                    <span class="t-person-accept_notify-label-inherits_from">{{t "crud.inherited_from" from=model.settings_object.accept_notify.inherits_from}}</span>
-                  {{/link-to}}
-                </p>
-              </div>
-              {{/form-group}}
-            </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.person.label.location" for="location"}}
+            {{db-fetch-multi-select model=model multiAttr="locations" multiAttrIds="locations_ids" selectedAttr=model.locations className="t-person-locations-select" displayName="name" add_func="add_locations" remove_func="remove_location" repository=locationRepo searchMethod="findLocationSelect" extra_params=extra_params}}
+            {{/form-group}}
           </div>
-        </section>
-      </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
+            {{#if model.settings_object.auth_amount.inherits_from}}
+            <p class="inherited-msg t-inherited-msg-auth_amount">
+              {{#link-to "admin.roles.role" model.settings_object.auth_amount.inherits_from_id class="t-inherited-msg-auth_amount-link"}}
+              {{t "crud.inherited_from" from=model.settings_object.auth_amount.inherits_from}}
+              {{/link-to}}
+            </p>
+            {{/if}}
+            {{input-currency
+              model=model
+              field="auth_amount"
+              currencyField="auth_currency"
+              placeholder=(t 'crud.default_value' value=model.settings_object.auth_amount.inherited_value)
+              inheritsFrom=model.settings_object.auth_amount.inherits_from
+            }}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.person.label.employee_id" for="employee_id"}}
+            {{input type="text" placeholder=(t "admin.person.label.employee_id") value=model.employee_id class="form-control t-person-employee_id" id="employee_id"}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.person.label.language" for="locale"}}
+            {{power-select-foreign-key mainModel=model selected=model.locale change_method="change_locale" relatedModels=locales relatedModelName="locale"}}
+            {{/form-group}}
+          </div>
+        </div>
+      </section>
     </div>
-  </section>
-</form>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <section>
+        <div class="row card-title">
+          <h2 class="col-md-12">{{t "admin.person.label.credentials"}}</h2>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            {{#form-group title="admin.person.label.status" for="status"}}
+            {{power-select-foreign-key mainModel=model selected=model.status change_method="change_status" relatedModels=statuses relatedModelName="status"}}
+            {{/form-group}}
+          </div>
+          <div class="col-md-4">
+            {{#form-group title="admin.person.label.username" for="username"}}
+            {{input-backend-validation model=model value=model.username valuePath="username" placeholder=(t "admin.person.label.username") className="form-control t-person-username" didValidate=didValidate idZ="username"}}
+            {{/form-group}}
+          </div>
+          <div class="col-md-4">
+            {{#form-group title="admin.person.label.password" for="password"}}
+            {{#if changingPassword}}
+            {{input-focus type="password" placeholder=(t "admin.person.label.password") value=model.password class="form-control t-person-password" id="password"}}
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value={{model.password_one_time}} onclick={{action 'changeBool' 'password_one_time'}} checked={{model.password_one_time}} class="t-person-password_one_time" name="password_one_time">
+                <span class="t-person-password_one_time-label">{{t "admin.setting.password_one_time"}}</span>
+              </label>
+            </div>
+            <div><button class="btn btn-default btn-sm" {{action "changePassword"}}>{{fa-icon "ban"}} {{t "crud.cancel.button"}}</button></div>
+            {{#validation-error-field submitted=submitted field="password" className="t-password-validation-error" model=model validation=passwordValidation}}{{t "validation.invalid"}} {{t "admin.person.label.password"}}{{/validation-error-field}}
+            {{else}}
+            <div><button class="btn btn-default btn-sm t-person-change-password" {{action "changePassword"}}>{{fa-icon "key"}} {{t "admin.person.label.change_password"}}</button></div>
+            {{/if}}
+            {{/form-group}}
+
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <section>
+        <div class="row card-title">
+          <h2 class="col-md-12">{{t "admin.person.label.contact"}}</h2>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.person.label.phone_number.other"}}
+            {{input-multi-phone placeholder=(t "admin.person.label.phone_number.one")
+            model=model.phone_numbers
+            types=phone_number_types
+            default_type=default_phone_number_type
+            related_pk=model.id
+          }}
+          {{/form-group}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          {{#form-group title="admin.person.label.email"}}
+          {{input-multi-email
+            placeholder=(t "admin.person.label.email.one")
+            model=model.emails
+            types=email_types
+            default_type=default_email_type
+            related_pk=model.id
+          }}
+          {{/form-group}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          {{#form-group title="admin.person.label.address"}}
+          {{input-multi-address
+            model=model.addresses
+            state_list=state_list
+            countries=countries
+            types=address_types
+            default_type=default_address_type
+            related_pk=model.id
+          }}
+          {{/form-group}}
+        </div>
+      </div>
+
+    </section>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <section>
+      <div class="row card-title">
+        <h2 class="col-md-12">{{t "admin.person.label.settings"}}</h2>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          {{#form-group}}
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value={{model.accept_assign}} onclick={{action 'changeBool' 'accept_assign'}} checked={{model.accept_assign}} class="t-person-accept_assign" name="accept_assign">
+              <span class="t-person-accept_assign-label">{{t "admin.setting.accept_assign"}}</span>
+            </label>
+            <p class="inherited-msg--under">
+              {{#link-to "admin.roles.role" model.settings_object.accept_assign.inherits_from_id class="t-inherited-msg-accept_assign-link"}}
+              <span class="t-person-accept_assign-label-inherits_from">{{t "crud.inherited_from" from=model.settings_object.accept_assign.inherits_from}}</span>
+              {{/link-to}}
+            </p>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value={{model.accept_notify}} onclick={{action 'changeBool' 'accept_notify'}} checked={{model.accept_notify}} class="t-person-accept_notify" name="accept_notify">
+              <span class="t-person-accept_notify-label">{{t "admin.setting.accept_notify"}}</span>
+            </label>
+            <p class="inherited-msg--under">
+              {{#link-to "admin.roles.role" model.settings_object.accept_notify.inherits_from_id class="t-inherited-msg-accept_notify-link"}}
+              <span class="t-person-accept_notify-label-inherits_from">{{t "crud.inherited_from" from=model.settings_object.accept_notify.inherits_from}}</span>
+              {{/link-to}}
+            </p>
+          </div>
+          {{/form-group}}
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+</section>
