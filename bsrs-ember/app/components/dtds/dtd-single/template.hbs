@@ -1,133 +1,131 @@
-<form {{action "return false" this on="submit"}}>
-  <article class="main">
-    <div class="form">
-      <section class="docSection container-fluid">
+<article class="main">
+  <div class="form">
+    <section class="docSection container-fluid">
+      <div class="row">
+        <h2 class="col-md-12 dtd-detail-title t-dtd-detail-title">{{t title}}</h2>
+      </div>
+      <div class="row">
+        {{base-component
+          model=model
+          save="save"
+          saveText="crud.save_only.button"
+          cancel="cancel"
+          delete="delete"
+        }}
+      </div>
+      <section class="sub-section row">
+        <h3 class="col-md-12">{{t 'admin.dtd.title.display'}}</h3>
         <div class="row">
-          <h2 class="col-md-12 dtd-detail-title t-dtd-detail-title">{{t title}}</h2>
-        </div>
-        <div class="row">
-          {{base-component
-            model=model
-            save="save"
-            saveText="crud.save_only.button"
-            cancel="cancel"
-            delete="delete"
-          }}
-        </div>
-        <section class="sub-section row">
-          <h3 class="col-md-12">{{t 'admin.dtd.title.display'}}</h3>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.dtd.label.key" for="key"}}
-                {{validated-input model=model value=model.key placeholder=(t "admin.dtd.label.key") valuePath="key" className="form-control t-dtd-single-key" didValidate=didValidate class="t-dtd-key"}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.dtd.label.note" for="note"}}
-              <div class="input-group" style="margin-bottom: 0;">
-                <div class="input-group-btn">
-                  {{#power-select
-                    class='t-dtd-note_type'
-                    selected=model.note_type
-                    onchange=(action "setNoteType")
-                    searchEnabled=false
-                    options=model.note_types
-                    as |note|
-                  }}
-                    {{t note}}
-                  {{/power-select}}
-                </div>
-                {{input type="text" placeholder=(t "admin.dtd.label.note") value=model.note class="form-control t-dtd-note" id="dtd_note"}}
-              </div>
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.dtd.label.description" for="description"}}
-                {{validated-input model=model value=model.description placeholder=(t "admin.dtd.label.description") valuePath="description" className="form-control t-dtd-single-description" didValidate=didValidate textarea=true class="t-dtd-description"}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.dtd.label.prompt" for="prompt"}}
-              {{textarea autoresize=true placeholder=(t "admin.dtd.label.prompt") value=model.prompt class="form-control t-dtd-prompt" id="dtd_prompt"}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.dtd.label.files" for=""}}
-              <div class="attach">
-                <span class="btn btn-default btn-file">{{fa-icon 'paperclip'}} {{t "button.upload"}}<input type="file" multiple="multiple" onchange={{action "upload"}}></span>
-                {{#if attachmentErrMsg}}
-                  <h2 class="t-dtd-attachment-error">{{t attachmentErrMsg}}</h2>
-                {{/if}}
-              </div>
-              {{/form-group}}
-            </div>
-            {{#each model.attachments as |attachment|}}
-            {{#if attachment.new}}
-            <div class="col-md-12 progress-wrap">
-              <div class="progress active {{attachment.complete_class}}" role="progressbar" aria-valuemin="100" aria-valuemax="100" aria-valuenow="0">
-                <div class={{attach-file-progress attachment.percent}} style={{attachment.progress}}>
-                  <span class="attachment-title">{{attachment.title}}</span>
-                  {{#unless attachment.complete}}
-                  <span class="attachment-progress"> - {{t "upload.progress"}}: {{attachment.percent}}%</span>
-                  {{/unless}}
-                  <i class="fa fa-minus-circle remove-attachment t-remove-attachment" aria-hidden="true" {{action "removeAttachment" attachment.id}}></i>
-                </div>
-              </div>
-            </div>
-            {{/if}}
-            {{/each}}
-            {{#each model.attachments as |attachment|}}
-              {{#unless attachment.new}}
-                {{attachment/single-thumb attachment=attachment}}
-              {{/unless}}
-            {{/each}}
-          </div>
-        </section>
-        <section class="sub-section row">
-          <h3 class="col-md-12">{{t 'admin.dtd.title.fields'}}</h3>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.dtd.label.fields" for="fields"}}
-              {{dtds/dtd-field
-                model=model
-              }}
-              {{/form-group}}
-            </div>
-          </div>
-        </section>
-        <section class="sub-section row">
-          <h3 class="col-md-12">{{t 'admin.dtd.title.navigation'}}</h3>
           <div class="col-md-12">
-            {{#form-group title="admin.dtd.label.link_type" for="link_type"}}
-              {{#each model.link_types as |type|}}
-                <div class="radio radio-inline">
-            			<label>
-            				<input type="radio" value={{type}} onchange={{action 'setLinkType' type}} class="t-dtd-link_type" checked={{is-equal model.link_type type}} name="link_type">
-            				<span class="t-dtd-link_type-label">{{t type}}</span>
-            			</label>
-            		</div>
-              {{/each}}
-            {{/form-group}}
-            {{#form-group title="admin.dtd.label.links" for=""}}
-              {{dtds/dtd-link
-                model=model
-                priorities=priorities
-                statuses=statuses
-                repository=repository
-                didValidate=didValidate
-              }}
+            {{#form-group title="admin.dtd.label.key" for="key"}}
+            {{validated-input model=model value=model.key placeholder=(t "admin.dtd.label.key") valuePath="key" className="form-control t-dtd-single-key" didValidate=didValidate class="t-dtd-key"}}
             {{/form-group}}
           </div>
-        </section>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.dtd.label.note" for="note"}}
+            <div class="input-group" style="margin-bottom: 0;">
+              <div class="input-group-btn">
+                {{#power-select
+                  class='t-dtd-note_type'
+                  selected=model.note_type
+                  onchange=(action "setNoteType")
+                  searchEnabled=false
+                  options=model.note_types
+                  as |note|
+                }}
+                {{t note}}
+                {{/power-select}}
+              </div>
+              {{input type="text" placeholder=(t "admin.dtd.label.note") value=model.note class="form-control t-dtd-note" id="dtd_note"}}
+            </div>
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.dtd.label.description" for="description"}}
+            {{validated-input model=model value=model.description placeholder=(t "admin.dtd.label.description") valuePath="description" className="form-control t-dtd-single-description" didValidate=didValidate textarea=true class="t-dtd-description"}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.dtd.label.prompt" for="prompt"}}
+            {{textarea autoresize=true placeholder=(t "admin.dtd.label.prompt") value=model.prompt class="form-control t-dtd-prompt" id="dtd_prompt"}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.dtd.label.files" for=""}}
+            <div class="attach">
+              <span class="btn btn-default btn-file">{{fa-icon 'paperclip'}} {{t "button.upload"}}<input type="file" multiple="multiple" onchange={{action "upload"}}></span>
+              {{#if attachmentErrMsg}}
+              <h2 class="t-dtd-attachment-error">{{t attachmentErrMsg}}</h2>
+              {{/if}}
+            </div>
+            {{/form-group}}
+          </div>
+          {{#each model.attachments as |attachment|}}
+          {{#if attachment.new}}
+          <div class="col-md-12 progress-wrap">
+            <div class="progress active {{attachment.complete_class}}" role="progressbar" aria-valuemin="100" aria-valuemax="100" aria-valuenow="0">
+              <div class={{attach-file-progress attachment.percent}} style={{attachment.progress}}>
+                <span class="attachment-title">{{attachment.title}}</span>
+                {{#unless attachment.complete}}
+                <span class="attachment-progress"> - {{t "upload.progress"}}: {{attachment.percent}}%</span>
+                {{/unless}}
+                <i class="fa fa-minus-circle remove-attachment t-remove-attachment" aria-hidden="true" {{action "removeAttachment" attachment.id}}></i>
+              </div>
+            </div>
+          </div>
+          {{/if}}
+          {{/each}}
+          {{#each model.attachments as |attachment|}}
+          {{#unless attachment.new}}
+          {{attachment/single-thumb attachment=attachment}}
+          {{/unless}}
+          {{/each}}
+        </div>
       </section>
-    </div>
-  </article>
-</form>
+      <section class="sub-section row">
+        <h3 class="col-md-12">{{t 'admin.dtd.title.fields'}}</h3>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.dtd.label.fields" for="fields"}}
+            {{dtds/dtd-field
+              model=model
+            }}
+            {{/form-group}}
+          </div>
+        </div>
+      </section>
+      <section class="sub-section row">
+        <h3 class="col-md-12">{{t 'admin.dtd.title.navigation'}}</h3>
+        <div class="col-md-12">
+          {{#form-group title="admin.dtd.label.link_type" for="link_type"}}
+          {{#each model.link_types as |type|}}
+          <div class="radio radio-inline">
+            <label>
+              <input type="radio" value={{type}} onchange={{action 'setLinkType' type}} class="t-dtd-link_type" checked={{is-equal model.link_type type}} name="link_type">
+              <span class="t-dtd-link_type-label">{{t type}}</span>
+            </label>
+          </div>
+          {{/each}}
+          {{/form-group}}
+          {{#form-group title="admin.dtd.label.links" for=""}}
+          {{dtds/dtd-link
+            model=model
+            priorities=priorities
+            statuses=statuses
+            repository=repository
+            didValidate=didValidate
+          }}
+          {{/form-group}}
+        </div>
+      </section>
+    </section>
+  </div>
+</article>

@@ -1,147 +1,145 @@
-<form {{action "return false" this on="submit"}}>
-  {{base-component
+{{base-component
   model=model
   save="save"
   cancel="cancel"
   delete="delete"
-  }}
-  <section class="docSection container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <span class="t-ajax-error {{if ajaxError '' 'hidden'}}">
-          {{#each ajaxError as |error|}}
-          <span>{{error.value}}</span>
-          {{/each}}
-        </span>
-      </div>
+}}
+<section class="docSection container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <span class="t-ajax-error {{if ajaxError '' 'hidden'}}">
+        {{#each ajaxError as |error|}}
+        <span>{{error.value}}</span>
+        {{/each}}
+      </span>
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <section style="padding-bottom: 0">
-          <div class="row card-title">
-            <h1 class="col-md-12">
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <section style="padding-bottom: 0">
+        <div class="row card-title">
+          <h1 class="col-md-12">
             {{model.name}} <small>{{model.number}}</small>
-            </h1>
-            <p class="col-md-12">{{model.location_level.name}}</p>
-          </div>
-        </section>
-      </div>
-      <div class="col-md-4 user-info">
-        <section>
-          <div class="row">
-            <div class="col-md-12">
-              {{form-photo icon="building"}}
-            </div>
-          </div>
-        </section>
-      </div>
-      <div class="col-md-8">
-        <section>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.location.label.name" for="name"}}
-                {{input type="text" placeholder=(t "admin.location.label.name") value=model.name class="form-control t-location-name" id="location_name"}}
-                {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.location.label.name"}}{{/validation-error-field}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.location.label.number" for="number"}}
-                {{input type="text" placeholder=(t "admin.location.label.number") value=model.number class="form-control t-location-number" id="location_number"}}
-                {{#validation-error-field submitted=submitted field="number" className="validation validation-under t-number-validation-error" model=model validation=numberValidation}}{{t "validation.invalid"}} {{t "admin.location.label.number"}}{{/validation-error-field}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.location.label.location_level" for="location_location_level_select"}}
-                {{power-select-foreign-key mainModel=model selected=model.location_level change_method='change_location_level' relatedModels=all_location_levels relatedModelName='location-level' notTranslated=true}}
-                {{#validation-error-field submitted=submitted field="location_level" className="validation validation-under t-location-level-validation-error" model=model validation=locationLevelValidation}}{{t "validation.invalid"}} {{t "admin.location.label.location_level"}}{{/validation-error-field}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.location.label.status-name" for="location_status"}}
-                {{power-select-foreign-key mainModel=model selected=model.status change_method="change_status" relatedModels=all_statuses relatedModelName="status"}}
-                {{#validation-error-field submitted=submitted field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}{{t "validation.invalid"}} {{t "admin.location.label.status-name"}}{{/validation-error-field}}
-              {{/form-group}}
-            </div>
-          </div>
-        </section>
-      </div>
-      <div class="col-md-12">
-        <section>
-          <div class="row card-title">
-            <h2 class="col-md-12">{{t "admin.location.label.contact"}}</h2>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.location.label.phone_number.other"}}
-                {{input-multi-phone
-                placeholder=(t "admin.location.label.phone_number.one")
-                model=model.phone_numbers
-                types=phone_number_types
-                default_type=default_phone_number_type
-                related_pk=model.id
-                }}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.location.label.email.other"}}
-                {{input-multi-email
-                placeholder=(t "admin.location.label.email.one")
-                model=model.emails
-                types=email_types
-                default_type=default_email_type
-                related_pk=model.id
-                }}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.location.label.address.other"}}
-                {{input-multi-address
-                model=model.addresses
-                state_list=state_list
-                countries=countries
-                types=address_types
-                default_type=default_address_type
-                related_pk=model.id
-                }}
-              {{/form-group}}
-            </div>
-          </div>
-        </section>
-      </div>
-      <div class="col-md-12">
-        <section>
-          <div class="row card-title">
-            <h2 class="col-md-12">{{t "admin.location.label.parents-name"}}</h2>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.location.label.parents-name" for="location_parents"}}
-                {{db-fetch-multi-select model=model isDisabled=isDisabled multiAttr="parents" multiAttrIds="parents_ids" selectedAttr=model.parents className="t-location-parent-select" displayName="name" add_func="add_parent" remove_func="remove_parent" repository=repository searchMethod="findLocationParents" extra_params=extra_params}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row card-title">
-            <h2 class="col-md-12">{{t "admin.location.label.children-name"}}</h2>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.location.label.children-name" for="location_children"}}
-                {{db-fetch-multi-select model=model isDisabled=isDisabled multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-location-children-select" displayName="name" add_func="add_child" remove_func="remove_children" repository=repository searchMethod="findLocationChildren" extra_params=extra_params}}
-              {{/form-group}}
-            </div>
-          </div>
-        </section>
-      </div>
+          </h1>
+          <p class="col-md-12">{{model.location_level.name}}</p>
+        </div>
+      </section>
     </div>
-  </section>
-</form>
+    <div class="col-md-4 user-info">
+      <section>
+        <div class="row">
+          <div class="col-md-12">
+            {{form-photo icon="building"}}
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="col-md-8">
+      <section>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.location.label.name" for="name"}}
+            {{input type="text" placeholder=(t "admin.location.label.name") value=model.name class="form-control t-location-name" id="location_name"}}
+            {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.location.label.name"}}{{/validation-error-field}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.location.label.number" for="number"}}
+            {{input type="text" placeholder=(t "admin.location.label.number") value=model.number class="form-control t-location-number" id="location_number"}}
+            {{#validation-error-field submitted=submitted field="number" className="validation validation-under t-number-validation-error" model=model validation=numberValidation}}{{t "validation.invalid"}} {{t "admin.location.label.number"}}{{/validation-error-field}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.location.label.location_level" for="location_location_level_select"}}
+            {{power-select-foreign-key mainModel=model selected=model.location_level change_method='change_location_level' relatedModels=all_location_levels relatedModelName='location-level' notTranslated=true}}
+            {{#validation-error-field submitted=submitted field="location_level" className="validation validation-under t-location-level-validation-error" model=model validation=locationLevelValidation}}{{t "validation.invalid"}} {{t "admin.location.label.location_level"}}{{/validation-error-field}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.location.label.status-name" for="location_status"}}
+            {{power-select-foreign-key mainModel=model selected=model.status change_method="change_status" relatedModels=all_statuses relatedModelName="status"}}
+            {{#validation-error-field submitted=submitted field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}{{t "validation.invalid"}} {{t "admin.location.label.status-name"}}{{/validation-error-field}}
+            {{/form-group}}
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="col-md-12">
+      <section>
+        <div class="row card-title">
+          <h2 class="col-md-12">{{t "admin.location.label.contact"}}</h2>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.location.label.phone_number.other"}}
+            {{input-multi-phone
+              placeholder=(t "admin.location.label.phone_number.one")
+              model=model.phone_numbers
+              types=phone_number_types
+              default_type=default_phone_number_type
+              related_pk=model.id
+            }}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.location.label.email.other"}}
+            {{input-multi-email
+              placeholder=(t "admin.location.label.email.one")
+              model=model.emails
+              types=email_types
+              default_type=default_email_type
+              related_pk=model.id
+            }}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.location.label.address.other"}}
+            {{input-multi-address
+              model=model.addresses
+              state_list=state_list
+              countries=countries
+              types=address_types
+              default_type=default_address_type
+              related_pk=model.id
+            }}
+            {{/form-group}}
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="col-md-12">
+      <section>
+        <div class="row card-title">
+          <h2 class="col-md-12">{{t "admin.location.label.parents-name"}}</h2>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.location.label.parents-name" for="location_parents"}}
+            {{db-fetch-multi-select model=model isDisabled=isDisabled multiAttr="parents" multiAttrIds="parents_ids" selectedAttr=model.parents className="t-location-parent-select" displayName="name" add_func="add_parent" remove_func="remove_parent" repository=repository searchMethod="findLocationParents" extra_params=extra_params}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row card-title">
+          <h2 class="col-md-12">{{t "admin.location.label.children-name"}}</h2>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.location.label.children-name" for="location_children"}}
+            {{db-fetch-multi-select model=model isDisabled=isDisabled multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-location-children-select" displayName="name" add_func="add_child" remove_func="remove_children" repository=repository searchMethod="findLocationChildren" extra_params=extra_params}}
+            {{/form-group}}
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>

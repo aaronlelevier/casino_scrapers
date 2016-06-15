@@ -1,54 +1,51 @@
-<form {{action "return false" this on="submit"}}>
-
-  {{base-component-new
+{{base-component-new
   model=model
   save="save"
   cancel="cancel"
-  }}
+}}
 
-  <section class="docSection container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <section style="padding-bottom: 0">
-          <div class="row card-title">
-            <h1 class="col-md-12">
-              <span class="new">{{t "admin.person.new"}}</span>
-            </h1>
-          </div>
-        </section>
-      </div>
-      <div class="col-md-12">
-        <section>
-          <div class="row">
-            <div class="col-sm-12">
-              {{#form-group title="admin.person.label.username" for="username"}}
-              {{input-backend-validation model=model value=model.username valuePath="username" placeholder=(t "admin.person.label.username") className="form-control t-person-username" didValidate=didValidate idZ="username"}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-12">
-              {{#form-group title="admin.person.label.password" for="password"}}
-              {{validated-input model=model value=model.password placeholder=(t "admin.person.label.password") valuePath="password" className="form-control t-person-password" didValidate=didValidate class="t-person-password-validator" idZ="password"}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-12">
-              {{#form-group title="admin.person.label.role-name" for="role"}}
-              {{role-select model=model options=roles}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.person.label.language" for="locale"}}
-              {{power-select-foreign-key mainModel=model selected=model.locale change_method="change_locale" relatedModels=locales relatedModelName="locale"}}
-              {{/form-group}}
-            </div>
-          </div>
-        </section>
-      </div>
+<section class="docSection container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <section style="padding-bottom: 0">
+        <div class="row card-title">
+          <h1 class="col-md-12">
+            <span class="new">{{t "admin.person.new"}}</span>
+          </h1>
+        </div>
+      </section>
     </div>
-  </section>
-</form>
+    <div class="col-md-12">
+      <section>
+        <div class="row">
+          <div class="col-sm-12">
+            {{#form-group title="admin.person.label.username" for="username"}}
+            {{input-backend-validation model=model value=model.username valuePath="username" placeholder=(t "admin.person.label.username") className="form-control t-person-username" didValidate=didValidate idZ="username"}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            {{#form-group title="admin.person.label.password" for="password"}}
+            {{validated-input model=model value=model.password placeholder=(t "admin.person.label.password") valuePath="password" className="form-control t-person-password" didValidate=didValidate class="t-person-password-validator" idZ="password"}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            {{#form-group title="admin.person.label.role-name" for="role"}}
+            {{role-select model=model options=roles}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.person.label.language" for="locale"}}
+            {{power-select-foreign-key mainModel=model selected=model.locale change_method="change_locale" relatedModels=locales relatedModelName="locale"}}
+            {{/form-group}}
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>

@@ -1,49 +1,47 @@
-<form {{action "return false" this on="submit"}}>
-  {{base-component
+{{base-component
   model=model
   save="save"
   cancel="cancel"
   delete="delete"
-  }}
-  <section class="docSection container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <section style="padding-bottom: 0">
-          <div class="row card-title">
-            <h1 class="col-md-12">
+}}
+<section class="docSection container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <section style="padding-bottom: 0">
+        <div class="row card-title">
+          <h1 class="col-md-12">
             {{model.name}}
             {{#if model.number}}
             ({{model.number}})
             {{/if}}
-            </h1>
-          </div>
-        </section>
-      </div>
-      <div class="col-md-12">
-        <section>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.third_party.label.name" for="name"}}
-              {{input type="text" placeholder=(t "admin.third_party.label.name") value=model.name class="form-control t-third-party-name" id="third_party_name"}}
-              {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.third_party.label.name"}}{{/validation-error-field}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.third_party.label.number" for="number"}}
-              {{input type="text" placeholder=(t "admin.third_party.label.number") value=model.number class="form-control t-third-party-number" id="third_party_number"}}
-              {{#validation-error-field submitted=submitted field="number" className="validation validation-under t-number-validation-error" model=model validation=numberValidation}}{{t "validation.invalid"}} {{t "admin.third_party.label.number"}}{{/validation-error-field}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModels=statuses relatedModelName='status'}}
-            </div>
-          </div>
-        </section>
-      </div>
+          </h1>
+        </div>
+      </section>
     </div>
-  </section>
-</form>
+    <div class="col-md-12">
+      <section>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.third_party.label.name" for="name"}}
+            {{input type="text" placeholder=(t "admin.third_party.label.name") value=model.name class="form-control t-third-party-name" id="third_party_name"}}
+            {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.third_party.label.name"}}{{/validation-error-field}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.third_party.label.number" for="number"}}
+            {{input type="text" placeholder=(t "admin.third_party.label.number") value=model.number class="form-control t-third-party-number" id="third_party_number"}}
+            {{#validation-error-field submitted=submitted field="number" className="validation validation-under t-number-validation-error" model=model validation=numberValidation}}{{t "validation.invalid"}} {{t "admin.third_party.label.number"}}{{/validation-error-field}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModels=statuses relatedModelName='status'}}
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
