@@ -13,6 +13,7 @@ var application, store, endpoint;
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
+const HEADER_WRAP_CLASS = '.t-grid-mobile-header';
 
 module('Acceptance | grid-head mobile', {
   beforeEach() {
@@ -38,7 +39,7 @@ test('clicking on filter icon will show filters and cancel will close it out', f
   click('.t-mobile-filter');
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
-    assert.ok(find('.t-mobile-filters'));
+    assert.equal(find('.t-mobile-filters').length, 1);
     assert.equal(find('.t-mobile-filter-title').text(), t('grid.filter.other'));
     assert.equal(find('.t-mobile-filter-first-btn').text(), t('crud.cancel.button'));
     assert.equal(find('.t-mobile-filter-second-btn').text(), t('grid.filter'));
@@ -47,4 +48,17 @@ test('clicking on filter icon will show filters and cancel will close it out', f
   andThen(() => {
     assert.throws(find('.t-mobile-filters'));
   });
+});
+
+test('clicking on search icon will show search bar above grid title and can search ticket grid', assert => {
+  visit(TICKET_URL);
+  click('.t-mobile-search');
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_URL);
+    assert.throws(find('.t-mobile-filters'));
+    assert.equal(find(`${HEADER_WRAP_CLASS} .t-mobile-search-wrap`).length, 1);
+    assert.equal(find(`${HEADER_WRAP_CLASS} .t-grid-search-input`).length, 1);
+    assert.equal(find(`${HEADER_WRAP_CLASS} .t-mobile-search-wrap .t-grid-search-input`).attr('placeholder'), t('ticket.search'));
+  });
+  //TODO: search functionality
 });

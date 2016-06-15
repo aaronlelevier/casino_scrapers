@@ -15,6 +15,9 @@ const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
+const SORT_LOCATION_DIR = '.t-sort-location-name-dir';
+// const SORT_ASSIGNEE_DIR = '.t-sort-assignee-fullname-dir';
+// const FILTER_PRIORITY = '.t-filter-priority-translated-name';
 
 module('Acceptance | grid mobile test', {
   beforeEach() {
@@ -56,3 +59,36 @@ test('visiting mobile ticket grid show correct layout', (assert) => {
     assert.equal(find('.t-grid-data:eq(0) > div:eq(7)').text().trim(), ticket.get('number'));
   });
 });
+
+// test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', function(assert) {
+//   // var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=request,location__name';
+//   // xhr(sort_two ,"GET",null,{},200,TF.sorted('request,location'));
+//   // var page_two = PREFIX + BASE_URL + '/?page=2&ordering=location__name';
+//   // xhr(page_two ,"GET",null,{},200,TF.sorted_page_two('location'));
+//   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=location__name';
+//   xhr(sort_one ,"GET",null,{},200,TF.sorted('location'));
+//   visit(TICKET_URL);
+//   andThen(() => {
+//     assert.equal(currentURL(), TICKET_URL);
+//     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+//     assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
+//   });
+//   // click(SORT_LOCATION_DIR);
+//   // andThen(() => {
+//   //   assert.equal(currentURL(), TICKET_URL + '?sort=location.name');
+//   //   assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+//   //   assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
+//   // });
+//   // click('.t-page:eq(1) a');
+//   // andThen(() => {
+//   //   assert.equal(currentURL(), TICKET_URL + '?page=2&sort=location.name');
+//   //   assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
+//   //   assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
+//   // });
+//   // click('.t-sort-request-dir');
+//   // andThen(() => {
+//   //   assert.equal(currentURL(),TICKET_URL + '?sort=request%2Clocation.name');
+//   //   assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+//   //   assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
+//   // });
+// });

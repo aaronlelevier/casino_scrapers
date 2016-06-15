@@ -3,8 +3,9 @@
     {{grid-search-input placeholder=search_placeholder}}
   {{/mobile-search-wrapper}}
 {{/if}}
+
 <div class="pull-right btn-group btn-group-sm center-block grid-options">
-  <button class="btn" {{action "toggleSaveFilterSetModal"}}>{{fa-icon "star-o"}}</button>
+  <button class="btn t-saved-filtersets" {{action "toggleMobileSearch"}}>{{fa-icon "star-o"}}</button>
   <button class="btn t-mobile-search" {{action "toggleMobileSearch"}}>{{fa-icon "search"}}</button>
   <button class="btn t-mobile-filter" {{action "toggleMobileSortFilter"}}>{{fa-icon "filter"}}</button>
 </div>
