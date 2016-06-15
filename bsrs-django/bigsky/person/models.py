@@ -41,7 +41,7 @@ class Tenant(BaseModel):
 
 class Role(SettingMixin, BaseModel):
     # keys
-    tenant = models.ForeignKey(Tenant, related_name="roles")
+    tenant = models.ForeignKey(Tenant, related_name="roles", null=True)
     group = models.OneToOneField(Group, blank=True, null=True)
     location_level = models.ForeignKey(LocationLevel, null=True, blank=True)
     role_type = models.CharField(max_length=29, blank=True,

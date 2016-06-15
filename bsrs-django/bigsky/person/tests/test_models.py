@@ -16,7 +16,8 @@ from contact.tests.factory import create_contact
 from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
-from person.tests.factory import PASSWORD, create_person, create_role, create_single_person
+from person.tests.factory import (PASSWORD, create_person, create_role, create_single_person,
+    get_or_create_tenant)
 from setting.tests.factory import (create_general_setting,
     create_role_setting, create_person_setting)
 from translation.models import Locale
@@ -46,6 +47,13 @@ class RoleTests(TestCase):
             self.role.to_dict()["location_level"],
             str(self.role.location_level.id)
         )
+
+    def test_default_tenant_on_save(self):
+        tenant = get_or_create_tenant()
+        self.assertIsNotNone(self.role.tenant)
+        self.role.tenant = None
+        self.role.save()
+        self.assertIsNone(self.role.tenant)
 
     def test_related_categories_can_only_be_top_level(self):
         parent = create_single_category()
