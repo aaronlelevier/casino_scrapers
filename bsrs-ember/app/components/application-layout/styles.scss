@@ -114,17 +114,6 @@ vbox.mobile-tray { //slideout navigation tray
       }
     }
   }
-  li.nav-search {
-    height: $mobileHeaderHeight;
-    padding: 10px;
-    background: $dark;
-    input {
-      height: $mobileHeaderHeight - 20px;
-      border: none;
-      background: $darker;
-      width: 100%;
-    }
-  }
 }
 /*
 * NAV MOBILE END

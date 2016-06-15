@@ -5,25 +5,25 @@ import { task, timeout } from 'ember-concurrency';
 const DEBOUNCE_MS = config.APP.POWER_SELECT_DEBOUNCE;
 
 var GridSearch =  Ember.TextField.extend({
-    val: '',
-    classNames: ['t-grid-search-input form-control input-sm'],
-    sendValueUp: task(function * (searchValue) {
-        yield timeout(DEBOUNCE_MS);
-        this.sendAction('keyup', this.get('val'));
-    }).restartable(),
-    keyUp: function() {
-        const searchValue = this.get('val');
-        this.get('sendValueUp').perform(searchValue);
+  val: '',
+  classNames: ['t-grid-search-input form-control input-sm'],
+  sendValueUp: task(function * (searchValue) {
+    yield timeout(DEBOUNCE_MS);
+    this.sendAction('keyup', this.get('val'));
+  }).restartable(),
+  keyUp: function() {
+    const searchValue = this.get('val');
+    this.get('sendValueUp').perform(searchValue);
+  },
+  value: Ember.computed('search', {
+    get(key){
+      return this.get('search');
     },
-    value: Ember.computed('search', {
-        get(key){
-            return this.get('search');
-        },
-        set(key, value){
-            this.set('val', value);
-            return this.get('search');
-        }
-    })
+    set(key, value){
+      this.set('val', value);
+      return this.get('search');
+    }
+  })
 });
 
 export default GridSearch;

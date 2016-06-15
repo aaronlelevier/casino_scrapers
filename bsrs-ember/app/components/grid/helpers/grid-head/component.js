@@ -2,9 +2,10 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   mobileSortFilter: false,
+  mobileSearch: true,
   actions: {
-    toggleSaveFilterSetModal() {
-      this.toggleProperty('savingFilter');
+    toggleMobileSearch() {
+      this.toggleProperty('mobileSearch');
     },
     toggleMobileSortFilter() {
       this.toggleProperty('mobileSortFilter');

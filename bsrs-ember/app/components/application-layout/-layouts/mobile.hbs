@@ -6,7 +6,9 @@
   <vbox class="mobile-tray">
     <div class="mobile-tray__inner flex-item--auto">
       <ul>
-        <li class="nav-search"><input type="search"></li>
+          {{#mobile-search-wrapper tagName="li"}}
+            {{grid-search-input placeholder=(t "selects.searchPlaceholder")}}
+          {{/mobile-search-wrapper}}
         <li class="nav-section">
           <ul class="nav-section-inner">
             <li class="nav-item">{{#link-to "dashboard"}}{{t "modules.tickets.newTickets"}}{{/link-to}}</li>

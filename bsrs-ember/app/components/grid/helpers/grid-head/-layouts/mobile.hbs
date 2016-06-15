@@ -1,13 +1,18 @@
+{{#if mobileSearch}}
+  {{#mobile-search-wrapper}}
+    {{grid-search-input placeholder=search_placeholder}}
+  {{/mobile-search-wrapper}}
+{{/if}}
 <div class="pull-right btn-group btn-group-sm center-block grid-options">
-  <button class="t-show-save-filterset-modal btn btn-default" {{action "toggleSaveFilterSetModal"}}>{{fa-icon "star-o"}}</button>
-  <button class="t-show-save-filterset-modal btn btn-default" {{action "toggleSaveFilterSetModal"}}>{{fa-icon "search"}}</button>
-  <button class="t-show-save-filterset-modal btn btn-default t-mobile-filter" {{action "toggleMobileSortFilter"}}>{{fa-icon "filter"}}</button>
+  <button class="btn" {{action "toggleSaveFilterSetModal"}}>{{fa-icon "star-o"}}</button>
+  <button class="btn t-mobile-search" {{action "toggleMobileSearch"}}>{{fa-icon "search"}}</button>
+  <button class="btn t-mobile-filter" {{action "toggleMobileSortFilter"}}>{{fa-icon "filter"}}</button>
 </div>
 <h1 class="grid-title t-mobile-grid-title">
   {{model.count}} {{grid_title}}
-  {{#unless model.isLoaded}}
-  {{grid-loading-graphic}}
-  {{/unless}}
+  {{!--#unless model.isLoaded--}}
+  {{!--grid-loading-graphic--}}
+  {{!--/unless--}}
 </h1>
 
 <div class="filtersets t-filterset-wrap">
