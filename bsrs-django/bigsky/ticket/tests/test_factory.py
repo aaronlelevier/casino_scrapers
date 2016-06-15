@@ -55,10 +55,10 @@ class RegionManagerWithTicketsTests(TestCase):
 class CreateTicketTests(TestCase):
 
     def setUp(self):
+        create_dtd_fixture_data()
         create_categories()
         self.person = create_single_person()
         # Put before create_ticket to ensure building dt_path has DT objects to pull from
-        create_dtd_fixture_data()
         self.ticket = factory.create_ticket()
 
     def test_location(self):

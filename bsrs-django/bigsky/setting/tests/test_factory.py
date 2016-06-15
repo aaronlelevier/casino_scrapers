@@ -29,6 +29,14 @@ class FactoryTests(TestCase):
         ret_two = factory.create_general_setting()
         self.assertEqual(ret_two.name, ret.name)
 
+    def test_create_general_setting__takes_a_name_arg(self):
+        name = 'foo'
+
+        ret = factory.create_general_setting(name)
+
+        self.assertIsInstance(ret, Setting)
+        self.assertEqual(ret.name, name)
+
     def test_create_role_setting(self):
         ret = factory.create_role_setting(self.role)
 

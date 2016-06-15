@@ -5,8 +5,7 @@ from setting.settings import GENERAL_SETTINGS, ROLE_SETTINGS, PERSON_SETTINGS
 from utils.helpers import generate_uuid
 
 
-def create_general_setting():
-    name = 'general'
+def create_general_setting(name='general'):
     remove_prior_settings(name=name)
     settings_dict = copy.copy(GENERAL_SETTINGS)
     id = generate_uuid(Setting)

@@ -32,8 +32,16 @@ from utils.validators import (contains_digit, contains_upper_char, contains_lowe
 from work_order.models import WorkOrderStatus
 
 
+class Tenant(BaseModel):
+    name = models.CharField(max_length=254)
+    dt_start = models.ForeignKey("dtd.TreeData")
+    auth_currency = models.ForeignKey(Currency)
+    settings = models.ForeignKey(Setting, null=True)
+
+
 class Role(SettingMixin, BaseModel):
     # keys
+    tenant = models.ForeignKey(Tenant, related_name="roles")
     group = models.OneToOneField(Group, blank=True, null=True)
     location_level = models.ForeignKey(LocationLevel, null=True, blank=True)
     role_type = models.CharField(max_length=29, blank=True,

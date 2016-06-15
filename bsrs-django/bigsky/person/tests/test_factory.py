@@ -7,10 +7,11 @@ from model_mommy import mommy
 
 from accounting.models import Currency
 from category.tests.factory import create_single_category, create_categories
+from dtd.models import TreeData
 from location.models import (Location, LocationLevel, LOCATION_COMPANY, LOCATION_DISTRICT,
     LOCATION_REGION)
 from location.tests.factory import create_location, create_locations, create_location_levels
-from person.models import Person, Role
+from person.models import Tenant, Role, Person
 from person.tests import factory
 from setting.models import Setting
 from translation.models import Locale
@@ -55,6 +56,21 @@ class DistrictManagerFactoryTests(TestCase):
         self.assertEqual(self.dm.person.role.name, 'district-manager')
         self.assertEqual(self.dm.person.role, self.dm.role)
         self.assertIn(self.dm.location, self.dm.person.locations.all())
+
+
+class TentantTests(TestCase):
+
+    def test_get_or_create(self):
+        ret = factory.get_or_create_tenant()
+
+        self.assertIsInstance(ret, Tenant)
+        self.assertIsInstance(ret.dt_start, TreeData)
+        self.assertIsInstance(ret.auth_currency, Currency)
+        self.assertIsInstance(ret.settings, Setting)
+
+        # get-or-create, so 2nd call returns original
+        ret_two = factory.get_or_create_tenant()
+        self.assertEqual(ret, ret_two)
 
 
 class CreateRoleTests(TestCase):

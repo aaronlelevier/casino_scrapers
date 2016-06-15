@@ -265,7 +265,9 @@ class BootstrappedDataTests(TestCase):
 
     def test_role__default_name_bool_and_location_level(self):
         [r.delete() for r in Role.objects.all()]
-        role = mommy.make(Role, name='foo')
+        role = create_role()
+        role.location_level = None
+        role.save()
         self.assertIsNone(role.location_level)
         self.assertNotEqual(role.name, settings.DEFAULT_ROLE)
 
@@ -368,8 +370,9 @@ class BootstrappedDataTests(TestCase):
     def test_settings(self):
         data = json.loads(self.response.context['settings'])
 
-        self.assertEqual(3, len(data))
-        for name in ['general', 'role', 'person']:
+        self.assertEqual(4, len(data))
+        # 'foo' is a default name for the main Tenant (for the time being)
+        for name in ['general', 'role', 'person', 'foo']:
             self.assertIn(name, [x['name'] for x in data])
 
     def test_ticket_statuses(self):

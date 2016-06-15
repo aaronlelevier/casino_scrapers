@@ -13,7 +13,7 @@ from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixi
 
 ### ROLE ###
 
-ROLE_FIELDS = ('id', 'name', 'role_type', 'auth_amount', 'auth_currency', 'location_level')
+ROLE_FIELDS = ('id', 'name', 'tenant', 'role_type', 'auth_amount', 'auth_currency', 'location_level')
 
 
 class RoleSerializer(BaseCreateSerializer):

@@ -11,7 +11,7 @@ from category.tests.factory import create_single_category
 from location.models import (LocationLevel, Location, LocationStatus, LocationType,
     LOCATION_COMPANY, LOCATION_DISTRICT, LOCATION_REGION,)
 from location.tests.factory import create_location, create_locations, create_location_levels
-from person.models import Person, Role, PersonStatus
+from person.models import Tenant, Role, Person, PersonStatus
 from setting.tests.factory import (create_general_setting,
     create_role_setting, create_person_setting)
 from translation.tests.factory import create_locale, LOCALES
@@ -46,6 +46,15 @@ class DistrictManager(object):
         self.person = create_single_person('district-manager-1', self.role, self.location)        
 
 
+def get_or_create_tenant(name='foo'):
+    try:
+        return Tenant.objects.all()[0]
+    except IndexError:
+        currency = Currency.objects.default()
+        setting = create_general_setting(name)
+        return mommy.make(Tenant, auth_currency=currency, settings=setting)
+
+
 def create_role(name=None, location_level=None, category=None):
     """
     Single Role needed to create Person with Login privileges.
@@ -54,13 +63,14 @@ def create_role(name=None, location_level=None, category=None):
     category = category or create_single_category(create._generate_chars())
 
     # system default models needed
-    Currency.objects.default()
+    currency = Currency.objects.default()
     create_general_setting()
 
     if not location_level:
         location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_REGION)
 
-    role = mommy.make(Role, name=name, location_level=location_level)
+    tenant = get_or_create_tenant()
+    role = mommy.make(Role, tenant=tenant, name=name, location_level=location_level)
     role.categories.add(category)
     create_role_setting(role)
 
@@ -85,7 +95,8 @@ def create_roles():
         try:
             role = Role.objects.get(name=name, location_level=location_level)
         except Role.DoesNotExist:
-            role = mommy.make(Role, name=name, location_level=location_level)
+            tenant = get_or_create_tenant()
+            role = mommy.make(Role, tenant=tenant, name=name, location_level=location_level)
             if category:
                 role.categories.add(category)
         finally:

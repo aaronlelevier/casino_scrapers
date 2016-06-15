@@ -138,14 +138,23 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
         destination_id = str(destination.id) if destination else None
         # Create dt_path which are the old dt objects which should be the START DTD
         # DTD Fields are an array (id, label, value, required, options) where options is an array of ids
-        dtd_obj = {'id': str(start_dtd.id), 'description': start_dtd.description, 'prompt': start_dtd.prompt, 'note': start_dtd.note, 'fields': []}
+        dtd_obj = {
+            'id': str(start_dtd.id),
+            'description': start_dtd.description,
+            'prompt': start_dtd.prompt,
+            'note': start_dtd.note,
+            'fields': []
+        }
         fields = start_dtd.fields.all()
         # create dtd_obj w/ all fields using dict comprehension
-        {
-        dtd_obj['fields'].append({'id':str(field.id), 'value':_generate_chars() if not field.type == 'admin.dtd.label.field.number' else 1234,
-            'required': 'true' if field.required else 'false', 'label': field.label,
-            'options': [str(opt.id) for opt in field.options.all() if opt]}) for field in fields
-        }
+        for field in fields:
+            dtd_obj['fields'].append({
+                'id': str(field.id),
+                'value': _generate_chars() if not field.type == 'admin.dtd.label.field.number' else 1234,
+                'required': 'true' if field.required else 'false',
+                'label': field.label,
+                'options': [str(opt.id) for opt in field.options.all() if opt]
+            })
         # second item in array is partially done with a field value and no label
         ticket.dt_path = [{
             'dtd': dtd_obj,
@@ -158,12 +167,12 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
                 'location': str(ticket.location.id)
                 }
             }, {
-                'dtd': {
-                    'id': destination_id,
-                    'description': 'You are almost done',
-                    'fields': [{'id': str(uuid.uuid4()), 'value': 'partially done', 'required': 'false'}]
-                    }
-                }]
+            'dtd': {
+                'id': destination_id,
+                'description': 'You are almost done',
+                'fields': [{'id': str(uuid.uuid4()), 'value': 'partially done', 'required': 'false'}]
+                }
+            }]
 
     ticket.save()
 

@@ -215,7 +215,7 @@ class PersonTests(TestCase):
 
     def test_update_defaults__not_defaulted_if_value(self):
         status = mommy.make(PersonStatus)
-        auth_amount = mommy.make(Role).auth_amount
+        auth_amount = create_role().auth_amount
         auth_currency = Currency.objects.default()
         locale = mommy.make(Locale)
         today = localtime(now()).date
