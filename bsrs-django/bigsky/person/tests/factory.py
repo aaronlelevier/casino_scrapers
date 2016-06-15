@@ -72,7 +72,12 @@ def create_role(name=None, location_level=None, category=None):
         location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_REGION)
 
     tenant = get_or_create_tenant()
-    role = mommy.make(Role, tenant=tenant, name=name, location_level=location_level)
+
+    try:
+        role = Role.objects.get(name=name)
+    except Role.DoesNotExist:
+        role = mommy.make(Role, tenant=tenant, name=name, location_level=location_level)
+
     role.categories.add(category)
     create_role_setting(role)
 
