@@ -1,6 +1,7 @@
 import Ember from 'ember';
+import SortBy from 'bsrs-ember/mixins/sort-by';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(SortBy, {
   mobileSortFilter: false,
   mobileSearch: false,
   actions: {

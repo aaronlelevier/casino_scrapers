@@ -8,6 +8,8 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import page from 'bsrs-ember/tests/pages/ticket-mobile';
+import generalPage from 'bsrs-ember/tests/pages/general-mobile';
 
 var application, store, endpoint;
 
@@ -60,35 +62,27 @@ test('visiting mobile ticket grid show correct layout', (assert) => {
   });
 });
 
-// test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', function(assert) {
-//   // var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=request,location__name';
-//   // xhr(sort_two ,"GET",null,{},200,TF.sorted('request,location'));
-//   // var page_two = PREFIX + BASE_URL + '/?page=2&ordering=location__name';
-//   // xhr(page_two ,"GET",null,{},200,TF.sorted_page_two('location'));
-//   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=location__name';
-//   xhr(sort_one ,"GET",null,{},200,TF.sorted('location'));
-//   visit(TICKET_URL);
-//   andThen(() => {
-//     assert.equal(currentURL(), TICKET_URL);
-//     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-//     assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
-//   });
-//   // click(SORT_LOCATION_DIR);
-//   // andThen(() => {
-//   //   assert.equal(currentURL(), TICKET_URL + '?sort=location.name');
-//   //   assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-//   //   assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
-//   // });
-//   // click('.t-page:eq(1) a');
-//   // andThen(() => {
-//   //   assert.equal(currentURL(), TICKET_URL + '?page=2&sort=location.name');
-//   //   assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-//   //   assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
-//   // });
-//   // click('.t-sort-request-dir');
-//   // andThen(() => {
-//   //   assert.equal(currentURL(),TICKET_URL + '?sort=request%2Clocation.name');
-//   //   assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-//   //   assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
-//   // });
-// });
+test('clicking sort will sort by given property in filterSort pop up', function(assert) {
+  var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=location__name';
+  xhr(sort_one ,"GET",null,{},200,TF.sorted('location'));
+  visit(TICKET_URL);
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_URL);
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.notOk(page.filterAndSort);
+    assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
+  });
+  page.toggleFilter();
+  click(SORT_LOCATION_DIR);
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_URL + '?sort=location.name');
+    assert.ok(page.filterAndSort);
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+  });
+  generalPage.submitFilterSort();
+  andThen(() => {
+    assert.notOk(page.filterAndSort);
+    assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestLastGrid);
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+  });
+});

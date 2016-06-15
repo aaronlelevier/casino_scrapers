@@ -27,7 +27,7 @@
     <hbox class="filters__head">
       <button class="filters__head__btn mobile-btn t-mobile-filter-first-btn" {{action "toggleMobileSortFilter"}}>{{t "crud.cancel.button"}}</button>
       <h1 class="filters__head__title t-mobile-filter-title">{{t "grid.filter" count=2}}</h1>
-      <button class="filters__head__btn filters__head__btn--action mobile-btn t-mobile-filter-second-btn">{{t "grid.filter"}}</button>
+      <button class="filters__head__btn filters__head__btn--action mobile-btn t-mobile-filter-second-btn" {{action "toggleMobileSortFilter"}}>{{t "grid.filter"}}</button>
     </hbox>
   </header>
   <section class="mobile-main flex-item--auto">
