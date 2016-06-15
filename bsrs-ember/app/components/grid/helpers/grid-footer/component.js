@@ -3,6 +3,9 @@ import config from 'bsrs-ember/config/environment';
 
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
+/*
+* page_size && plural component params not needed in mobile
+*/
 var GridFooter = Ember.Component.extend({
   page_sizes: ['10', '20', '50', '100', '150'],
   shown_pages: Ember.computed('pages', 'page', function() {
@@ -49,6 +52,7 @@ var GridFooter = Ember.Component.extend({
   notFirst: Ember.computed.not('first'),
   notLast: Ember.computed.not('last'),
   actions: {
+    /* only used in desktop */
     togglePageSize(page_size) {
       this.setProperties({page: 1, page_size: page_size});
     },

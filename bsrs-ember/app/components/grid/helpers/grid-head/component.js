@@ -17,6 +17,10 @@ export default Ember.Component.extend(SortBy, {
     /*
     * MOBILE - Need to see how Ember modularization RFC pans out.  Same component functions duplicated right now
     */
+    /*
+    * @method sortBy - passed down to grid-header-column component
+    * set query param for page and sort, thus re-firing grid route
+    */
     sortBy(column) {
       const current = this.get('sort');
       const sorted = this.reorder(current, column);

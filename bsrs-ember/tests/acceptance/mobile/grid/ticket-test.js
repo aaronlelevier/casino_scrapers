@@ -40,7 +40,7 @@ module('Acceptance | grid mobile test', {
   }
 });
 
-test('visiting mobile ticket grid show correct layout', (assert) => {
+test('visiting mobile ticket grid show correct layout', assert => {
   visit(TICKET_URL);
   andThen(() => {
     const ticket = store.findOne('ticket-list');
@@ -62,27 +62,52 @@ test('visiting mobile ticket grid show correct layout', (assert) => {
   });
 });
 
-test('clicking sort will sort by given property in filterSort pop up', function(assert) {
+test('clicking sort will sort by given property in filterSort pop up and reset page to 1', assert => {
+  var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=request,location__name';
+  xhr(sort_two ,"GET",null,{},200,TF.sorted('request,location'));
+  var page_two = PREFIX + BASE_URL + '/?page=2&ordering=location__name';
+  xhr(page_two ,"GET",null,{},200,TF.sorted_page_two('location'));
   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=location__name';
   xhr(sort_one ,"GET",null,{},200,TF.sorted('location'));
   visit(TICKET_URL);
   andThen(() => {
+    assert.notOk(page.filterAndSort);
     assert.equal(currentURL(), TICKET_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.notOk(page.filterAndSort);
     assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
   });
   page.toggleFilter();
   click(SORT_LOCATION_DIR);
   andThen(() => {
-    assert.equal(currentURL(), TICKET_URL + '?sort=location.name');
     assert.ok(page.filterAndSort);
+    assert.equal(currentURL(), TICKET_URL + '?sort=location.name');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
   });
   generalPage.submitFilterSort();
   andThen(() => {
     assert.notOk(page.filterAndSort);
-    assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestLastGrid);
+    assert.equal(currentURL(), TICKET_URL + '?sort=location.name');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestLastGrid);
+  });
+  generalPage.nextPage();
+  andThen(() => {
+    assert.notOk(page.filterAndSort);
+    assert.equal(currentURL(), TICKET_URL + '?page=2&sort=location.name');
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
+    assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
+  });
+  page.toggleFilter();
+  click('.t-sort-request-dir');
+  andThen(() => {
+    assert.equal(currentURL(),TICKET_URL + '?sort=request%2Clocation.name');
+    assert.ok(page.filterAndSort);
+  });
+  generalPage.submitFilterSort();
+  andThen(() => {
+    assert.notOk(page.filterAndSort);
+    assert.equal(currentURL(), TICKET_URL + '?sort=request%2Clocation.name');
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestLastGrid);
   });
 });
