@@ -34,7 +34,7 @@ from work_order.models import WorkOrderStatus
 
 class Tenant(BaseModel):
     name = models.CharField(max_length=254)
-    dt_start = models.ForeignKey("dtd.TreeData")
+    dt_start = models.ForeignKey("dtd.TreeData", null=True)
     auth_currency = models.ForeignKey(Currency)
     settings = models.ForeignKey(Setting, null=True)
 

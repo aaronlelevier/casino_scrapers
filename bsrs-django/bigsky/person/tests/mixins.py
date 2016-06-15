@@ -5,7 +5,6 @@ from category.models import Category
 from person.serializers import RoleSerializer
 from person.tests.factory import PASSWORD, create_single_person, get_or_create_tenant
 from setting.models import Setting
-from setting.tests.factory import create_general_setting, create_role_setting
 
 
 class RoleSetupMixin(object):

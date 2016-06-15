@@ -50,9 +50,11 @@ def get_or_create_tenant(name='foo'):
     try:
         return Tenant.objects.all()[0]
     except IndexError:
-        currency = Currency.objects.default()
-        setting = create_general_setting(name)
-        return mommy.make(Tenant, auth_currency=currency, settings=setting)
+        kwargs = {
+            'auth_currency': Currency.objects.default(),
+            'settings': create_general_setting(name),
+        }
+        return mommy.make(Tenant, **kwargs)
 
 
 def create_role(name=None, location_level=None, category=None):

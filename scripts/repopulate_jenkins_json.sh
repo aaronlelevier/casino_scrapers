@@ -15,7 +15,6 @@ wait
 wait
 ./manage.py loaddata fixtures/contact.Country.json
 ./manage.py loaddata fixtures/contact.State.json
-./manage.py loaddata fixtures/setting.Setting.json
 ./manage.py loaddata fixtures/translation.json
 ./manage.py loaddata fixtures/accounting.Currency.json
 ./manage.py loaddata fixtures/contact.EmailType.json

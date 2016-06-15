@@ -7,7 +7,6 @@ from model_mommy import mommy
 
 from accounting.models import Currency
 from category.tests.factory import create_single_category, create_categories
-from dtd.models import TreeData
 from location.models import (Location, LocationLevel, LOCATION_COMPANY, LOCATION_DISTRICT,
     LOCATION_REGION)
 from location.tests.factory import create_location, create_locations, create_location_levels
@@ -64,7 +63,7 @@ class TentantTests(TestCase):
         ret = factory.get_or_create_tenant()
 
         self.assertIsInstance(ret, Tenant)
-        self.assertIsInstance(ret.dt_start, TreeData)
+        self.assertIsNone(ret.dt_start)
         self.assertIsInstance(ret.auth_currency, Currency)
         self.assertIsInstance(ret.settings, Setting)
 
