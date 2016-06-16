@@ -1,10 +1,14 @@
 import Ember from 'ember';
+import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 
+const PAGE_SIZE = config.APP.PAGE_SIZE;
 const { run } = Ember;
 
 var GridRepositoryMixin = Ember.Mixin.create({
   error: Ember.inject.service(),
+  _totalPages: 0,
+  _currentPage: 0,
   create(new_pk, options={}) {
     let created;
     const pk = this.get('uuid').v4();
@@ -63,9 +67,25 @@ var GridRepositoryMixin = Ember.Mixin.create({
     }
     return endpoint;
   },
+  /*
+  * Once currentPage is >= to totalPages don't fetch another page
+  * If totalPages === 0, then always fetch more (initial App state)...need to think about how filter will affect this
+  */
+  _canLoadMore() {
+    const totalPages = this.get('_totalPages');
+    const currentPage = this.get('_currentPage');
+    return totalPages ? currentPage < totalPages : true;
+  },
+  //TODO: consolidate both find methods
   findWithQueryMobile(page, search, find, page_size) {
     const type = this.get('typeGrid');
     const store = this.get('simpleStore');
+    /* START if the currentPage is NOT less than totalPages, then bail */
+    if (!this._canLoadMore()) {
+      return [store.find(type), true];
+    }
+    this.incrementProperty('_currentPage');
+    /* END */
     const deserializer = this.get('deserializer');
     page = page || 1;
     let endpoint = this.modifyEndpoint(page, search, find, page_size);
@@ -84,13 +104,14 @@ var GridRepositoryMixin = Ember.Mixin.create({
       all.set('isLoaded', true);
       const count = response.count;
       all.set('count', count);
+      this.set('_totalPages', Math.ceil(count/PAGE_SIZE)); //used to determine how many pages
       run(() => {
         store.push('grid-count', { id: 1, count:count });
       });
     }, (xhr) => {
       this.get('error').transToError();
     });
-    return all;
+    return [all];
   },
   findWithQuery(page, search, find, page_size, sort) {
     const type = this.get('typeGrid');

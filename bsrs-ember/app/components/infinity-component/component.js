@@ -9,6 +9,11 @@ export default Ember.Component.extend({
     this._bindEvent();
     this._loadMoreIfNeeded();
   },
+  /* unbind scroll event when navigate away from component */
+  willDestroyElement() {
+    this._super(...arguments);
+    this._unbindEvent();
+  },
   /* sets scrollable container that has css overflow:scroll */
   _setupScrollableContainer() {
     this.set('_scrollable', Ember.$('#infinity-loading'));
@@ -18,6 +23,9 @@ export default Ember.Component.extend({
     this.get('_scrollable').on('scroll', () => {
       Ember.run.debounce(this, this._loadMoreIfNeeded, 20);
     });
+  },
+  _unbindEvent(eventName) {
+    this.get('_scrollable').off('scroll');
   },
   /* distance from position of component to top
   * increases as grid items fill in and add to grid
@@ -41,7 +49,7 @@ export default Ember.Component.extend({
     return this._bottomOfScrollableOffset() > Math.max(1000, this._triggerOffset());
   },
   _loadMoreIfNeeded() {
-    if (this._shouldLoadMore()) {
+    if (this._shouldLoadMore() && !this.get('reachedInfinity')) {
       const page = this.get('page');
       this.set('page', page + 1);
     }
