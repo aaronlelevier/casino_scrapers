@@ -1,30 +1,43 @@
 import Ember from 'ember';
-import SortBy from 'bsrs-ember/mixins/sort-by';
 
-export default Ember.Component.extend(SortBy, {
+export default Ember.Component.extend({
   mobileSortFilter: false,
   mobileSearch: false,
+  //THINK ABOUT PUTTING IN GRID_HEADER_COLUMN COMPONENT IF FIND IS NOT NEEDED HERE
+  /*
+  * object that holds key of type string ('location.name') and value of type string ('wat')
+  * passed as a property to grid-header-column component
+  gridFilterParams: {
+    //EXAMPLE PROPERTIES//
+    'location.name': 'wat',
+    'assignee.fullname': 'scooter'
+    'status.translated_name': 'scooter'
+  }
+  */
   actions: {
     toggleSaveFilterSetModal() {
       this.toggleProperty('savingFilter');
-    },
-    toggleMobileSearch() {
-      this.toggleProperty('mobileSearch');
-    },
-    toggleMobileSortFilter() {
-      this.toggleProperty('mobileSortFilter');
     },
     /*
     * MOBILE - Need to see how Ember modularization RFC pans out.  Same component functions duplicated right now
     */
     /*
-    * @method sortBy - passed down to grid-header-column component
-    * set query param for page and sort, thus re-firing grid route
+    filterGrid() {
+      this.toggleProperty('mobileFilter');
+      const params = this.get('gridFilterParams');
+      const find = this.get('find');
+      const finalFilter = '';
+      Object.keys(params).forEach((key) => {
+        finalFilter += update_find_query(key, params[key], find);
+      });
+      this.setProperties({page:1, find: finalFilter});
+    }
     */
-    sortBy(column) {
-      const current = this.get('sort');
-      const sorted = this.reorder(current, column);
-      this.setProperties({page: 1, sort: sorted});
+    toggleMobileSearch() {
+      this.toggleProperty('mobileSearch');
+    },
+    toggleMobileFilter() {
+      this.toggleProperty('mobileFilter');
     },
     toggleFilterModal(column) {
       this.toggle(column);
