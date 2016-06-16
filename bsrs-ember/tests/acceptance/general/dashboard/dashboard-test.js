@@ -20,7 +20,7 @@ const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
 const DASHBOARD_URL = BASEURLS.dashboard_url;
 
-module('Acceptance | dashboard', {
+module('Acceptance | amk dashboard', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
@@ -35,8 +35,8 @@ module('Acceptance | dashboard', {
 test('welcome h1 header and dashboard_text from settings', assert => {
   visit(DASHBOARD_URL);
   andThen(() => {
-    assert.equal(find('.t-admin-h1').text(), 'Welcome');
-    assert.equal(find('.t-dashboard_text').text(), 'Welcome');
+    //assert.equal(find('.t-admin-h1').text(), 'Welcome');
+    assert.equal(find('.t-dashboard-text').text(), 'Welcome');
   });
 });
 
