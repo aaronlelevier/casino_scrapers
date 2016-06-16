@@ -113,7 +113,7 @@ var BSRS_TICKET_FACTORY = (function() {
     }
     return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
   };
-  factory.prototype.list_two = function() {
+  factory.prototype.list_two = function(page) {
     var unused_category = this.category_fixtures.get(this.category_defaults.idOne, this.category_defaults.nameOne);
     unused_category.children = [];
     unused_category.parent = null;
@@ -121,10 +121,10 @@ var BSRS_TICKET_FACTORY = (function() {
     var response = [];
     var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
     for (var i=page_size+1; i <= page_size*2-1; i++) {
-      var uuid = 'bf2b9c85-f6bd-4345-9834-c5d51de53d';
+      var uuid = 'bf2b9c85-f6bd-4345-9834-c5d51de53d' + i + page;
       var ticket = this.generate(uuid + i);
-      ticket.number = 'gone' + i;
-      ticket.request = 'ape' + i;
+      ticket.number = 'gone' + i + page;
+      ticket.request = 'ape' + i + page;
       ticket.status = {id: this.ticket.statusTwoId, name: this.ticket.statusTwoKey};
       ticket.priority = {id: this.ticket.priorityTwoId, name: this.ticket.priorityTwoKey};
       ticket.location = location;

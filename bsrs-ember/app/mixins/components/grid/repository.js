@@ -64,7 +64,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
         endpoint = endpoint + '&' + field + '__icontains=' + encodeURIComponent(value);
       });
     }
-    const garbage_collection = this.get('garbage_collection') || [];
+    // const garbage_collection = this.get('garbage_collection') || [];
     const all = store.find(type);
     let grid_count = store.find('grid-count', 1);
     if(!grid_count.get('content')){
@@ -75,11 +75,12 @@ var GridRepositoryMixin = Ember.Mixin.create({
     }
     all.set('count', grid_count.get('count'));
     PromiseMixin.xhr(endpoint).then((response) => {
-      garbage_collection.forEach((type) => {
-        run(() => {
-          store.clear(type);
-        });
-      });
+      // garbage_collection.forEach((type) => {
+      //   run(() => {
+      //     store.clear(type);
+      //   });
+      // });
+      console.log(response)
       deserializer.deserialize(response);
       all.set('isLoaded', true);
       const count = response.count;

@@ -18,7 +18,7 @@ module.exports = function(app) {
     } else if(page_size && page_size.length > 0) {
         res.send(TICKET_FIXTURES.paginated(page_size));
     } else if(parseInt(page) > 1) {
-        res.send(TICKET_FIXTURES.list_two());
+        res.send(TICKET_FIXTURES.list_two(page));
     }else{
         res.send(TICKET_FIXTURES.list());
     }
