@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 /* @method update_find_query
 * @param {string} column - 'location.name'
-* @param {string} value - 'wat'
+* @param {string} value - 'newwat'
 * @param {string} find - 'location.name:wat,status.translated_name:foo'
 * pure function that does not mutate state
 * @return {string} newFind - `find` string 'location.name:newwat,status.translated_name:foo' for that one column (desktop - saving-filter component, mobile - grid-head)
