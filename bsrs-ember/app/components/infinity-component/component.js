@@ -5,44 +5,42 @@ export default Ember.Component.extend({
   triggerOffset: 100,
   didInsertElement() {
     this._super(...arguments);
-    this._setupScrollable();
-    // this.set('guid', Ember.guidFor(this));
+    this._setupScrollableContainer();
     this._bindEvent();
     this._loadMoreIfNeeded();
   },
-  _setupScrollable() {
+  /* sets scrollable container that has css overflow:scroll */
+  _setupScrollableContainer();() {
     this.set('_scrollable', Ember.$('#infinity-loading'));
   },
+  /* sets up binding when scroll in _scrollable */
   _bindEvent() {
     this.get('_scrollable').on('scroll', () => {
       Ember.run.debounce(this, this._loadMoreIfNeeded, 20);
     });
   },
-  _selfOffset() {
-    /* distance from position of component to top + #infinity-loading distance to top */
-    // 1900 + increasing number
-    var x = this.$().position().top// + this.get('_scrollable').scrollTop();
-    return x;
+  /* distance from position of component to top
+  * increases as grid items fill in and add to grid
+  */
+  _selfOffsetFromTop() {
+    return this.$().position().top// + this.get('_scrollable').scrollTop();
   },
   /* add the section.main height && distance from top */
   /* scrollTop is # of pixels content of an element is scrolled upwards */
   _bottomOfScrollableOffset() {
     // 507 + increasing number
-    var x = this.get('_scrollable').height() + this.get('_scrollable').scrollTop();
-    // console.log(x, 'bottom')
-    return x;
+    return this.get('_scrollable').height() + this.get('_scrollable').scrollTop();
   },
   _triggerOffset() {
-    var x = this._selfOffset() - this.get('triggerOffset');
-    // console.log(x, 'offset')
-    return x;
+    return this._selfOffsetFromTop() - this.get('triggerOffset');
   },
+  /* shouldLoadMore when the scrollable container is scrolled the same amount of pixels that is greater than the (static) distance of this component form the top */
   _shouldLoadMore() {
     return this._bottomOfScrollableOffset() > this._triggerOffset();
   },
+  //TODO: bottom is 0 on load
   _loadMoreIfNeeded() {
     if (this._shouldLoadMore()) {
-      console.log('wat')
       const page = this.get('page');
       this.set('page', page + 1);
     }
