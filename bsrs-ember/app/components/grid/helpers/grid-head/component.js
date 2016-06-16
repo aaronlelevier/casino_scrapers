@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  mobileSortFilter: false,
+  mobileFilter: false,
   mobileSearch: false,
   //THINK ABOUT PUTTING IN GRID_HEADER_COLUMN COMPONENT IF FIND IS NOT NEEDED HERE
   /*
