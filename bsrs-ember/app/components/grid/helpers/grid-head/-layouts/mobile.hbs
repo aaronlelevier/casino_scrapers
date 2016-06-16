@@ -7,7 +7,7 @@
 <div class="pull-right btn-group btn-group-sm center-block grid-options">
   <button class="btn t-saved-filtersets" {{action "toggleMobileSearch"}}>{{fa-icon "star-o"}}</button>
   <button class="btn t-mobile-search" {{action "toggleMobileSearch"}}>{{fa-icon "search"}}</button>
-  <button class="btn t-mobile-filter" {{action "toggleMobileSortFilter"}}>{{fa-icon "filter"}}</button>
+  <button class="btn t-mobile-filter" {{action "toggleMobileFilter"}}>{{fa-icon "filter"}}</button>
 </div>
 <h1 class="grid-title t-mobile-grid-title">
   {{model.count}} {{grid_title}}
@@ -20,19 +20,19 @@
   {{filterset-navigation filtersets=filtersets route=routeName}}
 </div>
 
-{{#if mobileSortFilter}}
+{{#if mobileFilter}}
 {{#ember-wormhole to="mobile-grid-filter-wormhole"}}
 <div class="filters animated slideInUp t-mobile-filters">
   <header class="mobile-header flex-item--none">
     <hbox class="filters__head">
-      <button class="filters__head__btn mobile-btn t-mobile-filter-first-btn" {{action "toggleMobileSortFilter"}}>{{t "crud.cancel.button"}}</button>
+      <button class="filters__head__btn mobile-btn t-mobile-filter-first-btn" {{action "toggleMobileFilter"}}>{{t "crud.cancel.button"}}</button>
       <h1 class="filters__head__title t-mobile-filter-title">{{t "grid.filter" count=2}}</h1>
       <button class="filters__head__btn filters__head__btn--action mobile-btn t-mobile-filter-second-btn" {{action "toggleMobileSortFilter"}}>{{t "grid.filter"}}</button>
     </hbox>
   </header>
   <section class="mobile-main flex-item--auto">
     {{#each columns as |column|}}
-      {{grid/helpers/grid-header-column tagName="div" column=column sort=sort find=find toggleFilterModal=(action "toggleFilterModal") sortBy=(action "sortBy")}}
+      {{grid/helpers/grid-header-column tagName="div" column=column find=find toggleFilterModal=(action "toggleFilterModal")}}
     {{/each}}
   </section>
 </div>

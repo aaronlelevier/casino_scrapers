@@ -1,19 +1,13 @@
 <hbox>
 
-  <div class="flex-item--auto filter__label">
-    <span class={{sortClass}}>{{if column.headerIsTranslatable (t column.headerLabel) column.headerLabel}}</span>
-  </div>
-
-  {{#if column.isSortable}}
-  <div class="flex-item--none filter__icon">
-      <span {{action "sortBy" column.field}} class="{{sortByClass}} {{if column.isSortable (query-param-asc column.field sort) ''}}"></span>
-  </div>
-  {{/if}}
-
   {{#if column.isFilterable}}
-  <div class="flex-item--none filter__icon">
-      <span class="mobile-filter {{filterClass}} {{if (fulltext-active column.field find) 'on' ''}}" {{action "toggleFilterModal" column.field}}></span>
-  </div>
+    <div class="flex-item--auto filter__label">
+      <span class={{sortClass}}>{{if column.headerIsTranslatable (t column.headerLabel) column.headerLabel}}</span>
+    </div>
+
+    <div class="flex-item--none filter__icon">
+        <span class="mobile-filter {{filterClass}} {{if (fulltext-active column.field find) 'on' ''}}" {{action "toggleFilterModal" column.field}}></span>
+    </div>
   {{/if}}
 
 </hbox>
