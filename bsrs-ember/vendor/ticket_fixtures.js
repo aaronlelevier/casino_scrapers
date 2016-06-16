@@ -123,8 +123,8 @@ var BSRS_TICKET_FACTORY = (function() {
     for (var i=page_size+1; i <= page_size*2-1; i++) {
       var uuid = 'bf2b9c85-f6bd-4345-9834-c5d51de53d' + i + page;
       var ticket = this.generate(uuid + i);
-      ticket.number = 'gone' + i + page;
-      ticket.request = 'ape' + i + page;
+      ticket.number = 'gone' + i;
+      ticket.request = 'ape'+ i;
       ticket.status = {id: this.ticket.statusTwoId, name: this.ticket.statusTwoKey};
       ticket.priority = {id: this.ticket.priorityTwoId, name: this.ticket.priorityTwoKey};
       ticket.location = location;

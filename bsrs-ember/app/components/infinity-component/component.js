@@ -21,9 +21,11 @@ export default Ember.Component.extend({
   },
   /* distance from position of component to top
   * increases as grid items fill in and add to grid
+  * position: returns object {top: px, left: px} relative to next offset parent (that has a position)
+  * offset: returns object {top: px, left: px} relative to document
   */
   _selfOffsetFromTop() {
-    return this.$().position().top// + this.get('_scrollable').scrollTop();
+    return this.$().position().top;// + this.get('_scrollable').scrollTop();
   },
   /* add the section.main height && distance from top */
   /* scrollTop is # of pixels content of an element is scrolled upwards */
@@ -36,9 +38,8 @@ export default Ember.Component.extend({
   },
   /* shouldLoadMore when the scrollable container is scrolled the same amount of pixels that is greater than the (static) distance of this component form the top */
   _shouldLoadMore() {
-    return this._bottomOfScrollableOffset() > this._triggerOffset();
+    return this._bottomOfScrollableOffset() > Math.max(1000, this._triggerOffset());
   },
-  //TODO: bottom is 0 on load
   _loadMoreIfNeeded() {
     if (this._shouldLoadMore()) {
       const page = this.get('page');

@@ -36,13 +36,10 @@ var GridRepositoryMixin = Ember.Mixin.create({
     }).get('length');
     return count+1;
   },
-  findWithQuery(page, sort, search, find, page_size) {
-    const type = this.get('typeGrid');
+  modifyEndpoint(page, search, find, page_size, sort) {
     let url = this.get('url');
-    const store = this.get('simpleStore');
-    const deserializer = this.get('deserializer');
-    page = page || 1;
     let endpoint = url + '?page=' + page;
+
     if(sort && sort !== 'id' && sort.indexOf('.') < 0){
       endpoint = endpoint + '&ordering=' + sort;
     }else if(sort && sort !== 'id'){
@@ -64,7 +61,15 @@ var GridRepositoryMixin = Ember.Mixin.create({
         endpoint = endpoint + '&' + field + '__icontains=' + encodeURIComponent(value);
       });
     }
-    // const garbage_collection = this.get('garbage_collection') || [];
+    return endpoint;
+  },
+  findWithQueryMobile(page, search, find, page_size) {
+    const type = this.get('typeGrid');
+    const store = this.get('simpleStore');
+    const deserializer = this.get('deserializer');
+    page = page || 1;
+    let endpoint = this.modifyEndpoint(page, search, find, page_size);
+
     const all = store.find(type);
     let grid_count = store.find('grid-count', 1);
     if(!grid_count.get('content')){
@@ -75,12 +80,41 @@ var GridRepositoryMixin = Ember.Mixin.create({
     }
     all.set('count', grid_count.get('count'));
     PromiseMixin.xhr(endpoint).then((response) => {
-      // garbage_collection.forEach((type) => {
-      //   run(() => {
-      //     store.clear(type);
-      //   });
-      // });
-      console.log(response)
+      deserializer.deserialize(response);
+      all.set('isLoaded', true);
+      const count = response.count;
+      all.set('count', count);
+      run(() => {
+        store.push('grid-count', { id: 1, count:count });
+      });
+    }, (xhr) => {
+      this.get('error').transToError();
+    });
+    return all;
+  },
+  findWithQuery(page, search, find, page_size, sort) {
+    const type = this.get('typeGrid');
+    const store = this.get('simpleStore');
+    const deserializer = this.get('deserializer');
+    page = page || 1;
+    let endpoint = this.modifyEndpoint(page, search, find, page_size, sort);
+
+    const garbage_collection = this.get('garbage_collection') || [];
+    const all = store.find(type);
+    let grid_count = store.find('grid-count', 1);
+    if(!grid_count.get('content')){
+      /* sets a default count while the payload is being deserialized */
+      run(() => {
+        grid_count = store.push('grid-count', {id: 1, count: 100});
+      });
+    }
+    all.set('count', grid_count.get('count'));
+    PromiseMixin.xhr(endpoint).then((response) => {
+      garbage_collection.forEach((type) => {
+        run(() => {
+          store.clear(type);
+        });
+      });
       deserializer.deserialize(response);
       all.set('isLoaded', true);
       const count = response.count;

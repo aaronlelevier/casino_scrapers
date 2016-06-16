@@ -52,7 +52,16 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, {
     const pages = requested.toArray().sort((a,b) => { return a-b; }).uniq();
     const max = (pages.indexOf(page) + 1) * page_size;
     const found_content = this.get('found_content');
-    return found_content//.slice(0, Math.max(page_size, 10));
+    return found_content.slice(0, Math.max(page_size, 10));
+  }),
+  paginated_content_mobile: Ember.computed('found_content.[]', function() {
+    const requested = this.get('requested');
+    const page = parseInt(this.get('page')) || 1;
+    const page_size = parseInt(this.get('page_size')) || PAGE_SIZE;
+    const pages = requested.toArray().sort((a,b) => { return a-b; }).uniq();
+    const max = (pages.indexOf(page) + 1) * page_size;
+    const found_content = this.get('found_content');
+    return found_content;//.slice(0, Math.max(page_size, 10));
   }),
   actions: {
     keyup(search) {
