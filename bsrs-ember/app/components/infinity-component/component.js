@@ -10,7 +10,7 @@ export default Ember.Component.extend({
     this._loadMoreIfNeeded();
   },
   /* sets scrollable container that has css overflow:scroll */
-  _setupScrollableContainer();() {
+  _setupScrollableContainer() {
     this.set('_scrollable', Ember.$('#infinity-loading'));
   },
   /* sets up binding when scroll in _scrollable */
