@@ -65,7 +65,7 @@ test('clicking on search icon will show search bar above grid title and can sear
   //TODO: search functionality
 });
 
-test('amk clicking filter icon and updating ticket request filter will filter grid', function(assert) {
+test('clicking filter icon and updating ticket request filter will filter grid', function(assert) {
   visit(TICKET_URL);
   andThen(() => {
     assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
@@ -75,11 +75,11 @@ test('amk clicking filter icon and updating ticket request filter will filter gr
   andThen(() => {
     assert.equal(find('.t-filter-input').length, 1);
   });
-  fillIn('.t-filter-input', 'ape16');
+  fillIn('.t-filter-input', 'ape19');
   triggerEvent('.t-filter-input', 'keyup', {keyCode: 68});
-  const filtered_list_xhr = xhr(PREFIX + BASE_URL + '/?page=1&request__icontains=ape16', 'GET', null, {}, 200, TF.searched('ape16', 'request'));
+  const filtered_list_xhr = xhr(PREFIX + BASE_URL + '/?page=1&request__icontains=ape19', 'GET', null, {}, 200, TF.searched('ape19', 'request'));
   generalPage.submitFilterSort();
   andThen(() => {
-    assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
+    assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestLastPage2Grid);
   });
 });

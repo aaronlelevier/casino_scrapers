@@ -2,6 +2,7 @@ import Ember from 'ember';
 import UpdateFind from 'bsrs-ember/mixins/update-find';
 
 export default Ember.Component.extend(UpdateFind, {
+  simpleStore: Ember.inject.service(),
   mobileFilter: false,
   mobileSearch: false,
   gridFilterParams: {},
@@ -31,6 +32,7 @@ export default Ember.Component.extend(UpdateFind, {
       Object.keys(params).forEach((key) => {
         finalFilter += this.update_find_query(key, params[key], find);
       });
+      this.get('simpleStore').clear(`${this.get('noun')}-list`);
       this.setProperties({ page:1, find: finalFilter });
     },
     toggleMobileSearch() {
