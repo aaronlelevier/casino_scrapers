@@ -54,7 +54,7 @@ test('it renders search grid when clicked and can toggle on and off', function(a
 });
 
 test('clicking filter on a column head column will display an input with no value', function(assert) {
-  this.column = 'location.name';
+  this.column = { field: 'location.name' };
   this.gridFilterParams = {};
   this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridFilterParams=gridFilterParams}}`);
   assert.equal(this.$('input').length, 0);
@@ -62,18 +62,18 @@ test('clicking filter on a column head column will display an input with no valu
   assert.equal(this.$('input').length, 1);
   this.$('input').val('dowat').trigger('keyup');
   assert.equal(this.$('input').val(), 'dowat');
-  assert.equal(this.gridFilterParams[this.column], 'dowat');
+  assert.equal(this.gridFilterParams[this.column.field], 'dowat');
 });
 
 test('clicking filter on a column head column will display an input with existing value', function(assert) {
-  this.column = 'location.name';
+  this.column = { field: 'location.name' };
   this.gridFilterParams = { 'location.name': 'dowat1'};
   this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridFilterParams=gridFilterParams}}`);
   assert.equal(this.$('input').length, 1);
   assert.equal(this.$('input').val(), 'dowat1');
   this.$('input').val('dowat').trigger('keyup');
   assert.equal(this.$('input').val(), 'dowat');
-  assert.equal(this.gridFilterParams[this.column], 'dowat');
+  assert.equal(this.gridFilterParams[this.column.field], 'dowat');
 });
 
 
