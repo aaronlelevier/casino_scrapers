@@ -1,8 +1,15 @@
 import Ember from 'ember';
+import config from 'bsrs-ember/config/environment';
+
+const PAGE_SIZE = config.APP.PAGE_SIZE;
+
+//TODO: reset grid options if deep link on mobile
+//TODO: if deep link to last page, then need to prevent error
+//TODO: non optimistic rendering for mobile
 
 export default Ember.Component.extend({
-  guid: null,
   triggerOffset: 100,
+  reachedInfinity: false,
   didInsertElement() {
     this._super(...arguments);
     this._setupScrollableContainer();
@@ -21,7 +28,7 @@ export default Ember.Component.extend({
   /* sets up binding when scroll in _scrollable */
   _bindEvent() {
     this.get('_scrollable').on('scroll', () => {
-      Ember.run.debounce(this, this._loadMoreIfNeeded, 20);
+      Ember.run.debounce(this, this._loadMoreIfNeeded, 10);
     });
   },
   _unbindEvent(eventName) {
@@ -48,10 +55,21 @@ export default Ember.Component.extend({
   _shouldLoadMore() {
     return this._bottomOfScrollableOffset() > Math.max(1000, this._triggerOffset());
   },
+  /*
+  * if no count, model has not yet loaded.
+  */
+  _canLoadMore() {
+    const count = this.get('model.count');
+    const totalPages = Math.ceil(count/PAGE_SIZE);
+    return count ? this.get('page') < totalPages : true;
+  },
   _loadMoreIfNeeded() {
-    if (this._shouldLoadMore() && !this.get('reachedInfinity')) {
+    const canLoadMore = this._canLoadMore();
+    if (this._shouldLoadMore() && canLoadMore && !this.get('reachedInfinity')) {
       const page = this.get('page');
       this.set('page', page + 1);
+    } else if (!canLoadMore) {
+      this.set('reachedInfinity', true);
     }
   },
 });

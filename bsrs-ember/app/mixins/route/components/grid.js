@@ -44,16 +44,13 @@ var GridViewRoute = Ember.Route.extend({
     const count = repository.findCount();
     const routeName = this.get('routeName');
     set_filter_model_attrs(this.filterModel, query.find);
-    /* jshint ignore:start */
-    let model, reachedInfinity;
+    let model;
     if (this.get('device').get('isMobile')) {
-      [model, reachedInfinity=false] = repository.findWithQueryMobile(query.page, query.search, query.find, query.page_size);
-      console.log(reachedInfinity)
+      model = repository.findWithQueryMobile(query.page, query.search, query.find);
     } else {
       model = repository.findWithQuery(query.page, query.search, query.find, query.page_size, query.sort);
     }
-    return {count, model, requested, filtersets, routeName, search, reachedInfinity};
-    /* jshint ignore:end */
+    return {count, model, requested, filtersets, routeName, search};
   },
   setupController: function(controller, hash) {
     controller.set('count', hash.count);
@@ -63,7 +60,6 @@ var GridViewRoute = Ember.Route.extend({
     controller.set('filtersets', hash.filtersets);
     controller.set('routeName', hash.routeName);
     controller.set('search', hash.search);
-    controller.set('reachedInfinity', hash.reachedInfinity);
   }
 });
 
