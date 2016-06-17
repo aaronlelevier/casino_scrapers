@@ -3,6 +3,7 @@ import module from 'bsrs-ember/tests/helpers/module';
 import { test } from 'qunit';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
+import {isFocused} from 'bsrs-ember/tests/helpers/input';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import config from 'bsrs-ember/config/environment';
@@ -99,6 +100,7 @@ test('search filters down results and resets page to 1', assert => {
   andThen(() => {
     assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
     assert.equal(find('.t-grid-search-input:eq(1)').attr('placeholder'), t('ticket.search'));
+    isFocused('.t-grid-search-input:eq(1)');
   });
   generalPage.mobileSearch('ape19');
   triggerEvent('.t-grid-search-input:eq(1)', 'keyup', LETTER_A);

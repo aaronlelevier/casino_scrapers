@@ -7,6 +7,12 @@ const DEBOUNCE_MS = config.APP.POWER_SELECT_DEBOUNCE;
 var GridSearch =  Ember.TextField.extend({
   val: '',
   classNames: ['t-grid-search-input form-control input-sm'],
+  didInsertElement() {
+    this._super(...arguments);
+    if (this.get('focusInput')) {
+      this.$().focus();
+    }
+  },
   sendValueUp: task(function * (searchValue) {
     yield timeout(DEBOUNCE_MS);
     this.sendAction('keyup', this.get('val'));
