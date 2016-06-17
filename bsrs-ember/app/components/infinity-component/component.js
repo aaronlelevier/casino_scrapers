@@ -61,7 +61,7 @@ export default Ember.Component.extend({
   * if no count, model has not yet loaded.
   */
   _canLoadMore() {
-    const count = this.get('model.count');
+    const count = this.get('model').get('count');
     const totalPages = Math.ceil(count/PAGE_SIZE);
     return count ? this.get('page') < totalPages : true;
   },
