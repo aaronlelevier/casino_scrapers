@@ -66,15 +66,6 @@ var GridRepositoryMixin = Ember.Mixin.create({
     }
     return endpoint;
   },
-  /*
-  * Once currentPage is >= to totalPages don't fetch another page
-  * If totalPages === 0, then always fetch more (initial App state)...need to think about how filter will affect this
-  */
-  // _canLoadMore() {
-  //   const totalPages = this.get('_totalPages');
-  //   const currentPage = this.get('_currentPage');
-  //   return totalPages ? currentPage < totalPages : true;
-  // },
   findWithQueryMobile(page, search, find) {
     const type = this.get('typeGrid');
     const store = this.get('simpleStore');
@@ -88,7 +79,6 @@ var GridRepositoryMixin = Ember.Mixin.create({
     page = page || 1;
     let endpoint = this.modifyEndpoint(page, search, find);
 
-    const all = store.find(type);
     // let grid_count = store.find('grid-count', 1);
     // if(!grid_count.get('content')){
     //   /* sets a default count while the payload is being deserialized */
@@ -97,18 +87,19 @@ var GridRepositoryMixin = Ember.Mixin.create({
     //   });
     // }
     // all.set('count', grid_count.get('count'));
-    PromiseMixin.xhr(endpoint).then((response) => {
+    return PromiseMixin.xhr(endpoint).then((response) => {
       deserializer.deserialize(response);
+      const all = store.find(type);
       all.set('isLoaded', true);
       const count = response.count;
       all.set('count', count);
       run(() => {
         store.push('grid-count', { id: 1, count:count });
       });
+      return all;
     }, (xhr) => {
       this.get('error').transToError();
     });
-    return all;
   },
   findWithQuery(page, search, find, page_size, sort) {
     const type = this.get('typeGrid');

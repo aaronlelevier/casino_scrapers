@@ -46,7 +46,11 @@ var GridViewRoute = Ember.Route.extend({
     set_filter_model_attrs(this.filterModel, query.find);
     let model;
     if (this.get('device').get('isMobile')) {
-      model = repository.findWithQueryMobile(query.page, query.search, query.find);
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        repository.findWithQueryMobile(query.page, query.search, query.find).then((model) => {
+          resolve({count, model, requested, filtersets, routeName, search});
+        });
+      });
     } else {
       model = repository.findWithQuery(query.page, query.search, query.find, query.page_size, query.sort);
     }
