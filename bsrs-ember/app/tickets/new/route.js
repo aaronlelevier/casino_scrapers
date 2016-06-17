@@ -17,6 +17,9 @@ var TicketNewRoute = TabNewRoute.extend({
   statuses: Ember.computed(function() {
     return this.get('statusRepository').fetch();
   }),
+  /* @method model
+  * new_pk determined from new_id passed in link-to from grid-head (desktop) and called from findCount function
+  */
   model(params) {
     const new_pk = parseInt(params.new_id, 10);
     const statuses = this.get('statuses');

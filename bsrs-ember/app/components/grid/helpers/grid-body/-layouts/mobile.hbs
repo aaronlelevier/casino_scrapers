@@ -1,4 +1,4 @@
-{{#each paginated_content as |item|}}
+{{#each paginated_content_mobile as |item|}}
   {{#link-to detail_url item.id tagName="div" class="mobile-grid-row t-grid-data"}}
     {{#each columns as |column|}}
       {{grid/helpers/grid-body-column tagName="div" noun=noun column=column item=item}}

@@ -7,6 +7,7 @@ var nameRoute = function(route) {
 };
 
 var GridViewRoute = Ember.Route.extend({
+  device: Ember.inject.service('device/layout'),
   pagination: Ember.inject.service(),
   personCurrent: Ember.inject.service(),
   filtersetRepository: inject('filterset'),
@@ -43,7 +44,12 @@ var GridViewRoute = Ember.Route.extend({
     const count = repository.findCount();
     const routeName = this.get('routeName');
     set_filter_model_attrs(this.filterModel, query.find);
-    const model = repository.findWithQuery(query.page, query.sort, query.search, query.find, query.page_size);
+    let model;
+    if (this.get('device').get('isMobile')) {
+      model = repository.findWithQueryMobile(query.page, query.search, query.find);
+    } else {
+      model = repository.findWithQuery(query.page, query.search, query.find, query.page_size, query.sort);
+    }
     return {count, model, requested, filtersets, routeName, search};
   },
   setupController: function(controller, hash) {
