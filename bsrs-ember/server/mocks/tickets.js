@@ -33,6 +33,10 @@ module.exports = function(app) {
     res.send(TICKET_FIXTURES.detail(req.params.id));
   });
 
+  adminTicketsRouter.get('/index/:id', function(req, res) {
+    res.send(TICKET_FIXTURES.detail(req.params.id));
+  });
+
   adminTicketsRouter.get('/:id/activity', function(req, res) {
     res.send(TICKET_ACTIVITY_FIXTURES.assignee_only());
   });
