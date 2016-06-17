@@ -32,7 +32,9 @@
   </header>
   <section class="mobile-main flex-item--auto">
     {{#each columns as |column|}}
-      {{grid/helpers/grid-header-column tagName="div" column=column find=find toggleFilterModal=(action "toggleFilterModal")}}
+      {{#if column.isFilterable}}
+      {{grid/helpers/grid-header-column-mobile tagName="div" column=column gridFilterParams=gridFilterParams find=find toggleFilterModal=(action "toggleFilterModal")}}
+      {{/if}}
     {{/each}}
   </section>
 </div>

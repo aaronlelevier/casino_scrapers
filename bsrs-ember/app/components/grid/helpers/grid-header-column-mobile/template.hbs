@@ -1,0 +1,13 @@
+<hbox>
+  <div class="flex-item--auto filter__label">
+    <span>{{if column.headerIsTranslatable (t column.headerLabel) column.headerLabel}}</span>
+  </div>
+  <div class="flex-item--none filter__icon">
+      <span class="t-mobile-filter mobile-filter {{filterClass}} {{if (fulltext-active column.field find) 'on' ''}}" {{action "toggleMobileFilterInput"}}></span>
+  </div>
+  {{#if mobileFilterInput}}
+  <div class="flex-item--none filter__input-wrap">
+    {{input value=initialVal key-up=(action "updateGridFilterParams")}}
+  </div>
+  {{/if}}
+</hbox>

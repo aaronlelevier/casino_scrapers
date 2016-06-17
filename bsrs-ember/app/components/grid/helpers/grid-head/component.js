@@ -3,6 +3,7 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   mobileFilter: false,
   mobileSearch: false,
+  gridFilterParams: {},
   //THINK ABOUT PUTTING IN GRID_HEADER_COLUMN COMPONENT IF FIND IS NOT NEEDED HERE
   /*
   * object that holds key of type string ('location.name') and value of type string ('wat')
