@@ -53,8 +53,12 @@ Router.map(function() {
     });
   });
   this.route('tickets', function() {
-    this.route('index');
+    this.route('index', function() {
+      /* MOBILE */
+      this.route('ticket', {path: '/:ticket_id'});
+    });
     this.route('new', {path: 'new/:new_id'});
+    /* DESKTOP */
     this.route('ticket', {path: '/:ticket_id'});
   });
   this.route('dtds', function() {

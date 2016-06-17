@@ -14,19 +14,19 @@ const TICKET_URL = BASE_URL + '/index';
 let application;
 
 module('Acceptance | ticket list test', {
-    beforeEach() {
-        application = startApp();
-        let endpoint = PREFIX + BASE_URL + '/';
-        xhr(`${endpoint}?page=1`,'GET', null, {}, 200, TF.list());
-    },
-    afterEach() {
-        Ember.run(application, 'destroy');
-    }
+  beforeEach() {
+    application = startApp();
+    let endpoint = PREFIX + BASE_URL + '/';
+    xhr(`${endpoint}?page=1`,'GET', null, {}, 200, TF.list());
+  },
+  afterEach() {
+    Ember.run(application, 'destroy');
+  }
 });
 
 test('visiting /tickets', (assert) => {
-    visit(TICKET_URL);
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-    });
+  visit(TICKET_URL);
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_URL);
+  });
 });
