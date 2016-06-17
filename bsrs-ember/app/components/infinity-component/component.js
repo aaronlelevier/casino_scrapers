@@ -8,6 +8,7 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 //TODO: non optimistic rendering for mobile
 
 export default Ember.Component.extend({
+  simpleStore: Ember.inject.service(),
   triggerOffset: 100,
   reachedInfinity: false,
   didInsertElement() {
@@ -20,6 +21,7 @@ export default Ember.Component.extend({
   willDestroyElement() {
     this._super(...arguments);
     this._unbindEvent();
+    this.get('simpleStore').clear();
   },
   /* sets scrollable container that has css overflow:scroll */
   _setupScrollableContainer() {
