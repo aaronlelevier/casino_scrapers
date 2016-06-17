@@ -26,7 +26,7 @@ export default Ember.Component.extend(UpdateFind, {
     */
     keyup(searchValue) {
       this.get('simpleStore').clear(`${this.get('noun')}-list`);
-      this.setProperties({ page:1, search: searchValue })
+      this.setProperties({ page:1, search: searchValue });
     },
     filterGrid() {
       this.toggleProperty('mobileFilter');

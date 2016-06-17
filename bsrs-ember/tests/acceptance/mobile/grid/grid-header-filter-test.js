@@ -63,7 +63,6 @@ test('clicking on search icon will show search bar above grid title and can sear
     assert.equal(find(`${HEADER_WRAP_CLASS} .t-grid-search-input`).length, 1);
     assert.equal(find(`${HEADER_WRAP_CLASS} .t-mobile-search-wrap .t-grid-search-input`).attr('placeholder'), t('ticket.search'));
   });
-  //TODO: search functionality
 });
 
 test('ticket request filter will filter down results and reset page to 1', function(assert) {
