@@ -66,27 +66,13 @@ var GridRepositoryMixin = Ember.Mixin.create({
     }
     return endpoint;
   },
+  /* Non Optimistic Rendering */
   findWithQueryMobile(page, search, find) {
     const type = this.get('typeGrid');
     const store = this.get('simpleStore');
-    // /* START if the currentPage is NOT less than totalPages, then bail */
-    // if (!this._canLoadMore()) {
-    //   return [store.find(type), true];
-    // }
-    // this.incrementProperty('_currentPage');
-    // /* END */
     const deserializer = this.get('deserializer');
     page = page || 1;
     let endpoint = this.modifyEndpoint(page, search, find);
-
-    // let grid_count = store.find('grid-count', 1);
-    // if(!grid_count.get('content')){
-    //   /* sets a default count while the payload is being deserialized */
-    //   run(() => {
-    //     grid_count = store.push('grid-count', {id: 1, count: 100});
-    //   });
-    // }
-    // all.set('count', grid_count.get('count'));
     return PromiseMixin.xhr(endpoint).then((response) => {
       deserializer.deserialize(response);
       const all = store.find(type);
@@ -101,6 +87,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
       this.get('error').transToError();
     });
   },
+  /* Optimistic Rendering */
   findWithQuery(page, search, find, page_size, sort) {
     const type = this.get('typeGrid');
     const store = this.get('simpleStore');
