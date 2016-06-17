@@ -6,9 +6,15 @@
   padding: 4%;
   div.filter__icon {
     color: $medGray;
-    padding: 0 2%;
+    padding: 0 0 0 2%;
     min-width:2em;
     text-align: center;
+    button{
+      padding: 0;
+      margin: 0;
+      border: none;
+      background: none;
+    }
   }
   div.filter__input-wrap{
     width: 100%;

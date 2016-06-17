@@ -53,18 +53,25 @@ input.nav-trigger {
 
 label[for="nav-trigger"] {
   position: fixed;
-  left: 15px;
-  top: $hamburgerTop;
-  z-index: 2; //hamburger must drumpf header.mobile-header z-index = 0
+  left: 0;
+  top: 0;
+  z-index: 3; //hamburger must drumpf header.mobile-header z-index = 0
   font-size: 26px;
-  line-height: $menuHeight;
+  line-height: $mobileHeaderHeight;
+  height: $mobileHeaderHeight;
+  width: $mobileHeaderHeight;
+  text-align: center;
   color: $light;
+  cursor: pointer;
+  display: block;
+  margin: 0;
 }
 
 .nav-trigger:checked + label {
-  top: $hamburgerTop;
+  top: 0;
   right: 0;
   bottom: 0;
+  height: auto;
   left: $mobileDrawerWidth;
   padding-left: 15px;
 }
