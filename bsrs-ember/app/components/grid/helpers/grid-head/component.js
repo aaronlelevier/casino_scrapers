@@ -24,6 +24,10 @@ export default Ember.Component.extend(UpdateFind, {
     /*
     * MOBILE - Need to see how Ember modularization RFC pans out.  Same component functions duplicated right now
     */
+    keyup(searchValue) {
+      this.get('simpleStore').clear(`${this.get('noun')}-list`);
+      this.setProperties({ page:1, search: searchValue })
+    },
     filterGrid() {
       this.toggleProperty('mobileFilter');
       const params = this.get('gridFilterParams');

@@ -10,19 +10,19 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import page from 'bsrs-ember/tests/pages/ticket-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general-mobile';
 
-var application, store, endpoint;
+var application, store, endpoint, list_xhr;
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
 const HEADER_WRAP_CLASS = '.t-grid-mobile-header';
+const LETTER_A = {keyCode: 65};
 
 module('Acceptance | grid-head mobile', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
-    endpoint = PREFIX + BASE_URL + '/?page=1';
-    const list_xhr = xhr(endpoint, 'GET', null, {}, 200, TF.list());
+    list_xhr = xhr(PREFIX + BASE_URL + '/?page=1', 'GET', null, {}, 200, TF.list());
     const flexi = application.__container__.lookup('service:device/layout');
     const breakpoints = flexi.get('breakpoints');
     const bp = {};
@@ -65,9 +65,13 @@ test('clicking on search icon will show search bar above grid title and can sear
   //TODO: search functionality
 });
 
-test('clicking filter icon and updating ticket request filter will filter grid', function(assert) {
-  visit(TICKET_URL);
+test('ticket request filter will filter down results and reset page to 1', function(assert) {
+  xhr(PREFIX + BASE_URL + '/?page=1&request__icontains=ape19', 'GET', null, {}, 200, TF.searched('ape19', 'request'));
+  clearxhr(list_xhr);
+  xhr(PREFIX + BASE_URL + '/?page=2', 'GET', null, {}, 200, TF.list());
+  visit(TICKET_URL+'?page=2');
   andThen(() => {
+    assert.equal(currentURL(), TICKET_URL + '?page=2');
     assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
   });
   click('.t-mobile-filter');
@@ -77,9 +81,29 @@ test('clicking filter icon and updating ticket request filter will filter grid',
   });
   fillIn('.t-filter-input', 'ape19');
   triggerEvent('.t-filter-input', 'keyup', {keyCode: 68});
-  const filtered_list_xhr = xhr(PREFIX + BASE_URL + '/?page=1&request__icontains=ape19', 'GET', null, {}, 200, TF.searched('ape19', 'request'));
   generalPage.submitFilterSort();
   andThen(() => {
+    assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestLastPage2Grid);
+  });
+});
+
+test('search filters down results and resets page to 1', assert => {
+  xhr(PREFIX + BASE_URL + '/?page=1&search=ape19','GET',null,{},200,TF.searched('ape19', 'request'));
+  clearxhr(list_xhr);
+  xhr(PREFIX + BASE_URL + '/?page=2', 'GET', null, {}, 200, TF.list());
+  visit(TICKET_URL+'?page=2');
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_URL + '?page=2');
+  });
+  generalPage.clickSearchIcon();
+  andThen(() => {
+    assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
+    assert.equal(find('.t-grid-search-input:eq(1)').attr('placeholder'), t('ticket.search'));
+  });
+  generalPage.mobileSearch('ape19');
+  triggerEvent('.t-grid-search-input:eq(1)', 'keyup', LETTER_A);
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_URL + '?search=ape19');
     assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestLastPage2Grid);
   });
 });
