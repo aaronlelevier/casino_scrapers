@@ -75,3 +75,14 @@ test('clicking filter on a column head column will display an input with existin
   assert.equal(this.$('input').val(), 'dowat');
   assert.equal(this.gridFilterParams[this.column], 'dowat');
 });
+
+
+
+// test('amk clicking filter on a column shows a custom filter - priority', function(assert) {
+//   this.column = {};
+//   this.gridFilterParams = {};
+//   this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridFilterParams=gridFilterParams}}`);
+//   assert.equal(this.$('input').length, 0);
+//   this.$('.t-mobile-filter').click();
+//   assert.equal(this.$('input').length, 4);
+// });

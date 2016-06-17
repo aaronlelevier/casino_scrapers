@@ -1,6 +1,7 @@
 import Ember from 'ember';
+import UpdateFind from 'bsrs-ember/mixins/update-find';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(UpdateFind, {
   mobileFilter: false,
   mobileSearch: false,
   gridFilterParams: {},
@@ -22,18 +23,16 @@ export default Ember.Component.extend({
     /*
     * MOBILE - Need to see how Ember modularization RFC pans out.  Same component functions duplicated right now
     */
-    /*
     filterGrid() {
       this.toggleProperty('mobileFilter');
       const params = this.get('gridFilterParams');
       const find = this.get('find');
-      const finalFilter = '';
+      let finalFilter = '';
       Object.keys(params).forEach((key) => {
-        finalFilter += update_find_query(key, params[key], find);
+        finalFilter += this.update_find_query(key, params[key], find);
       });
-      this.setProperties({page:1, find: finalFilter});
-    }
-    */
+      this.setProperties({ page:1, find: finalFilter });
+    },
     toggleMobileSearch() {
       this.toggleProperty('mobileSearch');
     },

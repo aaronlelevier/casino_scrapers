@@ -42,7 +42,7 @@ export default Ember.Component.extend({
     updateGridFilterParams(val){
       const column = this.get('column');
       const gridFilterParams = this.get('gridFilterParams');
-      gridFilterParams[column] = val;
+      gridFilterParams[column.field] = val;
     }
   }
 });
