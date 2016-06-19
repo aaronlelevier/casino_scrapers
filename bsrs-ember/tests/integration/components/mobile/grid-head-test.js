@@ -54,11 +54,11 @@ test('it renders search grid when clicked and can toggle on and off', function(a
 });
 
 test('clicking filter on a column head column will display an input with no value', function(assert) {
-  this.column = { field: 'location.name' };
+  this.column = { field: 'location.name', isFilterable: true };
   this.gridFilterParams = {};
   this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridFilterParams=gridFilterParams}}`);
   assert.equal(this.$('input').length, 0);
-  this.$('.t-mobile-filter').click();
+  this.$('.t-filter-location-name').click();
   assert.equal(this.$('input').length, 1);
   this.$('input').val('dowat').trigger('keyup');
   assert.equal(this.$('input').val(), 'dowat');
@@ -77,11 +77,11 @@ test('clicking filter on a column head column will display an input with existin
 });
 
 test('if column has filterComponent it is rendered', function(assert) {
-  this.column = { field: 'location.name', filterComponent: 'grid/filters/checkbox-list' };
+  this.column = { field: 'priority.translated_name', isFilterable: true, filterComponent: 'grid/filters/checkbox-list' };
   this.gridFilterParams = {};
   this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridFilterParams=gridFilterParams}}`);
   assert.equal(this.$('.t-checkbox-list').length, 0);
-  this.$('.t-mobile-filter').click();
+  this.$('.t-filter-priority-translated-name').click();
   assert.equal(this.$('.t-checkbox-list').length, 1);
 });
 

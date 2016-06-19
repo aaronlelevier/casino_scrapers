@@ -7,7 +7,11 @@
   </div>
   {{#if mobileFilterInput}}
     <div class="flex-item--none filter__input-wrap">
-      {{input class="form-control t-filter-input" value=initialVal key-up=(action "updateGridFilterParams")}}
+      {{#if column.filterComponent}}
+        {{component column.filterComponent column=column}}
+      {{else}}
+        {{input class="form-control t-filter-input" value=initialVal key-up=(action "updateGridFilterParams")}}
+      {{/if}}
     </div>
   {{/if}}
 </hbox>
