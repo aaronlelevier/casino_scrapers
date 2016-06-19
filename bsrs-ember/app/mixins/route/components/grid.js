@@ -57,13 +57,7 @@ var GridViewRoute = Ember.Route.extend({
     return {count, model, requested, filtersets, routeName, search};
   },
   setupController: function(controller, hash) {
-    controller.set('count', hash.count);
-    controller.set('model', hash.model);
-    controller.set('requested', hash.requested);
-    controller.set('filterModel', this.filterModel);
-    controller.set('filtersets', hash.filtersets);
-    controller.set('routeName', hash.routeName);
-    controller.set('search', hash.search);
+    controller.setProperties(hash);
   }
 });
 
