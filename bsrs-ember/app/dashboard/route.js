@@ -9,13 +9,12 @@ export default Ember.Route.extend({
     return repo.detail();
   }),
   model() {
-    return {
+    return Ember.RSVP.hash({
       model: this.get('repository').findTicketDrafts(),
       dashboardData: this.get('dashboardData')
-    };
+    });
   },
   setupController: function(controller, hash) {
-    controller.set('model', hash.model);
-    controller.set('dashboardData', hash.dashboardData);
+    controller.setProperties(hash);
   },
 });

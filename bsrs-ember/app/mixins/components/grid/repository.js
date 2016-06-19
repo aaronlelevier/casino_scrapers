@@ -76,6 +76,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
     return PromiseMixin.xhr(endpoint).then((response) => {
       deserializer.deserialize(response);
       const all = store.find(type);
+      /* further processing on array proxy */
       all.set('isLoaded', true);
       const count = response.count;
       all.set('count', count);

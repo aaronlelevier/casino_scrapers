@@ -62,10 +62,10 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMix
     });
   },
   findTicketDrafts(){
-    PromiseMixin.xhr(`${TICKETS_URL}?status__name=ticket.status.draft`, 'GET').then((response) => {
-      this.get('TicketDeserializer').deserialize(response);
+    /* Not store bound b/c no interaction with data */
+    return PromiseMixin.xhr(`${TICKETS_URL}?status__name=ticket.status.draft`, 'GET').then((response) => {
+      return response.results;
     });
-    return this.get('simpleStore').find('ticket-list');
   }
 });
 

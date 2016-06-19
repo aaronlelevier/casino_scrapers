@@ -6,29 +6,34 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import SD from 'bsrs-ember/vendor/defaults/setting';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import page from 'bsrs-ember/tests/pages/ticket-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general-mobile';
 
-var application, store, endpoint;
+var application, store, endpoint, list_xhr;
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
+const DASHBOARD_URL = BASEURLS.dashboard_url;
 const DETAIL_URL = `${BASE_URL}/index/${TD.idOne}`;
 const SORT_LOCATION_DIR = '.t-sort-location-name-dir';
+const LETTER_A = {keyCode: 65};
 // const SORT_ASSIGNEE_DIR = '.t-sort-assignee-fullname-dir';
 // const FILTER_PRIORITY = '.t-filter-priority-translated-name';
 
 module('Acceptance | grid mobile test', {
   beforeEach() {
+    /* SETUP */
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL;
-    const list_xhr = xhr(endpoint+'/?page=1', 'GET', null, {}, 200, TF.list());
+    list_xhr = xhr(endpoint+'/?page=1', 'GET', null, {}, 200, TF.list());
+    /* MOBILE RENDER */
     const flexi = application.__container__.lookup('service:device/layout');
     const breakpoints = flexi.get('breakpoints');
     const bp = {};
@@ -40,6 +45,33 @@ module('Acceptance | grid mobile test', {
   afterEach() {
     Ember.run(application, 'destroy');
   }
+});
+
+test('scott only renders gtid items from server and not other ticket objects already in store', assert => {
+  /* MOBILE doesn't clear out grid items on every route call to allow for infinite scrolling. If other tickets in store, this will fail */
+  xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: SD.dashboard_text}});
+  xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
+  visit(DASHBOARD_URL);
+  andThen(() => {
+    assert.equal(currentURL(), DASHBOARD_URL);
+    assert.equal(store.find('ticket-list').get('length'), 0);
+  });
+  clearxhr(list_xhr);
+  xhr(endpoint+'/?page=1', 'GET', null, {}, 200, TF.list_two());
+  visit(TICKET_URL);
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_URL);
+    assert.equal(store.find('ticket-list').get('length'), 9);
+  });
+  xhr(PREFIX + BASE_URL + '/?page=1&search=ape19','GET',null,{},200,TF.searched('ape19', 'request'));
+  generalPage.clickSearchIcon();
+  generalPage.mobileSearch('ape19');
+  triggerEvent('.t-grid-search-input:eq(1)', 'keyup', LETTER_A);
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_URL + '?search=ape19');
+    /* store gets cleared out when search */
+    assert.equal(store.find('ticket-list').get('length'), 1);
+  });
 });
 
 test('visiting mobile ticket grid show correct layout', assert => {

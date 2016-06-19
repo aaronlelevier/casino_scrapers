@@ -41,11 +41,9 @@ test('welcome h1 header and dashboard_text from settings', assert => {
 
 /* jshint ignore:start */
 
-test('draft tickets are shown and can click to ticket detail and start up decision tree', async assert => {
+test('draft tickets are shown (not model bound) and can click to ticket detail and start up decision tree', async assert => {
   await visit(DASHBOARD_URL);
   assert.equal(find('.t-ticket-draft').length, 10);
-  const tickets = store.find('ticket-list')
-  assert.equal(tickets.get('length'), 10);
   let endpoint = `${PREFIX}${BASE_URL}/`;
   detail_data = TF.detail(TD.idOne, TD.statusSevenId);
   xhr(`${endpoint}${TD.idOne}/`, 'GET', null, {}, 200, detail_data);

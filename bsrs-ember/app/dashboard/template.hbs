@@ -9,8 +9,8 @@
         </section>
         <section>
           {{#each model as |ticket|}}
-          <div class="t-ticket-draft">{{ticket.number}}</div>
-          {{#link-to "tickets.ticket" ticket.id tagName="button" class="btn btn-info t-ticket-status-draft-link"}}{{t "ticket.one"}}{{/link-to}}
+            <div class="t-ticket-draft">{{ticket.number}}</div>
+            {{#link-to "tickets.ticket" ticket.id tagName="button" class="btn btn-info t-ticket-status-draft-link"}}{{t "ticket.one"}}{{/link-to}}
           {{/each}}
         </section>
       </div>
