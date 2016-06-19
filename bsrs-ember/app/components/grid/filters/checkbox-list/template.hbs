@@ -1,0 +1,13 @@
+{{#each filterModels as |filterModel|}}
+  <hbox>
+    <div class="flex-item--auto">{{t filterModel.name}}</div>
+    <div class="flex-item--none checkbox-wrap">
+  		<div class="checkbox">
+  			<label>
+  				<input type="checkbox" checked="checked">
+  				<span></span>
+  			</label>
+  		</div>
+    </div>
+  </hbox>
+{{/each}}

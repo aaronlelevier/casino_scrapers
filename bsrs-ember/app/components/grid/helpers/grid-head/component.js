@@ -5,18 +5,11 @@ export default Ember.Component.extend(UpdateFind, {
   simpleStore: Ember.inject.service(),
   mobileFilter: false,
   mobileSearch: false,
-  gridFilterParams: {},
-  //THINK ABOUT PUTTING IN GRID_HEADER_COLUMN COMPONENT IF FIND IS NOT NEEDED HERE
   /*
   * object that holds key of type string ('location.name') and value of type string ('wat')
   * passed as a property to grid-header-column component
-  gridFilterParams: {
-    //EXAMPLE PROPERTIES//
-    'location.name': 'wat',
-    'assignee.fullname': 'scooter'
-    'status.translated_name': 'scooter'
-  }
   */
+  gridFilterParams: {},
   actions: {
     toggleSaveFilterSetModal() {
       this.toggleProperty('savingFilter');

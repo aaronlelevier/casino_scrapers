@@ -9,6 +9,8 @@ export let columns = [
     isSearchable: true,
     templateName: 'tickets/ticket-priority-tag',
     classNames: ['ticket-priority'],
+    filterComponent: 'grid/filters/checkbox-list',
+    filterModelName: 'ticket-priority',
   },
   {
     field: 'status.translated_name',

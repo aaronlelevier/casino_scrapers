@@ -3,11 +3,11 @@
     <span>{{if column.headerIsTranslatable (t column.headerLabel) column.headerLabel}}</span>
   </div>
   <div class="flex-item--none filter__icon">
-      <button class="t-mobile-filter mobile-filter {{filterClass}} {{if (fulltext-active column.field find) 'on' ''}}" {{action "toggleMobileFilterInput"}}></button>
+    <button class="mobile-filter {{filterClass}} {{if (fulltext-active column.field find) 'on' ''}}" {{action "toggleMobileFilterInput"}}></button>
   </div>
   {{#if mobileFilterInput}}
-  <div class="flex-item--none filter__input-wrap">
-    {{input class="form-control t-filter-input" value=initialVal key-up=(action "updateGridFilterParams")}}
-  </div>
+    <div class="flex-item--none filter__input-wrap">
+      {{input class="form-control t-filter-input" value=initialVal key-up=(action "updateGridFilterParams")}}
+    </div>
   {{/if}}
 </hbox>

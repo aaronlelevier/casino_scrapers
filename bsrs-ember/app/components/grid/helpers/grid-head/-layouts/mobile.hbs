@@ -11,9 +11,6 @@
 </div>
 <h1 class="grid-title t-mobile-grid-title">
   {{model.count}} {{grid_title}}
-  {{!--#unless model.isLoaded--}}
-  {{!--grid-loading-graphic--}}
-  {{!--/unless--}}
 </h1>
 
 <div class="filtersets t-filterset-wrap">
@@ -33,7 +30,7 @@
   <section class="mobile-main flex-item--auto">
     {{#each columns as |column|}}
       {{#if column.isFilterable}}
-      {{grid/helpers/grid-header-column-mobile tagName="div" column=column gridFilterParams=gridFilterParams find=find toggleFilterModal=(action "toggleFilterModal")}}
+      {{grid/helpers/grid-header-column-mobile tagName="div" column=column gridFilterParams=gridFilterParams find=find toggleFilterModal=(action "toggleFilterModal") }}
       {{/if}}
     {{/each}}
   </section>

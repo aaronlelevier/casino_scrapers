@@ -74,7 +74,7 @@ test('ticket request filter will filter down results and reset page to 1', funct
     assert.equal(currentURL(), TICKET_URL + '?page=2');
     assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
   });
-  click('.t-mobile-filter');
+  generalPage.clickFilterOpen();
   click('.t-filter-request');
   andThen(() => {
     assert.equal(find('.t-filter-input').length, 1);

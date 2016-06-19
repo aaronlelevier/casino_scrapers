@@ -76,6 +76,15 @@ test('clicking filter on a column head column will display an input with existin
   assert.equal(this.gridFilterParams[this.column.field], 'dowat');
 });
 
+test('if column has filterComponent it is rendered', function(assert) {
+  this.column = { field: 'location.name', filterComponent: 'grid/filters/checkbox-list' };
+  this.gridFilterParams = {};
+  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridFilterParams=gridFilterParams}}`);
+  assert.equal(this.$('.t-checkbox-list').length, 0);
+  this.$('.t-mobile-filter').click();
+  assert.equal(this.$('.t-checkbox-list').length, 1);
+});
+
 
 
 // test('amk clicking filter on a column shows a custom filter - priority', function(assert) {

@@ -7,4 +7,5 @@ export default create({
   clickGridOne: clickable('.t-grid-data:eq(0)'),
   mobileSearch: fillable('.t-grid-search-input:eq(1)'),
   clickSearchIcon: clickable('.t-mobile-search'),
+  clickFilterOpen: clickable('.t-mobile-filter'),
 });
