@@ -66,7 +66,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
     }
     return endpoint;
   },
-  /* Non Optimistic Rendering */
+  /* Non Optimistic Rendering: Mobile */
   findWithQueryMobile(page, search, find) {
     const type = this.get('typeGrid');
     const store = this.get('simpleStore');
@@ -95,7 +95,6 @@ var GridRepositoryMixin = Ember.Mixin.create({
     page = page || 1;
     let endpoint = this.modifyEndpoint(page, search, find, page_size, sort);
 
-    const garbage_collection = this.get('garbage_collection') || [];
     const all = store.find(type);
     let grid_count = store.find('grid-count', 1);
     if(!grid_count.get('content')){
@@ -106,6 +105,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
     }
     all.set('count', grid_count.get('count'));
     PromiseMixin.xhr(endpoint).then((response) => {
+      const garbage_collection = this.get('garbage_collection') || [];
       garbage_collection.forEach((type) => {
         run(() => {
           store.clear(type);
