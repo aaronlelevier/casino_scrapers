@@ -39,7 +39,7 @@ const CHILDREN_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-o
 const PARENTS = '.t-location-parent-select';
 const PARENTS_MULTIPLE_OPTION = `.t-location-parent-select > .ember-power-select-trigger > .ember-power-select-multiple-options`;
 
-module('Acceptance | location detail-test', {
+module('scott Acceptance | location detail-test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
@@ -511,7 +511,7 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
       assert.equal(currentURL(), LOCATION_URL);
       var location = store.find('location', LD.idOne);
       var phone_numbers = store.find('phonenumber', LD.idOne);
-      assert.equal(phone_numbers.source[0].get('type'), PNTD.officeId);
+      assert.equal(phone_numbers._source[0].get('type'), PNTD.officeId);
     });
   });
 });
@@ -532,7 +532,7 @@ test('when user changes an attribute on email and clicks cancel we prompt them w
       assert.equal(currentURL(), LOCATION_URL);
       var location = store.find('location', LD.idOne);
       var email = store.find('email', LD.idOne);
-      assert.equal(email.source[0].get('type'), ETD.workId);
+      assert.equal(email._source[0].get('type'), ETD.workId);
     });
   });
 });
@@ -553,7 +553,7 @@ test('when user changes an attribute on address and clicks cancel we prompt them
       assert.equal(currentURL(), LOCATION_URL);
       var location = store.find('location', LD.idOne);
       var addresses = store.find('address', LD.idOne);
-      assert.equal(addresses.source[0].get('type'), ATD.officeId);
+      assert.equal(addresses._source[0].get('type'), ATD.officeId);
     });
   });
 });
@@ -574,7 +574,7 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
       assert.equal(currentURL(), LOCATION_URL);
       var location = store.find('location', LD.idOne);
       var phone_numbers = store.find('phonenumber', LD.idOne);
-      assert.equal(phone_numbers.source[0].get('type'), PNTD.officeId);
+      assert.equal(phone_numbers._source[0].get('type'), PNTD.officeId);
     });
   });
 });
@@ -595,7 +595,7 @@ test('when user removes a email clicks cancel we prompt them with a modal and th
       assert.equal(currentURL(), LOCATION_URL);
       var location = store.find('location', LD.idOne);
       var emails = store.find('email', LD.idOne);
-      assert.equal(emails.source[0].get('type'), ETD.workId);
+      assert.equal(emails._source[0].get('type'), ETD.workId);
     });
   });
 });
@@ -616,7 +616,7 @@ test('when user removes an address clicks cancel we prompt them with a modal and
       assert.equal(currentURL(), LOCATION_URL);
       var location = store.find('location', LD.idOne);
       var addresses = store.find('address', LD.idOne);
-      assert.equal(addresses.source[0].get('type'), ATD.officeId);
+      assert.equal(addresses._source[0].get('type'), ATD.officeId);
     });
   });
 });

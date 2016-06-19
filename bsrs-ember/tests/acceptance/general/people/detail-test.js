@@ -584,7 +584,7 @@ test('when user changes an attribute on email and clicks cancel we prompt them w
       assert.equal(currentURL(), PEOPLE_URL);
       var person = store.find('person', PD.idOne);
       var emails = store.find('email', PD.idOne);
-      assert.equal(emails.source[0].get('type'), ETD.workId);
+      assert.equal(emails._source[0].get('type'), ETD.workId);
     });
   });
 });
@@ -605,7 +605,7 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
       assert.equal(currentURL(), PEOPLE_URL);
       var person = store.find('person', PD.idOne);
       var phone_numbers = store.find('phonenumber', PD.idOne);
-      assert.equal(phone_numbers.source[0].get('type'), PNTD.officeId);
+      assert.equal(phone_numbers._source[0].get('type'), PNTD.officeId);
     });
   });
 });
@@ -626,7 +626,7 @@ test('when user changes an attribute on address and clicks cancel we prompt them
       assert.equal(currentURL(), PEOPLE_URL);
       var person = store.find('person', PD.idOne);
       var addresses = store.find('address', PD.idOne);
-      assert.equal(addresses.source[0].get('type'), ATD.officeId);
+      assert.equal(addresses._source[0].get('type'), ATD.officeId);
     });
   });
 });
@@ -647,7 +647,7 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
       assert.equal(currentURL(), PEOPLE_URL);
       var person = store.find('person', PD.idOne);
       var emails = store.find('email', PD.idOne);
-      assert.equal(emails.source[0].get('type'), ETD.workId);
+      assert.equal(emails._source[0].get('type'), ETD.workId);
     });
   });
 });
@@ -668,7 +668,7 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
       assert.equal(currentURL(), PEOPLE_URL);
       var person = store.find('person', PD.idOne);
       var phone_numbers = store.find('phonenumber', PD.idOne);
-      assert.equal(phone_numbers.source[0].get('type'), PNTD.officeId);
+      assert.equal(phone_numbers._source[0].get('type'), PNTD.officeId);
     });
   });
 });
@@ -689,7 +689,7 @@ test('when user removes an address clicks cancel we prompt them with a modal and
       assert.equal(currentURL(), PEOPLE_URL);
       var person = store.find('person', PD.idOne);
       var addresses = store.find('address', PD.idOne);
-      assert.equal(addresses.source[0].get('type'), ATD.officeId);
+      assert.equal(addresses._source[0].get('type'), ATD.officeId);
     });
   });
 });
