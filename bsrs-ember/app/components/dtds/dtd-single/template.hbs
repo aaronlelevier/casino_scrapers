@@ -27,16 +27,7 @@
             {{#form-group title="admin.dtd.label.note" for="note"}}
             <div class="input-group" style="margin-bottom: 0;">
               <div class="input-group-btn">
-                {{#power-select
-                  class='t-dtd-note_type'
-                  selected=model.note_type
-                  onchange=(action "setNoteType")
-                  searchEnabled=false
-                  options=model.note_types
-                  as |note|
-                }}
-                {{t note}}
-                {{/power-select}}
+                {{general-power-select model=model className="t-dtd-note_type" selected=model.note_type property="note_type" options=model.note_types}}
               </div>
               {{input type="text" placeholder=(t "admin.dtd.label.note") value=model.note class="form-control t-dtd-note" id="dtd_note"}}
             </div>

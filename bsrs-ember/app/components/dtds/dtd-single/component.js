@@ -28,17 +28,8 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
       }
       this.set('didValidate', true);
     },
-    //delete() {
-    //  this._super(...arguments);
-    //  //Continue on w/ transition
-    //  //TODO: abstract to service
-    //  this.tab().set('transitionCB', undefined);
-    //},
     setLinkType(type){
       this.get('model').set('link_type', type);
-    },
-    setNoteType(type) {
-      this.get('model').set('note_type', type);
     },
     upload(e) {
       const repoUpload = (i, files) => {
