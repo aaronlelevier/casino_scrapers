@@ -39,7 +39,7 @@ const CHILDREN_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-o
 const PARENTS = '.t-location-parent-select';
 const PARENTS_MULTIPLE_OPTION = `.t-location-parent-select > .ember-power-select-trigger > .ember-power-select-multiple-options`;
 
-module('scott Acceptance | location detail-test', {
+module('Acceptance | location detail-test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');

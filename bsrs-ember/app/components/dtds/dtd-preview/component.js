@@ -6,7 +6,7 @@ export default Ember.Component.extend({
   classNames: ['dt-modal'],
   uuid: injectUUID('uuid'),
   simpleStore: Ember.inject.service(),
-  /* 
+  /*
    * @method init - fieldsObj setup
    * existing_ticket_request strings are parsed and a Map object is created for deep linking. May or may not contain a label
    * dt_path sets properties on fields/options to persist values on deep link
@@ -28,12 +28,12 @@ export default Ember.Component.extend({
     const fields = this.get('model.fields');
     const existing_ticket_request = this.get('ticket.request');
     const dt_path = this.get('ticket.dt_path');
-    const fieldsObj = this.get('fieldsObj') || new Map(); 
+    const fieldsObj = this.get('fieldsObj') || new Map();
     //Initial Map() setup - Current DTD
     fields.forEach((field) => {
       const field_id = field.get('id');
       fieldsObj.set(field_id, { dtd_id: dt_id, label: field.get('label'), num: 1, value: '', required: field.get('required'), });
-    }); 
+    });
     /* jshint ignore:start */
     dt_path && dt_path.forEach((dt_obj) => {
       // fields && options - set displayValue and isChecked on dt_path (existing) fieldsObjs to handle the case when user navigates back
@@ -101,6 +101,8 @@ export default Ember.Component.extend({
   }),
   _teardown: Ember.on('willDestroyElement', function() {
     this.get('eventbus').unsubscribe('bsrs-ember@component:field-element-display');
+    this.get('eventbus').unsubscribe('bsrs-ember@component:field-element-display:option');
+    this.get('eventbus').unsubscribe('bsrs-ember@component:field-element-display:select');
   }),
   /*
    * @method onFieldUpdate
@@ -128,7 +130,7 @@ export default Ember.Component.extend({
       optionValues = undefined;
     } else if (option_id) {
       optionValues = [option_id];
-    } 
+    }
     fieldsObj.set(field.get('id'), { num: num, value: value, label: field.get('label'), required: field.get('required'), optionValues: optionValues });
     this.attrs.updateRequest(fieldsObj, ticket);
   },
@@ -154,7 +156,7 @@ export default Ember.Component.extend({
       optionValues.splice(indx, 1);
     } else if (indx === -1 && value) {
       optionValues.push(option_id);
-    } 
+    }
     const store = this.get('simpleStore');
     let fieldValue = optionValues.reduce((prev, opt) => {
       const option = store.find('option', opt);
@@ -165,7 +167,7 @@ export default Ember.Component.extend({
     this.attrs.updateRequest(fieldsObj, ticket);
   },
   actions: {
-    /* 
+    /*
      * @method linkClick
      * closure action calls linkClick on controller
      * action is either 'post' or 'patch'
