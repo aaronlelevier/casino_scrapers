@@ -6,6 +6,7 @@ from location.serializers import LocationIdNameOnlySerializer, LocationStatusFKS
 from person.models import Person, Role, PersonStatus
 from person.validators import RoleLocationValidator, RoleCategoryValidator
 from setting.serializers import SettingSerializer
+from setting.tests.factory import create_role_setting
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
     RemovePasswordSerializerMixin, NestedSettingUpdateMixin,
     NestedSettingsToRepresentationMixin)
@@ -29,6 +30,11 @@ class RoleCreateSerializer(BaseCreateSerializer):
         model = Role
         validators = [RoleCategoryValidator()]
         fields = ROLE_FIELDS + ('categories',)
+
+    def create(self, validated_data):
+        instance = super(RoleCreateSerializer, self).create(validated_data)
+        create_role_setting(instance)
+        return instance
 
 
 class RoleUpdateSerializer(NestedSettingUpdateMixin, BaseCreateSerializer):

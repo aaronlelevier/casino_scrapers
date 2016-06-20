@@ -55,7 +55,6 @@ class SettingDetailSerializer(SettingSerializer):
         return data
 
     def get_dt_start_values(self, id):
-        print(id)
         dtd = TreeData.objects.get(id=id)
         return {
             'value': {

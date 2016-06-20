@@ -109,6 +109,14 @@ class RoleCreateTests(RoleSetupMixin, APITestCase):
         role = Role.objects.get(id=self.role_data['id'])
         self.assertEqual(role.auth_amount, 0)
 
+    def test_default_role_settings_get_added_on_create(self):
+        response = self.client.post('/api/admin/roles/', self.role_data, format='json')
+
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.content.decode('utf8'))
+        role = Role.objects.get(id=data['id'])
+        self.assertIsInstance(role.settings, Setting)
+
 
 class RoleUpdateTests(RoleSetupMixin, APITestCase):
 

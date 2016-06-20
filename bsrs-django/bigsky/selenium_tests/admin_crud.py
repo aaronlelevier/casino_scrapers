@@ -6,6 +6,7 @@ import string
 import time
 
 from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
@@ -19,21 +20,21 @@ from helpers import (
 
 # NOTE: Comment out - b/c button is currently disabled, and not able to click on 'checkbox'.
 #   - debug on Ember then bring back this test.
-class DtSeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
+# class DtSeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
 
-    def setUp(self):
-        self.driver = webdriver.Firefox()
-        self.driver.set_window_size(1200, 1200)
-        self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)
-        self.login()
-        # Wait
-        self.driver_wait = Wait(self.driver)
-        # Generic Elements
-        self.gen_elem_page = GeneralElementsPage(self.driver)
-        time.sleep(3)
+    # def setUp(self):
+    #     self.driver = webdriver.Firefox(capabilities=caps)
+    #     self.driver.set_window_size(1200, 1200)
+    #     self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)
+    #     self.login()
+    #     # Wait
+    #     self.driver_wait = Wait(self.driver)
+    #     # Generic Elements
+    #     self.gen_elem_page = GeneralElementsPage(self.driver)
+    #     time.sleep(3)
 
-    def tearDown(self):
-        self.driver.close()
+    # def tearDown(self):
+    #     self.driver.close()
 
     # def test_post_and_patch(self):
     #     # /dashboard
@@ -122,6 +123,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # New Role Data
         name = rand_chars()
         role = InputHelper(role_name=name)
+        self.wait_for_xhr_request("t-role-name")
         self._fill_in(role)
         role_category = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-role-category-select ')]/div")
         role_category.click()
