@@ -42,17 +42,6 @@ test('it renders saved filtersets', function(assert) {
   assert.equal(this.$('hbox > div:eq(0)').text(), 'ordered by assignee');
 });
 
-test('it renders search grid when clicked and can toggle on and off', function(assert) {
-  this.grid_title = 'Tickets';
-  this.routeName = 'tickets.index';
-  this.filtersets = store.find('filterset');
-  this.render(hbs`{{grid/helpers/grid-head filtersets=filtersets routeName=routeName grid_title=grid_title}}`);
-  this.$('.t-mobile-search').click();
-  assert.equal(this.$('.t-mobile-search-wrap').length, 1);
-  this.$('.t-mobile-search').click();
-  assert.equal(this.$('.t-mobile-search-wrap').length, 0);
-});
-
 test('clicking filter on a column head column will display an input with no value', function(assert) {
   this.column = { field: 'location.name', isFilterable: true };
   this.gridFilterParams = {};
