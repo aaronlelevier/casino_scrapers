@@ -109,7 +109,6 @@ var ApplicationRoute = Ember.Route.extend({
     store.push('person-current', person_current);
     var person_deserializer = this.get('PersonDeserializer');
     // push in 'logged in' Person
-    person_current.locale = current_locale;
     person_deserializer.deserialize(person_current, person_current.id);
     // Set the current user's time zone
     // TODO: use moment.tz.guess() when it becomes available - https://github.com/moment/moment-timezone/pull/220
@@ -163,7 +162,7 @@ var ApplicationRoute = Ember.Route.extend({
       } else {
         /* rollback if contact info */
         if(model.get('id')) { model.rollback(); }
-        
+
         tabService.callCB(tab);
 
         /* Redirect if clicked x on tab but stay on route if on other route...If new route, close tab, transition if at same module, and remove the model if in unsaved state (and not dirty) */
