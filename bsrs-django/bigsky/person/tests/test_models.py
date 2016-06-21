@@ -319,10 +319,6 @@ class PersonTests(TestCase):
         self.person.delete(override=True)
         self.assertEqual(Person.objects.count(), 0)
 
-    def test_status(self):
-        # should create a PersonStatus
-        self.assertEqual(self.person.status, PersonStatus.objects.first())
-
     def test_group(self):
         # The Person is still in one Group even after changing Roles
         role = Role.objects.first()
