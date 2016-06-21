@@ -1,5 +1,20 @@
 & {
-  .checkbox-wrap {
-    
+  margin: 0 -4% -4%;
+  .checkbox{
+    margin: 0;
+    label{
+      height: 4.6rem;
+      line-height: 4.6rem;
+      border: $borderStyle;
+      border-width: 1px 0 0;
+      display: block;
+      font-size: 1.5rem;
+      padding: 0 4%;
+      span{
+        float: right;
+        right: -1rem;
+        margin-top: 1.3rem;
+      }
+    }
   }
 }

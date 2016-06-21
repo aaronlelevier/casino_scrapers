@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  classNameBindings: ['className'],
+  classNameBindings: ['className', 'mobileFilterInput'],
   mobileFilterInput: false,
   init(){
     const existingFilter = this.get('gridFilterParams')[this.get('column.field')];

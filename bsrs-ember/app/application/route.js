@@ -163,7 +163,7 @@ var ApplicationRoute = Ember.Route.extend({
       } else {
         /* rollback if contact info */
         if(model.get('id')) { model.rollback(); }
-        
+
         tabService.callCB(tab);
 
         /* Redirect if clicked x on tab but stay on route if on other route...If new route, close tab, transition if at same module, and remove the model if in unsaved state (and not dirty) */

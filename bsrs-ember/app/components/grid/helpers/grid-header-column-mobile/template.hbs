@@ -1,17 +1,19 @@
-<hbox>
+<hbox {{action "toggleMobileFilterInput"}}>
   <div class="flex-item--auto filter__label">
     <span>{{if column.headerIsTranslatable (t column.headerLabel) column.headerLabel}}</span>
   </div>
   <div class="flex-item--none filter__icon">
-    <button class="mobile-filter {{filterClass}} {{if (fulltext-active column.field find) 'on' ''}}" {{action "toggleMobileFilterInput"}}></button>
+    <button class="mobile-filter {{filterClass}} {{if (fulltext-active column.field find) 'on' ''}}"></button>
   </div>
-  {{#if mobileFilterInput}}
-    <div class="flex-item--none filter__input-wrap">
-      {{#if column.filterComponent}}
-        {{component column.filterComponent column=column}}
-      {{else}}
-        {{input class="form-control t-filter-input" value=initialVal key-up=(action "updateGridFilterParams")}}
-      {{/if}}
-    </div>
-  {{/if}}
 </hbox>
+{{#if mobileFilterInput}}
+  {{#transition-group transition-class="example"}}
+  <div class="flex-item--none filter__input-wrap">
+    {{#if column.filterComponent}}
+      {{component column.filterComponent column=column}}
+    {{else}}
+      {{input class="form-control filter-input t-filter-input" value=initialVal key-up=(action "updateGridFilterParams")}}
+    {{/if}}
+  </div>
+  {{/transition-group}}
+{{/if}}
