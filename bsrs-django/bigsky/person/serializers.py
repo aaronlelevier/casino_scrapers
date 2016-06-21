@@ -6,7 +6,7 @@ from location.serializers import LocationIdNameOnlySerializer, LocationStatusFKS
 from person.models import Person, Role, PersonStatus
 from person.validators import RoleLocationValidator, RoleCategoryValidator
 from setting.serializers import SettingSerializer
-from setting.tests.factory import create_role_setting
+from setting.tests.factory import create_role_setting, create_person_setting
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
     RemovePasswordSerializerMixin, NestedSettingUpdateMixin,
     NestedSettingsToRepresentationMixin)
@@ -92,8 +92,9 @@ class PersonCreateSerializer(RemovePasswordSerializerMixin, BaseCreateSerializer
         fields = ('id', 'username', 'password', 'role',)
 
     def create(self, validated_data):
-        person = Person.objects.create_user(**validated_data)
+        person = super(PersonCreateSerializer, self).create(validated_data)
         person.groups.add(person.role.group)
+        create_person_setting(person)
         return person
 
 

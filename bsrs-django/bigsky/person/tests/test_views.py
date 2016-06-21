@@ -296,8 +296,8 @@ class PersonCreateTests(APITestCase):
         # update for mock data
         self.data = {
             "id": str(uuid.uuid4()),
-            "username":"one",
-            "password":"one",
+            "username": "one",
+            "password": PASSWORD,
             "role": self.person.role.pk
         }
 
@@ -305,30 +305,14 @@ class PersonCreateTests(APITestCase):
         self.client.logout()
 
     def test_create(self):
-        # Accepts a pre-created UUID, which is what Ember will do
         self.assertEqual(Person.objects.count(), 1)
-        # simulate posting a Json Dict to create a new Person
+
         response = self.client.post('/api/admin/people/', self.data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertEqual(response.status_code, 201)
         self.assertEqual(Person.objects.count(), 2)
         person = Person.objects.get(username=self.data["username"])
         self.assertEqual(self.data['id'], str(person.id))
-
-    def test_create_login_with_new_user(self):
-        # Original User is logged In
-        self.assertEqual(self.client.session['_auth_user_id'], str(self.person.pk))
-        # Create
-        response = self.client.post('/api/admin/people/', self.data, format='json')
-        # Confirm all Users Logged out
-        self.client.logout()
-        with self.assertRaises(KeyError):
-            self.client.session['_auth_user_id']
-        # login with New User
-        self.client.login(username=self.data['username'], password=self.data['password'])
-        self.assertEqual(
-            self.client.session['_auth_user_id'],
-            str(Person.objects.get(username=self.data['username']).pk)
-        )
 
     def test_password_not_in_response(self):
         response = self.client.post('/api/admin/people/', self.data, format='json')
@@ -344,6 +328,14 @@ class PersonCreateTests(APITestCase):
         self.assertEqual(data['id'], str(person.id))
         self.assertEqual(data['username'], person.username)
         self.assertEqual(data['role'], str(person.role.id))
+
+    def test_add_default_settings_on_create(self):
+        response = self.client.post('/api/admin/people/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.content.decode('utf8'))
+        person = Person.objects.get(id=data['id'])
+        self.assertIsInstance(person.settings, Setting)
 
 
 class PersonListTests(TestCase):
