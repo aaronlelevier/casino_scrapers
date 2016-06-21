@@ -1,7 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  classNameBindings: ['className'],
+  classNameBindings: ['className', 'mobileFilterInput'],
+  mobileFilterInput: false,
   init(){
     this._super(...arguments);
     this.mobileFilterInput = false;
