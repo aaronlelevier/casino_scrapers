@@ -56,7 +56,8 @@ class Locale(BaseModel):
             'name':self.name,
             'native_name':self.native_name,
             'presentation_name':self.presentation_name,
-            'rtl':self.rtl
+            'rtl':self.rtl,
+            'default': True if self.native_name == 'en' else False
             }
 
     def _update_defaults(self):
