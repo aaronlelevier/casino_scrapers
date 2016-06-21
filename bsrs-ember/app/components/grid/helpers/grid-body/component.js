@@ -61,7 +61,7 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, {
     const pages = requested.toArray().sort((a,b) => { return a-b; }).uniq();
     const max = (pages.indexOf(page) + 1) * page_size;
     const found_content = this.get('found_content');
-    return found_content;//.slice(0, Math.max(page_size, 10));
+    return found_content;
   }),
   actions: {
     keyup(search) {
