@@ -133,12 +133,15 @@ class Ticket(BaseModel):
     completion_date = models.DateTimeField(null=True)
     # Auto-fields
     number = models.IntegerField(blank=True, unique=True, default=next_number)
-    creator = models.ForeignKey(Person, related_name='created_tickets', null=True, help_text="The logged in Person that \
-created the Ticket. If NULL, it was system created.")
+    creator = models.ForeignKey(Person, related_name='created_tickets', null=True,
+        help_text="The logged in Person that created the Ticket. If NULL, it was system created.")
     legacy_ref_number = models.CharField(max_length=254, blank=True, null=True,
         help_text="Legacy ticket number from Domino")
 
     objects = TicketManager()
+
+    class Meta:
+        ordering = ('number',)
 
 
 TICKET_ACTIVITY_TYPES = [
