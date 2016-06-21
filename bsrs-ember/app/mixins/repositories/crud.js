@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import PromiseMixin from 'ember-promise/mixins/promise';
 
 export default Ember.Mixin.create({
   fetch(id) {
@@ -8,5 +9,29 @@ export default Ember.Mixin.create({
     const detail = store.find(type, id);
     const grid = store.find(typeGrid, id);
     return store.find(type, id);
-  }
+  },
+  create(new_pk, options={}) {
+    let created;
+    const pk = this.get('uuid').v4();
+    /* jshint ignore:start */
+    created = this.get('simpleStore').push(this.get('type'), {id: pk, new: true, new_pk: new_pk, ...options});
+    /* jshint ignore:end */
+    return created;
+  },
+  insert(model) {
+    return PromiseMixin.xhr(this.get('url'), 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
+      model.save();
+      model.saveRelated();
+    }, (xhr) => {
+      this.get('error').transToError(this.get('errorUrl'));
+    });
+  },
+  delete(id) {
+    const type = this.get('type');
+    return PromiseMixin.xhr(this.get('url') + id + '/', 'DELETE').then(() => {
+      /* remove from single / grid cache */
+      this.get('simpleStore').remove(type, id);
+      this.get('simpleStore').remove(`${type}-list`, id);
+    });
+  },
 });

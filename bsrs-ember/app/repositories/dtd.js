@@ -3,13 +3,14 @@ import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
+import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
 import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
+import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
 
 var PREFIX = config.APP.NAMESPACE;
 var DTD_URL = `${PREFIX}/dtds/`;
 
-var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
+var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: Ember.computed(function() { return 'dtd'; }),
   typeGrid: Ember.computed(function() { return 'dtd-list'; }),
   garbage_collection: Ember.computed(function() { return ['dtd-list']; }),
@@ -52,7 +53,7 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
   },
   /*
    * @method deepLinkDT
-   * when click continue from ticket route or get link to continue DT 
+   * when click continue from ticket route or get link to continue DT
    * if deep link, ticket needs to be full object and deserialized to setup relationships in order for dt-munge to work
    */
   deepLinkDT(dt_id, ticket_id) {
@@ -69,7 +70,7 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, {
         const err = xhr.responseJSON;
         const key = Object.keys(err);
         return Ember.RSVP.Promise.reject(err[key[0]]);
-      } 
+      }
     });
   }
 });
