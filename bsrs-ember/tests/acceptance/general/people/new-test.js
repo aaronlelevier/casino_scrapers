@@ -83,6 +83,7 @@ test('visiting /people/new and creating a new person', (assert) => {
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
     assert.equal(store.find('person').get('length'), 2);
+    assert.equal(store.find('locale').get('length'), 2);
     assert.equal(page.roleInput, RD.nameOne);
     var person = store.find('person', UUID.value);
     assert.ok(person.get('new'));
@@ -95,6 +96,7 @@ test('visiting /people/new and creating a new person', (assert) => {
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(store.find('person').get('length'), 2);
+    assert.equal(store.find('locale').get('length'), 2);
     var person = store.find('person').objectAt(1);
     assert.equal(person.get('id'), UUID.value);
     assert.equal(person.get('new'), undefined);

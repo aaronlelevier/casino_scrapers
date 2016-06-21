@@ -74,13 +74,16 @@ var extract_person_location = function(model, store, location_level_fk, location
 };
 
 var extract_locale = (model, store) => {
-  const locale_id = model.locale || store.find('person', model.id).get('locale_fk');
-  const locale = store.find('locale', locale_id);
-  let existing_people = locale.get('people') || [];
-  existing_people = existing_people.indexOf(model.id) > -1 ? existing_people : existing_people.concat(model.id);
-  store.push('locale', {id: locale.get('id'), people: existing_people});
-  model.locale_fk = locale.get('id');
-  delete model.locale;
+  // must be a POJO, or simpleStore object w/o a related Locale
+  if (typeof model.get !== 'function' || (typeof model.get === 'function' && !model.get('locale.id'))) {
+    const locale_id = model.locale || store.find('person', model.id).get('locale_fk');
+    const locale = store.find('locale', locale_id);
+    let existing_people = locale.get('people') || [];
+    existing_people = existing_people.indexOf(model.id) > -1 ? existing_people : existing_people.concat(model.id);
+    store.push('locale', {id: locale.get('id'), people: existing_people});
+    model.locale_fk = locale.get('id');
+    delete model.locale;
+  }
 };
 
 var PersonDeserializer = Ember.Object.extend({
