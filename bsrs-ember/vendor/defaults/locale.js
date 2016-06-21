@@ -10,6 +10,7 @@ var BSRS_LOCALE_DEFAULTS_OBJECT = (function() {
             nameOneKey: 'admin.locale.en',
             presentation_nameOne: '',
             rtlOne: false,
+            defaultOne: true,
             // two
             idTwo: '51905ba8-024f-4739-ae5c-2d90ffc3f726',
             native_nameTwo: 'Español',
@@ -18,6 +19,7 @@ var BSRS_LOCALE_DEFAULTS_OBJECT = (function() {
             nameTwoKey: 'admin.locale.es',
             presentation_nameTwo: 'Español',
             rtlTwo: false,
+            defaultTwo: false,
             // three
             idThree: '7f3afd8b-8f2b-43e0-879a-3b60f81388aa',
             native_nameThree: 'jp',
@@ -25,6 +27,7 @@ var BSRS_LOCALE_DEFAULTS_OBJECT = (function() {
             nameThree: 'jp',
             presentation_nameThree: 'jp',
             rtlThree: false,
+            defaultThree: false,
             // other
             idOther: '52f2e0eb-26a9-4588-9a09-ee9c812c594b',
             native_nameOther: 'en',
@@ -32,6 +35,7 @@ var BSRS_LOCALE_DEFAULTS_OBJECT = (function() {
             nameOther: 'en',
             presentation_nameOther: 'en',
             rtlOther: false,
+            defaultOther: false,
         }
     };
     return factory;

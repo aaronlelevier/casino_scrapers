@@ -14,6 +14,7 @@ import ED from 'bsrs-ember/vendor/defaults/email-type';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import LD from 'bsrs-ember/vendor/defaults/ticket';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
+import LOCALE_DEFAULTS from 'bsrs-ember/vendor/defaults/locale';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
@@ -214,23 +215,20 @@ test('on boot we should fetch and load the location level configuration', functi
     assert.equal(location_level_models.get('length'), 8);
     assert.equal(location_level_models.objectAt(0).get('id'), LLD.idOne);
     assert.equal(location_level_models.objectAt(0).get('name'), LLD.nameCompany);
-    //need to wait until all deserialized
-    // assert.equal(location_level_models.objectAt(0).get('children.length'), 7);
-    // assert.equal(location_level_models.objectAt(0).get('parents.length'), 0);
-    // assert.equal(location_level_models.objectAt(1).get('parents.length'), 1);
-    // assert.equal(location_level_models.objectAt(1).get('children.length'), 3);
-    // assert.equal(location_level_models.objectAt(2).get('parents.length'), 1);
-    // assert.equal(location_level_models.objectAt(2).get('children.length'), 2);
-    // assert.equal(location_level_models.objectAt(3).get('parents.length'), 3);
-    // assert.equal(location_level_models.objectAt(3).get('children.length'), 1);
-    // assert.equal(location_level_models.objectAt(4).get('parents.length'), 1);
-    // assert.equal(location_level_models.objectAt(4).get('children.length'), 2);
-    // assert.equal(location_level_models.objectAt(5).get('parents.length'), 1);
-    // assert.equal(location_level_models.objectAt(5).get('children.length'), 3);
-    // assert.equal(location_level_models.objectAt(6).get('parents.length'), 1);
-    // assert.equal(location_level_models.objectAt(6).get('children.length'), 2);
-    // assert.equal(location_level_models.objectAt(7).get('parents.length'), 1);
-    // assert.equal(location_level_models.objectAt(7).get('children.length'), 0);
+  });
+});
+
+test('locale', assert => {
+  visit(HOME_URL);
+  andThen(() => {
+    var locale = store.findOne('locale');
+    assert.equal(locale.get('id'), LOCALE_DEFAULTS.idOne);
+    assert.equal(locale.get('name'), LOCALE_DEFAULTS.nameOneKey);
+    assert.equal(locale.get('locale'), LOCALE_DEFAULTS.localeOne);
+    assert.equal(locale.get('native_name'), LOCALE_DEFAULTS.localeOne);
+    assert.equal(locale.get('presentation_name'), LOCALE_DEFAULTS.localeOne);
+    assert.equal(locale.get('rtl'), LOCALE_DEFAULTS.rtlOne);
+    assert.equal(locale.get('default'), LOCALE_DEFAULTS.defaultOne);
   });
 });
 
