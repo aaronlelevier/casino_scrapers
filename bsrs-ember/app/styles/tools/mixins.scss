@@ -12,12 +12,12 @@
 }
 
 @mixin input-group-dropdown($min-width: 6em) {
-	min-width: $min-width;
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	margin-left: -1px;
-	margin-right: -1px;
+  min-width: $min-width;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin-left: -1px;
+  margin-right: -1px;
 }
 
 @mixin nav-box-shadow($blurRadius: 10px, $color: $dark) {
@@ -45,4 +45,28 @@
   font-family: FontAwesome;
   font-style: normal;
   font-weight: normal;
+}
+
+@mixin mobileSearchInput($height: $mobileHeaderHeight - 20px, $width: 100%, $margin: 0) {
+  height: $height;
+  border: none;
+  background: $darker;
+  width: $width;
+  font-size: 1.6rem;
+  color: $gray;
+  padding: 0 10px;
+  margin: $margin;
+  border-radius: $borderRadius;
+  &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: $medGray;
+  }
+  &::-moz-placeholder { /* Firefox 19+ */
+    color: $medGray;
+  }
+  &:-ms-input-placeholder { /* IE 10+ */
+    color: $medGray;
+  }
+  &:-moz-placeholder { /* Firefox 18- */
+    color: $medGray;
+  }
 }

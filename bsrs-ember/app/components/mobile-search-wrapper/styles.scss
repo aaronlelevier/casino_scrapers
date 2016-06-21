@@ -13,24 +13,6 @@
     }
   }
   input {
-    height: $mobileHeaderHeight - 20px;
-    border: none;
-    background: $darker;
-    width: 100%;
-    font-size: 1.6rem;
-    color: $gray;
-    padding: 0 10px;
-    &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-      color: $medGray;
-    }
-    &::-moz-placeholder { /* Firefox 19+ */
-      color: $medGray;
-    }
-    &:-ms-input-placeholder { /* IE 10+ */
-      color: $medGray;
-    }
-    &:-moz-placeholder { /* Firefox 18- */
-      color: $medGray;
-    }
+    @include mobileSearchInput;
   }
 }

@@ -1,0 +1,12 @@
+& {
+  border: $borderStyle;
+  border-width: 0 0 1px;
+  padding: 4%;
+  font-size: 1.6rem;
+  .mobile-search-result__title {
+    font-weight: bold;
+  }
+  .mobile-search-result__meta {
+    font-size: 1.4rem;
+  }
+}

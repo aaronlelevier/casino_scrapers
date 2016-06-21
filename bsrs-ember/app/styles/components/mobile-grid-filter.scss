@@ -1,3 +1,6 @@
+$headerChildHeight: 36px;
+$headerChildMargin: ($mobileHeaderHeight - $headerChildHeight) / 2;
+
 .filters { // fixed positioning filters for the grid that comes up from the bottom
   position: fixed;
   width: 100%;
@@ -14,7 +17,8 @@
     height: $mobileHeaderHeight;
   }
   button.filters__head__btn {
-    margin: 3%;
+    height: $headerChildHeight;
+    margin: $headerChildMargin;
   }
   button.filters__head__btn--action {
     background: $activeColor;
@@ -25,6 +29,9 @@
     font-weight: normal;
     margin: 0;
     text-align: center;
+  }
+  .mobile-header__input--dark {
+    @include mobileSearchInput($height: $headerChildHeight, $width: 1%, $margin: $headerChildMargin 0);
   }
 }
 

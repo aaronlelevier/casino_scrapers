@@ -1,0 +1,15 @@
+<div class="mobile-search-result__title t-mobile-search-result__title">
+  {{#if (is-array result1)}}
+      {{mobile-display-search result=result1 searchConfigProperty=searchResultConfig.titleArrayProperty}}
+  {{else}}
+    {{result1}}
+  {{/if}}
+</div>
+
+<div class="mobile-search-result__meta t-mobile-search-result__meta">
+  {{#if (is-array result2)}}
+    {{mobile-display-search result=result2 searchConfigProperty=searchResultConfig.metaArrayProperty}}
+  {{else}}
+    {{result2}}
+  {{/if}}
+</div>

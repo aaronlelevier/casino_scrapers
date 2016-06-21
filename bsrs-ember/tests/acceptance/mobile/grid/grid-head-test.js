@@ -55,18 +55,6 @@ test('clicking on filter icon will show filters and cancel will close it out', f
   });
 });
 
-test('clicking on search icon will show search bar above grid title and can search ticket grid', assert => {
-  visit(TICKET_URL);
-  click('.t-mobile-search');
-  andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
-    assert.throws(find('.t-mobile-filters'));
-    assert.equal(find(`${HEADER_WRAP_CLASS} .t-mobile-search-wrap`).length, 1);
-    assert.equal(find(`${HEADER_WRAP_CLASS} .t-grid-search-input`).length, 1);
-    assert.equal(find(`${HEADER_WRAP_CLASS} .t-mobile-search-wrap .t-grid-search-input`).attr('placeholder'), t('ticket.search'));
-  });
-});
-
 test('ticket request filter will filter down results and reset page to 1', function(assert) {
   xhr(PREFIX + BASE_URL + '/?page=1&request__icontains=ape19', 'GET', null, {}, 200, TF.searched('ape19', 'request'));
   clearxhr(list_xhr);
@@ -89,16 +77,16 @@ test('ticket request filter will filter down results and reset page to 1', funct
   });
 });
 
-test('search filters down results and resets page to 1', assert => {
+test('search presents results on slideUp pane w/o pushing into store', assert => {
   xhr(PREFIX + BASE_URL + '/?search=ape','GET',null,{},200,TF.searched('ape', 'request'));
   xhr(PREFIX + BASE_URL + '/?search=sub8','GET',null,{},200,TF.searched('sub8', 'request'));
   visit(TICKET_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
+    assert.equal(store.find('ticket-list').get('length'), 10);
   });
   generalPage.clickSearchIcon();
   andThen(() => {
-    //TODO: Past search results check
     assert.equal(find(mobileSearch).attr('placeholder'), t('ticket.search'));
     assert.equal(find(mobileSearch).attr('type'), 'search');
     // isFocused('.t-mobile-search-slideUp .t-mobile-search-wrap .t-grid-search-input');
@@ -107,6 +95,7 @@ test('search filters down results and resets page to 1', assert => {
   triggerEvent(mobileSearch, 'keyup', LETTER_S);
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
+    assert.equal(store.find('ticket-list').get('length'), 10); //store length is same b/c search does not touch store
     assert.equal(find('.t-grid-search-data').length, 1);
     assert.equal(find('.t-mobile-search-result__title:eq(0)').text().trim(), 'Repair • Plumbing • Toilet Leak');
     assert.equal(find('.t-mobile-search-result__meta:eq(0)').text().trim(), LD.storeName);
@@ -115,8 +104,10 @@ test('search filters down results and resets page to 1', assert => {
   triggerEvent(mobileSearch, 'keyup', LETTER_A);
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
+    assert.equal(store.find('ticket-list').get('length'), 10);
     assert.equal(find('.t-grid-search-data').length, 9);
     assert.equal(find('.t-mobile-search-result__title:eq(0)').text().trim(), 'Repair');
     assert.equal(find('.t-mobile-search-result__meta:eq(0)').text().trim(), TD.locationTwo);
   });
+  //TODO: click search to present results in ticket grid
 });
