@@ -6,10 +6,11 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
+import LD from 'bsrs-ember/vendor/defaults/location';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import page from 'bsrs-ember/tests/pages/ticket-mobile';
-import generalPage from 'bsrs-ember/tests/pages/general-mobile';
+import generalPage, { mobileSearch } from 'bsrs-ember/tests/pages/general-mobile';
 
 var application, store, endpoint, list_xhr;
 
@@ -18,6 +19,7 @@ const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
 const HEADER_WRAP_CLASS = '.t-grid-mobile-header';
 const LETTER_A = {keyCode: 65};
+const LETTER_S = {keyCode: 83};
 
 module('Acceptance | grid-head mobile', {
   beforeEach() {
@@ -88,23 +90,33 @@ test('ticket request filter will filter down results and reset page to 1', funct
 });
 
 test('search filters down results and resets page to 1', assert => {
-  xhr(PREFIX + BASE_URL + '/?page=1&search=ape19','GET',null,{},200,TF.searched('ape19', 'request'));
-  clearxhr(list_xhr);
-  xhr(PREFIX + BASE_URL + '/?page=2', 'GET', null, {}, 200, TF.list());
-  visit(TICKET_URL+'?page=2');
+  xhr(PREFIX + BASE_URL + '/?search=ape','GET',null,{},200,TF.searched('ape', 'request'));
+  xhr(PREFIX + BASE_URL + '/?search=sub8','GET',null,{},200,TF.searched('sub8', 'request'));
+  visit(TICKET_URL);
   andThen(() => {
-    assert.equal(currentURL(), TICKET_URL + '?page=2');
+    assert.equal(currentURL(), TICKET_URL);
   });
   generalPage.clickSearchIcon();
   andThen(() => {
-    assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
-    assert.equal(find('.t-grid-search-input:eq(1)').attr('placeholder'), t('ticket.search'));
-    isFocused('.t-grid-search-input:eq(1)');
+    //TODO: Past search results check
+    assert.equal(find(mobileSearch).attr('placeholder'), t('ticket.search'));
+    assert.equal(find(mobileSearch).attr('type'), 'search');
+    // isFocused('.t-mobile-search-slideUp .t-mobile-search-wrap .t-grid-search-input');
   });
-  generalPage.mobileSearch('ape19');
-  triggerEvent('.t-grid-search-input:eq(1)', 'keyup', LETTER_A);
+  generalPage.mobileSearch('sub8');
+  triggerEvent(mobileSearch, 'keyup', LETTER_S);
   andThen(() => {
-    assert.equal(currentURL(), TICKET_URL + '?search=ape19');
-    assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestLastPage2Grid);
+    assert.equal(currentURL(), TICKET_URL);
+    assert.equal(find('.t-grid-search-data').length, 1);
+    assert.equal(find('.t-mobile-search-result__title:eq(0)').text().trim(), 'Repair • Plumbing • Toilet Leak');
+    assert.equal(find('.t-mobile-search-result__meta:eq(0)').text().trim(), LD.storeName);
+  });
+  generalPage.mobileSearch('ape');
+  triggerEvent(mobileSearch, 'keyup', LETTER_A);
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_URL);
+    assert.equal(find('.t-grid-search-data').length, 9);
+    assert.equal(find('.t-mobile-search-result__title:eq(0)').text().trim(), 'Repair');
+    assert.equal(find('.t-mobile-search-result__meta:eq(0)').text().trim(), TD.locationTwo);
   });
 });

@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import UpdateFind from 'bsrs-ember/mixins/update-find';
+import inject from 'bsrs-ember/utilities/inject';
 
 export default Ember.Component.extend(UpdateFind, {
   simpleStore: Ember.inject.service(),
@@ -10,6 +11,7 @@ export default Ember.Component.extend(UpdateFind, {
   * passed as a property to grid-header-column component
   */
   gridFilterParams: {},
+  searchResults: [],
   actions: {
     toggleSaveFilterSetModal() {
       this.toggleProperty('savingFilter');
@@ -17,9 +19,15 @@ export default Ember.Component.extend(UpdateFind, {
     /*
     * MOBILE - Need to see how Ember modularization RFC pans out.  Same component functions duplicated right now
     */
+    /* @method keyup
+    * asks repository for raw results
+    */
     keyup(searchValue) {
-      this.get('simpleStore').clear(`${this.get('noun')}-list`);
-      this.setProperties({ page:1, search: searchValue });
+      const repo = this.get('repository');
+      repo.mobileSearch(searchValue).then((results) => {
+        this.set('searchResults', results);
+      });
+      // this.setProperties({ page:1, search: searchValue });
     },
     filterGrid() {
       this.toggleProperty('mobileFilter');

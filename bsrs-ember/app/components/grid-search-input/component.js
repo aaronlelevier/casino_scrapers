@@ -6,10 +6,14 @@ const DEBOUNCE_MS = config.APP.POWER_SELECT_DEBOUNCE;
 
 var GridSearch =  Ember.TextField.extend({
   val: '',
+  type: 'search',
+  //TODO: test type and autocapitalize
+  autocapitalize: 'none',
   classNames: ['t-grid-search-input form-control input-sm'],
   didInsertElement() {
     this._super(...arguments);
     if (this.get('focusInput')) {
+      //TODO: This is not working right now
       this.$().focus();
     }
   },

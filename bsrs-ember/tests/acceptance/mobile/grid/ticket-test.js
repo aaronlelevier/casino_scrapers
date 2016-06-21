@@ -47,7 +47,7 @@ module('Acceptance | grid mobile test', {
   }
 });
 
-test('scott only renders gtid items from server and not other ticket objects already in store', assert => {
+test('only renders grid items from server and not other ticket objects already in store', assert => {
   /* MOBILE doesn't clear out grid items on every route call to allow for infinite scrolling. If other tickets in store, this will fail */
   xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: SD.dashboard_text}});
   xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
@@ -62,15 +62,6 @@ test('scott only renders gtid items from server and not other ticket objects alr
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
     assert.equal(store.find('ticket-list').get('length'), 9);
-  });
-  xhr(PREFIX + BASE_URL + '/?page=1&search=ape19','GET',null,{},200,TF.searched('ape19', 'request'));
-  generalPage.clickSearchIcon();
-  generalPage.mobileSearch('ape19');
-  triggerEvent('.t-grid-search-input:eq(1)', 'keyup', LETTER_A);
-  andThen(() => {
-    assert.equal(currentURL(), TICKET_URL + '?search=ape19');
-    /* store gets cleared out when search */
-    assert.equal(store.find('ticket-list').get('length'), 1);
   });
 });
 

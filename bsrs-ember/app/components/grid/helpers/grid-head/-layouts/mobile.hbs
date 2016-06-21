@@ -1,9 +1,3 @@
-{{#if mobileSearch}}
-  {{#mobile-search-wrapper}}
-    {{grid-search-input placeholder=search_placeholder keyup=(action "keyup") focusInput=true}}
-  {{/mobile-search-wrapper}}
-{{/if}}
-
 <div class="pull-right btn-group btn-group-sm center-block grid-options">
   <button class="btn t-saved-filtersets" {{action "toggleMobileSearch"}}>{{fa-icon "star-o"}}</button>
   <button class="btn t-mobile-search" {{action "toggleMobileSearch"}}>{{fa-icon "search"}}</button>
@@ -18,22 +12,45 @@
 </div>
 
 {{#if mobileFilter}}
-{{#ember-wormhole to="mobile-grid-filter-wormhole"}}
-<div class="filters animated slideInUp t-mobile-filters">
-  <header class="mobile-header flex-item--none">
-    <hbox class="filters__head">
-      <button class="filters__head__btn mobile-btn t-mobile-filter-first-btn" {{action "toggleMobileFilter"}}>{{t "crud.cancel.button"}}</button>
-      <h1 class="filters__head__title t-mobile-filter-title">{{t "grid.filter" count=2}}</h1>
-      <button class="filters__head__btn filters__head__btn--action mobile-btn t-mobile-filter-second-btn" {{action "filterGrid"}}>{{t "grid.filter"}}</button>
-    </hbox>
-  </header>
-  <section class="mobile-main flex-item--auto">
-    {{#each columns as |column|}}
-      {{#if column.isFilterable}}
-      {{grid/helpers/grid-header-column-mobile tagName="div" column=column gridFilterParams=gridFilterParams find=find toggleFilterModal=(action "toggleFilterModal") }}
-      {{/if}}
-    {{/each}}
-  </section>
-</div>
-{{/ember-wormhole}}
+  {{#ember-wormhole to="mobile-grid-filter-wormhole"}}
+  <div class="filters animated slideInUp t-mobile-filters">
+    <vbox class="mobile-wrap">
+      <header class="mobile-header flex-item--none">
+        <hbox class="filters__head">
+          <button class="filters__head__btn mobile-btn t-mobile-filter-first-btn" {{action "toggleMobileFilter"}}>{{t "crud.cancel.button"}}</button>
+          <h1 class="filters__head__title t-mobile-filter-title">{{t "grid.filter" count=2}}</h1>
+          <button class="filters__head__btn filters__head__btn--action mobile-btn t-mobile-filter-second-btn" {{action "filterGrid"}}>{{t "grid.filter"}}</button>
+        </hbox>
+      </header>
+      <section class="mobile-main flex-item--auto">
+        {{#each columns as |column|}}
+          {{#if column.isFilterable}}
+            {{grid/helpers/grid-header-column-mobile tagName="div" column=column gridFilterParams=gridFilterParams find=find toggleFilterModal=(action "toggleFilterModal") }}
+          {{/if}}
+        {{/each}}
+      </section>
+    </vbox>
+  </div>
+  {{/ember-wormhole}}
+{{else if mobileSearch}}
+  {{#ember-wormhole to="mobile-grid-filter-wormhole"}}
+  <div class="filters animated slideInUp t-mobile-search-slideUp">
+    <vbox class="mobile-wrap">
+      <header class="mobile-header flex-item--none">
+        <hbox class="filters__head">
+          <button class="filters__head__btn mobile-btn flex-item--none t-mobile-filter-first-btn" {{action "toggleMobileSearch"}}>{{fa-icon "arrow-left"}}</button>
+            {{grid-search-input classNames="mobile-header__input--dark flex-item--auto" placeholder=search_placeholder keyup=(action "keyup") focusInput=true}}
+          <button class="filters__head__btn filters__head__btn--action mobile-btn flex-item--none t-mobile-filter-second-btn" {{action "searchGrid"}}>{{fa-icon "search"}}</button>
+        </hbox>
+      </header>
+      <section class="mobile-main flex-item--auto">
+        {{#each searchResults as |result|}}
+          {{#link-to detail_url result.id tagName="div" class="t-grid-search-data"}}
+            {{mobile-search-result searchResultConfig=searchResultConfig result1=(get result searchResultConfig.title) result2=(get result searchResultConfig.meta)}}
+          {{/link-to}}
+        {{/each}}
+      </section>
+    </vbox>
+  </div>
+  {{/ember-wormhole}}
 {{/if}}

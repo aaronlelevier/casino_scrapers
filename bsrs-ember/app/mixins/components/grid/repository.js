@@ -39,6 +39,11 @@ var GridRepositoryMixin = Ember.Mixin.create({
     }).get('length');
     return count+1;
   },
+  mobileSearch(searchValue) {
+    return PromiseMixin.xhr(`${this.get('url')}?search=${searchValue}`).then((response) => {
+      return response.results;
+    });
+  },
   modifyEndpoint(page, search, find, page_size, sort) {
     let url = this.get('url');
     let endpoint = url + '?page=' + page;
