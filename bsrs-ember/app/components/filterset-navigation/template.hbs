@@ -1,3 +1,6 @@
+{{#if showSaveFilterInput}}
+  {{mobile-save-filter filtersetName=filtersetName showSaveFilterInput=showSaveFilterInput}}
+{{/if}}
 {{#each saved as |filterset|}}
-<div class="flex-item--none">{{#link-to filterset.endpoint_name (filterset-params filterset)}}{{filterset.name}}<i class="fa fa-minus-circle t-remove-filterset" aria-hidden="true" {{action "removeFilterSet" filterset.id}}></i>{{/link-to}}</div>
+  <div class="flex-item--none">{{#link-to filterset.endpoint_name (filterset-params filterset)}}{{filterset.name}}<i class="fa fa-minus-circle t-remove-filterset" aria-hidden="true" {{action "removeFilterSet" filterset.id}}></i>{{/link-to}}</div>
 {{/each}}

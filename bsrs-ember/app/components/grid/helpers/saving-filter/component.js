@@ -4,10 +4,11 @@ import SortBy from 'bsrs-ember/mixins/sort-by';
 import FilterBy from 'bsrs-ember/mixins/filter-by';
 import UpdateFind from 'bsrs-ember/mixins/update-find';
 import regex_property from 'bsrs-ember/utilities/regex-property';
+import SaveFiltersetMixin from 'bsrs-ember/mixins/components/grid/save-filterset';
 
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
-var SavingFilterComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
+var SavingFilterComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, SaveFiltersetMixin, {
   error: Ember.inject.service(),
   eventbus: Ember.inject.service(),
   _setup: Ember.on('init', function() {
@@ -29,21 +30,7 @@ var SavingFilterComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind,
     toggleSaveFilterSetModal() {
       this.toggleProperty('savingFilter');
     },
-    invokeSaveFilterSet() {
-      this.attrs.save_filterset(this.get('filtersetName')).then(() => {
-        this.toggleProperty('savingFilter');
-        this.set('filtersetName', '');
-        this.set('logMsg', '');
-      }, (xhr) => {
-        if (xhr.status === 400) {
-          //TODO: put into translations
-          this.set('logMsg', 'This saved filter name is already taken');
-        }
-      });
-    },
   }
 });
 
 export default SavingFilterComponent;
-
-

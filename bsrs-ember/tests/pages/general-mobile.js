@@ -7,7 +7,11 @@ export default create({
   submitFilterSort: clickable('.t-mobile-filter-second-btn'),
   nextPage: clickable('.t-next > a'),
   clickGridOne: clickable('.t-grid-data:eq(0)'),
+  clickSearchGridOne: clickable('.t-grid-search-data:eq(0)'),
   mobileSearch: fillable(mobileSearch),
+  filterInput: fillable('.t-filter-input'),
   clickSearchIcon: clickable('.t-mobile-search'),
   clickFilterOpen: clickable('.t-mobile-filter'),
+  saveFilterset: clickable('.t-mobile-save-filterset'),
+  closeFiltersetInput: clickable('.t-mobile-save-filterset-component span'),
 });

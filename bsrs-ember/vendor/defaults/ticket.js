@@ -5,6 +5,7 @@ var BSRS_TICKET_DEFAULTS_OBJECT = (function() {
     return {
       idOne: 'bf2b9c85-f6bd-4345-9834-c5d51de53d01',
       idTwo: '6ff90fb2-17ca-434d-9943-4035ea386b13',
+      idGridTwo: 'bf2b9c85-f6bd-4345-9834-c5d51de53d02',
       unusedId: 'cadba3ba-a533-44e0-ab1f-57cc1b056789',
       numberOne: '123zz',
       requesterOne: 'Winnie the Pooh',

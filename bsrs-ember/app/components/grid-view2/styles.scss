@@ -195,6 +195,7 @@ header.mobile-grid-head {
     hbox {
       overflow: auto;
       flex-wrap: nowrap;
+      /* div: achieve equal padding on l & r sides */
       div {
         margin: 5px 0px 5px 5px;
         &:first-child {
@@ -219,8 +220,8 @@ header.mobile-grid-head {
             background-color: $light;
             color: inherit;
           }
-        }
-      }
-    }
+        }//a
+      }//div
+    }//hbox
   } // filtersets
 } // header.mobile-grid-head
