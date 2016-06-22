@@ -4,11 +4,11 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 
 var PersonCurrent = Model.extend({
-    simpleStore: Ember.inject.service(),
-    translationsFetcher: Ember.inject.service(),
-    i18n: Ember.inject.service(),
-    person: Ember.computed(function(){
-        return this.get('simpleStore').find('person', this.get('id'));
-    })
+  simpleStore: Ember.inject.service(),
+  translationsFetcher: Ember.inject.service(),
+  i18n: Ember.inject.service(),
+  person: Ember.computed(function(){
+    return this.get('simpleStore').find('person', this.get('id'));
+  })
 });
 export default PersonCurrent;

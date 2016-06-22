@@ -8,8 +8,7 @@ var GridViewController = Ember.Controller.extend({
   sort: undefined,
   find: undefined,
   search: undefined,
-  repository: inject('filterset'),
-  application: Ember.inject.controller(),//SCOTT: what is this for? 
+  repositoryFilterset: inject('filterset'),
   queryParams: ['page', 'sort', 'search', 'find'],
   hasActiveFilterSet: Ember.computed('filtersets.[]', 'sort', 'find', 'search', function() {
     let filtersets = this.get('filtersets');
@@ -35,7 +34,7 @@ var GridViewController = Ember.Controller.extend({
       let path = this.get('routeName');
       let url = this.get('target.url');
       let params = filterset_regex(url);
-      let repository = this.get('repository');
+      let repository = this.get('repositoryFilterset');
       return repository.insert(params, path, name);
     }
   }

@@ -1,11 +1,14 @@
 import Ember from 'ember';
 import UpdateFind from 'bsrs-ember/mixins/update-find';
 import inject from 'bsrs-ember/utilities/inject';
+import SaveFiltersetMixin from 'bsrs-ember/mixins/components/grid/save-filterset';
 
-export default Ember.Component.extend(UpdateFind, {
+export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
   simpleStore: Ember.inject.service(),
   mobileFilter: false,
   mobileSearch: false,
+  showSaveFilterInput: false,
+  filtersetName: '',
   /*
   * object that holds key of type string ('location.name') and value of type string ('wat')
   * passed as a property to grid-header-column component
@@ -29,8 +32,13 @@ export default Ember.Component.extend(UpdateFind, {
       });
       // this.setProperties({ page:1, search: searchValue });
     },
+    // searchGrid() {
+    //   this.toggleProperty('showSaveFilterInput');
+    // },
     filterGrid() {
       this.toggleProperty('mobileFilter');
+      /* shows input box in horizontal scroll of save filterset */
+      this.toggleProperty('showSaveFilterInput');
       const params = this.get('gridFilterParams');
       const find = this.get('find');
       let finalFilter = '';

@@ -109,7 +109,6 @@ var ApplicationRoute = Ember.Route.extend({
     store.push('person-current', person_current);
     var person_deserializer = this.get('PersonDeserializer');
     // push in 'logged in' Person
-    person_current.locale = current_locale;
     person_deserializer.deserialize(person_current, person_current.id);
     // Set the current user's time zone
     // TODO: use moment.tz.guess() when it becomes available - https://github.com/moment/moment-timezone/pull/220

@@ -35,7 +35,7 @@ test('it renders saved filtersets', function(assert) {
   this.routeName = 'tickets.index';
   this.filtersets = store.find('filterset');
   this.render(hbs`{{grid/helpers/grid-head filtersets=filtersets routeName=routeName grid_title=grid_title}}`);
-  assert.ok(this.$('.t-saved-filtersets > i').hasClass('fa-star-o'));
+  assert.ok(this.$('.t-mobile-save-filterset > i').hasClass('fa-star-o'));
   assert.ok(this.$('.t-mobile-search > i').hasClass('fa-search'));
   assert.ok(this.$('.t-mobile-filter > i').hasClass('fa-filter'));
   assert.equal(this.$('.t-mobile-grid-title').text().trim(), 'Tickets');

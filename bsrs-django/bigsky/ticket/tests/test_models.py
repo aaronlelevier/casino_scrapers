@@ -213,6 +213,9 @@ class TicketTests(TestCase):
         create_single_person()
         create_tickets(_many=2)
 
+    def test_ordering(self):
+        self.assertEqual(Ticket._meta.ordering, ('number',))
+
     def test_number(self):
         one = Ticket.objects.get(number=1)
         self.assertIsInstance(one, Ticket)
