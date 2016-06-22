@@ -54,6 +54,14 @@ test('clicking filter on a column head column will display an input with no valu
   assert.equal(this.gridFilterParams[this.column.field], 'dowat');
 });
 
+test('classNameBinding works if toggle mobileFilterInput', function(assert) {
+  this.column = { field: 'location.name', isFilterable: true };
+  this.gridFilterParams = {};
+  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridFilterParams=gridFilterParams}}`);
+  this.$('hbox').click();
+  assert.equal(this.$('.mobile-filter-input').length, 1);
+});
+
 test('clicking filter on a column head column will display an input with existing value', function(assert) {
   this.column = { field: 'location.name' };
   this.gridFilterParams = { 'location.name': 'dowat1'};
