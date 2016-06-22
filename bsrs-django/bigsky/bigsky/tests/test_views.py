@@ -379,9 +379,9 @@ class BootstrappedDataTests(TestCase):
     def test_settings(self):
         data = json.loads(self.response.context['settings'])
 
-        self.assertEqual(4, len(data))
+        self.assertEqual(3, len(data))
         # 'foo' is a default name for the main Tenant (for the time being)
-        for name in ['general', 'role', 'person', 'foo']:
+        for name in ['general', 'role', 'person']:
             self.assertIn(name, [x['name'] for x in data])
 
     def test_ticket_statuses(self):

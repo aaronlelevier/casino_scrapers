@@ -1,3 +1,7 @@
+from django.test import TestCase
+
+from model_mommy import mommy
+
 from accounting.models import Currency
 from tenant.models import Tenant
 
