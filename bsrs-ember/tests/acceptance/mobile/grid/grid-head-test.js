@@ -15,7 +15,7 @@ import page from 'bsrs-ember/tests/pages/ticket-mobile';
 import generalPage, { mobileSearch } from 'bsrs-ember/tests/pages/general-mobile';
 import random from 'bsrs-ember/models/random';
 
-var application, store, endpoint, list_xhr, endpoint;
+var application, store, endpoint, list_xhr, endpoint, original_uuid;
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
@@ -40,8 +40,10 @@ module('Acceptance | grid-head mobile', {
       bp[point.name] = point.begin + 5;
     });
     flexi.set('width', bp.mobile);
+    original_uuid = random.uuid;
   },
   afterEach() {
+    random.uuid = original_uuid;
     Ember.run(application, 'destroy');
   }
 });
