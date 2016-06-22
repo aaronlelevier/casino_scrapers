@@ -10,9 +10,10 @@ from category.tests.factory import create_single_category, create_categories
 from location.models import (Location, LocationLevel, LOCATION_COMPANY, LOCATION_DISTRICT,
     LOCATION_REGION)
 from location.tests.factory import create_location, create_locations, create_location_levels
-from person.models import Tenant, Role, Person
+from person.models import Role, Person
 from person.tests import factory
 from setting.models import Setting
+from tenant.models import Tenant
 from translation.models import Locale
 from translation.tests.factory import create_locales
 
@@ -57,27 +58,13 @@ class DistrictManagerFactoryTests(TestCase):
         self.assertIn(self.dm.location, self.dm.person.locations.all())
 
 
-class TentantTests(TestCase):
-
-    def test_get_or_create(self):
-        ret = factory.get_or_create_tenant()
-
-        self.assertIsInstance(ret, Tenant)
-        self.assertIsNone(ret.dt_start)
-        self.assertIsInstance(ret.auth_currency, Currency)
-        self.assertIsInstance(ret.settings, Setting)
-
-        # get-or-create, so 2nd call returns original
-        ret_two = factory.get_or_create_tenant()
-        self.assertEqual(ret, ret_two)
-
-
 class CreateRoleTests(TestCase):
 
     def test_standard(self):
         init_count = Role.objects.count()
         role = factory.create_role()
         self.assertIsInstance(role, Role)
+        self.assertIsInstance(role.tenant, Tenant)
         self.assertIsInstance(role.auth_currency, Currency)
         self.assertEqual(init_count+1, Role.objects.count())
         self.assertEqual(role.location_level.name, LOCATION_REGION)
@@ -175,6 +162,7 @@ class CreateSinglePersonTests(TestCase):
         person = factory.create_single_person()
 
         self.assertIsInstance(person, Person)
+        self.assertIsInstance(person.role.tenant, Tenant)
         self.assertIsInstance(person.locale, Locale)
         # person's location
         self.assertEqual(person.locations.count(), 1)

@@ -11,9 +11,10 @@ from category.tests.factory import create_single_category
 from location.models import (LocationLevel, Location, LocationStatus, LocationType,
     LOCATION_COMPANY, LOCATION_DISTRICT, LOCATION_REGION,)
 from location.tests.factory import create_location, create_locations, create_location_levels
-from person.models import Tenant, Role, Person, PersonStatus
+from person.models import Role, Person, PersonStatus
 from setting.tests.factory import (create_general_setting,
     create_role_setting, create_person_setting)
+from tenant.tests.factory import get_or_create_tenant
 from translation.tests.factory import create_locale, LOCALES
 from translation.models import Locale
 from utils import create
@@ -43,18 +44,7 @@ class DistrictManager(object):
         self.location = Location.objects.create(location_level=self.location_level,
                                                 name='district-1', number='district-1')
 
-        self.person = create_single_person('district-manager-1', self.role, self.location)        
-
-
-def get_or_create_tenant(name='foo'):
-    try:
-        return Tenant.objects.all()[0]
-    except IndexError:
-        kwargs = {
-            'auth_currency': Currency.objects.default(),
-            'settings': create_general_setting(name),
-        }
-        return mommy.make(Tenant, **kwargs)
+        self.person = create_single_person('district-manager-1', self.role, self.location)
 
 
 def create_role(name=None, location_level=None, category=None):

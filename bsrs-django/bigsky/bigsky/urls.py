@@ -22,13 +22,13 @@ from dt import views as dt_views
 from dtd import views as dtd_views
 from generic import views as generic_views
 from location import views as location_views
+from person import views as person_views
 from setting import views as setting_views
 from third_party import views as third_party_views
 from ticket import views as tickets_views
-from work_order import views as work_orders_views
-from person import views as person_views
 from translation import views as translation_views
 from utils.decorators import required, logout_required
+from work_order import views as work_orders_views
 
 
 router = routers.DefaultRouter()

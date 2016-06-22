@@ -15,7 +15,7 @@ from contact.models import Email
 from contact.tests.factory import create_contact
 from location.models import Location
 from location.tests.factory import create_locations
-from person.models import Person, PersonStatus, Role, Tenant
+from person.models import Person, PersonStatus, Role
 from person.tests.factory import (PASSWORD, create_person, create_role, create_single_person,
     get_or_create_tenant)
 from setting.tests.factory import (create_general_setting,
@@ -26,17 +26,6 @@ from utils.models import DefaultNameManager
 from utils.tests.test_helpers import create_default
 from utils.tests.test_validators import (DIGITS, NO_DIGITS, UPPER_CHARS, NO_UPPER_CHARS,
     LOWER_CHARS, NO_LOWER_CHARS, SPECIAL_CHARS, NO_SPECIAL_CHARS)
-
-
-class TenantTests(TestCase):
-
-    def test_defaults(self):
-        tenant = mommy.make(Tenant)
-        usd = Currency.objects.default()
-
-        self.assertEqual(tenant.dashboard_text, "Welcome")
-        self.assertEqual(tenant.default_currency, usd)
-        self.assertTrue(tenant.test_mode)
 
 
 ### ROLE
