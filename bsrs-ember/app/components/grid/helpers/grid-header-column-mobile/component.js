@@ -2,14 +2,14 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   classNameBindings: ['className'],
-  mobileFilterInput: false,
   init(){
+    this._super(...arguments);
+    this.mobileFilterInput = false;
     const existingFilter = this.get('gridFilterParams')[this.get('column.field')];
     if(existingFilter){
       this.set('initialVal', existingFilter);
       this.set('mobileFilterInput', true);
     }
-    this._super(...arguments);
   },
   className: Ember.computed(function() {
     let classNames = this.get('column.classNames') || [];
