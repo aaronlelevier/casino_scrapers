@@ -110,7 +110,7 @@ test('savefilterset will fire off xhr', assert => {
   xhr(PREFIX + BASE_URL + '/?page=1&request__icontains=ape19', 'GET', null, {}, 200, TF.searched('ape19', 'request'));
   visit(TICKET_URL);
   generalPage.clickFilterOpen();
-  click('.t-filter-request');
+  page.clickFilterRequest();
   generalPage.filterInput('ape19');
   triggerEvent('.t-filter-input', 'keyup', {keyCode: 68});
   generalPage.submitFilterSort();
@@ -142,7 +142,7 @@ test('savefilterset input will close if have filters and decide not to fill it i
   xhr(PREFIX + BASE_URL + '/?page=1&request__icontains=ape19', 'GET', null, {}, 200, TF.searched('ape19', 'request'));
   visit(TICKET_URL);
   generalPage.clickFilterOpen();
-  click('.t-filter-request');
+  page.clickFilterRequest();
   fillIn('.t-filter-input', 'ape19');
   triggerEvent('.t-filter-input', 'keyup', {keyCode: 68});
   generalPage.submitFilterSort();
@@ -165,7 +165,7 @@ test('ticket request filter will filter down results and reset page to 1', funct
     assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
   });
   generalPage.clickFilterOpen();
-  click('.t-filter-request');
+  page.clickFilterRequest();
   andThen(() => {
     assert.equal(find('.t-filter-input').length, 1);
   });
