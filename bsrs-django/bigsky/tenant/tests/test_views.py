@@ -34,8 +34,10 @@ class TenantViewTests(APITestCase):
         self.assertEqual(data['company_code'], self.tenant.company_code)
         self.assertEqual(data['company_name'], self.tenant.company_name)
         self.assertEqual(data['dashboard_text'], self.tenant.dashboard_text)
-        self.assertEqual(data['dt_start'], str(self.tenant.dt_start.id))
-        self.assertEqual(data['default_currency'], str(self.tenant.default_currency.id))
+        self.assertEqual(data['dt_start_id'], str(self.tenant.dt_start.id))
+        self.assertEqual(data['dt_start']['id'], str(self.tenant.dt_start.id))
+        self.assertEqual(data['dt_start']['key'], self.tenant.dt_start.key)
+        self.assertEqual(data['default_currency_id'], str(self.tenant.default_currency.id))
         self.assertEqual(data['test_mode'], self.tenant.test_mode)
 
     def test_update(self):
