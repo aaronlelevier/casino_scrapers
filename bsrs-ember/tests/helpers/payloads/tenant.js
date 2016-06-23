@@ -9,6 +9,15 @@ var tenant_payload_other = {
   dt_start_id: TD.dt_start_id
 };
 
+var tenant_payload_other_only_change_start = {
+  id: TD.id,
+  company_name: TD.company_name,
+  company_code: TD.company_code,
+  dashboard_text: TD.dashboard_text,
+  test_mode: TD.test_mode,
+  dt_start_id: TD.dt_start_idOther
+};
+
 export {
-  tenant_payload_other
+  tenant_payload_other, tenant_payload_other_only_change_start
 };

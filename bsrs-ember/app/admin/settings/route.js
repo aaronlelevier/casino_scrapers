@@ -10,7 +10,7 @@ export default TabRoute.extend({
     return 'admin';
   }),
   module: Ember.computed(function() {
-    return 'setting';
+    return 'tenant';
   }),
   templateModelField: Ember.computed(function() {
     return 'translated_title';
