@@ -17,6 +17,6 @@ export default TabRoute.extend({
   }),
   model(params) {
     const repository = this.get('repository');
-    return repository.find();
+    return repository.findById(params.id);
   }
 });

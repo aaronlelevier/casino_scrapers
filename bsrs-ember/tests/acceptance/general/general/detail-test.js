@@ -21,17 +21,15 @@ const ADMIN_URL = BASEURLS.base_admin_url;
 const BASE_SETTINGS_URL = BASEURLS.base_setting_url;
 const DETAIL_URL = BASE_SETTINGS_URL + '/' + TD.id;
 
-var application, store, get_url, tenant_data, detail_xhr, url, put_url, translations;
+var application, store, tenant_data, detail_xhr, url, translations;
 
 module('Acceptance | general settings (tenant)', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
-    get_url = PREFIX + '/admin/tenant/get/';
+    url = `${PREFIX}/admin/tenant/${TD.id}/`;
     tenant_data = TF.detail();
-    detail_xhr = xhr(get_url, 'GET', null, {}, 200, tenant_data);
-    url = `${PREFIX}${DETAIL_URL}/`;
-    put_url = `${PREFIX}/admin/tenant/put/`;
+    detail_xhr = xhr(url, 'GET', null, {}, 200, tenant_data);
     translations = BSRS_TRANSLATION_FACTORY.generate('en')['en'];
   },
   afterEach() {
@@ -62,7 +60,7 @@ test('general settings title and fields populated correctly', assert => {
     assert.equal(page.testmodeChecked(), TD.test_modeOther);
     assert.equal(page.startDtdInput, TD.dt_start_key);
   });
-  xhr(put_url, 'PUT', JSON.stringify(tenant_payload_other), {}, 200, {});
+  xhr(url, 'PUT', JSON.stringify(tenant_payload_other), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ADMIN_URL);
@@ -80,7 +78,7 @@ test('change dt_start', async assert => {
   selectSearch('.t-settings-dt_start-select', param);
   await page.startDtdClickOne();
   assert.equal(page.startDtdInput, listResponse.results[1].key);
-  xhr(put_url, 'PUT', JSON.stringify(tenant_payload_other_only_change_start), {}, 200, {});
+  xhr(url, 'PUT', JSON.stringify(tenant_payload_other_only_change_start), {}, 200, {});
   await generalPage.save();
   assert.equal(currentURL(), ADMIN_URL);
 });
