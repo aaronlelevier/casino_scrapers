@@ -36,6 +36,7 @@ export default Model.extend({
       dashboard_text: this.get('dashboard_text'),
       test_mode: this.get('test_mode'),
       dt_start_id: this.get('dt_start_id'),
+      default_currency_id: this.get('default_currency_id')
     };
   }
 });

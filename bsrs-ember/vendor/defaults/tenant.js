@@ -39,6 +39,7 @@ var DEFAULT_GENERIAL_TENANT = (function() {
       test_contractor_phoneOther: '+18587154000',
       dt_start_idOther: this.dtd.idTwo,
       dt_start_keyOther: 'StartTwo',
+      default_currency_idOther: this.currency.idCAD,
       // Other Role
       create_allOther: false,
       accept_assignOther: true,

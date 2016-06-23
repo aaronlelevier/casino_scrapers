@@ -73,6 +73,22 @@
             {{/form-group}}
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-12 t-currency-code">
+            {{#form-group title="admin.category.label.cost_currency" for="default_currency"}}
+              {{#power-select
+                selected=currencyObject
+                options=currencyObjects
+                onchange=(action "selected")
+                class="t-currency-code-select"
+                searchEnabled=false
+                as |op|
+              }}
+              {{op.code}}
+              {{/power-select}}
+            {{/form-group}}
+          </div>
+        </div>
       </section>
     </div>
   </div>

@@ -6,6 +6,7 @@ let { visitable, text, clickable, count, fillable, value } = PageObject;
 
 export default PageObject.create({
   currencyCodeText: text('.t-currency-code'),
+  currencyCodeSelectText: text('.t-currency-code-select'),
 
   currencySymbolText: text('.t-currency-symbol'),
 

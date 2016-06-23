@@ -86,7 +86,8 @@ test('serialize', (assert) => {
     company_name: TD.company_name,
     dashboard_text: TD.dashboard_text,
     test_mode: TD.test_mode,
-    dt_start_id: TD.dt_start_id
+    dt_start_id: TD.dt_start_id,
+    default_currency_id: TD.default_currency_id,
   });
   var serialize = tenant.serialize();
   assert.equal(serialize.id, TD.id);
@@ -95,4 +96,5 @@ test('serialize', (assert) => {
   assert.equal(serialize.dashboard_text, TD.dashboard_text);
   assert.equal(serialize.test_mode, TD.test_mode);
   assert.equal(serialize.dt_start_id, TD.dt_start_id);
+  assert.equal(serialize.default_currency_id, TD.default_currency_id);
 });

@@ -7,12 +7,14 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import SD from 'bsrs-ember/vendor/defaults/setting';
+import CD from 'bsrs-ember/vendor/defaults/currencies';
 import TD from 'bsrs-ember/vendor/defaults/tenant';
 import TF from 'bsrs-ember/vendor/tenant_fixtures';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
 import page from 'bsrs-ember/tests/pages/settings';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import inputCurrencyPage from 'bsrs-ember/tests/pages/input-currency';
 import {tenant_payload_other, tenant_payload_other_only_change_start} from 'bsrs-ember/tests/helpers/payloads/tenant';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
@@ -59,11 +61,13 @@ test('general settings title and fields populated correctly', assert => {
     assert.equal(page.dashboardTextValue, TD.dashboard_text);
     assert.equal(page.testmodeChecked(), TD.test_mode);
     assert.equal(page.startDtdInput, TD.dt_start_key);
+    assert.equal(inputCurrencyPage.currencyCodeSelectText, CD.code);
   });
   fillIn('.t-settings-company_code', TD.company_codeOther);
   fillIn('.t-settings-company_name', TD.company_nameOther);
   fillIn('.t-settings-dashboard_text', TD.dashboard_textOther);
   page.testmodeClick();
+  selectChoose('.t-currency-code', CD.codeCAD);
   andThen(() => {
     let setting = store.find('tenant', TD.id);
     assert.equal(page.companyNameValue, TD.company_nameOther);
@@ -71,6 +75,7 @@ test('general settings title and fields populated correctly', assert => {
     assert.equal(page.dashboardTextValue, TD.dashboard_textOther);
     assert.equal(page.testmodeChecked(), TD.test_modeOther);
     assert.equal(page.startDtdInput, TD.dt_start_key);
+    assert.equal(inputCurrencyPage.currencyCodeSelectText, CD.codeCAD);
   });
   xhr(url, 'PUT', JSON.stringify(tenant_payload_other), {}, 200, {});
   generalPage.save();
@@ -104,6 +109,7 @@ test('translations - for labels', assert => {
     assert.equal(getLabelText('dashboard_text'), translations['admin.setting.dashboard_text']);
     assert.equal(page.testmodelLableText, translations['admin.setting.test_mode']);
     assert.equal(getLabelText('dt_start_id'), translations['admin.setting.dt_start_key']);
+    assert.equal(getLabelText('default_currency'), translations['admin.category.label.cost_currency']);
   });
 });
 
