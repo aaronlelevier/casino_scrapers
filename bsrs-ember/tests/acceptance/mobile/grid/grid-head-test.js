@@ -151,20 +151,33 @@ test('ticket request filter will filter down results and reset page to 1', async
   assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestLastPage2Grid);
 });
 
-test('sorting on priority will sort when filter is clicked', async assert => {
+test('scott sorting on priority will sort when filter is clicked', async assert => {
   xhr(PREFIX + BASE_URL + '/?page=1&priority__name__icontains=ticket.priority.emergency', 'GET', null, {}, 200, TF.searched_related('dfe28a24-307f-4da0-85e7-cdac016808c0', 'priority'));
   await visit(TICKET_URL);
   assert.equal(store.find('ticket-list').get('length'), 10);
   await generalPage.clickFilterOpen();
+  assert.equal(find('.t-filter__input-wrap').length, 0);
   await page.clickFilterPriority();
   assert.equal(find('.t-filter__input-wrap').length, 1);
   assert.equal(find('.t-checkbox-list').length, 1);
   assert.equal(page.priorityOneIsChecked(), false);
   await page.priorityOneCheck();
   assert.equal(page.priorityOneIsChecked(), true);
+  assert.equal(page.priorityTwoIsChecked(), false);
+  assert.equal(page.priorityThreeIsChecked(), false);
+  assert.equal(page.priorityFourIsChecked(), false);
   await generalPage.submitFilterSort();
   assert.equal(store.find('ticket-list').get('length'), 10);
   assert.equal(find('.t-grid-data:eq(0) > .t-ticket-priority-translated_name span').text().trim(), t('ticket.priority.emergency'));
+  await generalPage.clickFilterOpen();
+  assert.equal(find('.t-filter__input-wrap').length, 1);
+  assert.equal(page.priorityOneIsChecked(), true);
+  assert.equal(page.priorityTwoIsChecked(), false);
+  assert.equal(page.priorityThreeIsChecked(), false);
+  assert.equal(page.priorityFourIsChecked(), false);
+  // xhr(PREFIX + BASE_URL + '/?page=1&priority__name__icontains=ticket.priority.emergency', 'GET', null, {}, 200, TF.searched_related('dfe28a24-307f-4da0-85e7-cdac016808c0', 'priority'));
+  await page.priorityTwoCheck();
+  // await generalPage.submitFilterSort();
 });
 
 /* jshint ignore:end */
