@@ -1,9 +1,10 @@
 var DEFAULT_GENERIAL_SETTINGS = (function() {
-    var factory = function(dtd) {
+    var factory = function(dtd, currency) {
         this.dtd = dtd;
+        this.currency = currency;
     };
     factory.prototype.defaults = function() {
-        var base = {
+        return {
             // Initial
             company_code: 'one',
             company_name: 'Andys Pianos',
@@ -17,6 +18,7 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             test_contractor_phone: '+18587155000',
             dt_start_id: this.dtd.idOne,
             dt_start_key: 'Start',
+            default_currency: this.currency.id,
             // Initial Role
             create_all: true,
             accept_assign: false,
@@ -46,105 +48,21 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
             inherits_from_general: 'general',
             inherits_from_role: 'role',
         };
-        return Object.assign(base, {
-            id: 'b783a238-1131-4623-8d24-81a672bb4e00',
-            name: 'general',
-            title: 'admin.setting.name.general',
-            settings: {
-                company_code: {
-                    value: base.company_code
-                },
-                company_name: {
-                    value: base.company_name
-                },
-                dashboard_text: {
-                    value: base.dashboard_text
-                },
-                login_grace: {
-                    value: base.login_grace
-                },
-                tickets_module: {
-                    value: base.tickets_module,
-                },
-                work_orders_module: {
-                    value: base.work_orders_module,
-                },
-                invoices_module: {
-                    value: base.invoices_module,
-                },
-                test_mode: {
-                    value: base.test_mode,
-                },
-                test_contractor_email: {
-                    value: base.test_contractor_email,
-                },
-                test_contractor_phone: {
-                    value: base.test_contractor_phone,
-                },
-                dt_start_id: {
-                    value: base.dt_start_id,
-                },
-                dt_start: {
-                    value: {
-                        id: base.dt_start_id,
-                        key: base.dt_start_key
-                    }
-                }
-            },
-            settingsOther: {
-                company_code: {
-                    value: base.company_codeOther
-                },
-                company_name: {
-                    value: base.company_nameOther
-                },
-                dashboard_text: {
-                    value: base.dashboard_textOther
-                },
-                login_grace: {
-                    value: base.login_graceOther
-                },
-                tickets_module: {
-                    value: base.tickets_moduleOther,
-                },
-                work_orders_module: {
-                    value: base.work_orders_moduleOther,
-                },
-                invoices_module: {
-                    value: base.invoices_moduleOther,
-                },
-                test_mode: {
-                    value: base.test_modeOther,
-                },
-                test_contractor_email: {
-                    value: base.test_contractor_emailOther,
-                },
-                test_contractor_phone: {
-                    value: base.test_contractor_phoneOther,
-                },
-                dt_start_id: {
-                    value: base.dt_start_idOther,
-                },
-                dt_start: {
-                    value: {
-                        id: base.dt_start_idOther,
-                        key: base.dt_start_keyOther
-                    }
-                }
-            }
-        });
     };
     return factory;
 })();
 
 if (typeof window === 'undefined') {
     var dtd = require('./dtd');
-    module.exports = new DEFAULT_GENERIAL_SETTINGS(dtd).defaults();
+    var currency = require('./currency');
+    module.exports = new DEFAULT_GENERIAL_SETTINGS(dtd, currency).defaults();
 } else {
     define('bsrs-ember/vendor/defaults/setting',
-        ['exports', 'bsrs-ember/vendor/defaults/dtd'],
-        function(exports, dtd) {
+        ['exports',
+        'bsrs-ember/vendor/defaults/dtd',
+        'bsrs-ember/vendor/defaults/currencies'],
+        function(exports, dtd, currency) {
             'use strict';
-            return new DEFAULT_GENERIAL_SETTINGS(dtd).defaults();
+            return new DEFAULT_GENERIAL_SETTINGS(dtd, currency).defaults();
         });
 }

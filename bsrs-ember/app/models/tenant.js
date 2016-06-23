@@ -2,12 +2,21 @@ import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 
 export default Model.extend({
+  simpleStore: Ember.inject.service(),
+  // attrs: start
   company_code: attr(''),
   company_name: attr(''),
   dashboard_text: attr(''),
   test_mode: attr(),
   dt_start_id: attr(''),
   default_currency_id: attr(''),
+  // attrs: end
+  i18n: Ember.inject.service(),
+  translated_title: Ember.computed(function() {
+    return this.get('i18n').t('admin.general', {
+      count: 2
+    });
+  }),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
     return this.get('isDirty');
   }),

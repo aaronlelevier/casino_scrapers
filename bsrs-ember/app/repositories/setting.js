@@ -6,17 +6,16 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 
 const { run } = Ember;
 var PREFIX = config.APP.NAMESPACE;
-var SETTING_URL = PREFIX + '/admin/settings/';
+var SETTING_URL = PREFIX + '/admin/tenant/';
 
 export default Ember.Object.extend({
     SettingDeserializer: inject('setting'),
     deserializer: Ember.computed.alias('SettingDeserializer'),
-    findById(id) {
+    find() {
         let store = this.get('simpleStore');
-        let model = store.find('setting', id);
-        model.id = id;
-        PromiseMixin.xhr(SETTING_URL + id + '/', 'GET').then((response) => {
-            this.get('SettingDeserializer').deserialize(response, id);
+        let model = store.findOne('setting');
+        PromiseMixin.xhr(SETTING_URL + 'get/', 'GET').then((response) => {
+            this.get('SettingDeserializer').deserialize(response, response.id);
         });
         return model;
     },

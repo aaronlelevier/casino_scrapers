@@ -11,7 +11,7 @@ var PREFIX = config.APP.NAMESPACE;
 var DTD_URL = `${PREFIX}/dtds/`;
 
 var GeneralSettings = Ember.Component.extend(TabMixin, EditMixin, ChangeBoolMixin, {
-  repository: inject('setting'),
+  repository: inject('tenant'),
   dtdRepo: inject('dtd'),
   repositoryDtd: inject('dtd'),
   classNames: ['wrapper', 'form'],

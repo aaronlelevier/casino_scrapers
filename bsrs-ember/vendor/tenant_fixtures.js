@@ -10,6 +10,10 @@ var BSRS_SETTING_FACTORY = (function() {
             company_name: this.tenant.company_name,
             dashboard_text: this.tenant.dashboard_text,
             dt_start_id: this.tenant.dt_start_id,
+            dt_start: {
+                id: this.tenant.dt_start_id,
+                key: this.tenant.dt_start_key,
+            },
             default_currency_id: this.tenant.default_currency_id,
             test_mode: this.tenant.test_mode,
         }

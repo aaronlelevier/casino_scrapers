@@ -42,6 +42,7 @@ module.exports = function(defaults) {
       app.import('vendor/phone_number_fixtures.js');
       app.import('vendor/role_fixtures.js');
       app.import('vendor/setting_fixtures.js');
+      app.import('vendor/tenant_fixtures.js');
       app.import('vendor/third_party_fixtures.js');
       app.import('vendor/ticket_fixtures.js');
       app.import('vendor/ticket_activity_fixtures.js');
@@ -80,6 +81,7 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/setting.js');
       app.import('vendor/defaults/state.js');
       app.import('vendor/defaults/status.js');
+      app.import('vendor/defaults/tenant.js');
       app.import('vendor/defaults/third-party.js');
       app.import('vendor/defaults/third-party-status.js');
       app.import('vendor/defaults/ticket.js');

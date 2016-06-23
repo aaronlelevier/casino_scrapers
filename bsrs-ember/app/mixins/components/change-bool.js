@@ -4,8 +4,8 @@ var ChangeBoolMixin = Ember.Mixin.create({
   actions: {
     changeBool(modelName, attr) {
       const store = this.get('simpleStore');
-      let setting = store.find(modelName, this.get('model.id'));
-      setting.toggleProperty(attr);
+      let model = store.find(modelName, this.get('model.id'));
+      model.toggleProperty(attr);
     }
   }
 });

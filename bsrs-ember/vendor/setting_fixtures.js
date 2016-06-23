@@ -6,9 +6,13 @@ var BSRS_SETTING_FACTORY = (function() {
         var id = i || this.setting_defaults.id;
         return {
             id: id,
-            name: this.setting_defaults.name,
-            title: this.setting_defaults.title,
-            settings: this.setting_defaults.settings
+            company_code: this.setting_defaults.company_code,
+            company_name: this.setting_defaults.company_name,
+            dashboard_text: this.setting_defaults.dashboard_text,
+            dt_start: this.setting_defaults.dt_start_id,
+            // needed
+            default_currency: this.setting_defaults.company_code,
+            test_mode: this.setting_defaults.test_mode,
         }
     };
     factory.prototype.detail = function() {

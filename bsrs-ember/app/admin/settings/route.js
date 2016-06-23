@@ -5,7 +5,7 @@ import TabRoute from 'bsrs-ember/route/tab/route';
 
 export default TabRoute.extend({
   simpleStore: Ember.inject.service(),
-  repository: inject('setting'),
+  repository: inject('tenant'),
   redirectRoute: Ember.computed(function() {
     return 'admin';
   }),
@@ -16,8 +16,7 @@ export default TabRoute.extend({
     return 'translated_title';
   }),
   model(params) {
-    const id = params.id;
     const repository = this.get('repository');
-    return repository.findById(id);
+    return repository.find();
   }
 });

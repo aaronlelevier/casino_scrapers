@@ -6,6 +6,7 @@ var DEFAULT_GENERIAL_TENANT = (function() {
   factory.prototype.defaults = function() {
     return {
       // Initial
+      id: "63774987-65d2-4475-b998-091059c90e10",
       company_code: 'one',
       company_name: 'Andys Pianos',
       dashboard_text: 'Welcome',
