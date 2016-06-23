@@ -8,9 +8,9 @@
 </hbox>
 {{#if mobileFilterInput}}
   {{#transition-group transition-class="example"}}
-  <div class="flex-item--none filter__input-wrap">
+  <div class="flex-item--none filter__input-wrap t-filter__input-wrap">
     {{#if column.filterComponent}}
-      {{component column.filterComponent column=column}}
+      {{component column.filterComponent column=column gridFilterParams=gridFilterParams updateGridFilterParams=(action "updateGridFilterParams")}}
     {{else}}
       {{input class="form-control filter-input t-filter-input" value=initialVal key-up=(action "updateGridFilterParams")}}
     {{/if}}

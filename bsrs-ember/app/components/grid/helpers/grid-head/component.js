@@ -5,12 +5,12 @@ import SaveFiltersetMixin from 'bsrs-ember/mixins/components/grid/save-filterset
 
 export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
   simpleStore: Ember.inject.service(),
-  /*
-  * object that holds key of type string ('location.name') and value of type string ('wat')
-  * passed as a property to grid-header-column component
-  */
   init() {
     this._super(...arguments);
+    /* @property gridFilterParams
+    * object that holds key of type string ('location.name') and value of type string ('wat')
+    * passed as a property to grid-header-column component
+    */
     this.gridFilterParams = {};
     this.filtersetName = '';
     this.mobileFilter = false;

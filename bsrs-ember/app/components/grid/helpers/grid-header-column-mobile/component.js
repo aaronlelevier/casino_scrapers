@@ -29,7 +29,7 @@ export default Ember.Component.extend({
   /*
   * @method filterClass
   * @param actionClass - e.g. priority-translated-name
-  * @return {string} - fa icone && test class
+  * @return {string} - fa icon && test class
   */
   filterClass: Ember.computed(function() {
     let isFilterable = this.get('column.isFilterable');
@@ -37,10 +37,14 @@ export default Ember.Component.extend({
     return isFilterable ? `fa fa-filter t-filter-${actionClass}` : '';
   }),
   actions: {
-    toggleMobileFilterInput(){
+    toggleMobileFilterInput() {
       this.toggleProperty('mobileFilterInput');
     },
-    updateGridFilterParams(val){
+    /* @method updateGridFilterParams
+    * @param {string} val - from input
+    * column.field is the key that will go into update_find_query function in grid-head
+    */
+    updateGridFilterParams(val) {
       const column = this.get('column');
       const gridFilterParams = this.get('gridFilterParams');
       gridFilterParams[column.field] = val;

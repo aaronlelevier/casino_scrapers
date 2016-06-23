@@ -2,7 +2,7 @@
 	<div class="checkbox">
 		<label>
       {{t filterModel.name}}
-			<input type="checkbox" checked="checked">
+			<input type="checkbox" checked={{is-filter-checked field=column.field gridFilterParams=gridFilterParams}} onclick={{action "updateCheckbox" filterModel.name}} />
 			<span></span>
 		</label>
 	</div>
