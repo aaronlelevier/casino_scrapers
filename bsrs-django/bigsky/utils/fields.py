@@ -42,17 +42,20 @@ class InheritedValueField(object):
         (str) name of the related model to inherit setting from if it
         doesn't exist on the ``obj``. obj is a the primary model instance
     :field: (str) model field name to look up
-    :type: (str) python type name
+    :inherited_field:
+        (str: optional) to use if inherited field name is different than
+        the model's field.
     """
-    def __init__(self, related_model, field):
+    def __init__(self, related_model, field, inherited_field=None):
         self.related_model = related_model
         self.field = field
+        self.inherited_field = inherited_field or field
 
     def __get__(self, obj, type=None):
         related_model = getattr(obj, self.related_model)
 
         ret = {
-            'inherited_value': self._getvalue(related_model),
+            'inherited_value': self._getvalue(related_model, self.inherited_field),
             'inherits_from': self.related_model,
             'inherits_from_id': str(related_model.id)
         }
@@ -60,12 +63,12 @@ class InheritedValueField(object):
         if not getattr(obj, self.field):
             ret['value'] = None
         else:
-            ret['value'] = self._getvalue(obj)
+            ret['value'] = self._getvalue(obj, self.field)
 
         return ret
 
-    def _getvalue(self, object):
-        o = getattr(object, self.field)
+    def _getvalue(self, object, field):
+        o = getattr(object, field)
         if issubclass(o.__class__, models.Model):
             return str(o.id)
         return o

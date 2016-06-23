@@ -72,15 +72,22 @@ class RoleDetailTests(RoleSetupMixin, APITestCase):
 
     def test_detail__inherited(self):
         self.role.dashboard_text = 'foo'
+        self.role.auth_currency = mommy.make(Currency, code="FOO")
         self.role.save()
         response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
+        # dashboard_text
         self.assertEqual(data['inherited']['dashboard_text']['value'], self.role.dashboard_text)
         self.assertEqual(data['inherited']['dashboard_text']['inherited_value'], self.role.tenant.dashboard_text)
         self.assertEqual(data['inherited']['dashboard_text']['inherits_from'], 'tenant')
         self.assertEqual(data['inherited']['dashboard_text']['inherits_from_id'], str(self.role.tenant.id))
+        # auth_currency
+        self.assertEqual(data['inherited']['auth_currency']['value'], str(self.role.auth_currency.id))
+        self.assertEqual(data['inherited']['auth_currency']['inherited_value'], str(self.role.tenant.default_currency.id))
+        self.assertEqual(data['inherited']['auth_currency']['inherits_from'], 'tenant')
+        self.assertEqual(data['inherited']['auth_currency']['inherits_from_id'], str(self.role.tenant.id))
 
 
 class RoleCreateTests(RoleSetupMixin, APITestCase):

@@ -141,10 +141,12 @@ class Role(SettingMixin, BaseModel):
 
     def inherited(self):
         return {
-            'dashboard_text': self.proxy_dashboard_text
+            'dashboard_text': self.proxy_dashboard_text,
+            'auth_currency': self.proxy_auth_currency
         }
 
     proxy_dashboard_text = InheritedValueField('tenant', 'dashboard_text')
+    proxy_auth_currency = InheritedValueField('tenant', 'auth_currency', 'default_currency')
 
     @property
     def _name(self):
@@ -342,6 +344,9 @@ class Person(SettingMixin, BaseModel, AbstractUser):
         data['auth_amount'] = self.proxy_auth_amount
         data['auth_currency'] = self.proxy_auth_currency
         return data
+
+    def inherited(self):
+        pass
 
     # proxy fields (won't create a field in the database)
     proxy_auth_amount = InheritedValueField('role', 'auth_amount')
