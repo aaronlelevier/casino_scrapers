@@ -95,6 +95,6 @@ test('serialize', (assert) => {
   assert.equal(serialize.company_name, TD.company_name);
   assert.equal(serialize.dashboard_text, TD.dashboard_text);
   assert.equal(serialize.test_mode, TD.test_mode);
-  assert.equal(serialize.dt_start_id, TD.dt_start_id);
-  assert.equal(serialize.default_currency_id, TD.default_currency_id);
+  assert.equal(serialize.dt_start, TD.dt_start_id);
+  assert.equal(serialize.default_currency, TD.default_currency_id);
 });

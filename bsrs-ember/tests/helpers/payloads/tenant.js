@@ -6,8 +6,8 @@ var tenant_payload_other = {
   company_code: TD.company_codeOther,
   dashboard_text: TD.dashboard_textOther,
   test_mode: TD.test_modeOther,
-  dt_start_id: TD.dt_start_id,
-  default_currency_id: TD.default_currency_idOther
+  dt_start: TD.dt_start_id,
+  default_currency: TD.default_currency_idOther
 };
 
 var tenant_payload_other_only_change_start = {
@@ -16,8 +16,8 @@ var tenant_payload_other_only_change_start = {
   company_code: TD.company_code,
   dashboard_text: TD.dashboard_text,
   test_mode: TD.test_mode,
-  dt_start_id: TD.dt_start_idOther,
-  default_currency_id: TD.default_currency_id
+  dt_start: TD.dt_start_idOther,
+  default_currency: TD.default_currency_id
 };
 
 export {

@@ -35,8 +35,8 @@ export default Model.extend({
       company_name: this.get('company_name'),
       dashboard_text: this.get('dashboard_text'),
       test_mode: this.get('test_mode'),
-      dt_start_id: this.get('dt_start_id'),
-      default_currency_id: this.get('default_currency_id')
+      dt_start: this.get('dt_start_id'),
+      default_currency: this.get('default_currency_id')
     };
   }
 });
