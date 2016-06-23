@@ -22,6 +22,7 @@ var GeneralPage = PageObject.create({
   clickLaunchDTTicket: clickable('.t-launch-dt-ticket'),
   clickHomeModalShow: clickable('.t-home-modal-show'),
   isDirty: hasClass('dirty', 'i', {scope: '.t-tab-close'}),
+  clickGeneralSettingsLink: clickable('.t-general-settings')
 });
 
 export default GeneralPage;

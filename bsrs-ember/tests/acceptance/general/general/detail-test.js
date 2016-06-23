@@ -6,6 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import SD from 'bsrs-ember/vendor/defaults/setting';
 import TD from 'bsrs-ember/vendor/defaults/tenant';
 import TF from 'bsrs-ember/vendor/tenant_fixtures';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
@@ -35,6 +36,17 @@ module('Acceptance | general settings (tenant)', {
   afterEach() {
     Ember.run(application, 'destroy');
   }
+});
+
+test('from admin click general-settings link, and go to general settings page', assert => {
+  visit(BASEURLS.base_admin_url);
+  andThen(() => {
+    assert.equal(currentURL(), BASEURLS.base_admin_url);
+  });
+  generalPage.clickGeneralSettingsLink();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
 });
 
 test('general settings title and fields populated correctly', assert => {

@@ -370,6 +370,7 @@ class Person(SettingMixin, BaseModel, AbstractUser):
             'employee_id': self.employee_id,
             'locale': str(self.locale.id if self.locale else self._get_locale(locale)),
             'role': str(self.role.id),
+            'tenant': str(self.role.tenant.id),
             'locations': locations,
             'status_fk': str(self.status.id),
             'settings': self.combined_settings()
