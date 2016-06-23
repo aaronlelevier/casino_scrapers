@@ -43,7 +43,7 @@ class Role(SettingMixin, BaseModel):
     # Required
     name = models.CharField(max_length=75, unique=True, help_text="Will be set to the Group Name")
     categories = models.ManyToManyField(Category, blank=True) 
-    dashboad_text = models.CharField(max_length=255, blank=True)
+    dashboard_text = models.CharField(max_length=255, blank=True)
     create_all = models.BooleanField(blank=True, default=False,
         help_text='Allow document creation for all locations')
     modules = models.TextField(blank=True)
@@ -138,6 +138,13 @@ class Role(SettingMixin, BaseModel):
     def combined_settings(self):
         data = copy.copy(self.settings.combined_settings())
         return data
+
+    def inherited(self):
+        return {
+            'dashboard_text': self.proxy_dashboard_text
+        }
+
+    proxy_dashboard_text = InheritedValueField('tenant', 'dashboard_text')
 
     @property
     def _name(self):

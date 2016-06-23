@@ -70,6 +70,18 @@ class RoleDetailTests(RoleSetupMixin, APITestCase):
         self.assertIn('status', data['categories'][0])
         self.assertIn('parent', data['categories'][0])
 
+    def test_detail__inherited(self):
+        self.role.dashboard_text = 'foo'
+        self.role.save()
+        response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['inherited']['dashboard_text']['value'], self.role.dashboard_text)
+        self.assertEqual(data['inherited']['dashboard_text']['inherited_value'], self.role.tenant.dashboard_text)
+        self.assertEqual(data['inherited']['dashboard_text']['inherits_from'], 'tenant')
+        self.assertEqual(data['inherited']['dashboard_text']['inherits_from_id'], str(self.role.tenant.id))
+
 
 class RoleCreateTests(RoleSetupMixin, APITestCase):
 

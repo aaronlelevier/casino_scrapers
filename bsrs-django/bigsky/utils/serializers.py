@@ -133,6 +133,7 @@ class NestedSettingsToRepresentationMixin(object):
         data = super(NestedSettingsToRepresentationMixin, self).to_representation(instance)
         if instance.settings:
             data['settings'] = instance.combined_settings()
+        data['inherited'] = instance.inherited()
         return data
 
 
