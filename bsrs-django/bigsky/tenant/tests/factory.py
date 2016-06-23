@@ -9,6 +9,6 @@ def get_or_create_tenant(name='foo'):
         return Tenant.objects.all()[0]
     except IndexError:
         kwargs = {
-            'dt_start': mommy.make(TreeData),
+            'dt_start': TreeData.objects.get_start(),
         }
         return mommy.make(Tenant, **kwargs)

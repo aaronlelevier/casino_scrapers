@@ -1,0 +1,17 @@
+[
+{
+  "model": "tenant.tenant",
+  "pk": "119c0bed-7fb2-4466-a00d-e1ce90d3c883",
+  "fields": {
+    "created": "2016-06-23T22:29:24.593Z",
+    "modified": "2016-06-23T22:29:24.593Z",
+    "deleted": null,
+    "company_code": "zdYjQPThjlijmXLGgLtreDLsQhogKkBppYAtiDcVbHzSWKgfjdEjwKIDKZRCNcKOAWgiatSoiamunlzGfnGxUKlfYRkNGaVVDZBc",
+    "company_name": "DsjnohbcEOQNRDxTbJRYqtTrszugXqohQXCHVkSLPdBRVidUXDDMPcjLuweMDxXXzPwIRZcGFpObrBhuXXUIkfUMxsKIHrfcRWZW",
+    "dashboard_text": "Welcome",
+    "dt_start": "011530c4-ce6c-4724-9cfd-37a16e787001",
+    "default_currency": "009530c4-ce6c-4724-9cfd-37a16e787001",
+    "test_mode": true
+  }
+}
+]
