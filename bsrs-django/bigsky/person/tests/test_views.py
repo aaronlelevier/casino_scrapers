@@ -45,7 +45,6 @@ class RoleListTests(RoleSetupMixin, APITestCase):
         self.assertEqual(role['name'], self.role.name)
         self.assertEqual(role['role_type'], self.role.role_type)
         self.assertEqual(role['auth_amount'], "{:.4f}".format(self.role.auth_amount))
-        self.assertEqual(role['auth_currency'], str(self.role.auth_currency.id))
         self.assertEqual(role['location_level'], str(self.location.location_level.id))
 
 
@@ -60,8 +59,9 @@ class RoleDetailTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['name'], self.role.name)
         self.assertEqual(data['role_type'], self.role.role_type)
         self.assertEqual(data['auth_amount'], "{:.4f}".format(self.role.auth_amount))
-        self.assertEqual(data['auth_currency'], str(self.role.auth_currency.id))
         self.assertEqual(data['location_level'], str(self.location.location_level.id))
+        self.assertNotIn('dashboard_text', data)
+        self.assertNotIn('auth_currency', data)
         self.assertIn(
             data['categories'][0]['id'],
             [str(c.id) for c in self.role.categories.all()]
@@ -103,7 +103,8 @@ class RoleCreateTests(RoleSetupMixin, APITestCase):
             "location_level": str(self.location.location_level.id),
             "categories": self.role.categories_ids,
             "auth_amount": 123,
-            "auth_currency": str(currency.id)
+            "auth_currency": str(currency.id),
+            "dashboard_text": "foo"
         }
 
     def test_create(self):
@@ -116,6 +117,7 @@ class RoleCreateTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['role_type'], self.role_data['role_type'])
         self.assertEqual(data['auth_amount'], "{:.4f}".format(self.role_data['auth_amount']))
         self.assertEqual(data['auth_currency'], self.role_data['auth_currency'])
+        self.assertEqual(data['dashboard_text'], self.role_data['dashboard_text'])
         self.assertEqual(data['location_level'], self.role_data['location_level'])
         self.assertEqual(sorted(data['categories']), sorted(self.role_data['categories']))
 
@@ -146,6 +148,7 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
         category = mommy.make(Category)
         role_data = self.data
         role_data['name'] = 'new name here'
+        role_data['dashboard_text'] = 'foo'
         role_data['categories'].append(str(category.id))
 
         response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
@@ -158,6 +161,7 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['role_type'], self.role.role_type)
         self.assertEqual(data['auth_amount'], "{:.4f}".format(self.role.auth_amount))
         self.assertEqual(data['auth_currency'], str(self.role.auth_currency.id))
+        self.assertEqual(data['dashboard_text'], role_data['dashboard_text'])
         self.assertEqual(data['location_level'], str(self.role.location_level.id))
         self.assertIsInstance(data['categories'], list)
 

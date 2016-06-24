@@ -14,7 +14,7 @@ from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixi
 
 ### ROLE ###
 
-ROLE_FIELDS = ('id', 'name', 'role_type', 'auth_amount', 'auth_currency', 'location_level')
+ROLE_FIELDS = ('id', 'name', 'role_type', 'auth_amount', 'location_level')
 
 
 class RoleSerializer(BaseCreateSerializer):
@@ -29,7 +29,7 @@ class RoleCreateSerializer(BaseCreateSerializer):
     class Meta:
         model = Role
         validators = [RoleCategoryValidator()]
-        fields = ROLE_FIELDS + ('categories',)
+        fields = ROLE_FIELDS + ('auth_currency', 'dashboard_text', 'categories',)
 
     def create(self, validated_data):
         instance = super(RoleCreateSerializer, self).create(validated_data)
@@ -44,7 +44,7 @@ class RoleUpdateSerializer(NestedSettingUpdateMixin, BaseCreateSerializer):
     class Meta:
         model = Role
         validators = [RoleCategoryValidator()]
-        fields = ROLE_FIELDS + ('categories', 'settings',)
+        fields = ROLE_FIELDS + ('auth_currency', 'dashboard_text', 'categories', 'settings',)
 
 
 class RoleDetailSerializer(NestedSettingsToRepresentationMixin, BaseCreateSerializer):
