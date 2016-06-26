@@ -30,7 +30,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
     if(search && search !== ''){
       endpoint = endpoint + '&search=' + encodeURIComponent(search);
     }
-    if(page_size && page_size !== ''){
+    if(page_size) { //&& page_size !== ''){
       endpoint = endpoint + '&page_size=' + page_size;
     }
     if(find && find !== ''){
