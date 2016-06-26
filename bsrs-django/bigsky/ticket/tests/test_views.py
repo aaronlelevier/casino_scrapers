@@ -114,6 +114,7 @@ class TicketListTests(TicketSetupMixin, APITestCase):
             data['count'],
             Ticket.objects.filter(categories__name__icontains=keyword).count()
         )
+        self.assertTrue(data['count'] > 0)
 
     def test_filter__category(self):
         """
@@ -126,6 +127,8 @@ class TicketListTests(TicketSetupMixin, APITestCase):
             data['count'],
             Ticket.objects.filter(categories=self.category.id).count()
         )
+        # TODO: AARON - should return something greater than 0.  Does categories={} do anything?
+        # self.assertTrue(data['count'] > 0)
 
 
 class TicketDetailTests(TicketSetupMixin, APITestCase):
@@ -474,7 +477,7 @@ class TicketActivityViewSetTests(APITestCase):
             content={'comment': 'with comment'})
 
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
-        
+
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['results'][0]['content']), 1)
@@ -511,7 +514,7 @@ class TicketActivityViewSetTests(APITestCase):
 
         response = self.client.get('/api/tickets/{}/activity/?person__username={}'
             .format(self.ticket.id, person.username))
-        
+
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
