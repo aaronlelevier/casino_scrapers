@@ -16,15 +16,17 @@ from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixi
 
 ROLE_LIST_FIELDS = ('id', 'name', 'role_type', 'location_level', 'auth_amount',)
 
-ROLE_FIELDS = ROLE_LIST_FIELDS + ('auth_currency', 'dashboard_text', 'accept_assign',
-                                  'accept_notify', 'categories',)
+ROLE_DETAIL_FIELDS = ROLE_LIST_FIELDS + ('auth_currency', 'categories',)
+
+ROLE_CREATE_UPDATE_FIELDS = ROLE_LIST_FIELDS + \
+    ('auth_currency', 'dashboard_text', 'accept_assign', 'accept_notify', 'categories',)
 
 
 class RoleListSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Role
-        fields = ROLE_FIELDS
+        fields = ROLE_LIST_FIELDS
 
 
 class RoleCreateSerializer(BaseCreateSerializer):
@@ -32,7 +34,7 @@ class RoleCreateSerializer(BaseCreateSerializer):
     class Meta:
         model = Role
         validators = [RoleCategoryValidator()]
-        fields = ROLE_FIELDS
+        fields = ROLE_CREATE_UPDATE_FIELDS
 
     def create(self, validated_data):
         instance = super(RoleCreateSerializer, self).create(validated_data)
@@ -45,16 +47,22 @@ class RoleUpdateSerializer(BaseCreateSerializer):
     class Meta:
         model = Role
         validators = [RoleCategoryValidator()]
-        fields = ROLE_FIELDS
+        fields = ROLE_CREATE_UPDATE_FIELDS
 
 
 class RoleDetailSerializer(NestedSettingsToRepresentationMixin, BaseCreateSerializer):
+    """
+    Fields that have the ability to be inherited. i.e accept_assingn, accept_notify,
+    etc.. are not represented as first level fields in the detail payload. Instead
+    they are nested within an ``inherited`` object. Each is an object with inherited
+    properties.
+    """
     
     categories = CategoryRoleSerializer(many=True)
 
     class Meta:
         model = Role
-        fields = ROLE_FIELDS
+        fields = ROLE_DETAIL_FIELDS
 
     @staticmethod
     def eager_load(queryset):

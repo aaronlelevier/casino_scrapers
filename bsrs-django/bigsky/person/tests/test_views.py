@@ -61,9 +61,9 @@ class RoleDetailTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['location_level'], str(self.location.location_level.id))
         self.assertEqual(data['auth_amount'], "{:.4f}".format(self.role.auth_amount))
         self.assertEqual(data['auth_currency'], str(self.role.auth_currency.id))
-        self.assertEqual(data['dashboard_text'], self.role.dashboard_text)
-        self.assertFalse(data['accept_assign'])
-        self.assertFalse(data['accept_notify'])
+        self.assertNotIn('dashboard_text', data)
+        self.assertNotIn('accept_assign', data)
+        self.assertNotIn('accept_notify', data)
         self.assertIn(
             data['categories'][0]['id'],
             [str(c.id) for c in self.role.categories.all()]
