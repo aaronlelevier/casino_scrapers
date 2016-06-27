@@ -498,7 +498,7 @@ test('will show breadcrumbs if note present', async assert => {
   assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.noteOne));
 });
 
-test('visit 1 url, go back to step 0, then go back to 1 url after updating some info (checkbox)', async assert => {
+test('visit step 1 url, go back to step 0, then go back to 1 url after updating some info (checkbox)', async assert => {
   //DTD idOne
   let detail_data = DTF.detailWithAllFields(DT.idOne);
   returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: DT.descriptionStart, fields: [{ id: FD.idTwo, label: FD.labelTwo, value: 23, required: true }] };
@@ -511,7 +511,7 @@ test('visit 1 url, go back to step 0, then go back to 1 url after updating some 
   await visit(DETAIL_URL);
   assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.descriptionStart));
 
-  // snapshot
+  // snapshot of step 0 info DT.idThree
   const updated_ticket = store.find('ticket', TD.idOne);
   assert.equal(updated_ticket.get('request'), `${FD.labelTwo}: 23`);
   assert.equal(updated_ticket.get('dt_path').length, 1);
@@ -543,6 +543,7 @@ test('visit 1 url, go back to step 0, then go back to 1 url after updating some 
   detail_data_3.links.push({id: LINK.idTwo, text: 'wat', status_fk: LINK.statusTwo, priority_fk: LINK.priorityTwo});
   // Go back to idThree
   const endpoint_3 = `${PREFIX}${BASE_URL}/${DT.idThree}/ticket/?ticket=${TD.idOne}`;
+  returned_ticket.request = `${FD.labelOne}: ${OD.textOne}, ${FD.labelTwo}: 23`;
   xhr(endpoint_3, 'GET', null, {}, 200, {dtd: detail_data_3, ticket: returned_ticket});
   assert.equal(currentURL(), DETAIL_URL);
   await click('.t-ticket-breadcrumb-back');
@@ -624,8 +625,9 @@ test('visit 1 url, go back to step 0, then go back to 1 url after updating some 
   detail_data_3.links[0].priority_fk = LINK.priorityTwo;
   detail_data_3.links[0].destination = {id: DT.idOne};
   detail_data_3.links.push({id: LINK.idTwo, text: 'wat', status_fk: LINK.statusTwo, priority_fk: LINK.priorityTwo});
-  // Go back to idThree
+  // Go back to idThree and set request to new value coming from server
   const endpoint_3 = `${PREFIX}${BASE_URL}/${DT.idThree}/ticket/?ticket=${TD.idOne}`;
+  returned_ticket.request = `${FD.labelOne}: ${OD.textOne}, ${FD.labelSelect}: ${OD.fieldTypeSelectValue}`;
   xhr(endpoint_3, 'GET', null, {}, 200, {dtd: detail_data_3, ticket: returned_ticket});
   assert.equal(currentURL(), DETAIL_URL);
   await click('.t-ticket-breadcrumb-back');
@@ -717,6 +719,7 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
   detail_data_3.links.push({id: LINK.idTwo, text: 'wat', status_fk: LINK.statusTwo, priority_fk: LINK.priorityTwo});
   // Go back to idThree which is 2 back from where we were at
   const endpoint_3 = `${PREFIX}${BASE_URL}/${DT.idThree}/ticket/?ticket=${TD.idOne}`;
+  returned_ticket.request = `${FD.labelOne}: ${OD.textOne}, ${FD.labelTwo}: 23, ${FD.labelRandom}: Im second`;
   xhr(endpoint_3, 'GET', null, {}, 200, {dtd: detail_data_3, ticket: returned_ticket});
   assert.equal(currentURL(), DETAIL_URL);
   await click('.t-ticket-breadcrumb-back');
@@ -826,6 +829,7 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
   detail_data_3.links.push({id: LINK.idTwo, text: 'wat', status_fk: LINK.statusTwo, priority_fk: LINK.priorityTwo});
   // Go back to idThree which is 2 back from where we were at
   const endpoint_3 = `${PREFIX}${BASE_URL}/${DT.idThree}/ticket/?ticket=${TD.idOne}`;
+  returned_ticket.request = `${FD.labelOne}: ${OD.textOne}, ${FD.labelFour}: ${OD.textOne}, ${FD.labelRandom}: Im second`;
   xhr(endpoint_3, 'GET', null, {}, 200, {dtd: detail_data_3, ticket: returned_ticket});
   assert.equal(currentURL(), DETAIL_URL);
   await click('.t-ticket-breadcrumb-back');
@@ -929,6 +933,7 @@ test('visit 2 url, go back to step 0, then go a different route should save tick
   detail_data_3.links.push({id: LINK.idTwo, text: 'wat', status_fk: LINK.statusTwo, priority_fk: LINK.priorityTwo, destination: {id: DT.idGridTwo}});
   // Go back to idThree which is 2 back from where we were at
   const endpoint_3 = `${PREFIX}${BASE_URL}/${DT.idThree}/ticket/?ticket=${TD.idOne}`;
+  returned_ticket.request = `${FD.labelOne}: ${OD.textOne}, ${FD.labelTwo}: 23, ${FD.labelRandom}: Im second`;
   xhr(endpoint_3, 'GET', null, {}, 200, {dtd: detail_data_3, ticket: returned_ticket});
   assert.equal(currentURL(), DETAIL_URL);
   await click('.t-ticket-breadcrumb-back');
