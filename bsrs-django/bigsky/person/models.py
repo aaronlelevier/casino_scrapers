@@ -75,9 +75,7 @@ class Role(SettingMixin, BaseModel):
     # Default Settings
     # that set the Person settings for these fields when first
     # adding a Person to a Role
-    default_accept_assign = models.BooleanField(blank=True, default=True)
     accept_assign = models.BooleanField(blank=True, default=False)
-    default_accept_notify = models.BooleanField(blank=True, default=True)
     accept_notify = models.BooleanField(blank=True, default=False)
     # Auth Amounts
     auth_amount = models.DecimalField(
