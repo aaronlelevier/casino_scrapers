@@ -11,8 +11,7 @@ import LLF from 'bsrs-ember/vendor/location_level_fixtures';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
-import SD from 'bsrs-ember/vendor/defaults/setting';
-import SF from 'bsrs-ember/vendor/setting_fixtures';
+import TD from 'bsrs-ember/vendor/defaults/tenant';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
@@ -39,7 +38,7 @@ const SPACEBAR = {keyCode: 32};
 const CATEGORY = '.t-role-category-select > .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-select-options';
 
-let application, store, list_xhr, detail_xhr, setting_detail_xhr, endpoint, detail_data, url, translations, run = Ember.run;
+let application, store, list_xhr, detail_xhr, setting_detail_xhr, endpoint, detail_data, url, translations, basePayload, run = Ember.run;
 
 module('Acceptance | role detail', {
   beforeEach() {
@@ -58,6 +57,13 @@ module('Acceptance | role detail', {
     // Settings
     let setting_endpoint = `${PREFIX}${BASEURLS.base_roles_url}/route-data/new/`;
     setting_detail_xhr = xhr(setting_endpoint, 'GET', null, {}, 200, roleNewData);
+
+    basePayload = {
+      id: RD.idOne,
+      inherited: undefined,
+      auth_currency: null,
+      dashboard_text: null
+    };
   },
   afterEach() {
     Ember.run(application, 'destroy');
@@ -76,18 +82,18 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     assert.equal(page.categorySelected.indexOf(CD.nameOne), 2);
     assert.equal(page.locationLevelInput.split(' +')[0].trim().split(' ')[0], LLD.nameCompany);
   });
-  let response = RF.detail(RD.idOne);
+  let response = RF.detail(RD.idOne, RD.namePut);
   let location_level = LLF.put({id: LLD.idLossRegion, name: LLD.nameLossPreventionRegion});
-  let payload = RF.put({
-    id: RD.idOne,
+  let payload = RF.put(Object.assign(basePayload, {
     name: RD.namePut,
+    dashboard_text: TD.dashboard_textOther,
     role_type: RD.t_roleTypeContractor,
     location_level: location_level.id,
     categories: [CD.idOne],
-    settings: role_settings
-  });
+  }));
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
   fillIn('.t-role-name', RD.namePut);
+  fillIn('.t-settings-dashboard_text', TD.dashboard_textOther);
   selectChoose('.t-role-role-type', RD.roleTypeContractor);
   selectChoose('.t-location-level-select', LLD.nameLossPreventionRegion);
   andThen(() => {
@@ -128,7 +134,7 @@ test('validation works and when hit save, we do same post', (assert) => {
   andThen(() => {
     assert.ok(find('.t-name-validation-error').is(':hidden'));
   });
-  let payload = RF.put({id: RD.idOne, categories: [CD.idOne], settings: role_settings});
+  let payload = RF.put(Object.assign(basePayload, {categories: [CD.idOne]}));
   let response = Ember.$.extend(true, {}, payload);
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
   generalPage.save();
@@ -139,15 +145,19 @@ test('validation works and when hit save, we do same post', (assert) => {
 
 test('when you change a related location level it will be persisted correctly', (assert) => {
   visit(DETAIL_URL);
-  let location_level = LLF.put({id: LLD.idOne, name: LLD.nameRegion});
-  let payload = RF.put({id: RD.idOne, location_level: location_level.id, settings: role_settings});
+  let location_level = LLF.put({
+    id: LLD.idOne,
+    name: LLD.nameRegion
+  });
+  let payload = RF.put(Object.assign(basePayload, {
+    location_level: location_level.id,
+  }));
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ROLE_URL);
   });
 });
-
 test('clicking cancel button will take from detail view to list view', (assert) => {
   visit(ROLE_URL);
   andThen(() => {
@@ -266,7 +276,10 @@ test('clicking select for categories will fire off xhr request for all parent ca
     assert.ok(role.get('isDirtyOrRelatedDirty'));
     assert.equal(page.categoriesSelected, 2);
   });
-  const payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: [CD.idOne, CD.idThree], settings: role_settings});
+  const payload = RF.put(Object.assign(basePayload, {
+    location_level: LLD.idOne,
+    categories: [CD.idOne, CD.idThree],
+  }));
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
@@ -307,7 +320,9 @@ test('starting with multiple categories, can remove all categories (while not po
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(page.categoriesSelected, 2);
   });
-  let payload = RF.put({id: RD.idOne, categories: [CD.idOne, CD.idThree], settings: role_settings});
+  let payload = RF.put(Object.assign(basePayload, {
+    categories: [CD.idOne, CD.idThree],
+  }));
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
@@ -317,8 +332,8 @@ test('starting with multiple categories, can remove all categories (while not po
 
 test('search will filter down on categories in store correctly by removing and adding a category back', (assert) => {
   detail_data.categories = [...detail_data.categories, CF.get(CD.idTwo)];
-  detail_data.categories[1].id =  'abc123';
-  detail_data.categories[1].name =  CD.nameOne + ' scooter';
+  detail_data.categories[1].id = 'abc123';
+  detail_data.categories[1].name = CD.nameOne + ' scooter';
   visit(DETAIL_URL);
   andThen(() => {
     let role = store.find('role', RD.idOne);
@@ -344,7 +359,9 @@ test('search will filter down on categories in store correctly by removing and a
     assert.deepEqual(role.get('categories_ids'), ['abc123', CD.idGridOne]);
     assert.equal(page.categoriesSelected, 2);
   });
-  let payload = RF.put({id: RD.idOne, categories: ['abc123', CD.idGridOne], settings: role_settings});
+  let payload = RF.put(Object.assign(basePayload, {
+    categories: ['abc123', CD.idGridOne],
+  }));
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
@@ -352,48 +369,13 @@ test('search will filter down on categories in store correctly by removing and a
   });
 });
 
-// Role Settings: start
-
-test('settings update and redirected to list with clean model', (assert) => {
-  let role;
-  role = store.find('role', RD.idOne);
-  visit(DETAIL_URL);
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + SD.dashboard_text);
-    assert.equal(find('.t-settings-create_all').prop('checked'), SD.create_all);
-    assert.equal(find('.t-settings-accept_assign').prop('checked'), SD.accept_assign);
-    assert.equal(find('.t-settings-accept_notify').prop('checked'), SD.accept_notify);
-  });
-  fillIn('.t-settings-dashboard_text', SD.dashboard_textOther);
-  page.create_allClick();
-  page.accept_assignClick();
-  page.accept_notifyClick();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-settings-dashboard_text').val(), SD.dashboard_textOther);
-    assert.equal(find('.t-settings-create_all').prop('checked'), SD.create_allOther);
-    assert.equal(find('.t-settings-accept_assign').prop('checked'), SD.accept_assignOther);
-    assert.equal(find('.t-settings-accept_notify').prop('checked'), SD.accept_notifyOther);
-    assert.ok(role.get('isDirtyOrRelatedDirty'));
-  });
-  let payload = RF.put({id: RD.idOne, categories: [CD.idOne], settings: role_settingsOther});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
-    assert.ok(!role.get('isDirty'));
-  });
-});
+// TODO: the next two tests should be moved to integration tests
 
 test('settings - translation keys', (assert) => {
   clearxhr(list_xhr);
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(getLabelText('dashboard_text'), translations['admin.setting.dashboard_text']);
-    assert.equal(find('.t-settings-create_all-label').text(), translations['admin.setting.create_all']);
-    assert.equal(find('.t-settings-accept_notify-label').text(), translations['admin.setting.accept_notify']);
-    assert.equal(find('.t-settings-accept_assign-label').text(), translations['admin.setting.accept_assign']);
   });
 });
 
@@ -401,33 +383,28 @@ test('settings - UI is populated for inherited correctly - inherited value from 
   clearxhr(list_xhr);
   visit(DETAIL_URL);
   andThen(() => {
-    assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + SD.dashboard_text);
-    assert.equal(find('.t-inherited-msg-dashboard_text').text().trim(), 'Inherited from: ' + SD.inherits_from_general);
+    assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + TD.dashboard_text);
+    assert.equal(find('.t-inherited-msg-dashboard_text').text().trim(), 'Inherited from: ' + TD.inherits_from_general);
     assert.equal(find('.t-settings-dashboard_text').val(), '');
-    // checkboxes are populated based on defaults, but should show where they are getting
-    // defaulted from somewhere in the UI
-    assert.equal(find('.t-settings-create_all-label-inherits_from').text(), "");
-    assert.equal(find('.t-settings-accept_notify-label-inherits_from').text(), "");
-    assert.equal(find('.t-settings-accept_assign-label-inherits_from').text(), "");
   });
 });
+
+
 
 test('settings - override value from parent, can click link-to to get to inherited setting', (assert) => {
   clearxhr(list_xhr);
   visit(DETAIL_URL);
   andThen(() => {
-    assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + SD.dashboard_text);
-    assert.equal(settingPage.dashboardTextInheritedFrom, 'Inherited from: ' + SD.inherits_from_general);
+    assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + TD.dashboard_text);
+    assert.equal(settingPage.dashboardTextInheritedFrom, 'Inherited from: ' + TD.inherits_from_general);
     assert.equal(find('.t-settings-dashboard_text').val(), "");
   });
-  xhr(`${PREFIX}${SETTINGS_URL}/${SD.id}/`, 'GET', null, {}, 200, SF.detail());
+  xhr(`${PREFIX}/admin/tenant/${TD.id}/`, 'GET', null, {}, 200, {});
   settingPage.dashboardTextInheritedFromClick();
   andThen(() => {
-    assert.equal(currentURL(), `${SETTINGS_URL}/${SD.id}`);
+    assert.equal(currentURL(), `${SETTINGS_URL}/${TD.id}`);
   });
 });
-
-// Role Settings: end
 
 test('deep linking with an xhr with a 404 status code will show up in the error component (role)', (assert) => {
   clearxhr(detail_xhr);
@@ -447,8 +424,8 @@ test('role has an auth_amount and auth_currency', assert => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-inherited-msg-auth_amount').text(), "");
     let role = store.find('role', RD.idOne);
-    let currency = store.find('currency', role.get('auth_currency'));
-    assert.equal(currency.get('id'), CURRENCY_DEFAULTS.id);
+    assert.equal(role.get('auth_currency'), null);
+    assert.equal(role.get('inherited').auth_currency.inherited_value, CURRENCY_DEFAULTS.id);
     assert.equal(inputCurrencyPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
     assert.equal(inputCurrencyPage.authAmountValue, CURRENCY_DEFAULTS.authAmountOne);
     assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.code);
@@ -459,7 +436,9 @@ test('role has an auth_amount and auth_currency', assert => {
     let role = store.find('role', RD.idOne);
     assert.equal(role.get('auth_currency'), CURRENCY_DEFAULTS.idCAD);
   });
-  var payload = RF.put({id: RD.idOne, auth_currency: CURRENCY_DEFAULTS.idCAD});
+  var payload = RF.put(Object.assign(basePayload, {
+    auth_currency: CURRENCY_DEFAULTS.idCAD
+  }));
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {

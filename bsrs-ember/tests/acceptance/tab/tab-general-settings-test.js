@@ -6,19 +6,17 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
-
-import SF from 'bsrs-ember/vendor/setting_fixtures';
-import SD from 'bsrs-ember/vendor/defaults/setting';
-
+import TD from 'bsrs-ember/vendor/defaults/tenant';
+import TF from 'bsrs-ember/vendor/tenant_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_ADMIN_URL = 'admin';
 const BASE_SETTINGS_URL = BASEURLS.base_setting_url;
-const DETAIL_URL = BASE_SETTINGS_URL + '/' + SD.id;
+const DETAIL_URL = BASE_SETTINGS_URL + '/' + TD.id;
 const DETAIL_ROUTE = 'admin.settings';
-const DOC_TYPE = 'setting';
+const DOC_TYPE = 'tenant';
 const general_settings_link = '.t-general-settings:eq(0)';
 
 let application, store, list_xhr, settings_data, endpoint, detail_xhr, original_uuid;
@@ -28,8 +26,8 @@ module('Acceptance | tab general settings test', {
         application = startApp();
         store = application.__container__.lookup('service:simpleStore');
         endpoint = PREFIX + BASE_SETTINGS_URL + '/';
-        settings_data = SF.detail();
-        detail_xhr = xhr(endpoint + SD.id + '/', 'GET', null, {}, 200, settings_data);
+        settings_data = TF.detail();
+        detail_xhr = xhr(`${PREFIX}/admin/tenant/${TD.id}/`, 'GET', null, {}, 200, settings_data);
         original_uuid = random.uuid;
     },
     afterEach() {
@@ -44,8 +42,9 @@ test('deep linking the settings detail url should push a tab into the tab store 
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        let tab = store.find('tab', SD.id);
-        assert.equal(find('.t-tab-title:eq(0)').text(), t(SD.title));
+        let tab = store.find('tab', TD.id);
+        console.log(TD.id)
+        assert.equal(find('.t-tab-title:eq(0)').text(), t('admin.general.other'));
         assert.equal(tab.get('module'), DOC_TYPE);
         assert.equal(tab.get('routeName'), DETAIL_ROUTE);
         assert.equal(tab.get('redirectRoute'), BASE_ADMIN_URL);
@@ -65,8 +64,7 @@ test('visiting the setting detail url from the admin url should push a tab into 
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        let tab = store.find('tab', SD.id);
-        assert.equal(find('.t-tab-title:eq(0)').text(), t(SD.title));
+        let tab = store.find('tab', TD.id);
         assert.equal(tab.get('module'), DOC_TYPE);
         assert.equal(tab.get('routeName'), DETAIL_ROUTE);
         assert.equal(tab.get('redirectRoute'), BASE_ADMIN_URL);
@@ -84,11 +82,10 @@ test('clicking on a tab that is not dirty from the list url should take you to t
     click(general_settings_link);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let setting = store.find('setting', SD.id);
-        assert.equal(setting.get('isDirtyOrRelatedDirty'), false);
+        let tenant = store.find('tenant', TD.id);
+        assert.equal(tenant.get('isDirtyOrRelatedDirty'), false);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), t(SD.title));
     });
     visit(BASE_ADMIN_URL);
     andThen(() => {
@@ -96,8 +93,8 @@ test('clicking on a tab that is not dirty from the list url should take you to t
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let setting = store.find('setting', SD.id);
-        assert.equal(setting.get('isDirtyOrRelatedDirty'), false);
+        let tenant = store.find('tenant', TD.id);
+        assert.equal(tenant.get('isDirtyOrRelatedDirty'), false);
         assert.equal(currentURL(), DETAIL_URL);
     });
 });
@@ -113,12 +110,11 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     fillIn('.t-settings-dashboard_text:eq(0)', '1234');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let setting = store.find('setting', SD.id);
-        assert.equal(setting.get('name'), SD.name);
-        assert.equal(setting.get('isDirtyOrRelatedDirty'), true);
+        let tenant = store.find('tenant', TD.id);
+        assert.equal(tenant.get('name'), TD.name);
+        assert.equal(tenant.get('isDirtyOrRelatedDirty'), true);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), t(SD.title));
     });
     andThen(() => {
         visit(BASE_ADMIN_URL);
@@ -128,9 +124,9 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let setting = store.find('setting', SD.id);
-        assert.equal(setting.get('name'), SD.name);
-        assert.equal(setting.get('isDirtyOrRelatedDirty'), true);
+        let tenant = store.find('tenant', TD.id);
+        assert.equal(tenant.get('name'), TD.name);
+        assert.equal(tenant.get('isDirtyOrRelatedDirty'), true);
         assert.equal(currentURL(), DETAIL_URL);
     });
 });
@@ -145,10 +141,9 @@ test('clicking on a tab that is not dirty from the role url (or any non related 
     click(general_settings_link);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let setting = store.find('setting', SD.id);
+        let tenant = store.find('tenant', TD.id);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), t(SD.title));
     });
     click('.t-nav-admin');
     andThen(() => {
@@ -156,8 +151,8 @@ test('clicking on a tab that is not dirty from the role url (or any non related 
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let setting = store.find('setting', SD.id);
-        assert.equal(setting.get('isDirtyOrRelatedDirty'), false);
+        let tenant = store.find('tenant', TD.id);
+        assert.equal(tenant.get('isDirtyOrRelatedDirty'), false);
         assert.equal(currentURL(), DETAIL_URL);
     });
 });
@@ -169,7 +164,6 @@ test('a dirty model should add the dirty class to the tab close icon', (assert) 
         assert.equal(find('.dirty').length, 0);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), t(SD.title));
     });
     fillIn('.t-settings-dashboard_text:eq(0)', '1234');
     andThen(() => {
@@ -183,7 +177,6 @@ test('closing a document should close it\'s related tab', (assert) => {
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), t(SD.title));
     });
     click('.t-cancel-btn:eq(0)');
     andThen(() => {
@@ -198,7 +191,6 @@ test('opening a tab, navigating away and closing the tab should remove the tab',
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), t(SD.title));
         visit(BASE_ADMIN_URL);
     });
     click('.t-tab-close:eq(0)');
@@ -215,12 +207,10 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), t(SD.title));
     });
     fillIn('.t-settings-dashboard_text:eq(0)', '1234');
     andThen(() => {
         assert.equal(find('.dirty').length, 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), t(SD.title));
     });
     visit(BASE_ADMIN_URL);
     click('.t-tab-close:eq(0)');

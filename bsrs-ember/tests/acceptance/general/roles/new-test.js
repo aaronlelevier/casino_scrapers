@@ -11,8 +11,7 @@ import RF from 'bsrs-ember/vendor/role_fixtures';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
-import SD from 'bsrs-ember/vendor/defaults/setting';
-import SF from 'bsrs-ember/vendor/setting_fixtures';
+import TD from 'bsrs-ember/vendor/defaults/tenant';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
@@ -43,9 +42,6 @@ module('Acceptance | role new', {
       location_level: RD.locationLevelOne,
       categories: [CD.idOne],
       auth_amount: undefined,
-      settings: {
-        settings: {}
-      }
     };
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
@@ -84,33 +80,22 @@ test('visiting role/new', (assert) => {
     assert.equal(inputCurrencyPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
     assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.code);
     assert.equal(find('.t-inherited-msg-dashboard_text-link').text().trim(), 'Inherited from: general');
-    assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + SD.dashboard_text);
+    assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + TD.dashboard_text);
     assert.equal(page.dashboard_textValue, "");
-    assert.equal(find('.t-settings-create_all').prop('checked'), false);
-    assert.equal(find('.t-settings-accept_assign').prop('checked'), false);
-    assert.equal(find('.t-settings-accept_notify').prop('checked'), false);
     const role = store.find('role', UUID.value);
     assert.ok(role.get('new'));
   });
   fillIn('.t-role-name', RD.nameOne);
+  fillIn('.t-settings-dashboard_text', RD.dashboard_textTwo);
   selectChoose('.t-role-role-type', RD.roleTypeGeneral);
   selectChoose('.t-location-level-select', LLD.nameCompany);
   ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
   page.categoryClickDropdown();
   page.categoryClickOptionOneEq();
   fillIn('.t-amount', CURRENCY_DEFAULTS.authAmountOne);
-  page.create_allClick();
-  page.accept_assignClick();
-  page.accept_notifyClick();
   let postPayload = Object.assign(payload, {
     auth_amount: parseFloat(CURRENCY_DEFAULTS.authAmountOne).toFixed(2),
-    settings: {
-      settings: {
-        create_all: true,
-        accept_assign: true,
-        accept_notify: true
-      }
-    }
+    dashboard_text: RD.dashboard_textTwo
   });
   xhr(url, 'POST', JSON.stringify(postPayload), {}, 201, {});
   generalPage.save();
@@ -123,9 +108,6 @@ test('visiting role/new', (assert) => {
     assert.equal(role.get('role_type'), RD.t_roleTypeGeneral);
     assert.equal(role.get('location_level.id'), RD.locationLevelOne);
     assert.equal(role.get('auth_amount'), parseFloat(CURRENCY_DEFAULTS.authAmountOne).toFixed(2));
-    assert.equal(role.get('create_all'), true);
-    assert.equal(role.get('accept_assign'), true);
-    assert.equal(role.get('accept_notify'), true);
     assert.ok(role.get('isNotDirty'));
   });
 });

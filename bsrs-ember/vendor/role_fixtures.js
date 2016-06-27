@@ -65,14 +65,6 @@ var BSRS_ROLE_FACTORY = (function() {
     var response = this.generate(role.id);
     response.location_level = this.location_level_fixtures.detail().id;
     response.categories = [response.categories[0].id];
-    response.settings = {
-      settings: {
-        dashboard_text: this.role_defaults.settings.dashboard_text.value,
-        create_all: this.role_defaults.settings.create_all.value,
-        accept_assign: this.role_defaults.settings.accept_assign.value,
-        accept_notify: this.role_defaults.settings.accept_notify.value
-      }
-    };
     for (var key in role) {
       response[key] = role[key];
     }
