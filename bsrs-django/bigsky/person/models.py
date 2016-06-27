@@ -313,7 +313,7 @@ class Person(SettingMixin, BaseModel, AbstractUser):
     password_expire_date = models.DateField(blank=True, null=True,
                                             help_text="Date that the Person's password will expire next. "
                                             "Based upon the ``password_expire`` days set on the Role.")
-    password_one_time = models.CharField(max_length=255, blank=True, null=True)
+    password_one_time = models.BooleanField(blank=True, default=False)
     password_change = models.DateTimeField( blank=True, null=True,
         help_text="DateTime of last password change")
     password_history = ArrayField(

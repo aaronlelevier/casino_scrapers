@@ -379,8 +379,13 @@ class PersonDetailTests(TestCase):
         self.assertEqual(self.data['role'], str(self.person.role.id))
         self.assertEqual(self.data['title'], self.person.title)
         self.assertEqual(self.data['employee_id'], self.person.employee_id)
+        self.assertEqual(self.data['password_one_time'], self.person.password_one_time)
         self.assertIn('last_login', self.data)
         self.assertIn('date_joined', self.data)
+        self.assertNotIn('auth_amount', self.data)
+        self.assertNotIn('auth_currency', self.data)
+        self.assertNotIn('accept_assign', self.data)
+        self.assertNotIn('accept_notify', self.data)
 
     def test_data__inherited(self):
         # auth_amount
@@ -539,6 +544,7 @@ class PersonUpdateTests(APITestCase):
         self.data['auth_amount'] = new_auth_amount
         self.data['accept_assign'] = True
         self.data['accept_notify'] = True
+        self.data['password_one_time'] = True
 
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')
@@ -556,6 +562,7 @@ class PersonUpdateTests(APITestCase):
         self.assertEqual(data['employee_id'], self.person.employee_id)
         self.assertTrue(data['accept_assign'])
         self.assertTrue(data['accept_notify'])
+        self.assertTrue(data['password_one_time'])
 
     def test_no_change(self):
         # Confirm the ``self.data`` structure is correct
