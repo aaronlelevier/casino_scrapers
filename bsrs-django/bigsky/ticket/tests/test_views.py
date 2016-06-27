@@ -116,20 +116,6 @@ class TicketListTests(TicketSetupMixin, APITestCase):
         )
         self.assertTrue(data['count'] > 0)
 
-    def test_filter__category(self):
-        """
-        Filter for all Tickets in a single Category, for example: 'HVAC'.
-        """
-        response = self.client.get('/api/tickets/?categories={}'.format(self.category.id))
-        data = json.loads(response.content.decode('utf8'))
-
-        self.assertEqual(
-            data['count'],
-            Ticket.objects.filter(categories=self.category.id).count()
-        )
-        # TODO: AARON - should return something greater than 0.  Does categories={} do anything?
-        # self.assertTrue(data['count'] > 0)
-
 
 class TicketDetailTests(TicketSetupMixin, APITestCase):
 
@@ -650,7 +636,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
                                        .exclude(parent__isnull=True).first())
         to_child_category = Category.objects.filter(parent=str(to_category.id))[0]
         ticket_activity = create_ticket_activity(ticket=self.ticket, type='categories',
-                content={'from_0': str(from_category.id), 'from_1': str(child_child_category.id), 'to_0': str(to_category.id), 
+                content={'from_0': str(from_category.id), 'from_1': str(child_child_category.id), 'to_0': str(to_category.id),
                     'to_1': str(to_child_category.id)})
 
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
@@ -1077,7 +1063,7 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
 
     def test_can_view_tickets__child_location(self):
         """
-        Make a Ticket belonging to the child_location, and make sure it's 
+        Make a Ticket belonging to the child_location, and make sure it's
         viewable by the Person.
         """
         create_locations()
@@ -1102,7 +1088,7 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
 
     def test_can_view_tickets__category(self):
         """
-        Checks that at least one of Ticket's 'Categories' are in the 
+        Checks that at least one of Ticket's 'Categories' are in the
         Person's Role Categories.
         """
         with self.settings(TICKET_FILTERING_ON=True):
@@ -1121,7 +1107,7 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
 
     def test_can_view_tickets__child_category(self):
         """
-        If the Person has to Parent Category, the can view their Children's 
+        If the Person has to Parent Category, the can view their Children's
         Category Tickets.
         """
         with self.settings(TICKET_FILTERING_ON=True):
