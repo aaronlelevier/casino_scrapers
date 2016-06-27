@@ -34,7 +34,7 @@ class RoleViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
         elif self.action in ('update', 'partial_update'):
             return ps.RoleUpdateSerializer
         else:
-            return ps.RoleSerializer
+            return ps.RoleListSerializer
 
     @list_route(methods=['get'], url_path=r"route-data/new")
     def route_data_new(self, request):

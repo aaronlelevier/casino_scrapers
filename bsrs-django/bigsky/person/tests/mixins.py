@@ -2,7 +2,7 @@ from model_mommy import mommy
 
 from accounting.models import Currency
 from category.models import Category
-from person.serializers import RoleSerializer
+from person.serializers import RoleListSerializer
 from person.tests.factory import PASSWORD, create_single_person, get_or_create_tenant
 from setting.models import Setting
 
@@ -22,7 +22,7 @@ class RoleSetupMixin(object):
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
         # data
-        serializer = RoleSerializer(self.role)
+        serializer = RoleListSerializer(self.role)
         self.data = serializer.data
         # general settings
         self.setting = Setting.objects.get(name='general')

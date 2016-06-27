@@ -14,10 +14,13 @@ from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixi
 
 ### ROLE ###
 
-ROLE_FIELDS = ('id', 'name', 'role_type', 'auth_amount', 'location_level')
+ROLE_LIST_FIELDS = ('id', 'name', 'role_type', 'location_level', 'auth_amount',)
+
+ROLE_FIELDS = ROLE_LIST_FIELDS + ('auth_currency', 'dashboard_text', 'accept_assign',
+                                  'accept_notify', 'categories',)
 
 
-class RoleSerializer(BaseCreateSerializer):
+class RoleListSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Role
@@ -29,7 +32,7 @@ class RoleCreateSerializer(BaseCreateSerializer):
     class Meta:
         model = Role
         validators = [RoleCategoryValidator()]
-        fields = ROLE_FIELDS + ('auth_currency', 'dashboard_text', 'categories',)
+        fields = ROLE_FIELDS
 
     def create(self, validated_data):
         instance = super(RoleCreateSerializer, self).create(validated_data)
@@ -44,7 +47,7 @@ class RoleUpdateSerializer(NestedSettingUpdateMixin, BaseCreateSerializer):
     class Meta:
         model = Role
         validators = [RoleCategoryValidator()]
-        fields = ROLE_FIELDS + ('auth_currency', 'dashboard_text', 'categories', 'settings',)
+        fields = ROLE_FIELDS + ('settings',)
 
 
 class RoleDetailSerializer(NestedSettingsToRepresentationMixin, BaseCreateSerializer):
@@ -54,7 +57,7 @@ class RoleDetailSerializer(NestedSettingsToRepresentationMixin, BaseCreateSerial
 
     class Meta:
         model = Role
-        fields = ROLE_FIELDS + ('categories', 'settings',)
+        fields = ROLE_FIELDS + ('settings',)
 
     @staticmethod
     def eager_load(queryset):
@@ -75,7 +78,6 @@ PERSON_FIELDS = (
     'id', 'username', 'first_name', 'middle_initial',
     'last_name', 'fullname', 'status', 'role', 'title', 'employee_id',
 )
-
 
 PERSON_DETAIL_FIELDS = PERSON_FIELDS + ('locale', 'locations', 'last_login', 'date_joined',
     'emails', 'phone_numbers', 'addresses', 'settings',)
