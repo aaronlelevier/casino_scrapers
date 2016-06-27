@@ -169,9 +169,6 @@ class Role(SettingMixin, BaseModel):
         if not self.auth_amount:
             self.auth_amount = 0
 
-        if not self.auth_currency:
-            self.auth_currency = Currency.objects.default()
-
     def _update_password_history_length(self):
         """
         Append the previous ``password_min_length`` to the ``password_history_length`` 
@@ -302,8 +299,8 @@ class Person(SettingMixin, BaseModel, AbstractUser):
     fullname = models.CharField(max_length=100, blank=True)
     auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, null=True)
     auth_currency = models.ForeignKey(Currency, blank=True, null=True)
-    accept_assign = models.BooleanField(default=True, blank=True)
-    accept_notify = models.BooleanField(default=True, blank=True)
+    accept_assign = models.NullBooleanField(null=True)
+    accept_notify = models.NullBooleanField(null=True)
     next_approver = models.ForeignKey("self", related_name='nextapprover',
                                       blank=True, null=True)
     # optional
@@ -344,11 +341,18 @@ class Person(SettingMixin, BaseModel, AbstractUser):
         return data
 
     def inherited(self):
-        pass
+        return {
+            'auth_amount': self.proxy_auth_amount,
+            'auth_currency': self.proxy_auth_currency,
+            'accept_assign': self.proxy_accept_assign,
+            'accept_notify': self.proxy_accept_notify
+        }
 
     # proxy fields (won't create a field in the database)
     proxy_auth_amount = InheritedValueField('role', 'auth_amount')
     proxy_auth_currency = InheritedValueField('role', 'auth_currency')
+    proxy_accept_assign = InheritedValueField('role', 'accept_assign')
+    proxy_accept_notify = InheritedValueField('role', 'accept_notify')
 
     # Managers
     objects = PersonManager()

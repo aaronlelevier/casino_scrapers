@@ -330,6 +330,9 @@ class PersonListTests(TestCase):
         self.assertEqual(data['role'], str(person.role.id))
         self.assertEqual(data['title'], person.title)
         self.assertEqual(data['employee_id'], person.employee_id)
+        self.assertNotIn('auth_amount', data)
+        self.assertNotIn('accept_assign', data)
+        self.assertNotIn('accept_notify', data)
 
 
 class PersonDetailTests(TestCase):
@@ -377,6 +380,23 @@ class PersonDetailTests(TestCase):
         self.assertEqual(self.data['employee_id'], self.person.employee_id)
         self.assertIn('last_login', self.data)
         self.assertIn('date_joined', self.data)
+
+    def test_data__inherited(self):
+        # auth_amount
+        self.assertEqual(self.data['inherited']['auth_amount']['value'], None)
+        self.assertEqual(self.data['inherited']['auth_amount']['inherited_value'], self.person.role.auth_amount)
+        self.assertEqual(self.data['inherited']['auth_amount']['inherits_from'], 'role')
+        self.assertEqual(self.data['inherited']['auth_amount']['inherits_from_id'], str(self.person.role.id))
+        # accept_assign
+        self.assertEqual(self.data['inherited']['accept_assign']['value'], None)
+        self.assertEqual(self.data['inherited']['accept_assign']['inherited_value'], self.person.role.accept_assign)
+        self.assertEqual(self.data['inherited']['accept_assign']['inherits_from'], 'role')
+        self.assertEqual(self.data['inherited']['accept_assign']['inherits_from_id'], str(self.person.role.id))
+        # accept_notify
+        self.assertEqual(self.data['inherited']['accept_notify']['value'], None)
+        self.assertEqual(self.data['inherited']['accept_notify']['inherited_value'], self.person.role.accept_notify)
+        self.assertEqual(self.data['inherited']['accept_notify']['inherits_from'], 'role')
+        self.assertEqual(self.data['inherited']['accept_notify']['inherits_from_id'], str(self.person.role.id))
 
     def test_data_status(self):
         self.assertEqual(self.data['status_fk'], str(self.person.status.id))
@@ -511,6 +531,8 @@ class PersonUpdateTests(APITestCase):
     def test_auth_amount(self):
         new_auth_amount = '1234.1010'
         self.data['auth_amount'] = new_auth_amount
+        self.data['accept_assign'] = True
+        self.data['accept_notify'] = True
 
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')
@@ -526,6 +548,8 @@ class PersonUpdateTests(APITestCase):
         self.assertEqual(data['role'], str(self.person.role.id))
         self.assertEqual(data['title'], self.person.title)
         self.assertEqual(data['employee_id'], self.person.employee_id)
+        self.assertTrue(data['accept_assign'])
+        self.assertTrue(data['accept_notify'])
 
     def test_no_change(self):
         # Confirm the ``self.data`` structure is correct

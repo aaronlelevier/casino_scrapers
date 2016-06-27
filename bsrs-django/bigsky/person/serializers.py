@@ -52,7 +52,7 @@ class RoleUpdateSerializer(BaseCreateSerializer):
 
 class RoleDetailSerializer(NestedSettingsToRepresentationMixin, BaseCreateSerializer):
     """
-    Fields that have the ability to be inherited. i.e accept_assingn, accept_notify,
+    Fields that have the ability to be inherited. i.e accept_assign, accept_notify,
     etc.. are not represented as first level fields in the detail payload. Instead
     they are nested within an ``inherited`` object. Each is an object with inherited
     properties.
@@ -191,7 +191,8 @@ class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSeriali
         validators = [RoleLocationValidator('role', 'locations')]
         write_only_fields = ('password',)
         fields = PERSON_FIELDS + ('auth_amount', 'auth_currency', 'password', 'locale',
-                                  'locations', 'emails', 'phone_numbers', 'addresses', 'settings',)
+                                  'locations', 'emails', 'phone_numbers', 'addresses', 'settings',
+                                  'accept_assign', 'accept_notify',)
 
     def update(self, instance, validated_data):
         # Pasword
