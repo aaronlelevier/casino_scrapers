@@ -40,24 +40,21 @@ class RoleCreateSerializer(BaseCreateSerializer):
         return instance
 
 
-class RoleUpdateSerializer(NestedSettingUpdateMixin, BaseCreateSerializer):
-
-    settings = SettingSerializer()
+class RoleUpdateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Role
         validators = [RoleCategoryValidator()]
-        fields = ROLE_FIELDS + ('settings',)
+        fields = ROLE_FIELDS
 
 
 class RoleDetailSerializer(NestedSettingsToRepresentationMixin, BaseCreateSerializer):
     
     categories = CategoryRoleSerializer(many=True)
-    settings = SettingSerializer()
 
     class Meta:
         model = Role
-        fields = ROLE_FIELDS + ('settings',)
+        fields = ROLE_FIELDS
 
     @staticmethod
     def eager_load(queryset):
