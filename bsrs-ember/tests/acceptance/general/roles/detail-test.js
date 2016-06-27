@@ -22,7 +22,6 @@ import settingPage from 'bsrs-ember/tests/pages/settings';
 import inputCurrencyPage from 'bsrs-ember/tests/pages/input-currency';
 import {role_settings, role_settingsOther} from 'bsrs-ember/tests/helpers/payloads/role';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
-import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
 import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -369,16 +368,6 @@ test('search will filter down on categories in store correctly by removing and a
   });
 });
 
-// TODO: the next two tests should be moved to integration tests
-
-test('settings - translation keys', (assert) => {
-  clearxhr(list_xhr);
-  visit(DETAIL_URL);
-  andThen(() => {
-    assert.equal(getLabelText('dashboard_text'), translations['admin.setting.dashboard_text']);
-  });
-});
-
 test('settings - UI is populated for inherited correctly - inherited value from parent', (assert) => {
   clearxhr(list_xhr);
   visit(DETAIL_URL);
@@ -388,8 +377,6 @@ test('settings - UI is populated for inherited correctly - inherited value from 
     assert.equal(find('.t-settings-dashboard_text').val(), '');
   });
 });
-
-
 
 test('settings - override value from parent, can click link-to to get to inherited setting', (assert) => {
   clearxhr(list_xhr);
