@@ -392,61 +392,11 @@ test('role_categories_ids computed returns a flat list of ids for each category'
   assert.deepEqual(role.get('role_categories_ids'), [ROLE_CD.idTwo]);
 });
 
-// settings: dirty track: start
-
-test('dashboard_text isDirty test', (assert) => {
-  role = store.push('role', {id: RD.idOne});
-  assert.equal(role.get('isDirty'), false);
-  role.set('dashboard_text', 'foo');
-  assert.equal(role.get('isDirty'), true);
-  role.set('dashboard_text', '');
-  assert.equal(role.get('isDirty'), false);
-});
-
-test('create_all isDirty test', (assert) => {
-  role = store.push('role', {id: RD.idOne, name: RD.nameOne, create_all: SD.create_all});
-  assert.equal(role.get('isDirty'), false);
-  role.set('create_all', 'foo');
-  assert.equal(role.get('isDirty'), true);
-  role.set('create_all', SD.create_all);
-  assert.equal(role.get('isDirty'), false);
-});
-
-test('accept_assign isDirty test', (assert) => {
-  role = store.push('role', {id: RD.idOne, name: RD.nameOne, accept_assign: SD.accept_assign});
-  assert.equal(role.get('isDirty'), false);
-  role.set('accept_assign', 'foo');
-  assert.equal(role.get('isDirty'), true);
-  role.set('accept_assign', SD.accept_assign);
-  assert.equal(role.get('isDirty'), false);
-});
-
-test('accept_notify isDirty test', (assert) => {
-  role = store.push('role', {id: RD.idOne, name: RD.nameOne, accept_notify: SD.accept_notify});
-  assert.equal(role.get('isDirty'), false);
-  role.set('accept_notify', 'foo');
-  assert.equal(role.get('isDirty'), true);
-  role.set('accept_notify', SD.accept_notify);
-  assert.equal(role.get('isDirty'), false);
-});
-
-// settings: dirty track: end
-
-test('settings', (assert) => {
-  var dashboard_text = 'hi';
-  var create_all = true;
-  var login_grace = 2;
-  var company_name = "Andys Piano";
-  role = store.push('role', {id: RD.idOne, dashboard_text, create_all, login_grace, company_name});
-  var settings = role.get('settings');
-  assert.equal(settings.settings.dashboard_text, dashboard_text);
-});
-
 test('serialize', (assert) => {
   store.push('location-level', {id: LLD.idOne, name: LLD.nameRegion, roles: [RD.idOne]});
   store.push('category', {id: CD.idOne});
   store.push('role-category', {id: ROLE_CD.idOne, category_pk: CD.idOne, role_pk: RD.idOne});
-  role = store.push('role',{id: RD.idOne, name: RD.nameOne, role_type: RD.roleTypeGeneral, auth_amount: CURRENCY_DEFAULTS.authAmountOne, auth_currency: CURRENCY_DEFAULTS.id});
+  role = store.push('role',{id: RD.idOne, name: RD.nameOne, role_type: RD.roleTypeGeneral, auth_amount: CURRENCY_DEFAULTS.authAmountOne, auth_currency: CURRENCY_DEFAULTS.id, dashboard_text: RD.dashboard_text});
   var serialize = role.serialize();
   assert.equal(serialize.id, role.get('id'));
   assert.equal(serialize.name, role.get('name'));
@@ -455,5 +405,5 @@ test('serialize', (assert) => {
   assert.equal(serialize.categories, role.get('categories_ids'));
   assert.equal(serialize.auth_amount, role.get('auth_amount'));
   assert.equal(serialize.auth_currency, role.get('auth_currency'));
-  assert.equal(serialize.settings, role.get('settings'));
+  assert.equal(serialize.dashboard_text, role.get('dashboard_text'));
 });

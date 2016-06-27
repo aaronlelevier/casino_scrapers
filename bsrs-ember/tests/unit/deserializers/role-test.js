@@ -427,34 +427,26 @@ test('role-category m2m does not delete other role-category m2m models', (assert
   assert.equal(role_two.get('role_categories').get('length'), 1);
 });
 
-test('auth_amount and auth_currency', assert => {
+test('auth_amount', assert => {
   let response = RF.generate(RD.idOne);
   run(() => {
     subject.deserialize(response, RD.idOne);
   });
   role = store.find('role', RD.idOne);
   assert.equal(role.get('auth_amount'), CURRENCY_DEFAULTS.authAmountOne);
-  assert.equal(role.get('auth_currency'), CURRENCY_DEFAULTS.id);
 });
 
-test('settings copySettingsToFirstLevel', (assert) => {
+test('inherited copySettingsToFirstLevel', (assert) => {
   let response = RF.generate(RD.idOne);
+  assert.equal(response.auth_currency, undefined);
+  assert.equal(response.dashboard_text, undefined);
   run(() => {
     subject.deserialize(response, RD.idOne);
   });
   role = store.find('role', RD.idOne);
   assert.equal(role.get('dashboard_text'), null);
-  assert.equal(role.get('create_all'), true);
-  assert.equal(role.get('accept_assign'), false);
-  assert.equal(role.get('accept_notify'), false);
-  // settings
-  assert.equal(role.get('settings').settings.dashboard_text, null);
-  assert.equal(role.get('settings').settings.create_all, true);
-  assert.equal(role.get('settings').settings.accept_assign, false);
-  assert.equal(role.get('settings').settings.accept_notify, false);
-  // settings_object
-  assert.equal(role.get('settings_object').dashboard_text, RD.settings.dashboard_text);
-  assert.equal(role.get('settings_object').create_all, RD.settings.create_all);
-  assert.equal(role.get('settings_object').accept_assign, RD.settings.accept_assign);
-  assert.equal(role.get('settings_object').accept_notify, RD.settings.accept_notify);
+  assert.equal(role.get('auth_currency'), null);
+  // inherited
+  assert.deepEqual(role.get('inherited').dashboard_text, RD.inherited.dashboard_text);
+  assert.deepEqual(role.get('inherited').auth_currency, RD.inherited.auth_currency);
 });

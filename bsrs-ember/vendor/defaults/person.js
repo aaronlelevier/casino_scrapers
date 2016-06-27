@@ -90,18 +90,6 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
       emailThree: 'alevier@aol.com',
       personListTwo: '139543cf-8fea-426a-8bc3-09778cd79902',
       settings: {
-        accept_assign:{
-          value: null,
-          inherited_value: this.role_defaults.settings.accept_assign.value,
-          inherits_from: 'role',
-          inherits_from_id: this.role_defaults.idOne
-        },
-        accept_notify:{
-          value: null,
-          inherited_value: this.role_defaults.settings.accept_notify.value,
-          inherits_from: 'role',
-          inherits_from_id: this.role_defaults.idOne
-        },
         password_one_time: {
           value: this.setting_defaults.password_one_time
         },

@@ -6,7 +6,7 @@ var BSRS_ROLE_FACTORY = (function() {
     this.location_level_fixtures = location_level_fixtures.default || location_level_fixtures;
     this.config = config;
   };
-  factory.prototype.generate = function(i, name, settings) {
+  factory.prototype.generate = function(i, name, inherited) {
     return {
       id: i,
       name: name || this.role_defaults.nameOne,
@@ -14,8 +14,7 @@ var BSRS_ROLE_FACTORY = (function() {
       location_level: this.location_level_fixtures.detail().id,
       categories: [this.category_fixtures.detail()],
       auth_amount: this.currency_defaults.authAmountOne,
-      auth_currency: this.currency_defaults.id,
-      settings: settings || this.role_defaults.settings
+      inherited: inherited || this.role_defaults.inherited
     }
   };
   factory.prototype.generate_single_for_list = function(i) {

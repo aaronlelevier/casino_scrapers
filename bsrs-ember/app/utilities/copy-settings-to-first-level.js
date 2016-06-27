@@ -2,21 +2,19 @@ import Ember from 'ember';
 
 var copySettingsToFirstLevel = (obj) => {
   var newState = {};
-  var settings = obj.settings || {};
+  var inherited = obj.inherited || {};
 
-  for(var s in settings) {
-    var setting = settings[s];
-    var keys = Object.keys(setting);
+  for(var s in inherited) {
+    var inheritedKeys = inherited[s];
+    var keys = Object.keys(inheritedKeys);
 
     for(var i=0; i < keys.length; i++) {
       var key = keys[i];
       if(key === 'value') {
-        newState[s] = obj.settings[s][key];
+        newState[s] = obj.inherited[s][key];
       }
     }
   }
-  newState.settings_object = obj.settings;
-  delete obj.settings;
   return Ember.assign(obj, newState);
 };
 
