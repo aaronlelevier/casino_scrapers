@@ -143,8 +143,8 @@ class Role(SettingMixin, BaseModel):
             'auth_currency': self.proxy_auth_currency
         }
 
-    proxy_dashboard_text = InheritedValueField('tenant', 'dashboard_text')
-    proxy_auth_currency = InheritedValueField('tenant', 'auth_currency', 'default_currency')
+    proxy_dashboard_text = InheritedValueField('dashboard_text', [('tenant', 'dashboard_text')])
+    proxy_auth_currency = InheritedValueField('auth_currency', [('tenant', 'default_currency')])
 
     @property
     def _name(self):
@@ -349,10 +349,11 @@ class Person(SettingMixin, BaseModel, AbstractUser):
         }
 
     # proxy fields (won't create a field in the database)
-    proxy_auth_amount = InheritedValueField('role', 'auth_amount')
-    proxy_auth_currency = InheritedValueField('role', 'auth_currency')
-    proxy_accept_assign = InheritedValueField('role', 'accept_assign')
-    proxy_accept_notify = InheritedValueField('role', 'accept_notify')
+    proxy_auth_amount = InheritedValueField('auth_amount', [('role', 'auth_amount')])
+    proxy_auth_currency = InheritedValueField('auth_currency',
+                                              [('role', 'auth_currency'), ('tenant', 'default_currency')])
+    proxy_accept_assign = InheritedValueField('accept_assign', [('role', 'accept_assign')])
+    proxy_accept_notify = InheritedValueField('accept_notify', [('role', 'accept_notify')])
 
     # Managers
     objects = PersonManager()

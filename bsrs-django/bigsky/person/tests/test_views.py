@@ -60,7 +60,7 @@ class RoleDetailTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['role_type'], self.role.role_type)
         self.assertEqual(data['location_level'], str(self.location.location_level.id))
         self.assertEqual(data['auth_amount'], "{:.4f}".format(self.role.auth_amount))
-        self.assertEqual(data['auth_currency'], str(self.role.auth_currency.id))
+        self.assertEqual(data['auth_currency'], None)
         self.assertNotIn('dashboard_text', data)
         self.assertNotIn('accept_assign', data)
         self.assertNotIn('accept_notify', data)
@@ -144,6 +144,7 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
         category = mommy.make(Category)
         role_data = self.data
         role_data['name'] = 'new name here'
+        role_data['auth_currency'] = str(mommy.make(Currency, code='FOO').id)
         role_data['dashboard_text'] = 'foo'
         role_data['categories'].append(str(category.id))
         role_data['accept_assign'] = True
@@ -159,7 +160,7 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['role_type'], self.role.role_type)
         self.assertEqual(data['location_level'], str(self.role.location_level.id))
         self.assertEqual(data['auth_amount'], "{:.4f}".format(self.role.auth_amount))
-        self.assertEqual(data['auth_currency'], str(self.role.auth_currency.id))
+        self.assertEqual(data['auth_currency'], role_data['auth_currency'])
         self.assertEqual(data['dashboard_text'], role_data['dashboard_text'])
         self.assertTrue(data['accept_assign'])
         self.assertTrue(data['accept_notify'])
@@ -387,6 +388,11 @@ class PersonDetailTests(TestCase):
         self.assertEqual(self.data['inherited']['auth_amount']['inherited_value'], self.person.role.auth_amount)
         self.assertEqual(self.data['inherited']['auth_amount']['inherits_from'], 'role')
         self.assertEqual(self.data['inherited']['auth_amount']['inherits_from_id'], str(self.person.role.id))
+        # auth_currency
+        self.assertEqual(self.data['inherited']['auth_currency']['value'], None)
+        self.assertEqual(self.data['inherited']['auth_currency']['inherited_value'], str(self.person.role.tenant.default_currency.id))
+        self.assertEqual(self.data['inherited']['auth_currency']['inherits_from'], 'role')
+        self.assertEqual(self.data['inherited']['auth_currency']['inherits_from_id'], str(self.person.role.id))
         # accept_assign
         self.assertEqual(self.data['inherited']['accept_assign']['value'], None)
         self.assertEqual(self.data['inherited']['accept_assign']['inherited_value'], self.person.role.accept_assign)
@@ -932,10 +938,10 @@ class PersonSettingTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['settings']['auth_amount']['inherits_from'], 'role')
         self.assertEqual(data['settings']['auth_amount']['inherits_from_id'], str(self.role.id))
         self.assertNotIn('type', data['settings']['auth_amount'])
-        # inherited - auth_currency - from person's Role
+        # inherited - auth_currency - from person's Role > Tenant
         self.assertNotIn('auth_currency', data)
         self.assertEqual(data['settings']['auth_currency']['value'], None)
-        self.assertEqual(data['settings']['auth_currency']['inherited_value'], str(self.role.auth_currency.id))
+        self.assertEqual(data['settings']['auth_currency']['inherited_value'], str(self.person.role.tenant.default_currency.id))
         self.assertEqual(data['settings']['auth_currency']['inherits_from'], 'role')
         self.assertEqual(data['settings']['auth_currency']['inherits_from_id'], str(self.role.id))
         self.assertNotIn('type', data['settings']['auth_currency'])
@@ -964,7 +970,7 @@ class PersonSettingTests(RoleSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['settings']['auth_currency']['value'], str(self.person.auth_currency.id))
-        self.assertEqual(data['settings']['auth_currency']['inherited_value'], str(self.person.role.auth_currency.id))
+        self.assertEqual(data['settings']['auth_currency']['inherited_value'], str(self.person.role.tenant.default_currency.id))
         self.assertEqual(data['settings']['auth_currency']['inherits_from'], 'role')
         self.assertEqual(data['settings']['auth_currency']['inherits_from_id'], str(self.person.role.id))
 
@@ -1004,7 +1010,7 @@ class PersonSettingTests(RoleSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
 
         self.assertEqual(data['settings']['auth_amount']['inherited_value'], self.person.role.auth_amount)
-        self.assertEqual(data['settings']['auth_currency']['inherited_value'], str(self.person.role.auth_currency.id))
+        self.assertEqual(data['settings']['auth_currency']['inherited_value'], str(self.person.role.tenant.default_currency.id))
         self.assertIsNone(self.person.auth_amount)
         self.assertIsNone(self.person.auth_currency)
 

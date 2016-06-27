@@ -65,7 +65,6 @@ class CreateRoleTests(TestCase):
         role = factory.create_role()
         self.assertIsInstance(role, Role)
         self.assertIsInstance(role.tenant, Tenant)
-        self.assertIsInstance(role.auth_currency, Currency)
         self.assertEqual(init_count+1, Role.objects.count())
         self.assertEqual(role.location_level.name, LOCATION_REGION)
 
@@ -206,14 +205,6 @@ class CreateSinglePersonTests(TestCase):
 
         with self.assertRaises(ValidationError):
             factory.create_single_person(location=location)
-
-    def test_person_settings(self):
-        person = factory.create_single_person()
-
-        self.assertIsInstance(person.settings, Setting)
-        # if this fails, then either 'general' or this person's 'role'
-        # settings are not set up
-        self.assertTrue(person.combined_settings())
 
 
 class CreatePersonTests(TestCase):

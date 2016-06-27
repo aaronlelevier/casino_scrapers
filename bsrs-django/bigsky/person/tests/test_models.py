@@ -202,9 +202,6 @@ class PersonTests(TestCase):
         self.assertEqual(self.person.emails.filter(type=email_one.type).count(), 1)
         self.assertEqual(self.person.emails.filter(type__name=email_one.type.name).count(), 1)
 
-    def test_person_defaults(self):
-        self.assertTrue(self.person.accept_assign)
-
     def test_update_defaults(self):
         self.person.status = None
         self.person.auth_amount = None
@@ -464,44 +461,3 @@ class PersonPasswordHistoryTests(TestCase):
             init_password_change,
             post_password_change
         )
-
-
-class PersonProxyFieldTests(TestCase):
-
-    def setUp(self):
-        self.person = create_single_person()
-        create_person_setting(self.person)
-        self.role = self.person.role
-        create_role_setting(self.role)
-
-    def test_auth_amount__inherited(self):
-        combined_settings = self.person.combined_settings()
-        self.assertEqual(combined_settings['auth_amount']['value'], None)
-        self.assertEqual(combined_settings['auth_amount']['inherited_value'], self.role.auth_amount)
-        self.assertEqual(combined_settings['auth_amount']['inherits_from'], 'role')
-        self.assertEqual(combined_settings['auth_amount']['inherits_from_id'], str(self.person.role.id))
-
-    def test_auth_amount__not_inherited(self):
-        new_amount = 99
-        self.person.auth_amount = new_amount
-        combined_settings = self.person.combined_settings()
-        self.assertEqual(combined_settings['auth_amount']['value'], new_amount)
-        self.assertEqual(combined_settings['auth_amount']['inherited_value'], self.person.role.auth_amount)
-        self.assertEqual(combined_settings['auth_amount']['inherits_from'], 'role')
-        self.assertEqual(combined_settings['auth_amount']['inherits_from_id'], str(self.person.role.id))
-
-    def test_auth_currency__inherited(self):
-        combined_settings = self.person.combined_settings()
-        self.assertEqual(combined_settings['auth_currency']['value'], None)
-        self.assertEqual(combined_settings['auth_currency']['inherited_value'], str(self.role.auth_currency.id))
-        self.assertEqual(combined_settings['auth_currency']['inherits_from'], 'role')
-        self.assertEqual(combined_settings['auth_currency']['inherits_from_id'], str(self.person.role.id))
-
-    def test_auth_currency__not_inherited(self):
-        currency = mommy.make(Currency, code='ABC')
-        self.person.auth_currency = currency
-        combined_settings = self.person.combined_settings()
-        self.assertEqual(combined_settings['auth_currency']['value'], str(currency.id))
-        self.assertEqual(combined_settings['auth_currency']['inherited_value'], str(self.person.role.auth_currency.id))
-        self.assertEqual(combined_settings['auth_currency']['inherits_from'], 'role')
-        self.assertEqual(combined_settings['auth_currency']['inherits_from_id'], str(self.person.role.id))
