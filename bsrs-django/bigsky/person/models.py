@@ -146,10 +146,6 @@ class Role(SettingMixin, BaseModel):
     proxy_dashboard_text = InheritedValueField('dashboard_text', [('tenant', 'dashboard_text')])
     proxy_auth_currency = InheritedValueField('auth_currency', [('tenant', 'default_currency')])
 
-    @property
-    def _name(self):
-        return self.__name__.lower()
-
     def to_dict(self):
         return {
             "id": str(self.id),

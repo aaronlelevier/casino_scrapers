@@ -36,19 +36,28 @@ class RoleTests(TestCase):
         self.role = create_role()
         create_general_setting()
 
-    def test_group(self):
+    def test_str(self):
+        self.assertEqual(str(self.role), self.role.name)
+
+    def test_to_dict(self):
+        ret = self.role.to_dict()
+
+        self.assertEqual(ret['id'], str(self.role.id))
+        self.assertEqual(ret['name'], self.role.name)
+        self.assertEqual(ret['default'], True if self.role.name == settings.DEFAULT_ROLE else False)
+        self.assertEqual(ret['location_level'], str(self.role.location_level.id) if self.role.location_level else None)
+
+    def test_update_defaults(self):
+        self.role.group = None
+        self.role.auth_amount = None
+
+        self.role._update_defaults()
+
         self.assertIsInstance(self.role.group, Group)
-
-    def test_name(self):
         self.assertEqual(self.role.group.name, self.role.name)
+        self.assertEqual(self.role.auth_amount, 0)
 
-    def test_to_dict_location_level (self):
-        self.assertEqual(
-            self.role.to_dict()["location_level"],
-            str(self.role.location_level.id)
-        )
-
-    def test_default_tenant_on_save(self):
+    def test_tenant_not_defaulted_on_save(self):
         tenant = get_or_create_tenant()
         self.assertIsNotNone(self.role.tenant)
         self.role.tenant = None
