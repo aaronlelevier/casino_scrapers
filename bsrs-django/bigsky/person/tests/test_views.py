@@ -21,10 +21,6 @@ from person.serializers import PersonUpdateSerializer, RoleUpdateSerializer
 from person.tests.factory import (PASSWORD, create_single_person, create_role, create_roles,
     create_all_people, create_person_statuses)
 from person.tests.mixins import RoleSetupMixin
-from setting.models import Setting
-from setting.serializers import SettingSerializer
-from setting.settings import GENERAL_SETTINGS
-from setting.tests.factory import create_role_setting, create_person_setting
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from utils import create
@@ -192,7 +188,7 @@ class RoleRouteDataTests(RoleSetupMixin, APITestCase):
         self.assertEqual(len(data), 1)
         self.assertEqual(
             data['settings'],
-            {'dashboard_text': GENERAL_SETTINGS['dashboard_text']['value']}
+            {'dashboard_text': self.tenant.dashboard_text}
         )
 
 
@@ -266,14 +262,6 @@ class PersonCreateTests(APITestCase):
         self.assertEqual(data['id'], str(person.id))
         self.assertEqual(data['username'], person.username)
         self.assertEqual(data['role'], str(person.role.id))
-
-    def test_add_default_settings_on_create(self):
-        response = self.client.post('/api/admin/people/', self.data, format='json')
-
-        self.assertEqual(response.status_code, 201)
-        data = json.loads(response.content.decode('utf8'))
-        person = Person.objects.get(id=data['id'])
-        self.assertIsInstance(person.settings, Setting)
 
 
 class PersonListTests(TestCase):
@@ -467,8 +455,6 @@ class PersonDetailTests(TestCase):
 
     def test_current(self):
         # 'self.person' is the currently logged in 'Person'
-        self.assertIsInstance(self.person.settings, Setting)
-
         response = self.client.get('/api/admin/people/current/'.format(self.person.id))
 
         data = json.loads(response.content.decode('utf8'))
@@ -512,10 +498,8 @@ class PersonUpdateTests(APITestCase):
     def setUp(self):
         self.password = PASSWORD
         self.role = create_role()
-        self.role_setting = create_role_setting(self.role)
         self.location = create_location(location_level=self.role.location_level)
         self.person = create_single_person()
-        self.person_setting = create_person_setting(self.person)
         self.client.login(username=self.person.username, password=self.password)
         # Create ``contact.Model`` Objects not yet JOINed to a ``Person`` or ``Location``
         self.email_type = mommy.make(EmailType)
@@ -528,7 +512,6 @@ class PersonUpdateTests(APITestCase):
         # Person2 w/ some contact info doesn't affect Person1's Contact
         # counts / updates / deletes
         self.person2 = create_single_person()
-        create_person_setting(self.person2)
         create_contacts(self.person2)
 
         serializer = PersonUpdateSerializer(self.person)
@@ -915,122 +898,3 @@ class PasswordTests(APITestCase):
         self.client.logout()
         self.client.login(username=self.person2.username, password=new_password)
         self.assertIn('_auth_user_id', self.client.session)
-
-
-class PersonSettingTests(RoleSetupMixin, APITestCase):
-
-    def setUp(self):
-        super(PersonSettingTests, self).setUp()
-        self.person_settings = create_person_setting(self.person)
-
-    def test_detail(self):
-        # auth_amount and auth_currency aren't in the top-level fields on a Detail request
-        response = self.client.get('/api/admin/people/{}/'.format(self.person.id))
-
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        # non-inherited
-        self.assertEqual(data['settings']['password_one_time']['value'], False)
-        # inherited
-        self.assertEqual(data['settings']['accept_assign']['value'], None)
-        self.assertEqual(data['settings']['accept_assign']['inherited_value'], False)
-        self.assertEqual(data['settings']['accept_assign']['inherits_from'], 'role')
-        self.assertEqual(data['settings']['accept_assign']['inherits_from_id'], str(self.role.id))
-        # inherited - auth_amount - from person's Role
-        self.assertNotIn('auth_amount', data)
-        self.assertEqual(data['settings']['auth_amount']['value'], None)
-        self.assertEqual(data['settings']['auth_amount']['inherited_value'], self.role.auth_amount)
-        self.assertEqual(data['settings']['auth_amount']['inherits_from'], 'role')
-        self.assertEqual(data['settings']['auth_amount']['inherits_from_id'], str(self.role.id))
-        self.assertNotIn('type', data['settings']['auth_amount'])
-        # inherited - auth_currency - from person's Role > Tenant
-        self.assertNotIn('auth_currency', data)
-        self.assertEqual(data['settings']['auth_currency']['value'], None)
-        self.assertEqual(data['settings']['auth_currency']['inherited_value'], str(self.person.role.tenant.default_currency.id))
-        self.assertEqual(data['settings']['auth_currency']['inherits_from'], 'role')
-        self.assertEqual(data['settings']['auth_currency']['inherits_from_id'], str(self.role.id))
-        self.assertNotIn('type', data['settings']['auth_currency'])
-
-    def test_detail__auth_amount_not_inherited(self):
-        new_auth_amount = 25
-        self.person.auth_amount = new_auth_amount
-        self.person.save()
-
-        response = self.client.get('/api/admin/people/{}/'.format(self.person.id))
-
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings']['auth_amount']['value'], new_auth_amount)
-        self.assertEqual(data['settings']['auth_amount']['inherited_value'], self.person.role.auth_amount)
-        self.assertEqual(data['settings']['auth_amount']['inherits_from'], 'role')
-        self.assertEqual(data['settings']['auth_amount']['inherits_from_id'], str(self.person.role.id))
-
-    def test_detail__auth_currency_not_inherited(self):
-        auth_currency = mommy.make(Currency, code='ABC')
-        self.person.auth_currency = auth_currency
-        self.person.save()
-
-        response = self.client.get('/api/admin/people/{}/'.format(self.person.id))
-
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings']['auth_currency']['value'], str(self.person.auth_currency.id))
-        self.assertEqual(data['settings']['auth_currency']['inherited_value'], str(self.person.role.tenant.default_currency.id))
-        self.assertEqual(data['settings']['auth_currency']['inherits_from'], 'role')
-        self.assertEqual(data['settings']['auth_currency']['inherits_from_id'], str(self.person.role.id))
-
-    def test_update__non_inherited(self):
-        serializer = PersonUpdateSerializer(self.person)
-        raw_data = copy.copy(serializer.data)
-        self.assertEqual(raw_data['settings']['settings']['password_one_time']['value'], False)
-        raw_data['settings']['settings']['password_one_time'] = True
-
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
-            raw_data, format='json')
-
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings']['settings']['password_one_time']['value'], True)
-
-    def test_update__inherited_from_role(self):
-        serializer = PersonUpdateSerializer(self.person)
-        raw_data = copy.copy(serializer.data)
-        raw_data['settings']['settings']['accept_assign'] = True
-
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
-            raw_data, format='json')
-
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['settings']['settings']['accept_assign']['value'], True)
-        self.assertEqual(data['settings']['settings']['accept_assign']['inherits_from'], 'role')
-
-    def test_update__inherited_fields_update_to_role_relfected_in_person(self):
-        # Initiall show's Role's Values
-        self.person.auth_amount = None
-        self.person.auth_currency = None
-        self.person.save()
-
-        response = self.client.get('/api/admin/people/{}/'.format(self.person.id))
-        data = json.loads(response.content.decode('utf8'))
-
-        self.assertEqual(data['settings']['auth_amount']['inherited_value'], self.person.role.auth_amount)
-        self.assertEqual(data['settings']['auth_currency']['inherited_value'], str(self.person.role.tenant.default_currency.id))
-        self.assertIsNone(self.person.auth_amount)
-        self.assertIsNone(self.person.auth_currency)
-
-        # set Person to new values
-        auth_amount = 99
-        auth_currency = mommy.make(Currency, code='foo')
-        self.person.auth_amount = auth_amount
-        self.person.auth_currency = auth_currency
-        self.person.save()
-        # confirm Person's values != Role
-        self.assertNotEqual(self.person.auth_amount, self.person.role.auth_amount)
-        self.assertNotEqual(self.person.auth_currency, self.person.role.auth_currency)
-
-        response = self.client.get('/api/admin/people/{}/'.format(self.person.id))
-        data = json.loads(response.content.decode('utf8'))
-        # Now show's Person's Values
-        self.assertEqual(data['settings']['auth_amount']['value'], self.person.auth_amount)
-        self.assertEqual(data['settings']['auth_currency']['value'], str(self.person.auth_currency.id))

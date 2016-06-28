@@ -5,11 +5,8 @@ from contact.serializers import PhoneNumberSerializer, EmailSerializer, AddressS
 from location.serializers import LocationIdNameOnlySerializer, LocationStatusFKSerializer
 from person.models import Person, Role, PersonStatus
 from person.validators import RoleLocationValidator, RoleCategoryValidator
-from setting.serializers import SettingSerializer
-from setting.tests.factory import create_role_setting, create_person_setting
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
-    RemovePasswordSerializerMixin, NestedSettingUpdateMixin,
-    NestedSettingsToRepresentationMixin)
+    RemovePasswordSerializerMixin, NestedSettingsToRepresentationMixin)
 
 
 ### ROLE ###
@@ -35,11 +32,6 @@ class RoleCreateSerializer(BaseCreateSerializer):
         model = Role
         validators = [RoleCategoryValidator()]
         fields = ROLE_CREATE_UPDATE_FIELDS
-
-    def create(self, validated_data):
-        instance = super(RoleCreateSerializer, self).create(validated_data)
-        create_role_setting(instance)
-        return instance
 
 
 class RoleUpdateSerializer(BaseCreateSerializer):
@@ -82,7 +74,7 @@ PERSON_FIELDS = ('id', 'username', 'first_name', 'middle_initial', 'last_name',
                  'fullname', 'status', 'role', 'title', 'employee_id',)
 
 PERSON_DETAIL_FIELDS = PERSON_FIELDS + ('locale', 'locations', 'emails', 'phone_numbers',
-                                        'addresses', 'settings', 'password_one_time',)
+                                        'addresses', 'password_one_time',)
 
 
 class PersonCreateSerializer(RemovePasswordSerializerMixin, BaseCreateSerializer):
@@ -98,7 +90,6 @@ class PersonCreateSerializer(RemovePasswordSerializerMixin, BaseCreateSerializer
     def create(self, validated_data):
         person = super(PersonCreateSerializer, self).create(validated_data)
         person.groups.add(person.role.group)
-        create_person_setting(person)
         return person
 
 
@@ -138,7 +129,6 @@ class PersonDetailSerializer(NestedSettingsToRepresentationMixin, serializers.Mo
     emails = EmailSerializer(required=False, many=True)
     phone_numbers = PhoneNumberSerializer(required=False, many=True)
     addresses = AddressSerializer(required=False, many=True)
-    settings = SettingSerializer()
 
     class Meta:
         model = Person
@@ -168,7 +158,7 @@ class PersonCurrentSerializer(PersonDetailSerializer):
 
 
 class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSerializerMixin,
-    NestedSettingUpdateMixin, serializers.ModelSerializer):
+    serializers.ModelSerializer):
     '''
     Update a ``Person`` and all nested related ``Contact`` Models.
 
@@ -181,7 +171,6 @@ class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSeriali
     emails = EmailSerializer(required=False, many=True)
     phone_numbers = PhoneNumberSerializer(required=False, many=True)
     addresses = AddressSerializer(required=False, many=True)
-    settings = SettingSerializer(required=False)
 
     class Meta:
         model = Person

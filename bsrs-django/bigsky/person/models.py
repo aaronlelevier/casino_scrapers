@@ -22,8 +22,6 @@ from category.models import Category
 from contact.models import PhoneNumber, Address, Email
 from location.models import LocationLevel, Location, LOCATION_COMPANY
 from person import config, helpers
-from setting.mixins import SettingMixin
-from setting.models import Setting
 from tenant.models import Tenant
 from translation.models import Locale
 from utils.fields import InheritedValueField
@@ -33,7 +31,7 @@ from utils.validators import (contains_digit, contains_upper_char, contains_lowe
 from work_order.models import WorkOrderStatus
 
 
-class Role(SettingMixin, BaseModel):
+class Role(BaseModel):
     # keys
     tenant = models.ForeignKey(Tenant, related_name="roles", null=True)
     group = models.OneToOneField(Group, blank=True, null=True)
@@ -114,7 +112,6 @@ class Role(SettingMixin, BaseModel):
     msg_copy_email = models.BooleanField(blank=True, default=False)
     msg_copy_default = models.BooleanField(blank=True, default=False)
     msg_stored_link = models.BooleanField(blank=True, default=False)
-    settings = models.OneToOneField(Setting, null=True)
 
     __original_values = {}
 
@@ -132,10 +129,6 @@ class Role(SettingMixin, BaseModel):
         self._update_password_history_length()
         self._validate_related_categories()
         return super(Role, self).save(*args, **kwargs)
-
-    def combined_settings(self):
-        data = copy.copy(self.settings.combined_settings())
-        return data
 
     def inherited(self):
         return {
@@ -277,7 +270,7 @@ class PersonManager(UserManager):
         return self.get_queryset().search_multi(keyword)
 
 
-class Person(SettingMixin, BaseModel, AbstractUser):
+class Person(BaseModel, AbstractUser):
     '''
     :pw: password
     :ooto: out-of-the-office
@@ -327,14 +320,6 @@ class Person(SettingMixin, BaseModel, AbstractUser):
     phone_numbers = GenericRelation(PhoneNumber)
     addresses = GenericRelation(Address)
     emails = GenericRelation(Email)
-    # Inheritable Settings
-    settings = models.OneToOneField(Setting, null=True)
-
-    def combined_settings(self):
-        data = copy.copy(self.settings.combined_settings())
-        data['auth_amount'] = self.proxy_auth_amount
-        data['auth_currency'] = self.proxy_auth_currency
-        return data
 
     def inherited(self):
         return {

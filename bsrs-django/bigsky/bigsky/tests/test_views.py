@@ -20,7 +20,6 @@ from generic.tests.factory import create_image_attachment
 from location.models import LocationLevel, LocationStatus
 from person.models import PersonStatus, Role, Person
 from person.tests.factory import PASSWORD, create_person, create_single_person, create_role
-from setting.tests.factory import create_general_setting
 from ticket.models import TicketStatus, TicketPriority
 from translation.models import Locale
 from translation.tests.factory import create_locales
@@ -189,7 +188,6 @@ class BootstrappedDataTests(TestCase):
 
         self.saved_search = mommy.make(SavedSearch, person=self.person, name="foo",
             endpoint_name="admin.people.index")
-        self.settings = create_general_setting()
 
         mommy.make(EmailType)
         mommy.make(AddressType)
@@ -377,14 +375,6 @@ class BootstrappedDataTests(TestCase):
         self.assertEqual(saved_search.name, data[0]['name'])
         self.assertEqual(saved_search.endpoint_name, data[0]['endpoint_name'])
         self.assertEqual(saved_search.endpoint_uri, data[0]['endpoint_uri'])
-
-    def test_settings(self):
-        data = json.loads(self.response.context['settings'])
-
-        self.assertEqual(3, len(data))
-        # 'foo' is a default name for the main Tenant (for the time being)
-        for name in ['general', 'role', 'person']:
-            self.assertIn(name, [x['name'] for x in data])
 
     def test_ticket_statuses(self):
         data = json.loads(self.response.context['ticket_statuses'])

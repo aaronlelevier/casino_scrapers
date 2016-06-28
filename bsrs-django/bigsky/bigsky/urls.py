@@ -23,7 +23,6 @@ from dtd import views as dtd_views
 from generic import views as generic_views
 from location import views as location_views
 from person import views as person_views
-from setting import views as setting_views
 from tenant import views as tenant_views
 from third_party import views as third_party_views
 from ticket import views as tickets_views
@@ -52,7 +51,6 @@ router.register(r'admin/email-types', contact_views.EmailTypeViewSet)
 # GENERIC
 router.register(r'admin/saved-searches', generic_views.SavedSearchViewSet)
 router.register(r'admin/attachments', generic_views.AttachmentViewSet)
-router.register(r'admin/settings', setting_views.SettingViewSet)
 # LOCATION
 router.register(r'admin/locations', location_views.LocationViewSet)
 router.register(r'admin/location-levels', location_views.LocationLevelViewSet)

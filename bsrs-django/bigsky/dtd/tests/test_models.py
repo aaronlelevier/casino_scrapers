@@ -5,14 +5,12 @@ from model_mommy import mommy
 
 from dtd.models import TreeData, TreeDataManager, DTD_START_ID
 from dtd.tests.factory import create_tree_data, create_dtd_fixture_data
-from setting.tests.factory import create_general_setting
 
 
 class TreeDataManagerTests(TestCase):
 
     def setUp(self):
         create_dtd_fixture_data()
-        create_general_setting()
 
     def test_search_multi(self):
         keyword = 'a'

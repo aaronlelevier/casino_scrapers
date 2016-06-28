@@ -12,7 +12,6 @@ from location.models import (Location, LocationLevel, LOCATION_COMPANY, LOCATION
 from location.tests.factory import create_location, create_locations, create_location_levels
 from person.models import Role, Person
 from person.tests import factory
-from setting.models import Setting
 from tenant.models import Tenant
 from translation.models import Locale
 from translation.tests.factory import create_locales
@@ -92,20 +91,6 @@ class CreateRoleTests(TestCase):
         role = factory.create_role()
 
         self.assertEqual(role.categories.count(), 1)
-
-    def test_general_settings(self):
-        # get's created b/c Role's need to be setup with settings,
-        # and they have inherited settings from 'general', so 'general'
-        # needs to exist.
-        factory.create_role()
-        self.assertTrue(Setting.objects.filter(name='general'))
-
-    def test_role_settings(self):
-        role = factory.create_role()
-
-        self.assertIsInstance(role.settings, Setting)
-        self.assertEqual(role.settings.name, 'role')
-        self.assertEqual(role.settings.related_id, role.id)
 
 
 class CreateRolesTests(TestCase):

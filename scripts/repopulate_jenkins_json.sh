@@ -32,8 +32,6 @@ wait
 ./manage.py dumpdata person --indent=2 > fixtures/person.json
 ./manage.py dumpdata tenant --indent=2 > fixtures/tenant.json
 
-./manage.py dumpdata setting --indent=2 > fixtures/setting.json
-
 wait
 ./manage.py create_tickets
 wait

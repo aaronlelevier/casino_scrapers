@@ -12,8 +12,6 @@ from location.models import (LocationLevel, Location, LocationStatus, LocationTy
     LOCATION_COMPANY, LOCATION_DISTRICT, LOCATION_REGION,)
 from location.tests.factory import create_location, create_locations, create_location_levels
 from person.models import Role, Person, PersonStatus
-from setting.tests.factory import (create_general_setting,
-    create_role_setting, create_person_setting)
 from tenant.tests.factory import get_or_create_tenant
 from translation.tests.factory import create_locale, LOCALES
 from translation.models import Locale
@@ -56,7 +54,6 @@ def create_role(name=None, location_level=None, category=None):
 
     # system default models needed
     currency = Currency.objects.default()
-    create_general_setting()
 
     if not location_level:
         location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_REGION)
@@ -69,7 +66,6 @@ def create_role(name=None, location_level=None, category=None):
         role = mommy.make(Role, tenant=tenant, name=name, location_level=location_level)
 
     role.categories.add(category)
-    create_role_setting(role)
 
     return role
 
@@ -96,8 +92,6 @@ def create_roles():
             role = mommy.make(Role, tenant=tenant, name=name, location_level=location_level)
             if category:
                 role.categories.add(category)
-        finally:
-            create_role_setting(role)
 
     return Role.objects.all()
 
@@ -133,7 +127,6 @@ def create_single_person(name=None, role=None, location=None, status=None, local
             employee_id=create._generate_ph()
         )
         person.locations.add(location)
-        create_person_setting(person)
 
     return person
 
@@ -216,8 +209,6 @@ def remove_all_locations(person):
 def create_all_people():
     if not Location.objects.filter(name=LOCATION_COMPANY):
         create_locations()
-
-    create_general_setting()
 
     # initial Roles
     create_roles()
