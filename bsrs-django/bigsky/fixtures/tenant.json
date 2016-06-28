@@ -1,13 +1,13 @@
 [
 {
   "model": "tenant.tenant",
-  "pk": "bfc06be1-64d7-4df6-a5de-e713add33742",
+  "pk": "75d0101d-6278-491b-8f71-60213540950f",
   "fields": {
-    "created": "2016-06-27T20:33:06.860Z",
-    "modified": "2016-06-27T20:33:06.860Z",
+    "created": "2016-06-28T17:42:49.810Z",
+    "modified": "2016-06-28T17:42:49.810Z",
     "deleted": null,
-    "company_code": "TglmPSzhrcMJrzaRiYZsOHaMpViFBjzCfpdZxTzmZpVQwPBpqhlCNGdDEhNaSgwoUriohgCMmfANNfTDYrmkeOCUgNtdOWYFuOyl",
-    "company_name": "pzpeutwxufRJlNAomOODuSFuigNnJCMJpbpIBWxEevIjEDarmzIAXgnbnpRHbWDzMuwiiBKtZnNoebqduezTnCWCFUywPYezqKlU",
+    "company_code": "owgOfIrKjiJVaLSFzNOfPklETJDNVoDvGFBfAdgpzKqXCcjEUjcdYCMaeGBMSXXQBnLbVQjctilnQpvsPNliIYjJQHrwNIRRRMyD",
+    "company_name": "UaeYLUixDZMjxIPIbXcvTwyeBaPCzfYFGzhWBcrJzTevVtSxAZaEofnLtkgRRaduDVLGrGdEuGELzsCXGeDcufnMOCWBAgPlPlGl",
     "dashboard_text": "Welcome",
     "dt_start": "011530c4-ce6c-4724-9cfd-37a16e787001",
     "default_currency": "009530c4-ce6c-4724-9cfd-37a16e787001",

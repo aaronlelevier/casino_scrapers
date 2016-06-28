@@ -43,7 +43,7 @@ class Role(SettingMixin, BaseModel):
     # Required
     name = models.CharField(max_length=75, unique=True, help_text="Will be set to the Group Name")
     categories = models.ManyToManyField(Category, blank=True) 
-    dashboard_text = models.CharField(max_length=255, blank=True)
+    dashboard_text = models.CharField(max_length=255, null=True)
     create_all = models.BooleanField(blank=True, default=False,
         help_text='Allow document creation for all locations')
     modules = models.TextField(blank=True)
