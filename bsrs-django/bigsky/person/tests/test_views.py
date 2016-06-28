@@ -109,7 +109,7 @@ class RoleCreateTests(RoleSetupMixin, APITestCase):
             "dashboard_text": "foo"
         }
 
-    def test_create(self):
+    def test_main(self):
         response = self.client.post('/api/admin/roles/', self.role_data, format='json')
 
         self.assertEqual(response.status_code, 201)
@@ -125,13 +125,11 @@ class RoleCreateTests(RoleSetupMixin, APITestCase):
         self.assertFalse(data['accept_notify'])
         self.assertEqual(sorted(data['categories']), sorted(self.role_data['categories']))
 
-    def test_create__auth_amount_nulll(self):
-        self.role_data["auth_amount"] = None
+    def test_new_roles_tenant_set_to_logged_in_users_tenant(self):
         response = self.client.post('/api/admin/roles/', self.role_data, format='json')
-        self.assertEqual(response.status_code, 201)
-        # DB record
+
         role = Role.objects.get(id=self.role_data['id'])
-        self.assertEqual(role.auth_amount, 0)
+        self.assertEqual(role.tenant, self.person.role.tenant)
 
 
 class RoleUpdateTests(RoleSetupMixin, APITestCase):
