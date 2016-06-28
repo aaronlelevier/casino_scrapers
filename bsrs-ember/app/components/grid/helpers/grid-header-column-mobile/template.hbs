@@ -10,7 +10,7 @@
   {{#transition-group transition-class="example"}}
   <div class="flex-item--none filter__input-wrap t-filter__input-wrap">
     {{#if column.filterComponent}}
-      {{component column.filterComponent column=column gridFilterParams=gridFilterParams updateGridFilterParams=(action "updateGridFilterParams")}}
+      {{component column.filterComponent column=column gridIdInParams=gridIdInParams updateGridFilterParams=(action "updateGridFilterParams")}}
     {{else}}
       {{input class="form-control filter-input t-filter-input" value=initialVal key-up=(action "updateGridFilterParams")}}
     {{/if}}

@@ -6,7 +6,8 @@ export default Ember.Component.extend({
   init(){
     this._super(...arguments);
     this.mobileFilterInput = false;
-    const existingFilter = this.get('gridFilterParams')[this.get('column.field')];
+    //TODO: need to do for gridFilterParams as well
+    const existingFilter = this.get('gridIdInParams')[this.get('column.field')];
     if(existingFilter){
       this.set('initialVal', existingFilter);
       this.set('mobileFilterInput', true);
@@ -40,14 +41,23 @@ export default Ember.Component.extend({
     toggleMobileFilterInput() {
       this.toggleProperty('mobileFilterInput');
     },
-    /* @method updateGridFilterParams
+    /* @method updategridIdInParams
     * @param {string} val - from input
-    * column.field is the key that will go into update_find_query function in grid-head
+    * column.field is the key that will go into update_find_query/update_id_in function in grid-head
     */
     updateGridFilterParams(val) {
       const column = this.get('column');
-      const gridFilterParams = this.get('gridFilterParams');
-      gridFilterParams[column.field] = val;
+      if(column.multiple) {
+        const gridIdInParams = this.get('gridIdInParams');
+        if(gridIdInParams[column.field]) {
+          gridIdInParams[column.field] = gridIdInParams[column.field].concat(val).uniq();
+        } else {
+          gridIdInParams[column.field] = [val];
+        }
+      } else {
+        const gridFilterParams = this.get('gridFilterParams');
+        gridFilterParams[column.field] = val;
+      }
     }
   }
 });

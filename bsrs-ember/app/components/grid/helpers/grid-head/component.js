@@ -12,6 +12,11 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
     * passed as a property to grid-header-column component
     */
     this.gridFilterParams = {};
+    /* @property gridIdInParams
+    * used for model specific searches where request url will look like location__id__in=x,x,x
+    * object that holds key of type string ('location.name') and pipe separated ids
+    */
+    this.gridIdInParams = {};
     this.filtersetName = '';
     this.mobileFilter = false;
     this.mobileSearch = false;
@@ -36,12 +41,17 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
       // this.setProperties({ page:1, search: searchValue });
     },
     // searchGrid() {
-    //   this.toggleProperty('showSaveFilterInput');
+      // this.toggleProperty('showSaveFilterInput');
     // },
+    /*
+    * @method filterGrid
+    * takes gridFilterParams && gridIdInParams object and turns values into a string
+    */
     filterGrid() {
       this.toggleProperty('mobileFilter');
       /* shows input box in horizontal scroll of save filterset */
       this.toggleProperty('showSaveFilterInput');
+      /* find query param */
       const params = this.get('gridFilterParams');
       const find = this.get('find');
       let finalFilter = '';
@@ -49,7 +59,18 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
         finalFilter += this.update_find_query(key, params[key], find);
       });
       this.get('simpleStore').clear(`${this.get('noun')}-list`);
-      this.setProperties({ page:1, find: finalFilter });
+      /* id_in query param is pipe separated list of model's ids that were filtered */
+      const idInParams = this.get('gridIdInParams');
+      let finalIdInFilter = '';
+      Object.keys(idInParams).forEach((key) => {
+        finalIdInFilter += (key.split('.')[0] + ':' + idInParams[key].reduce((prev, id) => {
+          return prev += `${id}|`;
+        }, ''));
+        // 1. already searched, thus key already exists and need to modify key (remove or add)
+        // 2. key does not exist and need to add to object
+        // idInFilter += gridIdInParams[key]
+      });
+      this.setProperties({ page:1, find: finalFilter, id_in: finalIdInFilter });
     },
     toggleMobileSearch() {
       this.toggleProperty('mobileSearch');

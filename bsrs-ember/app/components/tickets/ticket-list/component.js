@@ -1,5 +1,9 @@
 import GridViewComponent from 'bsrs-ember/components/grid-view/component';
 
+/*
+* .translated_name comes from translation mixin on model
+* multiple - select multiple values from a predefined list of models with ids
+*/
 export let columns = [
   {
     field: 'priority.translated_name',
@@ -11,6 +15,7 @@ export let columns = [
     classNames: ['ticket-priority'],
     filterComponent: 'grid/filters/checkbox-list',
     filterModelName: 'ticket-priority',
+    multiple: true,
   },
   {
     field: 'status.translated_name',
@@ -20,6 +25,7 @@ export let columns = [
     isSearchable: true,
     templateName: 'tickets/ticket-status-tag',
     classNames: ['ticket-status'],
+    multiple: true,
   },
   {
     field: 'number',
