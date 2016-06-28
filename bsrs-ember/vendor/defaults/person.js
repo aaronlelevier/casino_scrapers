@@ -19,12 +19,11 @@ const BSRS_PERSON_ADDRESSES = [];
 const BSRS_PERSON_UNUSED_ID = 'cadba3ba-a533-44e0-ab1f-57cc1b052138';
 
 var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
-  var factory = function(role_defaults, status_defaults, currency_defaults, locale_defaults, setting_defaults) {
+  var factory = function(role_defaults, status_defaults, currency_defaults, locale_defaults) {
     this.role_defaults = role_defaults;
     this.status_defaults = status_defaults;
     this.currency_defaults = currency_defaults;
     this.locale_defaults = locale_defaults;
-    this.setting_defaults = setting_defaults;
   };
   factory.prototype.defaults = function() {
     return {
@@ -125,16 +124,17 @@ if (typeof window === 'undefined') {
   var status_defaults = require('./status');
   var currency_defaults = require('./currencies');
   var locale_defaults = require('./locale');
-  var setting_defaults = require('./setting');
-  module.exports = new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults, locale_defaults, setting_defaults).defaults();
-} else {
-  define('bsrs-ember/vendor/defaults/person', ['exports', 'bsrs-ember/vendor/defaults/role',
-         'bsrs-ember/vendor/defaults/status',
-         'bsrs-ember/vendor/defaults/currencies',
-         'bsrs-ember/vendor/defaults/locale',
-         'bsrs-ember/vendor/defaults/setting'],
-         function (exports, role_defaults, status_defaults, currency_defaults, locale_defaults, setting_defaults) {
-           'use strict';
-           return new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults, locale_defaults, setting_defaults).defaults();
-         });
+  module.exports = new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults, locale_defaults).defaults();
+}
+else {
+  define('bsrs-ember/vendor/defaults/person', ['exports',
+      'bsrs-ember/vendor/defaults/role',
+      'bsrs-ember/vendor/defaults/status',
+      'bsrs-ember/vendor/defaults/currencies',
+      'bsrs-ember/vendor/defaults/locale'
+    ],
+    function(exports, role_defaults, status_defaults, currency_defaults, locale_defaults) {
+      'use strict';
+      return new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults, locale_defaults).defaults();
+    });
 }

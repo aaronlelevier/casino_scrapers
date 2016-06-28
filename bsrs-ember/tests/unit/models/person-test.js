@@ -17,7 +17,6 @@ import AD from 'bsrs-ember/vendor/defaults/address';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import PERSON_LD from 'bsrs-ember/vendor/defaults/person-location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
-import StgD from 'bsrs-ember/vendor/defaults/setting';
 
 var store, uuid, person, role, run = Ember.run;
 

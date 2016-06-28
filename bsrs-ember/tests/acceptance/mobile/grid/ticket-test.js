@@ -6,7 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
-import SD from 'bsrs-ember/vendor/defaults/setting';
+import TENANT_DEFAULTS from 'bsrs-ember/vendor/defaults/tenant';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
@@ -49,7 +49,7 @@ module('Acceptance | grid mobile test', {
 
 test('only renders grid items from server and not other ticket objects already in store', assert => {
   /* MOBILE doesn't clear out grid items on every route call to allow for infinite scrolling. If other tickets in store, this will fail */
-  xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: SD.dashboard_text}});
+  xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
   xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   visit(DASHBOARD_URL);
   andThen(() => {

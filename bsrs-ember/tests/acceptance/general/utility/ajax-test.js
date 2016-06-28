@@ -9,7 +9,7 @@ import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr'; //kill this soon plz
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
-import SD from 'bsrs-ember/vendor/defaults/setting';
+import TENANT_DEFAULTS from 'bsrs-ember/vendor/defaults/tenant';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_people_url;
@@ -24,7 +24,7 @@ var application;
 module('Acceptance | ajax async test helper tests', {
   beforeEach() {
     application = startApp();
-    xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: SD.dashboard_text}});
+    xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
     xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   },
   afterEach() {

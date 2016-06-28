@@ -7,7 +7,7 @@ import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
-import SD from 'bsrs-ember/vendor/defaults/setting';
+import TENANT_DEFAULTS from 'bsrs-ember/vendor/defaults/tenant';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import page from 'bsrs-ember/tests/pages/dtd';
@@ -50,7 +50,7 @@ test('visiting /dtds', (assert) => {
 });
 
 test('admin to dtds list to detail && preview', (assert) => {
-  xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: SD.dashboard_text}});
+  xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
   xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   generalPage.visitDashboard();
   andThen(() => {
@@ -119,7 +119,7 @@ test('search grid', (assert) => {
 });
 
 test('detail && preview are bound and can save', (assert) => {
-  xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: SD.dashboard_text}});
+  xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
   xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   generalPage.visitDashboard();
   andThen(() => {

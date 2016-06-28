@@ -7,7 +7,6 @@ import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import PD from 'bsrs-ember/vendor/defaults/person';
-import SD from 'bsrs-ember/vendor/defaults/setting';
 
 var store, uuid, role, run = Ember.run;
 

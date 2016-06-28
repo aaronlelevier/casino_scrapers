@@ -20,7 +20,6 @@ import personPage from 'bsrs-ember/tests/pages/person';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import settingPage from 'bsrs-ember/tests/pages/settings';
 import inputCurrencyPage from 'bsrs-ember/tests/pages/input-currency';
-import {role_settings, role_settingsOther} from 'bsrs-ember/tests/helpers/payloads/role';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
 import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
 

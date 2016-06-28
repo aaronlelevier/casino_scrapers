@@ -5,12 +5,12 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
-import SD from 'bsrs-ember/vendor/defaults/setting';
-import SF from 'bsrs-ember/vendor/setting_fixtures';
+import TD from 'bsrs-ember/vendor/defaults/tenant';
+import TF from 'bsrs-ember/vendor/tenant_fixtures';
 
 const ADMIN_URL = '/admin';
 const PREFIX = config.APP.NAMESPACE;
-const SETTING_URL = BASEURLS.base_setting_url + '/' + SD.id;
+const SETTING_URL = BASEURLS.base_setting_url + '/' + TD.id;
 const ADMINPANEL = '.t-side-menu';
 
 var application, store, endpoint, setting_data, detail_xhr;
@@ -20,7 +20,7 @@ module('Acceptance | admin settings layout test', {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + SETTING_URL + '/';
-    setting_data = SF.detail();
+    setting_data = TF.detail();
     detail_xhr = xhr(endpoint, 'GET', null, {}, 200, setting_data);
   },
   afterEach() {
