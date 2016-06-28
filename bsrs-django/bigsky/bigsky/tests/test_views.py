@@ -354,6 +354,7 @@ class BootstrappedDataTests(TestCase):
         self.assertEqual(data['locale'], str(self.person.locale.id))
         self.assertEqual(data['role'], str(self.person.role.id))
         self.assertEqual(data['tenant'], str(self.person.role.tenant.id))
+        self.assertIn('inherited', data)
         self.assertEqual(data['locations'][0]['id'], str(self.person.locations.first().id))
         self.assertEqual(data['locations'][0]['number'], self.person.locations.first().number)
         self.assertEqual(data['locations'][0]['location_level'], str(self.person.locations.first().location_level.id))

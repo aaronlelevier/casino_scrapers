@@ -384,7 +384,7 @@ class Person(SettingMixin, BaseModel, AbstractUser):
             'tenant': str(self.role.tenant.id),
             'locations': locations,
             'status_fk': str(self.status.id),
-            'settings': self.combined_settings()
+            'inherited': self.inherited()
         }
 
     def to_simple_dict(self):
