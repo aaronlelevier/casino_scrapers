@@ -51,8 +51,8 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Edit
     },
     changeBool(key) {
       const store = this.get('simpleStore');
-      let setting = store.find('person', this.get('model.id'));
-      setting.toggleProperty(key);
+      let model = store.find('person', this.get('model.id'));
+      model.toggleProperty(key);
     }
   }
 });

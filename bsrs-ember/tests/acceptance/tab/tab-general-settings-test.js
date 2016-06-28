@@ -43,7 +43,6 @@ test('deep linking the settings detail url should push a tab into the tab store 
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
         let tab = store.find('tab', TD.id);
-        console.log(TD.id)
         assert.equal(find('.t-tab-title:eq(0)').text(), t('admin.general.other'));
         assert.equal(tab.get('module'), DOC_TYPE);
         assert.equal(tab.get('routeName'), DETAIL_ROUTE);

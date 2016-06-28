@@ -71,10 +71,10 @@
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
-            {{#if model.settings_object.auth_amount.inherits_from}}
+            {{#if model.inherited.auth_amount.inherits_from}}
             <p class="inherited-msg t-inherited-msg-auth_amount">
-              {{#link-to "admin.roles.role" model.settings_object.auth_amount.inherits_from_id class="t-inherited-msg-auth_amount-link"}}
-              {{t "crud.inherited_from" from=model.settings_object.auth_amount.inherits_from}}
+              {{#link-to "admin.roles.role" model.inherited.auth_amount.inherits_from_id class="t-inherited-msg-auth_amount-link"}}
+              {{t "crud.inherited_from" from=model.inherited.auth_amount.inherits_from}}
               {{/link-to}}
             </p>
             {{/if}}
@@ -82,8 +82,8 @@
               model=model
               field="auth_amount"
               currencyField="auth_currency"
-              placeholder=(t 'crud.default_value' value=model.settings_object.auth_amount.inherited_value)
-              inheritsFrom=model.settings_object.auth_amount.inherits_from
+              placeholder=(t 'crud.default_value' value=model.inherited.auth_amount.inherited_value)
+              inheritsFrom=model.inherited.auth_amount.inherits_from
             }}
             {{/form-group}}
           </div>
@@ -209,8 +209,8 @@
               <span class="t-person-accept_assign-label">{{t "admin.setting.accept_assign"}}</span>
             </label>
             <p class="inherited-msg--under">
-              {{#link-to "admin.roles.role" model.settings_object.accept_assign.inherits_from_id class="t-inherited-msg-accept_assign-link"}}
-              <span class="t-person-accept_assign-label-inherits_from">{{t "crud.inherited_from" from=model.settings_object.accept_assign.inherits_from}}</span>
+              {{#link-to "admin.roles.role" model.inherited.accept_assign.inherits_from_id class="t-inherited-msg-accept_assign-link"}}
+              <span class="t-person-accept_assign-label-inherits_from">{{t "crud.inherited_from" from=model.inherited.accept_assign.inherits_from}}</span>
               {{/link-to}}
             </p>
           </div>
@@ -220,8 +220,8 @@
               <span class="t-person-accept_notify-label">{{t "admin.setting.accept_notify"}}</span>
             </label>
             <p class="inherited-msg--under">
-              {{#link-to "admin.roles.role" model.settings_object.accept_notify.inherits_from_id class="t-inherited-msg-accept_notify-link"}}
-              <span class="t-person-accept_notify-label-inherits_from">{{t "crud.inherited_from" from=model.settings_object.accept_notify.inherits_from}}</span>
+              {{#link-to "admin.roles.role" model.inherited.accept_notify.inherits_from_id class="t-inherited-msg-accept_notify-link"}}
+              <span class="t-person-accept_notify-label-inherits_from">{{t "crud.inherited_from" from=model.inherited.accept_notify.inherits_from}}</span>
               {{/link-to}}
             </p>
           </div>

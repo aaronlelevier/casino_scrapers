@@ -56,7 +56,7 @@ var DEFAULT_GENERIAL_TENANT = (function() {
 
 if (typeof window === 'undefined') {
   var dtd = require('./dtd');
-  var currency = require('./currency');
+  var currency = require('./currencies');
   module.exports = new DEFAULT_GENERIAL_TENANT(dtd, currency).defaults();
 }
 else {

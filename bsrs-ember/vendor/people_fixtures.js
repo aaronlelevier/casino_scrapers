@@ -51,8 +51,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
       phone_numbers: [],
       phone_numbers: [],
       addresses: [],
-      locale: this.locale_defaults.idOne,
-      settings: this.person_defaults.settings
+      locale: this.locale_defaults.idOne
     }
   },
   factory.prototype.generate_single_for_list = function(i) {
@@ -124,9 +123,10 @@ var BSRS_PEOPLE_FACTORY = (function() {
     person.phone_numbers = this.phone_number_fixtures.get();
     person.addresses = this.address_fixtures.get();
     person.locations = [this.location_fixtures.get_fk()];
+    person.inherited = this.person_defaults.inherited;
     return person;
   };
-  factory.prototype.put = function(person, settings) {
+  factory.prototype.put = function(person) {
     var response = this.generate_list(person.id);
     response.emails = this.emails.put();
     response.phone_numbers = this.phone_number_fixtures.put();
@@ -136,13 +136,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
     response.locale = this.person_defaults.locale_id;
     response.locations = [this.location_defaults.idOne];
     response.auth_currency = response.auth_currency || null
-    response.settings = settings || {
-      settings: {
-        accept_assign: this.person_defaults.settings.accept_assign.value,
-        accept_notify: this.person_defaults.settings.accept_notify.value,
-        password_one_time: this.person_defaults.settings.password_one_time.value
-      }
-    };
     for(var key in person) {
       response[key] = person[key];
     }

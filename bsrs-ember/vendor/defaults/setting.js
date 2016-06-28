@@ -54,7 +54,7 @@ var DEFAULT_GENERIAL_SETTINGS = (function() {
 
 if (typeof window === 'undefined') {
     var dtd = require('./dtd');
-    var currency = require('./currency');
+    var currency = require('./currencies');
     module.exports = new DEFAULT_GENERIAL_SETTINGS(dtd, currency).defaults();
 } else {
     define('bsrs-ember/vendor/defaults/setting',

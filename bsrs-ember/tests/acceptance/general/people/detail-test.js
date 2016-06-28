@@ -286,11 +286,11 @@ test('currency helper displays inherited auth_amount, and can click link-to to g
 test('can change currency by clicking it and selecting another currency', assert => {
   page.visitDetail();
   andThen(() => {
-  assert.equal(currentURL(), DETAIL_URL);
-  assert.equal(inputCurrencyPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
-  let person = store.find('person', PD.id);
-  assert.equal(person.get('settings_object').auth_currency.inherited_value, CURRENCY_DEFAULTS.id);
-  assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.code);
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(inputCurrencyPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
+    let person = store.find('person', PD.id);
+    assert.equal(person.get('inherited').auth_currency.inherited_value, CURRENCY_DEFAULTS.id);
+    assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.code);
   });
   selectChoose('.t-currency-code', CURRENCY_DEFAULTS.codeCAD);
   andThen(() => {
@@ -1336,51 +1336,49 @@ test('settings values, placeholers, and inherited froms', assert => {
     assert.equal(currentURL(), DETAIL_URL);
     // inherited
     assert.equal(page.acceptAssignLabelText, translations['admin.setting.accept_assign']);
-    assert.equal(page.acceptAssignChecked(), PD.settings.accept_assign.inherited_value);
+    assert.equal(page.acceptAssignChecked(), PD.inherited.accept_assign.inherited_value);
     assert.equal(page.acceptAssignInheritedFromLabelText, 'Inherited from: ' + StgD.inherits_from_role);
     assert.equal(page.acceptNotifyLabelText, translations['admin.setting.accept_notify']);
-    assert.equal(page.acceptNotifyChecked(), PD.settings.accept_notify.inherited_value);
+    assert.equal(page.acceptNotifyChecked(), PD.inherited.accept_notify.inherited_value);
     assert.equal(page.acceptNotifyInheritedFromLabelText, 'Inherited from: ' + StgD.inherits_from_role);
     // not inherited
-
     page.clickChangePassword();
     andThen(() => {
       assert.equal(page.passwordOneTimeLabelText, translations['admin.setting.password_one_time']);
-      assert.equal(page.passwordOneTimeChecked(), PD.settings.password_one_time.value);
+      assert.notOk(page.passwordOneTimeChecked());
+    });
+    page.passwordOneTimeClick();
+    andThen(() => {
+      assert.ok(page.passwordOneTimeChecked());
     });
   });
 });
 
-test('update all settings', assert => {
+test('update accept_assign accept_notify password_one_time', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.acceptAssignChecked(), PD.settings.accept_assign.inherited_value);
-    assert.equal(page.acceptNotifyChecked(), PD.settings.accept_notify.inherited_value);
+    assert.equal(page.acceptAssignChecked(), PD.inherited.accept_assign.inherited_value);
+    assert.equal(page.acceptNotifyChecked(), PD.inherited.accept_notify.inherited_value);
     page.clickChangePassword();
     andThen(() => {
-      assert.equal(page.passwordOneTimeChecked(), PD.settings.password_one_time.value);
+      assert.equal(page.passwordOneTimeLabelText, translations['admin.setting.password_one_time']);
+      assert.notOk(page.passwordOneTimeChecked());
+    });
+    page.passwordOneTimeClick();
+    andThen(() => {
+      assert.ok(page.passwordOneTimeChecked());
     });
   });
-
   page.acceptAssignClick();
   page.acceptNotifyClick();
-  page.passwordOneTimeClick();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.acceptAssignChecked(), !PD.settings.accept_assign.inherited_value);
-    assert.equal(page.acceptNotifyChecked(), !PD.settings.accept_notify.inherited_value);
-    assert.equal(page.passwordOneTimeChecked(), !PD.settings.password_one_time.value);
+    assert.equal(page.acceptAssignChecked(), !PD.inherited.accept_assign.inherited_value);
+    assert.equal(page.acceptNotifyChecked(), !PD.inherited.accept_notify.inherited_value);
   });
   let person = store.find('person', {id: PD.id});
-  let settings = {
-    settings: {
-      accept_assign: !PD.settings.accept_assign.inherited_value,
-      accept_notify: !PD.settings.accept_notify.inherited_value,
-      password_one_time: !PD.settings.password_one_time.inherited_value
-    }
-  };
-  let payload = PF.put({id: PD.id}, settings);
+  let payload = PF.put({id: PD.id});
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {

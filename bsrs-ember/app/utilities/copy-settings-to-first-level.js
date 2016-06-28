@@ -3,7 +3,6 @@ import Ember from 'ember';
 var copySettingsToFirstLevel = (obj) => {
   var newState = {};
   var inherited = obj.inherited || {};
-
   for(var s in inherited) {
     var inheritedKeys = inherited[s];
     var keys = Object.keys(inheritedKeys);
