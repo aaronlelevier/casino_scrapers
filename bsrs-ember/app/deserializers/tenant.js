@@ -7,6 +7,7 @@ export default Ember.Object.extend({
     if (!existing_tenant.get('id') || existing_tenant.get('isNotDirtyOrRelatedNotDirty')) {
       let tenant = store.push('tenant', response);
       tenant.save();
+      return tenant;
     }
   }
 });
