@@ -90,8 +90,8 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     categories: [CD.idOne],
   }));
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-  fillIn('.t-role-name', RD.namePut);
-  fillIn('.t-settings-dashboard_text', TD.dashboard_textOther);
+  page.nameFill(RD.namePut);
+  page.dashboard_textFill(TD.dashboard_textOther);
   selectChoose('.t-role-role-type', RD.roleTypeContractor);
   selectChoose('.t-location-level-select', LLD.nameLossPreventionRegion);
   andThen(() => {
@@ -114,23 +114,23 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
 test('validation works and when hit save, we do same post', (assert) => {
   visit(DETAIL_URL);
   andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':hidden'));
+    assert.ok(page.nameValidationErrorHidden());
   });
   fillIn('.t-role-name', '');
   page.categoryOneRemove();
   generalPage.save();
   andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':visible'));
+    assert.ok(page.nameValidationErrorVisible());
   });
   fillIn('.t-role-name', RD.nameOne);
   andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':hidden'));
+    assert.ok(page.nameValidationErrorHidden());
   });
   xhr(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
   page.categoryClickDropdown();
   page.categoryClickOptionOneEq();
   andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':hidden'));
+    assert.ok(page.nameValidationErrorHidden());
   });
   let payload = RF.put(Object.assign(basePayload, {categories: [CD.idOne]}));
   let response = Ember.$.extend(true, {}, payload);
@@ -156,12 +156,13 @@ test('when you change a related location level it will be persisted correctly', 
     assert.equal(currentURL(), ROLE_URL);
   });
 });
+
 test('clicking cancel button will take from detail view to list view', (assert) => {
   visit(ROLE_URL);
   andThen(() => {
     assert.equal(currentURL(), ROLE_URL);
   });
-  click('.t-grid-data:eq(0)');
+  generalPage.gridItemZeroClick();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
   });
@@ -174,24 +175,24 @@ test('clicking cancel button will take from detail view to list view', (assert) 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
   clearxhr(list_xhr);
   visit(DETAIL_URL);
-  fillIn('.t-role-name', RD.namePut);
+  page.nameFill(RD.namePut);
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(Ember.$('.ember-modal-dialog'));
-      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
-      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
-      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
-      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
+      assert.ok(generalPage.modalIsVisible);
+      assert.equal(generalPage.modalTitleValue(), t('crud.discard_changes'));
+      assert.equal(generalPage.modalBodyValue(), t('crud.discard_changes_confirm'));
+      assert.equal(generalPage.modalRollbackBtnValue(), t('crud.yes'));
+      assert.equal(generalPage.modalCancelBtnValue(), t('crud.no'));
     });
   });
   generalPage.clickModalCancel();
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.equal(find('.t-role-name').val(), RD.namePut);
-      assert.throws(Ember.$('.ember-modal-dialog'));
+      assert.equal(page.nameValue, RD.namePut);
+      assert.throws(generalPage.modalIsVisible);
     });
   });
 });

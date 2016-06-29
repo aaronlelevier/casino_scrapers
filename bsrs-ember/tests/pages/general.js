@@ -22,7 +22,14 @@ var GeneralPage = PageObject.create({
   clickLaunchDTTicket: clickable('.t-launch-dt-ticket'),
   clickHomeModalShow: clickable('.t-home-modal-show'),
   isDirty: hasClass('dirty', 'i', {scope: '.t-tab-close'}),
-  clickGeneralSettingsLink: clickable('.t-general-settings')
+  clickGeneralSettingsLink: clickable('.t-general-settings'),
+
+  gridItemZeroClick: clickable('.t-grid-data:eq(0)'),
+
+  modalBodyValue: () => Ember.$('.t-modal-body').text().trim(),
+  modalCancelBtnValue: () => Ember.$('.t-modal-cancel-btn').text().trim(),
+  modalRollbackBtnValue: () => Ember.$('.t-modal-rollback-btn').text().trim(),
+  modalTitleValue: () => Ember.$('.t-modal-title').text().trim(),
 });
 
 export default GeneralPage;
