@@ -49,7 +49,6 @@ test('person detail example setup', function(assert) {
       id: PD.id,
       auth_amount: CD.authAmountOne,
       auth_currency: CD.id,
-      settings_object: PD.settings
     });
   });
   this.set('model', model);
@@ -57,8 +56,8 @@ test('person detail example setup', function(assert) {
                 model=model
                 field="auth_amount"
                 currencyField="auth_currency"
-                placeholder=(t 'crud.default_value' value=model.settings_object.auth_amount.inherited_value)
-                inheritsFrom=model.settings_object.auth_amount.inherits_from
+                placeholder=(t 'crud.default_value' value=model.inherited.auth_amount.inherited_value)
+                inheritsFrom=model.inherited.auth_amount.inherits_from
               }}`);
   var $component = this.$('.t-input-currency');
   $component.find('.t-amount').trigger('blur');
@@ -125,7 +124,6 @@ test('renders a component with no value when bound attr is undefined', function(
     model = store.push('person', {
       id: PD.id,
       auth_amount: undefined,
-      settings_object: PD.settings
     });
   });
   this.set('model', model);
@@ -133,7 +131,7 @@ test('renders a component with no value when bound attr is undefined', function(
                      model=model
                      field="auth_amount"
                      currencyField="auth_currency"
-                     inheritsFrom=model.settings_object.auth_amount.inherits_from
+                     inheritsFrom=model.inherited.auth_amount.inherits_from
                    }}`);
   var $component = this.$('.t-input-currency');
   assert.equal($component.find('.t-amount').val(), '');
@@ -144,7 +142,6 @@ test('if the person does not have a currency, use their inherited currency from 
     model = store.push('person', {
       id: PD.id,
       auth_amount: 0,
-      settings_object: PD.settings
     });
   });
   this.set('model', model);
@@ -152,7 +149,7 @@ test('if the person does not have a currency, use their inherited currency from 
                 model=model
                 field="auth_amount"
                 currencyField="auth_currency"
-                inheritsFrom=model.settings_object.auth_amount.inherits_from
+                inheritsFrom=model.inherited.auth_amount.inherits_from
               }}`);
   var $component = this.$('.t-input-currency');
   $component.find('.t-amount').trigger('blur');
@@ -171,7 +168,6 @@ test('renders a component with currency and label', function(assert) {
       id: PD.id,
       auth_amount: LONG_AUTH_AMOUNT,
       currency: CD.id,
-      settings_object: PD.settings
     });
   });
   this.set('model', model);
@@ -179,7 +175,7 @@ test('renders a component with currency and label', function(assert) {
                 model=model
                 field="auth_amount"
                 currencyField="auth_currency"
-                inheritsFrom=model.settings_object.auth_amount.inherits_from
+                inheritsFrom=model.inherited.auth_amount.inherits_from
               }}`);
   var $component = this.$('.t-input-currency');
   $component.find('.t-amount').trigger('blur');
@@ -194,7 +190,6 @@ test('the models bound field will update both the formatted input value and the 
       id: PD.id,
       auth_amount: LONG_AUTH_AMOUNT,
       currency: CD.id,
-      settings_object: PD.settings
     });
   });
   this.set('model', model);
@@ -202,7 +197,7 @@ test('the models bound field will update both the formatted input value and the 
                 model=model
                 field="auth_amount"
                 currencyField="auth_currency"
-                inheritsFrom=model.settings_object.auth_amount.inherits_from
+                inheritsFrom=model.inherited.auth_amount.inherits_from
               }}`);
   var $component = this.$('.t-input-currency');
   $component.find('.t-amount').val('30').trigger('blur');
@@ -217,7 +212,6 @@ test('t-amount placeholder should be defaulted if is not passed into component',
   run(function() {
     model = store.push('person', {
       id: PD.id,
-      settings_object: PD.settings
     });
   });
   this.set('model', model);
@@ -225,7 +219,7 @@ test('t-amount placeholder should be defaulted if is not passed into component',
                 model=model
                 field="auth_amount"
                 currencyField="auth_currency"
-                inheritsFrom=model.settings_object.auth_amount.inherits_from
+                inheritsFrom=model.inherited.auth_amount.inherits_from
               }}`);
   var $component = this.$('.t-input-currency');
   assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('admin.amount_and_default_value'));
@@ -235,7 +229,6 @@ test('t-amount placeholder is not defaulted if is passed into component', functi
   run(function() {
     model = store.push('person', {
       id: PD.id,
-      settings_object: PD.settings
     });
   });
   this.set('model', model);
@@ -243,7 +236,7 @@ test('t-amount placeholder is not defaulted if is passed into component', functi
                 model=model
                 field="auth_amount"
                 currencyField="auth_currency"
-                inheritsFrom=model.settings_object.auth_amount.inherits_from
+                inheritsFrom=model.inherited.auth_amount.inherits_from
                 placeholder="foo"
               }}`);
   var $component = this.$('.t-input-currency');

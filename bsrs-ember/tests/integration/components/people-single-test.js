@@ -62,7 +62,7 @@ moduleForComponent('person-single', 'integration: person-single test', {
 
 test('dropdown displays correct print and duplicate text', function(assert) {
   run(() => {
-    this.set('model', store.push('person', {id: PD.id, settings_object: PD.settings}));
+    this.set('model', store.push('person', {id: PD.id}));
   });
   this.render(hbs`{{people/person-single model=model}}`);
   this.$('.t-dropdown-delete').click();
@@ -73,7 +73,7 @@ test('dropdown displays correct print and duplicate text', function(assert) {
 test('validation on person username works if clear out username', function(assert) {
   var done = assert.async();
   run(() => {
-    this.set('model', store.push('person', {id: PD.id, username: 'foo', settings_object: PD.settings}));
+    this.set('model', store.push('person', {id: PD.id, username: 'foo'}));
   });
   this.render(hbs`{{people/person-single model=model}}`);
   let $component = this.$('.has-error');
@@ -92,7 +92,7 @@ test('validation on person username works if clear out username', function(asser
 
 test('filling in valid one char middle initial will not reveal validation messages', function(assert) {
   run(() => {
-    this.set('model', store.push('person', {id: PD.id, settings_object: PD.settings}));
+    this.set('model', store.push('person', {id: PD.id}));
   });
   this.render(hbs`{{people/person-single model=model}}`);
   var $component = this.$('.t-middle-initial-validator .error');
@@ -105,7 +105,7 @@ test('filling in valid one char middle initial will not reveal validation messag
 test('filling in more than 1 char middle initial will reveal validation messages', function(assert) {
   var done = assert.async();
   run(() => {
-    this.set('model', store.push('person', {id: PD.id, settings_object: PD.settings}));
+    this.set('model', store.push('person', {id: PD.id}));
   });
   this.render(hbs`{{people/person-single model=model}}`);
   var $component = this.$('.t-middle-initial-validator .error');
@@ -121,7 +121,7 @@ test('filling in more than 1 char middle initial will reveal validation messages
 
 test('filling in invalid email reveal validation messages', function(assert) {
   run(() => {
-    this.model = store.push('person', {id: PD.id, settings_object: PD.settings});
+    this.model = store.push('person', {id: PD.id});
   });
   this.email_types = email_types;
   this.default_email_type = default_email_type;
@@ -144,7 +144,7 @@ test('filling in invalid email reveal validation messages', function(assert) {
 
 test('filling in invalid phone number reveal validation messages', function(assert) {
   run(() => {
-    this.model = store.push('person', {id: PD.id, settings_object: PD.settings});
+    this.model = store.push('person', {id: PD.id});
   });
   this.phone_number_types = phone_number_types;
   this.default_phone_number_type = default_phone_number_type;
@@ -167,7 +167,7 @@ test('filling in invalid phone number reveal validation messages', function(asse
 
 test('filling in invalid address reveals validation messages', function(assert) {
   run(() => {
-    this.model = store.push('person', {id: PD.id, settings_object: PD.settings});
+    this.model = store.push('person', {id: PD.id});
   });
   this.address_types = address_types;
   this.default_address_type = default_address_type;
@@ -204,7 +204,7 @@ test('filling in invalid address reveals validation messages', function(assert) 
 
 test('can remove a new phone number', function(assert) {
   run(() => {
-    this.model = store.push('person', {id: PD.id, settings_object: PD.settings});
+    this.model = store.push('person', {id: PD.id});
   });
   this.phone_number_types = phone_number_types;
   this.default_phone_number_type = default_phone_number_type;
@@ -217,7 +217,7 @@ test('can remove a new phone number', function(assert) {
 
 test('can add and remove new email', function(assert) {
   run(() => {
-    this.model = store.push('person', {id: PD.id, settings_object: PD.settings});
+    this.model = store.push('person', {id: PD.id});
   });
   this.email_types = email_types;
   this.default_email_type = default_email_type;
@@ -230,7 +230,7 @@ test('can add and remove new email', function(assert) {
 
 test('can add and remove new address', function(assert) {
   run(() => {
-    this.model = store.push('person', {id: PD.id, settings_object: PD.settings});
+    this.model = store.push('person', {id: PD.id});
   });
   this.address_types = address_types;
   this.default_address_type = default_address_type;
