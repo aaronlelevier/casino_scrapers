@@ -1,6 +1,3 @@
-import copy
-import json
-
 from django.test import TestCase
 
 from rest_framework.test import APITestCase
@@ -12,7 +9,7 @@ from person.tests.factory import create_person, create_single_person, PASSWORD
 from utils.validators import (
     regex_check_contains, contains_digit, contains_upper_char,
     contains_lower_char, contains_special_char, contains_no_whitespaces,
-    SettingsValidator, valid_email, valid_phone, SettingsValidator)
+    valid_email, valid_phone)
 
 
 class UniqueForActiveValidatorTests(APITestCase):

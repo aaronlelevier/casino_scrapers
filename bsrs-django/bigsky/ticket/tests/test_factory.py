@@ -15,7 +15,6 @@ from person.models import Person
 from person.tests.factory import create_single_person, DistrictManager
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
-from ticket.serializers import TicketSerializer
 from ticket.tests import factory, factory_related
 from utils.helpers import generate_uuid
 
