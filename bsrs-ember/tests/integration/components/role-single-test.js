@@ -6,9 +6,6 @@ import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import translations from "bsrs-ember/vendor/translation_fixtures";
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import repository from 'bsrs-ember/tests/helpers/repository';
-import RD from 'bsrs-ember/vendor/defaults/role';
-import TD from 'bsrs-ember/vendor/defaults/tenant';
 import CD from 'bsrs-ember/vendor/defaults/currencies';
 
 var store, run = Ember.run, person_repo, trans;
