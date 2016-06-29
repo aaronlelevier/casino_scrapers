@@ -16,5 +16,11 @@ export default Ember.Component.extend({
     updateCheckbox(column_field) {
       this.attrs.updateGridFilterParams(column_field);
     },
-  }
+  },
+  /* test classes START */
+  classNameBindings: ['className'],
+  className: Ember.computed(function() {
+    return `t-checkbox-options-${this.get('column.classNames')}`;
+  }),
+  /* test classes END */
 });

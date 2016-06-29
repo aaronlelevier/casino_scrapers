@@ -25,6 +25,8 @@ export let columns = [
     isSearchable: true,
     templateName: 'tickets/ticket-status-tag',
     classNames: ['ticket-status'],
+    filterComponent: 'grid/filters/checkbox-list',
+    filterModelName: 'ticket-status',
     multiple: true,
   },
   {

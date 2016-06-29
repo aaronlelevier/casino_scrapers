@@ -151,7 +151,7 @@ test('ticket request filter will filter down results and reset page to 1', async
   assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestLastPage2Grid);
 });
 
-test('sorting on priority will sort when filter is clicked', async assert => {
+test('filtering on priority will sort when filter is clicked', async assert => {
   xhr(`${PREFIX}${BASE_URL}/?page=1&priority__id__in=${TD.priorityOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
   await visit(TICKET_URL);
   assert.equal(store.find('ticket-list').get('length'), 10);
@@ -178,6 +178,30 @@ test('sorting on priority will sort when filter is clicked', async assert => {
   await page.priorityTwoCheck();
   xhr(`${PREFIX}${BASE_URL}/?page=1&priority__id__in=${TD.priorityOneId},${TD.priorityTwoId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityTwoId, 'priority'));
   await generalPage.submitFilterSort();
+});
+
+test('filtering on multiple parameters', async assert => {
+  xhr(`${PREFIX}${BASE_URL}/?page=1&priority__id__in=${TD.priorityOneId}&status__id__in=${TD.statusOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
+  await visit(TICKET_URL);
+  assert.equal(store.find('ticket-list').get('length'), 10);
+  await generalPage.clickFilterOpen();
+  assert.equal(find('.t-filter__input-wrap').length, 0);
+  await page.clickFilterPriority();
+  await page.priorityOneCheck();
+  await page.clickFilterStatus();
+  await page.statusOneCheck();
+  await generalPage.submitFilterSort();
+  // assert.equal(store.find('ticket-list').get('length'), 10);
+  // assert.equal(find('.t-grid-data:eq(0) > .t-ticket-priority-translated_name span').text().trim(), t('ticket.priority.emergency'));
+  // await generalPage.clickFilterOpen();
+  // assert.equal(find('.t-filter__input-wrap').length, 1);
+  // assert.equal(page.priorityOneIsChecked(), true);
+  // assert.equal(page.priorityTwoIsChecked(), false);
+  // assert.equal(page.priorityThreeIsChecked(), false);
+  // assert.equal(page.priorityFourIsChecked(), false);
+  // await page.priorityTwoCheck();
+  // xhr(`${PREFIX}${BASE_URL}/?page=1&priority__id__in=${TD.priorityOneId},${TD.priorityTwoId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityTwoId, 'priority'));
+  // await generalPage.submitFilterSort();
 });
 
 

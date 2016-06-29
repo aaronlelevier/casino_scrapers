@@ -45,11 +45,13 @@ var GridRepositoryMixin = Ember.Mixin.create({
     }
     /* id__in can contain multiple id's for one field; however, assigning multiple ids to a field is done @ component level */
     if(id_in) {
-      const key_values = id_in.split(',');
+      const key_values = id_in.split('|');
       key_values.forEach((key_value) => {
         /* key='location' value='143ad-adie32,30843d-adc342, 121ae-...' */
         const [key, value] = key_value.split(':');
-        endpoint = endpoint + '&' + key + '__id__in=' + value.replace(/\|/g, ',').replace(/,+$/g, '');
+        if(value) {
+          endpoint = endpoint + '&' + key + '__id__in=' + value//.replace(/|/g, ',')//.replace(/,+$/g, '');
+        }
       });
     }
     return endpoint;

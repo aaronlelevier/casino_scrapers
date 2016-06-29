@@ -6,7 +6,7 @@ export default Ember.Component.extend({
   init(){
     this._super(...arguments);
     this.mobileFilterInput = false;
-    //TODO: need to do for gridFilterParams as well
+    /* filter on value for input */
     const existingFilter = this.get('gridIdInParams')[this.get('column.field')];
     if(existingFilter){
       this.set('initialVal', existingFilter);
@@ -49,11 +49,13 @@ export default Ember.Component.extend({
       const column = this.get('column');
       if(column.multiple) {
         const gridIdInParams = this.get('gridIdInParams');
-        if(gridIdInParams[column.field]) {
-          gridIdInParams[column.field] = gridIdInParams[column.field].concat(val).uniq();
-        } else {
-          gridIdInParams[column.field] = [val];
-        }
+        const fieldValues = gridIdInParams[column.field] || [];
+        gridIdInParams[column.field] = fieldValues.concat(val).uniq();
+        // if(gridIdInParams[column.field]) {
+        //   gridIdInParams[column.field] = gridIdInParams[column.field].concat(val).uniq();
+        // } else {
+        //   gridIdInParams[column.field] = [val];
+        // }
       } else {
         const gridFilterParams = this.get('gridFilterParams');
         gridFilterParams[column.field] = val;
