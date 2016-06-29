@@ -6,7 +6,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
 let {
-  visitable, 
+  visitable,
   clickable,
   text,
   count
@@ -36,7 +36,6 @@ const PARENTS_FOUR = `${PARENTS}:eq(3)`;
 const PARENTS_DROPDOWN = `.ember-basic-dropdown-content > ${options}`;
 
 export default PageObject.create({
-  visit: visitable('/'),
   visitDetail: visitable(DETAIL_URL),
   visitNew: visitable(NEW_URL),
 
@@ -89,4 +88,3 @@ export default PageObject.create({
   parentsOptionLength: count(`${PARENTS_DROPDOWN} > li`),
   // parentssSelected: count(PARENTSS),
 });
-

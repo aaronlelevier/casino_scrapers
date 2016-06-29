@@ -9,7 +9,6 @@ const CHILDREN_ONE = `${CHILDREN_MULTIPLE}:eq(0)`;
 const CHILDREN_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
 
 export default PageObject.create({
-  visit: visitable('/'),
   childrenClickDropdown: clickable(CHILDREN),
   childrenSelected: text(CHILDREN_ONE),
   childrenOneRemove: clickable(`${CHILDREN_ONE} > .ember-power-select-multiple-remove-btn`),

@@ -44,6 +44,4 @@ export default PageObject.create({
   roleTypeClickDropdown: clickable(ROLETYPE),
   roleTypeClickOptionOne: clickable(`${ROLETYPE_DROPDOWN} > .ember-power-select-option:contains(${RD.roleTypeGeneral})`),
   roleTypeClickOptionTwo: clickable(`${ROLETYPE_DROPDOWN} > .ember-power-select-option:contains(${RD.roleTypeContractor})`),
-
-  visit: visitable('/'),
 });
