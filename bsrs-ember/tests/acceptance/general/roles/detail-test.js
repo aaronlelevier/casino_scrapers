@@ -206,11 +206,11 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(Ember.$('.ember-modal-dialog'));
-      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
-      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
-      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
-      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
+      assert.ok(generalPage.modalIsVisible);
+      assert.equal(generalPage.modalTitleValue(), t('crud.discard_changes'));
+      assert.equal(generalPage.modalBodyValue(), t('crud.discard_changes_confirm'));
+      assert.equal(generalPage.modalRollbackBtnValue(), t('crud.yes'));
+      assert.equal(generalPage.modalCancelBtnValue(), t('crud.no'));
     });
   });
   generalPage.clickModalRollback();
@@ -219,7 +219,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
       assert.equal(currentURL(), ROLE_URL);
       let role = store.find('role', RD.idOne);
       assert.equal(role.get('name'), RD.nameOne);
-      assert.throws(Ember.$('.ember-modal-dialog'));
+      assert.throws(generalPage.modalIsVisible);
     });
   });
 });
@@ -231,10 +231,10 @@ test('when click delete, modal displays and when click ok, role is deleted and r
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(Ember.$('.ember-modal-dialog'));
-      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
-      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.delete.confirm', {module: 'role'}));
-      assert.equal(Ember.$('.t-modal-delete-btn').text().trim(), t('crud.delete.button'));
+      assert.ok(generalPage.modalIsVisible);
+      assert.equal(generalPage.modalTitleValue(), t('crud.delete.title'));
+      assert.equal(generalPage.modalBodyValue(), t('crud.delete.confirm', {module: 'role'}));
+      assert.equal(generalPage.modalDeleteBtnValue(), t('crud.delete.button'));
     });
   });
   xhr(`${PREFIX}${BASE_URL}/${RD.idOne}/`, 'DELETE', null, {}, 204, {});
@@ -243,7 +243,7 @@ test('when click delete, modal displays and when click ok, role is deleted and r
     waitFor(assert, () => {
       assert.equal(currentURL(), ROLE_URL);
       assert.equal(store.find('role', RD.idOne).get('length'), undefined);
-      assert.throws(Ember.$('.ember-modal-dialog'));
+      assert.throws(generalPage.modalIsVisible);
     });
   });
 });
@@ -368,23 +368,13 @@ test('search will filter down on categories in store correctly by removing and a
   });
 });
 
-test('settings - UI is populated for inherited correctly - inherited value from parent', (assert) => {
+test('for inherited field, can click link-to to get to inherited setting', (assert) => {
   clearxhr(list_xhr);
   visit(DETAIL_URL);
   andThen(() => {
-    assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + TD.dashboard_text);
-    assert.equal(find('.t-inherited-msg-dashboard_text').text().trim(), 'Inherited from: ' + TD.inherits_from_general);
-    assert.equal(find('.t-settings-dashboard_text').val(), '');
-  });
-});
-
-test('settings - override value from parent, can click link-to to get to inherited setting', (assert) => {
-  clearxhr(list_xhr);
-  visit(DETAIL_URL);
-  andThen(() => {
-    assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + TD.dashboard_text);
+    assert.equal(settingPage.dashboardPlaceholderValue(), 'Default: ' + TD.dashboard_text);
     assert.equal(settingPage.dashboardTextInheritedFrom, 'Inherited from: ' + TD.inherits_from_general);
-    assert.equal(find('.t-settings-dashboard_text').val(), "");
+    assert.equal(settingPage.dashboardTextValue, '');
   });
   xhr(`${PREFIX}/admin/tenant/${TD.id}/`, 'GET', null, {}, 200, {});
   settingPage.dashboardTextInheritedFromClick();
@@ -409,7 +399,6 @@ test('role has an auth_amount and auth_currency', assert => {
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-inherited-msg-auth_amount').text(), "");
     let role = store.find('role', RD.idOne);
     assert.equal(role.get('auth_currency'), null);
     assert.equal(role.get('inherited').auth_currency.inherited_value, CURRENCY_DEFAULTS.id);

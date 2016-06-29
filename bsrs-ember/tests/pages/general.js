@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import PageObject from 'bsrs-ember/tests/page-object';
 let { visitable, clickable, text, hasClass } = PageObject;
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
@@ -28,6 +29,7 @@ var GeneralPage = PageObject.create({
 
   modalBodyValue: () => Ember.$('.t-modal-body').text().trim(),
   modalCancelBtnValue: () => Ember.$('.t-modal-cancel-btn').text().trim(),
+  modalDeleteBtnValue: () => Ember.$('.t-modal-delete-btn').text().trim(),
   modalRollbackBtnValue: () => Ember.$('.t-modal-rollback-btn').text().trim(),
   modalTitleValue: () => Ember.$('.t-modal-title').text().trim(),
 });
