@@ -47,10 +47,10 @@ var GridRepositoryMixin = Ember.Mixin.create({
     if(id_in) {
       const key_values = id_in.split('|');
       key_values.forEach((key_value) => {
-        /* key='location' value='143ad-adie32,30843d-adc342, 121ae-...' */
+        /* key='location' value='143ad-adie32,30843d-adc342,121ae-..., key='priority' value='123adbd-3' */
         const [key, value] = key_value.split(':');
         if(value) {
-          endpoint = endpoint + '&' + key + '__id__in=' + value//.replace(/|/g, ',')//.replace(/,+$/g, '');
+          endpoint = endpoint + '&' + key + '__id__in=' + value.replace(/,+$/g, '');
         }
       });
     }

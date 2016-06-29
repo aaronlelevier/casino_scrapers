@@ -59,17 +59,17 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
         finalFilter += this.update_find_query(key, params[key], find);
       });
       this.get('simpleStore').clear(`${this.get('noun')}-list`);
-      /* id_in query param is pipe separated list of model's ids that were filtered */
+      /* id_in query param is pipe separated model types, comma separated list of model's ids that were filtered */
       const idInParams = this.get('gridIdInParams');
       let finalIdInFilter = '';
       Object.keys(idInParams).forEach((key) => {
-        finalIdInFilter += (key.split('.')[0] + ':' + idInParams[key].reduce((prev, id) => {
-          return prev += `${id}|`;
-        }, ''));
-        // 1. already searched, thus key already exists and need to modify key (remove or add)
-        // 2. key does not exist and need to add to object
-        // idInFilter += gridIdInParams[key]
+        const arrIds = idInParams[key];
+        finalIdInFilter += (key.split('.')[0] + ':' + arrIds.reduce((prev, id) => {
+          return prev += `${id},`;
+        }, '') + '|');
       });
+      /* savefilterset will append id_in for endpoint_uri if blank ?? */
+      if (!finalIdInFilter) finalIdInFilter = undefined;
       this.setProperties({ page:1, find: finalFilter, id_in: finalIdInFilter });
     },
     toggleMobileSearch() {

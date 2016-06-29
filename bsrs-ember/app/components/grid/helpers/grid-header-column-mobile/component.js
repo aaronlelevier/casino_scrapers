@@ -6,9 +6,9 @@ export default Ember.Component.extend({
   init(){
     this._super(...arguments);
     this.mobileFilterInput = false;
-    /* filter on value for input */
-    const existingFilter = this.get('gridIdInParams')[this.get('column.field')];
-    if(existingFilter){
+    const existingFilter = this.get('gridFilterParams')[this.get('column.field')];
+    const existingIdInObject = this.get('gridIdInParams')[this.get('column.field')];
+    if(existingFilter || (existingIdInObject && existingIdInObject.length)) {
       this.set('initialVal', existingFilter);
       this.set('mobileFilterInput', true);
     }
@@ -49,13 +49,15 @@ export default Ember.Component.extend({
       const column = this.get('column');
       if(column.multiple) {
         const gridIdInParams = this.get('gridIdInParams');
-        const fieldValues = gridIdInParams[column.field] || [];
-        gridIdInParams[column.field] = fieldValues.concat(val).uniq();
-        // if(gridIdInParams[column.field]) {
-        //   gridIdInParams[column.field] = gridIdInParams[column.field].concat(val).uniq();
-        // } else {
-        //   gridIdInParams[column.field] = [val];
-        // }
+        const idArray = gridIdInParams[column.field] || [];
+        const indx = idArray.indexOf(val);
+        if(indx > -1) {
+          // Remove
+          idArray.splice(indx, 1);
+        } else {
+          // Add
+          gridIdInParams[column.field] = idArray.concat(val);
+        }
       } else {
         const gridFilterParams = this.get('gridFilterParams');
         gridFilterParams[column.field] = val;
