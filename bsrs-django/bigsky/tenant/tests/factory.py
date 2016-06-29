@@ -1,6 +1,6 @@
 from model_mommy import mommy
 
-from dtd.models import TreeData, DTD_START_ID
+from dtd.models import TreeData
 from tenant.models import Tenant
 
 

@@ -2,21 +2,14 @@ from __future__ import absolute_import
 
 import os
 import unittest
-import random
-import string
 import time
 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, InvalidSelectorException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 from helpers import (
     LoginMixin, FillInHelper, JavascriptMixin, InputHelper,
     NavPage, GeneralElementsPage, Wait, ModelPage, rand_chars
 )
-from helpers.element import is_present
 
 
 class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):

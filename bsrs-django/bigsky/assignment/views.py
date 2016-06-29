@@ -10,5 +10,4 @@ class ProfileViewSet(BaseModelViewSet):
     model = Profile
     queryset = Profile.objects.all()
     serializer_class = ProfileListSerializer
-    # parser_classes = 
     permission_classes = (permissions.IsAuthenticated,)

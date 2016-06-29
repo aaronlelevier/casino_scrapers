@@ -91,4 +91,4 @@ class ModelContactPage(ModelPage):
             except selenium.common.exceptions.ElementNotVisibleException:
                 pass
             except IndexError:
-                assert new_model == None
+                assert new_model is None

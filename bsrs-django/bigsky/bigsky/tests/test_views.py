@@ -1,7 +1,6 @@
 from datetime import timedelta
 import json
 import time
-import uuid
 
 from django.conf import settings
 from django.core.urlresolvers import reverse

@@ -4,7 +4,7 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from dtd.models import TreeData, TreeDataManager, DTD_START_ID
-from dtd.tests.factory import create_tree_data, create_dtd_fixture_data
+from dtd.tests.factory import create_dtd_fixture_data
 
 
 class TreeDataManagerTests(TestCase):

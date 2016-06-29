@@ -3,7 +3,7 @@ from django.conf import settings
 
 from accounting.models import Currency
 from location.models import SelfReferencingQuerySet, SelfReferencingManager
-from utils.models import BaseModel, BaseManager, BaseNameModel, DefaultNameManager
+from utils.models import BaseModel, BaseNameModel, DefaultNameManager
 
 
 CATEGORY_STATUSES = [

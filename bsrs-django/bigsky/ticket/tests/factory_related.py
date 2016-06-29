@@ -39,6 +39,7 @@ def create_ticket_priorities():
     [create_ticket_priority(p) for p in TICKET_PRIORITIES]
     return TicketPriority.objects.all()
 
+
 def get_or_create_ticket_status():
     obj, _ = TicketStatus.objects.get_or_create(name=random.choice(TICKET_STATUSES))
     return obj

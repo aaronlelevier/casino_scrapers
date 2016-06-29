@@ -1,7 +1,5 @@
 from django.test import TestCase
-from django.conf import settings
 
-from third_party.config import THIRD_PARTY_STATUSES
 from third_party.models import ThirdParty, ThirdPartyStatus
 from third_party.tests import factory
 from utils.models import DefaultNameManager

@@ -5,7 +5,6 @@ from django.test import TestCase
 from contact.models import (PhoneNumber, PhoneNumberType, Email, EmailType,
     Address, AddressType, PHONE_NUMBER_TYPES, EMAIL_TYPES, ADDRESS_TYPES)
 from contact.tests import factory
-from person.models import Person
 from person.tests.factory import create_person
 
 

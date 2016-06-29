@@ -1,6 +1,4 @@
 from rest_framework import exceptions, permissions, viewsets
-from rest_framework.decorators import list_route
-from rest_framework.response import Response
 
 from tenant.models import Tenant
 from tenant.permissions import TenantPermissions
