@@ -15,7 +15,6 @@ const STATUS_DROPDOWN = '.t-person-status-select-dropdown > .ember-power-select-
 
 
 export default PageObject.create({
-  visit: visitable('/'),
   visitDetail: visitable(DETAIL_URL),
   statusInput: text(STATUS),
   statusClickDropdown: clickable(STATUS),

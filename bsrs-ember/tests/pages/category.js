@@ -14,7 +14,6 @@ const CATEGORY_THREE = `${CATEGORIES}:eq(2)`;
 const CATEGORY_DROPDOWN = multiple_options;
 
 var CategoryPage = PageObject.create({
-  visit: visitable('/'),
   visitDetail: visitable(DETAIL_URL),
   nameFill: fillable('.t-category-name'),
   nameInput: value('.t-category-name'),
