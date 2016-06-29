@@ -68,7 +68,7 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
           return prev += `${id},`;
         }, '') + '|');
       });
-      /* savefilterset will append id_in for endpoint_uri if blank ?? */
+      /* TODO: check why savefilterset will append id_in for endpoint_uri if blank ?? */
       if (!finalIdInFilter) { finalIdInFilter = undefined; }
       this.setProperties({ page:1, find: finalFilter, id_in: finalIdInFilter });
     },

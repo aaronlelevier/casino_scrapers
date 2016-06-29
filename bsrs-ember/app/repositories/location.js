@@ -53,6 +53,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
       });
     });
   },
+  /* @method findTicket - searches locations by name */
   findTicket(search) {
     let url = LOCATION_URL;
     return findByName(url, search);
