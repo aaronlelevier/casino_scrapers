@@ -69,7 +69,7 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
         }, '') + '|');
       });
       /* savefilterset will append id_in for endpoint_uri if blank ?? */
-      if (!finalIdInFilter) finalIdInFilter = undefined;
+      if (!finalIdInFilter) { finalIdInFilter = undefined; }
       this.setProperties({ page:1, find: finalFilter, id_in: finalIdInFilter });
     },
     toggleMobileSearch() {
