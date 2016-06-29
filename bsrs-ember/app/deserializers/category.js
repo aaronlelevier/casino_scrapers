@@ -23,24 +23,22 @@ var CategoryDeserializer = Ember.Object.extend({
         const store = this.get('simpleStore');
         const existing = store.find('category', id);
         let category = existing;
-        if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
-            let children_json = response.children;
-            delete response.children;
-            [response.parent_id] = extract_tree(response, store);
-            response.detail = true;
-            category = store.push('category', response);
-            if(children_json){
-                let [m2m_children, children, server_sum] = many_to_many_extract(children_json, store, category, 'category_children', 'category_pk', 'category', 'children_pk');
-                children.forEach((cat) => {
-                    store.push('category', cat); 
-                });
-                m2m_children.forEach((m2m) => {
-                    store.push('category-children', m2m);
-                });
-                category = store.push('category', {id: response.id, category_children_fks: server_sum});
-            }
-            category.save();
+        let children_json = response.children;
+        delete response.children;
+        [response.parent_id] = extract_tree(response, store);
+        response.detail = true;
+        category = store.push('category', response);
+        if(children_json){
+            let [m2m_children, children, server_sum] = many_to_many_extract(children_json, store, category, 'category_children', 'category_pk', 'category', 'children_pk');
+            children.forEach((cat) => {
+                store.push('category', cat);
+            });
+            m2m_children.forEach((m2m) => {
+                store.push('category-children', m2m);
+            });
+            category = store.push('category', {id: response.id, category_children_fks: server_sum});
         }
+        category.save();
         return category;
     },
     deserialize_list(response) {
@@ -52,6 +50,3 @@ var CategoryDeserializer = Ember.Object.extend({
 });
 
 export default CategoryDeserializer;
-
-
-

@@ -31,7 +31,7 @@ test('findWithQuery will format sort url string correctly', (assert) => {
   assert.expect(1);
   expected_endpoint = '?page=1&ordering=status__name,request,priority__name';
   let subject = FakeRepo.create({simpleStore: store, type: 'ticket', url:''});
-  subject.findWithQuery(1, undefined, undefined, undefined, 'status.translated_name,request,priority.translated_name');
+  subject.findWithQuery(1, undefined, undefined, undefined, undefined, 'status.translated_name,request,priority.translated_name');
 });
 
 test('findWithQuery will format find url string correctly', (assert) => {

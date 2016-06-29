@@ -13,7 +13,7 @@ var ThirdPartyRoute = TabRoute.extend(FindById, {
         const pk = params.third_party_id;
         const statuses = this.get('status_repo').find();
         let third_party = this.get('repository').fetch(pk);
-        const override = true;
+        // const override = true;
         return this.findByIdScenario(third_party, pk, {statuses:statuses});
     },
     setupController: function(controller, hash) {

@@ -120,6 +120,7 @@ var BSRS_TICKET_FACTORY = (function() {
     var location = this.location_fixtures.get(this.ticket.locationTwoId, this.ticket.locationTwo);
     var response = [];
     var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
+    page = page || ''; //page may come in as undefined
     for (var i=page_size+1; i <= page_size*2-1; i++) {
       var uuid = 'bf2b9c85-f6bd-4345-9834-c5d51de53d' + i + page;
       var ticket = this.generate(uuid + i);
