@@ -13,16 +13,12 @@ var DTD_URL = `${PREFIX}/dtds/`;
 var GeneralSettings = Ember.Component.extend(TabMixin, EditMixin, ChangeBoolMixin, {
   repository: inject('tenant'),
   dtdRepo: inject('dtd'),
-  repositoryDtd: inject('dtd'),
   classNames: ['wrapper', 'form'],
   simpleStore: Ember.inject.service(),
   dashboardTextValidation: validate('model.dashboard_text'),
   currencyObject: Ember.computed('model.default_currency_id', function() {
     let id = this.get('model.default_currency_id');
     return this.get('simpleStore').find('currency', id);
-  }),
-  currencyObjects: Ember.computed(function() {
-    return this.get('simpleStore').find('currency');
   }),
   actions: {
     save() {

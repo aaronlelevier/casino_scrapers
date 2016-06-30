@@ -76,16 +76,15 @@
         <div class="row">
           <div class="col-md-12 t-currency-code">
             {{#form-group title="admin.category.label.cost_currency" for="default_currency"}}
-              {{#power-select
+              {{general-power-select
+                model=model
+                className="t-currency-code-select"
                 selected=currencyObject
+                property="default_currency_id"
                 options=currencyObjects
-                onchange=(action "selected")
-                class="t-currency-code-select"
-                searchEnabled=false
-                as |op|
+                isObject=true
+                field="code"
               }}
-              {{op.code}}
-              {{/power-select}}
             {{/form-group}}
           </div>
         </div>

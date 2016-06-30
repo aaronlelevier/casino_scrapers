@@ -6,5 +6,5 @@
   options=options
   as |option|
 }}
-  {{t option}}
+  {{if isObject (get option field) (t option)}}
 {{/power-select}}

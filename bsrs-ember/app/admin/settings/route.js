@@ -10,9 +10,15 @@ export default TabRoute.extend(FindById, {
   redirectRoute: 'admin',
   module: 'tenant',
   templateModelField: 'translated_title',
+  currencyObjects: Ember.computed(function() {
+    return this.get('simpleStore').find('currency');
+  }),
   model(params) {
     const model = this.get('simpleStore').findOne('tenant');
-    return this.findByIdScenario(model, params.id);
+    const deps = {
+      currencyObjects: this.get('currencyObjects')
+    };
+    return this.findByIdScenario(model, params.id, deps);
   },
   setupController(controller, hash) {
     controller.setProperties(hash);
