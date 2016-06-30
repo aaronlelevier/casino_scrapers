@@ -14,18 +14,15 @@ var TicketSingleRoute = TabRoute.extend(FindById, PriorityMixin, {
   categoryRepository: inject('category'),
   statusRepository: inject('ticket-status'),
   attachmentRepository: inject('attachment'),
-  transitionCB() { 
+  transitionCB() {
     return {
       //should be an array
       otherFuncs: this.get('attachmentRepository').removeAllUnrelated()
     };
   },
-  /*start-non-standard*/ @computed /*end-non-standard*/
-  redirectRoute() { return 'tickets.index'; },
-  /*start-non-standard*/ @computed /*end-non-standard*/
-  module() { return 'ticket'; },
-  /*start-non-standard*/ @computed /*end-non-standard*/
-  templateModelField() { return 'categories'; },
+  redirectRoute: 'tickets.index',
+  module: 'ticket',
+  templateModelField: 'categories',
   /*start-non-standard*/ @computed /*end-non-standard*/
   statuses() {
     return this.get('statusRepository').fetch();
@@ -45,4 +42,3 @@ var TicketSingleRoute = TabRoute.extend(FindById, PriorityMixin, {
 });
 
 export default TicketSingleRoute;
-
