@@ -53,10 +53,7 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
     if (search) {
       url += `?fullname__icontains=${search}`;
       return PromiseMixin.xhr(url, 'GET').then((response) => {
-        return response.results;//.filter((assignee) => {
-        //   const fullname = `${assignee.first_name} ${assignee.last_name}`;
-        //   return fullname.toLowerCase().indexOf(search.toLowerCase()) > -1;
-        // });
+        return response.results;
       });
     }
   },
@@ -71,10 +68,7 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
     if (search) {
       url += `?fullname__icontains=${search}`;
       return PromiseMixin.xhr(url, 'GET').then((response) => {
-        return response.results;//.filter((person) => {
-        //   const fullname = `${person.first_name} ${person.last_name}`;
-        //   return fullname.toLowerCase().indexOf(search.toLowerCase()) > -1;
-        // });
+        return response.results;
       });
     }
   }
