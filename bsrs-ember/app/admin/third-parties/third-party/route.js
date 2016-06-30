@@ -8,7 +8,7 @@ var ThirdPartyRoute = TabRoute.extend(FindById, {
     status_repo: inject('status'),
     redirectRoute: 'admin.third-parties.index',
     module: 'third-party',
-    templateModelField: Ember.computed(function() { return 'name'; }),
+    templateModelField: 'name',
     model(params) {
         const pk = params.third_party_id;
         const statuses = this.get('status_repo').find();
