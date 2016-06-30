@@ -53,6 +53,8 @@ export let columns = [
     isFilterable: true,
     isSearchable: true,
     classNames: ['ticket-location'],
+    filterComponent: 'location-select-grid',
+    powerSelect: true,
   },
   {
     field: 'assignee.fullname',

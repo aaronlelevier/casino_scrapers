@@ -15,6 +15,7 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
     /* @property gridIdInParams
     * used for model specific searches where request url will look like location__id__in=x,x,x
     * object that holds key of type string ('location.name') and pipe separated ids
+    * for power selects, value is [obj, obj] b/c need to preserve object if return to filter
     */
     this.gridIdInParams = {};
     this.filtersetName = '';
@@ -51,7 +52,7 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
       this.toggleProperty('mobileFilter');
       /* shows input box in horizontal scroll of save filterset */
       this.toggleProperty('showSaveFilterInput');
-      /* find query param */
+      /* 'find' query param */
       const params = this.get('gridFilterParams');
       const find = this.get('find');
       let finalFilter = '';
@@ -59,13 +60,15 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
         finalFilter += this.update_find_query(key, params[key], find);
       });
       this.get('simpleStore').clear(`${this.get('noun')}-list`);
-      /* id_in query param is pipe separated model types, comma separated list of model's ids that were filtered */
+      /* 'id_in' query param - pipe separated model types, comma separated list of model's ids that were filtered */
       const idInParams = this.get('gridIdInParams');
       let finalIdInFilter = '';
+      /* loop through keys in gridIdInParams object > status.translated_name:['12493-adv32...'],location.name:[obj, obj] */
       Object.keys(idInParams).forEach((key) => {
-        const arrIds = idInParams[key];
-        finalIdInFilter += (key.split('.')[0] + ':' + arrIds.reduce((prev, id) => {
-          return prev += `${id},`;
+        const arrVals = idInParams[key];
+        finalIdInFilter += (key.split('.')[0] + ':' + arrVals.reduce((prev, val) => {
+          val = typeof(val) === 'object' ? val.id : val;
+          return prev += `${val},`;
         }, '') + '|');
       });
       /* TODO: check why savefilterset will append id_in for endpoint_uri if blank ?? */

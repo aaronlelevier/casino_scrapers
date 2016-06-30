@@ -27,4 +27,9 @@ test('it has correct properties set for ticket-list', function(assert) {
   assert.notOk(component.columns[2].multiple);
   assert.ok(component.columns[2].isSearchable);
   assert.ok(component.columns[2].isSortable);
+  assert.equal(component.columns[3].field, 'created');
+  assert.notOk(component.columns[3].multiple);
+  assert.equal(component.columns[4].field, 'location.name');
+  assert.equal(component.columns[4].filterComponent, 'location-select-grid');
+  assert.notOk(component.columns[4].multiple);
 });

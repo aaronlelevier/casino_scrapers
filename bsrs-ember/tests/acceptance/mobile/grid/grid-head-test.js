@@ -8,6 +8,7 @@ import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import LF from 'bsrs-ember/vendor/location_fixtures';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
@@ -226,17 +227,43 @@ test('filtering on multiple parameters', async assert => {
   await generalPage.submitFilterSort();
 });
 
-// test('filtering on power select', async assert => {
-//   xhr(`${PREFIX}${BASE_URL}/?page=1&location__id__in=${LD.idOne}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
-//   await visit(TICKET_URL);
-//   assert.equal(store.find('ticket-list').get('length'), 10);
-//   await generalPage.clickFilterOpen();
-//   assert.equal(find('.t-filter__input-wrap').length, 0);
-//   await page.clickFilterPriority();
-//   await page.priorityOneCheck();
-//   await page.clickFilterStatus();
-//   await page.statusOneCheck();
-//   await generalPage.submitFilterSort();
-// });
+test('filtering on power select and can remove', async assert => {
+  xhr(`${PREFIX}${BASE_URL}/?page=1&location__id__in=${LD.idThree}&status__id__in=${TD.statusOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
+  xhr(`${PREFIX}${BASE_URL}/?page=1&location__id__in=${LD.idFour},${LD.idThree}&status__id__in=${TD.statusOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
+  xhr(`${PREFIX}${BASE_URL}/?page=1&location__id__in=${LD.idFour}&status__id__in=${TD.statusOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
+  xhr(`${PREFIX}${BASE_URL}/?page=1&location__id__in=${LD.idFour}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
+  await visit(TICKET_URL);
+  assert.equal(store.find('ticket-list').get('length'), 10);
+  await generalPage.clickFilterOpen();
+  assert.equal(find('.t-filter__input-wrap').length, 0);
+  assert.equal(find('.t-ticket-location-select').length, 0);
+  await page.clickFilterLocation();
+  assert.equal(find('.t-filter__input-wrap').length, 1);
+  // assert.equal(find('.t-ticket-location-select').length, 1);
+  xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
+  selectSearch('.t-ticket-location-select', '6');
+  selectChoose('.t-ticket-location-select', 'ZXY863');
+  await generalPage.submitFilterSort();
+  // Select a status as well
+  await generalPage.clickFilterOpen();
+  assert.equal(page.locationInput.split(' ')[1], 'ZXY863');
+  await page.clickFilterStatus();
+  await page.statusOneCheck();
+  await generalPage.submitFilterSort();
+  // Select another location
+  await generalPage.clickFilterOpen();
+  xhr(`${PREFIX}/admin/locations/?name__icontains=9`, 'GET', null, {}, 200, LF.search_idThree());
+  selectSearch('.t-ticket-location-select', '9');
+  selectChoose('.t-ticket-location-select', 'GHI789');
+  await generalPage.submitFilterSort();
+  await generalPage.clickFilterOpen();
+  assert.equal(page.locationInput.split(' ')[1], 'ZXY863');
+  assert.equal(page.locationInput.split(' ')[3], 'GHI789');
+  // Remove
+  removeMultipleOption('.t-ticket-location-select', 'ZXY863');
+  await generalPage.submitFilterSort();
+  await generalPage.clickFilterOpen();
+  assert.equal(page.locationInput.split(' ')[1], 'GHI789');
+});
 
 /* jshint ignore:end */

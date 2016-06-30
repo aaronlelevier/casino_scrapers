@@ -52,13 +52,18 @@ export default Ember.Component.extend({
         const idArray = gridIdInParams[column.field] || [];
         const indx = idArray.indexOf(val);
         if(indx > -1) {
-          // Remove
+          // Remove Checkbox
           idArray.splice(indx, 1);
         } else {
-          // Add
+          // Add Checkbox
           gridIdInParams[column.field] = idArray.concat(val);
         }
+      } else if (column.powerSelect) {
+        // Power select
+        const gridIdInParams = this.get('gridIdInParams');
+        gridIdInParams[column.field] = val;
       } else {
+        // Input item
         const gridFilterParams = this.get('gridFilterParams');
         gridFilterParams[column.field] = val;
       }
