@@ -22,7 +22,7 @@ from person.tests.factory import (PASSWORD, create_single_person, create_role, c
     create_all_people, create_person_statuses)
 from person.tests.mixins import RoleSetupMixin
 from translation.models import Locale
-from translation.tests.factory import create_locales
+from translation.tests.factory import create_locale, create_locales
 from utils import create
 from utils.tests.test_helpers import create_default
 
@@ -226,13 +226,15 @@ class PersonCreateTests(APITestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
         create_default(PersonStatus)
         self.ph_num_type = mommy.make(PhoneNumberType)
+        self.locale = create_locale('foo')
 
         # update for mock data
         self.data = {
             "id": str(uuid.uuid4()),
             "username": "one",
             "password": PASSWORD,
-            "role": self.person.role.pk
+            "role": self.person.role.pk,
+            "locale": str(self.locale.id)
         }
 
     def tearDown(self):
@@ -262,6 +264,7 @@ class PersonCreateTests(APITestCase):
         self.assertEqual(data['id'], str(person.id))
         self.assertEqual(data['username'], person.username)
         self.assertEqual(data['role'], str(person.role.id))
+        self.assertEqual(data['locale'], str(self.locale.id))
 
 
 class PersonListTests(TestCase):

@@ -85,7 +85,7 @@ class PersonCreateSerializer(RemovePasswordSerializerMixin, BaseCreateSerializer
     class Meta:
         model = Person
         write_only_fields = ('password',)
-        fields = ('id', 'username', 'password', 'role',)
+        fields = ('id', 'username', 'password', 'role', 'locale',)
 
     def create(self, validated_data):
         person = super(PersonCreateSerializer, self).create(validated_data)
