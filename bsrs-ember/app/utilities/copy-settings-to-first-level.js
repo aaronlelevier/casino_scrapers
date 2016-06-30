@@ -3,16 +3,9 @@ import Ember from 'ember';
 var copySettingsToFirstLevel = (obj) => {
   var newState = {};
   var inherited = obj.inherited || {};
-  for(var s in inherited) {
-    var inheritedKeys = inherited[s];
-    var keys = Object.keys(inheritedKeys);
-
-    for(var i=0; i < keys.length; i++) {
-      var key = keys[i];
-      if(key === 'value') {
-        newState[s] = obj.inherited[s][key];
-      }
-    }
+  for (var inheritedKey in inherited) {
+    var inheritedObject = inherited[inheritedKey];
+    newState[inheritedKey] = obj.inherited[inheritedKey]['value'];
   }
   return Ember.assign(obj, newState);
 };
