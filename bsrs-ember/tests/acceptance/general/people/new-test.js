@@ -12,6 +12,7 @@ import SD from 'bsrs-ember/vendor/defaults/status';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import PND from 'bsrs-ember/vendor/defaults/phone-number-type';
+import LD from 'bsrs-ember/vendor/defaults/locale';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -36,7 +37,8 @@ module('Acceptance | person new test', {
       username: PD.username,
       password: PD.password,
       role: PD.role,
-      status: SD.activeId
+      status: SD.activeId,
+      locale: LD.idOne
     };
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
@@ -104,6 +106,7 @@ test('visiting /people/new and creating a new person', (assert) => {
     assert.equal(person.get('password'), '');
     assert.equal(person.get('role').get('id'), PD.role);
     assert.equal(person.get('role_fk'), PD.role);
+    assert.equal(person.get('locale.id'), LD.idOne);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   });
@@ -177,7 +180,7 @@ test('when user enters new form and doesnt enter data, the record is correctly r
   });
 });
 
-test('can change default role', (assert) => {
+test('can change default role and locale', (assert) => {
   clearxhr(list_xhr);
   visit(NEW_URL);
   page.roleClickDropdown();
@@ -193,12 +196,18 @@ test('can change default role', (assert) => {
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     assert.equal(page.roleInput, RD.nameTwo);
   });
+  page.localeClickDropdown();
+  page.localeClickOptionTwo();
+  andThen(() => {
+    assert.equal(page.localeInput, LD.nameTwo);
+  });
   const payload_two = {
     id: UUID.value,
     username: PD.username,
     password: PD.password,
     role: RD.idTwo,
-    status: SD.activeId
+    status: SD.activeId,
+    locale: LD.idTwo
   };
   fillIn('.t-person-username', PD.username);
   fillIn('.t-person-password', PD.password);

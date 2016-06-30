@@ -128,14 +128,17 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
     this._super();
   },
   createSerialize() {
+    const store = this.get('simpleStore');
     const status_repo = this.get('status_repo');
     const status_fk = status_repo.get_default().get('id');
+    const locale_fk = store.find('locale', {default: true}).objectAt(0).get('id');
     return {
       id: this.get('id'),
       username: this.get('username'),
       password: this.get('password'),
       role: this.get('role').get('id'),
       status: this.get('status_fk') || status_fk,
+      locale: this.get('locale_fk') || locale_fk,
     };
   },
   serialize() {

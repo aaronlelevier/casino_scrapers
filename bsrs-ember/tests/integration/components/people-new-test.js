@@ -44,7 +44,7 @@ test('filling in invalid username reveal validation messages', function(assert) 
   assert.equal($component.text().trim(), trans.t('errors.person.username'));
 });
 
-test('aaron should default locale if not present in Person model', function(assert) {
+test('should default locale if not present in Person model', function(assert) {
   let person;
   run(() => {
     person = store.push('person', {});
