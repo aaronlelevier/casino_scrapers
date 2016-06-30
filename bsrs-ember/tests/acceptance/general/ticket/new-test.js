@@ -446,7 +446,6 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
   fillIn(`${SEARCH}`, 'Boy1');
   andThen(() => {
     assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
-    assert.equal(page.assigneeOptionLength, 2);
     assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
   });
   page.assigneeClickOptionOne();
@@ -523,8 +522,7 @@ test('clicking and typing into power select for people will fire off xhr request
     assert.ok(!ticket.get('cc.length'));
   });
   let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
-  const payload = PF.list();
-  payload.results.push(PF.get(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
+  const payload = { 'results': [PF.get(PD.idDonald, PD.donald_first_name, PD.donald_last_name)] };
   ajax(people_endpoint, 'GET', null, {}, 200, payload);
   page.ccClickDropdown();
   fillIn(`${CC_SEARCH}`, 'a');
@@ -587,8 +585,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     assert.ok(!ticket.get('cc.length'));
   });
   let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
-  const payload = PF.list();
-  payload.results.push(PF.get(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
+  const payload = { 'results': [PF.get(PD.idDonald, PD.donald_first_name, PD.donald_last_name)] };
   ajax(people_endpoint, 'GET', null, {}, 200, payload);
   page.ccClickDropdown();
   fillIn(`${CC_SEARCH}`, 'a');

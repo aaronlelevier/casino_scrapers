@@ -33,10 +33,10 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
       url += `?name__icontains=${search_criteria}`;
     }
     return PromiseMixin.xhr(url, 'GET').then((response) => {
-      return response.results.filter((location) => {
-        const name = location.name;
-        return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1;
-      });
+      return response.results;//.filter((location) => {
+      //   const name = location.name;
+      //   return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1;
+      // });
     });
   },
   findLocationParents(search_criteria, extra_params) {
@@ -47,10 +47,10 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
       url += `?name__icontains=${search_criteria}`;
     }
     return PromiseMixin.xhr(url, 'GET').then((response) => {
-      return response.results.filter((location) => {
-        const name = location.name;
-        return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1;
-      });
+      return response.results;//.filter((location) => {
+      //   const name = location.name;
+      //   return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1;
+      // });
     });
   },
   findTicket(search) {

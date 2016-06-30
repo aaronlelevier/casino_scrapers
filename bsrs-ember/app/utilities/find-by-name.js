@@ -8,9 +8,9 @@ var findByName = function(url, search, page_size) {
       url += `&page_size=${page_size}`;
     }
     return PromiseMixin.xhr(url, 'GET').then((response) => {
-      return response.results.filter((model) => {
-        return model.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
-      });
+      return response.results;//.filter((model) => {
+      //   return model.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+      // });
     });
   }
 };

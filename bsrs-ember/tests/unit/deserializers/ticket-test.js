@@ -180,7 +180,7 @@ test('ticket location will be deserialized into its own store when deserialize l
   run(function() {
     subject.deserialize(response);
   });
-  let location = store.findOne('location-list'); 
+  let location = store.findOne('location-list');
   assert.deepEqual(location.get('tickets'), [TD.idOne]);
   ticket = store.find('ticket-list', TD.idOne);
   assert.ok(ticket.get('isNotDirty'));
@@ -207,7 +207,7 @@ test('ticket location will be deserialized into its own store when deserialize d
   run(function() {
     subject.deserialize(json, TD.idOne);
   });
-  let location = store.findOne('location'); 
+  let location = store.findOne('location');
   assert.deepEqual(location.get('tickets'), [TD.idOne]);
   ticket = store.find('ticket', TD.idOne);
   assert.ok(ticket.get('isNotDirty'));
