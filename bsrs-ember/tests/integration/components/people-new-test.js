@@ -10,8 +10,9 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import LD from 'bsrs-ember/vendor/defaults/locale';
 import GLOBAL from 'bsrs-ember/vendor/defaults/global-message';
 import { typeInSearch, clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
+import repository from 'bsrs-ember/tests/helpers/repository';
 
-var store, run = Ember.run, person_repo, trans;
+var store, run = Ember.run, locale_repo, trans;
 
 moduleForComponent('person-new', 'integration: person-new test', {
   integration: true,
@@ -26,6 +27,8 @@ moduleForComponent('person-new', 'integration: person-new test', {
       store.push('locale', {id: LD.idOne, name: LD.nameOneKey, default: LD.defaultOne});
       store.push('locale', {id: LD.idTwo, name: LD.nameTwoKey});
     });
+    locale_repo = repository.initialize(this.container, this.registry, 'locale');
+    locale_repo.get_default = () => { return store.find('locale', {default:true}).objectAt(0); };
   }
 });
 
