@@ -57,7 +57,7 @@ test('aaron should default locale if not present in Person model', function(asse
   let $component = this.$('.t-locale-select');
   assert.equal($component.text().trim(), trans.t(LD.nameOneKey));
   assert.ok(person.get('isNotDirty'));
-  clickTrigger('.t-locale-select')
+  clickTrigger('.t-locale-select');
   nativeMouseUp(`.ember-power-select-option:contains(${PD.localeTwo})`);
   assert.equal($component.text().trim(), trans.t(LD.nameTwoKey));
 });
