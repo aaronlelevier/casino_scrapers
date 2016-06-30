@@ -100,18 +100,6 @@ test('change dt_start', async assert => {
 });
 /* jshint ignore:end */
 
-test('translations - for labels', assert => {
-  visit(DETAIL_URL);
-  andThen(() => {
-    assert.equal(getLabelText('company_name'), translations['admin.setting.company_name']);
-    assert.equal(getLabelText('company_code'), translations['admin.setting.company_code']);
-    assert.equal(getLabelText('dashboard_text'), translations['admin.setting.dashboard_text']);
-    assert.equal(page.testmodelLableText, translations['admin.setting.test_mode']);
-    assert.equal(getLabelText('dt_start_id'), translations['admin.setting.dt_start_key']);
-    assert.equal(getLabelText('default_currency'), translations['admin.category.label.cost_currency']);
-  });
-});
-
 test('no delete button on dropdown', assert => {
   visit(DETAIL_URL);
   andThen(() => {

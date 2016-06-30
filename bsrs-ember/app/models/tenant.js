@@ -1,7 +1,9 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
+import inject from 'bsrs-ember/utilities/inject';
 
 export default Model.extend({
+  repository: inject('tenant'),
   company_code: attr(''),
   company_name: attr(''),
   dashboard_text: attr(''),

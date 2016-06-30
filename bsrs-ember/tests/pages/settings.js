@@ -11,9 +11,12 @@ var SettingsPage = PageObject.create({
   authAmountInheritedFromText: value('.t-inherited-msg-auth_amount'),
 
   companyNameValue: value('.t-settings-company_name'),
+  companyNameFill: fillable('.t-settings-company_name'),
   companyCodeValue: value('.t-settings-company_code'),
+  companyCodeFill: fillable('.t-settings-company_code'),
 
   dashboardTextValue: value('.t-settings-dashboard_text'),
+  dashboardTextFill: fillable('.t-settings-dashboard_text'),
   dashboardTextInheritedFrom: text('.t-inherited-msg-dashboard_text'),
   dashboardTextInheritedFromClick: clickable('.t-inherited-msg-dashboard_text-link'),
   dashboardPlaceholderValue: () => Ember.$('.t-settings-dashboard_text').get(0)['placeholder'],

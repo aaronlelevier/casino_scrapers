@@ -1,20 +1,16 @@
 import Ember from 'ember';
-import config from 'bsrs-ember/config/environment';
-import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/inject';
-import { validate } from 'ember-cli-simple-validation/mixins/validate';
+import { ValidationMixin, validate } from 'ember-cli-simple-validation/mixins/validate';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 import ChangeBoolMixin from 'bsrs-ember/mixins/components/change-bool';
 
-var PREFIX = config.APP.NAMESPACE;
-var DTD_URL = `${PREFIX}/dtds/`;
-
-var GeneralSettings = Ember.Component.extend(TabMixin, EditMixin, ChangeBoolMixin, {
+var GeneralSettings = Ember.Component.extend(TabMixin, EditMixin, ChangeBoolMixin, ValidationMixin, {
   repository: inject('tenant'),
   dtdRepo: inject('dtd'),
   classNames: ['wrapper', 'form'],
   simpleStore: Ember.inject.service(),
+  companyNameValidation: validate('model.company_name'),
   dashboardTextValidation: validate('model.dashboard_text'),
   currencyObject: Ember.computed('model.default_currency_id', function() {
     let id = this.get('model.default_currency_id');
@@ -23,11 +19,9 @@ var GeneralSettings = Ember.Component.extend(TabMixin, EditMixin, ChangeBoolMixi
   actions: {
     save() {
       this.set('submitted', true);
-      this._super();
-    },
-    selected(obj){
-      let model = this.get('model');
-      model.set('default_currency_id', obj.get('id'));
+      if (this.get('valid')) {
+        this._super();
+      }
     }
   }
 });
