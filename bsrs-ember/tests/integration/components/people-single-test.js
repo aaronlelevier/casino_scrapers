@@ -242,6 +242,7 @@ test('can add and remove new address', function(assert) {
 });
 
 test('header populates with username and role name', function(assert) {
+  let model;
   run(() => {
     model = store.push('person', {id: PD.id, username: PD.username, role_fk: RD.idOne});
     role = store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.id]});
