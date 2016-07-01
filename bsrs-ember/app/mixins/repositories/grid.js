@@ -18,7 +18,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
       return response.results;
     });
   },
-  modifyEndpoint(page, search, find, page_size, sort) {
+  modifyEndpoint(page, search, find, id_in, page_size, sort) {
     let url = this.get('url');
     let endpoint = url + '?page=' + page;
 
@@ -30,7 +30,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
     if(search && search !== ''){
       endpoint = endpoint + '&search=' + encodeURIComponent(search);
     }
-    if(page_size && page_size !== ''){
+    if(page_size) { //&& page_size !== ''){
       endpoint = endpoint + '&page_size=' + page_size;
     }
     if(find && find !== ''){
@@ -43,15 +43,26 @@ var GridRepositoryMixin = Ember.Mixin.create({
         endpoint = endpoint + '&' + field + '__icontains=' + encodeURIComponent(value);
       });
     }
+    /* id__in can contain multiple id's for one field; however, assigning multiple ids to a field is done @ component level */
+    if(id_in) {
+      const key_values = id_in.split('|');
+      key_values.forEach((key_value) => {
+        /* key='location' value='143ad-adie32,30843d-adc342,121ae-..., key='priority' value='123adbd-3' */
+        const [key, value] = key_value.split(':');
+        if(value) {
+          endpoint = endpoint + '&' + key + '__id__in=' + value.replace(/,+$/g, '');
+        }
+      });
+    }
     return endpoint;
   },
   /* Non Optimistic Rendering: Mobile */
-  findWithQueryMobile(page, search, find) {
+  findWithQueryMobile(page, search, find, id_in) {
     const type = this.get('typeGrid');
     const store = this.get('simpleStore');
     const deserializer = this.get('deserializer');
     page = page || 1;
-    let endpoint = this.modifyEndpoint(page, search, find);
+    let endpoint = this.modifyEndpoint(page, search, find, id_in);
     return PromiseMixin.xhr(endpoint).then((response) => {
       deserializer.deserialize(response);
       const all = store.find(type);
@@ -68,12 +79,12 @@ var GridRepositoryMixin = Ember.Mixin.create({
     });
   },
   /* Optimistic Rendering */
-  findWithQuery(page, search, find, page_size, sort) {
+  findWithQuery(page, search, find, id_in, page_size, sort) {
     const type = this.get('typeGrid');
     const store = this.get('simpleStore');
     const deserializer = this.get('deserializer');
     page = page || 1;
-    let endpoint = this.modifyEndpoint(page, search, find, page_size, sort);
+    let endpoint = this.modifyEndpoint(page, search, find, id_in, page_size, sort);
 
     const all = store.find(type);
     let grid_count = store.find('grid-count', 1);

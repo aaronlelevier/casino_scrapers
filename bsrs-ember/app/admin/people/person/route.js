@@ -35,6 +35,7 @@ var PersonRoute = TabRoute.extend(FindById, ContactRouteMixin, {
     const statuses = this.get('status_repo').find();
     const locales = this.get('simpleStore').find('locale');
     let person = repository.fetch(pk);
+    /* Person's role is dirty, then always fetch. Why would I do that? */
     const override = person.get('roleIsDirty');
     return this.findByIdScenario(person, pk, {email_types:email_types, default_email_type:default_email_type,
                                  phone_number_types:phone_number_types, default_phone_number_type:default_phone_number_type,

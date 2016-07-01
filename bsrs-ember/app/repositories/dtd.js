@@ -38,9 +38,7 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin,
     if (search) {
       url += `?search=${search}`;
       return PromiseMixin.xhr(url, 'GET').then((response) => {
-        return response.results.filter((dtd) => {
-          return dtd.key.toLowerCase().indexOf(search.toLowerCase()) > -1;
-        });
+        return response.results;
       });
     }
   },

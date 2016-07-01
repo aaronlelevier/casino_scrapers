@@ -45,7 +45,8 @@ test('it renders saved filtersets', function(assert) {
 test('clicking filter on a column head column will display an input with no value', function(assert) {
   this.column = { field: 'location.name', isFilterable: true };
   this.gridFilterParams = {};
-  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridFilterParams=gridFilterParams}}`);
+  this.gridIdInParams = {};
+  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridIdInParams=gridIdInParams gridFilterParams=gridFilterParams}}`);
   assert.equal(this.$('input').length, 0);
   this.$('.t-filter-location-name').click();
   assert.equal(this.$('input').length, 1);
@@ -65,7 +66,8 @@ test('classNameBinding works if toggle mobileFilterInput', function(assert) {
 test('clicking filter on a column head column will display an input with existing value', function(assert) {
   this.column = { field: 'location.name' };
   this.gridFilterParams = { 'location.name': 'dowat1'};
-  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridFilterParams=gridFilterParams}}`);
+  this.gridIdInParams = {};
+  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridIdInParams=gridIdInParams gridFilterParams=gridFilterParams}}`);
   assert.equal(this.$('input').length, 1);
   assert.equal(this.$('input').val(), 'dowat1');
   this.$('input').val('dowat').trigger('keyup');
@@ -76,7 +78,8 @@ test('clicking filter on a column head column will display an input with existin
 test('if column has filterComponent it is rendered', function(assert) {
   this.column = { field: 'priority.translated_name', isFilterable: true, filterComponent: 'grid/filters/checkbox-list' };
   this.gridFilterParams = {};
-  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridFilterParams=gridFilterParams}}`);
+  this.gridIdInParams = {};
+  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridIdInParams=gridIdInParams gridFilterParams=gridFilterParams}}`);
   assert.equal(this.$('.t-checkbox-list').length, 0);
   this.$('.t-filter-priority-translated-name').click();
   assert.equal(this.$('.t-checkbox-list').length, 1);

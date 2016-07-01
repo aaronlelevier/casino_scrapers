@@ -8,6 +8,7 @@ import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import LF from 'bsrs-ember/vendor/location_fixtures';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
@@ -48,79 +49,65 @@ module('Acceptance | grid-head mobile', {
   }
 });
 
-test('clicking on filter icon will show filters and cancel will close it out', function(assert) {
-  visit(TICKET_URL);
-  click('.t-mobile-filter');
-  andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
-    assert.equal(find('.t-mobile-filters').length, 1);
-    assert.equal(find('.t-mobile-filter-title').text(), t('grid.filter.other'));
-    assert.equal(find('.t-mobile-filter-first-btn').text(), t('crud.cancel.button'));
-    assert.equal(find('.t-mobile-filter-second-btn').text(), t('grid.filter'));
-  });
-  click('.t-mobile-filter-first-btn');
-  andThen(() => {
-    assert.throws(find('.t-mobile-filters'));
-  });
+/* jshint ignore:start */
+
+test('clicking on filter icon will show filters and cancel will close it out', async assert => {
+  await visit(TICKET_URL);
+  await click('.t-mobile-filter');
+  assert.equal(currentURL(), TICKET_URL);
+  assert.equal(find('.t-mobile-filters').length, 1);
+  assert.equal(find('.t-mobile-filter-title').text(), t('grid.filter.other'));
+  assert.equal(find('.t-mobile-filter-first-btn').text(), t('crud.cancel.button'));
+  assert.equal(find('.t-mobile-filter-second-btn').text(), t('grid.filter'));
+  await click('.t-mobile-filter-first-btn');
+  assert.throws(find('.t-mobile-filters'));
 });
 
-test('search presents results on slideUp pane w/o pushing into store', assert => {
+test('search presents results on slideUp pane w/o pushing into store', async assert => {
   xhr(PREFIX + BASE_URL + '/?search=ape','GET',null,{},200,TF.searched('ape', 'request'));
   xhr(PREFIX + BASE_URL + '/?search=sub2','GET',null,{},200,TF.searched('sub2', 'request'));
-  visit(TICKET_URL);
-  andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
-    assert.equal(store.find('ticket-list').get('length'), 10);
-  });
-  generalPage.clickSearchIcon();
-  andThen(() => {
-    assert.equal(find(mobileSearch).attr('placeholder'), t('ticket.search'));
-    assert.equal(find(mobileSearch).attr('type'), 'search');
-    // isFocused('.t-mobile-search-slideUp .t-mobile-search-wrap .t-grid-search-input');
-  });
-  generalPage.mobileSearch('ape');
-  triggerEvent(mobileSearch, 'keyup', LETTER_A);
-  andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
-    assert.equal(store.find('ticket-list').get('length'), 10);
-    assert.equal(find('.t-grid-search-data').length, 9);
-    assert.equal(find('.t-mobile-search-result__title:eq(0)').text().trim(), 'Repair');
-    assert.equal(find('.t-mobile-search-result__meta:eq(0)').text().trim(), TD.locationTwo);
-  });
-  generalPage.mobileSearch('sub2');
-  triggerEvent(mobileSearch, 'keyup', LETTER_S);
-  andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
-    assert.equal(store.find('ticket-list').get('length'), 10); //store length is same b/c search does not touch store
-    assert.equal(find('.t-grid-search-data').length, 1);
-    assert.equal(find('.t-mobile-search-result__title:eq(0)').text().trim(), 'Repair • Plumbing • Toilet Leak');
-    assert.equal(find('.t-mobile-search-result__meta:eq(0)').text().trim(), LD.storeName);
-  });
+  await visit(TICKET_URL);
+  assert.equal(currentURL(), TICKET_URL);
+  assert.equal(store.find('ticket-list').get('length'), 10);
+  await generalPage.clickSearchIcon();
+  assert.equal(find(mobileSearch).attr('placeholder'), t('ticket.search'));
+  assert.equal(find(mobileSearch).attr('type'), 'search');
+  // isFocused('.t-mobile-search-slideUp .t-mobile-search-wrap .t-grid-search-input');
+  await generalPage.mobileSearch('ape');
+  await triggerEvent(mobileSearch, 'keyup', LETTER_A);
+  assert.equal(currentURL(), TICKET_URL);
+  assert.equal(store.find('ticket-list').get('length'), 10);
+  assert.equal(find('.t-grid-search-data').length, 9);
+  assert.equal(find('.t-mobile-search-result__title:eq(0)').text().trim(), 'Repair');
+  assert.equal(find('.t-mobile-search-result__meta:eq(0)').text().trim(), TD.locationTwo);
+  await generalPage.mobileSearch('sub2');
+  await triggerEvent(mobileSearch, 'keyup', LETTER_S);
+  assert.equal(currentURL(), TICKET_URL);
+  assert.equal(store.find('ticket-list').get('length'), 10); //store length is same b/c search does not touch store
+  assert.equal(find('.t-grid-search-data').length, 1);
+  assert.equal(find('.t-mobile-search-result__title:eq(0)').text().trim(), 'Repair • Plumbing • Toilet Leak');
+  assert.equal(find('.t-mobile-search-result__meta:eq(0)').text().trim(), LD.storeName);
   xhr(`${endpoint}/${TD.idGridTwo}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   xhr(`${endpoint}/${TD.idGridTwo}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
-  generalPage.clickSearchGridOne();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_2_URL);
-  });
+  await generalPage.clickSearchGridOne();
+  assert.equal(currentURL(), DETAIL_2_URL);
   //TODO: asserts that are on single page
 });
 
-test('savefilterset will fire off xhr', assert => {
+test('savefilterset will fire off xhr', async assert => {
   random.uuid = function() { return UUID.value; };
   xhr(PREFIX + BASE_URL + '/?page=1&request__icontains=ape19', 'GET', null, {}, 200, TF.searched('ape19', 'request'));
-  visit(TICKET_URL);
-  generalPage.clickFilterOpen();
-  click('.t-filter-request');
-  generalPage.filterInput('ape19');
-  triggerEvent('.t-filter-input', 'keyup', {keyCode: 68});
-  generalPage.submitFilterSort();
-  andThen(() => {
-    assert.equal(find(FILTERSET_COMPONENT).length, 1);
-    isFocused(FILTERSET_COMPONENT_INPUT);
-    assert.equal(find(FILTERSET_COMPONENT_INPUT).attr('placeholder'), t('grid.filterset_name'));
-    assert.equal(find('.t-filterset-wrap > hbox > div').length, 5);
-  });
-  fillIn(FILTERSET_COMPONENT_INPUT, 'foobar');
+  await visit(TICKET_URL);
+  await generalPage.clickFilterOpen();
+  await page.clickFilterRequest();
+  await generalPage.filterInput('ape19');
+  await triggerEvent('.t-filter-input', 'keyup', {keyCode: 68});
+  await generalPage.submitFilterSort();
+  assert.equal(find(FILTERSET_COMPONENT).length, 1);
+  isFocused(FILTERSET_COMPONENT_INPUT);
+  assert.equal(find(FILTERSET_COMPONENT_INPUT).attr('placeholder'), t('grid.filterset_name'));
+  assert.equal(find('.t-filterset-wrap > hbox > div').length, 5);
+  await fillIn(FILTERSET_COMPONENT_INPUT, 'foobar');
   let name = 'foobar';
   let routePath = 'tickets.index';
   let url = window.location.toString();
@@ -129,50 +116,154 @@ test('savefilterset will fire off xhr', assert => {
   let navigation = '.t-filterset-wrap li';
   let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
   xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
-  generalPage.saveFilterset();
-  andThen(() => {
-    // isFocused('.t-mobile-save-filterset-component__input');
-    //TODO: needs to be in correct order
-    assert.equal(find('.t-filterset-wrap > hbox > div').length, 6);
-  });
+  await generalPage.saveFilterset();
+  // isFocused('.t-mobile-save-filterset-component__input');
+  //TODO: needs to be in correct order
+  assert.equal(find('.t-filterset-wrap > hbox > div').length, 6);
 });
 
-test('savefilterset input will close if have filters and decide not to fill it in', assert => {
+test('savefilterset input will close if have filters and decide not to fill it in', async assert => {
   random.uuid = function() { return UUID.value; };
   xhr(PREFIX + BASE_URL + '/?page=1&request__icontains=ape19', 'GET', null, {}, 200, TF.searched('ape19', 'request'));
-  visit(TICKET_URL);
-  generalPage.clickFilterOpen();
-  click('.t-filter-request');
-  fillIn('.t-filter-input', 'ape19');
-  triggerEvent('.t-filter-input', 'keyup', {keyCode: 68});
-  generalPage.submitFilterSort();
-  andThen(() => {
-    assert.equal(find(FILTERSET_COMPONENT).length, 1);
-  });
-  generalPage.closeFiltersetInput();
-  andThen(() => {
-    assert.equal(find(FILTERSET_COMPONENT).length, 0);
-  });
+  await visit(TICKET_URL);
+  await generalPage.clickFilterOpen();
+  await page.clickFilterRequest();
+  await fillIn('.t-filter-input', 'ape19');
+  await triggerEvent('.t-filter-input', 'keyup', {keyCode: 68});
+  await generalPage.submitFilterSort();
+  assert.equal(find(FILTERSET_COMPONENT).length, 1);
+  await generalPage.closeFiltersetInput();
+  assert.equal(find(FILTERSET_COMPONENT).length, 0);
 });
 
-test('ticket request filter will filter down results and reset page to 1', function(assert) {
+test('ticket request filter will filter down results and reset page to 1', async assert => {
   xhr(PREFIX + BASE_URL + '/?page=1&request__icontains=ape19', 'GET', null, {}, 200, TF.searched('ape19', 'request'));
   clearxhr(list_xhr);
   xhr(PREFIX + BASE_URL + '/?page=2', 'GET', null, {}, 200, TF.list());
-  visit(TICKET_URL+'?page=2');
-  andThen(() => {
-    assert.equal(currentURL(), TICKET_URL + '?page=2');
-    assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
-  });
-  generalPage.clickFilterOpen();
-  click('.t-filter-request');
-  andThen(() => {
-    assert.equal(find('.t-filter-input').length, 1);
-  });
-  generalPage.filterInput('ape19');
-  triggerEvent('.t-filter-input', 'keyup', {keyCode: 68});
-  generalPage.submitFilterSort();
-  andThen(() => {
-    assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestLastPage2Grid);
-  });
+  await visit(TICKET_URL+'?page=2');
+  assert.equal(currentURL(), TICKET_URL + '?page=2');
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
+  await generalPage.clickFilterOpen();
+  await page.clickFilterRequest();
+  assert.equal(find('.t-filter-input').length, 1);
+  await generalPage.filterInput('ape19');
+  await triggerEvent('.t-filter-input', 'keyup', {keyCode: 68});
+  await generalPage.submitFilterSort();
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestLastPage2Grid);
 });
+
+test('filtering on priority will sort when filter is clicked', async assert => {
+  xhr(`${PREFIX}${BASE_URL}/?page=1&priority__id__in=${TD.priorityOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
+  await visit(TICKET_URL);
+  assert.equal(store.find('ticket-list').get('length'), 10);
+  await generalPage.clickFilterOpen();
+  assert.equal(find('.t-filter__input-wrap').length, 0);
+  await page.clickFilterPriority();
+  assert.equal(find('.t-filter__input-wrap').length, 1);
+  assert.equal(find('.t-checkbox-list').length, 1);
+  assert.equal(page.priorityOneIsChecked(), false);
+  await page.priorityOneCheck();
+  assert.equal(page.priorityOneIsChecked(), true);
+  assert.equal(page.priorityTwoIsChecked(), false);
+  assert.equal(page.priorityThreeIsChecked(), false);
+  assert.equal(page.priorityFourIsChecked(), false);
+  await generalPage.submitFilterSort();
+  assert.equal(store.find('ticket-list').get('length'), 10);
+  assert.equal(find('.t-grid-data:eq(0) > .t-ticket-priority-translated_name span').text().trim(), t('ticket.priority.emergency'));
+  await generalPage.clickFilterOpen();
+  assert.equal(find('.t-filter__input-wrap').length, 1);
+  assert.equal(page.priorityOneIsChecked(), true);
+  assert.equal(page.priorityTwoIsChecked(), false);
+  assert.equal(page.priorityThreeIsChecked(), false);
+  assert.equal(page.priorityFourIsChecked(), false);
+  await page.priorityTwoCheck();
+  xhr(`${PREFIX}${BASE_URL}/?page=1&priority__id__in=${TD.priorityOneId},${TD.priorityTwoId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityTwoId, 'priority'));
+  await generalPage.submitFilterSort();
+});
+
+test('can uncheck a value after already checked and no xhr is sent', async assert => {
+  xhr(`${PREFIX}${BASE_URL}/?page=1&priority__id__in=${TD.priorityOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
+  await visit(TICKET_URL);
+  assert.equal(store.find('ticket-list').get('length'), 10);
+  await generalPage.clickFilterOpen();
+  assert.equal(find('.t-filter__input-wrap').length, 0);
+  await page.clickFilterPriority();
+  assert.equal(find('.t-filter__input-wrap').length, 1);
+  assert.equal(find('.t-checkbox-list').length, 1);
+  assert.equal(page.priorityOneIsChecked(), false);
+  await page.priorityOneCheck();
+  assert.equal(page.priorityOneIsChecked(), true);
+  assert.equal(page.priorityTwoIsChecked(), false);
+  assert.equal(page.priorityThreeIsChecked(), false);
+  assert.equal(page.priorityFourIsChecked(), false);
+  await generalPage.submitFilterSort();
+  assert.equal(store.find('ticket-list').get('length'), 10);
+  assert.equal(find('.t-grid-data:eq(0) > .t-ticket-priority-translated_name span').text().trim(), t('ticket.priority.emergency'));
+  await generalPage.clickFilterOpen();
+  assert.equal(find('.t-filter__input-wrap').length, 1);
+  await page.priorityOneCheck();
+  assert.equal(page.priorityOneIsChecked(), false);
+  assert.equal(page.priorityTwoIsChecked(), false);
+  assert.equal(page.priorityThreeIsChecked(), false);
+  assert.equal(page.priorityFourIsChecked(), false);
+  await generalPage.submitFilterSort();
+  await generalPage.clickFilterOpen();
+  assert.equal(find('.t-filter__input-wrap').length, 0);
+  assert.equal(page.priorityOneIsChecked(), false);
+  assert.equal(page.priorityTwoIsChecked(), false);
+  assert.equal(page.priorityThreeIsChecked(), false);
+  assert.equal(page.priorityFourIsChecked(), false);
+});
+
+test('filtering on multiple parameters', async assert => {
+  xhr(`${PREFIX}${BASE_URL}/?page=1&priority__id__in=${TD.priorityOneId}&status__id__in=${TD.statusOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
+  await visit(TICKET_URL);
+  await generalPage.clickFilterOpen();
+  assert.equal(find('.t-filter__input-wrap').length, 0);
+  await page.clickFilterPriority();
+  await page.priorityOneCheck();
+  await page.clickFilterStatus();
+  await page.statusOneCheck();
+  await generalPage.submitFilterSort();
+});
+
+test('filtering on power select and can remove', async assert => {
+  xhr(`${PREFIX}${BASE_URL}/?page=1&location__id__in=${LD.idThree}&status__id__in=${TD.statusOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
+  xhr(`${PREFIX}${BASE_URL}/?page=1&location__id__in=${LD.idFour},${LD.idThree}&status__id__in=${TD.statusOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
+  xhr(`${PREFIX}${BASE_URL}/?page=1&location__id__in=${LD.idFour}&status__id__in=${TD.statusOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
+  xhr(`${PREFIX}${BASE_URL}/?page=1&location__id__in=${LD.idFour}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
+  await visit(TICKET_URL);
+  assert.equal(store.find('ticket-list').get('length'), 10);
+  await generalPage.clickFilterOpen();
+  assert.equal(find('.t-filter__input-wrap').length, 0);
+  assert.equal(find('.t-ticket-location-select').length, 0);
+  await page.clickFilterLocation();
+  assert.equal(find('.t-filter__input-wrap').length, 1);
+  // assert.equal(find('.t-ticket-location-select').length, 1);
+  xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
+  selectSearch('.t-ticket-location-select', '6');
+  selectChoose('.t-ticket-location-select', 'ZXY863');
+  await generalPage.submitFilterSort();
+  // Select a status as well
+  await generalPage.clickFilterOpen();
+  assert.equal(page.locationInput.split(' ')[1], 'ZXY863');
+  await page.clickFilterStatus();
+  await page.statusOneCheck();
+  await generalPage.submitFilterSort();
+  // Select another location
+  await generalPage.clickFilterOpen();
+  xhr(`${PREFIX}/admin/locations/?name__icontains=9`, 'GET', null, {}, 200, LF.search_idThree());
+  selectSearch('.t-ticket-location-select', '9');
+  selectChoose('.t-ticket-location-select', 'GHI789');
+  await generalPage.submitFilterSort();
+  await generalPage.clickFilterOpen();
+  assert.equal(page.locationInput.split(' ')[1], 'ZXY863');
+  assert.equal(page.locationInput.split(' ')[3], 'GHI789');
+  // Remove
+  removeMultipleOption('.t-ticket-location-select', 'ZXY863');
+  await generalPage.submitFilterSort();
+  await generalPage.clickFilterOpen();
+  assert.equal(page.locationInput.split(' ')[1], 'GHI789');
+});
+
+/* jshint ignore:end */

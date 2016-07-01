@@ -4,7 +4,6 @@ import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import GridRepository from 'bsrs-ember/mixins/repositories/grid';
-import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 
 var FakeRepo = Ember.Object.extend(GridRepository);
 
@@ -31,7 +30,7 @@ test('findWithQuery will format sort url string correctly', (assert) => {
   assert.expect(1);
   expected_endpoint = '?page=1&ordering=status__name,request,priority__name';
   let subject = FakeRepo.create({simpleStore: store, type: 'ticket', url:''});
-  subject.findWithQuery(1, undefined, undefined, undefined, 'status.translated_name,request,priority.translated_name');
+  subject.findWithQuery(1, undefined, undefined, undefined, undefined, 'status.translated_name,request,priority.translated_name');
 });
 
 test('findWithQuery will format find url string correctly', (assert) => {

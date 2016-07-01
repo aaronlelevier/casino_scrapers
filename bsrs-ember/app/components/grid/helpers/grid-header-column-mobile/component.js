@@ -4,12 +4,14 @@ export default Ember.Component.extend({
   classNameBindings: ['className', 'mobileFilterInput'],
   mobileFilterInput: false,
   init(){
+    this._super(...arguments);
+    this.mobileFilterInput = false;
     const existingFilter = this.get('gridFilterParams')[this.get('column.field')];
-    if(existingFilter){
+    const existingIdInObject = this.get('gridIdInParams')[this.get('column.field')];
+    if(existingFilter || (existingIdInObject && existingIdInObject.length)) {
       this.set('initialVal', existingFilter);
       this.set('mobileFilterInput', true);
     }
-    this._super(...arguments);
   },
   className: Ember.computed(function() {
     let classNames = this.get('column.classNames') || [];
@@ -28,7 +30,7 @@ export default Ember.Component.extend({
   /*
   * @method filterClass
   * @param actionClass - e.g. priority-translated-name
-  * @return {string} - fa icone && test class
+  * @return {string} - fa icon && test class
   */
   filterClass: Ember.computed(function() {
     let isFilterable = this.get('column.isFilterable');
@@ -36,13 +38,35 @@ export default Ember.Component.extend({
     return isFilterable ? `fa fa-filter t-filter-${actionClass}` : '';
   }),
   actions: {
-    toggleMobileFilterInput(){
+    toggleMobileFilterInput() {
       this.toggleProperty('mobileFilterInput');
     },
-    updateGridFilterParams(val){
+    /* @method updategridIdInParams
+    * @param {string} val - from input
+    * column.field is the key that will go into update_find_query/update_id_in function in grid-head
+    */
+    updateGridFilterParams(val) {
       const column = this.get('column');
-      const gridFilterParams = this.get('gridFilterParams');
-      gridFilterParams[column.field] = val;
+      if(column.multiple) {
+        const gridIdInParams = this.get('gridIdInParams');
+        const idArray = gridIdInParams[column.field] || [];
+        const indx = idArray.indexOf(val);
+        if(indx > -1) {
+          // Remove Checkbox
+          idArray.splice(indx, 1);
+        } else {
+          // Add Checkbox
+          gridIdInParams[column.field] = idArray.concat(val);
+        }
+      } else if (column.powerSelect) {
+        // Power select
+        const gridIdInParams = this.get('gridIdInParams');
+        gridIdInParams[column.field] = val;
+      } else {
+        // Input item
+        const gridFilterParams = this.get('gridFilterParams');
+        gridFilterParams[column.field] = val;
+      }
     }
   }
 });

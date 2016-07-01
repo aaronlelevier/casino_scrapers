@@ -1,0 +1,9 @@
+{{#power-select-multiple
+  selected=selectedLocation
+  class="t-ticket-location-select"
+  search=(perform searchRepo)
+  onchange=(action "selected")
+  as |optionModel|
+}}
+  {{optionModel.name}}
+{{/power-select-multiple}}

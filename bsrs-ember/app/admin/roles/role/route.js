@@ -9,7 +9,7 @@ var RoleRoute = TabRoute.extend(FindById, {
   repository: inject('role'),
   redirectRoute: 'admin.roles.index',
   module: 'role',
-  templateModelField: Ember.computed(function() { return 'name'; }),
+  templateModelField: 'name',
   model(params, transition) {
     const store = this.get('simpleStore');
     const pk = params.role_id;

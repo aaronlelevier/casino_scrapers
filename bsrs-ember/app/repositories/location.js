@@ -28,38 +28,29 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
   findLocationChildren(search_criteria, extra_params) {
     const { llevel, pk } = extra_params;
     let url = `${LOCATION_URL}get-level-children/${llevel}/${pk}/`;
-    // search_criteria = search_criteria ? search_criteria.trim() : search_criteria;
     if (search_criteria) {
       url += `?name__icontains=${search_criteria}`;
     }
     return PromiseMixin.xhr(url, 'GET').then((response) => {
-      return response.results.filter((location) => {
-        const name = location.name;
-        return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1;
-      });
+      return response.results;
     });
   },
   findLocationParents(search_criteria, extra_params) {
     const { llevel, pk } = extra_params;
     let url = `${LOCATION_URL}get-level-parents/${llevel}/${pk}/`;
-    // search_criteria = search_criteria ? search_criteria.trim() : search_criteria;
     if (search_criteria) {
       url += `?name__icontains=${search_criteria}`;
     }
     return PromiseMixin.xhr(url, 'GET').then((response) => {
-      return response.results.filter((location) => {
-        const name = location.name;
-        return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1;
-      });
+      return response.results;
     });
   },
+  /* @method findTicket - searches locations by name */
   findTicket(search) {
-    let url = LOCATION_URL;
-    return findByName(url, search);
+    return findByName(LOCATION_URL, search);
   },
   findLocationSelect(search_criteria, filter) {
     let url = this.format_url(filter);
-    // search_criteria = search_criteria ? search_criteria.trim() : search_criteria;
     if (filter && search_criteria) {
       url += `&name__icontains=${search_criteria}`;
     } else if (search_criteria) {
