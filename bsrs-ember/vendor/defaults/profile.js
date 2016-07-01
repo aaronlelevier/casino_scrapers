@@ -9,7 +9,8 @@ var BSRS_PROFILE_DEFAULTS_OBJECT = (function() {
       descOne: 'foo',
       descTwo: 'bar',
       assigneeOne: this.person.idOne,
-      assigneeTwo: this.person.idTwo
+      assigneeTwo: this.person.idTwo,
+      username: this.person.username,
     };
   };
   return factory;

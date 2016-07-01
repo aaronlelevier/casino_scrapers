@@ -9,7 +9,7 @@ var store, profile, run = Ember.run, deserializer;
 
 module('unit: profile deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:profile', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:profile', 'model:profile-list', 'service:i18n']);
     deserializer = ProfileDeserializer.create({
       simpleStore: store
     });
@@ -21,7 +21,7 @@ module('unit: profile deserializer test', {
   }
 });
 
-test('profile correctly deserialized profiles object', assert => {
+test('deserialize single', assert => {
   let json = PF.detail();
   run(() => {
     deserializer.deserialize(json, PD.idOne);
@@ -29,4 +29,18 @@ test('profile correctly deserialized profiles object', assert => {
   assert.equal(profile.get('id'), PD.idOne);
   assert.equal(profile.get('description'), PD.descOne);
   assert.equal(profile.get('assignee_id'), PD.assigneeOne);
+});
+
+test('deserialize list', assert => {
+  let json = PF.list();
+  run(() => {
+    deserializer.deserialize(json);
+  });
+  assert.equal(store.find('profile-list').get('length'), 10);
+  const i = 0;
+  profile = store.find('profile-list').objectAt(i);
+  assert.equal(profile.get('id'), `${PD.idOne.slice(0,-1)}${i}`);
+  assert.equal(profile.get('description'), `${PD.descOne}${i}`);
+  assert.equal(profile.get('assignee').id, `${PD.assigneeOne.slice(0,-1)}${i}`);
+  assert.equal(profile.get('assignee').username, `${PD.username}${i}`);
 });

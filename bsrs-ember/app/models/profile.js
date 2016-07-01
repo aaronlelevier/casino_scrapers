@@ -1,8 +1,5 @@
 import Ember from 'ember';
-import {
-  attr, Model
-}
-from 'ember-cli-simple-store/model';
+import { attr, Model } from 'ember-cli-simple-store/model';
 
 const orderDefault = 0;
 
