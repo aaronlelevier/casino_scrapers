@@ -12,7 +12,7 @@ import GLOBAL from 'bsrs-ember/vendor/defaults/global-message';
 import CD from 'bsrs-ember/vendor/defaults/currencies';
 import page from 'bsrs-ember/tests/pages/person';
 
-var store, email_types, default_email_type, phone_number_types, default_phone_number_type, address_types, default_address_type, trans, run = Ember.run;
+var store, role, email_types, default_email_type, phone_number_types, default_phone_number_type, address_types, default_address_type, trans, run = Ember.run;
 
 moduleForComponent('person-single', 'integration: person-single test', {
   integration: true,
@@ -239,4 +239,14 @@ test('can add and remove new address', function(assert) {
   assert.equal(this.$('.t-address-address').length, 1);
   this.$('.t-del-address-btn:eq(0)').click();
   assert.equal(this.$('.t-address-address').length, 0);
+});
+
+test('header populates with username and role name', function(assert) {
+  run(() => {
+    this.model = store.push('person', {id: PD.id, username: PD.username, first_name: 'foo', role_fk: RD.idOne});
+    role = store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.id]});
+  });
+  this.render(hbs`{{people/person-single model=model}}`);
+  assert.equal(this.$('.t-person-single-header').text().trim(), PD.username);
+  assert.equal(this.$('.t-person-single-sub-header').text().trim(), RD.nameOne);
 });
