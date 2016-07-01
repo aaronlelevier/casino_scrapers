@@ -1,0 +1,36 @@
+{{base-component
+  model=model
+  save="save"
+  cancel="cancel"
+  delete="delete"
+}}
+
+<section class="docSection container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <section style="padding-bottom: 0">
+        <div class="row card-title">
+          <h1 class="col-md-12">
+          {{#if model.name}}
+            {{model.name}}
+            {{else}}
+            <span class="new">{{t 'admin.profile.detail'}}</span>
+          {{/if}}
+          </h1>
+        </div>
+      </section>
+    </div>
+    <div class="col-md-12">
+      <section>
+        <div class="row">
+          <div class="col-md-12">
+            {{log 'here'}}
+            {{#form-group title="admin.profile.description" for="description"}}
+              {{input type="text" placeholder=(t "admin.profile.description") value=model.description class="form-control t-ap-description" id="description"}}
+            {{/form-group}}
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>

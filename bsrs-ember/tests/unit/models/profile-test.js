@@ -41,3 +41,19 @@ test('serialize', assert => {
   assert.equal(ret.description, PD.descOne);
   assert.equal(ret.assignee, PD.assigneeOne);
 });
+
+test('isNotDirtyOrRelatedNotDirty', assert => {
+  profile = store.push('profile', {
+    id: PD.idOne
+  });
+  assert.equal(profile.get('isNotDirty'), true);
+  assert.equal(profile.get('isNotDirtyOrRelatedNotDirty'), true);
+});
+
+test('isDirtyOrRelatedDirty', assert => {
+  profile = store.push('profile', {
+    id: PD.idOne
+  });
+  assert.equal(profile.get('isDirty'), false);
+  assert.equal(profile.get('isDirtyOrRelatedDirty'), false);
+});
