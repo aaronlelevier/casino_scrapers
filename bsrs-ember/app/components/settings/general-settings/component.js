@@ -11,6 +11,7 @@ var GeneralSettings = Ember.Component.extend(TabMixin, EditMixin, ChangeBoolMixi
   classNames: ['wrapper', 'form'],
   simpleStore: Ember.inject.service(),
   companyNameValidation: validate('model.company_name'),
+  companyCodeValidation: validate('model.company_code'),
   dashboardTextValidation: validate('model.dashboard_text'),
   currencyObject: Ember.computed('model.default_currency_id', function() {
     let id = this.get('model.default_currency_id');
