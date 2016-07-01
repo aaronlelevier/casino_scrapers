@@ -36,23 +36,10 @@
     }
   }
 }
-.example-enter {
-  max-height: 0;
-  overflow: hidden;
-}
-
-.example-enter.example-enter-active {
+.transition--vertical-enter.transition--vertical-enter-active,
+.transition--vertical-leave {
   max-height: 300px;
-  transition: max-height 0.4s ease;
-  overflow: hidden;
 }
-.example-leave {
-  max-height: 300px;
-  overflow: hidden;
-}
-
-.example-leave.example-leave-active {
+.transition--vertical-leave.transition--vertical-leave-active {
   max-height: 0;
-  transition: max-height 0.3s ease;
-  overflow: hidden;
 }
