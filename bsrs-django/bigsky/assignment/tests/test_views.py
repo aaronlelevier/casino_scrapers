@@ -7,7 +7,7 @@ from model_mommy import mommy
 from rest_framework.test import APITestCase
 
 from assignment.models import Profile
-from assignment.serializers import ProfileListSerializer
+from assignment.serializers import ProfileCreateUpdateSerializer
 from person.tests.factory import create_single_person, PASSWORD
 
 
@@ -17,7 +17,7 @@ class ViewTests(APITestCase):
         self.person = create_single_person()
         self.profile = mommy.make(Profile, assignee=self.person)
 
-        self.data = ProfileListSerializer(self.profile).data
+        self.data = ProfileCreateUpdateSerializer(self.profile).data
 
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -33,8 +33,8 @@ class ViewTests(APITestCase):
         profile = data['results'][0]
         self.assertEqual(profile['id'], str(self.profile.id))
         self.assertEqual(profile['description'], self.profile.description)
-        self.assertEqual(profile['order'], self.profile.order)
-        self.assertEqual(profile['assignee'], str(self.profile.assignee.id))
+        self.assertEqual(profile['assignee']['id'], str(self.profile.assignee.id))
+        self.assertEqual(profile['assignee']['username'], self.profile.assignee.username)
 
     def test_detail(self):
         response = self.client.get('/api/profiles/assignment/{}/'.format(self.profile.id))
@@ -43,11 +43,11 @@ class ViewTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.profile.id))
         self.assertEqual(data['description'], self.profile.description)
-        self.assertEqual(data['order'], self.profile.order)
-        self.assertEqual(data['assignee'], str(self.profile.assignee.id))
+        self.assertEqual(data['assignee_id'], str(self.profile.assignee.id))
 
     def test_create(self):
         self.data['id'] = str(uuid.uuid4())
+        self.data['description'] = 'foo'
 
         response = self.client.post('/api/profiles/assignment/', self.data, format='json')
 
@@ -56,14 +56,12 @@ class ViewTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(profile.id))
         self.assertEqual(data['description'], profile.description)
-        self.assertEqual(data['order'], profile.order)
         self.assertEqual(data['assignee'], str(profile.assignee.id))
 
     def test_update(self):
         assignee = create_single_person()
         self.data.update({
             'description': 'foo',
-            'order': self.data['order']+1,
             'assignee': str(assignee.id)
         })
 
@@ -74,5 +72,4 @@ class ViewTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], self.data['id'])
         self.assertEqual(data['description'], self.data['description'])
-        self.assertEqual(data['order'], self.data['order'])
         self.assertEqual(data['assignee'], self.data['assignee'])
