@@ -243,10 +243,19 @@ test('can add and remove new address', function(assert) {
 
 test('header populates with username and role name', function(assert) {
   run(() => {
-    this.model = store.push('person', {id: PD.id, username: PD.username, first_name: 'foo', role_fk: RD.idOne});
+    model = store.push('person', {id: PD.id, username: PD.username, role_fk: RD.idOne});
     role = store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.id]});
   });
+  this.set('model', model);
   this.render(hbs`{{people/person-single model=model}}`);
   assert.equal(this.$('.t-person-single-header').text().trim(), PD.username);
   assert.equal(this.$('.t-person-single-sub-header').text().trim(), RD.nameOne);
+  run(() => {
+    store.push('person', {id: PD.id, first_name: PD.first_name});
+  });
+  assert.equal(this.$('.t-person-single-header').text().trim(), PD.first_name);
+  run(() => {
+    store.push('person', {id: PD.id, first_name: undefined, middle_initial: PD.middle_initial, last_name: PD.last_name});
+  });
+  assert.equal(this.$('.t-person-single-header').text().trim(), PD.middle_initial+' '+PD.last_name);
 });
