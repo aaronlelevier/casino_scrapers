@@ -39,5 +39,5 @@ test('serialize', assert => {
   let ret = profile.serialize();
   assert.equal(ret.id, PD.idOne);
   assert.equal(ret.description, PD.descOne);
-  assert.equal(ret.assignee_id, PD.assigneeOne);
+  assert.equal(ret.assignee, PD.assigneeOne);
 });

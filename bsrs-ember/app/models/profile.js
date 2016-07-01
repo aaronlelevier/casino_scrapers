@@ -13,7 +13,7 @@ export default Model.extend({
     return {
       id: this.get('id'),
       description: this.get('description'),
-      assignee_id: this.get('assignee_id'),
+      assignee: this.get('assignee_id'),
     };
   },
 });
