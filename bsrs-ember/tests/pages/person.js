@@ -60,6 +60,10 @@ export default PageObject.create({
   // localeFour: text(`${DROPDOWN} > li:eq(3)`),
   localeOptionLength: count(`${DROPDOWN} > li`),
 
+  firstNameFill: fillable('.t-person-first-name'),
+  middleInitialFill: fillable('.t-person-middle-initial'),
+  lastNameFill: fillable('.t-person-last-name'),
+
   middleInitial: fillable('.t-person-middle-initial'),
   usernameFillIn: fillable('.t-person-username'),
   username: value('.t-person-username'),
