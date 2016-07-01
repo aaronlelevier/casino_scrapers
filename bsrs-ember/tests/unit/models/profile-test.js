@@ -9,7 +9,7 @@ module('unit: profile test', {
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:profile']);
     run(function() {
-    profile = store.push('profile', {id: PD.idOne}); 
+    profile = store.push('profile', {id: PD.idOne});
   });
 }
 });

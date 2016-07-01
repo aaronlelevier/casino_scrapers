@@ -40,6 +40,7 @@ module.exports = function(defaults) {
       app.import('vendor/location_level_fixtures.js');
       app.import('vendor/people_fixtures.js');
       app.import('vendor/phone_number_fixtures.js');
+      app.import('vendor/profile_fixtures.js');
       app.import('vendor/role_fixtures.js');
       app.import('vendor/tenant_fixtures.js');
       app.import('vendor/third_party_fixtures.js');
