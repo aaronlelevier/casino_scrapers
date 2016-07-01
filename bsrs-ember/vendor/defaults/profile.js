@@ -8,9 +8,6 @@ var BSRS_PROFILE_DEFAULTS_OBJECT = (function() {
       idTwo: '2cc82b8c-89bd-45a2-8d57-5b920c8b0002',
       descOne: 'foo',
       descTwo: 'bar',
-      orderDefault: 0,
-      orderOne: 1,
-      orderTwo: 2,
       assigneeOne: this.person.idOne,
       assigneeTwo: this.person.idTwo
     };

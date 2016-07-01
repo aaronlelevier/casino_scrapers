@@ -28,6 +28,5 @@ test('profile correctly deserialized profiles object', assert => {
   });
   assert.equal(profile.get('id'), PD.idOne);
   assert.equal(profile.get('description'), PD.descOne);
-  assert.equal(profile.get('order'), PD.orderOne);
   assert.equal(profile.get('assignee_id'), PD.assigneeOne);
 });
