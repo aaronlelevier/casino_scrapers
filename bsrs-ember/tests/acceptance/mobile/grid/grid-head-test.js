@@ -117,7 +117,7 @@ test('savefilterset will fire off xhr', async assert => {
   let name = 'foobar';
   let routePath = 'tickets.index';
   let url = window.location.toString();
-  let query = '?find=request%3Aape19';
+  let query = '?find=request%3Aape19&id_in=';
   let section = '.t-grid-wrap';
   let navigation = '.t-filterset-wrap li';
   let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
@@ -289,6 +289,38 @@ test('filtering assignee on power select and can remove', async assert => {
   assert.equal(page.assigneeInput.split(' ')[1], PD.nameBoy);
   removeMultipleOption(ASSIGNEE, PD.fullnameBoy);
   await generalPage.submitFilterSort();
+});
+
+test('clicking on filter twice will keep results in grid', async assert => {
+  await visit(TICKET_URL);
+  await generalPage.clickFilterOpen();
+  await generalPage.submitFilterSort();
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
+  await generalPage.clickFilterOpen();
+  await generalPage.submitFilterSort();
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
+});
+
+test('removing find or id_in filter will reset grid', async assert => {
+  xhr(`${PREFIX}${BASE_URL}/?page=1&assignee__id__in=${PD.idBoy}`, 'GET', null, {}, 200, {'results': []});
+  await visit(TICKET_URL);
+  await generalPage.clickFilterOpen();
+  await page.clickFilterAssignee();
+  xhr(`${PREFIX}${BASE_PEOPLE_URL}/?fullname__icontains=boy`, 'GET', null, {}, 200, PF.search());
+  await selectSearch(ASSIGNEE, 'boy');
+  await selectChoose(ASSIGNEE, PD.fullnameBoy);
+  await generalPage.submitFilterSort();
+  await generalPage.clickFilterOpen();
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), '');
+  removeMultipleOption(ASSIGNEE, PD.fullnameBoy);
+  await generalPage.submitFilterSort();
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
+  await generalPage.clickFilterOpen();
+  await generalPage.submitFilterSort();
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
+  await generalPage.clickFilterOpen();
+  await generalPage.submitFilterSort();
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
 });
 
 /* jshint ignore:end */

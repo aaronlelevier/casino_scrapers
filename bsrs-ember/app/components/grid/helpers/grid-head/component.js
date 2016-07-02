@@ -53,27 +53,38 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
       /* shows input box in horizontal scroll of save filterset */
       this.toggleProperty('showSaveFilterInput');
       /* 'find' query param */
-      const params = this.get('gridFilterParams');
       const find = this.get('find');
+      const gridFilterParams = this.get('gridFilterParams');
       let finalFilter = '';
-      Object.keys(params).forEach((key) => {
-        finalFilter += this.update_find_query(key, params[key], find);
+      Object.keys(gridFilterParams).forEach((key) => {
+        finalFilter += this.update_find_query(key, gridFilterParams[key], find);
       });
-      this.get('simpleStore').clear(`${this.get('noun')}-list`);
       /* 'id_in' query param - pipe separated model types, comma separated list of model's ids that were filtered */
       const idInParams = this.get('gridIdInParams');
       let finalIdInFilter = '';
       /* loop through keys in gridIdInParams object > status.translated_name:['12493-adv32...'],location.name:[obj, obj] */
       Object.keys(idInParams).forEach((key) => {
         const arrVals = idInParams[key];
+        if (arrVals.length === 0) {
+          // delete key if user set to none
+          delete idInParams[key];
+        }
         finalIdInFilter += (key.split('.')[0] + ':' + arrVals.reduce((prev, val) => {
           val = typeof(val) === 'object' ? val.id : val;
           return prev += `${val},`;
         }, '') + '|');
       });
-      /* TODO: check why savefilterset will append id_in for endpoint_uri if blank ?? */
-      if (!finalIdInFilter) { finalIdInFilter = undefined; }
-      this.setProperties({ page:1, find: finalFilter, id_in: finalIdInFilter });
+      // enter if block if initial state or reset or query params had previous values that were removed
+      if (!finalFilter && !finalIdInFilter) {
+        // if initial state, do not reset grid and keep local cache of grid data
+        if (typeof find === 'undefined' && typeof id_in === 'undefined') return;
+        // if find or id_in had previous values, reset grid and clear store in anticipation of new data
+        this.get('simpleStore').clear(`${this.get('noun')}-list`);
+        this.setProperties({page: 1, find: undefined, id_in: undefined});
+      } else {
+        this.get('simpleStore').clear(`${this.get('noun')}-list`);
+        this.setProperties({ page: 1, find: finalFilter, id_in: finalIdInFilter });
+      }
     },
     toggleMobileSearch() {
       this.toggleProperty('mobileSearch');
