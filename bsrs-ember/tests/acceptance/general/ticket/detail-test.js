@@ -160,7 +160,7 @@ test('validation works for assignee if ticket status is not draft', async assert
   assert.ok(page.assigneeErrorVisible);
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(page.assigneeErrorText, t('error.ticket.assignee'));
-  xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy1`, 'GET', null, {}, 200, PF.search());
+  xhr(`${PREFIX}/admin/people/person__icontains=Boy1/`, 'GET', null, {}, 200, PF.search_power_select());
   await page.assigneeClickDropdown();
   fillIn(`${SEARCH}`, 'Boy1');
   await page.assigneeClickOptionOne();
@@ -312,9 +312,8 @@ test('clicking and typing into power select for people will fire off xhr request
     assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.first_name);
     assert.equal(page.ccSelected.indexOf(PD.first_name), 2);
   });
-  let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
-  const payload = { 'results': [PF.get(PD.idDonald, PD.donald_first_name, PD.donald_last_name)] };
-  xhr(people_endpoint, 'GET', null, {}, 200, payload);
+  let people_endpoint = PREFIX + '/admin/people/person__icontains=a/';
+  xhr(people_endpoint, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
   page.ccClickDropdown();
   fillIn(`${CC_SEARCH}`, 'a');
   andThen(() => {
@@ -352,7 +351,7 @@ test('clicking and typing into power select for people will fire off xhr request
   });
   //search specific cc
   page.ccClickDropdown();
-  xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy`, 'GET', null, {}, 200, PF.search());
+  xhr(`${PREFIX}/admin/people/person__icontains=Boy/`, 'GET', null, {}, 200, PF.search_power_select());
   fillIn(`${CC_SEARCH}`, 'Boy');
   andThen(() => {
     assert.equal(page.ccSelected.indexOf(PD.donald), 2);
@@ -400,9 +399,8 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
-  let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
-  let payload = { 'results': [PF.get(PD.idDonald, PD.donald_first_name, PD.donald_last_name)] };
-  xhr(people_endpoint, 'GET', null, {}, 200, payload);
+  let people_endpoint = PREFIX + '/admin/people/person__icontains=a/';
+  xhr(people_endpoint, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
   page.ccClickDropdown();//don't know why I have to do this
   fillIn(`${CC_SEARCH}`, 'a');
   andThen(() => {
@@ -428,8 +426,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
-  let people_endpoint_two = PREFIX + '/admin/people/?fullname__icontains=Mel';
-  xhr(people_endpoint_two, 'GET', null, {}, 200, PF.list());
+  xhr(PREFIX + '/admin/people/person__icontains=Mel/', 'GET', null, {}, 200, PF.get_for_power_select());
   page.ccClickDropdown();
   fillIn(`${CC_SEARCH}`, 'Mel');
   page.ccClickMel();
@@ -473,8 +470,8 @@ test('starting with multiple cc, can remove all ccs (while not populating option
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     assert.equal(page.ccsSelected, 0);
   });
-  let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=Mel';
-  ajax(people_endpoint, 'GET', null, {}, 200, PF.list());
+  let people_endpoint = PREFIX + '/admin/people/person__icontains=Mel/';
+  ajax(people_endpoint, 'GET', null, {}, 200, PF.get_for_power_select());
   page.ccClickDropdown();
   fillIn(`${CC_SEARCH}`, 'Mel');
   andThen(() => {
@@ -937,7 +934,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
   assert.equal(ticket.get('assignee.id'), PD.idOne);
   assert.equal(ticket.get('assignee_fk'), PD.idOne);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PF.search());
+  xhr(`${PREFIX}/admin/people/person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
   await page.assigneeClickDropdown();
   await fillIn(`${SEARCH}`, 'b');
   assert.equal(page.assigneeInput, PD.fullname);
@@ -963,7 +960,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
   assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
   assert.equal(ticket.get('categories').get('length'), 3);
   //search specific assignee
-  xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy1`, 'GET', null, {}, 200, PF.search());
+  xhr(`${PREFIX}/admin/people/person__icontains=Boy1/`, 'GET', null, {}, 200, PF.search_power_select());
   await page.assigneeClickDropdown();
   await fillIn(`${SEARCH}`, 'Boy1');
   assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);

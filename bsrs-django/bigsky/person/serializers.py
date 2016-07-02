@@ -79,7 +79,7 @@ PERSON_DETAIL_FIELDS = PERSON_FIELDS + ('locale', 'locations', 'emails', 'phone_
 
 class PersonCreateSerializer(RemovePasswordSerializerMixin, BaseCreateSerializer):
     '''
-    Base Create serializer because ``Role`` needed before second step 
+    Base Create serializer because ``Role`` needed before second step
     of configuration for the ``Person``.
     '''
     class Meta:
@@ -107,6 +107,13 @@ class PersonListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
         fields = PERSON_FIELDS
+
+
+class PersonSearchSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Person
+        fields = ('id', 'fullname', 'username', 'title')
 
 
 class PersonTicketSerializer(serializers.ModelSerializer):

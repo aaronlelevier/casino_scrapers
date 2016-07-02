@@ -324,6 +324,44 @@ class PersonListTests(TestCase):
         self.assertNotIn('accept_assign', data)
         self.assertNotIn('accept_notify', data)
 
+    ### CUSTOM LIST ROUTES
+
+    def test_power_select_people_username(self):
+        person1 = create_single_person(name='watter')
+        person1.first_name = 'nothing'
+        person1.last_name = 'nothing'
+        person1.title = 'nothing'
+        person1.save()
+        response = self.client.get('/api/admin/people/person__icontains={}/'.format('watter'))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['id'], str(person1.id))
+        self.assertEqual(data[0]['username'], 'watter')
+        self.assertEqual(data[0]['fullname'], 'nothing nothing')
+        self.assertEqual(data[0]['title'], 'nothing')
+        self.assertNotIn('role', data[0])
+        self.assertNotIn('status', data[0])
+
+    def test_power_select_people_fullname(self):
+        person1 = create_single_person(name='wat')
+        person1.first_name = 'foo'
+        person1.save()
+        response = self.client.get('/api/admin/people/person__icontains={}/'.format('foo'))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['id'], str(person1.id))
+        self.assertEqual(data[0]['fullname'], 'foo wat')
+
+    def test_power_select_people_title(self):
+        person1 = create_single_person(name='wat')
+        person1.title = 'foobar'
+        person1.save()
+        response = self.client.get('/api/admin/people/person__icontains={}/'.format('foobar'))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['id'], str(person1.id))
+        self.assertEqual(data[0]['title'], 'foobar')
+
 
 class PersonDetailTests(TestCase):
 

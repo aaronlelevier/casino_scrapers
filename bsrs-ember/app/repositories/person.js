@@ -47,28 +47,18 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
       model.save();
     });
   },
-  findTicketAssignee(search) {
-    let url = PEOPLE_URL;
-    search = search ? search.trim() : search;
-    if (search) {
-      url += `?fullname__icontains=${search}`;
-      return PromiseMixin.xhr(url, 'GET').then((response) => {
-        return response.results;
-      });
-    }
-  },
   findUsername(username) {
     const url = `${PEOPLE_URL}?username=${username}`;
     return PromiseMixin.xhr(url, 'GET');
   },
-  //TODO: refactor to one method that has text search across multiple fields
-  findTicketPeople(search) {
+  // CC && Assignee
+  findPeople(search) {
     let url = PEOPLE_URL;
     search = search ? search.trim() : search;
     if (search) {
-      url += `?fullname__icontains=${search}`;
+      url += `person__icontains=${search}/`;
       return PromiseMixin.xhr(url, 'GET').then((response) => {
-        return response.results;
+        return response;
       });
     }
   }

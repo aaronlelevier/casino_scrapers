@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError as DjangoValidationError
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
@@ -105,9 +106,19 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
         serializer = ps.PersonCurrentSerializer(instance)
         return Response(serializer.data)
 
+    @list_route(methods=['GET'], url_path=r"person__icontains=(?P<search_key>[\w\-]+)")
+    def search(self, request, search_key=None):
+        queryset = Person.objects.filter(
+            Q(username__icontains=search_key) | \
+            Q(fullname__icontains=search_key) | \
+            Q(title__icontains=search_key)
+        )
+        serializer = ps.PersonSearchSerializer(queryset, many=True)
+        return Response(serializer.data)
+
     # TODO
     # add correct authorization to who can use this endpoint
-    @list_route(methods=['post'], url_path=r"reset-password/(?P<person_id>[\w\-]+)")
+    @list_route(methods=['post'], url_path=r"reset-password/(?P<person_id>)")
     def reset_password(self, request, person_id=None):
         person = get_object_or_404(Person, id=person_id)
         self._validate_passwords_match(request.data)

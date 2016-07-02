@@ -27,13 +27,26 @@ var BSRS_PEOPLE_FACTORY = (function() {
       role: this.person_defaults.role,
       status: this.person_defaults.status
     }
-  },
+  };
+  factory.prototype.get_for_power_select = function(i, first_name, last_name) {
+    var first_name = first_name || this.person_defaults.first_name;
+    var last_name = last_name || this.person_defaults.last_name;
+    var fullname = first_name + ' ' + last_name;
+    //@return {array}
+    return [{
+      id: i || this.person_defaults.id,
+      first_name: first_name,
+      last_name: last_name,
+      fullname: fullname,
+      title: 'wat'
+    }]
+  };
   factory.prototype.generate_list = function(i) {
     var person = this.generate(i);
     person.status = {id: person.status_fk, name: this.status_defaults.activeName};
     delete person.status_fk;
     return person;
-  },
+  };
   factory.prototype.generate = function(i) {
     return {
       id: i,
@@ -53,7 +66,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
       addresses: [],
       locale: this.locale_defaults.idOne
     }
-  },
+  };
   factory.prototype.generate_single_for_list = function(i) {
     var person = this.generate(i);
     delete person.locations;
@@ -63,7 +76,17 @@ var BSRS_PEOPLE_FACTORY = (function() {
     // delete person.role.location_level;
     // delete person.role.role_type;
     return person;
-  },
+  };
+  factory.prototype.generate_for_power_select = function(i) {
+    return {
+      id: i,
+      username : this.person_defaults.username,
+      first_name : this.person_defaults.first_name,
+      middle_initial : this.person_defaults.middle_initial,
+      last_name : this.person_defaults.last_name,
+      title : this.person_defaults.title,
+    }
+  };
   factory.prototype.list = function() {
     var response = [];
     var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
@@ -167,6 +190,26 @@ var BSRS_PEOPLE_FACTORY = (function() {
       return b.id - a.id;
     });
     return {'count':10,'next':null,'previous':null,'results': sorted};
+  };
+  factory.prototype.search_power_select = function() {
+    var response = [];
+    for (var i=1; i <= 10; i++) {
+      var uuid = '249543cf-8fea-426a-8bc3-09778cd780';
+      if (i < 10) {
+        uuid = uuid + '0' + i;
+      } else{
+        uuid = uuid + i;
+      }
+      // only want username, fullname, title
+      var person = this.generate_for_power_select(uuid);
+      person.username = 'boy' + i;
+      person.first_name = 'Boy' + i;
+      person.last_name = 'Man' + i;
+      person.fullname = person.first_name + ' ' + person.last_name;
+      person.title = i + ' Mob Boss';
+      response.push(person);
+    }
+    return response;
   };
 
   return factory;
