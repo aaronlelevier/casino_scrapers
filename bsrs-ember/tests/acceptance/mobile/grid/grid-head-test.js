@@ -8,7 +8,9 @@ import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import PD from 'bsrs-ember/vendor/defaults/person';
 import LF from 'bsrs-ember/vendor/location_fixtures';
+import PF from 'bsrs-ember/vendor/people_fixtures';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
@@ -227,7 +229,7 @@ test('filtering on multiple parameters', async assert => {
   await generalPage.submitFilterSort();
 });
 
-test('filtering on power select and can remove', async assert => {
+test('filtering location on power select and can remove', async assert => {
   xhr(`${PREFIX}${BASE_URL}/?page=1&location__id__in=${LD.idThree}&status__id__in=${TD.statusOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
   xhr(`${PREFIX}${BASE_URL}/?page=1&location__id__in=${LD.idFour},${LD.idThree}&status__id__in=${TD.statusOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
   xhr(`${PREFIX}${BASE_URL}/?page=1&location__id__in=${LD.idFour}&status__id__in=${TD.statusOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
@@ -239,7 +241,6 @@ test('filtering on power select and can remove', async assert => {
   assert.equal(find('.t-ticket-location-select').length, 0);
   await page.clickFilterLocation();
   assert.equal(find('.t-filter__input-wrap').length, 1);
-  // assert.equal(find('.t-ticket-location-select').length, 1);
   xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
   selectSearch('.t-ticket-location-select', '6');
   selectChoose('.t-ticket-location-select', 'ZXY863');
@@ -264,6 +265,26 @@ test('filtering on power select and can remove', async assert => {
   await generalPage.submitFilterSort();
   await generalPage.clickFilterOpen();
   assert.equal(page.locationInput.split(' ')[1], 'GHI789');
+});
+
+test('amk filtering assignee on power select and can remove', async assert => {
+  xhr(`${PREFIX}${BASE_URL}/?page=1&assignee__id__in=${PD.idBoy}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
+  await visit(TICKET_URL);
+  assert.equal(store.find('ticket-list').get('length'), 10);
+  await generalPage.clickFilterOpen();
+  assert.equal(find('.t-filter__input-wrap').length, 0);
+  assert.equal(find('.t-ticket-assignee-select').length, 0);
+  await page.clickFilterAssignee();
+  assert.equal(find('.t-filter__input-wrap').length, 1);
+  xhr(`${PREFIX}/admin/people/?fullname__icontains=boy`, 'GET', null, {}, 200, PF.search());
+  await selectSearch('.t-ticket-assignee-select', 'boy');
+  await selectChoose('.t-ticket-assignee-select', PD.fullnameBoy);
+  assert.equal(page.assigneeInput.split(' ')[1], PD.nameBoy);
+  await generalPage.submitFilterSort();
+  await generalPage.clickFilterOpen();
+  assert.equal(page.assigneeInput.split(' ')[1], PD.nameBoy);
+  removeMultipleOption('.t-ticket-assignee-select', PD.fullnameBoy);
+  await generalPage.submitFilterSort();
 });
 
 /* jshint ignore:end */

@@ -64,6 +64,8 @@ export let columns = [
     isFilterable: true,
     isSearchable: true,
     classNames: ['ticket-assignee'],
+    filterComponent: 'grid/filters/assignee-select-grid',
+    powerSelect: true
   },
   {
     field: 'categories',

@@ -1,0 +1,9 @@
+{{#power-select-multiple
+  selected=selectedPerson
+  class="t-ticket-assignee-select"
+  search=(perform searchRepo)
+  onchange=(action "selected")
+  as |optionModel|
+}}
+  {{optionModel.fullname}}
+{{/power-select-multiple}}
