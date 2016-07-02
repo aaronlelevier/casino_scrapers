@@ -22,6 +22,8 @@ var application, store, endpoint, list_xhr, endpoint, original_uuid;
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
+const BASE_PEOPLE_URL = BASEURLS.base_people_url;
+const BASE_LOCATION_URL = BASEURLS.base_locations_url;
 const TICKET_URL = `${BASE_URL}/index`;
 const DETAIL_2_URL = `${BASE_URL}/index/${TD.idGridTwo}`;
 const HEADER_WRAP_CLASS = '.t-grid-mobile-header';
@@ -29,6 +31,8 @@ const LETTER_A = {keyCode: 65};
 const LETTER_S = {keyCode: 83};
 const FILTERSET_COMPONENT = '.t-mobile-save-filterset-component';
 const FILTERSET_COMPONENT_INPUT = '.t-mobile-save-filterset-component__input';
+const LOCATION = '.t-ticket-location-select';
+const ASSIGNEE = '.t-ticket-assignee-select';
 
 module('Acceptance | grid-head mobile', {
   beforeEach() {
@@ -238,12 +242,12 @@ test('filtering location on power select and can remove', async assert => {
   assert.equal(store.find('ticket-list').get('length'), 10);
   await generalPage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 0);
-  assert.equal(find('.t-ticket-location-select').length, 0);
+  assert.equal(find(LOCATION).length, 0);
   await page.clickFilterLocation();
   assert.equal(find('.t-filter__input-wrap').length, 1);
-  xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
-  selectSearch('.t-ticket-location-select', '6');
-  selectChoose('.t-ticket-location-select', 'ZXY863');
+  xhr(`${PREFIX}${BASE_LOCATION_URL}/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
+  await selectSearch(LOCATION, '6');
+  await selectChoose(LOCATION, 'ZXY863');
   await generalPage.submitFilterSort();
   // Select a status as well
   await generalPage.clickFilterOpen();
@@ -253,37 +257,37 @@ test('filtering location on power select and can remove', async assert => {
   await generalPage.submitFilterSort();
   // Select another location
   await generalPage.clickFilterOpen();
-  xhr(`${PREFIX}/admin/locations/?name__icontains=9`, 'GET', null, {}, 200, LF.search_idThree());
-  selectSearch('.t-ticket-location-select', '9');
-  selectChoose('.t-ticket-location-select', 'GHI789');
+  xhr(`${PREFIX}${BASE_LOCATION_URL}/?name__icontains=9`, 'GET', null, {}, 200, LF.search_idThree());
+  await selectSearch(LOCATION, '9');
+  await selectChoose(LOCATION, 'GHI789');
   await generalPage.submitFilterSort();
   await generalPage.clickFilterOpen();
   assert.equal(page.locationInput.split(' ')[1], 'ZXY863');
   assert.equal(page.locationInput.split(' ')[3], 'GHI789');
   // Remove
-  removeMultipleOption('.t-ticket-location-select', 'ZXY863');
+  await removeMultipleOption(LOCATION, 'ZXY863');
   await generalPage.submitFilterSort();
   await generalPage.clickFilterOpen();
   assert.equal(page.locationInput.split(' ')[1], 'GHI789');
 });
 
-test('amk filtering assignee on power select and can remove', async assert => {
+test('filtering assignee on power select and can remove', async assert => {
   xhr(`${PREFIX}${BASE_URL}/?page=1&assignee__id__in=${PD.idBoy}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
   await visit(TICKET_URL);
   assert.equal(store.find('ticket-list').get('length'), 10);
   await generalPage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 0);
-  assert.equal(find('.t-ticket-assignee-select').length, 0);
+  assert.equal(find(ASSIGNEE).length, 0);
   await page.clickFilterAssignee();
   assert.equal(find('.t-filter__input-wrap').length, 1);
-  xhr(`${PREFIX}/admin/people/?fullname__icontains=boy`, 'GET', null, {}, 200, PF.search());
-  await selectSearch('.t-ticket-assignee-select', 'boy');
-  await selectChoose('.t-ticket-assignee-select', PD.fullnameBoy);
+  xhr(`${PREFIX}${BASE_PEOPLE_URL}/?fullname__icontains=boy`, 'GET', null, {}, 200, PF.search());
+  await selectSearch(ASSIGNEE, 'boy');
+  await selectChoose(ASSIGNEE, PD.fullnameBoy);
   assert.equal(page.assigneeInput.split(' ')[1], PD.nameBoy);
   await generalPage.submitFilterSort();
   await generalPage.clickFilterOpen();
   assert.equal(page.assigneeInput.split(' ')[1], PD.nameBoy);
-  removeMultipleOption('.t-ticket-assignee-select', PD.fullnameBoy);
+  removeMultipleOption(ASSIGNEE, PD.fullnameBoy);
   await generalPage.submitFilterSort();
 });
 
