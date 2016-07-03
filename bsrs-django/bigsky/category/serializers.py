@@ -71,6 +71,13 @@ class CategoryListSerializer(BaseCreateSerializer):
         fields = CATEGORY_FIELDS + ('level',)
 
 
+class CategorySearchSerializer(BaseCreateSerializer):
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name', 'description', 'label')
+
+
 class CategoryDetailSerializer(BaseCreateSerializer):
 
     parent = CategoryIDNameSerializer(read_only=True)

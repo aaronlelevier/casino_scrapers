@@ -44,8 +44,8 @@ module('Acceptance | category new test', {
     store = application.__container__.lookup('service:simpleStore');
     let endpoint = PREFIX + BASE_URL + '/';
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, CF.empty());
-    let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a&page_size=25';
-    children_xhr = xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+    let category_children_endpoint = PREFIX + '/admin/categories/category__icontains=a/';
+    children_xhr = xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list_power_select());
     run(function() {
       store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
     });
