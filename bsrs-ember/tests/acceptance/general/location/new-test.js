@@ -520,11 +520,9 @@ test('clicking and typing into power select for location will fire off xhr reque
   page.locationLevelClickOptionOne();
   page.statusClickDropdown();
   page.statusClickOptionOne();
-  let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${UUID.value}/?name__icontains=a`;
-  let response = LF.search();
-  // response.results.push(LF.get(LD.unusedId, LD.apple));
-  let payload = { 'results': [LF.get(LD.unusedId, LD.apple)] };
-  ajax(location_endpoint, 'GET', null, {}, 201, payload);
+  let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${UUID.value}/location__icontains=a/`;
+  let response = [LF.generate_for_power_select(LD.unusedId, LD.apple)];
+  ajax(location_endpoint, 'GET', null, {}, 201, response);
   selectSearch(CHILDREN, 'a');
   andThen(() => {
     assert.equal(currentURL(), LOCATION_NEW_URL);
@@ -545,8 +543,8 @@ test('clicking and typing into power select for location will fire off xhr reque
     assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
   });
   //search specific children
-  let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${UUID.value}/?name__icontains=BooNdocks`;
-  let response_2 = { 'results': [LF.get('abc123', LD.boondocks)] };
+  let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${UUID.value}/location__icontains=BooNdocks/`;
+  let response_2 = [LF.generate_for_power_select('abc123', LD.boondocks)];
   xhr(location_endpoint_2, 'GET', null, {}, 201, response_2);
   selectSearch(CHILDREN, 'BooNdocks');
   andThen(() => {
@@ -588,10 +586,9 @@ test('can add and remove all children (while not populating options) and add bac
     assert.equal(location.get('children').get('length'), 0);
     assert.equal(location.get('location_children_fks').length, 0);
   });
-  let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${UUID.value}/?name__icontains=a`;
-  let response = LF.search();
-  let payload = { 'results': [LF.get(LD.unusedId, LD.apple)] };
-  ajax(location_endpoint, 'GET', null, {}, 201, payload);
+  let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${UUID.value}/location__icontains=a/`;
+  let response = [LF.generate_for_power_select(LD.unusedId, LD.apple)];
+  ajax(location_endpoint, 'GET', null, {}, 201, response);
   selectSearch(CHILDREN, 'a');
   andThen(() => {
     assert.equal(currentURL(), LOCATION_NEW_URL);
@@ -600,9 +597,9 @@ test('can add and remove all children (while not populating options) and add bac
   });
   page.childrenClickApple();
   //search specific children
-  let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${UUID.value}/?name__icontains=BooNdocks`;
-  let response_2 = LF.list();
-  response_2.results.push(LF.get('abc123', LD.boondocks));
+  let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${UUID.value}/location__icontains=BooNdocks/`;
+  let response_2 = LF.list_power_select();
+  response_2.push(LF.get('abc123', LD.boondocks));
   xhr(location_endpoint_2, 'GET', null, {}, 201, response_2);
   selectSearch(CHILDREN, 'BooNdocks');
   page.childrenClickOptionOne();
@@ -655,9 +652,9 @@ test('clicking and typing into power select for location will fire off xhr reque
     let location = store.find('location',UUID.value);
     assert.equal(location.get('parents').get('length'), 0);
   });
-  let location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LLD.idOne}/${UUID.value}/?name__icontains=a`;
-  let payload = { 'results': [LF.get(LD.unusedId, LD.apple)] };
-  ajax(location_endpoint, 'GET', null, {}, 201, payload);
+  let location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LLD.idOne}/${UUID.value}/location__icontains=a/`;
+  let response = [LF.generate_for_power_select(LD.unusedId, LD.apple)];
+  ajax(location_endpoint, 'GET', null, {}, 201, response);
   selectSearch(PARENTS, 'a');
   andThen(() => {
     assert.equal(currentURL(), LOCATION_NEW_URL);
@@ -678,8 +675,8 @@ test('clicking and typing into power select for location will fire off xhr reque
     assert.equal(find(`${PARENTS_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
   });
   //search specific parents
-  let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-parents/${LLD.idOne}/${UUID.value}/?name__icontains=BooNdocks`;
-  let response_2 = { 'results': [LF.get('abc123', LD.boondocks)] };
+  let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-parents/${LLD.idOne}/${UUID.value}/location__icontains=BooNdocks/`;
+  let response_2 = [LF.generate_for_power_select('abc123', LD.boondocks)];
   xhr(location_endpoint_2, 'GET', null, {}, 201, response_2);
   selectSearch(PARENTS, 'BooNdocks');
   andThen(() => {
@@ -721,9 +718,9 @@ test('starting with multiple parents, can remove all parents (while not populati
     assert.equal(location.get('parents').get('length'), 0);
     assert.equal(location.get('location_parents_fks').length, 0);
   });
-  let location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LLD.idOne}/${UUID.value}/?name__icontains=a`;
-  let payload = { 'results': [LF.get(LD.unusedId, LD.apple)] };
-  ajax(location_endpoint, 'GET', null, {}, 201, payload);
+  let location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LLD.idOne}/${UUID.value}/location__icontains=a/`;
+  let response = [LF.generate_for_power_select(LD.unusedId, LD.apple)];
+  ajax(location_endpoint, 'GET', null, {}, 201, response);
   selectSearch(PARENTS, 'a');
   andThen(() => {
     assert.equal(currentURL(), LOCATION_NEW_URL);
@@ -732,9 +729,9 @@ test('starting with multiple parents, can remove all parents (while not populati
   });
   page.parentsClickApple();
   //search specific parents
-  let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-parents/${LLD.idOne}/${UUID.value}/?name__icontains=BooNdocks`;
-  let response_2 = LF.list();
-  response_2.results.push(LF.get('abc123', LD.boondocks));
+  let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-parents/${LLD.idOne}/${UUID.value}/location__icontains=BooNdocks/`;
+  let response_2 = LF.list_power_select();
+  response_2.push(LF.get('abc123', LD.boondocks));
   xhr(location_endpoint_2, 'GET', null, {}, 201, response_2);
   selectSearch(PARENTS, 'BooNdocks');
   page.parentsClickOptionOne();

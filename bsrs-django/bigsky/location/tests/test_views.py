@@ -7,8 +7,8 @@ from model_mommy import mommy
 
 from contact.models import Address, PhoneNumber, PhoneNumberType, Email
 from contact.tests.factory import create_contact, create_contacts
-from location.tests.factory import (create_location_levels, create_locations, 
-    LOS_ANGELES, SAN_DIEGO)
+from location.tests.factory import (create_location_levels, create_locations,
+    create_location, LOS_ANGELES, SAN_DIEGO)
 from location.models import (Location, LocationLevel, LocationStatus,
 LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE,)
 from location.serializers import LocationUpdateSerializer
@@ -44,7 +44,7 @@ class LocationLevelTests(APITestCase):
 
         data = json.loads(response.content.decode('utf8'))
         location_level = LocationLevel.objects.get(id=data['results'][0]['id'])
-        
+
         self.assertEqual(data['results'][0]['id'], str(location_level.id))
         self.assertEqual(data['results'][0]['name'], location_level.name)
 
@@ -52,12 +52,12 @@ class LocationLevelTests(APITestCase):
 
     def test_get_response(self):
         response = self.client.get('/api/admin/location-levels/{}/'.format(self.district.id))
-        
+
         self.assertEqual(response.status_code, 200)
 
     def test_get_data(self):
         response = self.client.get('/api/admin/location-levels/{}/'.format(self.district.id))
-        
+
         data = json.loads(response.content.decode('utf8'))
         location_level = LocationLevel.objects.get(id=data['id'])
 
@@ -283,6 +283,39 @@ class LocationListTests(APITestCase):
 
             self.assertEqual(data['count'], len(person_locations))
 
+    # Custom List Route
+
+    def test_power_select_location_name(self):
+        location = create_location()
+        location.name = 'foobar'
+        location.save()
+        response = self.client.get('/api/admin/locations/location__icontains={}/'.format('foobar'))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['id'], str(location.id))
+        self.assertEqual(data[0]['name'], 'foobar')
+
+    def test_power_select_location_name_with_llevel(self):
+        location = create_location()
+        location.name = 'foobar'
+        location.save()
+        response = self.client.get('/api/admin/locations/location__icontains={}/location_level={}/'.format('foobar', location.location_level.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['id'], str(location.id))
+        self.assertEqual(data[0]['name'], 'foobar')
+        self.assertNotIn('location_level', data[0])
+        self.assertNotIn('status', data[0])
+
+    def test_power_select_location_name_with_llevel_diff_id(self):
+        # ensure llevel_id & operator is present by using random uuid that isn't apart of setup data
+        location = create_location()
+        location.id = uuid.uuid4()
+        location.save()
+        response = self.client.get('/api/admin/locations/location__icontains={}/location_level={}/'.format('foobar',location.location_level.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 0)
+
 
 class LocationDetailTests(APITestCase):
 
@@ -354,36 +387,36 @@ class LocationDetailTests(APITestCase):
 
     # ### DETAIL ROUTES
 
-    def test_get_level_children(self):
-        # SetUp
-        location = Location.objects.get(name='east')
-        # Test
-        response = self.client.get('/api/admin/locations/get-level-children/{llevel_id}/{pk}/'.format(
-            llevel_id=location.location_level.id, pk=location.id))
-        data = json.loads(response.content.decode('utf8'))
-        self.assertIn('results', data)
-        data = data['results']
-        child = Location.objects.get(name='ca')
-        self.assertIn(str(child.id), [loc['id'] for loc in data])
-        self.assertNotIn(str(location.id), [loc['id'] for loc in data])
-        self.assertEqual(len(data), 4)
+    # NEED THESE?  NEVER NOT FILTERED
+    # def test_get_level_children(self):
+    #     # SetUp
+    #     location = Location.objects.get(name='east')
+    #     # Test
+    #     response = self.client.get('/api/admin/locations/get-level-children/{llevel_id}/{pk}/'.format(
+    #         llevel_id=location.location_level.id, pk=location.id))
+    #     data = json.loads(response.content.decode('utf8'))
+    #     self.assertIn('results', data)
+    #     data = data['results']
+    #     child = Location.objects.get(name='ca')
+    #     self.assertIn(str(child.id), [loc['id'] for loc in data])
+    #     self.assertNotIn(str(location.id), [loc['id'] for loc in data])
+    #     self.assertEqual(len(data), 4)
 
-    def test_get_level_parents(self):
-        # SetUp
-        location = Location.objects.get(name='ca')
-        location_level = LocationLevel.objects.get(name=LOCATION_REGION)
-        # New Parent Location at "region" Level
-        east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
-        east_lp.children.add(location)
-        # Test
-        response = self.client.get('/api/admin/locations/get-level-parents/{llevel_id}/{pk}/'.format(
-            llevel_id=location.location_level.id, pk=location.id))
-        data = json.loads(response.content.decode('utf8'))
-        self.assertIn('results', data)
-        data = data['results']
-        region1 = Location.objects.filter(location_level=location_level).first()
-        self.assertIn(str(region1.id), response.content.decode('utf8'))
-        self.assertEqual(len(data), 3)
+    # def test_get_level_parents(self):
+    #     # SetUp
+    #     location = Location.objects.get(name='ca')
+    #     location_level = LocationLevel.objects.get(name=LOCATION_REGION)
+    #     # New Parent Location at "region" Level
+    #     east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
+    #     east_lp.children.add(location)
+    #     # Test
+    #     response = self.client.get('/api/admin/locations/get-level-parents/{llevel_id}/{pk}/'.format(
+    #         llevel_id=location.location_level.id, pk=location.id))
+    #     data = json.loads(response.content.decode('utf8'))
+    #     # self.assertIn('results', data)
+    #     region1 = Location.objects.filter(location_level=location_level).first()
+    #     self.assertIn(str(region1.id), response.content.decode('utf8'))
+    #     self.assertEqual(len(data), 3)
 
     ### DETAIL ROUTES - FILTERED
 
@@ -392,14 +425,15 @@ class LocationDetailTests(APITestCase):
         location_level = LocationLevel.objects.get(name=LOCATION_STORE)
         keyword = 'san_die'
         response = self.client.get(
-            '/api/admin/locations/get-level-children/{llevel_id}/{pk}/?name__icontains={name}'
+            '/api/admin/locations/get-level-children/{llevel_id}/{pk}/location__icontains={name}/'
             .format(llevel_id=location.location_level.id, pk=location.id, name=keyword))
         data = json.loads(response.content.decode('utf8'))
-        data = data['results']
         self.assertEqual(
             len(data),
             Location.objects.filter(location_level=location_level, name__icontains=keyword).count()
         )
+        self.assertNotIn('status', data[0])
+        self.assertNotIn('location_level', data[0])
 
     def test_get_level_parents__filtered(self):
         location = Location.objects.get(name='ca')
@@ -408,14 +442,15 @@ class LocationDetailTests(APITestCase):
         east_lp.children.add(location)
         keyword = 'east_l'
         response = self.client.get(
-            '/api/admin/locations/get-level-parents/{llevel_id}/{pk}/?name__icontains={name}'
+            '/api/admin/locations/get-level-parents/{llevel_id}/{pk}/location__icontains={name}/'
             .format(llevel_id=location.location_level.id, pk=location.id, name=keyword))
         data = json.loads(response.content.decode('utf8'))
-        data = data['results']
         self.assertEqual(
             len(data),
             Location.objects.filter(location_level=location_level, name__icontains=keyword).count()
         )
+        self.assertNotIn('status', data[0])
+        self.assertNotIn('location_level', data[0])
 
 
 class LocationCreateTests(APITestCase):
@@ -469,7 +504,7 @@ class LocationCreateTests(APITestCase):
         self.assertTrue(self.data['number'])
         old_location = Location.objects.exclude(number=self.data['number']).first()
         old_location.delete()
-        # Requery Update Serializer Data b/c children/parents may have changed 
+        # Requery Update Serializer Data b/c children/parents may have changed
         # when the "old_location" was deleted
         self.location = Location.objects.get(id=self.location.id)
         self.data = LocationUpdateSerializer(self.location).data
@@ -671,7 +706,7 @@ class LocationOrderingTests(APITestCase):
         mommy.make(Location, name='Z')
         mommy.make(Location, name='a')
         # test:
-        response = self.client.get('/api/admin/locations/?ordering=name') 
+        response = self.client.get('/api/admin/locations/?ordering=name')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["results"][0]["name"], "a")
         self.assertEqual(data["results"][1]["name"], "Z")

@@ -118,7 +118,7 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
 
     # TODO
     # add correct authorization to who can use this endpoint
-    @list_route(methods=['post'], url_path=r"reset-password/(?P<person_id>)")
+    @list_route(methods=['post'], url_path=r"reset-password/(?P<person_id>[\w\-]+)")
     def reset_password(self, request, person_id=None):
         person = get_object_or_404(Person, id=person_id)
         self._validate_passwords_match(request.data)

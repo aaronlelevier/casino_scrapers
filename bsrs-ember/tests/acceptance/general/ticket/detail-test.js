@@ -857,7 +857,7 @@ test('location component shows location for ticket and will fire off xhr to fetc
     assert.equal(page.categoryThreeOptionLength, 1);
   });
   // </check category tree>
-  xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
+  xhr(`${PREFIX}/admin/locations/location__icontains=6/`, 'GET', null, {}, 200, LF.search_power_select());
   page.categoryThreeClickDropdown();
   page.locationClickDropdown();
   fillIn(`${SEARCH}`, '6');
@@ -897,7 +897,7 @@ test('location component shows location for ticket and will fire off xhr to fetc
     assert.equal(ticket.get('categories').get('length'), 3);
   });
   //search specific location
-  xhr(`${PREFIX}/admin/locations/?name__icontains=GHI789`, 'GET', null, {}, 200, LF.search_idThree());
+  xhr(`${PREFIX}/admin/locations/location__icontains=GHI789/`, 'GET', null, {}, 200, LF.search_idThree());
   page.locationClickDropdown();
   fillIn(`${SEARCH}`, 'GHI789');
   andThen(() => {

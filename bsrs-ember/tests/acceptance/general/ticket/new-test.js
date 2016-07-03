@@ -48,7 +48,7 @@ module('Acceptance | ticket new test', {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(TICKET_LIST_URL, 'GET', null, {}, 200, TF.empty());
-    location_xhr = xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
+    location_xhr = xhr(`${PREFIX}/admin/locations/location__icontains=6/`, 'GET', null, {}, 200, LF.search_power_select());
     counter = 0;
     // timemachine.config({
     //   dateString: 'December 25, 2015 13:12:59'
@@ -494,9 +494,7 @@ test('location new component shows location for ticket and will fire off xhr to 
 
 test('removes location dropdown on search to change location', (assert) => {
   clearxhr(list_xhr);
-  clearxhr(location_xhr);
   page.visitNew();
-  location_xhr = xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
   page.locationClickDropdown();
   fillIn(`${SEARCH}`, '6');
   andThen(() => {

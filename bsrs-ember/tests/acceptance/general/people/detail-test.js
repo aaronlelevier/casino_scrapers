@@ -1023,8 +1023,8 @@ test('when you change a related role it will change the related locations as wel
   let payload = PF.put({id: PD.id, role: role.id, locations: []});
   xhr(url,'PUT',JSON.stringify(payload),{},200);
   andThen(() => {
-    let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=a`;
-    xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
+    let locations_endpoint = `${PREFIX}/admin/locations/location__icontains=a/location_level=${LLD.idOne}/`;
+    xhr(locations_endpoint, 'GET', null, {}, 200, LF.list_power_select());
     page.locationClickDropdown();
     fillIn(LOCATION_SEARCH, 'a');
     andThen(() => {
@@ -1070,8 +1070,8 @@ test('deep link to person and clicking in the person-locations-select component 
     assert.equal(page.locationOptionLength, 1);
     assert.equal(find(LOCATION_DROPDOWN).text().trim(), GLOBALMSG.power_search);
   });
-  let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=ABC1234`;
-  const response = LF.list();
+  let locations_endpoint = `${PREFIX}/admin/locations/location__icontains=ABC1234/location_level=${LLD.idOne}/`;
+  const response = LF.list_power_select();
   xhr(locations_endpoint, 'GET', null, {}, 200, response);
   fillIn(LOCATION_SEARCH, 'ABC1234');
   andThen(() => {
@@ -1109,9 +1109,9 @@ test('can remove and add back same location', (assert) => {
     let person = store.find('person', PD.idOne);
     assert.equal(person.get('locations').get('length'), 0);
   });
-  let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=a`;
-  const response = LF.list();
-  response.results.push(LF.get(LD.idOne, LD.storeName));
+  let locations_endpoint = `${PREFIX}/admin/locations/location__icontains=a/location_level=${LLD.idOne}/`;
+  const response = LF.list_power_select();
+  response.push(LF.get(LD.idOne, LD.storeName));
   xhr(locations_endpoint, 'GET', null, {}, 200, response);
   fillIn(LOCATION_SEARCH, 'a');
   page.locationClickOptionOne();
@@ -1147,8 +1147,9 @@ test('starting with multiple locations, can remove all locations (while not popu
     assert.equal(person.get('locations').get('length'), 0);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
   });
-  let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=a`;
-  xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
+  let locations_endpoint = `${PREFIX}/admin/locations/location__icontains=a/location_level=${LLD.idOne}/`;
+  const response = LF.list_power_select();
+  xhr(locations_endpoint, 'GET', null, {}, 200, response);
   page.locationClickDropdown();
   fillIn(LOCATION_SEARCH, 'a');
   page.locationClickOptionOneEq();
@@ -1200,8 +1201,9 @@ test('when you deep link to the person detail view you can alter the locations a
     assert.equal(previous_location_m2m.get('length'), 0);
   });
   xhr(endpoint + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data);
-  let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=ABC1234`;
-  xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
+  let locations_endpoint = `${PREFIX}/admin/locations/location__icontains=ABC1234/location_level=${LLD.idOne}/`;
+  const response = LF.list_power_select();
+  xhr(locations_endpoint, 'GET', null, {}, 200, response);
   fillIn(LOCATION_SEARCH, 'ABC1234');
   page.locationClickOptionTwo();
   generalPage.cancel();
