@@ -28,14 +28,8 @@ var BSRS_TICKET_FACTORY = (function() {
     return [parent_category, child_category, child_child_category];
   };
   factory.prototype.generate_list = function(i, statusId, statusName) {
-    // var ticket = this.generate(i);
-    // delete ticket.status_fk;
-    // delete ticket.priority_fk;
     var status_id = statusId || this.ticket.statusOneId;
     var status_name = statusName || this.ticket.statusOneKey;
-    // ticket.status = {id: status_id, name: status_name}
-    // ticket.priority = {id: this.ticket.priorityOneId, name: this.ticket.priorityOneKey}
-    // return ticket;
     //TODO: need to include category_ids
     return {
       id: i,

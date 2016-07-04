@@ -12,7 +12,7 @@ var BSRS_ROLE_FACTORY = (function() {
       name: name || this.role_defaults.nameOne,
       role_type: this.role_defaults.t_roleTypeGeneral,
       location_level: this.location_level_fixtures.detail().id,
-      categories: [this.category_fixtures.detail()],
+      categories: [this.category_fixtures.generate_for_power_select()],
       auth_amount: this.currency_defaults.authAmountOne,
       inherited: inherited || this.role_defaults.inherited
     }

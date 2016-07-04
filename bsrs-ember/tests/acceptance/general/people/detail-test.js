@@ -265,7 +265,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 test('currency helper displays inherited auth_amount, and can click link-to to go to roles inherited value', (assert) => {
-  xhr(role_route_data_endpoint, 'GET', null, {}, 200, {});
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
@@ -274,6 +273,7 @@ test('currency helper displays inherited auth_amount, and can click link-to to g
     assert.equal(inputCurrencyPage.authAmountInheritedFromText, 'Inherited from: ' + TENANT_DEFAULTS.inherits_from_role);
     assert.equal(inputCurrencyPage.authAmountValue, "");
   });
+  xhr(role_route_data_endpoint, 'GET', null, {}, 200, {});
   xhr(`${PREFIX}${BASEURLS.base_roles_url}/${RD.idOne}/`, 'GET', null, {}, 200, RF.detail(RD.idOne));
   inputCurrencyPage.authAmountInheritedFromClick();
   andThen(() => {
