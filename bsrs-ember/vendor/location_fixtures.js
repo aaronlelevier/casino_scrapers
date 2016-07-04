@@ -29,6 +29,13 @@ var BSRS_LOCATION_FACTORY = (function() {
       status_fk: this.location_status_defaults.openId,
     };
   };
+  factory.prototype.get_for_list = function(i, name) {
+    return {
+      id: i || this.location_defaults.idOne,
+      name: name || this.location_defaults.storeName,
+      number: this.location_defaults.storeName,
+    }
+  };
   factory.prototype.generate_for_power_select = function(i, name) {
     return {
       id: i || this.location_defaults.idOne,

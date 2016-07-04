@@ -257,7 +257,7 @@ test('ticket location will be updated when server returns different location (de
   let location;
   ticket.set('location_fk', LD.idOne);
   ticket.save();
-  location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne], location_level: LLD.idOne});
+  location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
   let json = TF.generate(TD.idOne);
   json.location = {id: LD.idTwo, name: LD.storeNameTwo, location_level: LLD.idOne};
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));

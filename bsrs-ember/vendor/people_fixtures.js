@@ -23,9 +23,21 @@ var BSRS_PEOPLE_FACTORY = (function() {
       first_name: first_name,
       last_name: last_name,
       fullname: fullname,
-      // email: this.person_defaults.emails,
       role: this.person_defaults.role,
       status: this.person_defaults.status
+    }
+  };
+  factory.prototype.get_for_list = function(i, first_name, last_name) {
+    var first_name = first_name || this.person_defaults.first_name;
+    var last_name = last_name || this.person_defaults.last_name;
+    var fullname = first_name + ' ' + last_name;
+    //@return {array}
+    return {
+      id: i || this.person_defaults.id,
+      first_name: first_name,
+      last_name: last_name,
+      fullname: fullname,
+      title: 'wat'
     }
   };
   factory.prototype.get_for_power_select = function(i, first_name, last_name) {

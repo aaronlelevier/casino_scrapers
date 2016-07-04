@@ -266,7 +266,7 @@ test('visiting detail should set the category even when it has no children', asy
   clearxhr(activity_one);
   ajax(`/api/tickets/${TD.idTwo}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
   let solo_data = TF.detail(TD.idTwo);
-  solo_data.categories = [{id: CD.idSolo, name: CD.nameSolo, children: [], parent: null}];
+  solo_data.categories = [{id: CD.idSolo, name: CD.nameSolo, children: []}];
   ajax(endpoint + TD.idTwo + '/', 'GET', null, {}, 200, solo_data);
   await visit(BASE_URL + '/' + TD.idTwo);
   assert.equal(currentURL(), BASE_URL + '/' + TD.idTwo);
@@ -1044,6 +1044,9 @@ test('clicking update will not transition away from ticket detail and bring in l
   let response = TF.detail(TD.idOne);
   ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_comment), {}, 200, response);
   const json = TA_FIXTURES.get_assignee_person_and_to_from_json();
+  //Prevent setting read only properties
+  delete json.to;
+  delete json.from;
   const activity_response = {'count':1,'next':null,'previous':null,'results': [json]};
   ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, activity_response);
   await page.update();

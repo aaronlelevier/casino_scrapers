@@ -12,13 +12,13 @@ var BSRS_TICKET_FACTORY = (function() {
     this.config = config;
   };
   factory.prototype.categories = function() {
-    var child_category = this.category_fixtures.generate(this.category_defaults.idPlumbing, this.category_defaults.nameRepairChild);
+    var child_category = this.category_fixtures.generate_for_power_select(this.category_defaults.idPlumbing, this.category_defaults.nameRepairChild);
     var child_child_category = {id: this.category_defaults.idPlumbingChild, name: this.category_defaults.namePlumbingChild, parent_id: child_category.id, label: this.category_defaults.labelThree, children: [], level: 2};
     child_category.children = [{id:this.category_defaults.idPlumbingChild}];
     child_category.parent_id = this.category_defaults.idOne;
     child_category.label = this.category_defaults.labelTwo;
     child_category.level = 1;
-    var parent_category = this.category_fixtures.generate(this.category_defaults.idOne, this.category_defaults.nameOne);
+    var parent_category = this.category_fixtures.generate_for_power_select(this.category_defaults.idOne, this.category_defaults.nameOne);
     parent_category.children = [{id: this.category_defaults.idPlumbing}, {id: this.category_defaults.idTwo}];
     parent_category.parent_id = null;
     parent_category.level = 0;
@@ -28,14 +28,26 @@ var BSRS_TICKET_FACTORY = (function() {
     return [parent_category, child_category, child_child_category];
   };
   factory.prototype.generate_list = function(i, statusId, statusName) {
-    var ticket = this.generate(i);
-    delete ticket.status_fk;
-    delete ticket.priority_fk;
+    // var ticket = this.generate(i);
+    // delete ticket.status_fk;
+    // delete ticket.priority_fk;
     var status_id = statusId || this.ticket.statusOneId;
     var status_name = statusName || this.ticket.statusOneKey;
-    ticket.status = {id: status_id, name: status_name}
-    ticket.priority = {id: this.ticket.priorityOneId, name: this.ticket.priorityOneKey}
-    return ticket;
+    // ticket.status = {id: status_id, name: status_name}
+    // ticket.priority = {id: this.ticket.priorityOneId, name: this.ticket.priorityOneKey}
+    // return ticket;
+    //TODO: need to include category_ids
+    return {
+      id: i,
+      number: this.ticket.numberOne,
+      request: this.ticket.requestOne,
+      status: {id: status_id, name: status_name},
+      priority: {id: this.ticket.priorityOneId, name: this.ticket.priorityOneKey},
+      assignee: this.people_fixtures.get_for_list(),
+      location: this.location_fixtures.get_for_list(),
+      categories: this.categories(),
+      requester: this.people_defaults.nameMel,
+    }
   };
   factory.prototype.generate = function(i, status_id, dt_path) {
     var id = i || this.ticket.idOne;
@@ -129,7 +141,7 @@ var BSRS_TICKET_FACTORY = (function() {
       ticket.status = {id: this.ticket.statusTwoId, name: this.ticket.statusTwoKey};
       ticket.priority = {id: this.ticket.priorityTwoId, name: this.ticket.priorityTwoKey};
       ticket.location = location;
-      ticket.assignee = this.people_fixtures.get(this.ticket.assigneeTwoId, this.ticket.assigneeTwo, this.ticket.assigneeTwo);
+      ticket.assignee = this.people_fixtures.get_for_list(this.ticket.assigneeTwoId, this.ticket.assigneeTwo, this.ticket.assigneeTwo);
       ticket.categories = [unused_category];
       delete ticket.cc;
       delete ticket.attachments;
