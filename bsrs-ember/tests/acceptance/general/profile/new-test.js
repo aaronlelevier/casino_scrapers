@@ -37,7 +37,7 @@ module('Acceptance | profile new test', {
   }
 });
 
-test('aaron visit new', assert => {
+test('visit new', assert => {
   visit(NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);

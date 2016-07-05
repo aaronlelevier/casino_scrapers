@@ -5,13 +5,15 @@ import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
+import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
 
 const { run } = Ember;
 var PREFIX = config.APP.NAMESPACE;
 var API_URL = `${PREFIX}/profiles/assignment/`;
 
-export default Ember.Object.extend(FindByIdMixin, CRUDMixin, {
+export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: 'profile',
+  typeGrid: 'profile-list',
   uuid: injectUUID('uuid'),
   profileDeserializer: injectDeserializer('profile'),
   url: API_URL,
