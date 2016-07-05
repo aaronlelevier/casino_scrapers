@@ -319,7 +319,7 @@ class PersonListTests(TestCase):
         self.assertEqual(data['status']['name'], person.status.name)
         self.assertEqual(data['role'], str(person.role.id))
         self.assertEqual(data['title'], person.title)
-        self.assertEqual(data['employee_id'], person.employee_id)
+        self.assertNotIn('employee_id', data)
         self.assertNotIn('auth_amount', data)
         self.assertNotIn('accept_assign', data)
         self.assertNotIn('accept_notify', data)
