@@ -11,12 +11,12 @@ from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixi
 
 ### ROLE ###
 
-ROLE_LIST_FIELDS = ('id', 'name', 'role_type', 'location_level', 'auth_amount',)
+ROLE_LIST_FIELDS = ('id', 'name', 'role_type', 'location_level')
 
-ROLE_DETAIL_FIELDS = ROLE_LIST_FIELDS + ('auth_currency', 'categories',)
+ROLE_DETAIL_FIELDS = ROLE_LIST_FIELDS + ('auth_currency', 'auth_amount', 'categories',)
 
 ROLE_CREATE_UPDATE_FIELDS = ROLE_LIST_FIELDS + \
-    ('auth_currency', 'dashboard_text', 'accept_assign', 'accept_notify', 'categories',)
+    ('auth_currency', 'auth_amount', 'dashboard_text', 'accept_assign', 'accept_notify', 'categories',)
 
 
 class RoleListSerializer(BaseCreateSerializer):

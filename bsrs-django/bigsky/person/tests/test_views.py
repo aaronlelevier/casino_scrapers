@@ -41,7 +41,6 @@ class RoleListTests(RoleSetupMixin, APITestCase):
         self.assertEqual(role['name'], self.role.name)
         self.assertEqual(role['role_type'], self.role.role_type)
         self.assertEqual(role['location_level'], str(self.location.location_level.id))
-        self.assertEqual(role['auth_amount'], "{:.4f}".format(self.role.auth_amount))
 
 
 class RoleDetailTests(RoleSetupMixin, APITestCase):

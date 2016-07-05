@@ -43,7 +43,7 @@ test('category and location level will not be deserialized into its own store wh
     id: CD.idOne,
     name: CD.nameOne
   });
-  let json = RF.generate_single_for_list(RD.unusedId);
+  let json = RF.generate_list(RD.unusedId);
   let response = {
     'count': 1,
     'next': null,
@@ -165,7 +165,7 @@ test('role location level will correctly be deserialized when server returns rol
     name: LLD.nameCompany,
     roles: [RD.idOne]
   });
-  let json = RF.generate_single_for_list(RD.idOne);
+  let json = RF.generate_list(RD.idOne);
   json.location_level = undefined;
   let response = {
     'count': 1,

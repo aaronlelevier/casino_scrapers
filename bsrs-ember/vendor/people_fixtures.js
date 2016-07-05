@@ -85,16 +85,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
       locale: this.locale_defaults.idOne
     }
   };
-  factory.prototype.generate_single_for_list = function(i) {
-    var person = this.generate(i);
-    delete person.locations;
-    delete person.emails;
-    delete person.phone_numbers;
-    delete person.addresses;
-    // delete person.role.location_level;
-    // delete person.role.role_type;
-    return person;
-  };
   factory.prototype.generate_for_power_select = function(i) {
     return {
       id: i,
