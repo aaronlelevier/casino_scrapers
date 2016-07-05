@@ -433,45 +433,16 @@ class LocationDetailTests(APITestCase):
     def test_contact_type_nested(self):
         self.assertTrue(self.data['phone_numbers'][0]['type'])
 
-    # ### DETAIL ROUTES
-
-    # NEED THESE?  NEVER NOT FILTERED
-    # def test_get_level_children(self):
-    #     # SetUp
-    #     location = Location.objects.get(name='east')
-    #     # Test
-    #     response = self.client.get('/api/admin/locations/get-level-children/{llevel_id}/{pk}/'.format(
-    #         llevel_id=location.location_level.id, pk=location.id))
-    #     data = json.loads(response.content.decode('utf8'))
-    #     self.assertIn('results', data)
-    #     data = data['results']
-    #     child = Location.objects.get(name='ca')
-    #     self.assertIn(str(child.id), [loc['id'] for loc in data])
-    #     self.assertNotIn(str(location.id), [loc['id'] for loc in data])
-    #     self.assertEqual(len(data), 4)
-
-    # def test_get_level_parents(self):
-    #     # SetUp
-    #     location = Location.objects.get(name='ca')
-    #     location_level = LocationLevel.objects.get(name=LOCATION_REGION)
-    #     # New Parent Location at "region" Level
-    #     east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
-    #     east_lp.children.add(location)
-    #     # Test
-    #     response = self.client.get('/api/admin/locations/get-level-parents/{llevel_id}/{pk}/'.format(
-    #         llevel_id=location.location_level.id, pk=location.id))
-    #     data = json.loads(response.content.decode('utf8'))
-    #     # self.assertIn('results', data)
-    #     region1 = Location.objects.filter(location_level=location_level).first()
-    #     self.assertIn(str(region1.id), response.content.decode('utf8'))
-    #     self.assertEqual(len(data), 3)
-
     ### DETAIL ROUTES - FILTERED
 
     def test_get_level_children__filtered(self):
         location = Location.objects.get(name='east')
+        location_2 = Location.objects.get(name='san_diego')
         location_level = LocationLevel.objects.get(name=LOCATION_STORE)
-        keyword = 'san_die'
+        # get a child of the east location and ensure has space in it
+        location_2.name = 'san diego'
+        location_2.save()
+        keyword = 'san die'
         response = self.client.get(
             '/api/admin/locations/get-level-children/{llevel_id}/{pk}/location__icontains={name}/'
             .format(llevel_id=location.location_level.id, pk=location.id, name=keyword))
@@ -486,9 +457,10 @@ class LocationDetailTests(APITestCase):
     def test_get_level_parents__filtered(self):
         location = Location.objects.get(name='ca')
         location_level = LocationLevel.objects.get(name=LOCATION_REGION)
-        east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
+        # create and ensure has space in it
+        east_lp = mommy.make(Location, location_level=location_level, name='east lp')
         east_lp.children.add(location)
-        keyword = 'east_l'
+        keyword = 'east l'
         response = self.client.get(
             '/api/admin/locations/get-level-parents/{llevel_id}/{pk}/location__icontains={name}/'
             .format(llevel_id=location.location_level.id, pk=location.id, name=keyword))
