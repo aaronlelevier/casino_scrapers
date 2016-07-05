@@ -54,10 +54,17 @@ var BSRS_PEOPLE_FACTORY = (function() {
     }]
   };
   factory.prototype.generate_list = function(i) {
-    var person = this.generate(i);
-    person.status = {id: person.status_fk, name: this.status_defaults.activeName};
-    delete person.status_fk;
-    return person;
+    return {
+      id: i,
+      username : this.person_defaults.username,
+      first_name : this.person_defaults.first_name,
+      middle_initial : this.person_defaults.middle_initial,
+      last_name : this.person_defaults.last_name,
+      title : this.person_defaults.title,
+      employee_id : this.person_defaults.employee_id,
+      status : {id: this.status_defaults.activeId, name: this.status_defaults.activeName},
+      role: this.role_fixtures.get(),
+    }
   };
   factory.prototype.generate = function(i) {
     return {
@@ -110,13 +117,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
         uuid = uuid + i;
       }
       var person = this.generate_list(uuid);
-      delete person.locations;
-      delete person.locale;
-      delete person.emails;
-      delete person.phone_numbers;
-      delete person.addresses;
-      // delete person.role.location_level;
-      // delete person.role.role_type;
       //TODO: DRY this up
       person.username = 'mgibson' + i;
       person.first_name = 'Mel' + i;
@@ -162,7 +162,8 @@ var BSRS_PEOPLE_FACTORY = (function() {
     return person;
   };
   factory.prototype.put = function(person) {
-    var response = this.generate_list(person.id);
+    var response = this.generate(person.id);
+    delete response.status_fk;
     response.emails = this.emails.put();
     response.phone_numbers = this.phone_number_fixtures.put();
     response.addresses = this.address_fixtures.put();
