@@ -206,14 +206,13 @@ class LocationQuerySet(SelfReferencingQuerySet):
             raise
         return self.filter(location_level__in=parent_levels).exclude(id=pk)
 
-    # TODO: most of this is not tested
     def search_multi(self, keyword):
         return self.filter(
-            Q(name__icontains=keyword)
-            # Q(number__icontains=keyword)
-            # Q(addresses__city__icontains=keyword) | \
-            # Q(addresses__address__icontains=keyword) | \
-            # Q(addresses__postal_code__icontains=keyword)
+            Q(name__icontains=keyword) | \
+            Q(number__icontains=keyword) | \
+            Q(addresses__city__icontains=keyword) | \
+            Q(addresses__address__icontains=keyword) | \
+            Q(addresses__postal_code__icontains=keyword)
         )
 
     def search_power_select(self, keyword, llevel_id):

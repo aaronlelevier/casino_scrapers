@@ -312,6 +312,7 @@ class LocationListTests(APITestCase):
         self.assertEqual(data[0]['number'], '1239')
 
     def test_power_select_location_address_city(self):
+        # munged city in case create_location factory creates contact as well
         location = create_location()
         address = create_contact(Address, location)
         address.city = 'wawapalooza'
@@ -353,7 +354,7 @@ class LocationListTests(APITestCase):
     #     self.assertEqual(data[0]['addresses'][0]['postal_code'], '12345-12345')
 
     def test_power_select_location_name_with_llevel(self):
-        # test ensuring nothing wrong with custom endpoint 
+        # test ensuring nothing wrong with custom endpoint
         llevel = create_location_level()
         location = create_location(llevel)
 

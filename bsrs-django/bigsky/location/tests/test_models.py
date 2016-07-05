@@ -1,10 +1,13 @@
 import uuid
 from django.db import models
+from django.db.models import Q
 from django.conf import settings
 from django.test import TestCase
 
 from model_mommy import mommy
 
+from contact.models import Address
+from contact.tests.factory import create_contact
 from location.models import (
     LocationManager, LocationLevel, LocationStatus, LocationType, Location,
     LOCATION_COMPANY, LOCATION_REGION, LOCATION_FMU, LOCATION_STORE,)
@@ -263,6 +266,71 @@ class LocationManagerTests(TestCase):
             len(ret),
             Location.objects.filter(location_level__can_create_tickets=True).count()
         )
+
+    def test_search_multi_name(self):
+        search = Location.objects.first().name
+        raw_qs_count = Location.objects.filter(
+                Q(name__icontains=search)
+            ).count()
+
+        ret = Location.objects.search_multi(keyword=search).count()
+
+        self.assertEqual(ret, raw_qs_count)
+        self.assertTrue(ret > 0)
+
+    def test_search_multi_number(self):
+        location = create_location()
+        search = location.number
+        raw_qs_count = Location.objects.filter(
+                Q(number__icontains=search)
+            ).count()
+
+        ret = Location.objects.search_multi(keyword=search).count()
+
+        self.assertEqual(ret, raw_qs_count)
+        self.assertTrue(ret > 0)
+
+    def test_search_multi_address_city(self):
+        location = create_location()
+        address = create_contact(Address, location)
+        address.city = 'fooville'
+        address.save()
+        raw_qs_count = Location.objects.filter(
+                Q(addresses__city__icontains=address.city)
+            ).count()
+
+        ret = Location.objects.search_multi(keyword=address.city).count()
+
+        self.assertEqual(ret, raw_qs_count)
+        self.assertTrue(ret > 0)
+
+    def test_search_multi_address_address(self):
+        location = create_location()
+        address = create_contact(Address, location)
+        address.address = '123 fooville'
+        address.save()
+        raw_qs_count = Location.objects.filter(
+                Q(addresses__address__icontains=address.address)
+            ).count()
+
+        ret = Location.objects.search_multi(keyword=address.address).count()
+
+        self.assertEqual(ret, raw_qs_count)
+        self.assertTrue(ret > 0)
+
+    def test_search_multi_address_postal_code(self):
+        location = create_location()
+        address = create_contact(Address, location)
+        address.postal_code = '12345-12345'
+        address.save()
+        raw_qs_count = Location.objects.filter(
+                Q(addresses__postal_code__icontains=address.postal_code)
+            ).count()
+
+        ret = Location.objects.search_multi(keyword=address.postal_code).count()
+
+        self.assertEqual(ret, raw_qs_count)
+        self.assertTrue(ret > 0)
 
 
 class LocationTests(TestCase):
