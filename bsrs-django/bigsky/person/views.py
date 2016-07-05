@@ -1,5 +1,4 @@
 from django.core.exceptions import ValidationError as DjangoValidationError
-from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
@@ -107,12 +106,8 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
         return Response(serializer.data)
 
     @list_route(methods=['GET'], url_path=r"person__icontains=(?P<search_key>[\w\-]+)")
-    def search(self, request, search_key=None):
-        queryset = Person.objects.filter(
-            Q(username__icontains=search_key) | \
-            Q(fullname__icontains=search_key) | \
-            Q(title__icontains=search_key)
-        )
+    def search_power_select(self, request, search_key=None):
+        queryset = Person.objects.search_power_select(search_key)
         serializer = ps.PersonSearchSerializer(queryset, many=True)
         return Response(serializer.data)
 

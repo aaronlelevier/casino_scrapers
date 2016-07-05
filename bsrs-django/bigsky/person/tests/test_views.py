@@ -332,7 +332,9 @@ class PersonListTests(TestCase):
         person1.last_name = 'nothing'
         person1.title = 'nothing'
         person1.save()
+
         response = self.client.get('/api/admin/people/person__icontains={}/'.format('watter'))
+
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['id'], str(person1.id))
@@ -346,7 +348,9 @@ class PersonListTests(TestCase):
         person1 = create_single_person(name='wat')
         person1.first_name = 'foo'
         person1.save()
+
         response = self.client.get('/api/admin/people/person__icontains={}/'.format('foo'))
+
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['id'], str(person1.id))
@@ -356,7 +360,9 @@ class PersonListTests(TestCase):
         person1 = create_single_person(name='wat')
         person1.title = 'foobar'
         person1.save()
+
         response = self.client.get('/api/admin/people/person__icontains={}/'.format('foobar'))
+        
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['id'], str(person1.id))
