@@ -8,7 +8,7 @@ from model_mommy import mommy
 from contact.models import Address, PhoneNumber, PhoneNumberType, Email
 from contact.tests.factory import create_contact, create_contacts
 from location.tests.factory import (create_location_levels, create_locations,
-    create_location, LOS_ANGELES, SAN_DIEGO)
+    create_location, create_location_level, LOS_ANGELES, SAN_DIEGO)
 from location.models import (Location, LocationLevel, LocationStatus,
 LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE,)
 from location.serializers import LocationUpdateSerializer
@@ -289,38 +289,79 @@ class LocationListTests(APITestCase):
         location = create_location()
         location.name = 'foobar'
         location.save()
-        
+
         response = self.client.get('/api/admin/locations/location__icontains={}/'.format('foobar'))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['id'], str(location.id))
         self.assertEqual(data[0]['name'], 'foobar')
+        self.assertNotIn('status', data[0])
+        self.assertNotIn('location_level', data[0])
 
-    def test_power_select_location_name_with_llevel(self):
+    def test_power_select_location_number(self):
         location = create_location()
-        location.name = 'foobar'
+        location.number = 1239
         location.save()
 
-        response = self.client.get('/api/admin/locations/location__icontains={}/?location_level={}'.format('foobar', location.location_level.id))
+        response = self.client.get('/api/admin/locations/location__icontains={}/'.format('1239'))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['id'], str(location.id))
-        self.assertEqual(data[0]['name'], 'foobar')
-        self.assertNotIn('location_level', data[0])
-        self.assertNotIn('status', data[0])
+        self.assertEqual(data[0]['number'], '1239')
 
-    def test_power_select_location_name_with_llevel_diff_id(self):
-        # ensure llevel_id & operator is present by using random uuid that isn't apart of setup data
+    def test_power_select_location_address_city(self):
         location = create_location()
-        location.id = uuid.uuid4()
-        location.save()
+        address = create_contact(Address, location)
+        address.city = 'wawapalooza'
+        address.save()
 
-        response = self.client.get('/api/admin/locations/location__icontains={}/?location_level={}'.format('foobar',location.location_level.id))
+        response = self.client.get('/api/admin/locations/location__icontains={}/'.format(address.city))
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 0)
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['id'], str(location.id))
+        self.assertEqual(data[0]['addresses'][0]['city'], 'wawapalooza')
+
+    def test_power_select_location_address_address(self):
+        location = create_location()
+        address = create_contact(Address, location)
+        address.address = '123 Drumpf Mansion'
+        address.save()
+
+        response = self.client.get('/api/admin/locations/location__icontains={}/'.format(address.address))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['id'], str(location.id))
+        self.assertEqual(data[0]['addresses'][0]['address'], '123 Drumpf Mansion')
+
+    # TODO: revisit b/c dash not allowed
+    # def test_power_select_location_address_address(self):
+    #     location = create_location()
+    #     address = create_contact(Address, location)
+    #     address.postal_code = '12345-12345'
+    #     address.save()
+    #     print(address.postal_code)
+    #
+    #     response = self.client.get('/api/admin/locations/location__icontains={}/'.format(address.postal_code))
+    #
+    #     data = json.loads(response.content.decode('utf8'))
+    #     self.assertEqual(len(data), 1)
+    #     self.assertEqual(data[0]['id'], str(location.id))
+    #     self.assertEqual(data[0]['addresses'][0]['postal_code'], '12345-12345')
+
+    def test_power_select_location_name_with_llevel(self):
+        # test ensuring nothing wrong with custom endpoint 
+        llevel = create_location_level()
+        location = create_location(llevel)
+
+        response = self.client.get('/api/admin/locations/location__icontains={}/?location_level={}'.format(location.name, location.location_level.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 1)
+        self.assertNotIn('location_level', data[0])
 
 
 class LocationDetailTests(APITestCase):

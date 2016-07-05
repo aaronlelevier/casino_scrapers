@@ -105,9 +105,11 @@ class LocationListSerializer(serializers.ModelSerializer):
 
 class LocationSearchSerializer(serializers.ModelSerializer):
 
+    addresses = AddressSerializer(required=False, many=True)
+
     class Meta:
         model = Location
-        fields = ('id', 'name', 'number')
+        fields = ('id', 'name', 'number', 'addresses')
 
 
 class LocationDetailSerializer(serializers.ModelSerializer):

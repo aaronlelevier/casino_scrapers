@@ -206,23 +206,27 @@ class LocationQuerySet(SelfReferencingQuerySet):
             raise
         return self.filter(location_level__in=parent_levels).exclude(id=pk)
 
+    # TODO: most of this is not tested
     def search_multi(self, keyword):
         return self.filter(
-            Q(name__icontains=keyword) | \
-            Q(number__icontains=keyword) | \
-            Q(addresses__city__icontains=keyword) | \
-            Q(addresses__address__icontains=keyword) | \
-            Q(addresses__postal_code__icontains=keyword)
-        )
-
-    def search_power_select(self, keyword):
-        return self.filter(
             Q(name__icontains=keyword)
-            # Q(number__icontains=keyword) | \
+            # Q(number__icontains=keyword)
             # Q(addresses__city__icontains=keyword) | \
             # Q(addresses__address__icontains=keyword) | \
             # Q(addresses__postal_code__icontains=keyword)
         )
+
+    def search_power_select(self, keyword, llevel_id):
+        q_obj = Q(name__icontains=keyword) | \
+            Q(number__icontains=keyword) | \
+            Q(addresses__city__icontains=keyword) | \
+            Q(addresses__address__icontains=keyword) | \
+            Q(addresses__postal_code__icontains=keyword)
+
+        if llevel_id:
+            q_obj &= Q(location_level=llevel_id)
+
+        return self.filter(q_obj)
 
     def objects_and_their_children(self):
         """
@@ -276,8 +280,11 @@ class LocationManager(SelfReferencingManager):
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
 
-    def search_power_select(self, keyword):
-        return self.get_queryset().search_power_select(keyword)
+    def search_power_select(self, keyword, llevel_id):
+        '''
+        llevel_id may be undefined. Only person location select passes llevel_id
+        '''
+        return self.get_queryset().search_power_select(keyword, llevel_id)
 
     def create_top_level(self):
         location_level = LocationLevel.objects.create_top_level()

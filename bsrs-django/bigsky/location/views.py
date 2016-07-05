@@ -173,6 +173,7 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
         serializer = ls.LocationSearchSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    # TODO: space regex
     @list_route(methods=['GET'], url_path=r'get-level-parents/(?P<llevel_id>[\w\-]+)/(?P<pk>[\w\-]+)/location__icontains=(?P<search_key>[\w\-]+)')
     def get_level_parents(self, request, llevel_id=None, pk=None, search_key=None):
         queryset = Location.objects.get_level_parents(llevel_id, pk)
@@ -182,8 +183,9 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
         serializer = ls.LocationSearchSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    @list_route(methods=['GET'], url_path=r"location__icontains=(?P<search_key>[\w\-]+)")
+    @list_route(methods=['GET'], url_path=r"location__icontains=(?P<search_key>[\w ]+)")
     def search_power_select(self, request, search_key=None):
-        queryset = Location.objects.search_power_select(search_key)
+        llevel_id = request.query_params['location_level'] if 'location_level' in request.query_params else None
+        queryset = Location.objects.search_power_select(search_key, llevel_id)
         serializer = ls.LocationSearchSerializer(queryset, many=True)
         return Response(serializer.data)
