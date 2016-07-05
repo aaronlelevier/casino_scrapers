@@ -182,23 +182,8 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
         serializer = ls.LocationSearchSerializer(queryset, many=True)
         return Response(serializer.data)
 
-
-    # Merge route if optional params
-    @list_route(methods=['GET'], url_path=r"location__icontains=(?P<search_key>[\w\-]+)/location_level=(?P<ll_pk>[\w\-]+)")
-    def search_with_llevel(self, request, ll_pk=None, search_key=None):
-        # if search more than name? address?
-        queryset = Location.objects.filter(
-            Q(name__icontains=search_key) & \
-            Q(location_level__id__in=[ll_pk])
-        )
-        serializer = ls.LocationSearchSerializer(queryset, many=True)
-        return Response(serializer.data)
-
     @list_route(methods=['GET'], url_path=r"location__icontains=(?P<search_key>[\w\-]+)")
-    def search(self, request, search_key=None):
-        # if search more than name? address?
-        queryset = Location.objects.filter(
-            Q(name__icontains=search_key)
-        )
+    def search_power_select(self, request, search_key=None):
+        queryset = Location.objects.search_power_select(search_key)
         serializer = ls.LocationSearchSerializer(queryset, many=True)
         return Response(serializer.data)

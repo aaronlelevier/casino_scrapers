@@ -49,7 +49,7 @@ class SelfReferencingQuerySet(models.query.QuerySet):
 
         :child: getting all parents for this Object
 
-        :first_child_id: 
+        :first_child_id:
             the ``child_id`` that we are looking up all parents for,
             and will be excluded from the output
 
@@ -99,10 +99,10 @@ class SelfReferencingQuerySet(models.query.QuerySet):
 
 
 class SelfReferencingManager(BaseManager):
-    
+
     def get_queryset(self):
         return SelfReferencingQuerySet(self.model, self._db).filter(deleted__isnull=True)
-        
+
     def get_all_children(self, parent, all_children=None):
         return self.get_queryset().get_all_children(parent, all_children)
 
@@ -159,7 +159,7 @@ class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
         children = [str(child.id) for child in self.children.all()]
         parents = [str(parent.id) for parent in self.parents.all()]
         return {"id": str(self.id), "name": self.name, "children": children, "parents": parents}
-    
+
 
 ### LOCATION STATUS
 
@@ -175,7 +175,7 @@ class LocationStatus(DefaultToDictMixin, BaseNameModel):
 class LocationType(BaseNameModel):
 
     default = settings.DEFAULT_LOCATION_TYPE
-    
+
     objects = DefaultNameManager()
 
 
@@ -215,6 +215,15 @@ class LocationQuerySet(SelfReferencingQuerySet):
             Q(addresses__postal_code__icontains=keyword)
         )
 
+    def search_power_select(self, keyword):
+        return self.filter(
+            Q(name__icontains=keyword)
+            # Q(number__icontains=keyword) | \
+            # Q(addresses__city__icontains=keyword) | \
+            # Q(addresses__address__icontains=keyword) | \
+            # Q(addresses__postal_code__icontains=keyword)
+        )
+
     def objects_and_their_children(self):
         """
         Meant to be called from a RelatedManager standpoint, otherwise
@@ -248,10 +257,10 @@ class LocationQuerySet(SelfReferencingQuerySet):
 
 
 class LocationManager(SelfReferencingManager):
-    
+
     def get_queryset(self):
         return LocationQuerySet(self.model, self._db).filter(deleted__isnull=True)
-        
+
     def get_level_children(self, llevel_id, pk):
         '''
         Get all child Locations at a specific LocationLevel.
@@ -266,6 +275,9 @@ class LocationManager(SelfReferencingManager):
 
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
+
+    def search_power_select(self, keyword):
+        return self.get_queryset().search_power_select(keyword)
 
     def create_top_level(self):
         location_level = LocationLevel.objects.create_top_level()
@@ -285,7 +297,7 @@ class Location(SelfRefrencingBaseModel, BaseModel):
     Physical Store ``Locations`` that have a ``LocationLevel``.
 
     :ex:
-        At the *Region* ``LocationLevel`` there is a 
+        At the *Region* ``LocationLevel`` there is a
         *East* ``Location``.
     '''
     # keys

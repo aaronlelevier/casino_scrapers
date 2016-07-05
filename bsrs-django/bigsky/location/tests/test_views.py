@@ -289,7 +289,9 @@ class LocationListTests(APITestCase):
         location = create_location()
         location.name = 'foobar'
         location.save()
+        
         response = self.client.get('/api/admin/locations/location__icontains={}/'.format('foobar'))
+
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['id'], str(location.id))
@@ -299,7 +301,9 @@ class LocationListTests(APITestCase):
         location = create_location()
         location.name = 'foobar'
         location.save()
-        response = self.client.get('/api/admin/locations/location__icontains={}/location_level={}/'.format('foobar', location.location_level.id))
+
+        response = self.client.get('/api/admin/locations/location__icontains={}/?location_level={}'.format('foobar', location.location_level.id))
+
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['id'], str(location.id))
@@ -312,7 +316,9 @@ class LocationListTests(APITestCase):
         location = create_location()
         location.id = uuid.uuid4()
         location.save()
-        response = self.client.get('/api/admin/locations/location__icontains={}/location_level={}/'.format('foobar',location.location_level.id))
+
+        response = self.client.get('/api/admin/locations/location__icontains={}/?location_level={}'.format('foobar',location.location_level.id))
+
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data), 0)
 
