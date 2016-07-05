@@ -3,6 +3,7 @@ from datetime import date
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, Group
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 from django.test import TestCase
 from django.utils.timezone import localtime, now
 
@@ -71,7 +72,7 @@ class RoleTests(TestCase):
 
     def test_categories_not_reqd(self):
         category = Category.objects.get(id=self.role.categories.first().id)
-        self.role.categories.remove(category)  
+        self.role.categories.remove(category)
         self.role.save()
         self.assertEqual(self.role.categories.count(), 0)
 
@@ -335,7 +336,7 @@ class PersonTests(TestCase):
         # Confirm that the ``system_default`` is not equal to the Locale
         # that we are about to assign to the ``Person``
         self.assertNotEqual(default_locale, person_locale)
-        Person.objects.filter(pk=self.person.id).update(locale=person_locale) 
+        Person.objects.filter(pk=self.person.id).update(locale=person_locale)
 
         # ``person.to_dict(_)`` will return the ``person.locale`` first
         # if it exists, not ``person._get_locale``
@@ -366,7 +367,7 @@ class PersonTests(TestCase):
 
     def test_all_locations_and_children(self):
         """
-        Tests that a full Location object is being returned, which will later 
+        Tests that a full Location object is being returned, which will later
         be used by a DRF serializer in the Person-Current Bootstrapped data.
         """
         data = self.person.all_locations_and_children()
@@ -445,3 +446,56 @@ class PersonPasswordHistoryTests(TestCase):
             init_password_change,
             post_password_change
         )
+
+class PersonManagerTests(TestCase):
+
+    def setUp(self):
+        create_person()
+        create_person()
+
+    def test_search_multi_username(self):
+        search = Person.objects.first().username
+        raw_qs_count = Person.objects.filter(
+                Q(username__icontains=search)
+            ).count()
+
+        ret = Person.objects.search_multi(keyword=search).count()
+
+        self.assertEqual(ret, raw_qs_count)
+        self.assertEqual(ret, 1)
+
+    def test_search_multi_username(self):
+        search = Person.objects.first().fullname
+        raw_qs_count = Person.objects.filter(
+                Q(fullname__icontains=search)
+            ).count()
+
+        ret = Person.objects.search_multi(keyword=search).count()
+
+        self.assertEqual(ret, raw_qs_count)
+        self.assertEqual(ret, 1)
+
+    def test_search_multi_title(self):
+        person = Person.objects.first()
+        person.title = 'another title'
+        person.save()
+        search = 'another title'
+        raw_qs_count = Person.objects.filter(
+                Q(title__icontains=search)
+            ).count()
+
+        ret = Person.objects.search_multi(keyword=search).count()
+
+        self.assertEqual(ret, raw_qs_count)
+        self.assertEqual(ret, 1)
+
+    def test_search_multi_role__name(self):
+        search = Person.objects.first().role.name
+        raw_qs_count = Person.objects.filter(
+                Q(role__name__icontains=search)
+            ).count()
+
+        ret = Person.objects.search_multi(keyword=search).count()
+
+        self.assertEqual(ret, raw_qs_count)
+        self.assertEqual(ret, 1)

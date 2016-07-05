@@ -251,8 +251,7 @@ class PersonQuerySet(models.query.QuerySet):
             Q(username__icontains=keyword) | \
             Q(fullname__icontains=keyword) | \
             Q(title__icontains=keyword) | \
-            Q(role__name__icontains=keyword) | \
-            Q(employee_id__icontains=keyword)
+            Q(role__name__icontains=keyword)
         )
 
     def search_power_select(self, keyword):
