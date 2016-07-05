@@ -11,10 +11,16 @@ const DROPDOWN = options;
 export default PageObject.create({
   descValue: value('.t-ap-description'),
   descFill: fillable('.t-ap-description'),
+  descSortText: text('.t-sort-description'),
+  descGridOne: text('.t-profile-description:eq(0)'),
+  descGridTwo: text('.t-profile-description:eq(1)'),
 
   assigneeInput: text(ASSIGNEE),
   assigneeClickDropdown: clickable(ASSIGNEE),
   assigneeClickOptionOne: clickable(`.ember-power-select-option:eq(0)`, { scope: DROPDOWN }),
   assigneeClickOptionTwo: clickable(`.ember-power-select-option:eq(1)`, { scope: DROPDOWN }),
   assigneeOptionLength: count('li', { scope: DROPDOWN }),
+  assigneeSortText: text('.t-sort-assignee-username'),
+  assigneeGridOne: text('.t-profile-assignee-username:eq(0)'),
+  assigneeGridTwo: text('.t-profile-assignee-username:eq(1)'),
 });

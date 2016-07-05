@@ -26,6 +26,8 @@ var GeneralPage = PageObject.create({
   clickGeneralSettingsLink: clickable('.t-general-settings'),
 
   gridItemZeroClick: clickable('.t-grid-data:eq(0)'),
+  gridTitle: text('.t-grid-title'),
+  gridPageCountText: text('.t-page-count'),
 
   modalBodyValue: () => Ember.$('.t-modal-body').text().trim(),
   modalCancelBtnValue: () => Ember.$('.t-modal-cancel-btn').text().trim(),

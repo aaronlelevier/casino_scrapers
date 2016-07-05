@@ -10,6 +10,14 @@ export default GridViewComponent.extend({
           isSortable: true,
           isFilterable: true,
           isSearchable: true
+        },
+        {
+          field: 'assignee.username',
+          headerLabel: 'admin.profile.label.assignee',
+          headerIsTranslatable: true,
+          isSortable: true,
+          isFilterable: true,
+          isSearchable: true
         }
     ]
 });

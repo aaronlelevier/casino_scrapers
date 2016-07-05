@@ -33,7 +33,6 @@ test('visit list, click a record and go to their detail view', assert => {
   visit(LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);
-    assert.equal(find('.t-grid-title').text(), t('admin.profile.other'));
   });
   xhr(API_DETAIL_URL, 'GET', null, {}, 200, PF.detail());
   generalPage.gridItemZeroClick();

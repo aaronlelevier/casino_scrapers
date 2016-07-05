@@ -12,6 +12,8 @@ var BSRS_PROFILE_DEFAULTS_OBJECT = (function() {
       assigneeOne: this.person.idOne,
       assigneeTwo: this.person.idTwo,
       username: this.person.username,
+      usernameOne: this.person.usernameOne,
+      usernameTwo: this.person.usernameTwo,
     };
   };
   return factory;
