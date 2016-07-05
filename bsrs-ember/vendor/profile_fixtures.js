@@ -8,6 +8,10 @@ var BSRS_PROFILE_FACTORY = (function() {
       id: id,
       description: this.profile.descOne,
       assignee_id: this.profile.assigneeOne,
+      assignee: {
+        id: this.profile.assigneeOne,
+        username: this.profile.username
+      }
     };
   };
   factory.prototype.detail = function() {

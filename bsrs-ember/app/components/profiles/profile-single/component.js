@@ -6,6 +6,7 @@ import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 
 export default Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, {
   repository: injectRepo('profile'),
+  personRepo: injectRepo('person'),
   actions: {
     save() {
       this.set('submitted', true);

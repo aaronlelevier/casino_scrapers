@@ -24,9 +24,26 @@
       <section>
         <div class="row">
           <div class="col-md-12">
-            {{log 'here'}}
             {{#form-group title="admin.profile.description" for="description"}}
               {{input type="text" placeholder=(t "admin.profile.description") value=model.description class="form-control t-ap-description" id="description"}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.profile.assignee" for="assignee"}}
+            {{db-fetch-select
+              model=model
+              selectedAttr=model.assignee
+              className="t-profile-assignee-select"
+              displayName="username"
+              change_func="changeAssignee"
+              remove_func="remove_assignee"
+              repository=personRepo
+              searchMethod="findTicketAssignee"
+              valuePath="assignee"
+              didValidate=didValidate
+              errorClass="error t-ticket-assignee-error"}}
             {{/form-group}}
           </div>
         </div>
