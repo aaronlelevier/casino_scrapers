@@ -79,7 +79,7 @@ test('visiting mobile ticket grid show correct layout', assert => {
     assert.ok(find('.t-grid-data:eq(0) > div:eq(2)').hasClass('t-ticket-status-translated_name'));
     assert.equal(find('.t-grid-data:eq(0) > div:eq(3)').text().trim(), t('ticket.priority.emergency'));
     assert.ok(find('.t-grid-data:eq(0) > div:eq(3)').hasClass('t-ticket-priority-translated_name'));
-    assert.equal(find('.t-grid-data:eq(0) > div:eq(4)').text().trim(), 'Company');
+    assert.equal(find('.t-grid-data:eq(0) > div:eq(4)').text().trim(), LD.baseStoreName);
     assert.equal(find('.t-grid-data:eq(0) > div:eq(5)').text().trim(), ticket.get('assignee').get('fullname'));
     assert.equal(find('.t-grid-data:eq(0) > div:eq(6)').text().trim().split(' ')[0], 'Today');
     assert.equal(find('.t-grid-data:eq(0) > div:eq(6)').text().trim().split(' ')[1], 'at');

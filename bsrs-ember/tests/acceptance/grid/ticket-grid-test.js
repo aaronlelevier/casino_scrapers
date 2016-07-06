@@ -60,7 +60,7 @@ test('initial load should only show first ${PAGE_SIZE} records ordered by id wit
     assert.equal(find('.t-grid-title').text(), 'Tickets');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
-    assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text().trim(), LD.storeName);
+    assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text().trim(), LD.baseStoreName);
     assert.ok(find('.t-grid-data:eq(0) .t-ticket-priority-emergency'));
     assert.ok(find('.t-grid-data:eq(0) .t-ticket-status-new'));
     const time = moment(new Date()).calendar();
