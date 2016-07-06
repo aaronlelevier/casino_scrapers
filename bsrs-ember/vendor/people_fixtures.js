@@ -201,7 +201,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
 })();
 
 if (typeof window === 'undefined') {
-
+  var objectAssign = require('object-assign');
   var mixin = require('../vendor/mixin');
   var email_fixtures = require('../vendor/email_fixtures');
   var address_fixtures = require('../vendor/address_fixtures');
