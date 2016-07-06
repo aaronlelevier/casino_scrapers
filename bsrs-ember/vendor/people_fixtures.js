@@ -40,6 +40,9 @@ var BSRS_PEOPLE_FACTORY = (function() {
       title: 'wat'
     }
   };
+  factory.prototype.get_for_power_select = function(i, first_name, last_name) {
+    return [this.get_no_related(i, first_name, last_name)];
+  };
   factory.prototype.generate_list = function(i) {
     return {
       id: i,
@@ -183,7 +186,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         uuid = uuid + i;
       }
       // only want username, fullname, title
-      var person = this.generate_for_power_select(uuid);
+      var person = this.get_no_related(uuid);
       person.username = 'boy' + i;
       person.first_name = 'Boy' + i;
       person.last_name = 'Man' + i;

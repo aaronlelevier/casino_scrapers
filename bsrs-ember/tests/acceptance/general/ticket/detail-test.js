@@ -313,7 +313,7 @@ test('clicking and typing into power select for people will fire off xhr request
     assert.equal(page.ccSelected.indexOf(PD.first_name), 2);
   });
   let people_endpoint = PREFIX + '/admin/people/person__icontains=a/';
-  xhr(people_endpoint, 'GET', null, {}, 200, PF.get_no_related(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
+  xhr(people_endpoint, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
   page.ccClickDropdown();
   fillIn(`${CC_SEARCH}`, 'a');
   andThen(() => {
@@ -400,7 +400,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
   let people_endpoint = PREFIX + '/admin/people/person__icontains=a/';
-  xhr(people_endpoint, 'GET', null, {}, 200, PF.get_no_related(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
+  xhr(people_endpoint, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
   page.ccClickDropdown();//don't know why I have to do this
   fillIn(`${CC_SEARCH}`, 'a');
   andThen(() => {
@@ -426,7 +426,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
-  xhr(PREFIX + '/admin/people/person__icontains=Mel/', 'GET', null, {}, 200, PF.get_no_related());
+  xhr(PREFIX + '/admin/people/person__icontains=Mel/', 'GET', null, {}, 200, PF.get_for_power_select());
   page.ccClickDropdown();
   fillIn(`${CC_SEARCH}`, 'Mel');
   page.ccClickMel();
@@ -471,7 +471,7 @@ test('starting with multiple cc, can remove all ccs (while not populating option
     assert.equal(page.ccsSelected, 0);
   });
   let people_endpoint = PREFIX + '/admin/people/person__icontains=Mel/';
-  ajax(people_endpoint, 'GET', null, {}, 200, PF.get_no_related());
+  ajax(people_endpoint, 'GET', null, {}, 200, PF.get_for_power_select());
   page.ccClickDropdown();
   fillIn(`${CC_SEARCH}`, 'Mel');
   andThen(() => {
