@@ -1,17 +1,12 @@
 <article class="main">
   <header>
+    &nbsp;
   </header>
   <section class="docSection container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <section style="padding-bottom: 0">
-          <div class="t-dashboard-text">{{dashboardData.settings.dashboard_text}}</div>
-        </section>
         <section>
-          {{#each model as |ticket|}}
-            <div class="t-ticket-draft">{{ticket.number}}</div>
-            {{#link-to "tickets.ticket" ticket.id tagName="button" class="btn btn-info t-ticket-status-draft-link"}}{{t "ticket.one"}}{{/link-to}}
-          {{/each}}
+          <div class="dashboard_text t-dashboard-text">{{format-markdown dashboardData.settings.dashboard_text}}</div>
         </section>
       </div>
     </div>
@@ -21,4 +16,6 @@
   <header>
     <h1></h1>
   </header>
+  <menu class="t-side-menu">
+  </menu>
 </aside>
