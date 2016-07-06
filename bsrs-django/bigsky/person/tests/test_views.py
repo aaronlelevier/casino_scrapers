@@ -41,7 +41,6 @@ class RoleListTests(RoleSetupMixin, APITestCase):
         self.assertEqual(role['name'], self.role.name)
         self.assertEqual(role['role_type'], self.role.role_type)
         self.assertEqual(role['location_level'], str(self.location.location_level.id))
-        self.assertEqual(role['auth_amount'], "{:.4f}".format(self.role.auth_amount))
 
 
 class RoleDetailTests(RoleSetupMixin, APITestCase):
@@ -319,10 +318,55 @@ class PersonListTests(TestCase):
         self.assertEqual(data['status']['name'], person.status.name)
         self.assertEqual(data['role'], str(person.role.id))
         self.assertEqual(data['title'], person.title)
-        self.assertEqual(data['employee_id'], person.employee_id)
+        self.assertNotIn('employee_id', data)
         self.assertNotIn('auth_amount', data)
         self.assertNotIn('accept_assign', data)
         self.assertNotIn('accept_notify', data)
+
+    ### CUSTOM LIST ROUTES
+
+    def test_power_select_people_username(self):
+        person1 = create_single_person(name='watter')
+        person1.first_name = 'nothing'
+        person1.last_name = 'nothing'
+        person1.title = 'nothing'
+        person1.save()
+
+        response = self.client.get('/api/admin/people/person__icontains={}/'.format('watter'))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['id'], str(person1.id))
+        self.assertEqual(data[0]['username'], 'watter')
+        self.assertEqual(data[0]['fullname'], 'nothing nothing')
+        self.assertNotIn('title', data[0])
+        self.assertNotIn('role', data[0])
+        self.assertNotIn('status', data[0])
+
+    def test_power_select_people_fullname(self):
+        person1 = create_single_person(name='wat')
+        person1.first_name = 'foo'
+        person1.save()
+
+        response = self.client.get('/api/admin/people/person__icontains={}/'.format('foo'))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['id'], str(person1.id))
+        self.assertEqual(data[0]['fullname'], 'foo wat')
+
+    def test_power_select_people_email(self):
+        # TODO: figure out email w/ @ in search
+        person1 = create_single_person(name='wat')
+        person1.email = 'foo@bar.com'
+        person1.save()
+
+        response = self.client.get('/api/admin/people/person__icontains={}/'.format('foo'))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['id'], str(person1.id))
+        self.assertEqual(data[0]['email'], 'foo@bar.com')
 
 
 class PersonDetailTests(TestCase):
@@ -378,22 +422,22 @@ class PersonDetailTests(TestCase):
 
     def test_data__inherited(self):
         # auth_amount
-        self.assertEqual(self.data['inherited']['auth_amount']['value'], None)
+        self.assertNotIn('value', self.data['inherited']['auth_amount'])
         self.assertEqual(self.data['inherited']['auth_amount']['inherited_value'], self.person.role.auth_amount)
         self.assertEqual(self.data['inherited']['auth_amount']['inherits_from'], 'role')
         self.assertEqual(self.data['inherited']['auth_amount']['inherits_from_id'], str(self.person.role.id))
         # auth_currency
-        self.assertEqual(self.data['inherited']['auth_currency']['value'], None)
+        self.assertNotIn('value', self.data['inherited']['auth_currency'])
         self.assertEqual(self.data['inherited']['auth_currency']['inherited_value'], str(self.person.role.tenant.default_currency.id))
         self.assertEqual(self.data['inherited']['auth_currency']['inherits_from'], 'role')
         self.assertEqual(self.data['inherited']['auth_currency']['inherits_from_id'], str(self.person.role.id))
         # accept_assign
-        self.assertEqual(self.data['inherited']['accept_assign']['value'], None)
+        self.assertNotIn('value', self.data['inherited']['accept_assign'])
         self.assertEqual(self.data['inherited']['accept_assign']['inherited_value'], self.person.role.accept_assign)
         self.assertEqual(self.data['inherited']['accept_assign']['inherits_from'], 'role')
         self.assertEqual(self.data['inherited']['accept_assign']['inherits_from_id'], str(self.person.role.id))
         # accept_notify
-        self.assertEqual(self.data['inherited']['accept_notify']['value'], None)
+        self.assertNotIn('value', self.data['inherited']['accept_notify'])
         self.assertEqual(self.data['inherited']['accept_notify']['inherited_value'], self.person.role.accept_notify)
         self.assertEqual(self.data['inherited']['accept_notify']['inherits_from'], 'role')
         self.assertEqual(self.data['inherited']['accept_notify']['inherits_from_id'], str(self.person.role.id))

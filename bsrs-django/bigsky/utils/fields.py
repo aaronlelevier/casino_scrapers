@@ -55,10 +55,12 @@ class InheritedValueField(object):
         inherited_model = self._get_inherited_model(obj, inherited_model_str)
 
         ret = {
-            'value': self._getvalue(obj, self.field) if getattr(obj, self.field) else None,
             'inherits_from': inherited_model_str,
             'inherits_from_id': str(inherited_model.id)
         }
+
+        if getattr(obj, self.field):
+            ret['value'] = self._getvalue(obj, self.field)
 
         current_model = obj
         for lookup in self.lookups:

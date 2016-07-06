@@ -43,7 +43,7 @@ test('category and location level will not be deserialized into its own store wh
     id: CD.idOne,
     name: CD.nameOne
   });
-  let json = RF.generate_single_for_list(RD.unusedId);
+  let json = RF.generate_list(RD.unusedId);
   let response = {
     'count': 1,
     'next': null,
@@ -120,7 +120,7 @@ test('role location level will correctly be deserialized when server returns rol
     roles: [RD.idOne]
   });
   let response = RF.generate(RD.idOne);
-  response.location_level = undefined;
+  delete response.location_level;
   run(() => {
     subject.deserialize(response, RD.idOne);
   });
@@ -143,7 +143,7 @@ test('role location level will correctly be deserialized (with many roles) when 
     roles: [RD.idOne, RD.unusedId]
   });
   let response = RF.generate(RD.idOne);
-  response.location_level = undefined;
+  delete response.location_level;
   run(() => {
     subject.deserialize(response, RD.idOne);
   });
@@ -165,7 +165,7 @@ test('role location level will correctly be deserialized when server returns rol
     name: LLD.nameCompany,
     roles: [RD.idOne]
   });
-  let json = RF.generate_single_for_list(RD.idOne);
+  let json = RF.generate_list(RD.idOne);
   json.location_level = undefined;
   let response = {
     'count': 1,
@@ -269,7 +269,7 @@ test('role category will correctly be deserialized when server returns role with
     id: CD.idOne,
     name: CD.nameOne
   });
-  response.categories.push(CF.generate(CD.unusedId));
+  response.categories.push(CF.generate_for_power_select(CD.unusedId));
   assert.deepEqual(role.get('role_categories_fks'), [ROLE_CD.idOne]);
   assert.equal(role.get('categories').get('length'), 1);
   run(() => {

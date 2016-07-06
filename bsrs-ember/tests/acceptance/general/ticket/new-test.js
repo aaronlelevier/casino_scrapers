@@ -43,12 +43,12 @@ const SEARCH = '.ember-power-select-search input';
 
 let application, store, list_xhr, location_xhr, people_xhr, original_uuid, counter;
 
-module('Acceptance | ticket new test', {
+module('scott Acceptance | ticket new test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(TICKET_LIST_URL, 'GET', null, {}, 200, TF.empty());
-    location_xhr = xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
+    location_xhr = xhr(`${PREFIX}/admin/locations/location__icontains=6/`, 'GET', null, {}, 200, LF.search_power_select());
     counter = 0;
     // timemachine.config({
     //   dateString: 'December 25, 2015 13:12:59'
@@ -114,7 +114,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     assert.ok(find('.t-location-validation-error').is(':visible'));
     assert.ok(find('.t-category-validation-error').is(':visible'));
   });
-  people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PF.search());
+  people_xhr = xhr(`${PREFIX}/admin/people/person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
   page.assigneeClickDropdown();
   fillIn(`${SEARCH}`, 'b');
   page.assigneeClickOptionTwo();
@@ -406,7 +406,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     assert.equal(ticket.get('assignee_fk'), undefined);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   });
-  xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PF.search());
+  xhr(`${PREFIX}/admin/people/person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
   page.assigneeClickDropdown();
   fillIn(`${SEARCH}`, 'b');
   andThen(() => {
@@ -441,7 +441,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
   //search specific assignee
-  xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy1`, 'GET', null, {}, 200, PF.search());
+  xhr(`${PREFIX}/admin/people/person__icontains=Boy1/`, 'GET', null, {}, 200, PF.search_power_select());
   page.assigneeClickDropdown();
   fillIn(`${SEARCH}`, 'Boy1');
   andThen(() => {
@@ -494,9 +494,7 @@ test('location new component shows location for ticket and will fire off xhr to 
 
 test('removes location dropdown on search to change location', (assert) => {
   clearxhr(list_xhr);
-  clearxhr(location_xhr);
   page.visitNew();
-  location_xhr = xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
   page.locationClickDropdown();
   fillIn(`${SEARCH}`, '6');
   andThen(() => {
@@ -521,9 +519,8 @@ test('clicking and typing into power select for people will fire off xhr request
     let ticket = store.findOne('ticket');
     assert.ok(!ticket.get('cc.length'));
   });
-  let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
-  const payload = { 'results': [PF.get(PD.idDonald, PD.donald_first_name, PD.donald_last_name)] };
-  ajax(people_endpoint, 'GET', null, {}, 200, payload);
+  let people_endpoint = PREFIX + '/admin/people/person__icontains=a/';
+  ajax(people_endpoint, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
   page.ccClickDropdown();
   fillIn(`${CC_SEARCH}`, 'a');
   andThen(() => {
@@ -555,7 +552,7 @@ test('clicking and typing into power select for people will fire off xhr request
   });
   //search specific cc
   page.ccClickDropdown();
-  xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy`, 'GET', null, {}, 200, PF.search());
+  xhr(`${PREFIX}/admin/people/person__icontains=Boy/`, 'GET', null, {}, 200, PF.search_power_select());
   fillIn(`${CC_SEARCH}`, 'Boy');
   andThen(() => {
     assert.equal(page.ccSelected.indexOf(PD.donald), 2);
@@ -584,9 +581,8 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     let ticket = store.findOne('ticket');
     assert.ok(!ticket.get('cc.length'));
   });
-  let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
-  const payload = { 'results': [PF.get(PD.idDonald, PD.donald_first_name, PD.donald_last_name)] };
-  ajax(people_endpoint, 'GET', null, {}, 200, payload);
+  let people_endpoint = PREFIX + '/admin/people/person__icontains=a/';
+  ajax(people_endpoint, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
   page.ccClickDropdown();
   fillIn(`${CC_SEARCH}`, 'a');
   andThen(() => {
@@ -620,7 +616,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
 //    const ticket = store.find('ticket', UUID.value);
 //    assert.ok(ticket.get('isNotDirty'));
 //  });
-//  people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PF.search());
+//  people_xhr = xhr(`${PREFIX}/admin/people/person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
 //  page.assigneeClickDropdown();
 //  fillIn(`${SEARCH}`, 'b');
 //  page.assigneeClickOptionTwo();
@@ -685,7 +681,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
 //});
 
 test('adding a new ticket should allow for another new ticket to be created after the first is persisted', (assert) => {
-  ajax(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PF.search());
+  ajax(`${PREFIX}/admin/people/person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
   page.visit();
   andThen(() => {
     patchRandom(counter);

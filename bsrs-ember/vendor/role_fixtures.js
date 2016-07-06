@@ -12,16 +12,19 @@ var BSRS_ROLE_FACTORY = (function() {
       name: name || this.role_defaults.nameOne,
       role_type: this.role_defaults.t_roleTypeGeneral,
       location_level: this.location_level_fixtures.detail().id,
-      categories: [this.category_fixtures.detail()],
+      categories: [this.category_fixtures.generate_for_power_select()],
       auth_amount: this.currency_defaults.authAmountOne,
       inherited: inherited || this.role_defaults.inherited
     }
   };
-  factory.prototype.generate_single_for_list = function(i) {
+  factory.prototype.generate_list = function(i) {
     var id = i || this.role_defaults.idOne;
-    var role = this.generate(id);
-    delete role.role_type;
-    return role;
+    return {
+      id: id,
+      name: this.role_defaults.nameOne,
+      role_type: this.role_defaults.t_roleTypeGeneral,
+      location_level: this.location_level_fixtures.detail().id,
+    }
   };
   factory.prototype.list = function() {
     var response = [];
@@ -37,8 +40,7 @@ var BSRS_ROLE_FACTORY = (function() {
       } else{
         rando_uuid = rando_uuid + i;
       }
-      var role = this.generate(rando_uuid);
-      delete role.categories;
+      var role = this.generate_list(rando_uuid);
       role.name = 'zap' + i;
       response.push(role);
     }
@@ -49,8 +51,7 @@ var BSRS_ROLE_FACTORY = (function() {
     var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
     for (var i=page_size+1; i <= page_size*2-1; i++) {
       var uuid = 'af34ee9b-833c-4f3e-a584-b6851d1e04';
-      var role = this.generate(uuid + i);
-      delete role.categories;
+      var role = this.generate_list(uuid + i);
       role.name = 'xav' + i;
       role.role_type = this.role_defaults.t_roleTypeContractor;
       response.push(role);
@@ -69,9 +70,6 @@ var BSRS_ROLE_FACTORY = (function() {
       response[key] = role[key];
     }
     return response;
-  };
-  factory.prototype.get = function() {
-    return this.role_defaults.idOne;
   };
   return factory;
 }());

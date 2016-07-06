@@ -41,7 +41,6 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, OptConf, {
       cost_code: this.get('cost_code'),
       label: this.get('label'),
       subcategory_label: this.get('subcategory_label'),
-      parent: null,
       children: this.get('children_ids')
     };
   },

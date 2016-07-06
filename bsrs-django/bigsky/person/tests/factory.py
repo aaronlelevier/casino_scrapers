@@ -29,7 +29,7 @@ PERSON_STATUSES = [
 
 
 class DistrictManager(object):
-    
+
     def __init__(self, *args, **kwargs):
         CategoryStatus.objects.get_or_create(name=CategoryStatus.default)
         self.repair = Category.objects.create(name=CATEGORY_REPAIR, subcategory_label="trade")
@@ -74,7 +74,7 @@ def create_roles():
     "Create a Role for each LocationLevel"
 
     category = Category.objects.first()
-    
+
     if not LocationLevel.objects.first():
         create_location_levels()
 
@@ -116,7 +116,6 @@ def create_single_person(name=None, role=None, location=None, status=None, local
         person = Person.objects.create_user(
             id=id,
             username=name,
-            email='myemail@mail.com',
             password=PASSWORD,
             first_name=name,
             last_name=name,
@@ -146,12 +145,12 @@ def create_person(username=None, _many=1):
             "You specified {} user(s) with username: {}".format(_many, username))
     elif username:
         return create_single_person(username)
-        
+
     # Multiple User Create
     for i in range(_many):
         username = random.choice(create.LOREM_IPSUM_WORDS.split())
         user = create_single_person(username)
-    
+
     return user
 
 
@@ -193,11 +192,11 @@ def add_top_level_location(person):
     `person.Role.location_level` must match `Location.location_level`
     """
     remove_all_locations(person)
-    
+
     location = Location.objects.create_top_level()
     person.role = Role.objects.get(location_level__name=settings.DEFAULT_LOCATION_LEVEL)
     person.save()
-    
+
     person.locations.add(location)
 
 

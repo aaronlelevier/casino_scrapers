@@ -54,7 +54,7 @@ const categories = '.categories-power-select-search input';
 
 let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, original_uuid, category_one_xhr, category_two_xhr, category_three_xhr, counter, activity_one, run = Ember.run;
 
-module('Acceptance | ticket detail', {
+module('scott Acceptance | ticket detail', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
@@ -160,7 +160,7 @@ test('validation works for assignee if ticket status is not draft', async assert
   assert.ok(page.assigneeErrorVisible);
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(page.assigneeErrorText, t('error.ticket.assignee'));
-  xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy1`, 'GET', null, {}, 200, PF.search());
+  xhr(`${PREFIX}/admin/people/person__icontains=Boy1/`, 'GET', null, {}, 200, PF.search_power_select());
   await page.assigneeClickDropdown();
   fillIn(`${SEARCH}`, 'Boy1');
   await page.assigneeClickOptionOne();
@@ -266,7 +266,7 @@ test('visiting detail should set the category even when it has no children', asy
   clearxhr(activity_one);
   ajax(`/api/tickets/${TD.idTwo}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
   let solo_data = TF.detail(TD.idTwo);
-  solo_data.categories = [{id: CD.idSolo, name: CD.nameSolo, children: [], parent: null}];
+  solo_data.categories = [{id: CD.idSolo, name: CD.nameSolo, children: []}];
   ajax(endpoint + TD.idTwo + '/', 'GET', null, {}, 200, solo_data);
   await visit(BASE_URL + '/' + TD.idTwo);
   assert.equal(currentURL(), BASE_URL + '/' + TD.idTwo);
@@ -312,9 +312,8 @@ test('clicking and typing into power select for people will fire off xhr request
     assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.first_name);
     assert.equal(page.ccSelected.indexOf(PD.first_name), 2);
   });
-  let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
-  const payload = { 'results': [PF.get(PD.idDonald, PD.donald_first_name, PD.donald_last_name)] };
-  xhr(people_endpoint, 'GET', null, {}, 200, payload);
+  let people_endpoint = PREFIX + '/admin/people/person__icontains=a/';
+  xhr(people_endpoint, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
   page.ccClickDropdown();
   fillIn(`${CC_SEARCH}`, 'a');
   andThen(() => {
@@ -352,7 +351,7 @@ test('clicking and typing into power select for people will fire off xhr request
   });
   //search specific cc
   page.ccClickDropdown();
-  xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy`, 'GET', null, {}, 200, PF.search());
+  xhr(`${PREFIX}/admin/people/person__icontains=Boy/`, 'GET', null, {}, 200, PF.search_power_select());
   fillIn(`${CC_SEARCH}`, 'Boy');
   andThen(() => {
     assert.equal(page.ccSelected.indexOf(PD.donald), 2);
@@ -400,9 +399,8 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
-  let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
-  let payload = { 'results': [PF.get(PD.idDonald, PD.donald_first_name, PD.donald_last_name)] };
-  xhr(people_endpoint, 'GET', null, {}, 200, payload);
+  let people_endpoint = PREFIX + '/admin/people/person__icontains=a/';
+  xhr(people_endpoint, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
   page.ccClickDropdown();//don't know why I have to do this
   fillIn(`${CC_SEARCH}`, 'a');
   andThen(() => {
@@ -428,8 +426,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
-  let people_endpoint_two = PREFIX + '/admin/people/?fullname__icontains=Mel';
-  xhr(people_endpoint_two, 'GET', null, {}, 200, PF.list());
+  xhr(PREFIX + '/admin/people/person__icontains=Mel/', 'GET', null, {}, 200, PF.get_for_power_select());
   page.ccClickDropdown();
   fillIn(`${CC_SEARCH}`, 'Mel');
   page.ccClickMel();
@@ -473,8 +470,8 @@ test('starting with multiple cc, can remove all ccs (while not populating option
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     assert.equal(page.ccsSelected, 0);
   });
-  let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=Mel';
-  ajax(people_endpoint, 'GET', null, {}, 200, PF.list());
+  let people_endpoint = PREFIX + '/admin/people/person__icontains=Mel/';
+  ajax(people_endpoint, 'GET', null, {}, 200, PF.get_for_power_select());
   page.ccClickDropdown();
   fillIn(`${CC_SEARCH}`, 'Mel');
   andThen(() => {
@@ -528,7 +525,7 @@ test('categories are in order based on text', (assert) => {
 
 test('power select options are rendered immediately when enter detail route and can save different top level category', (assert) => {
   let top_level_data = CF.top_level();
-  top_level_data.results[1] = {id: CD.idThree, name: CD.nameThree, parent_id: null, children: [{id: CD.idLossPreventionChild, name: CD.nameLossPreventionChild}], level: 0};
+  top_level_data.results[1] = {id: CD.idThree, name: CD.nameThree, children: [{id: CD.idLossPreventionChild, name: CD.nameLossPreventionChild}], level: 0};
   page.visitDetail();
   andThen(() => {
     let components = page.powerSelectComponents;
@@ -860,7 +857,7 @@ test('location component shows location for ticket and will fire off xhr to fetc
     assert.equal(page.categoryThreeOptionLength, 1);
   });
   // </check category tree>
-  xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
+  xhr(`${PREFIX}/admin/locations/location__icontains=6/`, 'GET', null, {}, 200, LF.search_power_select());
   page.categoryThreeClickDropdown();
   page.locationClickDropdown();
   fillIn(`${SEARCH}`, '6');
@@ -900,7 +897,7 @@ test('location component shows location for ticket and will fire off xhr to fetc
     assert.equal(ticket.get('categories').get('length'), 3);
   });
   //search specific location
-  xhr(`${PREFIX}/admin/locations/?name__icontains=GHI789`, 'GET', null, {}, 200, LF.search_idThree());
+  xhr(`${PREFIX}/admin/locations/location__icontains=GHI789/`, 'GET', null, {}, 200, LF.search_idThree());
   page.locationClickDropdown();
   fillIn(`${SEARCH}`, 'GHI789');
   andThen(() => {
@@ -937,7 +934,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
   assert.equal(ticket.get('assignee.id'), PD.idOne);
   assert.equal(ticket.get('assignee_fk'), PD.idOne);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PF.search());
+  xhr(`${PREFIX}/admin/people/person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
   await page.assigneeClickDropdown();
   await fillIn(`${SEARCH}`, 'b');
   assert.equal(page.assigneeInput, PD.fullname);
@@ -963,7 +960,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
   assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
   assert.equal(ticket.get('categories').get('length'), 3);
   //search specific assignee
-  xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy1`, 'GET', null, {}, 200, PF.search());
+  xhr(`${PREFIX}/admin/people/person__icontains=Boy1/`, 'GET', null, {}, 200, PF.search_power_select());
   await page.assigneeClickDropdown();
   await fillIn(`${SEARCH}`, 'Boy1');
   assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
@@ -1047,6 +1044,9 @@ test('clicking update will not transition away from ticket detail and bring in l
   let response = TF.detail(TD.idOne);
   ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_comment), {}, 200, response);
   const json = TA_FIXTURES.get_assignee_person_and_to_from_json();
+  //Prevent setting read only properties
+  delete json.to;
+  delete json.from;
   const activity_response = {'count':1,'next':null,'previous':null,'results': [json]};
   ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, activity_response);
   await page.update();

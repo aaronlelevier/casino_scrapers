@@ -89,26 +89,23 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
       emailThree: 'alevier@aol.com',
       personListTwo: '139543cf-8fea-426a-8bc3-09778cd79902',
       inherited: {
+        /* no value field if not present */
         auth_amount: {
-          value: null,
           inherited_value: BSRS_PERSON_AUTH_AMOUNT,
           inherits_from: 'role',
           inherits_from_id: this.role_defaults.idOne
         },
         auth_currency: {
-          value: null,
           inherited_value: this.currency_defaults.id,
           inherits_from: 'role',
           inherits_from_id: this.role_defaults.idOne
         },
         accept_assign: {
-          value: null,
           inherited_value: false,
           inherits_from: 'role',
           inherits_from_id: this.role_defaults.idOne
         },
         accept_notify: {
-          value: null,
           inherited_value: false,
           inherits_from: 'role',
           inherits_from_id: this.role_defaults.idOne

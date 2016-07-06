@@ -93,18 +93,27 @@ class LocationStatusFKSerializer(serializers.ModelSerializer):
         data['status_fk'] = data.pop('status', [])
         return data
 
-        
+
 class LocationListSerializer(serializers.ModelSerializer):
 
     status = LocationStatusSerializer(required=False)
-    
+
     class Meta:
         model = Location
         fields = ('id', 'name', 'number', 'status', 'location_level',)
 
 
+class LocationSearchSerializer(serializers.ModelSerializer):
+
+    addresses = AddressSerializer(required=False, many=True)
+
+    class Meta:
+        model = Location
+        fields = ('id', 'name', 'number', 'addresses')
+
+
 class LocationDetailSerializer(serializers.ModelSerializer):
-    
+
     people = PersonSimpleSerializer(many=True)
     parents = LocationSerializer(many=True)
     children = LocationSerializer(many=True)

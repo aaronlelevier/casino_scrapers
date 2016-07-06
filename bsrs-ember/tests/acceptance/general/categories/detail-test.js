@@ -276,8 +276,8 @@ test('clicking and typing into power select for categories children will fire of
     assert.deepEqual(category.get('children').objectAt(0).get('id'), CD.idChild);
     assert.equal(category.get('children').get('length'), 1);
   });
-  let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a&page_size=25';
-  xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+  let category_children_endpoint = PREFIX + '/admin/categories/category__icontains=a/';
+  xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list_power_select());
   page.categoryClickDropdown();
   fillIn(`${CATEGORY_SEARCH}`, 'a');
   andThen(() => {
@@ -320,8 +320,8 @@ test('when you deep link to the category detail can remove child from category a
     assert.equal(category.get('children').get('length'), 0);
     assert.equal(page.categoriesSelected, 0);
   });
-  let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a&page_size=25';
-  xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+  let category_children_endpoint = PREFIX + '/admin/categories/category__icontains=a/';
+  xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list_power_select());
   page.categoryClickDropdown();
   fillIn(CATEGORY_SEARCH, 'a');
   page.categoryClickOptionOneEq();
@@ -352,8 +352,8 @@ test('when you deep link to the category detail can remove child from category a
 //         assert.equal(category.get('children').get('length'), 0);
 //         assert.ok(category.get('isDirtyOrRelatedDirty'));
 //     });
-//     // let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=e&page_size=25';
-//     // const payload_cats = CF.list();
+//     // let category_children_endpoint = PREFIX + '/admin/categories/category__icontains=e&page_size=25';
+//     // const payload_cats = CF.list_power_select();
 //     // payload_cats.results.unshift(CF.get(CD.idTwo, CD.nameTwo));
 //     // payload_cats.results.unshift(CF.get(CD.idThree, CD.nameThree));
 //     // xhr(category_children_endpoint, 'GET', null, {}, 200, payload_cats);

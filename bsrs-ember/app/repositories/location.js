@@ -29,41 +29,52 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
     const { llevel, pk } = extra_params;
     let url = `${LOCATION_URL}get-level-children/${llevel}/${pk}/`;
     if (search_criteria) {
-      url += `?name__icontains=${search_criteria}`;
+      url += `location__icontains=${search_criteria}/`;
     }
     return PromiseMixin.xhr(url, 'GET').then((response) => {
-      return response.results;
+      return response;
     });
   },
   findLocationParents(search_criteria, extra_params) {
     const { llevel, pk } = extra_params;
     let url = `${LOCATION_URL}get-level-parents/${llevel}/${pk}/`;
     if (search_criteria) {
-      url += `?name__icontains=${search_criteria}`;
+      url += `location__icontains=${search_criteria}/`;
     }
     return PromiseMixin.xhr(url, 'GET').then((response) => {
-      return response.results;
+      return response;
     });
   },
   findTicket(search) {
     let url = LOCATION_URL;
-    return findByName(url, search);
-  },
-  findLocationSelect(search_criteria, filter) {
-    let url = this.format_url(filter);
-    if (filter && search_criteria) {
-      url += `&name__icontains=${search_criteria}`;
-    } else if (search_criteria) {
-      url += `?name__icontains=${search_criteria}`;
+    search = search ? search.trim() : search;
+    if (search) {
+      url += `location__icontains=${search}/`;
     }
     return PromiseMixin.xhr(url, 'GET').then((response) => {
-      return response.results.filter((location) => {
-        const location_level_fk = location.location_level;
-        if (filter) {
-          return location_level_fk === filter.location_level;
-        }
-        return location;
-      });
+      return response;
+    });
+  },
+  findPersonsLocations(search_criteria, filter) {
+    let url = LOCATION_URL;
+    if (filter && search_criteria) {
+      url += `location__icontains=${search_criteria}/?location_level=${filter['location_level']}/`;
+    } else if (search_criteria) {
+      // Role may not have a llevel
+      url += `location__icontains=${search_criteria}/`;
+    }
+    return PromiseMixin.xhr(url, 'GET').then((response) => {
+      return response;
+    });
+  },
+  findLocationSelect(search_criteria, filter) {
+    let url = LOCATION_URL;
+    if (search_criteria) {
+      // DT New
+      url += `location__icontains=${search_criteria}/`;
+    }
+    return PromiseMixin.xhr(url, 'GET').then((response) => {
+      return response;
     });
   },
   find(filter) {

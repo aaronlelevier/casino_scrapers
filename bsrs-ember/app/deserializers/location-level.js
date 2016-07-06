@@ -12,6 +12,7 @@ var LocationLevelDeserializer = Ember.Object.extend({
     const store = this.get('simpleStore');
     const existing = store.find('location-level', id);
     let location_level = existing;
+    //TODO: investigate why need if check
     if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
       response.children_fks = response.children || [];
       response.parent_fks = response.parents || [];
@@ -32,5 +33,3 @@ var LocationLevelDeserializer = Ember.Object.extend({
 });
 
 export default LocationLevelDeserializer;
-
-

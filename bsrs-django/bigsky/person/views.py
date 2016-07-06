@@ -105,8 +105,13 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
         serializer = ps.PersonCurrentSerializer(instance)
         return Response(serializer.data)
 
-    # TODO
-    # add correct authorization to who can use this endpoint
+    @list_route(methods=['GET'], url_path=r"person__icontains=(?P<search_key>[\w ]+)")
+    def search_power_select(self, request, search_key=None):
+        queryset = Person.objects.search_power_select(search_key)
+        serializer = ps.PersonSearchSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    # TODO # add correct authorization to who can use this endpoint
     @list_route(methods=['post'], url_path=r"reset-password/(?P<person_id>[\w\-]+)")
     def reset_password(self, request, person_id=None):
         person = get_object_or_404(Person, id=person_id)

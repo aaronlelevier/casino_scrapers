@@ -39,7 +39,7 @@ class Role(BaseModel):
         choices=[(x,x) for x in config.ROLE_TYPES], default=config.ROLE_TYPES[0])
     # Required
     name = models.CharField(max_length=75, unique=True, help_text="Will be set to the Group Name")
-    categories = models.ManyToManyField(Category, blank=True) 
+    categories = models.ManyToManyField(Category, blank=True)
     dashboard_text = models.CharField(max_length=255, null=True)
     create_all = models.BooleanField(blank=True, default=False,
         help_text='Allow document creation for all locations')
@@ -159,7 +159,7 @@ class Role(BaseModel):
 
     def _update_password_history_length(self):
         """
-        Append the previous ``password_min_length`` to the ``password_history_length`` 
+        Append the previous ``password_min_length`` to the ``password_history_length``
         if the ``password_min_length`` has changed.
         """
         if self.password_min_length != self.__original_values['password_min_length']:
@@ -211,7 +211,7 @@ class Role(BaseModel):
             digit = "0-9" if self.password_digit_required else "",
             upper_char = "A-Z" if self.password_upper_char_required else "",
             lower_char = "a-z" if self.password_lower_char_required else "",
-            special_char = "$%!@" if self.password_special_char_required else "" 
+            special_char = "$%!@" if self.password_special_char_required else ""
         )
 
     # Password Validators: end
@@ -245,14 +245,20 @@ class PersonStatus(BaseNameModel):
 
 
 class PersonQuerySet(models.query.QuerySet):
-    
+
     def search_multi(self, keyword):
         return self.filter(
             Q(username__icontains=keyword) | \
             Q(fullname__icontains=keyword) | \
             Q(title__icontains=keyword) | \
-            Q(role__name__icontains=keyword) | \
-            Q(employee_id__icontains=keyword)
+            Q(role__name__icontains=keyword)
+        )
+
+    def search_power_select(self, keyword):
+        return self.filter(
+            Q(username__icontains=keyword) | \
+            Q(fullname__icontains=keyword) | \
+            Q(email__icontains=keyword)
         )
 
 
@@ -267,6 +273,9 @@ class PersonManager(UserManager):
 
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
+
+    def search_power_select(self, keyword):
+        return self.get_queryset().search_power_select(keyword)
 
 
 class Person(BaseModel, AbstractUser):
@@ -352,7 +361,7 @@ class Person(BaseModel, AbstractUser):
         return super(Person, self).save(*args, **kwargs)
 
     def to_dict(self, locale):
-        locations = [{'id': str(x.id), 'name': x.name, 'status_fk': str(x.status.id), 
+        locations = [{'id': str(x.id), 'name': x.name, 'status_fk': str(x.status.id),
             'location_level': str(x.location_level.id), 'number': x.number} for x in self.locations.all()]
 
         return {
@@ -412,8 +421,8 @@ class Person(BaseModel, AbstractUser):
 
     def set_password(self, raw_password):
         """
-        Check if the raw_password has been used before. If so, raise an 
-        error. If not, update password, and append the password hash to 
+        Check if the raw_password has been used before. If so, raise an
+        error. If not, update password, and append the password hash to
         the list of password_history for this Person.
         """
         new_password = make_password(raw_password)

@@ -64,23 +64,25 @@ module('Acceptance | dt new', {
   }
 });
 
-test('go to /dashboard, click button to get to /dt/new', assert => {
-  xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
-  xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
-  visit(DASHBOARD_URL);
-  andThen(() => {
-    assert.equal(currentURL(), DASHBOARD_URL);
-  });
-  generalPage.clickHomeModalShow();
-  andThen(() => {
-    assert.ok(Ember.$('.ember-modal-dialog'));
-  });
-  generalPage.clickLaunchDTTicket();
-  andThen(() => {
-    assert.throws(Ember.$('.ember-modal-dialog'));
-    assert.equal(currentURL(), DT_NEW_URL);
-  });
-});
+// Bring back when we have the draft ticket grid on the dashboard.
+
+// test('go to /dashboard, click button to get to /dt/new', assert => {
+//   xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: SD.dashboard_text}});
+//   xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
+//   visit(DASHBOARD_URL);
+//   andThen(() => {
+//     assert.equal(currentURL(), DASHBOARD_URL);
+//   });
+//   generalPage.clickHomeModalShow();
+//   andThen(() => {
+//     assert.ok(Ember.$('.ember-modal-dialog'));
+//   });
+//   generalPage.clickLaunchDTTicket();
+//   andThen(() => {
+//     assert.throws(Ember.$('.ember-modal-dialog'));
+//     assert.equal(currentURL(), DT_NEW_URL);
+//   });
+// });
 
 /* jshint ignore:start */
 
@@ -89,7 +91,7 @@ test('POST then PATCH - to demonstrate starting the DT and maintaining traversin
   assert.equal(currentURL(), DT_NEW_URL);
   // fill out initial form
   await dtPage.requesterFillin(TICKET.requesterOne);
-  xhr(`${PREFIX}/admin/locations/?name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
+  xhr(`${PREFIX}/admin/locations/location__icontains=a/`, 'GET', null, {}, 200, LF.search_idThree());
   await dtPage.locationsClickDropdown();
   await fillIn(`${SEARCH}`, 'a');
   await dtPage.locationsOptionOneClick();
@@ -105,7 +107,7 @@ test('POST then PATCH - to demonstrate starting the DT and maintaining traversin
   let dtd_response_two = DTF.generate(DT.idTwo, '', FD.idTwo, FD.labelTwo);
   // POST
   let mod_payload = Ember.$.extend(true, {}, ticket_dt_new_payload);
-  mod_payload['dt_path'][0]['dtd']['fields'] = [{id: FD.idOne, label: FD.labelOne, value: OD.textOne, required: FD.requiredTwo, options: [OD.idOne]}]; 
+  mod_payload['dt_path'][0]['dtd']['fields'] = [{id: FD.idOne, label: FD.labelOne, value: OD.textOne, required: FD.requiredTwo, options: [OD.idOne]}];
   xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(mod_payload), {}, 201, dtd_response_two);
   await dtPage.btnOneClick();
   assert.equal(currentURL(), DT_TWO_URL);
@@ -152,7 +154,7 @@ test('has_multi_locations === true, transition to /dt/{start-id}, can POST data 
   assert.equal(ticket.get('requester'), TICKET.requesterOne);
   assert.equal(ticket.get('dt_path'), undefined);
   // location
-  xhr(`${PREFIX}/admin/locations/?name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
+  xhr(`${PREFIX}/admin/locations/location__icontains=a/`, 'GET', null, {}, 200, LF.search_idThree());
   await dtPage.locationsClickDropdown();
   await fillIn(`${SEARCH}`, 'a');
   assert.equal(currentURL(), DT_NEW_URL);
@@ -173,9 +175,9 @@ test('has_multi_locations === true, transition to /dt/{start-id}, can POST data 
   assert.deepEqual(ticket.get('requestValues'), [ticketRequestValue]);
   assert.equal(ticket.get('dt_path'), undefined);
   const mod_new_payload = Ember.$.extend(true, {}, ticket_dt_new_payload);
-  mod_new_payload.request = ticketRequestValue; 
-  mod_new_payload['dt_path'][0]['ticket'].request = ticketRequestValue; 
-  mod_new_payload['dt_path'][0]['dtd']['fields'] = [{id: FD.idOne, label: FD.labelOne, value: requestValue, required: FD.requiredTwo, options: [OD.idOne, OD.idTwo]}]; 
+  mod_new_payload.request = ticketRequestValue;
+  mod_new_payload['dt_path'][0]['ticket'].request = ticketRequestValue;
+  mod_new_payload['dt_path'][0]['dtd']['fields'] = [{id: FD.idOne, label: FD.labelOne, value: requestValue, required: FD.requiredTwo, options: [OD.idOne, OD.idTwo]}];
   xhr(DT_TICKET_POST_URL, 'POST', JSON.stringify(mod_new_payload), {}, 201, dtd_response);
   await page.clickNextBtn();
   // Post updates ticket fields, adds fields/options do dtd object
@@ -213,7 +215,7 @@ test('has_multi_locations === true, validation: cant click next until select loc
     assert.ok(find('.t-dt-start').attr('disabled'));
   });
   // location
-  xhr(`${PREFIX}/admin/locations/?name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
+  xhr(`${PREFIX}/admin/locations/location__icontains=a/`, 'GET', null, {}, 200, LF.search_idThree());
   dtPage.locationsClickDropdown();
   fillIn(`${SEARCH}`, 'a');
   dtPage.locationsOptionOneClick();
@@ -288,7 +290,7 @@ test('redirected to start DT after filling out requester and location', assert =
   });
   // fill out form
   dtPage.requesterFillin(TICKET.requesterOne);
-  xhr(`${PREFIX}/admin/locations/?name__icontains=a`, 'GET', null, {}, 200, LF.search_idThree());
+  xhr(`${PREFIX}/admin/locations/location__icontains=a/`, 'GET', null, {}, 200, LF.search_idThree());
   dtPage.locationsClickDropdown();
   fillIn(`${SEARCH}`, 'a');
   dtPage.locationsOptionOneClick();
@@ -309,4 +311,3 @@ test('redirected to start DT after filling out requester and location', assert =
     assert.equal(dtPage.btnOneText, LINK.textOne);
   });
 });
-

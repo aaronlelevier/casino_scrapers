@@ -94,7 +94,7 @@ test('search presents results on slideUp pane w/o pushing into store', assert =>
     assert.equal(store.find('ticket-list').get('length'), 10); //store length is same b/c search does not touch store
     assert.equal(find('.t-grid-search-data').length, 1);
     assert.equal(find('.t-mobile-search-result__title:eq(0)').text().trim(), 'Repair • Plumbing • Toilet Leak');
-    assert.equal(find('.t-mobile-search-result__meta:eq(0)').text().trim(), LD.storeName);
+    assert.equal(find('.t-mobile-search-result__meta:eq(0)').text().trim(), LD.baseStoreName);
   });
   xhr(`${endpoint}/${TD.idGridTwo}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   xhr(`${endpoint}/${TD.idGridTwo}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());

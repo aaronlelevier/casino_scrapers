@@ -11,12 +11,12 @@ from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixi
 
 ### ROLE ###
 
-ROLE_LIST_FIELDS = ('id', 'name', 'role_type', 'location_level', 'auth_amount',)
+ROLE_LIST_FIELDS = ('id', 'name', 'role_type', 'location_level')
 
-ROLE_DETAIL_FIELDS = ROLE_LIST_FIELDS + ('auth_currency', 'categories',)
+ROLE_DETAIL_FIELDS = ROLE_LIST_FIELDS + ('auth_currency', 'auth_amount', 'categories',)
 
 ROLE_CREATE_UPDATE_FIELDS = ROLE_LIST_FIELDS + \
-    ('auth_currency', 'dashboard_text', 'accept_assign', 'accept_notify', 'categories',)
+    ('auth_currency', 'auth_amount', 'dashboard_text', 'accept_assign', 'accept_notify', 'categories',)
 
 
 class RoleListSerializer(BaseCreateSerializer):
@@ -71,15 +71,15 @@ class RoleIdNameSerializer(serializers.ModelSerializer):
 ### PERSON ###
 
 PERSON_FIELDS = ('id', 'username', 'first_name', 'middle_initial', 'last_name',
-                 'fullname', 'status', 'role', 'title', 'employee_id',)
+                 'fullname', 'status', 'role', 'title')
 
-PERSON_DETAIL_FIELDS = PERSON_FIELDS + ('locale', 'locations', 'emails', 'phone_numbers',
+PERSON_DETAIL_FIELDS = PERSON_FIELDS + ('employee_id', 'locale', 'locations', 'emails', 'phone_numbers',
                                         'addresses', 'password_one_time',)
 
 
 class PersonCreateSerializer(RemovePasswordSerializerMixin, BaseCreateSerializer):
     '''
-    Base Create serializer because ``Role`` needed before second step 
+    Base Create serializer because ``Role`` needed before second step
     of configuration for the ``Person``.
     '''
     class Meta:
@@ -107,6 +107,13 @@ class PersonListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
         fields = PERSON_FIELDS
+
+
+class PersonSearchSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Person
+        fields = ('id', 'fullname', 'username', 'email')
 
 
 class PersonTicketSerializer(serializers.ModelSerializer):
