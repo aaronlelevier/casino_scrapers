@@ -29,25 +29,22 @@ var BSRS_LOCATION_FACTORY = (function() {
       status_fk: this.location_status_defaults.openId,
     };
   };
-  factory.prototype.get_for_list = function(i, name) {
-    return {
-      id: i || this.location_defaults.idOne,
-      name: name || this.location_defaults.storeName,
-      number: this.location_defaults.storeName,
-    }
-  };
-  factory.prototype.generate_for_power_select = function(i, name) {
+  factory.prototype.get_no_related = function(i, name) {
+    /* ticket list location */
     return {
       id: i || this.location_defaults.idOne,
       name: name || this.location_defaults.baseStoreName,
-      number: this.location_defaults.storeName,
+      number: this.location_defaults.storeNumber,
     }
   };
   factory.prototype.generate_list = function(i) {
-    var location = this.generate(i);
-    delete location.status_fk;
-    location.status = {id: this.location_status_defaults.openId, name: this.location_status_defaults.openName};
-    return location;
+    return {
+      id: i,
+      name: this.location_defaults.baseStoreName,
+      number : this.location_defaults.storeNumber,
+      status: {id: this.location_status_defaults.openId, name: this.location_status_defaults.openName},
+      location_level: this.location_level_fixtures.detail().id,
+    }
   };
   factory.prototype.generate = function(i) {
     var id = i || this.location_defaults.idOne;
@@ -143,12 +140,12 @@ var BSRS_LOCATION_FACTORY = (function() {
     return {'count':2,'next':null,'previous':null,'results': sorted};
   };
   factory.prototype.search_idThree = function() {
-    var location_one = this.generate_for_power_select(this.location_defaults.idThree, this.location_defaults.storeNameThree);
+    var location_one = this.get_no_related(this.location_defaults.idThree, this.location_defaults.storeNameThree);
     return [location_one];
   };
   factory.prototype.search_power_select = function() {
-    var location_one = this.generate_for_power_select(this.location_defaults.idFour, this.location_defaults.storeNameFour);
-    var location_two = this.generate_for_power_select(this.location_defaults.idTwo, this.location_defaults.storeNameTwo);
+    var location_one = this.get_no_related(this.location_defaults.idFour, this.location_defaults.storeNameFour);
+    var location_two = this.get_no_related(this.location_defaults.idTwo, this.location_defaults.storeNameTwo);
     var response = [location_one, location_two];
     return response;
   };
@@ -162,7 +159,7 @@ var BSRS_LOCATION_FACTORY = (function() {
       } else {
         uuid = uuid + i;
       }
-      var location = this.generate_for_power_select(uuid);
+      var location = this.get_no_related(uuid);
       if (i === 0) {
         location.name = location_defaults.storeName;
       } else {

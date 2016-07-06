@@ -38,7 +38,7 @@ var BSRS_TICKET_FACTORY = (function() {
       status: {id: status_id, name: status_name},
       priority: {id: this.ticket.priorityOneId, name: this.ticket.priorityOneKey},
       assignee: this.people_fixtures.get_no_related(),
-      location: this.location_fixtures.get_for_list(),
+      location: this.location_fixtures.get_no_related(),
       categories: this.categories(),
       requester: this.people_defaults.nameMel,
     }
