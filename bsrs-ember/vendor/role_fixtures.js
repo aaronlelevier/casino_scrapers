@@ -71,9 +71,6 @@ var BSRS_ROLE_FACTORY = (function() {
     }
     return response;
   };
-  factory.prototype.get = function() {
-    return this.role_defaults.idOne;
-  };
   return factory;
 }());
 

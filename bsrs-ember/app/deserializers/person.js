@@ -16,11 +16,9 @@ var extract_role_location_level = function(model, store) {
       let existing_roles = location_level.get('roles') || [];
       if (existing_roles.indexOf(role_pk) === -1) {
         store.push('location-level', {id: location_level.get('id'), roles: existing_roles.concat(role_pk)});
-        // location_level.set('roles', existing_roles.concat([role_pk]));
       }
       location_level.save();
       store.push('role', {id: role.get('id'), location_level_fk: location_level_pk});
-      // role.set('location_level_fk', location_level_pk);
     }
     return location_level_pk;
   }
