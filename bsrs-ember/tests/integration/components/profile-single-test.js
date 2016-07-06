@@ -20,10 +20,23 @@ moduleForComponent('profile-single', 'integration: profile-single test', {
         description: PD.descOne,
       });
     });
+    this.set('model', model);
   },
   afterEach() {
     page.removeContext(this);
   }
+});
+
+test('header - shows detail if not model.new', function(assert) {
+  this.render(hbs `{{profiles/profile-single model=model}}`);
+  assert.equal(this.$('.t-profile-header').text().trim(), trans.t('admin.profile.detail'));
+});
+
+test('header - shows new if model.new', function(assert) {
+  model.set('new', true);
+  this.set('model', model);
+  this.render(hbs `{{profiles/profile-single model=model}}`);
+  assert.equal(this.$('.t-profile-header').text().trim(), trans.t('admin.profile.new'));
 });
 
 test('translation keys for labels', function(assert) {
