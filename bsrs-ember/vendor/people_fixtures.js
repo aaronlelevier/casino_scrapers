@@ -26,11 +26,12 @@ var BSRS_PEOPLE_FACTORY = (function() {
       status: this.person_defaults.status
     }
   };
-  factory.prototype.get_for_list = function(i, first_name, last_name) {
+  factory.prototype.get_no_related = function(i, first_name, last_name) {
+    /* power select and ticket assignee */
     var first_name = first_name || this.person_defaults.first_name;
     var last_name = last_name || this.person_defaults.last_name;
     var fullname = first_name + ' ' + last_name;
-    //@return {array}
+    /* @return {array} */
     return {
       id: i || this.person_defaults.id,
       first_name: first_name,
@@ -38,19 +39,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
       fullname: fullname,
       title: 'wat'
     }
-  };
-  factory.prototype.get_for_power_select = function(i, first_name, last_name) {
-    var first_name = first_name || this.person_defaults.first_name;
-    var last_name = last_name || this.person_defaults.last_name;
-    var fullname = first_name + ' ' + last_name;
-    //@return {array}
-    return [{
-      id: i || this.person_defaults.id,
-      first_name: first_name,
-      last_name: last_name,
-      fullname: fullname,
-      title: 'wat'
-    }]
   };
   factory.prototype.generate_list = function(i) {
     return {
@@ -85,16 +73,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
       phone_numbers: [],
       addresses: [],
       locale: this.locale_defaults.idOne
-    }
-  };
-  factory.prototype.generate_for_power_select = function(i) {
-    return {
-      id: i,
-      username : this.person_defaults.username,
-      first_name : this.person_defaults.first_name,
-      middle_initial : this.person_defaults.middle_initial,
-      last_name : this.person_defaults.last_name,
-      title : this.person_defaults.title,
     }
   };
   factory.prototype.list = function() {

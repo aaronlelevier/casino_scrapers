@@ -37,7 +37,7 @@ var BSRS_TICKET_FACTORY = (function() {
       request: this.ticket.requestOne,
       status: {id: status_id, name: status_name},
       priority: {id: this.ticket.priorityOneId, name: this.ticket.priorityOneKey},
-      assignee: this.people_fixtures.get_for_list(),
+      assignee: this.people_fixtures.get_no_related(),
       location: this.location_fixtures.get_for_list(),
       categories: this.categories(),
       requester: this.people_defaults.nameMel,
@@ -135,7 +135,7 @@ var BSRS_TICKET_FACTORY = (function() {
       ticket.status = {id: this.ticket.statusTwoId, name: this.ticket.statusTwoKey};
       ticket.priority = {id: this.ticket.priorityTwoId, name: this.ticket.priorityTwoKey};
       ticket.location = location;
-      ticket.assignee = this.people_fixtures.get_for_list(this.ticket.assigneeTwoId, this.ticket.assigneeTwo, this.ticket.assigneeTwo);
+      ticket.assignee = this.people_fixtures.get_no_related(this.ticket.assigneeTwoId, this.ticket.assigneeTwo, this.ticket.assigneeTwo);
       ticket.categories = [unused_category];
       delete ticket.cc;
       delete ticket.attachments;
