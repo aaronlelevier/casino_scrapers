@@ -6,7 +6,7 @@ from location.serializers import LocationIdNameOnlySerializer, LocationStatusFKS
 from person.models import Person, Role, PersonStatus
 from person.validators import RoleLocationValidator, RoleCategoryValidator
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
-    RemovePasswordSerializerMixin, NestedSettingsToRepresentationMixin)
+    RemovePasswordSerializerMixin)
 
 
 ### ROLE ###
@@ -42,7 +42,7 @@ class RoleUpdateSerializer(BaseCreateSerializer):
         fields = ROLE_CREATE_UPDATE_FIELDS
 
 
-class RoleDetailSerializer(NestedSettingsToRepresentationMixin, BaseCreateSerializer):
+class RoleDetailSerializer(BaseCreateSerializer):
     """
     Fields that have the ability to be inherited. i.e accept_assign, accept_notify,
     etc.. are not represented as first level fields in the detail payload. Instead
@@ -53,7 +53,7 @@ class RoleDetailSerializer(NestedSettingsToRepresentationMixin, BaseCreateSerial
 
     class Meta:
         model = Role
-        fields = ROLE_DETAIL_FIELDS
+        fields = ROLE_DETAIL_FIELDS + ('inherited',)
 
     @staticmethod
     def eager_load(queryset):
@@ -123,7 +123,7 @@ class PersonTicketListSerializer(serializers.ModelSerializer):
         fields = ('id', 'first_name', 'middle_initial', 'last_name')
 
 
-class PersonDetailSerializer(NestedSettingsToRepresentationMixin, serializers.ModelSerializer):
+class PersonDetailSerializer(serializers.ModelSerializer):
 
     locations = LocationStatusFKSerializer(many=True)
     emails = EmailSerializer(required=False, many=True)
@@ -132,7 +132,7 @@ class PersonDetailSerializer(NestedSettingsToRepresentationMixin, serializers.Mo
 
     class Meta:
         model = Person
-        fields = PERSON_DETAIL_FIELDS + ('last_login', 'date_joined',)
+        fields = PERSON_DETAIL_FIELDS + ('last_login', 'date_joined', 'inherited',)
 
     @staticmethod
     def eager_load(queryset):
