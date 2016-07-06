@@ -355,17 +355,17 @@ class PersonListTests(TestCase):
         self.assertEqual(data[0]['id'], str(person1.id))
         self.assertEqual(data[0]['fullname'], 'foo wat')
 
-    def test_power_select_people_title(self):
+    def test_power_select_people_email(self):
         person1 = create_single_person(name='wat')
-        person1.title = 'foo bar'
+        person1.email = 'foo@bar.com'
         person1.save()
 
-        response = self.client.get('/api/admin/people/person__icontains={}/'.format('foo bar'))
+        response = self.client.get('/api/admin/people/person__icontains={}/'.format('foo@bar.com'))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['id'], str(person1.id))
-        self.assertEqual(data[0]['title'], 'foo bar')
+        self.assertEqual(data[0]['email'], 'foo@bar.com')
 
 
 class PersonDetailTests(TestCase):

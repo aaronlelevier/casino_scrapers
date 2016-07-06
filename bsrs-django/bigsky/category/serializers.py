@@ -75,7 +75,7 @@ class CategorySearchSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'description', 'label')
+        fields = ('id', 'name', 'cost_code')
 
 
 class CategoryDetailSerializer(BaseCreateSerializer):

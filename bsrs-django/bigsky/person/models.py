@@ -258,7 +258,7 @@ class PersonQuerySet(models.query.QuerySet):
         return self.filter(
             Q(username__icontains=keyword) | \
             Q(fullname__icontains=keyword) | \
-            Q(title__icontains=keyword)
+            Q(email__icontains=keyword)
         )
 
 

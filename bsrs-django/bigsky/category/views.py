@@ -1,5 +1,3 @@
-from django.db.models import Q
-
 from rest_framework.decorators import list_route
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -77,16 +75,13 @@ class CategoryViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
 
     # @list_route(methods=['GET'], url_path=r"parent=(?P<search_id>[\w\-]+)")
     # def parent(self, request, search_id=None):
-    #     # for ticket category open power select (not top level)
+    #     # for ticket category open power select (not top level).  Will tackle later today
     #     categories = Category.objects.filter(parent__id__in=[search_id])
     #     serializer = cs.CategorySearchSerializer(categories, many=True)
     #     return Response(serializer.data)
 
     @list_route(methods=['GET'], url_path=r"category__icontains=(?P<search_key>[\w\-]+)")
     def search(self, request, search_key=None):
-        # search more than name?
-        queryset = Category.objects.filter(
-            Q(name__icontains=search_key)
-        )
+        queryset = Category.objects.search_power_select(search_key)
         serializer = cs.CategorySearchSerializer(queryset, many=True)
         return Response(serializer.data)

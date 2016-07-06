@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.db.models import Q
 
 from accounting.models import Currency
 from location.models import SelfReferencingQuerySet, SelfReferencingManager
@@ -34,6 +35,11 @@ class CategoryQuerySet(SelfReferencingQuerySet):
             return Category.objects.all().values_list('id', flat=True)
         return role.categories.all().values_list('id', flat=True)
 
+    def search_power_select(self, keyword):
+        return self.filter(
+            Q(name__icontains=keyword) | \
+            Q(cost_code__icontains=keyword)
+        )
 
 class CategoryManager(SelfReferencingManager):
 
@@ -43,10 +49,13 @@ class CategoryManager(SelfReferencingManager):
     def get_all_if_none(self, role):
         return self.get_queryset().get_all_if_none(role)
 
+    def search_power_select(self, keyword):
+        return self.get_queryset().search_power_select(keyword)
+
 
 class Category(BaseModel):
     """
-    Category tree. Categories are self referencing OneToMany.  A Parent has 
+    Category tree. Categories are self referencing OneToMany.  A Parent has
     many Children.
 
     - Parent or Label is required to create a Category.
