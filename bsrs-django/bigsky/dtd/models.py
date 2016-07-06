@@ -5,12 +5,11 @@ from django.db.models import Q
 from dtd.model_choices import LINK_TYPES, NOTE_TYPES, FIELD_TYPES
 from category.models import Category
 from generic.models import Attachment
-from setting.settings import GENERAL_SETTINGS
 from ticket.models import TicketStatus, TicketPriority
 from utils.models import BaseModel, BaseQuerySet, BaseManager
 
 
-DTD_START_ID = GENERAL_SETTINGS['dt_start_id']['value']
+DTD_START_ID = '011530c4-ce6c-4724-9cfd-37a16e787001'
 DTD_START_KEY = 'Start'
 
 

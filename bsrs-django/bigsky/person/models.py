@@ -1,4 +1,3 @@
-import copy
 from datetime import timedelta
 import re
 
@@ -22,8 +21,7 @@ from category.models import Category
 from contact.models import PhoneNumber, Address, Email
 from location.models import LocationLevel, Location, LOCATION_COMPANY
 from person import config, helpers
-from setting.mixins import SettingMixin
-from setting.models import Setting
+from tenant.models import Tenant
 from translation.models import Locale
 from utils.fields import InheritedValueField
 from utils.models import BaseModel, BaseNameModel, DefaultNameManager
@@ -32,14 +30,7 @@ from utils.validators import (contains_digit, contains_upper_char, contains_lowe
 from work_order.models import WorkOrderStatus
 
 
-class Tenant(BaseModel):
-    name = models.CharField(max_length=254)
-    dt_start = models.ForeignKey("dtd.TreeData", null=True)
-    auth_currency = models.ForeignKey(Currency)
-    settings = models.ForeignKey(Setting, null=True)
-
-
-class Role(SettingMixin, BaseModel):
+class Role(BaseModel):
     # keys
     tenant = models.ForeignKey(Tenant, related_name="roles", null=True)
     group = models.OneToOneField(Group, blank=True, null=True)
@@ -48,8 +39,8 @@ class Role(SettingMixin, BaseModel):
         choices=[(x,x) for x in config.ROLE_TYPES], default=config.ROLE_TYPES[0])
     # Required
     name = models.CharField(max_length=75, unique=True, help_text="Will be set to the Group Name")
-    categories = models.ManyToManyField(Category, blank=True) 
-    dashboad_text = models.CharField(max_length=255, blank=True)
+    categories = models.ManyToManyField(Category, blank=True)
+    dashboard_text = models.CharField(max_length=255, null=True)
     create_all = models.BooleanField(blank=True, default=False,
         help_text='Allow document creation for all locations')
     modules = models.TextField(blank=True)
@@ -81,9 +72,7 @@ class Role(SettingMixin, BaseModel):
     # Default Settings
     # that set the Person settings for these fields when first
     # adding a Person to a Role
-    default_accept_assign = models.BooleanField(blank=True, default=True)
     accept_assign = models.BooleanField(blank=True, default=False)
-    default_accept_notify = models.BooleanField(blank=True, default=True)
     accept_notify = models.BooleanField(blank=True, default=False)
     # Auth Amounts
     auth_amount = models.DecimalField(
@@ -122,7 +111,6 @@ class Role(SettingMixin, BaseModel):
     msg_copy_email = models.BooleanField(blank=True, default=False)
     msg_copy_default = models.BooleanField(blank=True, default=False)
     msg_stored_link = models.BooleanField(blank=True, default=False)
-    settings = models.OneToOneField(Setting, null=True)
 
     __original_values = {}
 
@@ -141,13 +129,14 @@ class Role(SettingMixin, BaseModel):
         self._validate_related_categories()
         return super(Role, self).save(*args, **kwargs)
 
-    def combined_settings(self):
-        data = copy.copy(self.settings.combined_settings())
-        return data
+    def inherited(self):
+        return {
+            'dashboard_text': self.proxy_dashboard_text,
+            'auth_currency': self.proxy_auth_currency
+        }
 
-    @property
-    def _name(self):
-        return self.__name__.lower()
+    proxy_dashboard_text = InheritedValueField('dashboard_text', [('tenant', 'dashboard_text')])
+    proxy_auth_currency = InheritedValueField('auth_currency', [('tenant', 'default_currency')])
 
     def to_dict(self):
         return {
@@ -168,12 +157,9 @@ class Role(SettingMixin, BaseModel):
         if not self.auth_amount:
             self.auth_amount = 0
 
-        if not self.auth_currency:
-            self.auth_currency = Currency.objects.default()
-
     def _update_password_history_length(self):
         """
-        Append the previous ``password_min_length`` to the ``password_history_length`` 
+        Append the previous ``password_min_length`` to the ``password_history_length``
         if the ``password_min_length`` has changed.
         """
         if self.password_min_length != self.__original_values['password_min_length']:
@@ -225,7 +211,7 @@ class Role(SettingMixin, BaseModel):
             digit = "0-9" if self.password_digit_required else "",
             upper_char = "A-Z" if self.password_upper_char_required else "",
             lower_char = "a-z" if self.password_lower_char_required else "",
-            special_char = "$%!@" if self.password_special_char_required else "" 
+            special_char = "$%!@" if self.password_special_char_required else ""
         )
 
     # Password Validators: end
@@ -259,14 +245,20 @@ class PersonStatus(BaseNameModel):
 
 
 class PersonQuerySet(models.query.QuerySet):
-    
+
     def search_multi(self, keyword):
         return self.filter(
             Q(username__icontains=keyword) | \
             Q(fullname__icontains=keyword) | \
             Q(title__icontains=keyword) | \
-            Q(role__name__icontains=keyword) | \
-            Q(employee_id__icontains=keyword)
+            Q(role__name__icontains=keyword)
+        )
+
+    def search_power_select(self, keyword):
+        return self.filter(
+            Q(username__icontains=keyword) | \
+            Q(fullname__icontains=keyword) | \
+            Q(email__icontains=keyword)
         )
 
 
@@ -282,8 +274,11 @@ class PersonManager(UserManager):
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
 
+    def search_power_select(self, keyword):
+        return self.get_queryset().search_power_select(keyword)
 
-class Person(SettingMixin, BaseModel, AbstractUser):
+
+class Person(BaseModel, AbstractUser):
     '''
     :pw: password
     :ooto: out-of-the-office
@@ -301,8 +296,8 @@ class Person(SettingMixin, BaseModel, AbstractUser):
     fullname = models.CharField(max_length=100, blank=True)
     auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, null=True)
     auth_currency = models.ForeignKey(Currency, blank=True, null=True)
-    accept_assign = models.BooleanField(default=True, blank=True)
-    accept_notify = models.BooleanField(default=True, blank=True)
+    accept_assign = models.NullBooleanField(null=True)
+    accept_notify = models.NullBooleanField(null=True)
     next_approver = models.ForeignKey("self", related_name='nextapprover',
                                       blank=True, null=True)
     # optional
@@ -315,7 +310,7 @@ class Person(SettingMixin, BaseModel, AbstractUser):
     password_expire_date = models.DateField(blank=True, null=True,
                                             help_text="Date that the Person's password will expire next. "
                                             "Based upon the ``password_expire`` days set on the Role.")
-    password_one_time = models.CharField(max_length=255, blank=True, null=True)
+    password_one_time = models.BooleanField(blank=True, default=False)
     password_change = models.DateTimeField( blank=True, null=True,
         help_text="DateTime of last password change")
     password_history = ArrayField(
@@ -333,18 +328,21 @@ class Person(SettingMixin, BaseModel, AbstractUser):
     phone_numbers = GenericRelation(PhoneNumber)
     addresses = GenericRelation(Address)
     emails = GenericRelation(Email)
-    # Inheritable Settings
-    settings = models.OneToOneField(Setting, null=True)
 
-    def combined_settings(self):
-        data = copy.copy(self.settings.combined_settings())
-        data['auth_amount'] = self.proxy_auth_amount
-        data['auth_currency'] = self.proxy_auth_currency
-        return data
+    def inherited(self):
+        return {
+            'auth_amount': self.proxy_auth_amount,
+            'auth_currency': self.proxy_auth_currency,
+            'accept_assign': self.proxy_accept_assign,
+            'accept_notify': self.proxy_accept_notify
+        }
 
     # proxy fields (won't create a field in the database)
-    proxy_auth_amount = InheritedValueField('role', 'auth_amount')
-    proxy_auth_currency = InheritedValueField('role', 'auth_currency')
+    proxy_auth_amount = InheritedValueField('auth_amount', [('role', 'auth_amount')])
+    proxy_auth_currency = InheritedValueField('auth_currency',
+                                              [('role', 'auth_currency'), ('tenant', 'default_currency')])
+    proxy_accept_assign = InheritedValueField('accept_assign', [('role', 'accept_assign')])
+    proxy_accept_notify = InheritedValueField('accept_notify', [('role', 'accept_notify')])
 
     # Managers
     objects = PersonManager()
@@ -363,7 +361,7 @@ class Person(SettingMixin, BaseModel, AbstractUser):
         return super(Person, self).save(*args, **kwargs)
 
     def to_dict(self, locale):
-        locations = [{'id': str(x.id), 'name': x.name, 'status_fk': str(x.status.id), 
+        locations = [{'id': str(x.id), 'name': x.name, 'status_fk': str(x.status.id),
             'location_level': str(x.location_level.id), 'number': x.number} for x in self.locations.all()]
 
         return {
@@ -376,9 +374,10 @@ class Person(SettingMixin, BaseModel, AbstractUser):
             'employee_id': self.employee_id,
             'locale': str(self.locale.id if self.locale else self._get_locale(locale)),
             'role': str(self.role.id),
+            'tenant': str(self.role.tenant.id),
             'locations': locations,
             'status_fk': str(self.status.id),
-            'settings': self.combined_settings()
+            'inherited': self.inherited()
         }
 
     def to_simple_dict(self):
@@ -422,8 +421,8 @@ class Person(SettingMixin, BaseModel, AbstractUser):
 
     def set_password(self, raw_password):
         """
-        Check if the raw_password has been used before. If so, raise an 
-        error. If not, update password, and append the password hash to 
+        Check if the raw_password has been used before. If so, raise an
+        error. If not, update password, and append the password hash to
         the list of password_history for this Person.
         """
         new_password = make_password(raw_password)

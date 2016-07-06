@@ -3,7 +3,6 @@ const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectRepo from 'bsrs-ember/utilities/inject';
-import SettingMixin from 'bsrs-ember/mixins/model/setting';
 import CopyMixin from 'bsrs-ember/mixins/model/copy';
 import EmailMixin from 'bsrs-ember/mixins/model/email';
 import PhoneNumberMixin from 'bsrs-ember/mixins/model/phone_number';
@@ -47,17 +46,18 @@ const Validations = buildValidations({
   }),
 });
 
-var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin, LocationMixin, NewMixin, OptConf, RoleMixin, LocaleMixin, SettingMixin, {
+var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin, LocationMixin, NewMixin, OptConf, RoleMixin, LocaleMixin, {
   init() {
     belongs_to.bind(this)('status', 'person');
     belongs_to.bind(this)('role', 'person', {change_func:false, rollback: false});
     belongs_to.bind(this)('locale', 'person', {change_func:false});
-    many_to_many.bind(this)('location', 'person', {plural:true, rollback:false, dirty:false, save:false});
+    many_to_many.bind(this)('location', 'person', {plural:true, rollback:false, save:false});
     this._super(...arguments);
   },
   type: 'person',
   simpleStore: Ember.inject.service(),
   status_repo: injectRepo('status'),
+  locale_repo: injectRepo('locale'),
   username: attr(''),
   password: attr(''),
   first_name: attr(''),
@@ -67,6 +67,9 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
   employee_id: attr(''),
   auth_amount: attr(''),
   auth_currency: attr(),
+  accept_assign: attr(),
+  accept_notify: attr(),
+  password_one_time: attr(),
   locale_fk: undefined,
   role_fk: undefined,
   status_fk: undefined,
@@ -76,14 +79,6 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
   person_locations_fks: [],
   isModelDirty: false,
   changingPassword: false,
-  // settings: start
-  settingFields: Ember.computed(function() {
-    return ['accept_assign', 'accept_notify', 'password_one_time'];
-  }),
-  accept_assign: attr(),
-  accept_notify: attr(),
-  password_one_time: attr(),
-  // settings: end
   //models are leaf nodes and should be given a set of data and encapsulate and work on that data
   //tightly coupled.  Ideally, route would get services or hand off to another service to collect them all
   //and hands all information.  Person owns locale, so how do you rollback locale
@@ -134,14 +129,13 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
     this._super();
   },
   createSerialize() {
-    const status_repo = this.get('status_repo');
-    const status_fk = status_repo.get_default().get('id');
     return {
       id: this.get('id'),
       username: this.get('username'),
       password: this.get('password'),
       role: this.get('role').get('id'),
-      status: this.get('status_fk') || status_fk,
+      status: this.get('status_fk') || this.get('status_repo').get_default().get('id'),
+      locale: this.get('locale.id') || this.get('locale_repo').get_default().get('id'),
     };
   },
   serialize() {
@@ -188,8 +182,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
       phone_numbers: phone_numbers,
       addresses: addresses,
       locale: this.get('locale.id'),
-      password: this.get('password'),
-      settings: this.get('settings')
+      password: this.get('password')
     };
     if (!this.get('password')) {
       delete payload.password;

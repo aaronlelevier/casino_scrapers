@@ -1,5 +1,4 @@
 import json
-import uuid
 
 from django.conf import settings
 
@@ -8,8 +7,7 @@ from rest_framework.test import APITestCase
 from person.tests.factory import create_person, PASSWORD
 from translation.models import Locale, Translation
 from translation.serializers import LocaleSerializer, TranslationSerializer
-from translation.tests.factory import (create_locales, create_locale,
-    create_translations)
+from translation.tests.factory import create_locales, create_translations
 from utils import create
 from utils.tests.helpers import build_dict
 
@@ -154,7 +152,7 @@ class TranslationReadTests(APITestCase):
     # get_translations_by_key
 
     def test_get_translations_by_key(self):
-        key = list(self.translation.values.keys())[0] # key="admin.address.add" for example
+        key = list(self.translation.values.keys())[0]
 
         response = self.client.get('/api/admin/translations/{}/'.format(key))
 
@@ -199,12 +197,12 @@ class TranslationWriteTests(APITestCase):
         self.translation = Translation.objects.first()
         self.translation_two = Translation.objects.last()
 
-        self.locale = self.translation.locale # create_locale(create._generate_chars())
-        self.locale_two = self.translation_two.locale # create_locale(create._generate_chars())
+        self.locale = self.translation.locale
+        self.locale_two = self.translation_two.locale
 
         self.person = create_person()
 
-        self.key = list(self.translation.values.keys())[0] # key="admin.address.add" for example
+        self.key = list(self.translation.values.keys())[0]
         # Create Data 1
         self.value = create._generate_chars()
         self.data = {

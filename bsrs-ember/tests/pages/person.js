@@ -25,7 +25,6 @@ const LOCALE = '.t-locale-select > .ember-basic-dropdown-trigger';
 
 
 export default PageObject.create({
-  visit: visitable('/'),
   visitPeople: visitable(PEOPLE_URL),
   visitDetail: visitable(DETAIL_URL),
   statusInput: text(STATUS),
@@ -60,6 +59,10 @@ export default PageObject.create({
   // localeThree: text(`${DROPDOWN} > li:eq(2)`),
   // localeFour: text(`${DROPDOWN} > li:eq(3)`),
   localeOptionLength: count(`${DROPDOWN} > li`),
+
+  firstNameFill: fillable('.t-person-first-name'),
+  middleInitialFill: fillable('.t-person-middle-initial'),
+  lastNameFill: fillable('.t-person-last-name'),
 
   middleInitial: fillable('.t-person-middle-initial'),
   usernameFillIn: fillable('.t-person-username'),

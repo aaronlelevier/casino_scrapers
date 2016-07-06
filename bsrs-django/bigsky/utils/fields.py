@@ -38,34 +38,51 @@ class InheritedValueField(object):
     then fetch the value from the related model. The field name must be the
     same for this to work.
 
-    :related_model:
-        (str) name of the related model to inherit setting from if it
-        doesn't exist on the ``obj``. obj is a the primary model instance
-    :field: (str) model field name to look up
-    :type: (str) python type name
+    :field:
+        type: String
+        expl: instance's field name to check for value
+    :lookups:
+        type: Array of tuples: (inherited-model-name, inherited-field-name)
+        expl: way to lookup if value doesn't exist on the instance
     """
-    def __init__(self, related_model, field):
-        self.related_model = related_model
+    def __init__(self, field, lookups):
         self.field = field
+        self.lookups = lookups
 
     def __get__(self, obj, type=None):
-        related_model = getattr(obj, self.related_model)
+        inherited_model_str = self.lookups[0][0]
+        inherited_model_field = self.lookups[0][1]
+        inherited_model = self._get_inherited_model(obj, inherited_model_str)
 
         ret = {
-            'inherited_value': self._getvalue(related_model),
-            'inherits_from': self.related_model,
-            'inherits_from_id': str(related_model.id)
+            'inherits_from': inherited_model_str,
+            'inherits_from_id': str(inherited_model.id)
         }
 
-        if not getattr(obj, self.field):
-            ret['value'] = None
-        else:
-            ret['value'] = self._getvalue(obj)
+        if getattr(obj, self.field):
+            ret['value'] = self._getvalue(obj, self.field)
+
+        current_model = obj
+        for lookup in self.lookups:
+            inherited_model_str = lookup[0]
+            inherited_model_field = lookup[1]
+            inherited_model = self._get_inherited_model(current_model, inherited_model_str)
+
+            inherited_value = self._getvalue(inherited_model, inherited_model_field)
+
+            if inherited_value is not None:
+                ret['inherited_value'] = inherited_value
+                continue
+
+            current_model = inherited_model
 
         return ret
 
-    def _getvalue(self, object):
-        o = getattr(object, self.field)
+    def _getvalue(self, object, field):
+        o = getattr(object, field)
         if issubclass(o.__class__, models.Model):
             return str(o.id)
         return o
+
+    def _get_inherited_model(self, object, model_str):
+        return getattr(object, model_str)

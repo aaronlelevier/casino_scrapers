@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import PageObject from 'bsrs-ember/tests/page-object';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import RD from 'bsrs-ember/vendor/defaults/role';
@@ -16,19 +17,6 @@ const CATEGORY_DROPDOWN = options;
 
 
 export default PageObject.create({
-  visit: visitable('/'),
-
-  locationLevelInput: text(LOCATIONLEVEL),
-  locationLevelClickDropdown: clickable(LOCATIONLEVEL),
-  locationLevelClickOptionOne: clickable(`${LOCATIONLEVEL_DROPDOWN} > .ember-power-select-option:contains(${LLD.nameCompany})`),
-  locationLevelClickOptionTwo: clickable(`${LOCATIONLEVEL_DROPDOWN} > .ember-power-select-option:contains(${LLD.nameRegion})`, {multiple: true}),
-  locationLevelClickOptionLossRegion: clickable(`${LOCATIONLEVEL_DROPDOWN} > .ember-power-select-option:contains(${LLD.nameLossPreventionRegion})`, {multiple: true}),
-
-  roleTypeInput: text(ROLETYPE),
-  roleTypeClickDropdown: clickable(ROLETYPE),
-  roleTypeClickOptionOne: clickable(`${ROLETYPE_DROPDOWN} > .ember-power-select-option:contains(${RD.roleTypeGeneral})`),
-  roleTypeClickOptionTwo: clickable(`${ROLETYPE_DROPDOWN} > .ember-power-select-option:contains(${RD.roleTypeContractor})`),
-
   categoryClickDropdown: clickable(CATEGORY),
   categorySelectText: text('.t-role-category-select > .ember-basic-dropdown-trigger'),
   categorySelected: text(CATEGORY_ONE),
@@ -38,9 +26,22 @@ export default PageObject.create({
   categoryOptionLength: count(`${CATEGORY_DROPDOWN} > li`),
   categoriesSelected: count(CATEGORIES),
 
-  // settings
-  create_allClick: clickable('.t-settings-create_all-label'),
-  accept_assignClick: clickable('.t-settings-accept_assign-label'),
-  accept_notifyClick: clickable('.t-settings-accept_notify-label'),
   dashboard_textValue: value('.t-settings-dashboard_text'),
+  dashboard_textFill: fillable('.t-settings-dashboard_text'),
+
+  locationLevelInput: text(LOCATIONLEVEL),
+  locationLevelClickDropdown: clickable(LOCATIONLEVEL),
+  locationLevelClickOptionOne: clickable(`${LOCATIONLEVEL_DROPDOWN} > .ember-power-select-option:contains(${LLD.nameCompany})`),
+  locationLevelClickOptionTwo: clickable(`${LOCATIONLEVEL_DROPDOWN} > .ember-power-select-option:contains(${LLD.nameRegion})`, {multiple: true}),
+  locationLevelClickOptionLossRegion: clickable(`${LOCATIONLEVEL_DROPDOWN} > .ember-power-select-option:contains(${LLD.nameLossPreventionRegion})`, {multiple: true}),
+
+  nameFill: fillable('.t-role-name'),
+  nameValue: value('.t-role-name'),
+  nameValidationErrorHidden: () => Ember.$('.t-name-validation-error').is(':hidden'),
+  nameValidationErrorVisible: () => Ember.$('.t-name-validation-error').is(':visible'),
+
+  roleTypeInput: text(ROLETYPE),
+  roleTypeClickDropdown: clickable(ROLETYPE),
+  roleTypeClickOptionOne: clickable(`${ROLETYPE_DROPDOWN} > .ember-power-select-option:contains(${RD.roleTypeGeneral})`),
+  roleTypeClickOptionTwo: clickable(`${ROLETYPE_DROPDOWN} > .ember-power-select-option:contains(${RD.roleTypeContractor})`),
 });

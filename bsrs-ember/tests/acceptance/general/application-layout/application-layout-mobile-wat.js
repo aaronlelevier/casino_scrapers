@@ -9,7 +9,6 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import pageDrawer from 'bsrs-ember/tests/pages/nav-drawer';
-import SD from 'bsrs-ember/vendor/defaults/setting';
 
 const PREFIX = config.APP.NAMESPACE;
 const HOME_URL = '/';
@@ -18,7 +17,7 @@ const DASHBOARD_URL = BASEURLS.dashboard_url;
 
 let application;
 
-module('Acceptance | application layout mobile test', {
+module('aaron Acceptance | application layout mobile test', {
   beforeEach(assert) {
     application = startApp();
     assert.deviceLayout = application.__container__.lookup('service:device/layout');
@@ -28,7 +27,7 @@ module('Acceptance | application layout mobile test', {
       bp[point.name] = point.begin + 5;
     });
     assert.deviceLayout.set('width', bp.mobile);
-    xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: SD.dashboard_text}});
+    xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
     xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   },
   afterEach(assert) {

@@ -1,20 +1,16 @@
 from __future__ import absolute_import
 
 import unittest
-import random
-import string
 import time
 
 from selenium import webdriver
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import Select
 
 from helpers import (
     LoginMixin, FillInHelper, JavascriptMixin, InputHelper,
     NavPage, GeneralElementsPage, Wait, ModelPage,
-    ModelContactPage, rand_chars, rand_num, get_text_excluding_children
+    ModelContactPage, rand_chars, rand_num
 )
 
 

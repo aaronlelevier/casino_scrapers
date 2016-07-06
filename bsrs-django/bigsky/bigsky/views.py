@@ -16,7 +16,6 @@ from generic.models import SavedSearch
 from location.models import LocationLevel, LocationStatus
 from person.config import ROLE_TYPES
 from person.models import Role, PersonStatus
-from setting.models import Setting
 from ticket.models import TicketStatus, TicketPriority
 from translation.models import Locale
 from utils.helpers import (model_to_json, model_to_json_select_related,
@@ -63,7 +62,6 @@ class IndexView(TemplateView):
             'default_model_ordering': settings.default_model_ordering,
             'saved_search': json.dumps(
                 SavedSearch.objects.person_saved_searches(self.request.user)),
-            'settings': model_to_json(Setting),
             'ticket_statuses': model_to_json(TicketStatus),
             'ticket_priorities': model_to_json(TicketPriority),
         })

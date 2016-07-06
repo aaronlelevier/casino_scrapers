@@ -7,7 +7,7 @@ import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
-import SD from 'bsrs-ember/vendor/defaults/setting';
+import TENANT_DEFAULTS from 'bsrs-ember/vendor/defaults/tenant';
 import DTF from 'bsrs-ember/vendor/dtd_fixtures';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
@@ -24,7 +24,7 @@ module('Acceptance | dashboard', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
-    xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: SD.dashboard_text}});
+    xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
     xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   },
   afterEach() {

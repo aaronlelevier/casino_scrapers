@@ -1,6 +1,3 @@
-import copy
-import json
-
 from django.test import TestCase
 
 from rest_framework.test import APITestCase
@@ -9,12 +6,10 @@ from location.tests.factory import create_locations
 from location.models import Location
 from location.serializers import LocationUpdateSerializer
 from person.tests.factory import create_person, create_single_person, PASSWORD
-from setting.serializers import SettingUpdateSerializer
-from setting.tests.factory import create_general_setting
 from utils.validators import (
     regex_check_contains, contains_digit, contains_upper_char,
     contains_lower_char, contains_special_char, contains_no_whitespaces,
-    SettingsValidator, valid_email, valid_phone, SettingsValidator)
+    valid_email, valid_phone)
 
 
 class UniqueForActiveValidatorTests(APITestCase):
@@ -49,76 +44,6 @@ class UniqueForActiveValidatorTests(APITestCase):
         self.data['number'] = old_location.number
         response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
             self.data, format='json')
-        self.assertEqual(response.status_code, 200)
-
-
-class SettingsValidatorTests(APITestCase):
-
-    def setUp(self):
-        self.person = create_single_person()
-        # Settings
-        self.setting = create_general_setting()
-        serializer = SettingUpdateSerializer(self.setting)
-        self.data = copy.copy(serializer.data)
-        self.error_message = SettingsValidator.message
-        # Login
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def tearDown(self):
-        self.client.logout()
-
-    def test_types(self):
-        self.assertIsInstance(SettingsValidator.types, dict)
-
-    def test_main(self):
-        self.data['settings'] = {
-            'company_code': 0,
-            'company_name': 0,
-            'dashboard_text': 0,
-            'login_grace': 'foo',
-            'exchange_rates': 'foo',
-            'tickets_module': 0,
-            'work_orders_module': 0,
-            'invoices_module': 0,
-            'test_mode': 0,
-            'test_contractor_email': 'foo@bar',
-            'test_contractor_phone': '+1800',
-            'dt_start_id': 1,
-            'default_currency_id': 1
-        }
-
-        response = self.client.put('/api/admin/settings/{}/'.format(self.setting.id),
-            self.data, format='json')
-
-        error = json.loads(response.content.decode('utf8'))
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(error['company_code'], [self.error_message.format(value=0, type='str')])
-        self.assertEqual(error['company_name'], [self.error_message.format(value=0, type='str')])
-        self.assertEqual(error['dashboard_text'], [self.error_message.format(value=0, type='str')])
-        self.assertEqual(error['login_grace'], [self.error_message.format(value='foo', type='int')])
-        self.assertEqual(error['exchange_rates'], [self.error_message.format(value='foo', type='float')])
-        self.assertEqual(error['tickets_module'], [self.error_message.format(value=0, type='bool')])
-        self.assertEqual(error['work_orders_module'], [self.error_message.format(value=0, type='bool')])
-        self.assertEqual(error['invoices_module'], [self.error_message.format(value=0, type='bool')])
-        self.assertEqual(error['test_mode'], [self.error_message.format(value=0, type='bool')])
-        self.assertEqual(error['test_contractor_email'], ['{} is not a valid email'.format('foo@bar')])
-        self.assertEqual(error['test_contractor_phone'], ['{} is not a valid phone'.format('+1800')])
-        self.assertEqual(error['dt_start_id'], ['{} is not a valid uuid'.format(1)])
-        self.assertEqual(error['default_currency_id'], ['{} is not a valid uuid'.format(1)])
-
-    def test_coerce_float(self):
-        # Javascript `parseFloat` which returns 1.00 as "1.00" should be
-        # able to coerce the string to a float, and if that still fails,
-        # then it's a validation error
-        setting = create_general_setting()
-        serializer = SettingUpdateSerializer(setting)
-        data = copy.copy(serializer.data)
-        data['settings']['exchange_rates'] = '1.00'
-
-        response = self.client.put('/api/admin/settings/{}/'.format(setting.id),
-            data, format='json')
-
-        error = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
 
 

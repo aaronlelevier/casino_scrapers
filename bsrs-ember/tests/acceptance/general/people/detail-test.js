@@ -8,8 +8,7 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import SD from 'bsrs-ember/vendor/defaults/status';
-import StgD from 'bsrs-ember/vendor/defaults/setting';
-import StgF from 'bsrs-ember/vendor/setting_fixtures';
+import TENANT_DEFAULTS from 'bsrs-ember/vendor/defaults/tenant';
 import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import RD from 'bsrs-ember/vendor/defaults/role';
@@ -38,7 +37,6 @@ import inputCurrencyPage from 'bsrs-ember/tests/pages/input-currency';
 import random from 'bsrs-ember/models/random';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
-import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
 
 const PREFIX = config.APP.NAMESPACE;
 const POWER_SELECT_LENGTH = 10;
@@ -55,7 +53,7 @@ const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-options > .ember-p
 const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-var application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid, url, translations, setting_endpoint, run = Ember.run;
+var application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid, url, translations, role_route_data_endpoint, run = Ember.run;
 
 module('Acceptance | person detail test', {
   beforeEach() {
@@ -69,7 +67,7 @@ module('Acceptance | person detail test', {
     original_uuid = random.uuid;
     url = `${PREFIX}${DETAIL_URL}/`;
     translations = BSRS_TRANSLATION_FACTORY.generate('en')['en'];
-    setting_endpoint = `${PREFIX}${BASEURLS.base_roles_url}/route-data/new/`;
+    role_route_data_endpoint = `${PREFIX}${BASEURLS.base_roles_url}/route-data/new/`;
   },
   afterEach() {
     random.uuid = original_uuid;
@@ -267,15 +265,15 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 test('currency helper displays inherited auth_amount, and can click link-to to go to roles inherited value', (assert) => {
-  xhr(setting_endpoint, 'GET', null, {}, 200, roleNewData);
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(inputCurrencyPage.authAmountPlaceholder(), 'Default: ' + PD.auth_amount);
-    assert.equal(inputCurrencyPage.authAmountInheritedFromText, 'Inherited from: ' + StgD.inherits_from_role);
+    assert.equal(inputCurrencyPage.authAmountInheritedFromText, 'Inherited from: ' + TENANT_DEFAULTS.inherits_from_role);
     assert.equal(inputCurrencyPage.authAmountValue, "");
   });
+  xhr(role_route_data_endpoint, 'GET', null, {}, 200, {});
   xhr(`${PREFIX}${BASEURLS.base_roles_url}/${RD.idOne}/`, 'GET', null, {}, 200, RF.detail(RD.idOne));
   inputCurrencyPage.authAmountInheritedFromClick();
   andThen(() => {
@@ -286,11 +284,11 @@ test('currency helper displays inherited auth_amount, and can click link-to to g
 test('can change currency by clicking it and selecting another currency', assert => {
   page.visitDetail();
   andThen(() => {
-  assert.equal(currentURL(), DETAIL_URL);
-  assert.equal(inputCurrencyPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
-  let person = store.find('person', PD.id);
-  assert.equal(person.get('settings_object').auth_currency.inherited_value, CURRENCY_DEFAULTS.id);
-  assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.code);
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(inputCurrencyPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
+    let person = store.find('person', PD.id);
+    assert.equal(person.get('inherited').auth_currency.inherited_value, CURRENCY_DEFAULTS.id);
+    assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.code);
   });
   selectChoose('.t-currency-code', CURRENCY_DEFAULTS.codeCAD);
   andThen(() => {
@@ -1025,8 +1023,8 @@ test('when you change a related role it will change the related locations as wel
   let payload = PF.put({id: PD.id, role: role.id, locations: []});
   xhr(url,'PUT',JSON.stringify(payload),{},200);
   andThen(() => {
-    let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=a`;
-    xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
+    let locations_endpoint = `${PREFIX}/admin/locations/location__icontains=a/?location_level=${LLD.idOne}/`;
+    xhr(locations_endpoint, 'GET', null, {}, 200, LF.list_power_select());
     page.locationClickDropdown();
     fillIn(LOCATION_SEARCH, 'a');
     andThen(() => {
@@ -1072,8 +1070,8 @@ test('deep link to person and clicking in the person-locations-select component 
     assert.equal(page.locationOptionLength, 1);
     assert.equal(find(LOCATION_DROPDOWN).text().trim(), GLOBALMSG.power_search);
   });
-  let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=ABC1234`;
-  const response = LF.list();
+  let locations_endpoint = `${PREFIX}/admin/locations/location__icontains=ABC1234/?location_level=${LLD.idOne}/`;
+  const response = LF.list_power_select();
   xhr(locations_endpoint, 'GET', null, {}, 200, response);
   fillIn(LOCATION_SEARCH, 'ABC1234');
   andThen(() => {
@@ -1111,9 +1109,9 @@ test('can remove and add back same location', (assert) => {
     let person = store.find('person', PD.idOne);
     assert.equal(person.get('locations').get('length'), 0);
   });
-  let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=a`;
-  const response = LF.list();
-  response.results.push(LF.get(LD.idOne, LD.storeName));
+  let locations_endpoint = `${PREFIX}/admin/locations/location__icontains=a/?location_level=${LLD.idOne}/`;
+  const response = LF.list_power_select();
+  response.push(LF.get_no_related(LD.idOne, LD.storeName));
   xhr(locations_endpoint, 'GET', null, {}, 200, response);
   fillIn(LOCATION_SEARCH, 'a');
   page.locationClickOptionOne();
@@ -1149,8 +1147,9 @@ test('starting with multiple locations, can remove all locations (while not popu
     assert.equal(person.get('locations').get('length'), 0);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
   });
-  let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=a`;
-  xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
+  let locations_endpoint = `${PREFIX}/admin/locations/location__icontains=a/?location_level=${LLD.idOne}/`;
+  const response = LF.list_power_select();
+  xhr(locations_endpoint, 'GET', null, {}, 200, response);
   page.locationClickDropdown();
   fillIn(LOCATION_SEARCH, 'a');
   page.locationClickOptionOneEq();
@@ -1202,8 +1201,9 @@ test('when you deep link to the person detail view you can alter the locations a
     assert.equal(previous_location_m2m.get('length'), 0);
   });
   xhr(endpoint + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data);
-  let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=ABC1234`;
-  xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
+  let locations_endpoint = `${PREFIX}/admin/locations/location__icontains=ABC1234/?location_level=${LLD.idOne}/`;
+  const response = LF.list_power_select();
+  xhr(locations_endpoint, 'GET', null, {}, 200, response);
   fillIn(LOCATION_SEARCH, 'ABC1234');
   page.locationClickOptionTwo();
   generalPage.cancel();
@@ -1336,51 +1336,49 @@ test('settings values, placeholers, and inherited froms', assert => {
     assert.equal(currentURL(), DETAIL_URL);
     // inherited
     assert.equal(page.acceptAssignLabelText, translations['admin.setting.accept_assign']);
-    assert.equal(page.acceptAssignChecked(), PD.settings.accept_assign.inherited_value);
-    assert.equal(page.acceptAssignInheritedFromLabelText, 'Inherited from: ' + StgD.inherits_from_role);
+    assert.equal(page.acceptAssignChecked(), PD.inherited.accept_assign.inherited_value);
+    assert.equal(page.acceptAssignInheritedFromLabelText, 'Inherited from: ' + TENANT_DEFAULTS.inherits_from_role);
     assert.equal(page.acceptNotifyLabelText, translations['admin.setting.accept_notify']);
-    assert.equal(page.acceptNotifyChecked(), PD.settings.accept_notify.inherited_value);
-    assert.equal(page.acceptNotifyInheritedFromLabelText, 'Inherited from: ' + StgD.inherits_from_role);
+    assert.equal(page.acceptNotifyChecked(), PD.inherited.accept_notify.inherited_value);
+    assert.equal(page.acceptNotifyInheritedFromLabelText, 'Inherited from: ' + TENANT_DEFAULTS.inherits_from_role);
     // not inherited
-
     page.clickChangePassword();
     andThen(() => {
       assert.equal(page.passwordOneTimeLabelText, translations['admin.setting.password_one_time']);
-      assert.equal(page.passwordOneTimeChecked(), PD.settings.password_one_time.value);
+      assert.notOk(page.passwordOneTimeChecked());
+    });
+    page.passwordOneTimeClick();
+    andThen(() => {
+      assert.ok(page.passwordOneTimeChecked());
     });
   });
 });
 
-test('update all settings', assert => {
+test('update accept_assign accept_notify password_one_time', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.acceptAssignChecked(), PD.settings.accept_assign.inherited_value);
-    assert.equal(page.acceptNotifyChecked(), PD.settings.accept_notify.inherited_value);
+    assert.equal(page.acceptAssignChecked(), PD.inherited.accept_assign.inherited_value);
+    assert.equal(page.acceptNotifyChecked(), PD.inherited.accept_notify.inherited_value);
     page.clickChangePassword();
     andThen(() => {
-      assert.equal(page.passwordOneTimeChecked(), PD.settings.password_one_time.value);
+      assert.equal(page.passwordOneTimeLabelText, translations['admin.setting.password_one_time']);
+      assert.notOk(page.passwordOneTimeChecked());
+    });
+    page.passwordOneTimeClick();
+    andThen(() => {
+      assert.ok(page.passwordOneTimeChecked());
     });
   });
-
   page.acceptAssignClick();
   page.acceptNotifyClick();
-  page.passwordOneTimeClick();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.acceptAssignChecked(), !PD.settings.accept_assign.inherited_value);
-    assert.equal(page.acceptNotifyChecked(), !PD.settings.accept_notify.inherited_value);
-    assert.equal(page.passwordOneTimeChecked(), !PD.settings.password_one_time.value);
+    assert.equal(page.acceptAssignChecked(), !PD.inherited.accept_assign.inherited_value);
+    assert.equal(page.acceptNotifyChecked(), !PD.inherited.accept_notify.inherited_value);
   });
   let person = store.find('person', {id: PD.id});
-  let settings = {
-    settings: {
-      accept_assign: !PD.settings.accept_assign.inherited_value,
-      accept_notify: !PD.settings.accept_notify.inherited_value,
-      password_one_time: !PD.settings.password_one_time.inherited_value
-    }
-  };
-  let payload = PF.put({id: PD.id}, settings);
+  let payload = PF.put({id: PD.id});
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
@@ -1389,7 +1387,7 @@ test('update all settings', assert => {
 });
 
 test('link-to for accept_assign setting, and link routes to person.role', assert => {
-  xhr(setting_endpoint, 'GET', null, {}, 200, roleNewData);
+  xhr(role_route_data_endpoint, 'GET', null, {}, 200, {});
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
@@ -1403,7 +1401,7 @@ test('link-to for accept_assign setting, and link routes to person.role', assert
 });
 
 test('link-to for accept_notify setting, and link routes to person.role', assert => {
-  xhr(setting_endpoint, 'GET', null, {}, 200, roleNewData);
+  xhr(role_route_data_endpoint, 'GET', null, {}, 200, {});
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {

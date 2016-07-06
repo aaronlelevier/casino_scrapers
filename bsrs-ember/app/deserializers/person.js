@@ -16,11 +16,9 @@ var extract_role_location_level = function(model, store) {
       let existing_roles = location_level.get('roles') || [];
       if (existing_roles.indexOf(role_pk) === -1) {
         store.push('location-level', {id: location_level.get('id'), roles: existing_roles.concat(role_pk)});
-        // location_level.set('roles', existing_roles.concat([role_pk]));
       }
       location_level.save();
       store.push('role', {id: role.get('id'), location_level_fk: location_level_pk});
-      // role.set('location_level_fk', location_level_pk);
     }
     return location_level_pk;
   }
@@ -39,7 +37,6 @@ var extract_role = function(model, store) {
 };
 
 var extract_person_location = function(model, store, location_level_fk, location_deserializer) {
-  if (typeof model.locations !== 'undefined') {
     let server_locations_sum = [];
     let prevented_duplicate_m2m = [];
     let all_person_locations = store.find('person-location');
@@ -51,6 +48,7 @@ var extract_person_location = function(model, store, location_level_fk, location
       if(person_locations.length === 0) {
         const pk = Ember.uuid();
         server_locations_sum.push(pk);
+        // Use deserializer to extract llevel. change_role depends on having llevel setup 
         location_deserializer.deserialize(location_json, location_json.id);
         run(() => {
           store.push('person-location', {id: pk, person_pk: model.id, location_pk: location_json.id});
@@ -70,7 +68,6 @@ var extract_person_location = function(model, store, location_level_fk, location
     });
     delete model.locations;
     model.person_locations_fks = server_locations_sum;
-  }
 };
 
 var extract_locale = (model, store) => {

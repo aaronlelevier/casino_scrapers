@@ -7,14 +7,13 @@ from model_mommy import mommy
 
 from category.models import Category, CategoryStatus
 from category.tests.factory import create_single_category
-from dtd.models import TreeData, DTD_START_KEY
+from dtd.models import TreeData
 from generic.tests.factory import create_file_attachment
 from location.models import Location, LocationStatus, LocationType, LOCATION_COMPANY
 from location.tests.factory import create_locations
 from person.models import Person
-from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
+from ticket.models import (Ticket, TicketStatus, TicketActivityType,
     TicketActivity, TICKET_ACTIVITY_TYPES)
-from ticket.serializers import TicketSerializer
 from ticket.tests.factory_related import (create_ticket_status, get_or_create_ticket_status,
     get_or_create_ticket_priority)
 from utils.create import _generate_chars

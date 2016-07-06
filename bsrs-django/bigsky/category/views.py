@@ -37,6 +37,7 @@ class CategoryViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
     def get_serializer_class(self):
         """
         set the serializer based on the method
+        if parent is for category power select in ticket view
         """
         if 'parent' in self.request.query_params:
             return cs.CategoryIDNameSerializerTicket
@@ -66,7 +67,21 @@ class CategoryViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
 
     @list_route(methods=['GET'])
     def parents(self, request):
+        # for ticket top level category open power select
         categories = Category.objects.filter(parent__isnull=True)
         page = self.paginate_queryset(categories)
         serializer = cs.CategoryIDNameSerializer(page, many=True)
         return self.get_paginated_response(serializer.data)
+
+    # @list_route(methods=['GET'], url_path=r"parent=(?P<search_id>[\w\-]+)")
+    # def parent(self, request, search_id=None):
+    #     # for ticket category open power select (not top level).  Will tackle later today
+    #     categories = Category.objects.filter(parent__id__in=[search_id])
+    #     serializer = cs.CategorySearchSerializer(categories, many=True)
+    #     return Response(serializer.data)
+
+    @list_route(methods=['GET'], url_path=r"category__icontains=(?P<search_key>[\w\-]+)")
+    def search(self, request, search_key=None):
+        queryset = Category.objects.search_power_select(search_key)
+        serializer = cs.CategorySearchSerializer(queryset, many=True)
+        return Response(serializer.data)

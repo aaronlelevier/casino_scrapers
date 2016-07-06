@@ -1,5 +1,4 @@
 import json
-import platform
 
 from django.conf import settings
 from django.conf.urls import include, url
@@ -22,13 +21,13 @@ from dt import views as dt_views
 from dtd import views as dtd_views
 from generic import views as generic_views
 from location import views as location_views
-from setting import views as setting_views
+from person import views as person_views
+from tenant import views as tenant_views
 from third_party import views as third_party_views
 from ticket import views as tickets_views
-from work_order import views as work_orders_views
-from person import views as person_views
 from translation import views as translation_views
 from utils.decorators import required, logout_required
+from work_order import views as work_orders_views
 
 
 router = routers.DefaultRouter()
@@ -51,7 +50,6 @@ router.register(r'admin/email-types', contact_views.EmailTypeViewSet)
 # GENERIC
 router.register(r'admin/saved-searches', generic_views.SavedSearchViewSet)
 router.register(r'admin/attachments', generic_views.AttachmentViewSet)
-router.register(r'admin/settings', setting_views.SettingViewSet)
 # LOCATION
 router.register(r'admin/locations', location_views.LocationViewSet)
 router.register(r'admin/location-levels', location_views.LocationLevelViewSet)
@@ -60,6 +58,8 @@ router.register(r'admin/location-types', location_views.LocationTypeViewSet)
 # PERSON
 router.register(r'admin/people', person_views.PersonViewSet)
 router.register(r'admin/roles', person_views.RoleViewSet)
+# TENANT
+router.register(r'admin/tenant', tenant_views.TenantViewSet)
 # THIRD PARTY
 router.register(r'admin/third-parties', third_party_views.ThirdPartyViewSet)
 # Tickets

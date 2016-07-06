@@ -7,7 +7,7 @@ from model_mommy import mommy
 from contact.models import (State, Country, Email, EmailType,
     PhoneNumber, PhoneNumberType, Address, AddressType)
 from contact.tests.factory import create_contact
-from person.tests.factory import PASSWORD, create_person, create_single_person
+from person.tests.factory import PASSWORD, create_single_person
 from third_party.models import ThirdParty
 from third_party.serializers import ThirdPartyUpdateSerializer
 from third_party.tests.factory import create_third_party

@@ -81,6 +81,7 @@ var RoleDeserializer = Ember.Object.extend({
     const store = this.get('simpleStore');
     const existing = store.find('role', id);
     let role = existing;
+    //TODO: investigate why need if check
     if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
       response.location_level_fk = extract_location_level(response, store);
       response.role_categories_fks = extract_category(response, store, existing);

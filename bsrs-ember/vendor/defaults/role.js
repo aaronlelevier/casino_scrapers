@@ -1,7 +1,8 @@
 var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
-  var factory = function(location_level, setting) {
+  var factory = function(location_level, currency, tenant) {
     this.location_level = location_level;
-    this.setting = setting;
+    this.currency = currency;
+    this.tenant = tenant;
   };
   factory.prototype.defaults = function() {
     return {
@@ -28,21 +29,21 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
       locationLevelTwo: this.location_level.idTwo,
       categories: [],
       unusedId: 'af34ee9b-833c-4f3e-a584-b6851d1e04b3',
-      settings: {
-        dashboard_text:{
+      dashboard_text: 'Hi',
+      dashboard_textTwo: 'Bueno',
+      auth_currency: this.currency.id,
+      inherited: {
+        dashboard_text: {
           value: null,
           inherited_value: 'Welcome',
-          inherits_from: this.setting.name,
-          inherits_from_id: this.setting.id
+          inherits_from: this.tenant.inherits_from_tenant,
+          inherits_from_id: this.tenant.id
         },
-        create_all: {
-          value: this.setting.create_all,
-        },
-        accept_assign: {
-          value: this.setting.accept_assign,
-        },
-        accept_notify: {
-          value: this.setting.accept_notify,
+        auth_currency: {
+          value: null,
+          inherited_value: this.currency.id,
+          inherits_from: this.tenant.inherits_from_tenant,
+          inherits_from_id: this.tenant.id
         }
       }
     };
@@ -52,12 +53,17 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
 
 if (typeof window === 'undefined') {
   var location_level = require('./location-level');
-  var setting = require('./setting');
-  module.exports = new BSRS_ROLE_DEFAULTS_OBJECT(location_level, setting).defaults();
+  var currency = require('./currencies');
+  var tenant = require('./tenant');
+  module.exports = new BSRS_ROLE_DEFAULTS_OBJECT(location_level, currency, tenant).defaults();
 } else {
   define('bsrs-ember/vendor/defaults/role',
-    ['exports', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/defaults/setting'], function (exports, location_level, setting) {
+    ['exports',
+    'bsrs-ember/vendor/defaults/location-level',
+    'bsrs-ember/vendor/defaults/currencies',
+    'bsrs-ember/vendor/defaults/tenant'],
+    function (exports, location_level, currency, tenant) {
     'use strict';
-    return new BSRS_ROLE_DEFAULTS_OBJECT(location_level, setting).defaults();
+    return new BSRS_ROLE_DEFAULTS_OBJECT(location_level, currency, tenant).defaults();
   });
 }

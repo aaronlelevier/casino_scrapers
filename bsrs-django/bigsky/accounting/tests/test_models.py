@@ -4,10 +4,13 @@ from django.utils.text import capfirst
 from accounting.models import Currency, CurrencyManager, DEFAULT_CURRENCY
 
 
-class CurrencyManagerTests(TestCase):
+class CurrencyTestSetupMixin(object):
 
     def setUp(self):
-        self.default = Currency.objects.default()
+        self.currency = Currency.objects.default()
+
+
+class CurrencyManagerTests(CurrencyTestSetupMixin, TestCase):
 
     def test_default__get_or_create(self):
         self.assertEqual(Currency.objects.count(), 1)
@@ -18,17 +21,14 @@ class CurrencyManagerTests(TestCase):
         self.assertEqual(Currency.objects.count(), 1)
 
     def test_default__properties(self):
-        self.assertEqual(self.default.name, DEFAULT_CURRENCY['name'])
-        self.assertEqual(self.default.code, DEFAULT_CURRENCY['code'])
-        self.assertEqual(self.default.symbol, DEFAULT_CURRENCY['symbol'])
-        self.assertEqual(self.default.decimal_digits, DEFAULT_CURRENCY['decimal_digits'])
-        self.assertEqual(self.default.rounding, DEFAULT_CURRENCY['rounding'])
+        self.assertEqual(self.currency.name, DEFAULT_CURRENCY['name'])
+        self.assertEqual(self.currency.code, DEFAULT_CURRENCY['code'])
+        self.assertEqual(self.currency.symbol, DEFAULT_CURRENCY['symbol'])
+        self.assertEqual(self.currency.decimal_digits, DEFAULT_CURRENCY['decimal_digits'])
+        self.assertEqual(self.currency.rounding, DEFAULT_CURRENCY['rounding'])
 
 
-class CurrencyTests(TestCase):
-
-    def setUp(self):
-        self.default = Currency.objects.default()
+class CurrencyTests(CurrencyTestSetupMixin, TestCase):
 
     def test_manager(self):
         self.assertIsInstance(Currency.objects, CurrencyManager)
@@ -37,31 +37,26 @@ class CurrencyTests(TestCase):
         self.assertEqual(Currency._meta.verbose_name_plural, "Currencies")
 
     def test_str(self):
-        self.assertEqual(self.default.name, str(self.default))
+        self.assertEqual(self.currency.name, str(self.currency))
 
-    def test_update_defaults__name_plural(self):
-        self.default.name_plural = None
+    def test_update_defaults(self):
+        self.currency.name_plural = None
+        self.currency.symbol_native = None
 
-        self.default.save()
+        self.currency._update_defaults()
 
-        self.assertEqual(self.default.name_plural, capfirst(self.default.name+'s'))
-
-    def test_update_defaults__symbol_native(self):
-        self.default.symbol_native = None
-
-        self.default.save()
-
-        self.assertEqual(self.default.symbol_native, self.default.symbol)
+        self.assertEqual(self.currency.name_plural, capfirst(self.currency.name+'s'))
+        self.assertEqual(self.currency.symbol_native, self.currency.symbol)
 
     def test_to_dict(self):
-        data = self.default.to_dict()
+        data = self.currency.to_dict()
 
-        self.assertIsInstance(self.default.to_dict(), dict)
-        self.assertEqual(data['id'], str(self.default.id))
-        self.assertEqual(data['name'], self.default.name)
-        self.assertEqual(data['name_plural'], self.default.name_plural)
-        self.assertEqual(data['code'], self.default.code)
-        self.assertEqual(data['symbol'], self.default.symbol)
-        self.assertEqual(data['symbol_native'], self.default.symbol_native)
-        self.assertEqual(data['decimal_digits'], self.default.decimal_digits)
-        self.assertEqual(data['rounding'], self.default.rounding)
+        self.assertIsInstance(self.currency.to_dict(), dict)
+        self.assertEqual(data['id'], str(self.currency.id))
+        self.assertEqual(data['name'], self.currency.name)
+        self.assertEqual(data['name_plural'], self.currency.name_plural)
+        self.assertEqual(data['code'], self.currency.code)
+        self.assertEqual(data['symbol'], self.currency.symbol)
+        self.assertEqual(data['symbol_native'], self.currency.symbol_native)
+        self.assertEqual(data['decimal_digits'], self.currency.decimal_digits)
+        self.assertEqual(data['rounding'], self.currency.rounding)

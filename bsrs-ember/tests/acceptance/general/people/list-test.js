@@ -34,6 +34,5 @@ test('visiting /people', function(assert) {
     assert.equal(find('.t-sort-title').text(), t('admin.person.label.title'));
     assert.equal(find('.t-sort-username').text(), t('admin.person.label.username'));
     assert.equal(find('.t-sort-role-name').text(), t('admin.person.label.role-name'));
-    assert.equal(find('.t-sort-employee-id').text(), t('admin.person.label.employee_id'));
   });
 });

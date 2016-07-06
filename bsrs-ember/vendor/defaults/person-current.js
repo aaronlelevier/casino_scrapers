@@ -25,7 +25,8 @@ var BSRS_PERSON_CURRENT_DEFAULTS_OBJECT = (function() {
                 id: this.location_defaults.idOne,
                 name: this.location_defaults.storeName,
                 location_level_fk: this.location_level_defaults.idOne
-            }]
+            }],
+            inherited: this.person_defaults.inherited
         };
     };
     return factory;

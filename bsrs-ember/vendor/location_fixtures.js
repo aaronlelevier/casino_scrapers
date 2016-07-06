@@ -14,11 +14,11 @@ var BSRS_LOCATION_FACTORY = (function() {
     return {
       id: i || this.location_defaults.idOne,
       name: name,
-      number: this.location_defaults.storeName,
+      number: this.location_defaults.storeNumber,
       location_level: this.location_level_fixtures.detail().id,
       status: this.location_status_defaults.openId
     }
-  },
+  };
   factory.prototype.get_fk = function(i, name) {
     var name = name || this.location_defaults.storeName;
     return {
@@ -28,12 +28,23 @@ var BSRS_LOCATION_FACTORY = (function() {
       location_level: this.location_level_fixtures.detail().id,
       status_fk: this.location_status_defaults.openId,
     };
-  },
+  };
+  factory.prototype.get_no_related = function(i, name) {
+    /* ticket list location */
+    return {
+      id: i || this.location_defaults.idOne,
+      name: name || this.location_defaults.baseStoreName,
+      number: this.location_defaults.storeNumber,
+    }
+  };
   factory.prototype.generate_list = function(i) {
-    var location = this.generate(i);
-    delete location.status_fk;
-    location.status = {id: this.location_status_defaults.openId, name: this.location_status_defaults.openName};
-    return location;
+    return {
+      id: i,
+      name: this.location_defaults.baseStoreName,
+      number : this.location_defaults.storeNumber,
+      status: {id: this.location_status_defaults.openId, name: this.location_status_defaults.openName},
+      location_level: this.location_level_fixtures.detail().id,
+    }
   };
   factory.prototype.generate = function(i) {
     var id = i || this.location_defaults.idOne;
@@ -117,6 +128,7 @@ var BSRS_LOCATION_FACTORY = (function() {
     }
     return response;
   };
+  //TODO: Check to see if this is still used
   factory.prototype.search = function() {
     var location_one = this.get_fk(this.location_defaults.idFour, this.location_defaults.storeNameFour);
     var location_two = this.get_fk(this.location_defaults.idTwo, this.location_defaults.storeNameTwo);
@@ -128,10 +140,37 @@ var BSRS_LOCATION_FACTORY = (function() {
     return {'count':2,'next':null,'previous':null,'results': sorted};
   };
   factory.prototype.search_idThree = function() {
-    var location_one = this.get(this.location_defaults.idThree, this.location_defaults.storeNameThree);
-    var response = [location_one];
-    return {'count':1,'next':null,'previous':null,'results': response};
+    var location_one = this.get_no_related(this.location_defaults.idThree, this.location_defaults.storeNameThree);
+    return [location_one];
   };
+  factory.prototype.search_power_select = function() {
+    var location_one = this.get_no_related(this.location_defaults.idFour, this.location_defaults.storeNameFour);
+    var location_two = this.get_no_related(this.location_defaults.idTwo, this.location_defaults.storeNameTwo);
+    var response = [location_one, location_two];
+    return response;
+  };
+  factory.prototype.list_power_select = function() {
+    var response = [];
+    var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
+    for (var i=1; i <= page_size; i++) {
+      var uuid = '232z46cf-9fbb-456z-4hc3-59728vu3099';
+      if (i < page_size) {
+        uuid = uuid + '0' + i;
+      } else {
+        uuid = uuid + i;
+      }
+      var location = this.get_no_related(uuid);
+      if (i === 0) {
+        location.name = location_defaults.storeName;
+      } else {
+        location.name = location.name + i;
+      }
+      location.number = location.number + i;
+      response.push(location);
+    }
+    return response;
+  };
+
   return factory;
 })();
 

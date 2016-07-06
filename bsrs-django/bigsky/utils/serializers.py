@@ -3,8 +3,8 @@ import copy
 from rest_framework import serializers
 
 from contact.models import PhoneNumber, Address, Email
-from setting.models import Setting
 from utils import create
+
 
 class BaseCreateSerializer(serializers.ModelSerializer):
     '''
@@ -92,47 +92,6 @@ class RemovePasswordSerializerMixin(object):
     def to_representation(self, instance):
         data = super(RemovePasswordSerializerMixin, self).to_representation(instance)
         data.pop('password', None)
-        return data
-
-
-class NestedSettingUpdateMixin(object):
-    """
-    Needed as a Mixin b/c General, Role, and Person will need this
-    custom update logic for 'settings' JsonField.
-    """
-    def update(self, instance, validated_data):
-        settings_obj = validated_data.pop('settings', {})
-        self.update_settings(instance, settings_obj)
-        return super(NestedSettingUpdateMixin, self).update(instance, validated_data)
-
-    @staticmethod
-    def update_settings(instance, settings_obj):
-        init_settings = copy.copy(instance.settings.settings)
-        settings = copy.copy(settings_obj.get('settings', {}))
-
-        for k,v in settings.items():
-            init_settings[k]['value'] = v
-
-        # retrieve a current DB copy of the instance in order to
-        # get the unaltered Setting related object.
-        klass = instance.__class__
-        i = klass.objects.get(id=instance.id)
-
-        setting_instance = i.settings
-        setting_instance.settings = init_settings
-        setting_instance.save()
-
-
-class NestedSettingsToRepresentationMixin(object):
-    """
-    Replace settings on Model w/ inherited settings.
-    
-    Ex: GeneralSettings > RoleSettings = CombinedSettings
-    """
-    def to_representation(self, instance):
-        data = super(NestedSettingsToRepresentationMixin, self).to_representation(instance)
-        if instance.settings:
-            data['settings'] = instance.combined_settings()
         return data
 
 

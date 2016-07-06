@@ -5,14 +5,13 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from accounting.models import Currency
 from category.tests.factory import create_single_category, create_categories
 from location.models import (Location, LocationLevel, LOCATION_COMPANY, LOCATION_DISTRICT,
     LOCATION_REGION)
 from location.tests.factory import create_location, create_locations, create_location_levels
-from person.models import Tenant, Role, Person
+from person.models import Role, Person
 from person.tests import factory
-from setting.models import Setting
+from tenant.models import Tenant
 from translation.models import Locale
 from translation.tests.factory import create_locales
 
@@ -57,28 +56,13 @@ class DistrictManagerFactoryTests(TestCase):
         self.assertIn(self.dm.location, self.dm.person.locations.all())
 
 
-class TentantTests(TestCase):
-
-    def test_get_or_create(self):
-        ret = factory.get_or_create_tenant()
-
-        self.assertIsInstance(ret, Tenant)
-        self.assertIsNone(ret.dt_start)
-        self.assertIsInstance(ret.auth_currency, Currency)
-        self.assertIsInstance(ret.settings, Setting)
-
-        # get-or-create, so 2nd call returns original
-        ret_two = factory.get_or_create_tenant()
-        self.assertEqual(ret, ret_two)
-
-
 class CreateRoleTests(TestCase):
 
     def test_standard(self):
         init_count = Role.objects.count()
         role = factory.create_role()
         self.assertIsInstance(role, Role)
-        self.assertIsInstance(role.auth_currency, Currency)
+        self.assertIsInstance(role.tenant, Tenant)
         self.assertEqual(init_count+1, Role.objects.count())
         self.assertEqual(role.location_level.name, LOCATION_REGION)
 
@@ -106,20 +90,6 @@ class CreateRoleTests(TestCase):
         role = factory.create_role()
 
         self.assertEqual(role.categories.count(), 1)
-
-    def test_general_settings(self):
-        # get's created b/c Role's need to be setup with settings,
-        # and they have inherited settings from 'general', so 'general'
-        # needs to exist.
-        factory.create_role()
-        self.assertTrue(Setting.objects.filter(name='general'))
-
-    def test_role_settings(self):
-        role = factory.create_role()
-
-        self.assertIsInstance(role.settings, Setting)
-        self.assertEqual(role.settings.name, 'role')
-        self.assertEqual(role.settings.related_id, role.id)
 
 
 class CreateRolesTests(TestCase):
@@ -175,6 +145,7 @@ class CreateSinglePersonTests(TestCase):
         person = factory.create_single_person()
 
         self.assertIsInstance(person, Person)
+        self.assertIsInstance(person.role.tenant, Tenant)
         self.assertIsInstance(person.locale, Locale)
         # person's location
         self.assertEqual(person.locations.count(), 1)
@@ -218,14 +189,6 @@ class CreateSinglePersonTests(TestCase):
 
         with self.assertRaises(ValidationError):
             factory.create_single_person(location=location)
-
-    def test_person_settings(self):
-        person = factory.create_single_person()
-
-        self.assertIsInstance(person.settings, Setting)
-        # if this fails, then either 'general' or this person's 'role'
-        # settings are not set up
-        self.assertTrue(person.combined_settings())
 
 
 class CreatePersonTests(TestCase):

@@ -7,7 +7,7 @@ let CurrencyService = Ember.Service.extend({
         // should always be using the person-current here.
         let store = this.get('simpleStore');
         let person = store.find('person-current').objectAt(0).get('person');
-        let currencyId = person.get('auth_currency') ? person.get('auth_currency') : person.get('settings_object').auth_currency.inherited_value;
+        let currencyId = person.get('auth_currency') ? person.get('auth_currency') : person.get('inherited').auth_currency.inherited_value;
         return store.find('currency', currencyId);
     },
     getDefaultCurrency() {

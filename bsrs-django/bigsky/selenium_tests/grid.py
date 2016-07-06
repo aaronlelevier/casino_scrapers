@@ -2,8 +2,6 @@ from __future__ import absolute_import
 
 import unittest
 import uuid
-import random
-import string
 import time
 
 from selenium import webdriver
@@ -14,7 +12,7 @@ from helpers.element import is_present
 from helpers.lorem_ipsum import LOREM_IPSUM_WORDS
 from helpers import (
     LoginMixin, FillInHelper, JavascriptMixin,
-    NavPage, GeneralElementsPage, Wait, rand_chars
+    NavPage, GeneralElementsPage, Wait
 )
 
 

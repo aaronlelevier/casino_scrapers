@@ -10,7 +10,6 @@ var multi_new_put_payload = {
     phone_numbers: [],
     addresses: [],
     locale: PD.locale_id,
-    settings: {settings: {}}
 };
 
 export {multi_new_put_payload};

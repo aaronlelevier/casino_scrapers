@@ -10,7 +10,7 @@ const BSRS_PERSON_MIDDLE_INITIAL = 'B';
 const BSRS_PERSON_ORIG_LAST_NAME = 'Gibson';
 const BSRS_PERSON_LAST_NAME = BSRS_PERSON_ORIG_LAST_NAME + '1';
 const BSRS_PERSON_employee_id = '5063';
-const BSRS_PERSON_AUTH_AMOUNT = '50000.0000';
+const BSRS_PERSON_AUTH_AMOUNT = 50000.0000;
 const BSRS_PERSON_ORIG_TITLE = 'MVP';
 const BSRS_PERSON_TITLE = '1 ' + BSRS_PERSON_ORIG_TITLE;
 const BSRS_PERSON_LOCATION = '';
@@ -19,12 +19,11 @@ const BSRS_PERSON_ADDRESSES = [];
 const BSRS_PERSON_UNUSED_ID = 'cadba3ba-a533-44e0-ab1f-57cc1b052138';
 
 var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
-  var factory = function(role_defaults, status_defaults, currency_defaults, locale_defaults, setting_defaults) {
+  var factory = function(role_defaults, status_defaults, currency_defaults, locale_defaults) {
     this.role_defaults = role_defaults;
     this.status_defaults = status_defaults;
     this.currency_defaults = currency_defaults;
     this.locale_defaults = locale_defaults;
-    this.setting_defaults = setting_defaults;
   };
   factory.prototype.defaults = function() {
     return {
@@ -89,31 +88,25 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
       emailTwo: 'tbillups@gmail.com',
       emailThree: 'alevier@aol.com',
       personListTwo: '139543cf-8fea-426a-8bc3-09778cd79902',
-      settings: {
-        accept_assign:{
-          value: null,
-          inherited_value: this.role_defaults.settings.accept_assign.value,
-          inherits_from: 'role',
-          inherits_from_id: this.role_defaults.idOne
-        },
-        accept_notify:{
-          value: null,
-          inherited_value: this.role_defaults.settings.accept_notify.value,
-          inherits_from: 'role',
-          inherits_from_id: this.role_defaults.idOne
-        },
-        password_one_time: {
-          value: this.setting_defaults.password_one_time
-        },
+      inherited: {
+        /* no value field if not present */
         auth_amount: {
-          value: null,
           inherited_value: BSRS_PERSON_AUTH_AMOUNT,
           inherits_from: 'role',
           inherits_from_id: this.role_defaults.idOne
         },
         auth_currency: {
-          value: null,
           inherited_value: this.currency_defaults.id,
+          inherits_from: 'role',
+          inherits_from_id: this.role_defaults.idOne
+        },
+        accept_assign: {
+          inherited_value: false,
+          inherits_from: 'role',
+          inherits_from_id: this.role_defaults.idOne
+        },
+        accept_notify: {
+          inherited_value: false,
           inherits_from: 'role',
           inherits_from_id: this.role_defaults.idOne
         }
@@ -128,16 +121,17 @@ if (typeof window === 'undefined') {
   var status_defaults = require('./status');
   var currency_defaults = require('./currencies');
   var locale_defaults = require('./locale');
-  var setting_defaults = require('./setting');
-  module.exports = new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults, locale_defaults, setting_defaults).defaults();
-} else {
-  define('bsrs-ember/vendor/defaults/person', ['exports', 'bsrs-ember/vendor/defaults/role',
-         'bsrs-ember/vendor/defaults/status',
-         'bsrs-ember/vendor/defaults/currencies',
-         'bsrs-ember/vendor/defaults/locale',
-         'bsrs-ember/vendor/defaults/setting'],
-         function (exports, role_defaults, status_defaults, currency_defaults, locale_defaults, setting_defaults) {
-           'use strict';
-           return new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults, locale_defaults, setting_defaults).defaults();
-         });
+  module.exports = new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults, locale_defaults).defaults();
+}
+else {
+  define('bsrs-ember/vendor/defaults/person', ['exports',
+      'bsrs-ember/vendor/defaults/role',
+      'bsrs-ember/vendor/defaults/status',
+      'bsrs-ember/vendor/defaults/currencies',
+      'bsrs-ember/vendor/defaults/locale'
+    ],
+    function(exports, role_defaults, status_defaults, currency_defaults, locale_defaults) {
+      'use strict';
+      return new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults, locale_defaults).defaults();
+    });
 }

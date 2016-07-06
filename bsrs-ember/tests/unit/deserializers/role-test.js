@@ -7,7 +7,6 @@ import RF from 'bsrs-ember/vendor/role_fixtures';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
-import SD from 'bsrs-ember/vendor/defaults/setting';
 import RoleDeserializer from 'bsrs-ember/deserializers/role';
 import CategoryDeserializer from 'bsrs-ember/deserializers/category';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
@@ -44,7 +43,7 @@ test('category and location level will not be deserialized into its own store wh
     id: CD.idOne,
     name: CD.nameOne
   });
-  let json = RF.generate_single_for_list(RD.unusedId);
+  let json = RF.generate_list(RD.unusedId);
   let response = {
     'count': 1,
     'next': null,
@@ -121,7 +120,7 @@ test('role location level will correctly be deserialized when server returns rol
     roles: [RD.idOne]
   });
   let response = RF.generate(RD.idOne);
-  response.location_level = undefined;
+  delete response.location_level;
   run(() => {
     subject.deserialize(response, RD.idOne);
   });
@@ -144,7 +143,7 @@ test('role location level will correctly be deserialized (with many roles) when 
     roles: [RD.idOne, RD.unusedId]
   });
   let response = RF.generate(RD.idOne);
-  response.location_level = undefined;
+  delete response.location_level;
   run(() => {
     subject.deserialize(response, RD.idOne);
   });
@@ -166,7 +165,7 @@ test('role location level will correctly be deserialized when server returns rol
     name: LLD.nameCompany,
     roles: [RD.idOne]
   });
-  let json = RF.generate_single_for_list(RD.idOne);
+  let json = RF.generate_list(RD.idOne);
   json.location_level = undefined;
   let response = {
     'count': 1,
@@ -270,7 +269,7 @@ test('role category will correctly be deserialized when server returns role with
     id: CD.idOne,
     name: CD.nameOne
   });
-  response.categories.push(CF.generate(CD.unusedId));
+  response.categories.push(CF.generate_for_power_select(CD.unusedId));
   assert.deepEqual(role.get('role_categories_fks'), [ROLE_CD.idOne]);
   assert.equal(role.get('categories').get('length'), 1);
   run(() => {
@@ -427,34 +426,26 @@ test('role-category m2m does not delete other role-category m2m models', (assert
   assert.equal(role_two.get('role_categories').get('length'), 1);
 });
 
-test('auth_amount and auth_currency', assert => {
+test('auth_amount', assert => {
   let response = RF.generate(RD.idOne);
   run(() => {
     subject.deserialize(response, RD.idOne);
   });
   role = store.find('role', RD.idOne);
   assert.equal(role.get('auth_amount'), CURRENCY_DEFAULTS.authAmountOne);
-  assert.equal(role.get('auth_currency'), CURRENCY_DEFAULTS.id);
 });
 
-test('settings copySettingsToFirstLevel', (assert) => {
+test('inherited copySettingsToFirstLevel', (assert) => {
   let response = RF.generate(RD.idOne);
+  assert.equal(response.auth_currency, undefined);
+  assert.equal(response.dashboard_text, undefined);
   run(() => {
     subject.deserialize(response, RD.idOne);
   });
   role = store.find('role', RD.idOne);
   assert.equal(role.get('dashboard_text'), null);
-  assert.equal(role.get('create_all'), true);
-  assert.equal(role.get('accept_assign'), false);
-  assert.equal(role.get('accept_notify'), false);
-  // settings
-  assert.equal(role.get('settings').settings.dashboard_text, null);
-  assert.equal(role.get('settings').settings.create_all, true);
-  assert.equal(role.get('settings').settings.accept_assign, false);
-  assert.equal(role.get('settings').settings.accept_notify, false);
-  // settings_object
-  assert.equal(role.get('settings_object').dashboard_text, RD.settings.dashboard_text);
-  assert.equal(role.get('settings_object').create_all, RD.settings.create_all);
-  assert.equal(role.get('settings_object').accept_assign, RD.settings.accept_assign);
-  assert.equal(role.get('settings_object').accept_notify, RD.settings.accept_notify);
+  assert.equal(role.get('auth_currency'), null);
+  // inherited
+  assert.deepEqual(role.get('inherited').dashboard_text, RD.inherited.dashboard_text);
+  assert.deepEqual(role.get('inherited').auth_currency, RD.inherited.auth_currency);
 });

@@ -3,6 +3,7 @@ from datetime import date
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, Group
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 from django.test import TestCase
 from django.utils.timezone import localtime, now
 
@@ -18,8 +19,6 @@ from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
 from person.tests.factory import (PASSWORD, create_person, create_role, create_single_person,
     get_or_create_tenant)
-from setting.tests.factory import (create_general_setting,
-    create_role_setting, create_person_setting)
 from translation.models import Locale
 from utils import create
 from utils.models import DefaultNameManager
@@ -34,21 +33,29 @@ class RoleTests(TestCase):
 
     def setUp(self):
         self.role = create_role()
-        create_general_setting()
 
-    def test_group(self):
+    def test_str(self):
+        self.assertEqual(str(self.role), self.role.name)
+
+    def test_to_dict(self):
+        ret = self.role.to_dict()
+
+        self.assertEqual(ret['id'], str(self.role.id))
+        self.assertEqual(ret['name'], self.role.name)
+        self.assertEqual(ret['default'], True if self.role.name == settings.DEFAULT_ROLE else False)
+        self.assertEqual(ret['location_level'], str(self.role.location_level.id) if self.role.location_level else None)
+
+    def test_update_defaults(self):
+        self.role.group = None
+        self.role.auth_amount = None
+
+        self.role._update_defaults()
+
         self.assertIsInstance(self.role.group, Group)
-
-    def test_name(self):
         self.assertEqual(self.role.group.name, self.role.name)
+        self.assertEqual(self.role.auth_amount, 0)
 
-    def test_to_dict_location_level (self):
-        self.assertEqual(
-            self.role.to_dict()["location_level"],
-            str(self.role.location_level.id)
-        )
-
-    def test_default_tenant_on_save(self):
+    def test_tenant_not_defaulted_on_save(self):
         tenant = get_or_create_tenant()
         self.assertIsNotNone(self.role.tenant)
         self.role.tenant = None
@@ -65,20 +72,9 @@ class RoleTests(TestCase):
 
     def test_categories_not_reqd(self):
         category = Category.objects.get(id=self.role.categories.first().id)
-        self.role.categories.remove(category)  
+        self.role.categories.remove(category)
         self.role.save()
         self.assertEqual(self.role.categories.count(), 0)
-
-    def test_nonverbose_combined_settings(self):
-        ret = self.role.nonverbose_combined_settings()
-
-        self.assertEqual(sorted(ret.keys()), sorted(self.role.combined_settings().keys()))
-
-        for k,v in self.role.combined_settings().items():
-            if 'value' in v and v['value'] is not None:
-                self.assertEqual(ret[k], v['value'])
-            else:
-                self.assertEqual(ret[k], v['inherited_value'])
 
 
 class RolePasswordTests(TestCase):
@@ -201,9 +197,6 @@ class PersonTests(TestCase):
         self.assertEqual(self.person.emails.count(), 2)
         self.assertEqual(self.person.emails.filter(type=email_one.type).count(), 1)
         self.assertEqual(self.person.emails.filter(type__name=email_one.type.name).count(), 1)
-
-    def test_person_defaults(self):
-        self.assertTrue(self.person.accept_assign)
 
     def test_update_defaults(self):
         self.person.status = None
@@ -343,7 +336,7 @@ class PersonTests(TestCase):
         # Confirm that the ``system_default`` is not equal to the Locale
         # that we are about to assign to the ``Person``
         self.assertNotEqual(default_locale, person_locale)
-        Person.objects.filter(pk=self.person.id).update(locale=person_locale) 
+        Person.objects.filter(pk=self.person.id).update(locale=person_locale)
 
         # ``person.to_dict(_)`` will return the ``person.locale`` first
         # if it exists, not ``person._get_locale``
@@ -374,7 +367,7 @@ class PersonTests(TestCase):
 
     def test_all_locations_and_children(self):
         """
-        Tests that a full Location object is being returned, which will later 
+        Tests that a full Location object is being returned, which will later
         be used by a DRF serializer in the Person-Current Bootstrapped data.
         """
         data = self.person.all_locations_and_children()
@@ -409,17 +402,6 @@ class PersonTests(TestCase):
         # remove
         person.locations.remove(top_location)
         self.assertFalse(person.has_top_level_location)
-
-    def test_nonverbose_combined_settings(self):
-        ret = self.person.nonverbose_combined_settings()
-
-        self.assertEqual(sorted(ret.keys()), sorted(self.person.combined_settings().keys()))
-
-        for k,v in self.person.combined_settings().items():
-            if 'value' in v and v['value'] is not None:
-                self.assertEqual(ret[k], v['value'])
-            else:
-                self.assertEqual(ret[k], v['inherited_value'])
 
 
 ### PASSWORD
@@ -465,43 +447,55 @@ class PersonPasswordHistoryTests(TestCase):
             post_password_change
         )
 
-
-class PersonProxyFieldTests(TestCase):
+class PersonManagerTests(TestCase):
 
     def setUp(self):
-        self.person = create_single_person()
-        create_person_setting(self.person)
-        self.role = self.person.role
-        create_role_setting(self.role)
+        create_person()
+        create_person()
 
-    def test_auth_amount__inherited(self):
-        combined_settings = self.person.combined_settings()
-        self.assertEqual(combined_settings['auth_amount']['value'], None)
-        self.assertEqual(combined_settings['auth_amount']['inherited_value'], self.role.auth_amount)
-        self.assertEqual(combined_settings['auth_amount']['inherits_from'], 'role')
-        self.assertEqual(combined_settings['auth_amount']['inherits_from_id'], str(self.person.role.id))
+    def test_search_multi_username(self):
+        search = Person.objects.first().username
+        raw_qs_count = Person.objects.filter(
+                Q(username__icontains=search)
+            ).count()
 
-    def test_auth_amount__not_inherited(self):
-        new_amount = 99
-        self.person.auth_amount = new_amount
-        combined_settings = self.person.combined_settings()
-        self.assertEqual(combined_settings['auth_amount']['value'], new_amount)
-        self.assertEqual(combined_settings['auth_amount']['inherited_value'], self.person.role.auth_amount)
-        self.assertEqual(combined_settings['auth_amount']['inherits_from'], 'role')
-        self.assertEqual(combined_settings['auth_amount']['inherits_from_id'], str(self.person.role.id))
+        ret = Person.objects.search_multi(keyword=search).count()
 
-    def test_auth_currency__inherited(self):
-        combined_settings = self.person.combined_settings()
-        self.assertEqual(combined_settings['auth_currency']['value'], None)
-        self.assertEqual(combined_settings['auth_currency']['inherited_value'], str(self.role.auth_currency.id))
-        self.assertEqual(combined_settings['auth_currency']['inherits_from'], 'role')
-        self.assertEqual(combined_settings['auth_currency']['inherits_from_id'], str(self.person.role.id))
+        self.assertEqual(ret, raw_qs_count)
+        self.assertEqual(ret, 1)
 
-    def test_auth_currency__not_inherited(self):
-        currency = mommy.make(Currency, code='ABC')
-        self.person.auth_currency = currency
-        combined_settings = self.person.combined_settings()
-        self.assertEqual(combined_settings['auth_currency']['value'], str(currency.id))
-        self.assertEqual(combined_settings['auth_currency']['inherited_value'], str(self.person.role.auth_currency.id))
-        self.assertEqual(combined_settings['auth_currency']['inherits_from'], 'role')
-        self.assertEqual(combined_settings['auth_currency']['inherits_from_id'], str(self.person.role.id))
+    def test_search_multi_username(self):
+        search = Person.objects.first().fullname
+        raw_qs_count = Person.objects.filter(
+                Q(fullname__icontains=search)
+            ).count()
+
+        ret = Person.objects.search_multi(keyword=search).count()
+
+        self.assertEqual(ret, raw_qs_count)
+        self.assertEqual(ret, 1)
+
+    def test_search_multi_title(self):
+        person = Person.objects.first()
+        person.title = 'another title'
+        person.save()
+        search = 'another title'
+        raw_qs_count = Person.objects.filter(
+                Q(title__icontains=search)
+            ).count()
+
+        ret = Person.objects.search_multi(keyword=search).count()
+
+        self.assertEqual(ret, raw_qs_count)
+        self.assertEqual(ret, 1)
+
+    def test_search_multi_role__name(self):
+        search = Person.objects.first().role.name
+        raw_qs_count = Person.objects.filter(
+                Q(role__name__icontains=search)
+            ).count()
+
+        ret = Person.objects.search_multi(keyword=search).count()
+
+        self.assertEqual(ret, raw_qs_count)
+        self.assertEqual(ret, 1)

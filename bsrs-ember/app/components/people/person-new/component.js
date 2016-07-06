@@ -6,9 +6,9 @@ import NewTabMixin from 'bsrs-ember/mixins/components/tab/new';//used for save m
 var PersonNewComponent = Ember.Component.extend(TabMixin, NewTabMixin, {
   didValidate: false,
   repository: inject('person'),
-  simpleStore: Ember.inject.service(),
+  locale_repo: inject('locale'),
   selectedLocale: Ember.computed('model.locale', function() {
-    return this.get('model.locale') ? this.get('model.locale') : this.get('simpleStore').find('locale', {default: true}).objectAt(0);
+    return this.get('model.locale') ? this.get('model.locale') : this.get('locale_repo').get_default();
   }),
   actions: {
     save() {

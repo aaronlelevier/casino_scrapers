@@ -30,6 +30,7 @@
           <div class="col-md-12">
             {{#form-group title="admin.setting.company_name" for="company_name"}}
             {{input type="text" placeholder=(t "admin.setting.company_name") value=model.company_name class="form-control t-settings-company_name" id="company_name"}}
+            {{#validation-error-field submitted=submitted field="company_name" className="validation validation-under t-company_name-text-validation-error" model=model validation=companyNameValidation}}{{t "validation.invalid"}} {{t "admin.setting.company_name"}}{{/validation-error-field}}
             {{/form-group}}
           </div>
         </div>
@@ -37,6 +38,7 @@
           <div class="col-md-12">
             {{#form-group title="admin.setting.company_code" for="company_code"}}
             {{input type="text" placeholder=(t "admin.setting.company_code") value=model.company_code class="form-control t-settings-company_code" id="company_code"}}
+            {{#validation-error-field submitted=submitted field="company_code" className="validation validation-under t-company_code-text-validation-error" model=model validation=companyCodeValidation}}{{t "validation.invalid"}} {{t "admin.setting.company_code"}}{{/validation-error-field}}
             {{/form-group}}
           </div>
         </div>
@@ -50,33 +52,9 @@
         </div>
         <div class="row">
           <div class="col-md-12">
-            {{#form-group title="admin.setting.login_grace" for="login_grace"}}
-            {{input type="number" placeholder=(t "admin.setting.login_grace") value=model.login_grace class="form-control t-settings-login_grace" id="login_grace"}}
-            {{/form-group}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            {{#form-group title="admin.setting.modules" for="modules"}}{{/form-group}}
-            <label>
-              <input type="checkbox" value={{model.tickets_module}} onclick={{action 'changeBool' 'setting' 'tickets_module'}} checked={{model.tickets_module}} class="t-settings-modules-tickets" name="modules-tickets">
-              <span class="t-settings-modules-tickets-label">{{t "admin.setting.modules.tickets"}}</span>
-            </label>
-            <label>
-              <input type="checkbox" value={{model.work_orders_module}} onclick={{action 'changeBool' 'setting' 'work_orders_module'}} checked={{model.work_orders_module}} class="t-settings-modules-work_orders" name="modules-work_orders">
-              <span class="t-settings-modules-work_orders-label">{{t "admin.setting.modules.work_orders"}}</span>
-            </label>
-            <label>
-              <input type="checkbox" value={{model.invoices_module}} onclick={{action 'changeBool' 'setting' 'invoices_module'}} checked={{model.invoices_module}} class="t-settings-modules-invoices" name="modules-invoices">
-              <span class="t-settings-modules-invoices-label">{{t "admin.setting.modules.invoices"}}</span>
-            </label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
             <div class="checkbox">
               <label>
-                <input type="checkbox" value={{model.test_mode}} onclick={{action 'changeBool' 'setting' 'test_mode'}} checked={{model.test_mode}} class="t-settings-test_mode" name="test_mode">
+                <input type="checkbox" value={{model.test_mode}} onclick={{action 'changeBool' 'tenant' 'test_mode'}} checked={{model.test_mode}} class="t-settings-test_mode" name="test_mode">
                 <span class="t-settings-test_mode-label">{{t "admin.setting.test_mode"}}</span>
               </label>
             </div>
@@ -84,21 +62,6 @@
         </div>
         <div class="row">
           <div class="col-md-12">
-            {{#form-group title="admin.setting.test_contractor_email" for="test_contractor_email"}}
-            {{input type="email" placeholder=(t "admin.setting.test_contractor_email") value=model.test_contractor_email class="form-control t-settings-test_contractor_email" id="test_contractor_email"}}
-            {{/form-group}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            {{#form-group title="admin.setting.test_contractor_phone" for="test_contractor_phone"}}
-            {{input type="text" placeholder=(t "admin.setting.test_contractor_phone") value=model.test_contractor_phone class="form-control t-settings-test_contractor_phone" id="test_contractor_phone"}}
-            {{/form-group}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            {{dtdRepo}}
             {{#form-group title="admin.setting.dt_start_key" for="dt_start_id"}}
             {{db-fetch-select
               model=model
@@ -109,6 +72,21 @@
               searchMethod="findDTD"
               change_func="changeStartDtd"
             }}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 t-currency-code">
+            {{#form-group title="admin.category.label.cost_currency" for="default_currency"}}
+              {{general-power-select
+                model=model
+                className="t-currency-code-select"
+                selected=currencyObject
+                property="default_currency_id"
+                options=currencyObjects
+                isObject=true
+                field="code"
+              }}
             {{/form-group}}
           </div>
         </div>

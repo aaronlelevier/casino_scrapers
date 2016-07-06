@@ -2,22 +2,25 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import injectStore from 'bsrs-ember/utilities/store';
 import TabRoute from 'bsrs-ember/route/tab/route';
+import FindById from 'bsrs-ember/mixins/route/findById';
 
-export default TabRoute.extend({
+export default TabRoute.extend(FindById, {
   simpleStore: Ember.inject.service(),
-  repository: inject('setting'),
-  redirectRoute: Ember.computed(function() {
-    return 'admin';
-  }),
-  module: Ember.computed(function() {
-    return 'setting';
-  }),
-  templateModelField: Ember.computed(function() {
-    return 'translated_title';
+  repository: inject('tenant'),
+  redirectRoute: 'admin',
+  module: 'tenant',
+  templateModelField: 'translated_title',
+  currencyObjects: Ember.computed(function() {
+    return this.get('simpleStore').find('currency');
   }),
   model(params) {
-    const id = params.id;
-    const repository = this.get('repository');
-    return repository.findById(id);
+    const model = this.get('simpleStore').findOne('tenant');
+    const deps = {
+      currencyObjects: this.get('currencyObjects')
+    };
+    return this.findByIdScenario(model, params.id, deps);
+  },
+  setupController(controller, hash) {
+    controller.setProperties(hash);
   }
 });

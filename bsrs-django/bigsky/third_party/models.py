@@ -1,12 +1,11 @@
 from django.db import models
-from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 
 from accounting.models import Currency
 from category.models import Category
 from contact.models import PhoneNumber, Address, Email
 from third_party.config import THIRD_PARTY_STATUSES
-from utils.models import BaseManager, BaseNameModel, DefaultNameManager
+from utils.models import BaseNameModel, DefaultNameManager
 
 
 class ThirdPartyStatus(BaseNameModel):

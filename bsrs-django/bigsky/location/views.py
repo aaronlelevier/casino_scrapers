@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
 from rest_framework.response import Response
@@ -38,7 +39,7 @@ class LocationLevelViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
     **1. get_all_children:**
 
        Will return all *Child LocationsLevels*
-       
+
        URL: `/api/admin/location-levels/{pk}/get-all-children/`
 
        LocationLevel ID: `{pk}`
@@ -46,7 +47,7 @@ class LocationLevelViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
     **2. get_all_parents:**
 
        Will return all *Parent LocationsLevels*
-       
+
        URL: `/api/admin/location-levels/{pk}/get-all-parents/`
 
        LocationLevel ID: `{pk}`
@@ -68,7 +69,7 @@ class LocationLevelViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
     @property
     def _all_related_serializer(self):
         return ls.LocationLevelDetailSerializer
-    
+
 
 class LocationStatusViewSet(BaseModelViewSet):
 
@@ -93,7 +94,7 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
     **1. get_all_children:**
 
        Will return all *Child Locations*
-       
+
        URL: `/api/admin/locations/{pk}/get-all-children/`
 
        Location ID: `{pk}`
@@ -101,7 +102,7 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
     **2. get_all_parents:**
 
        Will return all *Parent Locations*
-       
+
        URL: `/api/admin/locations/{pk}/get-all-parents/`
 
        Location ID: `{pk}`
@@ -109,7 +110,7 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
     **3. get_level_children:**
 
        Will return all *Child Locations* for a given *LocationLevel*
-       
+
        URL: `/api/admin/locations/get-level-children/{pk}/?name__icontains={x}`
 
        Location ID: `{pk}`
@@ -118,7 +119,7 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
     **4. get_level_parents:**
 
        Will return all *Parent Locations* `{pk}` for a given *LocationLevel* `{level_id}`
-       
+
        URL: `/api/admin/locations/get-level-parents/{pk}/{level_id}}`
 
        Location ID: `{pk}`
@@ -133,7 +134,7 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
        URL2: `/api/admin/locations/?location_level={level_id}&name__icontains={x}`
 
        LocationLevel ID where: `person.role.location_level == location.location_level`
-    
+
     '''
     model = Location
     permission_classes = (IsAuthenticated,)
@@ -163,18 +164,27 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
     def _all_related_serializer(self):
         return ls.LocationListSerializer
 
-    @list_route(methods=['GET'], url_path=r'get-level-children/(?P<llevel_id>[\w\-]+)/(?P<pk>[\w\-]+)')
-    def get_level_children(self, request, llevel_id=None, pk=None):
+    @list_route(methods=['GET'], url_path=r'get-level-children/(?P<llevel_id>[\w\-]+)/(?P<pk>[\w\-]+)/location__icontains=(?P<search_key>[\w ]+)')
+    def get_level_children(self, request, llevel_id=None, pk=None, search_key=None):
         queryset = Location.objects.get_level_children(llevel_id, pk)
-        queryset = self.filter_by_query_params(queryset)
-        page = self.paginate_queryset(queryset)
-        serializer = self._all_related_serializer(page, many=True)
-        return self.get_paginated_response(serializer.data)
+        queryset = Location.objects.filter(
+            Q(name__icontains=search_key)
+        )
+        serializer = ls.LocationSearchSerializer(queryset, many=True)
+        return Response(serializer.data)
 
-    @list_route(methods=['GET'], url_path=r'get-level-parents/(?P<llevel_id>[\w\-]+)/(?P<pk>[\w\-]+)')
-    def get_level_parents(self, request, llevel_id=None, pk=None):
+    @list_route(methods=['GET'], url_path=r'get-level-parents/(?P<llevel_id>[\w\-]+)/(?P<pk>[\w\-]+)/location__icontains=(?P<search_key>[\w ]+)')
+    def get_level_parents(self, request, llevel_id=None, pk=None, search_key=None):
         queryset = Location.objects.get_level_parents(llevel_id, pk)
-        queryset = self.filter_by_query_params(queryset)
-        page = self.paginate_queryset(queryset)
-        serializer = self._all_related_serializer(page, many=True)
-        return self.get_paginated_response(serializer.data)
+        queryset = Location.objects.filter(
+            Q(name__icontains=search_key)
+        )
+        serializer = ls.LocationSearchSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @list_route(methods=['GET'], url_path=r"location__icontains=(?P<search_key>[\w ]+)")
+    def search_power_select(self, request, search_key=None):
+        llevel_id = request.query_params['location_level'] if 'location_level' in request.query_params else None
+        queryset = Location.objects.search_power_select(search_key, llevel_id)
+        serializer = ls.LocationSearchSerializer(queryset, many=True)
+        return Response(serializer.data)

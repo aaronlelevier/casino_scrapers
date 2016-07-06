@@ -4,8 +4,6 @@ from os.path import join
 from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from model_mommy import mommy
-
 from generic.models import Attachment
 
 

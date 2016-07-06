@@ -7,7 +7,6 @@ import windowProxy from 'bsrs-ember/utilities/window-proxy';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import config from 'bsrs-ember/config/environment';
-import SD from 'bsrs-ember/vendor/defaults/setting';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const HOME_URL = '/';
@@ -19,7 +18,7 @@ var application;
 module('Acceptance | logout test', {
   beforeEach() {
     application = startApp();
-    xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: SD.dashboard_text}});
+    xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
     xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   },
   afterEach() {

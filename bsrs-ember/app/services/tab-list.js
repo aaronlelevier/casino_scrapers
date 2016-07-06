@@ -5,7 +5,7 @@ import inject from 'bsrs-ember/utilities/store';
 export default Ember.Service.extend({
   simpleStore: Ember.inject.service(),
   /* Default to redirectRoute defined on module route if all redirect route locations are the same
-   * previousLocation is logged with each tab and will redirect to that location if user visits tab directly from a different module
+   * previousLocation is logged with each push and will redirect to that location if user visits tab directly from a different module
    * single tab types do not redirect unless tab is closed or single tab is deleted.  Rollback and cancel do not transition
    * @param {string} tab 
    * @param {string} current_route 

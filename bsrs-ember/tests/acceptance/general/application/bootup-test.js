@@ -19,7 +19,6 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
-import SD from 'bsrs-ember/vendor/defaults/setting';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
@@ -34,7 +33,7 @@ module('Acceptance | bootup test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
-    xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: SD.dashboard_text}});
+    xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
     xhr(`${PREFIX}${BASE_URL}/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   },
   afterEach() {
@@ -244,6 +243,7 @@ test('on boot we should fetch and load the person-current, logged in Person, con
     assert.equal(person_current.get('status.id'), PERSON_CURRENT.status);
     assert.equal(person_current.get('role.id'), store.find('person', PERSON_CURRENT.id).get('role').get('id'));
     assert.equal(person_current.get('locale.id'), PERSON_CURRENT.locale);
+    assert.deepEqual(person_current.get('inherited'), PERSON_CURRENT.inherited);
   });
 });
 
@@ -264,15 +264,5 @@ test('on boot we should fetch and load the saved filterset configuration', funct
     assert.equal(filtersets.get('length'), 7);
     assert.equal(filtersets.objectAt(0).get('endpoint_name'), 'tickets.index');
     assert.deepEqual(filtersets.objectAt(0).get('endpoint_uri'), '?sort=assignee.fullname');
-  });
-});
-
-test('setting - load id,name of setting model on boot', (assert) => {
-  visit(HOME_URL);
-  andThen(() => {
-    var settings = store.find('setting');
-    assert.equal(settings.get('length'), 1);
-    assert.equal(settings.objectAt(0).get('id'), SD.id);
-    assert.equal(settings.objectAt(0).get('name'), SD.name);
   });
 });

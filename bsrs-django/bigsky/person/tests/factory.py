@@ -11,9 +11,8 @@ from category.tests.factory import create_single_category
 from location.models import (LocationLevel, Location, LocationStatus, LocationType,
     LOCATION_COMPANY, LOCATION_DISTRICT, LOCATION_REGION,)
 from location.tests.factory import create_location, create_locations, create_location_levels
-from person.models import Tenant, Role, Person, PersonStatus
-from setting.tests.factory import (create_general_setting,
-    create_role_setting, create_person_setting)
+from person.models import Role, Person, PersonStatus
+from tenant.tests.factory import get_or_create_tenant
 from translation.tests.factory import create_locale, LOCALES
 from translation.models import Locale
 from utils import create
@@ -30,7 +29,7 @@ PERSON_STATUSES = [
 
 
 class DistrictManager(object):
-    
+
     def __init__(self, *args, **kwargs):
         CategoryStatus.objects.get_or_create(name=CategoryStatus.default)
         self.repair = Category.objects.create(name=CATEGORY_REPAIR, subcategory_label="trade")
@@ -43,18 +42,7 @@ class DistrictManager(object):
         self.location = Location.objects.create(location_level=self.location_level,
                                                 name='district-1', number='district-1')
 
-        self.person = create_single_person('district-manager-1', self.role, self.location)        
-
-
-def get_or_create_tenant(name='foo'):
-    try:
-        return Tenant.objects.all()[0]
-    except IndexError:
-        kwargs = {
-            'auth_currency': Currency.objects.default(),
-            'settings': create_general_setting(name),
-        }
-        return mommy.make(Tenant, **kwargs)
+        self.person = create_single_person('district-manager-1', self.role, self.location)
 
 
 def create_role(name=None, location_level=None, category=None):
@@ -66,7 +54,6 @@ def create_role(name=None, location_level=None, category=None):
 
     # system default models needed
     currency = Currency.objects.default()
-    create_general_setting()
 
     if not location_level:
         location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_REGION)
@@ -79,7 +66,6 @@ def create_role(name=None, location_level=None, category=None):
         role = mommy.make(Role, tenant=tenant, name=name, location_level=location_level)
 
     role.categories.add(category)
-    create_role_setting(role)
 
     return role
 
@@ -88,7 +74,7 @@ def create_roles():
     "Create a Role for each LocationLevel"
 
     category = Category.objects.first()
-    
+
     if not LocationLevel.objects.first():
         create_location_levels()
 
@@ -106,8 +92,6 @@ def create_roles():
             role = mommy.make(Role, tenant=tenant, name=name, location_level=location_level)
             if category:
                 role.categories.add(category)
-        finally:
-            create_role_setting(role)
 
     return Role.objects.all()
 
@@ -132,7 +116,6 @@ def create_single_person(name=None, role=None, location=None, status=None, local
         person = Person.objects.create_user(
             id=id,
             username=name,
-            email='myemail@mail.com',
             password=PASSWORD,
             first_name=name,
             last_name=name,
@@ -143,7 +126,6 @@ def create_single_person(name=None, role=None, location=None, status=None, local
             employee_id=create._generate_ph()
         )
         person.locations.add(location)
-        create_person_setting(person)
 
     return person
 
@@ -163,12 +145,12 @@ def create_person(username=None, _many=1):
             "You specified {} user(s) with username: {}".format(_many, username))
     elif username:
         return create_single_person(username)
-        
+
     # Multiple User Create
     for i in range(_many):
         username = random.choice(create.LOREM_IPSUM_WORDS.split())
         user = create_single_person(username)
-    
+
     return user
 
 
@@ -210,11 +192,11 @@ def add_top_level_location(person):
     `person.Role.location_level` must match `Location.location_level`
     """
     remove_all_locations(person)
-    
+
     location = Location.objects.create_top_level()
     person.role = Role.objects.get(location_level__name=settings.DEFAULT_LOCATION_LEVEL)
     person.save()
-    
+
     person.locations.add(location)
 
 
@@ -226,8 +208,6 @@ def remove_all_locations(person):
 def create_all_people():
     if not Location.objects.filter(name=LOCATION_COMPANY):
         create_locations()
-
-    create_general_setting()
 
     # initial Roles
     create_roles()

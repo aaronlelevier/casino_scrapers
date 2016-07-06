@@ -9,7 +9,6 @@ from rest_framework.response import Response
 
 from person import serializers as ps
 from person.models import Person, Role
-from setting.models import Setting
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.views import BaseModelViewSet
 
@@ -34,15 +33,27 @@ class RoleViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
         elif self.action in ('update', 'partial_update'):
             return ps.RoleUpdateSerializer
         else:
-            return ps.RoleSerializer
+            return ps.RoleListSerializer
+
+    def create(self, request, *args, **kwargs):
+        """Assign new Role's tenant to match the logged
+        in User's Tenant."""
+        response = super(RoleViewSet, self).create(request, *args, **kwargs)
+
+        role = Role.objects.get(id=response.data['id'])
+        role.tenant = request.user.role.tenant
+        role.save()
+
+        return response
 
     @list_route(methods=['get'], url_path=r"route-data/new")
     def route_data_new(self, request):
-        d = {}
-        general = Setting.objects.get(name='general')
-        for f in ['dashboard_text']:
-            d[f] = general.settings[f]['value']
-        return Response({'settings': d})
+        tenant = request.user.role.tenant
+        return Response({
+            'settings': {
+                'dashboard_text': tenant.dashboard_text
+            }
+        })
 
 
 ### PERSON
@@ -94,8 +105,13 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
         serializer = ps.PersonCurrentSerializer(instance)
         return Response(serializer.data)
 
-    # TODO
-    # add correct authorization to who can use this endpoint
+    @list_route(methods=['GET'], url_path=r"person__icontains=(?P<search_key>[\w ]+)")
+    def search_power_select(self, request, search_key=None):
+        queryset = Person.objects.search_power_select(search_key)
+        serializer = ps.PersonSearchSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    # TODO # add correct authorization to who can use this endpoint
     @list_route(methods=['post'], url_path=r"reset-password/(?P<person_id>[\w\-]+)")
     def reset_password(self, request, person_id=None):
         person = get_object_or_404(Person, id=person_id)
