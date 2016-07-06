@@ -421,22 +421,22 @@ class PersonDetailTests(TestCase):
 
     def test_data__inherited(self):
         # auth_amount
-        self.assertEqual(self.data['inherited']['auth_amount']['value'], None)
+        self.assertNotIn('value', self.data['inherited']['auth_amount'])
         self.assertEqual(self.data['inherited']['auth_amount']['inherited_value'], self.person.role.auth_amount)
         self.assertEqual(self.data['inherited']['auth_amount']['inherits_from'], 'role')
         self.assertEqual(self.data['inherited']['auth_amount']['inherits_from_id'], str(self.person.role.id))
         # auth_currency
-        self.assertEqual(self.data['inherited']['auth_currency']['value'], None)
+        self.assertNotIn('value', self.data['inherited']['auth_currency'])
         self.assertEqual(self.data['inherited']['auth_currency']['inherited_value'], str(self.person.role.tenant.default_currency.id))
         self.assertEqual(self.data['inherited']['auth_currency']['inherits_from'], 'role')
         self.assertEqual(self.data['inherited']['auth_currency']['inherits_from_id'], str(self.person.role.id))
         # accept_assign
-        self.assertEqual(self.data['inherited']['accept_assign']['value'], None)
+        self.assertNotIn('value', self.data['inherited']['accept_assign'])
         self.assertEqual(self.data['inherited']['accept_assign']['inherited_value'], self.person.role.accept_assign)
         self.assertEqual(self.data['inherited']['accept_assign']['inherits_from'], 'role')
         self.assertEqual(self.data['inherited']['accept_assign']['inherits_from_id'], str(self.person.role.id))
         # accept_notify
-        self.assertEqual(self.data['inherited']['accept_notify']['value'], None)
+        self.assertNotIn('value', self.data['inherited']['accept_notify'])
         self.assertEqual(self.data['inherited']['accept_notify']['inherited_value'], self.person.role.accept_notify)
         self.assertEqual(self.data['inherited']['accept_notify']['inherits_from'], 'role')
         self.assertEqual(self.data['inherited']['accept_notify']['inherits_from_id'], str(self.person.role.id))
