@@ -90,25 +90,25 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
       personListTwo: '139543cf-8fea-426a-8bc3-09778cd79902',
       inherited: {
         auth_amount: {
-          value: null,
+          value: undefined,
           inherited_value: BSRS_PERSON_AUTH_AMOUNT,
           inherits_from: 'role',
           inherits_from_id: this.role_defaults.idOne
         },
         auth_currency: {
-          value: null,
+          value: undefined,
           inherited_value: this.currency_defaults.id,
           inherits_from: 'role',
           inherits_from_id: this.role_defaults.idOne
         },
         accept_assign: {
-          value: null,
+          value: undefined,
           inherited_value: false,
           inherits_from: 'role',
           inherits_from_id: this.role_defaults.idOne
         },
         accept_notify: {
-          value: null,
+          value: undefined,
           inherited_value: false,
           inherits_from: 'role',
           inherits_from_id: this.role_defaults.idOne

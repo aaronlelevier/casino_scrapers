@@ -73,7 +73,10 @@ var BSRS_PEOPLE_FACTORY = (function() {
       last_name : this.person_defaults.last_name,
       title : this.person_defaults.title,
       employee_id : this.person_defaults.employee_id,
-      auth_amount : null,
+      auth_amount : undefined,
+      auth_currency : undefined,
+      accept_notify : undefined,
+      accept_assign : undefined,
       status_fk : this.status_defaults.activeId,
       role: this.role_defaults.idOne,
       locations: [],
@@ -159,7 +162,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
     response.role = this.role_defaults.idOne;
     response.locale = this.person_defaults.locale_id;
     response.locations = [this.location_defaults.idOne];
-    response.auth_currency = response.auth_currency || null
+    response.auth_currency = response.auth_currency;
     for(var key in person) {
       response[key] = person[key];
     }
@@ -217,7 +220,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
 })();
 
 if (typeof window === 'undefined') {
-  var objectAssign = require('object-assign');
+
   var mixin = require('../vendor/mixin');
   var email_fixtures = require('../vendor/email_fixtures');
   var address_fixtures = require('../vendor/address_fixtures');
