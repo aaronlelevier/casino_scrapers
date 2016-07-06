@@ -2,24 +2,20 @@ import Ember from 'ember';
 
 export default Ember.Object.extend({
   deserialize(response, id) {
+    let store = this.get('simpleStore');
     if(id) {
-      return this.deserializeSingle(response);
+      return this._deserializeSingle(store, response);
     } else {
-      return this.deserializeList(response);
+      return this._deserializeList(store, response);
     }
   },
-  deserializeSingle(model) {
-    let store = this.get('simpleStore');
-    return this._deserializeSingle(store, 'profile', model);
+  _deserializeSingle(store, model) {
+    model.assignee_id = model.assignee.id;
+    return store.push('profile', model);
   },
-  deserializeList(response) {
-    let store = this.get('simpleStore');
+  _deserializeList(store, response) {
     response.results.forEach((model) => {
-      this._deserializeSingle(store, 'profile-list', model);
+      store.push('profile-list', model);
     });
-  },
-  _deserializeSingle(store, modelStr, model) {
-      model.assignee_id = model.assignee.id;
-      return store.push(modelStr, model);
   }
 });

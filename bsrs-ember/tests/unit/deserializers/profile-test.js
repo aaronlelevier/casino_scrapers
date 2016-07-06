@@ -7,7 +7,7 @@ import ProfileDeserializer from 'bsrs-ember/deserializers/profile';
 
 var store, profile, run = Ember.run, deserializer;
 
-module('unit: profile deserializer test', {
+module('aaron unit: profile deserializer test', {
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:profile', 'model:profile-list', 'service:i18n']);
     deserializer = ProfileDeserializer.create({
@@ -44,7 +44,7 @@ test('deserialize list', assert => {
   assert.equal(profile.get('id'), `${PD.idOne.slice(0,-1)}${i}`);
   assert.equal(profile.get('description'), `${PD.descOne}${i}`);
   let assignee_id = `${PD.assigneeOne.slice(0,-1)}${i}`;
-  assert.equal(profile.get('assignee_id'), assignee_id);
+  assert.equal(profile.get('assignee_id'), undefined);
   assert.equal(profile.get('assignee').id, assignee_id);
   assert.equal(profile.get('assignee').username, `${PD.username}${i}`);
 });
