@@ -1,8 +1,7 @@
 from rest_framework import permissions
 
 from assignment.models import Profile
-from assignment.serializers import (ProfileCreateUpdateSerializer, ProfileDetailSerializer,
-    ProfileListSerializer)
+from assignment.serializers import ProfileCreateUpdateSerializer, ProfileSerializer
 from utils.views import BaseModelViewSet
 
 
@@ -14,9 +13,7 @@ class ProfileViewSet(BaseModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return ProfileDetailSerializer
-        elif self.action == 'list':
-            return ProfileListSerializer
+        if self.action in ('retrieve', 'list'):
+            return ProfileSerializer
         else:
             return ProfileCreateUpdateSerializer

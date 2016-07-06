@@ -30,11 +30,11 @@ class ViewTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
-        profile = data['results'][0]
-        self.assertEqual(profile['id'], str(self.profile.id))
-        self.assertEqual(profile['description'], self.profile.description)
-        self.assertEqual(profile['assignee']['id'], str(self.profile.assignee.id))
-        self.assertEqual(profile['assignee']['username'], self.profile.assignee.username)
+        data = data['results'][0]
+        self.assertEqual(data['id'], str(self.profile.id))
+        self.assertEqual(data['description'], self.profile.description)
+        self.assertEqual(data['assignee']['id'], str(self.profile.assignee.id))
+        self.assertEqual(data['assignee']['username'], self.profile.assignee.username)
 
     def test_detail(self):
         response = self.client.get('/api/profiles/assignment/{}/'.format(self.profile.id))
@@ -43,7 +43,8 @@ class ViewTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.profile.id))
         self.assertEqual(data['description'], self.profile.description)
-        self.assertEqual(data['assignee_id'], str(self.profile.assignee.id))
+        self.assertEqual(data['assignee']['id'], str(self.profile.assignee.id))
+        self.assertEqual(data['assignee']['username'], self.profile.assignee.username)
 
     def test_create(self):
         self.data['id'] = str(uuid.uuid4())

@@ -16,20 +16,10 @@ class ProfileCreateUpdateSerializer(BaseCreateSerializer):
         fields = PROFILE_FIELDS
 
 
-class ProfileDetailSerializer(serializers.ModelSerializer):
-
-    assignee_id = serializers.PrimaryKeyRelatedField(
-        queryset=Person.objects.all(), many=False)
-
-    class Meta:
-        model = Profile
-        fields = ('id', 'description', 'assignee_id',)
-
-
-class ProfileListSerializer(serializers.ModelSerializer):
+class ProfileSerializer(serializers.ModelSerializer):
 
     assignee = PersonIdUsernameSerializer()
 
     class Meta:
         model = Profile
-        fields = PROFILE_FIELDS
+        fields = ('id', 'description', 'assignee',)
