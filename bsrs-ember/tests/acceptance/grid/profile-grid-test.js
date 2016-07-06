@@ -48,26 +48,14 @@ test('template translation tags as variables', function(assert) {
   });
 });
 
-test('description and assignee username are showing', function(assert) {
-  visit(LIST_URL);
-  andThen(() => {
-    assert.equal(currentURL(), LIST_URL);
-    assert.equal(page.descGridOne, PD.descGridOne);
-    assert.equal(page.assigneeGridOne, PD.usernameGridOne);
-    assert.equal(page.descGridTwo, PD.descGridTwo);
-    assert.equal(page.assigneeGridTwo, PD.usernameGridTwo);
-  });
-});
-
-
 test(`initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr`, function(assert) {
   visit(LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);
     assert.equal(find('.t-grid-title').text(), 'Profiles');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descOne+"0");
-    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.username+"0");
+    assert.equal(page.descGridOne, PD.descOne+"0");
+    assert.equal(page.assigneeGridOne, PD.username+"0");
     var pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 2);
     assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');

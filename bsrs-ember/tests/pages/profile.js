@@ -13,10 +13,8 @@ export default PageObject.create({
   descFill: fillable('.t-ap-description'),
   descSortText: text('.t-sort-description'),
   descGridOne: text('.t-profile-description:eq(0)'),
-  descGridTwo: text('.t-profile-description:eq(1)'),
 
   assigneeInput: text(ASSIGNEE),
   assigneeSortText: text('.t-sort-assignee-username'),
   assigneeGridOne: text('.t-profile-assignee-username:eq(0)'),
-  assigneeGridTwo: text('.t-profile-assignee-username:eq(1)'),
 });
