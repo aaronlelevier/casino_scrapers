@@ -49,7 +49,7 @@ test('visit new', assert => {
   });
   // assignee
   let keyword = 'boy1';
-  xhr(`${API_LIST_URL_PERSON}?fullname__icontains=${keyword}`, 'GET', null, {}, 200, PersonF.search());
+  xhr(`${API_LIST_URL_PERSON}person__icontains=${keyword}/`, 'GET', null, {}, 200, PersonF.search_power_select());
   selectSearch('.t-profile-assignee-select', keyword);
   selectChoose('.t-profile-assignee-select', keyword);
   let payload = {

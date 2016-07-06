@@ -12,7 +12,7 @@ export default Model.extend({
   isDirtyOrRelatedDirty: Ember.computed(function(){
     return this.get('isDirty');
   }),
-  changeAssignee(obj) {
+  change_assignee(obj) {
     this.set('assignee_id', obj.id);
     this.set('assignee', {id: obj.id, username: obj.username});
   },
