@@ -20,6 +20,8 @@ const LIST_URL = '/admin/profiles/index';
 const DETAIL_URL = `/admin/profiles/${PD.idZero}`;
 const API_DETAIL_URL = `${PREFIX}/profiles/assignment/${PD.idZero}/`;
 
+const NUMBER_FOUR = {keyCode: 52};
+
 let application, store, endpoint, listData, listXhr, run = Ember.run;
 
 module('Acceptance | profile-grid-test', {
@@ -165,5 +167,53 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     assert.equal(currentURL(), LIST_URL + '?sort=description');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descOne+"0");
+  });
+});
+
+test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
+  var search_two = PREFIX + BASE_URL + '/?page=1&search=4';
+  xhr(search_two ,"GET",null,{},200, PF.searched('4'));
+  visit(LIST_URL);
+  andThen(() => {
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descGridOne);
+  });
+  fillIn('.t-grid-search-input', '4');
+  triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
+  andThen(() => {
+    assert.equal(currentURL(),LIST_URL + '?search=4');
+    assert.equal(find('.t-grid-data').length, 2);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descOne+"4");
+    assert.equal(find('.t-grid-data:eq(1) .t-profile-description').text().trim(), PD.descOne+"14");
+  });
+  click('.t-reset-grid');
+  andThen(() => {
+    assert.equal(currentURL(), LIST_URL);
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descGridOne);
+  });
+});
+
+test('multiple sort options appear in the query string as expected', function(assert) {
+  var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=description';
+  xhr(sort_one ,"GET",null,{},200, PF.sorted_page_one('description'));
+  visit(LIST_URL);
+  andThen(() => {
+    assert.equal(currentURL(), LIST_URL);
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descGridOne);
+  });
+  click('.t-sort-description-dir');
+  andThen(() => {
+    assert.equal(currentURL(), LIST_URL + '?sort=description');
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descGridOne);
+  });
+  var sort = PREFIX + BASE_URL + '/?page=1&ordering=-description';
+  xhr(sort ,"GET",null,{},200, PF.sorted_page_one('description'));
+  click('.t-sort-description-dir');
+  andThen(() => {
+    assert.equal(currentURL(), LIST_URL + '?sort=-description');
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descGridOne);
   });
 });

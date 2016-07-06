@@ -7,7 +7,7 @@ import ProfileDeserializer from 'bsrs-ember/deserializers/profile';
 
 var store, profile, run = Ember.run, deserializer;
 
-module('aaron unit: profile deserializer test', {
+module('unit: profile deserializer test', {
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:profile', 'model:profile-list', 'service:i18n']);
     deserializer = ProfileDeserializer.create({
