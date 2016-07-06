@@ -126,7 +126,7 @@ div.rowTable {
     overflow: auto;
     margin: 0;
     padding: 0;
-    li, div {
+    li, div.filtersets__item {
       list-style: none;
       float: left;
       margin: 0 5px 5px 0;
@@ -196,7 +196,7 @@ header.mobile-grid-head {
       overflow: auto;
       flex-wrap: nowrap;
       /* div: achieve equal padding on l & r sides */
-      div {
+      div.filtersets__item {
         margin: 5px 0px 5px 5px;
         &:first-child {
           margin-left: 5px;

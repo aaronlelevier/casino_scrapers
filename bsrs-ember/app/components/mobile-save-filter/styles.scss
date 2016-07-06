@@ -1,7 +1,15 @@
 & {
+  border: $borderStyle;
+  border-radius: $borderRadius;
+  background: $light;
+  font-size: 1.4rem;
+  line-height: 2.8rem;
+  height: 3rem;
+  padding: 0 .7em;
+  margin: 0;
   .mobile-save-filterset__input {
-    // @Andy: .2 rem less b/c of border
-    line-height: 2.6rem;
-    padding: 0 .7rem;
+    border: none;
+    background: none;
+    padding: 0;
   }
 }
