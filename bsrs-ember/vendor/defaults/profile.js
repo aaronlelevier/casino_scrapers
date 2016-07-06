@@ -9,12 +9,16 @@ var BSRS_PROFILE_DEFAULTS_OBJECT = (function() {
       idTwo: '2cc82b8c-89bd-45a2-8d57-5b920c8b0002',
       descOne: 'foo',
       descTwo: 'bar',
+      descGridOne: 'foo0',
+      descGridTwo: 'foo1',
       assigneeOne: this.person.idOne,
       assigneeTwo: this.person.idTwo,
       assigneeSelectOne: '249543cf-8fea-426a-8bc3-09778cd78001',
       username: this.person.username,
       usernameOne: this.person.usernameOne,
       usernameTwo: this.person.usernameTwo,
+      usernameGridOne: this.person.username+"0",
+      usernameGridTwo: this.person.username+"1",
     };
   };
   return factory;

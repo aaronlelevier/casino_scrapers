@@ -7,6 +7,7 @@ import PD from 'bsrs-ember/vendor/defaults/profile';
 import PF from 'bsrs-ember/vendor/profile_fixtures';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import page from 'bsrs-ember/tests/pages/profile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
 import random from 'bsrs-ember/models/random';
@@ -33,6 +34,31 @@ module('Acceptance | profile-grid-test', {
     Ember.run(application, 'destroy');
   }
 });
+
+test('template translation tags as variables', function(assert) {
+  visit(LIST_URL);
+  andThen(() => {
+    assert.equal(currentURL(), LIST_URL);
+    assert.equal(generalPage.gridTitle, t('admin.profile.other'));
+    assert.equal(Ember.$('.t-grid-search-input').get(0)['placeholder'], t('admin.profile.search'));
+    assert.equal(generalPage.gridPageCountText, '19 '+t('admin.profile.other'));
+    // column headers
+    assert.equal(page.descSortText, t('admin.profile.label.description'));
+    assert.equal(page.assigneeSortText, t('admin.profile.label.assignee'));
+  });
+});
+
+test('description and assignee username are showing', function(assert) {
+  visit(LIST_URL);
+  andThen(() => {
+    assert.equal(currentURL(), LIST_URL);
+    assert.equal(page.descGridOne, PD.descGridOne);
+    assert.equal(page.assigneeGridOne, PD.usernameGridOne);
+    assert.equal(page.descGridTwo, PD.descGridTwo);
+    assert.equal(page.assigneeGridTwo, PD.usernameGridTwo);
+  });
+});
+
 
 test(`initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr`, function(assert) {
   visit(LIST_URL);
