@@ -20,10 +20,15 @@ var BSRS_PROFILE_FACTORY = (function() {
   factory.prototype.put = function(id) {
     return this.generate();
   };
-  factory.prototype.list = function(id) {
+  factory.prototype.list = function() {
+    return this._list(20);
+  };
+  factory.prototype.list_two = function() {
+    return this._list(10);
+  };
+  factory.prototype._list = function(page_size) {
     let results = [];
-    let response = {results: results};
-    for(var i = 0; i < 10; i++) {
+    for(var i = 0; i < page_size; i++) {
       results.push({
         id: `${this.profile.idOne.slice(0,-1)}${i}`,
         description: `${this.profile.descOne}${i}`,
@@ -33,19 +38,23 @@ var BSRS_PROFILE_FACTORY = (function() {
         },
       });
     }
-    return response;
+    return {count: page_size-1, next: null, previous: null, results: results};
   };
   return factory;
 })();
 
 if (typeof window === 'undefined') {
+  var objectAssign = require('object-assign');
+  var mixin = require('../vendor/mixin');
   var profile = require('./defaults/profile');
+  objectAssign(BSRS_PROFILE_FACTORY.prototype, mixin.prototype);
   module.exports = new BSRS_PROFILE_FACTORY(profile);
 }
 else {
-  define('bsrs-ember/vendor/profile_fixtures', ['exports', 'bsrs-ember/vendor/defaults/profile'],
-    function(exports, profile) {
+  define('bsrs-ember/vendor/profile_fixtures', ['exports', 'bsrs-ember/vendor/defaults/profile', 'bsrs-ember/vendor/mixin'],
+    function(exports, profile, mixin) {
       'use strict';
+      Object.assign(BSRS_PROFILE_FACTORY.prototype, mixin.prototype);
       return new BSRS_PROFILE_FACTORY(profile);
     }
   );

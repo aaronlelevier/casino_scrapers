@@ -36,7 +36,7 @@ test('deserialize list', assert => {
   run(() => {
     deserializer.deserialize(json);
   });
-  assert.equal(store.find('profile-list').get('length'), 10);
+  assert.equal(store.find('profile-list').get('length'), 20);
   const i = 0;
   profile = store.find('profile-list').objectAt(i);
   assert.equal(profile.get('id'), `${PD.idOne.slice(0,-1)}${i}`);
