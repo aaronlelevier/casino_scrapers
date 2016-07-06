@@ -82,13 +82,14 @@ var CategoriesMixin = Ember.Mixin.create({
     if(!pushed_category.get('content') || pushed_category.get('isNotDirtyOrRelatedNotDirty')){
       run(() => {
         const children_json = category.children;
-        delete category.children;  
+        delete category.children;
+        delete category.parent;  
         pushed_category = store.push('category', category);
         pushed_category.save();
         if(children_json){
           let [m2m_children, children, server_sum] = many_to_many_extract(children_json, store, pushed_category, 'category_children', 'category_pk', 'category', 'children_pk');
           children.forEach((cat) => {
-            store.push('category', cat); 
+            store.push('category', cat);
           });
           m2m_children.forEach((m2m) => {
             store.push('category-children', m2m);
@@ -113,7 +114,7 @@ var CategoriesMixin = Ember.Mixin.create({
     //find old m2m models that might exist
     const matching_m2m = this.get('model_categories_with_removed').filter((m2m) => {
       return m2m.get('model_pk') === model_pk && category_pk === m2m.get('category_pk') && m2m.get('removed') === true;
-    }).objectAt(0); 
+    }).objectAt(0);
     if (matching_m2m) {
       run(() => {
         store.push('model-category', {id: matching_m2m.get('id'), removed: undefined});
