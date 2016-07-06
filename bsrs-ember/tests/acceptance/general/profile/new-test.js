@@ -48,16 +48,10 @@ test('visit new', assert => {
     assert.equal(page.descValue, PD.descOne);
   });
   // assignee
-  let keyword = 'Boy1';
+  let keyword = 'boy1';
   xhr(`${API_LIST_URL_PERSON}?fullname__icontains=${keyword}`, 'GET', null, {}, 200, PersonF.search());
-  page.assigneeClickDropdown();
-  andThen(() => {
-    fillIn(`${SEARCH}`, keyword);
-  });
-  page.assigneeClickOptionOne();
-  andThen(() => {
-    assert.equal(page.assigneeInput, 'boy1');
-  });
+  selectSearch('.t-profile-assignee-select', keyword);
+  selectChoose('.t-profile-assignee-select', keyword);
   let payload = {
     id: UUID.value,
     description: PD.descOne,

@@ -61,15 +61,12 @@ test('assignee dropdown is initially populated and can change assignee', assert 
     let profile = store.findOne('profile');
     assert.equal(page.assigneeInput, PD.username);
   });
-  let keyword = 'Boy1';
+  let keyword = 'boy1';
   xhr(`${API_LIST_URL_PERSON}?fullname__icontains=${keyword}`, 'GET', null, {}, 200, PersonF.search());
-  page.assigneeClickDropdown();
+  selectSearch('.t-profile-assignee-select', keyword);
+  selectChoose('.t-profile-assignee-select', keyword);
   andThen(() => {
-    fillIn(`${SEARCH}`, keyword);
-  });
-  page.assigneeClickOptionOne();
-  andThen(() => {
-    assert.equal(page.assigneeInput, 'boy1');
+    assert.equal(page.assigneeInput, keyword);
   });
   let payload = {
     id: PD.idOne,
