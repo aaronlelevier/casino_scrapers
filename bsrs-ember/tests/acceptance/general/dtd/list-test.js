@@ -51,7 +51,6 @@ test('visiting /dtds', (assert) => {
 
 test('admin to dtds list to detail && preview', (assert) => {
   xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
-  xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   generalPage.visitDashboard();
   andThen(() => {
     assert.equal(currentURL(), DASHBOARD_URL);
@@ -120,7 +119,6 @@ test('search grid', (assert) => {
 
 test('detail && preview are bound and can save', (assert) => {
   xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
-  xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   generalPage.visitDashboard();
   andThen(() => {
     assert.equal(currentURL(), DASHBOARD_URL);

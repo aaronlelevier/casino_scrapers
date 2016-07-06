@@ -19,7 +19,6 @@ module('Acceptance | logout test', {
   beforeEach() {
     application = startApp();
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
-    xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   },
   afterEach() {
     Ember.run(application, 'destroy');
