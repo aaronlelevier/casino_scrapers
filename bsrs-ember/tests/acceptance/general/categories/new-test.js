@@ -37,7 +37,6 @@ module('Acceptance | category new test', {
       cost_code: CD.costCodeOne,
       label: CD.labelOne,
       subcategory_label: CD.subCatLabelTwo,
-      parent: null,
       children: []
     };
     application = startApp();

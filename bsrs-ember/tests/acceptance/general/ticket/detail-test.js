@@ -54,7 +54,7 @@ const categories = '.categories-power-select-search input';
 
 let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, original_uuid, category_one_xhr, category_two_xhr, category_three_xhr, counter, activity_one, run = Ember.run;
 
-module('Acceptance | ticket detail', {
+module('scott Acceptance | ticket detail', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
@@ -525,7 +525,7 @@ test('categories are in order based on text', (assert) => {
 
 test('power select options are rendered immediately when enter detail route and can save different top level category', (assert) => {
   let top_level_data = CF.top_level();
-  top_level_data.results[1] = {id: CD.idThree, name: CD.nameThree, parent_id: null, children: [{id: CD.idLossPreventionChild, name: CD.nameLossPreventionChild}], level: 0};
+  top_level_data.results[1] = {id: CD.idThree, name: CD.nameThree, children: [{id: CD.idLossPreventionChild, name: CD.nameLossPreventionChild}], level: 0};
   page.visitDetail();
   andThen(() => {
     let components = page.powerSelectComponents;

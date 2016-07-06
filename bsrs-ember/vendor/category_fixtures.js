@@ -17,7 +17,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
       name: name || this.category_defaults.nameOne,
       status: this.category_defaults.status,
       children: children || [],
-      parent_id: parent || null,
+      parent_id: parent,
       level: level
     }];
     return {'count':1,'next':null,'previous':null,'results': response};
@@ -40,7 +40,6 @@ var BSRS_CATEGORY_FACTORY = (function() {
       cost_code: this.category_defaults.costCodeOne,
       label: this.category_defaults.labelOne,
       subcategory_label: this.category_defaults.subCatLabelOne,
-      parent: null
       // status: this.category_defaults.statusOne
     }
   },

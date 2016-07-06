@@ -1111,7 +1111,7 @@ test('can remove and add back same location', (assert) => {
   });
   let locations_endpoint = `${PREFIX}/admin/locations/location__icontains=a/?location_level=${LLD.idOne}/`;
   const response = LF.list_power_select();
-  response.push(LF.get(LD.idOne, LD.storeName));
+  response.push(LF.get_no_related(LD.idOne, LD.storeName));
   xhr(locations_endpoint, 'GET', null, {}, 200, response);
   fillIn(LOCATION_SEARCH, 'a');
   page.locationClickOptionOne();
