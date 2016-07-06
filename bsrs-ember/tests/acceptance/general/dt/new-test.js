@@ -228,7 +228,6 @@ test('has_multi_locations === true, validation: cant click next until select loc
 test('has_multi_locations === false, transitions to /dt/{start-id}', assert => {
   let person;
   xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
-  xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   visit(DASHBOARD_URL);
   andThen(() => {
     assert.equal(currentURL(), '/dashboard');

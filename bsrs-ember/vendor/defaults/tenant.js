@@ -9,7 +9,7 @@ var DEFAULT_GENERIAL_TENANT = (function() {
       id: '63774987-65d2-4475-b998-091059c90e10',
       company_code: 'one',
       company_name: 'Andys Pianos',
-      dashboard_text: 'Welcome',
+      dashboard_text: '# Welcome',
       login_grace: 1,
       tickets_module: true,
       work_orders_module: true,

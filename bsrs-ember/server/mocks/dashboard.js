@@ -1,4 +1,4 @@
-var SETTINGS_FIXTURES = require('../../vendor/defaults/setting.js');
+var SETTINGS_FIXTURES = require('../../vendor/defaults/tenant.js');
 
 module.exports = function(app) {
 
