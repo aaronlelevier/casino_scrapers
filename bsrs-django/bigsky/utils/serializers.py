@@ -95,18 +95,6 @@ class RemovePasswordSerializerMixin(object):
         return data
 
 
-class NestedSettingsToRepresentationMixin(object):
-    """
-    Replace settings on Model w/ inherited settings.
-    
-    Ex: GeneralSettings > RoleSettings = CombinedSettings
-    """
-    def to_representation(self, instance):
-        data = super(NestedSettingsToRepresentationMixin, self).to_representation(instance)
-        data['inherited'] = instance.inherited()
-        return data
-
-
 ### Fields
 
 class UpperCaseSerializerField(serializers.CharField):
