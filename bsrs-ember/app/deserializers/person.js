@@ -48,6 +48,7 @@ var extract_person_location = function(model, store, location_level_fk, location
       if(person_locations.length === 0) {
         const pk = Ember.uuid();
         server_locations_sum.push(pk);
+        // Use deserializer to extract llevel. change_role depends on having llevel setup 
         location_deserializer.deserialize(location_json, location_json.id);
         run(() => {
           store.push('person-location', {id: pk, person_pk: model.id, location_pk: location_json.id});

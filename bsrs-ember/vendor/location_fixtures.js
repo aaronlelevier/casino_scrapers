@@ -14,7 +14,7 @@ var BSRS_LOCATION_FACTORY = (function() {
     return {
       id: i || this.location_defaults.idOne,
       name: name,
-      number: this.location_defaults.storeName,
+      number: this.location_defaults.storeNumber,
       location_level: this.location_level_fixtures.detail().id,
       status: this.location_status_defaults.openId
     }

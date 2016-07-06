@@ -27,7 +27,7 @@ module('unit: person test', {
     person = store.push('person', {id: PD.idOne, first_name: PD.first_name, last_name: PD.last_name, role_fk: RD.idOne, status_fk: SD.activeId, locale_fk: LOCALED.idOne});
     role = store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.idOne]});
     store.push('status', {id: SD.activeId, people: [PD.idOne]});
-    store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]}); 
+    store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
   });
 }
 });
@@ -52,117 +52,117 @@ test('related addresses are not dirty when no addresses present', (assert) => {
 
 /* LOCALE */
 test('related locale should return one locale for a person', (assert) => {
-  let locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]}); 
+  let locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(person.get('localeIsNotDirty'));
 });
 
 test('change_locale will update the persons locale and dirty the model', (assert) => {
-  let locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]}); 
-  let inactive_locale = store.push('locale', {id: LOCALED.idTwo, name: LOCALED.nameTwo, people: []}); 
+  let locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
+  let inactive_locale = store.push('locale', {id: LOCALED.idTwo, name: LOCALED.nameTwo, people: []});
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(person.get('locale_fk'), LOCALED.idOne); 
-  assert.equal(person.get('locale.id'), LOCALED.idOne); 
+  assert.equal(person.get('locale_fk'), LOCALED.idOne);
+  assert.equal(person.get('locale.id'), LOCALED.idOne);
   person.change_locale(inactive_locale.get('id'));
-  assert.equal(person.get('locale_fk'), LOCALED.idOne); 
-  assert.equal(person.get('locale.id'), LOCALED.idTwo); 
-  assert.ok(person.get('isDirtyOrRelatedDirty')); 
-  assert.ok(person.get('localeIsDirty')); 
+  assert.equal(person.get('locale_fk'), LOCALED.idOne);
+  assert.equal(person.get('locale.id'), LOCALED.idTwo);
+  assert.ok(person.get('isDirtyOrRelatedDirty'));
+  assert.ok(person.get('localeIsDirty'));
 });
 
 test('save person will set locale_fk to current locale id', (assert) => {
   let locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
   let inactive_locale = store.push('locale', {id: LOCALED.idTwo, name: LOCALED.nameTwo, people: []});
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(person.get('locale_fk'), LOCALED.idOne); 
-  assert.equal(person.get('locale.id'), LOCALED.idOne); 
+  assert.equal(person.get('locale_fk'), LOCALED.idOne);
+  assert.equal(person.get('locale.id'), LOCALED.idOne);
   person.change_locale(inactive_locale.get('id'));
-  assert.equal(person.get('locale_fk'), LOCALED.idOne); 
-  assert.equal(person.get('locale.id'), LOCALED.idTwo); 
-  assert.ok(person.get('isDirtyOrRelatedDirty')); 
-  assert.ok(person.get('localeIsDirty')); 
+  assert.equal(person.get('locale_fk'), LOCALED.idOne);
+  assert.equal(person.get('locale.id'), LOCALED.idTwo);
+  assert.ok(person.get('isDirtyOrRelatedDirty'));
+  assert.ok(person.get('localeIsDirty'));
   person.saveRelated();
-  assert.ok(person.get('isNotDirtyOrRelatedNotDirty')); 
-  assert.ok(!person.get('localeIsDirty')); 
-  assert.equal(person.get('locale_fk'), LOCALED.idTwo); 
-  assert.equal(person.get('locale.id'), LOCALED.idTwo); 
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(!person.get('localeIsDirty'));
+  assert.equal(person.get('locale_fk'), LOCALED.idTwo);
+  assert.equal(person.get('locale.id'), LOCALED.idTwo);
 });
 
 test('rollback person will set locale to current locale_fk', (assert) => {
-  let locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]}); 
-  let inactive_locale = store.push('locale', {id: LOCALED.idTwo, name: LOCALED.nameTwo, people: []}); 
+  let locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
+  let inactive_locale = store.push('locale', {id: LOCALED.idTwo, name: LOCALED.nameTwo, people: []});
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(person.get('locale_fk'), LOCALED.idOne); 
-  assert.equal(person.get('locale.id'), LOCALED.idOne); 
+  assert.equal(person.get('locale_fk'), LOCALED.idOne);
+  assert.equal(person.get('locale.id'), LOCALED.idOne);
   person.change_locale(inactive_locale.get('id'));
-  assert.equal(person.get('locale_fk'), LOCALED.idOne); 
-  assert.equal(person.get('locale.id'), LOCALED.idTwo); 
-  assert.ok(person.get('isDirtyOrRelatedDirty')); 
-  assert.ok(person.get('localeIsDirty')); 
+  assert.equal(person.get('locale_fk'), LOCALED.idOne);
+  assert.equal(person.get('locale.id'), LOCALED.idTwo);
+  assert.ok(person.get('isDirtyOrRelatedDirty'));
+  assert.ok(person.get('localeIsDirty'));
   person.rollback();
-  assert.ok(person.get('isNotDirtyOrRelatedNotDirty')); 
-  assert.ok(person.get('roleIsNotDirty')); 
-  assert.ok(!person.get('localeIsDirty')); 
-  assert.ok(person.get('locationsIsNotDirty')); 
-  assert.equal(person.get('locale.id'), LOCALED.idOne); 
-  assert.equal(person.get('locale_fk'), LOCALED.idOne); 
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(person.get('roleIsNotDirty'));
+  assert.ok(!person.get('localeIsDirty'));
+  assert.ok(person.get('locationsIsNotDirty'));
+  assert.equal(person.get('locale.id'), LOCALED.idOne);
+  assert.equal(person.get('locale_fk'), LOCALED.idOne);
 });
 
 /* STATUS */
 test('related status should return one status for a person', (assert) => {
-  let status = store.push('status', {id: SD.activeId, name: SD.activeName}); 
+  let status = store.push('status', {id: SD.activeId, name: SD.activeName});
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(person.get('statusIsNotDirty'));
   assert.ok(person.get('roleIsNotDirty'));
 });
 
 test('change_status will update the persons status and dirty the model', (assert) => {
-  let status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [PD.idOne]}); 
-  let inactive_status = store.push('status', {id: SD.inactiveId, name: SD.inactiveName, people: []}); 
+  let status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [PD.idOne]});
+  let inactive_status = store.push('status', {id: SD.inactiveId, name: SD.inactiveName, people: []});
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(person.get('status_fk'), SD.activeId); 
-  assert.equal(person.get('status.id'), SD.activeId); 
+  assert.equal(person.get('status_fk'), SD.activeId);
+  assert.equal(person.get('status.id'), SD.activeId);
   person.change_status(inactive_status.get('id'));
-  assert.equal(person.get('status_fk'), SD.activeId); 
-  assert.equal(person.get('status.id'), SD.inactiveId); 
-  assert.ok(person.get('isDirtyOrRelatedDirty')); 
-  assert.ok(person.get('statusIsDirty')); 
+  assert.equal(person.get('status_fk'), SD.activeId);
+  assert.equal(person.get('status.id'), SD.inactiveId);
+  assert.ok(person.get('isDirtyOrRelatedDirty'));
+  assert.ok(person.get('statusIsDirty'));
 });
 
 test('save person will set status_fk to current status id', (assert) => {
   let status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [PD.idOne]});
   let inactive_status = store.push('status', {id: SD.inactiveId, name: SD.inactiveName, people: []});
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(person.get('status_fk'), SD.activeId); 
-  assert.equal(person.get('status.id'), SD.activeId); 
+  assert.equal(person.get('status_fk'), SD.activeId);
+  assert.equal(person.get('status.id'), SD.activeId);
   person.change_status(inactive_status.get('id'));
-  assert.equal(person.get('status_fk'), SD.activeId); 
-  assert.equal(person.get('status.id'), SD.inactiveId); 
-  assert.ok(person.get('isDirtyOrRelatedDirty')); 
-  assert.ok(person.get('statusIsDirty')); 
+  assert.equal(person.get('status_fk'), SD.activeId);
+  assert.equal(person.get('status.id'), SD.inactiveId);
+  assert.ok(person.get('isDirtyOrRelatedDirty'));
+  assert.ok(person.get('statusIsDirty'));
   person.saveRelated();
-  assert.ok(person.get('isNotDirtyOrRelatedNotDirty')); 
-  assert.ok(!person.get('statusIsDirty')); 
-  assert.equal(person.get('status_fk'), SD.inactiveId); 
-  assert.equal(person.get('status.id'), SD.inactiveId); 
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(!person.get('statusIsDirty'));
+  assert.equal(person.get('status_fk'), SD.inactiveId);
+  assert.equal(person.get('status.id'), SD.inactiveId);
 });
 
 test('rollback person will set status to current status_fk', (assert) => {
-  let status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [PD.idOne]}); 
-  let inactive_status = store.push('status', {id: SD.inactiveId, name: SD.inactiveName, people: []}); 
+  let status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [PD.idOne]});
+  let inactive_status = store.push('status', {id: SD.inactiveId, name: SD.inactiveName, people: []});
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(person.get('status_fk'), SD.activeId); 
-  assert.equal(person.get('status.id'), SD.activeId); 
+  assert.equal(person.get('status_fk'), SD.activeId);
+  assert.equal(person.get('status.id'), SD.activeId);
   person.change_status(inactive_status.get('id'));
-  assert.equal(person.get('status_fk'), SD.activeId); 
-  assert.equal(person.get('status.id'), SD.inactiveId); 
-  assert.ok(person.get('isDirtyOrRelatedDirty')); 
-  assert.ok(person.get('statusIsDirty')); 
+  assert.equal(person.get('status_fk'), SD.activeId);
+  assert.equal(person.get('status.id'), SD.inactiveId);
+  assert.ok(person.get('isDirtyOrRelatedDirty'));
+  assert.ok(person.get('statusIsDirty'));
   person.rollback();
-  assert.ok(person.get('isNotDirtyOrRelatedNotDirty')); 
-  assert.ok(!person.get('statusIsDirty')); 
-  assert.equal(person.get('status.id'), SD.activeId); 
-  assert.equal(person.get('status_fk'), SD.activeId); 
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(!person.get('statusIsDirty'));
+  assert.equal(person.get('status.id'), SD.activeId);
+  assert.equal(person.get('status_fk'), SD.activeId);
 });
 
 // /* ROLE */
@@ -1051,7 +1051,7 @@ test('locations property is not dirty with original location model', (assert) =>
   assert.ok(location.get('isDirty'));
   assert.equal(person.get('person_locations_fks').length, 1);
   assert.equal(person.get('person_locations_ids').length, 1);
-  assert.ok(person.get('locationsIsDirty'));
+  assert.ok(person.get('locationsIsNotDirty'));
   assert.equal(person.get('locations').get('length'), 1);
   assert.equal(person.get('locations').objectAt(0).get('name'), LD.storeNameTwo);
 });
@@ -1084,7 +1084,7 @@ test('locations property will update when the m2m array suddenly has the person 
   let location = {id: LD.idOne, person_locations_fks: []};
   store.push('location', {id: LD.idTwo, person_locations_fks: []});
   assert.equal(person.get('locations').get('length'), 0);
-  person.add_locations(location);
+  person.add_location(location);
   assert.equal(person.get('locations').get('length'), 1);
   assert.equal(person.get('locations').objectAt(0).get('id'), LD.idOne);
 });
@@ -1095,7 +1095,7 @@ test('locations property will update when the m2m array suddenly has the person 
   let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
   let location_two = {id: LD.idTwo, person_locations_fks: []};
   assert.equal(person.get('locations').get('length'), 1);
-  person.add_locations(location_two);
+  person.add_location(location_two);
   assert.equal(person.get('locations').get('length'), 2);
   assert.equal(person.get('locations').objectAt(0).get('id'), LD.idOne);
   assert.equal(person.get('locations').objectAt(1).get('id'), LD.idTwo);
@@ -1121,13 +1121,13 @@ test('when location is changed dirty tracking works as expected', (assert) => {
   location.set('name', LD.storeName);
   assert.ok(location.get('isDirty'));
   assert.ok(person.get('isNotDirty'));
-  assert.ok(person.get('isDirtyOrRelatedDirty'));
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   location.rollback();
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   location.set('name', LD.storeNameTwo);
   assert.ok(person.get('isNotDirty'));
-  assert.ok(person.get('isDirtyOrRelatedDirty'));
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   location.rollback();
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -1140,9 +1140,10 @@ test('when location is suddently assigned it shows as a dirty relationship (star
   assert.ok(person.get('locationsIsNotDirty'));
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  person.add_locations(location);
+  person.add_location(location);
   assert.equal(person.get('locations').get('length'), 1);
   assert.ok(person.get('isNotDirty'));
+  assert.notOk(person.get('person_locations_fks'));
   assert.ok(person.get('isDirtyOrRelatedDirty'));
 });
 
@@ -1153,9 +1154,10 @@ test('when location is suddenly assigned it shows as a dirty relationship (start
   assert.ok(person.get('locationsIsNotDirty'));
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  person.add_locations(location);
+  person.add_location(location);
   assert.equal(person.get('locations').get('length'), 1);
   assert.ok(person.get('isNotDirty'));
+  assert.equal(person.get('locations').get('length'), 1);
   assert.ok(person.get('isDirtyOrRelatedDirty'));
 });
 
@@ -1168,7 +1170,7 @@ test('when location is suddently assigned it shows as a dirty relationship (star
   assert.ok(person.get('locationsIsNotDirty'));
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  person.add_locations(location_two);
+  person.add_location(location_two);
   assert.equal(person.get('locations').get('length'), 2);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -1258,7 +1260,7 @@ test('rollback location will reset the previous locations when switching from on
   assert.equal(person.get('locations').get('length'), 1);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  person.add_locations(location_three);
+  person.add_location(location_three);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isDirtyOrRelatedDirty'));
   person.save();
@@ -1275,7 +1277,7 @@ test('rollback location will reset the previous locations when switching from on
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(person.get('locations').get('length'), 1);
-  person.add_locations(location_four);
+  person.add_location(location_four);
   assert.equal(person.get('locations').get('length'), 2);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isDirtyOrRelatedDirty'));
