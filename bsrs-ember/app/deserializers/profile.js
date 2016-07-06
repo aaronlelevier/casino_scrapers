@@ -8,13 +8,18 @@ export default Ember.Object.extend({
       return this.deserializeList(response);
     }
   },
-  deserializeSingle(response) {
-    return this.get('simpleStore').push('profile', response);
+  deserializeSingle(model) {
+    let store = this.get('simpleStore');
+    return this._deserializeSingle(store, 'profile', model);
   },
   deserializeList(response) {
     let store = this.get('simpleStore');
     response.results.forEach((model) => {
-      store.push('profile-list', model);
+      this._deserializeSingle(store, 'profile-list', model);
     });
+  },
+  _deserializeSingle(store, modelStr, model) {
+      model.assignee_id = model.assignee.id;
+      return store.push(modelStr, model);
   }
 });

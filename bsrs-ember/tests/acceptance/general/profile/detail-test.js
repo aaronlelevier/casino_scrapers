@@ -74,7 +74,7 @@ test('assignee dropdown is initially populated and can change assignee', assert 
   let payload = {
     id: PD.idOne,
     description: PD.descOne,
-    assignee: '249543cf-8fea-426a-8bc3-09778cd78001'
+    assignee: PD.assigneeSelectOne
   };
   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, {});
   generalPage.save();

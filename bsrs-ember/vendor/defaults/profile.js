@@ -11,6 +11,7 @@ var BSRS_PROFILE_DEFAULTS_OBJECT = (function() {
       descTwo: 'bar',
       assigneeOne: this.person.idOne,
       assigneeTwo: this.person.idTwo,
+      assigneeSelectOne: '249543cf-8fea-426a-8bc3-09778cd78001',
       username: this.person.username,
       usernameOne: this.person.usernameOne,
       usernameTwo: this.person.usernameTwo,

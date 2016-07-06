@@ -29,6 +29,8 @@ test('deserialize single', assert => {
   assert.equal(profile.get('id'), PD.idOne);
   assert.equal(profile.get('description'), PD.descOne);
   assert.equal(profile.get('assignee_id'), PD.assigneeOne);
+  assert.equal(profile.get('assignee').id, PD.assigneeOne);
+  assert.equal(profile.get('assignee').username, PD.username);
 });
 
 test('deserialize list', assert => {
@@ -41,6 +43,8 @@ test('deserialize list', assert => {
   profile = store.find('profile-list').objectAt(i);
   assert.equal(profile.get('id'), `${PD.idOne.slice(0,-1)}${i}`);
   assert.equal(profile.get('description'), `${PD.descOne}${i}`);
-  assert.equal(profile.get('assignee').id, `${PD.assigneeOne.slice(0,-1)}${i}`);
+  let assignee_id = `${PD.assigneeOne.slice(0,-1)}${i}`;
+  assert.equal(profile.get('assignee_id'), assignee_id);
+  assert.equal(profile.get('assignee').id, assignee_id);
   assert.equal(profile.get('assignee').username, `${PD.username}${i}`);
 });
