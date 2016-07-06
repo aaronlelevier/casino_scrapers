@@ -37,7 +37,6 @@ var extract_role = function(model, store) {
 };
 
 var extract_person_location = function(model, store, location_level_fk, location_deserializer) {
-  if (typeof model.locations !== 'undefined') {
     let server_locations_sum = [];
     let prevented_duplicate_m2m = [];
     let all_person_locations = store.find('person-location');
@@ -68,7 +67,6 @@ var extract_person_location = function(model, store, location_level_fk, location
     });
     delete model.locations;
     model.person_locations_fks = server_locations_sum;
-  }
 };
 
 var extract_locale = (model, store) => {
