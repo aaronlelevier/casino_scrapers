@@ -61,7 +61,6 @@ class InheritedValueField(TestCase):
 
         ret = self.person.inherited()['auth_currency']
 
-        self.assertEqual(ret['value'], None)
         self.assertEqual(ret['inherited_value'], str(self.tenant.default_currency.id))
         self.assertEqual(ret['inherits_from'], 'role')
         self.assertEqual(ret['inherits_from_id'], str(self.role.id))
