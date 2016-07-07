@@ -29,6 +29,17 @@ module('Acceptance | profile list test', {
   }
 });
 
+test('click Assignment Profiles from the Dashboard and be sent to Profiles grid view', assert => {
+  visit(BASEURLS.base_admin_url);
+  andThen(() => {
+    assert.equal(currentURL(), BASEURLS.base_admin_url);
+  });
+  generalPage.clickAssignmentProfiles();
+  andThen(() => {
+    assert.equal(currentURL(), LIST_URL);
+  });
+});
+
 test('visit list, click a record and go to their detail view', assert => {
   visit(LIST_URL);
   andThen(() => {

@@ -24,6 +24,7 @@ var GeneralPage = PageObject.create({
   clickHomeModalShow: clickable('.t-home-modal-show'),
   isDirty: hasClass('dirty', 'i', {scope: '.t-tab-close'}),
   clickGeneralSettingsLink: clickable('.t-general-settings'),
+  clickAssignmentProfiles: clickable('.t-assignment-profiles'),
 
   gridItemZeroClick: clickable('.t-grid-data:eq(0)'),
   gridTitle: text('.t-grid-title'),
