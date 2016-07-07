@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import OptConfMixin from 'bsrs-ember/mixins/optconfigure/profile';
@@ -20,6 +21,11 @@ export default Model.extend(OptConfMixin, {
   },
   saveRelated() {
     this.saveAssignee();
+  },
+  removeRecord() {
+    run(() => {
+      this.get('simpleStore').remove('profile', this.get('id'));
+    });
   },
   serialize() {
     return {

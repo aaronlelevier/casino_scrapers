@@ -12,18 +12,22 @@ import page from 'bsrs-ember/tests/pages/profile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
+const LIST_URL = `/admin/profiles/index`;
 const DETAIL_URL = `/admin/profiles/${PD.idOne}`;
+const API_LIST_URL = `${PREFIX}/profiles/assignment/?page=1`;
 const API_DETAIL_URL = `${PREFIX}/profiles/assignment/${PD.idOne}/`;
 const API_LIST_URL_PERSON = `${PREFIX}/admin/people/`;
 
 const SEARCH = '.ember-power-select-search input';
 
-var application, store, detailData, detailXhr, run = Ember.run;
+var application, store, detailData, detailXhr, listData, listXhr, run = Ember.run;
 
 module('Acceptance | profile detail test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
+    listData = PF.list();
+    listXhr = xhr(API_LIST_URL, 'GET', null, {}, 200, listData);
     detailData = PF.detail();
     detailXhr = xhr(API_DETAIL_URL, 'GET', null, {}, 200, detailData);
   },
@@ -32,7 +36,7 @@ module('Acceptance | profile detail test', {
   }
 });
 
-test('visit detail', assert => {
+test('visit detail and update description', assert => {
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -50,7 +54,7 @@ test('visit detail', assert => {
   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, {});
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(currentURL(), LIST_URL);
   });
 });
 
@@ -76,6 +80,6 @@ test('assignee dropdown is initially populated and can change assignee', assert 
   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, {});
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(currentURL(), LIST_URL);
   });
 });

@@ -9,7 +9,7 @@ var store, profile, run = Ember.run, deserializer;
 
 module('unit: profile deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:profile', 'model:profile-list', 'model:person', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:profile', 'model:profile-list', 'model:person', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     deserializer = ProfileDeserializer.create({
       simpleStore: store
     });

@@ -20,10 +20,9 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
   deserializer: Ember.computed.alias('profileDeserializer'),
   update(model) {
     let id = model.get('id');
-    return PromiseMixin.xhr(`${API_URL}${id}/`, 'PUT', {
-      data: JSON.stringify(model.serialize())
-    }).then(() => {
+    return PromiseMixin.xhr(`${API_URL}${id}/`, 'PUT', { data: JSON.stringify(model.serialize()) }).then(() => {
       model.save();
+      model.saveRelated();
     });
   },
 });

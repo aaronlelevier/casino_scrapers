@@ -13,8 +13,8 @@ var BSRS_PROFILE_FACTORY = (function() {
       }
     };
   };
-  factory.prototype.detail = function() {
-    return this.generate();
+  factory.prototype.detail = function(id) {
+    return this.generate(id);
   };
   factory.prototype.put = function(id) {
     return this.generate();

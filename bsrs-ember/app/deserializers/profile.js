@@ -13,13 +13,10 @@ export default Ember.Object.extend({
   _deserializeSingle(store, model) {
     model.assignee_fk = model.assignee.id;
     const assignee = model.assignee;
-    store.push('person', {
-      id: assignee.id,
-      username: assignee.username,
-      profiles: [model.id]
-    });
     delete model.assignee;
-    return store.push('profile', model);
+    let profile = store.push('profile', model);
+    profile.change_assignee(assignee);
+    return profile;
   },
   _deserializeList(store, response) {
     response.results.forEach((model) => {

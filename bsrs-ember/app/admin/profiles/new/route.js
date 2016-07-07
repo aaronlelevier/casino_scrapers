@@ -4,7 +4,7 @@ import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 
 export default TabNewRoute.extend({
   repository: inject('profile'),
-  redirectRoute: 'admin.profiles.profile', // TODO: should redirect to: 'admin.profiles.index'
+  redirectRoute: 'admin.profiles.index',
   module: 'profile',
   templateModelField: 'Profile',
   model(params) {
