@@ -11,38 +11,6 @@ var LocationMixin = Ember.Mixin.create({
       return location_level ? location_level.get('id') : undefined;
     }
   }),
-  // add_location(location) {
-  //   // add m2m model
-  //   const store = this.get('simpleStore');
-  //   const new_location = store.push('location', location);
-  //   // new_location.save();
-  //   run(() => {
-  //     store.push('person-location', { id: Ember.uuid(), person_pk: this.get('id'), location_pk: new_location.get('id') });
-  //   });
-  // },
-  // locationsIsNotDirty: Ember.computed.not('locationsIsDirty'),
-  /* @method locationsIsDirty
-  *
-  */
-  // locationsIsDirty: Ember.computed('person_locations_fks.[]', function() {
-  //   const locations = this.get('locations');
-  //   const previous_m2m_fks = this.get('person_locations_fks');
-  //   if(locations.get('length') > 0) {
-  //     if(!previous_m2m_fks || previous_m2m_fks.get('length') !== locations.get('length')) {
-  //       return true;
-  //     }
-  //   console.log(previous_m2m_fks)
-  //     // //TODO: notes on why person location dirties model
-  //     // const dirty_locations = locations.filter(function(location) {
-  //     //   return location.get('isDirty') === true;
-  //     // });
-  //     // return dirty_locations.length > 0;
-  //   }
-  //   // if(previous_m2m_fks && previous_m2m_fks.get('length') > 0) {
-  //   //   return true;
-  //   // }
-  //   return false;
-  // }),
   saveLocations() {
     this.resetPersonLocationFks({save: true});
   },
