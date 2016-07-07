@@ -78,6 +78,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     assert.equal(currentURL(), LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-profile-description').text().trim()), PD.descOne);
+    assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim()), PD.username.slice(0,-1));
     var pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 2);
     assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
