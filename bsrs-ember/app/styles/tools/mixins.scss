@@ -70,3 +70,8 @@
     color: $medGray;
   }
 }
+
+@mixin smoothScrolling() {
+  -webkit-overflow-scrolling: touch; // DO NOT REMOVE
+  overflow: scroll;
+}
