@@ -59,7 +59,7 @@
     "ember-export-application-global": "^1.0.5",
     "ember-i18n": "4.2.2",
     "ember-load-initializers": "^0.5.1",
-    "ember-modal-dialog": "0.8.4",
+    "ember-modal-dialog": "0.8.6",
     "ember-moment": "7.0.0-beta.3",
     "ember-power-select": "0.10.11",
     "ember-promise": "1.2.0",
