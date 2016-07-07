@@ -5,7 +5,7 @@ import config from 'bsrs-ember/config/environment';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
-import SD from 'bsrs-ember/vendor/defaults/setting';
+import TD from 'bsrs-ember/vendor/defaults/tenant';
 
 const PREFIX = config.APP.NAMESPACE;
 const HOME_URL = '/';
@@ -17,7 +17,7 @@ var application;
 module('Acceptance | application layout test', {
   beforeEach(assert) {
     application = startApp();
-    xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: SD.dashboard_text}});
+    xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
   },
   afterEach(assert) {
     Ember.run(application, 'destroy');

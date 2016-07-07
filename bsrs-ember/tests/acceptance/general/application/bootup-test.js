@@ -34,7 +34,6 @@ module('Acceptance | bootup test', {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
-    xhr(`${PREFIX}${BASE_URL}/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
   },
   afterEach() {
     store = null;
