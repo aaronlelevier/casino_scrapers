@@ -30,6 +30,7 @@ var DBFetch = Ember.Component.extend({
         }
       });
       old_selection.forEach((old_model) => {
+        /* if new selection does not contain old id, then remove */
         if(Ember.$.inArray(old_model.get('id'), new_selection_ids) < 0){
           model[remove_func](old_model.get('id'));
         }
@@ -39,4 +40,3 @@ var DBFetch = Ember.Component.extend({
 });
 
 export default DBFetch;
-

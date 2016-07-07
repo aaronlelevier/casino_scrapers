@@ -5,6 +5,9 @@ import { task, timeout } from 'ember-concurrency';
 
 const DEBOUNCE_MS = config.APP.POWER_SELECT_DEBOUNCE;
 
+/*
+* Uses: dtd destination
+*/
 var DBFetch = Ember.Component.extend({
   searchRepo: task(function * (search) {
     if (Ember.isBlank(search)) { return []; }
@@ -33,4 +36,3 @@ var DBFetch = Ember.Component.extend({
 });
 
 export default DBFetch;
-
