@@ -15,11 +15,11 @@ let {
 const BASE_URL = BASEURLS.base_locations_url;
 const DETAIL_URL = `${BASE_URL}/${LD.idOne}`;
 const NEW_URL = `${BASE_URL}/new/1`;
-const LOCATIONLEVEL = '.t-location-level-select > .ember-basic-dropdown-trigger';
-const STATUS = '.t-status-select > .ember-basic-dropdown-trigger';
+const LOCATIONLEVEL = '.t-location-level-select .ember-basic-dropdown-trigger';
+const STATUS = '.t-status-select .ember-basic-dropdown-trigger';
 const DROPDOWN = options;
 
-const CHILDREN = '.t-location-children-select > .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
+const CHILDREN = '.t-location-children-select .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
 const CHILDRENS = `${CHILDREN} > .ember-power-select-multiple-option`;
 const CHILDREN_ONE = `${CHILDRENS}:eq(0)`;
 const CHILDREN_TWO = `${CHILDRENS}:eq(1)`;
@@ -27,7 +27,7 @@ const CHILDREN_THREE = `${CHILDRENS}:eq(2)`;
 const CHILDREN_FOUR = `${CHILDRENS}:eq(3)`;
 const CHILDREN_DROPDOWN = `.ember-basic-dropdown-content > ${options}`;
 
-const PARENT = '.t-location-parent-select > .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
+const PARENT = '.t-location-parent-select .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
 const PARENTS = `${PARENT} > .ember-power-select-multiple-option`;
 const PARENTS_ONE = `${PARENTS}:eq(0)`;
 const PARENTS_TWO = `${PARENTS}:eq(1)`;

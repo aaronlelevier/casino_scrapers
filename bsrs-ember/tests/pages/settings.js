@@ -5,7 +5,7 @@ import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
 
 const DROPDOWN = options;
-const START_DTD_SELECT = '.t-settings-dt_start-select > .ember-basic-dropdown-trigger';
+const START_DTD_SELECT = '.t-settings-dt_start-select .ember-basic-dropdown-trigger';
 
 var SettingsPage = PageObject.create({
   authAmountInheritedFromText: value('.t-inherited-msg-auth_amount'),

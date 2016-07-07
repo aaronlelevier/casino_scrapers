@@ -3,7 +3,7 @@ import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
 let { text, visitable, fillable, clickable, count } = PageObject;
-const CHILDREN = '.t-location-level-children-select > .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
+const CHILDREN = '.t-location-level-children-select .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
 const CHILDREN_MULTIPLE = `${CHILDREN} > .ember-power-select-multiple-option`;
 const CHILDREN_ONE = `${CHILDREN_MULTIPLE}:eq(0)`;
 const CHILDREN_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';

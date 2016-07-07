@@ -28,7 +28,7 @@ const BASE_URL = BASEURLS.base_roles_url;
 const ROLE_URL = BASE_URL + '/index';
 const NEW_URL = BASE_URL + '/new/1';
 const SPACEBAR = {keyCode: 32};
-const CATEGORY = '.t-role-category-select > .ember-basic-dropdown-trigger';
+const CATEGORY = '.t-role-category-select .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-select-options';
 
 let application, store, payload, list_xhr, original_uuid, url, counter, run = Ember.run;

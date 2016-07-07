@@ -14,8 +14,8 @@ const DTDS_URL = `${BASE_URL}`;
 const NEW_URL = `${BASE_URL}/new/1`;
 const DETAIL_URL = `${BASE_URL}/${DTD.idOne}`;
 
-const DESTINATION = '.t-link-destination-select > .ember-basic-dropdown-trigger';
-const FIELD_SELECT_OPTION = '.t-dtd-field-select > .ember-basic-dropdown-trigger';
+const DESTINATION = '.t-link-destination-select .ember-basic-dropdown-trigger';
+const FIELD_SELECT_OPTION = '.t-dtd-field-select .ember-basic-dropdown-trigger';
 
 var DTDPage = PageObject.create({
   visit: visitable(DTDS_URL),
@@ -102,7 +102,7 @@ var DTDPage = PageObject.create({
 
   // noteTypeLength: count('.t-dtd-note_type'),
   noteTypeInput: text('.t-dtd-note_type'),
-  noteTypeClickDropdown: clickable('.t-dtd-note_type > .ember-basic-dropdown-trigger'),
+  noteTypeClickDropdown: clickable('.t-dtd-note_type .ember-basic-dropdown-trigger'),
   noteTypeClickOptionTwo: clickable(`.ember-power-select-option:contains(${DTD.noteTypeTwo})`, { scope: DROPDOWN }),
   noteTypeClickOptionTwoValue: clickable(`.ember-power-select-option:contains(${DTD.noteTypeTwoValue})`, { scope: DROPDOWN }),
 
@@ -114,7 +114,7 @@ var DTDPage = PageObject.create({
   fieldLabelOne: value('.t-dtd-field-label:eq(0)'),
   fieldLabelOneFillin: fillable('.t-dtd-field-label:eq(0)'),
   fieldTypeOne: text('.t-dtd-field-type:eq(0)'),
-  fieldTypeOneClickDropdown: clickable('.t-dtd-field-type > .ember-basic-dropdown-trigger'),
+  fieldTypeOneClickDropdown: clickable('.t-dtd-field-type .ember-basic-dropdown-trigger'),
   fieldTypeOneClickOptionTwo: clickable(`.ember-power-select-option:contains(${FD.typeTwo})`, { scope: DROPDOWN }),
   fieldTypeOneClickOptionThree: clickable(`.ember-power-select-option:contains(${FD.typeThree})`, { scope: DROPDOWN }),
   fieldTypeOneClickOptionFourTranslated: clickable(`.ember-power-select-option:contains(${FD.typeFour})`, { scope: DROPDOWN }),
@@ -130,7 +130,7 @@ var DTDPage = PageObject.create({
   fieldLabelTwo: value('.t-dtd-field-label:eq(1)'),
   fieldLabelTwoFillin: fillable('.t-dtd-field-label:eq(1)'),
   fieldTypeTwo: text('.t-dtd-field-type:eq(1)'),
-  fieldTypeTwoClickDropdown: clickable('.t-dtd-field-type:eq(1) > .ember-basic-dropdown-trigger'),
+  fieldTypeTwoClickDropdown: clickable('.t-dtd-field-type:eq(1) .ember-basic-dropdown-trigger'),
   fieldTypeTwoClickOptionTwo: clickable(`.ember-power-select-option:contains(${FD.typeTwoValue})`, { scope: DROPDOWN }),
   // fieldTypeTwoClickOptionTwoValue: clickable(`.ember-power-select-option:contains(${FD.typeTwoValue})`, { scope: DROPDOWN }),
   fieldTypeTwoClickOptionFour: clickable(`.ember-power-select-option:contains(${FD.typeFourValue})`, { scope: DROPDOWN }),
@@ -145,8 +145,8 @@ var DTDPage = PageObject.create({
   fieldOptionOne: text('.t-dtd-field-select li:eq(0)'),
   fieldOptionTwo: text('.t-dtd-field-select li:eq(1)'),
 
-  removePriority: clickable('.t-ticket-priority-select > .ember-power-select-trigger > .ember-power-select-clear-btn'),
-  removeStatus: clickable('.t-ticket-status-select > .ember-power-select-trigger > .ember-power-select-clear-btn'),
+  removePriority: clickable('.t-ticket-priority-select .ember-power-select-trigger > .ember-power-select-clear-btn'),
+  removeStatus: clickable('.t-ticket-status-select .ember-power-select-trigger > .ember-power-select-clear-btn'),
   removeTopLevelCategory: clickable('.ember-power-select-clear-btn:eq(0)'),
   removeMiddleCategory: clickable('.ember-power-select-clear-btn:eq(1)'),
   removeLeafCategory: clickable('.ember-power-select-clear-btn:eq(2)'),

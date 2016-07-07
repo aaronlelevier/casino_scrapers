@@ -35,14 +35,14 @@ moduleForComponent('db-fetch-custom-select', 'integration: db-fetch-custom-selec
   }
 });
 
-test('should render a selectbox when dtd options are empty (initial state of power select)', function(assert) {
-  // this.link = link_one;
-  // this.repository = dtd_repo;
-  // this.render(hbs`{{db-fetch-custom-select model=link selectedAttr=model.destination className="t-link-destination-select" componentName="dtds/dtd-key-desc" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}`);
-  assert.equal(1,1);
-  // clickTrigger();
-  // assert.equal($(DROPDOWN).length, 1);
-});
+// test('should render a selectbox when dtd options are empty (initial state of power select)', function(assert) {
+//   this.link = link_one;
+//   this.repository = dtd_repo;
+//   this.render(hbs`{{db-fetch-custom-select model=link selectedAttr=model.destination className="t-link-destination-select" componentName="dtds/dtd-key-desc" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}`);
+//   assert.equal(1,1);
+//   clickTrigger();
+//   assert.equal($(DROPDOWN).length, 1);
+// });
 
 // test('should render a selectbox with bound options after type ahead for search', function(assert) {
 //   assert.equal(link_one.get('destination').get('id'), dtd.get('id'));
@@ -102,7 +102,7 @@ test('should be able to select same dtd when dtd already has a dtd', function(as
     });
 });
 
-test('should be able to select same dtd when dtd already has a dtd', function(assert) {
+test('should be able to select diff dtd when dtd already has a dtd', function(assert) {
   this.model = link_one;
   this.set('repository', dtd_repo);
   this.render(hbs`{{db-fetch-custom-select model=model selectedAttr=model.destination className="t-link-destination-select" componentName="dtds/dtd-key-desc" selectedComponent="dtds/dtd-key-desc-selected" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD"}}`);
@@ -137,4 +137,3 @@ test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
     done();
   }, 150);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
 });
-
