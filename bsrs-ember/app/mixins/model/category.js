@@ -83,7 +83,6 @@ var CategoriesMixin = Ember.Mixin.create({
       run(() => {
         const children_json = category.children;
         delete category.children;
-        delete category.parent;  
         pushed_category = store.push('category', category);
         pushed_category.save();
         if(children_json){

@@ -10,7 +10,6 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework.viewsets import ModelViewSet
 
 from accounting.serializers import CurrencySerializer
-from category.serializers import CategoryParentSerializer
 from person.models import Person
 from person.views import PersonViewSet
 from utils.api_structures import (ViewSetFileWriter, SerializerData,

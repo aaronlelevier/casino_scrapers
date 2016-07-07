@@ -15,7 +15,6 @@ var BSRS_CATEGORY_FACTORY = (function() {
     var response = [{
       id: i || this.category_defaults.idOne,
       name: name || this.category_defaults.nameOne,
-      status: this.category_defaults.status,
       children: children || [],
       parent_id: parent,
       level: level
@@ -40,7 +39,6 @@ var BSRS_CATEGORY_FACTORY = (function() {
       cost_code: this.category_defaults.costCodeOne,
       label: this.category_defaults.labelOne,
       subcategory_label: this.category_defaults.subCatLabelOne,
-      // status: this.category_defaults.statusOne
     }
   },
   factory.prototype.children = function(id) {
