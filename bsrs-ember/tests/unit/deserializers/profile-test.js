@@ -9,7 +9,7 @@ var store, profile, run = Ember.run, deserializer;
 
 module('unit: profile deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:profile', 'model:profile-list', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:profile', 'model:profile-list', 'model:person', 'service:i18n']);
     deserializer = ProfileDeserializer.create({
       simpleStore: store
     });
@@ -28,9 +28,9 @@ test('deserialize single', assert => {
   });
   assert.equal(profile.get('id'), PD.idOne);
   assert.equal(profile.get('description'), PD.descOne);
-  assert.equal(profile.get('assignee_id'), PD.assigneeOne);
-  assert.equal(profile.get('assignee').id, PD.assigneeOne);
-  assert.equal(profile.get('assignee').username, PD.username);
+  assert.equal(profile.get('assignee_fk'), PD.assigneeOne);
+  assert.equal(profile.get('assignee').get('id'), PD.assigneeOne);
+  assert.equal(profile.get('assignee').get('username'), PD.username);
 });
 
 test('deserialize list', assert => {
