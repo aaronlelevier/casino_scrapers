@@ -20,77 +20,77 @@ const COMPONENT = '.t-ticket-cc-select';
 const OPTION = 'li.ember-power-select-option';
 
 moduleForComponent('ticket-cc-power-select', 'integration: ticket-cc-power-select test', {
-    integration: true,
-    setup() {
-        trans = this.container.lookup('service:i18n');
-        loadTranslations(trans, translations.generate('en'));
-        translation.initialize(this);
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:ticket-person']);
-        run(function() {
-            m2m = store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
-            m2m_two = store.push('ticket-person', {id: TPD.idTwo, ticket_pk: TD.idOne, person_pk: PD.idTwo});
-            ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne, TPD.idTwo]});
-            person_one = store.push('person', {id: PD.id, first_name: PD.first_name, last_name: PD.last_name});
-            person_two = store.push('person', {id: PD.idTwo, first_name: 'Scooter', last_name: 'McGavin'});
-            person_three = store.push('person', {id: PD.unusedId, first_name: 'Aaron', last_name: 'Wat'});
-        });
-        person_repo = repository.initialize(this.container, this.registry, 'person');
-        person_repo.findTicketPeople = function() {
-            return store.find('person');
-        };
-    }
+  integration: true,
+  setup() {
+    trans = this.container.lookup('service:i18n');
+    loadTranslations(trans, translations.generate('en'));
+    translation.initialize(this);
+    store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:ticket-person']);
+    run(function() {
+      m2m = store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
+      m2m_two = store.push('ticket-person', {id: TPD.idTwo, ticket_pk: TD.idOne, person_pk: PD.idTwo});
+      ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne, TPD.idTwo]});
+      person_one = store.push('person', {id: PD.id, first_name: PD.first_name, last_name: PD.last_name});
+      person_two = store.push('person', {id: PD.idTwo, first_name: 'Scooter', last_name: 'McGavin'});
+      person_three = store.push('person', {id: PD.unusedId, first_name: 'Aaron', last_name: 'Wat'});
+    });
+    person_repo = repository.initialize(this.container, this.registry, 'person');
+    person_repo.findTicketPeople = function() {
+      return store.find('person');
+    };
+  }
 });
 
 test('should render a selectbox when with options selected (initial state)', function(assert) {
-    run(function() {
-        store.clear('ticket-person');
-    });
-    let ticket_cc_options = Ember.A([]);
-    this.model = ticket;
-    this.selected = ticket.get('cc');
-    this.person_repo = person_repo;
-    this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
-    let $component = this.$(`${COMPONENT}`);
-    clickTrigger();
-    assert.equal($(`${DROPDOWN}`).length, 1);
-    assert.equal($('.ember-power-select-options > li').length, 1);
-    assert.equal($(`${OPTION}`).text(), GLOBALMSG.power_search);
-    assert.equal($(`${PowerSelect} > span.ember-power-select-multiple-option`).length, 0);
+  run(function() {
+    store.clear('ticket-person');
+  });
+  let ticket_cc_options = Ember.A([]);
+  this.model = ticket;
+  this.selected = ticket.get('cc');
+  this.person_repo = person_repo;
+  this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
+  let $component = this.$(`${COMPONENT}`);
+  clickTrigger();
+  assert.equal($(`${DROPDOWN}`).length, 1);
+  assert.equal($('.ember-power-select-options > li').length, 1);
+  assert.equal($(`${OPTION}`).text().trim(), GLOBALMSG.power_search);
+  assert.equal($(`${PowerSelect} > span.ember-power-select-multiple-option`).length, 0);
 });
 
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
-    let ticket_cc_options = store.find('person');
-    this.model = ticket;
-    this.selected = ticket.get('cc');
-    this.person_repo = person_repo;
-    this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
-    let $component = this.$(`${COMPONENT}`);
-    clickTrigger();
-    run(() => { typeInSearch('a'); });
-    return waitFor().
-        then(() => {
-            assert.equal($(`${DROPDOWN}`).length, 1);
-            assert.equal($('.ember-power-select-options > li').length, 3);
-            assert.equal($(`${OPTION}:eq(0)`).text().trim(), PD.fullname);
-            assert.equal($(`${OPTION}:eq(1)`).text().trim(), 'Scooter McGavin');
-            assert.equal($(`${OPTION}:eq(2)`).text().trim(), 'Aaron Wat');
-            assert.equal($(`${PowerSelect} > .ember-power-select-multiple-option`).length, 2);
-            assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains(${PD.fullname})`));
-            assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains('Scooter McGavin')`));
-        });
+  let ticket_cc_options = store.find('person');
+  this.model = ticket;
+  this.selected = ticket.get('cc');
+  this.person_repo = person_repo;
+  this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
+  let $component = this.$(`${COMPONENT}`);
+  clickTrigger();
+  run(() => { typeInSearch('a'); });
+  return waitFor().
+  then(() => {
+    assert.equal($(`${DROPDOWN}`).length, 1);
+    assert.equal($('.ember-power-select-options > li').length, 3);
+    assert.equal($(`${OPTION}:eq(0)`).text().trim(), PD.fullname);
+    assert.equal($(`${OPTION}:eq(1)`).text().trim(), 'Scooter McGavin');
+    assert.equal($(`${OPTION}:eq(2)`).text().trim(), 'Aaron Wat');
+    assert.equal($(`${PowerSelect} > .ember-power-select-multiple-option`).length, 2);
+    assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains(${PD.fullname})`));
+    assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains('Scooter McGavin')`));
+  });
 });
 
 test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
-    var done = assert.async();
-    let ticket_cc_options = store.find('person');
-    this.model = ticket;
-    this.selected = ticket.get('cc');
-    this.person_repo = person_repo;
-    this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
-    let $component = this.$(`${COMPONENT}`);
-    run(() => { typeInSearch('a'); });
-    Ember.run.later(() => {
-        assert.equal($('.ember-power-select-options > li').length, 1);
-        done();
-    }, 150);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
+  var done = assert.async();
+  let ticket_cc_options = store.find('person');
+  this.model = ticket;
+  this.selected = ticket.get('cc');
+  this.person_repo = person_repo;
+  this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
+  let $component = this.$(`${COMPONENT}`);
+  run(() => { typeInSearch('a'); });
+  Ember.run.later(() => {
+    assert.equal($('.ember-power-select-options > li').length, 1);
+    done();
+  }, 150);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
 });
