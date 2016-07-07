@@ -27,14 +27,6 @@ class CategoryIDNameOnlySerializer(serializers.ModelSerializer):
         fields = ('id', 'name',)
 
 
-class SetParentIdMixin(object):
-
-    def to_representation(self, obj):
-        data = super(SetParentIdMixin, self).to_representation(obj)
-        data['parent_id'] = data.pop('parent', [])
-        return data
-
-
 class CategoryIDNameSerializer(BaseCreateSerializer):
 
     children = CategoryChildrenSerializer(many=True, read_only=True)
@@ -43,9 +35,10 @@ class CategoryIDNameSerializer(BaseCreateSerializer):
         model = Category
         fields = ('id', 'name', 'level', 'parent', 'children', 'label', 'subcategory_label')
 
-
-class CategoryIDNameSerializerTicket(SetParentIdMixin, CategoryIDNameSerializer):
-    pass
+    def to_representation(self, obj):
+        data = super(CategoryIDNameSerializer, self).to_representation(obj)
+        data['parent_id'] = data.pop('parent', [])
+        return data
 
 
 class CategoryRoleSerializer(BaseCreateSerializer):
