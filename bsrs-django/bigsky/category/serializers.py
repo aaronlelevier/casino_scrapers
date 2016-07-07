@@ -21,7 +21,7 @@ class CategoryChildrenSerializer(BaseCreateSerializer):
 
 
 class CategoryIDNameOnlySerializer(serializers.ModelSerializer):
-
+    # DTD and Person Current
     class Meta:
         model = Category
         fields = ('id', 'name',)
@@ -53,13 +53,6 @@ class CategoryRoleSerializer(BaseCreateSerializer):
     class Meta:
         model = Category
         fields = ('id', 'name', 'status', 'parent',)
-
-
-class CategoryParentSerializer(BaseCreateSerializer):
-
-    class Meta:
-        model = Category
-        fields = CATEGORY_FIELDS
 
 
 # Main
