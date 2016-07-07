@@ -24,19 +24,10 @@ test('dirty test | description', assert => {
   assert.equal(profile.get('isDirty'), false);
 });
 
-test('dirty test | assignee_id', assert => {
-  assert.equal(profile.get('isDirty'), false);
-  profile.set('assignee_id', 1);
-  assert.equal(profile.get('isDirty'), true);
-  profile.set('assignee_id', undefined);
-  assert.equal(profile.get('isDirty'), false);
-});
-
 test('serialize', assert => {
   profile = store.push('profile', {
     id: PD.idOne,
     description: PD.descOne,
-    assignee_id: PD.assigneeOne
   });
   let ret = profile.serialize();
   assert.equal(ret.id, PD.idOne);
@@ -56,7 +47,7 @@ test('change_assignee will update the persons assignee and dirty the model', (as
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(profile.get('assignee_fk'), PersonD.idOne);
   assert.equal(profile.get('assignee.id'), PersonD.idOne);
-  profile.change_assignee(inactive_assignee.get('id'));
+  profile.change_assignee({id: inactive_assignee.get('id')});
   assert.equal(profile.get('assignee_fk'), PersonD.idOne);
   assert.equal(profile.get('assignee.id'), PersonD.idTwo);
   assert.ok(profile.get('isDirtyOrRelatedDirty'));
@@ -69,7 +60,7 @@ test('save profile will set assignee_fk to current assignee id', (assert) => {
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(profile.get('assignee_fk'), PersonD.idOne);
   assert.equal(profile.get('assignee.id'), PersonD.idOne);
-  profile.change_assignee(inactive_assignee.get('id'));
+  profile.change_assignee({id: inactive_assignee.get('id')});
   assert.equal(profile.get('assignee_fk'), PersonD.idOne);
   assert.equal(profile.get('assignee.id'), PersonD.idTwo);
   assert.ok(profile.get('isDirtyOrRelatedDirty'));
@@ -87,7 +78,7 @@ test('rollback profile will set assignee to current assignee_fk', (assert) => {
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(profile.get('assignee_fk'), PersonD.idOne);
   assert.equal(profile.get('assignee.id'), PersonD.idOne);
-  profile.change_assignee(inactive_assignee.get('id'));
+  profile.change_assignee({id: inactive_assignee.get('id')});
   assert.equal(profile.get('assignee_fk'), PersonD.idOne);
   assert.equal(profile.get('assignee.id'), PersonD.idTwo);
   assert.ok(profile.get('isDirtyOrRelatedDirty'));

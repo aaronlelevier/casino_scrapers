@@ -54,7 +54,7 @@ test('visit detail', assert => {
   });
 });
 
-test('aaron assignee dropdown is initially populated and can change assignee', assert => {
+test('assignee dropdown is initially populated and can change assignee', assert => {
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
