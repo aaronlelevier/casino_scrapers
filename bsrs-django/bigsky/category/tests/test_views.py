@@ -132,7 +132,7 @@ class CategoryDetailTests(APITestCase):
         self.assertIsInstance(data['parent'], dict)
         self.assertEqual(data['parent']['id'], str(category.parent.id))
         self.assertEqual(data['parent']['name'], str(category.parent.name))
-        self.assertIn('parent', data['parent'])
+        self.assertIn('parent_id', data['parent'])
         self.assertIn('children', data['parent'])
         self.assertIsInstance(data['parent']['children'], list)
 
@@ -405,7 +405,7 @@ class CategoryFilterTests(APITransactionTestCase):
         category = Category.objects.filter(parent__isnull=True).first()
         self.assertEqual(data['label'], category.label)
         self.assertEqual(data['subcategory_label'], category.subcategory_label)
-        self.assertEqual(data['parent'], None)
+        self.assertEqual(data['parent_id'], None)
         self.assertTrue(data['children'][0]['id'])
         self.assertTrue(data['children'][0]['name'])
         self.assertTrue(data['children'][0]['level'])

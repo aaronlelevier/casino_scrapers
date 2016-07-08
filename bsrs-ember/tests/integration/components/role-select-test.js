@@ -45,7 +45,7 @@ test('should render a selectbox when role options are empty (initial state of po
   assert.equal($(DROPDOWN).length, 1);
   assert.equal($('.ember-basic-dropdown-content').length, 1);
   assert.equal($('.ember-power-select-options > li').length, 1);
-  assert.equal($('li.ember-power-select-option').text(), 'No Matches');
+  assert.equal($('li.ember-power-select-option').text().trim(), 'No Matches');
   assert.ok(!person.get('role'));
   assert.notOk($('.ember-power-select-search').text());
 });

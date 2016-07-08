@@ -328,7 +328,7 @@ class LocationListTests(APITestCase):
     def test_power_select_location_address_address(self):
         location = create_location()
         address = create_contact(Address, location)
-        address.address = '123 Drumpf Mansion'
+        address.address = '123 Drumpf Mansion St. ,'
         address.save()
 
         response = self.client.get('/api/admin/locations/location__icontains={}/'.format(address.address))
@@ -336,22 +336,20 @@ class LocationListTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['id'], str(location.id))
-        self.assertEqual(data[0]['addresses'][0]['address'], '123 Drumpf Mansion')
+        self.assertEqual(data[0]['addresses'][0]['address'], '123 Drumpf Mansion St. ,')
 
-    # TODO: revisit b/c dash not allowed
-    # def test_power_select_location_address_address(self):
-    #     location = create_location()
-    #     address = create_contact(Address, location)
-    #     address.postal_code = '12345-12345'
-    #     address.save()
-    #     print(address.postal_code)
-    #
-    #     response = self.client.get('/api/admin/locations/location__icontains={}/'.format(address.postal_code))
-    #
-    #     data = json.loads(response.content.decode('utf8'))
-    #     self.assertEqual(len(data), 1)
-    #     self.assertEqual(data[0]['id'], str(location.id))
-    #     self.assertEqual(data[0]['addresses'][0]['postal_code'], '12345-12345')
+    def test_power_select_location_address_postal_code(self):
+        location = create_location()
+        address = create_contact(Address, location)
+        address.postal_code = '12345-12345'
+        address.save()
+
+        response = self.client.get('/api/admin/locations/location__icontains={}/'.format(address.postal_code))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['id'], str(location.id))
+        self.assertEqual(data[0]['addresses'][0]['postal_code'], '12345-12345')
 
     def test_power_select_location_name_with_llevel(self):
         # test ensuring nothing wrong with custom endpoint

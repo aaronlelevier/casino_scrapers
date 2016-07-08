@@ -24,7 +24,7 @@ const DETAIL_URL = BASE_URL + '/' + CD.idOne;
 const GRID_DETAIL_URL = BASE_URL + '/' + CD.idGridOne;
 const LETTER_A = {keyCode: 65};
 const SPACEBAR = {keyCode: 32};
-const CATEGORY = '.t-category-children-select > .ember-basic-dropdown-trigger';
+const CATEGORY = '.t-category-children-select .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
@@ -278,8 +278,7 @@ test('clicking and typing into power select for categories children will fire of
   });
   let category_children_endpoint = PREFIX + '/admin/categories/category__icontains=a/';
   xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list_power_select());
-  page.categoryClickDropdown();
-  fillIn(`${CATEGORY_SEARCH}`, 'a');
+  selectSearch('.t-category-children-select', 'a');
   andThen(() => {
     assert.equal(page.categoryOptionLength, PAGE_SIZE);
   });
@@ -322,8 +321,7 @@ test('when you deep link to the category detail can remove child from category a
   });
   let category_children_endpoint = PREFIX + '/admin/categories/category__icontains=a/';
   xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list_power_select());
-  page.categoryClickDropdown();
-  fillIn(CATEGORY_SEARCH, 'a');
+  selectSearch('.t-category-children-select', 'a');
   page.categoryClickOptionOneEq();
   let url = PREFIX + DETAIL_URL + '/';
   let response = CF.detail(CD.idOne);

@@ -45,7 +45,7 @@ test('should render a selectbox when location type options are empty (initial st
   assert.equal($(DROPDOWN).length, 1);
   assert.equal($('.ember-basic-dropdown-content').length, 1);
   assert.equal($('.ember-power-select-options > li').length, 1);
-  assert.equal($('li.ember-power-select-option').text(), GLOBALMSG.no_results);
+  assert.equal($('li.ember-power-select-option').text().trim(), GLOBALMSG.no_results);
   assert.deepEqual(location_level.get('children_fks'), undefined);
   assert.notOk($('.ember-power-select-search').text());
 });

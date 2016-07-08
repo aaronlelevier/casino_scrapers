@@ -8,7 +8,7 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
-import { dtd_payload, dtd_payload_two, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload, 
+import { dtd_payload, dtd_payload_two, dtd_payload_link_two_put, dtd_payload_update_priority, dtd_payload_no_priority, dtd_new_payload,
   dtd_payload_with_categories, dtd_payload_change_categories, dtd_payload_no_status } from 'bsrs-ember/tests/helpers/payloads/dtd';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import LINK from 'bsrs-ember/vendor/defaults/link';
@@ -114,8 +114,8 @@ test('dtd payload to update all fields', (assert) => {
   .requestFillIn(LINK.requestTwo)
   .textFillIn(LINK.textTwo)
   .action_buttonClick()
-  .linkTypeTwoClick()
-  .noteTypeClickDropdown()
+  .linkTypeTwoClick();
+  page.noteTypeClickDropdown()
   .noteTypeClickOptionTwoValue();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);

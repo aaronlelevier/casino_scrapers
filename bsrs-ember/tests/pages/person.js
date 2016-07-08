@@ -14,14 +14,14 @@ const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const PEOPLE_URL = `${BASE_PEOPLE_URL}/index`;
 const DETAIL_URL = `${BASE_PEOPLE_URL}/${PD.idOne}`;
-const STATUS = '.t-status-select > .ember-basic-dropdown-trigger';
+const STATUS = '.t-status-select .ember-basic-dropdown-trigger';
 const DROPDOWN = options;
-const LOCATION = '.t-person-locations-select > .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
+const LOCATION = '.t-person-locations-select .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
 const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-option`;
 const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
 const LOCATION_TWO = `${LOCATIONS}:eq(1)`;
-const ROLE = '.t-person-role-select > .ember-basic-dropdown-trigger';
-const LOCALE = '.t-locale-select > .ember-basic-dropdown-trigger';
+const ROLE = '.t-person-role-select .ember-basic-dropdown-trigger';
+const LOCALE = '.t-locale-select .ember-basic-dropdown-trigger';
 
 
 export default PageObject.create({

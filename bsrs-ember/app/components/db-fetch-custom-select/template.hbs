@@ -1,6 +1,7 @@
 {{#power-select
   selected=selectedAttr
   class=className
+  tagName="div"
   search=(perform searchRepo)
   selectedItemComponent=selectedComponent
   onchange=(action "selected")
@@ -9,4 +10,3 @@
 }}
   {{component componentName model=optionModel}}
 {{/power-select}}
-
