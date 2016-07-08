@@ -146,7 +146,7 @@ en,admin.location.label.contact,Contact,Contact,,"'admin.location.label.contact'
 en,admin.location.label.email.one,Email,Email,,"'admin.location.label.email.one':'Email',",Email,Email
 en,admin.location.label.email.other,Email,Email,,"'admin.location.label.email.other':'Email',",Email,Email
 en,admin.location.label.general,General,General,,"'admin.location.label.general':'General',",General,General
-en,admin.location.label.location_level,Organization,Organization,,"'admin.location.label.location_level':'Organization',",Organization,Organization
+en,admin.location.label.location_level,Organizational Level,Organizational Level,,"'admin.location.label.location_level':'Organizational Level',",Organizational Level,Organizational Level
 en,admin.location.label.name,Name,Name,,"'admin.location.label.name':'Name',",Name,Name
 en,admin.location.label.number,Number,Number,,"'admin.location.label.number':'Number',",Number,Number
 en,admin.location.label.parents-name,Parent Locations,Parent Locations,,"'admin.location.label.parents-name':'Parent Locations',",Parent Locations,Parent Locations
@@ -214,6 +214,16 @@ en,admin.phonenumbertype.fax,Fax,Fax,,"'admin.phonenumbertype.fax':'Fax',",Fax,F
 en,admin.phonenumbertype.mobile,Mobile,Mobile,,"'admin.phonenumbertype.mobile':'Mobile',",Mobile,Mobile
 en,admin.phonenumbertype.office,Office,Office,,"'admin.phonenumbertype.office':'Office',",Office,Office
 en,admin.phonenumbertype.telephone,Telephone,Telephone,,"'admin.phonenumbertype.telephone':'Telephone',",Telephone,Telephone
+en,admin.profile,Profile,Profile,,"'admin.profile':'Profile',",Profile,Profile
+en,admin.profile.assignee,Assignee,Assignee,,"'admin.profile.assignee':'Assignee',",Assignee,Assignee
+en,admin.profile.description,Description,Description,,"'admin.profile.description':'Description',",Description,Description
+en,admin.profile.detail,Profile Detail,Profile Detail,,"'admin.profile.detail':'Profile Detail',",Profile Detail,Profile Detail
+en,admin.profile.label.assignee,Assignee,Assignee,,"'admin.profile.label.assignee':'Assignee',",Assignee,Assignee
+en,admin.profile.label.description,Description,Description,,"'admin.profile.label.description':'Description',",Description,Description
+en,admin.profile.new,New Profile,New Profile,,"'admin.profile.new':'New Profile',",New Profile,New Profile
+en,admin.profile.one,Profile,Profile,,"'admin.profile.one':'Profile',",Profile,Profile
+en,admin.profile.other,Profiles,Profiles,,"'admin.profile.other':'Profiles',",Profiles,Profiles
+en,admin.profile.search,Search Profiles,Search Profiles,,"'admin.profile.search':'Search Profiles',",Search Profiles,Search Profiles
 en,admin.role.label.category,Category,Category,,"'admin.role.label.category':'Category',",Category,Category
 en,admin.role.label.general,General,General,,"'admin.role.label.general':'General',",General,General
 en,admin.role.label.location_level,Location Organization,Location Organization,,"'admin.role.label.location_level':'Location Organization',",Location Organization,Location Organization

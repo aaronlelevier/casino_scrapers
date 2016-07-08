@@ -20,19 +20,25 @@ class LocaleManager(BaseManager):
         obj, _ = self.get_or_create(locale=settings.LANGUAGE_CODE)
         return obj
 
-    def update_default(self, id):
-        """Only 1 default record allowed. Enforce below in the 
-        Locale.save() method."""
+    def update_non_default(self, id):
+        """
+        Only 1 default record allowed. Enforce below in the 
+        Locale.save() method.
 
-        queryset = self.exclude(id=id).filter(default=True)
-        if not queryset:
-            self.system_default()
-
+        Locale instance passed to this method must be ``default=True``
+        """
         self.exclude(id=id).filter(default=True).update(default=False)
+
+    def get_or_create_by_i18n_name(self, locale_name):
+        locale, created = self.get_or_create(locale=locale_name.lower())
+        locale.name = 'admin.locale.{}'.format(locale_name)
+        locale.save()
+        return locale, created
 
 
 class Locale(BaseModel):
-    locale = models.SlugField(help_text="Example values: en, en-US, en-x-Sephora")
+    locale = models.CharField(max_length=50, unique=True,
+        help_text="Example values: en, en-US, en-x-Sephora")
     default = models.BooleanField(blank=True, default=False)
     name = models.CharField(max_length=50, 
         help_text="Human readable name in forms. i.e. 'English'")
@@ -72,7 +78,7 @@ class Locale(BaseModel):
 def update_locale(sender, instance=None, created=False, **kwargs):
     "Post-save hook for maintaing single default Locale."
     if instance.default:
-        Locale.objects.update_default(instance.id)
+        Locale.objects.update_non_default(instance.id)
 
 
 class TranslationManager(BaseManager):
@@ -134,19 +140,14 @@ class TranslationManager(BaseManager):
             reader = csv.DictReader(csvfile)
             values = {}
             context = {}
-            locale = None
             for i, row in enumerate(reader):
-                if row['LOCALE']:
-                    locale = row['LOCALE']
-                if row['CONTEXT']:
-                    context.update({row['KEY']: row['CONTEXT']})
                 if row['VALUE']:
                     values.update({row['KEY']: row['VALUE']})
+                if row['CONTEXT']:
+                    context.update({row['KEY']: row['CONTEXT']})
             
-            locale, _ = Locale.objects.get_or_create(locale=locale_name, name=locale_name)
-            locale.name = 'admin.locale.{}'.format(locale_name)
-            locale.save()
-            
+            locale, _ = Locale.objects.get_or_create_by_i18n_name(locale_name)
+
             ret, _ = Translation.objects.get_or_create(locale=locale)
             ret.values = values
             ret.context = context
