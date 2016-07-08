@@ -33,14 +33,16 @@ moduleForComponent('profile-single', 'integration: profile-single test', {
 test('description is required validation, cannot save w/o description', function(assert) {
   run(function() {
     model = store.push('profile', {
-      id: PD.idOne,
-      description: undefined,
+      id: PD.idTwo,
     });
   });
   this.set('model', model);
   this.render(hbs `{{profiles/profile-single model=model}}`);
+  let $err = this.$('.t-ap-description-validation-error');
+  assert.notOk($err.is(':visible'));
   generalPage.save();
-  const $err = this.$('.t-ap-description-validation-error');
+  $err = this.$('.t-ap-description-validation-error');
+  assert.ok($err.is(':visible'));
   assert.equal($err.text().trim(), trans.t('validation.invalid') + ' ' + trans.t('admin.profile.description'));
 });
 
