@@ -13,13 +13,15 @@ import PF from 'bsrs-ember/vendor/profile_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
 import page from 'bsrs-ember/tests/pages/profile';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const PREFIX = config.APP.NAMESPACE;
+const BASE_URL = BASEURLS.base_profile_url;
 const newId = 1;
-const NEW_URL = `/admin/profiles/new/${newId}`;
-const LIST_URL = `/admin/profiles/index`;
-const API_LIST_URL = `${PREFIX}/profiles/assignment/?page=1`;
-const API_CREATE_URL = `${PREFIX}/profiles/assignment/`;
+const NEW_URL = `${BASE_URL}/new/${newId}`;
+const LIST_URL = `${BASE_URL}/index`;
+const API_LIST_URL = `${PREFIX}${BASE_URL}/?page=1`;
+const API_CREATE_URL = `${PREFIX}${BASE_URL}/`;
 const API_LIST_URL_PERSON = `${PREFIX}/admin/people/`;
 
 const SEARCH = '.ember-power-select-search input';

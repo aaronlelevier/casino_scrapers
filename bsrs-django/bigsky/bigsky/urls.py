@@ -35,7 +35,7 @@ router = routers.DefaultRouter()
 # ACCOUNTING
 router.register(r'admin/currencies', accounting_views.CurrencyViewSet)
 # ASSIGNMENT
-router.register(r'profiles/assignment', assignment_views.ProfileViewSet)
+router.register(r'admin/profiles', assignment_views.ProfileViewSet)
 # DECISION TREE
 router.register(r'dtds', dtd_views.TreeDataViewSet)
 # CATEGORY

@@ -10,19 +10,20 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
-const LIST_URL = '/admin/profiles/index';
-const DETAIL_URL = `/admin/profiles/${PD.idZero}`;
-const API_DETAIL_URL = `${PREFIX}/profiles/assignment/${PD.idZero}/`;
+const BASE_URL = BASEURLS.base_profile_url;
+const LIST_URL = `${BASE_URL}/index`;
+const DETAIL_URL = `${BASE_URL}/${PD.idZero}`;
+const API_LIST_URL = `${PREFIX}${BASE_URL}/`;
+const API_DETAIL_URL = `${PREFIX}${BASE_URL}/${PD.idZero}/`;
 
-let application, store, endpoint, listData, listXhr, run = Ember.run;
+let application, store, listData, listXhr, run = Ember.run;
 
 module('Acceptance | profile list test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
-    endpoint = PREFIX + '/profiles/assignment/';
     listData = PF.list();
-    listXhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, listData);
+    listXhr = xhr(API_LIST_URL + '?page=1', 'GET', null, {}, 200, listData);
   },
   afterEach() {
     Ember.run(application, 'destroy');

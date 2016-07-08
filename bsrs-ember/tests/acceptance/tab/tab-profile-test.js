@@ -16,7 +16,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 // Edit based on module
 const BASE_URL = BASEURLS.base_profile_url;
-const API_LIST_URL = `${config.APP.NAMESPACE}/profiles/assignment/`;
+const API_LIST_URL = `${config.APP.NAMESPACE}${BASE_URL}/`;
 const TAB_TITLE_NAME = 'New Profile';
 const TAB_TITLE = PD.descOne;
 const MODEL = 'profile';

@@ -9,7 +9,7 @@ import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
 
 const { run } = Ember;
 var PREFIX = config.APP.NAMESPACE;
-var API_URL = `${PREFIX}/profiles/assignment/`;
+var API_URL = `${PREFIX}/admin/profiles/`;
 
 export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: 'profile',
