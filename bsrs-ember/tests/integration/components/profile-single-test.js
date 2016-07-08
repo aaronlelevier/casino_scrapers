@@ -5,6 +5,7 @@ import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PD from 'bsrs-ember/vendor/defaults/profile';
 import page from 'bsrs-ember/tests/pages/profile';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 var store, model, run = Ember.run, trans;
 
@@ -12,6 +13,7 @@ moduleForComponent('profile-single', 'integration: profile-single test', {
   integration: true,
   setup() {
     page.setContext(this);
+    generalPage.setContext(this);
     store = module_registry(this.container, this.registry, ['model:profile']);
     trans = this.container.lookup('service:i18n');
     run(function() {
@@ -24,7 +26,22 @@ moduleForComponent('profile-single', 'integration: profile-single test', {
   },
   afterEach() {
     page.removeContext(this);
+    generalPage.removeContext(this);
   }
+});
+
+test('description is required validation, cannot save w/o description', function(assert) {
+  run(function() {
+    model = store.push('profile', {
+      id: PD.idOne,
+      description: undefined,
+    });
+  });
+  this.set('model', model);
+  this.render(hbs `{{profiles/profile-single model=model}}`);
+  generalPage.save();
+  const $err = this.$('.t-ap-description-validation-error');
+  assert.equal($err.text().trim(), trans.t('validation.invalid') + ' ' + trans.t('admin.profile.description'));
 });
 
 test('header - shows detail if not model.new', function(assert) {

@@ -27,6 +27,7 @@ var GeneralPage = PageObject.create({
   clickAssignmentProfiles: clickable('.t-assignment-profiles'),
 
   gridItemZeroClick: clickable('.t-grid-data:eq(0)'),
+  gridItemOneClick: clickable('.t-grid-data:eq(1)'),
   gridTitle: text('.t-grid-title'),
   gridPageCountText: text('.t-page-count'),
 
