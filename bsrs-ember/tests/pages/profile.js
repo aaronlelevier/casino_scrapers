@@ -5,7 +5,7 @@ import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
 let { value, visitable, fillable, clickable, hasClass, count, text } = PageObject;
 
-const ASSIGNEE = '.t-profile-assignee-select > .ember-basic-dropdown-trigger';
+const ASSIGNEE = '.t-profile-assignee-select';
 const DROPDOWN = options;
 
 export default PageObject.create({
