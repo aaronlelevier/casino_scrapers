@@ -105,7 +105,8 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
         serializer = ps.PersonCurrentSerializer(instance)
         return Response(serializer.data)
 
-    @list_route(methods=['GET'], url_path=r"person__icontains=(?P<search_key>[\w ]+)")
+    # TODO: need email_re or something similar here
+    @list_route(methods=['GET'], url_path=r"person__icontains=(?P<search_key>[\w\s\.\-@]+)")
     def search_power_select(self, request, search_key=None):
         queryset = Person.objects.search_power_select(search_key)
         serializer = ps.PersonSearchSerializer(queryset, many=True)

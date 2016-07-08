@@ -6,7 +6,7 @@ import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select
 let { visitable, fillable, clickable, count, text, value } = PageObject;
 const BASE_URL = BASEURLS.base_categories_url;
 const DETAIL_URL = `${BASE_URL}/${CD.idOne}`;
-const CATEGORY = '.t-category-children-select > .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
+const CATEGORY = '.t-category-children-select .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
 const CATEGORIES = `${CATEGORY} > .ember-power-select-multiple-option`;
 const CATEGORY_ONE = `${CATEGORIES}:eq(0)`;
 const CATEGORY_TWO = `${CATEGORIES}:eq(1)`;

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from category.models import Category
-from category.serializers import CategoryIDNameSerializerTicket
+from category.serializers import CategoryIDNameSerializer
 from generic.serializers import Attachment
 from location.serializers import LocationStatusFKSerializer, LocationTicketListSerializer
 from person.serializers import PersonTicketSerializer, PersonTicketListSerializer
@@ -46,7 +46,7 @@ class TicketCreateSerializer(BaseCreateSerializer):
 class TicketListSerializer(serializers.ModelSerializer):
 
     location = LocationTicketListSerializer()
-    categories = CategoryIDNameSerializerTicket(many=True)
+    categories = CategoryIDNameSerializer(many=True)
     category_ids = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(), source='categories',
         many=True, required=False)
@@ -69,7 +69,7 @@ class TicketSerializer(serializers.ModelSerializer):
 
     location = LocationStatusFKSerializer()
     assignee = PersonTicketSerializer(required=False)
-    categories = CategoryIDNameSerializerTicket(many=True)
+    categories = CategoryIDNameSerializer(many=True)
     cc = PersonTicketSerializer(many=True)
     attachments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 

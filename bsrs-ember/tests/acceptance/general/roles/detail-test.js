@@ -33,7 +33,7 @@ const LETTER_A = {keyCode: 65};
 const LETTER_S = {keyCode: 83};
 const LETTER_R = {keyCode: 82};
 const SPACEBAR = {keyCode: 32};
-const CATEGORY = '.t-role-category-select > .ember-basic-dropdown-trigger';
+const CATEGORY = '.t-role-category-select .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-select-options';
 
 let application, store, list_xhr, detail_xhr, setting_detail_xhr, endpoint, detail_data, url, translations, basePayload, run = Ember.run;

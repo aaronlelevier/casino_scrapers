@@ -182,7 +182,7 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
         serializer = ls.LocationSearchSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    @list_route(methods=['GET'], url_path=r"location__icontains=(?P<search_key>[\w ]+)")
+    @list_route(methods=['GET'], url_path=r"location__icontains=(?P<search_key>[\w\s\,\.\-]+)")
     def search_power_select(self, request, search_key=None):
         llevel_id = request.query_params['location_level'] if 'location_level' in request.query_params else None
         queryset = Location.objects.search_power_select(search_key, llevel_id)

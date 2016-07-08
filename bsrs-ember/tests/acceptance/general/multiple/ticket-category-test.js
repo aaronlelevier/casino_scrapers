@@ -25,7 +25,7 @@ const CATEGORY_DETAIL_URL = `${BASEURLS.base_categories_url}/${CD.idOne}`;
 const CATEGORY_DONALD_DETAIL_URL = `${BASEURLS.base_category_url}/${CD.idDonald}`;
 const TOP_LEVEL_CATEGORIES_URL = `${PREFIX}/admin/categories/parents/`;
 const TICKET_ACTIVITIES_URL = `${PREFIX}/tickets/${TD.idOne}/activity/`;
-const LOCATION = '.t-category-locations-select > .ember-basic-dropdown-trigger';
+const LOCATION = '.t-category-locations-select .ember-basic-dropdown-trigger';
 const LOCATION_DROCDOWN = '.t-category-locations-select-dropdown > .ember-power-select-options';
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 

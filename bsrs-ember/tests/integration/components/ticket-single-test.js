@@ -100,7 +100,7 @@ test('changing priority changes the class', function(assert) {
   assert.ok(this.$('.tag:eq(0)').hasClass('ticket-priority-emergency'));
   let $component = this.$('.t-ticket-priority-select');
   assert.equal($component.length, 1);
-  clickTrigger('.t-ticket-priority-select >');
+  clickTrigger('.t-ticket-priority-select');
   nativeMouseUp(`.ember-power-select-option:contains(${TD.priorityTwoKey})`);
   assert.ok(this.$('.tag:eq(0)').hasClass('ticket-priority-high'));
 });
@@ -117,7 +117,7 @@ test('changing status changes the class', function(assert) {
   assert.ok(this.$('.tag:eq(1)').hasClass('ticket-status-new'));
   let $component = this.$('.t-ticket-status-select');
   assert.equal($component.length, 1);
-  clickTrigger('.t-ticket-status-select >');
+  clickTrigger('.t-ticket-status-select');
   nativeMouseUp(`.ember-power-select-option:contains(${TD.statusTwoKey})`);
   assert.ok(this.$('.tag:eq(1)').hasClass('ticket-status-deferred'));
 });

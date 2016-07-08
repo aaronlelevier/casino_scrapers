@@ -57,7 +57,7 @@ test('should render a selectbox when with options selected (initial state of chi
     clickTrigger();
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 1);
-    assert.equal($(OPTION).text(), GLOBALMSG.power_search);
+    assert.equal($(OPTION).text().trim(), GLOBALMSG.power_search);
     assert.equal($(`${PowerSelect} > span.ember-power-select-multiple-option`).length, 0);
 });
 

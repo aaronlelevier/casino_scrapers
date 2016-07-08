@@ -64,8 +64,8 @@ class RoleDetailTests(RoleSetupMixin, APITestCase):
             [str(c.id) for c in self.role.categories.all()]
         )
         self.assertIn('name', data['categories'][0])
-        self.assertIn('status', data['categories'][0])
-        self.assertIn('parent', data['categories'][0])
+        self.assertNotIn('status', data['categories'][0])
+        self.assertNotIn('parent', data['categories'][0])
 
     def test_detail__inherited(self):
         self.role.dashboard_text = 'foo'
@@ -358,15 +358,15 @@ class PersonListTests(TestCase):
     def test_power_select_people_email(self):
         # TODO: figure out email w/ @ in search
         person1 = create_single_person(name='wat')
-        person1.email = 'foo@bar.com'
+        person1.email = 'foo-bar@gmail.com'
         person1.save()
 
-        response = self.client.get('/api/admin/people/person__icontains={}/'.format('foo'))
+        response = self.client.get('/api/admin/people/person__icontains={}/'.format('foo-bar@gmail.com'))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['id'], str(person1.id))
-        self.assertEqual(data[0]['email'], 'foo@bar.com')
+        self.assertEqual(data[0]['email'], 'foo-bar@gmail.com')
 
 
 class PersonDetailTests(TestCase):

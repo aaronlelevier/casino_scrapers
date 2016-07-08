@@ -22,7 +22,7 @@ const PEOPLE_DETAIL_URL = `${BASEURLS.base_people_url}/${PD.idOne}`;
 const PEOPLE_DONALD_DETAIL_URL = `${BASEURLS.base_people_url}/${PD.idDonald}`;
 const TOP_LEVEL_CATEGORIES_URL = `${PREFIX}/admin/categories/parents/`;
 const TICKET_ACTIVITIES_URL = `${PREFIX}/tickets/${TD.idOne}/activity/`;
-const LOCATION = '.t-person-locations-select > .ember-basic-dropdown-trigger';
+const LOCATION = '.t-person-locations-select .ember-basic-dropdown-trigger';
 const LOCATION_DROPDOWN = '.t-person-locations-select-dropdown > .ember-power-select-options';
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 

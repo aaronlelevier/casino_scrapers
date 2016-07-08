@@ -6,11 +6,11 @@ import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
 let { text, visitable, fillable, clickable, count, value } = PageObject;
-const ROLETYPE = '.t-role-role-type > .ember-basic-dropdown-trigger';
+const ROLETYPE = '.t-role-role-type .ember-basic-dropdown-trigger';
 const ROLETYPE_DROPDOWN = options;
-const LOCATIONLEVEL = '.t-location-level-select > .ember-basic-dropdown-trigger';
+const LOCATIONLEVEL = '.t-location-level-select .ember-basic-dropdown-trigger';
 const LOCATIONLEVEL_DROPDOWN = options;
-const CATEGORY = '.t-role-category-select > .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
+const CATEGORY = '.t-role-category-select .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
 const CATEGORIES = `${CATEGORY} > .ember-power-select-multiple-option`;
 const CATEGORY_ONE = `${CATEGORIES}:eq(0)`;
 const CATEGORY_DROPDOWN = options;
@@ -18,7 +18,7 @@ const CATEGORY_DROPDOWN = options;
 
 export default PageObject.create({
   categoryClickDropdown: clickable(CATEGORY),
-  categorySelectText: text('.t-role-category-select > .ember-basic-dropdown-trigger'),
+  categorySelectText: text('.t-role-category-select .ember-basic-dropdown-trigger'),
   categorySelected: text(CATEGORY_ONE),
   categoryOneRemove: clickable(`${CATEGORY_ONE} > .ember-power-select-multiple-remove-btn`),
   categoryClickOptionOneEq: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:eq(0)`),

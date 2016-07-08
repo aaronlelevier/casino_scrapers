@@ -37,7 +37,7 @@ let application, store, endpoint, list_xhr, url, original_uuid, run = Ember.run;
 const CHILDREN = '.t-location-children-select';
 const CHILDREN_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
 const PARENTS = '.t-location-parent-select';
-const PARENTS_MULTIPLE_OPTION = `.t-location-parent-select > .ember-power-select-trigger > .ember-power-select-multiple-options`;
+const PARENTS_MULTIPLE_OPTION = `.t-location-parent-select .ember-power-select-trigger > .ember-power-select-multiple-options`;
 
 module('Acceptance | location detail-test', {
   beforeEach() {

@@ -356,7 +356,6 @@ test('preview updates as fields changes are made to detail', function(assert) {
   page.fieldTypeOneClickOptionFourTranslated();
   //select
   nativeMouseUp(`.ember-power-select-option:contains(${FD.typeFour})`);
-  assert.ok(this.$('.t-dtd-preview-field .ember-power-select').hasClass('t-dtd-field-select'));
   clickTrigger('.t-dtd-field-select');
   assert.equal(page.fieldOptionOne, 'yes');
   page.fieldOneAddFieldOption();

@@ -17,7 +17,7 @@ const BASE_URL = BASEURLS.base_location_levels_url;
 const LOCATION_LEVEL_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + LLD.idOne;
 const DISTRICT_DETAIL_URL = BASE_URL + '/' + LLD.idDistrict;
-const LOCATION_LEVEL = '.t-location-level-children-select > .ember-basic-dropdown-trigger';
+const LOCATION_LEVEL = '.t-location-level-children-select .ember-basic-dropdown-trigger';
 const LOCATION_LEVEL_DROPDOWN = options;
 const LOCATION_LEVEL_SEARCH = '.ember-power-select-trigger-multiple-input';
 

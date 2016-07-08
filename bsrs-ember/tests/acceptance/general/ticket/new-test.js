@@ -34,10 +34,10 @@ const NUMBER_6 = {keyCode: 54};
 const LETTER_B = {keyCode: 66};
 const BACKSPACE = {keyCode: 8};
 const SPACEBAR = {keyCode: 32};
-const LOCATION = '.t-ticket-location-select > .ember-basic-dropdown-trigger';
+const LOCATION = '.t-ticket-location-select .ember-basic-dropdown-trigger';
 const DROPDOWN = options;
-const ASSIGNEE = '.t-ticket-assignee-select > .ember-basic-dropdown-trigger';
-const CC = '.t-ticket-cc-select > .ember-basic-dropdown-trigger';
+const ASSIGNEE = '.t-ticket-assignee-select .ember-basic-dropdown-trigger';
+const CC = '.t-ticket-cc-select .ember-basic-dropdown-trigger';
 const CC_SEARCH = '.ember-power-select-trigger-multiple-input';
 const SEARCH = '.ember-power-select-search input';
 

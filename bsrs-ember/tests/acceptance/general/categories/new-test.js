@@ -21,7 +21,7 @@ const DETAIL_URL = BASE_URL + '/' + UUID.value;
 const CATEGORY_NEW_URL = BASE_URL + '/new/1';
 const LETTER_A = {keyCode: 65};
 const SPACEBAR = {keyCode: 32};
-const CATEGORY = '.t-category-children-select > .ember-basic-dropdown-trigger';
+const CATEGORY = '.t-category-children-select .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
@@ -230,8 +230,7 @@ test('clicking and typing into power select for categories children will fire of
   fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
   fillIn('.t-amount', CD.costAmountOne);
   fillIn('.t-category-cost-code', CD.costCodeOne);
-  page.categoryClickDropdown();
-  fillIn(`${CATEGORY_SEARCH}`, 'a');
+  selectSearch('.t-category-children-select', 'a');
   page.categoryClickOptionOneEq();
   andThen(() => {
     let category = store.find('category', UUID.value);
@@ -255,8 +254,7 @@ test('clicking and typing into power select for categories children will not fil
     assert.equal(find('div.item').length, 0);
     assert.equal(find('div.option').length, 0);
   });
-  page.categoryClickDropdown();
-  fillIn(`${CATEGORY_SEARCH}`, ' ');
+  selectSearch('.t-category-children-select', ' ');
   andThen(() => {
     assert.equal(page.categoryOptionLength, 1);
   });
@@ -292,8 +290,7 @@ test('you can add and remove child from category', (assert) => {
   fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
   fillIn('.t-amount', CD.costAmountOne);
   fillIn('.t-category-cost-code', CD.costCodeOne);
-  page.categoryClickDropdown();
-  fillIn(`${CATEGORY_SEARCH}`, 'a');
+  selectSearch('.t-category-children-select', 'a');
   andThen(() => {
     assert.equal(page.categoryOptionLength, 10);
     const category = store.find('category', UUID.value);

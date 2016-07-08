@@ -10,6 +10,7 @@
       <span class="input-group-addon">{{t "admin.dtd.label.field_type"}}</span>
       {{#power-select
         class='t-dtd-field-type'
+        tagName="div"
         selected=field.type
         onchange=(action "setFieldType" field.id)
         searchEnabled=false
@@ -20,9 +21,7 @@
       {{/power-select}}
     </div>
     {{#if (if-in elem=field.type list=field.typesWithOptions)}}
-      {{dtds/dtd-field-option
-        model=field
-      }}
+      {{dtds/dtd-field-option model=field}}
     {{/if}}
     <div class="input-group">
       <span class="input-group-addon">{{t "admin.dtd.label.required"}}</span>
@@ -33,7 +32,6 @@
         </label>
       </div>
     </div>
-
   </div>
 {{/each}}
 <button class="t-add-field-btn btn-add btn btn-default btn-sm" type="button" {{action "append"}}>

@@ -14,8 +14,8 @@ const DTDS_URL = `${BASE_URL}`;
 const NEW_URL = `${BASE_URL}/new/1`;
 const DETAIL_URL = `${BASE_URL}/${DTD.idOne}`;
 
-const DESTINATION = '.t-link-destination-select > .ember-basic-dropdown-trigger';
-const FIELD_SELECT_OPTION = '.t-dtd-field-select > .ember-basic-dropdown-trigger';
+const DESTINATION = '.t-link-destination-select .ember-basic-dropdown-trigger';
+const FIELD_SELECT_OPTION = '.t-dtd-field-select .ember-basic-dropdown-trigger';
 
 var DTPage = PageObject.create({
   requester: value('.t-dt-ticket-requester'),

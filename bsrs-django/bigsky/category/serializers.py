@@ -21,18 +21,10 @@ class CategoryChildrenSerializer(BaseCreateSerializer):
 
 
 class CategoryIDNameOnlySerializer(serializers.ModelSerializer):
-
+    # DTD and Person Current
     class Meta:
         model = Category
         fields = ('id', 'name',)
-
-
-class SetParentIdMixin(object):
-
-    def to_representation(self, obj):
-        data = super(SetParentIdMixin, self).to_representation(obj)
-        data['parent_id'] = data.pop('parent', [])
-        return data
 
 
 class CategoryIDNameSerializer(BaseCreateSerializer):
@@ -43,23 +35,17 @@ class CategoryIDNameSerializer(BaseCreateSerializer):
         model = Category
         fields = ('id', 'name', 'level', 'parent', 'children', 'label', 'subcategory_label')
 
-
-class CategoryIDNameSerializerTicket(SetParentIdMixin, CategoryIDNameSerializer):
-    pass
+    def to_representation(self, obj):
+        data = super(CategoryIDNameSerializer, self).to_representation(obj)
+        data['parent_id'] = data.pop('parent', [])
+        return data
 
 
 class CategoryRoleSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'status', 'parent',)
-
-
-class CategoryParentSerializer(BaseCreateSerializer):
-
-    class Meta:
-        model = Category
-        fields = CATEGORY_FIELDS
+        fields = ('id', 'name',)
 
 
 # Main

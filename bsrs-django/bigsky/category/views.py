@@ -40,7 +40,7 @@ class CategoryViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
         if parent is for category power select in ticket view
         """
         if 'parent' in self.request.query_params:
-            return cs.CategoryIDNameSerializerTicket
+            return cs.CategoryIDNameSerializer
         elif self.action == 'list':
             return cs.CategoryListSerializer
         elif self.action == 'retrieve':
