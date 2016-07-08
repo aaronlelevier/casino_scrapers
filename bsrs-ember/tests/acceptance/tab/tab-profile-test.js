@@ -362,6 +362,6 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
   andThen(() => {
     assert.equal(currentURL(), NEW_URL_2);
     let tabs = store.find('tab');
-    assert.equal(tabs.get('length'), 1); // (ayl) flaky test fail
+    assert.equal(tabs.get('length'), 1);
   });
 });
