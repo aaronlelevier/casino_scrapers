@@ -45,7 +45,7 @@ class CategoryRoleSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'status', 'parent',)
+        fields = ('id', 'name',)
 
 
 # Main

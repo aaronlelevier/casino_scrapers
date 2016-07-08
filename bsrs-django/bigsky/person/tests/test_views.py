@@ -64,8 +64,8 @@ class RoleDetailTests(RoleSetupMixin, APITestCase):
             [str(c.id) for c in self.role.categories.all()]
         )
         self.assertIn('name', data['categories'][0])
-        self.assertIn('status', data['categories'][0])
-        self.assertIn('parent', data['categories'][0])
+        self.assertNotIn('status', data['categories'][0])
+        self.assertNotIn('parent', data['categories'][0])
 
     def test_detail__inherited(self):
         self.role.dashboard_text = 'foo'
