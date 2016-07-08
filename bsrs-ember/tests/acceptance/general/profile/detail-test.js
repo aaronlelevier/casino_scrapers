@@ -36,6 +36,17 @@ module('Acceptance | profile detail test', {
   }
 });
 
+test('by clicking record in list view, User is sent to detail view', assert => {
+  visit(LIST_URL);
+  andThen(() => {
+    assert.equal(currentURL(), LIST_URL);
+  });
+  generalPage.gridItemOneClick();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
+});
+
 test('visit detail and update description', assert => {
   visit(DETAIL_URL);
   andThen(() => {
