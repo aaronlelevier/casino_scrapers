@@ -7,6 +7,7 @@ var BSRS_PROFILE_DEFAULTS_OBJECT = (function() {
       idZero: '1ee82b8c-89bd-45a2-8d57-5b920c8b0000',
       idOne: '1ee82b8c-89bd-45a2-8d57-5b920c8b0001',
       idTwo: '2cc82b8c-89bd-45a2-8d57-5b920c8b0002',
+      idGridTwo: '1ee82b8c-89bd-45a2-8d57-5b920c8b0002',
       descOne: 'foo',
       descTwo: 'bar',
       descGridOne: 'foo0',
