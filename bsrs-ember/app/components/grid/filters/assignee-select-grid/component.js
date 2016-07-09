@@ -11,7 +11,7 @@ export default Ember.Component.extend({
     if (Ember.isBlank(search)) { return []; }
     yield timeout(DEBOUNCE_MS);
     const repo = this.get('repository');
-    const json = yield repo.findTicketAssignee(search);
+    const json = yield repo.findPeople(search);
     return json;
   }).restartable(),
   selectedPerson: Ember.computed(function() {

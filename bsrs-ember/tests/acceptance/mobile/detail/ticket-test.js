@@ -88,7 +88,7 @@ test('can update fields and save', async assert => {
   assert.equal(ticket.get('assignee').get('id'), PD.idBoy);
 });
 
-test('scott when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async assert => {
+test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async assert => {
   await page.visitDetail();
   await click('.t-mobile-footer-item:eq(1)');
   await page.requestFillIn('wat');
