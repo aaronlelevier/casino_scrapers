@@ -1,10 +1,16 @@
 import Ember from 'ember';
-import { create, clickable, text, isVisible } from 'ember-cli-page-object';
+import { visitable, fillable, value, create, clickable, text, isVisible } from 'ember-cli-page-object';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
+import config from 'bsrs-ember/config/environment';
+import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
+const BASE_URL = BASEURLS.base_tickets_url;
 const LOCATION = '.t-ticket-location-select > .ember-basic-dropdown-trigger';
 const ASSIGNEE = '.t-ticket-assignee-select > .ember-basic-dropdown-trigger';
+const DETAIL_URL = `${BASE_URL}/index/${TD.idOne}`;
 
 export default create({
+  visitDetail: visitable(DETAIL_URL),
   toggleFilter: clickable('.t-mobile-filter'),
   filterAndSort: isVisible('.t-mobile-filters'),
   clickFilterRequest: clickable('.t-filter-request'),
@@ -23,4 +29,6 @@ export default create({
   locationInput: text(LOCATION),
   assigneeInput: text(ASSIGNEE),
 
+  request: value('.t-mobile-ticket-request'),
+  requestFillIn: fillable('.t-mobile-ticket-request'),
 });

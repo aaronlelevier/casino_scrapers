@@ -6,17 +6,14 @@ import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 const { Route, inject } = Ember;
 
 var ApplicationRoute = Ember.Route.extend({
-  deleteModal: false,
-  dirtyModal: false,
-  repository: injectRepo('person'),
   RoleDeserializer: injectDeserializer('role'),
-  LocationDeserializer: injectDeserializer('location'),
   PersonDeserializer: injectDeserializer('person'),
   simpleStore: Ember.inject.service(),
   translationsFetcher: inject.service(),
   i18n: inject.service(),
   moment: inject.service(),
   tabList: inject.service(),
+  modalIsShowing: false,
   beforeModel() {
     let store = this.get('simpleStore');
     const email_types = Ember.$('[data-preload-email_types]').data('configuration');
@@ -141,6 +138,7 @@ var ApplicationRoute = Ember.Route.extend({
         return this.intermediateTransitionTo('error');
       }
     },
+    /* DESKTOP */
     closeTabMaster(tab, {action='closeTab', deleteCB=null, confirmed=false}={}) {
       /* Find model based on stored id in tab */
       const tab_id = tab.get('model_id') ? tab.get('model_id') : tab.get('id');
@@ -181,6 +179,15 @@ var ApplicationRoute = Ember.Route.extend({
     },
     deleteAttachment(tab, callback){
       this.send('closeTabMaster', tab, {action:'deleteAttachment', deleteCB:callback});
+    },
+    /* MOBILE */
+    closeMobileDetail(model, redirectRoute) {
+      if (model.get('isDirtyOrRelatedDirty')) {
+        this.trx.attemptedTransitionModel = model;
+        this.trx.attemptedAction = 'closeMobileDetail';
+      } else {
+        this.transitionTo(redirectRoute);
+      }
     }
   }
 });

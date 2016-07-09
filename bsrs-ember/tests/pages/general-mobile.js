@@ -14,4 +14,6 @@ export default create({
   clickFilterOpen: clickable('.t-mobile-filter'),
   saveFilterset: clickable('.t-mobile-save-filterset'),
   closeFiltersetInput: clickable('.t-mobile-save-filterset-component span'),
+  backButtonClick: clickable('.t-detail-back'),
+  mobileActionDropdownClick: clickable('.t-mobile-action-dropdown'),
 });
