@@ -71,10 +71,12 @@ class RoleIdNameSerializer(serializers.ModelSerializer):
 ### PERSON ###
 
 PERSON_FIELDS = ('id', 'username', 'first_name', 'middle_initial', 'last_name',
-                 'fullname', 'status', 'role', 'title')
+                 'fullname', 'role', 'title')
 
 PERSON_DETAIL_FIELDS = PERSON_FIELDS + ('employee_id', 'locale', 'locations', 'emails', 'phone_numbers',
                                         'addresses', 'password_one_time',)
+
+PERSON_DETAIL_FIELDS_WITH_STATUS = PERSON_DETAIL_FIELDS + ('status',)
 
 
 class PersonCreateSerializer(RemovePasswordSerializerMixin, BaseCreateSerializer):
@@ -106,7 +108,7 @@ class PersonListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = PERSON_FIELDS
+        fields = PERSON_FIELDS + ('status',)
 
 
 class PersonSearchSerializer(serializers.ModelSerializer):
@@ -136,21 +138,17 @@ class PersonDetailSerializer(serializers.ModelSerializer):
     emails = EmailSerializer(required=False, many=True)
     phone_numbers = PhoneNumberSerializer(required=False, many=True)
     addresses = AddressSerializer(required=False, many=True)
+    status_fk = serializers.PrimaryKeyRelatedField(queryset=PersonStatus.objects.all(), source='status')
 
     class Meta:
         model = Person
-        fields = PERSON_DETAIL_FIELDS + ('last_login', 'date_joined', 'inherited',)
+        fields = PERSON_DETAIL_FIELDS + ('status_fk', 'last_login', 'date_joined', 'inherited',)
 
     @staticmethod
     def eager_load(queryset):
         return (queryset.select_related('role')
                         .prefetch_related('emails', 'phone_numbers', 'addresses',
                                           'locations', 'locations__location_level'))
-
-    def to_representation(self, instance):
-        data = super(PersonDetailSerializer, self).to_representation(instance)
-        data['status_fk'] = data.pop('status', [])
-        return data
 
 
 class PersonCurrentSerializer(PersonDetailSerializer):
@@ -160,7 +158,7 @@ class PersonCurrentSerializer(PersonDetailSerializer):
 
     class Meta:
         model = Person
-        fields = PERSON_DETAIL_FIELDS + ('all_locations_and_children',
+        fields = PERSON_DETAIL_FIELDS_WITH_STATUS + ('all_locations_and_children',
                                          'categories',)
 
 
@@ -183,7 +181,7 @@ class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSeriali
         model = Person
         validators = [RoleLocationValidator('role', 'locations')]
         write_only_fields = ('password',)
-        fields = PERSON_DETAIL_FIELDS + ('auth_amount', 'auth_currency', 'password',
+        fields = PERSON_DETAIL_FIELDS_WITH_STATUS + ('auth_amount', 'auth_currency', 'password',
                                          'accept_assign', 'accept_notify',)
 
     def update(self, instance, validated_data):

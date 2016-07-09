@@ -11,8 +11,10 @@ from ticket.models import Ticket, TicketActivity, TicketPriority, TicketStatus
 from utils.serializers import BaseCreateSerializer
 
 
-TICKET_FIELDS = ('id', 'location', 'status', 'priority', 'assignee',
+TICKET_BASE_FIELDS = ('id', 'location', 'assignee',
     'requester', 'categories', 'request', 'completion_date', 'creator')
+
+TICKET_FIELDS = TICKET_BASE_FIELDS + ('status', 'priority',)
 
 
 class TicketPrioritySerializer(serializers.ModelSerializer):
@@ -72,11 +74,15 @@ class TicketSerializer(serializers.ModelSerializer):
     categories = CategoryIDNameSerializer(many=True)
     cc = PersonTicketSerializer(many=True)
     attachments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    status_fk = serializers.PrimaryKeyRelatedField(queryset=TicketStatus.objects.all(),
+                                                   source='status')
+    priority_fk = serializers.PrimaryKeyRelatedField(queryset=TicketPriority.objects.all(),
+                                                     source='priority')
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS + ('number', 'cc', 'attachments', 'created',
-                                  'legacy_ref_number', 'dt_path')
+        fields = TICKET_BASE_FIELDS + ('number', 'cc', 'attachments', 'created', 'legacy_ref_number',
+                                       'status_fk', 'priority_fk', 'dt_path')
 
     @staticmethod
     def eager_load(queryset):
@@ -84,12 +90,6 @@ class TicketSerializer(serializers.ModelSerializer):
                                         'priority')
                         .prefetch_related('cc', 'categories', 'attachments',
                                           'categories__children'))
-
-    def to_representation(self, obj):
-        data = super(TicketSerializer, self).to_representation(obj)
-        data['status_fk'] = data.pop('status', [])
-        data['priority_fk'] = data.pop('priority', [])
-        return data
 
 
 class TicketActivitySerializer(serializers.ModelSerializer):

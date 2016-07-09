@@ -8,6 +8,7 @@ from dtd.models import TreeField, TreeOption, TreeLink, TreeData
 from dtd.validators import UniqueDtdFieldValidator
 from generic.models import Attachment
 from generic.serializers import AttachmentSerializer
+from ticket.models import TicketPriority, TicketStatus
 from utils import create
 from utils.serializers import BaseCreateSerializer
 
@@ -46,18 +47,14 @@ class TreeLinkDetailSerializer(BaseCreateSerializer):
 
     categories = CategoryIDNameOnlySerializer(many=True, required=False)
     destination = TreeDataListSerializer(required=False)
+    priority_fk = serializers.PrimaryKeyRelatedField(queryset=TicketPriority.objects.all(), source='priority')
+    status_fk = serializers.PrimaryKeyRelatedField(queryset=TicketStatus.objects.all(), source='status')
+    dtd_fk = serializers.PrimaryKeyRelatedField(queryset=TreeData.objects.all(), source='dtd')
 
     class Meta:
         model = TreeLink
         fields = ('id', 'order', 'text', 'action_button', 'is_header', 'categories',
-                  'request', 'priority', 'status', 'dtd', 'destination',)
-
-    def to_representation(self, obj):
-        data = super(TreeLinkDetailSerializer, self).to_representation(obj)
-        data['priority_fk'] = data.pop('priority', None)
-        data['status_fk'] = data.pop('status', None)
-        data['dtd_fk'] = data.pop('dtd', None)
-        return data
+                  'request', 'priority_fk', 'status_fk', 'dtd_fk', 'destination',)
 
 
 class TreeLinkCreateUpdateSerializer(BaseCreateSerializer):
