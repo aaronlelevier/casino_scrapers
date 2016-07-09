@@ -83,15 +83,11 @@ class LocationTicketListSerializer(serializers.ModelSerializer):
 
 class LocationStatusFKSerializer(serializers.ModelSerializer):
     """Leaf node serializer for LocationDetailSerializer and PersonDetailSerializer"""
+    status_fk = serializers.PrimaryKeyRelatedField(queryset=LocationStatus.objects.all(), source='status')
 
     class Meta:
         model = Location
-        fields = ('id', 'name', 'number', 'location_level', 'status')
-
-    def to_representation(self, obj):
-        data = super(LocationStatusFKSerializer, self).to_representation(obj)
-        data['status_fk'] = data.pop('status', [])
-        return data
+        fields = ('id', 'name', 'number', 'location_level', 'status_fk')
 
 
 class LocationListSerializer(serializers.ModelSerializer):
@@ -120,16 +116,12 @@ class LocationDetailSerializer(serializers.ModelSerializer):
     emails = EmailSerializer(required=False, many=True)
     phone_numbers = PhoneNumberSerializer(required=False, many=True)
     addresses = AddressSerializer(required=False, many=True)
+    status_fk = serializers.PrimaryKeyRelatedField(queryset=LocationStatus.objects.all(), source='status')
 
     class Meta:
         model = Location
-        fields = ('id', 'name', 'number', 'location_level', 'status', 'people',
+        fields = ('id', 'name', 'number', 'location_level', 'status_fk', 'people',
             'parents', 'children', 'emails', 'phone_numbers', 'addresses',)
-
-    def to_representation(self, obj):
-        data = super(LocationDetailSerializer, self).to_representation(obj)
-        data['status_fk'] = data.pop('status', [])
-        return data
 
 
 class LocationUpdateSerializer(NestedCreateContactSerializerMixin, NestedContactSerializerMixin,

@@ -31,6 +31,7 @@ const INDEX_ROUTE = 'tickets.index';
 const DETAIL_ROUTE = 'tickets.ticket';
 const DOC_TYPE = 'ticket';
 const TAB_TITLE = '.t-tab-title:eq(0)';
+const ACTIVITY_ITEMS = '.t-activity-list-item';
 
 let application, store, list_xhr, ticket_detail_data, endpoint, detail_xhr, original_uuid, activity_one;
 
@@ -212,9 +213,11 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
   });
 });
 
-test('clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+test('clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request and show activities', (assert) => {
   let ticket_list_data = TF.list();
   list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
+  clearxhr(activity_one);
+  ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(2));
   visit(TICKET_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
@@ -231,19 +234,19 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     assert.equal(ticket.get('isDirtyOrRelatedDirty'), true);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
+    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
   });
+  visit(TICKET_URL);
   andThen(() => {
-    visit(TICKET_URL);
-    andThen(() => {
-      assert.equal(currentURL(), TICKET_URL);
-    });
+    assert.equal(currentURL(), TICKET_URL);
   });
   click('.t-tab:eq(0)');
   andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
     let ticket = store.find('ticket', TD.idOne);
     assert.equal(page.priorityInput, TD.priorityTwo);
     assert.equal(ticket.get('isDirtyOrRelatedDirty'), true);
-    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
   });
 });
 
