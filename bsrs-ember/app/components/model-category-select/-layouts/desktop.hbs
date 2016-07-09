@@ -1,0 +1,16 @@
+<div class="input-group">
+  <span class="input-group-addon t-model-category-label">{{label}}</span>
+  {{#power-select
+    selected=categories_selected
+    options=options
+    class="category-select t-model-category-select"
+    tagName="div"
+    onchange=(action "selected")
+    onopen=(action "handleOpen" category.id)
+    searchEnabled=false
+    allowClear=allowClear
+    as |category|
+  }}
+    {{category.name}}
+  {{/power-select}}
+</div>
