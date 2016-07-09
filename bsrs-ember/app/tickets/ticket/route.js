@@ -33,11 +33,14 @@ var TicketSingleRoute = TabRoute.extend(FindById, PriorityMixin, {
     let ticket = repository.fetch(pk);
     const statuses = this.get('statuses');
     const priorities = this.get('priorities');
-    let activities = this.get('activityRepository').find('ticket', 'tickets', pk);
-    return this.findByIdScenario(ticket, pk, {statuses:statuses, priorities:priorities, activities:activities });
+    const otherXhrs = [this.get('activityRepository').find('ticket', 'tickets', pk)];
+    return this.findByIdScenario(ticket, pk, {statuses:statuses, priorities:priorities}, false, otherXhrs);
   },
   setupController: function(controller, hash) {
     controller.setProperties(hash);
+    if (hash.otherXhrs) {
+      controller.set('activities', hash.otherXhrs[0]);
+    }
   },
 });
 
