@@ -1,0 +1,8 @@
+& {
+  padding: 4%;
+  @include borderStyle(0 0 1px);
+  .ticket-action{
+    margin: 2% 0 0 2%;
+    float: right;
+  }
+}

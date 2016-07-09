@@ -36,6 +36,7 @@
     }
   }
 }
+//Overrides max height defined in transitions.scss
 .transition--vertical-enter.transition--vertical-enter-active,
 .transition--vertical-leave {
   max-height: 300px;
