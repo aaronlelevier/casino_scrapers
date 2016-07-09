@@ -127,20 +127,3 @@
   }//article.main
 }
 
-.bs-mobile {
-  article.main.fixed {
-    position: fixed;
-    top: 60px;
-    right: 0;
-    bottom: 55px;
-    left: 0;
-    overflow: auto;
-    // position: absolute;
-    // top: 0;
-    // bottom: $mobileFooterHeight;
-    // left: 0;
-    background: white;
-    // width: 100%;
-    // @include smoothScrolling;
-  }
-}
