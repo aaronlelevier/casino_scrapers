@@ -77,7 +77,7 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
       // enter if block if initial state or reset or query params had previous values that were removed
       if (!finalFilter && !finalIdInFilter) {
         // if initial state, do not reset grid and keep local cache of grid data
-        if (typeof find === 'undefined' && typeof id_in === 'undefined') return;
+        if (typeof find === 'undefined' && typeof id_in === 'undefined') { return; }
         // if find or id_in had previous values, reset grid and clear store in anticipation of new data
         this.get('simpleStore').clear(`${this.get('noun')}-list`);
         this.setProperties({page: 1, find: undefined, id_in: undefined});
