@@ -3,10 +3,10 @@ const { Route, inject } = Ember;
 
 export default Ember.Component.extend({
   i18n: inject.service(),
-  sortedModels: Ember.computed.sort('model', function(a,b) {
+  sortedModels: Ember.computed.sort('model', function(a, b) {
     if (a.get('created') > b.get('created')) {
       return -1;
-    }else if (a.get('created') < b.get('created')) {
+    } else if (a.get('created') < b.get('created')) {
       return 1;
     }
     return 0;
@@ -21,23 +21,23 @@ export default Ember.Component.extend({
     return this.get('model').filterBy('type', 'status').get('length');
   }),
   actions: {
-    filter(filterType, event){
+    filter(filterType, event) {
       Ember.$('.activity-list-tabs li').removeClass('active');
       Ember.$(event.target).addClass('active');
-      Ember.$('.activity-list-item').each(function(i, elem){
-        if(!Ember.$(elem).hasClass('activity-create')){
-          switch(filterType){
+      Ember.$('.activity-list-item').each(function(i, elem) {
+        if (!Ember.$(elem).hasClass('activity-create')) {
+          switch (filterType) {
             case 'comments':
-              if(Ember.$(elem).hasClass('activity-comment')){
+              if (Ember.$(elem).hasClass('activity-comment')) {
                 Ember.$(elem).removeClass('hide');
-              }else{
+              } else {
                 Ember.$(elem).addClass('hide');
               }
               break;
             case 'status_updates':
-              if(Ember.$(elem).hasClass('activity-status')){
+              if (Ember.$(elem).hasClass('activity-status')) {
                 Ember.$(elem).removeClass('hide');
-              }else{
+              } else {
                 Ember.$(elem).addClass('hide');
               }
               break;
@@ -48,9 +48,9 @@ export default Ember.Component.extend({
         }
       });
 
-      if(Ember.$('.activity-list-item').filter(':visible').length === 0){
+      if (Ember.$('.activity-list-item').filter(':visible').length === 0) {
         Ember.$('.activity-spacer').hide();
-        switch(filterType){
+        switch (filterType) {
           case 'comments':
             Ember.$('.activity-empty-comments').removeClass('hide');
             Ember.$('.activity-empty-status_updates').addClass('hide');
@@ -62,7 +62,7 @@ export default Ember.Component.extend({
           default:
             break;
         }
-      }else{
+      } else {
         Ember.$('.activity-empty-comments').addClass('hide');
         Ember.$('.activity-empty-status_updates').addClass('hide');
         Ember.$('.activity-spacer').show();

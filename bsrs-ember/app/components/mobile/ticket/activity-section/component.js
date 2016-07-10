@@ -1,7 +1,11 @@
 import Ember from 'ember';
+import inject from 'bsrs-ember/utilities/inject';
+import injectUUID from 'bsrs-ember/utilities/uuid';
 
 export default Ember.Component.extend({
   i18n: Ember.inject.service(),
+  uuid: injectUUID('uuid'),
+  repository: inject('attachment'),
   classNames: ['t-mobile-ticket-activity-section'],
   actions: {
     upload(e) {
