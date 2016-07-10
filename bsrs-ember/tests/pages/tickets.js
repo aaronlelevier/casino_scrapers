@@ -109,6 +109,7 @@ var TicketPage = PageObject.create({
   request: value('.t-ticket-request'),
   requestFillIn: fillable('.t-ticket-request'),
   requesterFillIn: fillable('.t-ticket-requester'),
+  comment: value('.t-ticket-comment'),
   commentFillIn: fillable('.t-ticket-comment'),
 
   //validation

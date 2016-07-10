@@ -10,10 +10,10 @@ var ActivityRepo = Ember.Object.extend({
   find(model, plural, pk) {
     return PromiseMixin.xhr(`${PREFIX}/${plural}/${pk}/activity/`, 'GET').then((response) => {
       this.get('ActivityDeserializer').deserialize(response);
-        let filter = function(activity) {
-            return activity.get(`${model}`) === pk;
-        };
-        return this.get('simpleStore').find('activity', filter);
+      let filter = function(activity) {
+        return activity.get(`${model}`) === pk;
+      };
+      return this.get('simpleStore').find('activity', filter);
     });
   },
 });

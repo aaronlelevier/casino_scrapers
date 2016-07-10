@@ -2,8 +2,9 @@ import Ember from 'ember';
 import module from 'bsrs-ember/tests/helpers/module';
 import { test } from 'qunit';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
-import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
-import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
+import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
+import { waitFor } from 'bsrs-ember/tests/helpers/utilities';
+import { ticket_payload_with_comment } from 'bsrs-ember/tests/helpers/payloads/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
@@ -112,6 +113,21 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   //     assert.throws(Ember.$('.ember-modal-dialog'));
   //   });
   // });
+});
+test('can add comment and click update to show new activity', async assert => {
+  await page.visitDetail();
+  assert.equal(currentURL(), DETAIL_URL);
+  await ticketPage.commentFillIn(TD.commentOne);
+  assert.equal(ticketPage.comment, TD.commentOne);
+  let response = TF.detail(TD.idOne);
+  xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_comment), {}, 200, response);
+  ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.comment_only());
+  await ticketPage.update();
+  assert.equal(currentURL(), DETAIL_URL);
+  const ticket = store.find('ticket', TD.idOne);
+  assert.equal(ticket.get('comment'), '');
+  assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+  assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} commented 4 months ago ${TD.commentOne}`);
 });
 
 /* jshint ignore:end */

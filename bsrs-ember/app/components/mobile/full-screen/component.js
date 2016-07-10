@@ -1,7 +1,9 @@
 import Ember from 'ember';
 import FullScreenMixin from 'bsrs-ember/mixins/components/full-screen/edit';
+import inject from 'bsrs-ember/utilities/inject';
 
 var FullScreen = Ember.Component.extend(FullScreenMixin, {
+  activityRepository: inject('activity'),
   init() {
     this._super();
     this.componentStringFunc();
@@ -13,8 +15,12 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
     this.set('componentString', componentString);
   },
   actions: {
-    save() {
-      this._super();
+    save(update) {
+      this._super(update);
+      if (update) {
+        const pk = this.get('model').get('id');
+        return this.get('activityRepository').find('ticket', 'tickets', pk);
+      }
     },
     cancel() {
       this._super();

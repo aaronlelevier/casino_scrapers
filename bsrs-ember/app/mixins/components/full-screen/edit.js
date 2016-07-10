@@ -2,7 +2,8 @@ import Ember from 'ember';
 
 export default Ember.Mixin.create({
   actions: {
-    save() {
+    save(update=false) {
+      //TODO: refactor into util funcs
       const model = this.get('model');
       const pk = this.get('model').get('id');
       // const persisted = model.get('new');
@@ -10,7 +11,11 @@ export default Ember.Mixin.create({
       // const action = persisted === true ? 'insert' : 'update';
       repository['update'](model).then(() => {
         const redirectRoute = this.get('redirectRoute');
-        this.sendAction('close', model, redirectRoute);
+        if (update) {
+          return;
+        } else {
+          this.sendAction('close', model, redirectRoute);
+        }
       }, (xhr) => {
         if(xhr.status === 400) {
           var response = JSON.parse(xhr.responseText), errors = [];
