@@ -9,11 +9,12 @@ export default Ember.Mixin.create({
       // const persisted = model.get('new');
       const repository = this.get('repository');
       // const action = persisted === true ? 'insert' : 'update';
-      repository['update'](model).then(() => {
-        const redirectRoute = this.get('redirectRoute');
+      return repository['update'](model).then(() => {
         if (update) {
-          return;
+          const pk = this.get('model').get('id');
+          return this.get('activityRepository').find('ticket', 'tickets', pk);
         } else {
+          const redirectRoute = this.get('redirectRoute');
           this.sendAction('close', model, redirectRoute);
         }
       }, (xhr) => {

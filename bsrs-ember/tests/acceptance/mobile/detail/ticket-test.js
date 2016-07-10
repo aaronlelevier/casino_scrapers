@@ -114,6 +114,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   //   });
   // });
 });
+
 test('can add comment and click update to show new activity', async assert => {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);

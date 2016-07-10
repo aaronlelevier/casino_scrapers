@@ -16,11 +16,13 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
   },
   actions: {
     save(update) {
-      this._super(update);
-      if (update) {
-        const pk = this.get('model').get('id');
-        return this.get('activityRepository').find('ticket', 'tickets', pk);
+      const promise = this._super(update);
+      if (promise.then) {
+        return promise.then((activities) => {
+          return activities;
+        })
       }
+
     },
     cancel() {
       this._super();

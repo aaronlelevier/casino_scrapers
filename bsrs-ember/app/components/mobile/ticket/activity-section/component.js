@@ -2,7 +2,6 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   i18n: Ember.inject.service(),
-  simpleStore: Ember.inject.service(),
   classNames: ['t-mobile-ticket-activity-section'],
   actions: {
     upload(e) {
@@ -25,13 +24,8 @@ export default Ember.Component.extend({
       }
     },
     save() {
-      this.get('save')(true).then(() => {
-        const pk = this.get('model').get('id');
-        let filter = function(activity) {
-          return activity.get('ticket') === pk;
-        };
-        const store_activities = this.get('simpleStore').find('activity', filter);
-        this.set('activities', store_activities);
+      this.get('save')(true).then((activities) => {
+        this.set('activities', activities);
       });
     },
   }
