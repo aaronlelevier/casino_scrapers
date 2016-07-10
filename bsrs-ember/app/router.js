@@ -77,7 +77,9 @@ Router.map(function() {
   this.route('invoices');
   this.route('reports');
   this.route('phone-number');
-  this.route('dashboard');
+  this.route('dashboard', function() {
+    this.route('draft');
+  });
   this.route('redirect', {path: '/*wildcard'});
   this.route('error');
 });

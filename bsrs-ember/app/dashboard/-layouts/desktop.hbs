@@ -12,6 +12,7 @@
     </div>
   </section>
 </article>
+{{outlet}}
 
 {{#unless FlexiLayout.isMobile}}
 <aside class="side-panel">
@@ -19,6 +20,23 @@
     <h1></h1>
   </header>
   <menu class="t-side-menu">
+    <div class="nav-list">
+      {{#link-to "dashboard" class="nav-list__item nav-list__item--home t-nav-list-home"}}
+        {{t "menu.home"}}
+      {{/link-to}}
+      {{#link-to "dashboard.draft" class="nav-list__item t-nav-list-draft"}}
+        <span class="badge">14</span>
+        {{t "ticket.status.draft"}}
+      {{/link-to}}
+      <a href="#" class="nav-list__item t-nav-list-new">
+        <span class="badge">2</span>
+        {{t "ticket.status.new"}}
+      </a>
+      <a href="#" class="nav-list__item t-nav-list-in_progress">
+        <span class="badge">1</span>
+        {{t "ticket.status.in_progress"}}
+      </a>
+    </div>
   </menu>
 </aside>
 {{/unless}}

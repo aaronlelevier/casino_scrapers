@@ -20,7 +20,7 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
       if (promise.then) {
         return promise.then((activities) => {
           return activities;
-        })
+        });
       }
 
     },

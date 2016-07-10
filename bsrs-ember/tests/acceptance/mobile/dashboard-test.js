@@ -12,7 +12,7 @@ var application, store, dashboard_xhr;
 const PREFIX = config.APP.NAMESPACE;
 const DASHBOARD_URL = BASEURLS.dashboard_url;
 
-module('Acceptance | amk mobile dashboard test', {
+module('Acceptance | mobile dashboard test', {
   beforeEach() {
     /* SETUP */
     application = startApp();

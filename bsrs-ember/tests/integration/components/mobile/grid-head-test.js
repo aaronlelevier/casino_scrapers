@@ -88,7 +88,7 @@ test('if column has filterComponent it is rendered', function(assert) {
 
 
 
-// test('amk clicking filter on a column shows a custom filter - priority', function(assert) {
+// test('clicking filter on a column shows a custom filter - priority', function(assert) {
 //   this.column = {};
 //   this.gridFilterParams = {};
 //   this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridFilterParams=gridFilterParams}}`);

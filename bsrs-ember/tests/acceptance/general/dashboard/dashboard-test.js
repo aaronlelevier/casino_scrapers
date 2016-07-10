@@ -23,10 +23,14 @@ module('Acceptance | dashboard', {
   }
 });
 
-test('welcome h1 header and dashboard_text from settings', assert => {
+test('amk welcome h1 header and dashboard_text from settings', assert => {
   visit(DASHBOARD_URL);
   andThen(() => {
     assert.equal(find('.t-dashboard-text').text().trim(), 'Welcome');
     assert.equal(find('.t-dashboard-text h1').prop('tagName'), 'H1');
+    assert.equal(find('.t-nav-list-home').length, 1);
+    assert.equal(find('.t-nav-list-draft').length, 1);
+    assert.equal(find('.t-nav-list-new').length, 1);
+    assert.equal(find('.t-nav-list-in_progress').length, 1);
   });
 });
