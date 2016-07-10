@@ -28,14 +28,14 @@
         <span class="badge">14</span>
         {{t "ticket.status.draft"}}
       {{/link-to}}
-      <a href="#" class="nav-list__item t-nav-list-new">
+      {{#link-to "dashboard.tickets-new" class="nav-list__item t-nav-list-new"}}
         <span class="badge">2</span>
         {{t "ticket.status.new"}}
-      </a>
-      <a href="#" class="nav-list__item t-nav-list-in_progress">
+      {{/link-to}}
+      {{#link-to "dashboard.tickets-in-progress" class="nav-list__item t-nav-list-in_progress"}}
         <span class="badge">1</span>
         {{t "ticket.status.in_progress"}}
-      </a>
+      {{/link-to}}
     </div>
   </menu>
 </aside>

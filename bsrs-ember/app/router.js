@@ -79,6 +79,8 @@ Router.map(function() {
   this.route('phone-number');
   this.route('dashboard', function() {
     this.route('draft');
+    this.route('tickets-new');
+    this.route('tickets-in-progress');
   });
   this.route('redirect', {path: '/*wildcard'});
   this.route('error');
