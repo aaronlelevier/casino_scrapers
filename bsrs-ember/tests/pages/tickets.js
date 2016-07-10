@@ -120,6 +120,8 @@ var TicketPage = PageObject.create({
 
   //DT
   continueDT: clickable('.t-dt-continue'),
+
+  activityTwoPerson: text('.t-person-activity:eq(0)'),
 });
 
 export default TicketPage;
