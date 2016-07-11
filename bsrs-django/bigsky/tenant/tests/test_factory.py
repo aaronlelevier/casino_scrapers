@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.test import TestCase
 
 from dtd.models import TreeData, DTD_START_ID
@@ -18,3 +19,6 @@ class TenantTests(TestCase):
         # get-or-create, so 2nd call returns original
         ret_two = factory.get_or_create_tenant()
         self.assertEqual(ret, ret_two)
+        # fields
+        self.assertEqual(ret.company_name, settings.DEFAULT_TENANT_COMPANY_NAME)
+        self.assertEqual(ret.company_code, settings.DEFAULT_TENANT_COMPANY_CODE)
