@@ -125,7 +125,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   });
   click('.t-previous a');
   andThen(() => {
-    assert.equal(currentURL(),LIST_URL);
+    assert.equal(currentURL(), LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
@@ -143,7 +143,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   });
   click('.t-first a');
   andThen(() => {
-    assert.equal(currentURL(),LIST_URL);
+    assert.equal(currentURL(), LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
@@ -172,16 +172,17 @@ test('clicking header will sort by given property and reset page to 1 (also requ
 });
 
 test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
-  var search_two = PREFIX + BASE_URL + '/?page=1&search=4';
-  xhr(search_two ,"GET",null,{},200, PF.searched('4'));
   visit(LIST_URL);
   andThen(() => {
     assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descGridOne);
   });
-  fillIn('.t-grid-search-input', '4');
+  const searchText = '4';
+  var search_two = PREFIX + BASE_URL + `/?page=1&search=${searchText}`;
+  xhr(search_two ,"GET",null,{},200, PF.searched(searchText, 'description', 1));
+  fillIn('.t-grid-search-input', searchText);
   triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
   andThen(() => {
-    assert.equal(currentURL(),LIST_URL + '?search=4');
+    assert.equal(currentURL(),LIST_URL + `?search=${searchText}`);
     assert.equal(find('.t-grid-data').length, 2);
     assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descOne+"4");
     assert.equal(find('.t-grid-data:eq(1) .t-profile-description').text().trim(), PD.descOne+"14");
@@ -210,11 +211,11 @@ test('multiple sort options appear in the query string as expected', function(as
     assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descGridOne);
   });
   var sort = PREFIX + BASE_URL + '/?page=1&ordering=-description';
-  xhr(sort ,"GET",null,{},200, PF.sorted_page_one('description'));
+  xhr(sort ,"GET",null,{},200, PF.list_reverse());
   click('.t-sort-description-dir');
   andThen(() => {
     assert.equal(currentURL(), LIST_URL + '?sort=-description');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descGridOne);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descGridOneReverse);
   });
 });

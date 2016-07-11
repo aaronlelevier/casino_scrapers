@@ -12,6 +12,7 @@ var BSRS_PROFILE_DEFAULTS_OBJECT = (function() {
       descTwo: 'bar',
       descGridOne: 'foo0',
       descGridTwo: 'foo1',
+      descGridOneReverse: 'foo10',
       assigneeOne: this.person.idOne,
       assigneeTwo: this.person.idTwo,
       assigneeSelectOne: '249543cf-8fea-426a-8bc3-09778cd78001',

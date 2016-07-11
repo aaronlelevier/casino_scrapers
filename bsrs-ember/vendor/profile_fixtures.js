@@ -25,19 +25,30 @@ var BSRS_PROFILE_FACTORY = (function() {
   factory.prototype.list_two = function() {
     return this._list(10);
   };
+  factory.prototype.list_reverse = function() {
+    const page_size = 10;
+    let results = [];
+    for(var i = page_size; i > 0; i--) {
+      results.push(this._generate_item(i));
+    }
+    return {count: page_size-1, next: null, previous: null, results: results};
+  };
   factory.prototype._list = function(page_size) {
     let results = [];
     for(var i = 0; i < page_size; i++) {
-      results.push({
-        id: `${this.profile.idOne.slice(0,-1)}${i}`,
-        description: `${this.profile.descOne}${i}`,
-        assignee: {
-          id: `${this.profile.assigneeOne.slice(0,-1)}${i}`,
-          username: `${this.profile.username}${i}`,
-        },
-      });
+      results.push(this._generate_item(i));
     }
     return {count: page_size-1, next: null, previous: null, results: results};
+  };
+  factory.prototype._generate_item = function(i) {
+    return {
+      id: `${this.profile.idOne.slice(0,-1)}${i}`,
+      description: `${this.profile.descOne}${i}`,
+      assignee: {
+        id: `${this.profile.assigneeOne.slice(0,-1)}${i}`,
+        username: `${this.profile.username}${i}`,
+      },
+    };
   };
   return factory;
 })();
