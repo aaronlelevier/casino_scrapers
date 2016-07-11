@@ -48,7 +48,7 @@ var extract_person_location = function(model, store, location_level_fk, location
       if(person_locations.length === 0) {
         const pk = Ember.uuid();
         server_locations_sum.push(pk);
-        // Use deserializer to extract llevel. change_role depends on having llevel setup 
+        // Use deserializer to extract llevel. change_role depends on having llevel setup
         location_deserializer.deserialize(location_json, location_json.id);
         run(() => {
           store.push('person-location', {id: pk, person_pk: model.id, location_pk: location_json.id});
@@ -85,12 +85,12 @@ var PersonDeserializer = Ember.Object.extend({
   deserialize(response, options) {
     let location_deserializer = this.get('LocationDeserializer');
     if (typeof options === 'undefined') {
-      this.deserialize_list(response);
+      this._deserializeList(response);
     } else {
-      return this.deserialize_single(response, options, location_deserializer);
+      return this._deserializeSingle(response, options, location_deserializer);
     }
   },
-  deserialize_single(model, id, location_deserializer) {
+  _deserializeSingle(model, id, location_deserializer) {
     let store = this.get('simpleStore');
     const existing = store.find('person', id);
     let location_level_fk;
@@ -112,7 +112,7 @@ var PersonDeserializer = Ember.Object.extend({
     }
     return person;
   },
-  deserialize_list(response) {
+  _deserializeList(response) {
     const store = this.get('simpleStore');
     response.results.forEach((model) => {
       [model.role_fk] = extract_role(model, store);
