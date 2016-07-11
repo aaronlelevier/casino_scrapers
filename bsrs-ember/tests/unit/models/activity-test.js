@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import {test, module} from 'bsrs-ember/tests/helpers/qunit';
+import { test, module } from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import PD from 'bsrs-ember/vendor/defaults/person';
