@@ -14,12 +14,12 @@ var extract_tree = function(model, store) {
 var CategoryDeserializer = Ember.Object.extend({
   deserialize(response, options) {
     if (typeof options === 'undefined') {
-      this.deserialize_list(response);
+      this._deserializeList(response);
     } else {
-      return this.deserialize_single(response, options);
+      return this._deserializeSingle(response, options);
     }
   },
-  deserialize_single(response, id) {
+  _deserializeSingle(response, id) {
     const store = this.get('simpleStore');
     const existing = store.find('category', id);
     let category = existing;
@@ -41,7 +41,7 @@ var CategoryDeserializer = Ember.Object.extend({
     category.save();
     return category;
   },
-  deserialize_list(response) {
+  _deserializeList(response) {
     const store = this.get('simpleStore');
     response.results.forEach((model) => {
       const category = store.push('category-list', model);

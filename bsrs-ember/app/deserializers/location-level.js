@@ -3,12 +3,12 @@ import Ember from 'ember';
 var LocationLevelDeserializer = Ember.Object.extend({
   deserialize(response, options) {
     if (typeof options === 'undefined') {
-      this.deserialize_list(response);
+      this._deserializeList(response);
     } else {
-      return this.deserialize_single(response, options);
+      return this._deserializeSingle(response, options);
     }
   },
-  deserialize_single(response, id) {
+  _deserializeSingle(response, id) {
     const store = this.get('simpleStore');
     const existing = store.find('location-level', id);
     let location_level = existing;
@@ -24,7 +24,7 @@ var LocationLevelDeserializer = Ember.Object.extend({
     }
     return location_level;
   },
-  deserialize_list(response) {
+  _deserializeList(response) {
     const store = this.get('simpleStore');
     response.results.forEach((model) => {
       const location_level = store.push('location-level-list', model);

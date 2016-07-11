@@ -19,7 +19,7 @@ module('unit: translation deserializer test', {
     }
 });
 
-test('deserialize_list - translations only created from list of strings', (assert) => {
+test('_deserializeList - translations only created from list of strings', (assert) => {
     let json = ['home.welcome1', 'home.welcome2'];
     let response = {'count':2,'next':null,'previous':null,'results': json};
     subject.deserialize(response);
@@ -28,7 +28,7 @@ test('deserialize_list - translations only created from list of strings', (asser
     assert.equal(store.find('locales').get('length'), 0);
 });
 
-test('deserialize_list - if the object already exists in the store, do not replace it.', (assert) => {
+test('_deserializeList - if the object already exists in the store, do not replace it.', (assert) => {
     // NOTE: Confirm with Toran that this test is needed?
     // Translation doesn't have an properties to dirty, and the related 'locales' are 
     // computed, so re-pushing into the store doesn't affect the related 'locales' 
@@ -51,7 +51,7 @@ test('deserialize_list - if the object already exists in the store, do not repla
     assert.ok(locale.get('isDirty'));
 });
 
-test('deserialize_single - translation', (assert) => {
+test('_deserializeSingle - translation', (assert) => {
     let response = TRANSLATION_FIXTURES.get();
     subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
     let translation = store.find('translation', TRANSLATION_DEFAULTS.keyOneGrid);
@@ -60,7 +60,7 @@ test('deserialize_single - translation', (assert) => {
     assert.equal(translation.get('key'), TRANSLATION_DEFAULTS.keyOneGrid);
 });
 
-test('deserialize_single - translation.locales attr is an array of "locale-translation" objects', (assert) => {
+test('_deserializeSingle - translation.locales attr is an array of "locale-translation" objects', (assert) => {
     var locale_trans;
     let response = TRANSLATION_FIXTURES.get();
     // extra "locale-translation" in the "store" that should not be associated with the 
@@ -79,7 +79,7 @@ test('deserialize_single - translation.locales attr is an array of "locale-trans
     assert.equal(translation.get('locales').objectAt(0).get('id'), LOCALE_TRANSLATION_DEFAULTS.idOne);
 });
 
-test('deserialize_single - locale-translation - including locale_name', (assert) => {
+test('_deserializeSingle - locale-translation - including locale_name', (assert) => {
     store.clear();
     // bootstrapped Locale
     let responseLocale = LOCALE_FIXTURES.get();
@@ -98,7 +98,7 @@ test('deserialize_single - locale-translation - including locale_name', (assert)
     assert.equal(locale.get('translation'), LOCALE_TRANSLATION_DEFAULTS.translationOne);
 });
 
-test('deserialize_single - multiple deserializes from hitting detail endpoint would not affect state.', (assert) => {
+test('_deserializeSingle - multiple deserializes from hitting detail endpoint would not affect state.', (assert) => {
     store.clear();
     let response = TRANSLATION_FIXTURES.get();
 

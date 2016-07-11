@@ -125,7 +125,7 @@ test('person setup correct status fk with bootstrapped data (list)', (assert) =>
 });
 
 /* PH and ADDRESSES and EMAILS*/
-test('person will setup the correct relationship with phone numbers when deserialize_single is invoked with relationship already in place', (assert) => {
+test('person will setup the correct relationship with phone numbers when _deserializeSingle is invoked with relationship already in place', (assert) => {
   let location_level, phonenumber;
   let response = PF.generate(PD.id);
   response.phone_numbers = PNF.get();
@@ -144,7 +144,7 @@ test('person will setup the correct relationship with phone numbers when deseria
   assert.ok(!person.get('roleIsDirty'));
 });
 
-test('person will setup the correct relationship with phone emails when deserialize_single is invoked with no relationship in place', (assert) => {
+test('person will setup the correct relationship with phone emails when _deserializeSingle is invoked with no relationship in place', (assert) => {
   let location_level, email;
   let response = PF.generate(PD.id);
   response.emails = EF.get();
@@ -162,7 +162,7 @@ test('person will setup the correct relationship with phone emails when deserial
   assert.equal(email.get('model_fk'), PD.id);
 });
 
-test('person will setup the correct relationship with phone emails when deserialize_single is invoked with person setup with phone email relationship', (assert) => {
+test('person will setup the correct relationship with phone emails when _deserializeSingle is invoked with person setup with phone email relationship', (assert) => {
   let location_level, email, response = PF.generate(PD.id);
   response.emails = EF.get();
   location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
@@ -179,7 +179,7 @@ test('person will setup the correct relationship with phone emails when deserial
   assert.equal(email.get('model_fk'), PD.id);
 });
 
-test('person will setup the correct relationship with phone numbers when deserialize_single is invoked with no relationship in place', (assert) => {
+test('person will setup the correct relationship with phone numbers when _deserializeSingle is invoked with no relationship in place', (assert) => {
   let location_level, phonenumber;
   let response = PF.generate(PD.id);
   response.phone_numbers = PNF.get();
@@ -197,7 +197,7 @@ test('person will setup the correct relationship with phone numbers when deseria
   assert.equal(phonenumber.get('model_fk'), PD.id);
 });
 
-test('person will setup the correct relationship with phone numbers when deserialize_single is invoked with person setup with phone number relationship', (assert) => {
+test('person will setup the correct relationship with phone numbers when _deserializeSingle is invoked with person setup with phone number relationship', (assert) => {
   let location_level, phonenumber, response = PF.generate(PD.id);
   response.phone_numbers = PNF.get();
   location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
@@ -215,7 +215,7 @@ test('person will setup the correct relationship with phone numbers when deseria
 });
 
 /* ROLE */
-test('role will keep appending when deserialize_list is invoked with many people who play the same role', (assert) => {
+test('role will keep appending when _deserializeList is invoked with many people who play the same role', (assert) => {
   let location_level;
   let json = PF.generate_list(PD.unusedId);
   let response = {'count':1,'next':null,'previous':null,'results': [json]};
@@ -230,7 +230,7 @@ test('role will keep appending when deserialize_list is invoked with many people
   assert.ok(original.get('isNotDirty'));
 });
 
-test('role will setup the correct relationship with location_level when deserialize_single is invoked', (assert) => {
+test('role will setup the correct relationship with location_level when _deserializeSingle is invoked', (assert) => {
   let location_level, response = PF.generate(PD.id);
   location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
   role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});

@@ -17,12 +17,12 @@ var extract_locale_translation = function(model, store) {
 var TranslationDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         if (typeof options === 'undefined') {
-            this.deserialize_list(response);
+            this._deserializeList(response);
         } else {
-            this.deserialize_single(response, options);
+            this._deserializeSingle(response, options);
         }
     },
-    deserialize_single(model, id) {
+    _deserializeSingle(model, id) {
         let store = this.get('simpleStore');
         let trans_check = store.find('translation', id);
         if (!trans_check.get('id') || trans_check.get('isNotDirtyOrRelatedNotDirty')) {
@@ -32,7 +32,7 @@ var TranslationDeserializer = Ember.Object.extend({
             trans.save();
         }
     },
-    deserialize_list(response) {
+    _deserializeList(response) {
         const store = this.get('simpleStore');
         response.results.forEach((json) => {
             store.push('translation-list', {id: json});

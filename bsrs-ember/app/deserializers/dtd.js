@@ -22,12 +22,12 @@ var extract_destination = function(destination_json, store, link_model) {
 var DTDDeserializer = Ember.Object.extend({
   deserialize(response, options) {
     if (typeof options === 'undefined') {
-      return this.deserialize_list(response);
+      return this._deserializeList(response);
     } else {
-      return this.deserialize_single(response, options);
+      return this._deserializeSingle(response, options);
     }
   },
-  deserialize_single(response, id) {
+  _deserializeSingle(response, id) {
     const store = this.get('simpleStore');
     let existing = store.find('dtd', id);
     let return_dtd = existing;
@@ -121,7 +121,7 @@ var DTDDeserializer = Ember.Object.extend({
     }
     return return_dtd;
   },
-  deserialize_list(response) {
+  _deserializeList(response) {
     const store = this.get('simpleStore');
     const return_array = [];
     registerCB(response, function(model) {

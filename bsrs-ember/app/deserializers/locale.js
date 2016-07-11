@@ -4,17 +4,17 @@ import Ember from 'ember';
 var LocaleDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         if (typeof options === 'undefined') {
-            this.deserialize_list(response);
+            this._deserializeList(response);
         } else {
-            this.deserialize_single(response, options);
+            this._deserializeSingle(response, options);
         }
     },
-    deserialize_single(model, id) {
+    _deserializeSingle(model, id) {
         let store = this.get('simpleStore');
         let obj = store.push('locale', model);
         obj.save();
     },
-    deserialize_list(response) {
+    _deserializeList(response) {
         let store = this.get('simpleStore');
         response.results.forEach((json) => {
             let obj = store.push('locale', {id: json});

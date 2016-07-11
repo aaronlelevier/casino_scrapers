@@ -155,7 +155,7 @@ test('can push in location with location level as an id', (assert) => {
 });
 
 /* PH and ADDRESSES and Emails*/
-test('location will setup the correct relationship with emails when deserialize_single is invoked with no relationship in place', (assert) => {
+test('location will setup the correct relationship with emails when _deserializeSingle is invoked with no relationship in place', (assert) => {
     let location, email;
     location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
     email = store.push('email', {id: ED.idOne, email: ED.emailOne});
@@ -171,7 +171,7 @@ test('location will setup the correct relationship with emails when deserialize_
     assert.equal(email.get('model_fk'), LD.idOne);
 });
 
-test('location will setup the correct relationship with emails when deserialize_single is invoked with location setup with phone number relationship', (assert) => {
+test('location will setup the correct relationship with emails when _deserializeSingle is invoked with location setup with phone number relationship', (assert) => {
     let location, email;
     location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId, email_fks: [ED.idOne]});
     email = store.push('email', {id: ED.idOne, number: ED.emailOne});
@@ -187,7 +187,7 @@ test('location will setup the correct relationship with emails when deserialize_
     assert.equal(email.get('model_fk'), LD.idOne);
 });
 
-test('location will setup the correct relationship with phone numbers when deserialize_single is invoked with no relationship in place', (assert) => {
+test('location will setup the correct relationship with phone numbers when _deserializeSingle is invoked with no relationship in place', (assert) => {
     let location, phonenumber;
     location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
     phonenumber = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne});
@@ -203,7 +203,7 @@ test('location will setup the correct relationship with phone numbers when deser
     assert.equal(phonenumber.get('model_fk'), LD.idOne);
 });
 
-test('location will setup the correct relationship with phone numbers when deserialize_single is invoked with location setup with phone number relationship', (assert) => {
+test('location will setup the correct relationship with phone numbers when _deserializeSingle is invoked with location setup with phone number relationship', (assert) => {
     let location, phonenumber;
     location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId, phone_number_fks: [PND.idOne]});
     phonenumber = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne});
@@ -219,7 +219,7 @@ test('location will setup the correct relationship with phone numbers when deser
     assert.equal(phonenumber.get('model_fk'), LD.idOne);
 });
 
-test('location will setup the correct relationship with addresses when deserialize_single is invoked with no relationship in place', (assert) => {
+test('location will setup the correct relationship with addresses when _deserializeSingle is invoked with no relationship in place', (assert) => {
     let location, address;
     location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
     address = store.push('address', {id: AND.idOne, address: AND.streetOne});
@@ -235,7 +235,7 @@ test('location will setup the correct relationship with addresses when deseriali
     assert.equal(address.get('model_fk'), LD.idOne);
 });
 
-test('location will setup the correct relationship with address when deserialize_single is invoked with location setup with address relationship', (assert) => {
+test('location will setup the correct relationship with address when _deserializeSingle is invoked with location setup with address relationship', (assert) => {
     let location, address;
     location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId, address_fks: [AND.idOne]});
     address = store.push('address', {id: AND.idOne, address: AND.streetOne});

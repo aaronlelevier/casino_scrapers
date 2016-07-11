@@ -4,12 +4,12 @@ import { belongs_to_extract } from 'bsrs-components/repository/belongs-to';
 var ThirdPartyDeserializer = Ember.Object.extend({
   deserialize(model, options) {
     if (typeof options === 'undefined') {
-      this.deserialize_list(model);
+      this._deserializeList(model);
     } else {
-      return this.deserialize_single(model, options);
+      return this._deserializeSingle(model, options);
     }
   },
-  deserialize_single(model, id) {
+  _deserializeSingle(model, id) {
     const store = this.get('simpleStore');
     let existing = store.find('third-party', id);
     let third_party = existing;
@@ -19,7 +19,7 @@ var ThirdPartyDeserializer = Ember.Object.extend({
     third_party.save();
     return third_party;
   },
-  deserialize_list(response) {
+  _deserializeList(response) {
     const store = this.get('simpleStore');
     response.results.forEach((model) => {
       const status_json = model.status;

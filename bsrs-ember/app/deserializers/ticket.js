@@ -29,12 +29,12 @@ var extract_ticket_location = function(location_json, store, ticket) {
 var TicketDeserializer = Ember.Object.extend({
   deserialize(response, options) {
     if (typeof options === 'undefined') {
-      this.deserialize_list(response);
+      this._deserializeList(response);
     } else {
-      return this.deserialize_single(response, options);
+      return this._deserializeSingle(response, options);
     }
   },
-  deserialize_single(response, id) {
+  _deserializeSingle(response, id) {
     //TODO: oh my should I do with this...need to refactor, provide notes, etc...fix apart of deserialize refactor
     let store = this.get('simpleStore');
     let existing = store.find('ticket', id);
@@ -97,7 +97,7 @@ var TicketDeserializer = Ember.Object.extend({
     });
     return ticket;
   },
-  deserialize_list(response) {
+  _deserializeList(response) {
     const store = this.get('simpleStore');
     response.results.forEach((model) => {
       const category_json = model.categories;

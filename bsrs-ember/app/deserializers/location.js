@@ -102,12 +102,12 @@ var extract_children = function(model, store) {
 var LocationDeserializer = Ember.Object.extend({
   deserialize(response, options) {
     if (typeof options === 'undefined') {
-      this.deserialize_list(response);
+      this._deserializeList(response);
     } else {
-      return this.deserialize_single(response, options);
+      return this._deserializeSingle(response, options);
     }
   },
-  deserialize_single(response, id) {
+  _deserializeSingle(response, id) {
     const store = this.get('simpleStore');
     const existing = store.find('location', id);
     let location = existing;
@@ -124,7 +124,7 @@ var LocationDeserializer = Ember.Object.extend({
     belongs_to_extract(response.status_fk, store, location, 'status', 'location', 'locations');
     return location;
   },
-  deserialize_list(response) {
+  _deserializeList(response) {
     const store = this.get('simpleStore');
     response.results.forEach((model) => {
       model.location_level_fk = extract_location_level(model, store);

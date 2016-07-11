@@ -13,7 +13,7 @@ module('unit: locale deserializer test', {
     }
 });
 
-test('deserialize_single - locale', (assert) => {
+test('_deserializeSingle - locale', (assert) => {
     let data = {
         id: LOCALE_DEFAULTS.idOne,
         native_name: LOCALE_DEFAULTS.native_nameOne,
