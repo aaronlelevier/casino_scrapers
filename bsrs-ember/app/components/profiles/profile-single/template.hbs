@@ -1,0 +1,54 @@
+{{base-component
+  model=model
+  save="save"
+  cancel="cancel"
+  delete="delete"
+}}
+
+<section class="docSection container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <section style="padding-bottom: 0">
+        <div class="row card-title">
+          <h1 class="col-md-12 t-profile-header">
+            <span class="new">
+            {{#if model.new}}
+              {{t 'admin.profile.new'}}
+            {{else}}
+              {{t 'admin.profile.detail'}}
+            {{/if}}
+            </span>
+          </h1>
+        </div>
+      </section>
+    </div>
+    <div class="col-md-12">
+      <section>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.profile.description" for="description"}}
+              {{input type="text" placeholder=(t "admin.profile.description") value=model.description class="form-control t-ap-description" id="description"}}
+              {{#validation-error-field submitted=submitted field="description" className="validation validation-under t-ap-description-validation-error" model=model validation=descriptionValidation}}{{t "validation.invalid"}} {{t "admin.profile.description"}}{{/validation-error-field}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.profile.assignee" for="assignee"}}
+            {{db-fetch-select
+              model=model
+              selectedAttr=model.assignee
+              className="t-profile-assignee-select"
+              displayName="username"
+              change_func="change_assignee"
+              repository=personRepo
+              searchMethod="findPeople"
+              valuePath="assignee"
+            }}
+            {{/form-group}}
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>

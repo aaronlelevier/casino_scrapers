@@ -19,6 +19,7 @@ var RoleRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
   simpleStore: Ember.inject.service(),
   RoleDeserializer: inject('role'),
   deserializer: Ember.computed.alias('RoleDeserializer'),
+  // TODO: may be able to user ``CRUDMixin.create`` method if ``role_type`` is passed as the 2nd arg as an object
   create(role_type, new_pk) {
     const store = this.get('simpleStore');
     const pk = this.get('uuid').v4();

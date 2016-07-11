@@ -11,20 +11,14 @@ from translation.tests import factory
 from utils.create import _generate_chars
 
 
-class LocaleTests(TestCase):
+class LocaleSetupMixin(object):
 
     def setUp(self):
         factory.create_locales()
         self.locale = Locale.objects.first()
 
-    def test_create_default(self):
-        for l in Locale.objects_all.all():
-            l.delete(override=True)
-        self.assertEqual(Locale.objects_all.count(), 0)
 
-        d = Locale.objects.system_default()
-        self.assertIsInstance(d, Locale)
-        self.assertEqual(d.locale, settings.LANGUAGE_CODE)
+class LocaleManagerTests(LocaleSetupMixin, TestCase):
 
     def test_update_default(self):
         for l in Locale.objects_all.all():
@@ -34,6 +28,49 @@ class LocaleTests(TestCase):
         d = mommy.make(Locale, default=True)
         self.assertIsInstance(d, Locale)
         self.assertTrue(d.default)
+        self.assertEqual(Locale.objects_all.count(), 1)
+
+    def test_system_default(self):
+        for l in Locale.objects_all.all():
+            l.delete(override=True)
+        self.assertEqual(Locale.objects_all.count(), 0)
+
+        d = Locale.objects.system_default()
+        self.assertIsInstance(d, Locale)
+        self.assertEqual(d.locale, settings.LANGUAGE_CODE)
+
+    def test_get_or_create_by_i18n_name(self):
+        locale_name = 'foo'
+
+        obj, created = Locale.objects.get_or_create_by_i18n_name(locale_name)
+
+        self.assertTrue(created)
+        self.assertEqual(obj.locale, locale_name)
+        self.assertEqual(obj.name, 'admin.locale.{}'.format(locale_name))
+
+    def test_get_or_create_by_i18n_name__update_name(self):
+        # Locale exists, but name needs to be updated
+        locale_name = 'foo'
+        locale = mommy.make(Locale, name=locale_name, locale=locale_name)
+        self.assertEqual(locale.name, locale_name)
+
+        obj, created = Locale.objects.get_or_create_by_i18n_name(locale_name)
+        self.assertFalse(created)
+        self.assertEqual(obj.locale, locale_name)
+        self.assertEqual(obj.name, 'admin.locale.{}'.format(locale_name))
+
+    def test_get_or_create_by_i18n_name__indepomtent_based_on_name(self):
+        locale_name = 'foo'
+        obj, _ = Locale.objects.get_or_create_by_i18n_name(locale_name)
+        init_count = Locale.objects.count()
+
+        obj, _ = Locale.objects.get_or_create_by_i18n_name(locale_name)
+
+        post_count = Locale.objects.count()
+        self.assertEqual(post_count, init_count)
+
+
+class LocaleTests(LocaleSetupMixin, TestCase):
 
     def test_post_save_update_locale(self):
         self.assertTrue(Locale.objects.all().exists())
@@ -45,6 +82,21 @@ class LocaleTests(TestCase):
 
 
 class TranslationManagerTests(TestCase):
+
+    def test_get_or_create_by_locale(self):
+        locale = mommy.make(Locale)
+        first_count = Translation.objects.count()
+
+        ret, _ = Translation.objects.get_or_create(locale=locale)
+
+        second_count = Translation.objects.count()
+        self.assertEqual(second_count, first_count+1)
+        
+        # 2nd pass, no change in count
+        ret, _ = Translation.objects.get_or_create(locale=locale)
+
+        third_count = Translation.objects.count()
+        self.assertEqual(third_count, second_count)
 
     def test_translation_dir(self):
         self.assertIn('translation', Translation.objects.translation_dir)

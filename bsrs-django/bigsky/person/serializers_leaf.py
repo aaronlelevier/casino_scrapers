@@ -13,3 +13,10 @@ class PersonSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
         fields = ('id', 'fullname',)
+
+
+class PersonIdUsernameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Person
+        fields = ('id', 'username',)

@@ -24,8 +24,12 @@ var GeneralPage = PageObject.create({
   clickHomeModalShow: clickable('.t-home-modal-show'),
   isDirty: hasClass('dirty', 'i', {scope: '.t-tab-close'}),
   clickGeneralSettingsLink: clickable('.t-general-settings'),
+  clickAssignmentProfiles: clickable('.t-assignment-profiles'),
 
   gridItemZeroClick: clickable('.t-grid-data:eq(0)'),
+  gridItemOneClick: clickable('.t-grid-data:eq(1)'),
+  gridTitle: text('.t-grid-title'),
+  gridPageCountText: text('.t-page-count'),
 
   modalBodyValue: () => Ember.$('.t-modal-body').text().trim(),
   modalCancelBtnValue: () => Ember.$('.t-modal-cancel-btn').text().trim(),
