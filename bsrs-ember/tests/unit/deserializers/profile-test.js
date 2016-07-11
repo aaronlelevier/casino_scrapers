@@ -33,6 +33,20 @@ test('deserialize single', assert => {
   assert.equal(profile.get('assignee').get('username'), PD.username);
 });
 
+test('deserialize single should update assignee if server returns different assignee', assert => {
+  profile.change_assignee({id: PD.assigneeTwo});
+  assert.equal(profile.get('assignee').get('id'), PD.assigneeTwo);
+  let json = PF.detail();
+  run(() => {
+    deserializer.deserialize(json, PD.idOne);
+  });
+  assert.equal(profile.get('id'), PD.idOne);
+  assert.equal(profile.get('description'), PD.descOne);
+  assert.equal(profile.get('assignee_fk'), PD.assigneeOne);
+  assert.equal(profile.get('assignee').get('id'), PD.assigneeOne);
+  assert.equal(profile.get('assignee').get('username'), PD.username);
+});
+
 test('deserialize list', assert => {
   let json = PF.list();
   run(() => {

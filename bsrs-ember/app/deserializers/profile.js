@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Object.extend({
   deserialize(response, id) {
-    let store = this.get('simpleStore');
+    const store = this.get('simpleStore');
     if (id) {
       return this._deserializeSingle(store, response);
     }
