@@ -8,7 +8,6 @@ const { Route, inject } = Ember;
 var ApplicationRoute = Ember.Route.extend({
   RoleDeserializer: injectDeserializer('role'),
   PersonDeserializer: injectDeserializer('person'),
-  simpleStore: Ember.inject.service(),
   translationsFetcher: inject.service(),
   i18n: inject.service(),
   moment: inject.service(),

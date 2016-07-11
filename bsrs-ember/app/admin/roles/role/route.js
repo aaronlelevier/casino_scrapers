@@ -5,7 +5,6 @@ import TabRoute from 'bsrs-ember/route/tab/route';
 import FindById from 'bsrs-ember/mixins/route/findById';
 
 var RoleRoute = TabRoute.extend(FindById, {
-  simpleStore: Ember.inject.service(),
   repository: inject('role'),
   redirectRoute: 'admin.roles.index',
   module: 'role',

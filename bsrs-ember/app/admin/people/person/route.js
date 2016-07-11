@@ -7,7 +7,6 @@ import ContactRouteMixin from 'bsrs-ember/mixins/route/contact';
 import FindById from 'bsrs-ember/mixins/route/findById';
 
 var PersonRoute = TabRoute.extend(FindById, ContactRouteMixin, {
-  simpleStore: Ember.inject.service(),
   repository: inject('person'),
   status_repo: inject('status'),
   role_repo: inject('role'),
