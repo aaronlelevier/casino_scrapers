@@ -12,7 +12,7 @@ const { run } = Ember;
 
 var RoleModel = Model.extend(NewMixin, OptConf, {
   init() {
-    belongs_to.bind(this)('location_level', 'role', {rollback:false});
+    belongs_to.bind(this)('location_level', 'role', {bootstrapped:true, rollback:false});
     many_to_many.bind(this)('category', 'role', {plural:true});
     this._super(...arguments);
   },

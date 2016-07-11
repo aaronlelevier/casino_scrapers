@@ -6,7 +6,7 @@ import OptConfMixin from 'bsrs-ember/mixins/optconfigure/profile';
 
 export default Model.extend(OptConfMixin, {
   init() {
-    belongs_to.bind(this)('assignee', 'profile', {bootstrapped: false});
+    belongs_to.bind(this)('assignee', 'profile');
     this._super(...arguments);
   },
   simpleStore: Ember.inject.service(),

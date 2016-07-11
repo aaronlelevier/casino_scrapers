@@ -19,8 +19,8 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/location';
 
 var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin, LocationLevelMixin, AddressMixin, PhoneNumberMixin, EmailMixin, OptConf, {
   init() {
-    belongs_to.bind(this)('status', 'location');
-    belongs_to.bind(this)('location_level', 'location', {change_func: false});
+    belongs_to.bind(this)('status', 'location', {bootstrapped:true});
+    belongs_to.bind(this)('location_level', 'location', {bootstrapped:true, change_func: false});
     many_to_many.bind(this)('children', 'location', {add_func:false});
     many_to_many.bind(this)('parent', 'location', {plural:true, add_func:false});
     this._super(...arguments);

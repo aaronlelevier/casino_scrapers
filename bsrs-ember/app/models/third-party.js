@@ -9,7 +9,7 @@ const { run } = Ember;
 
 var ThirdPartyModel = Model.extend(NewMixin, OptConf, {
   init() {
-    belongs_to.bind(this)('status', 'third-party', {'dirty':true});
+    belongs_to.bind(this)('status', 'third-party', {bootstrapped:true, 'dirty':true});
     this._super(...arguments);
   },
   type: 'third-party',

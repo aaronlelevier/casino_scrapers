@@ -16,7 +16,7 @@ import caps from 'bsrs-components/utils/caps';
  * @return list of defined properties/methods/computed to handle belongs_to relationship with parent
  */
 var belongs_to = function(_ownerName, modelName, noSetup) {
-  let { bootstrapped=true, change_func=true, belongs_to=true, rollback=true, save=true, dirty=true } = noSetup || {};
+  let { bootstrapped=false, change_func=true, belongs_to=true, rollback=true, save=true, dirty=true } = noSetup || {};
   const _capsOwnerName = caps(_ownerName);
   const _camelOwnerName = camel(_ownerName);
 
@@ -94,13 +94,13 @@ var change_belongs_to_fk = function(_ownerName) {
     const current_related = this.get(related);
     if(current_related) {
       const current_related_existing = current_related.get(collection);
-      const updated_current_related_existing = current_related_existing.filter((id) => { 
+      const updated_current_related_existing = current_related_existing.filter((id) => {
         return id !== this.get('id');
-      }); 
+      });
       const current_related_pojo = {id: current_related.get('id')};
-      current_related_pojo[collection] = updated_current_related_existing; 
+      current_related_pojo[collection] = updated_current_related_existing;
       run(() => {
-        store.push(name, current_related_pojo); 
+        store.push(name, current_related_pojo);
       });
     }
     if(new_related_pk) {
@@ -119,7 +119,7 @@ var change_belongs_to_fk = function(_ownerName) {
 /**
  * Creates change_belongs_to_full method
  *   - use if data is not bootstrapped
- *   - need this method to setup model in store 
+ *   - need this method to setup model in store
  *
  * @method change_belongs_to_full
  * @param {object}
@@ -147,22 +147,22 @@ var change_belongs_to_full = function(_ownerName) {
     if(current_related) {
       //filter out calling id from array if null.  Needs to happen before adding back
       const current_related_existing = current_related.get(collection);
-      const updated_current_related_existing = current_related_existing.filter((id) => { 
+      const updated_current_related_existing = current_related_existing.filter((id) => {
         return id !== this.get('id');
-      }); 
+      });
       const current_related_pojo = {id: current_related.get('id')};
-      current_related_pojo[collection] = updated_current_related_existing; 
+      current_related_pojo[collection] = updated_current_related_existing;
       run(() => {
-        store.push(name, current_related_pojo); 
+        store.push(name, current_related_pojo);
       });
     }
     if(new_related){
       //push calling id back in array
       const related_collection = push_related.get(collection) || [];
       const new_related_pojo = {id: push_related.get('id')};
-      new_related_pojo[collection] = related_collection.concat(this.get('id')); 
+      new_related_pojo[collection] = related_collection.concat(this.get('id'));
       run(() => {
-        store.push(name, new_related_pojo); 
+        store.push(name, new_related_pojo);
       });
     }
   };
