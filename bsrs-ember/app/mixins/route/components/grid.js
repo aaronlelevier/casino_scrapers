@@ -43,6 +43,7 @@ var GridViewRoute = Ember.Route.extend({
     let page = parseInt(query.page, 10) || 1;
     let repository = this.get('repository');
     let requested = this.get('pagination').requested(name, page);
+    let special_url = this.get('special_url'); //special routes only
     const search = query.search;
     const count = repository.findCount();
     const routeName = this.get('routeName');
@@ -50,17 +51,18 @@ var GridViewRoute = Ember.Route.extend({
     let model;
     if (this.get('device').get('isMobile')) {
       return new Ember.RSVP.Promise((resolve, reject) => {
-        repository.findWithQueryMobile(query.page, query.search, query.find, query.id_in).then((model) => {
+        repository.findWithQueryMobile(query.page, query.search, query.find, query.id_in, special_url).then((model) => {
           resolve({count, model, requested, filtersets, routeName, search, repository});
         });
       });
     } else {
-      model = repository.findWithQuery(query.page, query.search, query.find, query.id_in, query.page_size, query.sort);
+      model = repository.findWithQuery(query.page, query.search, query.find, query.id_in, query.page_size, query.sort, special_url);
     }
     return {count, model, requested, filtersets, routeName, search};
   },
   setupController: function(controller, hash) {
     controller.setProperties(hash);
+    controller.set('filterModel', this.filterModel);
   }
 });
 

@@ -1029,7 +1029,7 @@ test('clicking update with no changes will not fire off xhr', async assert => {
   assert.equal(currentURL(), DETAIL_URL);
 });
 
-test('clicking update will not transition away from ticket detail and bring in latest activities', async assert => {
+test('clicking update will not transition away from ticket detail and bring in latest activities in correct order', async assert => {
   let iso;
   clearxhr(list_xhr);
   await page.visitDetail();
@@ -1043,11 +1043,13 @@ test('clicking update will not transition away from ticket detail and bring in l
   page.commentFillIn(TD.commentOne);
   let response = TF.detail(TD.idOne);
   ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_comment), {}, 200, response);
-  const json = TA_FIXTURES.get_assignee_person_and_to_from_json();
+  let json = TA_FIXTURES.assignee_only();
   //Prevent setting read only properties
-  delete json.to;
-  delete json.from;
-  const activity_response = {'count':1,'next':null,'previous':null,'results': [json]};
+  const d = new Date();
+  json.results[1].created = d.setDate(d.getDate()-90);
+  json.results[1].person.fullname = 'Im second';
+
+  const activity_response = json;
   ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, activity_response);
   await page.update();
   assert.equal(currentURL(), DETAIL_URL);
@@ -1056,8 +1058,9 @@ test('clicking update will not transition away from ticket detail and bring in l
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(ticket.get('comment'), '');
   assert.equal(ticket.get('created'), iso);
+  assert.equal(page.activityTwoPerson, 'Im second');
   let activity = store.find('activity');
-  assert.equal(activity.get('length'), 1);
+  assert.equal(activity.get('length'), 2);
 });
 
 test('deep linking with an xhr with a 404 status code will show up in the error component (ticket)', async assert => {

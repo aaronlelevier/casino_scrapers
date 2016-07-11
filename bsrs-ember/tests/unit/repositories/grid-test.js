@@ -4,7 +4,6 @@ import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import GridRepository from 'bsrs-ember/mixins/repositories/grid';
-import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 
 var FakeRepo = Ember.Object.extend(GridRepository);
 

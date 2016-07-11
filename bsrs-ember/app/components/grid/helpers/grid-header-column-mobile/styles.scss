@@ -1,9 +1,18 @@
 & {
   background: $white;
-  margin-bottom: 1px;
+  border: $borderStyle;
+  border-width: 1px 0;
+  margin-bottom: -1px;
   font-size: 1.6rem;
   font-weight: bold;
-  padding: 4%;
+  transition: all 0.5s ease;
+  & > hbox{
+    padding: 4%;
+    cursor: pointer;
+  }
+  &.mobile-filter-input{
+    margin: 10px 0;
+  }
   div.filter__icon {
     color: $medGray;
     padding: 0 0 0 2%;
@@ -17,13 +26,21 @@
     }
   }
   div.filter__input-wrap{
-    width: 100%;
-    margin: 4% 0 0;
+    padding: 0;
     font-weight: normal;
+    margin: 0 4% 4%;
     input {
       font-size: 1.6rem;
       padding: 2%;
       height: auto;
     }
   }
+}
+//Overrides max height defined in transitions.scss
+.transition--vertical-enter.transition--vertical-enter-active,
+.transition--vertical-leave {
+  max-height: 300px;
+}
+.transition--vertical-leave.transition--vertical-leave-active {
+  max-height: 0;
 }

@@ -138,6 +138,7 @@ test('activity list can be filtered to show comments or status updates', functio
   this.render(hbs`{{activity-list model=model}}`);
   let $component = this.$(`${ACTIVITY_ITEMS}`);
   assert.equal($component.length, 8);
+  assert.equal($('.t-activity-timestamp:eq(0)').text(), '15 days ago');
   this.$(`${STATUS_TAB}`).click();
   $component = this.$(`${ACTIVITY_ITEMS}`).filter(':visible');
   assert.equal($component.length, 2);

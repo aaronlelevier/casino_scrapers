@@ -1,6 +1,8 @@
 <div class="bs-mobile">
   <div id="mobile-grid-filter-wormhole">
   </div>
+  <div id="mobile-single-wormhole">
+  </div>
   {{input type="checkbox" checked=drawerOpen id="nav-trigger" class="nav-trigger t-nav-trigger"}}
   <label for="nav-trigger">{{fa-icon "reorder"}}</label>
   <vbox class="mobile-tray">
@@ -28,7 +30,7 @@
         </li>
         <li class="nav-section">
           <ul class="nav-section-inner">
-            <li class="nav-item">{{#link-to "dashboard"}}{{t "admin.title"}}{{/link-to}}</li>
+            <li class="nav-item">{{#link-to "admin"}}{{t "admin.title"}}{{/link-to}}</li>
           </ul>
         </li>
       </ul>
@@ -42,9 +44,8 @@
     <header class="mobile-header flex-item--none">
       {{nav-bar}}
     </header>
-    {{tab-list tabs=tabs closeTabMaster=(action "closeTabMaster")}}
     <section class="mobile-main flex-item--auto" id="infinity-loading">
-      {{liquid-outlet}}
+      {{outlet}}
     </section>
     {{mobile-footer}}
   </vbox>

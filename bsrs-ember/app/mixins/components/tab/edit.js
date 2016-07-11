@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 var EditMixin = Ember.Mixin.create({
   actions: {
-    save(update, updateActivities=false) {//update arg determines if transition or not and close out tab
+    save(update) {//update arg determines if transition or not and close out tab
       const model = this.get('model');
       if(update && model.get('isNotDirtyOrRelatedNotDirty')){
         return;
@@ -11,15 +11,15 @@ var EditMixin = Ember.Mixin.create({
       const persisted = model.get('new');
       const repository = this.get('repository');
       const action = persisted === true ? 'insert' : 'update';
-      repository[action](model).then(() => {
+      return repository[action](model).then(() => {
         let tab = this.tab();
         tab.set('saveModel', persisted);
         if(!update){
           //All other routes
           this.sendAction('close', tab);
-        }else if(update && updateActivities){
-          //TICKET sends update in args...will be used for other routes that have this feed as well
-          this.get('activityRepository').find('ticket', 'tickets', pk);
+        } else if (update) {
+          //TICKET sends update in args
+          return this.get('activityRepository').find('ticket', 'tickets', pk);
         }
       }, (xhr) => {
         if(xhr.status === 400) {

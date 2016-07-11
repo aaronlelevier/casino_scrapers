@@ -1,0 +1,28 @@
+& {
+  @include fullScreen;
+  hbox.detail__head {
+    align-items: center;
+    height: $mobileHeaderHeight;
+  }
+  button.detail__head__btn,
+  button.detail__head__btn--back {
+    height: $headerChildHeight;
+    margin: $headerChildMargin;
+    font-size: 2rem;
+    padding: 0;
+    min-width: 40px;
+  }
+  button.detail__head__btn--back {
+  }
+  h1.detail__head__title {
+    flex-grow: 1;
+    font-size: 2.2rem;
+    font-weight: normal;
+    margin: 0;
+    text-align: center;
+  }
+
+  .bs-dropdown-menu {
+    font-size: 1.5rem;
+  }
+}

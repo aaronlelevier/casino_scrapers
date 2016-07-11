@@ -6,7 +6,7 @@ const PREFIX = config.APP.NAMESPACE;
 const CATEGORY_URL = PREFIX + '/admin/categories/';
 
 var TicketCategories = Ember.Component.extend({
-  classNames: ['input-group category'],
+  classNames: ['category'],
   categories_selected: Ember.computed('ticket.top_level_category', 'ticket.categories.[]', function() {
     let index = this.get('index');
     let ticket = this.get('ticket');
