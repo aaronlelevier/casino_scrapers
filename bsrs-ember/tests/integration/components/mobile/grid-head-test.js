@@ -35,11 +35,10 @@ test('it renders saved filtersets', function(assert) {
   this.routeName = 'tickets.index';
   this.filtersets = store.find('filterset');
   this.render(hbs`{{grid/helpers/grid-head filtersets=filtersets routeName=routeName grid_title=grid_title}}`);
-  assert.ok(this.$('.t-mobile-save-filterset > i').hasClass('fa-star-o'));
   assert.ok(this.$('.t-mobile-search > i').hasClass('fa-search'));
   assert.ok(this.$('.t-mobile-filter > i').hasClass('fa-filter'));
   assert.equal(this.$('.t-mobile-grid-title').text().trim(), 'Tickets');
-  assert.equal(this.$('hbox > div:eq(0)').text().trim(), 'ordered by assignee');
+  assert.equal(this.$('hbox div:eq(0) a').text().trim(), 'ordered by assignee');
 });
 
 test('clicking filter on a column head column will display an input with no value', function(assert) {
@@ -58,8 +57,8 @@ test('clicking filter on a column head column will display an input with no valu
 test('classNameBinding works if toggle mobileFilterInput', function(assert) {
   this.column = { field: 'location.name', isFilterable: true };
   this.gridFilterParams = {};
+  this.gridIdInParams = {};
   this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridIdInParams=gridIdInParams gridFilterParams=gridFilterParams}}`);
-  assert.async();
   this.$('hbox').click();
   assert.equal(this.$('.mobile-filter-input').length, 1);
 });

@@ -8,5 +8,4 @@ moduleForComponent('mobile-save-filter', 'Integration | Component | mobile save 
 test('it renders with a span and input', function(assert) {
   this.render(hbs`{{mobile-save-filter}}`);
   assert.ok(this.$('input').hasClass('mobile-save-filterset__input'));
-  assert.ok(this.$('span > i').hasClass('fa-close'));
 });

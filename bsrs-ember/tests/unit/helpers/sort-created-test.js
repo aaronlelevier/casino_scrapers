@@ -18,7 +18,7 @@ module('Unit | Helper | sort created', {
   }
 });
 
-test('scott it sorts created property on an array proxy', function(assert) {
+test('it sorts created property on an array proxy', function(assert) {
   const activities = store.find('activity');
   let result = sortCreated([activities]);
   assert.equal(result[0].get('id'), TAD.idAssigneeOne);
