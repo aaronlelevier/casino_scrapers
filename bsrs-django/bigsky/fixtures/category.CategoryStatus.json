@@ -1,0 +1,62 @@
+[
+{
+  "model": "category.categorystatus",
+  "pk": "010530c4-ce6c-4724-9cfd-37a16e787001",
+  "fields": {
+    "created": "2016-01-21T19:43:51.633Z",
+    "modified": "2016-01-21T19:43:51.633Z",
+    "deleted": null,
+    "name": "category.status.active"
+  }
+},
+{
+  "model": "category.categorystatus",
+  "pk": "010530c4-ce6c-4724-9cfd-37a16e787002",
+  "fields": {
+    "created": "2016-01-21T19:43:51.637Z",
+    "modified": "2016-01-21T19:43:51.637Z",
+    "deleted": null,
+    "name": "category.status.inactive"
+  }
+},
+{
+  "model": "category.categorystatus",
+  "pk": "015530c4-ce6c-4724-9cfd-37a16e787003",
+  "fields": {
+    "created": "2016-07-11T16:17:52.480Z",
+    "modified": "2016-07-11T16:17:52.480Z",
+    "deleted": null,
+    "name": "Type"
+  }
+},
+{
+  "model": "category.categorystatus",
+  "pk": "015530c4-ce6c-4724-9cfd-37a16e787004",
+  "fields": {
+    "created": "2016-07-11T16:17:52.485Z",
+    "modified": "2016-07-11T16:17:52.485Z",
+    "deleted": null,
+    "name": "Trade"
+  }
+},
+{
+  "model": "category.categorystatus",
+  "pk": "015530c4-ce6c-4724-9cfd-37a16e787005",
+  "fields": {
+    "created": "2016-07-11T16:17:52.488Z",
+    "modified": "2016-07-11T16:17:52.488Z",
+    "deleted": null,
+    "name": "Issue"
+  }
+},
+{
+  "model": "category.categorystatus",
+  "pk": "015530c4-ce6c-4724-9cfd-37a16e787006",
+  "fields": {
+    "created": "2016-07-11T16:17:52.491Z",
+    "modified": "2016-07-11T16:17:52.491Z",
+    "deleted": null,
+    "name": "Sub-Issue"
+  }
+}
+]

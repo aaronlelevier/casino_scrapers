@@ -7,15 +7,21 @@ from location.models import SelfReferencingQuerySet, SelfReferencingManager
 from utils.models import BaseModel, BaseNameModel, DefaultNameManager
 
 
-CATEGORY_STATUSES = [
-    'category.status.active',
-    'category.status.inactive'
-]
-
+LABEL_ACTIVE = 'category.status.active'
+LABEL_INACTIVE = 'category.status.inactive'
 LABEL_TYPE = 'Type'
 LABEL_TRADE = 'Trade'
 LABEL_ISSUE = 'Issue'
 LABEL_SUB_ISSUE = 'Sub-Issue'
+
+CATEGORY_STATUSES = [
+    LABEL_ACTIVE,
+    LABEL_INACTIVE,
+    LABEL_TYPE,
+    LABEL_TRADE,
+    LABEL_ISSUE,
+    LABEL_SUB_ISSUE
+]
 
 
 class CategoryStatus(BaseNameModel):
