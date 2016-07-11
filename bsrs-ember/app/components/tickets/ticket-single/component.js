@@ -19,11 +19,15 @@ var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMi
     return last_dt[0]['dtd']['id'];
   }),
   actions: {
-    save(update=false) {
+    /* @method save
+    * @param {bool} update - general boolean to no close tab
+    * @param {bool} updateActivities - specifically to fetch activities for detail view to return and set in respective single component
+    */
+    save(update, updateActivities) {
       this.set('submitted', true);
       if (this.all_components_valid()) {
         if (this.get('model.validations.isValid')) {
-          const promise = this._super(update);
+          const promise = this._super(update, updateActivities);
           if (promise && promise.then) {
             promise.then((activities) => {
               this.set('activities', activities);
