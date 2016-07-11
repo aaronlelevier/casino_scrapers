@@ -22,7 +22,7 @@ var GridViewController = Ember.Controller.extend({
   }),
   actions: {
     save_filterset(name) {
-      const { routeName, repositoryFilterset } = this.getProperties('routeName', 'repositoryFilterset'):
+      const { routeName, repositoryFilterset } = this.getProperties('routeName', 'repositoryFilterset');
       let url = this.get('target.url');
       let params = filterset_regex(url);
       return repositoryFilterset.insert(params, routeName, name);

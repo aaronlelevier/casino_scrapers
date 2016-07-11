@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 var EditMixin = Ember.Mixin.create({
   actions: {
-    save(update) {//update arg determines if transition or not and close out tab
+    save(update, updateActivities=false) {//update arg determines if transition or not and close out tab
       const model = this.get('model');
       if(update && model.get('isNotDirtyOrRelatedNotDirty')){
         return;
@@ -17,7 +17,7 @@ var EditMixin = Ember.Mixin.create({
         if(!update){
           //All other routes
           this.sendAction('close', tab);
-        } else if (update) {
+        } else if (update && updateActivities) {
           //TICKET sends update in args
           return this.get('activityRepository').find('ticket', 'tickets', pk);
         }
