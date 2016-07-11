@@ -10,6 +10,7 @@ from location.models import (LocationLevel, LOCATION_COMPANY, LOCATION_FMU,
     LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE)
 from location.tests.factory import create_location_levels
 from person.models import Role
+from tenant.models import Tenant
 from utils_transform.trole.management.commands._etl_utils import (
     create_role, run_role_migrations, get_location_level, ROLE_TYPE_INTERNAL,
     ROLE_TYPE_THIRD_PARTY, SELECTION_CONTRACTOR, SELECTION_REGION, 
@@ -28,6 +29,7 @@ class RunRoleMigrationsTests(TestCase):
         self.assertEqual(role.role_type, "admin.role.type.internal")
         self.assertEqual(role.location_level.name, LOCATION_REGION)
         self.assertEqual(role.categories.count(), 2)
+        self.assertEqual(Tenant.objects.count(), 1)
 
 
 class CreateRoleTests(TestCase):
@@ -46,6 +48,7 @@ class CreateRoleTests(TestCase):
         self.assertEqual(role.role_type, "admin.role.type.internal")
         self.assertEqual(role.location_level.name, LOCATION_REGION)
         self.assertEqual(role.categories.count(), 2)
+        self.assertIsInstance(role.tenant, Tenant)
         # Group
         groups_ = Group.objects.filter(name=domino_role.name)
         self.assertEqual(groups_.count(), 1)

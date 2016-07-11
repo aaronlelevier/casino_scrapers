@@ -7,6 +7,7 @@ from category.models import Category
 from location.models import (LocationLevel, LOCATION_COMPANY, LOCATION_FMU,
     LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE)
 from person.models import Role
+from tenant.tests.factory import get_or_create_tenant
 from utils_transform.trole.models import DominoRole
 
 ROLE_TYPE_INTERNAL = "admin.role.type.internal"
@@ -34,10 +35,13 @@ def create_role(domino_instance):
         location_level = None
         logger.info("LocationLevel name:{} Not Found.".format(location_level_name))
     
+    tenant = get_or_create_tenant()
+
     role = Role.objects.create(
         name=domino_instance.name,
         role_type=role_type,
-        location_level=location_level
+        location_level=location_level,
+        tenant=tenant
     )
 
     cats = domino_instance.categories.split(";")    

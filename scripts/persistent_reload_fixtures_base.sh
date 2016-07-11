@@ -23,7 +23,6 @@ wait
 wait
 ../venv/bin/python manage.py loaddata fixtures/contact.Country.json
 ../venv/bin/python manage.py loaddata fixtures/contact.State.json
-../venv/bin/python manage.py loaddata fixtures/setting.Setting.json
 ../venv/bin/python manage.py loaddata fixtures/translation.json
 ../venv/bin/python manage.py loaddata fixtures/accounting.Currency.json
 ../venv/bin/python manage.py loaddata fixtures/category.CategoryStatus.json
@@ -32,6 +31,7 @@ wait
 ../venv/bin/python manage.py loaddata fixtures/contact.AddressType.json
 ../venv/bin/python manage.py loaddata fixtures/location.LocationStatus.json
 ../venv/bin/python manage.py loaddata fixtures/location.LocationType.json
+../venv/bin/python manage.py loaddata fixtures/tenant.json
 ../venv/bin/python manage.py loaddata fixtures/third_party.json
 ../venv/bin/python manage.py loaddata fixtures/auth.json
 ../venv/bin/python manage.py loaddata fixtures/ticket.TicketStatus.json
