@@ -12,7 +12,6 @@ vbox.mobile-wrap { //wraps header/section/footer
 
 /* DO NOT NEST since this class declaration is used in nav-bar and in outer wormhole */
 header.mobile-header {
-  overflow: hidden;
   height: $mobileHeaderHeight;
   position: relative;
   z-index: 1;
@@ -22,7 +21,37 @@ header.mobile-header {
 
 /* DO NOT NEST since this class declaration is used in nav-bar and in outer wormhole */
 section.mobile-main {
-  -webkit-overflow-scrolling: touch; // DO NOT REMOVE
-  overflow: scroll;
+  @include smoothScrolling;
   z-index: 0;
+}
+
+footer.mobile-footer {
+  height: $mobileFooterHeight;
+  line-height: $mobileFooterHeight;
+  background: $lightGray;
+  border: $borderStyle;
+  border-width: 1px 0 0;
+  @include nav-box-shadow(10px, $medGray);
+  z-index: 1;
+  hbox.mobile-footer__wrapper {
+    width: 100%;
+    div.mobile-footer__item {
+      text-align: center;
+      flex: auto;
+      a {
+        color: $medGray;
+        font-size: 1.7rem;
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
+        &.active {
+          color: $activeColor;
+        }
+        i {
+          line-height: $mobileFooterHeight;
+          font-size: 2.6rem;
+        }
+      }
+    }
+  }
 }

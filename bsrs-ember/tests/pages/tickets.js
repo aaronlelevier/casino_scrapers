@@ -109,6 +109,7 @@ var TicketPage = PageObject.create({
   request: value('.t-ticket-request'),
   requestFillIn: fillable('.t-ticket-request'),
   requesterFillIn: fillable('.t-ticket-requester'),
+  comment: value('.t-ticket-comment'),
   commentFillIn: fillable('.t-ticket-comment'),
 
   //validation
@@ -119,6 +120,8 @@ var TicketPage = PageObject.create({
 
   //DT
   continueDT: clickable('.t-dt-continue'),
+
+  activityTwoPerson: text('.t-person-activity:eq(0)'),
 });
 
 export default TicketPage;

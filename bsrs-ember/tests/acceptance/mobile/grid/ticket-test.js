@@ -21,8 +21,7 @@ const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
 const DASHBOARD_URL = BASEURLS.dashboard_url;
 const DETAIL_URL = `${BASE_URL}/index/${TD.idOne}`;
-const SORT_LOCATION_DIR = '.t-sort-location-name-dir';
-const LETTER_A = {keyCode: 65};
+const ACTIVITY_ITEMS = '.t-activity-list-item';
 // const SORT_ASSIGNEE_DIR = '.t-sort-assignee-fullname-dir';
 // const FILTER_PRIORITY = '.t-filter-priority-translated-name';
 
@@ -83,15 +82,5 @@ test('visiting mobile ticket grid show correct layout', assert => {
     assert.equal(find('.t-grid-data:eq(0) > div:eq(6)').text().trim().split(' ')[0], 'Today');
     assert.equal(find('.t-grid-data:eq(0) > div:eq(6)').text().trim().split(' ')[1], 'at');
     assert.equal(find('.t-grid-data:eq(0) > div:eq(7)').text().trim(), ticket.get('number'));
-  });
-});
-
-test('can click to detail', assert => {
-  visit(TICKET_URL);
-  xhr(`${endpoint}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
-  xhr(`${endpoint}/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
-  generalPage.clickGridOne();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
   });
 });

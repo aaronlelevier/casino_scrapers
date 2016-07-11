@@ -1,0 +1,15 @@
+{{#form-group title=label noTranslate=true for="categories"}}
+  {{#power-select
+    selected=categories_selected
+    options=options
+    class="category-select t-model-category-select"
+    tagName="div"
+    onchange=(action "selected")
+    onopen=(action "handleOpen" category.id)
+    searchEnabled=false
+    allowClear=allowClear
+    as |category|
+  }}
+    {{category.name}}
+  {{/power-select}}
+{{/form-group}}

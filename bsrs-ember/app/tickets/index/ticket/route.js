@@ -2,10 +2,10 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import FindById from 'bsrs-ember/mixins/route/findById';
 import PriorityMixin from 'bsrs-ember/mixins/route/priority';
+import StatusMixin from 'bsrs-ember/mixins/route/status';
 
-export default Ember.Route.extend(FindById, PriorityMixin, {
+var TicketMobileRoute = Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
   repository: inject('ticket'),
-  statusRepository: inject('ticket-status'),
   activityRepository: inject('activity'),
   model(params, transition) {
     const pk = params.ticket_id;
@@ -13,10 +13,18 @@ export default Ember.Route.extend(FindById, PriorityMixin, {
     let ticket = repository.fetch(pk);
     const statuses = this.get('statuses');
     const priorities = this.get('priorities');
-    let activities = this.get('activityRepository').find('ticket', 'tickets', pk);
-    return this.findByIdScenario(ticket, pk, {statuses:statuses, priorities:priorities, activities:activities });
+    const hashComponents = [
+      {'title': 'Activity', 'component': 'mobile/ticket/activity-section', active: 'active'},
+      {'title': 'Details', 'component': 'mobile/ticket/detail-section', active: ''},
+      {'title': 'Location', 'component': 'mobile/ticket/location-section', active: ''},
+    ];
+    const otherXhrs = [this.get('activityRepository').find('ticket', 'tickets', pk)];
+    return this.findByIdScenario(ticket, pk, {statuses:statuses, priorities:priorities, repository:repository, hashComponents:hashComponents }, false, otherXhrs);
   },
   setupController: function(controller, hash) {
     controller.setProperties(hash);
+    controller.set('activities', hash.otherXhrs[0]);
   },
 });
+
+export default TicketMobileRoute;

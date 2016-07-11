@@ -4,6 +4,7 @@ input, textarea, select, button {
 	-moz-box-shadow: none !important;
 	-ms-box-shadow: none !important;
 	box-shadow: none !important;
+  -webkit-appearance:none;
 }
 input[type="text"]:disabled {
 	border: none;

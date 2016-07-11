@@ -1,9 +1,9 @@
 from django.core.management.base import BaseCommand
 
-from location.models import Location, LocationLevel
+from location.models import Location, LocationLevel, LOCATION_DISTRICT, LOCATION_STORE
 from utils_transform.tlocation.management.commands._etl_utils import (
     create_phone_numbers, create_email, create_address, join_district_to_store)
-from utils_transform.tlocation.models import LocationStore, LOCATION_DISTRICT, LOCATION_STORE
+from utils_transform.tlocation.models import LocationStore
 
 
 class Command(BaseCommand):

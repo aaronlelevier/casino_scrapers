@@ -30,15 +30,11 @@ class CategoryIDNameOnlySerializer(serializers.ModelSerializer):
 class CategoryIDNameSerializer(BaseCreateSerializer):
 
     children = CategoryChildrenSerializer(many=True, read_only=True)
+    parent_id = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), source='parent')
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'level', 'parent', 'children', 'label', 'subcategory_label')
-
-    def to_representation(self, obj):
-        data = super(CategoryIDNameSerializer, self).to_representation(obj)
-        data['parent_id'] = data.pop('parent', [])
-        return data
+        fields = ('id', 'name', 'level', 'parent_id', 'children', 'label', 'subcategory_label')
 
 
 class CategoryRoleSerializer(BaseCreateSerializer):
@@ -81,8 +77,8 @@ class CategoryDetailSerializer(BaseCreateSerializer):
 
 class CategorySerializer(BaseCreateSerializer):
 
-    children = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.all(), many=True, required=False)
+    children = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(),
+                                                  many=True, required=False)
 
     class Meta:
         model = Category

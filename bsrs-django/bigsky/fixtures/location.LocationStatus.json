@@ -1,0 +1,12 @@
+[
+{
+  "model": "location.locationstatus",
+  "pk": "3b693a9f-98b9-47d0-87df-a9c752d097bf",
+  "fields": {
+    "created": "2016-04-01T20:14:52.368Z",
+    "modified": "2016-04-01T20:14:52.368Z",
+    "deleted": null,
+    "name": "admin.location.status.open"
+  }
+}
+]

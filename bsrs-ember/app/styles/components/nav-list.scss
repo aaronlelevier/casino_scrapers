@@ -1,0 +1,33 @@
+.nav-list{
+  .nav-list__item{
+    display: block;
+    color: $dark;
+    text-decoration: none;
+    height:3em;
+    line-height: 3em;
+    padding: 0 1em;
+    @include borderStyle(0 0 1px);
+    &:hover{
+      background: $light;
+    }
+    &.active{
+      background: $activeColor;
+      color: $white;
+      &.nav-list__item--home{
+        color: $dark;
+        background: $lightGray;
+        &:hover{
+          background: $light;
+        }
+      }
+    }
+
+    .badge{
+      float: right;
+      min-width: 2em;
+      line-height: 1.6em;
+      margin: 0.6em 0;
+      clear: both;
+    }
+  }
+}

@@ -35,17 +35,17 @@ test('it renders saved filtersets', function(assert) {
   this.routeName = 'tickets.index';
   this.filtersets = store.find('filterset');
   this.render(hbs`{{grid/helpers/grid-head filtersets=filtersets routeName=routeName grid_title=grid_title}}`);
-  assert.ok(this.$('.t-mobile-save-filterset > i').hasClass('fa-star-o'));
   assert.ok(this.$('.t-mobile-search > i').hasClass('fa-search'));
   assert.ok(this.$('.t-mobile-filter > i').hasClass('fa-filter'));
   assert.equal(this.$('.t-mobile-grid-title').text().trim(), 'Tickets');
-  assert.equal(this.$('hbox > div:eq(0)').text(), 'ordered by assignee');
+  assert.equal(this.$('hbox div:eq(0) a').text().trim(), 'ordered by assignee');
 });
 
 test('clicking filter on a column head column will display an input with no value', function(assert) {
   this.column = { field: 'location.name', isFilterable: true };
   this.gridFilterParams = {};
-  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridFilterParams=gridFilterParams}}`);
+  this.gridIdInParams = {};
+  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridIdInParams=gridIdInParams gridFilterParams=gridFilterParams}}`);
   assert.equal(this.$('input').length, 0);
   this.$('.t-filter-location-name').click();
   assert.equal(this.$('input').length, 1);
@@ -54,10 +54,20 @@ test('clicking filter on a column head column will display an input with no valu
   assert.equal(this.gridFilterParams[this.column.field], 'dowat');
 });
 
+test('classNameBinding works if toggle mobileFilterInput', function(assert) {
+  this.column = { field: 'location.name', isFilterable: true };
+  this.gridFilterParams = {};
+  this.gridIdInParams = {};
+  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridIdInParams=gridIdInParams gridFilterParams=gridFilterParams}}`);
+  this.$('hbox').click();
+  assert.equal(this.$('.mobile-filter-input').length, 1);
+});
+
 test('clicking filter on a column head column will display an input with existing value', function(assert) {
   this.column = { field: 'location.name' };
   this.gridFilterParams = { 'location.name': 'dowat1'};
-  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridFilterParams=gridFilterParams}}`);
+  this.gridIdInParams = {};
+  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridIdInParams=gridIdInParams gridFilterParams=gridFilterParams}}`);
   assert.equal(this.$('input').length, 1);
   assert.equal(this.$('input').val(), 'dowat1');
   this.$('input').val('dowat').trigger('keyup');
@@ -68,7 +78,8 @@ test('clicking filter on a column head column will display an input with existin
 test('if column has filterComponent it is rendered', function(assert) {
   this.column = { field: 'priority.translated_name', isFilterable: true, filterComponent: 'grid/filters/checkbox-list' };
   this.gridFilterParams = {};
-  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridFilterParams=gridFilterParams}}`);
+  this.gridIdInParams = {};
+  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridIdInParams=gridIdInParams gridFilterParams=gridFilterParams}}`);
   assert.equal(this.$('.t-checkbox-list').length, 0);
   this.$('.t-filter-priority-translated-name').click();
   assert.equal(this.$('.t-checkbox-list').length, 1);
@@ -76,7 +87,7 @@ test('if column has filterComponent it is rendered', function(assert) {
 
 
 
-// test('amk clicking filter on a column shows a custom filter - priority', function(assert) {
+// test('clicking filter on a column shows a custom filter - priority', function(assert) {
 //   this.column = {};
 //   this.gridFilterParams = {};
 //   this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridFilterParams=gridFilterParams}}`);

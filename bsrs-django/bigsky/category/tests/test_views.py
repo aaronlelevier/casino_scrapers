@@ -39,7 +39,6 @@ class CategoryListTests(APITestCase):
         self.assertFalse(self.top_level.parent)
         self.assertTrue(self.top_level.children)
 
-
     def test_data(self):
         response = self.client.get('/api/admin/categories/')
 

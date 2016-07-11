@@ -7,8 +7,9 @@ from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin
 
 
 
-THIRD_PARTY_FIELDS = ('id', 'name', 'number', 'status',)
+THIRD_PARTY_FIELDS = ('id', 'name', 'number',)
 
+THIRD_PARTY_FIELDS_WITH_STATUS = THIRD_PARTY_FIELDS + ('status',)
 
 class ThirdPartyStatusSerializer(serializers.ModelSerializer):
 
@@ -22,14 +23,14 @@ class ThirdPartySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ThirdParty
-        fields = THIRD_PARTY_FIELDS
+        fields = THIRD_PARTY_FIELDS_WITH_STATUS
 
 
 class ThirdPartyCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = ThirdParty
-        fields = THIRD_PARTY_FIELDS + ('currency',)
+        fields = THIRD_PARTY_FIELDS_WITH_STATUS + ('currency',)
 
 
 class ThirdPartyUpdateSerializer(NestedContactSerializerMixin, serializers.ModelSerializer):
@@ -45,7 +46,7 @@ class ThirdPartyUpdateSerializer(NestedContactSerializerMixin, serializers.Model
 
     class Meta:
         model = ThirdParty
-        fields = THIRD_PARTY_FIELDS + ('currency', 'categories',
+        fields = THIRD_PARTY_FIELDS_WITH_STATUS + ('currency', 'categories',
             'emails', 'phone_numbers', 'addresses',)
 
 
@@ -54,15 +55,12 @@ class ThirdPartyDetailSerializer(serializers.ModelSerializer):
     emails = EmailSerializer(required=False, many=True)
     phone_numbers = PhoneNumberSerializer(required=False, many=True)
     addresses = AddressSerializer(required=False, many=True)
+    status_fk = serializers.PrimaryKeyRelatedField(queryset=ThirdPartyStatus.objects.all(),
+                                                   source='status')
 
     class Meta:
         model = ThirdParty
-        fields = THIRD_PARTY_FIELDS + ('emails', 'phone_numbers', 'addresses',)
-
-    def to_representation(self, obj):
-        data = super(ThirdPartyDetailSerializer, self).to_representation(obj)
-        data['status_fk'] = data.pop('status', [])
-        return data
+        fields = THIRD_PARTY_FIELDS + ('status_fk', 'emails', 'phone_numbers', 'addresses',)
 
     @staticmethod
     def eager_load(queryset):

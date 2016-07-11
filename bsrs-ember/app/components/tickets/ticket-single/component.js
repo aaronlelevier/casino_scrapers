@@ -19,11 +19,16 @@ var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMi
     return last_dt[0]['dtd']['id'];
   }),
   actions: {
-    save(update=false, updateActivities=false) {
+    save(update=false) {
       this.set('submitted', true);
       if (this.all_components_valid()) {
         if (this.get('model.validations.isValid')) {
-          this._super(update, updateActivities);
+          const promise = this._super(update);
+          if (promise && promise.then) {
+            promise.then((activities) => {
+              this.set('activities', activities);
+            });
+          }
         }
         this.set('didValidate', true);
       }
@@ -31,8 +36,7 @@ var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMi
     deleteAttachment(tab, callback) {
       this.sendAction('deleteAttachment', tab, callback);
     }
-  } 
+  }
 });
 
 export default TicketSingleComponent;
-

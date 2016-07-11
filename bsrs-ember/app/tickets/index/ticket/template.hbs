@@ -1,0 +1,20 @@
+{{#ember-wormhole to="mobile-single-wormhole"}}
+    {{#mobile/full-screen
+      model=model
+      statuses=statuses
+      priorities=priorities
+      activities=activities
+      title=(concat (t "ticket.label.numberSymbol")model.number)
+      close="closeMobileDetail"
+      redirectRoute="tickets.index"
+      hashComponents=hashComponents
+      otherXhrs=otherXhrs
+      repository=repository
+    }}
+      <article class="main fixed">
+        {{tickets/ticket-single
+          model=model
+        }}
+      </article>
+    {{/mobile/full-screen}}
+{{/ember-wormhole}}

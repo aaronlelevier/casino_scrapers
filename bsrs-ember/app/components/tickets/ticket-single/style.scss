@@ -1,3 +1,4 @@
+/* DESKTOP */
 textarea.ticket-request{
 	font-size: 1.2rem;
 	resize: none;
@@ -56,5 +57,24 @@ textarea.ticket-request{
 		        font-size: 1.2rem;
 		    }
 		}
+	}
+}
+
+/* MOBILE */
+.mobile-meta-data {
+	padding: 4%;
+	background: $white;
+  @include borderStyle(0 0 1px);
+	.mobile-meta-data__priority-status {
+		padding-bottom: 3%;
+	}
+	.mobile-meta-data__created {
+		font-size: 1.4rem;
+		padding-bottom: 1%;
+
+	}
+	.mobile-meta-data__request {
+		font-size: 1.3rem;
+		color: $medGray;
 	}
 }

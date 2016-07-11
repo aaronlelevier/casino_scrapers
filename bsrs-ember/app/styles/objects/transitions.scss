@@ -1,0 +1,18 @@
+.transition--vertical-enter{
+  max-height: 0;
+  overflow: hidden;
+}
+.transition--vertical-enter.transition--vertical-enter-active {
+  max-height: 500px;
+  transition: max-height 0.4s ease;
+  overflow: hidden;
+}
+.transition--vertical-leave {
+  max-height: 500px;
+  overflow: hidden;
+}
+.transition--vertical-leave.transition--vertical-leave-active {
+  max-height: 0;
+  transition: max-height 0.3s ease;
+  overflow: hidden;
+}
