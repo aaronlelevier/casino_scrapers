@@ -19,6 +19,8 @@ class FactoryTests(TestCase):
         self.assertTrue(all(d.values()))
 
     def test_create_locales(self):
+        # prove this is an indempotent create function
+        factory.create_locales()
         factory.create_locales()
         self.assertEqual(Locale.objects.count(), 4)
 

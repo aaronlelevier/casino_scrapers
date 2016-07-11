@@ -14,8 +14,11 @@ def create_locales():
         'en-x-sephora',
         'es'
     ]
-    return [Locale.objects.create(locale=l, name=l)
-            for l in locales]
+    ret = []
+    for l in locales:
+        obj, _ = Locale.objects.get_or_create(locale=l, name=l)
+        ret.append(obj)
+    return ret
 
 
 def create_locale(name):
