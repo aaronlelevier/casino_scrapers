@@ -18,8 +18,8 @@ var GridRepositoryMixin = Ember.Mixin.create({
       return response.results;
     });
   },
-  modifyEndpoint(page, search, find, id_in, page_size, sort) {
-    let url = this.get('url');
+  modifyEndpoint(page, search, find, id_in, page_size, sort, special_url) {
+    let url = url || this.get('url');
     let endpoint = url + '?page=' + page;
 
     if(sort && sort !== 'id' && sort.indexOf('.') < 0){
@@ -32,6 +32,9 @@ var GridRepositoryMixin = Ember.Mixin.create({
     }
     if(page_size) { //&& page_size !== ''){
       endpoint = endpoint + '&page_size=' + page_size;
+    }
+    if(special_url) {
+      endpoint = endpoint + `&${special_url}`;
     }
     if(find && find !== ''){
       let finds = find.split(',');
@@ -57,12 +60,12 @@ var GridRepositoryMixin = Ember.Mixin.create({
     return endpoint;
   },
   /* Non Optimistic Rendering: Mobile */
-  findWithQueryMobile(page, search, find, id_in) {
+  findWithQueryMobile(page, search, find, id_in, special_url=undefined) {
     const type = this.get('typeGrid');
     const store = this.get('simpleStore');
     const deserializer = this.get('deserializer');
     page = page || 1;
-    let endpoint = this.modifyEndpoint(page, search, find, id_in);
+    let endpoint = this.modifyEndpoint(page, search, find, id_in, special_url);
     return PromiseMixin.xhr(endpoint).then((response) => {
       deserializer.deserialize(response);
       const all = store.find(type);
@@ -79,12 +82,12 @@ var GridRepositoryMixin = Ember.Mixin.create({
     });
   },
   /* Optimistic Rendering */
-  findWithQuery(page, search, find, id_in, page_size, sort) {
+  findWithQuery(page, search, find, id_in, page_size, sort, special_url=undefined) {
     const type = this.get('typeGrid');
     const store = this.get('simpleStore');
     const deserializer = this.get('deserializer');
     page = page || 1;
-    let endpoint = this.modifyEndpoint(page, search, find, id_in, page_size, sort);
+    let endpoint = this.modifyEndpoint(page, search, find, id_in, page_size, sort, special_url);
 
     const all = store.find(type);
     let grid_count = store.find('grid-count', 1);
