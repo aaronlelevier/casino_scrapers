@@ -46,12 +46,11 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, OptConf, {
   },
   parent: Ember.computed.alias('parent_belongs_to.firstObject'),
   parent_belongs_to: Ember.computed('parent_id', function() {
-    const parent_id = this.get('parent_id');
-    const store = this.get('simpleStore');
+    const { parent_id, simpleStore } = this.getProperties('parent_id', 'simpleStore');
     const filter = function(category) {
       return parent_id === category.get('id');
     };
-    return store.find('category', filter);
+    return simpleStore.find('category', filter);
   }),
   removeRecord() {
     run(() => {

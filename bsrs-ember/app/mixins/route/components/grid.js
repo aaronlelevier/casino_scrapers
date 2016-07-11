@@ -36,17 +36,14 @@ var GridViewRoute = Ember.Route.extend({
     },
   },
   model(params, transition) {
-    let filtersetRepository = this.get('filtersetRepository');
+    const { filtersetRepository, repository, special_url, routeName } = this.getProperties('filtersetRepository', 'repository', 'special_url', 'routeName');
     let filtersets = filtersetRepository.fetch();
     let name = nameRoute(this);
     let query = transition.queryParams;
     let page = parseInt(query.page, 10) || 1;
-    let repository = this.get('repository');
     let requested = this.get('pagination').requested(name, page);
-    let special_url = this.get('special_url'); //special routes only
     const search = query.search;
     const count = repository.findCount();
-    const routeName = this.get('routeName');
     set_filter_model_attrs(this.filterModel, query.find);
     let model;
     if (this.get('device').get('isMobile')) {

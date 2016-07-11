@@ -63,16 +63,14 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     return name ? name.replace(/\./g, '-') : '';
   }),
   rollbackAssignee() {
-    const assignee = this.get('assignee');
-    const assignee_fk = this.get('assignee_fk');
+    const { assignee, assignee_fk } = this.getProperties('assignee', 'assignee_fk');
     if(assignee && assignee.get('id') !== assignee_fk) {
       const assignee_object = {id: assignee_fk};
       this.change_assignee(assignee_object);
     }
   },
   rollbackAttachments() {
-    const ticket_attachments_fks = this.get('ticket_attachments_fks');
-    const previous_attachments_fks = this.get('previous_attachments_fks');
+    const { ticket_attachments_fks, previous_attachments_fks } = this.getProperties('ticket_attachments_fks', 'previous_attachments_fks');
     ticket_attachments_fks.forEach((id) => {
       this.remove_attachment(id);
     });
@@ -81,11 +79,9 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     });
   },
   saveAttachments() {
-    const store = this.get('simpleStore');
-    const ticket_pk = this.get('id');
-    const fks = this.get('ticket_attachments_fks');
-    run(function() {
-      store.push('ticket', {id: ticket_pk, previous_attachments_fks: fks});
+    const { simpleStore, id, ticket_attachments_fks = [] } = this.getProperties('simpleStore', 'id', 'ticket_attachments_fks');
+    run(() => {
+      simpleStore.push('ticket', {id: id, previous_attachments_fks: ticket_attachments_fks});
     });
     this.get('attachments').forEach((attachment) => {
       attachment.save();
@@ -149,33 +145,28 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     return this.get('attachments').mapBy('id');
   }),
   remove_attachment(attachment_id) {
-    const store = this.get('simpleStore');
-    const attachment = store.find('attachment', attachment_id);
+    let { simpleStore, id, ticket_attachments_fks = [] } = this.getProperties('simpleStore', 'id', 'ticket_attachments_fks');
+    const attachment = simpleStore.find('attachment', attachment_id);
     attachment.set('rollback', true);
-    const ticket_id = this.get('id');
-    const current_fks = this.get('ticket_attachments_fks') || [];
-    const updated_fks = current_fks.filter(function(id) {
+    const updated_fks = ticket_attachments_fks.filter(function(id) {
       return id !== attachment_id;
     });
-    run(function() {
-      store.push('ticket', {id: ticket_id, ticket_attachments_fks: updated_fks});
+    run(() => {
+      simpleStore.push('ticket', {id: id, ticket_attachments_fks: updated_fks});
     });
   },
   add_attachment(attachment_id) {
-    const store = this.get('simpleStore');
-    const attachment = store.find('attachment', attachment_id);
+    let { simpleStore, id, ticket_attachments_fks = [] } = this.getProperties('simpleStore', 'id', 'ticket_attachments_fks');
+    const attachment = simpleStore.find('attachment', attachment_id);
     attachment.set('rollback', undefined);
-    const ticket_id = this.get('id');
-    const current_fks = this.get('ticket_attachments_fks') || [];
-    run(function() {
-      store.push('ticket', {id: ticket_id, ticket_attachments_fks: current_fks.concat(attachment_id).uniq()});
+    run(() => {
+      simpleStore.push('ticket', {id: id, ticket_attachments_fks: ticket_attachments_fks.concat(attachment_id).uniq()});
     });
   },
   serialize() {
-    const ticket_pk = this.get('id');
-    const store = this.get('simpleStore');
+    const { id, simpleStore } = this.getProperties('id', 'simpleStore');
     let payload = {
-      id: ticket_pk,
+      id: id,
       request: this.get('request'),
       status: this.get('status.id'),
       priority: this.get('priority.id'),
@@ -189,8 +180,8 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     };
     if (this.get('comment')) {
       payload.comment = this.get('comment');
-      run(function() {
-        store.push('ticket', {id: ticket_pk, comment: ''});
+      run(() => {
+        simpleStore.push('ticket', {id: id, comment: ''});
       });
     }
     if(!this.get('created')) { this.createdAt(); }

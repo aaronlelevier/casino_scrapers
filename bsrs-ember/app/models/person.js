@@ -96,8 +96,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
     }
   },
   fullname: Ember.computed('first_name', 'last_name', function() {
-    const first_name = this.get('first_name');
-    const last_name = this.get('last_name');
+    const { first_name, last_name } = this.getProperties('first_name', 'last_name');
     return first_name + ' ' + last_name;
   }),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'emailsIsDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'roleIsDirty', 'locationsIsDirty', 'statusIsDirty', 'localeIsDirty', function() {

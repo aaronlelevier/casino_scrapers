@@ -12,25 +12,20 @@ var GridViewController = Ember.Controller.extend({
   repositoryFilterset: inject('filterset'),
   queryParams: ['page', 'sort', 'search', 'find', 'id_in'],
   hasActiveFilterSet: Ember.computed('filtersets.[]', 'sort', 'find', 'search', function() {
-    let filtersets = this.get('filtersets');
-    let sort = this.get('sort');
-    let find = this.get('find');
-    let search = this.get('search');
+    const { filtersets, sort, find, search, routeName } = this.getProperties('filtersets', 'sort', 'find', 'search', 'routeName');
     let active = sort || find || search;
-    let path = this.get('routeName');
     let result = true;
-    filtersets.forEach(function(model) {
-      result = !model.filter_exists(path, {search: search, find: find, sort: sort}) && result;
+    filtersets.forEach((model) => {
+      result = !model.filter_exists(routeName, {search: search, find: find, sort: sort}) && result;
     });
     return active && result;
   }),
   actions: {
     save_filterset(name) {
-      let path = this.get('routeName');
+      const { routeName, repositoryFilterset } = this.getProperties('routeName', 'repositoryFilterset'):
       let url = this.get('target.url');
       let params = filterset_regex(url);
-      let repository = this.get('repositoryFilterset');
-      return repository.insert(params, path, name);
+      return repositoryFilterset.insert(params, routeName, name);
     }
   }
 });

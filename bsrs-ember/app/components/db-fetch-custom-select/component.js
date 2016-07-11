@@ -19,9 +19,7 @@ var DBFetch = Ember.Component.extend({
   }).restartable(),
   actions: {
     selected(item) {
-      const model = this.get('model');
-      const change_func = this.get('change_func');
-      const remove_func = this.get('remove_func');
+      const { model, change_func, remove_func } = this.getProperties('model', 'change_func', 'remove_func');
       if (item) {
         run(() => {
           model[change_func](item);

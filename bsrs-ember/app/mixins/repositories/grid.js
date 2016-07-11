@@ -61,9 +61,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
   },
   /* Non Optimistic Rendering: Mobile */
   findWithQueryMobile(page, search, find, id_in, special_url=undefined) {
-    const type = this.get('typeGrid');
-    const store = this.get('simpleStore');
-    const deserializer = this.get('deserializer');
+    const { typeGrid: type, simpleStore: store, deserializer } = this.getProperties('typeGrid', 'simpleStore', 'deserializer');
     page = page || 1;
     let endpoint = this.modifyEndpoint(page, search, find, id_in, special_url);
     return PromiseMixin.xhr(endpoint).then((response) => {
@@ -83,9 +81,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
   },
   /* Optimistic Rendering */
   findWithQuery(page, search, find, id_in, page_size, sort, special_url=undefined) {
-    const type = this.get('typeGrid');
-    const store = this.get('simpleStore');
-    const deserializer = this.get('deserializer');
+    const { typeGrid: type, simpleStore: store, deserializer } = this.getProperties('typeGrid', 'simpleStore', 'deserializer');
     page = page || 1;
     let endpoint = this.modifyEndpoint(page, search, find, id_in, page_size, sort, special_url);
 
