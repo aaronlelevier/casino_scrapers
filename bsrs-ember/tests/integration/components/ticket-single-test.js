@@ -43,6 +43,13 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
       }];
       ticket = store.push('ticket', {id: TD.idOne, request: 'foo', dt_path: dt_path});
     });
+    const flexi = this.container.lookup('service:device/layout');
+    let breakpoints = flexi.get('breakpoints');
+    let bp = {};
+    breakpoints.forEach((point) => {
+      bp[point.name] = point.begin + 5;
+    });
+    flexi.set('width', bp.huge);
   },
   afterEach() {
     page.removeContext(this);
@@ -69,7 +76,7 @@ test('validation on ticket request works if clear out textarea', function(assert
   }, 300);
 });
 
-test('each status shows up as a valid select option', function(assert) {
+test('scott each status shows up as a valid select option', function(assert) {
   let statuses = store.find('ticket-status');
   this.set('model', ticket);
   this.set('statuses', statuses);

@@ -37,6 +37,13 @@ moduleForComponent('dtds/dtd-single', 'integration: dtd-single test', {
     dtd_repo = repository.initialize(this.container, this.registry, 'dtd');
     dtd_repo.update = () => { return new Ember.RSVP.Promise(() => {}); };
     dtd_repo.findDTD = () => { return store.find('dtd'); };
+    const flexi = this.container.lookup('service:device/layout');
+    let breakpoints = flexi.get('breakpoints');
+    let bp = {};
+    breakpoints.forEach((point) => {
+      bp[point.name] = point.begin + 5;
+    });
+    flexi.set('width', bp.huge);
   },
   afterEach() {
     page.removeContext(this);
