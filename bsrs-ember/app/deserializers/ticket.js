@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { belongs_to_extract, belongs_to_extract_nodetail } from 'bsrs-components/repository/belongs-to';
+import { belongs_to_extract } from 'bsrs-components/repository/belongs-to';
 import { many_to_many_extract } from 'bsrs-components/repository/many-to-many';
 
 const { run } = Ember;

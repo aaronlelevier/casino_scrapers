@@ -4,7 +4,7 @@ import {test, module} from '../helpers/qunit';
 import module_registry from '../helpers/module_registry';
 import Deserializer from 'dummy/repository/deserializer';
 
-var store, deserializer; 
+var store, deserializer;
 
 module('unit: repository test', {
   beforeEach() {
@@ -23,25 +23,6 @@ test('repository sets up hat relationship in deserializer', (assert) => {
   });
   const hat = store.find('hat', 2);
   assert.deepEqual(hat.get('users'), [1]);
-});
-
-test('repository sets up hat relationship in deserializer if no detail scenario is required', (assert) => {
-  const json = {id: 1, hats: {id: 2}};
-  run(() => {
-    deserializer.deserialize_two(json);
-  });
-  const user_hat = store.find('user-hat-list', 2);
-  assert.deepEqual(user_hat.get('users'), [1]);
-});
-
-test('repository sets up hat relationship in deserializer if no detail scenario is required with existing users', (assert) => {
-  store.push('user-hat-list', {id: 2, users: [1]});
-  const json = {id: 2, hats: {id: 2, users: [2]}};
-  run(() => {
-    deserializer.deserialize_two(json);
-  });
-  const user_hat = store.find('user-hat-list', 2);
-  assert.deepEqual(user_hat.get('users'), [1,2]);
 });
 
 test('extract contacts works as expected', (assert) => {

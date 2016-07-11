@@ -15,21 +15,10 @@ var belongs_to_extract = function(type, store, parent_model, type_string, parent
         const updated_type_arr = type_arr.concat(parent_model.get('id')).uniq();
         const join_model = {id: type.id, name: type.name};
         join_model[`${multiple}`] = updated_type_arr;
-        run(() =>{ 
+        run(() =>{
             store.push(`${parent_string}-${type_string}-list`, join_model);
         });
     }
-};
-
-var belongs_to_extract_nodetail = function(json, store, model, related_str, array_str) {
-    const existing = store.find(`${related_str}-list`, json.id);
-    const model_related_array = existing.get(`${array_str}`) || [];
-    const updated_model_related_array = model_related_array.concat(model.get('id')).uniq();
-    const inserted_json = json;
-    inserted_json[array_str] = updated_model_related_array;
-    run(() =>{ 
-        store.push(`${related_str}-list`, inserted_json);
-    });
 };
 
 var belongs_to_extract_contacts = function(model, store, contact_model_str, contact_type) {
@@ -47,4 +36,4 @@ var belongs_to_extract_contacts = function(model, store, contact_model_str, cont
     return contact_fks;
 };
 
-export { belongs_to_extract, belongs_to_extract_nodetail, belongs_to_extract_contacts };
+export { belongs_to_extract, belongs_to_extract_contacts };
