@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import injectService from 'ember-service/inject';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import equal from 'bsrs-ember/utilities/equal';
 import inject from 'bsrs-ember/utilities/store';
@@ -16,7 +17,7 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, OptConf, {
     many_to_many.bind(this)('children', 'category');
     this._super(...arguments);
   },
-  simpleStore: Ember.inject.service(),
+  simpleStore: injectService(),
   uuid: injectUUID('uuid'),
   name: attr(''),
   description: attr(''),

@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import injectService from 'ember-service/inject';
 import inject from 'bsrs-ember/utilities/store';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import { attr, Model } from 'ember-cli-simple-store/model';
@@ -6,7 +7,7 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 const { run } = Ember;
 
 var LocationLevel = Model.extend(NewMixin, {
-  simpleStore: Ember.inject.service(),
+  simpleStore: injectService(),
   name: attr(''),
   locations: [],
   roles: [],
@@ -34,7 +35,7 @@ var LocationLevel = Model.extend(NewMixin, {
     };
   },
   set_children(new_children) {
-    this.set('children_fks', new_children.mapBy('id')); 
+    this.set('children_fks', new_children.mapBy('id'));
   },
   removeRecord() {
     run(() => {

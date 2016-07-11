@@ -1,7 +1,8 @@
 import Ember from 'ember';
+import injectService from 'ember-service/inject';
 
 export default Ember.Component.extend({
-  simpleStore: Ember.inject.service(),
+  simpleStore: injectService(),
   classNames: ['t-checkbox-list'],
   filterModels: Ember.computed(function() {
     const field = this.get('column.filterModelName');
