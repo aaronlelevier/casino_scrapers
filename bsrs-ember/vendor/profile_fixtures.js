@@ -20,10 +20,10 @@ var BSRS_PROFILE_FACTORY = (function() {
     return this.generate();
   };
   factory.prototype.list = function() {
-    return this._list(20);
+    return this._list(0, 20);
   };
   factory.prototype.list_two = function() {
-    return this._list(10);
+    return this._list(10, 20);
   };
   factory.prototype.list_reverse = function() {
     const page_size = 10;
@@ -33,9 +33,9 @@ var BSRS_PROFILE_FACTORY = (function() {
     }
     return {count: page_size-1, next: null, previous: null, results: results};
   };
-  factory.prototype._list = function(page_size) {
+  factory.prototype._list = function(start, page_size) {
     let results = [];
-    for(var i = 0; i < page_size; i++) {
+    for(var i = start; i < page_size; i++) {
       results.push(this._generate_item(i));
     }
     return {count: page_size-1, next: null, previous: null, results: results};

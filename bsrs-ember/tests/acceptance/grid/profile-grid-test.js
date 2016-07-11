@@ -104,11 +104,13 @@ test('clicking page 2 will load in another set of data as well as clicking page 
 
 test('clicking first,last,next and previous will request page 1 and 2 correctly', function(assert) {
   var page_two = PREFIX + BASE_URL + '/?page=2';
-  xhr(page_two ,"GET",null,{},200,PF.list());
+  xhr(page_two ,"GET",null,{},200,PF.list_two());
   visit(LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descOne+"0");
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridOne);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
     isNotDisabledElement('.t-next');
@@ -118,6 +120,8 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   andThen(() => {
     assert.equal(currentURL(), LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descOne+"10");
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), `${PD.usernameGridOne.slice(0,-1)}10`);
     isNotDisabledElement('.t-first');
     isNotDisabledElement('.t-previous');
     isDisabledElement('.t-next');
@@ -127,6 +131,8 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descOne+"0");
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridOne);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
     isNotDisabledElement('.t-next');
@@ -136,6 +142,8 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   andThen(() => {
     assert.equal(currentURL(), LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descOne+"10");
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), `${PD.usernameGridOne.slice(0,-1)}10`);
     isNotDisabledElement('.t-first');
     isNotDisabledElement('.t-previous');
     isDisabledElement('.t-next');
@@ -145,6 +153,8 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descOne+"0");
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridOne);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
     isNotDisabledElement('.t-next');
@@ -184,8 +194,8 @@ test('typing a search will reset page to 1 and require an additional xhr and res
   andThen(() => {
     assert.equal(currentURL(),LIST_URL + `?search=${searchText}`);
     assert.equal(find('.t-grid-data').length, 2);
-    assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descOne+"4");
-    assert.equal(find('.t-grid-data:eq(1) .t-profile-description').text().trim(), PD.descOne+"14");
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descOne+"14");
+    assert.equal(find('.t-grid-data:eq(1) .t-profile-description').text().trim(), PD.descOne+"4");
   });
   click('.t-reset-grid');
   andThen(() => {
