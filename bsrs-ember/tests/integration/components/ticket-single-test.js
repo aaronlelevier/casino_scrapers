@@ -76,7 +76,7 @@ test('validation on ticket request works if clear out textarea', function(assert
   }, 300);
 });
 
-test('scott each status shows up as a valid select option', function(assert) {
+test('each status shows up as a valid select option', function(assert) {
   let statuses = store.find('ticket-status');
   this.set('model', ticket);
   this.set('statuses', statuses);

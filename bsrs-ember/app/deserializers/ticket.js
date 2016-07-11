@@ -111,9 +111,6 @@ var TicketDeserializer = Ember.Object.extend({
       const assignee_json = model.assignee;
       model.assignee_fk = model.assignee ? model.assignee.id : undefined;
       delete model.categories;
-      delete model.location;
-      delete model.assignee;
-      delete model.location;
       const status_json = model.status;
       delete model.status;
       const priority_json = model.priority;
@@ -122,10 +119,6 @@ var TicketDeserializer = Ember.Object.extend({
       ticket.save();
       belongs_to_extract(status_json, store, ticket, 'status', 'general', 'tickets');
       belongs_to_extract(priority_json, store, ticket, 'priority', 'ticket', 'tickets');
-      if (assignee_json) {
-        belongs_to_extract_nodetail(assignee_json, store, ticket, 'person', 'tickets');
-      }
-      belongs_to_extract_nodetail(location_json, store, ticket, 'location', 'tickets');
     });
   }
 });

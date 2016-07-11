@@ -62,7 +62,7 @@ test('navigating between ticket and people and locations and category will not d
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
         const persons = store.find('person-list');
-        assert.equal(persons.get('length'), 1);
+        assert.equal(persons.get('length'), 0);
         const people = store.find('person');
         assert.equal(people.get('length'), 1);
         people.forEach((person) => {
@@ -94,7 +94,7 @@ test('navigating between ticket and people and locations and category will not d
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
         const persons = store.find('person-list');
-        assert.equal(persons.get('length'), 1);
+        assert.equal(persons.get('length'), 0);
         const people = store.find('person');
         assert.equal(people.get('length'), 1);
         people.forEach((person) => {
@@ -298,7 +298,7 @@ test('navigating between ticket and people and locations and category will not d
         //     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
         // });
         const persons = store.find('person-list');
-        assert.equal(persons.get('length'), 1);
+        assert.equal(persons.get('length'), 0);
         persons.forEach((person) => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         });
@@ -309,4 +309,3 @@ test('navigating between ticket and people and locations and category will not d
         // });
     });
 });
-

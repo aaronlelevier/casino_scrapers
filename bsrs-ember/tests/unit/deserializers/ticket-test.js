@@ -115,9 +115,9 @@ test('deserialize list with no existing assignee (list)', (assert) => {
   });
   ticket = store.find('ticket-list', TD.idOne);
   const people = store.find('person-list');
-  assert.equal(people.get('length'), 1);
+  assert.equal(people.get('length'), 0);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(ticket.get('assignee').get('id'), PD.id);
+  assert.equal(ticket.get('assignee').id, PD.id);
 });
 
 test('deserialize list with existing assignee (list)', (assert) => {
@@ -134,7 +134,7 @@ test('deserialize list with existing assignee (list)', (assert) => {
   });
   ticket = store.find('ticket-list', TD.idOne);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(ticket.get('assignee').get('id'), PD.id);
+  assert.equal(ticket.get('assignee').id, PD.id);
 });
 
 test('ticket with existing assignee should not modify locations as it will not be in the json payload from the api', (assert) => {
@@ -152,7 +152,7 @@ test('ticket with existing assignee should not modify locations as it will not b
   });
   ticket = store.find('ticket-list', TD.idOne);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(ticket.get('assignee').get('id'), PD.id);
+  assert.equal(ticket.get('assignee').id, PD.id);
 });
 
 /*TICKET LOCATION 1-2-Many*/
@@ -168,7 +168,8 @@ test('ticket location will be deserialized into its own store when deserialize l
   });
   ticket = store.find('ticket-list', TD.idOne);
   location = store.find('location-list', LD.idOne);
-  assert.deepEqual(location.get('tickets'), [TD.idOne]);
+  //location-list model not used in ticket list
+  assert.deepEqual(location.length, undefined);
   assert.ok(ticket.get('isNotDirty'));
   assert.equal(ticket.get('location.id'), LD.idOne);
 });
@@ -181,7 +182,7 @@ test('ticket location will be deserialized into its own store when deserialize l
     subject.deserialize(response);
   });
   let location = store.findOne('location-list');
-  assert.deepEqual(location.get('tickets'), [TD.idOne]);
+  assert.deepEqual(location.get('length'), undefined);
   ticket = store.find('ticket-list', TD.idOne);
   assert.ok(ticket.get('isNotDirty'));
   assert.equal(ticket.get('location.id'), LD.idOne);
