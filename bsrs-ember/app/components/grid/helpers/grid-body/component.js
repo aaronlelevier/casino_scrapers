@@ -76,6 +76,7 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, {
       this.setProperties({page: 1, sort: sorted});
     },
     toggleFilterModal(column) {
+      /* Filter By mixin */
       this.toggle(column);
     },
     resetGrid() {
