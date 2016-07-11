@@ -106,10 +106,6 @@ var TicketDeserializer = Ember.Object.extend({
         //TODO: test this
         store.push('category-list', category);
       });
-      const location_json = model.location;
-      model.location_fk = model.location.id;
-      const assignee_json = model.assignee;
-      model.assignee_fk = model.assignee ? model.assignee.id : undefined;
       delete model.categories;
       const status_json = model.status;
       delete model.status;

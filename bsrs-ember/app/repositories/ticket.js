@@ -16,7 +16,7 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMix
   type: Ember.computed(function() { return 'ticket'; }),
   typeGrid: Ember.computed(function() { return 'ticket-list'; }),
   //TODO: test count to ensure being deleted
-  garbage_collection: Ember.computed(function() { return ['ticket-list', 'location-list', 'person-list', 'ticket-priority-list', 'general-status-list', 'category-list']; }),
+  garbage_collection: Ember.computed(function() { return ['ticket-list', 'ticket-priority-list', 'general-status-list', 'category-list']; }),
   url: Ember.computed(function() { return TICKETS_URL; }),
   TicketDeserializer: inject('ticket'),
   deserializer: Ember.computed.alias('TicketDeserializer'),
