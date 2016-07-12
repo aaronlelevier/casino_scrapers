@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { change_belongs_to_fk } from 'bsrs-components/attr/belongs-to';
+import { change_belongs_to } from 'bsrs-components/attr/belongs-to';
 
 const { run } = Ember;
 
@@ -59,7 +59,7 @@ var RoleMixin = Ember.Mixin.create({
     const role_fk = this.get('role_fk');
     this.rollbackChangeRole(role_fk);
   },
-  rollbackChangeRole: change_belongs_to_fk('role'),
+  rollbackChangeRole: change_belongs_to('role'),
 });
 
 export default RoleMixin;

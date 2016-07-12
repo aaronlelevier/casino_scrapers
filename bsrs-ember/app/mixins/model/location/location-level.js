@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { change_belongs_to_fk } from 'bsrs-components/attr/belongs-to';
+import { change_belongs_to } from 'bsrs-components/attr/belongs-to';
 
 const { run } = Ember;
 
@@ -37,7 +37,7 @@ var LocationLevelMixin = Ember.Mixin.create({
     this.remove_children_parents();
     this.change_location_level_container(llevel_id); 
   },
-  change_location_level_container: change_belongs_to_fk('location_level'),
+  change_location_level_container: change_belongs_to('location_level'),
 });
 
 export default LocationLevelMixin;

@@ -1,6 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
-import { change_belongs_to_full } from 'bsrs-components/attr/belongs-to';
+import { change_belongs_to } from 'bsrs-components/attr/belongs-to';
 
 
 var TicketLocationMixin = Ember.Mixin.create({
@@ -36,7 +36,7 @@ var TicketLocationMixin = Ember.Mixin.create({
       location.save();
     }
   },
-  change_location_container: change_belongs_to_full('location'),//pass owning model when grabbing from add on directly
+  change_location_container: change_belongs_to('location'),//pass owning model when grabbing from add on directly
 });
 
 export default TicketLocationMixin;

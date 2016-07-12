@@ -10,7 +10,7 @@ import CategoriesMixin from 'bsrs-ember/mixins/model/category';
 import TicketLocationMixin from 'bsrs-ember/mixins/model/ticket/location';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
-import { belongs_to, change_belongs_to_fk } from 'bsrs-components/attr/belongs-to';
+import { belongs_to, change_belongs_to } from 'bsrs-components/attr/belongs-to';
 import { many_to_many } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 
@@ -31,7 +31,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     this.requestValues = []; //store array of values to be sent in dt post or put request field
     belongs_to.bind(this)('status', 'ticket', {bootstrapped:true});
     belongs_to.bind(this)('priority', 'ticket', {bootstrapped:true});
-    belongs_to.bind(this)('assignee', 'ticket', {change_func:false, rollback:false});//change_assignee_container (below): change_belongs_to_fk
+    belongs_to.bind(this)('assignee', 'ticket', {change_func:false, rollback:false});//change_assignee_container (below): change_belongs_to
     belongs_to.bind(this)('location', 'ticket', {change_func:false});
     many_to_many.bind(this)('cc', 'ticket');
     many_to_many.bind(this)('category', 'model', {plural:true, add_func:false});
@@ -121,7 +121,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     pushed_person.change_status(person_json.status_fk);
     return pushed_person;
   },
-  change_assignee_container: change_belongs_to_fk('assignee'),
+  change_assignee_container: change_belongs_to('assignee'),
   change_assignee(new_assignee) {
     this.person_status_role_setup(new_assignee);
     this.change_assignee_container(new_assignee.id);
