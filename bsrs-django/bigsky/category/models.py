@@ -47,6 +47,14 @@ class CategoryQuerySet(SelfReferencingQuerySet):
             Q(cost_code__icontains=keyword)
         )
 
+    def search_multi(self, keyword):
+        return self.filter(
+            Q(name__icontains=keyword) | \
+            Q(description__icontains=keyword) | \
+            Q(label__icontains=keyword)
+        )
+
+
 class CategoryManager(SelfReferencingManager):
 
     queryset_cls = CategoryQuerySet
@@ -56,6 +64,9 @@ class CategoryManager(SelfReferencingManager):
 
     def search_power_select(self, keyword):
         return self.get_queryset().search_power_select(keyword)
+
+    def search_multi(self, keyword):
+        return self.get_queryset().search_multi(keyword)
 
 
 class Category(BaseModel):

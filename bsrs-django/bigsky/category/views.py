@@ -4,11 +4,11 @@ from rest_framework.response import Response
 
 from category import serializers as cs
 from category.models import Category
-from utils.mixins import EagerLoadQuerySetMixin
+from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.views import BaseModelViewSet
 
 
-class CategoryViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
+class CategoryViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
     '''
     ### Create
     Can add a single Parent and multiple Children Categories.

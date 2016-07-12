@@ -1,7 +1,8 @@
 import random
 
-from django.test import TestCase
 from django.conf import settings
+from django.db.models import Q
+from django.test import TestCase
 
 from accounting.models import Currency
 from category.models import Category, CategoryManager, CategoryQuerySet, CategoryStatus
@@ -73,6 +74,18 @@ class CategoryManagerTests(TestCase):
         ret = self.person.role.categories.get_all_if_none(self.person.role)
 
         self.assertEqual(len(ret), count)
+
+    def test_search_multi(self):
+        keyword = self.repair.name
+        raw_ret = Category.objects.filter(
+            Q(name__icontains=keyword) | \
+            Q(description__icontains=keyword) | \
+            Q(label__icontains=keyword)
+        )
+
+        ret = Category.objects.search_multi(keyword)
+
+        self.assertEqual(ret.count(), raw_ret.count())
 
 
 class CategoryTests(CategorySetupMixin, TestCase):

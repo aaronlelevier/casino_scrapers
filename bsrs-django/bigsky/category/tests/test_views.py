@@ -85,6 +85,15 @@ class CategoryListTests(APITestCase):
         self.assertEqual(data[0]['id'], str(category.id))
         self.assertEqual(data[0]['cost_code'], str('760521'))
 
+    def test_search(self):
+        category = create_single_category(name='foobar')
+        self.assertTrue(Category.objects.count() > 1)
+
+        response = self.client.get('/api/admin/categories/?search={}'.format(category.name))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+
 
 class CategoryDetailTests(APITestCase):
 
