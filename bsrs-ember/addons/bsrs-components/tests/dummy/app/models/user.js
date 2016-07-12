@@ -1,6 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
-import { belongs_to, change_belongs_to_fk, change_belongs_to_full } from 'bsrs-components/attr/belongs-to';
+import { belongs_to, change_belongs_to } from 'bsrs-components/attr/belongs-to';
 import { many_to_many } from 'bsrs-components/attr/many-to-many';
 import equal from 'bsrs-components/utils/equal';
 import OPT_CONF from 'dummy/mixins/user_config';
@@ -45,6 +45,6 @@ export default Ember.Object.extend(OPT_CONF, {
   user_shoes_fks: [],
   user_feet_fks: [],
   //still able to use attrs when needed
-  change_fk: change_belongs_to_fk('hat'),
-  change_full: change_belongs_to_full('hat'),
+  change_fk: change_belongs_to('hat'),
+  change_full: change_belongs_to('hat'),
 });

@@ -27,10 +27,8 @@ var belongs_to = function(_ownerName, modelName, noSetup) {
   }
 
   //change
-  if(change_func && bootstrapped){
-    Ember.defineProperty(this, `change_${_ownerName}`, undefined, change_belongs_to_fk(_ownerName));
-  } else if (change_func) {
-    Ember.defineProperty(this, `change_${_ownerName}`, undefined, change_belongs_to_full(_ownerName));
+  if(change_func){
+    Ember.defineProperty(this, `change_${_ownerName}`, undefined, change_belongs_to(_ownerName));
   }
 
   //dirty
@@ -74,65 +72,65 @@ var belongs_to_generator = function(_ownerName) {
 };
 
 
-/**
- * Creates change_belongs_to_fk method
- *   - relationship param defines model associatioin
- *   - name: retrieves property on model
- *   - this_related_model (related_model): model that manages relationship b/w model and name
- *
- * @method change_belongs_to_fk
- * @param {string} _ownerName
- * @return func
- */
-var change_belongs_to_fk = function(_ownerName) {
-  return function(new_related_pk) {
-    const collection = this.OPT_CONF[_ownerName]['collection'];
-    const name = this.OPT_CONF[_ownerName]['property'];
-    const this_related_model = this.OPT_CONF[_ownerName]['related_model'];
-    const store = this.get('simpleStore');
-    const related = this_related_model || name.replace('-', '_');
-    const current_related = this.get(related);
-    if(current_related) {
-      const current_related_existing = current_related.get(collection);
-      const updated_current_related_existing = current_related_existing.filter((id) => {
-        return id !== this.get('id');
-      });
-      const current_related_pojo = {id: current_related.get('id')};
-      current_related_pojo[collection] = updated_current_related_existing;
-      run(() => {
-        store.push(name, current_related_pojo);
-      });
-    }
-    if(new_related_pk) {
-      let new_related = store.find(name, new_related_pk);
-      const new_related_existing = new_related.get(collection) || [];
-      const new_related_pojo = {id: new_related.get('id')};
-      new_related_pojo[collection] = new_related_existing.concat(this.get('id'));
-      run(() => {
-        store.push(name, new_related_pojo);
-      });
-    }
-  };
-};
+// /**
+//  * Creates change_belongs_to method
+//  *   - relationship param defines model associatioin
+//  *   - name: retrieves property on model
+//  *   - this_related_model (related_model): model that manages relationship b/w model and name
+//  *
+//  * @method change_belongs_to
+//  * @param {string} _ownerName
+//  * @return func
+//  */
+// var change_belongs_to = function(_ownerName) {
+//   return function(new_related_pk) {
+//     const collection = this.OPT_CONF[_ownerName]['collection'];
+//     const name = this.OPT_CONF[_ownerName]['property'];
+//     const this_related_model = this.OPT_CONF[_ownerName]['related_model'];
+//     const store = this.get('simpleStore');
+//     const related = this_related_model || name.replace('-', '_');
+//     const current_related = this.get(related);
+//     if(current_related) {
+//       const current_related_existing = current_related.get(collection);
+//       const updated_current_related_existing = current_related_existing.filter((id) => {
+//         return id !== this.get('id');
+//       });
+//       const current_related_pojo = {id: current_related.get('id')};
+//       current_related_pojo[collection] = updated_current_related_existing;
+//       run(() => {
+//         store.push(name, current_related_pojo);
+//       });
+//     }
+//     if(new_related_pk) {
+//       let new_related = store.find(name, new_related_pk);
+//       const new_related_existing = new_related.get(collection) || [];
+//       const new_related_pojo = {id: new_related.get('id')};
+//       new_related_pojo[collection] = new_related_existing.concat(this.get('id'));
+//       run(() => {
+//         store.push(name, new_related_pojo);
+//       });
+//     }
+//   };
+// };
 
 
 /**
- * Creates change_belongs_to_full method
+ * Creates change_belongs_to method
  *   - use if data is not bootstrapped
  *   - need this method to setup model in store
  *
- * @method change_belongs_to_full
+ * @method change_belongs_to
  * @param {object}
  * @return func
  */
-var change_belongs_to_full = function(_ownerName) {
+var change_belongs_to = function(_ownerName) {
   return function(new_related) {
     const collection = this.OPT_CONF[_ownerName]['collection'];
     const name = this.OPT_CONF[_ownerName]['property'];
     const this_related_model = this.OPT_CONF[_ownerName]['related_model'];
     const store = this.get('simpleStore');
     let push_related;
-    if(new_related){
+    if(new_related && typeof new_related === 'object'){
       //push in js object
       push_related = store.find(name, new_related.id);
       if(!push_related.get('content') || push_related.get('isNotDirtyOrRelatedNotDirty')){
@@ -156,11 +154,19 @@ var change_belongs_to_full = function(_ownerName) {
         store.push(name, current_related_pojo);
       });
     }
-    if(new_related){
+    if (new_related && typeof new_related === 'object') {
       //push calling id back in array
       const related_collection = push_related.get(collection) || [];
       const new_related_pojo = {id: push_related.get('id')};
       new_related_pojo[collection] = related_collection.concat(this.get('id'));
+      run(() => {
+        store.push(name, new_related_pojo);
+      });
+    } else if (typeof new_related !== 'object') { //may be # or string
+      let new_related_obj = store.find(name, new_related);
+      const new_related_existing = new_related_obj.get(collection) || [];
+      const new_related_pojo = {id: new_related_obj.get('id')};
+      new_related_pojo[collection] = new_related_existing.concat(this.get('id'));
       run(() => {
         store.push(name, new_related_pojo);
       });
@@ -249,4 +255,4 @@ var belongs_to_save = function(modelName, _ownerName) {
   };
 };
 
-export { belongs_to, change_belongs_to_fk, change_belongs_to_full };
+export { belongs_to, change_belongs_to };
