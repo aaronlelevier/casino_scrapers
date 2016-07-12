@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import injectService from 'ember-service/inject';
 const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import NewMixin from 'bsrs-ember/mixins/model/new';
@@ -25,7 +24,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin
     many_to_many.bind(this)('parent', 'location', {plural:true, add_func:false});
     this._super(...arguments);
   },
-  simpleStore: injectService(),
+  simpleStore: Ember.inject.service(),
   name: attr(''),
   number: attr(''),
   status_fk: undefined,

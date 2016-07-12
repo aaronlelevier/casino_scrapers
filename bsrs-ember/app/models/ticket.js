@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import injectService from 'ember-service/inject';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 //start-non-standard
@@ -37,7 +36,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     many_to_many.bind(this)('category', 'model', {plural:true, add_func:false});
     this._super(...arguments);
   },
-  simpleStore: injectService(),
+  simpleStore: Ember.inject.service(),
   //TODO: test this.  Plan on using for delete modal
   displayName: 'modules.tickets.titleShort',
   number: attr(''),

@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import injectService from 'ember-service/inject';
 const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
@@ -56,7 +55,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
     this._super(...arguments);
   },
   type: 'person',
-  simpleStore: injectService(),
+  simpleStore: Ember.inject.service(),
   status_repo: injectRepo('status'),
   locale_repo: injectRepo('locale'),
   username: attr(''),

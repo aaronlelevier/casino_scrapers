@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import injectService from 'ember-service/inject';
 const { run } = Ember;
 import inject from 'bsrs-ember/utilities/store';
 import equal from 'bsrs-ember/utilities/equal';
@@ -27,7 +26,7 @@ var DTDModel = Model.extend(Validations, OptConf, {
     many_to_many.bind(this)('field', 'dtd', {plural:true, dirty:false});
     this._super(...arguments);
   },
-  simpleStore: injectService(),
+  simpleStore: Ember.inject.service(),
   dtd_attachments_fks: [],
   previous_attachments_fks: [],
   key: attr(''),

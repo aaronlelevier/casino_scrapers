@@ -1,12 +1,11 @@
 import Ember from 'ember';
-import injectService from 'ember-service/inject';
 import EmberPowerSelect from 'ember-power-select/components/power-select';
 
 export default EmberPowerSelect.extend({
   // You can even use computed properties to do other stuff, like apply i18n, that wouldn't be
   // possible with static configuration.
   renderInPlace: true,
-  i18n: injectService(),
+  i18n: Ember.inject.service(),
   loadingMessage: Ember.computed('i18n.locale', function() {
     return this.get('i18n').t('selects.loading');
   }),

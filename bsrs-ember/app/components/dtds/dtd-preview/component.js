@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import injectService from 'ember-service/inject';
 import on from 'ember-evented/on';
 const { computed, defineProperty } = Ember;
 import injectUUID from 'bsrs-ember/utilities/uuid';
@@ -7,7 +6,7 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 export default Ember.Component.extend({
   classNames: ['dt-modal'],
   uuid: injectUUID('uuid'),
-  simpleStore: injectService(),
+  simpleStore: Ember.inject.service(),
   /*
    * @method init - fieldsObj setup
    * existing_ticket_request strings are parsed and a Map object is created for deep linking. May or may not contain a label

@@ -71,49 +71,6 @@ var belongs_to_generator = function(_ownerName) {
   }).property().readOnly();
 };
 
-
-// /**
-//  * Creates change_belongs_to method
-//  *   - relationship param defines model associatioin
-//  *   - name: retrieves property on model
-//  *   - this_related_model (related_model): model that manages relationship b/w model and name
-//  *
-//  * @method change_belongs_to
-//  * @param {string} _ownerName
-//  * @return func
-//  */
-// var change_belongs_to = function(_ownerName) {
-//   return function(new_related_pk) {
-//     const collection = this.OPT_CONF[_ownerName]['collection'];
-//     const name = this.OPT_CONF[_ownerName]['property'];
-//     const this_related_model = this.OPT_CONF[_ownerName]['related_model'];
-//     const store = this.get('simpleStore');
-//     const related = this_related_model || name.replace('-', '_');
-//     const current_related = this.get(related);
-//     if(current_related) {
-//       const current_related_existing = current_related.get(collection);
-//       const updated_current_related_existing = current_related_existing.filter((id) => {
-//         return id !== this.get('id');
-//       });
-//       const current_related_pojo = {id: current_related.get('id')};
-//       current_related_pojo[collection] = updated_current_related_existing;
-//       run(() => {
-//         store.push(name, current_related_pojo);
-//       });
-//     }
-//     if(new_related_pk) {
-//       let new_related = store.find(name, new_related_pk);
-//       const new_related_existing = new_related.get(collection) || [];
-//       const new_related_pojo = {id: new_related.get('id')};
-//       new_related_pojo[collection] = new_related_existing.concat(this.get('id'));
-//       run(() => {
-//         store.push(name, new_related_pojo);
-//       });
-//     }
-//   };
-// };
-
-
 /**
  * Creates change_belongs_to method
  *   - use if data is not bootstrapped
