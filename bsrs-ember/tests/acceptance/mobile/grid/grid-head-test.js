@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import module from 'bsrs-ember/tests/helpers/module';
 import { test } from 'qunit';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
@@ -18,7 +19,7 @@ import page from 'bsrs-ember/tests/pages/ticket-mobile';
 import generalPage, { mobileSearch } from 'bsrs-ember/tests/pages/general-mobile';
 import random from 'bsrs-ember/models/random';
 
-var application, store, endpoint, list_xhr, endpoint, original_uuid;
+var application, store, endpoint, list_xhr, endpoint, original_uuid, flexi, bp;
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
@@ -40,9 +41,9 @@ module('Acceptance | grid-head mobile', {
     store = application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL;
     list_xhr = xhr(`${endpoint}/?page=1`, 'GET', null, {}, 200, TF.list());
-    const flexi = application.__container__.lookup('service:device/layout');
+    flexi = application.__container__.lookup('service:device/layout');
     const breakpoints = flexi.get('breakpoints');
-    const bp = {};
+    bp = {};
     breakpoints.forEach((point) => {
       bp[point.name] = point.begin + 5;
     });
@@ -50,7 +51,9 @@ module('Acceptance | grid-head mobile', {
     original_uuid = random.uuid;
   },
   afterEach() {
-    flexi.set('width', bp.huge);
+    run(() => {
+      flexi.set('width', bp.huge);
+    });
     random.uuid = original_uuid;
     Ember.run(application, 'destroy');
   }

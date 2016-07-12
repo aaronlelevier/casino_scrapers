@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import module from 'bsrs-ember/tests/helpers/module';
 import { test } from 'qunit';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
@@ -17,7 +18,7 @@ import ticketPage from 'bsrs-ember/tests/pages/tickets';
 import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 
-var application, store, endpoint, list_xhr, activity;
+var application, store, endpoint, list_xhr, activity, flexi, bp;
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -39,16 +40,18 @@ module('Acceptance | mobile ticket detail test', {
     xhr(`${endpoint}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
     activity = xhr(`${endpoint}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
     /* MOBILE RENDER */
-    const flexi = application.__container__.lookup('service:device/layout');
+    flexi = application.__container__.lookup('service:device/layout');
     const breakpoints = flexi.get('breakpoints');
-    const bp = {};
+    bp = {};
     breakpoints.forEach((point) => {
       bp[point.name] = point.begin + 5;
     });
     flexi.set('width', bp.mobile);
   },
   afterEach() {
-    flexi.set('width', bp.huge);
+    run(() => {
+      flexi.set('width', bp.huge);
+    });
     Ember.run(application, 'destroy');
   }
 });

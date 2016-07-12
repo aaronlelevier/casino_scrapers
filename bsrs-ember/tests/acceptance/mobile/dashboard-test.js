@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import module from 'bsrs-ember/tests/helpers/module';
 import { test } from 'qunit';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
@@ -7,7 +8,7 @@ import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import TENANT_DEFAULTS from 'bsrs-ember/vendor/defaults/tenant';
 
-var application, store, dashboard_xhr;
+var application, store, dashboard_xhr, flexi, bp;
 
 const PREFIX = config.APP.NAMESPACE;
 const DASHBOARD_URL = BASEURLS.dashboard_url;
@@ -19,16 +20,18 @@ module('Acceptance | mobile dashboard test', {
     store = application.__container__.lookup('service:simpleStore');
     dashboard_xhr = xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
     /* MOBILE RENDER */
-    const flexi = application.__container__.lookup('service:device/layout');
+    flexi = application.__container__.lookup('service:device/layout');
     const breakpoints = flexi.get('breakpoints');
-    const bp = {};
+    bp = {};
     breakpoints.forEach((point) => {
       bp[point.name] = point.begin + 5;
     });
     flexi.set('width', bp.mobile);
   },
   afterEach() {
-    flexi.set('width', bp.huge);
+    run(() => {
+      flexi.set('width', bp.huge);
+    });
     Ember.run(application, 'destroy');
   }
 });

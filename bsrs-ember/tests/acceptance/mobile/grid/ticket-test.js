@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import module from 'bsrs-ember/tests/helpers/module';
 import { test } from 'qunit';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
@@ -13,7 +14,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import page from 'bsrs-ember/tests/pages/ticket-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general-mobile';
 
-var application, store, endpoint, list_xhr;
+var application, store, endpoint, list_xhr, flexi, bp;
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -33,16 +34,18 @@ module('Acceptance | grid mobile test', {
     endpoint = PREFIX + BASE_URL;
     list_xhr = xhr(endpoint+'/?page=1', 'GET', null, {}, 200, TF.list());
     /* MOBILE RENDER */
-    const flexi = application.__container__.lookup('service:device/layout');
+    flexi = application.__container__.lookup('service:device/layout');
     const breakpoints = flexi.get('breakpoints');
-    const bp = {};
+    bp = {};
     breakpoints.forEach((point) => {
       bp[point.name] = point.begin + 5;
     });
     flexi.set('width', bp.mobile);
   },
   afterEach() {
-    flexi.set('width', bp.huge);
+    run(() => {
+      flexi.set('width', bp.huge);
+    });
     Ember.run(application, 'destroy');
   }
 });
