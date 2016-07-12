@@ -44,10 +44,13 @@ test('description is required validation, cannot save w/o description', function
   $err = this.$('.t-ap-description-validation-error');
   assert.ok($err.is(':visible'));
   assert.equal($err.text().trim(), trans.t('validation.invalid') + ' ' + trans.t('admin.profile.description'));
+  page.descFill('a');
+  assert.notOk($err.is(':visible'));
 });
 
 test('description is max length validation is 500', function(assert) {
-  const description = Array(555).join("a");
+  const descriptionChars = 501;
+  const description = Array(descriptionChars+1).join("a");
   run(function() {
     model = store.push('profile', {
       id: PD.idTwo,
@@ -62,6 +65,8 @@ test('description is max length validation is 500', function(assert) {
   $err = this.$('.t-ap-description-validation-error');
   assert.ok($err.is(':visible'));
   assert.equal($err.text().trim(), trans.t('validation.invalid') + ' ' + trans.t('admin.profile.description'));
+  page.descFill(Array(descriptionChars).join("a"));
+  assert.notOk($err.is(':visible'));
 });
 
 test('header - shows detail if not model.new', function(assert) {
