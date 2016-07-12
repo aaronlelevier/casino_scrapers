@@ -4,7 +4,7 @@ import OPT_CONF from 'dummy/mixins/issue_config';
 
 export default Ember.Object.extend(OPT_CONF, {
   init() {
-    belongs_to.bind(this)('tag', 'issue');
+    belongs_to.bind(this)('tag', 'issue', {bootstrapped: true});
     this._super(...arguments);
   },
   simpleStore: Ember.inject.service(),

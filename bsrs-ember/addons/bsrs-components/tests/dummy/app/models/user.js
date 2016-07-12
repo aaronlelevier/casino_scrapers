@@ -23,9 +23,9 @@ export default Ember.Object.extend(OPT_CONF, {
      * @param {string} status owning model
      * @param {string} user belongs to model
      */
-    belongs_to.bind(this)('hat', 'user');
-    belongs_to.bind(this)('shirt', 'user', {'bootstrapped':false});
-    belongs_to.bind(this)('user_status', 'user');
+    belongs_to.bind(this)('hat', 'user', {bootstrapped:true});
+    belongs_to.bind(this)('shirt', 'user');
+    belongs_to.bind(this)('user_status', 'user', {bootstrapped:true});
 
     /**
      * Creates methods defined on join model

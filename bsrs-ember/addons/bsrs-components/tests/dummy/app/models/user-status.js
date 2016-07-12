@@ -6,7 +6,7 @@ import OPT_CONF from 'dummy/mixins/user_status_config';
 export default Model.extend(OPT_CONF, {
   simpleStore: Ember.inject.service(),
   init() {
-    belongs_to.bind(this)('hat', 'user-status', {'change_func':false, 'save':false, 'rollback':false, 'belongs_to':false, 'dirty': false});
+    belongs_to.bind(this)('hat', 'user-status', {bootstrapped:true, 'change_func':false, 'save':false, 'rollback':false, 'belongs_to':false, 'dirty': false});
   },
   change_hat() {
     return 'wat';
@@ -24,4 +24,3 @@ export default Model.extend(OPT_CONF, {
     return 'wat';
   },
 });
-
