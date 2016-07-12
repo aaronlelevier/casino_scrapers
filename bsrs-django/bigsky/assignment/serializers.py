@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from assignment.models import Profile
-from person.models import Person
 from person.serializers_leaf import PersonIdUsernameSerializer
 from utils.serializers import BaseCreateSerializer
 
@@ -22,4 +21,4 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('id', 'description', 'assignee',)
+        fields = PROFILE_FIELDS

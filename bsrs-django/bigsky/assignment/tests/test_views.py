@@ -1,14 +1,14 @@
 import json
 import uuid
 
-from django.test import TestCase
-
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
 from assignment.models import Profile
 from assignment.serializers import ProfileCreateUpdateSerializer
+from assignment.tests.factory import create_profile
 from person.tests.factory import create_single_person, PASSWORD
+from utils.create import _generate_chars
 
 
 class ViewTests(APITestCase):
@@ -25,7 +25,7 @@ class ViewTests(APITestCase):
         self.client.logout()
 
     def test_list(self):
-        response = self.client.get('/api/profiles/assignment/')
+        response = self.client.get('/api/admin/profiles/')
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -37,7 +37,7 @@ class ViewTests(APITestCase):
         self.assertEqual(data['assignee']['username'], self.profile.assignee.username)
 
     def test_detail(self):
-        response = self.client.get('/api/profiles/assignment/{}/'.format(self.profile.id))
+        response = self.client.get('/api/admin/profiles/{}/'.format(self.profile.id))
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -50,7 +50,7 @@ class ViewTests(APITestCase):
         self.data['id'] = str(uuid.uuid4())
         self.data['description'] = 'foo'
 
-        response = self.client.post('/api/profiles/assignment/', self.data, format='json')
+        response = self.client.post('/api/admin/profiles/', self.data, format='json')
 
         self.assertEqual(response.status_code, 201)
         profile = Profile.objects.get(id=self.data['id'])
@@ -66,7 +66,7 @@ class ViewTests(APITestCase):
             'assignee': str(assignee.id)
         })
 
-        response = self.client.put('/api/profiles/assignment/{}/'.format(self.profile.id),
+        response = self.client.put('/api/admin/profiles/{}/'.format(self.profile.id),
             self.data, format='json')
 
         self.assertEqual(response.status_code, 200)
@@ -74,3 +74,14 @@ class ViewTests(APITestCase):
         self.assertEqual(data['id'], self.data['id'])
         self.assertEqual(data['description'], self.data['description'])
         self.assertEqual(data['assignee'], self.data['assignee'])
+
+    def test_search(self):
+        self.profile_two = create_profile(_generate_chars())
+        self.profile_three = create_profile(_generate_chars())
+        self.assertEqual(Profile.objects.count(), 3)
+        keyword = self.profile_two.description
+
+        response = self.client.get('/api/admin/profiles/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
