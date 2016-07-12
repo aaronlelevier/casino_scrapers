@@ -214,7 +214,7 @@ class TicketTests(TestCase):
         create_tickets(_many=2)
 
     def test_ordering(self):
-        self.assertEqual(Ticket._meta.ordering, ('number',))
+        self.assertEqual(Ticket._meta.ordering, ('-created',))
 
     def test_number(self):
         one = Ticket.objects.get(number=1)
@@ -225,7 +225,7 @@ class TicketTests(TestCase):
 
 
 class TicketActivityTests(TestCase):
-    
+
     def setUp(self):
         create_categories()
         self.person = create_single_person()
@@ -266,7 +266,7 @@ class TicketActivityTests(TestCase):
     def test_log_create(self):
         name = 'create'
         type, _ = TicketActivityType.objects.get_or_create(name=name)
-        
+
         ticket_activity = TicketActivity.objects.create(type=type, ticket=self.ticket,
             person=self.person)
 
@@ -276,7 +276,7 @@ class TicketActivityTests(TestCase):
     def test_log_assignee(self):
         name = 'assignee'
         type, _ = TicketActivityType.objects.get_or_create(name='assignee')
-        
+
         ticket_activity = TicketActivity.objects.create(
             type=type,
             person=self.person,
@@ -294,7 +294,7 @@ class TicketActivityTests(TestCase):
     def test_log_attachment(self):
         attachment = create_file_attachment(self.ticket)
         type, _ = TicketActivityType.objects.get_or_create(name='attachment_add')
-        
+
         ticket_activity = TicketActivity.objects.create(
             type=type,
             person=self.person,
@@ -310,7 +310,7 @@ class TicketActivityTests(TestCase):
 
     def test_log_cc_add(self):
         type, _ = TicketActivityType.objects.get_or_create(name='cc_add')
-        
+
         ticket_activity = TicketActivity.objects.create(
             type=type,
             person=self.person,
@@ -329,7 +329,7 @@ class TicketCategoryOrderingTests(TicketCategoryOrderingSetupMixin, TestCase):
 
     def test_ticket_one(self):
         ordered_categories = self.one.categories.order_by('level').values_list('name', flat=True)
-        
+
         self.assertEqual(
             " - ".join(ordered_categories),
             "Loss Prevention - Locks - Drawer Lock"

@@ -141,7 +141,7 @@ class Ticket(BaseModel):
     objects = TicketManager()
 
     class Meta:
-        ordering = ('number',)
+        ordering = ('-created',)
 
 
 TICKET_ACTIVITY_TYPES = [
@@ -173,7 +173,7 @@ class TicketActivity(models.Model):
     person = models.ForeignKey(Person, related_name="ticket_activities",
         help_text="Person who did the TicketActivity")
     content = JSONField(blank=True, null=True)
-    
+
     class Meta:
         ordering = ('-created',)
 
