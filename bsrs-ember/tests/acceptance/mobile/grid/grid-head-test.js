@@ -50,6 +50,7 @@ module('Acceptance | grid-head mobile', {
     original_uuid = random.uuid;
   },
   afterEach() {
+    flexi.set('width', bp.huge);
     random.uuid = original_uuid;
     Ember.run(application, 'destroy');
   }

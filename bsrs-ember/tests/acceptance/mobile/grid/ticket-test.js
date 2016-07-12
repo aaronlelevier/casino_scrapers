@@ -42,6 +42,7 @@ module('Acceptance | grid mobile test', {
     flexi.set('width', bp.mobile);
   },
   afterEach() {
+    flexi.set('width', bp.huge);
     Ember.run(application, 'destroy');
   }
 });

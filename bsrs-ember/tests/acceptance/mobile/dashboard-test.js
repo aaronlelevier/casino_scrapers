@@ -28,6 +28,7 @@ module('Acceptance | mobile dashboard test', {
     flexi.set('width', bp.mobile);
   },
   afterEach() {
+    flexi.set('width', bp.huge);
     Ember.run(application, 'destroy');
   }
 });
