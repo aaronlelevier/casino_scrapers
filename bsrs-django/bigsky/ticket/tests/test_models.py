@@ -9,8 +9,8 @@ from generic.tests.factory import create_file_attachment
 from location.models import LocationStatus
 from location.tests.factory import create_location
 from person.tests.factory import create_single_person
-from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
-    TicketActivity, TICKET_STATUS_DEFAULT, TICKET_PRIORITY_DEFAULT)
+from ticket.models import (Ticket, TicketManager, TicketQuerySet, TicketStatus, TicketPriority,
+    TicketActivityType, TicketActivity, TICKET_STATUS_DEFAULT, TICKET_PRIORITY_DEFAULT)
 from ticket.tests.factory_related import create_ticket_statuses, create_ticket_priorities
 from ticket.tests.factory import RegionManagerWithTickets, create_ticket, create_tickets
 from ticket.tests.mixins import TicketCategoryOrderingSetupMixin
@@ -81,6 +81,9 @@ class TicketManagerTests(TestCase):
             self.person.locations.remove(x)
         for c in self.person.role.categories.all():
             self.person.role.categories.remove(c)
+
+    def test_queryset_cls(self):
+        self.assertEqual(TicketManager.queryset_cls, TicketQuerySet)
 
     def test_ticket_filter__person_top_level_location_and_no_role_categories(self):
         self.person.locations.add(self.rm.top_location)

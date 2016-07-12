@@ -106,8 +106,7 @@ class AttachmentQuerySet(BaseQuerySet):
 
 class AttachmentManager(BaseManager):
 
-    def get_queryset(self):
-        return AttachmentQuerySet(self.model, using=self._db).filter(deleted__isnull=True)
+    queryset_cls = AttachmentQuerySet
 
     def to_dict_full(self):
         return self.get_queryset().to_dict_full()

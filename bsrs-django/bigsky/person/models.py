@@ -268,6 +268,8 @@ class PersonManager(UserManager):
     Auto exclude deleted records
     '''
 
+    # Leave as-is b/c not using our BaseManager, using Django's UserManager.
+    # Don't use `queryset_cls` pattern for this class.
     def get_queryset(self):
         return PersonQuerySet(self.model, using=self._db).filter(deleted__isnull=True)
 

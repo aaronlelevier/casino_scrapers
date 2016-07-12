@@ -9,8 +9,8 @@ from model_mommy import mommy
 from contact.models import Address
 from contact.tests.factory import create_contact
 from location.models import (
-    LocationManager, LocationLevel, LocationStatus, LocationType, Location,
-    LOCATION_COMPANY, LOCATION_REGION, LOCATION_FMU, LOCATION_STORE,)
+    Location, LocationManager, LocationQuerySet,  LocationLevel, LocationStatus,
+    LocationType, LOCATION_COMPANY, LOCATION_REGION, LOCATION_FMU, LOCATION_STORE,)
 from location.tests.factory import create_location, create_locations
 from person.tests.factory import create_single_person
 from utils.models import DefaultNameManager
@@ -163,6 +163,9 @@ class LocationManagerTests(TestCase):
 
     def setUp(self):
         create_locations()
+
+    def test_queryset_cls(self):
+        self.assertEqual(LocationManager.queryset_cls, LocationQuerySet)
 
     def test_get_level_children(self):
         # setup

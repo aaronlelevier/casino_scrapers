@@ -10,7 +10,7 @@ from model_mommy import mommy
 from rest_framework.exceptions import ValidationError
 
 from category.tests.factory import create_categories
-from generic.models import Attachment, SavedSearch
+from generic.models import Attachment, AttachmentManager, AttachmentQuerySet, SavedSearch
 from generic.tests.factory import create_file_attachment, create_image_attachment
 from person.tests.factory import create_single_person
 from ticket.tests.factory import create_ticket
@@ -76,6 +76,9 @@ class AttachmentManagerTests(TestCase):
 
     def setUp(self):
         create_image_attachment()
+
+    def test_queryset_cls(self):
+        self.assertEqual(AttachmentManager.queryset_cls, AttachmentQuerySet)
 
     def test_to_dict_full(self):
         self.assertEqual(

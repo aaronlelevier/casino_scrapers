@@ -9,3 +9,6 @@ class PersonOrLocationRequiredExcp(Exception):
 
 class PersonAndLocationKeysExcp(Exception):
     pass
+
+class QuerySetClassNotDefined(Exception):
+    pass

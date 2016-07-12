@@ -3,7 +3,7 @@ from django.utils.text import capfirst
 
 from utils.helpers import generate_uuid
 from utils.fields import UpperCaseCharField
-from utils.models import BaseModel, BaseManager
+from utils.models import BaseModel, BaseManager, BaseQuerySet
 
 
 DEFAULT_CURRENCY = {
@@ -16,6 +16,7 @@ DEFAULT_CURRENCY = {
 
 
 class CurrencyManager(BaseManager):
+    queryset_cls = BaseQuerySet
 
     def default(self):
         try:

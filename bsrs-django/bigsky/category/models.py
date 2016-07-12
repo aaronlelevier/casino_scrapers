@@ -49,8 +49,7 @@ class CategoryQuerySet(SelfReferencingQuerySet):
 
 class CategoryManager(SelfReferencingManager):
 
-    def get_queryset(self):
-        return CategoryQuerySet(self.model, self._db).filter(deleted__isnull=True)
+    queryset_cls = CategoryQuerySet
 
     def get_all_if_none(self, role):
         return self.get_queryset().get_all_if_none(role)

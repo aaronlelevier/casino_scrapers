@@ -100,8 +100,7 @@ class SelfReferencingQuerySet(models.query.QuerySet):
 
 class SelfReferencingManager(BaseManager):
 
-    def get_queryset(self):
-        return SelfReferencingQuerySet(self.model, self._db).filter(deleted__isnull=True)
+    queryset_cls = SelfReferencingQuerySet
 
     def get_all_children(self, parent, all_children=None):
         return self.get_queryset().get_all_children(parent, all_children)
@@ -261,8 +260,7 @@ class LocationQuerySet(SelfReferencingQuerySet):
 
 class LocationManager(SelfReferencingManager):
 
-    def get_queryset(self):
-        return LocationQuerySet(self.model, self._db).filter(deleted__isnull=True)
+    queryset_cls = LocationQuerySet
 
     def get_level_children(self, llevel_id, pk):
         '''

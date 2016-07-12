@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.conf import settings
 
 from accounting.models import Currency
-from category.models import Category, CategoryStatus
+from category.models import Category, CategoryManager, CategoryQuerySet, CategoryStatus
 from category.tests import factory
 from person.tests.factory import create_single_person
 from utils.models import DefaultNameManager
@@ -53,6 +53,9 @@ class CategoryManagerTests(TestCase):
         ret = self.person.role.categories.objects_and_their_children()
 
         self.assertEqual(len(ret), 3)
+
+    def test_queryset_cls(self):
+        self.assertEqual(CategoryManager.queryset_cls, CategoryQuerySet)
 
     def test_get_all_if_none(self):
         for c in self.person.role.categories.all():

@@ -8,7 +8,8 @@ from model_mommy import mommy
 from contact.models import Country
 from person.tests.factory import create_single_person, create_role
 from utils import create
-from utils.models import Tester
+from utils.exceptions import QuerySetClassNotDefined
+from utils.models import Tester, TesterManager
 from utils.permissions import perms_map
 
 

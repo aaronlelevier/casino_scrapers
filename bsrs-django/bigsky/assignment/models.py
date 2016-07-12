@@ -16,8 +16,7 @@ class ProfileQuerySet(BaseQuerySet):
 
 class ProfileManager(BaseManager):
 
-    def get_queryset(self):
-        return ProfileQuerySet(self.model, using=self._db).filter(deleted__isnull=True)
+    queryset_cls = ProfileQuerySet
 
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)

@@ -8,6 +8,9 @@ import uuid
 from django.db import models
 from django.utils import timezone
 
+from utils.exceptions import QuerySetClassNotDefined
+
+
 
 """
 Monkey patch the JSONEncoder to cast UUID's as strings.
@@ -41,9 +44,18 @@ class BaseQuerySet(models.query.QuerySet):
 class BaseManager(models.Manager):
     '''
     Auto exclude deleted records
+
+    :queryset_cls:
+      Must defined on the class that sub-classes this manager. This is how
+      the `get_queryset` method knows which QuerySet class to use.
     '''
+    queryset_cls = BaseQuerySet
+
     def get_queryset(self):
-        return BaseQuerySet(self.model, using=self._db).filter(deleted__isnull=True)
+        if not getattr(self.__class__, "queryset_cls"):
+            raise QuerySetClassNotDefined("Must define 'queryset_cls' for use with this Manager.")
+
+        return self.__class__.queryset_cls(self.model, using=self._db).filter(deleted__isnull=True)
 
 
 class BaseModel(models.Model):
@@ -83,8 +95,14 @@ timestamp of when the record was deleted.""")
         return {"id": str(self.pk)}
 
 
-class Tester(BaseModel):
+class TesterQuerySet(BaseQuerySet):
     pass
+
+class TesterManager(BaseManager):
+    queryset_cls = TesterQuerySet
+
+class Tester(BaseModel):
+    objects = TesterManager()
     
 
 class ToDictNameMixin(object):
