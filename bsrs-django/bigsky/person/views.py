@@ -13,7 +13,7 @@ from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.views import BaseModelViewSet
 
 
-class RoleViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
+class RoleViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
     """
     API endpoint that allows roles to be viewed or edited.
     """

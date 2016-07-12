@@ -42,6 +42,15 @@ class RoleListTests(RoleSetupMixin, APITestCase):
         self.assertEqual(role['role_type'], self.role.role_type)
         self.assertEqual(role['location_level'], str(self.location.location_level.id))
 
+    def test_search(self):
+        role = create_role()
+        self.assertEqual(Role.objects.count(), 2)
+
+        response = self.client.get('/api/admin/roles/?search={}'.format(role.name))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+
 
 class RoleDetailTests(RoleSetupMixin, APITestCase):
 

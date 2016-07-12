@@ -16,7 +16,8 @@ from contact.models import Email
 from contact.tests.factory import create_contact
 from location.models import Location
 from location.tests.factory import create_locations
-from person.models import Person, PersonManager, PersonQuerySet, PersonStatus, Role
+from person.models import (Person, PersonManager, PersonQuerySet, PersonStatus,
+    Role, RoleManager, RoleQuerySet)
 from person.tests.factory import (PASSWORD, create_person, create_role, create_single_person,
     get_or_create_tenant)
 from translation.models import Locale
@@ -29,10 +30,34 @@ from utils.tests.test_validators import (DIGITS, NO_DIGITS, UPPER_CHARS, NO_UPPE
 
 ### ROLE
 
+class RoleManagerTests(TestCase):
+
+    def setUp(self):
+        self.role_one = create_role()
+        self.role_two = create_role()
+
+    def test_queryset_cls(self):
+        self.assertEqual(RoleManager.queryset_cls, RoleQuerySet)
+
+    def test_search_multi(self):
+        keyword = self.role_one.name
+        raw_ret = Role.objects.search_multi(keyword)
+
+        ret = Role.objects.filter(
+            Q(name__icontains=keyword) | \
+            Q(role_type__icontains=keyword)
+        )
+
+        self.assertEqual(ret.count(), raw_ret.count())
+
+
 class RoleTests(TestCase):
 
     def setUp(self):
         self.role = create_role()
+
+    def test_manager(self):
+        self.assertIsInstance(Role.objects, RoleManager)
 
     def test_str(self):
         self.assertEqual(str(self.role), self.role.name)

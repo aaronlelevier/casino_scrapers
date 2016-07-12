@@ -24,10 +24,27 @@ from person import config, helpers
 from tenant.models import Tenant
 from translation.models import Locale
 from utils.fields import InheritedValueField
-from utils.models import BaseModel, BaseNameModel, DefaultNameManager
+from utils.models import BaseModel, BaseManager, BaseQuerySet, BaseNameModel, DefaultNameManager
 from utils.validators import (contains_digit, contains_upper_char, contains_lower_char,
     contains_special_char, contains_no_whitespaces)
 from work_order.models import WorkOrderStatus
+
+
+class RoleQuerySet(BaseQuerySet):
+
+    def search_multi(self, keyword):
+        return self.filter(
+            Q(name__icontains=keyword) | \
+            Q(role_type__icontains=keyword)
+        )
+
+
+class RoleManager(BaseManager):
+
+    queryset_cls = RoleQuerySet
+
+    def search_multi(self, keyword):
+        return self.get_queryset().search_multi(keyword)
 
 
 class Role(BaseModel):
@@ -111,6 +128,8 @@ class Role(BaseModel):
     msg_copy_email = models.BooleanField(blank=True, default=False)
     msg_copy_default = models.BooleanField(blank=True, default=False)
     msg_stored_link = models.BooleanField(blank=True, default=False)
+
+    objects = RoleManager()
 
     __original_values = {}
 
