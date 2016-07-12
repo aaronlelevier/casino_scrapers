@@ -32,7 +32,7 @@ class SelfReferencingRouteMixin(object):
 
 ### LOCATION LEVEL
 
-class LocationLevelViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
+class LocationLevelViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelViewSet):
     '''
     ## Detail Routes
 

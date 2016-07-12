@@ -9,8 +9,9 @@ from model_mommy import mommy
 from contact.models import Address
 from contact.tests.factory import create_contact
 from location.models import (
-    Location, LocationManager, LocationQuerySet,  LocationLevel, LocationStatus,
-    LocationType, LOCATION_COMPANY, LOCATION_REGION, LOCATION_FMU, LOCATION_STORE,)
+    Location, LocationManager, LocationQuerySet,  LocationLevel, LocationLevelManager,
+    LocationLevelQuerySet, LocationStatus, LocationType, LOCATION_COMPANY, LOCATION_REGION,
+    LOCATION_FMU, LOCATION_STORE,)
 from location.tests.factory import create_location, create_locations
 from person.tests.factory import create_single_person
 from utils.models import DefaultNameManager
@@ -70,6 +71,9 @@ class LocationLevelManagerTests(TestCase):
         self.store1 = mommy.make(LocationLevel, name='store1')
         self.store2 = mommy.make(LocationLevel, name='store2')
 
+    def test_queryset_cls(self):
+        self.assertEqual(LocationLevelManager.queryset_cls, LocationLevelQuerySet)
+
     def test_children(self):
         # no children levels
         self.assertEqual(self.region.children.count(), 0)
@@ -96,11 +100,23 @@ class LocationLevelManagerTests(TestCase):
         self.assertIsInstance(ret, LocationLevel)
         self.assertEqual(ret.name, settings.DEFAULT_LOCATION_LEVEL)
 
+    def test_search_multi(self):
+        self.assertEqual(LocationLevel.objects.count(), 4)
+        keyword = self.region.name
+        raw_ret = LocationLevel.objects.filter(name__icontains=keyword)
+
+        ret = LocationLevel.objects.search_multi(keyword)
+
+        self.assertEqual(ret.count(), raw_ret.count())
+
 
 class LocationLevelTests(TestCase):
 
     def setUp(self):
         self.location = create_location()
+
+    def test_manager(self):
+        self.assertIsInstance(LocationLevel.objects, LocationLevelManager)
 
     def test_name(self):
         # confirm that the "mixin-inheritance" worked for the ``name`` field

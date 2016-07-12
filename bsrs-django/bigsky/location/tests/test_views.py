@@ -48,6 +48,16 @@ class LocationLevelTests(APITestCase):
         self.assertEqual(data['results'][0]['id'], str(location_level.id))
         self.assertEqual(data['results'][0]['name'], location_level.name)
 
+    def test_list_search(self):
+        self.assertTrue(LocationLevel.objects.count() > 1)
+        keyword = self.region.name
+
+        response = self.client.get('/api/admin/location-levels/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+
+
     ### GET
 
     def test_get_response(self):

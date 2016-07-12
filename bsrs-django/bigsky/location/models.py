@@ -135,6 +135,20 @@ class SelfRefrencingBaseModel(models.Model):
 
 ### LOCATION LEVEL
 
+class LocationLevelQuerySet(SelfReferencingQuerySet):
+
+    def search_multi(self, keyword):
+        return self.filter(name__icontains=keyword)
+
+
+class LocationLevelManager(SelfReferencingManager):
+
+    queryset_cls = LocationLevelQuerySet
+
+    def search_multi(self, keyword):
+        return self.get_queryset().search_multi(keyword)
+
+
 class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
     '''
     LocationLevel records must be unique by: name, role_type
@@ -149,6 +163,8 @@ class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
     warranty = models.BooleanField(blank=True, default=True)
     catalog_categories = models.BooleanField(blank=True, default=True)
     assets = models.BooleanField(blank=True, default=True)
+
+    objects = LocationLevelManager()
 
     @property
     def is_top_level(self):
