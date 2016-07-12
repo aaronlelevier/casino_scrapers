@@ -21,6 +21,7 @@ var BSRS_PROFILE_DEFAULTS_OBJECT = (function() {
       usernameTwo: this.person.usernameTwo,
       usernameGridOne: this.person.username+"0",
       usernameGridTwo: this.person.username+"1",
+      usernameGridTen: this.person.username+"10",
     };
   };
   return factory;

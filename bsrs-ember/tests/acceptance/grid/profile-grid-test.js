@@ -181,6 +181,8 @@ test('clicking header will sort by given property and reset page to 1 (also requ
   });
 });
 
+// description search/sort
+
 test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
   visit(LIST_URL);
   andThen(() => {
@@ -206,14 +208,14 @@ test('typing a search will reset page to 1 and require an additional xhr and res
 });
 
 test('multiple sort options appear in the query string as expected', function(assert) {
-  var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=description';
-  xhr(sort_one ,"GET",null,{},200, PF.sorted_page_one('description'));
   visit(LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descGridOne);
   });
+  var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=description';
+  xhr(sort_one ,"GET",null,{},200, PF.sorted_page_one('description'));
   click('.t-sort-description-dir');
   andThen(() => {
     assert.equal(currentURL(), LIST_URL + '?sort=description');
@@ -227,5 +229,56 @@ test('multiple sort options appear in the query string as expected', function(as
     assert.equal(currentURL(), LIST_URL + '?sort=-description');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descGridOneReverse);
+  });
+});
+
+// assignee.username search/sort
+
+test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
+  visit(LIST_URL);
+  andThen(() => {
+    assert.equal(currentURL(), LIST_URL);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridOne);
+  });
+  const searchText = '10';
+  var search_two = PREFIX + BASE_URL + `/?page=1&search=${searchText}`;
+  xhr(search_two ,"GET",null,{},200, PF.searched(searchText, 'description', 1));
+  fillIn('.t-grid-search-input', searchText);
+  triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
+  andThen(() => {
+    assert.equal(currentURL(),LIST_URL + `?search=${searchText}`);
+    assert.equal(find('.t-grid-data').length, 1);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridTen);
+  });
+  click('.t-reset-grid');
+  andThen(() => {
+    assert.equal(currentURL(), LIST_URL);
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridOne);
+  });
+});
+
+test('sort by assignee username', function(assert) {
+  visit(LIST_URL);
+  andThen(() => {
+    assert.equal(currentURL(), LIST_URL);
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridOne);
+  });
+  var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=assignee__username';
+  xhr(sort_one ,"GET",null,{},200, PF.sorted_page_one('assignee'));
+  click('.t-sort-assignee-username-dir');
+  andThen(() => {
+    assert.equal(currentURL(), LIST_URL + '?sort=assignee.username');
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridOne);
+  });
+  var sort = PREFIX + BASE_URL + '/?page=1&ordering=-assignee__username';
+  xhr(sort ,"GET",null,{},200, PF.list_reverse());
+  click('.t-sort-assignee-username-dir');
+  andThen(() => {
+    assert.equal(currentURL(), LIST_URL + '?sort=-assignee.username');
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridTen);
   });
 });
