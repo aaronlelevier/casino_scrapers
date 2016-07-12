@@ -12,7 +12,11 @@ class EagerLoadQuerySetMixin(object):
 
     When mixed into a ViewSet, must be the first "mixin".
 
-    :eager_load_actions: override in ViewSet to actions.
+    :eager_load_actions:
+      override in ViewSet to actions if want to limit/change request
+      actions to apply eager loading to.
+
+    :eager_load: must define the eager_loading method on the serializer.
     """
     eager_load_actions = ['retrieve', 'list']
 

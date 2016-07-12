@@ -2,11 +2,11 @@ from rest_framework import permissions
 
 from assignment.models import Profile
 from assignment.serializers import ProfileCreateUpdateSerializer, ProfileSerializer
-from utils.mixins import SearchMultiMixin
+from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.views import BaseModelViewSet
 
 
-class ProfileViewSet(SearchMultiMixin, BaseModelViewSet):
+class ProfileViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
 
     model = Profile
     queryset = Profile.objects.all()

@@ -22,3 +22,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = PROFILE_FIELDS
+
+    @staticmethod
+    def eager_load(queryset):
+        return queryset.select_related('assignee')
