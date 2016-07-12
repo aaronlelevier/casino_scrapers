@@ -3,12 +3,14 @@ import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-import BaseRepository from 'bsrs-ember/repositories/base-repo';
+import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
+import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
+import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
 
 var PREFIX = config.APP.NAMESPACE;
 var THIRD_PARTY_URL = PREFIX + '/admin/third-parties/';
 
-var ThirdPartyRepo = BaseRepository.extend({
+var ThirdPartyRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: Ember.computed(function() { return 'third-party'; }),
   typeGrid: Ember.computed(function() { return 'third-party-list'; }),
   garbage_collection: Ember.computed(function() { return ['third-party-list']; }),

@@ -3,13 +3,15 @@ import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-import BaseRepository from 'bsrs-ember/repositories/base-repo';
+import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
+import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
+import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
 
 const { run } = Ember;
 var PREFIX = config.APP.NAMESPACE;
 var API_URL = `${PREFIX}/admin/profiles/`;
 
-export default BaseRepository.extend({
+export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: 'profile',
   typeGrid: 'profile-list',
   garbage_collection: Ember.computed(function() {

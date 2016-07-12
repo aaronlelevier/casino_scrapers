@@ -3,14 +3,16 @@ import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import injectRepo from 'bsrs-ember/utilities/inject';
+import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
+import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-import BaseRepository from 'bsrs-ember/repositories/base-repo';
+import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
 
 const { run } = Ember;
 var PREFIX = config.APP.NAMESPACE;
 var PEOPLE_URL = `${PREFIX}/admin/people/`;
 
-export default BaseRepository.extend({
+export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: Ember.computed(function() { return 'person'; }),
   typeGrid: Ember.computed(function() { return 'person-list'; }),
   garbage_collection: Ember.computed(function() { return ['person-list', 'person-status-list']; }),

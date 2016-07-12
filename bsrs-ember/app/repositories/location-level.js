@@ -3,12 +3,14 @@ import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-import BaseRepository from 'bsrs-ember/repositories/base-repo';
+import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
+import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
+import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 
 var PREFIX = config.APP.NAMESPACE;
 var LOCATION_LEVEL_URL = PREFIX + '/admin/location-levels/';
 
-var LocationLevelRepo = BaseRepository.extend({
+var LocationLevelRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: Ember.computed(function() { return 'location-level'; }),
   typeGrid: Ember.computed(function() { return 'location-level-list'; }),
   garbage_collection: Ember.computed(function() { return ['location-level-list']; }),
