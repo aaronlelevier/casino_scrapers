@@ -3,15 +3,13 @@ import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import inject from 'bsrs-ember/utilities/deserializer';
-import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
-import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
-import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
+import BaseRepository from 'bsrs-ember/repositories/base-repo';
 
 var PREFIX = config.APP.NAMESPACE;
 var TICKET_URL = '/ticket';
 var TICKETS_URL = PREFIX + '/tickets/';
 
-var TicketRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
+var TicketRepo = BaseRepository.extend({
   uuid: injectUUID('uuid'),
   type: Ember.computed(function() { return 'ticket'; }),
   typeGrid: Ember.computed(function() { return 'ticket-list'; }),

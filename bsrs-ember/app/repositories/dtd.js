@@ -3,14 +3,12 @@ import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
-import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
-import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
+import BaseRepository from 'bsrs-ember/repositories/base-repo';
 
 var PREFIX = config.APP.NAMESPACE;
 var DTD_URL = `${PREFIX}/dtds/`;
 
-var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
+var DTDRepo = BaseRepository.extend({
   type: Ember.computed(function() { return 'dtd'; }),
   typeGrid: Ember.computed(function() { return 'dtd-list'; }),
   garbage_collection: Ember.computed(function() { return ['dtd-list']; }),
