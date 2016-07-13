@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from profile import models
+from routing import models
 
 
 @admin.register(models.Assignment)

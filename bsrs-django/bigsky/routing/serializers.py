@@ -1,11 +1,18 @@
 from rest_framework import serializers
 
-from profile.models import Assignment
+from routing.models import Assignment, ProfileFilter
 from person.serializers_leaf import PersonIdUsernameSerializer
 from utils.serializers import BaseCreateSerializer
 
 
 ASSIGNMENT_FIELDS = ('id', 'description', 'assignee',)
+
+
+class ProfileFilterSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProfileFilter
+        fields = ('id', 'context', 'field', 'criteria')
 
 
 class AssignmentCreateUpdateSerializer(BaseCreateSerializer):
@@ -15,7 +22,7 @@ class AssignmentCreateUpdateSerializer(BaseCreateSerializer):
         fields = ASSIGNMENT_FIELDS
 
 
-class AssignmentSerializer(serializers.ModelSerializer):
+class AssignmentListSerializer(serializers.ModelSerializer):
 
     assignee = PersonIdUsernameSerializer()
 
@@ -26,3 +33,13 @@ class AssignmentSerializer(serializers.ModelSerializer):
     @staticmethod
     def eager_load(queryset):
         return queryset.select_related('assignee')
+
+
+class AssignmentDetailSerializer(serializers.ModelSerializer):
+
+    assignee = PersonIdUsernameSerializer()
+    filters = ProfileFilterSerializer(required=False, many=True)
+
+    class Meta:
+        model = Assignment
+        fields = ASSIGNMENT_FIELDS + ('filters',)

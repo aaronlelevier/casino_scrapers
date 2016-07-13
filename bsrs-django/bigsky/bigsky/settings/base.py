@@ -47,7 +47,7 @@ LOCAL_APPS = [
     'generic',
     'location',
     'person',
-    'profile',
+    'routing',
     'session',
     'tenant',
     'third_party',
@@ -224,7 +224,10 @@ PASSWORD_EXPIRE_DAYS = 90
 MAX_PASSWORDS_STORED = 5
 DEFAULT_PERSON_STATUS = 'Active'
 
-# TENANT
+### ROUTING
+DEFAULT_PROFILE_FILTER_CONTEXT = "ticket.ticket"
+
+### TENANT
 DEFAULT_TENANT_COMPANY_NAME = "Andy's Pianos"
 DEFAULT_TENANT_COMPANY_CODE = "001"
 

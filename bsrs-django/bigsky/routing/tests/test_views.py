@@ -4,9 +4,9 @@ import uuid
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
-from profile.models import Assignment
-from profile.serializers import AssignmentCreateUpdateSerializer
-from profile.tests.factory import create_assignment
+from routing.models import Assignment
+from routing.serializers import AssignmentCreateUpdateSerializer
+from routing.tests.factory import create_assignment, create_profile_filter
 from person.tests.factory import create_single_person, PASSWORD
 from utils.create import _generate_chars
 
@@ -16,6 +16,7 @@ class ViewTests(APITestCase):
     def setUp(self):
         self.person = create_single_person()
         self.assignment = mommy.make(Assignment, assignee=self.person)
+        self.profile_filter = create_profile_filter(self.assignment)
 
         self.data = AssignmentCreateUpdateSerializer(self.assignment).data
 
@@ -45,6 +46,12 @@ class ViewTests(APITestCase):
         self.assertEqual(data['description'], self.assignment.description)
         self.assertEqual(data['assignee']['id'], str(self.assignment.assignee.id))
         self.assertEqual(data['assignee']['username'], self.assignment.assignee.username)
+        # profile_filter
+        self.assertEqual(len(data['filters']), 1)
+        self.assertEqual(data['filters'][0]['id'], str(self.profile_filter.id))
+        self.assertEqual(data['filters'][0]['context'], self.profile_filter.context)
+        self.assertEqual(data['filters'][0]['field'], self.profile_filter.field)
+        self.assertEqual(data['filters'][0]['criteria'], self.profile_filter.criteria)
 
     def test_create(self):
         self.data['id'] = str(uuid.uuid4())

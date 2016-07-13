@@ -22,7 +22,7 @@ from dtd import views as dtd_views
 from generic import views as generic_views
 from location import views as location_views
 from person import views as person_views
-from profile import views as profile_views
+from routing import views as routing_views
 from tenant import views as tenant_views
 from third_party import views as third_party_views
 from ticket import views as tickets_views
@@ -59,8 +59,8 @@ router.register(r'admin/location-types', location_views.LocationTypeViewSet)
 # PERSON
 router.register(r'admin/people', person_views.PersonViewSet)
 router.register(r'admin/roles', person_views.RoleViewSet)
-# PROFILE
-router.register(r'admin/assignments', profile_views.AssignmentViewSet)
+# ROUTING
+router.register(r'admin/assignments', routing_views.AssignmentViewSet)
 # TENANT
 router.register(r'admin/tenant', tenant_views.TenantViewSet)
 # THIRD PARTY

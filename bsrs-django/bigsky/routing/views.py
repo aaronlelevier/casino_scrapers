@@ -1,7 +1,7 @@
 from rest_framework import permissions
 
-from profile.models import Assignment
-from profile.serializers import AssignmentCreateUpdateSerializer, AssignmentSerializer
+from routing.models import Assignment
+from routing import serializers as rs
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.views import BaseModelViewSet
 
@@ -10,11 +10,14 @@ class AssignmentViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewS
 
     model = Assignment
     queryset = Assignment.objects.all()
-    serializer_class = AssignmentCreateUpdateSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    # TODO: eager load for 'retrieve'
+    eager_load_actions = ['list']
 
     def get_serializer_class(self):
-        if self.action in ('retrieve', 'list'):
-            return AssignmentSerializer
+        if self.action == 'retrieve':
+            return rs.AssignmentDetailSerializer
+        if self.action == 'list':
+            return rs.AssignmentListSerializer
         else:
-            return AssignmentCreateUpdateSerializer
+            return rs.AssignmentCreateUpdateSerializer

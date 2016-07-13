@@ -2,8 +2,8 @@ from django.db.models import Q
 from django.test import TestCase
 
 from person.models import Person
-from profile.models import Assignment, AssignmentManager, AssignmentQuerySet
-from profile.tests.factory import create_assignment
+from routing.models import Assignment, AssignmentManager, AssignmentQuerySet
+from routing.tests.factory import create_assignment
 
 
 class AssignmentManagerTests(TestCase):
@@ -54,9 +54,16 @@ class AssignmentTests(TestCase):
 
 # class ProfilefilterTests(TestCase):
 
-#     def test_properties(self):
-#         pf = mommy.make(ProfileFilter)
-#         self.assertIsInstance(pf.field, str)
-#         self.assertTrue(pf.criteria)
-#         self.assertIsInstance(pf.criteria, list)
+#     def test_meta__ordering(self):
+#         # order by id, so that way are returned to User in the same order
+#         # each time if nested in the Assignment Detail view
 
+#     def test_context_is_valid(self):
+#         # validate context that a app.Model exists w/ that context name
+
+#     def test_context_and_field_validation(self):
+#         # field for context Model class must exist, or else this is a worthless filter
+
+#     def test_criteria_is_valid(self):
+#         # criteria, the OR filter aspect of ProfileFilters, must use valid identifiers
+#         # i.e. if a TicketPriority filter, must be a valid TicketPriority Id.

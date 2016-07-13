@@ -30,13 +30,13 @@ class Assignment(BaseModel):
     description = models.CharField(max_length=500, unique=True)
     assignee = models.ForeignKey(settings.AUTH_USER_MODEL,
                                  related_name="assignments")
-    filters = GenericRelation("profile.ProfileFilter")
+    filters = GenericRelation("routing.ProfileFilter")
 
     objects = AssignmentManager()
 
 
 class ProfileFilter(BaseModel):
-    context = models.CharField(max_length=100, blank=True, default="ticket.Ticket",
+    context = models.CharField(max_length=100, blank=True, default=settings.DEFAULT_PROFILE_FILTER_CONTEXT,
                                help_text="The namespace of the model to look the field up on. ex: 'app_name.model_name'")
     field = models.CharField(max_length=100,
                              help_text="Model field to look up from the Model class specified in the 'context'")

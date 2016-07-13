@@ -1,4 +1,4 @@
-from profile.models import Assignment, ProfileFilter
+from routing.models import Assignment, ProfileFilter
 from person.tests.factory import create_single_person
 from ticket.models import TicketPriority
 from utils.create import random_lorem
@@ -18,13 +18,13 @@ def create_assignments():
         create_assignment()
 
 
-def create_profile_filter():
+def create_profile_filter(assignment=None):
     priority = create_default(TicketPriority)
 
     pf = ProfileFilter.objects.create(field='priority',
                                       criteria=[str(priority.id)])
 
-    assignment = create_assignment()
+    assignment = assignment or create_assignment()
     assignment.filters.add(pf)
 
     return pf
