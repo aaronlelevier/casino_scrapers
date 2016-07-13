@@ -6,6 +6,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 const DASHBOARD_URL = BASEURLS.dashboard_url;
 
 var GeneralPage = PageObject.create({
+  visitAdmin: visitable('/admin'),
   save: clickable('.t-save-btn'),
   cancel: clickable('.t-cancel-btn'),
   delete: clickable('.t-delete-btn'),
