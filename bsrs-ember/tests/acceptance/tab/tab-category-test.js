@@ -433,7 +433,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
   fillIn('.t-category-name', CD.nameTwo);
   let category_list_data = CF.list();
   list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, category_list_data);
-  visit(CATEGORY_URL);
+  generalPage.clickCategories();
   andThen(() => {
     assert.equal(currentURL(), CATEGORY_URL);
   });
