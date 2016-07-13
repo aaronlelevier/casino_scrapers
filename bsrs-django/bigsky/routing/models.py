@@ -45,3 +45,6 @@ class ProfileFilter(BaseModel):
     content_type = models.ForeignKey(ContentType, null=True)
     object_id = models.UUIDField(null=True)
     content_object = MyGenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        ordering = ['id']

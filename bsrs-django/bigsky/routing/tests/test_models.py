@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.test import TestCase
 
 from person.models import Person
-from routing.models import Assignment, AssignmentManager, AssignmentQuerySet
+from routing.models import Assignment, AssignmentManager, AssignmentQuerySet, ProfileFilter
 from routing.tests.factory import create_assignment
 
 
@@ -52,11 +52,12 @@ class AssignmentTests(TestCase):
         self.assertIsInstance(Assignment.objects, AssignmentManager)
 
 
-# class ProfilefilterTests(TestCase):
+class ProfilefilterTests(TestCase):
 
-#     def test_meta__ordering(self):
-#         # order by id, so that way are returned to User in the same order
-#         # each time if nested in the Assignment Detail view
+    def test_meta__ordering(self):
+        # order by id, so that way are returned to User in the same order
+        # each time if nested in the Assignment Detail view
+        self.assertEqual(ProfileFilter._meta.ordering, ['id'])
 
 #     def test_context_is_valid(self):
 #         # validate context that a app.Model exists w/ that context name
