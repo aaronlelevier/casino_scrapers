@@ -25,7 +25,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 const HOME_URL = '/';
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
-const DASHBOARD_URL = BASEURLS.dashboard_url;
+const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 
 var application, store, run = Ember.run;
 

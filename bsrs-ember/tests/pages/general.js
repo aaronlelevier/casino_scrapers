@@ -1,12 +1,11 @@
 import Ember from 'ember';
 import PageObject from 'bsrs-ember/tests/page-object';
 let { visitable, clickable, text, hasClass } = PageObject;
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
-
-const DASHBOARD_URL = BASEURLS.dashboard_url;
+import BASEURLS from 'bsrs-ember/utilities/urls';
 
 var GeneralPage = PageObject.create({
   visitAdmin: visitable('/admin'),
+  visitDashboard: visitable(BASEURLS.DASHBOARD_URL),
   save: clickable('.t-save-btn'),
   cancel: clickable('.t-cancel-btn'),
   delete: clickable('.t-delete-btn'),
@@ -17,7 +16,6 @@ var GeneralPage = PageObject.create({
   clickModalCancelDelete: clickable('.t-modal-footer .t-modal-cancel-btn'),
   modalIsVisible: PageObject.isVisible('.ember-modal-dialog'),
   modalIsHidden: PageObject.isHidden('.t-modal'),
-  visitDashboard: visitable(DASHBOARD_URL),
   clickAdmin: clickable('.t-nav-admin'),
   errorText: text('.t-error-message'),
   clickLaunchDTTicket: clickable('.t-launch-dt-ticket'),

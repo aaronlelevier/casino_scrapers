@@ -17,7 +17,7 @@ const LIST_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + PEOPLE_DEFAULTS.id;
 const XHR_LIST_URL = PREFIX + BASE_URL;
 const XHR_DETAIL_URL = XHR_LIST_URL + '/' + PEOPLE_DEFAULTS.id + '/';
-const DASHBOARD_URL = BASEURLS.dashboard_url;
+const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 
 var application;
 

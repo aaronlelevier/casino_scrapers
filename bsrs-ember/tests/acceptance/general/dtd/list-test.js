@@ -15,7 +15,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import { dtd_payload, dtd_payload_update_priority, dtd_payload_no_priority, dtd_payload_two } from 'bsrs-ember/tests/helpers/payloads/dtd';
 
-const DASHBOARD_URL = BASEURLS.dashboard_url;
+const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_dtd_url;

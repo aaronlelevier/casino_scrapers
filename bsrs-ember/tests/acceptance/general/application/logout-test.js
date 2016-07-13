@@ -11,7 +11,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const HOME_URL = '/';
 const PREFIX = config.APP.NAMESPACE;
-const DASHBOARD_URL = BASEURLS.dashboard_url;
+const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 
 var application;
 

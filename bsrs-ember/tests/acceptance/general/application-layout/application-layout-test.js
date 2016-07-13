@@ -10,7 +10,7 @@ import TD from 'bsrs-ember/vendor/defaults/tenant';
 const PREFIX = config.APP.NAMESPACE;
 const HOME_URL = '/';
 const NAVBAR = '.t-navbar-items';
-const DASHBOARD_URL = BASEURLS.dashboard_url;
+const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 
 var application;
 

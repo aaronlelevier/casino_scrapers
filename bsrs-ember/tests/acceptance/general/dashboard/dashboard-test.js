@@ -13,7 +13,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 var application, store, endpoint;
 
 const PREFIX = config.APP.NAMESPACE;
-const DASHBOARD_URL = BASEURLS.dashboard_url;
+const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
