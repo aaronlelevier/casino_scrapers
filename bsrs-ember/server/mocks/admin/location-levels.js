@@ -1,4 +1,4 @@
-var LOCATION_LEVEL_FIXTURES = require('../../../vendor/location_level_fixtures.js');
+var LOCATION_LEVEL_FIXTURES = require('../../../vendor/location-level_fixtures.js');
 
 module.exports = function(app) {
   var express = require('express');

@@ -6,7 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
-import LLF from 'bsrs-ember/vendor/location_level_fixtures';
+import LLF from 'bsrs-ember/vendor/location-level_fixtures';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';

@@ -4,7 +4,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LD from 'bsrs-ember/vendor/defaults/location';
-import LLF from 'bsrs-ember/vendor/location_level_fixtures';
+import LLF from 'bsrs-ember/vendor/location-level_fixtures';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';

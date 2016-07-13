@@ -80,13 +80,13 @@ if (typeof window === 'undefined') {
   var role_defaults = require('../vendor/defaults/role');
   var currency_defaults = require('../vendor/defaults/currencies');
   var category_fixtures = require('../vendor/category_fixtures');
-  var location_level_fixtures = require('../vendor/location_level_fixtures');
+  var location_level_fixtures = require('../vendor/location-level_fixtures');
   var config = require('../config/environment');
   objectAssign(BSRS_ROLE_FACTORY.prototype, mixin.prototype);
   module.exports = new BSRS_ROLE_FACTORY(role_defaults, currency_defaults, category_fixtures, location_level_fixtures, config);
 }
 else {
-  define('bsrs-ember/vendor/role_fixtures', ['exports', 'bsrs-ember/vendor/defaults/role', 'bsrs-ember/vendor/defaults/currencies', 'bsrs-ember/vendor/category_fixtures', 'bsrs-ember/vendor/location_level_fixtures', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
+  define('bsrs-ember/vendor/role_fixtures', ['exports', 'bsrs-ember/vendor/defaults/role', 'bsrs-ember/vendor/defaults/currencies', 'bsrs-ember/vendor/category_fixtures', 'bsrs-ember/vendor/location-level_fixtures', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
     function(exports, role_defaults, currency_defaults, category_fixtures, location_level_fixtures, mixin, config) {
       'use strict';
       Object.assign(BSRS_ROLE_FACTORY.prototype, mixin.prototype);

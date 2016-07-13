@@ -7,7 +7,7 @@ import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
-import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location_level_fixtures';
+import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location-level_fixtures';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 
 let store, location_level, all_location_levels, location_levels, location_level_repo, run = Ember.run;

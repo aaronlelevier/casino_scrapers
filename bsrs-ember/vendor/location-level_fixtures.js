@@ -96,11 +96,10 @@ if (typeof window === 'undefined') {
     objectAssign(BSRS_LOCATION_LEVEL_FACTORY.prototype, mixin.prototype);
     module.exports = new BSRS_LOCATION_LEVEL_FACTORY(location_level_defaults, config);
 } else {
-    define('bsrs-ember/vendor/location_level_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'], function (exports, location_level_defaults, mixin, config) {
+    define('bsrs-ember/vendor/location-level_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'], function (exports, location_level_defaults, mixin, config) {
         'use strict';
         Object.assign(BSRS_LOCATION_LEVEL_FACTORY.prototype, mixin.prototype);
         var Factory = new BSRS_LOCATION_LEVEL_FACTORY(location_level_defaults, config);
         return {default: Factory};
     });
 }
-

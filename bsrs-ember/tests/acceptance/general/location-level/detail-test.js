@@ -5,7 +5,7 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
-import LLF from 'bsrs-ember/vendor/location_level_fixtures';
+import LLF from 'bsrs-ember/vendor/location-level_fixtures';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/location-level';
