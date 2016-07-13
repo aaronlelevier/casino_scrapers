@@ -48,7 +48,7 @@ test('description is required validation, cannot save w/o description', function
   assert.notOk($err.is(':visible'));
 });
 
-test('scott description is max length validation is 500', function(assert) {
+test('description is max length validation is 500', function(assert) {
   const description = 'a'.repeat(501);
   run(function() {
     model = store.push('profile', {

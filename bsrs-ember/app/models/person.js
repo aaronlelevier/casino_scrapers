@@ -6,7 +6,7 @@ import injectRepo from 'bsrs-ember/utilities/inject';
 import CopyMixin from 'bsrs-ember/mixins/model/copy';
 import EmailMixin from 'bsrs-ember/mixins/model/email';
 import PhoneNumberMixin from 'bsrs-ember/mixins/model/phone_number';
-import AddressMixin from 'bsrs-ember/mixins/model/address';
+// import AddressMixin from 'bsrs-ember/mixins/model/address';
 import RoleMixin from 'bsrs-ember/mixins/model/person/role';
 import LocationMixin from 'bsrs-ember/mixins/model/person/location';
 import LocaleMixin from 'bsrs-ember/mixins/model/person/locale';
@@ -46,7 +46,7 @@ const Validations = buildValidations({
   }),
 });
 
-var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin, LocationMixin, NewMixin, OptConf, RoleMixin, LocaleMixin, {
+var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, LocationMixin, NewMixin, OptConf, RoleMixin, LocaleMixin, {
   init() {
     belongs_to.bind(this)('status', 'person', {bootstrapped:true});
     belongs_to.bind(this)('role', 'person', {bootstrapped:true, change_func:false, rollback: false});
@@ -74,7 +74,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
   role_fk: undefined,
   status_fk: undefined,
   phone_number_fks: [],
-  address_fks: [],
+  // address_fks: [],
   email_fks: [],
   person_locations_fks: [],
   isModelDirty: false,
@@ -99,8 +99,8 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
     const { first_name, last_name } = this.getProperties('first_name', 'last_name');
     return first_name + ' ' + last_name;
   }),
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'emailsIsDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'roleIsDirty', 'locationsIsDirty', 'statusIsDirty', 'localeIsDirty', function() {
-    return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty') || this.get('statusIsDirty') || this.get('emailsIsDirty') || this.get('localeIsDirty');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'emailsIsDirty', 'phoneNumbersIsDirty', 'roleIsDirty', 'locationsIsDirty', 'statusIsDirty', 'localeIsDirty', function() {
+    return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty') || this.get('statusIsDirty') || this.get('emailsIsDirty') || this.get('localeIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   clearPassword() {
@@ -109,7 +109,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
   saveRelated() {
     this.saveEmails();
     this.savePhoneNumbers();
-    this.saveAddresses();
+    // this.saveAddresses();
     this.saveRole();
     this.saveLocations();
     this.clearPassword();
@@ -120,7 +120,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
     this.changeLocale();
     this.rollbackEmails();
     this.rollbackPhoneNumbers();
-    this.rollbackAddresses();
+    // this.rollbackAddresses();
     this.rollbackRole();
     this.rollbackLocations();
     this.rollbackStatus();
@@ -155,14 +155,14 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
     }).map(function(num) {
       return num.serialize();
     });
-    const addresses = this.get('addresses').filter(function(address) {
-      if (address.get('invalid_address')) {
-        return;
-      }
-      return address;
-    }).map(function(address) {
-      return address.serialize();
-    });
+    // const addresses = this.get('addresses').filter(function(address) {
+    //   if (address.get('invalid_address')) {
+    //     return;
+    //   }
+    //   return address;
+    // }).map(function(address) {
+    //   return address.serialize();
+    // });
 
     var payload = {
       id: this.get('id'),
@@ -179,7 +179,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
       locations: this.get('locations_ids'),
       emails: emails,
       phone_numbers: phone_numbers,
-      addresses: addresses,
+      // addresses: addresses,
       locale: this.get('locale.id'),
       password: this.get('password')
     };
