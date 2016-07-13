@@ -43,13 +43,11 @@ module('Acceptance | grid-head mobile', {
       bp[point.name] = point.begin + 5;
     });
     flexi.set('width', bp.mobile);
-    original_uuid = random.uuid;
   },
   afterEach() {
     run(() => {
       flexi.set('width', bp.huge);
     });
-    random.uuid = original_uuid;
     Ember.run(application, 'destroy');
   }
 });
