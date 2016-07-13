@@ -36,7 +36,7 @@ const DETAIL_URL = BASE_URL + '/' + <%= camelizedModuleName %>D.idOne;
 
 let application, store, list_xhr, endpoint, detail_xhr, detail_data_two, list_data, original_uuid, counter;
 
-module('scott Acceptance | tab <%= dasherizedModuleName %> test', {
+module('Acceptance | tab <%= dasherizedModuleName %> test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');

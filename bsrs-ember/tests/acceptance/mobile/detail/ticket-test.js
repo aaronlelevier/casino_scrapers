@@ -12,21 +12,20 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import page from 'bsrs-ember/tests/pages/ticket-mobile';
 import ticketPage from 'bsrs-ember/tests/pages/tickets';
 import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import BASEURLS, { TICKETS_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
-var application, store, endpoint, list_xhr, activity, flexi, bp;
+var application, store, list_xhr, activity, flexi, bp;
 
-const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
 const DETAIL_URL = `${BASE_URL}/index/${TD.idOne}`;
 const ASSIGNEE = '.t-ticket-assignee-select';
-const TICKET_PUT_URL = `${PREFIX}${BASE_URL}/${TD.idOne}/`;
+const TICKET_PUT_URL = `${TICKETS_URL}${TD.idOne}/`;
 const ACTIVITY_ITEMS = '.t-activity-list-item';
 
 module('Acceptance | mobile ticket detail test', {
@@ -34,11 +33,9 @@ module('Acceptance | mobile ticket detail test', {
     /* SETUP */
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
-    endpoint = PREFIX + BASE_URL;
-    list_xhr = xhr(endpoint+'/?page=1', 'GET', null, {}, 200, TF.list());
-    endpoint = `${PREFIX}${BASE_URL}/`;
-    xhr(`${endpoint}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
-    activity = xhr(`${endpoint}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
+    list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
+    xhr(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
+    activity = xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
     /* MOBILE RENDER */
     flexi = application.__container__.lookup('service:device/layout');
     const breakpoints = flexi.get('breakpoints');
@@ -60,7 +57,7 @@ module('Acceptance | mobile ticket detail test', {
 
 test('can click to detail, show activities, and go back to list', async assert => {
   clearxhr(activity);
-  xhr(`${endpoint}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
   await ticketPage.visit();
   assert.equal(currentURL(), TICKET_URL);
   await click('.t-grid-data:eq(0)')
@@ -80,7 +77,7 @@ test('can update fields and save', async assert => {
   assert.equal(find('.t-mobile-ticket-activity-section').length, 1);
   await click('.t-mobile-footer-item:eq(1)');
   assert.equal(find('.t-mobile-ticket-detail-section').length, 1);
-  xhr(`${PREFIX}/admin/people/person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
+  xhr(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
   selectSearch(ASSIGNEE, 'b');
   selectChoose(ASSIGNEE, PD.fullnameBoy);
   await generalMobilePage.mobileActionDropdownClick();
@@ -126,7 +123,7 @@ test('can add comment and click update to show new activity', async assert => {
   assert.equal(ticketPage.comment, TD.commentOne);
   let response = TF.detail(TD.idOne);
   xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_comment), {}, 200, response);
-  ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.comment_only());
+  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.comment_only());
   await ticketPage.update();
   assert.equal(currentURL(), DETAIL_URL);
   const ticket = store.find('ticket', TD.idOne);
