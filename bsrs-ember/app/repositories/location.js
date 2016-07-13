@@ -10,7 +10,7 @@ import { LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: 'location',
   typeGrid: 'location-list',
-  garbage_collection: Ember.computed(function() { return ['location-list', 'location-status-list']; }),
+  garbage_collection: ['location-list', 'location-status-list'],
   url: LOCATIONS_URL,
   uuid: injectUUID('uuid'),
   LocationDeserializer: inject('location'),

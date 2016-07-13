@@ -10,7 +10,7 @@ import { LOCATION_LEVELS_URL } from 'bsrs-ember/utilities/urls';
 var LocationLevelRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: 'location-level',
   typeGrid: 'location-level-list',
-  garbage_collection: Ember.computed(function() { return ['location-level-list']; }),
+  garbage_collection: ['location-level-list'],
   url: LOCATION_LEVELS_URL,
   uuid: injectUUID('uuid'),
   LocationLevelDeserializer: inject('location-level'),

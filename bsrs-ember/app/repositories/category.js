@@ -11,7 +11,7 @@ import { CATEGORIES_URL } from 'bsrs-ember/utilities/urls';
 var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: 'category',
   typeGrid: 'category-list',
-  garbage_collection: Ember.computed(function() { return ['category-list']; }),
+  garbage_collection: ['category-list'],
   url: Ember.computed(function() { return CATEGORIES_URL; }),
   uuid: injectUUID('uuid'),
   CategoryDeserializer: inject('category'),

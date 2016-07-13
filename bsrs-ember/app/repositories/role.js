@@ -11,7 +11,7 @@ import { ROLES_URL } from 'bsrs-ember/utilities/urls';
 var RoleRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: 'role',
   typeGrid: 'role-list',
-  garbage_collection: Ember.computed(function() { return ['role-list']; }),
+  garbage_collection: ['role-list'],
   url: ROLES_URL,
   uuid: injectUUID('uuid'),
   simpleStore: Ember.inject.service(),

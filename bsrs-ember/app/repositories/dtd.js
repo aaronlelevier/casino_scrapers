@@ -10,7 +10,7 @@ import { DTD_URL, DT_URL } from 'bsrs-ember/utilities/urls';
 var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: 'dtd',
   typeGrid: 'dtd-list',
-  garbage_collection: Ember.computed(function() { return ['dtd-list']; }),
+  garbage_collection: ['dtd-list'],
   url: DTD_URL,
   errorUrl: 'dtds.dtd-error',
   uuid: injectUUID('uuid'),

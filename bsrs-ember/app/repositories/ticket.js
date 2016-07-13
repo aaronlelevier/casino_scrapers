@@ -13,10 +13,10 @@ var TICKET_URL = '/ticket';
 
 var TicketRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   uuid: injectUUID('uuid'),
-  type: Ember.computed(function() { return 'ticket'; }),
-  typeGrid: Ember.computed(function() { return 'ticket-list'; }),
+  type: 'ticket',
+  typeGrid: 'ticket-list',
   //TODO: test count to ensure being deleted
-  garbage_collection: Ember.computed(function() { return ['ticket-list', 'ticket-priority-list', 'general-status-list', 'category-list']; }),
+  garbage_collection: ['ticket-list', 'ticket-priority-list', 'general-status-list', 'category-list'],
   url: TICKETS_URL,
   TicketDeserializer: inject('ticket'),
   deserializer: Ember.computed.alias('TicketDeserializer'),
