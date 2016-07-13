@@ -1,8 +1,8 @@
 
 /*
- * - camel will capitalize first letter and replace first letter after underscore with capital letter
+ * - camel will replace first letter after underscore with capital letter
  * - assumes only one underscore in related_model string
- * 
+ *
  * @param {string} related_model
  */
 var camel = function(related_model) {
@@ -17,4 +17,3 @@ var camel = function(related_model) {
 };
 
 export default camel;
-
