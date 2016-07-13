@@ -18,7 +18,6 @@ var GeneralPage = PageObject.create({
   modalIsHidden: PageObject.isHidden('.t-modal'),
   visitDashboard: visitable(DASHBOARD_URL),
   clickAdmin: clickable('.t-nav-admin'),
-  clickDTD: clickable('.t-nav-admin-dtd'),
   errorText: text('.t-error-message'),
   clickLaunchDTTicket: clickable('.t-launch-dt-ticket'),
   clickHomeModalShow: clickable('.t-home-modal-show'),
@@ -36,6 +35,10 @@ var GeneralPage = PageObject.create({
   modalDeleteBtnValue: () => Ember.$('.t-modal-delete-btn').text().trim(),
   modalRollbackBtnValue: () => Ember.$('.t-modal-rollback-btn').text().trim(),
   modalTitleValue: () => Ember.$('.t-modal-title').text().trim(),
+
+  //Admin Routes
+  clickDTD: clickable('.t-nav-admin-dtd'),
+  clickCategories: clickable('.t-nav-admin-category'),
 });
 
 export default GeneralPage;

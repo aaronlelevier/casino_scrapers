@@ -215,7 +215,7 @@ test('can remove a new phone number', function(assert) {
   assert.equal(this.$('.t-new-entry').length, 0);
 });
 
-test('scott can add and remove new email', function(assert) {
+test('can add and remove new email', function(assert) {
   run(() => {
     this.model = store.push('person', {id: PD.id});
   });
