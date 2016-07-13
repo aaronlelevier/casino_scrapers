@@ -19,8 +19,9 @@ var BSRS_<%= CapitalizeModule %>_DEFAULTS_OBJECT = (function() {
       <%= secondModelDisplayCamel %>: this.<%= secondModelCamel %>.<%= secondModelDisplayCamel %>,
       <%= secondModelDisplayCamel %>One: this.<%= secondModelCamel %>.<%= secondModelDisplayCamel %>One,
       <%= secondModelDisplayCamel %>Two: this.<%= secondModelCamel %>.<%= secondModelDisplayCamel %>Two,
-      <%= secondModelDisplayCamel %>GridOne: this.<%= secondModelCamel %>.<%= secondModelDisplaySnake %>+"0",
-      <%= secondModelDisplayCamel %>GridTwo: this.<%= secondModelCamel %>.<%= secondModelDisplaySnake %>+"1",
+      <%= secondModelDisplayCamel %>GridOne: this.<%= secondModelCamel %>.<%= secondModelDisplaySnake %>+'0',
+      <%= secondModelDisplayCamel %>GridTwo: this.<%= secondModelCamel %>.<%= secondModelDisplaySnake %>+'1',
+      <%= secondModelDisplayCamel %>GridTen: this.<%= secondModelCamel %>.<%= secondModelDisplaySnake %>+'10',
     };
   };
   return factory;

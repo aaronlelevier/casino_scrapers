@@ -6,7 +6,7 @@ export default TabNewRoute.extend({
   repository: inject('<%= dasherizedModuleName %>s'),
   redirectRoute: '<%= dasherizedModuleName %>s.index',
   module: '<%= dasherizedModuleName %>',
-  templateModelField: '<%= dasherizedModuleName %>',
+  templateModelField: '<%= CapFirstLetterModuleName %>',
   model(params) {
     let new_pk = parseInt(params.new_id, 10);
     const repository = this.get('repository');

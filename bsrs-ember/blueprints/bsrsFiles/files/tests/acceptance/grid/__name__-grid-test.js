@@ -30,7 +30,7 @@ module('Acceptance | <%= dasherizedModuleName %>-grid-test', {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
     const listData = <%= camelizedModuleName %>F.list();
-    listXhr = xhr(`${<%= CapitalizeModule %>_URL}?page=1` + '?page=1', 'GET', null, {}, 200, listData);
+    listXhr = xhr(`${<%= CapitalizeModule %>_URL}?page=1`, 'GET', null, {}, 200, listData);
   },
   afterEach() {
     Ember.run(application, 'destroy');
@@ -54,10 +54,9 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
   visit(LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);
-    assert.equal(find('.t-grid-title').text(), '<%= dasherizedModuleName %>s');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(page.<%= firstPropertyCamel %>GridOne, <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+"0");
-    assert.equal(page.<%= secondProperty %>GridOne, <%= camelizedModuleName %>D.<%= secondModelDisplaySnake %>+"0");
+    assert.equal(page.<%= firstPropertyCamel %>GridOne, <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+'0');
+    assert.equal(page.<%= secondProperty %>GridOne, <%= camelizedModuleName %>D.<%= secondModelDisplaySnake %>+'0');
     var pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 2);
     assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -69,7 +68,7 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
 
 test('clicking page 2 will load in another set of data as well as clicking page 1 after that reloads the original set of data (both require an additional xhr)', function(assert) {
   var page_two = `${<%= CapitalizeModule %>_URL}?page=2`;
-  xhr(page_two ,"GET",null,{},200,<%= FirstCharacterModuleName %>F.list());
+  xhr(page_two ,'GET',null,{},200,<%= camelizedModuleName %>F.list());
   visit(LIST_URL);
   click('.t-page:eq(1) a');
   andThen(() => {
@@ -92,7 +91,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     assert.equal(<%= dasherizedModuleName %>s.get('length'), 20);
     assert.equal(currentURL(),LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+"0");
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+'0');
     var pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 2);
     assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -104,12 +103,12 @@ test('clicking page 2 will load in another set of data as well as clicking page 
 
 test('clicking first,last,next and previous will request page 1 and 2 correctly', function(assert) {
   var page_two = `${<%= CapitalizeModule %>_URL}?page=2`;
-  xhr(page_two ,"GET",null,{},200,<%= FirstCharacterModuleName %>F.list_two());
+  xhr(page_two ,'GET',null,{},200,<%= camelizedModuleName %>F.list_two());
   visit(LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+"0");
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+'0');
     assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= secondProperty %>-<%= secondModelDisplaySnake %>').text().trim(), <%= camelizedModuleName %>D.<%= secondModelDisplaySnake %>GridOne);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
@@ -120,7 +119,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   andThen(() => {
     assert.equal(currentURL(), LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+"10");
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+'10');
     assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= secondProperty %>-<%= secondModelDisplaySnake %>').text().trim(), `${<%= camelizedModuleName %>D.<%= secondModelDisplaySnake %>GridOne.slice(0,-1)}10`);
     isNotDisabledElement('.t-first');
     isNotDisabledElement('.t-previous');
@@ -131,7 +130,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+"0");
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+'0');
     assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= secondProperty %>-<%= secondModelDisplaySnake %>').text().trim(), <%= camelizedModuleName %>D.<%= secondModelDisplaySnake %>GridOne);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
@@ -142,7 +141,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   andThen(() => {
     assert.equal(currentURL(), LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+"10");
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+'10');
     assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= secondProperty %>-<%= secondModelDisplaySnake %>').text().trim(), `${<%= camelizedModuleName %>D.<%= secondModelDisplaySnake %>GridOne.slice(0,-1)}10`);
     isNotDisabledElement('.t-first');
     isNotDisabledElement('.t-previous');
@@ -153,7 +152,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+"0");
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+'0');
     assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= secondProperty %>-<%= secondModelDisplaySnake %>').text().trim(), <%= camelizedModuleName %>D.<%= secondModelDisplaySnake %>GridOne);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
@@ -169,15 +168,15 @@ test('clicking header will sort by given property and reset page to 1 (also requ
   });
   random.uuid = function() { return UUID.value; };
   var sort_one = `${<%= CapitalizeModule %>_URL}?page=1&ordering=<%= firstProperty %>`;
-  xhr(sort_one ,"GET",null,{},200,<%= FirstCharacterModuleName %>F.sorted_page_one('<%= firstProperty %>'));
+  xhr(sort_one ,'GET',null,{},200,<%= camelizedModuleName %>F.sorted_page_one('<%= firstProperty %>'));
   andThen(() => {
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+"0");
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+'0');
   });
   click('.t-sort-<%= firstProperty %>-dir');
   andThen(() => {
     assert.equal(currentURL(), LIST_URL + '?sort=<%= firstProperty %>');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+"0");
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+'0');
   });
 });
 
@@ -190,14 +189,14 @@ test('typing a search will reset page to 1 and require an additional xhr and res
   });
   const searchText = '4';
   var search_two = PREFIX + BASE_URL + `/?page=1&search=${searchText}`;
-  xhr(search_two ,"GET",null,{},200, <%= FirstCharacterModuleName %>F.searched(searchText, '<%= firstProperty %>', 1));
+  xhr(search_two ,'GET',null,{},200, <%= camelizedModuleName %>F.searched(searchText, '<%= firstProperty %>', 1));
   fillIn('.t-grid-search-input', searchText);
   triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
   andThen(() => {
     assert.equal(currentURL(),LIST_URL + `?search=${searchText}`);
     assert.equal(find('.t-grid-data').length, 2);
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+"14");
-    assert.equal(find('.t-grid-data:eq(1) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+"4");
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+'14');
+    assert.equal(find('.t-grid-data:eq(1) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One+'4');
   });
   click('.t-reset-grid');
   andThen(() => {
@@ -215,7 +214,7 @@ test('multiple sort options appear in the query string as expected', function(as
     assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>GridOne);
   });
   var sort_one = `${<%= CapitalizeModule %>_URL}?page=1&ordering=<%= firstProperty %>`;
-  xhr(sort_one ,"GET",null,{},200, <%= FirstCharacterModuleName %>F.sorted_page_one('<%= firstProperty %>'));
+  xhr(sort_one ,'GET',null,{},200, <%= camelizedModuleName %>F.sorted_page_one('<%= firstProperty %>'));
   click('.t-sort-<%= firstProperty %>-dir');
   andThen(() => {
     assert.equal(currentURL(), LIST_URL + '?sort=<%= firstProperty %>');
@@ -223,7 +222,7 @@ test('multiple sort options appear in the query string as expected', function(as
     assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>GridOne);
   });
   var sort = `${<%= CapitalizeModule %>_URL}?page=1&ordering=-<%= firstProperty %>`;
-  xhr(sort ,"GET",null,{},200, <%= FirstCharacterModuleName %>F.list_reverse());
+  xhr(sort ,'GET',null,{},200, <%= camelizedModuleName %>F.list_reverse());
   click('.t-sort-<%= firstProperty %>-dir');
   andThen(() => {
     assert.equal(currentURL(), LIST_URL + '?sort=-<%= firstProperty %>');
@@ -242,7 +241,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
   });
   const searchText = '10';
   var search_two = PREFIX + BASE_URL + `/?page=1&search=${searchText}`;
-  xhr(search_two ,"GET",null,{},200, <%= FirstCharacterModuleName %>F.searched(searchText, '<%= firstProperty %>', 1));
+  xhr(search_two ,'GET',null,{},200, <%= camelizedModuleName %>F.searched(searchText, '<%= firstProperty %>', 1));
   fillIn('.t-grid-search-input', searchText);
   triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
   andThen(() => {
@@ -266,7 +265,7 @@ test('sort by <%= secondProperty %> <%= secondModelDisplaySnake %>', function(as
     assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= secondProperty %>-<%= secondModelDisplaySnake %>').text().trim(), <%= camelizedModuleName %>D.<%= secondModelDisplaySnake %>GridOne);
   });
   var sort_one = `${<%= CapitalizeModule %>_URL}?page=1&ordering=<%= secondProperty %>__<%= secondModelDisplaySnake %>`;
-  xhr(sort_one ,"GET",null,{},200, <%= FirstCharacterModuleName %>F.sorted_page_one('<%= secondProperty %>'));
+  xhr(sort_one ,'GET',null,{},200, <%= camelizedModuleName %>F.sorted_page_one('<%= secondProperty %>'));
   click('.t-sort-<%= secondProperty %>-<%= secondModelDisplaySnake %>-dir');
   andThen(() => {
     assert.equal(currentURL(), LIST_URL + '?sort=<%= secondProperty %>.<%= secondModelDisplaySnake %>');
@@ -274,7 +273,7 @@ test('sort by <%= secondProperty %> <%= secondModelDisplaySnake %>', function(as
     assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= secondProperty %>-<%= secondModelDisplaySnake %>').text().trim(), <%= camelizedModuleName %>D.<%= secondModelDisplaySnake %>GridOne);
   });
   var sort = `${<%= CapitalizeModule %>_URL}?page=1&ordering=-<%= secondProperty %>__<%= secondModelDisplaySnake %>`;
-  xhr(sort ,"GET",null,{},200, <%= FirstCharacterModuleName %>F.list_reverse());
+  xhr(sort ,'GET',null,{},200, <%= camelizedModuleName %>F.list_reverse());
   click('.t-sort-<%= secondProperty %>-<%= secondModelDisplaySnake %>-dir');
   andThen(() => {
     assert.equal(currentURL(), LIST_URL + '?sort=-<%= secondProperty %>.<%= secondModelDisplaySnake %>');

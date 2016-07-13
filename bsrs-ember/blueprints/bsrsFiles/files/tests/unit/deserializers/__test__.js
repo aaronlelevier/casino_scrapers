@@ -10,7 +10,7 @@ var store, <%= camelizedModuleName %>, deserializer;
 
 module('unit: <%= dasherizedModuleName %> deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:<%= dasherizedModuleName %>', 'model:<%= dasherizedModuleName %>-list', 'model:<%= secondModel %>']);
+    store = module_registry(this.container, this.registry, ['model:<%= dasherizedModuleName %>', 'model:<%= dasherizedModuleName %>-list', 'model:<%= secondModel %>', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     deserializer = <%= camelizedModuleName %>Deserializer.create({
       simpleStore: store
     });
@@ -28,7 +28,7 @@ test('deserialize single', assert => {
     deserializer.deserialize(json, <%= camelizedModuleName %>D.idOne);
   });
   assert.equal(<%= camelizedModuleName %>.get('id'), <%= camelizedModuleName %>D.idOne);
-  assert.equal(<%= camelizedModuleName %>.get('<%= firstProperty %>'), <%= camelizedModuleName %>D.descOne);
+  assert.equal(<%= camelizedModuleName %>.get('<%= firstProperty %>'), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One);
   assert.equal(<%= camelizedModuleName %>.get('<%= secondPropertySnake %>_fk'), <%= camelizedModuleName %>D.<%= secondProperty %>One);
   assert.equal(<%= camelizedModuleName %>.get('<%= secondPropertySnake %>').get('id'), <%= camelizedModuleName %>D.<%= secondProperty %>One);
   assert.equal(<%= camelizedModuleName %>.get('<%= secondPropertySnake %>').get('<%= secondModelDisplaySnake %>'), <%= camelizedModuleName %>D.<%= secondModelDisplaySnake %>);
@@ -42,7 +42,7 @@ test('deserialize single should update <%= secondProperty %> if server returns d
     deserializer.deserialize(json, <%= camelizedModuleName %>D.idOne);
   });
   assert.equal(<%= camelizedModuleName %>.get('id'), <%= camelizedModuleName %>D.idOne);
-  assert.equal(<%= camelizedModuleName %>.get('<%= firstProperty %>'), <%= camelizedModuleName %>D.descOne);
+  assert.equal(<%= camelizedModuleName %>.get('<%= firstProperty %>'), <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One);
   assert.equal(<%= camelizedModuleName %>.get('<%= secondPropertySnake %>_fk'), <%= camelizedModuleName %>D.<%= secondProperty %>One);
   assert.equal(<%= camelizedModuleName %>.get('<%= secondPropertySnake %>').get('id'), <%= camelizedModuleName %>D.<%= secondProperty %>One);
   assert.equal(<%= camelizedModuleName %>.get('<%= secondPropertySnake %>').get('<%= secondModelDisplaySnake %>'), <%= camelizedModuleName %>D.<%= secondModelDisplaySnake %>);
@@ -57,7 +57,7 @@ test('deserialize list', assert => {
   const i = 0;
   <%= camelizedModuleName %> = store.find('<%= dasherizedModuleName %>-list').objectAt(i);
   assert.equal(<%= camelizedModuleName %>.get('id'), `${<%= camelizedModuleName %>D.idOne.slice(0,-1)}${i}`);
-  assert.equal(<%= camelizedModuleName %>.get('<%= firstProperty %>'), `${<%= camelizedModuleName %>D.descOne}${i}`);
+  assert.equal(<%= camelizedModuleName %>.get('<%= firstProperty %>'), `${<%= camelizedModuleName %>D.<%= firstPropertyCamel %>One}${i}`);
   assert.equal(<%= camelizedModuleName %>.get('<%= secondPropertySnake %>').id, `${<%= camelizedModuleName %>D.<%= secondProperty %>One.slice(0,-1)}${i}`);
   assert.equal(<%= camelizedModuleName %>.get('<%= secondPropertySnake %>').<%= secondModelDisplaySnake %>, `${<%= camelizedModuleName %>D.<%= secondModelDisplaySnake %>}${i}`);
 });

@@ -16,6 +16,7 @@ export default create({
   <%= firstPropertyCamel %>Value: value('.t-<%= dasherizedModuleName %>-<%= firstProperty %>'),
   <%= firstPropertyCamel %>Fill: fillable('.t-<%= dasherizedModuleName %>-<%= firstProperty %>'),
   <%= firstPropertyCamel %>GridOne: text('.t-<%= dasherizedModuleName %>-<%= firstProperty %>:eq(0)'),
+  <%= firstPropertyCamel %>SortText: text('.t-sort-<%= firstProperty %>'),
 
   <%= secondProperty %>Input: text(<%= secondPropertyCamel %>),
   <%= secondProperty %>SortText: text('.t-sort-<%= secondProperty %>-<%= secondModelDisplaySnake %>'),

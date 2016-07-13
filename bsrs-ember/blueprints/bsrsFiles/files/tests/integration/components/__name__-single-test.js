@@ -42,16 +42,16 @@ test('<%= firstProperty %> is required validation, cannot save w/o <%= firstProp
   let $err = this.$('.t-ap-<%= firstProperty %>-validation-error');
   assert.notOk($err.is(':visible'));
   generalPage.save();
-  $err = this.$('.t-ap-<%= firstProperty %>-validation-error');
+  $err = this.$('.t-<%= dasherizedModuleName %>-<%= firstProperty %>-validation-error');
   assert.ok($err.is(':visible'));
   assert.equal($err.text().trim(), trans.t('validation.invalid') + ' ' + trans.t('<%= dasherizedModuleName %>.<%= firstProperty %>'));
   page.<%= firstPropertyCamel %>Fill('a');
   assert.notOk($err.is(':visible'));
 });
 
-test('<%= firstProperty %> is max length validation is 500', function(assert) {
+test('<%= firstProperty %> has max length validation', function(assert) {
   const descriptionChars = 501;
-  const <%= firstProperty %> = Array(descriptionChars+1).join("a");
+  const <%= firstProperty %> = 'a'.repeat(descriptionChars);
   run(function() {
     model = store.push('<%= dasherizedModuleName %>', {
       id: <%= FirstCharacterModuleName %>D.idTwo,
@@ -60,13 +60,13 @@ test('<%= firstProperty %> is max length validation is 500', function(assert) {
   });
   this.set('model', model);
   this.render(hbs `{{<%= dasherizedModuleName %>s/<%= dasherizedModuleName %>-single model=model}}`);
-  let $err = this.$('.t-ap-<%= firstProperty %>-validation-error');
+  let $err = this.$('.t-<%=dasherizedModuleName %>-<%= firstProperty %>-validation-error');
   assert.notOk($err.is(':visible'));
   generalPage.save();
-  $err = this.$('.t-ap-<%= firstProperty %>-validation-error');
+  $err = this.$('.t-<%= dasherizedModuleName %>-<%= firstProperty %>-validation-error');
   assert.ok($err.is(':visible'));
   assert.equal($err.text().trim(), trans.t('validation.invalid') + ' ' + trans.t('<%= dasherizedModuleName %>.<%= firstProperty %>'));
-  page.<%= firstPropertyCamel %>Fill(Array(descriptionChars).join("a"));
+  page.<%= firstPropertyCamel %>Fill(Array(descriptionChars).join('a'));
   assert.notOk($err.is(':visible'));
 });
 
@@ -82,13 +82,13 @@ test('header - shows new if model.new', function(assert) {
   assert.equal(this.$('.t-<%= dasherizedModuleName %>-header').text().trim(), trans.t('<%= dasherizedModuleName %>.new'));
 });
 
-test('translation keys for labels', function(assert) {
+test('labels are translated', function(assert) {
   this.render(hbs `{{<%= dasherizedModuleName %>s/<%= dasherizedModuleName %>-single}}`);
   assert.equal(getLabelText('<%= firstProperty %>'), trans.t('<%= dasherizedModuleName %>.<%= firstProperty %>'));
   assert.equal(getLabelText('<%= secondProperty %>'), trans.t('<%= dasherizedModuleName %>.<%= secondProperty %>'));
 });
 
-test('placeholders', function(assert) {
+test('placeholders are translated', function(assert) {
   this.render(hbs `{{<%= dasherizedModuleName %>s/<%= dasherizedModuleName %>-single}}`);
-  assert.equal(this.$('.t-ap-<%= firstProperty %>').get(0)['placeholder'], trans.t('<%= dasherizedModuleName %>.<%= firstProperty %>'));
+  assert.equal(this.$('.t-<%= dasherizedModuleName %>-<%= firstProperty %>').get(0)['placeholder'], trans.t('<%= dasherizedModuleName %>.<%= firstProperty %>'));
 });
