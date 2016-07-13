@@ -43,3 +43,7 @@ class AssignmentDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assignment
         fields = ASSIGNMENT_FIELDS + ('filters',)
+
+    @staticmethod
+    def eager_load(queryset):
+        return queryset.select_related('assignee').prefetch_related('filters')

@@ -11,8 +11,6 @@ class AssignmentViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewS
     model = Assignment
     queryset = Assignment.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
-    # TODO: eager load for 'retrieve'
-    eager_load_actions = ['list']
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
