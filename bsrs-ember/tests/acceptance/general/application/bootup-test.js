@@ -20,7 +20,7 @@ import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 
 const HOME_URL = '/';
 const PREFIX = config.APP.NAMESPACE;

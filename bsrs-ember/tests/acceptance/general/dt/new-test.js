@@ -21,7 +21,7 @@ import LF from 'bsrs-ember/vendor/location_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TENANT_DEFAULTS from 'bsrs-ember/vendor/defaults/tenant';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/dtd';
 import dtPage from 'bsrs-ember/tests/pages/dt';
