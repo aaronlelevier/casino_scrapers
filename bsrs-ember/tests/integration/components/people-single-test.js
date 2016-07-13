@@ -12,7 +12,7 @@ import GLOBAL from 'bsrs-ember/vendor/defaults/global-message';
 import CD from 'bsrs-ember/vendor/defaults/currencies';
 import page from 'bsrs-ember/tests/pages/person';
 
-var store, role, email_types, default_email_type, phone_number_types, default_phone_number_type, address_types, default_address_type, trans, run = Ember.run;
+var store, role, email_types, default_email_type, phone_number_types, default_phone_number_type, trans, run = Ember.run;
 
 moduleForComponent('person-single', 'integration: person-single test', {
   integration: true,
@@ -36,15 +36,15 @@ moduleForComponent('person-single', 'integration: person-single test', {
       });
       phone_number_types = store.find('phone-number-type');
       default_phone_number_type = phone_number_types.objectAt(0);
-      let ad_types = [{ "id": "8e16a68c-fda6-4c30-ba7d-fee98257e92d", "name": "admin.address_type.office" },
-        { "id": "f7e55e71-1ff2-4cc2-8700-139802738bd0", "name": "admin.address_type.shipping" }];
-        run(function() {
-          ad_types.forEach(function(ad) {
-            store.push('address-type', ad);
-          });
-        });
-        address_types = store.find('phone-number-type');
-        default_address_type = address_types.objectAt(0);
+      // let ad_types = [{ "id": "8e16a68c-fda6-4c30-ba7d-fee98257e92d", "name": "admin.address_type.office" },
+      //   { "id": "f7e55e71-1ff2-4cc2-8700-139802738bd0", "name": "admin.address_type.shipping" }];
+      //   run(function() {
+      //     ad_types.forEach(function(ad) {
+      //       store.push('address-type', ad);
+      //     });
+      //   });
+      //   address_types = store.find('phone-number-type');
+      //   default_address_type = address_types.objectAt(0);
         let em_types = [{ 'id': ETD.personalId, 'name': ETD.personalEmail },
           { 'id': ETD.workId, 'name': ETD.workEmail }];
           run(() => {
@@ -165,42 +165,42 @@ test('filling in invalid phone number reveal validation messages', function(asse
   assert.equal($component.text(), GLOBAL.invalid_ph);
 });
 
-test('filling in invalid address reveals validation messages', function(assert) {
-  run(() => {
-    this.model = store.push('person', {id: PD.id});
-  });
-  this.address_types = address_types;
-  this.default_address_type = default_address_type;
-  this.render(hbs`{{people/person-single model=model address_types=address_types default_address_type=default_address_type}}`);
-  //street
-  var $component = this.$('.t-input-multi-address-validation-error');
-  assert.equal($component.length, 0);
-  this.$('.t-add-address-btn:eq(0)').click();
-  $component = this.$('.t-input-multi-address-validation-error');
-  assert.ok($component.is(':hidden'));
-  assert.equal($component.length, 1);
-  this.$('.t-address-address').val('a').trigger('change');
-  $component = this.$('.t-input-multi-address-validation-error');
-  assert.ok($component.is(':visible'));
-  assert.equal($component.text(), GLOBAL.invalid_street);
-  assert.equal($component.length, 1);
-  this.$('.t-address-address').val('925 Sky Park').trigger('change');
-  $component = this.$('.t-input-multi-address-validation-error');
-  assert.ok($component.is(':hidden'));
-  //zip
-  $component = this.$('.t-input-multi-address-zip-validation-error');
-  assert.ok($component.is(':hidden'));
-  assert.equal($component.length, 1);
-  this.$('.t-address-postal-code').val('a').trigger('change');
-  $component = this.$('.t-input-multi-address-zip-validation-error');
-  assert.ok($component.is(':visible'));
-  assert.equal($component.text(), GLOBAL.invalid_zip);
-  assert.equal($component.length, 1);
-  this.$('.t-address-postal-code').val('97255').trigger('change');
-  $component = this.$('.t-input-multi-address-zip-validation-error');
-  assert.ok($component.is(':hidden'));
-  assert.equal($component.length, 1);
-});
+// test('filling in invalid address reveals validation messages', function(assert) {
+//   run(() => {
+//     this.model = store.push('person', {id: PD.id});
+//   });
+//   this.address_types = address_types;
+//   this.default_address_type = default_address_type;
+//   this.render(hbs`{{people/person-single model=model address_types=address_types default_address_type=default_address_type}}`);
+//   //street
+//   var $component = this.$('.t-input-multi-address-validation-error');
+//   assert.equal($component.length, 0);
+//   this.$('.t-add-address-btn:eq(0)').click();
+//   $component = this.$('.t-input-multi-address-validation-error');
+//   assert.ok($component.is(':hidden'));
+//   assert.equal($component.length, 1);
+//   this.$('.t-address-address').val('a').trigger('change');
+//   $component = this.$('.t-input-multi-address-validation-error');
+//   assert.ok($component.is(':visible'));
+//   assert.equal($component.text(), GLOBAL.invalid_street);
+//   assert.equal($component.length, 1);
+//   this.$('.t-address-address').val('925 Sky Park').trigger('change');
+//   $component = this.$('.t-input-multi-address-validation-error');
+//   assert.ok($component.is(':hidden'));
+//   //zip
+//   $component = this.$('.t-input-multi-address-zip-validation-error');
+//   assert.ok($component.is(':hidden'));
+//   assert.equal($component.length, 1);
+//   this.$('.t-address-postal-code').val('a').trigger('change');
+//   $component = this.$('.t-input-multi-address-zip-validation-error');
+//   assert.ok($component.is(':visible'));
+//   assert.equal($component.text(), GLOBAL.invalid_zip);
+//   assert.equal($component.length, 1);
+//   this.$('.t-address-postal-code').val('97255').trigger('change');
+//   $component = this.$('.t-input-multi-address-zip-validation-error');
+//   assert.ok($component.is(':hidden'));
+//   assert.equal($component.length, 1);
+// });
 
 test('can remove a new phone number', function(assert) {
   run(() => {
@@ -228,18 +228,18 @@ test('can add and remove new email', function(assert) {
   assert.equal(this.$('.t-new-entry').length, 0);
 });
 
-test('can add and remove new address', function(assert) {
-  run(() => {
-    this.model = store.push('person', {id: PD.id});
-  });
-  this.address_types = address_types;
-  this.default_address_type = default_address_type;
-  this.render(hbs`{{people/person-single model=model address_types=address_types default_address_type=default_address_type}}`);
-  this.$('.t-add-address-btn:eq(0)').click();
-  assert.equal(this.$('.t-address-address').length, 1);
-  this.$('.t-del-address-btn:eq(0)').click();
-  assert.equal(this.$('.t-address-address').length, 0);
-});
+// test('can add and remove new address', function(assert) {
+//   run(() => {
+//     this.model = store.push('person', {id: PD.id});
+//   });
+//   this.address_types = address_types;
+//   this.default_address_type = default_address_type;
+//   this.render(hbs`{{people/person-single model=model address_types=address_types default_address_type=default_address_type}}`);
+//   this.$('.t-add-address-btn:eq(0)').click();
+//   assert.equal(this.$('.t-address-address').length, 1);
+//   this.$('.t-del-address-btn:eq(0)').click();
+//   assert.equal(this.$('.t-address-address').length, 0);
+// });
 
 test('header populates with username and role name', function(assert) {
   let model;

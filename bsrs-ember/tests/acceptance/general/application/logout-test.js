@@ -7,11 +7,11 @@ import windowProxy from 'bsrs-ember/utilities/window-proxy';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 
 const HOME_URL = '/';
 const PREFIX = config.APP.NAMESPACE;
-const DASHBOARD_URL = BASEURLS.dashboard_url;
+const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 
 var application;
 

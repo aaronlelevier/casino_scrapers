@@ -14,6 +14,7 @@ import CF from 'bsrs-ember/vendor/category_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
 import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_ROLE_URL = BASEURLS.base_roles_url;
@@ -394,7 +395,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
     });
     let role_list_data = RF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, role_list_data);
-    visit(ROLE_URL);
+    generalPage.clickRoles();
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
     });

@@ -8,7 +8,7 @@ var multi_new_put_payload = {
     locations: [],
     emails: [],
     phone_numbers: [],
-    addresses: [],
+    // addresses: [],
     locale: PD.locale_id,
 };
 

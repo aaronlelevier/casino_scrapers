@@ -1,11 +1,11 @@
 import Ember from 'ember';
 import PageObject from 'bsrs-ember/tests/page-object';
 let { visitable, clickable, text, hasClass } = PageObject;
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
-
-const DASHBOARD_URL = BASEURLS.dashboard_url;
+import BASEURLS from 'bsrs-ember/utilities/urls';
 
 var GeneralPage = PageObject.create({
+  visitAdmin: visitable('/admin'),
+  visitDashboard: visitable(BASEURLS.DASHBOARD_URL),
   save: clickable('.t-save-btn'),
   cancel: clickable('.t-cancel-btn'),
   delete: clickable('.t-delete-btn'),
@@ -16,15 +16,11 @@ var GeneralPage = PageObject.create({
   clickModalCancelDelete: clickable('.t-modal-footer .t-modal-cancel-btn'),
   modalIsVisible: PageObject.isVisible('.ember-modal-dialog'),
   modalIsHidden: PageObject.isHidden('.t-modal'),
-  visitDashboard: visitable(DASHBOARD_URL),
   clickAdmin: clickable('.t-nav-admin'),
-  clickDTD: clickable('.t-nav-admin-dtd'),
   errorText: text('.t-error-message'),
   clickLaunchDTTicket: clickable('.t-launch-dt-ticket'),
   clickHomeModalShow: clickable('.t-home-modal-show'),
   isDirty: hasClass('dirty', 'i', {scope: '.t-tab-close'}),
-  clickGeneralSettingsLink: clickable('.t-general-settings'),
-  clickAssignmentProfiles: clickable('.t-assignment-profiles'),
 
   gridItemZeroClick: clickable('.t-grid-data:eq(0)'),
   gridItemOneClick: clickable('.t-grid-data:eq(1)'),
@@ -36,6 +32,16 @@ var GeneralPage = PageObject.create({
   modalDeleteBtnValue: () => Ember.$('.t-modal-delete-btn').text().trim(),
   modalRollbackBtnValue: () => Ember.$('.t-modal-rollback-btn').text().trim(),
   modalTitleValue: () => Ember.$('.t-modal-title').text().trim(),
+
+  //Admin Routes
+  clickDTD: clickable('.t-nav-admin-dtd'),
+  clickCategories: clickable('.t-nav-admin-category'),
+  clickPeople: clickable('.t-nav-admin-people'),
+  clickLocations: clickable('.t-nav-admin-location'),
+  clickLocationLevel: clickable('.t-nav-admin-location-level'),
+  clickRoles: clickable('.t-nav-admin-role'),
+  clickGeneralSettingsLink: clickable('.t-nav-general-settings'),
+  clickAssignmentProfiles: clickable('.t-nav-assignment-profiles'),
 });
 
 export default GeneralPage;

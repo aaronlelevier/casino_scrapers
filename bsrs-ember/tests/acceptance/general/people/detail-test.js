@@ -28,9 +28,9 @@ import PNTD from 'bsrs-ember/vendor/defaults/phone-number-type';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
-import AF from 'bsrs-ember/vendor/address_fixtures';
-import AD from 'bsrs-ember/vendor/defaults/address';
-import ATD from 'bsrs-ember/vendor/defaults/address-type';
+// import AF from 'bsrs-ember/vendor/address_fixtures';
+// import AD from 'bsrs-ember/vendor/defaults/address';
+// import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/person';
 import inputCurrencyPage from 'bsrs-ember/tests/pages/input-currency';
@@ -132,21 +132,21 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     assert.equal(find('.t-input-multi-phone').find('input').length, 2);
     assert.equal(find('.t-input-multi-phone').find('input:eq(0)').val(), PND.numberOne);
     assert.equal(find('.t-input-multi-phone').find('input:eq(1)').val(), PND.numberTwo);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group').length, 2);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type').val(), ATD.officeId);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type option:selected').text(), t(ATD.officeName));
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-address').val(), AD.streetOne);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-city').val(), AD.cityOne);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-state').val(), AD.stateTwo);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-postal-code').val(), AD.zipOne);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-country').val(), AD.countryOne);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type').val(), ATD.shippingId);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type option:selected').text(), t(ATD.shippingName));
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-address').val(), AD.streetTwo);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-city').val(), AD.cityTwo);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-state').val(), AD.stateTwo);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), AD.zipTwo);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), AD.countryTwo);
+    // assert.equal(find('.t-input-multi-address').find('.t-address-group').length, 2);
+    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type').val(), ATD.officeId);
+    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type option:selected').text(), t(ATD.officeName));
+    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-address').val(), AD.streetOne);
+    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-city').val(), AD.cityOne);
+    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-state').val(), AD.stateTwo);
+    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-postal-code').val(), AD.zipOne);
+    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-country').val(), AD.countryOne);
+    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type').val(), ATD.shippingId);
+    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type option:selected').text(), t(ATD.shippingName));
+    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-address').val(), AD.streetTwo);
+    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-city').val(), AD.cityTwo);
+    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-state').val(), AD.stateTwo);
+    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), AD.zipTwo);
+    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), AD.countryTwo);
     assert.equal(page.statusInput, t(SD.activeName));
     assert.equal(page.localeInput, PD.localeFull);
     assert.equal(page.localeOptionLength, 2);
@@ -396,26 +396,26 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     });
   });
 
-  test('newly added addresses without a valid name are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-    page.visitDetail();
-    click('.t-add-address-btn:eq(0)');
-    andThen(() => {
-      assert.equal(store.find('address').get('length'), 3);
-      let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-      assert.equal(visible_errors.length, 0);
-    });
-    fillIn('.t-address-address:eq(2)', '34');
-    andThen(() => {
-      let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-      assert.equal(visible_errors.length, 1);
-    });
-    fillIn('.t-address-address:eq(2)', '');
-    generalPage.cancel();
-    andThen(() => {
-      assert.equal(currentURL(), PEOPLE_INDEX_URL);
-      assert.equal(store.find('address').get('length'), 2);
-    });
-  });
+  // test('newly added addresses without a valid name are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
+  //   page.visitDetail();
+  //   click('.t-add-address-btn:eq(0)');
+  //   andThen(() => {
+  //     assert.equal(store.find('address').get('length'), 3);
+  //     let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+  //     assert.equal(visible_errors.length, 0);
+  //   });
+  //   fillIn('.t-address-address:eq(2)', '34');
+  //   andThen(() => {
+  //     let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+  //     assert.equal(visible_errors.length, 1);
+  //   });
+  //   fillIn('.t-address-address:eq(2)', '');
+  //   generalPage.cancel();
+  //   andThen(() => {
+  //     assert.equal(currentURL(), PEOPLE_INDEX_URL);
+  //     assert.equal(store.find('address').get('length'), 2);
+  //   });
+  // });
 
   test('emails without a valid name are ignored and removed on save', (assert) => {
     page.visitDetail();
@@ -479,56 +479,56 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     });
   });
 
-  test('address without a valid address or zip code are ignored and removed on save', (assert) => {
-    page.visitDetail();
-    click('.t-add-address-btn:eq(0)');
-    andThen(() => {
-      let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-      let visible_zip_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
-      assert.equal(visible_errors.length, 0);
-      assert.equal(visible_zip_errors.length, 0);
-    });
-    fillIn('.t-address-address:eq(2)', '34');
-    andThen(() => {
-      let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-      assert.equal(visible_errors.length, 1);
-      assert.equal(find('.t-input-multi-address-validation-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_street);
-    });
-    generalPage.save();
-    andThen(() => {
-      assert.equal(currentURL(), DETAIL_URL);
-      let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-      let visible_zip_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
-      assert.equal(visible_errors.length, 1);
-      assert.equal(visible_zip_errors.length, 0);
-      assert.equal(store.find('address').get('length'), 3);
-    });
-    fillIn('.t-address-address:eq(2)', '');
-    fillIn('.t-address-postal-code:eq(2)', '34');
-    andThen(() => {
-      let visible_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
-      assert.equal(visible_errors.length, 1);
-      assert.equal(find('.t-input-multi-address-zip-validation-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_zip);
-    });
-    generalPage.save();
-    andThen(() => {
-      assert.equal(currentURL(), DETAIL_URL);
-      let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-      let visible_zip_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
-      assert.equal(visible_errors.length, 1);
-      assert.equal(visible_zip_errors.length, 1);
-      assert.equal(store.find('address').get('length'), 3);
-    });
-    fillIn('.t-address-postal-code:eq(2)', '');
-    var response = PF.detail(PD.idOne);
-    var payload = PF.put({id: PD.id});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    generalPage.save();
-    andThen(() => {
-      assert.equal(currentURL(), PEOPLE_INDEX_URL);
-      assert.equal(store.find('address').get('length'), 2);
-    });
-  });
+  // test('address without a valid address or zip code are ignored and removed on save', (assert) => {
+  //   page.visitDetail();
+  //   click('.t-add-address-btn:eq(0)');
+  //   andThen(() => {
+  //     let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+  //     let visible_zip_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
+  //     assert.equal(visible_errors.length, 0);
+  //     assert.equal(visible_zip_errors.length, 0);
+  //   });
+  //   fillIn('.t-address-address:eq(2)', '34');
+  //   andThen(() => {
+  //     let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+  //     assert.equal(visible_errors.length, 1);
+  //     assert.equal(find('.t-input-multi-address-validation-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_street);
+  //   });
+  //   generalPage.save();
+  //   andThen(() => {
+  //     assert.equal(currentURL(), DETAIL_URL);
+  //     let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+  //     let visible_zip_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
+  //     assert.equal(visible_errors.length, 1);
+  //     assert.equal(visible_zip_errors.length, 0);
+  //     assert.equal(store.find('address').get('length'), 3);
+  //   });
+  //   fillIn('.t-address-address:eq(2)', '');
+  //   fillIn('.t-address-postal-code:eq(2)', '34');
+  //   andThen(() => {
+  //     let visible_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
+  //     assert.equal(visible_errors.length, 1);
+  //     assert.equal(find('.t-input-multi-address-zip-validation-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_zip);
+  //   });
+  //   generalPage.save();
+  //   andThen(() => {
+  //     assert.equal(currentURL(), DETAIL_URL);
+  //     let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+  //     let visible_zip_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
+  //     assert.equal(visible_errors.length, 1);
+  //     assert.equal(visible_zip_errors.length, 1);
+  //     assert.equal(store.find('address').get('length'), 3);
+  //   });
+  //   fillIn('.t-address-postal-code:eq(2)', '');
+  //   var response = PF.detail(PD.idOne);
+  //   var payload = PF.put({id: PD.id});
+  //   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+  //   generalPage.save();
+  //   andThen(() => {
+  //     assert.equal(currentURL(), PEOPLE_INDEX_URL);
+  //     assert.equal(store.find('address').get('length'), 2);
+  //   });
+  // });
 
   test('when you change a related email numbers type it will be persisted correctly', (assert) => {
     page.visitDetail();
@@ -554,17 +554,17 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     });
   });
 
-  test('when you change a related address type it will be persisted correctly', (assert) => {
-    page.visitDetail();
-    var addresses = AF.put({id: AD.idOne, type: ATD.shippingId});
-    var payload = PF.put({id: PD.id, addresses: addresses});
-    xhr(url,'PUT',JSON.stringify(payload),{},200);
-    fillIn('.t-address-type:eq(0)', ATD.shippingId);
-    generalPage.save();
-    andThen(() => {
-      assert.equal(currentURL(), PEOPLE_INDEX_URL);
-    });
-  });
+  // test('when you change a related address type it will be persisted correctly', (assert) => {
+  //   page.visitDetail();
+  //   var addresses = AF.put({id: AD.idOne, type: ATD.shippingId});
+  //   var payload = PF.put({id: PD.id, addresses: addresses});
+  //   xhr(url,'PUT',JSON.stringify(payload),{},200);
+  //   fillIn('.t-address-type:eq(0)', ATD.shippingId);
+  //   generalPage.save();
+  //   andThen(() => {
+  //     assert.equal(currentURL(), PEOPLE_INDEX_URL);
+  //   });
+  // });
 
   test('when user changes an attribute on email and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
     page.visitDetail();
@@ -608,26 +608,26 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     });
   });
 
-  test('when user changes an attribute on address and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-    page.visitDetail();
-    fillIn('.t-address-type:eq(0)', ATD.shippingId);
-    generalPage.cancel();
-    andThen(() => {
-      waitFor(assert, () => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.ok(generalPage.modalIsVisible);
-      });
-    });
-    generalPage.clickModalRollback();
-    andThen(() => {
-      waitFor(assert, () => {
-        assert.equal(currentURL(), PEOPLE_INDEX_URL);
-        var person = store.find('person', PD.idOne);
-        var addresses = store.find('address', PD.idOne);
-        assert.equal(addresses._source[0].get('type'), ATD.officeId);
-      });
-    });
-  });
+  // test('when user changes an attribute on address and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+  //   page.visitDetail();
+  //   fillIn('.t-address-type:eq(0)', ATD.shippingId);
+  //   generalPage.cancel();
+  //   andThen(() => {
+  //     waitFor(assert, () => {
+  //       assert.equal(currentURL(), DETAIL_URL);
+  //       assert.ok(generalPage.modalIsVisible);
+  //     });
+  //   });
+  //   generalPage.clickModalRollback();
+  //   andThen(() => {
+  //     waitFor(assert, () => {
+  //       assert.equal(currentURL(), PEOPLE_INDEX_URL);
+  //       var person = store.find('person', PD.idOne);
+  //       var addresses = store.find('address', PD.idOne);
+  //       assert.equal(addresses._source[0].get('type'), ATD.officeId);
+  //     });
+  //   });
+  // });
 
   test('when user removes a phone number clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
     page.visitDetail();
@@ -671,26 +671,26 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     });
   });
 
-  test('when user removes an address clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-    page.visitDetail();
-    click('.t-del-address-btn:eq(0)');
-    generalPage.cancel();
-    andThen(() => {
-      waitFor(assert, () => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.ok(generalPage.modalIsVisible);
-      });
-    });
-    generalPage.clickModalRollback();
-    andThen(() => {
-      waitFor(assert, () => {
-        assert.equal(currentURL(), PEOPLE_INDEX_URL);
-        var person = store.find('person', PD.idOne);
-        var addresses = store.find('address', PD.idOne);
-        assert.equal(addresses._source[0].get('type'), ATD.officeId);
-      });
-    });
-  });
+  // test('when user removes an address clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+  //   page.visitDetail();
+  //   click('.t-del-address-btn:eq(0)');
+  //   generalPage.cancel();
+  //   andThen(() => {
+  //     waitFor(assert, () => {
+  //       assert.equal(currentURL(), DETAIL_URL);
+  //       assert.ok(generalPage.modalIsVisible);
+  //     });
+  //   });
+  //   generalPage.clickModalRollback();
+  //   andThen(() => {
+  //     waitFor(assert, () => {
+  //       assert.equal(currentURL(), PEOPLE_INDEX_URL);
+  //       var person = store.find('person', PD.idOne);
+  //       var addresses = store.find('address', PD.idOne);
+  //       assert.equal(addresses._source[0].get('type'), ATD.officeId);
+  //     });
+  //   });
+  // });
 
   test('when you deep link to the person detail view you can remove a new phone number', (assert) => {
     page.visitDetail();
@@ -720,34 +720,34 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     });
   });
 
-  test('when you deep link to the person detail view you can remove a new address', (assert) => {
-    page.visitDetail();
-    andThen(() => {
-      assert.equal(currentURL(), DETAIL_URL);
-      var person = store.find('person', PD.idOne);
-      assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-      assert.equal(find('.t-input-multi-address').find('input').length, 4);
-    });
-    click('.t-del-address-btn:eq(0)');
-    andThen(() => {
-      assert.equal(currentURL(), DETAIL_URL);
-      assert.equal(find('.t-input-multi-address').find('input').length, 2);
-      var person = store.find('person', PD.idOne);
-      assert.ok(person.get('isDirtyOrRelatedDirty'));
-    });
-    var addresses = AF.put();
-    var response = PF.detail(PD.idOne);
-    var payload = PF.put({id: PD.id, addresses: [addresses[1]]});
-    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-    generalPage.save();
-    andThen(() => {
-      assert.equal(currentURL(), PEOPLE_INDEX_URL);
-      var person = store.find('person', PD.idOne);
-      assert.ok(person.get('isNotDirty'));
-      assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-      assert.ok(person.get('emailsIsNotDirty'));
-    });
-  });
+  // test('when you deep link to the person detail view you can remove a new address', (assert) => {
+  //   page.visitDetail();
+  //   andThen(() => {
+  //     assert.equal(currentURL(), DETAIL_URL);
+  //     var person = store.find('person', PD.idOne);
+  //     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  //     assert.equal(find('.t-input-multi-address').find('input').length, 4);
+  //   });
+  //   click('.t-del-address-btn:eq(0)');
+  //   andThen(() => {
+  //     assert.equal(currentURL(), DETAIL_URL);
+  //     assert.equal(find('.t-input-multi-address').find('input').length, 2);
+  //     var person = store.find('person', PD.idOne);
+  //     assert.ok(person.get('isDirtyOrRelatedDirty'));
+  //   });
+  //   var addresses = AF.put();
+  //   var response = PF.detail(PD.idOne);
+  //   var payload = PF.put({id: PD.id, addresses: [addresses[1]]});
+  //   xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+  //   generalPage.save();
+  //   andThen(() => {
+  //     assert.equal(currentURL(), PEOPLE_INDEX_URL);
+  //     var person = store.find('person', PD.idOne);
+  //     assert.ok(person.get('isNotDirty'));
+  //     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  //     assert.ok(person.get('emailsIsNotDirty'));
+  //   });
+  // });
 
   test('when you deep link to the person detail view you can add and remove a new phone number', (assert) => {
     clearxhr(list_xhr);
@@ -767,23 +767,23 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     });
   });
 
-  test('when you deep link to the person detail view you can add and remove a new address', (assert) => {
-    clearxhr(list_xhr);
-    page.visitDetail();
-    andThen(() => {
-      assert.equal(currentURL(), DETAIL_URL);
-      var person = store.find('person', PD.idOne);
-      assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-      assert.equal(find('.t-input-multi-address').find('input').length, 4);
-    });
-    click('.t-add-address-btn:eq(0)');
-    click('.t-del-address-btn:eq(2)');
-    andThen(() => {
-      var person = store.find('person', PD.idOne);
-      assert.ok(person.get('isNotDirty'));
-      assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    });
-  });
+  // test('when you deep link to the person detail view you can add and remove a new address', (assert) => {
+  //   clearxhr(list_xhr);
+  //   page.visitDetail();
+  //   andThen(() => {
+  //     assert.equal(currentURL(), DETAIL_URL);
+  //     var person = store.find('person', PD.idOne);
+  //     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  //     assert.equal(find('.t-input-multi-address').find('input').length, 4);
+  //   });
+  //   click('.t-add-address-btn:eq(0)');
+  //   click('.t-del-address-btn:eq(2)');
+  //   andThen(() => {
+  //     var person = store.find('person', PD.idOne);
+  //     assert.ok(person.get('isNotDirty'));
+  //     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  //   });
+  // });
 
   test('when you deep link to the person detail view you can change the phone number type and add a new phone number', (assert) => {
     random.uuid = function() { return UUID.value; };
@@ -810,30 +810,30 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     });
   });
 
-  test('when you deep link to the person detail view you can change the address type and can add new address with default type', (assert) => {
-    random.uuid = function() { return UUID.value; };
-    page.visitDetail();
-    fillIn('.t-input-multi-address .t-address-group:eq(0) select:eq(0)', ATD.shippingId);
-    click('.t-add-address-btn:eq(0)');
-    fillIn('.t-address-address:eq(2)', AD.streetThree);
-    var addresses = AF.put();
-    addresses[0].type = ATD.shippingId;
-    var response = PF.detail(PD.idOne);
-    run(function() {
-      addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree});
-    });
-    var payload = PF.put({id: PD.id, addresses: addresses});
-    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-    generalPage.save();
-    andThen(() => {
-      assert.equal(currentURL(), PEOPLE_INDEX_URL);
-      var person = store.find('person', PD.idOne);
-      assert.ok(person.get('isNotDirty'));
-      assert.equal(person.get('addresses').objectAt(0).get('type'), ATD.shippingId);
-      assert.equal(person.get('addresses').objectAt(2).get('type'), ATD.officeId);
-      assert.ok(person.get('addresses').objectAt(0).get('isNotDirty'));
-    });
-  });
+  // test('when you deep link to the person detail view you can change the address type and can add new address with default type', (assert) => {
+  //   random.uuid = function() { return UUID.value; };
+  //   page.visitDetail();
+  //   fillIn('.t-input-multi-address .t-address-group:eq(0) select:eq(0)', ATD.shippingId);
+  //   click('.t-add-address-btn:eq(0)');
+  //   fillIn('.t-address-address:eq(2)', AD.streetThree);
+  //   var addresses = AF.put();
+  //   addresses[0].type = ATD.shippingId;
+  //   var response = PF.detail(PD.idOne);
+  //   run(function() {
+  //     addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree});
+  //   });
+  //   var payload = PF.put({id: PD.id, addresses: addresses});
+  //   xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+  //   generalPage.save();
+  //   andThen(() => {
+  //     assert.equal(currentURL(), PEOPLE_INDEX_URL);
+  //     var person = store.find('person', PD.idOne);
+  //     assert.ok(person.get('isNotDirty'));
+  //     assert.equal(person.get('addresses').objectAt(0).get('type'), ATD.shippingId);
+  //     assert.equal(person.get('addresses').objectAt(2).get('type'), ATD.officeId);
+  //     assert.ok(person.get('addresses').objectAt(0).get('isNotDirty'));
+  //   });
+  // });
 
 
   test('clicking cancel button will take from detail view to list view', (assert) => {

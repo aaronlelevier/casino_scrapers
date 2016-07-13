@@ -27,8 +27,8 @@ var PersonRoute = TabRoute.extend(FindById, ContactRouteMixin, {
     const default_email_type = this.email_type_repo.get_default();
     const phone_number_types = this.phone_number_type_repo.find();
     const default_phone_number_type = this.phone_number_type_repo.get_default();
-    const address_types = this.address_type_repo.find();
-    const default_address_type = this.address_type_repo.get_default();
+    // const address_types = this.address_type_repo.find();
+    // const default_address_type = this.address_type_repo.get_default();
     const countries = this.country_repo.find();
     const state_list = this.state_repo.find();
     const statuses = this.get('status_repo').find();
@@ -38,7 +38,7 @@ var PersonRoute = TabRoute.extend(FindById, ContactRouteMixin, {
     const override = person.get('roleIsDirty');
     return this.findByIdScenario(person, pk, {email_types:email_types, default_email_type:default_email_type,
                                  phone_number_types:phone_number_types, default_phone_number_type:default_phone_number_type,
-                                 address_types:address_types, default_address_type:default_address_type,
+                                //  address_types:address_types, default_address_type:default_address_type,
                                  countries:countries, state_list:state_list, statuses:statuses,
                                  locales:locales, roles:roles, role_change:role_change}, override);
   },

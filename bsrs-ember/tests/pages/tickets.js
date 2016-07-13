@@ -1,12 +1,12 @@
 import PageObject from 'bsrs-ember/tests/page-object';
 let { value, visitable, fillable, clickable, count, text, hasClass, isHidden, isVisible } = PageObject;
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 
 const BASE_URL = BASEURLS.base_tickets_url;
 const TICKETS_URL = BASE_URL + '/index';

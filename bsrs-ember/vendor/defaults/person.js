@@ -44,7 +44,7 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
       role: this.role_defaults.idOne,
       status: this.status_defaults.activeId,
       phone_numbers: BSRS_PERSON_PHONE_NUMBERS,
-      addresses: BSRS_PERSON_ADDRESSES,
+      // addresses: BSRS_PERSON_ADDRESSES,
       location: BSRS_PERSON_LOCATION,
       employee_id: BSRS_PERSON_employee_id,
       title: BSRS_PERSON_TITLE,

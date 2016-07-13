@@ -3,7 +3,7 @@ import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
-import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location_level_fixtures';
+import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location-level_fixtures';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS, { LOCATION_LEVELS_URL } from 'bsrs-ember/utilities/urls';
 

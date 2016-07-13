@@ -2,7 +2,7 @@ import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
-import LLF from 'bsrs-ember/vendor/location_level_fixtures';
+import LLF from 'bsrs-ember/vendor/location-level_fixtures';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 
 var store, location_level, location_level_two, run = Ember.run, subject;

@@ -6,11 +6,12 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
-import LLF from 'bsrs-ember/vendor/location_level_fixtures';
+import LLF from 'bsrs-ember/vendor/location-level_fixtures';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
@@ -393,7 +394,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
   fillIn('.t-location-level-name', LLD.nameCompany);
   let location_list_data = LLF.list();
   list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
-  visit(LOCATION_LEVEL_URL);
+  generalPage.clickLocationLevel();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
   });

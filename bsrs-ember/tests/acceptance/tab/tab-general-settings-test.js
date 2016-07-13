@@ -16,7 +16,7 @@ const BASE_SETTINGS_URL = BASEURLS.base_setting_url;
 const DETAIL_URL = BASE_SETTINGS_URL + '/' + TD.id;
 const DETAIL_ROUTE = 'admin.settings';
 const DOC_TYPE = 'tenant';
-const general_settings_link = '.t-general-settings:eq(0)';
+const general_settings_link = '.t-nav-general-settings:eq(0)';
 
 let application, store, settings_data, endpoint, detail_xhr;
 

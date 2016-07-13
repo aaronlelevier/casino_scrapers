@@ -10,6 +10,7 @@ import TPF from 'bsrs-ember/vendor/third_party_fixtures';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import TPD from 'bsrs-ember/vendor/defaults/third-party';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import generalPage from 'bsrs-ember/tests/pages/general';
 import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;

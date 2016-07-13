@@ -12,6 +12,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import PD_PUT from 'bsrs-ember/vendor/defaults/person-put';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
@@ -424,6 +425,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
   let people_list_data = PF.list();
   list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
   visit(PEOPLE_URL);
+  generalPage.clickPeople();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_URL);
     let tabs = store.find('tab');

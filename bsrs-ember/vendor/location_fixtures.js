@@ -179,7 +179,7 @@ if (typeof window === 'undefined') {
   var mixin = require('../vendor/mixin');
   var location_defaults = require('../vendor/defaults/location');
   var location_status_defaults = require('../vendor/defaults/location-status');
-  var location_level_fixtures = require('../vendor/location_level_fixtures');
+  var location_level_fixtures = require('../vendor/location-level_fixtures');
   var location_level_defaults = require('../vendor/defaults/location-level');
   var address_fixtures = require('../vendor/address_fixtures');
   var email_fixtures = require('../vendor/email_fixtures');
@@ -188,7 +188,7 @@ if (typeof window === 'undefined') {
   objectAssign(BSRS_LOCATION_FACTORY.prototype, mixin.prototype);
   module.exports = new BSRS_LOCATION_FACTORY(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, email_fixtures, phone_number_fixtures, address_fixtures, config);
 } else {
-  define('bsrs-ember/vendor/location_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/defaults/location-status', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/location_level_fixtures', 'bsrs-ember/vendor/email_fixtures', 'bsrs-ember/vendor/phone_number_fixtures', 'bsrs-ember/vendor/address_fixtures', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'], function (exports, location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, email_fixtures, phone_number_fixtures, address_fixtures, mixin, config) {
+  define('bsrs-ember/vendor/location_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/defaults/location-status', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/location-level_fixtures', 'bsrs-ember/vendor/email_fixtures', 'bsrs-ember/vendor/phone_number_fixtures', 'bsrs-ember/vendor/address_fixtures', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'], function (exports, location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, email_fixtures, phone_number_fixtures, address_fixtures, mixin, config) {
     'use strict';
     Object.assign(BSRS_LOCATION_FACTORY.prototype, mixin.prototype);
     var Factory = new BSRS_LOCATION_FACTORY(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, email_fixtures, phone_number_fixtures, address_fixtures, config);

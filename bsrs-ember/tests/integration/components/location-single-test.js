@@ -6,7 +6,7 @@ import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import translations from "bsrs-ember/vendor/translation_fixtures";
 import LF from "bsrs-ember/vendor/location_fixtures";
-import LLF from "bsrs-ember/vendor/location_level_fixtures";
+import LLF from "bsrs-ember/vendor/location-level_fixtures";
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';

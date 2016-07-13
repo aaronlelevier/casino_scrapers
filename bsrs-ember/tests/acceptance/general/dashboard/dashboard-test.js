@@ -4,7 +4,7 @@ import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 import TD from 'bsrs-ember/vendor/defaults/tenant';
 import TicketD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
@@ -13,7 +13,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 var application, store, endpoint;
 
 const PREFIX = config.APP.NAMESPACE;
-const DASHBOARD_URL = BASEURLS.dashboard_url;
+const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
 const PAGE_SIZE = config.APP.PAGE_SIZE;

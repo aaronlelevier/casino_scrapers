@@ -42,10 +42,10 @@ var BSRS_LOCATION_DEFAULTS_OBJECT = (function() {
 if (typeof window === 'undefined') {
   var location_level = require('./location-level');
   var location_status = require('./location-status');
-  var location_level_fixtures = require('../location_level_fixtures');
+  var location_level_fixtures = require('../location-level_fixtures');
   module.exports = new BSRS_LOCATION_DEFAULTS_OBJECT(location_status, location_level, location_level_fixtures).defaults();
 } else {
-  define('bsrs-ember/vendor/defaults/location', ['exports', 'bsrs-ember/vendor/defaults/location-status', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/location_level_fixtures'], function (exports, location_status, location_level, location_level_fixtures) {
+  define('bsrs-ember/vendor/defaults/location', ['exports', 'bsrs-ember/vendor/defaults/location-status', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/location-level_fixtures'], function (exports, location_status, location_level, location_level_fixtures) {
     'use strict';
     return new BSRS_LOCATION_DEFAULTS_OBJECT(location_status, location_level, location_level_fixtures).defaults();
   });
