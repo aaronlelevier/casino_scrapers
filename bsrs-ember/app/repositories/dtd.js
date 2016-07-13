@@ -1,21 +1,18 @@
 import Ember from 'ember';
-import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
 import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
-
-var PREFIX = config.APP.NAMESPACE;
-var DTD_URL = `${PREFIX}/dtds/`;
+import { DTD_URL, DT_URL } from 'bsrs-ember/utilities/urls';
 
 var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
-  type: Ember.computed(function() { return 'dtd'; }),
-  typeGrid: Ember.computed(function() { return 'dtd-list'; }),
+  type: 'dtd',
+  typeGrid: 'dtd-list',
   garbage_collection: Ember.computed(function() { return ['dtd-list']; }),
-  url: Ember.computed(function() { return DTD_URL; }),
-  errorUrl: Ember.computed(function() { return 'dtds.dtd-error'; }),
+  url: DTD_URL,
+  errorUrl: 'dtds.dtd-error',
   uuid: injectUUID('uuid'),
   DTDDeserializer: inject('dtd'),
   ticketDeserializer: inject('ticket'),
@@ -47,7 +44,7 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin,
    * called from dt/new/controller
    */
   getStart() {
-    return PromiseMixin.xhr(`${PREFIX}/dt/dt-start/`, 'GET');
+    return PromiseMixin.xhr(`${DT_URL}dt-start/`, 'GET');
   },
   /*
    * @method deepLinkDT
@@ -55,7 +52,7 @@ var DTDRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin,
    * if deep link, ticket needs to be full object and deserialized to setup relationships in order for dt-munge to work
    */
   deepLinkDT(dt_id, ticket_id) {
-    return PromiseMixin.xhr(`${PREFIX}/dt/${dt_id}/ticket/?ticket=${ticket_id}`, 'GET').then((response) => {
+    return PromiseMixin.xhr(`${DT_URL}${dt_id}/ticket/?ticket=${ticket_id}`, 'GET').then((response) => {
       const { dtd: model, ticket } = response;
       this.get('simpleStore').push('ticket', {id: ticket_id});
       return {

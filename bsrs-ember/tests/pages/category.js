@@ -5,7 +5,9 @@ import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select
 
 let { visitable, fillable, clickable, count, text, value } = PageObject;
 const BASE_URL = BASEURLS.base_categories_url;
+const INDEX_URL = BASEURLS.base_categories_url + '/index';
 const DETAIL_URL = `${BASE_URL}/${CD.idOne}`;
+const CATEGORY_NEW_URL = BASE_URL + '/new/1';
 const CATEGORY = '.t-category-children-select .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
 const CATEGORIES = `${CATEGORY} > .ember-power-select-multiple-option`;
 const CATEGORY_ONE = `${CATEGORIES}:eq(0)`;
@@ -14,7 +16,9 @@ const CATEGORY_THREE = `${CATEGORIES}:eq(2)`;
 const CATEGORY_DROPDOWN = multiple_options;
 
 var CategoryPage = PageObject.create({
+  visit: visitable(INDEX_URL),
   visitDetail: visitable(DETAIL_URL),
+  visitNew: visitable(CATEGORY_NEW_URL),
   nameFill: fillable('.t-category-name'),
   nameInput: value('.t-category-name'),
   descriptionFill: fillable('.t-category-description'),

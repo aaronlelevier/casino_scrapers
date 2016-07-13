@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
@@ -20,11 +21,11 @@ import PNTD from 'bsrs-ember/vendor/defaults/phone-number-type';
 import AD from 'bsrs-ember/vendor/defaults/address';
 import AF from 'bsrs-ember/vendor/address_fixtures';
 import ATD from 'bsrs-ember/vendor/defaults/address-type';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/location';
 import random from 'bsrs-ember/models/random';
 import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import BASEURLS, { LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_locations_url;
@@ -32,7 +33,7 @@ const LOCATION_URL = `${BASE_URL}/index`;
 const DETAIL_URL = `${BASE_URL}/${LD.idOne}`;
 const LOCATION_PUT_URL = PREFIX + DETAIL_URL + '/';
 
-let application, store, endpoint, list_xhr, url, original_uuid, run = Ember.run;
+let application, store, list_xhr, url, original_uuid;
 
 const CHILDREN = '.t-location-children-select';
 const CHILDREN_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
@@ -43,11 +44,10 @@ module('Acceptance | location detail-test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
-    endpoint = `${PREFIX}${BASE_URL}/`;
     let location_list_data = LF.list();
     let location_detail_data = LF.detail();
-    list_xhr = xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, location_list_data);
-    xhr(`${endpoint}${LD.idOne}/`, 'GET', null, {}, 200, location_detail_data);
+    list_xhr = xhr(`${LOCATIONS_URL}?page=1`, 'GET', null, {}, 200, location_list_data);
+    xhr(`${LOCATIONS_URL}${LD.idOne}/`, 'GET', null, {}, 200, location_detail_data);
     url = `${PREFIX}${DETAIL_URL}/`;
     original_uuid = random.uuid;
   },
@@ -58,7 +58,7 @@ module('Acceptance | location detail-test', {
 });
 
 test('clicking on a locations name will redirect them to the detail view', (assert) => {
-  visit(LOCATION_URL);
+  page.visit();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
   });
@@ -70,7 +70,7 @@ test('clicking on a locations name will redirect them to the detail view', (asse
 
 test('visiting admin/location', (assert) => {
   clearxhr(list_xhr);
-  visit(DETAIL_URL);
+  page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     let location = store.find('location', LD.idOne);
@@ -137,7 +137,7 @@ test('visiting admin/location', (assert) => {
   });
   let list = LF.list();
   list.results[0].name = LD.storeNameTwo;
-  xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
+  xhr(LOCATIONS_URL + '?page=1', 'GET', null, {}, 200, list);
   let response = LF.detail(LD.idOne);
   let payload = LF.put({id: LD.idOne, name: LD.storeNameTwo, status: LDS.closedId});
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
@@ -150,7 +150,7 @@ test('visiting admin/location', (assert) => {
 });
 
 test('clicking cancel button will take from detail view to list view', (assert) => {
-  visit(LOCATION_URL);
+  page.visit();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
   });
@@ -166,7 +166,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
   clearxhr(list_xhr);
-  visit(DETAIL_URL);
+  page.visitDetail();
   fillIn('.t-location-name', LD.storeNameTwo);
   page.locationLevelClickDropdown();
   page.locationLevelClickOptionTwo();
@@ -192,7 +192,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   fillIn('.t-location-name', LD.storeNameTwo);
   page.locationLevelClickDropdown();
   page.locationLevelClickOptionTwo();
@@ -242,7 +242,7 @@ test('when click delete, modal displays and when click ok, location is deleted a
 /* jshint ignore:end */
 
 test('changing location level will update related location level locations array and clear out parent and children power selects', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   andThen(() => {
     let location = store.find('location', LD.idOne);
     let location_level = store.find('location-level', LLD.idOne);
@@ -281,7 +281,7 @@ test('changing location level will update related location level locations array
 
 /* PHONE NUMBER AND ADDRESS AND EMAILS*/
 test('newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   andThen(() => {
     assert.equal(store.find('phonenumber').get('length'), 2);
   });
@@ -305,7 +305,7 @@ test('newly added phone numbers without a valid number are ignored and removed w
 });
 
 test('newly added email without a valid email are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   click('.t-add-email-btn:eq(0)');
   andThen(() => {
     assert.equal(store.find('email').get('length'), 3);
@@ -326,7 +326,7 @@ test('newly added email without a valid email are ignored and removed when user 
 });
 
 test('newly added addresses without a valid name are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   click('.t-add-address-btn:eq(0)');
   andThen(() => {
     assert.equal(store.find('address').get('length'), 3);
@@ -347,7 +347,7 @@ test('newly added addresses without a valid name are ignored and removed when us
 });
 
 test('phone numbers without a valid number are ignored and removed on save', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   click('.t-btn-add:eq(0)');
   andThen(() => {
     let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
@@ -378,7 +378,7 @@ test('phone numbers without a valid number are ignored and removed on save', (as
 });
 
 test('emails without a valid email are ignored and removed on save', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   click('.t-add-email-btn:eq(0)');
   andThen(() => {
     let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
@@ -409,7 +409,7 @@ test('emails without a valid email are ignored and removed on save', (assert) =>
 });
 
 test('address without a valid address or zip code are ignored and removed on save', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   click('.t-add-address-btn:eq(0)');
   andThen(() => {
     let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
@@ -460,7 +460,7 @@ test('address without a valid address or zip code are ignored and removed on sav
 });
 
 test('when you change a related phone numbers type it will be persisted correctly', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   var phone_numbers = PNF.put({id: PND.idOne, type: PNTD.mobileId});
   var payload = LF.put({id: LD.idOne, phone_numbers: phone_numbers});
   fillIn('.t-multi-phone-type:eq(0)', PNTD.mobileId);
@@ -472,7 +472,7 @@ test('when you change a related phone numbers type it will be persisted correctl
 });
 
 test('when you change a related emails type it will be persisted correctly', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   var emails = EF.put({id: ED.idOne, type: ETD.personalId});
   var payload = LF.put({id: LD.idOne, emails: emails});
   fillIn('.t-multi-email-type:eq(0)', ETD.personalId);
@@ -484,7 +484,7 @@ test('when you change a related emails type it will be persisted correctly', (as
 });
 
 test('when you change a related address type it will be persisted correctly', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   var addresses = AF.put({id: AD.idOne, type: ATD.shippingId});
   var payload = LF.put({id: LD.idOne, addresses: addresses});
   xhr(url,'PUT',JSON.stringify(payload),{},200);
@@ -496,7 +496,7 @@ test('when you change a related address type it will be persisted correctly', (a
 });
 
 test('when user changes an attribute on phonenumber and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   fillIn('.t-multi-phone-type:eq(0)', PNTD.mobileId);
   generalPage.cancel();
   andThen(() => {
@@ -517,7 +517,7 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
 });
 
 test('when user changes an attribute on email and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   fillIn('.t-multi-email-type:eq(0)', ETD.personalId);
   generalPage.cancel();
   andThen(() => {
@@ -538,7 +538,7 @@ test('when user changes an attribute on email and clicks cancel we prompt them w
 });
 
 test('when user changes an attribute on address and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   fillIn('.t-address-type:eq(0)', ATD.shippingId);
   generalPage.cancel();
   andThen(() => {
@@ -559,7 +559,7 @@ test('when user changes an attribute on address and clicks cancel we prompt them
 });
 
 test('when user removes a phone number clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   click('.t-del-btn:eq(0)');
   generalPage.cancel();
   andThen(() => {
@@ -580,7 +580,7 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
 });
 
 test('when user removes a email clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   click('.t-del-email-btn:eq(0)');
   generalPage.cancel();
   andThen(() => {
@@ -601,7 +601,7 @@ test('when user removes a email clicks cancel we prompt them with a modal and th
 });
 
 test('when user removes an address clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   click('.t-del-address-btn:eq(0)');
   generalPage.cancel();
   andThen(() => {
@@ -622,7 +622,7 @@ test('when user removes an address clicks cancel we prompt them with a modal and
 });
 
 test('when you deep link to the location detail view you can remove a new phone number', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     var location = store.find('location', LD.idOne);
@@ -650,7 +650,7 @@ test('when you deep link to the location detail view you can remove a new phone 
 });
 
 test('when you deep link to the location detail view you can remove a new email', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     var location = store.find('location', LD.idOne);
@@ -678,7 +678,7 @@ test('when you deep link to the location detail view you can remove a new email'
 });
 
 test('when you deep link to the location detail view you can remove a new address', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     var location = store.find('location', LD.idOne);
@@ -707,7 +707,7 @@ test('when you deep link to the location detail view you can remove a new addres
 
 test('when you deep link to the location detail view you can change the phone number type and add a new phone number', (assert) => {
   random.uuid = function() { return UUID.value; };
-  visit(DETAIL_URL);
+  page.visitDetail();
   fillIn('.t-input-multi-phone select:eq(0)', PNTD.mobileId);
   click('.t-btn-add:eq(0)');
   fillIn('.t-new-entry:eq(2)', PND.numberThree);
@@ -732,7 +732,7 @@ test('when you deep link to the location detail view you can change the phone nu
 
 test('when you deep link to the location detail view you can change the email type and add a new email', (assert) => {
   random.uuid = function() { return UUID.value; };
-  visit(DETAIL_URL);
+  page.visitDetail();
   fillIn('.t-input-multi-email select:eq(0)', ETD.personalId);
   click('.t-add-email-btn:eq(0)');
   fillIn('.t-new-entry:eq(4)', ED.emailThree);
@@ -757,7 +757,7 @@ test('when you deep link to the location detail view you can change the email ty
 
 test('when you deep link to the location detail view you can change the address type and can add new address with default type', (assert) => {
   random.uuid = function() { return UUID.value; };
-  visit(DETAIL_URL);
+  page.visitDetail();
   fillIn('.t-input-multi-address .t-address-group:eq(0) select:eq(0)', ATD.shippingId);
   click('.t-add-address-btn:eq(0)');
   fillIn('.t-address-address:eq(2)', AD.streetThree);
@@ -789,7 +789,7 @@ test('clicking and typing into power select for location will fire off xhr reque
     assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
     assert.equal(page.childrenSelected.indexOf(LD.storeNameTwo), 2);
   });
-  let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${LD.idOne}/location__icontains=a/`;
+  let location_endpoint = `${LOCATIONS_URL}get-level-children/${LLD.idOne}/${LD.idOne}/location__icontains=a/`;
   let response = [LF.get_no_related(LD.unusedId, LD.apple), LF.get_no_related(LD.idParent, LD.storeNameParent), LF.get_no_related(LD.idParentTwo, LD.storeNameParentTwo)];
   xhr(location_endpoint, 'GET', null, {}, 200, response);
   selectSearch(CHILDREN, 'a');
@@ -829,7 +829,7 @@ test('clicking and typing into power select for location will fire off xhr reque
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
   //search specific children
-  let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${LD.idOne}/location__icontains=BooNdocks/`;
+  let location_endpoint_2 = `${LOCATIONS_URL}get-level-children/${LLD.idOne}/${LD.idOne}/location__icontains=BooNdocks/`;
   let response_2 = [LF.get_no_related('abc123', LD.boondocks)];
   xhr(location_endpoint_2, 'GET', null, {}, 200, response_2);
   selectSearch(CHILDREN, 'BooNdocks');
@@ -885,7 +885,7 @@ test('can remove and add back same children and save empty children', (assert) =
     assert.ok(location.get('childrenIsDirty'));
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
-  let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${LD.idOne}/location__icontains=a/`;
+  let location_endpoint = `${LOCATIONS_URL}get-level-children/${LLD.idOne}/${LD.idOne}/location__icontains=a/`;
   let response = [LF.get_no_related(LD.unusedId, LD.baseStoreName), LF.get_no_related(LD.idParent, LD.storeNameParent), LF.get(LD.idParentTwo, LD.storeNameParentTwo)];
   xhr(location_endpoint, 'GET', null, {}, 200, response);
   selectSearch(CHILDREN, 'a');
@@ -912,7 +912,7 @@ test('can remove and add back same children and save empty children', (assert) =
     assert.ok(location.get('childrenIsDirty'));
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
-  location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${LD.idOne}/location__icontains=d/`;
+  location_endpoint = `${LOCATIONS_URL}get-level-children/${LLD.idOne}/${LD.idOne}/location__icontains=d/`;
   xhr(location_endpoint, 'GET', null, {}, 200, LF.search_power_select());
   selectSearch(CHILDREN, 'd');
   page.childrenClickOptionStoreNameTwo();
@@ -953,7 +953,7 @@ test('starting with multiple children, can remove all children (while not popula
     assert.equal(location.get('children').get('length'), 0);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
-  let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${LD.idOne}/location__icontains=d/`;
+  let location_endpoint = `${LOCATIONS_URL}get-level-children/${LLD.idOne}/${LD.idOne}/location__icontains=d/`;
   xhr(location_endpoint, 'GET', null, {}, 200, LF.search_power_select());
   selectSearch(CHILDREN, 'd');
   page.childrenClickOptionStoreNameTwo();
@@ -963,7 +963,7 @@ test('starting with multiple children, can remove all children (while not popula
     assert.ok(location.get('isDirtyOrRelatedDirty'));
     assert.equal(page.childrenSelected.indexOf(LD.storeNameTwo), 2);
   });
-  location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${LD.idOne}/location__icontains=g/`;
+  location_endpoint = `${LOCATIONS_URL}get-level-children/${LLD.idOne}/${LD.idOne}/location__icontains=g/`;
   const response = LF.search_power_select();
   response.push(LF.get(LD.idThree, LD.storeNameThree));
   xhr(location_endpoint, 'GET', null, {}, 200, response);
@@ -1010,7 +1010,7 @@ test('clicking and typing into power select for location will fire off xhr reque
     assert.equal(location.get('parents').objectAt(0).get('name'), LD.storeNameParent);
     assert.equal(page.parentsSelected.indexOf(LD.storeNameParent), 2);
   });
-  let location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LLD.idOne}/${LD.idOne}/location__icontains=a/`;
+  let location_endpoint = `${LOCATIONS_URL}get-level-parents/${LLD.idOne}/${LD.idOne}/location__icontains=a/`;
   let response = [LF.get_no_related(LD.unusedId, LD.apple), LF.get_no_related(LD.idParent, LD.storeNameParent), LF.get_no_related(LD.idParentTwo, LD.storeNameParentTwo)];
   xhr(location_endpoint, 'GET', null, {}, 200, response);
   page.parentsClickDropdown();
@@ -1051,7 +1051,7 @@ test('clicking and typing into power select for location will fire off xhr reque
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
   //search specific parents
-  let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-parents/${LLD.idOne}/${LD.idOne}/location__icontains=BooNdocks/`;
+  let location_endpoint_2 = `${LOCATIONS_URL}get-level-parents/${LLD.idOne}/${LD.idOne}/location__icontains=BooNdocks/`;
   let response_2 = [LF.get_no_related('abc123', LD.boondocks)];
   xhr(location_endpoint_2, 'GET', null, {}, 200, response_2);
   selectSearch(PARENTS, 'BooNdocks');
@@ -1107,7 +1107,7 @@ test('can remove and add back same parents and save empty parents', (assert) => 
     assert.ok(location.get('parentsIsDirty'));
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
-  let location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LLD.idOne}/${LD.idOne}/location__icontains=a/`;
+  let location_endpoint = `${LOCATIONS_URL}get-level-parents/${LLD.idOne}/${LD.idOne}/location__icontains=a/`;
   let response = [LF.get_no_related(LD.unusedId, LD.baseStoreName), LF.get_no_related(LD.idParent, LD.storeNameParent), LF.get_no_related(LD.idParentTwo, LD.storeNameParentTwo)];
   xhr(location_endpoint, 'GET', null, {}, 200, response);
   selectSearch(PARENTS, 'a');
@@ -1134,7 +1134,7 @@ test('can remove and add back same parents and save empty parents', (assert) => 
     assert.ok(location.get('parentsIsDirty'));
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
-  location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LLD.idOne}/${LD.idOne}/location__icontains=p/`;
+  location_endpoint = `${LOCATIONS_URL}get-level-parents/${LLD.idOne}/${LD.idOne}/location__icontains=p/`;
   response = LF.search_power_select();
   response.push(...[LF.get_no_related(LD.unusedId, LD.baseStoreName), LF.get_no_related(LD.idParent, LD.storeNameParent), LF.get_no_related(LD.idParentTwo, LD.storeNameParentTwo)]);
   xhr(location_endpoint, 'GET', null, {}, 200, response);
@@ -1177,7 +1177,7 @@ test('starting with multiple parents, can remove all parents (while not populati
     assert.equal(location.get('parents').get('length'), 0);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
-  let location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LLD.idOne}/${LD.idOne}/location__icontains=p/`;
+  let location_endpoint = `${LOCATIONS_URL}get-level-parents/${LLD.idOne}/${LD.idOne}/location__icontains=p/`;
   let response = LF.search_power_select();
   response.push(...[LF.get_no_related(LD.unusedId, LD.baseStoreName), LF.get_no_related(LD.idParent, LD.storeNameParent), LF.get_no_related(LD.idParentTwo, LD.storeNameParentTwo)]);
   xhr(location_endpoint, 'GET', null, {}, 200, response);

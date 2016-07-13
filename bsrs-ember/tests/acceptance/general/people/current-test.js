@@ -10,12 +10,12 @@ import PF from 'bsrs-ember/vendor/people_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import PD_PUT from 'bsrs-ember/vendor/defaults/person-put';
 import PCD from 'bsrs-ember/vendor/defaults/person-current';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import page from 'bsrs-ember/tests/pages/person';
+import BASEURLS, { PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_people_url;
-const PEOPLE_URL = BASE_URL + '/index';
+const PEOPLE_INDEX_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + PD.id;
 const PERSON_CURRENT_URL = BASE_URL + '/' + PCD.id;
 
@@ -29,10 +29,9 @@ module('Acceptance | person current test', {
     var current_person_data = PF.detail(PCD.id);
     var locale_data_es = translations.generate('es');
     var locale_endpoint_es = '/api/translations/?locale=es';
-    var endpoint = PREFIX + BASE_URL + '/';
     xhr(locale_endpoint_es, 'GET', null, {}, 200, locale_data_es);
-    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
-    xhr(endpoint + PCD.id + '/', 'GET', null, {}, 200, current_person_data);
+    list_xhr = xhr(PEOPLE_URL + '?page=1', 'GET', null, {}, 200, people_list_data);
+    xhr(PEOPLE_URL + PCD.id + '/', 'GET', null, {}, 200, current_person_data);
   },
   afterEach() {
     Ember.run(application, 'destroy');
@@ -84,7 +83,7 @@ test('when rolling back the locale the current locale is also changed back', (as
   click('.t-modal-footer .t-modal-rollback-btn');
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
       var person = store.find('person', PCD.id);
       assert.equal(person.get('locale').get('locale'), PD.locale);
       assert.equal(find('.t-grid-title').text(), "People");

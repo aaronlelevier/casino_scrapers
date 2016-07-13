@@ -14,9 +14,7 @@ var API_URL = `${PREFIX}/admin/profiles/`;
 export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: 'profile',
   typeGrid: 'profile-list',
-  garbage_collection: Ember.computed(function() {
-    return ['profile-list'];
-  }),
+  garbage_collection: Ember.computed(function() { return ['profile-list']; }),
   uuid: injectUUID('uuid'),
   profileDeserializer: injectDeserializer('profile'),
   url: API_URL,

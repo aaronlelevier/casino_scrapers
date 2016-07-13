@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
@@ -30,19 +31,19 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import AF from 'bsrs-ember/vendor/address_fixtures';
 import AD from 'bsrs-ember/vendor/defaults/address';
 import ATD from 'bsrs-ember/vendor/defaults/address-type';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/person';
 import inputCurrencyPage from 'bsrs-ember/tests/pages/input-currency';
 import random from 'bsrs-ember/models/random';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
+import BASEURLS, { PEOPLE_URL, ROLES_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const POWER_SELECT_LENGTH = 10;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const BASE_LOCATION_URL = BASEURLS.base_locations_url;
-const PEOPLE_URL = `${BASE_PEOPLE_URL}/index`;
+const PEOPLE_INDEX_URL = `${BASE_PEOPLE_URL}/index`;
 const DETAIL_URL = `${BASE_PEOPLE_URL}/${PD.idOne}`;
 const LETTER_A = {keyCode: 65};
 const LETTER_M = {keyCode: 77};
@@ -53,21 +54,20 @@ const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-options > .ember-p
 const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-var application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid, url, translations, role_route_data_endpoint, run = Ember.run;
+var application, store, list_xhr, people_detail_data, detail_xhr, original_uuid, url, translations, role_route_data_endpoint;
 
 module('Acceptance | person detail test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
-    endpoint = PREFIX + BASE_PEOPLE_URL + '/';
     var people_list_data = PF.list();
     people_detail_data = PF.detail(PD.idOne);
-    list_xhr = xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, people_list_data);
-    detail_xhr = xhr(`${endpoint}${PD.idOne}/`, 'GET', null, {}, 200, people_detail_data);
+    list_xhr = xhr(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, people_list_data);
+    detail_xhr = xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, people_detail_data);
     original_uuid = random.uuid;
     url = `${PREFIX}${DETAIL_URL}/`;
     translations = BSRS_TRANSLATION_FACTORY.generate('en')['en'];
-    role_route_data_endpoint = `${PREFIX}${BASEURLS.base_roles_url}/route-data/new/`;
+    role_route_data_endpoint = `${ROLES_URL}route-data/new/`;
   },
   afterEach() {
     random.uuid = original_uuid;
@@ -78,7 +78,7 @@ module('Acceptance | person detail test', {
 test('clicking a persons name will redirect to the given detail view', (assert) => {
   page.visitPeople();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_URL);
+    assert.equal(currentURL(), PEOPLE_INDEX_URL);
   });
   click('.t-grid-data:eq(0)');
   andThen(() => {
@@ -91,13 +91,13 @@ test('username backend validation', (assert) => {
   clearxhr(detail_xhr);
   let data = PF.detail(PD.idOne);
   data.username = 'Watter1';
-  xhr(`${endpoint}${PD.idOne}/`, 'GET', null, {}, 200, data);
+  xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, data);
   page.visitDetail();
   andThen(() => {
     assert.equal(find('.t-existing-error').text().trim(), '');
   });
   const username_response = {'count':1,'next':null,'previous':null,'results': [{'id': PD.idOne}]};
-  xhr(endpoint + '?username=mgibson1', 'GET', null, {}, 200, username_response);
+  xhr(PEOPLE_URL + '?username=mgibson1', 'GET', null, {}, 200, username_response);
   fillIn('.t-person-username', PD.username);
   andThen(() => {
     assert.equal(find('.t-existing-error').text().trim(), t(GLOBALMSG.existing_username, {value: PD.username}));
@@ -160,7 +160,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     middle_initial: PD_PUT.middle_initial, last_name: PD_PUT.last_name, title: PD_PUT.title,
     employee_id: PD_PUT.employee_id, auth_amount: PD_PUT.auth_amount, locale: PD.locale_id });
     const username_response = {'count':0,'next':null,'previous':null,'results': []};
-    xhr(`${endpoint}?username=${PD_PUT.username}`, 'get', null, {}, 200, username_response);
+    xhr(`${PEOPLE_URL}?username=${PD_PUT.username}`, 'get', null, {}, 200, username_response);
     fillIn('.t-person-username', PD_PUT.username);
     fillIn('.t-person-first-name', PD_PUT.first_name);
     fillIn('.t-person-middle-initial', PD_PUT.middle_initial );
@@ -177,7 +177,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
       var person = store.find('person', PD.idOne);
       assert.ok(person.get('isNotDirty'));
       assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -197,14 +197,14 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     andThen(() => {
       let person = store.find('person', PD.idOne);
       assert.equal(person.get('password'), '');
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
     });
   });
 
   test('payload does not include password if blank or undefined', (assert) => {
     page.visitDetail();
     const username_response = {'count':0,'next':null,'previous':null,'results': []};
-    xhr(`${endpoint}?username=${PD.sorted_username}`, 'GET', null, {}, 200, username_response);
+    xhr(`${PEOPLE_URL}?username=${PD.sorted_username}`, 'GET', null, {}, 200, username_response);
     fillIn('.t-person-username', PD.sorted_username);
     let response = PF.detail(PD.idOne);
     let payload = PF.put({id: PD.id, username: PD.sorted_username});
@@ -213,7 +213,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     andThen(() => {
       let person = store.find('person', PD.idOne);
       assert.equal(person.get('password'), '');
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
     });
   });
 
@@ -222,7 +222,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     clearxhr(list_xhr);
     page.visitDetail();
     const username_response = {'count':1,'next':null,'previous':null,'results': [{'id': PD.idOne}]};
-    xhr(`${endpoint}?username=${PD_PUT.username}`, 'GET', null, {}, 200, username_response);
+    xhr(`${PEOPLE_URL}?username=${PD_PUT.username}`, 'GET', null, {}, 200, username_response);
     fillIn('.t-person-username', PD_PUT.username);
     generalPage.cancel();
     andThen(() => {
@@ -245,7 +245,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
   test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     page.visitDetail();
     const username_response = {'count':1,'next':null,'previous':null,'results': [{'id': PD.idone}]};
-    xhr(`${endpoint}?username=${PD_PUT.username}`, 'get', null, {}, 200, username_response);
+    xhr(`${PEOPLE_URL}?username=${PD_PUT.username}`, 'get', null, {}, 200, username_response);
     fillIn('.t-person-username', PD_PUT.username);
     generalPage.cancel();
     andThen(() => {
@@ -257,7 +257,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     generalPage.clickModalRollback();
     andThen(() => {
       waitFor(assert, () => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), PEOPLE_INDEX_URL);
         var person = store.find('person', PD.idOne);
         assert.equal(person.get('username'), PD.username);
       });
@@ -274,7 +274,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       assert.equal(inputCurrencyPage.authAmountValue, "");
     });
     xhr(role_route_data_endpoint, 'GET', null, {}, 200, {});
-    xhr(`${PREFIX}${BASEURLS.base_roles_url}/${RD.idOne}/`, 'GET', null, {}, 200, RF.detail(RD.idOne));
+    xhr(`${ROLES_URL}${RD.idOne}/`, 'GET', null, {}, 200, RF.detail(RD.idOne));
     inputCurrencyPage.authAmountInheritedFromClick();
     andThen(() => {
       assert.equal(currentURL(), `${BASEURLS.base_roles_url}/${RD.idOne}`);
@@ -300,7 +300,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
     });
   });
 
@@ -321,7 +321,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     generalPage.clickModalDelete();
     andThen(() => {
       waitFor(assert, () => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), PEOPLE_INDEX_URL);
         assert.equal(store.find('person', PD.idOne).get('length'), undefined);
         assert.throws(Ember.$('.ember-modal-dialog'));
       });
@@ -370,7 +370,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     fillIn('.t-new-entry:eq(4)', '');
     generalPage.cancel();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
       assert.equal(store.find('email').get('length'), 2);
     });
   });
@@ -391,7 +391,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     fillIn('.t-new-entry:eq(2)', '');
     generalPage.cancel();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
       assert.equal(store.find('phonenumber').get('length'), 2);
     });
   });
@@ -412,7 +412,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     fillIn('.t-address-address:eq(2)', '');
     generalPage.cancel();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
       assert.equal(store.find('address').get('length'), 2);
     });
   });
@@ -443,7 +443,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
       assert.equal(store.find('email').get('length'), 2);
     });
   });
@@ -474,7 +474,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
       assert.equal(store.find('phonenumber').get('length'), 2);
     });
   });
@@ -525,7 +525,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
       assert.equal(store.find('address').get('length'), 2);
     });
   });
@@ -538,7 +538,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(),PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
     });
   });
 
@@ -550,7 +550,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(),PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
     });
   });
 
@@ -562,7 +562,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     fillIn('.t-address-type:eq(0)', ATD.shippingId);
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(),PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
     });
   });
 
@@ -579,7 +579,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     generalPage.clickModalRollback();
     andThen(() => {
       waitFor(assert, () => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), PEOPLE_INDEX_URL);
         var person = store.find('person', PD.idOne);
         var emails = store.find('email', PD.idOne);
         assert.equal(emails._source[0].get('type'), ETD.workId);
@@ -600,7 +600,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     generalPage.clickModalRollback();
     andThen(() => {
       waitFor(assert, () => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), PEOPLE_INDEX_URL);
         var person = store.find('person', PD.idOne);
         var phone_numbers = store.find('phonenumber', PD.idOne);
         assert.equal(phone_numbers._source[0].get('type'), PNTD.officeId);
@@ -621,7 +621,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     generalPage.clickModalRollback();
     andThen(() => {
       waitFor(assert, () => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), PEOPLE_INDEX_URL);
         var person = store.find('person', PD.idOne);
         var addresses = store.find('address', PD.idOne);
         assert.equal(addresses._source[0].get('type'), ATD.officeId);
@@ -642,7 +642,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     generalPage.clickModalRollback();
     andThen(() => {
       waitFor(assert, () => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), PEOPLE_INDEX_URL);
         var person = store.find('person', PD.idOne);
         var emails = store.find('email', PD.idOne);
         assert.equal(emails._source[0].get('type'), ETD.workId);
@@ -663,7 +663,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     generalPage.clickModalRollback();
     andThen(() => {
       waitFor(assert, () => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), PEOPLE_INDEX_URL);
         var person = store.find('person', PD.idOne);
         var phone_numbers = store.find('phonenumber', PD.idOne);
         assert.equal(phone_numbers._source[0].get('type'), PNTD.officeId);
@@ -684,7 +684,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     generalPage.clickModalRollback();
     andThen(() => {
       waitFor(assert, () => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), PEOPLE_INDEX_URL);
         var person = store.find('person', PD.idOne);
         var addresses = store.find('address', PD.idOne);
         assert.equal(addresses._source[0].get('type'), ATD.officeId);
@@ -713,7 +713,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(),PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
       var person = store.find('person', PD.idOne);
       assert.ok(person.get('isNotDirty'));
       assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -741,7 +741,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(),PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
       var person = store.find('person', PD.idOne);
       assert.ok(person.get('isNotDirty'));
       assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -801,7 +801,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(),PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
       var person = store.find('person', PD.idOne);
       assert.ok(person.get('isNotDirty'));
       assert.equal(person.get('phone_numbers').objectAt(0).get('type'), PNTD.mobileId);
@@ -826,7 +826,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(),PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
       var person = store.find('person', PD.idOne);
       assert.ok(person.get('isNotDirty'));
       assert.equal(person.get('addresses').objectAt(0).get('type'), ATD.shippingId);
@@ -839,7 +839,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
   test('clicking cancel button will take from detail view to list view', (assert) => {
     page.visitPeople();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
     });
     click('.t-grid-data:eq(0)');
     andThen(() => {
@@ -851,7 +851,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     });
     generalPage.cancel();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
     });
   });
 
@@ -867,7 +867,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     //refreshModel will call findById in people repo
     let people_detail_data_two = PF.detail(PD.idOne);
     people_detail_data_two.role = RD.idTwo;
-    ajax(endpoint + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
+    ajax(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
     page.roleClickDropdown();
     page.roleClickOptionTwo();
     andThen(() => {
@@ -879,7 +879,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(url,'PUT',JSON.stringify(payload),{},200);
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
     });
   });
 
@@ -895,7 +895,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     //refreshModel will call findById in people repo
     let people_detail_data_two = PF.detail(PD.idOne);
     people_detail_data_two.role = RD.idTwo;
-    ajax(`${endpoint}${PD.idOne}/`, 'GET', null, {}, 200, people_detail_data_two);
+    ajax(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, people_detail_data_two);
     page.roleClickDropdown();
     page.roleClickOptionTwo();
     andThen(() => {
@@ -915,7 +915,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     generalPage.clickModalRollback();
     andThen(() => {
       waitFor(assert, () => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), PEOPLE_INDEX_URL);
         var person = store.find('person', PD.idOne);
         assert.equal(person.get('role.id'), RD.idOne);
         var actual_role = store.find('role', RD.idOne);
@@ -936,7 +936,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       //refreshModel will call findById in people repo
       let people_detail_data_two = PF.detail(PD.idOne);
       people_detail_data_two.role = RD.idTwo;
-      let first_role_change = xhr(endpoint + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
+      let first_role_change = xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
       assert.equal(currentURL(), DETAIL_URL);
       var person = store.find('person', PD.idOne);
       andThen(() => {
@@ -957,7 +957,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         clearxhr(first_role_change);
         let people_detail_data_three = PF.detail(PD.idOne);
         people_detail_data_three.role = RD.idOne;
-        xhr(endpoint + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_three);
+        xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_three);
         page.roleClickDropdown();
         page.roleClickOptionOne();
         andThen(() => {
@@ -970,7 +970,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       });
       generalPage.cancel();
       andThen(() => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), PEOPLE_INDEX_URL);
       });
     });
   });
@@ -981,7 +981,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     clearxhr(list_xhr);
     let people_list_data_mod = PF.list();
     people_list_data_mod.results[0].role = RD.idTwo;
-    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data_mod);
+    list_xhr = xhr(PEOPLE_URL + '?page=1', 'GET', null, {}, 200, people_list_data_mod);
     page.visitDetail();
     let url = PREFIX + DETAIL_URL + "/";
     let role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
@@ -994,7 +994,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     });
     clearxhr(detail_xhr);
     let people_detail_data_two = PF.detail(PD.idOne);
-    xhr(endpoint + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
+    xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
     page.roleClickDropdown();
     page.roleClickOptionTwo();
     andThen(() => {
@@ -1006,7 +1006,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     });
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
       let person = store.find('person', PD.idOne);
       assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
@@ -1016,14 +1016,14 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     clearxhr(list_xhr);
     let people_list_data_mod = PF.list();
     people_list_data_mod.results[0].role = RD.idTwo;
-    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data_mod);
+    list_xhr = xhr(PEOPLE_URL + '?page=1', 'GET', null, {}, 200, people_list_data_mod);
     page.visitDetail();
     let url = PREFIX + DETAIL_URL + "/";
     let role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
     let payload = PF.put({id: PD.id, role: role.id, locations: []});
     xhr(url,'PUT',JSON.stringify(payload),{},200);
     andThen(() => {
-      let locations_endpoint = `${PREFIX}/admin/locations/location__icontains=a/?location_level=${LLD.idOne}/`;
+      let locations_endpoint = `${LOCATIONS_URL}location__icontains=a/?location_level=${LLD.idOne}/`;
       xhr(locations_endpoint, 'GET', null, {}, 200, LF.list_power_select());
       page.locationClickDropdown();
       fillIn(LOCATION_SEARCH, 'a');
@@ -1040,7 +1040,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       clearxhr(detail_xhr);
       let people_detail_data_two = PF.detail(PD.idOne);
       people_detail_data_two.role = RD.idTwo;
-      xhr(endpoint + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
+      xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
       page.roleClickDropdown();
       page.roleClickOptionTwo();
       andThen(() => {
@@ -1049,7 +1049,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       });
       generalPage.save();
       andThen(() => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), PEOPLE_INDEX_URL);
         let person = store.find('person', PD.idOne);
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         assert.equal(person.get('locations').get('length'), 0);
@@ -1070,7 +1070,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       assert.equal(page.locationOptionLength, 1);
       assert.equal(find(LOCATION_DROPDOWN).text().trim(), GLOBALMSG.power_search);
     });
-    let locations_endpoint = `${PREFIX}/admin/locations/location__icontains=ABC1234/?location_level=${LLD.idOne}/`;
+    let locations_endpoint = `${LOCATIONS_URL}location__icontains=ABC1234/?location_level=${LLD.idOne}/`;
     const response = LF.list_power_select();
     xhr(locations_endpoint, 'GET', null, {}, 200, response);
     fillIn(LOCATION_SEARCH, 'ABC1234');
@@ -1098,7 +1098,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
     });
   });
 
@@ -1109,7 +1109,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       let person = store.find('person', PD.idOne);
       assert.equal(person.get('locations').get('length'), 0);
     });
-    let locations_endpoint = `${PREFIX}/admin/locations/location__icontains=a/?location_level=${LLD.idOne}/`;
+    let locations_endpoint = `${LOCATIONS_URL}location__icontains=a/?location_level=${LLD.idOne}/`;
     const response = LF.list_power_select();
     response.push(LF.get_no_related(LD.idOne, LD.storeName));
     xhr(locations_endpoint, 'GET', null, {}, 200, response);
@@ -1126,7 +1126,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
     });
   });
 
@@ -1147,7 +1147,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       assert.equal(person.get('locations').get('length'), 0);
       assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
-    let locations_endpoint = `${PREFIX}/admin/locations/location__icontains=a/?location_level=${LLD.idOne}/`;
+    let locations_endpoint = `${LOCATIONS_URL}location__icontains=a/?location_level=${LLD.idOne}/`;
     const response = LF.list_power_select();
     xhr(locations_endpoint, 'GET', null, {}, 200, response);
     page.locationClickDropdown();
@@ -1164,7 +1164,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
     });
   });
 
@@ -1181,7 +1181,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
     });
   });
 
@@ -1200,8 +1200,8 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       assert.deepEqual(person.get('person_locations_fks'), []);
       assert.equal(previous_location_m2m.get('length'), 0);
     });
-    xhr(endpoint + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data);
-    let locations_endpoint = `${PREFIX}/admin/locations/location__icontains=ABC1234/?location_level=${LLD.idOne}/`;
+    xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data);
+    let locations_endpoint = `${LOCATIONS_URL}location__icontains=ABC1234/?location_level=${LLD.idOne}/`;
     const response = LF.list_power_select();
     xhr(locations_endpoint, 'GET', null, {}, 200, response);
     fillIn(LOCATION_SEARCH, 'ABC1234');
@@ -1223,7 +1223,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     generalPage.clickModalRollback();
     andThen(() => {
       waitFor(assert, () => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), PEOPLE_INDEX_URL);
         let person = store.find('person', PD.idOne);
         assert.equal(person.get('locations').get('length'), 0);
         assert.ok(person.get('isNotDirty'));
@@ -1264,7 +1264,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
     });
   });
 
@@ -1295,7 +1295,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
     });
   });
 
@@ -1321,7 +1321,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     clearxhr(detail_xhr);
     clearxhr(list_xhr);
     const exception = `This record does not exist.`;
-    xhr(`${endpoint}${PD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+    xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
     page.visitDetail();
     andThen(() => {
       assert.equal(currentURL(), DETAIL_URL);
@@ -1382,7 +1382,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
     });
   });
 
@@ -1393,7 +1393,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     andThen(() => {
       assert.equal(currentURL(), DETAIL_URL);
     });
-    xhr(`${PREFIX}${BASEURLS.base_roles_url}/${RD.idOne}/`, 'GET', null, {}, 200, RF.detail(RD.idOne));
+    xhr(`${ROLES_URL}${RD.idOne}/`, 'GET', null, {}, 200, RF.detail(RD.idOne));
     page.acceptAssignInheritedFromClick();
     andThen(() => {
       assert.equal(currentURL(), `${BASEURLS.base_roles_url}/${RD.idOne}`);
@@ -1407,7 +1407,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     andThen(() => {
       assert.equal(currentURL(), DETAIL_URL);
     });
-    xhr(`${PREFIX}${BASEURLS.base_roles_url}/${RD.idOne}/`, 'GET', null, {}, 200, RF.detail(RD.idOne));
+    xhr(`${ROLES_URL}${RD.idOne}/`, 'GET', null, {}, 200, RF.detail(RD.idOne));
     page.acceptNotifyInheritedFromClick();
     andThen(() => {
       assert.equal(currentURL(), `${BASEURLS.base_roles_url}/${RD.idOne}`);

@@ -21,20 +21,19 @@ import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/location';
 import random from 'bsrs-ember/models/random';
 import {parents_payload, children_payload, email_payload, phone_number_payload, address_put_payload, new_put_payload} from 'bsrs-ember/tests/helpers/payloads/location';
 import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import BASEURLS, { LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_locations_url;
 const LOCATION_URL = BASE_URL + '/index';
 const LOCATION_NEW_URL = BASE_URL + '/new/1';
-const DJANGO_LOCATION_URL = PREFIX + '/admin/locations/';
 const DETAIL_URL = BASE_URL + '/' + UUID.value;
-const DJANGO_LOCATION_NEW_URL = PREFIX + DJANGO_LOCATION_URL +UUID.value + '/';
+const DJANGO_LOCATION_NEW_URL = PREFIX + LOCATIONS_URL +UUID.value + '/';
 const CHILDREN = '.t-location-children-select';
 const CHILDREN_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
 const PARENTS = '.t-location-parent-select';
@@ -47,7 +46,7 @@ module('Acceptance | location-new', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
-    list_xhr = xhr(DJANGO_LOCATION_URL + '?page=1', "GET", null, {}, 201, LOCATION_FIXTURES.empty());
+    list_xhr = xhr(`${LOCATIONS_URL}?page=1`, "GET", null, {}, 201, LOCATION_FIXTURES.empty());
     payload = {
       id: UUID.value,
       name: LD.storeName,
@@ -71,7 +70,7 @@ module('Acceptance | location-new', {
 });
 
 test('visiting /location/new', (assert) => {
-  visit(LOCATION_URL);
+  page.visit();
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), LOCATION_NEW_URL);
@@ -90,7 +89,7 @@ test('visiting /location/new', (assert) => {
     assert.equal(page.locationLevelInput.split(' +')[0].split(' ')[0], LLD.nameCompany);
   });
   let response = Ember.$.extend(true, {}, payload);
-  xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response);
+  xhr(LOCATIONS_URL, 'POST', JSON.stringify(payload), {}, 201, response);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
@@ -105,7 +104,7 @@ test('visiting /location/new', (assert) => {
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
-  visit(LOCATION_URL);
+  page.visit();
   click('.t-add-new');
   andThen(() => {
     assert.ok(find('.t-name-validation-error').is(':hidden'));
@@ -153,7 +152,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     assert.ok(find('.t-status-validation-error').is(':hidden'));
   });
   let response = Ember.$.extend(true, {}, payload);
-  xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response);
+  xhr(LOCATIONS_URL, 'POST', JSON.stringify(payload), {}, 201, response);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
@@ -227,7 +226,7 @@ test('adding a new location should allow for another new location to be created 
   random.uuid = original_uuid;
   payload.id = 'abc123';
   patchRandomAsync(0);
-  visit(LOCATION_URL);
+  page.visit();
   click('.t-add-new');
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
@@ -235,7 +234,7 @@ test('adding a new location should allow for another new location to be created 
   page.locationLevelClickOptionOne();
   page.statusClickDropdown();
   page.statusClickOptionOne();
-  xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
+  xhr(LOCATIONS_URL, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
@@ -341,7 +340,7 @@ test('phone numbers without a valid number are ignored and removed on save', (as
   });
   fillIn('.t-new-entry:eq(0)', '');
   var response = LF.detail(LD.idOne);
-  xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(new_put_payload), {}, 201, response);
+  xhr(LOCATIONS_URL, 'POST', JSON.stringify(new_put_payload), {}, 201, response);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
@@ -376,7 +375,7 @@ test('emails without a valid email are ignored and removed on save', (assert) =>
     assert.equal(store.find('email').get('length'), 1);
   });
   fillIn('.t-new-entry:eq(0)', '');
-  xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(new_put_payload), {}, 201, {});
+  xhr(LOCATIONS_URL, 'POST', JSON.stringify(new_put_payload), {}, 201, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
@@ -452,7 +451,7 @@ test('address without a valid address or zip code are ignored and removed on sav
     assert.equal(store.find('address').get('length'), 1);
   });
   fillIn('.t-address-postal-code:eq(0)', '');
-  xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(new_put_payload), {}, 201, {});
+  xhr(LOCATIONS_URL, 'POST', JSON.stringify(new_put_payload), {}, 201, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
@@ -471,7 +470,7 @@ test('when you change a related phone numbers type it will be persisted correctl
   var phone_numbers = PNF.put({id: PND.idOne, type: PNTD.officeId});
   click('.t-btn-add:eq(0)');
   fillIn('.t-new-entry:eq(0)', PND.numberOne);
-  xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(phone_number_payload), {}, 201);
+  xhr(LOCATIONS_URL, 'POST', JSON.stringify(phone_number_payload), {}, 201);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(),LOCATION_URL);
@@ -488,7 +487,7 @@ test('when you change a related emails type it will be persisted correctly', (as
   page.statusClickOptionOne();
   click('.t-add-email-btn:eq(0)');
   fillIn('.t-new-entry:eq(0)', ED.emailOne);
-  xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(email_payload), {}, 201);
+  xhr(LOCATIONS_URL, 'POST', JSON.stringify(email_payload), {}, 201);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(),LOCATION_URL);
@@ -505,7 +504,7 @@ test('when you change a related address type it will be persisted correctly', (a
   page.statusClickOptionOne();
   click('.t-add-address-btn:eq(0)');
   fillIn('.t-address-address:eq(0)', '34 2nd St');
-  xhr(DJANGO_LOCATION_URL,'POST',JSON.stringify(address_put_payload),{},201);
+  xhr(LOCATIONS_URL,'POST',JSON.stringify(address_put_payload),{},201);
   fillIn('.t-address-type:eq(0)', ATD.shippingId);
   generalPage.save();
   andThen(() => {
@@ -520,7 +519,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   page.locationLevelClickOptionOne();
   page.statusClickDropdown();
   page.statusClickOptionOne();
-  let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${UUID.value}/location__icontains=a/`;
+  let location_endpoint = `${LOCATIONS_URL}get-level-children/${LLD.idOne}/${UUID.value}/location__icontains=a/`;
   let response = [LF.get_no_related(LD.unusedId, LD.apple)];
   ajax(location_endpoint, 'GET', null, {}, 201, response);
   selectSearch(CHILDREN, 'a');
@@ -543,7 +542,7 @@ test('clicking and typing into power select for location will fire off xhr reque
     assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
   });
   //search specific children
-  let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${UUID.value}/location__icontains=BooNdocks/`;
+  let location_endpoint_2 = `${LOCATIONS_URL}get-level-children/${LLD.idOne}/${UUID.value}/location__icontains=BooNdocks/`;
   let response_2 = [LF.get_no_related('abc123', LD.boondocks)];
   xhr(location_endpoint_2, 'GET', null, {}, 201, response_2);
   selectSearch(CHILDREN, 'BooNdocks');
@@ -568,7 +567,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   });
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
-  xhr(DJANGO_LOCATION_URL,'POST',JSON.stringify(children_payload),{},201);
+  xhr(LOCATIONS_URL,'POST',JSON.stringify(children_payload),{},201);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
@@ -586,7 +585,7 @@ test('can add and remove all children (while not populating options) and add bac
     assert.equal(location.get('children').get('length'), 0);
     assert.equal(location.get('location_children_fks').length, 0);
   });
-  let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${UUID.value}/location__icontains=a/`;
+  let location_endpoint = `${LOCATIONS_URL}get-level-children/${LLD.idOne}/${UUID.value}/location__icontains=a/`;
   let response = [LF.get_no_related(LD.unusedId, LD.apple)];
   ajax(location_endpoint, 'GET', null, {}, 201, response);
   selectSearch(CHILDREN, 'a');
@@ -597,7 +596,7 @@ test('can add and remove all children (while not populating options) and add bac
   });
   page.childrenClickApple();
   //search specific children
-  let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-children/${LLD.idOne}/${UUID.value}/location__icontains=BooNdocks/`;
+  let location_endpoint_2 = `${LOCATIONS_URL}get-level-children/${LLD.idOne}/${UUID.value}/location__icontains=BooNdocks/`;
   let response_2 = LF.list_power_select();
   response_2.push(LF.get('abc123', LD.boondocks));
   xhr(location_endpoint_2, 'GET', null, {}, 201, response_2);
@@ -620,7 +619,7 @@ test('can add and remove all children (while not populating options) and add bac
   page.childrenClickOptionOne();
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
-  ajax(DJANGO_LOCATION_URL, 'POST', JSON.stringify(children_payload), {}, 201);
+  ajax(LOCATIONS_URL, 'POST', JSON.stringify(children_payload), {}, 201);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
@@ -652,7 +651,7 @@ test('clicking and typing into power select for location will fire off xhr reque
     let location = store.find('location',UUID.value);
     assert.equal(location.get('parents').get('length'), 0);
   });
-  let location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LLD.idOne}/${UUID.value}/location__icontains=a/`;
+  let location_endpoint = `${LOCATIONS_URL}get-level-parents/${LLD.idOne}/${UUID.value}/location__icontains=a/`;
   let response = [LF.get_no_related(LD.unusedId, LD.apple)];
   ajax(location_endpoint, 'GET', null, {}, 201, response);
   selectSearch(PARENTS, 'a');
@@ -675,7 +674,7 @@ test('clicking and typing into power select for location will fire off xhr reque
     assert.equal(find(`${PARENTS_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
   });
   //search specific parents
-  let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-parents/${LLD.idOne}/${UUID.value}/location__icontains=BooNdocks/`;
+  let location_endpoint_2 = `${LOCATIONS_URL}get-level-parents/${LLD.idOne}/${UUID.value}/location__icontains=BooNdocks/`;
   let response_2 = [LF.get_no_related('abc123', LD.boondocks)];
   xhr(location_endpoint_2, 'GET', null, {}, 201, response_2);
   selectSearch(PARENTS, 'BooNdocks');
@@ -700,7 +699,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   });
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
-  xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(parents_payload), {}, 201, {});
+  xhr(LOCATIONS_URL, 'POST', JSON.stringify(parents_payload), {}, 201, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
@@ -718,7 +717,7 @@ test('starting with multiple parents, can remove all parents (while not populati
     assert.equal(location.get('parents').get('length'), 0);
     assert.equal(location.get('location_parents_fks').length, 0);
   });
-  let location_endpoint = `${PREFIX}/admin/locations/get-level-parents/${LLD.idOne}/${UUID.value}/location__icontains=a/`;
+  let location_endpoint = `${LOCATIONS_URL}get-level-parents/${LLD.idOne}/${UUID.value}/location__icontains=a/`;
   let response = [LF.get_no_related(LD.unusedId, LD.apple)];
   ajax(location_endpoint, 'GET', null, {}, 201, response);
   selectSearch(PARENTS, 'a');
@@ -729,7 +728,7 @@ test('starting with multiple parents, can remove all parents (while not populati
   });
   page.parentsClickApple();
   //search specific parents
-  let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-parents/${LLD.idOne}/${UUID.value}/location__icontains=BooNdocks/`;
+  let location_endpoint_2 = `${LOCATIONS_URL}get-level-parents/${LLD.idOne}/${UUID.value}/location__icontains=BooNdocks/`;
   let response_2 = LF.list_power_select();
   response_2.push(LF.get('abc123', LD.boondocks));
   xhr(location_endpoint_2, 'GET', null, {}, 201, response_2);
@@ -753,7 +752,7 @@ test('starting with multiple parents, can remove all parents (while not populati
   page.parentsClickOptionOne();
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
-  ajax(DJANGO_LOCATION_URL, 'POST', JSON.stringify(parents_payload), {}, 201);
+  ajax(LOCATIONS_URL, 'POST', JSON.stringify(parents_payload), {}, 201);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);

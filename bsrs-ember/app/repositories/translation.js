@@ -1,16 +1,13 @@
 import Ember from 'ember';
-import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
-
-var PREFIX = config.APP.NAMESPACE;
-const TRANSLATION_URL = PREFIX + '/admin/translations/';
+import { TRANSLATION_URL } from 'bsrs-ember/utilities/urls';
 
 export default Ember.Object.extend(GridRepositoryMixin, {
-  type: Ember.computed(function() { return 'translation'; }),
-  typeGrid: Ember.computed(function() { return 'translation-list'; }),
-  url: Ember.computed(function() { return TRANSLATION_URL; }),
+  type: 'translation',
+  typeGrid: 'translation-list',
+  url: TRANSLATION_URL,
   TranslationDeserializer: inject('translation'),
   deserializer: Ember.computed.alias('TranslationDeserializer'),
   insert(model) {

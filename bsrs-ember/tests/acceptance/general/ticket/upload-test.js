@@ -9,12 +9,12 @@ import CF from 'bsrs-ember/vendor/category_fixtures';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/tickets';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import { ticket_payload_with_attachment, ticket_payload_with_attachments } from 'bsrs-ember/tests/helpers/payloads/ticket';
+import BASEURLS, { TICKETS_URL, ATTACHMENTS_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
@@ -22,7 +22,7 @@ const DETAIL_URL = BASE_URL + '/' + TD.idOne;
 const DETAIL_TWO_URL = BASE_URL + '/' + TD.idTwo;
 const TICKET_URL = BASE_URL + '/index';
 const TICKET_PUT_URL = PREFIX + DETAIL_URL + '/';
-const ATTACHMENT_DELETE_URL = PREFIX + '/admin/attachments/' + UUID.value + '/';
+const ATTACHMENT_DELETE_URL = ATTACHMENTS_URL + UUID.value + '/';
 const PROGRESS_BAR = '.progress-bar';
 
 let application, store, original_uuid;
@@ -31,7 +31,7 @@ module('Acceptance | ticket file upload test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
-    xhr(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
+    xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
     original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
   },
@@ -44,14 +44,14 @@ module('Acceptance | ticket file upload test', {
 test('upload will post form data, show progress and on save append the attachment', (assert) => {
   let model = store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
-  ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
+  ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(PROGRESS_BAR).length, 0);
     assert.equal(store.find('attachment').get('length'), 0);
   });
-  ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
+  ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -64,7 +64,7 @@ test('upload will post form data, show progress and on save append the attachmen
     assert.ok(model.get('isDirtyOrRelatedDirty'));
   });
   ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_attachment), {}, 200, TF.detail(TD.idOne));
-  ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
+  ajax(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
   generalPage.save();
   andThen(() => {
     model = store.find('ticket', TD.idOne);
@@ -79,7 +79,7 @@ test('upload will post form data, show progress and on save append the attachmen
 test('uploading a file, then rolling back should throw out any previously associated attachments', (assert) => {
   let model = store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
-  ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
+  ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -87,7 +87,7 @@ test('uploading a file, then rolling back should throw out any previously associ
     assert.equal(store.find('attachment').get('length'), 0);
     assert.equal(find('.dirty').length, 0);
   });
-  ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
+  ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
   andThen(() => {
     assert.equal(store.find('attachment').get('length'), 1);
@@ -96,7 +96,7 @@ test('uploading a file, then rolling back should throw out any previously associ
     assert.ok(model.get('isDirtyOrRelatedDirty'));
     assert.equal(find('.dirty').length, 1);
   });
-  ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
+  ajax(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
   visit(TICKET_URL);
   click('.t-tab-close:eq(0)');
   andThen(() => {
@@ -109,7 +109,7 @@ test('uploading a file, then rolling back should throw out any previously associ
       assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
-  ajax(`${PREFIX}/admin/attachments/batch-delete/`, 'DELETE', {ids: [UUID.value]}, {}, 204, {});
+  ajax(`${ATTACHMENTS_URL}batch-delete/`, 'DELETE', {ids: [UUID.value]}, {}, 204, {});
   click('.t-modal-rollback-btn');
   andThen(() => {
     assert.equal(model.get('attachments').get('length'), 0);
@@ -124,7 +124,7 @@ test('previously attached files do not show up after file upload', (assert) => {
   detail_with_attachment.attachments = [TD.attachmentOneId];
   let model = store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
-  ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
+  ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
   page.visitDetail();
   andThen(() => {
     model = store.find('ticket', TD.idOne);
@@ -135,7 +135,7 @@ test('previously attached files do not show up after file upload', (assert) => {
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
   });
-  ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
+  ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -153,14 +153,14 @@ test('previously attached files do not show up after file upload', (assert) => {
 test('delete attachment is successful when the user confirms yes (before the file is associated with a ticket)', (assert) => {
   let model = store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
-  ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
+  ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(PROGRESS_BAR).length, 0);
     assert.equal(store.find('attachment').get('length'), 0);
   });
-  ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
+  ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -196,14 +196,14 @@ test('delete attachment is aborted when the user confirms no (before the file is
   };
   let model = store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
-  ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
+  ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(PROGRESS_BAR).length, 0);
     assert.equal(store.find('attachment').get('length'), 0);
   });
-  ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
+  ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -225,14 +225,14 @@ test('delete attachment is aborted when the user confirms no (before the file is
 test('user cannot see progress bar for uploaded attachment that is associated with a ticket (after save)', (assert) => {
   let model = store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
-  ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
+  ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(PROGRESS_BAR).length, 0);
     assert.equal(store.find('attachment').get('length'), 0);
   });
-  ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
+  ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -243,7 +243,7 @@ test('user cannot see progress bar for uploaded attachment that is associated wi
     assert.equal(find('.t-remove-attachment').length, 1);
   });
   ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_attachment), {}, 200, TF.detail(TD.idOne));
-  ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
+  ajax(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
   generalPage.save();
   andThen(() => {
     model = store.find('ticket', TD.idOne);
@@ -255,7 +255,7 @@ test('user cannot see progress bar for uploaded attachment that is associated wi
   });
   let detail_with_attachment = TF.detail(TD.idOne);
   detail_with_attachment.attachments = [UUID.value];
-  ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
+  ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -267,7 +267,7 @@ test('file upload supports multiple attachments', (assert) => {
   let model = store.find('ticket', TD.idOne);
   let one = {name: 'one.png', type: 'image/png', size: 234000};
   let two = {name: 'two.png', type: 'image/png', size: 124000};
-  ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
+  ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -275,7 +275,7 @@ test('file upload supports multiple attachments', (assert) => {
     assert.equal(store.find('attachment').get('length'), 0);
   });
   patchRandomAsync(0);
-  ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
+  ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', [one, two], model);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -288,7 +288,7 @@ test('file upload supports multiple attachments', (assert) => {
     assert.ok(model.get('isDirtyOrRelatedDirty'));
   });
   ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_attachments), {}, 200, TF.detail(TD.idOne));
-  ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
+  ajax(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
   generalPage.save();
   andThen(() => {
     model = store.find('ticket', TD.idOne);
@@ -305,7 +305,7 @@ test('rolling back should only remove files not yet associated with a given tick
   detail_with_attachment.attachments = [TD.attachmentOneId];
   let model = store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
-  ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
+  ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
   page.visitDetail();
   andThen(() => {
     model = store.find('ticket', TD.idOne);
@@ -316,7 +316,7 @@ test('rolling back should only remove files not yet associated with a given tick
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
   });
-  ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
+  ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -329,7 +329,7 @@ test('rolling back should only remove files not yet associated with a given tick
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isDirtyOrRelatedDirty'));
   });
-  ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
+  ajax(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
   visit(TICKET_URL);
   click('.t-tab-close:eq(0)');
   andThen(() => {
@@ -338,7 +338,7 @@ test('rolling back should only remove files not yet associated with a given tick
       assert.equal(find('.t-modal-body').length, 1);
     });
   });
-  ajax(`${PREFIX}/admin/attachments/batch-delete/`, 'DELETE', {ids: [UUID.value]}, {}, 204, {});
+  ajax(`${ATTACHMENTS_URL}batch-delete/`, 'DELETE', {ids: [UUID.value]}, {}, 204, {});
   click('.t-modal-rollback-btn');
   andThen(() => {
     assert.equal(model.get('attachments').get('length'), 1);
@@ -350,7 +350,7 @@ test('rolling back should only remove files not yet associated with a given tick
 
 test('when multiple tabs are open only attachments associated with the rollback are removed', (assert) => {
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
-  ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
+  ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -358,34 +358,34 @@ test('when multiple tabs are open only attachments associated with the rollback 
     assert.equal(store.find('ticket', TD.idOne).get('attachments').get('length'), 0);
   });
   patchRandomAsync(0);
-  ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
+  ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, store.find('ticket', TD.idOne));
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(store.find('attachment').get('length'), 1);
     assert.equal(store.find('ticket', TD.idOne).get('attachments').get('length'), 1);
   });
-  ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
+  ajax(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
   visit(TICKET_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
   });
   ajax(`/api/tickets/${TD.idTwo}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
-  ajax(`${PREFIX}${BASE_URL}/${TD.idTwo}/`, 'GET', null, {}, 200, TF.detail(TD.idTwo));
+  ajax(`${TICKETS_URL}${TD.idTwo}/`, 'GET', null, {}, 200, TF.detail(TD.idTwo));
   visit(DETAIL_TWO_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_TWO_URL);
     assert.equal(store.find('attachment').get('length'), 1);
     assert.equal(store.find('ticket', TD.idTwo).get('attachments').get('length'), 0);
   });
-  ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
+  ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, store.find('ticket', TD.idTwo));
   andThen(() => {
     assert.equal(currentURL(), DETAIL_TWO_URL);
     assert.equal(store.find('attachment').get('length'), 2);
     assert.equal(store.find('ticket', TD.idTwo).get('attachments').get('length'), 1);
   });
-  ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
+  ajax(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
   visit(TICKET_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
@@ -401,7 +401,7 @@ test('when multiple tabs are open only attachments associated with the rollback 
       assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
     });
   });
-  ajax(`${PREFIX}/admin/attachments/batch-delete/`, 'DELETE', {ids: ['abc123']}, {}, 204, {});
+  ajax(`${ATTACHMENTS_URL}batch-delete/`, 'DELETE', {ids: ['abc123']}, {}, 204, {});
   click('.t-modal-rollback-btn');
   andThen(() => {
       // assert.equal(store.find('attachment').get('length'), 1);
@@ -420,7 +420,7 @@ test('when multiple tabs are open only attachments associated with the rollback 
 /* jshint ignore:start */
 test('uploading error shows error message', async assert => {
   const model = store.find('ticket', TD.idOne);
-  ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
+  ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   await page.visitDetail();
   assert.equal(find(PROGRESS_BAR).length, 0);
   assert.equal(store.find('attachment').get('length'), 0);
@@ -429,7 +429,7 @@ test('uploading error shows error message', async assert => {
   assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
   const exception = `File failed to upload`;
   const image = {name: 'foo.png', type: 'image/png', size: 234000};
-  ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 404, {'detail': exception});
+  ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 404, {'detail': exception});
   await uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
   assert.equal(store.find('attachment').get('length'), 0);
   assert.equal(find('.t-ticket-attachment-error').text(), t('attachment.fail'));

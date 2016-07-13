@@ -1,20 +1,18 @@
 import Ember from 'ember';
-import config from 'bsrs-ember/config/environment';
+const { run } = Ember;
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
 import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
-
-var PREFIX = config.APP.NAMESPACE, run = Ember.run;
-var ROLE_URL = PREFIX + '/admin/roles/';
+import { ROLES_URL } from 'bsrs-ember/utilities/urls';
 
 var RoleRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
-  type: Ember.computed(function() { return 'role'; }),
-  typeGrid: Ember.computed(function() { return 'role-list'; }),
+  type: 'role',
+  typeGrid: 'role-list',
   garbage_collection: Ember.computed(function() { return ['role-list']; }),
-  url: Ember.computed(function() { return ROLE_URL; }),
+  url: ROLES_URL,
   uuid: injectUUID('uuid'),
   simpleStore: Ember.inject.service(),
   RoleDeserializer: inject('role'),
@@ -30,7 +28,7 @@ var RoleRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
     return role;
   },
   update(model) {
-    return PromiseMixin.xhr(ROLE_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())} ).then(() => {
+    return PromiseMixin.xhr(ROLES_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())} ).then(() => {
       model.save();
       model.saveRelated();
     });
@@ -39,7 +37,7 @@ var RoleRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
     return this.get('simpleStore').find('role');
   },
   getRouteData() {
-    return PromiseMixin.xhr(ROLE_URL + 'route-data/new/', 'GET').then((response) => {
+    return PromiseMixin.xhr(ROLES_URL + 'route-data/new/', 'GET').then((response) => {
       return response;
     });
   }

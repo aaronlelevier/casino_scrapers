@@ -5,19 +5,17 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS, { PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
-const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_LIST_URL = BASEURLS.base_people_url;
-const PEOPLE_URL = BASE_PEOPLE_LIST_URL + '/index';
+const PEOPLE_INDEX_URL = BASE_PEOPLE_LIST_URL + '/index';
 
 var application;
 
 module('Acceptance | person list test', {
   beforeEach() {
     application = startApp();
-    var endpoint = PREFIX + BASE_PEOPLE_LIST_URL + '/';
-    xhr(endpoint + '?page=1', 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
+    xhr(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
   },
   afterEach() {
     Ember.run(application, 'destroy');
@@ -25,9 +23,9 @@ module('Acceptance | person list test', {
 });
 
 test('visiting /people', function(assert) {
-  visit(PEOPLE_URL);
+  visit(PEOPLE_INDEX_URL);
   andThen(() => {
-    assert.equal(currentURL(),PEOPLE_URL);
+    assert.equal(currentURL(), PEOPLE_INDEX_URL);
     assert.equal(find('.t-grid-title').text(), t('admin.person.other'));
     assert.equal(find('.t-sort-fullname').text(), t('admin.person.label.fullname'));
     assert.equal(find('.t-sort-status-translated-name').text(), t('admin.person.label.status'));

@@ -6,10 +6,10 @@ import inject from 'bsrs-ember/utilities/deserializer';
 import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
 import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
+import { TICKETS_URL } from 'bsrs-ember/utilities/urls';
 
 var PREFIX = config.APP.NAMESPACE;
 var TICKET_URL = '/ticket';
-var TICKETS_URL = PREFIX + '/tickets/';
 
 var TicketRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   uuid: injectUUID('uuid'),
@@ -17,7 +17,7 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMix
   typeGrid: Ember.computed(function() { return 'ticket-list'; }),
   //TODO: test count to ensure being deleted
   garbage_collection: Ember.computed(function() { return ['ticket-list', 'ticket-priority-list', 'general-status-list', 'category-list']; }),
-  url: Ember.computed(function() { return TICKETS_URL; }),
+  url: TICKETS_URL,
   TicketDeserializer: inject('ticket'),
   deserializer: Ember.computed.alias('TicketDeserializer'),
   create(new_pk, options={}) {

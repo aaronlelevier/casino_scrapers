@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import config from 'bsrs-ember/config/environment';
+const { run } = Ember;
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import injectRepo from 'bsrs-ember/utilities/inject';
@@ -7,20 +7,16 @@ import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
 import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
-
-const { run } = Ember;
-var PREFIX = config.APP.NAMESPACE;
-var PEOPLE_URL = `${PREFIX}/admin/people/`;
+import { PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
 export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
-  type: Ember.computed(function() { return 'person'; }),
-  typeGrid: Ember.computed(function() { return 'person-list'; }),
+  type: 'person',
+  typeGrid: 'person-list',
   garbage_collection: Ember.computed(function() { return ['person-list', 'person-status-list']; }),
-  url: Ember.computed(function() { return PEOPLE_URL; }),
+  url: PEOPLE_URL,
   uuid: injectUUID('uuid'),
   PersonDeserializer: inject('person'),
   deserializer: Ember.computed.alias('PersonDeserializer'),
-  status_repo: injectRepo('status'),
   create(new_pk) {
     const pk = this.get('uuid').v4();
     const store = this.get('simpleStore');

@@ -2,7 +2,6 @@ import Ember from 'ember';
 import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
-import config from 'bsrs-ember/config/environment';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import random from 'bsrs-ember/models/random';
@@ -13,7 +12,6 @@ import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import {ticket_payload, required_ticket_payload} from 'bsrs-ember/tests/helpers/payloads/ticket';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
@@ -23,13 +21,12 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/tickets';
 import moment from 'moment';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import BASEURLS, { TICKETS_URL, LOCATIONS_URL, PEOPLE_URL, CATEGORIES_URL, DT_URL } from 'bsrs-ember/utilities/urls';
 
-const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
 const TICKET_NEW_URL = BASE_URL + '/new/1';
-const TICKET_LIST_URL = PREFIX + BASE_URL + '/?page=1';
-const TICKET_POST_URL = PREFIX + BASE_URL + '/';
+const TICKET_POST_URL = TICKETS_URL;
 const NUMBER_6 = {keyCode: 54};
 const LETTER_B = {keyCode: 66};
 const BACKSPACE = {keyCode: 8};
@@ -47,8 +44,8 @@ module('Acceptance | ticket new test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
-    list_xhr = xhr(TICKET_LIST_URL, 'GET', null, {}, 200, TF.empty());
-    location_xhr = xhr(`${PREFIX}/admin/locations/location__icontains=6/`, 'GET', null, {}, 200, LF.search_power_select());
+    list_xhr = xhr(TICKETS_URL+'?page=1', 'GET', null, {}, 200, TF.empty());
+    location_xhr = xhr(`${LOCATIONS_URL}location__icontains=6/`, 'GET', null, {}, 200, LF.search_power_select());
     counter = 0;
     // timemachine.config({
     //   dateString: 'December 25, 2015 13:12:59'
@@ -114,9 +111,9 @@ test('validation works and when hit save, we do same post', (assert) => {
     assert.ok(find('.t-location-validation-error').is(':visible'));
     assert.ok(find('.t-category-validation-error').is(':visible'));
   });
-  people_xhr = xhr(`${PREFIX}/admin/people/person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
+  people_xhr = xhr(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
   page.assigneeClickDropdown();
-  fillIn(`${SEARCH}`, 'b');
+  fillIn(SEARCH, 'b');
   page.assigneeClickOptionTwo();
   generalPage.save();
   andThen(() => {
@@ -125,13 +122,13 @@ test('validation works and when hit save, we do same post', (assert) => {
     assert.ok(find('.t-category-validation-error').is(':visible'));
   });
   page.locationClickDropdown();
-  fillIn(`${SEARCH}`, '6');
+  fillIn(SEARCH, '6');
   page.locationClickOptionTwo();
   andThen(() => {
     assert.equal(currentURL(), TICKET_NEW_URL);
     assert.ok(find('.t-category-validation-error').is(':visible'));
   });
-  let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
+  let top_level_categories_endpoint = `${CATEGORIES_URL}parents/`;
   xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
   page.categoryOneClickDropdown();
   page.categoryOneClickOptionOne();
@@ -141,7 +138,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     assert.ok(find('.t-category-validation-error').is(':visible'));
   });
   const payload = CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1);
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, payload);
+  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, payload);
   page.categoryTwoClickDropdown();
   page.categoryTwoClickOptionOne();
   andThen(() => {
@@ -149,7 +146,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     assert.equal(find('.t-category-validation-error').length, 1);
     assert.ok(find('.t-category-validation-error').is(':visible'));
   });
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+  ajax(`${CATEGORIES_URL}?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
   page.categoryThreeClickDropdown();
   page.categoryThreeClickOptionOne();
   andThen(() => {
@@ -182,7 +179,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
     // assert.ok(tickets.objectAt(0).get('categoriesIsNotDirty'));//jenkins fail
     assert.equal(components, 1);
   });
-  let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
+  let top_level_categories_endpoint = `${CATEGORIES_URL}parents/`;
   xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
   page.categoryOneClickDropdown();
   page.categoryOneClickOptionOne();
@@ -199,7 +196,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
     assert.equal(find('.t-model-category-label:eq(0)').text(), CD.labelOne);
     assert.equal(find('.t-model-category-label:eq(1)').text(), CD.subCatLabelOne);
   });
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [], CD.idOne, 1));
+  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [], CD.idOne, 1));
   page.categoryTwoClickDropdown();
   page.categoryTwoClickOptionOne();
   andThen(() => {
@@ -272,7 +269,7 @@ test('selecting category tree and removing a top level category will remove chil
     assert.equal(components, 1);
   });
   //first select
-  let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
+  let top_level_categories_endpoint = `${CATEGORIES_URL}parents/`;
   xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
   page.categoryOneClickDropdown();
   page.categoryOneClickOptionOne();
@@ -284,7 +281,7 @@ test('selecting category tree and removing a top level category will remove chil
     assert.equal(components, 2);
   });
   //second select
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
+  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
   page.categoryTwoClickDropdown();
   page.categoryTwoClickOptionOne();
   andThen(() => {
@@ -295,7 +292,7 @@ test('selecting category tree and removing a top level category will remove chil
     assert.equal(components, 3);
   });
   //third select
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+  ajax(`${CATEGORIES_URL}?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
   page.categoryThreeClickDropdown();
   page.categoryThreeClickOptionOne();
   andThen(() => {
@@ -306,7 +303,7 @@ test('selecting category tree and removing a top level category will remove chil
     assert.equal(components, 3);
   });
   //change second with same children as electrical (outlet);
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.unusedId, CD.nameUnused, [{id: CD.idChild}], CD.idOne, 1));
+  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.unusedId, CD.nameUnused, [{id: CD.idChild}], CD.idOne, 1));
   page.categoryTwoClickDropdown();
   page.categoryTwoClickOptionTwo();
   andThen(() => {
@@ -339,7 +336,7 @@ test('when selecting a new parent cateogry it should remove previously selected 
     assert.equal(tickets.objectAt(0).get('categories').get('length'), 0);
     assert.equal(components, 1);
   });
-  let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
+  let top_level_categories_endpoint = `${CATEGORIES_URL}parents/`;
   xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
   //first select
   page.categoryOneClickDropdown();
@@ -352,7 +349,7 @@ test('when selecting a new parent cateogry it should remove previously selected 
     assert.equal(components, 2);
   });
   //second select
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
+  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
   page.categoryTwoClickDropdown();
   page.categoryTwoClickOptionOne();
   andThen(() => {
@@ -363,7 +360,7 @@ test('when selecting a new parent cateogry it should remove previously selected 
     assert.equal(components, 3);
   });
   //third select
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+  ajax(`${CATEGORIES_URL}?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
   page.categoryThreeClickDropdown();
   page.categoryThreeClickOptionOne();
   andThen(() => {
@@ -373,7 +370,7 @@ test('when selecting a new parent cateogry it should remove previously selected 
     assert.equal(tickets.objectAt(0).get('categories').get('length'), 3);
     assert.equal(components, 3);
   });
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.unusedId, CD.nameUnused, [{id: CD.idChild}], CD.idOne, 1));
+  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.unusedId, CD.nameUnused, [{id: CD.idChild}], CD.idOne, 1));
   page.categoryTwoClickDropdown();
   page.categoryTwoClickOptionTwo();
   andThen(() => {
@@ -406,9 +403,9 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     assert.equal(ticket.get('assignee_fk'), undefined);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   });
-  xhr(`${PREFIX}/admin/people/person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
+  xhr(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
   page.assigneeClickDropdown();
-  fillIn(`${SEARCH}`, 'b');
+  fillIn(SEARCH, 'b');
   andThen(() => {
     assert.equal(page.assigneeInput, GLOBALMSG.assignee_power_select);
     assert.equal(page.assigneeOptionLength, 10);
@@ -420,12 +417,12 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
   });
   page.assigneeClickDropdown();
-  fillIn(`${SEARCH}`, '');
+  fillIn(SEARCH, '');
   andThen(() => {
     assert.equal(page.assigneeOptionLength, 1);
     assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
   });
-  fillIn(`${SEARCH}`, 'b');
+  fillIn(SEARCH, 'b');
   andThen(() => {
     assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
     assert.equal(page.assigneeOptionLength, 10);
@@ -441,9 +438,9 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
   //search specific assignee
-  xhr(`${PREFIX}/admin/people/person__icontains=Boy1/`, 'GET', null, {}, 200, PF.search_power_select());
+  xhr(`${PEOPLE_URL}person__icontains=Boy1/`, 'GET', null, {}, 200, PF.search_power_select());
   page.assigneeClickDropdown();
-  fillIn(`${SEARCH}`, 'Boy1');
+  fillIn(SEARCH, 'Boy1');
   andThen(() => {
     assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
     assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
@@ -465,7 +462,7 @@ test('selecting new location will not affect other power select components and w
   page.priorityClickDropdown();
   page.priorityClickOptionOne();
   page.locationClickDropdown();
-  fillIn(`${SEARCH}`, '6');
+  fillIn(SEARCH, '6');
   page.locationClickOptionTwo();
   andThen(() => {
     assert.equal(page.priorityInput, TD.priorityOne);
@@ -478,7 +475,7 @@ test('location new component shows location for ticket and will fire off xhr to 
   clearxhr(list_xhr);
   page.visitNew();
   page.locationClickDropdown();
-  fillIn(`${SEARCH}`, '6');
+  fillIn(SEARCH, '6');
   andThen(() => {
     assert.equal(find(`${DROPDOWN} > li`).length, 2);
   });
@@ -496,15 +493,15 @@ test('removes location dropdown on search to change location', (assert) => {
   clearxhr(list_xhr);
   page.visitNew();
   page.locationClickDropdown();
-  fillIn(`${SEARCH}`, '6');
+  fillIn(SEARCH, '6');
   andThen(() => {
     assert.equal(page.locationOptionLength, 2);
   });
-  fillIn(`${SEARCH}`, ' ');
+  fillIn(SEARCH, ' ');
   andThen(() => {
     assert.equal(find(`${DROPDOWN}`).text().trim(), GLOBALMSG.power_search);
   });
-  fillIn(`${SEARCH}`, '6');
+  fillIn(SEARCH, '6');
   andThen(() => {
     assert.equal(page.locationOptionLength, 2);
   });
@@ -519,7 +516,7 @@ test('clicking and typing into power select for people will fire off xhr request
     let ticket = store.findOne('ticket');
     assert.ok(!ticket.get('cc.length'));
   });
-  let people_endpoint = PREFIX + '/admin/people/person__icontains=a/';
+  let people_endpoint = `${PEOPLE_URL}person__icontains=a/`;
   ajax(people_endpoint, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
   page.ccClickDropdown();
   fillIn(`${CC_SEARCH}`, 'a');
@@ -552,7 +549,7 @@ test('clicking and typing into power select for people will fire off xhr request
   });
   //search specific cc
   page.ccClickDropdown();
-  xhr(`${PREFIX}/admin/people/person__icontains=Boy/`, 'GET', null, {}, 200, PF.search_power_select());
+  xhr(`${PEOPLE_URL}person__icontains=Boy/`, 'GET', null, {}, 200, PF.search_power_select());
   fillIn(`${CC_SEARCH}`, 'Boy');
   andThen(() => {
     assert.equal(page.ccSelected.indexOf(PD.donald), 2);
@@ -581,7 +578,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     let ticket = store.findOne('ticket');
     assert.ok(!ticket.get('cc.length'));
   });
-  let people_endpoint = PREFIX + '/admin/people/person__icontains=a/';
+  let people_endpoint = `${PEOPLE_URL}person__icontains=a/`;
   ajax(people_endpoint, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
   page.ccClickDropdown();
   fillIn(`${CC_SEARCH}`, 'a');
@@ -616,9 +613,9 @@ test('can remove and add back same cc and save empty cc', (assert) => {
 //    const ticket = store.find('ticket', UUID.value);
 //    assert.ok(ticket.get('isNotDirty'));
 //  });
-//  people_xhr = xhr(`${PREFIX}/admin/people/person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
+//  people_xhr = xhr(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
 //  page.assigneeClickDropdown();
-//  fillIn(`${SEARCH}`, 'b');
+//  fillIn(SEARCH, 'b');
 //  page.assigneeClickOptionTwo();
 //  andThen(() => {
 //    assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
@@ -638,7 +635,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
 //    assert.equal(ticket.get('priority.id'), TD.priorityOneId);
 //  });
 //  page.locationClickDropdown();
-//  fillIn(`${SEARCH}`, '6');
+//  fillIn(SEARCH, '6');
 //  andThen(() => {
 //    //ensure route doesn't change current selections
 //    assert.equal(page.locationOptionLength, 2);
@@ -648,11 +645,11 @@ test('can remove and add back same cc and save empty cc', (assert) => {
 //    assert.equal(ticket.get('priority.id'), TD.priorityOneId);
 //  });
 //  page.locationClickOptionTwo();
-//  let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
+//  let top_level_categories_endpoint = `${CATEGORIES_URL}parents/`;
 //  xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
-//  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
-//  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
-//  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+//  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
+//  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
+//  ajax(`${CATEGORIES_URL}?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
 //  page.categoryOneClickDropdown();
 //  page.categoryOneClickOptionOne();
 //  page.categoryTwoClickDropdown();
@@ -681,27 +678,27 @@ test('can remove and add back same cc and save empty cc', (assert) => {
 //});
 
 test('adding a new ticket should allow for another new ticket to be created after the first is persisted', (assert) => {
-  ajax(`${PREFIX}/admin/people/person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
+  ajax(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
   page.visit();
   andThen(() => {
     patchRandom(counter);
   });
   click('.t-add-new');
   page.assigneeClickDropdown();
-  fillIn(`${SEARCH}`, 'b');
+  fillIn(SEARCH, 'b');
   page.assigneeClickOptionTwo();
   page.statusClickDropdown();
   page.statusClickOptionOne();
   page.priorityClickDropdown();
   page.priorityClickOptionOne();
   page.locationClickDropdown();
-  fillIn(`${SEARCH}`, '6');
+  fillIn(SEARCH, '6');
   page.locationClickOptionTwo();
-  let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
+  let top_level_categories_endpoint = `${CATEGORIES_URL}parents/`;
   xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
-  ajax(`${PREFIX}/admin/categories/?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
+  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
+  ajax(`${CATEGORIES_URL}?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
   page.categoryOneClickDropdown();
   page.categoryOneClickOptionOne();
   page.categoryTwoClickDropdown();

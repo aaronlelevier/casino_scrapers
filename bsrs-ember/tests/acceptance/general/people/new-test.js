@@ -15,20 +15,20 @@ import PND from 'bsrs-ember/vendor/defaults/phone-number-type';
 import LD from 'bsrs-ember/vendor/defaults/locale';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import config from 'bsrs-ember/config/environment';
-import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import { waitFor } from 'bsrs-ember/tests/helpers/utilities';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/person';
 import random from 'bsrs-ember/models/random';
-import {multi_new_put_payload} from 'bsrs-ember/tests/helpers/payloads/person';
+import { multi_new_put_payload } from 'bsrs-ember/tests/helpers/payloads/person';
+import BASEURLS, { PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
-const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
+const PEOPLE_INDEX_URL = BASE_PEOPLE_URL + '/index';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + UUID.value;
 const NEW_URL = BASE_PEOPLE_URL + '/new/1';
 
-var application, store, payload, detail_xhr, list_xhr, original_uuid, people_detail_data, detailEndpoint, endpoint, username_search;
+var application, store, payload, detail_xhr, list_xhr, original_uuid, people_detail_data, detailEndpoint, username_search;
 
 module('Acceptance | person new test', {
   beforeEach() {
@@ -42,13 +42,12 @@ module('Acceptance | person new test', {
     };
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
-    endpoint = `${PREFIX}${BASE_PEOPLE_URL}/`;
-    list_xhr = xhr(endpoint + '?page=1','GET',null,{},200,PF.empty());
-    detailEndpoint = `${PREFIX}${BASE_PEOPLE_URL}/`;
+    list_xhr = xhr(PEOPLE_URL + '?page=1','GET',null,{},200,PF.empty());
+    detailEndpoint = PEOPLE_URL;
     people_detail_data = {id: UUID.value, username: PD.username, role: RD.idOne, phone_numbers:[], addresses: [], locations: [], status_fk: SD.activeId, locale: PD.locale_id};
     detail_xhr = xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
     const username_response = {'count':0,'next':null,'previous':null,'results': []};
-    username_search = xhr(endpoint + '?username=mgibson1', 'GET', null, {}, 200, username_response);
+    username_search = xhr(PEOPLE_URL + '?username=mgibson1', 'GET', null, {}, 200, username_response);
     original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
   },
@@ -69,7 +68,7 @@ test('username backend validation', (assert) => {
     assert.equal(find('.t-existing-error').text().trim(), '');
   });
   const username_response = {'count':1,'next':null,'previous':null,'results': [{'id': PD.idOne}]};
-  username_search = xhr(endpoint + '?username=mgibson1', 'GET', null, {}, 200, username_response);
+  username_search = xhr(PEOPLE_URL + '?username=mgibson1', 'GET', null, {}, 200, username_response);
   fillIn('.t-person-username', PD.username);
   andThen(() => {
     assert.equal(find('.t-existing-error').text().trim(), t(GLOBALMSG.existing_username, {value: PD.username}));
@@ -79,7 +78,7 @@ test('username backend validation', (assert) => {
 test('visiting /people/new and creating a new person', (assert) => {
   clearxhr(detail_xhr);
   var response = Ember.$.extend(true, {}, payload);
-  visit(PEOPLE_URL);
+  page.visitPeople();
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
@@ -92,7 +91,7 @@ test('visiting /people/new and creating a new person', (assert) => {
   });
   fillIn('.t-person-username', PD.username);
   fillIn('.t-person-password', PD.password);
-  ajax(`${PREFIX}${BASE_PEOPLE_URL}/`, 'POST', JSON.stringify(payload), {}, 201, response);
+  ajax(PEOPLE_URL, 'POST', JSON.stringify(payload), {}, 201, response);
   ajax(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
   generalPage.save();
   andThen(() => {
@@ -163,7 +162,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   click('.t-modal-footer .t-modal-rollback-btn');
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), PEOPLE_URL);
+      assert.equal(currentURL(), PEOPLE_INDEX_URL);
       var person = store.find('person', UUID.value);
       // assert.equal(person.get('length'), 0);
       assert.throws(Ember.$('.ember-modal-dialog'));
@@ -212,7 +211,7 @@ test('can change default role and locale', (assert) => {
   };
   fillIn('.t-person-username', PD.username);
   fillIn('.t-person-password', PD.password);
-  ajax(`${PREFIX}${BASE_PEOPLE_URL}/`, 'POST', JSON.stringify(payload_two), {}, 201, {});
+  ajax(PEOPLE_URL, 'POST', JSON.stringify(payload_two), {}, 201, {});
   ajax(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
   generalPage.save();
   andThen(() => {
@@ -230,8 +229,8 @@ test('adding a new person should allow for another new person to be created afte
   visit(NEW_URL);
   fillIn('.t-person-username', PD.username);
   fillIn('.t-person-password', PD.password);
-  ajax(`${PREFIX}${BASE_PEOPLE_URL}/`, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
-  ajax(`${PREFIX}${BASE_PEOPLE_URL}/abc123/`, 'GET', null, {}, 200, people_detail_data);
+  ajax(PEOPLE_URL, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
+  ajax(`${PEOPLE_URL}abc123/`, 'GET', null, {}, 200, people_detail_data);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/abc123`);
@@ -241,10 +240,10 @@ test('adding a new person should allow for another new person to be created afte
   page.roleClickOptionOne();
   page.statusClickDropdown();
   page.statusClickOptionOne();
-  ajax(`${PREFIX}${BASE_PEOPLE_URL}/abc123/`, 'PUT', JSON.stringify(multi_new_put_payload), {}, 200, {});
+  ajax(`${PEOPLE_URL}abc123/`, 'PUT', JSON.stringify(multi_new_put_payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_URL);
+    assert.equal(currentURL(), PEOPLE_INDEX_URL);
     assert.equal(store.find('person').get('length'), person_count);
   });
   click('.t-add-new');

@@ -37,7 +37,7 @@ module.exports = function(defaults) {
       app.import('vendor/email_fixtures.js');
       app.import('vendor/locale_fixtures.js');
       app.import('vendor/location_fixtures.js');
-      app.import('vendor/location_level_fixtures.js');
+      app.import('vendor/location-level_fixtures.js');
       app.import('vendor/people_fixtures.js');
       app.import('vendor/phone_number_fixtures.js');
       app.import('vendor/profile_fixtures.js');

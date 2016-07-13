@@ -7,10 +7,10 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
 import LLF from 'bsrs-ember/vendor/location_level_fixtures';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/location-level';
 import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import BASEURLS, { LOCATION_LEVELS_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
@@ -21,7 +21,7 @@ const LOCATION_LEVEL = '.t-location-level-children-select .ember-basic-dropdown-
 const LOCATION_LEVEL_DROPDOWN = options;
 const LOCATION_LEVEL_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-var application, store, endpoint, endpoint_detail, list_xhr, detail_xhr, location_level_district_detail_data;
+var application, store, endpoint_detail, list_xhr, detail_xhr, location_level_district_detail_data;
 
 module('Acceptance | detail-test', {
   beforeEach() {
@@ -30,9 +30,8 @@ module('Acceptance | detail-test', {
     let location_list_data = LLF.list();
     let location_detail_data = LLF.detail();
     location_level_district_detail_data = LLF.detail_district();
-    endpoint = PREFIX + BASE_URL + '/';
     endpoint_detail = PREFIX + DETAIL_URL + '/';
-    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
+    list_xhr = xhr(`${LOCATION_LEVELS_URL}?page=1`, 'GET', null, {}, 200, location_list_data);
     detail_xhr = xhr(endpoint_detail, 'GET', null, {}, 200, location_detail_data);
   },
   afterEach() {
@@ -43,7 +42,7 @@ module('Acceptance | detail-test', {
 });
 
 test('clicking on a location levels name will redirect them to the detail view', (assert) => {
-  visit(LOCATION_LEVEL_URL);
+  page.visit();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
   });
@@ -55,7 +54,7 @@ test('clicking on a location levels name will redirect them to the detail view',
 
 test('visiting admin/location-level', (assert) => {
   clearxhr(list_xhr);
-  visit(DETAIL_URL);
+  page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     let location = store.find('location-level').objectAt(0);
@@ -76,7 +75,7 @@ test('visiting admin/location-level', (assert) => {
   });
   let list = LLF.list();
   list.results[0].name = LLD.nameRegion;
-  xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
+  xhr(`${LOCATION_LEVELS_URL}?page=1`, 'GET', null, {}, 200, list);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
@@ -109,7 +108,7 @@ test('a location level child can be selected and persisted', (assert) => {
   let payload = LLF.put({id: LLD.idDistrict, name: LLD.nameDistrict, children: children});
   xhr(PREFIX + DISTRICT_DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, {});
   let list = LLF.list();
-  xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
+  xhr(`${LOCATION_LEVELS_URL}?page=1`, 'GET', null, {}, 200, list);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
@@ -119,7 +118,7 @@ test('a location level child can be selected and persisted', (assert) => {
 });
 
 test('when editing name to invalid, it checks for validation', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   fillIn('.t-location-level-name', '');
   generalPage.save();
   andThen(() => {
@@ -144,7 +143,7 @@ test('when editing name to invalid, it checks for validation', (assert) => {
 });
 
 test('clicking cancel button will take from detail view to list view', (assert) => {
-  visit(LOCATION_LEVEL_URL);
+  page.visit();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
   });
@@ -160,7 +159,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
   clearxhr(list_xhr);
-  visit(DETAIL_URL);
+  page.visitDetail();
   fillIn('.t-location-level-name', LLD.nameRegion);
   generalPage.cancel();
   andThen(() => {
@@ -184,7 +183,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   andThen(() => {
     assert.equal(page.childrenSelectedCount, 7);
     const ll = store.find('location-level', LLD.idOne);
@@ -222,7 +221,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 
 /* jshint ignore:start */
 test('when click delete, modal displays and when click ok, location-level is deleted and removed from store', async assert => {
-  await visit(DETAIL_URL);
+  await page.visitDetail();
   await generalPage.delete();
   andThen(() => {
     waitFor(assert, () => {
@@ -247,7 +246,7 @@ test('when click delete, modal displays and when click ok, location-level is del
 
 /* Children */
 test('can remove and add back children', (assert) => {
-  visit(DETAIL_URL);
+  page.visitDetail();
   andThen(() => {
     const model = store.find('location-level', LLD.idOne);
     assert.equal(model.get('children_fks').length, 7);
@@ -290,8 +289,8 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
   clearxhr(detail_xhr);
   clearxhr(list_xhr);
   const exception = `This record does not exist.`;
-  xhr(`${endpoint}${LLD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
-  visit(DETAIL_URL);
+  xhr(`${LOCATION_LEVELS_URL}${LLD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+  page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-error-message').text(), 'WAT');

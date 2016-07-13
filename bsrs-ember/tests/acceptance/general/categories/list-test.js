@@ -5,20 +5,18 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
-import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import page from 'bsrs-ember/tests/pages/category';
+import BASEURLS, { CATEGORIES_URL } from 'bsrs-ember/utilities/urls';
 
-const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_categories_url;
-const CATEGORIES_URL = BASE_URL + '/index';
+const CATEGORIES_INDEX_URL = BASE_URL + '/index';
 
 let application;
 
 module('Acceptance | category list test', {
   beforeEach() {
     application = startApp();
-    let endpoint = PREFIX + BASE_URL + '/';
-    xhr(endpoint + '?page=1', "GET", null, {}, 200, CATEGORY_FIXTURES.list());
+    xhr(`${CATEGORIES_URL}?page=1`, "GET", null, {}, 200, CATEGORY_FIXTURES.list());
   },
   afterEach() {
     Ember.run(application, 'destroy');
@@ -26,9 +24,9 @@ module('Acceptance | category list test', {
 });
 
 test('visiting /categories/index', (assert) => {
-  visit(CATEGORIES_URL);
+  page.visit();
   andThen(() => {
-    assert.equal(currentURL(), CATEGORIES_URL);
+    assert.equal(currentURL(), CATEGORIES_INDEX_URL);
     assert.equal(find('.t-sort-name').text(), t('admin.category.label.name'));
     assert.equal(find('.t-sort-description').text(), t('admin.category.label.description'));
     assert.equal(find('.t-sort-label').text(), t('admin.category.label.label'));

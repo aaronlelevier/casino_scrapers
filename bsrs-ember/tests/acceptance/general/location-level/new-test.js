@@ -8,10 +8,10 @@ import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/location-level';
 import random from 'bsrs-ember/models/random';
+import BASEURLS, { LOCATION_LEVELS_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
@@ -19,14 +19,13 @@ const LOCATION_LEVEL_URL = BASE_URL + '/index';
 const LOCATION_LEVEL_NEW_URL = BASE_URL + '/new/1';
 const DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idOne;
 
-let application, store, payload, list_xhr, endpoint, original_uuid;
+let application, store, payload, list_xhr, original_uuid;
 
 module('Acceptance | location-level-new', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
-    endpoint = PREFIX + BASE_URL + '/' + '?page=1';
-    list_xhr = xhr(endpoint, 'GET', null, {}, 200, LOCATION_LEVEL_FIXTURES.empty());
+    list_xhr = xhr(`${LOCATION_LEVELS_URL}?page=1`, 'GET', null, {}, 200, LOCATION_LEVEL_FIXTURES.empty());
     payload = {
       id: UUID.value,
       name: LOCATION_LEVEL_DEFAULTS.nameAnother,
@@ -44,8 +43,8 @@ module('Acceptance | location-level-new', {
 
 test('visiting /location-level/new', (assert) => {
   let response = Ember.$.extend(true, {}, payload);
-  xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
-  visit(LOCATION_LEVEL_URL);
+  xhr(LOCATION_LEVELS_URL, 'POST', JSON.stringify(payload), {}, 201, response);
+  page.visit();
   click('.t-add-new');
   page.childrenClickDropdown();
   page.childrenClickOptionStore();
@@ -86,8 +85,8 @@ test('validation works and when hit save, we do same post', (assert) => {
   payload.name = LOCATION_LEVEL_DEFAULTS.nameRegion;
   payload.children = [];
   let response = Ember.$.extend(true, {}, payload);
-  xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
-  visit(LOCATION_LEVEL_URL);
+  xhr(LOCATION_LEVELS_URL, 'POST', JSON.stringify(payload), {}, 201, response);
+  page.visit();
   click('.t-add-new');
   andThen(() => {
     assert.ok(find('.t-name-validation-error').is(':hidden'));
@@ -170,8 +169,8 @@ test('adding a new location-level should allow for another new location-level to
   patchRandomAsync(0);
   payload.name = LOCATION_LEVEL_DEFAULTS.nameRegion;
   payload.children = [];
-  xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
-  visit(LOCATION_LEVEL_URL);
+  xhr(LOCATION_LEVELS_URL, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
+  page.visit();
   click('.t-add-new');
   fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameRegion);
   generalPage.save();

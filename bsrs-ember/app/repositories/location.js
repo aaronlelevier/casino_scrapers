@@ -1,33 +1,29 @@
 import Ember from 'ember';
-import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
 import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
-import findByName from 'bsrs-ember/utilities/find-by-name';
-
-var PREFIX = config.APP.NAMESPACE;
-var LOCATION_URL = PREFIX + '/admin/locations/';
+import { LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
 var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
-  type: Ember.computed(function() { return 'location'; }),
-  typeGrid: Ember.computed(function() { return 'location-list'; }),
+  type: 'location',
+  typeGrid: 'location-list',
   garbage_collection: Ember.computed(function() { return ['location-list', 'location-status-list']; }),
-  url: Ember.computed(function() { return LOCATION_URL; }),
+  url: LOCATIONS_URL,
   uuid: injectUUID('uuid'),
   LocationDeserializer: inject('location'),
   deserializer: Ember.computed.alias('LocationDeserializer'),
   update(model) {
-    return PromiseMixin.xhr(LOCATION_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
+    return PromiseMixin.xhr(LOCATIONS_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
       model.save();
       model.saveRelated();
     });
   },
   findLocationChildren(search_criteria, extra_params) {
     const { llevel, pk } = extra_params;
-    let url = `${LOCATION_URL}get-level-children/${llevel}/${pk}/`;
+    let url = `${LOCATIONS_URL}get-level-children/${llevel}/${pk}/`;
     if (search_criteria) {
       url += `location__icontains=${search_criteria}/`;
     }
@@ -37,7 +33,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
   },
   findLocationParents(search_criteria, extra_params) {
     const { llevel, pk } = extra_params;
-    let url = `${LOCATION_URL}get-level-parents/${llevel}/${pk}/`;
+    let url = `${LOCATIONS_URL}get-level-parents/${llevel}/${pk}/`;
     if (search_criteria) {
       url += `location__icontains=${search_criteria}/`;
     }
@@ -47,7 +43,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
   },
   /* @method findTicket - searches locations by name */
   findTicket(search) {
-    let url = LOCATION_URL;
+    let url = LOCATIONS_URL;
     search = search ? search.trim() : search;
     if (search) {
       url += `location__icontains=${search}/`;
@@ -57,7 +53,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
     });
   },
   findPersonsLocations(search_criteria, filter) {
-    let url = LOCATION_URL;
+    let url = LOCATIONS_URL;
     if (filter && search_criteria) {
       url += `location__icontains=${search_criteria}/?location_level=${filter['location_level']}/`;
     } else if (search_criteria) {
@@ -69,7 +65,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
     });
   },
   findLocationSelect(search_criteria, filter) {
-    let url = LOCATION_URL;
+    let url = LOCATIONS_URL;
     if (search_criteria) {
       // DT New
       url += `location__icontains=${search_criteria}/`;
@@ -86,7 +82,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
     return this.get('simpleStore').find('location');
   },
   format_url(filter) {
-    let url = LOCATION_URL;
+    let url = LOCATIONS_URL;
     if(typeof filter !== 'undefined') {
       let name = Object.keys(filter)[0];
       let value = filter[Object.keys(filter)[0]];

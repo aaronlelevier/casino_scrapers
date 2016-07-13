@@ -8,15 +8,15 @@ import CD from 'bsrs-ember/vendor/defaults/category';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import page from 'bsrs-ember/tests/pages/category';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import random from 'bsrs-ember/models/random';
+import BASEURLS, { CATEGORIES_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_categories_url;
-const CATEGORIES_URL = BASE_URL + '/index';
+const CATEGORIES_INDEX_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + UUID.value;
 const CATEGORY_NEW_URL = BASE_URL + '/new/1';
 const LETTER_A = {keyCode: 65};
@@ -41,9 +41,8 @@ module('Acceptance | category new test', {
     };
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
-    let endpoint = PREFIX + BASE_URL + '/';
-    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, CF.empty());
-    let category_children_endpoint = PREFIX + '/admin/categories/category__icontains=a/';
+    list_xhr = xhr(CATEGORIES_URL + '?page=1', 'GET', null, {}, 200, CF.empty());
+    let category_children_endpoint = `${CATEGORIES_URL}category__icontains=a/`;
     children_xhr = xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list_power_select());
     run(function() {
       store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
@@ -63,8 +62,8 @@ module('Acceptance | category new test', {
 test('visiting /category/new', (assert) => {
   clearxhr(children_xhr);
   let response = Ember.$.extend(true, {}, payload);
-  xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
-  visit(CATEGORIES_URL);
+  xhr(CATEGORIES_URL, 'POST', JSON.stringify(payload), {}, 201, response);
+  page.visit();
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), CATEGORY_NEW_URL);
@@ -81,7 +80,7 @@ test('visiting /category/new', (assert) => {
   fillIn('.t-category-cost-code', CD.costCodeOne);
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), CATEGORIES_URL);
+    assert.equal(currentURL(), CATEGORIES_INDEX_URL);
     let category = store.find('category', UUID.value);
     assert.equal(category.get('new'), undefined);
     assert.equal(category.get('name'), CD.nameOne);
@@ -97,9 +96,8 @@ test('visiting /category/new', (assert) => {
 test('validation works and when hit save, we do same post', (assert) => {
   clearxhr(children_xhr);
   let response = Ember.$.extend(true, {}, payload);
-  let url = PREFIX + BASE_URL + '/';
-  xhr(url, 'POST', JSON.stringify(payload), {}, 201, response );
-  visit(CATEGORIES_URL);
+  xhr(CATEGORIES_URL, 'POST', JSON.stringify(payload), {}, 201, response );
+  page.visit();
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), CATEGORY_NEW_URL);
@@ -133,14 +131,14 @@ test('validation works and when hit save, we do same post', (assert) => {
   fillIn('.t-category-name', CD.nameOne);
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), CATEGORIES_URL);
+    assert.equal(currentURL(), CATEGORIES_INDEX_URL);
   });
 });
 
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
   clearxhr(children_xhr);
   clearxhr(list_xhr);
-  visit(CATEGORY_NEW_URL);
+  page.visitNew();
   fillIn('.t-category-name', CD.nameOne);
   generalPage.cancel();
   andThen(() => {
@@ -165,7 +163,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
   clearxhr(children_xhr);
-  visit(CATEGORY_NEW_URL);
+  page.visitNew();
   fillIn('.t-category-name', CD.nameOne);
   generalPage.cancel();
   andThen(() => {
@@ -183,7 +181,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   click('.t-modal-footer .t-modal-rollback-btn');
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), CATEGORIES_URL);
+      assert.equal(currentURL(), CATEGORIES_INDEX_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));
       let category = store.find('category', {id: UUID.value});
       assert.equal(category.get('length'), 0);
@@ -195,7 +193,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
   let categories;
   clearxhr(children_xhr);
-  visit(CATEGORIES_URL);
+  page.visit();
   andThen(() => {
     categories = store.find('category').get('length');
   });
@@ -216,8 +214,8 @@ test('clicking and typing into power select for categories children will fire of
   let payload_new = Ember.$.extend(true, {}, payload);
   payload_new.children = [CD.idGridOne];
   let response = Ember.$.extend(true, {}, payload_new);
-  xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload_new), {}, 201, response);
-  visit(CATEGORY_NEW_URL);
+  xhr(CATEGORIES_URL, 'POST', JSON.stringify(payload_new), {}, 201, response);
+  page.visitNew();
   andThen(() => {
     let category = store.find('category', UUID.value);
     assert.equal(category.get('children').get('length'), 0);
@@ -239,15 +237,15 @@ test('clicking and typing into power select for categories children will fire of
   });
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), CATEGORIES_URL);
+    assert.equal(currentURL(), CATEGORIES_INDEX_URL);
   });
 });
 
 test('clicking and typing into power select for categories children will not filter if spacebar pressed', (assert) => {
   clearxhr(children_xhr);
   let response = Ember.$.extend(true, {}, payload);
-  xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
-  visit(CATEGORY_NEW_URL);
+  xhr(CATEGORIES_URL, 'POST', JSON.stringify(payload), {}, 201, response);
+  page.visitNew();
   andThen(() => {
     let category = store.find('category', UUID.value);
     assert.equal(category.get('children').get('length'), 0);
@@ -270,14 +268,14 @@ test('clicking and typing into power select for categories children will not fil
   fillIn('.t-category-cost-code', CD.costCodeOne);
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), CATEGORIES_URL);
+    assert.equal(currentURL(), CATEGORIES_INDEX_URL);
   });
 });
 
 test('you can add and remove child from category', (assert) => {
   let response = Ember.$.extend(true, {}, payload);
-  xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
-  visit(CATEGORY_NEW_URL);
+  xhr(CATEGORIES_URL, 'POST', JSON.stringify(payload), {}, 201, response);
+  page.visitNew();
   andThen(() => {
     let category = store.find('category', UUID.value);
     assert.equal(category.get('children').get('length'), 0);
@@ -311,7 +309,7 @@ test('you can add and remove child from category', (assert) => {
   });
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), CATEGORIES_URL);
+    assert.equal(currentURL(), CATEGORIES_INDEX_URL);
   });
 });
 
@@ -322,7 +320,7 @@ test('adding a new category should allow for another new category to be created 
   payload.id = 'abc123';
   patchRandomAsync(0);
   xhr(`${PREFIX}${BASE_URL}/`, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
-  visit(CATEGORIES_URL);
+  page.visit();
   click('.t-add-new');
   fillIn('.t-category-name', CD.nameOne);
   fillIn('.t-category-description', CD.descriptionMaintenance);
@@ -332,7 +330,7 @@ test('adding a new category should allow for another new category to be created 
   fillIn('.t-amount', CD.costAmountOne);
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), CATEGORIES_URL);
+    assert.equal(currentURL(), CATEGORIES_INDEX_URL);
     category_count = store.find('category').get('length');
   });
   click('.t-add-new');

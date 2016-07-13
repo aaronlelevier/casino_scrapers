@@ -2,8 +2,8 @@ import PageObject from 'bsrs-ember/tests/page-object';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LDS from 'bsrs-ember/vendor/defaults/location-status';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import BASEURLS, { LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
 let {
   visitable,
@@ -36,6 +36,7 @@ const PARENTS_FOUR = `${PARENTS}:eq(3)`;
 const PARENTS_DROPDOWN = `.ember-basic-dropdown-content > ${options}`;
 
 export default PageObject.create({
+  visit: visitable(BASE_URL + '/index'),
   visitDetail: visitable(DETAIL_URL),
   visitNew: visitable(NEW_URL),
 

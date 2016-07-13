@@ -1,25 +1,22 @@
 import Ember from 'ember';
-import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
 import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
 import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
-
-var PREFIX = config.APP.NAMESPACE;
-var LOCATION_LEVEL_URL = PREFIX + '/admin/location-levels/';
+import { LOCATION_LEVELS_URL } from 'bsrs-ember/utilities/urls';
 
 var LocationLevelRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
-  type: Ember.computed(function() { return 'location-level'; }),
-  typeGrid: Ember.computed(function() { return 'location-level-list'; }),
+  type: 'location-level',
+  typeGrid: 'location-level-list',
   garbage_collection: Ember.computed(function() { return ['location-level-list']; }),
-  url: Ember.computed(function() { return LOCATION_LEVEL_URL; }),
+  url: LOCATION_LEVELS_URL,
   uuid: injectUUID('uuid'),
   LocationLevelDeserializer: inject('location-level'),
   deserializer: Ember.computed.alias('LocationLevelDeserializer'),
   update(model) {
-    return PromiseMixin.xhr(LOCATION_LEVEL_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
+    return PromiseMixin.xhr(LOCATION_LEVELS_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
       model.save();
     });
   },

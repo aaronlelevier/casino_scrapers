@@ -1,14 +1,21 @@
 import PageObject from 'bsrs-ember/tests/page-object';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import BASEURLS, { LOCATION_LEVELS_URL } from 'bsrs-ember/utilities/urls';
 
 let { text, visitable, fillable, clickable, count } = PageObject;
+const BASE_URL = BASEURLS.base_location_levels_url;
+const DETAIL_URL = BASE_URL + '/' + LLD.idOne;
+const NEW_URL = BASE_URL + '/new/1';
 const CHILDREN = '.t-location-level-children-select .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
 const CHILDREN_MULTIPLE = `${CHILDREN} > .ember-power-select-multiple-option`;
 const CHILDREN_ONE = `${CHILDREN_MULTIPLE}:eq(0)`;
 const CHILDREN_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
 
 export default PageObject.create({
+  visit: visitable(BASE_URL + '/index'),
+  visitDetail: visitable(DETAIL_URL),
+  visitNew: visitable(NEW_URL),
   childrenClickDropdown: clickable(CHILDREN),
   childrenSelected: text(CHILDREN_ONE),
   childrenOneRemove: clickable(`${CHILDREN_ONE} > .ember-power-select-multiple-remove-btn`),
