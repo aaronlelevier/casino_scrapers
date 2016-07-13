@@ -37,8 +37,12 @@ var GeneralPage = PageObject.create({
   //Admin Routes
   clickDTD: clickable('.t-nav-admin-dtd'),
   clickCategories: clickable('.t-nav-admin-category'),
-  clickGeneralSettingsLink: clickable('.t-general-settings'),
-  clickAssignmentProfiles: clickable('.t-assignment-profiles'),
+  clickPeople: clickable('.t-nav-admin-people'),
+  clickLocations: clickable('.t-nav-admin-location'),
+  clickLocationLevel: clickable('.t-nav-admin-location-level'),
+  clickRoles: clickable('.t-nav-admin-role'),
+  clickGeneralSettingsLink: clickable('.t-nav-general-settings'),
+  clickAssignmentProfiles: clickable('.t-nav-assignment-profiles'),
 });
 
 export default GeneralPage;

@@ -393,7 +393,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
   fillIn('.t-location-level-name', LLD.nameCompany);
   let location_list_data = LLF.list();
   list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
-  visit(LOCATION_LEVEL_URL);
+  generalPage.clickLocationLevel();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
   });
