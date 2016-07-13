@@ -12,6 +12,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import PD_PUT from 'bsrs-ember/vendor/defaults/person-put';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;

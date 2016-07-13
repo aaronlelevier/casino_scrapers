@@ -14,6 +14,7 @@ import CF from 'bsrs-ember/vendor/category_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
 import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_ROLE_URL = BASEURLS.base_roles_url;

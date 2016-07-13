@@ -12,6 +12,7 @@ import random from 'bsrs-ember/models/random';
 import PF from 'bsrs-ember/vendor/profile_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/profile';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 
 // Edit based on module
@@ -362,6 +363,6 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
   andThen(() => {
     assert.equal(currentURL(), NEW_URL_2);
     let tabs = store.find('tab');
-    assert.equal(tabs.get('length'), 1);
+    assert.equal(tabs.get('length'), 2);
   });
 });
