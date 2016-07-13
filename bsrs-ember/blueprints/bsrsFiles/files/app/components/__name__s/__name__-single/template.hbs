@@ -1,0 +1,54 @@
+{{base-component
+  model=model
+  save="save"
+  cancel="cancel"
+  delete="delete"
+}}
+
+<section class="docSection container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <section style="padding-bottom: 0">
+        <div class="row card-title">
+          <h1 class="col-md-12 t-<%= dasherizedModuleName %>-header">
+            <span class="new">
+            {{#if model.new}}
+              {{t "<%= dasherizedModuleName %>.new"}}
+            {{else}}
+              {{t "<%= dasherizedModuleName %>.detail"}}
+            {{/if}}
+            </span>
+          </h1>
+        </div>
+      </section>
+    </div>
+    <div class="col-md-12">
+      <section>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="<%= dasherizedModuleName %>.<%= firstProperty %>" for="<%= firstProperty %>"}}
+              {{input type="text" placeholder=(t "<%= dasherizedModuleName %>.<%= firstProperty %>") value=model.<%= firstPropertySnake %> class="form-control t-<%= dasherizedModuleName %>-<%= firstProperty %>" id="<%= firstProperty %>"}}
+                {{#validation-error-field submitted=submitted field="<%= firstProperty %>" className="validation validation-under t-<%= dasherizedModuleName %>-<%= firstProperty %>-validation-error" model=model validation=<%= firstPropertyCamel %>Validation}}{{t "validation.invalid"}} {{t "<%= dasherizedModuleName %>.<%= firstProperty %>"}}{{/validation-error-field}}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="<%= dasherizedModuleName %>.<%= secondProperty %>" for="<%= secondProperty %>"}}
+            {{db-fetch-select
+              model=model
+              selectedAttr=model.<%= secondPropertySnake %>
+              className="t-<%= dasherizedModuleName %>-<%= secondProperty %>-select"
+              displayName="<%= secondModelDisplaySnake %>"
+              change_func="change_<%= secondPropertySnake %>"
+              repository=<%= secondModelCamel %>Repo
+              searchMethod="findPeople"
+              valuePath="<%= secondPropertySnake %>"
+            }}
+            {{/form-group}}
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
