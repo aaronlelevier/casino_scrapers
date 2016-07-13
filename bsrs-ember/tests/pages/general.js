@@ -22,8 +22,6 @@ var GeneralPage = PageObject.create({
   clickLaunchDTTicket: clickable('.t-launch-dt-ticket'),
   clickHomeModalShow: clickable('.t-home-modal-show'),
   isDirty: hasClass('dirty', 'i', {scope: '.t-tab-close'}),
-  clickGeneralSettingsLink: clickable('.t-general-settings'),
-  clickAssignmentProfiles: clickable('.t-assignment-profiles'),
 
   gridItemZeroClick: clickable('.t-grid-data:eq(0)'),
   gridItemOneClick: clickable('.t-grid-data:eq(1)'),
@@ -39,6 +37,8 @@ var GeneralPage = PageObject.create({
   //Admin Routes
   clickDTD: clickable('.t-nav-admin-dtd'),
   clickCategories: clickable('.t-nav-admin-category'),
+  clickGeneralSettingsLink: clickable('.t-general-settings'),
+  clickAssignmentProfiles: clickable('.t-assignment-profiles'),
 });
 
 export default GeneralPage;

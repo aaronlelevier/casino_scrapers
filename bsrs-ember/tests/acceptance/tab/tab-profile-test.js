@@ -352,7 +352,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
   });
   fillIn(EDIT_FIELD_CSS_CLASS, EDIT_FIELD_VALUE);
   list_xhr = xhr(API_LIST_URL + '?page=1', 'GET', null, {}, 200, list_data);
-  visit(LIST_URL);
+  generalPage.clickAssignmentProfiles();
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);
     let tabs = store.find('tab');
