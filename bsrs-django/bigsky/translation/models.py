@@ -10,7 +10,7 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from utils.models import BaseModel, BaseManager
+from utils.models import BaseModel, BaseManager, BaseQuerySet
 
 
 class LocaleManager(BaseManager):
@@ -81,8 +81,26 @@ def update_locale(sender, instance=None, created=False, **kwargs):
         Locale.objects.update_non_default(instance.id)
 
 
+class TranslationQuerySet(BaseQuerySet):
+
+    def all_distinct_keys(self):
+        s = set()
+        for t in self.all():
+            s.update(list(t.values.keys()))
+        return sorted(s)
+
+    def search_multi(self, keyword):
+        seq = self.all_distinct_keys()
+        return sorted([x for x in seq if keyword in x])
+
+
 class TranslationManager(BaseManager):
     "CSV Model methods"
+
+    queryset_cls = TranslationQuerySet
+
+    def search_multi(self, keyword):
+        return self.get_queryset().search_multi(keyword)
 
     @property
     def translation_dir(self):
@@ -191,10 +209,7 @@ class TranslationManager(BaseManager):
         Return all distinct Translation keys accross all translations 
         in a sorted list. For use with the Translation List API Endpoint.
         """
-        s = set()
-        for t in self.all():
-            s.update(list(t.values.keys()))
-        return sorted(s)
+        return self.get_queryset().all_distinct_keys()
 
 
 def translation_file(instance, filename):

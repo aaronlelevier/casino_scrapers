@@ -149,6 +149,15 @@ class TranslationReadTests(APITestCase):
             sorted_trans[settings.PAGE_SIZE]
         )
 
+    def test_list_search(self):
+        keyword = 'a'
+
+        response = self.client.get('/api/admin/translations/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        raw_ret = Translation.objects.search_multi(keyword)
+        self.assertEqual(data['count'], len(raw_ret))
+
     # get_translations_by_key
 
     def test_get_translations_by_key(self):

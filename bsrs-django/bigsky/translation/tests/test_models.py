@@ -6,8 +6,9 @@ from django.conf import settings
 
 from model_mommy import mommy
 
-from translation.models import Locale, Translation
+from translation.models import Locale, Translation, TranslationManager, TranslationQuerySet
 from translation.tests import factory
+from utils import ListObject
 from utils.create import _generate_chars
 
 
@@ -83,6 +84,20 @@ class LocaleTests(LocaleSetupMixin, TestCase):
 
 class TranslationManagerTests(TestCase):
 
+    def test_queryset_cls(self):
+        self.assertEqual(TranslationManager.queryset_cls, TranslationQuerySet)
+
+    def test_search_multi(self):
+        factory.create_translations()
+        keyword = 'a'
+        seq = Translation.objects.all_distinct_keys()
+        raw_ret = ListObject({el for el in seq if keyword in el})
+
+        ret = Translation.objects.search_multi(keyword)
+
+        self.assertEqual(len(ret), len(raw_ret))
+        self.assertIsInstance(ret, list)
+
     def test_get_or_create_by_locale(self):
         locale = mommy.make(Locale)
         first_count = Translation.objects.count()
@@ -154,6 +169,9 @@ class TranslationTests(TestCase):
     def setUp(self):
         factory.create_translations()
         self.definition = Translation.objects.first()
+
+    def test_manager(self):
+        self.assertIsInstance(Translation.objects, TranslationManager)
 
     def test_add(self):
         k = _generate_chars()

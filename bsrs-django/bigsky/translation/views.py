@@ -1,4 +1,3 @@
-from collections import OrderedDict
 import copy
 
 from rest_framework import viewsets, status
@@ -10,7 +9,6 @@ from rest_framework.response import Response
 from translation.models import Locale, Translation
 from translation.serializers import (LocaleSerializer, TranslationBootstrapSerializer,
     TranslationSerializer, TranslationListSerializer)
-from utils import ListObject
 from utils.mixins import DestroyModelMixin
 from utils.views import BaseModelViewSet
 
@@ -93,10 +91,13 @@ class TranslationViewSet(DestroyModelMixin, viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         # custom: start
-        # keys = ListObject(sorted(queryset.first().values.keys()))
-        keys = ListObject(Translation.objects.all_distinct_keys())
+        search = self.request.query_params.get('search', None)
+        if search:
+            queryset = queryset.search_multi(keyword=search)
+        else:
+            queryset = queryset.all_distinct_keys()
         # custom: end
-        page = self.paginate_queryset(keys)
+        page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
