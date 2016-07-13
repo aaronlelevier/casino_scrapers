@@ -50,3 +50,13 @@ class AssignmentTests(TestCase):
 
     def test_manger(self):
         self.assertIsInstance(Assignment.objects, AssignmentManager)
+
+
+# class ProfilefilterTests(TestCase):
+
+#     def test_properties(self):
+#         pf = mommy.make(ProfileFilter)
+#         self.assertIsInstance(pf.field, str)
+#         self.assertTrue(pf.criteria)
+#         self.assertIsInstance(pf.criteria, list)
+
