@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from person.serializers_leaf import PersonIdUsernameSerializer
 from routing.models import Assignment, ProfileFilter
-from routing.validators import is_model_class
+from routing.validators import ValidateProfileFilterField
 from utils.create import update_model
 from utils.serializers import BaseCreateSerializer
 
@@ -12,11 +12,9 @@ ASSIGNMENT_FIELDS = ('id', 'description', 'assignee',)
 
 class ProfileFilterSerializer(BaseCreateSerializer):
 
-    context = serializers.CharField(max_length=100, required=False,
-                                    validators=[is_model_class])
-
     class Meta:
         model = ProfileFilter
+        validators = [ValidateProfileFilterField()]
         fields = ('id', 'context', 'field', 'criteria')
 
 
