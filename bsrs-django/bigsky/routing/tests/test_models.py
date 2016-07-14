@@ -3,7 +3,9 @@ from django.test import TestCase
 
 from person.models import Person
 from routing.models import Assignment, AssignmentManager, AssignmentQuerySet, ProfileFilter
-from routing.tests.factory import create_assignment
+from routing.tests.factory import create_assignment, create_ticket_priority_filter
+from tenant.models import Tenant
+from tenant.tests.factory import get_or_create_tenant
 
 
 class AssignmentManagerTests(TestCase):
@@ -42,29 +44,39 @@ class AssignmentManagerTests(TestCase):
 class AssignmentTests(TestCase):
 
     def setUp(self):
+        self.tenant = get_or_create_tenant()
         self.assignment = create_assignment()
 
     def test_fields(self):
         self.assertIsInstance(self.assignment.description, str)
         self.assertIsInstance(self.assignment.assignee, Person)
 
-    def test_manger(self):
+    def test_manager(self):
         self.assertIsInstance(Assignment.objects, AssignmentManager)
+
+    def test_default_tenant(self):
+        self.assertIsInstance(self.assignment.tenant, Tenant)
+
+    def test_order_increments_by_tenant(self):
+        self.assertEqual(self.assignment.order, 1)
+
+        assignment2 = create_assignment()
+        self.assertEqual(assignment2.order, 2)
+
+        # tenant 2
+        tenant_two = get_or_create_tenant('foo')
+        assignment3 = create_assignment(tenant=tenant_two)
+        self.assertEqual(assignment3.order, 1)
+        assignment4 = create_assignment(tenant=tenant_two)
+        self.assertEqual(assignment4.order, 2)
 
 
 class ProfilefilterTests(TestCase):
+
+    def setUp(self):
+        self.pf = create_ticket_priority_filter()
 
     def test_meta__ordering(self):
         # order by id, so that way are returned to User in the same order
         # each time if nested in the Assignment Detail view
         self.assertEqual(ProfileFilter._meta.ordering, ['id'])
-
-#     def test_context_is_valid(self):
-#         # validate context that a app.Model exists w/ that context name
-
-#     def test_context_and_field_validation(self):
-#         # field for context Model class must exist, or else this is a worthless filter
-
-#     def test_criteria_is_valid(self):
-#         # criteria, the OR filter aspect of ProfileFilters, must use valid identifiers
-#         # i.e. if a TicketPriority filter, must be a valid TicketPriority Id.

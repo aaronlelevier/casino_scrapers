@@ -5,6 +5,8 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.db.models import Q
 
+from tenant.models import Tenant
+from tenant.tests.factory import get_or_create_tenant
 from utils.fields import MyGenericForeignKey
 from utils.models import BaseQuerySet, BaseManager, BaseModel
 
@@ -27,12 +29,28 @@ class AssignmentManager(BaseManager):
 
 
 class Assignment(BaseModel):
+    tenant = models.ForeignKey(Tenant, null=True)
+    order = models.IntegerField(blank=True)
     description = models.CharField(max_length=500, unique=True)
     assignee = models.ForeignKey(settings.AUTH_USER_MODEL,
                                  related_name="assignments")
     filters = GenericRelation("routing.ProfileFilter")
 
     objects = AssignmentManager()
+
+    def save(self, *args, **kwargs):
+        self._update_defaults()
+        return super(Assignment, self).save(*args, **kwargs)
+
+    def _update_defaults(self):
+        if not self.tenant:
+            self.tenant = get_or_create_tenant()
+        if not self.order:
+            self.order = self.get_order(self.tenant)
+
+    @classmethod
+    def get_order(cls, tenant):
+        return cls.objects.filter(tenant=tenant).count() + 1
 
 
 class ProfileFilter(BaseModel):

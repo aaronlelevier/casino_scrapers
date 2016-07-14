@@ -4,16 +4,17 @@ from model_mommy import mommy
 
 from dtd.models import TreeData
 from tenant.models import Tenant
+from utils.create import _generate_chars
 
 
 def get_or_create_tenant(company_name=settings.DEFAULT_TENANT_COMPANY_NAME):
     try:
-        return Tenant.objects.all()[0]
-    except IndexError:
+        return Tenant.objects.get(company_name=company_name)
+    except Tenant.DoesNotExist:
         kwargs = {
             'dt_start': TreeData.objects.get_start(),
         }
         kwargs['company_name'] = company_name
-        kwargs['company_code'] = settings.DEFAULT_TENANT_COMPANY_CODE
+        kwargs['company_code'] = _generate_chars()
 
         return mommy.make(Tenant, **kwargs)
