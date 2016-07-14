@@ -8,6 +8,7 @@ from routing.models import Assignment, ProfileFilter
 from routing.serializers import AssignmentCreateUpdateSerializer
 from routing.tests.factory import create_assignment
 from routing.tests.mixins import ViewTestSetupMixin
+from ticket.models import Ticket
 from ticket.tests.factory import create_ticket
 from utils.create import _generate_chars
 
@@ -55,19 +56,16 @@ class ViewTests(ViewTestSetupMixin, APITestCase):
             "'{}' content type does not exist.".format(invalid_context)
         )
 
-    # def test_is_model_field(self):
-    #     invalid_field = 'foo'
-    #     self.data['filters'][0].update({
-    #         'context': 'ticket.ticket',
-    #     })
+    def test_is_model_field(self):
+        self.data['filters'][0].update({
+            'context': 'ticket.ticket',
+        })
 
-    #     response = self.client.post('/api/admin/assignments/', self.data, format='json')
+        response = self.client.post('/api/admin/assignments/', self.data, format='json')
 
-    #     self.assertEqual(response.status_code, 400)
-    #     data = json.loads(response.content.decode('utf8'))
-    #     print(data)
-    #     self.assertEqual(
-    #         data['filters'][0]['context'][0],
-    #         "'{}' content type does not exist.".format(invalid_context)
-    #     )
-    #     self.fail()
+        self.assertEqual(response.status_code, 400)
+        msg = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            msg['filters'][0]['non_field_errors'][0],
+            "'{}' is not a field on '{}'".format(self.invalid_field, Ticket.__name__)
+        )
