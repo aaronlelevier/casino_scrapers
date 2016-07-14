@@ -1,18 +1,18 @@
 from person.serializers_leaf import PersonIdUsernameSerializer
 from routing.models import Assignment, ProfileFilter
-from routing.validators import ValidateProfileFilterField
+from routing.validators import ProfileFilterFieldValidator, UniqueByTenantValidator
 from utils.create import update_model
 from utils.serializers import BaseCreateSerializer
 
 
-ASSIGNMENT_FIELDS = ('id', 'description', 'assignee',)
+ASSIGNMENT_FIELDS = ('id', 'tenant', 'order', 'description', 'assignee',)
 
 
 class ProfileFilterSerializer(BaseCreateSerializer):
 
     class Meta:
         model = ProfileFilter
-        validators = [ValidateProfileFilterField()]
+        validators = [ProfileFilterFieldValidator()]
         fields = ('id', 'context', 'field', 'criteria')
 
 
@@ -22,6 +22,8 @@ class AssignmentCreateUpdateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Assignment
+        validators = [UniqueByTenantValidator('order'),
+                      UniqueByTenantValidator('description')]
         fields = ASSIGNMENT_FIELDS + ('filters',)
 
     def create(self, validated_data):
@@ -31,8 +33,12 @@ class AssignmentCreateUpdateSerializer(BaseCreateSerializer):
 
         if filters:
             for f in filters:
-                filter_object = ProfileFilter.objects.create(**f)
-                instance.filters.add(filter_object)
+                try:
+                    filter_object = ProfileFilter.objects.get(id=f['id'])
+                except ProfileFilter.DoesNotExist:
+                    filter_object = ProfileFilter.objects.create(**f)
+                finally:
+                    instance.filters.add(filter_object)
 
         return instance
 

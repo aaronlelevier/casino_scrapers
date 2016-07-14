@@ -3,7 +3,9 @@ from django.contrib.auth.models import ContentType
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.dispatch import receiver
 from django.db.models import Q
+from django.db.models.signals import post_save
 
 from tenant.models import Tenant
 from tenant.tests.factory import get_or_create_tenant
@@ -30,13 +32,16 @@ class AssignmentManager(BaseManager):
 
 class Assignment(BaseModel):
     tenant = models.ForeignKey(Tenant, null=True)
-    order = models.IntegerField(blank=True)
-    description = models.CharField(max_length=500, unique=True)
+    order = models.IntegerField(null=True)
+    description = models.CharField(max_length=500)
     assignee = models.ForeignKey(settings.AUTH_USER_MODEL,
                                  related_name="assignments")
     filters = GenericRelation("routing.ProfileFilter")
 
     objects = AssignmentManager()
+
+    class Meta:
+        ordering = ['order']
 
     def save(self, *args, **kwargs):
         self._update_defaults()
@@ -45,12 +50,14 @@ class Assignment(BaseModel):
     def _update_defaults(self):
         if not self.tenant:
             self.tenant = get_or_create_tenant()
-        if not self.order:
-            self.order = self.get_order(self.tenant)
 
-    @classmethod
-    def get_order(cls, tenant):
-        return cls.objects.filter(tenant=tenant).count() + 1
+
+@receiver(post_save, sender=Assignment)
+def update_order(sender, instance=None, created=False, **kwargs):
+    "Post-save hook for incrementing order if not set"
+    if not instance.order:
+        instance.order = Assignment.objects.filter(tenant=instance.tenant).count()
+        instance.save()
 
 
 class ProfileFilter(BaseModel):

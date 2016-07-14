@@ -4,13 +4,14 @@ import uuid
 from rest_framework.test import APITestCase
 
 from routing.tests.mixins import ViewTestSetupMixin
+from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority
 
 
-class ValidatorTests(ViewTestSetupMixin, APITestCase):
+class ProfileFilterFieldValidatorTests(ViewTestSetupMixin, APITestCase):
 
     def setUp(self):
-        super(ValidatorTests, self).setUp()
+        super(ProfileFilterFieldValidatorTests, self).setUp()
 
         self.data['id'] = str(uuid.uuid4())
         self.data['description'] = 'foo'
@@ -95,3 +96,38 @@ class ValidatorTests(ViewTestSetupMixin, APITestCase):
             msg['filters'][0]['non_field_errors'][0],
             "'{}' not valid. Must be a list of UUIDs".format(criteria)
         )
+
+
+class UniqueByTenantValidatorTests(ViewTestSetupMixin, APITestCase):
+
+    def test_not_unique_by_tenant(self):
+        self.assertEqual(self.assignment.order, 1)
+        self.data['id'] = str(uuid.uuid4())
+        self.data['order'] = 1
+
+        response = self.client.post('/api/admin/assignments/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        msg = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            msg['non_field_errors'][0],
+            "order: '{}' already exists for Tenant: '{}'".format(self.data['order'],
+                                                                 self.data['tenant'])
+        )
+        self.assertEqual(
+            msg['non_field_errors'][1],
+            "description: '{}' already exists for Tenant: '{}'".format(self.data['description'],
+                                                                       self.data['tenant'])
+        )
+
+    def test_unique_by_tenant_but_not_unique_accross_model(self):
+        # this is fine, 'order' only needs to be unique by Tenant
+        self.assertEqual(self.assignment.order, 1)
+        tenant_two = get_or_create_tenant('foo')
+        self.data['id'] = str(uuid.uuid4())
+        self.data['tenant'] = str(tenant_two.id)
+        self.data['order'] = 1
+
+        response = self.client.post('/api/admin/assignments/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 201)

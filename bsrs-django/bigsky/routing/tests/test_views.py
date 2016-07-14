@@ -20,6 +20,8 @@ class ViewTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['count'], 1)
         data = data['results'][0]
         self.assertEqual(data['id'], str(self.assignment.id))
+        self.assertEqual(data['tenant'], str(self.tenant.id))
+        self.assertEqual(data['order'], 1)
         self.assertEqual(data['description'], self.assignment.description)
         self.assertEqual(data['assignee']['id'], str(self.assignment.assignee.id))
         self.assertEqual(data['assignee']['username'], self.assignment.assignee.username)
@@ -41,6 +43,8 @@ class ViewTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.assignment.id))
+        self.assertEqual(data['tenant'], str(self.tenant.id))
+        self.assertEqual(data['order'], 1)
         self.assertEqual(data['description'], self.assignment.description)
         self.assertEqual(data['assignee']['id'], str(self.assignment.assignee.id))
         self.assertEqual(data['assignee']['username'], self.assignment.assignee.username)
@@ -62,10 +66,12 @@ class ViewTests(ViewTestSetupMixin, APITestCase):
 
         response = self.client.post('/api/admin/assignments/', self.data, format='json')
 
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201)
         assignment = Assignment.objects.get(id=self.data['id'])
-        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(assignment.id))
+        self.assertEqual(data['tenant'], str(self.tenant.id))
+        self.assertEqual(data['order'], 2)
         self.assertEqual(data['description'], assignment.description)
         self.assertEqual(data['assignee'], str(assignment.assignee.id))
         # profile_filter
@@ -90,6 +96,8 @@ class ViewTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], self.data['id'])
+        self.assertEqual(data['tenant'], str(self.tenant.id))
+        self.assertEqual(data['order'], 1)
         self.assertEqual(data['description'], self.data['description'])
         self.assertEqual(data['assignee'], self.data['assignee'])
         # profile_filter
@@ -102,6 +110,7 @@ class ViewTests(ViewTestSetupMixin, APITestCase):
     def test_update__nested_create(self):
         self.assertEqual(self.assignment.filters.count(), 2)
         new_filter_id = str(uuid.uuid4())
+        self.data['description'] = _generate_chars()
         self.data['filters'].append({
             'id': new_filter_id,
             'field': 'priority',

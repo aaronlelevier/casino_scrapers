@@ -47,6 +47,10 @@ class AssignmentTests(TestCase):
         self.tenant = get_or_create_tenant()
         self.assignment = create_assignment()
 
+    def test_meta__ordering(self):
+        # order by ascending 'order' b/c this demostrates processing order
+        self.assertEqual(Assignment._meta.ordering, ['order'])
+
     def test_fields(self):
         self.assertIsInstance(self.assignment.description, str)
         self.assertIsInstance(self.assignment.assignee, Person)
