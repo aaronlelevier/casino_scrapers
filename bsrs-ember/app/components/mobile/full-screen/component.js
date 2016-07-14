@@ -24,9 +24,6 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
       }
 
     },
-    cancel() {
-      this._super();
-    },
     renderSection(activeComponent) {
       const hashComponents = this.get('hashComponents');
       hashComponents.forEach((componentObj) => {
