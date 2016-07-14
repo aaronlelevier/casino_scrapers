@@ -1,5 +1,5 @@
 export function initialize(i) {
-    window.__container__ = i.container;
+    window.__container__ = i.__container__;
 }
 
 export default {
