@@ -1,6 +1,7 @@
-from routing.models import Assignment, ProfileFilter
+from location.models import Location
 from person.tests.factory import create_single_person
-from ticket.models import TicketPriority, TicketStatus
+from routing.models import Assignment, ProfileFilter
+from ticket.models import TicketPriority
 from utils.create import random_lorem
 from utils.helpers import create_default
 
@@ -11,10 +12,10 @@ def create_ticket_priority_filter():
                                         criteria=[str(priority.id)])
 
 
-def create_ticket_status_filter():
-    status = create_default(TicketStatus)
-    return ProfileFilter.objects.create(field='status',
-                                        criteria=[str(status.id)])
+def create_ticket_location_filter():
+    location = Location.objects.create_top_level()
+    return ProfileFilter.objects.create(field='location',
+                                        criteria=[str(location.id)])
 
 
 def create_assignment(description=None):
@@ -26,8 +27,8 @@ def create_assignment(description=None):
         assignment = Assignment.objects.create(**kwargs)
 
         priority_filter = create_ticket_priority_filter()
-        status_filter = create_ticket_status_filter()
-        assignment.filters.add(priority_filter, status_filter)
+        location_filter = create_ticket_location_filter()
+        assignment.filters.add(priority_filter, location_filter)
 
     return assignment
 
