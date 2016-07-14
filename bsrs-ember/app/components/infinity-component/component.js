@@ -20,7 +20,7 @@ export default Ember.Component.extend({
   willDestroyElement() {
     this._super(...arguments);
     this._unbindEvent();
-    this.get('simpleStore').clear();
+    this.get('simpleStore').clear(`${this.get('noun')}-list`);
   },
   /* sets scrollable container that has css overflow:scroll */
   _setupScrollableContainer() {
