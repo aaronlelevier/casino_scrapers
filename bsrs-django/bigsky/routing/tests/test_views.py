@@ -4,11 +4,13 @@ import uuid
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
+from person.tests.factory import create_single_person, PASSWORD
 from routing.models import Assignment, ProfileFilter
 from routing.serializers import AssignmentCreateUpdateSerializer
 from routing.tests.factory import create_assignment
-from person.tests.factory import create_single_person, PASSWORD
+from ticket.tests.factory import create_ticket
 from utils.create import _generate_chars
+from utils.helpers import create_default
 
 
 class ViewTests(APITestCase):
@@ -18,11 +20,10 @@ class ViewTests(APITestCase):
         self.assignment = create_assignment()
         self.assignment.assignee = self.person
         self.assignment.save()
-
         self.profile_filter = self.assignment.filters.first()
-
+        self.ticket = create_ticket()
+        self.ticket_priority = self.ticket.priority
         self.data = AssignmentCreateUpdateSerializer(self.assignment).data
-
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
@@ -114,3 +115,53 @@ class ViewTests(APITestCase):
         self.assertEqual(data['filters'][0]['context'], self.profile_filter.context)
         self.assertEqual(data['filters'][0]['field'], self.profile_filter.field)
         self.assertEqual(data['filters'][0]['criteria'], self.profile_filter.criteria)
+
+    def test_update__nested_create(self):
+        self.assertEqual(self.assignment.filters.count(), 2)
+        new_filter_id = str(uuid.uuid4())
+        self.data['filters'].append({
+            'id': new_filter_id,
+            'field': 'priority',
+            'criteria': str(self.ticket_priority.id)
+        })
+
+        response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
+            self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(data['filters']), 3)
+        self.assertIn(new_filter_id, [f['id'] for f in data['filters']])
+
+    def test_update__nested_update(self):
+        self.assertEqual(self.assignment.filters.count(), 2)
+        new_filter_id = str(uuid.uuid4())
+        self.data['filters'][0].update({
+            'field': 'location',
+            'criteria': str(self.ticket.location.id)
+        })
+
+        response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
+            self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(data['filters']), 2)
+        profile_filter = ProfileFilter.objects.get(id=self.data['filters'][0]['id'])
+        self.assertEqual(profile_filter.field, self.data['filters'][0]['field'])
+        self.assertEqual(profile_filter.criteria, self.data['filters'][0]['criteria'])
+
+    def test_update__nested_delete(self):
+        self.assertEqual(self.assignment.filters.count(), 2)
+        deleted_id = self.data['filters'][1]['id']
+        self.data['filters'] = self.data['filters'][:1]
+
+        response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
+            self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(data['filters']), 1)
+        self.assertNotIn(deleted_id, [f['id'] for f in data['filters']])
+        self.assertFalse(ProfileFilter.objects.filter(id=deleted_id).exists())
+        self.assertFalse(ProfileFilter.objects_all.filter(id=deleted_id).exists())

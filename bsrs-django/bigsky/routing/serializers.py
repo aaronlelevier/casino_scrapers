@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from routing.models import Assignment, ProfileFilter
 from person.serializers_leaf import PersonIdUsernameSerializer
+from utils.create import update_model
 from utils.serializers import BaseCreateSerializer
 
 
@@ -36,7 +37,26 @@ class AssignmentCreateUpdateSerializer(BaseCreateSerializer):
         return instance
 
     def update(self, instance, validated_data):
-        validated_data.pop('filters')
+        filter_ids = []
+
+        # create/update nested ProfileFilters
+        filters = validated_data.pop('filters')
+        if filters:
+            for f in filters:
+                try:
+                    pf = ProfileFilter.objects.get(id=f['id'])
+                except ProfileFilter.DoesNotExist:
+                    pf = ProfileFilter.objects.create(**f)
+                else:
+                    update_model(pf, f)
+                finally:
+                    filter_ids.append(pf.id)
+                    instance.filters.add(pf)
+
+        # # hard delete if not sent
+        for x in ProfileFilter.objects.exclude(id__in=filter_ids):
+            x.delete(override=True)
+
         return super(AssignmentCreateUpdateSerializer, self).update(instance, validated_data)
 
 
