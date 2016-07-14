@@ -3,20 +3,14 @@ import uuid
 
 from rest_framework.test import APITestCase
 
-from person.tests.factory import create_single_person, PASSWORD
-from routing.models import Assignment, ProfileFilter
-from routing.serializers import AssignmentCreateUpdateSerializer
-from routing.tests.factory import create_assignment
 from routing.tests.mixins import ViewTestSetupMixin
-from ticket.models import Ticket
-from ticket.tests.factory import create_ticket
-from utils.create import _generate_chars
+from ticket.models import Ticket, TicketPriority
 
 
-class ViewTests(ViewTestSetupMixin, APITestCase):
+class ValidatorTests(ViewTestSetupMixin, APITestCase):
 
     def setUp(self):
-        super(ViewTests, self).setUp()
+        super(ValidatorTests, self).setUp()
 
         self.data['id'] = str(uuid.uuid4())
         self.data['description'] = 'foo'
@@ -28,7 +22,7 @@ class ViewTests(ViewTestSetupMixin, APITestCase):
             'id': self.invalid_id,
             'context': self.invalid_context,
             'field': self.invalid_field,
-            'criteria': self.invalid_criteria_id
+            'criteria': [self.invalid_criteria_id]
         }]
 
     def test_is_model_class__not_correct_format(self):
@@ -68,4 +62,36 @@ class ViewTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(
             msg['filters'][0]['non_field_errors'][0],
             "'{}' is not a field on '{}'".format(self.invalid_field, Ticket.__name__)
+        )
+
+    def test_is_valid_field_filter(self):
+        self.data['filters'][0].update({
+            'context': 'ticket.ticket',
+            'field': 'priority'
+        })
+
+        response = self.client.post('/api/admin/assignments/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        msg = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            msg['filters'][0]['non_field_errors'][0],
+            "'{}' is not a valid id for '{}'".format([self.invalid_criteria_id], TicketPriority.__name__)
+        )
+
+    def test_is_valid_field_filter__uuid_list(self):
+        criteria = 'x'
+        self.data['filters'][0].update({
+            'context': 'ticket.ticket',
+            'field': 'priority',
+            'criteria': criteria
+        })
+
+        response = self.client.post('/api/admin/assignments/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        msg = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            msg['filters'][0]['non_field_errors'][0],
+            "'{}' not valid. Must be a list of UUIDs".format(criteria)
         )

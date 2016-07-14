@@ -3,12 +3,10 @@ import uuid
 
 from rest_framework.test import APITestCase
 
-from person.tests.factory import create_single_person, PASSWORD
+from person.tests.factory import create_single_person
 from routing.models import Assignment, ProfileFilter
-from routing.serializers import AssignmentCreateUpdateSerializer
 from routing.tests.factory import create_assignment
 from routing.tests.mixins import ViewTestSetupMixin
-from ticket.tests.factory import create_ticket
 from utils.create import _generate_chars
 
 
@@ -107,7 +105,7 @@ class ViewTests(ViewTestSetupMixin, APITestCase):
         self.data['filters'].append({
             'id': new_filter_id,
             'field': 'priority',
-            'criteria': str(self.ticket_priority.id)
+            'criteria': [str(self.ticket_priority.id)]
         })
 
         response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
@@ -123,7 +121,7 @@ class ViewTests(ViewTestSetupMixin, APITestCase):
         new_filter_id = str(uuid.uuid4())
         self.data['filters'][0].update({
             'field': 'location',
-            'criteria': str(self.ticket.location.id)
+            'criteria': [str(self.ticket.location.id)]
         })
 
         response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),

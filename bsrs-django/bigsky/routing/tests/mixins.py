@@ -1,14 +1,7 @@
-import json
-import uuid
-
-from rest_framework.test import APITestCase
-
 from person.tests.factory import create_single_person, PASSWORD
-from routing.models import Assignment, ProfileFilter
 from routing.serializers import AssignmentCreateUpdateSerializer
 from routing.tests.factory import create_assignment
 from ticket.tests.factory import create_ticket
-from utils.create import _generate_chars
 
 
 class ViewTestSetupMixin(object):

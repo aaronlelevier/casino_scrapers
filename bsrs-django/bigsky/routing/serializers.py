@@ -1,5 +1,3 @@
-from rest_framework import serializers
-
 from person.serializers_leaf import PersonIdUsernameSerializer
 from routing.models import Assignment, ProfileFilter
 from routing.validators import ValidateProfileFilterField

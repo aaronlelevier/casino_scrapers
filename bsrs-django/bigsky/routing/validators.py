@@ -1,13 +1,12 @@
 from django.conf import settings
 from django.contrib.auth.models import ContentType
-from django.db import models
 
 from rest_framework.exceptions import ValidationError
 
 
 class ValidateProfileFilterField(object):
     """Validate that the Model class returned by the 'context' has
-    the 'field'."""
+    the 'field' and that the 'field' has valid 'criteria'."""
 
     def __call__(self, data):
         self.id = data.get('id', None)
@@ -18,16 +17,12 @@ class ValidateProfileFilterField(object):
         if self.context:
             content_type = self.is_model_class()
         else:
-            content_type = settings.DEFAULT_PROFILE_FILTER_CONTEXT
+            app_label, model = settings.DEFAULT_PROFILE_FILTER_CONTEXT.split('.')
+            content_type = ContentType.objects.get(app_label=app_label, model=model)
 
         klass = content_type.model_class()
-        context_field_model = self.is_model_field(klass)
-
-    def set_context(self, serializer=None):
-        """Determine the existing instance, prior to the validation
-        call being made."""
-        self.instance = getattr(serializer, 'instance', None)
-        print('instance:', self.instance)
+        self.is_model_field(klass)
+        self.is_valid_field_filter(klass)
 
     def is_model_class(self):
         try:
@@ -45,3 +40,13 @@ class ValidateProfileFilterField(object):
     def is_model_field(self, klass):
         if not hasattr(klass, self.field):
             raise ValidationError("'{}' is not a field on '{}'".format(self.field, klass.__name__))
+
+    def is_valid_field_filter(self, klass):
+        rel_klass = klass._meta.get_field(self.field).rel.to
+        try:
+            if not rel_klass.objects.filter(id__in=self.criteria).exists():
+                raise ValidationError("'{}' is not a valid id for '{}'"
+                                      .format(self.criteria, rel_klass.__name__))
+        except ValueError:
+            # raised if a NULL value or non-list type is passed to the try block
+            raise ValidationError("'{}' not valid. Must be a list of UUIDs".format(self.criteria))
