@@ -27,14 +27,14 @@ var BSRS_PROFILE_FACTORY = (function() {
   };
   factory.prototype.list_reverse = function() {
     const page_size = 10;
-    let results = [];
+    var results = [];
     for(var i = page_size; i > 0; i--) {
       results.push(this._generate_item(i));
     }
     return {count: page_size-1, next: null, previous: null, results: results};
   };
   factory.prototype._list = function(start, page_size) {
-    let results = [];
+    var results = [];
     for(var i = start; i < page_size; i++) {
       results.push(this._generate_item(i));
     }
