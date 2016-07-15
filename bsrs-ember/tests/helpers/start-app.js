@@ -176,7 +176,7 @@ export default function startApp(attrs) {
   breakpoints.forEach((point) => {
     bp[point.name] = point.begin + 5;
   });
-  run(() => {
+  Ember.run(() => {
     flexi.set('width', bp['huge']);
   });
 
