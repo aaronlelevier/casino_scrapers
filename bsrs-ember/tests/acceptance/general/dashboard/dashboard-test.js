@@ -21,6 +21,7 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 module('Acceptance | dashboard', {
   beforeEach() {
     application = startApp();
+    setWidth('huge');
     store = application.__container__.lookup('service:simpleStore');
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
   },

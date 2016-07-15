@@ -13,7 +13,6 @@ var module = function(name, settings){
       this.owner = Owner.create({
         __registry__: this.registry
       });
-
       this.container = this.registry.container({
         owner: this.owner
       });
@@ -34,6 +33,7 @@ var module = function(name, settings){
   });
 };
 
+/* Wrapper for all unit tests.  Don't have to wrap store.push with run in test.  Only in beforeEach.  Many cases where this is not true and still need to wrap with run */
 var test = function() {
   for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; ++_key) {
     args[_key] = arguments[_key];

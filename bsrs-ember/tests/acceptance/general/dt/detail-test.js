@@ -41,7 +41,7 @@ const BAIL_TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idOne}/ticket/`;
 
 let application, store, endpoint, original_uuid, link, dtd, dt_path, returned_ticket, dt_one;
 
-module('scott Acceptance | dt detail', {
+module('Acceptance | dt detail', {
   beforeEach() {
     application = startApp();
     setWidth('huge');

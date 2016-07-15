@@ -40,9 +40,11 @@ var extract_parents = function(model, store) {
       Ember.set(parent, 'location_level_fk', parent_llevel_pk);
       run(() => {
         parent.status_fk = parent.status;
+        parent.detail = true;
         delete parent.status;
-        store.push('location', parent);
+        const parent_loc = store.push('location', parent);
         store.push('location-parents', {id: pk, location_pk: model.id, parents_pk: parent.id});
+        belongs_to_extract(parent.status_fk, store, parent_loc, 'status', 'location', 'locations');
       });
     }else{
       prevented_duplicate_m2m.push(location_parents[0].get('id'));
@@ -78,9 +80,11 @@ var extract_children = function(model, store) {
       run(() => {
         //TODO: test this
         child.status_fk = child.status;
+        child.detail = true;
         delete child.status;
-        store.push('location', child);
+        const child_loc = store.push('location', child);
         store.push('location-children', {id: pk, location_pk: model.id, children_pk: child.id});
+        belongs_to_extract(child.status_fk, store, child_loc, 'status', 'location', 'locations');
       });
     }else{
       prevented_duplicate_m2m.push(location_children[0].get('id'));
