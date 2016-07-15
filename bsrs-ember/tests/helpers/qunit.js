@@ -22,14 +22,8 @@ var module = function(name, settings){
       if(typeof settings.beforeEach === 'function') {
         return settings.beforeEach.apply(this, arguments);
       }
-
-      /* Prevent diff widths in various environments from inexplicitely failing tests */
-      setWidth('huge');
     },
     afterEach: function() {
-      /* jshint ignore:start */
-      typeof setWidth ==='function' && setWidth('huge');
-      /* jshint ignore:end */
       this.container = null;
       this.registry = null;
       this.owner = null;

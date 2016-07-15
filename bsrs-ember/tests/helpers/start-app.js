@@ -170,6 +170,13 @@ export default function startApp(attrs) {
     application.injectTestHelpers();
   });
 
+  let flexi = application.__container__.lookup('service:device/layout');
+  const breakpoints = flexi.get('breakpoints');
+  let bp = {};
+  breakpoints.forEach((point) => {
+    bp[point.name] = point.begin + 5;
+  });
+  flexi.set('width', bp['huge']);
 
   windowProxy.locationUrl = null;
   windowProxy.changeLocation = function(url) {
