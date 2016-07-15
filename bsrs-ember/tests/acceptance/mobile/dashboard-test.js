@@ -20,18 +20,12 @@ module('Acceptance | mobile dashboard test', {
     store = application.__container__.lookup('service:simpleStore');
     dashboard_xhr = xhr(`${DASHBOARD_URL}`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
     /* MOBILE RENDER */
-    flexi = application.__container__.lookup('service:device/layout');
-    const breakpoints = flexi.get('breakpoints');
-    bp = {};
-    breakpoints.forEach((point) => {
-      bp[point.name] = point.begin + 5;
-    });
-    flexi.set('width', bp.mobile);
+    setWidth('mobile');
   },
   afterEach() {
-    run(() => {
-      flexi.set('width', bp.huge);
-    });
+    // run(() => {
+    //   flexi.set('width', bp.huge);
+    // });
     Ember.run(application, 'destroy');
   }
 });

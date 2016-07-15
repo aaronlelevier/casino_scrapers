@@ -33,6 +33,7 @@
     "findWithAssert",
     "selectSearch",
     "selectChoose",
+    "setWidth",
     "wait",
     "t",
     "require",

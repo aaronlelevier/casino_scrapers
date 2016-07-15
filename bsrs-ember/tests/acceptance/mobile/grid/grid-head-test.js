@@ -36,18 +36,12 @@ module('Acceptance | grid-head mobile', {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
-    flexi = application.__container__.lookup('service:device/layout');
-    const breakpoints = flexi.get('breakpoints');
-    bp = {};
-    breakpoints.forEach((point) => {
-      bp[point.name] = point.begin + 5;
-    });
-    flexi.set('width', bp.mobile);
+    setWidth('mobile');
   },
   afterEach() {
-    run(() => {
-      flexi.set('width', bp.huge);
-    });
+    // run(() => {
+    //   flexi.set('width', bp.huge);
+    // });
     Ember.run(application, 'destroy');
   }
 });

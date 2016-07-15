@@ -8,6 +8,7 @@ import random from 'bsrs-ember/models/random';
 import './ember-i18n/test-helpers';
 import substring_up_to_num from './substring_up_to_num';
 import substringBreadcrumb from './substring-breadcrumb';
+import setWidth from './set-width';
 import registerPowerSelectHelpers from '../../tests/helpers/ember-power-select';
 
 registerPowerSelectHelpers();
@@ -169,13 +170,8 @@ export default function startApp(attrs) {
     application.injectTestHelpers();
   });
 
-  let flexi = application.__container__.lookup('service:device/layout');
-  let breakpoints = flexi.get('breakpoints');
-  let bp = {};
-  breakpoints.forEach((point) => {
-    bp[point.name] = point.begin + 5;
-  });
-  flexi.set('width', bp.huge);
+  /* Prevent diff widths in various environments from inexplicitely failing tests */
+  setWidth('huge');
 
   windowProxy.locationUrl = null;
   windowProxy.changeLocation = function(url) {
