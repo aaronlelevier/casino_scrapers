@@ -140,4 +140,5 @@ class DefaultToDictMixin(object):
 class DefaultNameManager(BaseManager):
 
     def default(self):
-        return self.get(name=self.model.default)
+        obj, _ = self.get_or_create(name=self.model.default)
+        return obj

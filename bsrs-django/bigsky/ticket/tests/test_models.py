@@ -214,6 +214,7 @@ class TicketTests(TestCase):
         create_default(LocationStatus)
         create_categories()
         create_single_person()
+        create_ticket_statuses()
         create_tickets(_many=2)
 
     def test_ordering(self):

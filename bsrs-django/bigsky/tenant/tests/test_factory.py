@@ -16,9 +16,15 @@ class TenantTests(TestCase):
 
         self.assertIsInstance(ret, Tenant)
         self.assertIsInstance(ret.dt_start, TreeData)
-        # get-or-create, so 2nd call returns original
+        self.assertEqual(ret.company_name, settings.DEFAULT_TENANT_COMPANY_NAME)
+        self.assertTrue(ret.company_code)
+
+    def test_get_existing(self):
+        ret = factory.get_or_create_tenant()
         ret_two = factory.get_or_create_tenant()
         self.assertEqual(ret, ret_two)
-        # fields
-        self.assertEqual(ret.company_name, settings.DEFAULT_TENANT_COMPANY_NAME)
-        self.assertEqual(ret.company_code, settings.DEFAULT_TENANT_COMPANY_CODE)
+
+    def test_create(self):
+        ret = factory.get_or_create_tenant()
+        ret_two = factory.get_or_create_tenant('foo')
+        self.assertNotEqual(ret, ret_two)

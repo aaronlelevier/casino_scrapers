@@ -7,6 +7,7 @@ from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from routing.tasks import process_ticket
 from ticket.mixins import CreateTicketModelMixin, UpdateTicketModelMixin
 from ticket.models import Ticket, TicketActivity
 from ticket.serializers import (TicketSerializer, TicketCreateSerializer,
@@ -51,7 +52,9 @@ class TicketViewSet(EagerLoadQuerySetMixin, TicketQuerySetFilters, CreateTicketM
         Add the User making the POST request as the 'creator' of this Ticket.
         """
         request.data['creator'] = request.user.id
-        return super(TicketViewSet, self).create(request, *args, **kwargs)
+        response = super(TicketViewSet, self).create(request, *args, **kwargs)
+        process_ticket(request.user.role.tenant.id, ticket_id=response.data['id'])
+        return response
 
 
 class TicketActivityViewSet(BaseModelViewSet):

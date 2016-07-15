@@ -13,4 +13,4 @@ manage.py loaddata fixtures/dtd.json
 manage.py loaddata fixtures/tenant.json
 manage.py loaddata fixtures/person.json
 manage.py loaddata fixtures/ticket.json
-manage.py loaddata fixtures/assignment.json
+manage.py loaddata fixtures/routing.json

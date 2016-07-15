@@ -1,7 +1,7 @@
 import random
 
 from ticket.models import (TicketStatus, TicketPriority, TICKET_STATUSES,
-        TICKET_PRIORITIES)
+        TICKET_PRIORITIES, TICKET_STATUS_NEW, TICKET_PRIORITY_DEFAULT)
 from utils.helpers import generate_uuid
 
 
@@ -41,11 +41,10 @@ def create_ticket_priorities():
 
 
 def get_or_create_ticket_status():
-    obj, _ = TicketStatus.objects.get_or_create(name=random.choice(TICKET_STATUSES))
+    obj, _ = TicketStatus.objects.get_or_create(name=TICKET_STATUS_NEW)
     return obj
 
 
 def get_or_create_ticket_priority():
-    obj, _ = TicketPriority.objects.get_or_create(name=random.choice(TICKET_PRIORITIES))
+    obj, _ = TicketPriority.objects.get_or_create(name=TICKET_PRIORITY_DEFAULT)
     return obj
-
