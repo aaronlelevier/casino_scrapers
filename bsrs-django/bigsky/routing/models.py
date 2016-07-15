@@ -9,6 +9,7 @@ from django.db.models.signals import post_save
 
 from tenant.models import Tenant
 from tenant.tests.factory import get_or_create_tenant
+from ticket.models import Ticket
 from utils.fields import MyGenericForeignKey
 from utils.models import BaseQuerySet, BaseManager, BaseModel
 
@@ -28,6 +29,28 @@ class AssignmentManager(BaseManager):
 
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
+
+    def process_ticket(self, tenant_id, ticket_id):
+        """
+        for each assignment-profile in this Tenant's Assignment Profiles
+          does it match?
+            match logic:
+              for each profile filter in this Assingment Profile:
+                do all filters's match? if so, it's an match for this
+                assignment profile
+          if match:
+            assign ticket to that ap's assignee
+            break out of for-loop
+
+        """
+        ticket = Ticket.objects.get(id=ticket_id)
+
+        for assignment in self.filter(tenant__id=tenant_id):
+            match = assignment.is_match(ticket)
+            if match:
+                ticket.assignee = assignment.assignee
+                ticket.save()
+                break
 
 
 class Assignment(BaseModel):
@@ -51,6 +74,15 @@ class Assignment(BaseModel):
         if not self.tenant:
             self.tenant = get_or_create_tenant()
 
+    def is_match(self, ticket):
+        matches = []
+        for f in self.filters.all():
+            if f.is_match(ticket):
+                matches.append(True)
+            else:
+                matches.append(False)
+        return all(matches)
+
 
 @receiver(post_save, sender=Assignment)
 def update_order(sender, instance=None, created=False, **kwargs):
@@ -73,3 +105,18 @@ class ProfileFilter(BaseModel):
 
     class Meta:
         ordering = ['id']
+
+    def is_match(self, ticket):
+        return str(getattr(ticket, self.field).id) in self.criteria
+
+    @property
+    def filter_criteria(self):
+        """
+        Return a QuerySet of all Filter criteria objects defined by the
+        ProfileFilter instance.
+        """
+        app_label, model = self.context.split('.')
+        content_type = ContentType.objects.get(app_label=app_label, model=model)
+        klass = content_type.model_class()
+        rel_klass = klass._meta.get_field(self.field).rel.to
+        return rel_klass.objects.filter(id__in=self.criteria)

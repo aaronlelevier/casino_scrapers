@@ -13,8 +13,10 @@ from generic.models import Attachment
 from location.models import Location, LOCATION_COMPANY
 from person.models import Person
 from person.tests.factory import create_single_person, DistrictManager
-from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
-    TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
+from ticket.models import (
+    Ticket, TicketStatus, TicketPriority, TicketActivityType, TicketActivity,
+    TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES, TICKET_STATUS_NEW,
+    TICKET_PRIORITY_DEFAULT)
 from ticket.tests import factory, factory_related
 from utils.helpers import generate_uuid
 
@@ -69,6 +71,7 @@ class CreateTicketTests(TestCase):
 
     def test_status(self):
         self.assertIsInstance(self.ticket.status, TicketStatus)
+        self.assertEqual(self.ticket.status.name, TICKET_STATUS_NEW)
 
     def test_priority(self):
         self.assertIsInstance(self.ticket.priority, TicketPriority)
@@ -136,41 +139,21 @@ class CreateTicketTests(TestCase):
 
 class GetOrCreateTicketStatusAndPriorityTests(TestCase):
 
-    # status
-
     def test_get_or_create_ticket_status(self):
-        self.assertFalse(TicketStatus.objects.filter(name=TICKET_STATUSES[0]))
+        self.assertEqual(TicketStatus.objects.count(), 0)
 
         status = factory.get_or_create_ticket_status()
 
-        self.assertTrue(status)
-
-    def test_get_or_create_ticket_status__default_exists(self):
-        factory_related.create_ticket_statuses()
-        self.assertTrue(TicketStatus.objects.filter(name=TICKET_STATUSES[0]).exists())
-
-        status = factory.get_or_create_ticket_status()
-
-        self.assertIsInstance(status, TicketStatus)
-        self.assertTrue(TicketStatus.objects.count() > 0)
-
-        # priority
+        self.assertEqual(TicketStatus.objects.count(), 1)
+        self.assertEqual(status.name, TICKET_STATUS_NEW)
 
     def test_get_or_create_ticket_priority(self):
-        self.assertFalse(TicketPriority.objects.filter(name=TICKET_PRIORITIES[0]).exists())
+        self.assertEqual(TicketPriority.objects.count(), 0)
 
         priority = factory.get_or_create_ticket_priority()
 
-        self.assertTrue(priority)
-
-    def test_get_or_create_ticket_priority__default_exists(self):
-        factory_related.create_ticket_priorities()
-        self.assertTrue(TicketPriority.objects.filter(name=TICKET_PRIORITIES[0]).exists())
-
-        priority = factory.get_or_create_ticket_priority()
-
-        self.assertIsInstance(priority, TicketPriority)
-        self.assertTrue(TicketPriority.objects.count() > 0)
+        self.assertEqual(TicketPriority.objects.count(), 1)
+        self.assertEqual(priority.name, TICKET_PRIORITY_DEFAULT)
 
 
 class CreateTicketKwargTests(TestCase):

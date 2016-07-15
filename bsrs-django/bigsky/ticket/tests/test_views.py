@@ -1,6 +1,7 @@
-import json
-import uuid
 import datetime
+import json
+from mock import patch
+import uuid
 
 from django.utils.timezone import now
 
@@ -13,7 +14,7 @@ from location.tests.factory import create_location, create_locations
 from generic.models import Attachment
 from generic.tests.factory import create_file_attachment
 from person.tests.factory import PASSWORD, create_single_person, DistrictManager
-from ticket.models import Ticket, TicketActivity, TicketActivityType
+from ticket.models import Ticket, TicketActivity, TicketActivityType, TICKET_STATUS_NEW
 from ticket.serializers import TicketCreateSerializer
 from ticket.tests.factory_related import (create_ticket_priority, create_ticket_status)
 from ticket.tests.factory import (create_ticket, create_ticket_activity,
@@ -320,11 +321,13 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
 
         response = self.client.post('/api/tickets/', self.data, format='json')
 
+        self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         ticket = Ticket.objects.get(id=data['id'])
         self.assertEqual(data['id'], str(ticket.id))
         self.assertEqual(data['location'], str(ticket.location.id))
         self.assertEqual(data['status'], str(ticket.status.id))
+        self.assertEqual(ticket.status.name, TICKET_STATUS_NEW)
         self.assertEqual(data['priority'], str(ticket.priority.id))
         self.assertEqual(data['assignee'], str(ticket.assignee.id))
         self.assertEqual(data['requester'], str(ticket.requester))
@@ -349,6 +352,16 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(json.loads(response.content.decode('utf8'))['status'], ['This field may not be null.'])
         self.assertEqual(json.loads(response.content.decode('utf8'))['priority'], ['This field may not be null.'])
+
+    @patch("ticket.views.process_ticket")
+    def test_process_ticket(self, was_called):
+        self.data.update({
+            'id': str(uuid.uuid4()),
+            'request': 'plumbing',
+        })
+        response = self.client.post('/api/tickets/', self.data, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(was_called)
 
 
 class TicketSearchTests(TicketSetupMixin, APITestCase):
