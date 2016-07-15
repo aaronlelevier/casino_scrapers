@@ -71,7 +71,7 @@ class LocationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Location
-        fields = ('id', 'name', 'number', 'location_level',)
+        fields = ('id', 'name', 'number', 'location_level', 'status')
 
 
 class LocationTicketListSerializer(serializers.ModelSerializer):

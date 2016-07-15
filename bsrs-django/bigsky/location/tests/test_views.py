@@ -425,12 +425,16 @@ class LocationDetailTests(APITestCase):
             Location.objects.get(id=self.data['parents'][0]['id']),
             self.location.parents.all()
         )
+        parent = Location.objects.get(id=self.data['parents'][0]['id'])
+        self.assertEqual(self.data['parents'][0]['status'], str(parent.status.id))
 
     def test_get_children(self):
         self.assertIn(
             Location.objects.get(id=self.data['children'][0]['id']),
             self.location.children.all()
         )
+        child = Location.objects.get(id=self.data['children'][0]['id'])
+        self.assertEqual(self.data['children'][0]['status'], str(child.status.id))
 
     def test_count_of_detail_fields(self):
         self.assertEqual(len(self.data), 11)
