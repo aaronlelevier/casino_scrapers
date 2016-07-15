@@ -55,7 +55,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
   findPersonsLocations(search_criteria, filter) {
     let url = LOCATIONS_URL;
     if (filter && search_criteria) {
-      url += `location__icontains=${search_criteria}/?location_level=${filter['location_level']}/`;
+      url += `location__icontains=${search_criteria}/?location_level=${filter['location_level']}`;
     } else if (search_criteria) {
       // Role may not have a llevel
       url += `location__icontains=${search_criteria}/`;

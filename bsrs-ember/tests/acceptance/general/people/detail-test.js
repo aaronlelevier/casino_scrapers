@@ -1023,7 +1023,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     let payload = PF.put({id: PD.id, role: role.id, locations: []});
     xhr(url,'PUT',JSON.stringify(payload),{},200);
     andThen(() => {
-      let locations_endpoint = `${LOCATIONS_URL}location__icontains=a/?location_level=${LLD.idOne}/`;
+      let locations_endpoint = `${LOCATIONS_URL}location__icontains=a/?location_level=${LLD.idOne}`;
       xhr(locations_endpoint, 'GET', null, {}, 200, LF.list_power_select());
       page.locationClickDropdown();
       fillIn(LOCATION_SEARCH, 'a');
@@ -1070,7 +1070,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       assert.equal(page.locationOptionLength, 1);
       assert.equal(find(LOCATION_DROPDOWN).text().trim(), GLOBALMSG.power_search);
     });
-    let locations_endpoint = `${LOCATIONS_URL}location__icontains=ABC1234/?location_level=${LLD.idOne}/`;
+    let locations_endpoint = `${LOCATIONS_URL}location__icontains=ABC1234/?location_level=${LLD.idOne}`;
     const response = LF.list_power_select();
     xhr(locations_endpoint, 'GET', null, {}, 200, response);
     fillIn(LOCATION_SEARCH, 'ABC1234');
@@ -1109,7 +1109,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       let person = store.find('person', PD.idOne);
       assert.equal(person.get('locations').get('length'), 0);
     });
-    let locations_endpoint = `${LOCATIONS_URL}location__icontains=a/?location_level=${LLD.idOne}/`;
+    let locations_endpoint = `${LOCATIONS_URL}location__icontains=a/?location_level=${LLD.idOne}`;
     const response = LF.list_power_select();
     response.push(LF.get_no_related(LD.idOne, LD.storeName));
     xhr(locations_endpoint, 'GET', null, {}, 200, response);
@@ -1147,7 +1147,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       assert.equal(person.get('locations').get('length'), 0);
       assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
-    let locations_endpoint = `${LOCATIONS_URL}location__icontains=a/?location_level=${LLD.idOne}/`;
+    let locations_endpoint = `${LOCATIONS_URL}location__icontains=a/?location_level=${LLD.idOne}`;
     const response = LF.list_power_select();
     xhr(locations_endpoint, 'GET', null, {}, 200, response);
     page.locationClickDropdown();
@@ -1201,7 +1201,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       assert.equal(previous_location_m2m.get('length'), 0);
     });
     xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data);
-    let locations_endpoint = `${LOCATIONS_URL}location__icontains=ABC1234/?location_level=${LLD.idOne}/`;
+    let locations_endpoint = `${LOCATIONS_URL}location__icontains=ABC1234/?location_level=${LLD.idOne}`;
     const response = LF.list_power_select();
     xhr(locations_endpoint, 'GET', null, {}, 200, response);
     fillIn(LOCATION_SEARCH, 'ABC1234');

@@ -6,9 +6,9 @@ export default Ember.Test.registerAsyncHelper('setWidth', function(application, 
     console.warn('mobile, huge or other width needs to be provided');
     return;
   }
-  flexi = application.__container__.lookup('service:device/layout');
+  let flexi = application.__container__.lookup('service:device/layout');
   const breakpoints = flexi.get('breakpoints');
-  bp = {};
+  let bp = {};
   breakpoints.forEach((point) => {
     bp[point.name] = point.begin + 5;
   });
