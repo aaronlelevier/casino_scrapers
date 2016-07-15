@@ -3,6 +3,7 @@ import uuid
 
 from rest_framework.test import APITestCase
 
+from person.tests.factory import create_single_person, PASSWORD
 from routing.tests.mixins import ViewTestSetupMixin
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority
@@ -112,20 +113,25 @@ class UniqueByTenantValidatorTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(
             msg['non_field_errors'][0],
             "order: '{}' already exists for Tenant: '{}'".format(self.data['order'],
-                                                                 self.data['tenant'])
+                                                                 self.tenant.id)
         )
         self.assertEqual(
             msg['non_field_errors'][1],
             "description: '{}' already exists for Tenant: '{}'".format(self.data['description'],
-                                                                       self.data['tenant'])
+                                                                       self.tenant.id)
         )
 
     def test_unique_by_tenant_but_not_unique_accross_model(self):
         # this is fine, 'order' only needs to be unique by Tenant
         self.assertEqual(self.assignment.order, 1)
         tenant_two = get_or_create_tenant('foo')
+        person = create_single_person()
+        person.role.tenant = tenant_two
+        person.role.save()
+        self.client.logout()
+        self.client.login(username=person.username, password=PASSWORD)
+
         self.data['id'] = str(uuid.uuid4())
-        self.data['tenant'] = str(tenant_two.id)
         self.data['order'] = 1
 
         response = self.client.post('/api/admin/assignments/', self.data, format='json')

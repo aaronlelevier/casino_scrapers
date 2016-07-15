@@ -19,3 +19,11 @@ class AssignmentViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewS
             return rs.AssignmentListSerializer
         else:
             return rs.AssignmentCreateUpdateSerializer
+
+    def create(self, request, *args, **kwargs):
+        """
+        Attach tenant based upon User for validating uniqueness of
+        description and order by Tenant.
+        """
+        request.data['tenant'] = request.user.role.tenant.id
+        return super(AssignmentViewSet, self).create(request, *args, **kwargs)

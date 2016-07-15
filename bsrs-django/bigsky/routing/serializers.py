@@ -16,7 +16,15 @@ class ProfileFilterSerializer(BaseCreateSerializer):
         fields = ('id', 'context', 'field', 'criteria')
 
 
-class AssignmentCreateUpdateSerializer(BaseCreateSerializer):
+class RemoveTenantMixin(object):
+
+    def to_representation(self, instance):
+        data = super(RemoveTenantMixin, self).to_representation(instance)
+        data.pop('tenant', None)
+        return data
+
+
+class AssignmentCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
     filters = ProfileFilterSerializer(required=False, many=True)
 
@@ -66,7 +74,7 @@ class AssignmentCreateUpdateSerializer(BaseCreateSerializer):
         return super(AssignmentCreateUpdateSerializer, self).update(instance, validated_data)
 
 
-class AssignmentListSerializer(BaseCreateSerializer):
+class AssignmentListSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
     assignee = PersonIdUsernameSerializer()
 
@@ -79,7 +87,7 @@ class AssignmentListSerializer(BaseCreateSerializer):
         return queryset.select_related('assignee')
 
 
-class AssignmentDetailSerializer(BaseCreateSerializer):
+class AssignmentDetailSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
     assignee = PersonIdUsernameSerializer()
     filters = ProfileFilterSerializer(required=False, many=True)

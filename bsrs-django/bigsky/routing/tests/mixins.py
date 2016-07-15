@@ -17,6 +17,7 @@ class ViewTestSetupMixin(object):
         self.ticket_priority = self.ticket.priority
         self.data = AssignmentCreateUpdateSerializer(self.assignment).data
         self.data.pop('order', None)
+        self.data.pop('tenant', None)
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
