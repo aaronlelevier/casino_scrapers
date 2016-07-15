@@ -41,9 +41,10 @@ const BAIL_TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idOne}/ticket/`;
 
 let application, store, endpoint, original_uuid, link, dtd, dt_path, returned_ticket, dt_one;
 
-module('Acceptance | dt detail', {
+module('scott Acceptance | dt detail', {
   beforeEach() {
     application = startApp();
+    setWidth('huge');
     store = application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/${DT.idOne}/ticket/?ticket=${TD.idOne}`;
     dtd = store.find('dtd', DT.idOne);
