@@ -9,11 +9,11 @@ var store, profile, person, run = Ember.run;
 module('unit: profile test', {
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:profile', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
-    run(function() {
-    profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
-    person = store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
-  });
-}
+    run(() => {
+      profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
+      person = store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
+    });
+  }
 });
 
 test('dirty test | description', assert => {
