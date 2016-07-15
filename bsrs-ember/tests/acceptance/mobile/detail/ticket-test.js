@@ -23,7 +23,7 @@ var application, store, list_xhr, activity, flexi, bp;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
-const DETAIL_URL = `${BASE_URL}/index/${TD.idOne}`;
+const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
 const ASSIGNEE = '.t-ticket-assignee-select';
 const TICKET_PUT_URL = `${TICKETS_URL}${TD.idOne}/`;
 const ACTIVITY_ITEMS = '.t-activity-list-item';
@@ -55,12 +55,12 @@ module('Acceptance | mobile ticket detail test', {
 
 /* jshint ignore:start */
 
-test('can click to detail, show activities, and go back to list', async assert => {
+test('scott can click to detail, show activities, and go back to list', async assert => {
   clearxhr(activity);
-  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
+  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
   await ticketPage.visit();
   assert.equal(currentURL(), TICKET_URL);
-  await click('.t-grid-data:eq(0)')
+  await click('.t-grid-data:eq(0)');
   assert.equal(currentURL(), DETAIL_URL);
   const ticket = store.find('ticket', TD.idOne);
   assert.equal(find('.t-detail-title').text(), `#${ticket.get('number')}`);
@@ -68,6 +68,7 @@ test('can click to detail, show activities, and go back to list', async assert =
   await generalMobilePage.backButtonClick();
   assert.equal(currentURL(), TICKET_URL);
 });
+
 
 test('can update fields and save', async assert => {
   await page.visitDetail();
@@ -77,7 +78,7 @@ test('can update fields and save', async assert => {
   assert.equal(find('.t-mobile-ticket-activity-section').length, 1);
   await click('.t-mobile-footer-item:eq(1)');
   assert.equal(find('.t-mobile-ticket-detail-section').length, 1);
-  xhr(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
+  ajax(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
   selectSearch(ASSIGNEE, 'b');
   selectChoose(ASSIGNEE, PD.fullnameBoy);
   await generalMobilePage.mobileActionDropdownClick();
@@ -91,6 +92,7 @@ test('can update fields and save', async assert => {
 });
 
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async assert => {
+  clearxhr(list_xhr);
   await page.visitDetail();
   await click('.t-mobile-footer-item:eq(1)');
   await page.requestFillIn('wat');
@@ -117,6 +119,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
 });
 
 test('can add comment and click update to show new activity', async assert => {
+  clearxhr(list_xhr);
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   await ticketPage.commentFillIn(TD.commentOne);

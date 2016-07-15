@@ -7,7 +7,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 const BASE_URL = BASEURLS.base_tickets_url;
 const LOCATION = '.t-ticket-location-select .ember-basic-dropdown-trigger';
 const ASSIGNEE = '.t-ticket-assignee-select .ember-basic-dropdown-trigger';
-const DETAIL_URL = `${BASE_URL}/index/${TD.idOne}`;
+const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
 
 export default create({
   visitDetail: visitable(DETAIL_URL),

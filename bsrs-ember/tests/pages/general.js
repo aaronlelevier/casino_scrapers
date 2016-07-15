@@ -42,6 +42,7 @@ var GeneralPage = PageObject.create({
   clickRoles: clickable('.t-nav-admin-role'),
   clickGeneralSettingsLink: clickable('.t-nav-general-settings'),
   clickAssignmentProfiles: clickable('.t-nav-assignment-profiles'),
+  clickTickets: clickable('.t-nav-tickets'),
 });
 
 export default GeneralPage;

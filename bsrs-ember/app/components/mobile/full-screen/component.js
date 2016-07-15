@@ -5,8 +5,8 @@ import inject from 'bsrs-ember/utilities/inject';
 var FullScreen = Ember.Component.extend(FullScreenMixin, {
   activityRepository: inject('activity'),
   init() {
-    this._super();
     this.componentStringFunc();
+    this._super();
   },
   componentString: '',
   componentStringFunc(componentString) {
@@ -22,7 +22,6 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
           return activities;
         });
       }
-
     },
     renderSection(activeComponent) {
       const hashComponents = this.get('hashComponents');

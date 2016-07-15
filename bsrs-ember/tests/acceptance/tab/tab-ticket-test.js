@@ -217,7 +217,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
   let ticket_list_data = TF.list();
   list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
   clearxhr(activity_one);
-  ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(2));
+  xhr(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(2));
   visit(TICKET_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
@@ -236,7 +236,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     assert.equal(tabs.get('length'), 1);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
   });
-  visit(TICKET_URL);
+  generalPage.clickTickets();
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
   });
