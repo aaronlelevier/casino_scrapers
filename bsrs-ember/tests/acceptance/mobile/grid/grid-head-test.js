@@ -24,7 +24,7 @@ var application, store, list_xhr, original_uuid, flexi, bp;
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
-const DETAIL_2_URL = `${BASE_URL}/index/${TD.idGridTwo}`;
+const DETAIL_2_URL = `${BASE_URL}/${TD.idGridTwo}`;
 const HEADER_WRAP_CLASS = '.t-grid-mobile-header';
 const LETTER_A = {keyCode: 65};
 const LETTER_S = {keyCode: 83};
