@@ -27,6 +27,9 @@ var module = function(name, settings){
       setWidth('huge');
     },
     afterEach: function() {
+      /* jshint ignore:start */
+      typeof setWidth ==='function' && setWidth('huge');
+      /* jshint ignore:end */
       this.container = null;
       this.registry = null;
       this.owner = null;
