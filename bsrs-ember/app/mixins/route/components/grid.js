@@ -12,6 +12,17 @@ var GridViewRoute = Ember.Route.extend({
   personCurrent: Ember.inject.service(),
   filtersetRepository: inject('filterset'),
   init() {
+    /* @property gridFilterParams
+    * object that holds key of type string ('location.name') and value of type string ('wat')
+    * passed as a property to grid-header-column component
+    */
+    this.gridFilterParams = {};
+    /* @property gridIdInParams
+    * used for model specific searches where request url will look like location__id__in=x,x,x
+    * object that holds key of type string ('location.name') and pipe separated ids
+    * for power selects, value is [obj, obj] b/c need to preserve object if return to filter
+    */
+    this.gridIdInParams = {};
     this.filterModel = Ember.Object.create();
     this._super();
   },
@@ -62,6 +73,8 @@ var GridViewRoute = Ember.Route.extend({
   setupController: function(controller, hash) {
     controller.setProperties(hash);
     controller.set('filterModel', this.filterModel);
+    controller.set('gridFilterParams', this.gridFilterParams);
+    controller.set('gridIdInParams', this.gridIdInParams);
   }
 });
 

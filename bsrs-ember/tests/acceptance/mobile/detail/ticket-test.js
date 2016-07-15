@@ -55,7 +55,7 @@ module('Acceptance | mobile ticket detail test', {
 
 /* jshint ignore:start */
 
-test('scott can click to detail, show activities, and go back to list', async assert => {
+test('can click to detail, show activities, and go back to list', async assert => {
   clearxhr(activity);
   ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
   await ticketPage.visit();

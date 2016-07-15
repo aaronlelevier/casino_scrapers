@@ -7,17 +7,6 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
   simpleStore: Ember.inject.service(),
   init() {
     this._super(...arguments);
-    /* @property gridFilterParams
-    * object that holds key of type string ('location.name') and value of type string ('wat')
-    * passed as a property to grid-header-column component
-    */
-    this.gridFilterParams = {};
-    /* @property gridIdInParams
-    * used for model specific searches where request url will look like location__id__in=x,x,x
-    * object that holds key of type string ('location.name') and pipe separated ids
-    * for power selects, value is [obj, obj] b/c need to preserve object if return to filter
-    */
-    this.gridIdInParams = {};
     this.filtersetName = '';
     this.mobileFilter = false;
     this.mobileSearch = false;
