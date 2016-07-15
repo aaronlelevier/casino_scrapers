@@ -170,8 +170,6 @@ export default function startApp(attrs) {
     application.injectTestHelpers();
   });
 
-  /* Prevent diff widths in various environments from inexplicitely failing tests */
-  setWidth('huge');
 
   windowProxy.locationUrl = null;
   windowProxy.changeLocation = function(url) {
