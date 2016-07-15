@@ -13,7 +13,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import RF from 'bsrs-ember/vendor/role_fixtures';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/tickets';
 import generalPage from 'bsrs-ember/tests/pages/general';

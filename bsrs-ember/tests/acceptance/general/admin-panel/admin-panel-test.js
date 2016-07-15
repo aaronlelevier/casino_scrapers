@@ -4,7 +4,7 @@ import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 import TD from 'bsrs-ember/vendor/defaults/tenant';
 import TF from 'bsrs-ember/vendor/tenant_fixtures';
 

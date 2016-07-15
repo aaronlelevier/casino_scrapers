@@ -11,7 +11,7 @@ import PF from 'bsrs-ember/vendor/profile_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
 import page from 'bsrs-ember/tests/pages/profile';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_profile_url;

@@ -9,7 +9,7 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 
 const idTwo = 'bf2b9c85-f6bd-4345-9834-c5d51de53d02';
 const PREFIX = config.APP.NAMESPACE;

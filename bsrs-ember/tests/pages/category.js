@@ -1,5 +1,5 @@
 import PageObject from 'bsrs-ember/tests/page-object';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
 

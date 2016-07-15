@@ -1,6 +1,6 @@
 import PageObject from 'bsrs-ember/tests/page-object';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 import TPD from 'bsrs-ember/vendor/defaults/third-party';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';

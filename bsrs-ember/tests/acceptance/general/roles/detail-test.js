@@ -14,7 +14,7 @@ import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import TD from 'bsrs-ember/vendor/defaults/tenant';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 import page from 'bsrs-ember/tests/pages/role';
 import personPage from 'bsrs-ember/tests/pages/person';
 import generalPage from 'bsrs-ember/tests/pages/general';

@@ -11,7 +11,7 @@ import random from 'bsrs-ember/models/random';
 // Edit
 import PF from 'bsrs-ember/vendor/profile_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/profile';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 
 

@@ -10,7 +10,7 @@ import PF from 'bsrs-ember/vendor/people_fixtures';
 import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import PD_PUT from 'bsrs-ember/vendor/defaults/person-put';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 import random from 'bsrs-ember/models/random';
 import generalPage from 'bsrs-ember/tests/pages/general';
 

@@ -18,7 +18,7 @@ import DTF from 'bsrs-ember/vendor/dtd_fixtures';
 import FD from 'bsrs-ember/vendor/defaults/field';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import OD from 'bsrs-ember/vendor/defaults/option';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/dtd';
 import dtPage from 'bsrs-ember/tests/pages/dt';

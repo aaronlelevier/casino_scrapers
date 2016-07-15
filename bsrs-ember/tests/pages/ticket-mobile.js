@@ -2,7 +2,7 @@ import Ember from 'ember';
 import { visitable, fillable, value, create, clickable, text, isVisible } from 'ember-cli-page-object';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 
 const BASE_URL = BASEURLS.base_tickets_url;
 const LOCATION = '.t-ticket-location-select .ember-basic-dropdown-trigger';

@@ -8,7 +8,7 @@ import config from 'bsrs-ember/config/environment';
 import TPF from 'bsrs-ember/vendor/third_party_fixtures';
 import TPD from 'bsrs-ember/vendor/defaults/third-party';
 import SD from 'bsrs-ember/vendor/defaults/status';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/third-party';
 

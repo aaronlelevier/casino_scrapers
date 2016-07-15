@@ -10,7 +10,7 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;

@@ -8,7 +8,7 @@ import config from 'bsrs-ember/config/environment';
 import LOCALED from 'bsrs-ember/vendor/defaults/locale';
 import TF from 'bsrs-ember/vendor/admin_translation_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/translation';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;

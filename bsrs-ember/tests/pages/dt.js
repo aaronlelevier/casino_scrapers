@@ -2,7 +2,7 @@ import Ember from 'ember';
 import PageObject from 'bsrs-ember/tests/page-object';
 let { value, visitable, fillable, clickable, hasClass, count, text } = PageObject;
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import FD from 'bsrs-ember/vendor/defaults/field';
 import OD from 'bsrs-ember/vendor/defaults/option';

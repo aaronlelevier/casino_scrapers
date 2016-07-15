@@ -5,7 +5,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import windowProxy from 'bsrs-ember/utilities/window-proxy';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 
 var application, originalLoggerError, originalTestAdapterException;

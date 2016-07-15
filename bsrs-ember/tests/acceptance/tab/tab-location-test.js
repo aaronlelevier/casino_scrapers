@@ -9,7 +9,7 @@ import config from 'bsrs-ember/config/environment';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
-import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 import random from 'bsrs-ember/models/random';
 import generalPage from 'bsrs-ember/tests/pages/general';
 
