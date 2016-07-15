@@ -176,7 +176,9 @@ export default function startApp(attrs) {
   breakpoints.forEach((point) => {
     bp[point.name] = point.begin + 5;
   });
-  flexi.set('width', bp['huge']);
+  run(() => {
+    flexi.set('width', bp['huge']);
+  });
 
   windowProxy.locationUrl = null;
   windowProxy.changeLocation = function(url) {
