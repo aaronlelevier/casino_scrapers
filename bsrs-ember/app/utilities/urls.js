@@ -35,6 +35,7 @@ export const TICKET_LIST_URL = '/tickets/index';
 
 var BASEURLS = {
   base_admin_url: '/admin',
+  ADMIN_MOBILE_URL: '/admin-mobile',
   base_admin_translations_url: '/admin/translations',
   base_categories_url: '/admin/categories',
   base_dtd_url: '/dtds',

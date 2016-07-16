@@ -23,43 +23,46 @@ module('Acceptance | mobile dashboard test', {
     setWidth('mobile');
   },
   afterEach() {
-    // run(() => {
-    //   flexi.set('width', bp.huge);
-    // });
     Ember.run(application, 'destroy');
   }
 });
 
-test('dashboard renders with welcome text and no sidebar', assert => {
-  generalPage.visitDashboard();
-  andThen(() => {
-    assert.equal(find('.t-dashboard-text').text().trim(), 'Welcome');
-    assert.equal(find('.t-dashboard-text h1').prop('tagName'), 'H1');
-    assert.equal(find('.t-side-menu').length, 0);
-  });
+/* jshint ignore:start */
+
+test('dashboard renders with welcome text and no sidebar', async assert => {
+  await generalPage.visitDashboard();
+  assert.equal(find('.t-dashboard-text').text().trim(), 'Welcome');
+  assert.equal(find('.t-dashboard-text h1').prop('tagName'), 'H1');
+  assert.equal(find('.t-side-menu').length, 0);
 });
 
-test('visiting dashboard can click on tray and show base modules', function(assert) {
-  generalPage.visitDashboard();
-  andThen(() => {
-    assert.equal(currentURL(), BASEURLS.DASHBOARD_URL);
-    assert.equal(find('label > i').attr('class').split(/-/)[2], 'reorder');
-    assert.equal(find('li.nav-item:eq(0)').text(), t('modules.tickets.newTickets'));
-    assert.equal(find('li.nav-item:eq(1)').text(), t('modules.tickets.openTickets'));
-    assert.equal(find('li.nav-item:eq(2)').text(), t('modules.workOrders.overdue'));
-    assert.equal(find('li.nav-item:eq(3)').text(), t('admin.approval.other'));
-    assert.equal(find('li.nav-item:eq(5)').text(), t('modules.tickets.titleShort'));
-    assert.equal(find('li.nav-item:eq(6)').text(), t('modules.workOrders.titleShort'));
-    assert.equal(find('li.nav-item:eq(7)').text(), t('modules.invoices.titleShort'));
-    assert.equal(find('li.nav-item:eq(8)').text(), t('admin.title'));
-    assert.notOk(find('.t-nav-trigger').prop('checked'));
-  });
-  pageDrawer.clickDrawer();
-  andThen(() => {
-    assert.ok(find('.t-nav-trigger').prop('checked'));
-  });
-  pageDrawer.clickDrawer();
-  andThen(() => {
-    assert.notOk(find('.t-nav-trigger').prop('checked'));
-  });
+test('visiting dashboard can click on tray and show base modules', async assert => {
+  await generalPage.visitDashboard();
+  assert.notOk(find('.t-nav-trigger').prop('checked'));
+  await pageDrawer.clickDrawer();
+  assert.ok(find('.t-nav-trigger').prop('checked'));
+  assert.equal(currentURL(), BASEURLS.DASHBOARD_URL);
+  assert.equal(find('label > i').attr('class').split(/-/)[2], 'reorder');
+  assert.equal(find('li.t-nav-mobile-tray-item:eq(0)').text(), t('modules.tickets.newTickets'));
+  assert.equal(find('li.t-nav-mobile-tray-item:eq(1)').text(), t('modules.tickets.openTickets'));
+  assert.equal(find('li.t-nav-mobile-tray-item:eq(2)').text(), t('modules.workOrders.overdue'));
+  assert.equal(find('li.t-nav-mobile-tray-item:eq(3)').text(), t('admin.approval.other'));
+  assert.equal(find('li.t-nav-mobile-tray-item:eq(5)').text(), t('modules.tickets.titleShort'));
+  assert.equal(find('li.t-nav-mobile-tray-item:eq(6)').text(), t('modules.workOrders.titleShort'));
+  assert.equal(find('li.t-nav-mobile-tray-item:eq(7)').text(), t('modules.invoices.titleShort'));
+  assert.equal(find('li.t-nav-mobile-tray-item:eq(8)').text(), t('admin.title'));
+  await pageDrawer.clickDrawer();
+  assert.notOk(find('.t-nav-trigger').prop('checked'));
 });
+
+test('visiting admin-mobile', async assert => {
+  await generalPage.visitDashboard();
+  assert.notOk(find('.t-nav-trigger').prop('checked'));
+  await pageDrawer.clickDrawer();
+  assert.ok(find('.t-nav-trigger').prop('checked'));
+  await pageDrawer.clickAdmin();
+  assert.equal(currentURL(), BASEURLS.ADMIN_MOBILE_URL);
+  assert.notOk(find('.t-nav-trigger').prop('checked'));
+});
+
+/* jshint ignore:end */

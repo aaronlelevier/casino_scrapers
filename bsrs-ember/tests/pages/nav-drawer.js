@@ -6,5 +6,6 @@ import {
 
 export default create({
   visit: visitable('/'),
-  clickDrawer: clickable('.t-nav-trigger')
+  clickDrawer: clickable('.t-nav-trigger'),
+  clickAdmin: clickable('.t-mobile-tray-admin'),
 });
