@@ -13,6 +13,7 @@ export default PageObject.create({
   descFill: fillable('.t-ap-description'),
   descSortText: text('.t-sort-description'),
   descGridOne: text('.t-profile-description:eq(0)'),
+  descError: text('.t-ap-description-validation-error'),
 
   assigneeInput: text(ASSIGNEE),
   assigneeSortText: text('.t-sort-assignee-username'),

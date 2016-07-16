@@ -27,8 +27,16 @@
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.profile.description" for="description"}}
-              {{input type="text" placeholder=(t "admin.profile.description") value=model.description class="form-control t-ap-description" id="description"}}
-              {{#validation-error-field submitted=submitted field="description" className="validation validation-under t-ap-description-validation-error" model=model validation=descriptionValidation}}{{t "validation.invalid"}} {{t "admin.profile.description"}}{{/validation-error-field}}
+              {{validated-input
+                model=model
+                value=model.description
+                valuePath="description"
+                didValidate=didValidate
+                className="form-control t-ap-description"
+                validationErrorClass="t-ap-description-validation-error"
+                placeholder=(t "admin.profile.description")
+                type="text"
+            }}
             {{/form-group}}
           </div>
         </div>

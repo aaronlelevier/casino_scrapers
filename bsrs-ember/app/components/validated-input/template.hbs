@@ -1,7 +1,7 @@
 {{#unless textarea}}
   {{input type=type placeholder=placeholder value=value class=className id=idZ}}
   {{#if showMessage}}
-    <div class="error">
+    <div class="error {{validationErrorClass}}">
       {{t (v-get model valuePath 'message')}}
     </div>
   {{/if}}

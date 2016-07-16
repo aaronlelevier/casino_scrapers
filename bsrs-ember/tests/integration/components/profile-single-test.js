@@ -31,7 +31,8 @@ moduleForComponent('profile-single', 'integration: profile-single test', {
 });
 
 test('description is required validation, cannot save w/o description', function(assert) {
-  run(function() {
+  // like new template
+  run(() => {
     model = store.push('profile', {
       id: PD.idTwo,
     });
@@ -43,29 +44,17 @@ test('description is required validation, cannot save w/o description', function
   generalPage.save();
   $err = this.$('.t-ap-description-validation-error');
   assert.ok($err.is(':visible'));
-  assert.equal($err.text().trim(), trans.t('validation.invalid') + ' ' + trans.t('admin.profile.description'));
+  assert.equal($err.text().trim(), trans.t('errors.profile.description'));
   page.descFill('a');
+  assert.ok($err.is(':visible'));
+  assert.equal($err.text().trim(), trans.t('errors.profile.description.min_max'));
+  page.descFill('a'.repeat(6));
   assert.notOk($err.is(':visible'));
-});
-
-test('description is max length validation is 500', function(assert) {
-  const description = 'a'.repeat(501);
-  run(function() {
-    model = store.push('profile', {
-      id: PD.idTwo,
-      description: description
-    });
-  });
-  this.set('model', model);
-  this.render(hbs `{{profiles/profile-single model=model}}`);
-  let $err = this.$('.t-ap-description-validation-error');
-  assert.notOk($err.is(':visible'));
-  generalPage.save();
+  // like detail
+  page.descFill('a'.repeat(501));
   $err = this.$('.t-ap-description-validation-error');
   assert.ok($err.is(':visible'));
-  assert.equal($err.text().trim(), trans.t('validation.invalid') + ' ' + trans.t('admin.profile.description'));
-  page.descFill('a'.repeat(500));
-  assert.notOk($err.is(':visible'));
+  assert.equal($err.text().trim(), trans.t('errors.profile.description.min_max'));
 });
 
 test('header - shows detail if not model.new', function(assert) {

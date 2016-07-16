@@ -3,8 +3,23 @@ const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import OptConfMixin from 'bsrs-ember/mixins/optconfigure/profile';
+import { validator, buildValidations } from 'ember-cp-validations';
 
-export default Model.extend(OptConfMixin, {
+const Validations = buildValidations({
+  description: [
+    validator('presence', {
+      presence: true,
+      message: 'errors.profile.description'
+    }),
+    validator('length', {
+      min: 5,
+      max: 500,
+      message: 'errors.profile.description.min_max'
+    })
+  ],
+});
+
+export default Model.extend(OptConfMixin, Validations, {
   init() {
     belongs_to.bind(this)('assignee', 'profile');
     this._super(...arguments);
