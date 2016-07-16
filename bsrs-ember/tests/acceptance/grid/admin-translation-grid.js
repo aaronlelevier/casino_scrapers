@@ -6,7 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import ATF from 'bsrs-ember/vendor/admin_translation_fixtures';
 import ATD from 'bsrs-ember/vendor/defaults/translation';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/utilities/urls';
+import BASEURLS, { I18N_LIST_URL } from 'bsrs-ember/utilities/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
@@ -16,8 +16,6 @@ import random from 'bsrs-ember/models/random';
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_admin_translations_url;
-const ADMIN_TRANSLATION_URL = BASE_URL + '/index';
-const DJANGO_ADMIN_TRANSLATION_URL = '/admin/translations/';
 const NUMBER_ONE = {keyCode: 49};
 const NUMBER_FOUR = {keyCode: 52};
 const BACKSPACE = {keyCode: 8};
@@ -39,9 +37,9 @@ module('Acceptance | admin-translation-grid-list', {
 });
 
 test('initial load should only show first PAGE_SIZE records ordered by id with correct pagination and no additional xhr', function(assert) {
-    visit(ADMIN_TRANSLATION_URL);
+    visit(I18N_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
+        assert.equal(currentURL(), I18N_LIST_URL);
         assert.equal(find('.t-grid-title').text(), 'Translations');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ATD.keyOneGrid);
@@ -58,10 +56,10 @@ test('initial load should only show first PAGE_SIZE records ordered by id with c
 test('clicking page 2 will load in another set of data as well as clicking page 1 after that reloads the original set of data (both require an additional xhr)', function(assert) {
     var page_two = PREFIX + BASE_URL + '/?page=2';
     xhr(page_two ,"GET",null,{},200,ATF.list_two());
-    visit(ADMIN_TRANSLATION_URL);
+    visit(I18N_LIST_URL);
     click('.t-page:eq(1) a');
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL + '?page=2');
+        assert.equal(currentURL(), I18N_LIST_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim()), 'home.welcome');
         var pagination = find('.t-pages');
@@ -73,7 +71,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     });
     click('.t-page:eq(0) a');
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL);
+        assert.equal(currentURL(),I18N_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ATD.keyOneGrid);
         var pagination = find('.t-pages');
@@ -88,9 +86,9 @@ test('clicking page 2 will load in another set of data as well as clicking page 
 test('clicking first,last,next and previous will request page 1 and 2 correctly', function(assert) {
     var page_two = PREFIX + BASE_URL + '/?page=2';
     xhr(page_two ,"GET",null,{},200,ATF.list_two());
-    visit(ADMIN_TRANSLATION_URL);
+    visit(I18N_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
+        assert.equal(currentURL(), I18N_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         isDisabledElement('.t-first');
         isDisabledElement('.t-previous');
@@ -99,7 +97,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     });
     click('.t-next a');
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL + '?page=2');
+        assert.equal(currentURL(), I18N_LIST_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         isNotDisabledElement('.t-first');
         isNotDisabledElement('.t-previous');
@@ -108,7 +106,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     });
     click('.t-previous a');
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL);
+        assert.equal(currentURL(),I18N_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         isDisabledElement('.t-first');
         isDisabledElement('.t-previous');
@@ -117,7 +115,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     });
     click('.t-last a');
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL + '?page=2');
+        assert.equal(currentURL(), I18N_LIST_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         isNotDisabledElement('.t-first');
         isNotDisabledElement('.t-previous');
@@ -126,7 +124,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     });
     click('.t-first a');
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL);
+        assert.equal(currentURL(),I18N_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         isDisabledElement('.t-first');
         isDisabledElement('.t-previous');
@@ -140,21 +138,21 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     xhr(sort_two ,"GET",null,{},200,ATF.sorted_page_one('key'));
     sort_two = PREFIX + BASE_URL + '/?page=2&ordering=key';
     xhr(sort_two ,"GET",null,{},200,ATF.sorted_page_two('key'));
-    visit(ADMIN_TRANSLATION_URL);
+    visit(I18N_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
+        assert.equal(currentURL(), I18N_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ATD.keyOneGrid);
     });
     click('.t-sort-key-dir');
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL + '?sort=key');
+        assert.equal(currentURL(), I18N_LIST_URL + '?sort=key');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ATD.keyOneGrid);
     });
     click('.t-page:eq(1) a');
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL + '?page=2&sort=key');
+        assert.equal(currentURL(), I18N_LIST_URL + '?page=2&sort=key');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim()), 'home.welcome');
     });
@@ -171,35 +169,35 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     xhr(sort_one ,"GET",null,{},200,ATF.searched('4', 'key'));
     var search_one = PREFIX + BASE_URL + '/?page=1&search=4';
     xhr(search_one ,"GET",null,{},200,ATF.searched('4', 'id'));
-    visit(ADMIN_TRANSLATION_URL);
+    visit(I18N_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
+        assert.equal(currentURL(), I18N_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ATD.keyOneGrid);
     });
     fillIn('.t-grid-search-input', '4');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=4');
+        assert.equal(currentURL(), I18N_LIST_URL+'?search=4');
         assert.equal(find('.t-grid-data').length, 2);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), "home.welcome14");
     });
     click('.t-sort-key-dir');
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=4&sort=key');
+        assert.equal(currentURL(), I18N_LIST_URL+'?search=4&sort=key');
         assert.equal(find('.t-grid-data').length, 2);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), "home.welcome14");
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=&sort=key');
+        assert.equal(currentURL(), I18N_LIST_URL+'?search=&sort=key');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ATD.keyOneGrid + '1');
     });
     click('.t-page:eq(1) a');
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?page=2&search=&sort=key');
+        assert.equal(currentURL(), I18N_LIST_URL+'?page=2&search=&sort=key');
         // assert.equal(find('.t-grid-data').length, 22);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim()), 'home.welcome');
     });
@@ -207,13 +205,13 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_ONE);
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=14&sort=key');
+        assert.equal(currentURL(), I18N_LIST_URL+'?search=14&sort=key');
         assert.equal(find('.t-grid-data').length, 1);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), 'home.welcome14');
     });
     click('.t-reset-grid');
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
+        assert.equal(currentURL(), I18N_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ATD.keyOneGrid);
     });
@@ -222,15 +220,15 @@ test('typing a search will reset page to 1 and require an additional xhr and res
 test('multiple sort options appear in the query string as expected', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=key';
     xhr(sort_one ,"GET",null,{},200,ATF.sorted('key'));
-    visit(ADMIN_TRANSLATION_URL);
+    visit(I18N_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
+        assert.equal(currentURL(), I18N_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ATD.keyOneGrid);
     });
     click('.t-sort-key-dir');
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL + '?sort=key');
+        assert.equal(currentURL(),I18N_LIST_URL + '?sort=key');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ATD.keyOneGrid + '1');
     });
@@ -239,9 +237,9 @@ test('multiple sort options appear in the query string as expected', function(as
 test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=key';
     xhr(sort_one ,"GET",null,{},200,ATF.sorted('key'));
-    visit(ADMIN_TRANSLATION_URL);
+    visit(I18N_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
+        assert.equal(currentURL(), I18N_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-key-dir').hasClass('fa-sort'));
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ATD.keyOneGrid);
@@ -249,14 +247,14 @@ test('clicking the same sort option over and over will flip the direction and re
     });
     click('.t-sort-key-dir');
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL + '?sort=key');
+        assert.equal(currentURL(),I18N_LIST_URL + '?sort=key');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-key-dir').hasClass('fa-sort-asc'));
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ATD.keyOneGrid + '1');
     });
     click('.t-reset-grid');
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
+        assert.equal(currentURL(), I18N_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-key-dir').hasClass('fa-sort'));
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ATD.keyOneGrid);
@@ -266,22 +264,22 @@ test('clicking the same sort option over and over will flip the direction and re
 test('full text search will filter down the result set and query django accordingly and reset clears all full text searches', function(assert) {
     let find_one = PREFIX + BASE_URL + '/?page=1&key__icontains=7';
     xhr(find_one ,"GET",null,{},200,ATF.fulltext('key', 1));
-    visit(ADMIN_TRANSLATION_URL);
+    visit(I18N_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
+        assert.equal(currentURL(), I18N_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ATD.keyOneGrid);
     });
     filterGrid('key', '7');
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL + '?find=key%3A7');
+        assert.equal(currentURL(),I18N_LIST_URL + '?find=key%3A7');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE/5);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim()), 'home.welcome');
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-translation-key:eq(0)').text().trim()), 'home.welcome');
     });
     click('.t-reset-grid');
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
+        assert.equal(currentURL(), I18N_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ATD.keyOneGrid);
     });
@@ -290,13 +288,13 @@ test('full text search will filter down the result set and query django accordin
 test('loading screen shown before any xhr and hidden after', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=key';
     xhr(sort_one ,"GET",null,{},200,ATF.sorted('key'));
-    visitSync(ADMIN_TRANSLATION_URL);
+    visitSync(I18N_LIST_URL);
     Ember.run.later(function() {
         assert.equal(find('.t-grid-data').length, 0);
         // assert.equal(find('.t-grid-loading-graphic').length, 1);
     }, 0);
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL);
+        assert.equal(currentURL(),I18N_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-loading-graphic').length, 0);
     });
@@ -310,7 +308,7 @@ test('loading screen shown before any xhr and hidden after', function(assert) {
 });
 
 test('when a full text filter is selected the input inside the modal is focused', function(assert) {
-    visit(ADMIN_TRANSLATION_URL);
+    visit(I18N_LIST_URL);
     click('.t-filter-key');
     andThen(() => {
         isFocused('.ember-modal-dialog input:first');
@@ -322,7 +320,7 @@ test('full text searched columns will have a special on css class when active', 
     // xhr(find_two ,"GET",null,{},200,ATF.sorted(''));
     let find_one = PREFIX + BASE_URL + '/?page=1&key__icontains=7';
     xhr(find_one ,"GET",null,{},200,ATF.fulltext('key', 1));
-    visit(ADMIN_TRANSLATION_URL);
+    visit(I18N_LIST_URL);
     andThen(() => {
         assert.ok(!find('.t-filter-key').hasClass('on'));
     });
@@ -343,23 +341,23 @@ test('after you reset the grid the filter model will also be reset', function(as
     xhr(option_two ,'GET',null,{},200,ATF.sorted('key:4'));
     let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
     xhr(option_one ,'GET',null,{},200,ATF.searched('4', 'id'));
-    visit(ADMIN_TRANSLATION_URL);
+    visit(I18N_LIST_URL);
     fillIn('.t-grid-search-input', '4');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL + '?search=4');
+        assert.equal(currentURL(),I18N_LIST_URL + '?search=4');
     });
     click('.t-sort-key-dir');
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL + '?search=4&sort=key');
+        assert.equal(currentURL(),I18N_LIST_URL + '?search=4&sort=key');
     });
     filterGrid('key', '4');
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL + '?find=key%3A4&search=4&sort=key');
+        assert.equal(currentURL(),I18N_LIST_URL + '?find=key%3A4&search=4&sort=key');
     });
     click('.t-reset-grid');
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
+        assert.equal(currentURL(), I18N_LIST_URL);
     });
     click('.t-filter-key');
     andThen(() => {
@@ -371,7 +369,7 @@ test('after you reset the grid the filter model will also be reset', function(as
 test('count is shown and updated as the user filters down the list from django', function(assert) {
     let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
     xhr(option_one, 'GET', null, {}, 200, ATF.searched('4', 'id'));
-    visit(ADMIN_TRANSLATION_URL);
+    visit(I18N_LIST_URL);
     andThen(() => {
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-page-count').text(), `${PAGE_SIZE*2-1} Translations`);
@@ -379,14 +377,14 @@ test('count is shown and updated as the user filters down the list from django',
     fillIn('.t-grid-search-input', '4');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=4');
+        assert.equal(currentURL(), I18N_LIST_URL+'?search=4');
         assert.equal(find('.t-grid-data').length, 2);
         assert.equal(find('.t-page-count').text(), '2 Translations');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=');
+        assert.equal(currentURL(), I18N_LIST_URL+'?search=');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-page-count').text(), `${PAGE_SIZE*2-1} Translations`);
     });
@@ -400,9 +398,9 @@ test('picking a different number of pages will alter the query string and xhr', 
     xhr(option_one, 'GET',null,{},200,ATF.paginated(updated_pg_size));
     let page_two = PREFIX + BASE_URL + '/?page=2';
     xhr(page_two, 'GET',null,{},200,ATF.list_two());
-    visit(ADMIN_TRANSLATION_URL);
+    visit(I18N_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL);
+        assert.equal(currentURL(), I18N_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-page-size option:selected').text(), `${PAGE_SIZE} per page`);
         var pagination = find('.t-pages');
@@ -414,7 +412,7 @@ test('picking a different number of pages will alter the query string and xhr', 
     });
     click('.t-page:eq(1) a');
     andThen(() => {
-        assert.equal(currentURL(), ADMIN_TRANSLATION_URL + '?page=2');
+        assert.equal(currentURL(), I18N_LIST_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
@@ -425,7 +423,7 @@ test('picking a different number of pages will alter the query string and xhr', 
     });
     alterPageSize('.t-page-size', updated_pg_size);
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL + `?page_size=${updated_pg_size}`);
+        assert.equal(currentURL(),I18N_LIST_URL + `?page_size=${updated_pg_size}`);
         assert.equal(find('.t-grid-data').length, updated_pg_size-1);
         assert.equal(find('.t-page-size option:selected').text(), `${updated_pg_size} per page`);
         var pagination = find('.t-pages');
@@ -435,7 +433,7 @@ test('picking a different number of pages will alter the query string and xhr', 
     });
     alterPageSize('.t-page-size', PAGE_SIZE);
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL + `?page_size=${PAGE_SIZE}`);
+        assert.equal(currentURL(),I18N_LIST_URL + `?page_size=${PAGE_SIZE}`);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-page-size option:selected').text(), `${PAGE_SIZE} per page`);
         var pagination = find('.t-pages');
@@ -453,9 +451,9 @@ test('starting with a page size greater than PAGE_SIZE will set the selected', f
     const updated_pg_size = PAGE_SIZE*2;
     let option_one = PREFIX + BASE_URL + `/?page=1&page_size=${updated_pg_size}`;
     xhr(option_one, 'GET',null,{},200,ATF.paginated(updated_pg_size));
-    visit(ADMIN_TRANSLATION_URL + `?page_size=${updated_pg_size}`);
+    visit(I18N_LIST_URL + `?page_size=${updated_pg_size}`);
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL + `?page_size=${updated_pg_size}`);
+        assert.equal(currentURL(),I18N_LIST_URL + `?page_size=${updated_pg_size}`);
         assert.equal(find('.t-grid-data').length, updated_pg_size-1);
         assert.equal(find('.t-page-size option:selected').text(), `${updated_pg_size} per page`);
         var pagination = find('.t-pages');
@@ -468,7 +466,7 @@ test('starting with a page size greater than PAGE_SIZE will set the selected', f
 test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=key';
     xhr(sort_one ,'GET',null,{},200,ATF.sorted('key'));
-    visit(ADMIN_TRANSLATION_URL);
+    visit(I18N_LIST_URL);
     click('.t-sort-key-dir');
     click('.t-show-save-filterset-modal');
     andThen(() => {
@@ -491,7 +489,7 @@ test('save filterset will fire off xhr and add item to the sidebar navigation', 
     let section = '.t-grid-wrap';
     let navigation = '.t-filterset-wrap li';
     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
-    visit(ADMIN_TRANSLATION_URL);
+    visit(I18N_LIST_URL);
     click('.t-sort-key-dir');
     click('.t-show-save-filterset-modal');
     xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
@@ -512,7 +510,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
     let query = '?foo=bar';
     let navigation = '.t-filterset-wrap li';
     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
-    visit(ADMIN_TRANSLATION_URL);
+    visit(I18N_LIST_URL);
     clearAll(store, 'filterset');
     andThen(() => {
         run(function() {
@@ -534,7 +532,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
 test('save filterset button only available when a dynamic filter is present', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=key';
     xhr(sort_one ,'GET',null,{},200,ATF.sorted('key'));
-    visit(ADMIN_TRANSLATION_URL);
+    visit(I18N_LIST_URL);
     andThen(() => {
         assert.equal(find('.t-show-save-filterset-modal').length, 0);
     });

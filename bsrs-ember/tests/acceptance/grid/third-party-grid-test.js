@@ -6,7 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import TPF from 'bsrs-ember/vendor/third_party_fixtures';
 import TPD from 'bsrs-ember/vendor/defaults/third-party';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/utilities/urls';
+import BASEURLS, { THIRD_PARTY_LIST_URL } from 'bsrs-ember/utilities/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
@@ -17,7 +17,6 @@ import page from 'bsrs-ember/tests/pages/third-party';
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_third_parties_url;
-const TP_URL = `${BASE_URL}/index`;
 const NUMBER_ONE = {keyCode: 49};
 const NUMBER_FOUR = {keyCode: 52};
 const BACKSPACE = {keyCode: 8};
@@ -53,9 +52,9 @@ module('Acceptance | third-party-grid-list', {
 });
 
 test(`initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr`, (assert) => {
-    visit(TP_URL);
+    visit(THIRD_PARTY_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), TP_URL);
+        assert.equal(currentURL(), THIRD_PARTY_LIST_URL);
         assert.equal(find('.t-grid-title').text(), t('admin.third_party'));
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
@@ -72,12 +71,12 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
 
 test('clicking page 2 will load in another set of data as well as clicking page 1 after that reloads the original set of data (both require an additional xhr)', (assert) => {
     ajax(`${PREFIX}${BASE_URL}/?page=2` ,'GET',null,{},200,TPF.list_two());
-    visit(TP_URL);
+    visit(THIRD_PARTY_LIST_URL);
     click(`${PAGE}:eq(1) a`);
     andThen(() => {
         const third_parties = store.find('third-party-list');
         assert.equal(third_parties.get('length'), 9);
-        assert.equal(currentURL(), TP_URL + '?page=2');
+        assert.equal(currentURL(), THIRD_PARTY_LIST_URL + '?page=2');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE-1);
         assert.equal(substring_up_to_num(find(`${GRID_DATA_0} .t-third-party-name`).text().trim()), 'vzoname');
         var pagination = find(`${PAGES}`);
@@ -91,7 +90,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         const third_parties = store.find('third-party-list');
         assert.equal(third_parties.get('length'), 11);
-        assert.equal(currentURL(),TP_URL);
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL);
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
         var pagination = find(`${PAGES}`);
@@ -105,9 +104,9 @@ test('clicking page 2 will load in another set of data as well as clicking page 
 
 test('clicking first,last,next and previous will request page 1 and 2 correctly', (assert) => {
     ajax(`${PREFIX}${BASE_URL}/?page=2` ,'GET',null,{},200,TPF.list_two());
-    visit(TP_URL);
+    visit(THIRD_PARTY_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), TP_URL);
+        assert.equal(currentURL(), THIRD_PARTY_LIST_URL);
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         isDisabledElement(`${FIRST_LINK}`);
         isDisabledElement(`${PREVIOUS_LINK}`);
@@ -116,7 +115,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     });
     click('.t-next a');
     andThen(() => {
-        assert.equal(currentURL(), TP_URL + '?page=2');
+        assert.equal(currentURL(), THIRD_PARTY_LIST_URL + '?page=2');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE-1);
         isNotDisabledElement(`${FIRST_LINK}`);
         isNotDisabledElement(`${PREVIOUS_LINK}`);
@@ -125,7 +124,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     });
     click('.t-previous a');
     andThen(() => {
-        assert.equal(currentURL(),TP_URL);
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL);
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         isDisabledElement(`${FIRST_LINK}`);
         isDisabledElement(`${PREVIOUS_LINK}`);
@@ -134,7 +133,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     });
     click('.t-last a');
     andThen(() => {
-        assert.equal(currentURL(), TP_URL + '?page=2');
+        assert.equal(currentURL(), THIRD_PARTY_LIST_URL + '?page=2');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE-1);
         isNotDisabledElement(`${FIRST_LINK}`);
         isNotDisabledElement(`${PREVIOUS_LINK}`);
@@ -143,7 +142,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     });
     click('.t-first a');
     andThen(() => {
-        assert.equal(currentURL(),TP_URL);
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL);
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         isDisabledElement(`${FIRST_LINK}`);
         isDisabledElement(`${PREVIOUS_LINK}`);
@@ -159,27 +158,27 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     xhr(page_two ,'GET',null,{},200,TPF.sorted_page_two('name'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,'GET',null,{},200,TPF.sorted('name'));
-    visit(TP_URL);
+    visit(THIRD_PARTY_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), TP_URL);
+        assert.equal(currentURL(), THIRD_PARTY_LIST_URL);
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
     });
     click('.t-sort-name-dir');
     andThen(() => {
-        assert.equal(currentURL(), TP_URL + '?sort=name');
+        assert.equal(currentURL(), THIRD_PARTY_LIST_URL + '?sort=name');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameVz);
     });
     click(`${PAGE}:eq(1) a`);
     andThen(() => {
-        assert.equal(currentURL(), TP_URL + '?page=2&sort=name');
+        assert.equal(currentURL(), THIRD_PARTY_LIST_URL + '?page=2&sort=name');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE-1);
         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameVz);
     });
     click('.t-sort-name-dir');
     andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?sort=-name');
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?sort=-name');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameVz);
     });
@@ -196,23 +195,23 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     xhr(sort_one ,'GET',null,{},200,TPF.searched('4', 'number'));
     var search_one = PREFIX + BASE_URL + '/?page=1&search=4';
     xhr(search_one,'GET',null,{},200,TPF.searched('4', 'number'));
-    visit(TP_URL);
+    visit(THIRD_PARTY_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), TP_URL);
+        assert.equal(currentURL(), THIRD_PARTY_LIST_URL);
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
     });
     fillIn(`${SEARCH_INPUT}`, '4');
     triggerEvent(`${SEARCH_INPUT}`, 'keyup', NUMBER_FOUR);
     andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?search=4');
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?search=4');
         assert.equal(find(GRID_DATA_ALL).length, 2);
         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameGrid);
         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'4');
     });
     click(SORT_DIR);
     andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?search=4&sort=status.name');
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?search=4&sort=status.name');
         assert.equal(find(GRID_DATA_ALL).length, 2);
         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameGrid);
         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'4');
@@ -220,14 +219,14 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     fillIn(`${SEARCH_INPUT}`, '');
     triggerEvent(`${SEARCH_INPUT}`, 'keyup', BACKSPACE);
     andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?search=&sort=status.name');
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?search=&sort=status.name');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameVz);
         // assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'10');
     });
     click(`${PAGE}:eq(1) a`);
     andThen(() => {
-        assert.equal(currentURL(),`${TP_URL}?page=2&search=&sort=status.name`);
+        assert.equal(currentURL(),`${THIRD_PARTY_LIST_URL}?page=2&search=&sort=status.name`);
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         // assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameGridBase+'2');
         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'2');
@@ -236,13 +235,13 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     triggerEvent(`${SEARCH_INPUT}`, 'keyup', NUMBER_ONE);
     triggerEvent(`${SEARCH_INPUT}`, 'keyup', NUMBER_FOUR);
     andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?search=14&sort=status.name');
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?search=14&sort=status.name');
         assert.equal(find(GRID_DATA_ALL).length, 1);
         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameGrid);
     });
     click(`${RESET_GRID}`);
     andThen(() => {
-        assert.equal(currentURL(), TP_URL);
+        assert.equal(currentURL(), THIRD_PARTY_LIST_URL);
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
     });
@@ -253,9 +252,9 @@ test('multiple sort options appear in the query string as expected', (assert) =>
     xhr(sort_two ,'GET',null,{},200,TPF.sorted('third-party_type,name'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,'GET',null,{},200,TPF.sorted('name'));
-    visit(TP_URL);
+    visit(THIRD_PARTY_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), TP_URL);
+        assert.equal(currentURL(), THIRD_PARTY_LIST_URL);
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'1');
@@ -263,14 +262,14 @@ test('multiple sort options appear in the query string as expected', (assert) =>
     });
     click('.t-sort-name-dir');
     andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?sort=name');
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?sort=name');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameVz);
         // assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'10'); //firefox discrepancy
     });
     click(SORT_DIR);
     andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?sort=status.name%2Cname');
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?sort=status.name%2Cname');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameVz);
         // assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text().trim(), TPD.nameOne+'1');
@@ -287,9 +286,9 @@ test('multiple sort options appear in the query string as expected', (assert) =>
 //     xhr(sort_two,'GET',null,{},200,TPF.sorted('status,name'));
 //     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
 //     xhr(sort_one,'GET',null,{},200,TPF.sorted('name'));
-//     visit(TP_URL);
+//     visit(THIRD_PARTY_LIST_URL);
 //     andThen(() => {
-//         assert.equal(currentURL(), TP_URL);
+//         assert.equal(currentURL(), THIRD_PARTY_LIST_URL);
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
 //         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort'));
 //         assert.ok(find(SORT_DIR).hasClass('fa-sort'));
@@ -298,7 +297,7 @@ test('multiple sort options appear in the query string as expected', (assert) =>
 //     });
 //     click('.t-sort-name-dir');
 //     andThen(() => {
-//         assert.equal(currentURL(),TP_URL + '?sort=name');
+//         assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?sort=name');
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
 //         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
 //         assert.ok(find(SORT_DIR).hasClass('fa-sort'));
@@ -308,7 +307,7 @@ test('multiple sort options appear in the query string as expected', (assert) =>
 //     });
 //     click(SORT_DIR);
 //     andThen(() => {
-//         assert.equal(currentURL(),TP_URL + '?sort=status.name%2Cname');
+//         assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?sort=status.name%2Cname');
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
 //         assert.ok(find(SORT_DIR).hasClass('fa-sort-asc'));
 //         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
@@ -318,7 +317,7 @@ test('multiple sort options appear in the query string as expected', (assert) =>
 //     });
 //     click('.t-sort-name-dir');
 //     andThen(() => {
-//         assert.equal(currentURL(),TP_URL + '?sort=-name%2Cstatus.name');
+//         assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?sort=-name%2Cstatus.name');
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
 //         assert.ok(find(SORT_DIR).hasClass('fa-sort-asc'));
 //         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-desc'));
@@ -328,7 +327,7 @@ test('multiple sort options appear in the query string as expected', (assert) =>
 //     });
 //     click('.t-sort-name-dir');
 //     andThen(() => {
-//         assert.equal(currentURL(),TP_URL + '?sort=status.name');
+//         assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?sort=status.name');
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
 //         assert.ok(find(SORT_DIR).hasClass('fa-sort-asc'));
 //         assert.ok(!find('.t-sort-name-dir').hasClass('fa-sort-asc'));
@@ -338,7 +337,7 @@ test('multiple sort options appear in the query string as expected', (assert) =>
 //     });
 //     click(RESET_GRID);
 //     andThen(() => {
-//         assert.equal(currentURL(), TP_URL);
+//         assert.equal(currentURL(), THIRD_PARTY_LIST_URL);
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
 //         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
 //     });
@@ -349,27 +348,27 @@ test('multiple sort options appear in the query string as expected', (assert) =>
 //     xhr(find_two,'GET',null,{},200,TPF.sorted('status:i,name:vzoname'));
 //     let find_one = PREFIX + BASE_URL + '/?page=1&status__icontains=i';
 //     xhr(find_one,'GET',null,{},200,TPF.fulltext('status:i', 1));
-//     visit(TP_URL);
+//     visit(THIRD_PARTY_LIST_URL);
 //     andThen(() => {
-//         assert.equal(currentURL(), TP_URL);
+//         assert.equal(currentURL(), THIRD_PARTY_LIST_URL);
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
 //         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
 //     });
 //     filterGrid('status.name', 'i');
 //     andThen(() => {
-//         assert.equal(currentURL(),TP_URL + '?find=status%3Ai');
+//         assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?find=status%3Ai');
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
 //         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
 //     });
 //     filterGrid('name', 'vzoname');
 //     andThen(() => {
-//         assert.equal(currentURL(),TP_URL + '?find=status%3Ai%2Cname%3Avzoname');
+//         assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?find=status%3Ai%2Cname%3Avzoname');
 //         assert.equal(find(GRID_DATA_ALL).length, 8);
 //         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameGridBase+'1');
 //     });
 //     click(RESET_GRID);
 //     andThen(() => {
-//         assert.equal(currentURL(), TP_URL);
+//         assert.equal(currentURL(), THIRD_PARTY_LIST_URL);
 //         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
 //         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text().trim(), TPD.nameOne);
 //     });
@@ -378,13 +377,13 @@ test('multiple sort options appear in the query string as expected', (assert) =>
 test('loading screen shown before any xhr and hidden after', (assert) => {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one,'GET',null,{},200,TPF.sorted('name'));
-    visitSync(TP_URL);
+    visitSync(THIRD_PARTY_LIST_URL);
     Ember.run.later(function() {
         assert.equal(find(GRID_DATA_ALL).length, 0);
         // assert.equal(find('.t-grid-loading-graphic').length, 1);
     }, 0);
     andThen(() => {
-        assert.equal(currentURL(),TP_URL);
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL);
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find('.t-grid-loading-graphic').length, 0);
     });
@@ -398,7 +397,7 @@ test('loading screen shown before any xhr and hidden after', (assert) => {
 });
 
 test('when a full text filter is selected the input inside the modal is focused', (assert) => {
-    visit(TP_URL);
+    visit(THIRD_PARTY_LIST_URL);
     click('.t-filter-name');
     andThen(() => {
         isFocused('.ember-modal-dialog input:first');
@@ -416,7 +415,7 @@ test('when a full text filter is selected the input inside the modal is focused'
 //     xhr(find_two ,'GET',null,{},200,TPF.sorted('status.name:in,name:7'));
 //     let find_one = PREFIX + BASE_URL + '/?page=1&status__name__icontains=in';
 //     xhr(find_one ,'GET',null,{},200,TPF.fulltext('status.name:in', 1));
-//     visit(TP_URL);
+//     visit(THIRD_PARTY_LIST_URL);
 //     andThen(() => {
 //         assert.ok(!find('.t-filter-name').hasClass('on'));
 //         assert.ok(!find(STATUS_FILTER).hasClass('on'));
@@ -445,23 +444,23 @@ test('after you reset the grid the filter model will also be reset', (assert) =>
     xhr(option_two ,'GET',null,{},200,TPF.sorted('name:4'));
     let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
     xhr(option_one ,'GET',null,{},200,TPF.searched('4', 'id'));
-    visit(TP_URL);
+    visit(THIRD_PARTY_LIST_URL);
     fillIn(`${SEARCH_INPUT}`, '4');
     triggerEvent(`${SEARCH_INPUT}`, 'keyup', NUMBER_FOUR);
     andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?search=4');
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?search=4');
     });
     click('.t-sort-name-dir');
     andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?search=4&sort=name');
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?search=4&sort=name');
     });
     filterGrid('name', '4');
     andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?find=name%3A4&search=4&sort=name');
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?find=name%3A4&search=4&sort=name');
     });
     click(`${RESET_GRID}`);
     andThen(() => {
-        assert.equal(currentURL(), TP_URL);
+        assert.equal(currentURL(), THIRD_PARTY_LIST_URL);
     });
     click('.t-filter-name');
     andThen(() => {
@@ -473,7 +472,7 @@ test('after you reset the grid the filter model will also be reset', (assert) =>
 test('count is shown and updated as the user filters down the list from django', (assert) => {
     let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
     xhr(option_one ,'GET',null,{},200,TPF.searched('4', 'name'));
-    visit(TP_URL);
+    visit(THIRD_PARTY_LIST_URL);
     andThen(() => {
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find(`${PAGE}-count`).text(), `${PAGE_SIZE*2-1} ${t('admin.third_party.other')}`);
@@ -481,14 +480,14 @@ test('count is shown and updated as the user filters down the list from django',
     fillIn(`${SEARCH_INPUT}`, '4');
     triggerEvent(`${SEARCH_INPUT}`, 'keyup', NUMBER_FOUR);
     andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?search=4');
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?search=4');
         assert.equal(find(GRID_DATA_ALL).length, 2);
         assert.equal(find(`${PAGE}-count`).text(), `2 ${t('admin.third_party.other')}`);
     });
     fillIn(`${SEARCH_INPUT}`, '');
     triggerEvent(`${SEARCH_INPUT}`, 'keyup', BACKSPACE);
     andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?search=');
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL + '?search=');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find(`${PAGE}-count`).text(), `${PAGE_SIZE*2-1} ${t('admin.third_party.other')}`);
     });
@@ -502,9 +501,9 @@ test('picking a different number of pages will alter the query string and xhr', 
     xhr(option_one, 'GET',null,{},200,TPF.paginated(updated_pg_size));
     let page_two = PREFIX + BASE_URL + '/?page=2';
     xhr(page_two, 'GET',null,{},200,TPF.list_two());
-    visit(TP_URL);
+    visit(THIRD_PARTY_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), TP_URL);
+        assert.equal(currentURL(), THIRD_PARTY_LIST_URL);
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find(`${PAGE}-size option:selected`).text(), `${PAGE_SIZE} per page`);
         var pagination = find(PAGES);
@@ -516,7 +515,7 @@ test('picking a different number of pages will alter the query string and xhr', 
     });
     click(`${PAGE}:eq(1) a`);
     andThen(() => {
-        assert.equal(currentURL(), TP_URL + '?page=2');
+        assert.equal(currentURL(), THIRD_PARTY_LIST_URL + '?page=2');
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE-1);
         var pagination = find(PAGES);
         assert.equal(pagination.find(PAGE).length, 2);
@@ -527,7 +526,7 @@ test('picking a different number of pages will alter the query string and xhr', 
     });
     alterPageSize(`${PAGE}-size`, updated_pg_size);
     andThen(() => {
-        assert.equal(currentURL(),TP_URL + `?page_size=${updated_pg_size}`);
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL + `?page_size=${updated_pg_size}`);
         assert.equal(find(GRID_DATA_ALL).length, updated_pg_size);
         assert.equal(find(`${PAGE}-size option:selected`).text(), `${updated_pg_size} per page`);
         var pagination = find(PAGES);
@@ -537,7 +536,7 @@ test('picking a different number of pages will alter the query string and xhr', 
     });
     alterPageSize(`${PAGE}-size`, PAGE_SIZE);
     andThen(() => {
-        assert.equal(currentURL(),TP_URL + `?page_size=${PAGE_SIZE}`);
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL + `?page_size=${PAGE_SIZE}`);
         assert.equal(find(GRID_DATA_ALL).length, PAGE_SIZE);
         assert.equal(find(`${PAGE}-size option:selected`).text(), `${PAGE_SIZE} per page`);
         var pagination = find(`${PAGES}`);
@@ -554,9 +553,9 @@ test(`starting with a page size greater than ${PAGE_SIZE} will set the selected`
     const updated_pg_size = PAGE_SIZE*2;
     let option_one = PREFIX + BASE_URL + `/?page=1&page_size=${updated_pg_size}`;
     xhr(option_one, 'GET',null,{},200,TPF.paginated(updated_pg_size));
-    visit(TP_URL + `?page_size=${updated_pg_size}`);
+    visit(THIRD_PARTY_LIST_URL + `?page_size=${updated_pg_size}`);
     andThen(() => {
-        assert.equal(currentURL(),TP_URL + `?page_size=${updated_pg_size}`);
+        assert.equal(currentURL(),THIRD_PARTY_LIST_URL + `?page_size=${updated_pg_size}`);
         assert.equal(find(GRID_DATA_ALL).length, updated_pg_size);
         assert.equal(find(`${PAGE}-size option:selected`).text(), `${updated_pg_size} per page`);
         var pagination = find(`${PAGES}`);
@@ -569,7 +568,7 @@ test(`starting with a page size greater than ${PAGE_SIZE} will set the selected`
 test('when a save filterset modal is selected the input inside the modal is focused', (assert) => {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,'GET',null,{},200,TPF.sorted('name'));
-    visit(TP_URL);
+    visit(THIRD_PARTY_LIST_URL);
     click('.t-sort-name-dir');
     click('.t-show-save-filterset-modal');
     andThen(() => {
@@ -592,7 +591,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 //     let section = '.t-grid-wrap';
 //     let navigation = '.t-filterset-wrap li';
 //     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
-//     visit(TP_URL);
+//     visit(THIRD_PARTY_LIST_URL);
 //     click('.t-sort-name-dir');
 //     click('.t-show-save-filterset-modal');
 //     xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
@@ -613,7 +612,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
     let query = '?foo=bar';
     let navigation = '.t-filterset-wrap div';
     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
-    visit(TP_URL);
+    visit(THIRD_PARTY_LIST_URL);
     clearAll(store, 'filterset');
     andThen(() => {
         store.push('filterset', {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query});
@@ -633,7 +632,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
 test('save filterset button only available when a dynamic filter is present', (assert) => {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,'GET',null,{},200,TPF.sorted('name'));
-    visit(TP_URL);
+    visit(THIRD_PARTY_LIST_URL);
     andThen(() => {
         assert.equal(find('.t-show-save-filterset-modal').length, 0);
     });

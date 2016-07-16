@@ -6,7 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/utilities/urls';
+import BASEURLS, { CATEGORY_LIST_URL } from 'bsrs-ember/utilities/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
@@ -16,7 +16,6 @@ import random from 'bsrs-ember/models/random';
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_categories_url;
-const CATEGORY_URL = BASE_URL + '/index';
 const NUMBER_ONE = {keyCode: 49};
 const NUMBER_FOUR = {keyCode: 52};
 const BACKSPACE = {keyCode: 8};
@@ -38,9 +37,9 @@ module('Acceptance | category-grid-list', {
 });
 
 test('initial load should only show first PAGE_SIZE records ordered by id with correct pagination and no additional xhr', function(assert) {
-    visit(CATEGORY_URL);
+    visit(CATEGORY_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), CATEGORY_URL);
+        assert.equal(currentURL(), CATEGORY_LIST_URL);
         assert.equal(find('.t-grid-title').text(), 'Categories');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(1) .t-category-name').text().trim(), CD.nameOne + '2');
@@ -58,14 +57,14 @@ test('initial load should only show first PAGE_SIZE records ordered by id with c
 });
 
 test('clicking page 2 will load in another set of data as well as clicking page 1 after that reloads the original set of data (both require an additional xhr)', function(assert) {
-    visit(CATEGORY_URL);
+    visit(CATEGORY_LIST_URL);
     var page_two = PREFIX + BASE_URL + '/?page=2';
     xhr(page_two ,"GET",null,{},200,CF.list_two());
     click('.t-page:eq(1) a');
     andThen(() => {
         const categories = store.find('category-list');
         assert.equal(categories.get('length'), 9);
-        assert.equal(currentURL(), CATEGORY_URL + '?page=2');
+        assert.equal(currentURL(), CATEGORY_LIST_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-category-name').text().trim()), 'cococat');
         var pagination = find('.t-pages');
@@ -79,7 +78,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         const categories = store.find('category-list');
         assert.equal(categories.get('length'), 10);
-        assert.equal(currentURL(),CATEGORY_URL);
+        assert.equal(currentURL(),CATEGORY_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(1) .t-category-name').text().trim(), CD.nameOne + '2');
         var pagination = find('.t-pages');
@@ -94,9 +93,9 @@ test('clicking page 2 will load in another set of data as well as clicking page 
 test('clicking first,last,next and previous will request page 1 and 2 correctly', function(assert) {
     var page_two = PREFIX + BASE_URL + '/?page=2';
     xhr(page_two ,"GET",null,{},200,CF.list_two());
-    visit(CATEGORY_URL);
+    visit(CATEGORY_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), CATEGORY_URL);
+        assert.equal(currentURL(), CATEGORY_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         isDisabledElement('.t-first');
         isDisabledElement('.t-previous');
@@ -105,7 +104,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     });
     click('.t-next a');
     andThen(() => {
-        assert.equal(currentURL(), CATEGORY_URL + '?page=2');
+        assert.equal(currentURL(), CATEGORY_LIST_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         isNotDisabledElement('.t-first');
         isNotDisabledElement('.t-previous');
@@ -114,7 +113,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     });
     click('.t-previous a');
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL);
+        assert.equal(currentURL(),CATEGORY_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         isDisabledElement('.t-first');
         isDisabledElement('.t-previous');
@@ -123,7 +122,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     });
     click('.t-last a');
     andThen(() => {
-        assert.equal(currentURL(), CATEGORY_URL + '?page=2');
+        assert.equal(currentURL(), CATEGORY_LIST_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         isNotDisabledElement('.t-first');
         isNotDisabledElement('.t-previous');
@@ -132,7 +131,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     });
     click('.t-first a');
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL);
+        assert.equal(currentURL(),CATEGORY_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         isDisabledElement('.t-first');
         isDisabledElement('.t-previous');
@@ -148,27 +147,27 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     xhr(page_two ,"GET",null,{},200,CF.sorted_page_two('name'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,"GET",null,{},200,CF.sorted_page_one('name'));
-    visit(CATEGORY_URL);
+    visit(CATEGORY_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), CATEGORY_URL);
+        assert.equal(currentURL(), CATEGORY_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-category-name').text().trim(), CD.nameOne + '1');
     });
     click('.t-sort-name-dir');
     andThen(() => {
-        assert.equal(currentURL(), CATEGORY_URL + '?sort=name');
+        assert.equal(currentURL(), CATEGORY_LIST_URL + '?sort=name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-category-name').text().trim(), CD.nameOne + '1');
     });
     click('.t-page:eq(1) a');
     andThen(() => {
-        assert.equal(currentURL(), CATEGORY_URL + '?page=2&sort=name');
+        assert.equal(currentURL(), CATEGORY_LIST_URL + '?page=2&sort=name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE - 1);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-category-name').text().trim()), 'cococat');
     });
     click('.t-sort-label-dir');
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?sort=label%2Cname');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?sort=label%2Cname');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-category-name').text().trim(), 'cococat11');
     });
@@ -185,23 +184,23 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     xhr(sort_one ,"GET",null,{},200,CF.searched('4', 'label'));
     var search_one = PREFIX + BASE_URL + '/?page=1&search=4';
     xhr(search_one ,"GET",null,{},200,CF.searched('4', 'name'));
-    visit(CATEGORY_URL);
+    visit(CATEGORY_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), CATEGORY_URL);
+        assert.equal(currentURL(), CATEGORY_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(1) .t-category-name').text().trim(), CD.nameOne + '2');
     });
     fillIn('.t-grid-search-input', '4');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?search=4');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?search=4');
         assert.equal(find('.t-grid-data').length, 2);
         assert.equal(find('.t-grid-data:eq(0) .t-category-name').text().trim(), 'cococat14');
         assert.equal(find('.t-grid-data:eq(1) .t-category-name').text().trim(), CD.nameOne + '4');
     });
     click('.t-sort-label-dir');
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?search=4&sort=label');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?search=4&sort=label');
         assert.equal(find('.t-grid-data').length, 2);
         assert.equal(find('.t-grid-data:eq(0) .t-category-name').text().trim(), 'cococat14');
         assert.equal(find('.t-grid-data:eq(1) .t-category-name').text().trim(), CD.nameOne + '4');
@@ -209,13 +208,13 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?search=&sort=label');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?search=&sort=label');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         // assert.equal(find('.t-grid-data:eq(1) .t-category-name').text().trim(), CD.nameOne + '10');//firefox
     });
     click('.t-page:eq(1) a');
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?page=2&search=&sort=label');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?page=2&search=&sort=label');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-category-name').text().trim()), CD.nameOne);
     });
@@ -223,13 +222,13 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_ONE);
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?search=14&sort=label');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?search=14&sort=label');
         assert.equal(find('.t-grid-data').length, 1);
         assert.equal(find('.t-grid-data:eq(0) .t-category-name').text().trim(), 'cococat14');
     });
     click('.t-reset-grid');
     andThen(() => {
-        assert.equal(currentURL(), CATEGORY_URL);
+        assert.equal(currentURL(), CATEGORY_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(1) .t-category-name').text().trim(), CD.nameOne + '2');
     });
@@ -240,21 +239,21 @@ test('multiple sort options appear in the query string as expected', function(as
     xhr(sort_two ,"GET",null,{},200,CF.sorted('label,name'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,"GET",null,{},200,CF.sorted('name'));
-    visit(CATEGORY_URL);
+    visit(CATEGORY_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), CATEGORY_URL);
+        assert.equal(currentURL(), CATEGORY_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(1) .t-category-name').text().trim(), CD.nameOne + '2');
     });
     click('.t-sort-name-dir');
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?sort=name');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?sort=name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-category-name').text().trim(), 'cococat11');
     });
     click('.t-sort-label-dir');
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?sort=label%2Cname');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?sort=label%2Cname');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         // assert.equal(find('.t-grid-data:eq(1) .t-category-name').text().trim(), CD.nameOne + '1');//firefox
     });
@@ -269,9 +268,9 @@ test('clicking the same sort option over and over will flip the direction and re
     xhr(sort_two ,"GET",null,{},200,CF.sorted('label,name'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,"GET",null,{},200,CF.sorted('name'));
-    visit(CATEGORY_URL);
+    visit(CATEGORY_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), CATEGORY_URL);
+        assert.equal(currentURL(), CATEGORY_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort'));
         assert.ok(find('.t-sort-label-dir').hasClass('fa-sort'));
@@ -280,7 +279,7 @@ test('clicking the same sort option over and over will flip the direction and re
     });
     click('.t-sort-name-dir');
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?sort=name');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?sort=name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-label-dir').hasClass('fa-sort'));
@@ -288,7 +287,7 @@ test('clicking the same sort option over and over will flip the direction and re
     });
     click('.t-sort-label-dir');
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?sort=label%2Cname');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?sort=label%2Cname');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-label-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
@@ -296,7 +295,7 @@ test('clicking the same sort option over and over will flip the direction and re
     });
     click('.t-sort-name-dir');
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?sort=-name%2Clabel');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?sort=-name%2Clabel');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-label-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-desc'));
@@ -304,7 +303,7 @@ test('clicking the same sort option over and over will flip the direction and re
     });
     click('.t-sort-name-dir');
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?sort=label');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?sort=label');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-label-dir').hasClass('fa-sort-asc'));
         assert.ok(!find('.t-sort-name-dir').hasClass('fa-sort-asc'));
@@ -312,7 +311,7 @@ test('clicking the same sort option over and over will flip the direction and re
     });
     click('.t-reset-grid');
     andThen(() => {
-        assert.equal(currentURL(), CATEGORY_URL);
+        assert.equal(currentURL(), CATEGORY_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(1) .t-category-name').text().trim(), CD.nameOne + '2');
     });
@@ -323,27 +322,27 @@ test('full text search will filter down the result set and query django accordin
     xhr(find_two ,"GET",null,{},200,CF.sorted('label:hat,name:7'));
     let find_one = PREFIX + BASE_URL + '/?page=1&label__icontains=hat';
     xhr(find_one ,"GET",null,{},200,CF.fulltext('label:hat', 1));
-    visit(CATEGORY_URL);
+    visit(CATEGORY_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), CATEGORY_URL);
+        assert.equal(currentURL(), CATEGORY_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(1) .t-category-name').text().trim(), CD.nameOne + '2');
     });
     filterGrid('label', 'hat');
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?find=label%3Ahat');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?find=label%3Ahat');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-category-name').text().trim()), 'cococat');
     });
     filterGrid('name', '7');
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?find=label%3Ahat%2Cname%3A7');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?find=label%3Ahat%2Cname%3A7');
         assert.equal(find('.t-grid-data').length, 1);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-category-name').text().trim()), 'cococat');
     });
     click('.t-reset-grid');
     andThen(() => {
-        assert.equal(currentURL(), CATEGORY_URL);
+        assert.equal(currentURL(), CATEGORY_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(1) .t-category-name').text().trim(), CD.nameOne + '2');
     });
@@ -352,14 +351,14 @@ test('full text search will filter down the result set and query django accordin
 test('loading screen shown before any xhr and hidden after', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,"GET",null,{},200,CF.sorted('name'));
-    visitSync(CATEGORY_URL);
+    visitSync(CATEGORY_LIST_URL);
     Ember.run.later(function() {
         //categories not bootstrapped anymore
         // assert.equal(find('.t-grid-data').length, 3);
         // assert.equal(find('.t-grid-loading-graphic').length, 1);
     }, 0);
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL);
+        assert.equal(currentURL(),CATEGORY_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-loading-graphic').length, 0);
     });
@@ -373,7 +372,7 @@ test('loading screen shown before any xhr and hidden after', function(assert) {
 });
 
 test('when a full text filter is selected the input inside the modal is focused', function(assert) {
-    visit(CATEGORY_URL);
+    visit(CATEGORY_LIST_URL);
     click('.t-filter-name');
     andThen(() => {
         isFocused('.ember-modal-dialog input:first');
@@ -391,7 +390,7 @@ test('full text searched columns will have a special on css class when active', 
     xhr(find_two ,"GET",null,{},200,CF.sorted('label:num,name:7'));
     let find_one = PREFIX + BASE_URL + '/?page=1&label__icontains=num';
     xhr(find_one ,"GET",null,{},200,CF.fulltext('label:num', 1));
-    visit(CATEGORY_URL);
+    visit(CATEGORY_LIST_URL);
     andThen(() => {
         assert.ok(!find('.t-filter-name').hasClass('on'));
         assert.ok(!find('.t-filter-label').hasClass('on'));
@@ -420,23 +419,23 @@ test('after you reset the grid the filter model will also be reset', function(as
     xhr(option_two ,'GET',null,{},200,CF.sorted('name:4'));
     let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
     xhr(option_one ,'GET',null,{},200,CF.searched('4', 'id'));
-    visit(CATEGORY_URL);
+    visit(CATEGORY_LIST_URL);
     fillIn('.t-grid-search-input', '4');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?search=4');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?search=4');
     });
     click('.t-sort-name-dir');
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?search=4&sort=name');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?search=4&sort=name');
     });
     filterGrid('name', '4');
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?find=name%3A4&search=4&sort=name');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?find=name%3A4&search=4&sort=name');
     });
     click('.t-reset-grid');
     andThen(() => {
-        assert.equal(currentURL(), CATEGORY_URL);
+        assert.equal(currentURL(), CATEGORY_LIST_URL);
     });
     click('.t-filter-name');
     andThen(() => {
@@ -448,7 +447,7 @@ test('after you reset the grid the filter model will also be reset', function(as
 test('count is shown and updated as the user filters down the list from django', function(assert) {
     let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
     xhr(option_one ,'GET',null,{},200,CF.searched('4', 'name'));
-    visit(CATEGORY_URL);
+    visit(CATEGORY_LIST_URL);
     andThen(() => {
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-page-count').text(), `${PAGE_SIZE*2-1} Categories`);
@@ -456,14 +455,14 @@ test('count is shown and updated as the user filters down the list from django',
     fillIn('.t-grid-search-input', '4');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?search=4');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?search=4');
         assert.equal(find('.t-grid-data').length, 2);
         assert.equal(find('.t-page-count').text(), '2 Categories');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + '?search=');
+        assert.equal(currentURL(),CATEGORY_LIST_URL + '?search=');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-page-count').text(), `${PAGE_SIZE*2-1} Categories`);
     });
@@ -477,9 +476,9 @@ test('picking a different number of pages will alter the query string and xhr', 
     xhr(option_one, 'GET',null,{},200,CF.paginated(updated_pg_size));
     let page_two = PREFIX + BASE_URL + '/?page=2';
     xhr(page_two, 'GET',null,{},200,CF.list_two());
-    visit(CATEGORY_URL);
+    visit(CATEGORY_LIST_URL);
     andThen(() => {
-        assert.equal(currentURL(), CATEGORY_URL);
+        assert.equal(currentURL(), CATEGORY_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-page-size option:selected').text(), `${PAGE_SIZE} per page`);
         var pagination = find('.t-pages');
@@ -491,7 +490,7 @@ test('picking a different number of pages will alter the query string and xhr', 
     });
     click('.t-page:eq(1) a');
     andThen(() => {
-        assert.equal(currentURL(), CATEGORY_URL + '?page=2');
+        assert.equal(currentURL(), CATEGORY_LIST_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
@@ -502,7 +501,7 @@ test('picking a different number of pages will alter the query string and xhr', 
     });
     alterPageSize('.t-page-size', updated_pg_size);
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + `?page_size=${updated_pg_size}`);
+        assert.equal(currentURL(),CATEGORY_LIST_URL + `?page_size=${updated_pg_size}`);
         assert.equal(find('.t-grid-data').length, updated_pg_size-1);
         assert.equal(find('.t-page-size option:selected').text(), `${updated_pg_size} per page`);
         var pagination = find('.t-pages');
@@ -512,7 +511,7 @@ test('picking a different number of pages will alter the query string and xhr', 
     });
     alterPageSize('.t-page-size', PAGE_SIZE);
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + `?page_size=${PAGE_SIZE}`);
+        assert.equal(currentURL(),CATEGORY_LIST_URL + `?page_size=${PAGE_SIZE}`);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-page-size option:selected').text(), `${PAGE_SIZE} per page`);
         var pagination = find('.t-pages');
@@ -530,9 +529,9 @@ test(`starting with a page size greater than ${PAGE_SIZE} will set the selected`
     const updated_pg_size = PAGE_SIZE*2;
     let option_one = PREFIX + BASE_URL + `/?page=1&page_size=${updated_pg_size}`;
     xhr(option_one, 'GET',null,{},200,CF.paginated(updated_pg_size));
-    visit(CATEGORY_URL + `?page_size=${updated_pg_size}`);
+    visit(CATEGORY_LIST_URL + `?page_size=${updated_pg_size}`);
     andThen(() => {
-        assert.equal(currentURL(),CATEGORY_URL + `?page_size=${updated_pg_size}`);
+        assert.equal(currentURL(),CATEGORY_LIST_URL + `?page_size=${updated_pg_size}`);
         assert.equal(find('.t-grid-data').length, updated_pg_size-1);
         assert.equal(find('.t-page-size option:selected').text(), `${updated_pg_size} per page`);
         var pagination = find('.t-pages');
@@ -545,7 +544,7 @@ test(`starting with a page size greater than ${PAGE_SIZE} will set the selected`
 test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,'GET',null,{},200,CF.sorted('name'));
-    visit(CATEGORY_URL);
+    visit(CATEGORY_LIST_URL);
     click('.t-sort-name-dir');
     click('.t-show-save-filterset-modal');
     andThen(() => {
@@ -568,7 +567,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 //     let section = '.t-grid-wrap';
 //     let navigation = '.t-filterset-wrap li';
 //     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
-//     visit(CATEGORY_URL);
+//     visit(CATEGORY_LIST_URL);
 //     click('.t-sort-name-dir');
 //     click('.t-show-save-filterset-modal');
 //     xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
@@ -589,7 +588,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
     let query = '?foo=bar';
     let navigation = '.t-filterset-wrap div';
     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
-    visit(CATEGORY_URL);
+    visit(CATEGORY_LIST_URL);
     clearAll(store, 'filterset');
     andThen(() => {
         store.push('filterset', {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query});
@@ -609,7 +608,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
 test('save filterset button only available when a dynamic filter is present', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,'GET',null,{},200,CF.sorted('name'));
-    visit(CATEGORY_URL);
+    visit(CATEGORY_LIST_URL);
     andThen(() => {
         assert.equal(find('.t-show-save-filterset-modal').length, 0);
     });

@@ -6,7 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/utilities/urls';
+import BASEURLS, { ROLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
@@ -16,7 +16,6 @@ import random from 'bsrs-ember/models/random';
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_roles_url;
-const ROLE_URL = BASE_URL + '/index';
 const NUMBER_ONE = {keyCode: 49};
 const NUMBER_FOUR = {keyCode: 52};
 const BACKSPACE = {keyCode: 8};
@@ -40,9 +39,9 @@ module('Acceptance | role-grid-list', {
 });
 
 test(`initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr`, function(assert) {
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     assert.equal(find('.t-grid-title').text(), 'Roles');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-role-name').text().trim(), RD.nameOne);
@@ -60,12 +59,12 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
 test('clicking page 2 will load in another set of data as well as clicking page 1 after that reloads the original set of data (both require an additional xhr)', function(assert) {
   var page_two = PREFIX + BASE_URL + '/?page=2';
   xhr(page_two ,"GET",null,{},200,RF.list_two());
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   click('.t-page:eq(1) a');
   andThen(() => {
     const people = store.find('role-list');
     assert.equal(people.get('length'), 9);
-    assert.equal(currentURL(), ROLE_URL + '?page=2');
+    assert.equal(currentURL(), ROLE_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-role-name').text().trim()), 'xav');
     var pagination = find('.t-pages');
@@ -79,7 +78,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
   andThen(() => {
     const people = store.find('role-list');
     assert.equal(people.get('length'), 10);
-    assert.equal(currentURL(),ROLE_URL);
+    assert.equal(currentURL(),ROLE_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-role-name').text().trim(), RD.nameOne);
     var pagination = find('.t-pages');
@@ -94,9 +93,9 @@ test('clicking page 2 will load in another set of data as well as clicking page 
 test('clicking first,last,next and previous will request page 1 and 2 correctly', function(assert) {
   var page_two = PREFIX + BASE_URL + '/?page=2';
   xhr(page_two ,"GET",null,{},200,RF.list_two());
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
@@ -105,7 +104,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   });
   click('.t-next a');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL + '?page=2');
+    assert.equal(currentURL(), ROLE_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
     isNotDisabledElement('.t-first');
     isNotDisabledElement('.t-previous');
@@ -114,7 +113,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   });
   click('.t-previous a');
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL);
+    assert.equal(currentURL(),ROLE_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
@@ -123,7 +122,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   });
   click('.t-last a');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL + '?page=2');
+    assert.equal(currentURL(), ROLE_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
     isNotDisabledElement('.t-first');
     isNotDisabledElement('.t-previous');
@@ -132,7 +131,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   });
   click('.t-first a');
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL);
+    assert.equal(currentURL(),ROLE_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
@@ -149,25 +148,25 @@ test('clicking header will sort by given property and reset page to 1 (also requ
   xhr(page_two ,"GET",null,{},200,RF.sorted_page_two('name'));
   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
   xhr(sort_one ,"GET",null,{},200,RF.sorted_page_one('name'));
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
     assert.equal(find('.t-grid-data:eq(0) .t-role-name').text().trim(), RD.nameOne);
   });
   click('.t-sort-name-dir');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL + '?sort=name');
+    assert.equal(currentURL(), ROLE_LIST_URL + '?sort=name');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-role-name').text().trim(), RD.nameOne);
   });
   click('.t-page:eq(1) a');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL + '?page=2&sort=name');
+    assert.equal(currentURL(), ROLE_LIST_URL + '?page=2&sort=name');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
     assert.equal(find('.t-grid-data:eq(0) .t-role-role_type').text().trim(), t(RD.t_roleTypeContractor));
   });
   click('.t-sort-role-type-dir');
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?sort=role_type%2Cname');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?sort=role_type%2Cname');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-role-name').text().trim(), RD.nameOne);
   });
@@ -184,21 +183,21 @@ test('typing a search will reset page to 1 and require an additional xhr and res
   xhr(sort_one ,"GET",null,{},200,RF.sorted('role_type'));
   var search_one = PREFIX + BASE_URL + '/?page=1&search=4';
   xhr(search_one ,"GET",null,{},200,RF.searched('4', 'name'));
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
     assert.equal(find('.t-grid-data:eq(0) .t-role-name').text().trim(), RD.nameOne);
   });
   fillIn('.t-grid-search-input', '4');
   triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?search=4');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?search=4');
     assert.equal(find('.t-grid-data').length, 2);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-role-name').text().trim()), 'xav');
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-role-name').text().trim()), 'zap');
   });
   click('.t-sort-role-type-dir');
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?search=4&sort=role_type');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?search=4&sort=role_type');
     assert.equal(find('.t-grid-data').length, 2);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-role-name').text().trim()), 'xav');
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-role-name').text().trim()), 'zap');
@@ -206,25 +205,25 @@ test('typing a search will reset page to 1 and require an additional xhr and res
   fillIn('.t-grid-search-input', '');
   triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?search=&sort=role_type');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?search=&sort=role_type');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
   });
   click('.t-page:eq(1) a');
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?page=2&search=&sort=role_type');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?page=2&search=&sort=role_type');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
   });
   fillIn('.t-grid-search-input', '14');
   triggerEvent('.t-grid-search-input', 'keyup', NUMBER_ONE);
   triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?search=14&sort=role_type');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?search=14&sort=role_type');
     assert.equal(find('.t-grid-data').length, 1);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-role-name').text().trim()), 'xav');
   });
   click('.t-reset-grid');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-role-name').text().trim(), RD.nameOne);
   });
@@ -235,22 +234,22 @@ test('multiple sort options appear in the query string as expected', function(as
   xhr(sort_two ,"GET",null,{},200,RF.sorted_page_one('role_type,name'));
   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
   xhr(sort_one ,"GET",null,{},200,RF.sorted_page_one('name'));
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-role-name').text().trim(), RD.nameOne);
   });
   click('.t-sort-name-dir');
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?sort=name');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?sort=name');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-role-name').text().trim(), RD.nameOne);
 
   });
   click('.t-sort-role-type-dir');
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?sort=role_type%2Cname');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?sort=role_type%2Cname');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-role-name').text().trim(), RD.nameOne);
   });
@@ -266,9 +265,9 @@ test('clicking the same sort option over and over will flip the direction and re
   xhr(sort_two ,"GET",null,{},200,RF.sorted('role_type,name'));
   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
   xhr(sort_one ,"GET",null,{},200,RF.sorted('name'));
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.ok(find('.t-sort-name-dir').hasClass('fa-sort'));
     assert.ok(find('.t-sort-role-type-dir').hasClass('fa-sort'));
@@ -277,7 +276,7 @@ test('clicking the same sort option over and over will flip the direction and re
   });
   click('.t-sort-name-dir');
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?sort=name');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?sort=name');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
     assert.ok(find('.t-sort-role-type-dir').hasClass('fa-sort'));
@@ -285,7 +284,7 @@ test('clicking the same sort option over and over will flip the direction and re
   });
   click('.t-sort-role-type-dir');
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?sort=role_type%2Cname');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?sort=role_type%2Cname');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.ok(find('.t-sort-role-type-dir').hasClass('fa-sort-asc'));
     assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
@@ -293,7 +292,7 @@ test('clicking the same sort option over and over will flip the direction and re
   });
   click('.t-sort-name-dir');
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?sort=-name%2Crole_type');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?sort=-name%2Crole_type');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.ok(find('.t-sort-role-type-dir').hasClass('fa-sort-asc'));
     assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-desc'));
@@ -301,7 +300,7 @@ test('clicking the same sort option over and over will flip the direction and re
   });
   click('.t-sort-name-dir');
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?sort=role_type');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?sort=role_type');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.ok(find('.t-sort-role-type-dir').hasClass('fa-sort-asc'));
     assert.ok(!find('.t-sort-name-dir').hasClass('fa-sort-asc'));
@@ -309,7 +308,7 @@ test('clicking the same sort option over and over will flip the direction and re
   });
   click('.t-reset-grid');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-role-name').text().trim(), RD.nameOne);
   });
@@ -320,27 +319,27 @@ test('full text search will filter down the result set and query django accordin
   xhr(find_two ,"GET",null,{},200,RF.sorted('role_type:i,name:xav'));
   let find_one = PREFIX + BASE_URL + '/?page=1&role_type__icontains=i';
   xhr(find_one ,"GET",null,{},200,RF.fulltext('role_type:i', 1));
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-role-name').text().trim(), RD.nameOne);
   });
   filterGrid('role_type', 'i');
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?find=role_type%3Ai');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?find=role_type%3Ai');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-role-name').text().trim(), 'xav11');
   });
   filterGrid('name', 'xav');
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?find=role_type%3Ai%2Cname%3Axav');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?find=role_type%3Ai%2Cname%3Axav');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-role-name').text().trim()), 'xav');
   });
   click('.t-reset-grid');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-role-name').text().trim(), RD.nameOne);
   });
@@ -349,13 +348,13 @@ test('full text search will filter down the result set and query django accordin
 test('loading screen shown before any xhr and hidden after', function(assert) {
   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
   xhr(sort_one ,"GET",null,{},200,RF.sorted('name'));
-  visitSync(ROLE_URL);
+  visitSync(ROLE_LIST_URL);
   Ember.run.later(function() {
     // assert.equal(find('.t-grid-data').length, 6);
     // assert.equal(find('.t-grid-loading-graphic').length, 1);
   }, 0);
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL);
+    assert.equal(currentURL(),ROLE_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-loading-graphic').length, 0);
   });
@@ -369,7 +368,7 @@ test('loading screen shown before any xhr and hidden after', function(assert) {
 });
 
 test('when a full text filter is selected the input inside the modal is focused', function(assert) {
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   click('.t-filter-name');
   andThen(() => {
     isFocused('.ember-modal-dialog input:first');
@@ -387,7 +386,7 @@ test('full text searched columns will have a special on css class when active', 
   xhr(find_two ,"GET",null,{},200,RF.sorted('role_type:in,name:7'));
   let find_one = PREFIX + BASE_URL + '/?page=1&role_type__icontains=in';
   xhr(find_one ,"GET",null,{},200,RF.fulltext('role_type:in', 1));
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
     assert.ok(!find('.t-filter-name').hasClass('on'));
     assert.ok(!find('.t-filter-role-type').hasClass('on'));
@@ -416,23 +415,23 @@ test('after you reset the grid the filter model will also be reset', function(as
   xhr(option_two ,'GET',null,{},200,RF.sorted('name:4'));
   let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
   xhr(option_one ,'GET',null,{},200,RF.searched('4', 'id'));
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   fillIn('.t-grid-search-input', '4');
   triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?search=4');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?search=4');
   });
   click('.t-sort-name-dir');
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?search=4&sort=name');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?search=4&sort=name');
   });
   filterGrid('name', '4');
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?find=name%3A4&search=4&sort=name');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?find=name%3A4&search=4&sort=name');
   });
   click('.t-reset-grid');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
   });
   click('.t-filter-name');
   andThen(() => {
@@ -444,7 +443,7 @@ test('after you reset the grid the filter model will also be reset', function(as
 test('count is shown and updated as the user filters down the list from django', function(assert) {
   let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
   xhr(option_one ,'GET',null,{},200,RF.searched('4', 'name'));
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-page-count').text(), `${PAGE_SIZE*2-1} Roles`);
@@ -452,14 +451,14 @@ test('count is shown and updated as the user filters down the list from django',
   fillIn('.t-grid-search-input', '4');
   triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?search=4');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?search=4');
     assert.equal(find('.t-grid-data').length, 2);
     assert.equal(find('.t-page-count').text(), '2 Roles');
   });
   fillIn('.t-grid-search-input', '');
   triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + '?search=');
+    assert.equal(currentURL(),ROLE_LIST_URL + '?search=');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-page-count').text(), `${PAGE_SIZE*2-1} Roles`);
   });
@@ -473,9 +472,9 @@ test('picking a different number of pages will alter the query string and xhr', 
   xhr(option_one, 'GET',null,{},200,RF.paginated(updated_pg_size));
   let page_two = PREFIX + BASE_URL + '/?page=2';
   xhr(page_two, 'GET',null,{},200,RF.list_two());
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-page-size option:selected').text(), `${PAGE_SIZE} per page`);
     var pagination = find('.t-pages');
@@ -487,7 +486,7 @@ test('picking a different number of pages will alter the query string and xhr', 
   });
   click('.t-page:eq(1) a');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL + '?page=2');
+    assert.equal(currentURL(), ROLE_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
     var pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 2);
@@ -498,7 +497,7 @@ test('picking a different number of pages will alter the query string and xhr', 
   });
   alterPageSize('.t-page-size', updated_pg_size);
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + `?page_size=${updated_pg_size}`);
+    assert.equal(currentURL(),ROLE_LIST_URL + `?page_size=${updated_pg_size}`);
     assert.equal(find('.t-grid-data').length, updated_pg_size-1);
     assert.equal(find('.t-page-size option:selected').text(), `${updated_pg_size} per page`);
     var pagination = find('.t-pages');
@@ -508,7 +507,7 @@ test('picking a different number of pages will alter the query string and xhr', 
   });
   alterPageSize('.t-page-size', PAGE_SIZE);
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + `?page_size=${PAGE_SIZE}`);
+    assert.equal(currentURL(),ROLE_LIST_URL + `?page_size=${PAGE_SIZE}`);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-page-size option:selected').text(), `${PAGE_SIZE} per page`);
     var pagination = find('.t-pages');
@@ -526,9 +525,9 @@ test(`starting with a page size greater than ${PAGE_SIZE} will set the selected`
   const updated_pg_size = PAGE_SIZE*2;
   let option_one = PREFIX + BASE_URL + `/?page=1&page_size=${updated_pg_size}`;
   xhr(option_one, 'GET',null,{},200,RF.paginated(updated_pg_size));
-  visit(ROLE_URL + `?page_size=${updated_pg_size}`);
+  visit(ROLE_LIST_URL + `?page_size=${updated_pg_size}`);
   andThen(() => {
-    assert.equal(currentURL(),ROLE_URL + `?page_size=${updated_pg_size}`);
+    assert.equal(currentURL(),ROLE_LIST_URL + `?page_size=${updated_pg_size}`);
     assert.equal(find('.t-grid-data').length, updated_pg_size-1);
     assert.equal(find('.t-page-size option:selected').text(), `${updated_pg_size} per page`);
     var pagination = find('.t-pages');
@@ -541,7 +540,7 @@ test(`starting with a page size greater than ${PAGE_SIZE} will set the selected`
 test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
   xhr(sort_one ,'GET',null,{},200,RF.sorted('name'));
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   click('.t-sort-name-dir');
   click(SAVE_FILTERSET_MODAL);
   andThen(() => {
@@ -564,7 +563,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 //   let section = '.t-grid-wrap';
 //   let navigation = '.t-filterset-wrap li';
 //   let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
-//   visit(ROLE_URL);
+//   visit(ROLE_LIST_URL);
 //   click('.t-sort-name-dir');
 //   click(SAVE_FILTERSET_MODAL);
 //   xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
@@ -585,7 +584,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
   let query = '?foo=bar';
   let navigation = '.t-filterset-wrap div';
   let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   clearAll(store, 'filterset');
   andThen(() => {
     store.push('filterset', {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query});
@@ -605,7 +604,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
 test('save filterset button only available when a dynamic filter is present', function(assert) {
   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
   xhr(sort_one ,'GET',null,{},200,RF.sorted('name'));
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
   });
@@ -619,7 +618,7 @@ test('save filterset button only available when a dynamic filter is present', fu
 //test('save filterset button is not available when page size or page is altered and only sort/find/search are persisted', function(assert) {
 //  const updated_pg_size = PAGE_SIZE*2;
 //  ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
-//  visit(ROLE_URL);
+//  visit(ROLE_LIST_URL);
 //  andThen(() => {
 //    assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
 //  });
@@ -682,7 +681,7 @@ test('applying a saved filterset will reset the page to 1 by default', function(
     store.push('filterset', {id: 'def456', name: filter_name, endpoint_name: 'admin.roles.index', endpoint_uri: '?find=name%3Axav&sort=name'});
   });
   ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
     assert.equal(find('.t-filterset-wrap div:eq(0) a').text().trim(), filter_name);
@@ -715,7 +714,7 @@ test('each time you apply a saved filterset the query params are reset to reflec
     store.push('filterset', {id: 'ghi789', name: filter_two, endpoint_name: 'admin.roles.index', endpoint_uri: '?search=admin&sort=name'});
   });
   ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
     assert.equal(find('.t-filterset-wrap div:eq(0) a').text().trim(), filter_one);
@@ -744,7 +743,7 @@ test('each time you apply a saved filterset the query params are reset to reflec
 ////this test is specifically for applying saved filtersets ... it just happens to use this module and the role fixture data
 //test('after saving a filterset the save button button is not visible', function(assert) {
 //  ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
-//  visit(ROLE_URL);
+//  visit(ROLE_LIST_URL);
 //  andThen(() => {
 //    assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
 //  });
@@ -775,7 +774,7 @@ test('when a filterset that has a search is applied both the querystring and the
     store.push('filterset', {id: 'jkl234', name: filter_three, endpoint_name: 'admin.roles.index', endpoint_uri: '?sort=name'});
   });
   ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
     assert.equal(find('.t-filterset-wrap div:eq(0) a').text().trim(), filter_one);
@@ -825,7 +824,7 @@ test('when a filterset that has a search is applied both the querystring and the
 //    store.push('filterset', {id: 'def456', name: filter_one, endpoint_name: 'admin.roles.index', endpoint_uri: '?sort=name'});
 //  });
 //  ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
-//  visit(ROLE_URL);
+//  visit(ROLE_LIST_URL);
 //  ajax(`${PREFIX}${BASE_URL}/?page=1&ordering=name` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
 //  click(SORT_NAME_DIR);
 //  andThen(() => {

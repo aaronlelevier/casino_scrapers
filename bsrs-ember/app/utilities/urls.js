@@ -2,6 +2,7 @@ import config from 'bsrs-ember/config/environment';
 
 const PREFIX = config.APP.NAMESPACE;
 
+// API Urls
 export const ADMIN_URL = `${PREFIX}/admin/`;
 export const ADMIN_TRANSLATIONS_URL = `${PREFIX}/admin/translations/`;
 export const ATTACHMENTS_URL = `${PREFIX}/admin/attachments/`;
@@ -21,6 +22,16 @@ export const THIRD_PARTIES_URL = `${PREFIX}/admin/third-parties/`;
 export const TRANSLATION_URL = `${PREFIX}/admin/translations/`;
 export const TICKETS_URL = `${PREFIX}/tickets/`;
 export const WOS_URL = `${PREFIX}/work-orders/`;
+
+// App Urls
+export const CATEGORY_LIST_URL = '/admin/categories/index';
+export const I18N_LIST_URL = '/admin/translations/index';
+export const LOCATION_LIST_URL = '/admin/locations/index';
+export const LOCATION_LEVEL_LIST_URL = '/admin/location-levels/index';
+export const PEOPLE_LIST_URL = '/admin/people/index';
+export const ROLE_LIST_URL = '/admin/roles/index';
+export const THIRD_PARTY_LIST_URL = '/admin/third-parties/index';
+export const TICKET_LIST_URL = '/tickets/index';
 
 var BASEURLS = {
   base_admin_url: '/admin',
