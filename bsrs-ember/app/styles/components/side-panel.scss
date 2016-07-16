@@ -1,3 +1,62 @@
+/* START Placeholders */
+%header {
+  height: $documentHeaderHeight;
+  line-height: $documentHeaderHeight;
+  border: $borderStyle;
+  border-width: 0 0 1px;
+  padding: 0 10px;
+  position: relative;
+  background: $lightGray;
+}
+%aAdmin {
+  line-height: 2rem;
+  font-size: 0.9em;
+  color: $darkGray;
+  text-decoration: none;
+  padding: 3px 8px 3px 30px;
+  display: block;
+  &:hover {
+    cursor: pointer;
+    color: $hoverColor;
+    background-color: $hoverColorLight;
+    .fa {
+      color: $white;
+      &:hover {
+        color: $orange;
+      }
+    }
+  }
+  &.active {
+    color: $white;
+    background-color: $activeColor;
+    .fa {
+      color: $white;
+      &:hover {
+        color: $orange;
+      }
+    }
+  }
+  &.active:hover {
+    cursor: default;
+    .fa {
+      color: $white;
+      &:hover {
+        cursor: pointer;
+        color: $orange;
+      }
+    }
+  }
+  .fa {
+    line-height: 1.7rem;
+    margin-right: 7px;
+    &:hover{
+      color: $orange;
+    }
+  }
+}
+/* END Placeholders */
+
+/* Ticket, Admin, Dashboard, */
 aside.side-panel {
   position: absolute;
   top: 0;
@@ -6,19 +65,13 @@ aside.side-panel {
   width: $documentLeft;
   overflow: hidden;
   header {
-    height: $documentHeaderHeight;
-    line-height: $documentHeaderHeight;
-    border: $borderStyle;
-    border-width: 0 0 1px;
-    padding: 0 10px;
-    position: relative;
-    background: $lightGray;
+    @extend %header;
     h1 {
       vertical-align: middle;
       font-size: 1.3em;
       font-weight: normal;
       display: inline;
-    }//h1
+    }
   }
   menu {
     position: absolute;
@@ -39,77 +92,46 @@ aside.side-panel {
         color: $darkGray;
         font-size: 1.1em;
         padding: 10px 5px;
-        i.menuIcon{
+        i.menuIcon {
           width: 25px;
           text-align: center;
-          color: $darkGray;
         }
       }//h3
-
-      ul {
-        padding: 0;
-        margin: 0;
-        font-size: 0.9em;
-        li {
-          clear: both;
-          line-height: 2rem;
-          a {
-            color: $darkGray;
-            text-decoration: none;
-            padding: 3px 8px 3px 30px;
-            display: block;
-            &:hover {
-              cursor: pointer;
-              color: $hoverColor;
-              background-color: $hoverColorLight;
-              .fa {
-                color: $white;
-                &:hover {
-                  color: $orange;
-                }
-              }
-            }
-            &.active {
-              color: $white;
-              background-color: $activeColor;
-              .fa {
-                color: $white;
-                &:hover {
-                  color: $orange;
-                }
-              }
-            }
-            &.active:hover {
-              cursor: default;
-              .fa {
-                color: $white;
-                &:hover {
-                  cursor: pointer;
-                  color: $orange;
-                }
-              }
-            }
-
-            .fa {
-              line-height: 1.7rem;
-              margin-right: 7px;
-              &:hover{
-                color: $orange;
-              }
-            }
-          }//a
-          ul {
-            list-style-type: none;
-            li {
-              font-size: 1em;
-              line-height: 1.7rem;
-              a {
-                padding: 3px 8px 3px 40px;
-              }
-            }
-          }//ul
-        }//li
-      }//ul
+      a {
+        @extend %aAdmin;
+      }//a
     }//section
   }//menu
-}// aside.side-panel
+}
+
+/* Mobile does not use aside tag but rather class defined on passing in string .mobile-admin-menu */
+.mobile-admin-menu {
+  @include generalPadding;
+  header {
+    h1 {
+      @include pageTitle;
+    }
+  }
+  menu {
+    background: none;
+    padding: 0;
+    section {
+      margin: 0;
+      h3 {
+        padding-bottom: .6em;
+        color: $medGray;
+        @include borderStyle(0 0 1px);
+        i {
+          padding-right: 0.5em;
+        }
+      }
+      a {
+        @extend %aAdmin;
+        background: $lightGray;
+        font-size: 1.8rem;
+        line-height: 2.4em;
+        @include borderStyle(0 0 1px);
+      }
+    }
+  }
+}

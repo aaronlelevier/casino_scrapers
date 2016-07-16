@@ -168,13 +168,7 @@ header.mobile-grid-head {
   z-index: 40;
   //TODO: Flex it
   h1.grid-title {
-    padding: 0 15px;
-    height: $mobileDocHeaderHeight;
-    line-height: $mobileDocHeaderHeight;
-    font-size: 2rem;
-    color: $darkGray;
-    margin: 0;
-    @include truncate;
+    @include pageTitle();
   }
   div.grid-options {
     padding: 0 15px;

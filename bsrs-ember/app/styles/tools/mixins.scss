@@ -97,3 +97,13 @@
 @mixin generalPadding() {
   padding: 4%;
 }
+
+@mixin pageTitle() {
+  padding: 0 15px;
+  height: $mobileDocHeaderHeight;
+  line-height: $mobileDocHeaderHeight;
+  font-size: 2rem;
+  color: $darkGray;
+  margin: 0;
+  @include truncate;
+}
