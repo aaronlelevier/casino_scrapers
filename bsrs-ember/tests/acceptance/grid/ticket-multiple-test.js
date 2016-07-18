@@ -9,7 +9,6 @@ import PF from 'bsrs-ember/vendor/people_fixtures';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import config from 'bsrs-ember/config/environment';
-import random from 'bsrs-ember/models/random';
 import BASEURLS, {
   TICKET_LIST_URL,
   PEOPLE_LIST_URL,
@@ -34,10 +33,8 @@ module('Acceptance | ticket multiple grid test', {
     ticket_list_xhr = xhr(ticket_endpoint, 'GET', null, {}, 200, TF.list());
     people_endpoint = `${PREFIX}${BASE_PEOPLE_URL}/?page=1`;
     people_list_xhr = xhr(people_endpoint, 'GET', null, {}, 200, PF.list());
-    original_uuid = random.uuid;
   },
   afterEach() {
-    random.uuid = original_uuid;
     Ember.run(application, 'destroy');
   }
 });

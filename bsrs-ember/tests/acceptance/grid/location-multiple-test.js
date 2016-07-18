@@ -11,7 +11,6 @@ import PF from 'bsrs-ember/vendor/people_fixtures';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/utilities/urls';
-import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -36,10 +35,8 @@ module('Acceptance | location multiple grid test', {
         // ticket_list_xhr = xhr(ticket_endpoint, 'GET', null, {}, 200, TF.list());
         // people_endpoint = `${PREFIX}${BASE_PEOPLE_URL}/?page=1`;
         // people_list_xhr = xhr(people_endpoint, 'GET', null, {}, 200, PF.list());
-        original_uuid = random.uuid;
     },
     afterEach() {
-        random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
 });
@@ -158,4 +155,3 @@ test('navigating between location and people and locations and category will not
         // });
     });
 });
-

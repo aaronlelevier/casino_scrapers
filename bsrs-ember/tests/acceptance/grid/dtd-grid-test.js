@@ -11,7 +11,6 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
-import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/dtd';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -35,10 +34,8 @@ module('Acceptance | dtd grid test', {
     store = application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/?page=1`;
     list_xhr = xhr(endpoint, 'GET', null, {}, 200, DTDF.list());
-    original_uuid = random.uuid;
   },
   afterEach() {
-    random.uuid = original_uuid;
     Ember.run(application, 'destroy');
   }
 });
