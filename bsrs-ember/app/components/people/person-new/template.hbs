@@ -31,6 +31,25 @@
             {{/form-group}}
           </div>
         </div>
+
+        <div class="row">
+          <div class="col-md-5">
+            {{#form-group title="admin.person.label.first_name" for="first_name"}}
+            {{input type="text" placeholder=(t "admin.person.label.first_name") value=model.first_name class="form-control t-person-first-name" id="first_name"}}
+            {{/form-group}}
+          </div>
+          <div class="col-md-2">
+            {{#form-group title="admin.person.label.middle_initial" for="middle_initial"}}
+            {{validated-input placeholder=(t "admin.person.label.middle_initial") value=model.middle_initial class="t-middle-initial-validator" id="middle_initial" model=model valuePath="middle_initial" className="form-control t-person-middle-initial" didValidate=didValidate}}
+            {{/form-group}}
+          </div>
+          <div class="col-md-5">
+            {{#form-group title="admin.person.label.last_name" for="last_name"}}
+            {{input type="text" placeholder=(t "admin.person.label.last_name") value=model.last_name class="form-control t-person-last-name" id="last_name"}}
+            {{/form-group}}
+          </div>
+        </div>
+
         <div class="row">
           <div class="col-sm-12">
             {{#form-group title="admin.person.label.role-name" for="role"}}
