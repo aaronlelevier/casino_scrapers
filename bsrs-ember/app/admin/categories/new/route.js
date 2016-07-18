@@ -6,7 +6,7 @@ var CategoryNewRoute = TabNewRoute.extend({
   repository: inject('category'),
   redirectRoute: 'admin.categories.index',
   module: 'category',
-  templateModelField: Ember.computed(function() { return 'Category'; }),
+  templateModelField: 'Category',
   model(params) {
     let new_pk = parseInt(params.new_id, 10);
     let transition = arguments[1];
@@ -17,10 +17,10 @@ var CategoryNewRoute = TabNewRoute.extend({
     if(!model){
       model = this.get('repository').create(new_pk);
     }
-    return {
+    return Ember.RSVP.hash({
       model: model,
       categories_children: categories_children,
-    };
+    });
   },
   setupController: function(controller, hash) {
     controller.set('model', hash.model);

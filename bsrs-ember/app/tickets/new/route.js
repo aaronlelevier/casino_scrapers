@@ -28,11 +28,11 @@ var TicketNewRoute = TabNewRoute.extend({
     if(!model){
       model = this.get('repository').create(new_pk);
     }
-    return {
+    return Ember.RSVP.hash({
       model: model,
       statuses: statuses,
       priorities: priorities,
-    };
+    });
   },
   setupController: function(controller, hash) {
     controller.set('model', hash.model);

@@ -14,11 +14,11 @@ var PersonNew = TabNewRoute.extend({
     if(!model){
       model = this.get('repository').create(new_pk);
     }
-    return {
+    return Ember.RSVP.hash({
       model: model,
       roles: roles,
       locales: this.get('simpleStore').find('locale')
-    };
+    });
   },
   setupController(controller, hash) {
     controller.set('model', hash.model);

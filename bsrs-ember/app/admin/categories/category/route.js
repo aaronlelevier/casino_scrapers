@@ -7,7 +7,7 @@ var CategorySingle = TabRoute.extend(FindById, {
   repository: inject('category'),
   redirectRoute: 'admin.categories.index',
   module: 'category',
-  templateModelField: Ember.computed(function() { return 'name'; }),
+  templateModelField: 'name',
   model(params) {
     const pk = params.category_id;
     const repository = this.get('repository');

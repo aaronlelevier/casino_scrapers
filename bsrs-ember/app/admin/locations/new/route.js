@@ -16,7 +16,7 @@ var LocationNewRoute = TabRoute.extend(ContactRouteMixin, {
     if(!model){
       model = this.get('repository').create(new_pk);
     }
-    return {
+    return Ember.RSVP.hash({
       model: model,
       all_statuses: all_statuses,
       all_location_levels: all_location_levels,
@@ -28,7 +28,7 @@ var LocationNewRoute = TabRoute.extend(ContactRouteMixin, {
       default_address_type: this.address_type_repo.get_default(),
       countries: this.country_repo.find(),
       state_list: this.state_repo.find(),
-    };
+    });
   },
   setupController: function(controller, hash) {
     controller.set('model', hash.model);
