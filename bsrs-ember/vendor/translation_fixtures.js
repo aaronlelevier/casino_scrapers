@@ -6,6 +6,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
       case 'en':
       lang = {
         'en': {
+          'activity.one':'Activity',
           'activity.empty.comments':'No Comments',
           'activity.empty.status_updates':'No Status Updates',
           'activity.tabs.all_updates':'All Updates',
@@ -323,9 +324,11 @@ var BSRS_TRANSLATION_FACTORY = (function() {
           'errors.dtd.description':'Description must be provided',
           'errors.dtd.key':'Key must be provided',
           'errors.link.text':'Text must be provided',
-          'errors.person.middle_initial':'Middle Initial must be less than 2 characters',
+          'errors.person.middle_initial':'Middle Initial can only be 1 character',
           'errors.person.password':'Password must include at least one upper case letter, one lower case letter, and a number',
           'errors.person.username':'Username must be provided',
+          'errors.person.first_name':'First name must be provided. Max length 30',
+          'errors.person.last_name':'Last name must be provided. Max length 30',
           'errors.ticket.assignee':'Assignee must be provided',
           'errors.ticket.request':'Request must be provided',
           'general.new':'New',
@@ -336,6 +339,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
           'grid.reset_all_options':'Reset All Options',
           'grid.save_filter':'Save Filter',
           'menu.home':'Home',
+          'mobile.label.detail':'Details',
           'modules.assets.titleShort':'Assets',
           'modules.invoices.titleShort':'Invoices',
           'modules.pms.titleShort':'PM',
