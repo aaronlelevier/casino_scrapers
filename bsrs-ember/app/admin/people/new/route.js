@@ -6,7 +6,7 @@ var PersonNew = TabNewRoute.extend({
   repository: inject('person'),
   redirectRoute: 'admin.people.index',
   module: 'person',
-  templateModelField: Ember.computed(function() { return 'Person'; }),
+  templateModelField: 'Person',
   model(params) {
     const new_pk = parseInt(params.new_id, 10);
     const roles = this.get('simpleStore').find('role');

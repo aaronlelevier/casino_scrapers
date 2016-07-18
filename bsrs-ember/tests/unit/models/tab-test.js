@@ -25,19 +25,19 @@ test('test generic attrs on the model', (assert) => {
   assert.equal(tab1.get('newModel'), TBD.newModel_one);
 });
 
-test('ensure tabs are aware of the total tab count', (assert) => {
-  let data = TBF.get();
-  run(()=>{
-    tab1 = store.push('tab', data);
-  });
-  assert.equal(tab1.get('tab_count').get('length'), 1);
-  data = TBF.get(TBD.id_two);
-  run(()=>{
-    tab2 = store.push('tab', data);
-  });
-  assert.equal(tab1.get('tab_count').get('length'), 2);
-  assert.equal(tab2.get('tab_count').get('length'), 2);
-});
+// test('ensure tabs are aware of the total tab count', (assert) => {
+//   let data = TBF.get();
+//   run(()=>{
+//     tab1 = store.push('tab', data);
+//   });
+//   assert.equal(tab1.get('tab_count').get('length'), 1);
+//   data = TBF.get(TBD.id_two);
+//   run(()=>{
+//     tab2 = store.push('tab', data);
+//   });
+//   assert.equal(tab1.get('tab_count').get('length'), 2);
+//   assert.equal(tab2.get('tab_count').get('length'), 2);
+// });
 
 test('model is returned based on id of corresponding model', (assert) => {
   let data = TBF.get();

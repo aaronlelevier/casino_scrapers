@@ -30,15 +30,18 @@ var TabModel = Ember.Object.extend({
   singleTabModel: Ember.computed('model_id', function() {
     return this.get('simpleStore').find(this.get('module'), this.get('model_id'));
   }),
+  /*
+  * displayText - used for single tabs
+  */
   parent: Ember.computed('modelBindingToTemplate', function(){
     return this.get('displayText') || this.get('modelBindingToTemplate');
   }),
-  tab_count: Ember.computed(function(){
-    const filter = (tab) => {
-      return true;
-    };
-    return this.get('simpleStore').find('tab', filter);
-  }),
+  // tab_count: Ember.computed(function(){
+  //   const filter = (tab) => {
+  //     return true;
+  //   };
+  //   return this.get('simpleStore').find('tab', filter);
+  // }),
 });
 
 export default TabModel;

@@ -7,7 +7,7 @@ var LocationNewRoute = TabRoute.extend(ContactRouteMixin, {
   repository: inject('location'),
   redirectRoute: 'admin.locations.index',
   module: 'location',
-  templateModelField: Ember.computed(function() { return 'Location'; }),
+  templateModelField: 'Location',
   model(params) {
     let new_pk = parseInt(params.new_id, 10);
     let all_location_levels = this.get('simpleStore').find('location-level');

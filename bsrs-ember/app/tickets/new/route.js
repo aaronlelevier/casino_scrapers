@@ -10,7 +10,7 @@ var TicketNewRoute = TabNewRoute.extend({
   priorityRepository: inject('ticket-priority'),
   redirectRoute: 'tickets.index',
   module: 'ticket',
-  templateModelField: Ember.computed(function() { return 'Ticket'; }),
+  templateModelField: 'Ticket',
   priorities: Ember.computed(function() {
     return this.get('priorityRepository').fetch();
   }),
