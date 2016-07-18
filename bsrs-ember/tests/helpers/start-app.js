@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import Application from '../../app';
 import config from 'bsrs-ember/config/environment';
 import windowProxy from 'bsrs-ember/utilities/window-proxy';
@@ -176,7 +177,7 @@ export default function startApp(attrs) {
   breakpoints.forEach((point) => {
     bp[point.name] = point.begin + 5;
   });
-  Ember.run(() => {
+  run(() => {
     flexi.set('width', bp['huge']);
   });
 

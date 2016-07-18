@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 
 /* @param {string} string - 'huge' 'mobile' */
 export default Ember.Test.registerAsyncHelper('setWidth', function(application, string) {
@@ -12,5 +13,7 @@ export default Ember.Test.registerAsyncHelper('setWidth', function(application, 
   breakpoints.forEach((point) => {
     bp[point.name] = point.begin + 5;
   });
-  flexi.set('width', bp[string]);
+  run(() => {
+    flexi.set('width', bp[string]);
+  });
 });
