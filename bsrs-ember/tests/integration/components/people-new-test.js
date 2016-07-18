@@ -71,7 +71,6 @@ test('locale should default if not present in Person model', function(assert) {
   assert.equal($component.text().trim(), trans.t(LD.nameTwoKey));
 });
 
-
 // test('filling in invalid password reveal validation messages', function(assert) {
 //   run(() => {
 //     this.set('model', store.push('person', {}));
