@@ -82,6 +82,7 @@ export default PageObject.create({
   acceptNotifyInheritedFromClick: clickable('.t-inherited-msg-accept_notify-link'),
 
   clickChangePassword: clickable('.t-person-change-password'),
+  passwordFillIn: fillable('.t-person-password'),
   passwordOneTimeChecked: () => Ember.$('.t-person-password_one_time').is(':checked'),
   passwordOneTimeClick: clickable('.t-person-password_one_time-label'),
   passwordOneTimeLabelText: text('.t-person-password_one_time-label'),

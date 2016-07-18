@@ -92,11 +92,11 @@ test('visiting /people/new and creating a new person', (assert) => {
     assert.equal(person.get('id'), UUID.value);
     assert.ok(person.get('new'));
   });
-  fillIn('.t-person-username', PD.username);
-  fillIn('.t-person-password', PD.password);
-  fillIn('.t-person-first-name', PD.first_name);
-  fillIn('.t-person-middle-initial', PD.middle_initial);
-  fillIn('.t-person-last-name', PD.last_name);
+  page.usernameFillIn(PD.username);
+  page.passwordFillIn(PD.password);
+  page.firstNameFill(PD.first_name);
+  page.middleInitialFill(PD.middle_initial);
+  page.lastNameFill(PD.last_name);
   ajax(PEOPLE_URL, 'POST', JSON.stringify(payload), {}, 201, response);
   ajax(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
   generalPage.save();
