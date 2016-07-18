@@ -1,0 +1,82 @@
+%aAdmin {
+  line-height: 2em;
+  font-size: 0.9em;
+  color: $darkGray;
+  text-decoration: none;
+  padding: 3px 10px 3px 10%;
+  display: block;
+  &:hover {
+    cursor: pointer;
+    color: $hoverColor;
+    background-color: $hoverColorLight;
+    .fa {
+      color: $white;
+      &:hover {
+        color: $orange;
+      }
+    }
+  }
+  &.active {
+    color: $white;
+    background-color: $activeColor;
+    .fa {
+      color: $white;
+      &:hover {
+        color: $orange;
+      }
+    }
+  }
+  &.active:hover {
+    cursor: default;
+    .fa {
+      color: $white;
+      &:hover {
+        cursor: pointer;
+        color: $orange;
+      }
+    }
+  }
+  .fa {
+    line-height: 1.7em;
+    margin-right: 7px;
+    &:hover{
+      color: $orange;
+    }
+  }
+}
+
+& {
+  font-size: 1.4rem;
+  h3 {
+    margin: 0;
+    color: $medGray;
+    font-size: 0.8em;
+    padding: 25px 10px 10px 0;
+    i.menuIcon {
+      width: 10%;
+      text-align: center;
+    }
+  }//h3
+  section {
+    background: $white;
+    @include borderStyle(1px 0);
+    a {
+      @extend %aAdmin;
+    }//a
+  }//section
+}
+
+&.mobile-admin-menu {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  section {
+    @include borderStyle(1px 0 0);
+    a {
+      @include borderStyle(0 0 1px);
+      line-height: 2.2em;
+      &:hover {
+        background: none;
+      }
+    }//a
+  }//section
+}

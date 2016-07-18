@@ -28,15 +28,15 @@ module('Acceptance | admin settings layout test', {
   }
 });
 
-test('admin panel displays correct headers and section headers', function(assert) {
+test('admin panel displays correct headers and h3 headers', function(assert) {
   clearxhr(detail_xhr);
   visit(ADMIN_URL);
   andThen(() => {
-    assert.equal(find(ADMINPANEL + ' > section').length, 5);
-    assert.equal(find(ADMINPANEL + ' > section:eq(0) h3').text().trim(), "Settings");
-    assert.equal(find(ADMINPANEL + ' > section:eq(1) h3').text().trim(), "People");
-    assert.equal(find(ADMINPANEL + ' > section:eq(2) h3').text().trim(), "Locations");
-    assert.equal(find(ADMINPANEL + ' > section:eq(3) h3').text().trim(), "Categories");
-    assert.equal(find(ADMINPANEL + ' > section:eq(4) h3').text().trim(), "Contractors");
+    assert.equal(find(ADMINPANEL + ' h3').length, 5);
+    assert.equal(find(ADMINPANEL + ' h3:eq(0)').text().trim(), "Settings");
+    assert.equal(find(ADMINPANEL + ' h3:eq(1)').text().trim(), "People");
+    assert.equal(find(ADMINPANEL + ' h3:eq(2)').text().trim(), "Locations");
+    assert.equal(find(ADMINPANEL + ' h3:eq(3)').text().trim(), "Categories");
+    assert.equal(find(ADMINPANEL + ' h3:eq(4)').text().trim(), "Contractors");
   });
 });

@@ -1,61 +1,3 @@
-/* START Placeholders */
-%header {
-  height: $documentHeaderHeight;
-  line-height: $documentHeaderHeight;
-  border: $borderStyle;
-  border-width: 0 0 1px;
-  padding: 0 10px;
-  position: relative;
-  background: $lightGray;
-}
-%aAdmin {
-  line-height: 2rem;
-  font-size: 0.9em;
-  color: $darkGray;
-  text-decoration: none;
-  padding: 3px 8px 3px 30px;
-  display: block;
-  &:hover {
-    cursor: pointer;
-    color: $hoverColor;
-    background-color: $hoverColorLight;
-    .fa {
-      color: $white;
-      &:hover {
-        color: $orange;
-      }
-    }
-  }
-  &.active {
-    color: $white;
-    background-color: $activeColor;
-    .fa {
-      color: $white;
-      &:hover {
-        color: $orange;
-      }
-    }
-  }
-  &.active:hover {
-    cursor: default;
-    .fa {
-      color: $white;
-      &:hover {
-        cursor: pointer;
-        color: $orange;
-      }
-    }
-  }
-  .fa {
-    line-height: 1.7rem;
-    margin-right: 7px;
-    &:hover{
-      color: $orange;
-    }
-  }
-}
-/* END Placeholders */
-
 /* Ticket, Admin, Dashboard, */
 aside.side-panel {
   position: absolute;
@@ -65,7 +7,13 @@ aside.side-panel {
   width: $documentLeft;
   overflow: hidden;
   header {
-    @extend %header;
+    height: $documentHeaderHeight;
+    line-height: $documentHeaderHeight;
+    border: $borderStyle;
+    border-width: 0 0 1px;
+    padding: 0 10px;
+    position: relative;
+    background: $lightGray;
     h1 {
       vertical-align: middle;
       font-size: 1.3em;
@@ -85,53 +33,5 @@ aside.side-panel {
     background-color: $lightGray;
     border: $borderStyle;
     border-width: 0 1px 0 0;
-    section {
-      margin: 5px 0;
-      h3 {
-        margin: 0;
-        color: $darkGray;
-        font-size: 1.1em;
-        padding: 10px 5px;
-        i.menuIcon {
-          width: 25px;
-          text-align: center;
-        }
-      }//h3
-      a {
-        @extend %aAdmin;
-      }//a
-    }//section
   }//menu
-}
-
-/* Mobile does not use aside tag but rather class defined on passing in string .mobile-admin-menu */
-.mobile-admin-menu {
-  @include generalPadding;
-  header {
-    h1 {
-      @include pageTitle;
-    }
-  }
-  menu {
-    background: none;
-    padding: 0;
-    section {
-      margin: 0;
-      h3 {
-        padding-bottom: .6em;
-        color: $medGray;
-        @include borderStyle(0 0 1px);
-        i {
-          padding-right: 0.5em;
-        }
-      }
-      a {
-        @extend %aAdmin;
-        background: $lightGray;
-        font-size: 1.8rem;
-        line-height: 2.4em;
-        @include borderStyle(0 0 1px);
-      }
-    }
-  }
 }
