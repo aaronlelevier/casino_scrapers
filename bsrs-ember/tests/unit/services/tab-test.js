@@ -1,13 +1,13 @@
 import Ember from 'ember';
 const { run } = Ember;
-import {test, module} from 'bsrs-ember/tests/helpers/qunit';
+import { moduleFor, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 
 var ticket, dtd, store, tab, tab_single;
 
-module('service:tab-list', 'Unit | Service | tab list', {
+moduleFor('service:tab-list', 'Unit | Service | tab list', {
   needs: ['validator:presence', 'validator:ticket-status'],
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:ticket', 'model:tab', 'model:dtd', 'model:dtd-list', 'service:i18n']);
@@ -19,8 +19,8 @@ module('service:tab-list', 'Unit | Service | tab list', {
 });
 
 /*
- * findTab: used to get tab that is passed to application route
- */
+* findTab: used to get tab that is passed to application route
+*/
 test('it exists for multiple tabs', function(assert) {
   let service = this.subject();
   assert.equal(service.findTab(TD.idOne).get('id'), TD.idOne);
