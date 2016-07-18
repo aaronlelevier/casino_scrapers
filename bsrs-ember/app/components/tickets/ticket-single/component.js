@@ -28,7 +28,7 @@ var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMi
       if (this.all_components_valid()) {
         if (this.get('model.validations.isValid')) {
           const promise = this._super(update, updateActivities);
-          if (promise && promise.then) {
+          if (promise && promise.then && updateActivities) {
             promise.then((activities) => {
               this.set('activities', activities);
             });

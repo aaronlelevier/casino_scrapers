@@ -3,14 +3,14 @@ const { Route, inject } = Ember;
 
 export default Ember.Component.extend({
   i18n: inject.service(),
-  allCounts: Ember.computed('model.[]', function() {
-    return this.get('model').get('length');
+  allCounts: Ember.computed('activities.[]', function() {
+    return this.get('activities').get('length');
   }),
-  commentCounts: Ember.computed('model.[]', function() {
-    return this.get('model').filterBy('type', 'comment').get('length');
+  commentCounts: Ember.computed('activities.[]', function() {
+    return this.get('activities').filterBy('type', 'comment').get('length');
   }),
-  statusCounts: Ember.computed('model.[]', function() {
-    return this.get('model').filterBy('type', 'status').get('length');
+  statusCounts: Ember.computed('activities.[]', function() {
+    return this.get('activities').filterBy('type', 'status').get('length');
   }),
   actions: {
     filter(filterType, event) {

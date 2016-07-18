@@ -43,7 +43,7 @@
         </div>
         {{tickets/ticket-comments-and-file-upload model=model priorities=priorities statuses=statuses deleteAttachment="deleteAttachment" save=(action "save" "update" "updateActivities")}}
       </div>
-      {{activity-list model=activities}}
+      {{activity-list activities=activities}}
     </section>
   </div>
 </article>
