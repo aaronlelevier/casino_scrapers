@@ -240,6 +240,9 @@ class PersonCreateTests(APITestCase):
         self.data = {
             "id": str(uuid.uuid4()),
             "username": "one",
+            "first_name": "foo",
+            "middle_initial": "a",
+            "last_name": "bar",
             "password": PASSWORD,
             "role": self.person.role.pk,
             "locale": str(self.locale.id)
@@ -248,31 +251,27 @@ class PersonCreateTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_create(self):
+    def test_data(self):
         self.assertEqual(Person.objects.count(), 1)
 
         response = self.client.post('/api/admin/people/', self.data, format='json')
 
+        data = json.loads(response.content.decode('utf8'))
+        person = Person.objects.get(id=data['id'])
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Person.objects.count(), 2)
-        person = Person.objects.get(username=self.data["username"])
-        self.assertEqual(self.data['id'], str(person.id))
+        self.assertEqual(data['id'], str(person.id))
+        self.assertEqual(data['username'], person.username)
+        self.assertEqual(data['first_name'], person.first_name)
+        self.assertEqual(data['middle_initial'], person.middle_initial)
+        self.assertEqual(data['last_name'], person.last_name)
+        self.assertEqual(data['role'], str(person.role.id))
+        self.assertEqual(data['locale'], str(self.locale.id))
 
     def test_password_not_in_response(self):
         response = self.client.post('/api/admin/people/', self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertNotIn('password', data)
-
-    def test_data(self):
-        response = self.client.post('/api/admin/people/', self.data, format='json')
-
-        data = json.loads(response.content.decode('utf8'))
-        person = Person.objects.get(id=data['id'])
-
-        self.assertEqual(data['id'], str(person.id))
-        self.assertEqual(data['username'], person.username)
-        self.assertEqual(data['role'], str(person.role.id))
-        self.assertEqual(data['locale'], str(self.locale.id))
 
 
 class PersonListTests(TestCase):

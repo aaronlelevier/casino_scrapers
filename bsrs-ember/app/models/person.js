@@ -40,11 +40,33 @@ const Validations = buildValidations({
   //   regex: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$/,
   //   message: 'errors.person.password'
   // }),
+  first_name: [
+    validator('presence', {
+      presence: true,
+      message: 'errors.person.first_name'
+    }),
+    validator('length', {
+      debounce: 300,
+      max: 30,
+      message: 'errors.person.first_name'
+    })
+  ],
   middle_initial: validator('length', {
     debounce: 300,
     max: 1,
     message: 'errors.person.middle_initial'
   }),
+  last_name: [
+    validator('presence', {
+      presence: true,
+      message: 'errors.person.last_name'
+    }),
+    validator('length', {
+      debounce: 300,
+      max: 30,
+      message: 'errors.person.last_name'
+    })
+  ],
 });
 
 var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, LocationMixin, NewMixin, OptConf, RoleMixin, LocaleMixin, {
@@ -133,6 +155,9 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
       id: this.get('id'),
       username: this.get('username'),
       password: this.get('password'),
+      first_name: this.get('first_name'),
+      middle_initial: this.get('middle_initial'),
+      last_name: this.get('last_name'),
       role: this.get('role').get('id'),
       status: this.get('status_fk') || this.get('status_repo').get_default().get('id'),
       locale: this.get('locale.id') || this.get('locale_repo').get_default().get('id'),
