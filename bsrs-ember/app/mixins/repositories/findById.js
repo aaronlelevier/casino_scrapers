@@ -2,24 +2,12 @@ import Ember from 'ember';
 import PromiseMixin from 'ember-promise/mixins/promise';
 
 var FindByIdRepo = Ember.Mixin.create({
-  findById(id, model){
+  findById(id){
     const url = this.get('url');
     const deserializer = this.get('deserializer');
-    if(model){
-      PromiseMixin.xhr(`${url}${id}/`, 'GET').then((response) => {
-        deserializer.deserialize(response, id);
-      }, (xhr) => {
-        if(xhr.status === 400 || xhr.status === 404){
-          const err = xhr.responseJSON;
-          const key = Object.keys(err);
-          return Ember.RSVP.Promise.reject(err[key[0]]);
-        } 
-      });
-      return model;
-    }
-    /**
-     * If no existing model, return Promise to prevent optimistic rendering
-     */
+    /*
+    * If no existing model, return Promise to prevent optimistic rendering
+    */
     return PromiseMixin.xhr(`${url}${id}/`, 'GET').then((response) => {
       return deserializer.deserialize(response, id);
     }, (xhr) => {
@@ -27,7 +15,7 @@ var FindByIdRepo = Ember.Mixin.create({
         const err = xhr.responseJSON;
         const key = Object.keys(err);
         return Ember.RSVP.Promise.reject(err[key[0]]);
-      } 
+      }
     });
 
   }
