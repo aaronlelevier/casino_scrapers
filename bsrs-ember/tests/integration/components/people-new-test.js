@@ -37,22 +37,23 @@ moduleForComponent('person-new', 'integration: person-new test', {
   }
 });
 
-test('filling in invalid username reveal validation messages', function(assert) {
+test('username validation error if not present', function(assert) {
   run(() => {
     this.set('model', store.push('person', {}));
   });
   this.render(hbs`{{people/person-new model=model}}`);
   let $component = this.$('.has-error');
+  // invalid - username required
   assert.equal($component.text().trim(), '');
   this.$('.t-person-password').val(PD.password).trigger('change');
   var save_btn = this.$('.t-save-btn');
   save_btn.trigger('click').trigger('change');
-  $component = this.$('.has-error');
-  assert.ok($component.is(':visible'));
-  assert.ok($component.text().trim().indexOf(trans.t('errors.person.username')) > -1);
+  let $err = this.$('.has-error');
+  assert.ok($err.is(':visible'));
+  assert.ok($err.text().trim().indexOf(trans.t('errors.person.username')) > -1);
 });
 
-test('should default locale if not present in Person model', function(assert) {
+test('locale should default if not present in Person model', function(assert) {
   let person;
   run(() => {
     person = store.push('person', {});
@@ -70,73 +71,74 @@ test('should default locale if not present in Person model', function(assert) {
   assert.equal($component.text().trim(), trans.t(LD.nameTwoKey));
 });
 
-test('first_name should raise validation error if first_name is blank becauase its required', function(assert) {
-  var done = assert.async();
+test('first_name validation error if not present or greater than 30 characters', function(assert) {
   run(() => {
     this.set('model', store.push('person', {id: PD.id}));
   });
   this.render(hbs`{{people/person-new model=model}}`);
-  var $component = this.$('.t-first-name-validator .error');
+  let $component = this.$('.t-first-name-validator .error');
+  // presence required
   assert.equal($component.text().trim(), '');
   page.firstNameFill('');
-  Ember.run.later(() => {
-    const $component = this.$('.t-first-name-validator .error');
-    assert.ok($component.is(':visible'));
-    assert.equal($component.text().trim(), trans.t('errors.person.first_name'));
-    done();
-  }, 300);
+  let $err = this.$('.t-first-name-validator .error');
+  assert.ok($err.is(':visible'));
+  assert.equal($err.text().trim(), trans.t('errors.person.first_name'));
+  // valid input
+  $err = this.$('.t-first-name-validator .error');
+  page.firstNameFill('a');
+  assert.notOk($err.is(':visible'));
+  // length validation
+  page.firstNameFill(Array(32).join('a'));
+  $err = this.$('.t-first-name-validator .error');
+  assert.ok($err.is(':visible'));
+  assert.equal($err.text().trim(), trans.t('errors.person.first_name'));
 });
 
-test('filling in more than 1 char middle initial will reveal validation messages', function(assert) {
-  var done = assert.async();
+test('middle_initial validation error if more than 1 character', function(assert) {
   run(() => {
     this.set('model', store.push('person', {id: PD.id}));
   });
   this.render(hbs`{{people/person-new model=model}}`);
   var $component = this.$('.t-middle-initial-validator .error');
   assert.equal($component.text().trim(), '');
+  // invalid
   page.middleInitial('wa');
-  Ember.run.later(() => {
-    const $component = this.$('.t-middle-initial-validator .error');
-    assert.ok($component.is(':visible'));
-    assert.equal($component.text().trim(), trans.t('errors.person.middle_initial'));
-    done();
-  }, 300);
+  let $err = this.$('.t-middle-initial-validator .error');
+  assert.ok($err.is(':visible'));
+  assert.equal($err.text().trim(), trans.t('errors.person.middle_initial'));
+  // valid - if 1 char
+  page.middleInitial('a');
+  $err = this.$('.t-middle-initial-validator .error');
+  assert.notOk($err.is(':visible'));
+  // valid - b/c not a required field
+  page.middleInitial('');
+  $err = this.$('.t-middle-initial-validator .error');
+  assert.notOk($err.is(':visible'));
 });
 
-test('last_name should raise validation error if last_name is blank becauase its required', function(assert) {
-  var done = assert.async();
+test('last_name validation error if not present or greater than 30 characters', function(assert) {
   run(() => {
     this.set('model', store.push('person', {id: PD.id}));
   });
   this.render(hbs`{{people/person-new model=model}}`);
   var $component = this.$('.t-last-name-validator .error');
   assert.equal($component.text().trim(), '');
+  // invalid b/c required
   page.lastNameFill('');
-  Ember.run.later(() => {
-    const $component = this.$('.t-last-name-validator .error');
-    assert.ok($component.is(':visible'));
-    assert.equal($component.text().trim(), trans.t('errors.person.last_name'));
-    done();
-  }, 300);
+  let $err = this.$('.t-last-name-validator .error');
+  assert.ok($err.is(':visible'));
+  assert.equal($err.text().trim(), trans.t('errors.person.last_name'));
+  // valid
+  page.lastNameFill('a');
+  $err = this.$('.t-last-name-validator .error');
+  assert.notOk($err.is(':visible'));
+  // invalid length
+  page.lastNameFill(Array(32).join('a'));
+  $err = this.$('.t-last-name-validator .error');
+  assert.ok($err.is(':visible'));
+  assert.equal($err.text().trim(), trans.t('errors.person.last_name'));
 });
 
-test('last_name should raise validation error if greater than 30 characters', function(assert) {
-  var done = assert.async();
-  run(() => {
-    this.set('model', store.push('person', {id: PD.id}));
-  });
-  this.render(hbs`{{people/person-new model=model}}`);
-  var $component = this.$('.t-last-name-validator .error');
-  assert.equal($component.text().trim(), '');
-  page.lastNameFill(Array(32).join('a'));
-  Ember.run.later(() => {
-    const $component = this.$('.t-last-name-validator .error');
-    assert.ok($component.is(':visible'));
-    assert.equal($component.text().trim(), trans.t('errors.person.last_name'));
-    done();
-  }, 300);
-});
 
 // test('filling in invalid password reveal validation messages', function(assert) {
 //   run(() => {

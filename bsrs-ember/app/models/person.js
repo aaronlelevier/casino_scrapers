@@ -46,13 +46,11 @@ const Validations = buildValidations({
       message: 'errors.person.first_name'
     }),
     validator('length', {
-      debounce: 300,
       max: 30,
       message: 'errors.person.first_name'
     })
   ],
   middle_initial: validator('length', {
-    debounce: 300,
     max: 1,
     message: 'errors.person.middle_initial'
   }),
@@ -62,7 +60,6 @@ const Validations = buildValidations({
       message: 'errors.person.last_name'
     }),
     validator('length', {
-      debounce: 300,
       max: 30,
       message: 'errors.person.last_name'
     })
