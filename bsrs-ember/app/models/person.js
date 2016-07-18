@@ -25,9 +25,10 @@ const Validations = buildValidations({
     }),
     validator('unique-username', {
       debounce: 300,
-      disabled() {
+      // disabled: Ember.computed.not('model.meta.username.isEnabled'),
+      disabled: Ember.computed(function() {
         return this.get('model.isDirtyOrRelatedDirty') ? false : true;
-      }
+      }).volatile()
     }),
   ],
   // password: validator('format', {

@@ -1,6 +1,9 @@
 import Ember from 'ember';
 const { computed, defineProperty, observer } = Ember;
 
+/*
+* didValidate - trigger showMessage and can show mwwage if 
+*/
 export default Ember.Component.extend({
   type: 'text',
   wasSet: false,
