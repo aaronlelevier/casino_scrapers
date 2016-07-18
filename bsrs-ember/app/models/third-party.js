@@ -32,7 +32,7 @@ var ThirdPartyModel = Model.extend(NewMixin, OptConf, {
   },
   rollback() {
     this.rollbackStatus();
-    this._super();
+    this._super(...arguments);
   },
   removeRecord() {
     run(() => {

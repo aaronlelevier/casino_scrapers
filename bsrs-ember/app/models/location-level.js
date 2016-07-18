@@ -18,7 +18,7 @@ var LocationLevel = Model.extend(NewMixin, {
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   rollback() {
     this.rollbackChildren();
-    this._super();
+    this._super(...arguments);
   },
   rollbackChildren() {
     const store = this.get('simpleStore');

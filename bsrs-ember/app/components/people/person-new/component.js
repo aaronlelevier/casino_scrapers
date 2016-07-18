@@ -13,7 +13,7 @@ var PersonNewComponent = Ember.Component.extend(TabMixin, NewTabMixin, {
   actions: {
     save() {
       if (this.get('model.validations.isValid')) {
-        this._super().then(() => {
+        this._super(...arguments).then(() => {
           this.sendAction('editPerson');
         });
       }

@@ -227,7 +227,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     this.rollbackCategories();
     this.rollbackAssignee();
     this.rollbackAttachments();
-    this._super();
+    this._super(...arguments);
   },
   saveRelated() {
     this.saveStatus();

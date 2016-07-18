@@ -55,7 +55,7 @@ var RoleModel = Model.extend(NewMixin, OptConf, {
   rollback() {
     this.rollbackLocationLevel();
     this.rollbackCategories();
-    this._super();
+    this._super(...arguments);
   },
   saveRelated() {
     this.saveLocationLevel();

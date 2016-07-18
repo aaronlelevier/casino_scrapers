@@ -28,7 +28,7 @@ var TicketNewComponent = ParentValidationComponent.extend(StrictMixin, TabMixin,
     save() {
       this.set('submitted', true);
       if (this.all_components_valid()) {
-        this._super();
+        this._super(...arguments);
       }
     }
   }

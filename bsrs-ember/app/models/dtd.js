@@ -87,7 +87,7 @@ var DTDModel = Model.extend(Validations, OptConf, {
     this.fieldRollbackContainer();
     this.rollbackFields();
     this.rollbackAttachments();
-    this._super();
+    this._super(...arguments);
   },
   linkRollbackContainer() {
     const links = this.get('links');
@@ -107,7 +107,7 @@ var DTDModel = Model.extend(Validations, OptConf, {
     this.saveFieldsContainer();
     this.saveFields();
     this.saveAttachments();
-    this._super();
+    this._super(...arguments);
   },
   saveLinksContainer() {
     const links = this.get('links');

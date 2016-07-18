@@ -59,7 +59,7 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, OptConf, {
   },
   rollback() {
     this.rollbackChildren();
-    this._super();
+    this._super(...arguments);
   },
   saveRelated() {
     this.saveChildren();

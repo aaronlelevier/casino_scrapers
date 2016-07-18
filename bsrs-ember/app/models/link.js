@@ -41,14 +41,14 @@ var LinkModel = Model.extend(CategoriesMixin, Validations, OptConf, {
     this.rollbackStatus();
     this.rollbackDestination();
     this.rollbackCategories();
-    this._super();
+    this._super(...arguments);
   },
   save(){
     this.savePriority();
     this.saveStatus();
     this.saveDestination();
     this.saveCategories();
-    this._super();
+    this._super(...arguments);
   },
   serialize() {
     return {

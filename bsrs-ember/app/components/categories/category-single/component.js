@@ -12,7 +12,7 @@ var CategorySingleComponent = Ember.Component.extend(TabMixin, EditMixin, Valida
     save() {
       this.set('submitted', true);
       if (this.get('valid')) {
-        this._super();
+        this._super(...arguments);
       }
     }
   }

@@ -21,7 +21,7 @@ var GeneralSettings = Ember.Component.extend(TabMixin, EditMixin, ChangeBoolMixi
     save() {
       this.set('submitted', true);
       if (this.get('valid')) {
-        this._super();
+        this._super(...arguments);
       }
     }
   }

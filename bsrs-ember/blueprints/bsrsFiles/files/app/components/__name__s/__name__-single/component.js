@@ -17,7 +17,7 @@ export default Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, {
     save() {
       this.set('submitted', true);
       if (this.get('valid')) {
-        this._super();
+        this._super(...arguments);
       }
     }
   }

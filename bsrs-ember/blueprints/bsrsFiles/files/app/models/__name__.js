@@ -17,7 +17,7 @@ export default Model.extend(OptConfMixin, {
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   rollback() {
     this.rollback<%= secondPropertyTitle %>();
-    this._super();
+    this._super(...arguments);
   },
   saveRelated() {
     this.save<%= secondPropertyTitle %>();

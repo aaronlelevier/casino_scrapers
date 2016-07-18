@@ -14,7 +14,7 @@ var RoleSingle = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, Ch
     save() {
       this.set('submitted', true);
       if (this.get('valid')) {
-        this._super();
+        this._super(...arguments);
       }
     },
     changedLocLevel(model, val) {

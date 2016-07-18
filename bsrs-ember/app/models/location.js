@@ -54,7 +54,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin
     this.rollbackAddresses();
     this.rollbackChildren();
     this.rollbackParents();
-    this._super();
+    this._super(...arguments);
   },
   serialize() {
     var emails = this.get('emails').filter(function(email) {

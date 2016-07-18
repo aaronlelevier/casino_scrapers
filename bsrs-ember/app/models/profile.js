@@ -32,7 +32,7 @@ export default Model.extend(OptConfMixin, Validations, {
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   rollback() {
     this.rollbackAssignee();
-    this._super();
+    this._super(...arguments);
   },
   saveRelated() {
     this.saveAssignee();

@@ -13,7 +13,7 @@ var LocationLevelGeneral = Ember.Component.extend(TabMixin, EditMixin, Validatio
     save() {
       this.set('submitted', true);
       if (this.get('valid')) {
-        this._super();
+        this._super(...arguments);
       }
     },
   }

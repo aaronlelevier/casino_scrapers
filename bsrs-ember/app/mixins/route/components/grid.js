@@ -12,7 +12,7 @@ var GridViewRoute = Ember.Route.extend({
   personCurrent: Ember.inject.service(),
   filtersetRepository: inject('filterset'),
   init() {
-    this._super();
+    this._super(...arguments);
     /* @property gridFilterParams
     * object that holds key of type string ('location.name') and value of type string ('wat')
     * passed as a property to grid-header-column component

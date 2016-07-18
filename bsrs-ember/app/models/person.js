@@ -148,7 +148,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
     this.rollbackLocations();
     this.rollbackStatus();
     this.rollbackLocale();
-    this._super();
+    this._super(...arguments);
   },
   createSerialize() {
     return {

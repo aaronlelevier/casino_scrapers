@@ -30,7 +30,7 @@ var LocationSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Ed
       //this is for insert and update location methods and transitions to list route
       this.set('submitted', true);
       if (this.all_components_valid()) {
-        this._super();
+        this._super(...arguments);
       }
     },
   }

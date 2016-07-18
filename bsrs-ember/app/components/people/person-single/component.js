@@ -37,7 +37,7 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Edit
       this.set('submitted', true);
       if (this.all_components_valid()) {
         if (this.get('model.validations.isValid')) {
-          this._super();
+          this._super(...arguments);
         }
         this.set('didValidate', true);
       }

@@ -51,7 +51,7 @@ export default Model.extend(OptConf, {
   rollback(){
     this.optionRollbackContainer();
     this.rollbackOptions();
-    this._super();
+    this._super(...arguments);
   },
   optionRollbackContainer() {
     const options = this.get('options');
