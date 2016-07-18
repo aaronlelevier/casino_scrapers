@@ -163,13 +163,9 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
 });
 
 test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', function(assert) {
-  visit(LIST_URL);
-  andThen(() => {
-    assert.equal(currentURL(), LIST_URL);
-  });
-  random.uuid = function() { return UUID.value; };
   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=description';
   xhr(sort_one ,"GET",null,{},200,PF.sorted_page_one('description'));
+  visit(LIST_URL);
   andThen(() => {
     assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descOne+"0");
   });
