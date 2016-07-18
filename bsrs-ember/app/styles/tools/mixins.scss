@@ -104,30 +104,38 @@ $Placeholders: ();
   @include truncate;
 }
 
-@mixin input-group-dropdown-static($extend: true) {
-  $inputGroupDropdownStatic:map-get($Placeholders, 'inputGroupDropdownStatic');
-  // prevent extending itself.  Will extend placeholder on every call
-  @if $extend == true {
-    // first call to mixin will generate key value in $Placeholder object and create placeholder at root of app with styles in @else
-    @if $inputGroupDropdownStatic == null {
-      $inputGroupDropdownStatic: unique-id();
-      $Placeholder: map-merge($Placeholders, ('inputGroupDropdownStatic': $inputGroupDropdownStatic)) !global;
-      @at-root %#{$inputGroupDropdownStatic} {
-        // recursive mixin that places itself at root of app inside of placeholder with css below
-        @include input-group-dropdown-static(false);
-      }
-    }
-    @extend %#{$inputGroupDropdownStatic};
-  } @else {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    margin-left: -1px;
-    margin-right: -1px;
-  }
+// @mixin input-group-dropdown-static($extend: true) {
+//   $inputGroupDropdownStatic:map-get($Placeholders, 'inputGroupDropdownStatic');
+//   // prevent extending itself.  Will extend placeholder on every call
+//   @if $extend == true {
+//     // first call to mixin will generate key value in $Placeholder object and create placeholder at root of app with styles in @else
+//     @if $inputGroupDropdownStatic == null {
+//       $inputGroupDropdownStatic: unique-id();
+//       $Placeholder: map-merge($Placeholders, ('inputGroupDropdownStatic': $inputGroupDropdownStatic)) !global;
+//       @at-root %#{$inputGroupDropdownStatic} {
+//         // recursive mixin that places itself at root of app inside of placeholder with css below
+//         @include input-group-dropdown-static(false);
+//       }
+//     }
+//     @extend %#{$inputGroupDropdownStatic};
+//   } @else {
+//     -webkit-appearance: none;
+//     -moz-appearance: none;
+//     appearance: none;
+//     margin-left: -1px;
+//     margin-right: -1px;
+//   }
+// }
+
+%input-group-dropdown-static {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin-left: -1px;
+  margin-right: -1px;
 }
 
 @mixin input-group-dropdown($min-width: 6em) {
   min-width: $min-width;
-  @include input-group-dropdown-static();
+  @extend %input-group-dropdown-static;
 }
