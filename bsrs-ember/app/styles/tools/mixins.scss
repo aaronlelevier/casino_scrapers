@@ -1,55 +1,20 @@
 // Placeholders object that basically is a true false indicator for the if statement
 $Placeholders: ();
 
-@mixin vertical-align($extend: true) {
-  $vertical-align:map-get($Placeholders, 'vertical-align');
-  // prevent extending itself.  Will extend placeholder on every call
-  @if $extend == true {
-    // first call to mixin will generate key value in $Placeholder object and create placeholder at root of app with styles in @else
-    @if $vertical-align == null {
-      $vertical-align: unique-id();
-      $Placeholder: map-merge($Placeholders, ('vertical-align': $vertical-align)) !global;
-      @at-root %#{$vertical-align} {
-        // recursive mixin that places itself at root of app inside of placeholder with css below
-        @include vertical-align(false);
-      }
-    }
-    @extend %#{$vertical-align};
-  } @else {
-    position: relative;
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
-  }
+@mixin vertical-align() {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
-@mixin truncate($extend: true) {
-  $truncate: map-get($Placeholders, 'truncate');
-  @if $extend == true {
-    @if $truncate == null {
-      $truncate: unique-id();
-      $Placeholder: map-merge($Placeholders, ('truncate': $truncate)) !global;
-      @at-root %#{$truncate} {
-        @include truncate(false);
-      }
-    }
-    @extend %#{$truncate};
-  } @else {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
+@mixin truncate() {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-@mixin input-group-dropdown($min-width: 6em) {
-  min-width: $min-width;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  margin-left: -1px;
-  margin-right: -1px;
-}
 
 @mixin nav-box-shadow($blurRadius: 10px, $color: $dark) {
   -webkit-box-shadow: 0 0 $blurRadius $color;
@@ -60,21 +25,9 @@ $Placeholders: ();
 /*
 * Used for general desktop and mobile
 */
-@mixin headerColors($extend: true) {
-  $headerColors:map-get($Placeholders, 'headerColors');
-  @if $extend == true {
-    @if $headerColors == null {
-      $headerColors: unique-id();
-      $Placeholder: map-merge($Placeholders, ('headerColors': $headerColors)) !global;
-      @at-root %#{$headerColors} {
-        @include headerColors(false);
-      }
-    }
-    @extend %#{$headerColors};
-  } @else {
-    background: $menuColor;
-    color: $light;
-  }
+@mixin headerColors() {
+  background: $menuColor;
+  color: $light;
 }
 
 /*
@@ -114,49 +67,22 @@ $Placeholders: ();
   }
 }
 
-@mixin smoothScrolling($extend: true) {
-  $smoothScrolling:map-get($Placeholders, 'smoothScrolling');
-  // prevent extending itself.  Will extend placeholder on every call
-  @if $extend == true {
-    // first call to mixin will generate key value in $Placeholder object and create placeholder at root of app with styles in @else
-    @if $smoothScrolling == null {
-      $smoothScrolling: unique-id();
-      $Placeholder: map-merge($Placeholders, ('smoothScrolling': $smoothScrolling)) !global;
-      @at-root %#{$smoothScrolling} {
-        // recursive mixin that places itself at root of app inside of placeholder with css below
-        @include smoothScrolling(false);
-      }
-    }
-    @extend %#{$smoothScrolling};
-  } @else {
-    -webkit-overflow-scrolling: touch; // DO NOT REMOVE
-    overflow: scroll;
-  }
+@mixin smoothScrolling() {
+  -webkit-overflow-scrolling: touch; // DO NOT REMOVE
+  overflow: scroll;
 }
 
-@mixin fullScreen($extend: true) {
-  $fullScreen:map-get($Placeholders, 'fullScreen');
-  @if $extend == true {
-    @if $fullScreen == null {
-      $fullScreen: unique-id();
-      $Placeholder: map-merge($Placeholders, ('fullScreen': $fullScreen)) !global;
-      @at-root %#{$fullScreen} {
-        @include fullScreen(false);
-      }
-    }
-    @extend %#{$fullScreen};
-  } @else {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 40;
-    background: $light;
-    @include nav-box-shadow(25px);
-  }
+@mixin fullScreen() {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 40;
+  background: $light;
+  @include nav-box-shadow(25px);
 }
 
 @mixin borderStyle($borderWidth: 1px) {
@@ -164,40 +90,44 @@ $Placeholders: ();
   border-width: $borderWidth;
 }
 
-@mixin generalPadding($extend: true) {
-  $generalPadding:map-get($Placeholders, 'generalPadding');
+@mixin generalPadding() {
+  padding: 4%;
+}
+
+@mixin pageTitle() {
+  padding: 0 15px;
+  height: $mobileDocHeaderHeight;
+  line-height: $mobileDocHeaderHeight;
+  font-size: 2rem;
+  color: $darkGray;
+  margin: 0;
+  @include truncate;
+}
+
+@mixin input-group-dropdown-static($extend: true) {
+  $inputGroupDropdownStatic:map-get($Placeholders, 'inputGroupDropdownStatic');
+  // prevent extending itself.  Will extend placeholder on every call
   @if $extend == true {
-    @if $generalPadding == null {
-      $generalPadding: unique-id();
-      $Placeholder: map-merge($Placeholders, ('generalPadding': $generalPadding)) !global;
-      @at-root %#{$generalPadding} {
-        @include generalPadding(false);
+    // first call to mixin will generate key value in $Placeholder object and create placeholder at root of app with styles in @else
+    @if $inputGroupDropdownStatic == null {
+      $inputGroupDropdownStatic: unique-id();
+      $Placeholder: map-merge($Placeholders, ('inputGroupDropdownStatic': $inputGroupDropdownStatic)) !global;
+      @at-root %#{$inputGroupDropdownStatic} {
+        // recursive mixin that places itself at root of app inside of placeholder with css below
+        @include input-group-dropdown-static(false);
       }
     }
-    @extend %#{$generalPadding};
+    @extend %#{$inputGroupDropdownStatic};
   } @else {
-    padding: 4%;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin-left: -1px;
+    margin-right: -1px;
   }
 }
 
-@mixin pageTitle($extend: true) {
-  $pageTitle:map-get($Placeholders, 'pageTitle');
-  @if $extend == true {
-    @if $pageTitle == null {
-      $pageTitle: unique-id();
-      $Placeholder: map-merge($Placeholders, ('pageTitle': $pageTitle)) !global;
-      @at-root %#{$pageTitle} {
-        @include pageTitle(false);
-      }
-    }
-    @extend %#{$pageTitle};
-  } @else {
-    padding: 0 15px;
-    height: $mobileDocHeaderHeight;
-    line-height: $mobileDocHeaderHeight;
-    font-size: 2rem;
-    color: $darkGray;
-    margin: 0;
-    @include truncate;
-  }
+@mixin input-group-dropdown($min-width: 6em) {
+  min-width: $min-width;
+  @include input-group-dropdown-static();
 }
