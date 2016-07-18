@@ -8,6 +8,7 @@ import OPT_CONF from 'dummy/mixins/user_config';
 
 export default Ember.Object.extend(OPT_CONF, {
   init() {
+    this._super(...arguments);
 
     /**
      * Creates methods defined on owning model
@@ -38,8 +39,6 @@ export default Ember.Object.extend(OPT_CONF, {
      */
     many_to_many.bind(this)('shoe', 'user', {'plural':true});
     many_to_many.bind(this)('feet', 'user', {'unlessAddedM2MDirty':true});
-
-    this._super(...arguments);
   },
   simpleStore: Ember.inject.service(),
   user_shoes_fks: [],

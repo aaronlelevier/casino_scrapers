@@ -6,8 +6,8 @@ import OptConfMixin from 'bsrs-ember/mixins/optconfigure/<%= dasherizedModuleNam
 
 export default Model.extend(OptConfMixin, {
   init() {
-    belongs_to.bind(this)('<%= secondProperty %>', '<%= dasherizedModuleName %>');
     this._super(...arguments);
+    belongs_to.bind(this)('<%= secondProperty %>', '<%= dasherizedModuleName %>');
   },
   simpleStore: Ember.inject.service(),
   <%= firstPropertySnake %>: attr(''),

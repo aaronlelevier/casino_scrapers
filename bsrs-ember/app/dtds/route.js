@@ -12,6 +12,7 @@ var DTDSRoute = GridViewRoute.extend({
   transitionCB: function() {},
   tabList: Ember.inject.service(),
   afterModel(){
+    this._super(...arguments);
     this.get('tabList').createSingleTab({
       routeName: this.routeName,
       module: this.get('module'),
@@ -21,7 +22,6 @@ var DTDSRoute = GridViewRoute.extend({
     });
     // original, none tab
     this.get('simpleStore').push('dtd-header', {id: 1, showingList:true, showingDetail:true, showingPreview:true, message: detail_msg});
-    return this._super(...arguments);
   },
   repository: inject('dtd'),
 });

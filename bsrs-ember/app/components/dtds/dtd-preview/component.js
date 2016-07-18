@@ -14,6 +14,7 @@ export default Ember.Component.extend({
    * displayValue is set for fields and options to display value in template if deep link or user navigates back
    */
   init() {
+    this._super(...arguments);
     /*
      * @property fieldsObj - used to keep track of state of field (and options if present)
      * key = field id ... value is { num (0 or 1), value (based on user action), label of field, required, and options (array of ids)}
@@ -24,7 +25,6 @@ export default Ember.Component.extend({
      * fieldsObj is updated with new fields in response of patch
      * optionValues - all options related to a field. Should just be those selected
      */
-    this._super(...arguments);
     const dt_id = this.get('model').get('id');
     const fields = this.get('model.fields');
     const existing_ticket_request = this.get('ticket.request');
@@ -64,13 +64,13 @@ export default Ember.Component.extend({
    * only way you can patch is is by clicking link button or modal 'yes' when navigating back in decision tree
    */
   // willDestroy() {
+  //   this._super(...arguments);
   //   const ticket = this.get('ticket');
   //   const model = this.get('model');
   //   const action = this.get('action');
   //   if (action === 'patch' && ticket.get('isDirty') && !ticket.get('hasSaved')) {
   //     this.attrs.linkClick(undefined, ticket, model, 'patch', false);
   //   }
-  //   this._super(...arguments);
   // },
 
   /* @method fieldsCompleted

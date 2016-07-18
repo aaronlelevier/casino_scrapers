@@ -12,6 +12,7 @@ var GridViewRoute = Ember.Route.extend({
   personCurrent: Ember.inject.service(),
   filtersetRepository: inject('filterset'),
   init() {
+    this._super();
     /* @property gridFilterParams
     * object that holds key of type string ('location.name') and value of type string ('wat')
     * passed as a property to grid-header-column component
@@ -24,7 +25,6 @@ var GridViewRoute = Ember.Route.extend({
     */
     this.gridIdInParams = {};
     this.filterModel = Ember.Object.create();
-    this._super();
   },
   queryParams: {
     page_size: {
