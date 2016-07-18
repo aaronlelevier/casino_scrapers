@@ -26,14 +26,11 @@ $Placeholders: ();
 
 @mixin truncate($extend: true) {
   $truncate: map-get($Placeholders, 'truncate');
-  // prevent extending itself.  Will extend placeholder on every call
   @if $extend == true {
-    // first call to mixin will generate key value in $Placeholder object and create placeholder at root of app with styles in @else
     @if $truncate == null {
       $truncate: unique-id();
       $Placeholder: map-merge($Placeholders, ('truncate': $truncate)) !global;
       @at-root %#{$truncate} {
-        // recursive mixin that places itself at root of app inside of placeholder with css below
         @include truncate(false);
       }
     }
@@ -65,14 +62,11 @@ $Placeholders: ();
 */
 @mixin headerColors($extend: true) {
   $headerColors:map-get($Placeholders, 'headerColors');
-  // prevent extending itself.  Will extend placeholder on every call
   @if $extend == true {
-    // first call to mixin will generate key value in $Placeholder object and create placeholder at root of app with styles in @else
     @if $headerColors == null {
       $headerColors: unique-id();
       $Placeholder: map-merge($Placeholders, ('headerColors': $headerColors)) !global;
       @at-root %#{$headerColors} {
-        // recursive mixin that places itself at root of app inside of placeholder with css below
         @include headerColors(false);
       }
     }
@@ -142,14 +136,11 @@ $Placeholders: ();
 
 @mixin fullScreen($extend: true) {
   $fullScreen:map-get($Placeholders, 'fullScreen');
-  // prevent extending itself.  Will extend placeholder on every call
   @if $extend == true {
-    // first call to mixin will generate key value in $Placeholder object and create placeholder at root of app with styles in @else
     @if $fullScreen == null {
       $fullScreen: unique-id();
       $Placeholder: map-merge($Placeholders, ('fullScreen': $fullScreen)) !global;
       @at-root %#{$fullScreen} {
-        // recursive mixin that places itself at root of app inside of placeholder with css below
         @include fullScreen(false);
       }
     }
@@ -175,14 +166,11 @@ $Placeholders: ();
 
 @mixin generalPadding($extend: true) {
   $generalPadding:map-get($Placeholders, 'generalPadding');
-  // prevent extending itself.  Will extend placeholder on every call
   @if $extend == true {
-    // first call to mixin will generate key value in $Placeholder object and create placeholder at root of app with styles in @else
     @if $generalPadding == null {
       $generalPadding: unique-id();
       $Placeholder: map-merge($Placeholders, ('generalPadding': $generalPadding)) !global;
       @at-root %#{$generalPadding} {
-        // recursive mixin that places itself at root of app inside of placeholder with css below
         @include generalPadding(false);
       }
     }
@@ -194,14 +182,11 @@ $Placeholders: ();
 
 @mixin pageTitle($extend: true) {
   $pageTitle:map-get($Placeholders, 'pageTitle');
-  // prevent extending itself.  Will extend placeholder on every call
   @if $extend == true {
-    // first call to mixin will generate key value in $Placeholder object and create placeholder at root of app with styles in @else
     @if $pageTitle == null {
       $pageTitle: unique-id();
       $Placeholder: map-merge($Placeholders, ('pageTitle': $pageTitle)) !global;
       @at-root %#{$pageTitle} {
-        // recursive mixin that places itself at root of app inside of placeholder with css below
         @include pageTitle(false);
       }
     }
