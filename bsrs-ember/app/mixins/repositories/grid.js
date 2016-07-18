@@ -93,8 +93,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
         grid_count = store.push('grid-count', {id: 1, count: 100});
       });
     }
-    all.set('count', grid_count.get('count'));
-    PromiseMixin.xhr(endpoint).then((response) => {
+    return PromiseMixin.xhr(endpoint).then((response) => {
       const garbage_collection = this.get('garbage_collection') || [];
       garbage_collection.forEach((type) => {
         run(() => {
@@ -103,15 +102,16 @@ var GridRepositoryMixin = Ember.Mixin.create({
       });
       deserializer.deserialize(response);
       all.set('isLoaded', true);
+      all.set('count', grid_count.get('count'));
       const count = response.count;
       all.set('count', count);
       run(() => {
         store.push('grid-count', { id: 1, count:count });
       });
+      return all;
     }, (xhr) => {
       this.get('error').transToError();
     });
-    return all;
   }
 });
 

@@ -61,14 +61,16 @@ var GridViewRoute = Ember.Route.extend({
       /* Non-Optimistic rendering */
       return new Ember.RSVP.Promise((resolve, reject) => {
         repository.findWithQueryMobile(query.page, query.search, query.find, query.id_in, special_url).then((model) => {
-          resolve({count, model, requested, filtersets, routeName, search, repository});
+          resolve({ count, model, requested, filtersets, routeName, search, repository });
         });
       });
     } else {
-      /* Optimistic rendering */
-      model = repository.findWithQuery(query.page, query.search, query.find, query.id_in, query.page_size, query.sort, special_url);
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        repository.findWithQuery(query.page, query.search, query.find, query.id_in, query.page_size, query.sort, special_url).then((model) => {
+          resolve({ count, model, requested, filtersets, routeName, search });
+        });
+      });
     }
-    return {count, model, requested, filtersets, routeName, search};
   },
   setupController: function(controller, hash) {
     controller.setProperties(hash);
