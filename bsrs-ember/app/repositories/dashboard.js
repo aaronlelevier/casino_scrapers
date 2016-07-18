@@ -12,11 +12,10 @@ var DashboardRepo = Ember.Object.extend({
   }),
   detail() {
     let store = this.get('simpleStore');
-    PromiseMixin.xhr(`${DASHBOARD_URL}`, 'GET').then((response) => {
+    return PromiseMixin.xhr(`${DASHBOARD_URL}`, 'GET').then((response) => {
       const pk = this.get('uuid').v4();
-      store.push('dashboard', {id: pk, settings: response.settings});
+      return store.push('dashboard', {id: pk, settings: response.settings});
     });
-    return store.findOne('dashboard');
   }
 });
 
