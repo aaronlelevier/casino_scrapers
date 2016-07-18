@@ -873,8 +873,11 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     andThen(() => {
       assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
     });
+    page.firstNameFill(PD.first_name);
+    page.middleInitial(PD.middle_initial);
+    page.lastNameFill(PD.last_name);
     var role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
-    var payload = PF.put({id: PD.id, role: role.id});
+    var payload = PF.put({id: PD.id, first_name: PD.first_name, middle_initial: PD.middle_initial, last_name: PD.last_name, role: role.id});
     payload.locations = [];
     xhr(url,'PUT',JSON.stringify(payload),{},200);
     generalPage.save();
@@ -957,6 +960,9 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         clearxhr(first_role_change);
         let people_detail_data_three = PF.detail(PD.idOne);
         people_detail_data_three.role = RD.idOne;
+          page.firstNameFill(PD.first_name);
+          page.middleInitial(PD.middle_initial);
+          page.lastNameFill(PD.last_name);
         xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_three);
         page.roleClickDropdown();
         page.roleClickOptionOne();

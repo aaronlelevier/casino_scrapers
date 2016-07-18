@@ -252,7 +252,8 @@ test('header populates with username and role name', function(assert) {
   assert.equal(this.$('.t-person-single-header').text().trim(), PD.username);
   assert.equal(this.$('.t-person-single-sub-header').text().trim(), RD.nameOne);
   page.firstNameFill(PD.first_name);
-  assert.equal(this.$('.t-person-single-header').text().trim(), PD.first_name);
+  page.lastNameFill(PD.last_name);
+  assert.equal(this.$('.t-person-single-header').text().trim(), PD.first_name+'  '+PD.last_name);
   page.firstNameFill('');
   page.middleInitialFill(PD.middle_initial);
   page.lastNameFill(PD.last_name);

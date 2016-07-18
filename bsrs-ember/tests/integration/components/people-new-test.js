@@ -37,22 +37,23 @@ moduleForComponent('person-new', 'integration: person-new test', {
   }
 });
 
-test('filling in invalid username reveal validation messages', function(assert) {
+test('username validation error if not present', function(assert) {
   run(() => {
     this.set('model', store.push('person', {}));
   });
   this.render(hbs`{{people/person-new model=model}}`);
   let $component = this.$('.has-error');
+  // invalid - username required
   assert.equal($component.text().trim(), '');
   this.$('.t-person-password').val(PD.password).trigger('change');
   var save_btn = this.$('.t-save-btn');
   save_btn.trigger('click').trigger('change');
-  $component = this.$('.has-error');
-  assert.ok($component.is(':visible'));
-  assert.ok($component.text().trim().indexOf(trans.t('errors.person.username')) > -1);
+  let $err = this.$('.has-error');
+  assert.ok($err.is(':visible'));
+  assert.ok($err.text().trim().indexOf(trans.t('errors.person.username')) > -1);
 });
 
-test('should default locale if not present in Person model', function(assert) {
+test('locale should default if not present in Person model', function(assert) {
   let person;
   run(() => {
     person = store.push('person', {});
@@ -70,73 +71,6 @@ test('should default locale if not present in Person model', function(assert) {
   assert.equal($component.text().trim(), trans.t(LD.nameTwoKey));
 });
 
-test('first_name should raise validation error if first_name is blank becauase its required', function(assert) {
-  var done = assert.async();
-  run(() => {
-    this.set('model', store.push('person', {id: PD.id}));
-  });
-  this.render(hbs`{{people/person-new model=model}}`);
-  var $component = this.$('.t-first-name-validator .error');
-  assert.equal($component.text().trim(), '');
-  page.firstNameFill('');
-  Ember.run.later(() => {
-    const $component = this.$('.t-first-name-validator .error');
-    assert.ok($component.is(':visible'));
-    assert.equal($component.text().trim(), trans.t('errors.person.first_name'));
-    done();
-  }, 300);
-});
-
-test('filling in more than 1 char middle initial will reveal validation messages', function(assert) {
-  var done = assert.async();
-  run(() => {
-    this.set('model', store.push('person', {id: PD.id}));
-  });
-  this.render(hbs`{{people/person-new model=model}}`);
-  var $component = this.$('.t-middle-initial-validator .error');
-  assert.equal($component.text().trim(), '');
-  page.middleInitial('wa');
-  Ember.run.later(() => {
-    const $component = this.$('.t-middle-initial-validator .error');
-    assert.ok($component.is(':visible'));
-    assert.equal($component.text().trim(), trans.t('errors.person.middle_initial'));
-    done();
-  }, 300);
-});
-
-test('last_name should raise validation error if last_name is blank becauase its required', function(assert) {
-  var done = assert.async();
-  run(() => {
-    this.set('model', store.push('person', {id: PD.id}));
-  });
-  this.render(hbs`{{people/person-new model=model}}`);
-  var $component = this.$('.t-last-name-validator .error');
-  assert.equal($component.text().trim(), '');
-  page.lastNameFill('');
-  Ember.run.later(() => {
-    const $component = this.$('.t-last-name-validator .error');
-    assert.ok($component.is(':visible'));
-    assert.equal($component.text().trim(), trans.t('errors.person.last_name'));
-    done();
-  }, 300);
-});
-
-test('last_name should raise validation error if greater than 30 characters', function(assert) {
-  var done = assert.async();
-  run(() => {
-    this.set('model', store.push('person', {id: PD.id}));
-  });
-  this.render(hbs`{{people/person-new model=model}}`);
-  var $component = this.$('.t-last-name-validator .error');
-  assert.equal($component.text().trim(), '');
-  page.lastNameFill(Array(32).join('a'));
-  Ember.run.later(() => {
-    const $component = this.$('.t-last-name-validator .error');
-    assert.ok($component.is(':visible'));
-    assert.equal($component.text().trim(), trans.t('errors.person.last_name'));
-    done();
-  }, 300);
-});
 
 // test('filling in invalid password reveal validation messages', function(assert) {
 //   run(() => {

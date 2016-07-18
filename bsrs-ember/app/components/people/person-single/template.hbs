@@ -30,21 +30,24 @@
         </div>
         <div class="row">
           <div class="col-md-8">
-            {{#form-group title="admin.person.label.first_name" for="first_name"}}
-            {{input type="text" placeholder=(t "admin.person.label.first_name") value=model.first_name class="form-control t-person-first-name" id="first_name"}}
-            {{/form-group}}
+            {{people/person-text-input
+              model=model
+              field="first_name"
+            }}
           </div>
           <div class="col-md-4">
-            {{#form-group title="admin.person.label.middle_initial" for="middle_initial"}}
-            {{validated-input model=model value=model.middle_initial placeholder=(t "admin.person.label.middle_initial") valuePath="middle_initial" className="form-control t-person-middle-initial" didValidate=didValidate class="t-middle-initial-validator" id="middle_initial"}}
-            {{/form-group}}
+            {{people/person-text-input
+              model=model
+              field="middle_initial"
+            }}
           </div>
         </div>
         <div class="row">
           <div class="col-md-12">
-            {{#form-group title="admin.person.label.last_name" for="last_name"}}
-            {{input type="text" placeholder=(t "admin.person.label.last_name") value=model.last_name class="form-control t-person-last-name" id="last_name"}}
-            {{/form-group}}
+            {{people/person-text-input
+              model=model
+              field="last_name"
+            }}
           </div>
         </div>
         <div class="row">
