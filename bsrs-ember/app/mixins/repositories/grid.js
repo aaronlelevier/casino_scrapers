@@ -61,38 +61,20 @@ var GridRepositoryMixin = Ember.Mixin.create({
   },
   /* Non Optimistic Rendering: Mobile */
   findWithQueryMobile(page, search, find, id_in, special_url=undefined) {
-    const { typeGrid: type, simpleStore: store, deserializer } = this.getProperties('typeGrid', 'simpleStore', 'deserializer');
+    const store = this.get('simpleStore');
     page = page || 1;
     let endpoint = this.modifyEndpoint(page, search, find, id_in, special_url);
     return PromiseMixin.xhr(endpoint).then((response) => {
-      deserializer.deserialize(response);
-      const all = store.find(type);
-      /* further processing on array proxy */
-      all.set('isLoaded', true);
-      const count = response.count;
-      all.set('count', count);
-      run(() => {
-        store.push('grid-count', { id: 1, count:count });
-      });
-      return all;
+      return this.deserializeResponse(response);
     }, (xhr) => {
       this.get('error').transToError();
     });
   },
-  /* Optimistic Rendering */
+  /* Non Optimistic Rendering: Desktop */
   findWithQuery(page, search, find, id_in, page_size, sort, special_url=undefined) {
-    const { typeGrid: type, simpleStore: store, deserializer } = this.getProperties('typeGrid', 'simpleStore', 'deserializer');
+    const store = this.get('simpleStore');
     page = page || 1;
     let endpoint = this.modifyEndpoint(page, search, find, id_in, page_size, sort, special_url);
-
-    const all = store.find(type);
-    let grid_count = store.find('grid-count', 1);
-    if(!grid_count.get('content')){
-      /* sets a default count while the payload is being deserialized */
-      run(() => {
-        grid_count = store.push('grid-count', {id: 1, count: 100});
-      });
-    }
     return PromiseMixin.xhr(endpoint).then((response) => {
       const garbage_collection = this.get('garbage_collection') || [];
       garbage_collection.forEach((type) => {
@@ -100,18 +82,22 @@ var GridRepositoryMixin = Ember.Mixin.create({
           store.clear(type);
         });
       });
-      deserializer.deserialize(response);
-      all.set('isLoaded', true);
-      all.set('count', grid_count.get('count'));
-      const count = response.count;
-      all.set('count', count);
-      run(() => {
-        store.push('grid-count', { id: 1, count:count });
-      });
-      return all;
+      return this.deserializeResponse(response);
     }, (xhr) => {
       this.get('error').transToError();
     });
+  },
+  deserializeResponse(response) {
+    const { typeGrid: type, simpleStore: store, deserializer } = this.getProperties('typeGrid', 'simpleStore', 'deserializer');
+    const all = store.find(type);
+    deserializer.deserialize(response);
+    all.set('isLoaded', true);
+    const count = response.count;
+    all.set('count', count);
+    run(() => {
+      store.push('grid-count', { id: 1, count: count });
+    });
+    return all;
   }
 });
 
