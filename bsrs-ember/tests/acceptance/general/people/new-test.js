@@ -211,12 +211,18 @@ test('can change default role and locale', (assert) => {
     id: UUID.value,
     username: PD.username,
     password: PD.password,
+    first_name: PD.first_name,
+    middle_initial: PD.middle_initial,
+    last_name: PD.last_name,
     role: RD.idTwo,
     status: SD.activeId,
     locale: LD.idTwo
   };
   fillIn('.t-person-username', PD.username);
   fillIn('.t-person-password', PD.password);
+  fillIn('.t-person-first-name', PD.first_name);
+  fillIn('.t-person-middle-initial', PD.middle_initial);
+  fillIn('.t-person-last-name', PD.last_name);
   ajax(PEOPLE_URL, 'POST', JSON.stringify(payload_two), {}, 201, {});
   ajax(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
   generalPage.save();
