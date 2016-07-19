@@ -59,13 +59,13 @@ var GridViewRoute = Ember.Route.extend({
     let model;
     if (this.get('device').get('isMobile')) {
       return new Ember.RSVP.Promise((resolve, reject) => {
-        repository.findWithQueryMobile(query.page, query.search, query.find, query.id_in, special_url).then((model) => {
+        return repository.findWithQueryMobile(query.page, query.search, query.find, query.id_in, special_url).then((model) => {
           resolve({ count, model, requested, filtersets, routeName, search, repository });
         });
       });
     } else {
       return new Ember.RSVP.Promise((resolve, reject) => {
-        repository.findWithQuery(query.page, query.search, query.find, query.id_in, query.page_size, query.sort, special_url).then((model) => {
+        return repository.findWithQuery(query.page, query.search, query.find, query.id_in, query.page_size, query.sort, special_url).then((model) => {
           resolve({ count, model, requested, filtersets, routeName, search });
         });
       });
