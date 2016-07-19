@@ -505,11 +505,8 @@ test('scott (NEW URL) a dirty new tab and clicking on new model button should pu
   generalPage.clickTickets();
   click('.t-add-new');
   andThen(() => {
-    console.log('andThen');
     assert.equal(currentURL(), NEW_URL_2);
     let tabs = store.find('tab');
-    console.log(tabs.get('_source'));
-    console.log(tabs.get('_source').length, 'source length');
     assert.equal(tabs.get('length'), 2);
   });
 });
