@@ -362,9 +362,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), NEW_URL_2);
-    waitFor(assert, () => {
-      let tabs = store.find('tab');
-      assert.equal(tabs.get('length'), 2);
-    });
+    let tabs = store.find('tab');
+    assert.equal(tabs.get('length'), 2);
   });
 });
