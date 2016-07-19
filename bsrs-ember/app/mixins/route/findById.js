@@ -16,8 +16,6 @@ var FindById = Ember.Mixin.create({
         model: this.get('repository').findById(pk),
         otherXhrs: Ember.RSVP.all(otherXhrs),
         ...deps
-      }).then((modelHash) => {
-        return modelHash;
       });
     }else if(model.get('isDirtyOrRelatedDirty')){
       return { model, ...deps };
