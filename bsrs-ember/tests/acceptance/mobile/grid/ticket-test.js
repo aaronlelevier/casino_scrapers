@@ -44,7 +44,7 @@ module('Acceptance | grid ticket mobile test', {
   },
   afterEach() {
     // run(() => {
-    //   flexi.set('width', bp.huge);
+    //   flexi.set('width', bp.desktop);
     // });
     Ember.run(application, 'destroy');
   }

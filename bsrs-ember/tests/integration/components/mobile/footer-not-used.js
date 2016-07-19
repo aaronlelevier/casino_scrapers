@@ -24,7 +24,7 @@ moduleForComponent('grid/grid-footer', 'Integration | Component | grid-footer', 
   },
   afterEach() {
     run(() => {
-      flexi.set('width', bp.huge);
+      flexi.set('width', bp.desktop);
     });
   }
 });

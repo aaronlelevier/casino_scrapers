@@ -43,7 +43,7 @@ moduleForComponent('dtds/dtd-single', 'integration: dtd-single test', {
     breakpoints.forEach((point) => {
       bp[point.name] = point.begin + 5;
     });
-    flexi.set('width', bp.huge);
+    flexi.set('width', bp.desktop);
   },
   afterEach() {
     page.removeContext(this);
