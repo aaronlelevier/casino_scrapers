@@ -14,8 +14,14 @@ export default Ember.Object.extend({
     model.assignee_fk = model.assignee.id;
     const assignee = model.assignee;
     delete model.assignee;
+    const pfilters = model.filters;
+    delete model.filters;
     let profile = store.push('profile', model);
     profile.change_assignee(assignee);
+    pfilters.forEach((obj) => {
+      store.push('pfilter', obj);
+      profile.add_pf({id: obj.id});
+    });
     return profile;
   },
   _deserializeList(store, response) {

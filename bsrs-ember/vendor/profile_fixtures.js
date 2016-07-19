@@ -1,6 +1,8 @@
 var BSRS_PROFILE_FACTORY = (function() {
-  var factory = function(profile) {
+  var factory = function(profile, pfilter, ticket) {
     this.profile = profile;
+    this.pfilter = pfilter;
+    this.ticket = ticket;
   };
   factory.prototype.generate = function(i) {
     var id = i || this.profile.idOne;
@@ -10,7 +12,12 @@ var BSRS_PROFILE_FACTORY = (function() {
       assignee: {
         id: this.profile.assigneeOne,
         username: this.profile.username
-      }
+      },
+      filters: [{
+        id: this.pfilter.idOne,
+        field: this.pfilter.fieldOne,
+        criteria: [this.ticket.priorityOneId]
+      }]
     };
   };
   factory.prototype.detail = function(id) {
@@ -47,7 +54,7 @@ var BSRS_PROFILE_FACTORY = (function() {
       assignee: {
         id: `${this.profile.assigneeOne.slice(0,-1)}${i}`,
         username: `${this.profile.username}${i}`,
-      },
+      }
     };
   };
   return factory;
@@ -57,15 +64,18 @@ if (typeof window === 'undefined') {
   var objectAssign = require('object-assign');
   var mixin = require('../vendor/mixin');
   var profile = require('./defaults/profile');
+  var pfilter = require('./defaults/profile-filter');
+  var ticket = require('./defaults/ticket');
   objectAssign(BSRS_PROFILE_FACTORY.prototype, mixin.prototype);
-  module.exports = new BSRS_PROFILE_FACTORY(profile);
+  module.exports = new BSRS_PROFILE_FACTORY(profile, pfilter, ticket);
 }
 else {
-  define('bsrs-ember/vendor/profile_fixtures', ['exports', 'bsrs-ember/vendor/defaults/profile', 'bsrs-ember/vendor/mixin'],
-    function(exports, profile, mixin) {
+  define('bsrs-ember/vendor/profile_fixtures',
+    ['exports', 'bsrs-ember/vendor/defaults/profile', 'bsrs-ember/vendor/defaults/profile-filter', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/mixin'],
+    function(exports, profile, pfilter, ticket, mixin) {
       'use strict';
       Object.assign(BSRS_PROFILE_FACTORY.prototype, mixin.prototype);
-      return new BSRS_PROFILE_FACTORY(profile);
+      return new BSRS_PROFILE_FACTORY(profile, pfilter, ticket);
     }
   );
 }

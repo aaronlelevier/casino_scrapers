@@ -4,12 +4,14 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PD from 'bsrs-ember/vendor/defaults/profile';
 import PF from 'bsrs-ember/vendor/profile_fixtures';
 import ProfileDeserializer from 'bsrs-ember/deserializers/profile';
+import PFD from 'bsrs-ember/vendor/defaults/profile-filter';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
 
 var store, profile, run = Ember.run, deserializer;
 
 module('unit: profile deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:profile', 'model:profile-list', 'model:person', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:profile', 'model:pfilter', 'model:profile-join-pfilter', 'model:profile-list', 'model:person', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     deserializer = ProfileDeserializer.create({
       simpleStore: store
     });
@@ -31,6 +33,11 @@ test('deserialize single', assert => {
   assert.equal(profile.get('assignee_fk'), PD.assigneeOne);
   assert.equal(profile.get('assignee').get('id'), PD.assigneeOne);
   assert.equal(profile.get('assignee').get('username'), PD.username);
+  // pFilter
+  assert.equal(profile.get('pfs').get('length'), 1);
+  assert.equal(profile.get('pfs').objectAt(0).get('id'), PFD.idOne);
+  assert.equal(profile.get('pfs').objectAt(0).get('field'), PFD.fieldOne);
+  assert.deepEqual(profile.get('pfs').objectAt(0).get('criteria'), [TD.priorityOneId]);
 });
 
 test('deserialize single should update assignee if server returns different assignee', assert => {
