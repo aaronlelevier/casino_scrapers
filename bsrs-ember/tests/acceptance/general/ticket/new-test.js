@@ -47,11 +47,14 @@ module('Acceptance | ticket new test', {
     list_xhr = xhr(TICKETS_URL+'?page=1', 'GET', null, {}, 200, TF.empty());
     location_xhr = xhr(`${LOCATIONS_URL}location__icontains=6/`, 'GET', null, {}, 200, LF.search_power_select());
     counter = 0;
+    original_uuid = random.uuid;
+    random.uuid = function() { return UUID.value; };
     // timemachine.config({
     //   dateString: 'December 25, 2015 13:12:59'
     // });
   },
   afterEach() {
+    random.uuid = original_uuid;
     counter = 0;
     Ember.run(application, 'destroy');
   }
@@ -684,27 +687,21 @@ test('adding a new ticket should allow for another new ticket to be created afte
     patchRandom(counter);
   });
   click('.t-add-new');
-  page.assigneeClickDropdown();
-  fillIn(SEARCH, 'b');
-  page.assigneeClickOptionTwo();
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
-  page.priorityClickDropdown();
-  page.priorityClickOptionOne();
-  page.locationClickDropdown();
-  fillIn(SEARCH, '6');
-  page.locationClickOptionTwo();
+  selectSearch('.t-ticket-assignee-select', 'b');
+  selectChoose('.t-ticket-assignee-select', PD.fullnameBoy2);
+  selectChoose('.t-ticket-status-select', TD.statusOne);
+  selectChoose('.t-ticket-priority-select', TD.priorityOne);
+  selectSearch('.t-ticket-location-select', '6');
+  selectChoose('.t-ticket-location-select', LD.storeNameTwo);
+  // page.locationClickOptionTwo();
   let top_level_categories_endpoint = `${CATEGORIES_URL}parents/`;
   xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
   ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
   ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
   ajax(`${CATEGORIES_URL}?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
-  page.categoryOneClickDropdown();
-  page.categoryOneClickOptionOne();
-  page.categoryTwoClickDropdown();
-  page.categoryTwoClickOptionOne();
-  page.categoryThreeClickDropdown();
-  page.categoryThreeClickOptionOne();
+  selectChoose('.t-model-category-select:eq(0)', CD.nameOne);
+  selectChoose('.t-model-category-select:eq(1)', CD.nameTwo);
+  selectChoose('.t-model-category-select:eq(2)', CD.nameElectricalChild);
   page.requestFillIn(TD.requestOneGrid);
   page.requesterFillIn(TD.requesterOne);
   required_ticket_payload.request = TD.requestOneGrid;
@@ -714,10 +711,10 @@ test('adding a new ticket should allow for another new ticket to be created afte
     assert.equal(currentURL(), TICKET_URL);
     assert.equal(store.find('ticket').get('length'), 1);
   });
-  // click('.t-add-new');
-  // andThen(() => {
-  //   assert.equal(currentURL(), TICKET_NEW_URL);
-  //   assert.equal(store.find('ticket').get('length'), 2);
-  //   assert.equal(find('.t-ticket-request').val(), '');
-  // });
+  click('.t-add-new');
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.equal(store.find('ticket').get('length'), 2);
+    assert.equal(find('.t-ticket-request').val(), '');
+  });
 });

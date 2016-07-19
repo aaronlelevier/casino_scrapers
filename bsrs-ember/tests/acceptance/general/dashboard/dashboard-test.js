@@ -18,7 +18,7 @@ const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
-module('scott Acceptance | dashboard', {
+module('Acceptance | dashboard', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
@@ -65,7 +65,7 @@ test('clicking new tickets will send off xhr for person currents tickets as an a
   });
 });
 
-test('scott clicking draft tickets will send off xhr for person currents tickets as an assignee', assert => {
+test('clicking draft tickets will send off xhr for person currents tickets as an assignee', assert => {
   visit(DASHBOARD_URL);
   var page_one = PREFIX + BASE_URL + `/?page=1&status=${TicketD.statusSevenId}&assignee=${PD.idDonald}`;
   xhr(page_one ,"GET",null,{},200,TF.list());
