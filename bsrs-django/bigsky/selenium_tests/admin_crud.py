@@ -401,8 +401,16 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         person_page.find_new_link().click()
         username = "almno_"+rand_num()
         password = "bobber-foo"
-        person = InputHelper(username=username, password=password)
+        first_name = "foo"
+        last_name = "bar"
+        person = InputHelper(username=username, password=password, first_name=first_name, last_name=last_name)
         self._fill_in(person)
+        # select a Locale
+        locale_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-locale-select ')]/div")
+        locale_input.click()
+        locale_option = self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
+        locale_option.click()
+        # save
         self.gen_elem_page.click_save_btn()
         ### UPDATE
         person_page.find_wait_and_assert_elem("t-person-username", username)
@@ -439,11 +447,14 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         person_page.find_email_new_entry_send_keys(new_email_one)
         add_email_btn.click()
         person_page.find_second_email_new_entry_send_keys(new_email_two)
-        add_address_btn = self.gen_elem_page.find_add_address_btn()
-        add_address_btn.click()
-        person_page.find_address_new_entry_send_keys(1, new_street_one, new_city_one, new_zip_one)
-        add_address_btn.click()
-        person_page.find_address_new_entry_send_keys(2, new_street_two, new_city_two, new_zip_two)
+
+        # NOTE: no address button on template (7/18 ayl)
+        # add_address_btn = self.gen_elem_page.find_add_address_btn()
+        # add_address_btn.click()
+        # person_page.find_address_new_entry_send_keys(1, new_street_one, new_city_one, new_zip_one)
+        # add_address_btn.click()
+        # person_page.find_address_new_entry_send_keys(2, new_street_two, new_city_two, new_zip_two)
+
         # Fill in Location
         # TODO: (scott) double slashes can be removed at some point when the templates are stable. Selects all nodes, regardless of where they are in document.  Allows for relative path selection
         location_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-person-locations-select')])[last()]")
