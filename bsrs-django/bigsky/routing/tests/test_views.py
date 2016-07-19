@@ -1,6 +1,8 @@
 import json
 import uuid
 
+from django.conf import settings
+
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
@@ -83,6 +85,21 @@ class ViewTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['filters'][0]['context'], profile_filter.context)
         self.assertEqual(data['filters'][0]['field'], profile_filter.field)
         self.assertEqual(data['filters'][0]['criteria'], profile_filter.criteria)
+
+    def test_create__context_not_required(self):
+        self.data['id'] = str(uuid.uuid4())
+        self.data['description'] = 'foo'
+        self.data['filters'] = self.data['filters'][:1]
+        self.data['filters'][0]['id'] = str(uuid.uuid4())
+        self.data['filters'][0].pop('context', None)
+
+        response = self.client.post('/api/admin/assignments/', self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(len(data['filters']), 1)
+        self.assertEqual(data['filters'][0]['id'], self.data['filters'][0]['id'])
+        self.assertEqual(data['filters'][0]['context'], settings.DEFAULT_PROFILE_FILTER_CONTEXT)
 
     def test_update(self):
         assignee = create_single_person()
