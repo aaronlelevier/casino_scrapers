@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import {test as qunitTest} from 'qunit';
 import {module as qunitModule} from 'qunit';
+import random from 'bsrs-ember/models/random';
 
 var Owner = Ember.Object.extend(Ember._RegistryProxyMixin, Ember._ContainerProxyMixin);
 
@@ -21,8 +22,10 @@ var module = function(name, settings){
       if(typeof settings.beforeEach === 'function') {
         return settings.beforeEach.apply(this, arguments);
       }
+      original_uuid = random.uuid;
     },
     afterEach: function() {
+      random.uuid = original_uuid;
       this.container = null;
       this.registry = null;
       this.owner = null;
