@@ -76,6 +76,7 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/person-put.js');
       app.import('vendor/defaults/phone-number.js');
       app.import('vendor/defaults/phone-number-type.js');
+      app.import('vendor/defaults/profile-filter.js');
       app.import('vendor/defaults/profile.js');
       app.import('vendor/defaults/role.js');
       app.import('vendor/defaults/role-category.js');
