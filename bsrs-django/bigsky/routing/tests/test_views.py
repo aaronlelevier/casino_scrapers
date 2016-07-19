@@ -1,6 +1,7 @@
 import json
 import uuid
 
+from model_mommy import mommy
 from rest_framework.test import APITestCase
 
 from person.tests.factory import create_single_person
@@ -157,3 +158,13 @@ class ViewTests(ViewTestSetupMixin, APITestCase):
         self.assertNotIn(deleted_id, [f['id'] for f in data['filters']])
         self.assertFalse(ProfileFilter.objects.filter(id=deleted_id).exists())
         self.assertFalse(ProfileFilter.objects_all.filter(id=deleted_id).exists())
+
+    def test_update__other_assignment_filters_not_affected(self):
+        mommy.make(ProfileFilter, criteria=self.profile_filter.criteria)
+        init_count = ProfileFilter.objects.count()
+
+        response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(ProfileFilter.objects.count(), init_count)

@@ -68,7 +68,7 @@ class AssignmentCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
                     instance.filters.add(pf)
 
         # # hard delete if not sent
-        for x in ProfileFilter.objects.exclude(id__in=filter_ids):
+        for x in instance.filters.exclude(id__in=filter_ids):
             x.delete(override=True)
 
         return super(AssignmentCreateUpdateSerializer, self).update(instance, validated_data)
