@@ -10,7 +10,7 @@ import TicketD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 
-var application, store, endpoint;
+var application, store;
 
 const PREFIX = config.APP.NAMESPACE;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
@@ -18,10 +18,9 @@ const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
-module('Acceptance | dashboard', {
+module('scott Acceptance | dashboard', {
   beforeEach() {
     application = startApp();
-    setWidth('huge');
     store = application.__container__.lookup('service:simpleStore');
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
   },
@@ -42,36 +41,38 @@ test('welcome h1 header and dashboard_text from settings', assert => {
   });
 });
 
-/* jshint ignore:start */
-
-test('clicking in progress tickets will send off xhr for person currents tickets as an assignee', async assert => {
-  await visit(DASHBOARD_URL);
+test('clicking in progress tickets will send off xhr for person currents tickets as an assignee', assert => {
+  visit(DASHBOARD_URL);
   var page_one = PREFIX + BASE_URL + `/?page=1&status=${TicketD.statusThreeId}&assignee=${PD.idDonald}`;
   xhr(page_one ,"GET",null,{},200,TF.list());
-  await click('.t-nav-list-in_progress');
-  assert.equal(currentURL(), DASHBOARD_URL + '/tickets-in-progress');
-  assert.equal(find('.t-grid-title').text(), 'In Progress Tickets');
-  assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+  click('.t-nav-list-in_progress');
+  andThen(() => {
+    assert.equal(currentURL(), DASHBOARD_URL + '/tickets-in-progress');
+    assert.equal(find('.t-grid-title').text(), 'In Progress Tickets');
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+  });
 });
 
-test('clicking new tickets will send off xhr for person currents tickets as an assignee', async assert => {
-  await visit(DASHBOARD_URL);
+test('clicking new tickets will send off xhr for person currents tickets as an assignee', assert => {
+  visit(DASHBOARD_URL);
   var page_one = PREFIX + BASE_URL + `/?page=1&status=${TicketD.statusOneId}&assignee=${PD.idDonald}`;
   xhr(page_one ,"GET",null,{},200,TF.list());
-  await click('.t-nav-list-new');
-  assert.equal(currentURL(), DASHBOARD_URL + '/tickets-new');
-  assert.equal(find('.t-grid-title').text(), 'New Tickets');
-  assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+  click('.t-nav-list-new');
+  andThen(() => {
+    assert.equal(currentURL(), DASHBOARD_URL + '/tickets-new');
+    assert.equal(find('.t-grid-title').text(), 'New Tickets');
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+  });
 });
 
-test('clicking draft tickets will send off xhr for person currents tickets as an assignee', async assert => {
-  await visit(DASHBOARD_URL);
+test('scott clicking draft tickets will send off xhr for person currents tickets as an assignee', assert => {
+  visit(DASHBOARD_URL);
   var page_one = PREFIX + BASE_URL + `/?page=1&status=${TicketD.statusSevenId}&assignee=${PD.idDonald}`;
   xhr(page_one ,"GET",null,{},200,TF.list());
-  await click('.t-nav-list-draft');
-  assert.equal(currentURL(), DASHBOARD_URL + '/draft');
-  assert.equal(find('.t-grid-title').text(), 'Draft Tickets');
-  assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+  click('.t-nav-list-draft');
+  andThen(() => {
+    assert.equal(currentURL(), DASHBOARD_URL + '/draft');
+    assert.equal(find('.t-grid-title').text(), 'Draft Tickets');
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+  });
 });
-
-/* jshint ignore:end */
