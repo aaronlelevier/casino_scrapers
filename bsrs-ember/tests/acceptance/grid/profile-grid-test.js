@@ -10,7 +10,6 @@ import BASEURLS from 'bsrs-ember/utilities/urls';
 import page from 'bsrs-ember/tests/pages/profile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
-import random from 'bsrs-ember/models/random';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 
 const PREFIX = config.APP.NAMESPACE;
