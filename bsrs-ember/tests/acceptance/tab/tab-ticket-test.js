@@ -508,7 +508,9 @@ test('(NEW URL) a dirty new tab and clicking on new model button should push new
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), NEW_URL_2);
-    let tabs = store.find('tab');
-    assert.equal(tabs.get('length'), 2);
+    waitFor(assert, () => {
+      let tabs = store.find('tab');
+      assert.equal(tabs.get('length'), 2);
+    });
   });
 });
