@@ -2,13 +2,7 @@
   {{#if hasActiveFilterSet}}
     <button class="t-show-save-filterset-modal btn btn-primary btn-sm" {{action "toggleSaveFilterSetModal"}}>{{t 'grid.save_filter'}}</button>
   {{/if}}
-  {{#if count}}
-    {{#link-to add_model_url count class="t-add-new btn-add btn btn-default btn-sm"}}
-      {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
-    {{/link-to}}
-  {{else}}
-    {{#link-to add_model_url class="t-add-new btn-add btn btn-default btn-sm"}}
-      {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
-    {{/link-to}}
-  {{/if}}
+  {{#link-to add_model_url count class="t-add-new btn-add btn btn-default btn-sm"}}
+    {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
+  {{/link-to}}
 </div>
