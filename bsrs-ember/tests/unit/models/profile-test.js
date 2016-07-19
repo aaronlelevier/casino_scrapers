@@ -95,66 +95,75 @@ test('rollback profile will set assignee to current assignee_fk', (assert) => {
 // /* PROFILE & PROFILE_FILTER */
 test('profile_filters property should return all associated profile_filters or empty array', (assert) => {
   let m2m = store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
-  profile = store.push('profile', {id: PD.idOne, profile_join_pfilters_fks: [PPFD.idOne]});
+  profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne]});
   let profile_filter = store.push('pfilter', {id: PFD.idOne});
-  assert.equal(profile.get('pfs').get('length'), 1);
+  let pfs = profile.get('pfs');
+  assert.equal(pfs.get('length'), 1);
+  assert.equal(pfs.objectAt(0).get('id'), PFD.idOne);
+  run(function() {
+    store.push('profile-join-pfilter', {id: m2m.get('id'), removed: true});
+  });
+  assert.equal(profile.get('pfs').get('length'), 0);
 });
 
-// test('cc property is not dirty when no cc present (undefined)', (assert) => {
-//   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: undefined});
-//   store.push('person', {id: PD.id});
-//   assert.equal(ticket.get('cc').get('length'), 0);
-//   assert.ok(ticket.get('ccIsNotDirty'));
-// });
+test('pfs property is not dirty when no pfs present (undefined)', (assert) => {
+  profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: undefined});
+  store.push('pfilter', {id: PFD.id});
+  assert.equal(profile.get('pfs').get('length'), 0);
+  assert.ok(profile.get('pfsIsNotDirty'));
+});
 
-// test('cc property is not dirty when no cc present (empty array)', (assert) => {
-//   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: []});
-//   store.push('person', {id: PD.id});
-//   assert.equal(ticket.get('cc').get('length'), 0);
-//   assert.ok(ticket.get('ccIsNotDirty'));
-// });
+test('pfs property is not dirty when no pfs present (empty array)', (assert) => {
+  profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: []});
+  store.push('pfilter', {id: PFD.id});
+  assert.equal(profile.get('pfs').get('length'), 0);
+  assert.ok(profile.get('pfsIsNotDirty'));
+});
 
-// test('cc property is not dirty when attr on person is changed', (assert) => {
-//   store.push('ticket-person', {id: PPFD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
-//   let person = store.push('person', {id: PD.id});
-//   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [PPFD.idOne]});
-//   assert.equal(ticket.get('cc').get('length'), 1);
-//   assert.ok(ticket.get('ccIsNotDirty'));
-//   run(function() {
-//     store.push('person', {id: PD.id, first_name: PD.first_name});
-//   });
-//   assert.ok(person.get('isDirty'));
-//   assert.ok(ticket.get('ccIsNotDirty'));
-//   assert.equal(ticket.get('cc').get('length'), 1);
-//   assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.first_name);
-// });
+test('pfs property is not dirty when attr on profile is changed', (assert) => {
+  let m2m = store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
+  profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne]});
+  let pfilter = store.push('pfilter', {id: PFD.idOne});
+  assert.ok(pfilter.get('isNotDirty'));
+  assert.ok(pfilter.get('isNotDirtyOrRelatedNotDirty'));
+  let pfs = profile.get('pfs');
+  assert.equal(pfs.get('length'), 1);
+  assert.ok(profile.get('pfsIsNotDirty'));
+  run(function() {
+    store.push('pfilter', {id: PFD.idOne, field: PFD.fieldOne});
+  });
+  assert.ok(pfilter.get('isDirty'));
+  assert.ok(profile.get('pfsIsNotDirty'));
+  assert.equal(profile.get('pfs').get('length'), 1);
+  assert.equal(profile.get('pfs').objectAt(0).get('field'), PFD.fieldOne);
+});
 
-// test('removing a ticket-person will mark the ticket as dirty and reduce the associated cc models to zero', (assert) => {
-//   store.push('ticket-person', {id: PPFD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
-//   let person = store.push('person', {id: PD.id});
-//   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [PPFD.idOne]});
-//   assert.equal(ticket.get('cc').get('length'), 1);
-//   assert.ok(ticket.get('ccIsNotDirty'));
-//   ticket.remove_cc(PD.id);
-//   assert.ok(ticket.get('ccIsDirty'));
-//   assert.equal(ticket.get('cc').get('length'), 0);
-// });
+test('removing a profile-join-pfilter will mark the profile as dirty and reduce the associated pfs models to zero', (assert) => {
+  store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
+  let pfilter = store.push('pfilter', {id: PFD.idOne});
+  profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne]});
+  assert.equal(profile.get('pfs').get('length'), 1);
+  assert.ok(profile.get('pfsIsNotDirty'));
+  profile.remove_pf(PFD.idOne);
+  assert.ok(profile.get('pfsIsDirty'));
+  assert.equal(profile.get('pfs').get('length'), 0);
+});
 
-// test('replacing a ticket-person with some other ticket-person still shows the ticket model as dirty', (assert) => {
-//   store.push('ticket-person', {id: PPFD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
-//   store.push('person', {id: PD.id});
-//   const person_two = {id: PD.idTwo};
-//   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [PPFD.idOne]});
-//   assert.equal(ticket.get('cc').get('length'), 1);
-//   assert.ok(ticket.get('ccIsNotDirty'));
-//   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//   ticket.remove_cc(PD.id);
-//   assert.ok(ticket.get('ccIsDirty'));
-//   assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-//   assert.equal(ticket.get('cc').get('length'), 0);
-//   ticket.add_cc(person_two);
-//   assert.ok(ticket.get('ccIsDirty'));
-//   assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-//   assert.equal(ticket.get('cc').get('length'), 1);
-//   assert.equal(ticket.get('cc').objectAt(0).get('id'), PD.idTwo);
-// });
+test('replacing a profile-join-pfilter with some other profile-join-pfilter still shows the profile model as dirty', (assert) => {
+  store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
+  store.push('pfilter', {id: PFD.idOne});
+  const pfilter_two = {id: PFD.idTwo};
+  profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne]});
+  assert.equal(profile.get('pfs').get('length'), 1);
+  assert.ok(profile.get('pfsIsNotDirty'));
+  assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
+  profile.remove_pf(PFD.idOne);
+  assert.ok(profile.get('pfsIsDirty'));
+  assert.ok(profile.get('isDirtyOrRelatedDirty'));
+  assert.equal(profile.get('pfs').get('length'), 0);
+  profile.add_pf(pfilter_two);
+  assert.ok(profile.get('pfsIsDirty'));
+  assert.ok(profile.get('isDirtyOrRelatedDirty'));
+  assert.equal(profile.get('pfs').get('length'), 1);
+  assert.equal(profile.get('pfs').objectAt(0).get('id'), PFD.idTwo);
+});

@@ -28,8 +28,8 @@ export default Model.extend(OptConfMixin, Validations, {
   },
   simpleStore: Ember.inject.service(),
   description: attr(''),
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', function() {
-    return this.get('isDirty') || this.get('assigneeIsDirty');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'pfsIsDirty', function() {
+    return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('pfsIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   rollback() {
