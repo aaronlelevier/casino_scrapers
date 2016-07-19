@@ -487,10 +487,11 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
   });
 });
 
-test('(NEW URL) a dirty new tab and clicking on new model button should push new tab into store', (assert) => {
+test('scott (NEW URL) a dirty new tab and clicking on new model button should push new tab into store', (assert) => {
   clearxhr(detail_xhr);
   clearxhr(activity_one);
-  visit(NEW_URL);
+  visit(TICKET_URL);
+  click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
     let tabs = store.find('tab');
@@ -502,15 +503,12 @@ test('(NEW URL) a dirty new tab and clicking on new model button should push new
   let ticket_list_data = TF.list();
   xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
   generalPage.clickTickets();
-  andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
-  });
   click('.t-add-new');
   andThen(() => {
+    console.log('andThen');
     assert.equal(currentURL(), NEW_URL_2);
-    waitFor(assert, () => {
-      let tabs = store.find('tab');
-      assert.equal(tabs.get('length'), 2);
-    });
+    let tabs = store.find('tab');
+    console.log(tabs);
+    assert.equal(tabs.get('length'), 2);
   });
 });
