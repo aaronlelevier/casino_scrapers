@@ -11,7 +11,6 @@ import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/utilities/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/location';
-import random from 'bsrs-ember/models/random';
 import trim from 'bsrs-ember/utilities/trim';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -29,8 +28,6 @@ module('Acceptance | error handling test', {
     store = application.__container__.lookup('service:simpleStore');
     new_xhr = xhr(DJANGO_LOCATION_URL + '?page=1', "GET", null, {}, 200, LF.empty());
     payload = {id: UUID.value, name: LD.storeName, number: LD.storeNumber, status: LD.status, location_level: LLD.idOne, children: [], parents: [], emails: [], phone_numbers: [], addresses: []};
-    original_uuid = random.uuid;
-    random.uuid = function() { return UUID.value; };
     originalLoggerError = Ember.Logger.error;
     originalTestAdapterException = Ember.Test.adapter.exception;
     Ember.Logger.error = function() {};
@@ -39,7 +36,6 @@ module('Acceptance | error handling test', {
   afterEach() {
     Ember.Logger.error = originalLoggerError;
     Ember.Test.adapter.exception = originalTestAdapterException;
-    random.uuid = original_uuid;
     Ember.run(application, 'destroy');
   }
 });

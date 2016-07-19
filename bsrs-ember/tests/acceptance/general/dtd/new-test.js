@@ -34,7 +34,7 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 
 let application, store, list_xhr, original_uuid;
 
-module('scott Acceptance | dtd-new', {
+module('Acceptance | dtd-new', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');

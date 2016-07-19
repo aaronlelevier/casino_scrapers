@@ -39,7 +39,7 @@ const DETAIL_URL = BASE_URL + '/' + PD.idOne;
 
 let application, store, list_xhr, detail_data, endpoint, detail_xhr, detail_data_two, list_data, original_uuid, counter;
 
-module('Acceptance | tab profile test', {
+module('scott Acceptance | tab profile test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
@@ -363,6 +363,8 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
   andThen(() => {
     assert.equal(currentURL(), NEW_URL_2);
     let tabs = store.find('tab');
+    assert.ok(tabs.objectAt(0).get('id'));
+    assert.ok(tabs.objectAt(1).get('id'));
     assert.equal(tabs.get('length'), 2);
   });
 });
