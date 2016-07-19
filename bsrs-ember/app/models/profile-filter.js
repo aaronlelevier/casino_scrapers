@@ -24,5 +24,12 @@ export default Model.extend({
       criteria_fks.splice(index, 1);
       this.set('criteria_fks', criteria_fks);
     }
+  },
+  serialize() {
+    return {
+      id: this.get('id'),
+      field: this.get('field'),
+      criteria: this.get('criteria_fks')
+    };
   }
 });

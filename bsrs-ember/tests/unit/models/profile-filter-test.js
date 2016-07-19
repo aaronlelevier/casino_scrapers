@@ -66,3 +66,13 @@ test('remove_criteria', assert => {
   profile_filter.remove_criteria(TD.priorityOneId);
   assert.deepEqual(profile_filter.get('criteria_fks'), []);
 });
+
+test('serialize', assert => {
+    run(() => {
+      profile_filter = store.push('profile-filter', {id: PFD.idOne, field: PFD.fieldOne, criteria_fks: [TD.priorityOneId]});
+    });
+  let data = profile_filter.serialize();
+  assert.equal(data.id, PFD.idOne);
+  assert.equal(data.field, PFD.fieldOne);
+  assert.deepEqual(data.criteria, [TD.priorityOneId]);
+});
