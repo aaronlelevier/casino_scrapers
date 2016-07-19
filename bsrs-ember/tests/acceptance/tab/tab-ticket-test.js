@@ -500,8 +500,8 @@ test('(NEW URL) a dirty new tab and clicking on new model button should push new
   page.priorityClickDropdown();
   page.priorityClickOptionTwo();
   let ticket_list_data = TF.list();
-  list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
-  visit(TICKET_URL);
+  xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
+  generalPage.clickTickets();
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
   });

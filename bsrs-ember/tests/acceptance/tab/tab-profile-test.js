@@ -352,7 +352,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
     assert.equal(find('.t-tab-title:eq(0)').text(), TAB_TITLE_NAME);
   });
   fillIn(EDIT_FIELD_CSS_CLASS, EDIT_FIELD_VALUE);
-  list_xhr = xhr(API_LIST_URL + '?page=1', 'GET', null, {}, 200, list_data);
+  xhr(API_LIST_URL + '?page=1', 'GET', null, {}, 200, list_data);
   generalPage.clickAssignmentProfiles();
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);

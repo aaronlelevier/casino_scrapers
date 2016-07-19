@@ -394,7 +394,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
     assert.equal(find('.t-tab-title:eq(0)').text(), 'New Role');
   });
   let role_list_data = RF.list();
-  list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, role_list_data);
+  xhr(endpoint + '?page=1', 'GET', null, {}, 200, role_list_data);
   generalPage.clickRoles();
   andThen(() => {
     assert.equal(currentURL(), ROLE_URL);

@@ -384,7 +384,7 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
     });
     fillIn('.t-third-party-name', TPD.nameTwo);
     let list_data = TPF.list();
-    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, list_data);
+    xhr(endpoint + '?page=1', 'GET', null, {}, 200, list_data);
     visit(THIRD_PARTY_URL);
     andThen(() => {
         assert.equal(currentURL(), THIRD_PARTY_URL);

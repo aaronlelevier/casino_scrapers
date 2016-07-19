@@ -387,7 +387,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
   });
   fillIn('.t-location-name', LD.storeName);
   let location_list_data = LF.list();
-  list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
+  xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
   generalPage.clickLocations();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);

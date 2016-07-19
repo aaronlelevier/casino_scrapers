@@ -423,8 +423,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
   const username_search = xhr(endpoint + '?username=llcoolj', 'GET', null, {}, 200, username_response);
   fillIn('.t-person-username', PD_PUT.username);
   let people_list_data = PF.list();
-  list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
-  visit(PEOPLE_URL);
+  xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
   generalPage.clickPeople();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_URL);
