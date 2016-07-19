@@ -63,7 +63,7 @@ moduleForComponent('activity-list', 'integration: activity-list', {
 //     });
 //     let model = store.find('activity');
 //     this.set('model', model);
-//     this.render(hbs`{{activity-list model=model}}`);
+//     this.render(hbs`{{activity-list activities=model}}`);
 //     let $component = this.$(`${ACTIVITY_ITEMS}`);
 //     assert.equal($component.length, 8);
 //     assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} added person1 person2 to CC 15 days ago`);
@@ -135,7 +135,7 @@ test('activity list can be filtered to show comments or status updates', functio
   });
   let model = store.find('activity');
   this.set('model', model);
-  this.render(hbs`{{activity-list model=model}}`);
+  this.render(hbs`{{activity-list activities=model}}`);
   let $component = this.$(`${ACTIVITY_ITEMS}`);
   assert.equal($component.length, 8);
   assert.equal($('.t-activity-timestamp:eq(0)').text(), '15 days ago');

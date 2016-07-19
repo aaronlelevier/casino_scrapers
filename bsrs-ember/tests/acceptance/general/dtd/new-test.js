@@ -32,9 +32,9 @@ const DJANGO_DTD_NEW_URL = `${DJANGO_DTD_URL}${UUID.value}/`;
 const DTD_ERROR_URL = BASEURLS.dtd_error_url;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
-let application, store, payload, list_xhr, original_uuid;
+let application, store, list_xhr, original_uuid;
 
-module('Acceptance | dtd-new', {
+module('scott Acceptance | dtd-new', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
@@ -43,7 +43,6 @@ module('Acceptance | dtd-new', {
     random.uuid = function() { return UUID.value; };
   },
   afterEach() {
-    payload = null;
     random.uuid = original_uuid;
     Ember.run(application, 'destroy');
   }
@@ -92,8 +91,8 @@ test('visiting /dtd/new', async assert => {
   const link = dtd.get('links').objectAt(0);
   assert.ok(link.get('isDirtyOrRelatedDirty'));
   assert.ok(link.get('priorityIsDirty'));
-  const response = Ember.$.extend(true, {}, payload);
-  xhr(DJANGO_DTD_URL, 'POST', JSON.stringify(dtd_new_payload), {}, 201, response);
+  // const response = Ember.$.extend(true, {}, payload);
+  xhr(DJANGO_DTD_URL, 'POST', JSON.stringify(dtd_new_payload), {}, 201, {});
   await generalPage.save();
   assert.equal(currentURL(), NEW_URL);
   assert.equal(dtd.get('key'), DTD.keyOne);
@@ -190,7 +189,7 @@ test('adding a new dtd should allow for another new dtd to be created after the 
   .priorityClickOptionOne()
   .statusClickDropdown()
   .statusClickOptionOne();
-  xhr(DJANGO_DTD_URL, 'POST', JSON.stringify(dtd_new_payload), {}, 201, Ember.$.extend(true, {}, payload));
+  xhr(DJANGO_DTD_URL, 'POST', JSON.stringify(dtd_new_payload), {}, 201, {});
   await generalPage.save();
   assert.equal(currentURL(), NEW_URL);
   await click('.t-add-new');

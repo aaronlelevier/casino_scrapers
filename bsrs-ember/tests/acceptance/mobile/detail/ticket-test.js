@@ -47,7 +47,7 @@ module('Acceptance | mobile ticket detail test', {
   },
   afterEach() {
     run(() => {
-      flexi.set('width', bp.huge);
+      flexi.set('width', bp.desktop);
     });
     Ember.run(application, 'destroy');
   }

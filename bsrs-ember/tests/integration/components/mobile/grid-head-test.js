@@ -25,7 +25,7 @@ moduleForComponent('grid/grid-head', 'Integration | Component | grid-head', {
   },
   afterEach() {
     run(() => {
-      flexi.set('width', bp.huge);
+      flexi.set('width', bp.desktop);
     });
   }
 });
