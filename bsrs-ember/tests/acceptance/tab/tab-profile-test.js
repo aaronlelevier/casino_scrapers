@@ -39,7 +39,7 @@ const DETAIL_URL = BASE_URL + '/' + PD.idOne;
 
 let application, store, list_xhr, detail_data, endpoint, detail_xhr, detail_data_two, list_data, original_uuid, counter;
 
-module('scott Acceptance | tab profile test', {
+module('Acceptance | tab profile test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
