@@ -490,7 +490,8 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
 test('(NEW URL) a dirty new tab and clicking on new model button should push new tab into store', (assert) => {
   clearxhr(detail_xhr);
   clearxhr(activity_one);
-  visit(NEW_URL);
+  visit(TICKET_URL);
+  click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
     let tabs = store.find('tab');
