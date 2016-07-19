@@ -148,34 +148,34 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
   });
 });
 
-test('(NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
-  random.uuid = function() { return UUID.value; };
-  clearxhr(detail_xhr);
-  visit(NEW_URL);
-  andThen(() => {
-    assert.equal(currentURL(), NEW_URL);
-    let tabs = store.find('tab');
-    assert.equal(tabs.get('length'), 1);
-    assert.equal(find('.t-tab-title:eq(0)').text(), 'New Category');
-  });
-  fillIn('.t-category-name', CD.nameTwo);
-  let category_list_data = CF.list();
-  list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, category_list_data);
-  visit(CATEGORY_URL);
-  andThen(() => {
-    assert.equal(currentURL(), CATEGORY_URL);
-    let category = store.find('category', UUID.value);
-    assert.equal(category.get('name'), CD.nameTwo);
-    assert.equal(category.get('isDirtyOrRelatedDirty'), true);
-  });
-  click('.t-tab:eq(0)');
-  andThen(() => {
-    assert.equal(currentURL(), NEW_URL);
-    let category = store.find('category', UUID.value);
-    assert.equal(category.get('name'), CD.nameTwo);
-    assert.equal(category.get('isDirtyOrRelatedDirty'), true);
-  });
-});
+// test('(NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+//   random.uuid = function() { return UUID.value; };
+//   clearxhr(detail_xhr);
+//   visit(NEW_URL);
+//   andThen(() => {
+//     assert.equal(currentURL(), NEW_URL);
+//     let tabs = store.find('tab');
+//     assert.equal(tabs.get('length'), 1);
+//     assert.equal(find('.t-tab-title:eq(0)').text(), 'New Category');
+//   });
+//   fillIn('.t-category-name', CD.nameTwo);
+//   let category_list_data = CF.list();
+//   list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, category_list_data);
+//   visit(CATEGORY_URL);
+//   andThen(() => {
+//     assert.equal(currentURL(), CATEGORY_URL);
+//     let category = store.find('category', UUID.value);
+//     assert.equal(category.get('name'), CD.nameTwo);
+//     assert.equal(category.get('isDirtyOrRelatedDirty'), true);
+//   });
+//   click('.t-tab:eq(0)');
+//   andThen(() => {
+//     assert.equal(currentURL(), NEW_URL);
+//     let category = store.find('category', UUID.value);
+//     assert.equal(category.get('name'), CD.nameTwo);
+//     assert.equal(category.get('isDirtyOrRelatedDirty'), true);
+//   });
+// });
 
 test('clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
   let category_list_data = CF.list();
