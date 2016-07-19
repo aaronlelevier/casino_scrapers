@@ -21,6 +21,10 @@ export default Ember.Mixin.create({
       collection: 'profiles',
       property: 'person',
       related_model: 'assignee',
+    },
+    pfs: {
+      associated_model: 'pfilter',
+      join_model: 'profile-join-pfilter',
     }
   }
 });
