@@ -39,6 +39,18 @@ test('deserialize single', assert => {
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
 });
 
+test('deserialize single - no filters', assert => {
+  let json = PF.detail();
+  json.filters = [];
+  run(() => {
+    deserializer.deserialize(json, PD.idOne);
+  });
+  profile = store.find('profile', PD.idOne);
+  assert.equal(profile.get('pfs').get('length'), 0);
+  assert.ok(profile.get('isNotDirty'));
+  assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
+});
+
 test('deserialize list', assert => {
   let json = PF.list();
   run(() => {
