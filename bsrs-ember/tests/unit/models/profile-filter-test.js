@@ -6,15 +6,15 @@ import PFD from 'bsrs-ember/vendor/defaults/profile-filter';
 import PersonD from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 
-var store, profile, profileFilter, person, run = Ember.run;
+var store, profile, profile_filter, person, run = Ember.run;
 
 module('unit: profile test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:profile', 'model:profile-filter', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:profile', 'model:pfilter', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     run(() => {
       profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
       person = store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
-      profile_filter = store.push('profile-filter', {id: PFD.idOne});
+      profile_filter = store.push('pfilter', {id: PFD.idOne});
     });
   }
 });
@@ -69,7 +69,7 @@ test('remove_criteria', assert => {
 
 test('serialize', assert => {
     run(() => {
-      profile_filter = store.push('profile-filter', {id: PFD.idOne, field: PFD.fieldOne, criteria_fks: [TD.priorityOneId]});
+      profile_filter = store.push('pfilter', {id: PFD.idOne, field: PFD.fieldOne, criteria_fks: [TD.priorityOneId]});
     });
   let data = profile_filter.serialize();
   assert.equal(data.id, PFD.idOne);

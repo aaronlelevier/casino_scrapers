@@ -55,7 +55,6 @@ var GridViewRoute = Ember.Route.extend({
     let requested = this.get('pagination').requested(name, page);
     const search = query.search;
     const count = repository.findCount();
-    console.log(count);
     set_filter_model_attrs(this.filterModel, query.find);
     let model;
     if (this.get('device').get('isMobile')) {

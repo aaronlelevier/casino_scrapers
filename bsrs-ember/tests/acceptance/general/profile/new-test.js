@@ -61,7 +61,8 @@ test('visit new URL and create a new record', assert => {
   let payload = {
     id: UUID.value,
     description: PD.descOne,
-    assignee: '249543cf-8fea-426a-8bc3-09778cd78001'
+    assignee: '249543cf-8fea-426a-8bc3-09778cd78001',
+    filters: []
   };
   xhr(API_CREATE_URL, 'POST', payload, {}, 200, {});
   generalPage.save();

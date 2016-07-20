@@ -36,22 +36,7 @@ test('deserialize single', assert => {
   assert.deepEqual(profile.get('pfs').objectAt(0).get('criteria_fks'), [TD.priorityOneId]);
   // should not be dirty
   assert.ok(profile.get('isNotDirty'));
-  assert.ok(profile.get('isDirtyOrRelatedDirty'));
-});
-
-test('deserialize single should update assignee if server returns different assignee', assert => {
-  profile = store.push('profile', {id: PD.idOne});
-  profile.change_assignee({id: PD.assigneeTwo});
-  assert.equal(profile.get('assignee').get('id'), PD.assigneeTwo);
-  let json = PF.detail();
-  run(() => {
-    deserializer.deserialize(json, PD.idOne);
-  });
-  assert.equal(profile.get('id'), PD.idOne);
-  assert.equal(profile.get('description'), PD.descOne);
-  assert.equal(profile.get('assignee_fk'), PD.assigneeOne);
-  assert.equal(profile.get('assignee').get('id'), PD.assigneeOne);
-  assert.equal(profile.get('assignee').get('username'), PD.username);
+  assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('deserialize list', assert => {
