@@ -130,7 +130,7 @@ class PersonTicketListSerializer(serializers.ModelSerializer):
     # Role and Status is not needed in Ticket Grid
     class Meta:
         model = Person
-        fields = ('id', 'first_name', 'middle_initial', 'last_name')
+        fields = ('id', 'fullname',)
 
 
 class PersonDetailSerializer(serializers.ModelSerializer):
