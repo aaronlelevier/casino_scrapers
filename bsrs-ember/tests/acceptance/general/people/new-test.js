@@ -1,7 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
 import { test } from 'qunit';
-import module from "bsrs-ember/tests/helpers/module";
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
@@ -30,7 +30,7 @@ const NEW_URL = BASE_PEOPLE_URL + '/new/1';
 
 var application, store, payload, detail_xhr, list_xhr, people_detail_data, detailEndpoint, username_search;
 
-module('Acceptance | person new test', {
+moduleForAcceptance('Acceptance | person new test', {
   beforeEach() {
     payload = {
       id: UUID.value,
@@ -43,8 +43,8 @@ module('Acceptance | person new test', {
       status: SD.activeId,
       locale: LD.idOne
     };
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(PEOPLE_URL + '?page=1','GET',null,{},200,PF.empty());
     detailEndpoint = PEOPLE_URL;
     people_detail_data = {id: UUID.value, username: PD.username, role: RD.idOne, phone_numbers:[], addresses: [], locations: [], status_fk: SD.activeId, locale: PD.locale_id};
@@ -56,8 +56,6 @@ module('Acceptance | person new test', {
   afterEach() {
     payload = null;
     detail_xhr = null;
-    uuidReset();
-    Ember.run(application, 'destroy');
   }
 });
 

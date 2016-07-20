@@ -1,7 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -37,10 +37,10 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 
 let application, store, endpoint, list_xhr, detail_xhr, detail_data;
 
-module('Acceptance | dtd detail', {
+moduleForAcceptance('Acceptance | dtd detail', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/`;
     list_xhr = xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, DTDF.list());
     detail_data = DTDF.detail(DTD.idOne);
@@ -48,7 +48,7 @@ module('Acceptance | dtd detail', {
   },
   afterEach() {
     uuidReset();
-    Ember.run(application, 'destroy');
+    
   }
 });
 

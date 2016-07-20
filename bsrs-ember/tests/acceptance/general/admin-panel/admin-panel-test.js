@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
@@ -15,16 +15,16 @@ const ADMINPANEL = '.t-side-menu';
 
 var application, store, endpoint, setting_data, detail_xhr;
 
-module('Acceptance | admin settings layout test', {
+moduleForAcceptance('Acceptance | admin settings layout test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + SETTING_URL + '/';
     setting_data = TF.detail();
     detail_xhr = xhr(endpoint, 'GET', null, {}, 200, setting_data);
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -18,10 +18,10 @@ const DETAIL_URL = BASE_URL + '/' + TD.keyOneGrid;
 
 var application, store, endpoint, translation_list_data, translation_detail_data, list_xhr, detail_xhr;
 
-module('Acceptance | translation detail test', {
+moduleForAcceptance('Acceptance | translation detail test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/';
     translation_list_data = TF.list();
     translation_detail_data = TF.get();
@@ -29,7 +29,7 @@ module('Acceptance | translation detail test', {
     detail_xhr = xhr(endpoint + TD.keyOneGrid + '/', 'GET', null, {}, 200, translation_detail_data);
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

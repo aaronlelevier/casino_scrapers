@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from "bsrs-ember/tests/helpers/module";
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import TPF from 'bsrs-ember/vendor/third_party_fixtures';
@@ -23,10 +23,10 @@ const DJANGO_DETAIL_URL = PREFIX + DJANGO_THIRD_PARTY_URL + TPD.idOne + '/';
 
 let application, store, payload, list_xhr;
 
-module('Acceptance | third-party new test', {
+moduleForAcceptance('Acceptance | third-party new test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${DJANGO_THIRD_PARTY_URL}?page=1`, "GET", null, {}, 200, TPF.empty());
     payload = {
       id: UUID.value,
@@ -38,8 +38,6 @@ module('Acceptance | third-party new test', {
   },
   afterEach() {
     payload = null;
-    uuidReset();
-    Ember.run(application, 'destroy');
   }
 });
 

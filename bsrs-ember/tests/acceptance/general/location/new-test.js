@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from "bsrs-ember/tests/helpers/module";
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
@@ -42,10 +42,10 @@ const PARENTS_MULTIPLE_OPTION = `.t-location-parent-select > .ember-power-select
 
 let application, store, payload, list_xhr;
 
-module('Acceptance | location-new', {
+moduleForAcceptance('Acceptance | location-new', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${LOCATIONS_URL}?page=1`, "GET", null, {}, 201, LOCATION_FIXTURES.empty());
     payload = {
       id: UUID.value,
@@ -63,8 +63,6 @@ module('Acceptance | location-new', {
   },
   afterEach() {
     payload = null;
-    uuidReset();
-    Ember.run(application, 'destroy');
   }
 });
 

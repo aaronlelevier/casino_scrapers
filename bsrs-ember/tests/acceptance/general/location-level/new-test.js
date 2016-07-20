@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from "bsrs-ember/tests/helpers/module";
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location-level_fixtures';
@@ -21,10 +21,10 @@ const DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idOne;
 
 let application, store, payload, list_xhr;
 
-module('Acceptance | location-level-new', {
+moduleForAcceptance('Acceptance | location-level-new', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${LOCATION_LEVELS_URL}?page=1`, 'GET', null, {}, 200, LOCATION_LEVEL_FIXTURES.empty());
     payload = {
       id: UUID.value,
@@ -35,8 +35,6 @@ module('Acceptance | location-level-new', {
   },
   afterEach() {
     payload = null;
-    uuidReset();
-    Ember.run(application, 'destroy');
   }
 });
 

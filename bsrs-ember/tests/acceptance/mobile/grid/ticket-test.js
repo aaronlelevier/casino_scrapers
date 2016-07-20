@@ -1,6 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import { test } from 'qunit';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
@@ -33,11 +33,11 @@ const LOCATION = '.t-ticket-location-select';
 // const SORT_ASSIGNEE_DIR = '.t-sort-assignee-fullname-dir';
 // const FILTER_PRIORITY = '.t-filter-priority-translated-name';
 
-module('Acceptance | grid ticket mobile test', {
+moduleForAcceptance('Acceptance | grid ticket mobile test', {
   beforeEach() {
     /* SETUP */
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
     /* MOBILE RENDER */
     setWidth('mobile');
@@ -46,7 +46,7 @@ module('Acceptance | grid ticket mobile test', {
     // run(() => {
     //   flexi.set('width', bp.desktop);
     // });
-    Ember.run(application, 'destroy');
+    
   }
 });
 

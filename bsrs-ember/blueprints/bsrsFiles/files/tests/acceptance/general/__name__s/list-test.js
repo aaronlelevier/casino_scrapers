@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
 import <%= camelizedModuleName %>D from 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>';
@@ -16,15 +16,15 @@ const API_DETAIL_URL = `${<%= CapitalizeModule %>_URL}${<%= camelizedModuleName 
 
 let application, store;
 
-module('Acceptance | <%= dasherizedModuleName %> list test', {
+moduleForAcceptance('Acceptance | <%= dasherizedModuleName %> list test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     const listData = <%= camelizedModuleName %>F.list();
     xhr(`${<%= CapitalizeModule %>_URL}?page=1`, 'GET', null, {}, 200, listData);
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

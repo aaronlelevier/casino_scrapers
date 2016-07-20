@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -28,17 +28,17 @@ const PERSON_URL = BASE_PERSON_URL + '/index';
 
 let application, store, list_xhr, third_party_detail_data, endpoint, detail_xhr;
 
-module('Acceptance | tab third-party test', {
+moduleForAcceptance('Acceptance | tab third-party test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_THIRD_PARTY_URL + '/';
     var third_party_detail_data = TPF.detail(TPD.idOne);
     detail_xhr = xhr(endpoint + TPD.idOne + '/', 'GET', null, {}, 200, third_party_detail_data);
   },
   afterEach() {
     uuidReset();
-    Ember.run(application, 'destroy');
+    
   }
 });
 

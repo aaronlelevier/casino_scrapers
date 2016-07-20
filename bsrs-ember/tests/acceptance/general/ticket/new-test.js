@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -40,10 +40,10 @@ const SEARCH = '.ember-power-select-search input';
 
 let application, store, list_xhr, location_xhr, people_xhr, counter;
 
-module('Acceptance | ticket new test', {
+moduleForAcceptance('Acceptance | ticket new test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(TICKETS_URL+'?page=1', 'GET', null, {}, 200, TF.empty());
     location_xhr = xhr(`${LOCATIONS_URL}location__icontains=6/`, 'GET', null, {}, 200, LF.search_power_select());
     counter = 0;
@@ -53,9 +53,7 @@ module('Acceptance | ticket new test', {
     // });
   },
   afterEach() {
-    uuidReset();
     counter = 0;
-    Ember.run(application, 'destroy');
   }
 });
 

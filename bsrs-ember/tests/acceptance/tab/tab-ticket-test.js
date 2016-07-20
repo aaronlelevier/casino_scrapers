@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -35,10 +35,10 @@ const ACTIVITY_ITEMS = '.t-activity-list-item';
 
 let application, store, list_xhr, ticket_detail_data, endpoint, detail_xhr, activity_one;
 
-module('Acceptance | tab ticket test', {
+moduleForAcceptance('Acceptance | tab ticket test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_TICKET_URL + '/';
     ticket_detail_data = TF.detail(TD.idOne);
     detail_xhr = xhr(endpoint + TD.idOne + '/', 'GET', null, {}, 200, ticket_detail_data);
@@ -46,7 +46,7 @@ module('Acceptance | tab ticket test', {
   },
   afterEach() {
     uuidReset();
-    Ember.run(application, 'destroy');
+    
   }
 });
 
@@ -486,7 +486,7 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
   });
 });
 
-test('scott (NEW URL) a dirty new tab and clicking on new model button should push new tab into store', (assert) => {
+test('(NEW URL) a dirty new tab and clicking on new model button should push new tab into store', (assert) => {
   clearxhr(detail_xhr);
   clearxhr(activity_one);
   visit(TICKET_URL);

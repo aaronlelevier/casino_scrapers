@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from "bsrs-ember/tests/helpers/module";
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import CF from 'bsrs-ember/vendor/category_fixtures';
@@ -27,7 +27,7 @@ const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 let application, store, payload, list_xhr, children_xhr, run = Ember.run;
 
-module('Acceptance | category new test', {
+moduleForAcceptance('Acceptance | category new test', {
   beforeEach() {
     payload = {
       id: UUID.value,
@@ -39,8 +39,8 @@ module('Acceptance | category new test', {
       subcategory_label: CD.subCatLabelTwo,
       children: []
     };
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(CATEGORIES_URL + '?page=1', 'GET', null, {}, 200, CF.empty());
     let category_children_endpoint = `${CATEGORIES_URL}category__icontains=a/`;
     children_xhr = xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list_power_select());
@@ -53,8 +53,6 @@ module('Acceptance | category new test', {
     payload = null;
     list_xhr = null;
     children_xhr = null;
-    uuidReset()
-    Ember.run(application, 'destroy');
   }
 });
 

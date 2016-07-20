@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
@@ -12,13 +12,13 @@ const PEOPLE_INDEX_URL = BASE_PEOPLE_LIST_URL + '/index';
 
 var application;
 
-module('Acceptance | person list test', {
+moduleForAcceptance('Acceptance | person list test', {
   beforeEach() {
-    application = startApp();
+    
     xhr(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

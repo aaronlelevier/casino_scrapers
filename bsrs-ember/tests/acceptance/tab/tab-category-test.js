@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -28,16 +28,16 @@ const DOC_TYPE = 'category';
 
 let application, store, list_xhr, category_detail_data, endpoint, detail_xhr;
 
-module('Acceptance | tab category test', {
+moduleForAcceptance('Acceptance | tab category test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_CATEGORY_URL + '/';
     category_detail_data = CF.detail(CD.idGridOne);
     detail_xhr = xhr(endpoint + CD.idGridOne + '/', 'GET', null, {}, 200, category_detail_data);
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

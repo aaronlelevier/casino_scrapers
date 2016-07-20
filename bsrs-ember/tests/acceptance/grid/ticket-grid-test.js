@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -33,18 +33,18 @@ const FILTER_PRIORITY = '.t-filter-priority-translated-name';
 
 var application, store, endpoint, list_xhr;
 
-module('Acceptance | ticket grid test', {
+moduleForAcceptance('Acceptance | ticket grid test', {
   beforeEach() {
     // timemachine.config({
     //   dateString: 'December 25, 2014 13:12:59'
     // });
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';
     list_xhr = xhr(endpoint, 'GET', null, {}, 200, TF.list());
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
     // timemachine.reset();
   }
 });

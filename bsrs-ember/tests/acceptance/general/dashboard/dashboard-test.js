@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
@@ -18,14 +18,14 @@ const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = `${BASE_URL}/index`;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
-module('Acceptance | dashboard', {
+moduleForAcceptance('Acceptance | dashboard', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

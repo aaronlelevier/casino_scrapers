@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import windowProxy from 'bsrs-ember/utilities/window-proxy';
@@ -15,13 +15,13 @@ const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 
 var application;
 
-module('Acceptance | logout test', {
+moduleForAcceptance('Acceptance | logout test', {
   beforeEach() {
-    application = startApp();
+    
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

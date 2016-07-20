@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -31,10 +31,10 @@ const DOC_TYPE = 'role';
 
 let application, store, list_xhr, role_detail_data, endpoint, detail_xhr, run = Ember.run;
 
-module('Acceptance | tab role test', {
+moduleForAcceptance('Acceptance | tab role test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_ROLE_URL + '/';
     role_detail_data = RF.detail(RD.idGridOne, RD.nameGrid);
     detail_xhr = xhr(endpoint + RD.idGridOne + '/', 'GET', null, {}, 200, role_detail_data);
@@ -47,7 +47,7 @@ module('Acceptance | tab role test', {
   },
   afterEach() {
     uuidReset();
-    Ember.run(application, 'destroy');
+    
   }
 });
 

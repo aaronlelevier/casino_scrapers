@@ -4,6 +4,7 @@ import { module as qunitModule } from 'qunit';
 
 var Owner = Ember.Object.extend(Ember._RegistryProxyMixin, Ember._ContainerProxyMixin);
 
+/* Used in unit tests, acceptance test module comes from ember-cli-test-helpers */
 var module = function(name, settings){
   settings = settings || {};
   qunitModule(name, {

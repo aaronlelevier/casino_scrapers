@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import config from 'bsrs-ember/config/environment';
@@ -22,13 +22,13 @@ const TICKET_ACTIVITIES_TWO_URL = `${PREFIX}/tickets/${idTwo}/activity/`;
 
 var application, store, ticket_one, ticket_two;
 
-module('Acceptance | ticket and ticket test', {
+moduleForAcceptance('Acceptance | ticket and ticket test', {
     beforeEach() {
-        application = startApp();
-        store = application.__container__.lookup('service:simpleStore');
+        
+        store = this.application.__container__.lookup('service:simpleStore');
     },
     afterEach() {
-        Ember.run(application, 'destroy');
+        
     }
 });
 

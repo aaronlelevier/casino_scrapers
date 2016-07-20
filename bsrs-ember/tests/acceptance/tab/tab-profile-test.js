@@ -1,7 +1,7 @@
 
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -39,10 +39,10 @@ const DETAIL_URL = BASE_URL + '/' + PD.idOne;
 
 let application, store, list_xhr, detail_data, endpoint, detail_xhr, detail_data_two, list_data, counter;
 
-module('Acceptance | tab profile test', {
+moduleForAcceptance('Acceptance | tab profile test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     // Edit based on module
     detail_data = PF.detail(ID_ONE);
     detail_xhr = xhr(`${API_LIST_URL}${ID_ONE}/`, 'GET', null, {}, 200, detail_data);
@@ -51,7 +51,7 @@ module('Acceptance | tab profile test', {
   },
   afterEach() {
     uuidReset();
-    Ember.run(application, 'destroy');
+    
   }
 });
 

@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PD from 'bsrs-ember/vendor/defaults/profile';
@@ -18,15 +18,15 @@ const API_DETAIL_URL = `${PREFIX}${BASE_URL}/${PD.idZero}/`;
 
 let application, store, listData, listXhr, run = Ember.run;
 
-module('Acceptance | profile list test', {
+moduleForAcceptance('Acceptance | profile list test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     listData = PF.list();
     listXhr = xhr(API_LIST_URL + '?page=1', 'GET', null, {}, 200, listData);
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

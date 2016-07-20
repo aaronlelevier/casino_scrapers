@@ -1,7 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -50,16 +50,13 @@ const TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
 
 let application, store, endpoint;
 
-module('Acceptance | dt new', {
+moduleForAcceptance('Acceptance | dt new', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${DTD_URL}/`;
     random.uuid = function() { return UUID.value; };
   },
   afterEach() {
-    uuidReset();
-    Ember.run(application, 'destroy');
   }
 });
 

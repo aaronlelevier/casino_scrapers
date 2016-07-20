@@ -1,6 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import { test } from 'qunit';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
@@ -28,16 +28,16 @@ const ASSIGNEE = '.t-ticket-assignee-select';
 const TICKET_PUT_URL = `${TICKETS_URL}${TD.idOne}/`;
 const ACTIVITY_ITEMS = '.t-activity-list-item';
 
-module('Acceptance | mobile ticket detail test', {
+moduleForAcceptance('Acceptance | mobile ticket detail test', {
   beforeEach() {
     /* SETUP */
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
     xhr(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
     activity = xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
     /* MOBILE RENDER */
-    flexi = application.__container__.lookup('service:device/layout');
+    flexi = this.application.__container__.lookup('service:device/layout');
     const breakpoints = flexi.get('breakpoints');
     bp = {};
     breakpoints.forEach((point) => {
@@ -49,7 +49,7 @@ module('Acceptance | mobile ticket detail test', {
     run(() => {
       flexi.set('width', bp.desktop);
     });
-    Ember.run(application, 'destroy');
+    
   }
 });
 

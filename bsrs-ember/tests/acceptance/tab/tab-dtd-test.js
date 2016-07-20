@@ -1,5 +1,5 @@
 import Ember from 'ember'; import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -31,10 +31,10 @@ const DTD_TAB_NAME = 'Decision Tree';
 
 let application, store, list_xhr, dtd_detail_data, endpoint, detail_xhr;
 
-module('Acceptance | tab dtd test', {
+moduleForAcceptance('Acceptance | tab dtd test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_DTD_URL}/`;
     dtd_detail_data = DTDF.detail(DTD.idOne);
     detail_xhr = xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 200, dtd_detail_data);
@@ -42,7 +42,7 @@ module('Acceptance | tab dtd test', {
   },
   afterEach() {
     uuidReset();
-    Ember.run(application, 'destroy');
+    
   }
 });
 

@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import LF from 'bsrs-ember/vendor/location_fixtures';
@@ -28,15 +28,15 @@ const SORT_LLEVEL_DIR = '.t-sort-location-level-name-dir';
 
 var application, store, endpoint, list_xhr;
 
-module('Acceptance | location-grid-list', {
+moduleForAcceptance('Acceptance | location-grid-list', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';
     list_xhr = xhr(endpoint ,"GET",null,{},200,LF.list());
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

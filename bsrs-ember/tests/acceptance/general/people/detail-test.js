@@ -1,7 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -56,10 +56,10 @@ const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 var application, store, list_xhr, people_detail_data, detail_xhr, url, translations, role_route_data_endpoint;
 
-module('Acceptance | person detail test', {
+moduleForAcceptance('Acceptance | person detail test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     var people_list_data = PF.list();
     people_detail_data = PF.detail(PD.idOne);
     list_xhr = xhr(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, people_list_data);
@@ -70,7 +70,7 @@ module('Acceptance | person detail test', {
   },
   afterEach() {
     uuidReset();
-    Ember.run(application, 'destroy');
+    
   }
 });
 

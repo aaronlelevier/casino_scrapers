@@ -15,7 +15,9 @@ export default function(name, options = {}) {
       }
     },
 
-    afterEach() {
+    afterEach(assert) {
+      Ember.$.fauxjax.clear();
+      uuidReset();
       let afterEach = options.afterEach && options.afterEach.apply(this, arguments);
       return Promise.resolve(afterEach).then(() => destroyApp(this.application));
     }

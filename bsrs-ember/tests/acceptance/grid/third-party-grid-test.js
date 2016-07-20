@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import TPF from 'bsrs-ember/vendor/third_party_fixtures';
@@ -36,15 +36,15 @@ const STATUS_FILTER = '.t-filter-status-name';
 
 var application, store, endpoint, list_xhr;
 
-module('Acceptance | third-party-grid-list', {
+moduleForAcceptance('Acceptance | third-party-grid-list', {
     beforeEach() {
-        application = startApp();
-        store = application.__container__.lookup('service:simpleStore');
+        
+        store = this.application.__container__.lookup('service:simpleStore');
         endpoint = `${PREFIX}${BASE_URL}/?page=1`;
         list_xhr = xhr(endpoint ,'GET',null,{},200,TPF.list());
     },
     afterEach() {
-        Ember.run(application, 'destroy');
+        
     }
 });
 

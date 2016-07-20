@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -21,10 +21,10 @@ const PERSON_CURRENT_URL = BASE_URL + '/' + PCD.id;
 
 var application, store, list_xhr;
 
-module('Acceptance | person current test', {
+moduleForAcceptance('Acceptance | person current test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     var people_list_data = PF.list();
     var current_person_data = PF.detail(PCD.id);
     var locale_data_es = translations.generate('es');
@@ -34,7 +34,7 @@ module('Acceptance | person current test', {
     xhr(PEOPLE_URL + PCD.id + '/', 'GET', null, {}, 200, current_person_data);
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

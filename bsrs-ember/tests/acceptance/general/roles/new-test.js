@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import config from 'bsrs-ember/config/environment';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
@@ -33,7 +33,7 @@ const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-selec
 
 let application, store, payload, list_xhr, url, counter, run = Ember.run;
 
-module('Acceptance | role new', {
+moduleForAcceptance('Acceptance | role new', {
   beforeEach() {
     payload = {
       id: UUID.value,
@@ -43,8 +43,8 @@ module('Acceptance | role new', {
       categories: [CD.idOne],
       auth_amount: undefined,
     };
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
     let endpoint = PREFIX + BASE_URL + '/';
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, RF.empty());
     random.uuid = function() { return UUID.value; };
@@ -58,9 +58,7 @@ module('Acceptance | role new', {
     xhr(setting_endpoint, 'GET', null, {}, 200, roleNewData);
   },
   afterEach() {
-    uuidReset();
     counter=0;
-    Ember.run(application, 'destroy');
   }
 });
 

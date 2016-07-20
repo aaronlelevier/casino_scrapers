@@ -1,7 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -40,10 +40,10 @@ const CHILDREN_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-o
 const PARENTS = '.t-location-parent-select';
 const PARENTS_MULTIPLE_OPTION = `.t-location-parent-select .ember-power-select-trigger > .ember-power-select-multiple-options`;
 
-module('Acceptance | location detail-test', {
+moduleForAcceptance('Acceptance | location detail-test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     let location_list_data = LF.list();
     let location_detail_data = LF.detail();
     list_xhr = xhr(`${LOCATIONS_URL}?page=1`, 'GET', null, {}, 200, location_list_data);
@@ -52,7 +52,7 @@ module('Acceptance | location detail-test', {
   },
   afterEach() {
     uuidReset();
-    Ember.run(application, 'destroy');
+    
   }
 });
 
