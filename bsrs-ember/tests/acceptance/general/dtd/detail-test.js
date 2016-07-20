@@ -39,17 +39,12 @@ let application, store, endpoint, list_xhr, detail_xhr, detail_data;
 
 moduleForAcceptance('Acceptance | dtd detail', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/`;
     list_xhr = xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, DTDF.list());
     detail_data = DTDF.detail(DTD.idOne);
     detail_xhr = xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 200, detail_data);
   },
-  afterEach() {
-    uuidReset();
-    
-  }
 });
 
 test('decision tree definition displays data and does not update nor transitions if not dirty model', (assert) => {

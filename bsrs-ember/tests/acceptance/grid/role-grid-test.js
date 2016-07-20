@@ -26,15 +26,11 @@ var application, store, endpoint, list_xhr;
 
 moduleForAcceptance('Acceptance | role-grid-list', {
   beforeEach() {
-    
+
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';
     list_xhr = xhr(endpoint ,'GET',null,{},200,RF.list());
   },
-  afterEach() {
-    uuidReset();
-    
-  }
 });
 
 test(`initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr`, function(assert) {

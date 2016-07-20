@@ -42,7 +42,7 @@ const PARENTS_MULTIPLE_OPTION = `.t-location-parent-select .ember-power-select-t
 
 moduleForAcceptance('Acceptance | location detail-test', {
   beforeEach() {
-    
+
     store = this.application.__container__.lookup('service:simpleStore');
     let location_list_data = LF.list();
     let location_detail_data = LF.detail();
@@ -50,10 +50,6 @@ moduleForAcceptance('Acceptance | location detail-test', {
     xhr(`${LOCATIONS_URL}${LD.idOne}/`, 'GET', null, {}, 200, location_detail_data);
     url = `${PREFIX}${DETAIL_URL}/`;
   },
-  afterEach() {
-    uuidReset();
-    
-  }
 });
 
 test('clicking on a locations name will redirect them to the detail view', (assert) => {

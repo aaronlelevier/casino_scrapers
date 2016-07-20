@@ -33,7 +33,7 @@ let application, store, list_xhr, role_detail_data, endpoint, detail_xhr, run = 
 
 moduleForAcceptance('Acceptance | tab role test', {
   beforeEach() {
-    
+
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_ROLE_URL + '/';
     role_detail_data = RF.detail(RD.idGridOne, RD.nameGrid);
@@ -45,10 +45,6 @@ moduleForAcceptance('Acceptance | tab role test', {
     let setting_endpoint = `${PREFIX}${BASEURLS.base_roles_url}/route-data/new/`;
     xhr(setting_endpoint, 'GET', null, {}, 200, roleNewData);
   },
-  afterEach() {
-    uuidReset();
-    
-  }
 });
 
 test('(NEW URL) deep linking the new role url should push a tab into the tab store with correct properties', (assert) => {

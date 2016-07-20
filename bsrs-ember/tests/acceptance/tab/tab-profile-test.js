@@ -41,17 +41,12 @@ let application, store, list_xhr, detail_data, endpoint, detail_xhr, detail_data
 
 moduleForAcceptance('Acceptance | tab profile test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     // Edit based on module
     detail_data = PF.detail(ID_ONE);
     detail_xhr = xhr(`${API_LIST_URL}${ID_ONE}/`, 'GET', null, {}, 200, detail_data);
     detail_data_two = PF.detail(ID_GRID_TWO);
     list_data = PF.list();
-  },
-  afterEach() {
-    uuidReset();
-    
   }
 });
 

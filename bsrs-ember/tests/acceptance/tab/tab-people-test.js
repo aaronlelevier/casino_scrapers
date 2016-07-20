@@ -27,16 +27,12 @@ let application, store, list_xhr, people_detail_data, endpoint, detail_xhr, coun
 
 moduleForAcceptance('Acceptance | tab people test', {
   beforeEach() {
-    
+
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_PEOPLE_URL + '/';
     people_detail_data = PF.detail(PD.id);
     detail_xhr = xhr(`${endpoint}${PD.idOne}/`, 'GET', null, {}, 200, people_detail_data);
   },
-  afterEach() {
-    uuidReset();
-    
-  }
 });
 
 test('(NEW URL) deep linking the new people url should push a tab into the tab store with correct properties', (assert) => {

@@ -30,16 +30,11 @@ let application, store, list_xhr, third_party_detail_data, endpoint, detail_xhr;
 
 moduleForAcceptance('Acceptance | tab third-party test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_THIRD_PARTY_URL + '/';
     var third_party_detail_data = TPF.detail(TPD.idOne);
     detail_xhr = xhr(endpoint + TPD.idOne + '/', 'GET', null, {}, 200, third_party_detail_data);
   },
-  afterEach() {
-    uuidReset();
-    
-  }
 });
 
 test('(NEW URL) deep linking the new third-party url should push a tab into the tab store with correct properties', (assert) => {

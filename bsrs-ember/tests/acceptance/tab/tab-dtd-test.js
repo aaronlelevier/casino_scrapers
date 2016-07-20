@@ -33,17 +33,13 @@ let application, store, list_xhr, dtd_detail_data, endpoint, detail_xhr;
 
 moduleForAcceptance('Acceptance | tab dtd test', {
   beforeEach() {
-    
+
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_DTD_URL}/`;
     dtd_detail_data = DTDF.detail(DTD.idOne);
     detail_xhr = xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 200, dtd_detail_data);
     list_xhr = xhr(`${PREFIX}${DTD_URL}/?page=1`, 'GET', null, {}, 201, DTDF.list());
   },
-  afterEach() {
-    uuidReset();
-    
-  }
 });
 
 test('going from admin to dtds list view generates a tab', assert => {

@@ -36,15 +36,10 @@ let application, store, list_xhr;
 
 moduleForAcceptance('Acceptance | dtd-new', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${DJANGO_DTD_URL}?page=1`, 'GET', null, {}, 201, DTDF.list());
     random.uuid = function() { return UUID.value; };
   },
-  afterEach() {
-    uuidReset();
-    
-  }
 });
 
 /* jshint ignore:start */

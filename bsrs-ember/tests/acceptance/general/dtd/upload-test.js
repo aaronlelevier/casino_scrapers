@@ -29,7 +29,7 @@ let application, store, detail_xhr, list_xhr, endpoint, model, img_payload;
 
 moduleForAcceptance('Acceptance | dtd file upload test', {
   beforeEach() {
-    
+
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/`;
     list_xhr = xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, DTDF.list());
@@ -39,10 +39,6 @@ moduleForAcceptance('Acceptance | dtd file upload test', {
     img_payload = {id: UUID.value, filename: 'wat.jpg', file: '/media/attachments/images/full/wat.jpg', image_full: '/media/attachments/images/full/wat.jpg', image_thumbnail: '/media/attachments/images/thumbnail/wat.jpg',
       image_medium: '/media/attachments/images/medium/wat.jpg'};
   },
-  afterEach() {
-    uuidReset();
-    
-  }
 });
 
 /* jshint ignore:start */

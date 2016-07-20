@@ -58,7 +58,7 @@ var application, store, list_xhr, people_detail_data, detail_xhr, url, translati
 
 moduleForAcceptance('Acceptance | person detail test', {
   beforeEach() {
-    
+
     store = this.application.__container__.lookup('service:simpleStore');
     var people_list_data = PF.list();
     people_detail_data = PF.detail(PD.idOne);
@@ -68,10 +68,6 @@ moduleForAcceptance('Acceptance | person detail test', {
     translations = BSRS_TRANSLATION_FACTORY.generate('en')['en'];
     role_route_data_endpoint = `${ROLES_URL}route-data/new/`;
   },
-  afterEach() {
-    uuidReset();
-    
-  }
 });
 
 test('clicking a persons name will redirect to the given detail view', (assert) => {
