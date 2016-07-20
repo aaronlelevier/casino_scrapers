@@ -19,6 +19,14 @@ module('unit: profile test', {
   }
 });
 
+test('dirty test | context', assert => {
+  assert.equal(profile_filter.get('isDirty'), false);
+  profile_filter.set('context', 'wat');
+  assert.equal(profile_filter.get('isDirty'), true);
+  profile_filter.set('context', '');
+  assert.equal(profile_filter.get('isDirty'), false);
+});
+
 test('dirty test | field', assert => {
   assert.equal(profile_filter.get('isDirty'), false);
   profile_filter.set('field', 'wat');
@@ -69,10 +77,11 @@ test('remove_criteria', assert => {
 
 test('serialize', assert => {
     run(() => {
-      profile_filter = store.push('pfilter', {id: PFD.idOne, field: PFD.fieldOne, criteria_fks: [TD.priorityOneId]});
+      profile_filter = store.push('pfilter', {id: PFD.idOne, context: PFD.contextOne, field: PFD.fieldOne, criteria_fks: [TD.priorityOneId]});
     });
   let data = profile_filter.serialize();
   assert.equal(data.id, PFD.idOne);
+  assert.equal(data.context, PFD.contextOne);
   assert.equal(data.field, PFD.fieldOne);
   assert.deepEqual(data.criteria, [TD.priorityOneId]);
 });

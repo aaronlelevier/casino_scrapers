@@ -3,6 +3,7 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import equal from 'bsrs-components/utils/equal';
 
 export default Model.extend({
+  context: attr(''),
   field: attr(''),
   criteria_fks: [],
   criteria_ids: [],
@@ -28,6 +29,7 @@ export default Model.extend({
   serialize() {
     return {
       id: this.get('id'),
+      context: this.get('context'),
       field: this.get('field'),
       criteria: this.get('criteria_fks')
     };

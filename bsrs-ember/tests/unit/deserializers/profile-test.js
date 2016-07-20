@@ -32,6 +32,7 @@ test('deserialize single', assert => {
   // pFilter
   assert.equal(profile.get('pfs').get('length'), 1);
   assert.equal(profile.get('pfs').objectAt(0).get('id'), PFD.idOne);
+  assert.equal(profile.get('pfs').objectAt(0).get('context'), PFD.contextOne);
   assert.equal(profile.get('pfs').objectAt(0).get('field'), PFD.fieldOne);
   assert.deepEqual(profile.get('pfs').objectAt(0).get('criteria_fks'), [TD.priorityOneId]);
   // should not be dirty
