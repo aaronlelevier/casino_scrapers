@@ -37,8 +37,11 @@ module('Acceptance | grid-head mobile', {
     store = application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
     setWidth('mobile');
+    original_uuid = random.uuid;
+    random.uuid = function() { return UUID.value; };
   },
   afterEach() {
+    random.uuid = original_uuid;
     // run(() => {
     //   flexi.set('width', bp.desktop);
     // });
