@@ -30,6 +30,10 @@ var BSRS_TICKET_FACTORY = (function() {
   factory.prototype.generate_list = function(i, statusId, statusName) {
     var status_id = statusId || this.ticket.statusOneId;
     var status_name = statusName || this.ticket.statusOneKey;
+    var person = this.people_fixtures.get_no_related();
+    delete person.first_name;
+    delete person.last_name;
+    delete person.title;
     //TODO: need to include category_ids
     return {
       id: i,
