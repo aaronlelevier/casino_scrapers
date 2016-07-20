@@ -40,7 +40,6 @@ let application, store, list_xhr, detail_xhr, setting_detail_xhr, endpoint, deta
 
 moduleForAcceptance('Acceptance | role detail', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/';
     detail_data = RF.detail(RD.idOne);
@@ -55,7 +54,6 @@ moduleForAcceptance('Acceptance | role detail', {
     // Settings
     let setting_endpoint = `${PREFIX}${BASEURLS.base_roles_url}/route-data/new/`;
     setting_detail_xhr = xhr(setting_endpoint, 'GET', null, {}, 200, roleNewData);
-
     basePayload = {
       id: RD.idOne,
       inherited: undefined,
@@ -63,9 +61,6 @@ moduleForAcceptance('Acceptance | role detail', {
       dashboard_text: null
     };
   },
-  afterEach() {
-    
-  }
 });
 
 test('when you deep link to the role detail view you get bound attrs', (assert) => {

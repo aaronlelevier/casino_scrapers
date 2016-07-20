@@ -84,9 +84,6 @@ moduleForAcceptance('Acceptance | dt detail', {
       store.push('ticket', {id: ticket.id});
     });
   },
-  afterEach() {
-
-  }
 });
 
 /* jshint ignore:start */

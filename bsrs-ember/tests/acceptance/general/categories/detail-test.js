@@ -32,15 +32,11 @@ let application, store, detail_xhr, list_xhr, detail_data;
 
 moduleForAcceptance('Acceptance | category detail test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     detail_data = CF.detail(CD.idOne);
     list_xhr = xhr(CATEGORIES_URL + '?page=1', 'GET', null, {}, 200, CF.list());
     detail_xhr = xhr(CATEGORIES_URL + CD.idOne + '/', 'GET', null, {}, 200, detail_data);
   },
-  afterEach() {
-    
-  }
 });
 
 test('clicking a categories name will redirect to the given detail view', (assert) => {

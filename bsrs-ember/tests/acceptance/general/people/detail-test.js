@@ -58,7 +58,6 @@ var application, store, list_xhr, people_detail_data, detail_xhr, url, translati
 
 moduleForAcceptance('Acceptance | person detail test', {
   beforeEach() {
-
     store = this.application.__container__.lookup('service:simpleStore');
     var people_list_data = PF.list();
     people_detail_data = PF.detail(PD.idOne);

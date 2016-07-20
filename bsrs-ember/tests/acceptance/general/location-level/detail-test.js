@@ -25,7 +25,6 @@ var application, store, endpoint_detail, list_xhr, detail_xhr, location_level_di
 
 moduleForAcceptance('Acceptance | detail-test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     let location_list_data = LLF.list();
     let location_detail_data = LLF.detail();
@@ -34,11 +33,6 @@ moduleForAcceptance('Acceptance | detail-test', {
     list_xhr = xhr(`${LOCATION_LEVELS_URL}?page=1`, 'GET', null, {}, 200, location_list_data);
     detail_xhr = xhr(endpoint_detail, 'GET', null, {}, 200, location_detail_data);
   },
-  afterEach() {
-    
-    detail_xhr = null;
-    list_xhr = null;
-  }
 });
 
 test('clicking on a location levels name will redirect them to the detail view', (assert) => {

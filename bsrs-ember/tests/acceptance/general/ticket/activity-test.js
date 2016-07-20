@@ -39,15 +39,11 @@ moduleForAcceptance('Acceptance | ticket activity test', {
     // timemachine.config({
     //   dateString: 'December 25, 2015 13:12:59'
     // });
-
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/`;
     detail_data = TF.detail(TD.idOne);
     detail_xhr = ajax(endpoint + TD.idOne + '/', 'GET', null, {}, 200, detail_data);
   },
-  afterEach() {
-
-  }
 });
 
 test('can deep link to the person who created the activity', (assert) => {

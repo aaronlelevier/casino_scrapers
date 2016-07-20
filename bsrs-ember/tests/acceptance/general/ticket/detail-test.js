@@ -67,8 +67,6 @@ moduleForAcceptance('Acceptance | ticket detail', {
     //   dateString: 'December 25, 2015 13:12:59'
     // });
   },
-  afterEach() {
-  }
 });
 
 /* jshint ignore:start */

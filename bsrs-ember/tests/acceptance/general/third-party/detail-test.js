@@ -21,7 +21,6 @@ let application, store, endpoint, endpoint_detail, list_xhr, detail_xhr;
 
 moduleForAcceptance('Acceptance | third-party detail test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     let third_party_list_data = TPF.list();
     let third_party_detail_data = TPF.detail();
@@ -30,9 +29,6 @@ moduleForAcceptance('Acceptance | third-party detail test', {
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, third_party_list_data);
     detail_xhr = xhr(endpoint_detail, 'GET', null, {}, 200, third_party_detail_data);
   },
-  afterEach() {
-    
-  }
 });
 
 test('clicking on a third party name will redirect them to the detail view', (assert) => {
