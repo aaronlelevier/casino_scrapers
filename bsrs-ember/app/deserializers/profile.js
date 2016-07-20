@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import { many_to_many_extract } from 'bsrs-components/repository/many-to-many';
 
 export default Ember.Object.extend({
   deserialize(response, id) {
@@ -18,13 +19,18 @@ export default Ember.Object.extend({
     delete model.filters;
     let profile = store.push('profile', model);
     profile.change_assignee(assignee);
-    pfilters.forEach((obj) => {
-      const criteria_fks = obj.criteria;
-      delete obj.criteria;
-      obj.criteria_fks = criteria_fks;
-      store.push('pfilter', obj);
-      profile.add_pf({id: obj.id});
+    let [m2m_pfs, pfs, pf_server_sum] = many_to_many_extract(pfilters, store, profile, 'pfs', 'profile_pk', 'pfilter', 'pfilter_pk');
+    pfs.forEach((pf) => {
+      const criteriaIds = pf.criteria;
+      delete pf.criteria;
+      pf.criteria_fks = criteriaIds
+      store.push('pfilter', pf);
     });
+    m2m_pfs.forEach((m2m) => {
+      store.push('profile-join-pfilter', m2m);
+    });
+    let pfsIds = pfilters.map((obj) => { return obj.id; });
+    profile = store.push('profile', {id: model.id, profile_pfs_fks: pfsIds});
     return profile;
   },
   _deserializeList(store, response) {
