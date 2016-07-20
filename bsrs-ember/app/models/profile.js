@@ -34,10 +34,12 @@ export default Model.extend(OptConfMixin, Validations, {
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   rollback() {
     this.rollbackAssignee();
+    this.rollbackPfs();
     this._super(...arguments);
   },
   saveRelated() {
     this.saveAssignee();
+    this.savePfs();
   },
   removeRecord() {
     run(() => {
