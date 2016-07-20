@@ -37,7 +37,7 @@ test('deserialize single', assert => {
   assert.equal(profile.get('pfs').get('length'), 1);
   assert.equal(profile.get('pfs').objectAt(0).get('id'), PFD.idOne);
   assert.equal(profile.get('pfs').objectAt(0).get('field'), PFD.fieldOne);
-  assert.deepEqual(profile.get('pfs').objectAt(0).get('criteria'), [TD.priorityOneId]);
+  assert.deepEqual(profile.get('pfs').objectAt(0).get('criteria_fks'), [TD.priorityOneId]);
 });
 
 test('deserialize single should update assignee if server returns different assignee', assert => {

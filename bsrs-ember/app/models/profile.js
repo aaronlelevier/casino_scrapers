@@ -49,6 +49,7 @@ export default Model.extend(OptConfMixin, Validations, {
       id: this.get('id'),
       description: this.get('description'),
       assignee: this.get('assignee').get('id'),
+      filters: this.get('pfs').map((obj) => { return obj.serialize(); })
     };
   },
 });

@@ -19,6 +19,9 @@ export default Ember.Object.extend({
     let profile = store.push('profile', model);
     profile.change_assignee(assignee);
     pfilters.forEach((obj) => {
+      const criteria_fks = obj.criteria;
+      delete obj.criteria;
+      obj.criteria_fks = criteria_fks;
       store.push('pfilter', obj);
       profile.add_pf({id: obj.id});
     });

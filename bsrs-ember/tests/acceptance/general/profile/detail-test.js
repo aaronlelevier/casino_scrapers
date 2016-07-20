@@ -6,12 +6,14 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
 import config from 'bsrs-ember/config/environment';
+import generalPage from 'bsrs-ember/tests/pages/general';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 import PD from 'bsrs-ember/vendor/defaults/profile';
+import PFD from 'bsrs-ember/vendor/defaults/profile-filter';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
 import PF from 'bsrs-ember/vendor/profile_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
 import page from 'bsrs-ember/tests/pages/profile';
-import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_profile_url;
@@ -40,10 +42,6 @@ module('Acceptance | profile detail test', {
   }
 });
 
-/* jshint ignore:start */
-
-/* jshint ignore:start */
-
 test('visit detail and update all fields', assert => {
   visit(DETAIL_URL);
   andThen(() => {
@@ -67,7 +65,12 @@ test('visit detail and update all fields', assert => {
   let payload = {
     id: PD.idOne,
     description: PD.descTwo,
-    assignee: PD.assigneeSelectOne
+    assignee: PD.assigneeSelectOne,
+    filters: [{
+      id: PFD.idOne,
+      field: PFD.fieldOne,
+      criteria: [TD.priorityOneId]
+    }]
   };
   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, {});
   generalPage.save();
