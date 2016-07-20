@@ -23,7 +23,7 @@ const NEW_URL_2 = BASE_PEOPLE_URL + '/new/2';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + PD.id;
 const ROLE_URL = BASE_ROLE_URL + '/index';
 
-let application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid, counter;
+let application, store, list_xhr, people_detail_data, endpoint, detail_xhr, counter;
 
 module('Acceptance | tab people test', {
   beforeEach() {
@@ -32,10 +32,9 @@ module('Acceptance | tab people test', {
     endpoint = PREFIX + BASE_PEOPLE_URL + '/';
     people_detail_data = PF.detail(PD.id);
     detail_xhr = xhr(`${endpoint}${PD.idOne}/`, 'GET', null, {}, 200, people_detail_data);
-    original_uuid = random.uuid;
   },
   afterEach() {
-    random.uuid = original_uuid;
+    uuidReset();
     Ember.run(application, 'destroy');
   }
 });

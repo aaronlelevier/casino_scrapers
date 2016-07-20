@@ -28,7 +28,7 @@ const PEOPLE_INDEX_URL = BASE_PEOPLE_URL + '/index';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + UUID.value;
 const NEW_URL = BASE_PEOPLE_URL + '/new/1';
 
-var application, store, payload, detail_xhr, list_xhr, original_uuid, people_detail_data, detailEndpoint, username_search;
+var application, store, payload, detail_xhr, list_xhr, people_detail_data, detailEndpoint, username_search;
 
 module('Acceptance | person new test', {
   beforeEach() {
@@ -51,13 +51,12 @@ module('Acceptance | person new test', {
     detail_xhr = xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
     const username_response = {'count':0,'next':null,'previous':null,'results': []};
     username_search = xhr(PEOPLE_URL + '?username=mgibson1', 'GET', null, {}, 200, username_response);
-    original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
   },
   afterEach() {
     payload = null;
     detail_xhr = null;
-    random.uuid = original_uuid;
+    uuidReset();
     Ember.run(application, 'destroy');
   }
 });
@@ -234,7 +233,7 @@ test('can change default role and locale', (assert) => {
 test('adding a new person should allow for another new person to be created after the first is persisted', (assert) => {
   clearxhr(detail_xhr);
   let person_count;
-  random.uuid = original_uuid;
+  uuidReset();
   payload.id = 'abc123';
   people_detail_data.id = 'abc123';
   patchRandomAsync(0);

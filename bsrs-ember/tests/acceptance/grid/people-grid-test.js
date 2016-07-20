@@ -25,7 +25,7 @@ const NUMBER_EIGHT = {keyCode: 56};
 const BACKSPACE = {keyCode: 8};
 const SORT_STATUS_DIR = '.t-sort-status-translated-name-dir';
 
-var application, store, endpoint, list_xhr, original_uuid;
+var application, store, endpoint, list_xhr;
 
 module('Acceptance | people-grid-list', {
   beforeEach() {

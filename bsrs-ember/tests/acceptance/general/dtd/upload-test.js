@@ -25,7 +25,7 @@ const ATTACHMENT_DELETE_URL = `${PREFIX}/admin/attachments/${UUID.value}/`;
 const ADMIN_URL = BASEURLS.base_admin_url;
 const PROGRESS_BAR = '.progress-bar';
 
-let application, store, original_uuid, detail_xhr, list_xhr, endpoint, model, img_payload;
+let application, store, detail_xhr, list_xhr, endpoint, model, img_payload;
 
 module('Acceptance | dtd file upload test', {
   beforeEach() {
@@ -34,14 +34,13 @@ module('Acceptance | dtd file upload test', {
     endpoint = `${PREFIX}${BASE_URL}/`;
     list_xhr = xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, DTDF.list());
     detail_xhr = xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 200, DTDF.detail(DTD.idOne));
-    original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
     model = store.find('dtd', DTD.idOne);
     img_payload = {id: UUID.value, filename: 'wat.jpg', file: '/media/attachments/images/full/wat.jpg', image_full: '/media/attachments/images/full/wat.jpg', image_thumbnail: '/media/attachments/images/thumbnail/wat.jpg',
       image_medium: '/media/attachments/images/medium/wat.jpg'};
   },
   afterEach() {
-    random.uuid = original_uuid;
+    uuidReset();
     Ember.run(application, 'destroy');
   }
 });

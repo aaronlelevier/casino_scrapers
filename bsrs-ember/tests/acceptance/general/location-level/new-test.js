@@ -19,7 +19,7 @@ const LOCATION_LEVEL_URL = BASE_URL + '/index';
 const LOCATION_LEVEL_NEW_URL = BASE_URL + '/new/1';
 const DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idOne;
 
-let application, store, payload, list_xhr, original_uuid;
+let application, store, payload, list_xhr;
 
 module('Acceptance | location-level-new', {
   beforeEach() {
@@ -31,12 +31,11 @@ module('Acceptance | location-level-new', {
       name: LOCATION_LEVEL_DEFAULTS.nameAnother,
       children: LOCATION_LEVEL_DEFAULTS.newTemplateChildren
     };
-    original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
   },
   afterEach() {
     payload = null;
-    random.uuid = original_uuid;
+    uuidReset();
     Ember.run(application, 'destroy');
   }
 });
@@ -164,7 +163,7 @@ test('when user enters new form and doesnt enter data, the record is correctly r
 
 test('adding a new location-level should allow for another new location-level to be created after the first is persisted', (assert) => {
   let location_level_count;
-  random.uuid = original_uuid;
+  uuidReset();
   payload.id = 'abc123';
   patchRandomAsync(0);
   payload.name = LOCATION_LEVEL_DEFAULTS.nameRegion;

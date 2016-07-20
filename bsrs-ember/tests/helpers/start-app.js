@@ -10,6 +10,7 @@ import './ember-i18n/test-helpers';
 import substring_up_to_num from './substring_up_to_num';
 import substringBreadcrumb from './substring-breadcrumb';
 import setWidth from './set-width';
+import uuidReset from './uuid-reset';
 import registerPowerSelectHelpers from '../../tests/helpers/ember-power-select';
 
 registerPowerSelectHelpers();

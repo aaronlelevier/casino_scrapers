@@ -33,7 +33,7 @@ const DOC_TYPE = 'ticket';
 const TAB_TITLE = '.t-tab-title:eq(0)';
 const ACTIVITY_ITEMS = '.t-activity-list-item';
 
-let application, store, list_xhr, ticket_detail_data, endpoint, detail_xhr, original_uuid, activity_one;
+let application, store, list_xhr, ticket_detail_data, endpoint, detail_xhr, activity_one;
 
 module('Acceptance | tab ticket test', {
   beforeEach() {
@@ -43,10 +43,9 @@ module('Acceptance | tab ticket test', {
     ticket_detail_data = TF.detail(TD.idOne);
     detail_xhr = xhr(endpoint + TD.idOne + '/', 'GET', null, {}, 200, ticket_detail_data);
     activity_one = xhr(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
-    original_uuid = random.uuid;
   },
   afterEach() {
-    random.uuid = original_uuid;
+    uuidReset();
     Ember.run(application, 'destroy');
   }
 });

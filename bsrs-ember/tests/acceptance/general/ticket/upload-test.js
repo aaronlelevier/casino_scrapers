@@ -25,18 +25,18 @@ const TICKET_PUT_URL = PREFIX + DETAIL_URL + '/';
 const ATTACHMENT_DELETE_URL = ATTACHMENTS_URL + UUID.value + '/';
 const PROGRESS_BAR = '.progress-bar';
 
-let application, store, original_uuid;
+let application, store;
 
 module('Acceptance | ticket file upload test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
     xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
-    original_uuid = random.uuid;
+    originaldd_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
   },
   afterEach() {
-    random.uuid = original_uuid;
+    uuidReset()
     Ember.run(application, 'destroy');
   }
 });

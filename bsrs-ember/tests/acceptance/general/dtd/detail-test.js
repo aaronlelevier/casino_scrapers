@@ -35,7 +35,7 @@ const BACKSPACE = {keyCode: 8};
 const DTD_ERROR_URL = BASEURLS.dtd_error_url;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
-let application, store, endpoint, list_xhr, detail_xhr, detail_data, original_uuid;
+let application, store, endpoint, list_xhr, detail_xhr, detail_data;
 
 module('Acceptance | dtd detail', {
   beforeEach() {
@@ -45,10 +45,9 @@ module('Acceptance | dtd detail', {
     list_xhr = xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, DTDF.list());
     detail_data = DTDF.detail(DTD.idOne);
     detail_xhr = xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 200, detail_data);
-    original_uuid = random.uuid;
   },
   afterEach() {
-    random.uuid = original_uuid;
+    uuidReset();
     Ember.run(application, 'destroy');
   }
 });

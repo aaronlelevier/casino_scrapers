@@ -19,7 +19,7 @@ import generalPage, { mobileSearch } from 'bsrs-ember/tests/pages/general-mobile
 import random from 'bsrs-ember/models/random';
 import BASEURLS, { TICKETS_URL, PEOPLE_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
-var application, store, list_xhr, original_uuid, flexi, bp;
+var application, store, list_xhr, flexi, bp;
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
@@ -37,14 +37,13 @@ module('Acceptance | grid-head mobile', {
     store = application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
     setWidth('mobile');
-    original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
   },
   afterEach() {
-    random.uuid = original_uuid;
     // run(() => {
     //   flexi.set('width', bp.desktop);
     // });
+    uuidReset();
     Ember.run(application, 'destroy');
   }
 });

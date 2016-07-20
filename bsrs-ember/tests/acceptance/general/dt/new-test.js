@@ -48,18 +48,17 @@ const DT_START_URL = `${DT_URL}/${DT.idOne}/ticket/1`;
 const DT_TWO_URL = `${DT_URL}/${DT.idTwo}/ticket/1`;
 const TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
 
-let application, store, endpoint, original_uuid;
+let application, store, endpoint;
 
 module('Acceptance | dt new', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${DTD_URL}/`;
-    original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
   },
   afterEach() {
-    random.uuid = original_uuid;
+    uuidReset();
     Ember.run(application, 'destroy');
   }
 });

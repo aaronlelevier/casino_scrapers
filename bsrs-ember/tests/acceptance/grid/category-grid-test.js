@@ -19,7 +19,7 @@ const NUMBER_ONE = {keyCode: 49};
 const NUMBER_FOUR = {keyCode: 52};
 const BACKSPACE = {keyCode: 8};
 
-var application, store, endpoint, list_xhr, original_uuid;
+var application, store, endpoint, list_xhr;
 
 module('Acceptance | category-grid-list', {
     beforeEach() {

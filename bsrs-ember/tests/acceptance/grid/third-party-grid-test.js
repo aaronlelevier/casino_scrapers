@@ -34,7 +34,7 @@ const SEARCH_INPUT = '.t-grid-search-input';
 const SORT_DIR = '.t-sort-status-name-dir';
 const STATUS_FILTER = '.t-filter-status-name';
 
-var application, store, endpoint, list_xhr, original_uuid;
+var application, store, endpoint, list_xhr;
 
 module('Acceptance | third-party-grid-list', {
     beforeEach() {

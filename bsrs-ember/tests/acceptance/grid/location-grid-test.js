@@ -26,7 +26,7 @@ const BACKSPACE = {keyCode: 8};
 const SORT_STATUS_DIR = '.t-sort-status-translated-name-dir';
 const SORT_LLEVEL_DIR = '.t-sort-location-level-name-dir';
 
-var application, store, endpoint, list_xhr, original_uuid;
+var application, store, endpoint, list_xhr;
 
 module('Acceptance | location-grid-list', {
   beforeEach() {

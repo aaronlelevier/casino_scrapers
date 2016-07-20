@@ -26,7 +26,7 @@ const SORT_DESCRIPTION_DIR = '.t-sort-description-dir';
 const FILTER_KEY = '.t-filter-key';
 const FILTER_DESCRIPTION = '.t-filter-description';
 
-var application, store, endpoint, list_xhr, original_uuid;
+var application, store, endpoint, list_xhr;
 
 module('Acceptance | dtd grid test', {
   beforeEach() {

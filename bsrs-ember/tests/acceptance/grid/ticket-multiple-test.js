@@ -23,7 +23,7 @@ const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const BASE_CATEGORY_URL = BASEURLS.base_categories_url;
 const BASE_LOCATION_URL = BASEURLS.base_locations_url;
 
-var application, store, ticket_endpoint, ticket_list_xhr, people_endpoint, people_list_xhr, category_endpoint, category_list_xhr, original_uuid;
+var application, store, ticket_endpoint, ticket_list_xhr, people_endpoint, people_list_xhr, category_endpoint, category_list_xhr;
 
 module('Acceptance | ticket multiple grid test', {
   beforeEach() {

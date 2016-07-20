@@ -31,7 +31,7 @@ const SORT_LOCATION_DIR = '.t-sort-location-name-dir';
 const SORT_ASSIGNEE_DIR = '.t-sort-assignee-fullname-dir';
 const FILTER_PRIORITY = '.t-filter-priority-translated-name';
 
-var application, store, endpoint, list_xhr, original_uuid;
+var application, store, endpoint, list_xhr;
 
 module('Acceptance | ticket grid test', {
   beforeEach() {

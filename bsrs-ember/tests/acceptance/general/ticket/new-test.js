@@ -38,7 +38,7 @@ const CC = '.t-ticket-cc-select .ember-basic-dropdown-trigger';
 const CC_SEARCH = '.ember-power-select-trigger-multiple-input';
 const SEARCH = '.ember-power-select-search input';
 
-let application, store, list_xhr, location_xhr, people_xhr, original_uuid, counter;
+let application, store, list_xhr, location_xhr, people_xhr, counter;
 
 module('Acceptance | ticket new test', {
   beforeEach() {
@@ -47,14 +47,13 @@ module('Acceptance | ticket new test', {
     list_xhr = xhr(TICKETS_URL+'?page=1', 'GET', null, {}, 200, TF.empty());
     location_xhr = xhr(`${LOCATIONS_URL}location__icontains=6/`, 'GET', null, {}, 200, LF.search_power_select());
     counter = 0;
-    original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
     // timemachine.config({
     //   dateString: 'December 25, 2015 13:12:59'
     // });
   },
   afterEach() {
-    random.uuid = original_uuid;
+    uuidReset();
     counter = 0;
     Ember.run(application, 'destroy');
   }

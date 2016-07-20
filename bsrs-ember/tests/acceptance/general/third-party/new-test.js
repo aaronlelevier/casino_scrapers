@@ -21,7 +21,7 @@ const DJANGO_THIRD_PARTY_URL = PREFIX + '/admin/third-parties/';
 const DETAIL_URL = BASE_URL + '/' + TPD.idOne;
 const DJANGO_DETAIL_URL = PREFIX + DJANGO_THIRD_PARTY_URL + TPD.idOne + '/';
 
-let application, original_uuid, store, payload, list_xhr;
+let application, store, payload, list_xhr;
 
 module('Acceptance | third-party new test', {
   beforeEach() {
@@ -34,12 +34,11 @@ module('Acceptance | third-party new test', {
       number: TPD.numberOne,
       status: TPD.statusActive
     };
-    original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
   },
   afterEach() {
     payload = null;
-    random.uuid = original_uuid;
+    uuidReset();
     Ember.run(application, 'destroy');
   }
 });
@@ -164,7 +163,7 @@ test('when user enters new form and doesnt enter data, the record is correctly r
 });
 
 test('adding a new third-party should allow for another new third-party to be created after the first is persisted', (assert) => {
-  random.uuid = original_uuid;
+  uuidReset();
   payload.id = 'abc123';
   patchRandomAsync(0);
   visit(THIRD_PARTY_URL);

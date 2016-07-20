@@ -23,7 +23,7 @@ const PEOPLE_URL = `${BASE_PEOPLE_URL}/index`;
 const BASE_CATEGORY_URL = BASEURLS.base_categories_url;
 const CATEGORY_URL = `${BASE_CATEGORY_URL}/index`;
 
-var application, store, location_endpoint, location_list_xhr, ticket_endpoint, ticket_list_xhr, people_endpoint, people_list_xhr, category_endpoint, category_list_xhr, original_uuid;
+var application, store, location_endpoint, location_list_xhr, ticket_endpoint, ticket_list_xhr, people_endpoint, people_list_xhr, category_endpoint, category_list_xhr;
 
 module('Acceptance | location multiple grid test', {
     beforeEach() {

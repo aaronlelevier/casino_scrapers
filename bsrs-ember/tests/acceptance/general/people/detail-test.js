@@ -54,7 +54,7 @@ const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-options > .ember-p
 const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-var application, store, list_xhr, people_detail_data, detail_xhr, original_uuid, url, translations, role_route_data_endpoint;
+var application, store, list_xhr, people_detail_data, detail_xhr, url, translations, role_route_data_endpoint;
 
 module('Acceptance | person detail test', {
   beforeEach() {
@@ -64,13 +64,12 @@ module('Acceptance | person detail test', {
     people_detail_data = PF.detail(PD.idOne);
     list_xhr = xhr(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, people_list_data);
     detail_xhr = xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, people_detail_data);
-    original_uuid = random.uuid;
     url = `${PREFIX}${DETAIL_URL}/`;
     translations = BSRS_TRANSLATION_FACTORY.generate('en')['en'];
     role_route_data_endpoint = `${ROLES_URL}route-data/new/`;
   },
   afterEach() {
-    random.uuid = original_uuid;
+    uuidReset();
     Ember.run(application, 'destroy');
   }
 });

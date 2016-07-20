@@ -32,7 +32,7 @@ const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
 const TICKET_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
 const ACTIVITY_ITEMS = '.t-activity-list-item';
 
-let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, original_uuid;
+let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid;
 
 module('Acceptance | ticket activity test', {
   beforeEach() {

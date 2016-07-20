@@ -25,7 +25,7 @@ const CATEGORY = '.t-category-children-select .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-let application, store, payload, list_xhr, children_xhr, original_uuid, run = Ember.run;
+let application, store, payload, list_xhr, children_xhr, run = Ember.run;
 
 module('Acceptance | category new test', {
   beforeEach() {
@@ -47,14 +47,13 @@ module('Acceptance | category new test', {
     run(function() {
       store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
     });
-    original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
   },
   afterEach() {
     payload = null;
     list_xhr = null;
     children_xhr = null;
-    random.uuid = original_uuid;
+    uuidReset()
     Ember.run(application, 'destroy');
   }
 });
@@ -316,7 +315,7 @@ test('you can add and remove child from category', (assert) => {
 test('adding a new category should allow for another new category to be created after the first is persisted', (assert) => {
   clearxhr(children_xhr);
   let category_count;
-  random.uuid = original_uuid;
+  uuidReset();
   payload.id = 'abc123';
   patchRandomAsync(0);
   xhr(`${PREFIX}${BASE_URL}/`, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));

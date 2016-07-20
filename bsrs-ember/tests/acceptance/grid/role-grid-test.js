@@ -22,7 +22,7 @@ const BACKSPACE = {keyCode: 8};
 const SORT_NAME_DIR = '.t-sort-name-dir';
 const SAVE_FILTERSET_MODAL = '.t-show-save-filterset-modal';
 
-var application, store, endpoint, list_xhr, original_uuid;
+var application, store, endpoint, list_xhr;
 
 module('Acceptance | role-grid-list', {
   beforeEach() {
@@ -30,10 +30,9 @@ module('Acceptance | role-grid-list', {
     store = application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';
     list_xhr = xhr(endpoint ,'GET',null,{},200,RF.list());
-    original_uuid = random.uuid;
   },
   afterEach() {
-    random.uuid = original_uuid;
+    uuidReset();
     Ember.run(application, 'destroy');
   }
 });

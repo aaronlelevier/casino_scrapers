@@ -20,7 +20,7 @@ const DETAIL_URL = `${LOC_URL}/${LD.idOne}`;
 const LOCATION_NEW_URL = `${LOC_URL}/new/1`;
 const DJANGO_LOCATION_URL = `${PREFIX}/admin/locations/`;
 
-var application, store, payload, new_xhr, list_xhr, original_uuid, originalLoggerError, originalTestAdapterException;
+var application, store, payload, new_xhr, list_xhr, originalLoggerError, originalTestAdapterException;
 
 module('Acceptance | error handling test', {
   beforeEach() {

@@ -29,7 +29,7 @@ const DOC_TYPE = 'dtd';
 const TAB_TITLE = '.t-tab-title:eq(0)';
 const DTD_TAB_NAME = 'Decision Tree';
 
-let application, store, list_xhr, dtd_detail_data, endpoint, detail_xhr, original_uuid;
+let application, store, list_xhr, dtd_detail_data, endpoint, detail_xhr;
 
 module('Acceptance | tab dtd test', {
   beforeEach() {
@@ -39,10 +39,9 @@ module('Acceptance | tab dtd test', {
     dtd_detail_data = DTDF.detail(DTD.idOne);
     detail_xhr = xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 200, dtd_detail_data);
     list_xhr = xhr(`${PREFIX}${DTD_URL}/?page=1`, 'GET', null, {}, 201, DTDF.list());
-    original_uuid = random.uuid;
   },
   afterEach() {
-    random.uuid = original_uuid;
+    uuidReset();
     Ember.run(application, 'destroy');
   }
 });
@@ -351,7 +350,7 @@ test('opening a tab, making the model dirty and closing the tab should display t
   generalPage.cancel();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    waitFor(assert, () => { 
+    waitFor(assert, () => {
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
@@ -488,4 +487,3 @@ test('(NEW URL) a dirty new tab and clicking on new model button should not push
     assert.equal(tabs.get('length'), 1);
   });
 });
-

@@ -26,7 +26,7 @@ const INDEX_ROUTE = 'admin.locations.index';
 const DETAIL_ROUTE = 'admin.locations.location';
 const DOC_TYPE = 'location';
 
-let application, store, list_xhr, location_detail_data, endpoint, detail_xhr, original_uuid;
+let application, store, list_xhr, location_detail_data, endpoint, detail_xhr;
 
 module('Acceptance | tab location test', {
   beforeEach() {
@@ -35,10 +35,9 @@ module('Acceptance | tab location test', {
     endpoint = PREFIX + BASE_LOCATION_URL + '/';
     location_detail_data = LF.detail(LD.idOne);
     detail_xhr = xhr(endpoint + LD.idOne + '/', 'GET', null, {}, 200, location_detail_data);
-    original_uuid = random.uuid;
   },
   afterEach() {
-    random.uuid = original_uuid;
+    uuidReset();
     Ember.run(application, 'destroy');
   }
 });

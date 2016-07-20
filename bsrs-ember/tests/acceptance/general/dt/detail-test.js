@@ -39,7 +39,7 @@ const TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
 const TICKET_SUBMIT_URL = `${PREFIX}/dt/submit/`;
 const BAIL_TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idOne}/ticket/`;
 
-let application, store, endpoint, original_uuid, link, dtd, dt_path, returned_ticket, dt_one;
+let application, store, endpoint, link, dtd, dt_path, returned_ticket, dt_one;
 
 module('Acceptance | dt detail', {
   beforeEach() {
@@ -48,7 +48,6 @@ module('Acceptance | dt detail', {
     store = application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/${DT.idOne}/ticket/?ticket=${TD.idOne}`;
     dtd = store.find('dtd', DT.idOne);
-    original_uuid = random.uuid;
     random.uuid = function() { return TD.idOne; };
     /*
      * NOTES
@@ -87,7 +86,6 @@ module('Acceptance | dt detail', {
     });
   },
   afterEach() {
-    random.uuid = original_uuid;
     Ember.run(application, 'destroy');
   }
 });

@@ -40,7 +40,7 @@ const PARENTS = '.t-location-parent-select';
 const PARENTS_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
 const PARENTS_MULTIPLE_OPTION = `.t-location-parent-select > .ember-power-select-trigger > .ember-power-select-multiple-options`;
 
-let application, store, payload, list_xhr, original_uuid;
+let application, store, payload, list_xhr;
 
 module('Acceptance | location-new', {
   beforeEach() {
@@ -59,12 +59,11 @@ module('Acceptance | location-new', {
       phone_numbers: [],
       addresses: []
     };
-    original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
   },
   afterEach() {
     payload = null;
-    random.uuid = original_uuid;
+    uuidReset();
     Ember.run(application, 'destroy');
   }
 });
@@ -223,7 +222,7 @@ test('when user enters new form and doesnt enter data, only has boostrapped loca
 
 test('adding a new location should allow for another new location to be created after the first is persisted', (assert) => {
   let location_count;
-  random.uuid = original_uuid;
+  uuidReset();
   payload.id = 'abc123';
   patchRandomAsync(0);
   page.visit();

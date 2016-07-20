@@ -37,13 +37,12 @@ const NEW_URL_2 = BASE_URL + '/new/2';
 const DETAIL_URL = BASE_URL + '/' + PD.idOne;
 
 
-let application, store, list_xhr, detail_data, endpoint, detail_xhr, detail_data_two, list_data, original_uuid, counter;
+let application, store, list_xhr, detail_data, endpoint, detail_xhr, detail_data_two, list_data, counter;
 
 module('Acceptance | tab profile test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('service:simpleStore');
-    original_uuid = random.uuid;
     // Edit based on module
     detail_data = PF.detail(ID_ONE);
     detail_xhr = xhr(`${API_LIST_URL}${ID_ONE}/`, 'GET', null, {}, 200, detail_data);
@@ -51,7 +50,7 @@ module('Acceptance | tab profile test', {
     list_data = PF.list();
   },
   afterEach() {
-    random.uuid = original_uuid;
+    uuidReset();
     Ember.run(application, 'destroy');
   }
 });

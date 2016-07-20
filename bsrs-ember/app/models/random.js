@@ -21,7 +21,7 @@ var lut = []; for (var i=0; i<256; i++) { lut[i] = (i<16?'0':'')+(i).toString(16
 @for Orbit
 @returns {String} a version 4 UUID
 */
-var uuid = function() {
+export const uuid = function() {
   var d0 = Math.random()*0xffffffff|0;
   var d1 = Math.random()*0xffffffff|0;
   var d2 = Math.random()*0xffffffff|0;
@@ -32,6 +32,7 @@ var uuid = function() {
   lut[d3&0xff]+lut[d3>>8&0xff]+lut[d3>>16&0xff]+lut[d3>>24&0xff];
 };
 
-export default Ember.Object.extend().reopenClass({
-  uuid: uuid
-});
+export default { uuid: uuid };
+// export default Ember.Object.extend().reopenClass({
+//   uuid: uuid
+// });

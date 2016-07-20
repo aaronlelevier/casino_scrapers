@@ -26,7 +26,7 @@ const INDEX_ROUTE = 'admin.categories.index';
 const DETAIL_ROUTE = 'admin.categories.category';
 const DOC_TYPE = 'category';
 
-let application, store, list_xhr, category_detail_data, endpoint, detail_xhr, original_uuid;
+let application, store, list_xhr, category_detail_data, endpoint, detail_xhr;
 
 module('Acceptance | tab category test', {
   beforeEach() {
@@ -35,10 +35,8 @@ module('Acceptance | tab category test', {
     endpoint = PREFIX + BASE_CATEGORY_URL + '/';
     category_detail_data = CF.detail(CD.idGridOne);
     detail_xhr = xhr(endpoint + CD.idGridOne + '/', 'GET', null, {}, 200, category_detail_data);
-    original_uuid = random.uuid;
   },
   afterEach() {
-    random.uuid = original_uuid;
     Ember.run(application, 'destroy');
   }
 });
