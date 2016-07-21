@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
@@ -13,7 +14,8 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import LD from 'bsrs-ember/vendor/defaults/locale';
 import page from 'bsrs-ember/tests/pages/person';
 
-var store, run = Ember.run, locale_repo, trans;
+var store, locale_repo, trans;
+const ERR_TEXT = '.validated-input-error-dialog';
 
 moduleForComponent('person-text-input', 'integration: person-text-input test', {
   integration: true,
@@ -52,6 +54,7 @@ test('first_name validation error if not present or greater than 30 characters',
   Ember.run.later(() => {
     let $err = this.$('.invalid');
     assert.ok($err.is(':visible'));
+    assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.person.first_name'));
     this.$('.t-person-first-name').val('a').keyup();
     Ember.run.later(() => {
       // valid input
@@ -61,6 +64,7 @@ test('first_name validation error if not present or greater than 30 characters',
       Ember.run.later(() => {
         $err = this.$('.invalid');
         assert.ok($err.is(':visible'));
+        assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.person.first_name.length'));
         this.$('.t-person-first-name').val('a'.repeat(30)).keyup();
         Ember.run.later(() => {
           $err = this.$('.invalid');
@@ -96,6 +100,7 @@ test('middle_initial validation error if not present or greater than 30 characte
       Ember.run.later(() => {
         $err = this.$('.invalid');
         assert.ok($err.is(':visible'));
+        assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.person.middle_initial'));
         done();
       }, 1600);
     }, 100);
@@ -117,6 +122,7 @@ test('last_name validation error if not present or greater than 30 characters', 
   Ember.run.later(() => {
     let $err = this.$('.invalid');
     assert.ok($err.is(':visible'));
+    assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.person.last_name'));
     this.$('.t-person-last-name').val('a').keyup();
     Ember.run.later(() => {
       // valid input
@@ -126,6 +132,7 @@ test('last_name validation error if not present or greater than 30 characters', 
       Ember.run.later(() => {
         $err = this.$('.invalid');
         assert.ok($err.is(':visible'));
+        assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.person.last_name.length'));
         this.$('.t-person-last-name').val('a'.repeat(30)).keyup();
         Ember.run.later(() => {
           $err = this.$('.invalid');
