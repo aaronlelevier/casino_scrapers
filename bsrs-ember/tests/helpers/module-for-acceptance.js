@@ -2,6 +2,7 @@ import { module } from 'qunit';
 import Ember from 'ember';
 import startApp from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
+import TestDone from "../helpers/test-done";
 
 const { RSVP: { Promise } } = Ember;
 
@@ -15,6 +16,11 @@ export default function(name, options = {}) {
       }
     },
     afterEach(assert) {
+      TestDone.create({
+        name: assert.test.testName,
+        module: assert.test.module.name,
+        assert: assert
+      }).testDoneCallback();
       Ember.$.fauxjax.clear();
       uuidReset();
       let afterEach = options.afterEach && options.afterEach.apply(this, arguments);
