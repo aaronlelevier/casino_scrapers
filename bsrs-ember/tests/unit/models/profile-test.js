@@ -19,8 +19,7 @@ module('unit: profile test', {
       simpleStore: store
     });
     run(() => {
-      profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
-      assignee = store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
+      profile = store.push('profile', {id: PD.idOne});
     });
   }
 });
@@ -63,7 +62,8 @@ test('availablePfilters - will be used in the profile filter power select', asse
 
 /* ASSIGNEE */
 test('related person should return one person for a profile', (assert) => {
-  let people = store.find('person');
+  profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
+  store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
   assert.equal(profile.get('assignee').get('id'), PersonD.idOne);
 });
 
@@ -87,6 +87,8 @@ test('change_assignee - will update the persons assignee and dirty the model', (
 });
 
 test('saveAssignee - assignee - profile will set assignee_fk to current assignee id', (assert) => {
+  profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
+  store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
   let inactive_assignee = store.push('person', {id: PersonD.idTwo, profiles: []});
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(profile.get('assignee_fk'), PersonD.idOne);
@@ -104,6 +106,8 @@ test('saveAssignee - assignee - profile will set assignee_fk to current assignee
 });
 
 test('rollbackAssignee - assignee - profile will set assignee to current assignee_fk', (assert) => {
+  profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
+  store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
   let inactive_assignee = store.push('person', {id: PersonD.idTwo, profiles: []});
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(profile.get('assignee_fk'), PersonD.idOne);
@@ -276,6 +280,8 @@ test('saveRelated - change assignee and pfs', assert => {
 
 test('rollback - assignee and pfs', assert => {
   // assignee
+  profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
+  assignee = store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
   let inactive_assignee = store.push('person', {id: PersonD.idTwo, profiles: []});
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
   profile.change_assignee({id: inactive_assignee.get('id')});
