@@ -13,7 +13,7 @@ class ProfileFilterSerializer(BaseCreateSerializer):
     class Meta:
         model = ProfileFilter
         validators = [ProfileFilterFieldValidator()]
-        fields = ('id', 'context', 'field', 'criteria')
+        fields = ('id', 'key', 'context', 'field', 'criteria')
 
 
 class RemoveTenantMixin(object):

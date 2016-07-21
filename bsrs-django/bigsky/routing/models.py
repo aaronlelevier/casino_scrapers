@@ -93,6 +93,8 @@ def update_order(sender, instance=None, created=False, **kwargs):
 
 
 class ProfileFilter(BaseModel):
+    key = models.CharField(max_length=100,
+                           help_text="To use for i18n UI key, and also for mapping component based on selected filter")
     context = models.CharField(max_length=100, blank=True, default=settings.DEFAULT_PROFILE_FILTER_CONTEXT,
                                help_text="The namespace of the model to look the field up on. ex: 'app_name.model_name'")
     field = models.CharField(max_length=100,

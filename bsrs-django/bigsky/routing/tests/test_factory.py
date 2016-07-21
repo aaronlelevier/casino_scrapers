@@ -22,6 +22,7 @@ class FactoryTests(TestCase):
         content_type = ContentType.objects.get(app_label=app_label, model=model)
         self.assertEqual(content_type.model_class(), Ticket)
         # other fields
+        self.assertEqual(pf.key, 'admin.placeholder.ticket_priority')
         self.assertEqual(pf.field, 'priority')
         self.assertEqual(pf.criteria, [str(create_default(TicketPriority).id)])
 
@@ -31,6 +32,7 @@ class FactoryTests(TestCase):
 
         pf = factory.create_ticket_location_filter()
 
+        self.assertEqual(pf.key, 'admin.placeholder.location_store')
         self.assertEqual(pf.field, 'location')
         self.assertEqual(pf.criteria, [str(location.id)])
 

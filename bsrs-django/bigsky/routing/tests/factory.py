@@ -8,14 +8,14 @@ from utils.helpers import create_default
 
 def create_ticket_priority_filter():
     priority = create_default(TicketPriority)
-    return ProfileFilter.objects.create(field='priority',
-                                        criteria=[str(priority.id)])
+    return ProfileFilter.objects.create(key='admin.placeholder.ticket_priority',
+                                        field='priority', criteria=[str(priority.id)])
 
 
 def create_ticket_location_filter():
     location = Location.objects.create_top_level()
-    return ProfileFilter.objects.create(field='location',
-                                        criteria=[str(location.id)])
+    return ProfileFilter.objects.create(key='admin.placeholder.location_store',
+                                        field='location', criteria=[str(location.id)])
 
 
 def create_assignment(description=None, tenant=None):

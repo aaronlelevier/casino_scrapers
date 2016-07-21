@@ -54,6 +54,7 @@ class ViewTests(ViewTestSetupMixin, APITestCase):
         # profile_filter
         self.assertEqual(len(data['filters']), 2)
         self.assertEqual(data['filters'][0]['id'], str(self.profile_filter.id))
+        self.assertEqual(data['filters'][0]['key'], self.profile_filter.key)
         self.assertEqual(data['filters'][0]['context'], self.profile_filter.context)
         self.assertEqual(data['filters'][0]['field'], self.profile_filter.field)
         self.assertEqual(data['filters'][0]['criteria'], self.profile_filter.criteria)
@@ -82,6 +83,7 @@ class ViewTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(len(data['filters']), 2)
         self.assertIn(data['filters'][0]['id'], [f['id'] for f in self.data['filters']])
         profile_filter = ProfileFilter.objects.get(id=data['filters'][0]['id'])
+        self.assertEqual(data['filters'][0]['key'], profile_filter.key)
         self.assertEqual(data['filters'][0]['context'], profile_filter.context)
         self.assertEqual(data['filters'][0]['field'], profile_filter.field)
         self.assertEqual(data['filters'][0]['criteria'], profile_filter.criteria)
@@ -121,6 +123,7 @@ class ViewTests(ViewTestSetupMixin, APITestCase):
         # profile_filter
         self.assertEqual(len(data['filters']), 2)
         self.assertEqual(data['filters'][0]['id'], str(self.profile_filter.id))
+        self.assertEqual(data['filters'][0]['key'], self.profile_filter.key)
         self.assertEqual(data['filters'][0]['context'], self.profile_filter.context)
         self.assertEqual(data['filters'][0]['field'], self.profile_filter.field)
         self.assertEqual(data['filters'][0]['criteria'], self.profile_filter.criteria)
@@ -131,6 +134,7 @@ class ViewTests(ViewTestSetupMixin, APITestCase):
         self.data['description'] = _generate_chars()
         self.data['filters'].append({
             'id': new_filter_id,
+            'key': self.profile_filter.key,
             'field': 'priority',
             'criteria': [str(self.ticket_priority.id)]
         })

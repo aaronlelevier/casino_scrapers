@@ -17,11 +17,13 @@ class ProfileFilterFieldValidatorTests(ViewTestSetupMixin, APITestCase):
         self.data['id'] = str(uuid.uuid4())
         self.data['description'] = 'foo'
         self.invalid_id= str(uuid.uuid4())
+        self.invalid_key = 'biz'
         self.invalid_context = 'foo'
         self.invalid_field = 'bar'
         self.invalid_criteria_id = str(uuid.uuid4())
         self.data['filters'] = [{
             'id': self.invalid_id,
+            'key': self.invalid_key,
             'context': self.invalid_context,
             'field': self.invalid_field,
             'criteria': [self.invalid_criteria_id]
