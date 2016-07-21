@@ -10,7 +10,6 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
-import page from 'bsrs-ember/tests/pages/tickets';
 
 let store, m2m, m2m_two, m2m_three, ticket, category_one, category_two, category_three, run = Ember.run, category_repo, trans;
 const DROPDOWN = '.ember-basic-dropdown-trigger';
@@ -18,11 +17,10 @@ const DROPDOWN = '.ember-basic-dropdown-trigger';
 moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
   integration: true,
   beforeEach() {
-    page.setContext(this);
     store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status', 'model:model-category']);
     translation.initialize(this);
     trans = this.container.lookup('service:i18n');
-    run(function() {
+    run(() => {
       m2m = store.push('model-category', {id: TICKET_CD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
       m2m_two = store.push('model-category', {id: TICKET_CD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
       m2m_three = store.push('model-category', {id: TICKET_CD.idThree, model_pk: TD.idOne, category_pk: CD.unusedId});
@@ -43,19 +41,7 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
       }];
       ticket = store.push('ticket', {id: TD.idOne, request: 'foo', dt_path: dt_path});
     });
-    const flexi = this.container.lookup('service:device/layout');
-    let breakpoints = flexi.get('breakpoints');
-    let bp = {};
-    breakpoints.forEach((point) => {
-      bp[point.name] = point.begin + 5;
-    });
-    run(() => {
-      flexi.set('width', bp.desktop);
-    });
   },
-  afterEach() {
-    page.removeContext(this);
-  }
 });
 
 // test('validation on ticket request works', function(assert) {
@@ -70,7 +56,6 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
 //   let $component = this.$('.invalid');
 //   assert.equal($component.text().trim(), '');
 //   this.$(REQUEST).val('wat').keyup();
-//   assert.equal(page.request, 'wat');
 //   assert.notOk($component.is(':visible'));
 //   this.$(REQUEST).val('').keyup();
 //   Ember.run.later(() => {
