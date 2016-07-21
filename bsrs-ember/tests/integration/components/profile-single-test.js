@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
@@ -7,7 +8,9 @@ import PD from 'bsrs-ember/vendor/defaults/profile';
 import page from 'bsrs-ember/tests/pages/profile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 
-var store, model, run = Ember.run, trans;
+var store, model, trans;
+
+const ERR_TEXT = '.validated-input-error-dialog';
 
 moduleForComponent('profile-single', 'integration: profile-single test', {
   integration: true,
@@ -31,7 +34,9 @@ moduleForComponent('profile-single', 'integration: profile-single test', {
 });
 
 test('description is required validation, cannot save w/o description', function(assert) {
-  // like new template
+  var done = assert.async();
+  let modalDialogService = this.container.lookup('service:modal-dialog');
+  modalDialogService.destinationElementId = 'description';
   run(() => {
     model = store.push('profile', {
       id: PD.idTwo,
@@ -39,22 +44,38 @@ test('description is required validation, cannot save w/o description', function
   });
   this.set('model', model);
   this.render(hbs `{{profiles/profile-single model=model}}`);
-  let $err = this.$('.t-ap-description-validation-error');
-  assert.notOk($err.is(':visible'));
-  generalPage.save();
-  $err = this.$('.t-ap-description-validation-error');
-  assert.ok($err.is(':visible'));
-  assert.equal($err.text().trim(), trans.t('errors.profile.description'));
-  page.descFill('a');
-  assert.ok($err.is(':visible'));
-  assert.equal($err.text().trim(), trans.t('errors.profile.description.min_max'));
-  page.descFill('a'.repeat(6));
-  assert.notOk($err.is(':visible'));
-  // like detail
-  page.descFill('a'.repeat(501));
-  $err = this.$('.t-ap-description-validation-error');
-  assert.ok($err.is(':visible'));
-  assert.equal($err.text().trim(), trans.t('errors.profile.description.min_max'));
+  // like new template
+  const $component = this.$('.invalid');
+  assert.notOk($component.is(':visible'));
+  this.$('.t-ap-description').val('').keyup();
+  Ember.run.later(() => {
+    const $component = this.$('.invalid');
+    assert.ok($component.is(':visible'));
+    assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.profile.description'));
+    this.$('.t-ap-description').val('a'.repeat(500)).keyup();
+    Ember.run.later(() => {
+      const $component = this.$('.invalid');
+      assert.notOk($component.is(':visible'));
+      this.$('.t-ap-description').val('a'.repeat(501)).keyup();
+      Ember.run.later(() => {
+        const $component = this.$('.invalid');
+        assert.ok($component.is(':visible'));
+        assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.profile.description.min_max'));
+        this.$('.t-ap-description').val('a'.repeat(4)).keyup();
+        Ember.run.later(() => {
+          const $component = this.$('.invalid');
+          assert.ok($component.is(':visible'));
+          assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.profile.description.min_max'));
+          this.$('.t-ap-description').val('a'.repeat(5)).keyup();
+          Ember.run.later(() => {
+            const $component = this.$('.invalid');
+            assert.notOk($component.is(':visible'));
+            done();
+          }, 100);
+        }, 1600);
+      }, 1600);
+    }, 100);
+  }, 1600);
 });
 
 test('header - shows detail if not model.new', function(assert) {

@@ -1,5 +1,14 @@
 {{#unless textarea}}
-  {{input maxlength=maxlength type=type placeholder=placeholder value=value class=className id=valuePath focus-out="focusedOut" key-up="keyedUp"}}
+  {{input
+    maxlength=maxlength
+    type=type
+    placeholder=placeholder
+    value=value
+    class=className
+    id=(if count (concat valuePath count) valuePath)
+    focus-out="focusedOut"
+    key-up="keyedUp"
+  }}
   {{#if showMessage}}
       {{#if (v-get model valuePath "message")}}
         {{#tether-dialog
@@ -17,7 +26,15 @@
       {{/if}}
   {{/if}}
 {{else}}
-  {{textarea placeholder=placeholder value=value class=className id=valuePath focus-out="focusedOut" key-up="keyedUp"}}
+  {{textarea
+    autoresize=true
+    placeholder=placeholder
+    value=value
+    class=className
+    id=valuePath
+    focus-out="focusedOut"
+    key-up="keyedUp"
+  }}
   {{#if showMessage}}
       {{#if (v-get model valuePath "message")}}
         {{#tether-dialog

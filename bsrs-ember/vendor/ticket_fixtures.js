@@ -116,7 +116,7 @@ var BSRS_TICKET_FACTORY = (function() {
       }
       var ticket = this.generate_list(uuid, statusId, statusName);
       ticket.number = 'bye' + i;
-      ticket.request = 'sub' + i;
+      ticket.request = 'subb' + i;
       delete ticket.cc;
       delete ticket.attachments;
       response.push(ticket);

@@ -38,13 +38,13 @@ moduleForAcceptance('Acceptance | ticket grid test', {
     // timemachine.config({
     //   dateString: 'December 25, 2014 13:12:59'
     // });
-    
+
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';
     list_xhr = xhr(endpoint, 'GET', null, {}, 200, TF.list());
   },
   afterEach() {
-    
+
     // timemachine.reset();
   }
 });
@@ -214,14 +214,14 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     assert.equal(currentURL(),TICKET_LIST_URL + '?search=5');
     assert.equal(find('.t-grid-data').length, 2);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
-    assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text().trim()), 'sub');
+    assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text().trim()), 'subb');
   });
   click('.t-sort-request-dir');
   andThen(() => {
     assert.equal(currentURL(),TICKET_LIST_URL + '?search=5&sort=request');
     assert.equal(find('.t-grid-data').length, 2);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
-    assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text().trim()), 'sub');
+    assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text().trim()), 'subb');
   });
   fillIn('.t-grid-search-input', '');
   triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
@@ -234,7 +234,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
   andThen(() => {
     assert.equal(currentURL(),TICKET_LIST_URL + '?page=2&search=&sort=request');
     // assert.equal(find('.t-grid-data').length, 22);//firefox discerepency
-    assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'sub');
+    assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'subb');
   });
   fillIn('.t-grid-search-input', '14');
   triggerEvent('.t-grid-search-input', 'keyup', NUMBER_ONE);

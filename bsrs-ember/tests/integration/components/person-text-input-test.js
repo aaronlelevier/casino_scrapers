@@ -17,7 +17,7 @@ import page from 'bsrs-ember/tests/pages/person';
 var store, locale_repo, trans;
 const ERR_TEXT = '.validated-input-error-dialog';
 
-moduleForComponent('person-text-input', 'scott integration: person-text-input test', {
+moduleForComponent('person-text-input', 'integration: person-text-input test', {
   integration: true,
   setup() {
     page.setContext(this);

@@ -1,10 +1,19 @@
-{{#each model.links as |link|}}
+{{#each model.links as |link index|}}
   <div class="input-group-vertical">
     <div class="input-group">
       <span class="input-group-btn">
         <button class="t-del-link-btn btn btn-default btn-sm delete" type="button" {{action 'delete' link}}>{{fa-icon "minus"}}</button>
       </span>
-      {{validated-input model=link value=link.text placeholder=(t "admin.dtd.label.link.text") valuePath="text" className="form-control t-dtd-link-text" didValidate=didValidate class="t-link-text"}}
+      {{validated-input
+        model=link
+        value=link.text
+        placeholder=(t "admin.dtd.label.link.text")
+        valuePath="text"
+        className="form-control t-dtd-link-text"
+        didValidate=didValidate
+        class="t-link-text"
+        count=index
+      }}
     </div>
     {{#if (is-equal model.link_type model.link_types.[0])}}
       <div class="input-group">

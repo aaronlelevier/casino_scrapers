@@ -30,26 +30,26 @@ const Validations = buildValidations({
       }).volatile()
     }),
   ],
-  password: [
-    validator('presence', {
-      presence: true,
-      message: 'errors.person.password',
-    }),
-    // validator('format', {
-    //   /*
-    //    * Password must include at least one upper case letter, one lower case letter, and a number
-    //    * (?=) positive lookahead. requires express to match .*\d ..... .* matches any single character 0 or more times with one decimal
-    //    * () acts as a memory device to remember the match as it traverses through the string
-    //    * b/w 4-8 occurences of the previous look ahead assertions
-    //   */
-    //   regex: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$/,
-    //   message: 'errors.person.password'
-    // }),
-    validator('length', {
-      max: 15,
-      message: 'errors.person.password.length',
-    }),
-  ],
+  // password: [
+  //   validator('presence', {
+  //     presence: true,
+  //     message: 'errors.person.password',
+  //   }),
+  //   // validator('format', {
+  //   //   /*
+  //   //    * Password must include at least one upper case letter, one lower case letter, and a number
+  //   //    * (?=) positive lookahead. requires express to match .*\d ..... .* matches any single character 0 or more times with one decimal
+  //   //    * () acts as a memory device to remember the match as it traverses through the string
+  //   //    * b/w 4-8 occurences of the previous look ahead assertions
+  //   //   */
+  //   //   regex: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$/,
+  //   //   message: 'errors.person.password'
+  //   // }),
+  //   validator('length', {
+  //     max: 15,
+  //     message: 'errors.person.password.length',
+  //   }),
+  // ],
   first_name: [
     validator('presence', {
       presence: true,
