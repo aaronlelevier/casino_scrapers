@@ -14,20 +14,17 @@ import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 
 let store, ticket, trans;
 
-moduleForComponent('tickets/ticket-single', 'scott integration: ticket-single test', {
+moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
   integration: true,
   beforeEach() {
-    flexi = this.container.lookup('service:device/layout');
-    let breakpoints = flexi.get('breakpoints');
-    bp = {};
-    breakpoints.forEach((point) => {
-      bp[point.name] = point.begin + 5;
-    });
     store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status', 'model:model-category']);
+    const flexi = this.container.lookup('service:device/layout');
+    const breakpoints = flexi.get('breakpoints');
+    const width = breakpoints.find(bp => bp.name === 'desktop').begin + 5;
+    flexi.set('width', width);
     translation.initialize(this);
     trans = this.container.lookup('service:i18n');
     run(() => {
-      flexi.set('width', bp.desktop);
       store.push('model-category', {id: TICKET_CD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
       store.push('model-category', {id: TICKET_CD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
       store.push('model-category', {id: TICKET_CD.idThree, model_pk: TD.idOne, category_pk: CD.unusedId});

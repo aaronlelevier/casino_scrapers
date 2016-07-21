@@ -27,19 +27,16 @@ const ERR_TEXT = '.validated-input-error-dialog';
 moduleForComponent('dtds/dtd-single', 'integration: dtd-single test', {
   integration: true,
   beforeEach() {
-    const flexi = this.container.lookup('service:device/layout');
-    let breakpoints = flexi.get('breakpoints');
-    let bp = {};
-    breakpoints.forEach((point) => {
-      bp[point.name] = point.begin + 5;
-    });
     page.setContext(this);
     generalPage.setContext(this);
     ticketPage.setContext(this);
     store = module_registry(this.container, this.registry, ['model:dtd', 'model:uuid']);
+    const flexi = this.container.lookup('service:device/layout');
+    const breakpoints = flexi.get('breakpoints');
+    const width = breakpoints.find(bp => bp.name === 'desktop').begin + 5;
+    flexi.set('width', width);
     trans = this.container.lookup('service:i18n');
     run(() => {
-      flexi.set('width', bp.desktop);
       dtd = store.push('dtd', {});
     });
     dtd_repo = repository.initialize(this.container, this.registry, 'dtd');

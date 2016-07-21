@@ -14,14 +14,11 @@ moduleForComponent('grid/grid-footer', 'Integration | Component | grid-footer', 
     run(() => {
       ticket = store.push('ticket', {id: TD.idOne, count: 10});
     });
-    flexi = this.container.lookup('service:device/layout');
-    let breakpoints = flexi.get('breakpoints');
-    bp = {};
-    breakpoints.forEach((point) => {
-      bp[point.name] = point.begin + 5;
-    });
+    const flexi = this.container.lookup('service:device/layout');
+    const breakpoints = flexi.get('breakpoints');
+    const width = breakpoints.find(bp => bp.name === 'mobile').begin + 5;
     run(() => {
-      flexi.set('width', bp.mobile);
+      flexi.set('width', width);
     });
   },
 });

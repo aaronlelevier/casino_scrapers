@@ -43,10 +43,10 @@ let application, store, endpoint, link, dtd, dt_path, returned_ticket, dt_one;
 
 moduleForAcceptance('Acceptance | dt detail', {
   beforeEach() {
-    setWidth('desktop');
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/${DT.idOne}/ticket/?ticket=${TD.idOne}`;
     dtd = store.find('dtd', DT.idOne);
+    setWidth('desktop');
     random.uuid = function() { return TD.idOne; };
     /*
      * NOTES
