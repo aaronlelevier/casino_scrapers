@@ -20,13 +20,10 @@ moduleForComponent('grid/grid-footer', 'Integration | Component | grid-footer', 
     breakpoints.forEach((point) => {
       bp[point.name] = point.begin + 5;
     });
-    flexi.set('width', bp.mobile);
-  },
-  afterEach() {
     run(() => {
-      flexi.set('width', bp.desktop);
+      flexi.set('width', bp.mobile);
     });
-  }
+  },
 });
 
 test('it renders page selector', function(assert) {

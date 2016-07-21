@@ -17,17 +17,12 @@ moduleForComponent('grid/grid-head', 'Integration | Component | grid-head', {
     breakpoints.forEach((point) => {
       bp[point.name] = point.begin + 5;
     });
-    flexi.set('width', bp.mobile);
     run(() => {
+      flexi.set('width', bp.mobile);
       store.push('filterset', {'id': '55639133-fd6f-4a03-b7bc-ec2a6a3cb049', 'name': 'ordered by assignee',
       'endpoint_name': 'tickets.index', 'endpoint_uri': '?sort=assignee.fullname', 'created': Date.now() });
     });
   },
-  afterEach() {
-    run(() => {
-      flexi.set('width', bp.desktop);
-    });
-  }
 });
 
 test('it renders saved filtersets', function(assert) {
