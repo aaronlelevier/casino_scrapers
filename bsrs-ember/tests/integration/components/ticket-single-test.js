@@ -1,6 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
 import hbs from 'htmlbars-inline-precompile';
+import config from 'bsrs-ember/config/environment';
 import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
@@ -12,16 +13,15 @@ import CD from 'bsrs-ember/vendor/defaults/category';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 
-let store, ticket, trans;
+let store, ticket, trans, width;
 
-moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
+moduleForComponent('tickets/ticket-single', 'scott integration: ticket-single test', {
   integration: true,
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status', 'model:model-category']);
-    const flexi = this.container.lookup('service:device/layout');
-    const breakpoints = flexi.get('breakpoints');
-    const width = breakpoints.find(bp => bp.name === 'desktop').begin + 5;
-    flexi.set('width', width);
+    store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status', 'model:model-category', 'service:device/layout']);
+    // const flexi = this.container.lookup('service:device/layout');
+    const breakpoints = config.flexi.breakpoints;
+    width = breakpoints.find(bp => bp.name === 'desktop').begin + 5;
     translation.initialize(this);
     trans = this.container.lookup('service:i18n');
     run(() => {
@@ -48,41 +48,43 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
   },
 });
 
-// test('validation on ticket request works', function(assert) {
-//   const REQUEST = '.t-ticket-request';
-//   let modalDialogService = this.container.lookup('service:modal-dialog');
-//   modalDialogService.destinationElementId = 'request';
-//   var done = assert.async();
-//   let statuses = store.find('ticket-status');
-//   this.model = ticket;
-//   this.statuses = statuses;
-//   this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
-//   let $component = this.$('.invalid');
-//   assert.equal($component.text().trim(), '');
-//   this.$(REQUEST).val('wat').keyup();
-//   assert.notOk($component.is(':visible'));
-//   this.$(REQUEST).val('').keyup();
-//   Ember.run.later(() => {
-//     const $component = this.$('.invalid');
-//     assert.ok($component.is(':visible'));
-//     assert.equal($('.validated-input-error-dialog').text().trim(), trans.t('errors.ticket.request'));
-//     this.$(REQUEST).val('a'.repeat(4)).keyup();
-//     Ember.run.later(() => {
-//       const $component = this.$('.invalid');
-//       assert.ok($component.is(':visible'));
-//       assert.equal($('.validated-input-error-dialog').text().trim(), trans.t('errors.ticket.request.length'));
-//       this.$(REQUEST).val('a'.repeat(5)).keyup();
-//       Ember.run.later(() => {
-//         const $component = this.$('.invalid');
-//         assert.notOk($component.is(':visible'));
-//         done();
-//       }, 200);
-//     }, 200);
-//   }, 1800);
-// });
+test('validation on ticket request works', function(assert) {
+  this.set('width', width);
+  const REQUEST = '.t-ticket-request';
+  let modalDialogService = this.container.lookup('service:modal-dialog');
+  modalDialogService.destinationElementId = 'request';
+  var done = assert.async();
+  let statuses = store.find('ticket-status');
+  this.model = ticket;
+  this.statuses = statuses;
+  this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
+  let $component = this.$('.invalid');
+  assert.equal($component.text().trim(), '');
+  this.$(REQUEST).val('wat').keyup();
+  assert.notOk($component.is(':visible'));
+  this.$(REQUEST).val('').keyup();
+  Ember.run.later(() => {
+    const $component = this.$('.invalid');
+    assert.ok($component.is(':visible'));
+    assert.equal($('.validated-input-error-dialog').text().trim(), trans.t('errors.ticket.request'));
+    this.$(REQUEST).val('a'.repeat(4)).keyup();
+    Ember.run.later(() => {
+      const $component = this.$('.invalid');
+      assert.ok($component.is(':visible'));
+      assert.equal($('.validated-input-error-dialog').text().trim(), trans.t('errors.ticket.request.length'));
+      this.$(REQUEST).val('a'.repeat(5)).keyup();
+      Ember.run.later(() => {
+        const $component = this.$('.invalid');
+        assert.notOk($component.is(':visible'));
+        done();
+      }, 200);
+    }, 200);
+  }, 1800);
+});
 
 test('each status shows up as a valid select option', function(assert) {
   let statuses = store.find('ticket-status');
+  this.set('width', width);
   this.set('model', ticket);
   this.set('statuses', statuses);
   this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
@@ -106,6 +108,7 @@ test('changing priority changes the class', function(assert) {
     ticket = store.push('ticket', {id: TD.idOne, priority_fk: TD.priorityOneId});
   });
   let priorities = store.find('ticket-priority');
+  this.set('width', width);
   this.set('model', ticket);
   this.set('priorities', priorities);
   this.render(hbs`{{tickets/ticket-single model=model priorities=priorities activities=priorities}}`);
@@ -123,6 +126,7 @@ test('changing status changes the class', function(assert) {
     ticket = store.push('ticket', {id: TD.idOne, status_fk: TD.statusOneId});
   });
   let statuses = store.find('ticket-status');
+  this.set('width', width);
   this.set('model', ticket);
   this.set('statuses', statuses);
   this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
