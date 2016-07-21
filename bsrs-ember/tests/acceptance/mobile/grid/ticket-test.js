@@ -36,18 +36,10 @@ const LOCATION = '.t-ticket-location-select';
 moduleForAcceptance('Acceptance | grid ticket mobile test', {
   beforeEach() {
     /* SETUP */
-    
+    setWidth('mobile');
     store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
-    /* MOBILE RENDER */
-    setWidth('mobile');
   },
-  afterEach() {
-    // run(() => {
-    //   flexi.set('width', bp.desktop);
-    // });
-    
-  }
 });
 
 /* jshint ignore:start */

@@ -14,7 +14,6 @@ export default function(name, options = {}) {
         return options.beforeEach.apply(this, arguments);
       }
     },
-
     afterEach(assert) {
       Ember.$.fauxjax.clear();
       uuidReset();

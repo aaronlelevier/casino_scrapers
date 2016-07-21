@@ -31,26 +31,12 @@ const ACTIVITY_ITEMS = '.t-activity-list-item';
 moduleForAcceptance('Acceptance | mobile ticket detail test', {
   beforeEach() {
     /* SETUP */
-    
+    setWidth('mobile');
     store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
     xhr(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
     activity = xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
-    /* MOBILE RENDER */
-    flexi = this.application.__container__.lookup('service:device/layout');
-    const breakpoints = flexi.get('breakpoints');
-    bp = {};
-    breakpoints.forEach((point) => {
-      bp[point.name] = point.begin + 5;
-    });
-    flexi.set('width', bp.mobile);
   },
-  afterEach() {
-    run(() => {
-      flexi.set('width', bp.desktop);
-    });
-    
-  }
 });
 
 /* jshint ignore:start */

@@ -33,17 +33,11 @@ const FILTERSET_COMPONENT_INPUT = '.t-mobile-save-filterset-component__input';
 
 moduleForAcceptance('Acceptance | grid-head mobile', {
   beforeEach() {
-
     store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
     setWidth('mobile');
     random.uuid = function() { return UUID.value; };
   },
-  afterEach() {
-    // run(() => {
-    //   flexi.set('width', bp.desktop);
-    // });
-  }
 });
 
 /* jshint ignore:start */
