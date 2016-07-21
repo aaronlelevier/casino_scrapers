@@ -37,6 +37,15 @@ export default Ember.Object.extend({
     let pfsIds = pfilters.map((obj) => {
       return obj.id;
     });
+    // remove an pfs that are still setup as related locally, but weren't in payload
+    profile.get('pfs').forEach((pf) => {
+      let pfsIds = pfs.map((obj) => { return obj.id; });
+      let id = pf.get('id');
+      if (pfsIds.indexOf(id) < 0) {
+        store.push('pfilter', {id: id, removed: true});
+        profile.remove_pf(id);
+      }
+    });
     run(() => {
       profile = store.push('profile', {
         id: model.id,

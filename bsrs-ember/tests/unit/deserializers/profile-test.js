@@ -18,7 +18,7 @@ module('unit: profile deserializer test', {
   }
 });
 
-test('deserialize single', assert => {
+test('deserialize single - existing filters', assert => {
   let json = PF.detail();
   run(() => {
     deserializer.deserialize(json, PD.idOne);
@@ -48,6 +48,57 @@ test('deserialize single - no filters', assert => {
   });
   profile = store.find('profile', PD.idOne);
   assert.equal(profile.get('pfs').get('length'), 0);
+  assert.ok(profile.get('isNotDirty'));
+  assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('existing profile w/ filters, and server returns no filters - want no filters b/c that is the most recent', assert => {
+  // deserialize w/ filters
+  run(() => {
+    deserializer.deserialize(PF.detail(), PD.idOne);
+  });
+  // deserialize w/o filters
+  let json = PF.detail();
+  json.filters = [];
+  run(() => {
+    deserializer.deserialize(json, PD.idOne);
+  });
+  profile = store.find('profile', PD.idOne);
+  assert.equal(profile.get('pfs').get('length'), 0);
+  assert.ok(profile.get('isNotDirty'));
+  assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('existing profile w/ filters, and server returns w/ 1 extra filter', assert => {
+  // deserialize w/ filters
+  run(() => {
+    deserializer.deserialize(PF.detail(), PD.idOne);
+  });
+  // deserialize w/ extra filters
+  let json = PF.detail();
+  json.filters.push({id: PFD.unusedId});
+  run(() => {
+    deserializer.deserialize(json, PD.idOne);
+  });
+  profile = store.find('profile', PD.idOne);
+  assert.equal(profile.get('pfs').get('length'), 2);
+  assert.ok(profile.get('isNotDirty'));
+  assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('existing profile w/ filter and get same filter', assert => {
+  // deserialize w/ filters
+  let json = PF.detail();
+  run(() => {
+    deserializer.deserialize(json, PD.idOne);
+  });
+  // deserialize w/ same filters
+  json = PF.detail();
+  run(() => {
+    deserializer.deserialize(json, PD.idOne);
+  });
+  profile = store.find('profile', PD.idOne);
+  assert.equal(profile.get('pfs').get('length'), 1);
   assert.ok(profile.get('isNotDirty'));
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
 });
