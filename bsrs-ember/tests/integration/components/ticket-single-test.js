@@ -15,13 +15,10 @@ import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 
 let store, ticket, trans, width;
 
-moduleForComponent('tickets/ticket-single', 'scott integration: ticket-single test', {
+moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
   integration: true,
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status', 'model:model-category', 'service:device/layout']);
-    // const flexi = this.container.lookup('service:device/layout');
-    const breakpoints = config.flexi.breakpoints;
-    width = breakpoints.find(bp => bp.name === 'desktop').begin + 5;
     translation.initialize(this);
     trans = this.container.lookup('service:i18n');
     run(() => {
@@ -45,11 +42,17 @@ moduleForComponent('tickets/ticket-single', 'scott integration: ticket-single te
       }];
       ticket = store.push('ticket', {id: TD.idOne, request: 'foo', dt_path: dt_path});
     });
+    const flexi = this.container.lookup('service:device/layout');
+    let breakpoints = flexi.get('breakpoints');
+    let bp = {};
+    breakpoints.forEach((point) => {
+      bp[point.name] = point.begin + 5;
+    });
+    flexi.set('width', bp.huge);
   },
 });
 
 test('validation on ticket request works', function(assert) {
-  this.set('width', width);
   const REQUEST = '.t-ticket-request';
   let modalDialogService = this.container.lookup('service:modal-dialog');
   modalDialogService.destinationElementId = 'request';
@@ -84,7 +87,6 @@ test('validation on ticket request works', function(assert) {
 
 test('each status shows up as a valid select option', function(assert) {
   let statuses = store.find('ticket-status');
-  this.set('width', width);
   this.set('model', ticket);
   this.set('statuses', statuses);
   this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
@@ -108,7 +110,6 @@ test('changing priority changes the class', function(assert) {
     ticket = store.push('ticket', {id: TD.idOne, priority_fk: TD.priorityOneId});
   });
   let priorities = store.find('ticket-priority');
-  this.set('width', width);
   this.set('model', ticket);
   this.set('priorities', priorities);
   this.render(hbs`{{tickets/ticket-single model=model priorities=priorities activities=priorities}}`);
@@ -126,7 +127,6 @@ test('changing status changes the class', function(assert) {
     ticket = store.push('ticket', {id: TD.idOne, status_fk: TD.statusOneId});
   });
   let statuses = store.find('ticket-status');
-  this.set('width', width);
   this.set('model', ticket);
   this.set('statuses', statuses);
   this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
