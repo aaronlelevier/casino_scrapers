@@ -71,11 +71,11 @@ test('description is required validation, cannot save w/o description', function
             const $component = this.$('.invalid');
             assert.notOk($component.is(':visible'));
             done();
-          }, 100);
-        }, 1600);
-      }, 1600);
-    }, 100);
-  }, 1600);
+          }, 200);
+        }, 1800);
+      }, 1800);
+    }, 200);
+  }, 1800);
 });
 
 test('header - shows detail if not model.new', function(assert) {
