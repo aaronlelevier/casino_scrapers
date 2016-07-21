@@ -1,11 +1,11 @@
 {{#form-group title=(concat "admin.person.label." field) for=field}}
   {{validated-input
-  model=model 
-  value=(get model field)
-  placeholder=(t (concat "admin.person.label." field))
-  valuePath=field
-  className=(concat "form-control t-person-" dasherizedField)
-  didValidate=didValidate 
-  class=(concat "t-" dasherizedField "-validator")
-  idZ=field}}
+    model=model
+    placeholder=(t (concat "admin.person.label." field))
+    valuePath=field
+    className=(concat "form-control t-person-" dasherizedField)
+    didValidate=didValidate
+    class=(concat "t-" dasherizedField "-validator")
+    maxlength=maxlength
+  }}
 {{/form-group}}

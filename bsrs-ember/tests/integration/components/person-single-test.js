@@ -24,36 +24,36 @@ moduleForComponent('person-single', 'integration: person-single test', {
     var json = translations.generate('en');
     loadTranslations(trans, json);
     run(function() {
-      store.push('person-current', {id: PD.id});
+      store.push('person-current', {id: PD.idOne});
       store.push('currency', {id:CD.id, symbol:CD.symbol, name:CD.name, decimal_digits:CD.decimal_digits, code:CD.code, name_plural:CD.name_plural, rounding:CD.rounding, symbol_native:CD.symbol_native, default: true});
     });
     let pn_types = [{ 'id': '2bff27c7-ca0c-463a-8e3b-6787dffbe7de', 'name': 'admin.phonenumbertype.office' },
-      { 'id': '9416c657-6f96-434d-aaa6-0c867aff3270', 'name': 'admin.phonenumbertype.mobile' }];
-      run(function() {
-        pn_types.forEach(function(pnt) {
-          store.push('phone-number-type', pnt);
-        });
+    { 'id': '9416c657-6f96-434d-aaa6-0c867aff3270', 'name': 'admin.phonenumbertype.mobile' }];
+    run(function() {
+      pn_types.forEach(function(pnt) {
+        store.push('phone-number-type', pnt);
       });
-      phone_number_types = store.find('phone-number-type');
-      default_phone_number_type = phone_number_types.objectAt(0);
-      // let ad_types = [{ "id": "8e16a68c-fda6-4c30-ba7d-fee98257e92d", "name": "admin.address_type.office" },
-      //   { "id": "f7e55e71-1ff2-4cc2-8700-139802738bd0", "name": "admin.address_type.shipping" }];
-      //   run(function() {
-      //     ad_types.forEach(function(ad) {
-      //       store.push('address-type', ad);
-      //     });
-      //   });
-      //   address_types = store.find('phone-number-type');
-      //   default_address_type = address_types.objectAt(0);
-        let em_types = [{ 'id': ETD.personalId, 'name': ETD.personalEmail },
-          { 'id': ETD.workId, 'name': ETD.workEmail }];
-          run(() => {
-            em_types.forEach(function(emt) {
-              store.push('email-type', emt);
-            });
-          });
-          email_types = store.find('email-type');
-          default_email_type = email_types.objectAt(0);
+    });
+    phone_number_types = store.find('phone-number-type');
+    default_phone_number_type = phone_number_types.objectAt(0);
+    // let ad_types = [{ "id": "8e16a68c-fda6-4c30-ba7d-fee98257e92d", "name": "admin.address_type.office" },
+    //   { "id": "f7e55e71-1ff2-4cc2-8700-139802738bd0", "name": "admin.address_type.shipping" }];
+    //   run(function() {
+    //     ad_types.forEach(function(ad) {
+    //       store.push('address-type', ad);
+    //     });
+    //   });
+    //   address_types = store.find('phone-number-type');
+    //   default_address_type = address_types.objectAt(0);
+    let em_types = [{ 'id': ETD.personalId, 'name': ETD.personalEmail },
+    { 'id': ETD.workId, 'name': ETD.workEmail }];
+    run(() => {
+      em_types.forEach(function(emt) {
+        store.push('email-type', emt);
+      });
+    });
+    email_types = store.find('email-type');
+    default_email_type = email_types.objectAt(0);
   },
   afterEach() {
     page.removeContext(this);
@@ -62,7 +62,7 @@ moduleForComponent('person-single', 'integration: person-single test', {
 
 test('dropdown displays correct print and duplicate text', function(assert) {
   run(() => {
-    this.set('model', store.push('person', {id: PD.id}));
+    this.set('model', store.push('person', {id: PD.idOne}));
   });
   this.render(hbs`{{people/person-single model=model}}`);
   this.$('.t-dropdown-delete').click();
@@ -76,52 +76,23 @@ test('validation on person username works if clear out username', function(asser
     this.set('model', store.push('person', {id: PD.id, username: 'foo'}));
   });
   this.render(hbs`{{people/person-single model=model}}`);
-  let $component = this.$('.has-error');
+  let $component = this.$('.invalid');
   assert.equal($component.text().trim(), '');
   page.usernameFillIn('wat');
   assert.equal(page.username, 'wat');
   assert.notOk($component.is(':visible'));
   page.usernameFillIn('');
   Ember.run.later(() => {
-    const $component = this.$('.has-error');
+    const $component = this.$('.invalid');
     assert.ok($component.is(':visible'));
     assert.equal($component.text().trim(), trans.t('errors.person.username'));
     done();
   }, 300);
 });
 
-test('filling in valid one char middle initial will not reveal validation messages', function(assert) {
-  run(() => {
-    this.set('model', store.push('person', {id: PD.id}));
-  });
-  this.render(hbs`{{people/person-single model=model}}`);
-  var $component = this.$('.t-middle-initial-validator .error');
-  assert.equal($component.text().trim(), '');
-  var save_btn = this.$('.t-save-btn');
-  this.$('.t-person-middle-initial').val('a').trigger('change');
-  assert.equal($component.text().trim(), '');
-});
-
-test('filling in more than 1 char middle initial will reveal validation messages', function(assert) {
-  var done = assert.async();
-  run(() => {
-    this.set('model', store.push('person', {id: PD.id}));
-  });
-  this.render(hbs`{{people/person-single model=model}}`);
-  var $component = this.$('.t-middle-initial-validator .error');
-  assert.equal($component.text().trim(), '');
-  page.middleInitial('wa');
-  Ember.run.later(() => {
-    const $component = this.$('.t-middle-initial-validator .error');
-    assert.ok($component.is(':visible'));
-    assert.equal($component.text().trim(), trans.t('errors.person.middle_initial'));
-    done();
-  }, 300);
-});
-
 test('filling in invalid email reveal validation messages', function(assert) {
   run(() => {
-    this.model = store.push('person', {id: PD.id});
+    this.model = store.push('person', {id: PD.idOne});
   });
   this.email_types = email_types;
   this.default_email_type = default_email_type;
@@ -144,7 +115,7 @@ test('filling in invalid email reveal validation messages', function(assert) {
 
 test('filling in invalid phone number reveal validation messages', function(assert) {
   run(() => {
-    this.model = store.push('person', {id: PD.id});
+    this.model = store.push('person', {id: PD.idOne});
   });
   this.phone_number_types = phone_number_types;
   this.default_phone_number_type = default_phone_number_type;
@@ -167,7 +138,7 @@ test('filling in invalid phone number reveal validation messages', function(asse
 
 // test('filling in invalid address reveals validation messages', function(assert) {
 //   run(() => {
-//     this.model = store.push('person', {id: PD.id});
+//     this.model = store.push('person', {id: PD.idOne});
 //   });
 //   this.address_types = address_types;
 //   this.default_address_type = default_address_type;
@@ -204,7 +175,7 @@ test('filling in invalid phone number reveal validation messages', function(asse
 
 test('can remove a new phone number', function(assert) {
   run(() => {
-    this.model = store.push('person', {id: PD.id});
+    this.model = store.push('person', {id: PD.idOne});
   });
   this.phone_number_types = phone_number_types;
   this.default_phone_number_type = default_phone_number_type;
@@ -217,7 +188,7 @@ test('can remove a new phone number', function(assert) {
 
 test('can add and remove new email', function(assert) {
   run(() => {
-    this.model = store.push('person', {id: PD.id});
+    this.model = store.push('person', {id: PD.idOne});
   });
   this.email_types = email_types;
   this.default_email_type = default_email_type;
@@ -230,7 +201,7 @@ test('can add and remove new email', function(assert) {
 
 // test('can add and remove new address', function(assert) {
 //   run(() => {
-//     this.model = store.push('person', {id: PD.id});
+//     this.model = store.push('person', {id: PD.idOne});
 //   });
 //   this.address_types = address_types;
 //   this.default_address_type = default_address_type;
