@@ -49,7 +49,9 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
     breakpoints.forEach((point) => {
       bp[point.name] = point.begin + 5;
     });
-    flexi.set('width', bp.desktop);
+    run(() => {
+      flexi.set('width', bp.desktop);
+    });
   },
   afterEach() {
     page.removeContext(this);
