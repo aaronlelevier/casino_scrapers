@@ -15,6 +15,7 @@ var BSRS_PROFILE_FACTORY = (function() {
       },
       filters: [{
         id: this.pfilter.idOne,
+        key: this.pfilter.keyOne,
         context: this.pfilter.contextOne,
         field: this.pfilter.fieldOne,
         criteria: [this.ticket.priorityOneId]

@@ -68,6 +68,7 @@ test('visit detail and update all fields', assert => {
     assignee: PD.assigneeSelectOne,
     filters: [{
       id: PFD.idOne,
+      key: PFD.keyOne,
       context: PFD.contextOne,
       field: PFD.fieldOne,
       criteria: [TD.priorityOneId]

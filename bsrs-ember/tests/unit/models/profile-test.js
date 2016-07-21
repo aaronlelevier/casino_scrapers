@@ -43,6 +43,7 @@ test('serialize', assert => {
   assert.equal(ret.assignee, PD.assigneeOne);
   assert.equal(ret.filters.length, 1);
   assert.equal(ret.filters[0].id, PFD.idOne);
+  assert.equal(ret.filters[0].key, PFD.keyOne);
   assert.equal(ret.filters[0].context, PFD.contextOne);
   assert.equal(ret.filters[0].field, PFD.fieldOne);
   assert.deepEqual(ret.filters[0].criteria, [TD.priorityOneId]);
