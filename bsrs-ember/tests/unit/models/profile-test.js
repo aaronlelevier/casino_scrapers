@@ -47,6 +47,18 @@ test('serialize', assert => {
   assert.deepEqual(ret.filters[0].criteria, [TD.priorityOneId]);
 });
 
+test('default pfilterContext', assert => {
+  ret = profile.get('defaultPfilter');
+  assert.equal(ret.key, 'admin.placeholder.ticket_priority');
+  assert.equal(ret.context, 'ticket.ticket');
+  assert.equal(ret.field, 'priority');
+});
+
+test('availablePfilters - will be used in the profile filter power select', assert => {
+  ret = profile.get('availablePfilters');
+  assert.equal(ret.length, 2);
+});
+
 /* ASSIGNEE */
 test('related person should return one person for a profile', (assert) => {
   let people = store.find('person');

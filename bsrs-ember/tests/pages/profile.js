@@ -18,4 +18,9 @@ export default PageObject.create({
   assigneeInput: text(ASSIGNEE),
   assigneeSortText: text('.t-sort-assignee-username'),
   assigneeGridOne: text('.t-profile-assignee-username:eq(0)'),
+
+  filterSectionTitleText: text('.t-filter-section-title'),
+  addFilterBtnText: text('.t-add-filter-btn'),
+  addFilterBtnClick: clickable('.t-add-filter-btn'),
+  removeFilterBtnClick: clickable('.t-del-filter-btn'),
 });

@@ -3,9 +3,10 @@ import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import PD from 'bsrs-ember/vendor/defaults/profile';
-import page from 'bsrs-ember/tests/pages/profile';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import PD from 'bsrs-ember/vendor/defaults/profile';
+import PFD from 'bsrs-ember/vendor/defaults/profile-filter';
+import page from 'bsrs-ember/tests/pages/profile';
 
 var store, model, run = Ember.run, trans;
 
@@ -28,6 +29,34 @@ moduleForComponent('profile-single', 'integration: profile-single test', {
     page.removeContext(this);
     generalPage.removeContext(this);
   }
+});
+
+test('filter section and add filter button - onClick of button, a related filter is added to the profile', function(assert) {
+  this.set('model', model);
+  this.render(hbs `{{profiles/profile-single model=model}}`);
+  assert.equal(page.filterSectionTitleText, trans.t('admin.section.title.filter'));
+  assert.equal(page.addFilterBtnText, trans.t('admin.btn.add_filter'));
+  assert.equal(model.get('pfs').get('length'), 0);
+  assert.equal(this.$('.t-filter-selector').length, 0);
+  page.addFilterBtnClick();
+  assert.equal(model.get('pfs').get('length'), 1);
+  assert.equal(this.$('.t-filter-selector').length, 1);
+  // pfilter added to model has default properties
+  assert.equal(model.get('pfs').objectAt(0).get('context'), PFD.contextOne);
+  assert.equal(model.get('pfs').objectAt(0).get('field'), PFD.fieldOne);
+});
+
+test('remove filter', function(assert) {
+  this.set('model', model);
+  this.render(hbs `{{profiles/profile-single model=model}}`);
+  assert.equal(model.get('pfs').get('length'), 0);
+  assert.equal(this.$('.t-filter-selector').length, 0);
+  page.addFilterBtnClick();
+  assert.equal(model.get('pfs').get('length'), 1);
+  assert.equal(this.$('.t-filter-selector').length, 1);
+  page.removeFilterBtnClick();
+  assert.equal(model.get('pfs').get('length'), 0);
+  assert.equal(this.$('.t-filter-selector').length, 0);
 });
 
 test('description is required validation, cannot save w/o description', function(assert) {

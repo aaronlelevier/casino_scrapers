@@ -58,5 +58,36 @@
         </div>
       </section>
     </div>
+    <div class="col-md-12">
+      <section>
+        <div class="row card-title">
+          <h2 class="col-md-12 t-filter-section-title">{{t "admin.section.title.filter"}}</h2>
+        </div>
+
+        {{#each model.pfs as |filter|}}
+          <div class="input-group">
+            <span class="input-group-btn">
+              <button class="t-del-filter-btn btn btn-default btn-sm delete" type="button" {{action 'removeFilter' filter}}>{{fa-icon "minus"}}</button>
+            </span>
+            <span class="input-group-btn">
+              {{general-power-select
+                model=model
+                className="t-filter-selector"
+                selected=filter
+                field="key"
+                isObject=true
+                options=model.availablePfilters
+              }}
+            </span>
+          </div>
+        {{/each}}
+
+        <button class="t-add-filter-btn btn-add btn btn-default btn-sm" type="button" {{action 'addFilter'}}>
+          <span class="btn-label">{{fa-icon "plus"}} {{t "admin.btn.add_filter"}}</span>
+        </button>
+
+
+      </section>
+    </div>
   </div>
 </section>
