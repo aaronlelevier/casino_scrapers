@@ -34,6 +34,7 @@
     "selectSearch",
     "selectChoose",
     "setWidth",
+    "uuidReset",
     "wait",
     "t",
     "require",

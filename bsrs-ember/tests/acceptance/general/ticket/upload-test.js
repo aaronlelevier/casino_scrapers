@@ -31,7 +31,6 @@ moduleForAcceptance('Acceptance | ticket file upload test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
-    originaldd_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
   },
 });
