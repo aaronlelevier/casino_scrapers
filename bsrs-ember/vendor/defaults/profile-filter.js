@@ -6,8 +6,11 @@ var BSRS_PROFILE_FILTER_DEFAULTS_OBJECT = (function() {
       idOne: '1ee82b8c-89bd-45a2-8d57-4b920c8b1111',
       idTwo: '2cc82b8c-89bd-45a2-8d57-4b920c8b1112',
       unusedId: '00082b8c-89bd-45a2-8d57-4b920c8b1000',
+      keyOne: 'admin.placeholder.ticket_priority',
+      keyTwo: 'admin.placeholder.location_store',
       contextOne: 'ticket.ticket',
       fieldOne: 'priority',
+      fieldTwo: 'location'
     };
   };
   return factory;

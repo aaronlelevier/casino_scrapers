@@ -22,7 +22,7 @@ export default Ember.Object.extend({
     delete model.filters;
     profile = store.push('profile', model);
     profile.change_assignee(assignee);
-    let [m2m_pfs, pfs, pf_server_sum] = many_to_many_extract(pfilters, store, profile, 'pfs', 'profile_pk', 'pfilter', 'pfilter_pk');
+    let [m2m_pfs, pfs, pf_server_sum] = many_to_many_extract(pfilters, store, profile, 'profile_pfs', 'profile_pk', 'pfilter', 'pfilter_pk');
     pfs.forEach((pf) => {
       if (pf.criteria) {
         const criteriaIds = pf.criteria;
@@ -37,21 +37,11 @@ export default Ember.Object.extend({
     let pfsIds = pfilters.map((obj) => {
       return obj.id;
     });
-    // remove an pfs that are still setup as related locally, but weren't in payload
-    profile.get('pfs').forEach((pf) => {
-      let pfsIds = pfs.map((obj) => { return obj.id; });
-      let id = pf.get('id');
-      if (pfsIds.indexOf(id) < 0) {
-        store.push('pfilter', {id: id, removed: true});
-        profile.remove_pf(id);
-      }
-    });
     run(() => {
       profile = store.push('profile', {
         id: model.id,
         profile_pfs_fks: pf_server_sum
       });
-      profile.saveRelated();
       profile.save();
     });
     return profile;
