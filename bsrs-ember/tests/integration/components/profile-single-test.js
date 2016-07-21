@@ -34,6 +34,29 @@ moduleForComponent('profile-single', 'integration: profile-single test', {
   }
 });
 
+test('header - shows detail if not model.new', function(assert) {
+  this.render(hbs `{{profiles/profile-single model=model}}`);
+  assert.equal(this.$('.t-profile-header').text().trim(), trans.t('admin.profile.detail'));
+});
+
+test('header - shows new if model.new', function(assert) {
+  model.set('new', true);
+  this.set('model', model);
+  this.render(hbs `{{profiles/profile-single model=model}}`);
+  assert.equal(this.$('.t-profile-header').text().trim(), trans.t('admin.profile.new'));
+});
+
+test('translation keys for labels', function(assert) {
+  this.render(hbs `{{profiles/profile-single}}`);
+  assert.equal(getLabelText('description'), trans.t('admin.profile.description'));
+  assert.equal(getLabelText('assignee'), trans.t('admin.profile.assignee'));
+});
+
+test('placeholders', function(assert) {
+  this.render(hbs `{{profiles/profile-single}}`);
+  assert.equal(this.$('.t-ap-description').get(0)['placeholder'], trans.t('admin.profile.description'));
+});
+
 test('filter section and add filter button - onClick of button, a related filter is added to the profile', function(assert) {
   this.set('model', model);
   this.render(hbs `{{profiles/profile-single model=model}}`);
@@ -105,27 +128,4 @@ test('description is required validation, cannot save w/o description', function
       }, 1800);
     }, 200);
   }, 1800);
-});
-
-test('header - shows detail if not model.new', function(assert) {
-  this.render(hbs `{{profiles/profile-single model=model}}`);
-  assert.equal(this.$('.t-profile-header').text().trim(), trans.t('admin.profile.detail'));
-});
-
-test('header - shows new if model.new', function(assert) {
-  model.set('new', true);
-  this.set('model', model);
-  this.render(hbs `{{profiles/profile-single model=model}}`);
-  assert.equal(this.$('.t-profile-header').text().trim(), trans.t('admin.profile.new'));
-});
-
-test('translation keys for labels', function(assert) {
-  this.render(hbs `{{profiles/profile-single}}`);
-  assert.equal(getLabelText('description'), trans.t('admin.profile.description'));
-  assert.equal(getLabelText('assignee'), trans.t('admin.profile.assignee'));
-});
-
-test('placeholders', function(assert) {
-  this.render(hbs `{{profiles/profile-single}}`);
-  assert.equal(this.$('.t-ap-description').get(0)['placeholder'], trans.t('admin.profile.description'));
 });

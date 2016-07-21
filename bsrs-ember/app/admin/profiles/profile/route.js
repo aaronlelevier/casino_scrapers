@@ -5,7 +5,6 @@ import TabRoute from 'bsrs-ember/route/tab/route';
 import FindById from 'bsrs-ember/mixins/route/findById';
 
 export default TabRoute.extend(FindById, {
-  simpleStore: Ember.inject.service(),
   repository: injectRepo('profile'),
   redirectRoute: 'admin.profiles.index',
   module: 'profile',

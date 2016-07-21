@@ -13,9 +13,9 @@
           <h1 class="col-md-12 t-profile-header">
             <span class="new">
             {{#if model.new}}
-              {{t 'admin.profile.new'}}
+              {{t "admin.profile.new"}}
             {{else}}
-              {{t 'admin.profile.detail'}}
+              {{t "admin.profile.detail"}}
             {{/if}}
             </span>
           </h1>
@@ -29,7 +29,6 @@
             {{#form-group title="admin.profile.description" for="description"}}
               {{validated-input
                 model=model
-                value=model.description
                 valuePath="description"
                 didValidate=didValidate
                 className="form-control t-ap-description"
@@ -65,7 +64,7 @@
         {{#each model.pfs as |filter|}}
           <div class="input-group">
             <span class="input-group-btn">
-              <button class="t-del-filter-btn btn btn-default btn-sm delete" type="button" {{action 'removeFilter' filter}}>{{fa-icon "minus"}}</button>
+              <button class="t-del-filter-btn btn btn-default btn-sm delete" type="button" {{action "removeFilter" filter}}>{{fa-icon "minus"}}</button>
             </span>
             <span class="input-group-btn">
               {{general-power-select
@@ -80,7 +79,7 @@
           </div>
         {{/each}}
 
-        <button class="t-add-filter-btn btn-add btn btn-default btn-sm" type="button" {{action 'addFilter'}}>
+        <button class="t-add-filter-btn btn-add btn btn-default btn-sm" type="button" {{action "addFilter"}}>
           <span class="btn-label">{{fa-icon "plus"}} {{t "admin.btn.add_filter"}}</span>
         </button>
 

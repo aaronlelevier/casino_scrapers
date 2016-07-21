@@ -34,12 +34,6 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
       const id = obj.get('id');
       this.get('simpleStore').push('pfilter', {id: id, removed: true});
       this.get('model').remove_pf(id);
-    },
-    updateFilter(obj) {
-      return;
-    },
-    select(obj) {
-      return;
     }
   }
 });
