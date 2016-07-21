@@ -62,7 +62,7 @@ test('clicking on filter icon will show filters and cancel will close it out', a
 
 test('search presents results on slideUp pane w/o pushing into store', async assert => {
   xhr(PREFIX + BASE_URL + '/?search=ape','GET',null,{},200,TF.searched('ape', 'request'));
-  xhr(PREFIX + BASE_URL + '/?search=sub2','GET',null,{},200,TF.searched('sub2', 'request'));
+  xhr(PREFIX + BASE_URL + '/?search=subb2','GET',null,{},200,TF.searched('subb2', 'request'));
   await visit(TICKET_URL);
   assert.equal(currentURL(), TICKET_URL);
   assert.equal(store.find('ticket-list').get('length'), 10);
@@ -77,7 +77,7 @@ test('search presents results on slideUp pane w/o pushing into store', async ass
   assert.equal(find('.t-grid-search-data').length, 9);
   assert.equal(find('.t-mobile-search-result__title:eq(0)').text().trim(), 'Repair');
   assert.equal(find('.t-mobile-search-result__meta:eq(0)').text().trim(), TD.locationTwo);
-  await generalPage.mobileSearch('sub2');
+  await generalPage.mobileSearch('subb2');
   await triggerEvent(mobileSearch, 'keyup', LETTER_S);
   assert.equal(currentURL(), TICKET_URL);
   assert.equal(store.find('ticket-list').get('length'), 10); //store length is same b/c search does not touch store
