@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
@@ -11,22 +12,28 @@ import CD from 'bsrs-ember/vendor/defaults/category';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 
-let store, m2m, m2m_two, m2m_three, ticket, category_one, category_two, category_three, run = Ember.run, category_repo, trans;
-const DROPDOWN = '.ember-basic-dropdown-trigger';
+let store, ticket, trans;
 
-moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
+moduleForComponent('tickets/ticket-single', 'scott integration: ticket-single test', {
   integration: true,
   beforeEach() {
+    flexi = this.container.lookup('service:device/layout');
+    let breakpoints = flexi.get('breakpoints');
+    bp = {};
+    breakpoints.forEach((point) => {
+      bp[point.name] = point.begin + 5;
+    });
     store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status', 'model:model-category']);
     translation.initialize(this);
     trans = this.container.lookup('service:i18n');
     run(() => {
-      m2m = store.push('model-category', {id: TICKET_CD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
-      m2m_two = store.push('model-category', {id: TICKET_CD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
-      m2m_three = store.push('model-category', {id: TICKET_CD.idThree, model_pk: TD.idOne, category_pk: CD.unusedId});
-      category_one = store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo});
-      category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId});
-      category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: null});
+      flexi.set('width', bp.desktop);
+      store.push('model-category', {id: TICKET_CD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
+      store.push('model-category', {id: TICKET_CD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
+      store.push('model-category', {id: TICKET_CD.idThree, model_pk: TD.idOne, category_pk: CD.unusedId});
+      store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo});
+      store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId});
+      store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: null});
       store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey});
       store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwoKey});
       const dt_path = [{

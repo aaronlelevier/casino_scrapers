@@ -26,15 +26,6 @@ moduleForComponent('tickets/ticket-new', 'integration: ticket-new test', {
       category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent_id: CATEGORY_DEFAULTS.unusedId});
       category_three = store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameThree, parent_id: null});
     });
-    // const flexi = this.container.lookup('service:device/layout');
-    // let breakpoints = flexi.get('breakpoints');
-    // let bp = {};
-    // breakpoints.forEach((point) => {
-    //   bp[point.name] = point.begin + 5;
-    // });
-    // run(() => {
-    //   flexi.set('width', bp.desktop);
-    // });
   }
 });
 
