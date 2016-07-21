@@ -56,24 +56,38 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
   }
 });
 
-test('validation on ticket request works if clear out textarea', function(assert) {
+test('scott validation on ticket request works', function(assert) {
+  const REQUEST = '.t-ticket-request';
+  let modalDialogService = this.container.lookup('service:modal-dialog');
+  modalDialogService.destinationElementId = 'request';
   var done = assert.async();
   let statuses = store.find('ticket-status');
   this.model = ticket;
   this.statuses = statuses;
   this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
-  let $component = this.$('.has-error');
+  let $component = this.$('.invalid');
   assert.equal($component.text().trim(), '');
-  page.requestFillIn('wat');
+  this.$(REQUEST).val('wat').keyup();
   assert.equal(page.request, 'wat');
   assert.notOk($component.is(':visible'));
-  page.requestFillIn('');
+  this.$(REQUEST).val('').keyup();
   Ember.run.later(() => {
-    const $component = this.$('.has-error');
+    const $component = this.$('.invalid');
     assert.ok($component.is(':visible'));
-    assert.equal($component.text().trim(), trans.t('errors.ticket.request'));
-    done();
-  }, 300);
+    assert.equal($('.validated-input-error-dialog').text().trim(), trans.t('errors.ticket.request'));
+    this.$(REQUEST).val('a'.repeat(4)).keyup();
+    Ember.run.later(() => {
+      const $component = this.$('.invalid');
+      assert.ok($component.is(':visible'));
+      assert.equal($('.validated-input-error-dialog').text().trim(), trans.t('errors.ticket.request.length'));
+      this.$(REQUEST).val('a'.repeat(5)).keyup();
+      Ember.run.later(() => {
+        const $component = this.$('.invalid');
+        assert.notOk($component.is(':visible'));
+        done();
+      }, 100);
+    }, 100);
+  }, 1600);
 });
 
 test('each status shows up as a valid select option', function(assert) {

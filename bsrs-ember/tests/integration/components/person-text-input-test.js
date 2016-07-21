@@ -17,7 +17,7 @@ import page from 'bsrs-ember/tests/pages/person';
 var store, locale_repo, trans;
 const ERR_TEXT = '.validated-input-error-dialog';
 
-moduleForComponent('person-text-input', 'integration: person-text-input test', {
+moduleForComponent('person-text-input', 'scott integration: person-text-input test', {
   integration: true,
   setup() {
     page.setContext(this);
@@ -40,6 +40,7 @@ moduleForComponent('person-text-input', 'integration: person-text-input test', {
 });
 
 test('first_name validation error if not present or greater than 30 characters', function(assert) {
+  const FIRST_NAME = '.t-person-first-name';
   let modalDialogService = this.container.lookup('service:modal-dialog');
   modalDialogService.destinationElementId = 'first_name';
   var done = assert.async();
@@ -50,22 +51,22 @@ test('first_name validation error if not present or greater than 30 characters',
   // presence required
   let $err = this.$('.invalid');
   assert.equal($err.text().trim(), '');
-  this.$('.t-person-first-name').val('').keyup();
+  this.$(FIRST_NAME).val('').keyup();
   Ember.run.later(() => {
     let $err = this.$('.invalid');
     assert.ok($err.is(':visible'));
     assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.person.first_name'));
-    this.$('.t-person-first-name').val('a').keyup();
+    this.$(FIRST_NAME).val('a').keyup();
     Ember.run.later(() => {
       // valid input
       $err = this.$('.invalid');
       assert.notOk($err.is(':visible'));
-      this.$('.t-person-first-name').val('a'.repeat(31)).keyup();
+      this.$(FIRST_NAME).val('a'.repeat(31)).keyup();
       Ember.run.later(() => {
         $err = this.$('.invalid');
         assert.ok($err.is(':visible'));
         assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.person.first_name.length'));
-        this.$('.t-person-first-name').val('a'.repeat(30)).keyup();
+        this.$(FIRST_NAME).val('a'.repeat(30)).keyup();
         Ember.run.later(() => {
           $err = this.$('.invalid');
           assert.notOk($err.is(':visible'));
@@ -77,6 +78,7 @@ test('first_name validation error if not present or greater than 30 characters',
 });
 
 test('middle_initial validation error if not present or greater than 30 characters', function(assert) {
+  const MIDDLE_INITIAL = '.t-person-middle-initial';
   let modalDialogService = this.container.lookup('service:modal-dialog');
   modalDialogService.destinationElementId = 'middle_initial';
   var done = assert.async();
@@ -87,16 +89,16 @@ test('middle_initial validation error if not present or greater than 30 characte
   // presence required
   let $err = this.$('.invalid');
   assert.equal($err.text().trim(), '');
-  this.$('.t-person-middle-initial').val('').keyup();
+  this.$(MIDDLE_INITIAL).val('').keyup();
   Ember.run.later(() => {
     let $err = this.$('.invalid');
     assert.notOk($err.is(':visible'));
-    this.$('.t-person-middle-initial').val('a').keyup();
+    this.$(MIDDLE_INITIAL).val('a').keyup();
     Ember.run.later(() => {
       // valid input
       $err = this.$('.invalid');
       assert.notOk($err.is(':visible'));
-      this.$('.t-person-middle-initial').val('1').keyup();
+      this.$(MIDDLE_INITIAL).val('1').keyup();
       Ember.run.later(() => {
         $err = this.$('.invalid');
         assert.ok($err.is(':visible'));
@@ -108,6 +110,7 @@ test('middle_initial validation error if not present or greater than 30 characte
 });
 
 test('last_name validation error if not present or greater than 30 characters', function(assert) {
+  const LAST_NAME = '.t-person-last-name';
   let modalDialogService = this.container.lookup('service:modal-dialog');
   modalDialogService.destinationElementId = 'last_name';
   var done = assert.async();
@@ -118,22 +121,22 @@ test('last_name validation error if not present or greater than 30 characters', 
   // presence required
   let $err = this.$('.invalid');
   assert.equal($err.text().trim(), '');
-  this.$('.t-person-last-name').val('').keyup();
+  this.$(LAST_NAME).val('').keyup();
   Ember.run.later(() => {
     let $err = this.$('.invalid');
     assert.ok($err.is(':visible'));
     assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.person.last_name'));
-    this.$('.t-person-last-name').val('a').keyup();
+    this.$(LAST_NAME).val('a').keyup();
     Ember.run.later(() => {
       // valid input
       $err = this.$('.invalid');
       assert.notOk($err.is(':visible'));
-      this.$('.t-person-last-name').val('a'.repeat(31)).keyup();
+      this.$(LAST_NAME).val('a'.repeat(31)).keyup();
       Ember.run.later(() => {
         $err = this.$('.invalid');
         assert.ok($err.is(':visible'));
         assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.person.last_name.length'));
-        this.$('.t-person-last-name').val('a'.repeat(30)).keyup();
+        this.$(LAST_NAME).val('a'.repeat(30)).keyup();
         Ember.run.later(() => {
           $err = this.$('.invalid');
           assert.notOk($err.is(':visible'));

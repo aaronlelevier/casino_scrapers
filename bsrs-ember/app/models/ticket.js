@@ -14,11 +14,16 @@ import { many_to_many } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 const Validations = buildValidations({
-  request: validator('presence', {
-    presence: true,
-    debounce: 300,
-    message: 'errors.ticket.request'
-  }),
+  request: [
+    validator('presence', {
+      presence: true,
+      message: 'errors.ticket.request'
+    }),
+    validator('length', {
+      min: 5,
+      message: 'errors.ticket.request.length',
+    }),
+  ],
   assignee: validator('ticket-status', {
   }),
 });
