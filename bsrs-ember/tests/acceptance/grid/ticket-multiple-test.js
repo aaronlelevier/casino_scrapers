@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
@@ -23,19 +23,19 @@ const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const BASE_CATEGORY_URL = BASEURLS.base_categories_url;
 const BASE_LOCATION_URL = BASEURLS.base_locations_url;
 
-var application, store, ticket_endpoint, ticket_list_xhr, people_endpoint, people_list_xhr, category_endpoint, category_list_xhr, original_uuid;
+var application, store, ticket_endpoint, ticket_list_xhr, people_endpoint, people_list_xhr, category_endpoint, category_list_xhr;
 
-module('Acceptance | ticket multiple grid test', {
+moduleForAcceptance('Acceptance | ticket multiple grid test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     ticket_endpoint = `${PREFIX}${BASE_TICKET_URL}/?page=1`;
     ticket_list_xhr = xhr(ticket_endpoint, 'GET', null, {}, 200, TF.list());
     people_endpoint = `${PREFIX}${BASE_PEOPLE_URL}/?page=1`;
     people_list_xhr = xhr(people_endpoint, 'GET', null, {}, 200, PF.list());
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

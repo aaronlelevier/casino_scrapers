@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import LF from 'bsrs-ember/vendor/location_fixtures';
@@ -23,12 +23,12 @@ const PEOPLE_URL = `${BASE_PEOPLE_URL}/index`;
 const BASE_CATEGORY_URL = BASEURLS.base_categories_url;
 const CATEGORY_URL = `${BASE_CATEGORY_URL}/index`;
 
-var application, store, location_endpoint, location_list_xhr, ticket_endpoint, ticket_list_xhr, people_endpoint, people_list_xhr, category_endpoint, category_list_xhr, original_uuid;
+var application, store, location_endpoint, location_list_xhr, ticket_endpoint, ticket_list_xhr, people_endpoint, people_list_xhr, category_endpoint, category_list_xhr;
 
-module('Acceptance | location multiple grid test', {
+moduleForAcceptance('Acceptance | location multiple grid test', {
     beforeEach() {
-        application = startApp();
-        store = application.__container__.lookup('service:simpleStore');
+        
+        store = this.application.__container__.lookup('service:simpleStore');
         location_endpoint = `${PREFIX}${BASE_LOCATION_URL}/?page=1`;
         location_list_xhr = xhr(location_endpoint, 'GET', null, {}, 200, LF.list());
         // ticket_endpoint = `${PREFIX}${BASE_TICKET_URL}/?page=1`;
@@ -37,7 +37,7 @@ module('Acceptance | location multiple grid test', {
         // people_list_xhr = xhr(people_endpoint, 'GET', null, {}, 200, PF.list());
     },
     afterEach() {
-        Ember.run(application, 'destroy');
+        
     }
 });
 

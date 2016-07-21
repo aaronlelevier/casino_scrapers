@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
@@ -32,20 +32,14 @@ const DJANGO_DTD_NEW_URL = `${DJANGO_DTD_URL}${UUID.value}/`;
 const DTD_ERROR_URL = BASEURLS.dtd_error_url;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
-let application, store, list_xhr, original_uuid;
+let application, store, list_xhr;
 
-module('Acceptance | dtd-new', {
+moduleForAcceptance('Acceptance | dtd-new', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${DJANGO_DTD_URL}?page=1`, 'GET', null, {}, 201, DTDF.list());
-    original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
   },
-  afterEach() {
-    random.uuid = original_uuid;
-    Ember.run(application, 'destroy');
-  }
 });
 
 /* jshint ignore:start */

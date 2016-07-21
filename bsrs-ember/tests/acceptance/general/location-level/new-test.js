@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from "bsrs-ember/tests/helpers/module";
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location-level_fixtures';
@@ -19,25 +19,21 @@ const LOCATION_LEVEL_URL = BASE_URL + '/index';
 const LOCATION_LEVEL_NEW_URL = BASE_URL + '/new/1';
 const DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idOne;
 
-let application, store, payload, list_xhr, original_uuid;
+let application, store, payload, list_xhr;
 
-module('Acceptance | location-level-new', {
+moduleForAcceptance('Acceptance | location-level-new', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${LOCATION_LEVELS_URL}?page=1`, 'GET', null, {}, 200, LOCATION_LEVEL_FIXTURES.empty());
     payload = {
       id: UUID.value,
       name: LOCATION_LEVEL_DEFAULTS.nameAnother,
       children: LOCATION_LEVEL_DEFAULTS.newTemplateChildren
     };
-    original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
   },
   afterEach() {
     payload = null;
-    random.uuid = original_uuid;
-    Ember.run(application, 'destroy');
   }
 });
 
@@ -164,7 +160,7 @@ test('when user enters new form and doesnt enter data, the record is correctly r
 
 test('adding a new location-level should allow for another new location-level to be created after the first is persisted', (assert) => {
   let location_level_count;
-  random.uuid = original_uuid;
+  uuidReset();
   payload.id = 'abc123';
   patchRandomAsync(0);
   payload.name = LOCATION_LEVEL_DEFAULTS.nameRegion;

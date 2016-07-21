@@ -94,9 +94,10 @@ class TicketListTests(TicketSetupMixin, APITestCase):
         assignee = data['results'][0]['assignee']
 
         self.assertEqual(assignee['id'], str(self.ticket.assignee.id))
-        self.assertEqual(assignee['first_name'], self.ticket.assignee.first_name)
-        self.assertEqual(assignee['middle_initial'], self.ticket.assignee.middle_initial)
-        self.assertEqual(assignee['last_name'], self.ticket.assignee.last_name)
+        self.assertEqual(assignee['fullname'], self.ticket.assignee.fullname)
+        self.assertNotIn('first_name', assignee)
+        self.assertNotIn('last_name', assignee)
+        self.assertNotIn('middle_initial', assignee)
         self.assertNotIn('status', assignee)
         self.assertNotIn('role', assignee)
 

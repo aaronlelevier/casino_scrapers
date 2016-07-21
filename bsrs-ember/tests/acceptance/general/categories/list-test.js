@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from "bsrs-ember/tests/helpers/module";
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
@@ -13,13 +13,13 @@ const CATEGORIES_INDEX_URL = BASE_URL + '/index';
 
 let application;
 
-module('Acceptance | category list test', {
+moduleForAcceptance('Acceptance | category list test', {
   beforeEach() {
-    application = startApp();
+    
     xhr(`${CATEGORIES_URL}?page=1`, "GET", null, {}, 200, CATEGORY_FIXTURES.list());
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

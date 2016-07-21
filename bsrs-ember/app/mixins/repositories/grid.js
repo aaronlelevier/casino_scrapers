@@ -77,6 +77,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
     let endpoint = this.modifyEndpoint(page, search, find, id_in, page_size, sort, special_url);
     return PromiseMixin.xhr(endpoint).then((response) => {
       const garbage_collection = this.get('garbage_collection') || [];
+      /* Remove all types of ex// ticket-list models before render of ticket-list grid */
       garbage_collection.forEach((type) => {
         run(() => {
           store.clear(type);

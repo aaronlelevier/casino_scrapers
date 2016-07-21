@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import LF from 'bsrs-ember/vendor/location_fixtures';
@@ -20,12 +20,12 @@ const DETAIL_URL = `${LOC_URL}/${LD.idOne}`;
 const LOCATION_NEW_URL = `${LOC_URL}/new/1`;
 const DJANGO_LOCATION_URL = `${PREFIX}/admin/locations/`;
 
-var application, store, payload, new_xhr, list_xhr, original_uuid, originalLoggerError, originalTestAdapterException;
+var application, store, payload, new_xhr, list_xhr, originalLoggerError, originalTestAdapterException;
 
-module('Acceptance | error handling test', {
+moduleForAcceptance('Acceptance | error handling test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     new_xhr = xhr(DJANGO_LOCATION_URL + '?page=1', "GET", null, {}, 200, LF.empty());
     payload = {id: UUID.value, name: LD.storeName, number: LD.storeNumber, status: LD.status, location_level: LLD.idOne, children: [], parents: [], emails: [], phone_numbers: [], addresses: []};
     originalLoggerError = Ember.Logger.error;
@@ -36,7 +36,7 @@ module('Acceptance | error handling test', {
   afterEach() {
     Ember.Logger.error = originalLoggerError;
     Ember.Test.adapter.exception = originalTestAdapterException;
-    Ember.run(application, 'destroy');
+    
   }
 });
 

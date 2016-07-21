@@ -8,11 +8,16 @@ import { validator, buildValidations } from 'ember-cp-validations';
 import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
 
 const Validations = buildValidations({
-  key: validator('presence', {
-    presence: true,
-    debounce: 300,
-    message: 'errors.dtd.key'
-  }),
+  key: [
+    validator('presence', {
+      presence: true,
+      message: 'errors.dtd.key'
+    }),
+    validator('length', {
+      max: 12,
+      message: 'errors.dtd.key.length',
+    }),
+  ],
   links: validator(function(value, options, model, attribute) {
     return model.get(attribute).reduce((prev, model) => {
       return prev && model.get('validations').get('isValid');

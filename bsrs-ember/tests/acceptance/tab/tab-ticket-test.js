@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -33,22 +33,17 @@ const DOC_TYPE = 'ticket';
 const TAB_TITLE = '.t-tab-title:eq(0)';
 const ACTIVITY_ITEMS = '.t-activity-list-item';
 
-let application, store, list_xhr, ticket_detail_data, endpoint, detail_xhr, original_uuid, activity_one;
+let application, store, list_xhr, ticket_detail_data, endpoint, detail_xhr, activity_one;
 
-module('Acceptance | tab ticket test', {
+moduleForAcceptance('Acceptance | tab ticket test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_TICKET_URL + '/';
     ticket_detail_data = TF.detail(TD.idOne);
     detail_xhr = xhr(endpoint + TD.idOne + '/', 'GET', null, {}, 200, ticket_detail_data);
     activity_one = xhr(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
-    original_uuid = random.uuid;
   },
-  afterEach() {
-    random.uuid = original_uuid;
-    Ember.run(application, 'destroy');
-  }
 });
 
 test('(NEW URL) deep linking the new ticket url should push a tab into the tab store with correct properties', (assert) => {
@@ -487,7 +482,7 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
   });
 });
 
-test('scott (NEW URL) a dirty new tab and clicking on new model button should push new tab into store', (assert) => {
+test('(NEW URL) a dirty new tab and clicking on new model button should push new tab into store', (assert) => {
   clearxhr(detail_xhr);
   clearxhr(activity_one);
   visit(TICKET_URL);
@@ -505,10 +500,8 @@ test('scott (NEW URL) a dirty new tab and clicking on new model button should pu
   generalPage.clickTickets();
   click('.t-add-new');
   andThen(() => {
-    console.log('andThen');
     assert.equal(currentURL(), NEW_URL_2);
     let tabs = store.find('tab');
-    console.log(tabs);
     assert.equal(tabs.get('length'), 2);
   });
 });

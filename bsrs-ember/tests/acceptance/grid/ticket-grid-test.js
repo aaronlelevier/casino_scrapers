@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -31,20 +31,20 @@ const SORT_LOCATION_DIR = '.t-sort-location-name-dir';
 const SORT_ASSIGNEE_DIR = '.t-sort-assignee-fullname-dir';
 const FILTER_PRIORITY = '.t-filter-priority-translated-name';
 
-var application, store, endpoint, list_xhr, original_uuid;
+var application, store, endpoint, list_xhr;
 
-module('Acceptance | ticket grid test', {
+moduleForAcceptance('Acceptance | ticket grid test', {
   beforeEach() {
     // timemachine.config({
     //   dateString: 'December 25, 2014 13:12:59'
     // });
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';
     list_xhr = xhr(endpoint, 'GET', null, {}, 200, TF.list());
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+
     // timemachine.reset();
   }
 });
@@ -214,14 +214,14 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     assert.equal(currentURL(),TICKET_LIST_URL + '?search=5');
     assert.equal(find('.t-grid-data').length, 2);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
-    assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text().trim()), 'sub');
+    assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text().trim()), 'subb');
   });
   click('.t-sort-request-dir');
   andThen(() => {
     assert.equal(currentURL(),TICKET_LIST_URL + '?search=5&sort=request');
     assert.equal(find('.t-grid-data').length, 2);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'ape');
-    assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text().trim()), 'sub');
+    assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text().trim()), 'subb');
   });
   fillIn('.t-grid-search-input', '');
   triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
@@ -234,7 +234,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
   andThen(() => {
     assert.equal(currentURL(),TICKET_LIST_URL + '?page=2&search=&sort=request');
     // assert.equal(find('.t-grid-data').length, 22);//firefox discerepency
-    assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'sub');
+    assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text().trim()), 'subb');
   });
   fillIn('.t-grid-search-input', '14');
   triggerEvent('.t-grid-search-input', 'keyup', NUMBER_ONE);

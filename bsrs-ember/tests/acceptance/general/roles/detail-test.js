@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -38,10 +38,9 @@ const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-selec
 
 let application, store, list_xhr, detail_xhr, setting_detail_xhr, endpoint, detail_data, url, translations, basePayload, run = Ember.run;
 
-module('Acceptance | role detail', {
+moduleForAcceptance('Acceptance | role detail', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/';
     detail_data = RF.detail(RD.idOne);
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, RF.list());
@@ -55,7 +54,6 @@ module('Acceptance | role detail', {
     // Settings
     let setting_endpoint = `${PREFIX}${BASEURLS.base_roles_url}/route-data/new/`;
     setting_detail_xhr = xhr(setting_endpoint, 'GET', null, {}, 200, roleNewData);
-
     basePayload = {
       id: RD.idOne,
       inherited: undefined,
@@ -63,9 +61,6 @@ module('Acceptance | role detail', {
       dashboard_text: null
     };
   },
-  afterEach() {
-    Ember.run(application, 'destroy');
-  }
 });
 
 test('when you deep link to the role detail view you get bound attrs', (assert) => {

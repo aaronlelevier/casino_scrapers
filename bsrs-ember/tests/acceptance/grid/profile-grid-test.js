@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PD from 'bsrs-ember/vendor/defaults/profile';
@@ -10,7 +10,6 @@ import BASEURLS from 'bsrs-ember/utilities/urls';
 import page from 'bsrs-ember/tests/pages/profile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
-import random from 'bsrs-ember/models/random';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -25,15 +24,15 @@ const NUMBER_FOUR = {keyCode: 52};
 
 let application, store, listData, listXhr, run = Ember.run;
 
-module('Acceptance | profile-grid-test', {
+moduleForAcceptance('Acceptance | profile-grid-test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     listData = PF.list();
     listXhr = xhr(API_LIST_URL + '?page=1', 'GET', null, {}, 200, listData);
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

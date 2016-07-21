@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -25,20 +25,14 @@ const TICKET_PUT_URL = PREFIX + DETAIL_URL + '/';
 const ATTACHMENT_DELETE_URL = ATTACHMENTS_URL + UUID.value + '/';
 const PROGRESS_BAR = '.progress-bar';
 
-let application, store, original_uuid;
+let application, store;
 
-module('Acceptance | ticket file upload test', {
+moduleForAcceptance('Acceptance | ticket file upload test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    store = this.application.__container__.lookup('service:simpleStore');
     xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
-    original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
   },
-  afterEach() {
-    random.uuid = original_uuid;
-    Ember.run(application, 'destroy');
-  }
 });
 
 test('upload will post form data, show progress and on save append the attachment', (assert) => {

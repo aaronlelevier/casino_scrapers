@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
@@ -11,13 +11,13 @@ const LOCATION_URL = BASEURLS.base_locations_url + '/index';
 
 let application;
 
-module('Acceptance | location-list', {
+moduleForAcceptance('Acceptance | location-list', {
   beforeEach() {
-    application = startApp();
+    
     xhr(LOCATIONS_URL + '?page=1','GET', null, {}, 200, LOCATION_FIXTURES.list() );
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

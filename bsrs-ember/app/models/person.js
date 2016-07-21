@@ -25,33 +25,43 @@ const Validations = buildValidations({
     }),
     validator('unique-username', {
       debounce: 300,
-      // disabled: Ember.computed.not('model.meta.username.isEnabled'),
       disabled: Ember.computed(function() {
         return this.get('model.isDirtyOrRelatedDirty') ? false : true;
       }).volatile()
     }),
   ],
-  // password: validator('format', {
-  /*
-   * (?=) positive lookahead. requires express to match .*\d ..... .* matches any single character 0 or more times with one decimal
-   * () acts as a memory device to remember the match as it traverses through the string
-   * b/w 4-8 occurences of the previous look ahead assertions
-  */
-  //   regex: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$/,
-  //   message: 'errors.person.password'
-  // }),
+  // password: [
+  //   validator('presence', {
+  //     presence: true,
+  //     message: 'errors.person.password',
+  //   }),
+  //   // validator('format', {
+  //   //   /*
+  //   //    * Password must include at least one upper case letter, one lower case letter, and a number
+  //   //    * (?=) positive lookahead. requires express to match .*\d ..... .* matches any single character 0 or more times with one decimal
+  //   //    * () acts as a memory device to remember the match as it traverses through the string
+  //   //    * b/w 4-8 occurences of the previous look ahead assertions
+  //   //   */
+  //   //   regex: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$/,
+  //   //   message: 'errors.person.password'
+  //   // }),
+  //   validator('length', {
+  //     max: 15,
+  //     message: 'errors.person.password.length',
+  //   }),
+  // ],
   first_name: [
     validator('presence', {
       presence: true,
-      message: 'errors.person.first_name'
+      message: 'errors.person.first_name',
     }),
     validator('length', {
       max: 30,
-      message: 'errors.person.first_name'
-    })
+      message: 'errors.person.first_name.length',
+    }),
   ],
-  middle_initial: validator('length', {
-    max: 1,
+  middle_initial: validator('format', {
+    regex: /^[a-zA-Z]*$/,
     message: 'errors.person.middle_initial'
   }),
   last_name: [
@@ -61,8 +71,8 @@ const Validations = buildValidations({
     }),
     validator('length', {
       max: 30,
-      message: 'errors.person.last_name'
-    })
+      message: 'errors.person.last_name.length'
+    }),
   ],
 });
 

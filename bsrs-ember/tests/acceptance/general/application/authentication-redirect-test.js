@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import windowProxy from 'bsrs-ember/utilities/window-proxy';
@@ -14,9 +14,9 @@ const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_people_url;
 const PEOPLE_URL = BASE_URL + '/index';
 
-module('Acceptance | application redirect test', {
+moduleForAcceptance('Acceptance | application redirect test', {
     beforeEach() {
-        application = startApp();
+        
         //required to allow tests to pass.
         //Ember configures a Ember.RSVP.on('error', function() {}) for testing which requires
         //each promise to handle the error scenario with a .then() error function or .catch()
@@ -31,7 +31,7 @@ module('Acceptance | application redirect test', {
     afterEach() {
         Ember.Logger.error = originalLoggerError;
         Ember.Test.adapter.exception = originalTestAdapterException;
-        Ember.run(application, 'destroy');
+        
     }
 });
 

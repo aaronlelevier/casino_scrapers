@@ -4,7 +4,7 @@ const { computed, defineProperty } = Ember;
 export default Ember.Component.extend({
   type: 'text',
   attributeValidation: null,
-  classNameBindings: ['showErrorClass:has-error'],
+  classNameBindings: ['showErrorClass:invalid'],
   init() {
     this._super(...arguments);
     const valuePath = this.get('valuePath');

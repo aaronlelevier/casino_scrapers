@@ -1,6 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import { test } from 'qunit';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
@@ -19,7 +19,7 @@ import generalPage, { mobileSearch } from 'bsrs-ember/tests/pages/general-mobile
 import random from 'bsrs-ember/models/random';
 import BASEURLS, { TICKETS_URL, PEOPLE_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
-var application, store, list_xhr, original_uuid, flexi, bp;
+var application, store, list_xhr, flexi, bp;
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
@@ -31,18 +31,18 @@ const LETTER_S = {keyCode: 83};
 const FILTERSET_COMPONENT = '.t-mobile-save-filterset-component';
 const FILTERSET_COMPONENT_INPUT = '.t-mobile-save-filterset-component__input';
 
-module('Acceptance | grid-head mobile', {
+moduleForAcceptance('Acceptance | grid-head mobile', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
     setWidth('mobile');
+    random.uuid = function() { return UUID.value; };
   },
   afterEach() {
     // run(() => {
     //   flexi.set('width', bp.desktop);
     // });
-    Ember.run(application, 'destroy');
   }
 });
 

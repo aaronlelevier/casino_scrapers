@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
 import { waitFor } from 'bsrs-ember/tests/helpers/utilities';
@@ -36,10 +36,10 @@ const DETAIL_URL = BASE_URL + '/' + <%= camelizedModuleName %>D.idOne;
 
 let application, store, list_xhr, endpoint, detail_xhr, detail_data_two, list_data, original_uuid, counter;
 
-module('Acceptance | tab <%= dasherizedModuleName %> test', {
+moduleForAcceptance('Acceptance | tab <%= dasherizedModuleName %> test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     original_uuid = random.uuid;
     // Edit based on module
     const detail_data = <%= camelizedModuleName %>F.detail(ID_ONE);
@@ -49,7 +49,7 @@ module('Acceptance | tab <%= dasherizedModuleName %> test', {
   },
   afterEach() {
     random.uuid = original_uuid;
-    Ember.run(application, 'destroy');
+    
   }
 });
 

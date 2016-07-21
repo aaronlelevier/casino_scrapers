@@ -1,7 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
 import <%= camelizedModuleName %>D from 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>';
@@ -25,15 +25,15 @@ const NUMBER_FOUR = {keyCode: 52};
 
 let application, store, listXhr;
 
-module('Acceptance | <%= dasherizedModuleName %>-grid-test', {
+moduleForAcceptance('Acceptance | <%= dasherizedModuleName %>-grid-test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     const listData = <%= camelizedModuleName %>F.list();
     listXhr = xhr(`${<%= CapitalizeModule %>_URL}?page=1`, 'GET', null, {}, 200, listData);
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

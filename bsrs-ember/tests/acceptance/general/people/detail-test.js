@@ -1,7 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -54,25 +54,19 @@ const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-options > .ember-p
 const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-var application, store, list_xhr, people_detail_data, detail_xhr, original_uuid, url, translations, role_route_data_endpoint;
+var application, store, list_xhr, people_detail_data, detail_xhr, url, translations, role_route_data_endpoint;
 
-module('Acceptance | person detail test', {
+moduleForAcceptance('Acceptance | person detail test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    store = this.application.__container__.lookup('service:simpleStore');
     var people_list_data = PF.list();
     people_detail_data = PF.detail(PD.idOne);
     list_xhr = xhr(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, people_list_data);
     detail_xhr = xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, people_detail_data);
-    original_uuid = random.uuid;
     url = `${PREFIX}${DETAIL_URL}/`;
     translations = BSRS_TRANSLATION_FACTORY.generate('en')['en'];
     role_route_data_endpoint = `${ROLES_URL}route-data/new/`;
   },
-  afterEach() {
-    random.uuid = original_uuid;
-    Ember.run(application, 'destroy');
-  }
 });
 
 test('clicking a persons name will redirect to the given detail view', (assert) => {

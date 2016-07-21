@@ -22,6 +22,7 @@ import waitFor from 'ember-test-helpers/wait';
 let store, dtd, uuid, trans, link, field, option, dtd_repo;
 const DROPDOWN = '.ember-power-select-dropdown';
 const FIELD_TYPE = '.t-dtd-field-type';
+const ERR_TEXT = '.validated-input-error-dialog';
 
 moduleForComponent('dtds/dtd-single', 'integration: dtd-single test', {
   integration: true,
@@ -52,29 +53,44 @@ moduleForComponent('dtds/dtd-single', 'integration: dtd-single test', {
   }
 });
 
-test('validation on dtd key works if clear out input', function(assert) {
+test('validation on dtd key works', function(assert) {
   var done = assert.async();
+  let modalDialogService = this.container.lookup('service:modal-dialog');
+  modalDialogService.destinationElementId = 'key';
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}`);
-  let $component = this.$('.has-error');
+  const $component = this.$('.invalid');
   assert.equal($component.text().trim(), '');
   page.keyFillIn('wat');
   assert.equal(page.key, 'wat');
   assert.notOk($component.is(':visible'));
-  page.keyFillIn('');
+  this.$('.t-dtd-single-key:eq(0)').val('').keyup();
   Ember.run.later(() => {
-    const $component = this.$('.has-error');
+    const $component = this.$('.invalid');
     assert.ok($component.is(':visible'));
-    assert.equal($component.text().trim(), trans.t('errors.dtd.key'));
-    done();
-  }, 300);
+    assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.dtd.key'));
+    this.$('.t-dtd-single-key:eq(0)').val('a'.repeat(12)).keyup();
+    Ember.run.later(() => {
+      const $component = this.$('.invalid');
+      assert.notOk($component.is(':visible'));
+      this.$('.t-dtd-single-key:eq(0)').val('a'.repeat(13)).keyup();
+      Ember.run.later(() => {
+        const $component = this.$('.invalid');
+        assert.ok($component.is(':visible'));
+        assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.dtd.key.length'));
+        done();
+      }, 1800);
+    }, 200);
+  }, 1800);
 });
 
 test('validation on fields when click save', function(assert) {
   var done = assert.async();
+  let modalDialogService = this.container.lookup('service:modal-dialog');
+  modalDialogService.destinationElementId = 'key';
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}`);
-  let $component = this.$('.has-error');
+  let $component = this.$('.invalid');
   assert.equal($component.text().trim(), '');
   const add_btn = this.$('.t-add-link-btn');
   add_btn.trigger('click').trigger('change');
@@ -84,9 +100,9 @@ test('validation on fields when click save', function(assert) {
     const $key_component = this.$('.t-dtd-key');
     const $link_text_component = this.$('.t-link-text');
     assert.ok($key_component.is(':visible'));
-    assert.ok($key_component.hasClass('has-error'));
-    assert.equal($key_component.text().trim(), trans.t('errors.dtd.key'));
-    assert.equal($link_text_component.text().trim(), trans.t('errors.link.text'));
+    assert.ok($key_component.hasClass('invalid'));
+    assert.equal($(`${ERR_TEXT}:eq(0)`).text().trim(), trans.t('errors.dtd.key'));
+    assert.equal($(`${ERR_TEXT}:eq(1)`).text().trim(), trans.t('errors.link.text'));
     done();
   }, 300);
 });
@@ -95,6 +111,8 @@ test('validation on fields when click save', function(assert) {
 
 test('validation - clear out text, and validation msg still works', function(assert) {
   var done = assert.async();
+  let modalDialogService = this.container.lookup('service:modal-dialog');
+  modalDialogService.destinationElementId = 'text';
   run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, link_type: DTD.linkTypeOne, dtd_links_fks: [DTDL.idOne]});
     store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
@@ -103,18 +121,20 @@ test('validation - clear out text, and validation msg still works', function(ass
   });
   this.set('model', dtd);
   this.render(hbs`{{dtds/dtd-single model=model}}`);
-  let $component = this.$('.has-error');
+  const $component = this.$('.invalid');
   assert.notOk($component.is(':visible'));
-  page.textFillIn('');
+  this.$('.t-dtd-link-text:eq(0)').val('').keyup();
   Ember.run.later(() => {
-    const $component = this.$('.has-error');
+    const $component = this.$('.invalid');
     assert.ok($component.is(':visible'));
-    assert.equal($component.text().trim(), trans.t('errors.link.text'));
+    assert.equal($(`${ERR_TEXT}:eq(0)`).text().trim(), trans.t('errors.link.text'));
     done();
-  }, 300);
+  }, 1800);
 });
 
 test('add and remove dtd links', function(assert) {
+  let modalDialogService = this.container.lookup('service:modal-dialog');
+  modalDialogService.destinationElementId = 'text';
   run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, link_type: DTD.linkTypeOne});
     uuid = store.push('uuid', {id: 1});
@@ -180,21 +200,6 @@ test('must have one link, cant remove last link, remove btn clears link', functi
   assert.equal(page.is_header(), LINK.is_headerTwo);
   assert.equal(ticketPage.priorityInput.split(' ').slice(0,-1).join(' '), '');
   assert.equal(ticketPage.statusInput.split(' ').slice(0,-1).join(' '), '');
-});
-
-test('add and remove dtd links', function(assert) {
-  run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne});
-    uuid = store.push('uuid', {id: 1});
-    dtd.add_link({id: uuid.v4()});
-  });
-  this.set('model', dtd);
-  this.render(hbs`{{dtds/dtd-single model=model}}`);
-  let $component = this.$('.t-input-multi-dtd-link');
-  assert.ok($component.is(':visible'));
-  assert.equal(page.textIsRequiredError(), '');
-  generalPage.save();
-  // assert.equal(page.textIsRequiredError(), 'Text must be provided');
 });
 
 test('link type selector is present and has a selection', function(assert) {

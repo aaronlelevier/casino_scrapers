@@ -1,6 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import { test } from 'qunit';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
@@ -13,17 +13,17 @@ var application, store, dashboard_xhr, flexi, bp;
 
 const NAVBAR = '.t-navbar-items';
 
-module('Acceptance | mobile dashboard test', {
+moduleForAcceptance('Acceptance | mobile dashboard test', {
   beforeEach() {
     /* SETUP */
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     dashboard_xhr = xhr(`${DASHBOARD_URL}`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
     /* MOBILE RENDER */
     setWidth('mobile');
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

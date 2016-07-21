@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import { test } from 'qunit';
 import trim from 'bsrs-ember/utilities/trim';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -32,22 +32,18 @@ const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
 const TICKET_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
 const ACTIVITY_ITEMS = '.t-activity-list-item';
 
-let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, original_uuid;
+let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid;
 
-module('Acceptance | ticket activity test', {
+moduleForAcceptance('Acceptance | ticket activity test', {
   beforeEach() {
     // timemachine.config({
     //   dateString: 'December 25, 2015 13:12:59'
     // });
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/`;
     detail_data = TF.detail(TD.idOne);
     detail_xhr = ajax(endpoint + TD.idOne + '/', 'GET', null, {}, 200, detail_data);
   },
-  afterEach() {
-    Ember.run(application, 'destroy');
-  }
 });
 
 test('can deep link to the person who created the activity', (assert) => {

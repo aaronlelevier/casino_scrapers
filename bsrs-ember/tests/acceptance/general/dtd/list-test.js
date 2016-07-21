@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
@@ -27,9 +27,9 @@ const ERROR_URL = BASEURLS.error_url;
 
 let application, endpoint, detail_xhr, list_xhr;
 
-module('Acceptance | dtd list test', {
+moduleForAcceptance('Acceptance | dtd list test', {
   beforeEach() {
-    application = startApp();
+    
     endpoint = `${PREFIX}${BASE_URL}/`;
     list_xhr = xhr(`${endpoint}?page=1`,'GET', null, {}, 200, DTDF.list());
     const detail_endpoint = `${PREFIX}${BASE_URL}/`;
@@ -37,7 +37,7 @@ module('Acceptance | dtd list test', {
     detail_xhr = xhr(`${detail_endpoint}${DTD.idOne}/`, 'GET', null, {}, 200, detail_data);
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

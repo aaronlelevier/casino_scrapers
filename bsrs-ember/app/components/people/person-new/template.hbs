@@ -20,14 +20,22 @@
         <div class="row">
           <div class="col-sm-12">
             {{#form-group title="admin.person.label.username" for="username"}}
-            {{input-backend-validation model=model value=model.username valuePath="username" placeholder=(t "admin.person.label.username") className="form-control t-person-username" didValidate=didValidate idZ="username"}}
+            {{input-backend-validation model=model value=model.username valuePath="username" placeholder=(t "admin.person.label.username") className="form-control t-person-username" didValidate=didValidate}}
             {{/form-group}}
           </div>
         </div>
         <div class="row">
           <div class="col-sm-12">
             {{#form-group title="admin.person.label.password" for="password"}}
-            {{validated-input model=model value=model.password placeholder=(t "admin.person.label.password") valuePath="password" className="form-control t-person-password" didValidate=didValidate class="t-person-password-validator" idZ="password" type="password"}}
+            {{validated-input
+              model=model
+              placeholder=(t "admin.person.label.password")
+              valuePath="password"
+              className="form-control t-person-password"
+              didValidate=didValidate
+              class="t-person-password-validator"
+              type="password"
+            }}
             {{/form-group}}
           </div>
         </div>

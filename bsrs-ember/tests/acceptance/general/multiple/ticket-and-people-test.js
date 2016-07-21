@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import config from 'bsrs-ember/config/environment';
 import PD from 'bsrs-ember/vendor/defaults/person';
@@ -28,13 +28,13 @@ const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 var application, store, person, ticket;
 
-module('Acceptance | ticket and people test', {
+moduleForAcceptance('Acceptance | ticket and people test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+
   }
 });
 

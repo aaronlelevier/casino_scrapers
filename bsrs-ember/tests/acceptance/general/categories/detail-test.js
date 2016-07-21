@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -30,17 +30,13 @@ const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 let application, store, detail_xhr, list_xhr, detail_data;
 
-module('Acceptance | category detail test', {
+moduleForAcceptance('Acceptance | category detail test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    store = this.application.__container__.lookup('service:simpleStore');
     detail_data = CF.detail(CD.idOne);
     list_xhr = xhr(CATEGORIES_URL + '?page=1', 'GET', null, {}, 200, CF.list());
     detail_xhr = xhr(CATEGORIES_URL + CD.idOne + '/', 'GET', null, {}, 200, detail_data);
   },
-  afterEach() {
-    Ember.run(application, 'destroy');
-  }
 });
 
 test('clicking a categories name will redirect to the given detail view', (assert) => {

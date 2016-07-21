@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -28,17 +28,17 @@ const SEARCH = '.ember-power-select-search input';
 
 var application, store, detailData, detailXhr, listData, listXhr, run = Ember.run;
 
-module('Acceptance | profile detail test', {
+moduleForAcceptance('Acceptance | profile detail test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     listData = PF.list();
     listXhr = xhr(API_LIST_URL_PAGE_ONE, 'GET', null, {}, 200, listData);
     detailData = PF.detail();
     detailXhr = xhr(API_DETAIL_URL, 'GET', null, {}, 200, detailData);
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

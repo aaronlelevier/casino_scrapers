@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import { test } from 'qunit';
 import config from 'bsrs-ember/config/environment';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import BASEURLS from 'bsrs-ember/utilities/urls';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
@@ -21,13 +21,13 @@ const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 
 var application;
 
-module('Acceptance | ajax async test helper tests', {
+moduleForAcceptance('Acceptance | ajax async test helper tests', {
   beforeEach() {
-    application = startApp();
+    
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

@@ -3,11 +3,11 @@
   border: $borderStyle;
   border-width: 1px 0;
   margin-bottom: -1px;
-  font-size: 1.6rem;
+  font-size: $baseMobileMenuFontSize;
   font-weight: bold;
   transition: all 0.5s ease;
   & > hbox{
-    padding: 4%;
+    @include generalPadding();
     cursor: pointer;
   }
   &.mobile-filter-input{

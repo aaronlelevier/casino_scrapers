@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -29,27 +29,22 @@ const INDEX_ROUTE = 'admin.roles.index';
 const DETAIL_ROUTE = 'admin.roles.role';
 const DOC_TYPE = 'role';
 
-let application, store, list_xhr, role_detail_data, endpoint, detail_xhr, original_uuid, run = Ember.run;
+let application, store, list_xhr, role_detail_data, endpoint, detail_xhr, run = Ember.run;
 
-module('Acceptance | tab role test', {
+moduleForAcceptance('Acceptance | tab role test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_ROLE_URL + '/';
     role_detail_data = RF.detail(RD.idGridOne, RD.nameGrid);
     detail_xhr = xhr(endpoint + RD.idGridOne + '/', 'GET', null, {}, 200, role_detail_data);
-    original_uuid = random.uuid;
-    run(function() {
+    run(() => {
       store.push('role', {id: RD.idGridOne, name: 'wat', categories: [CF.detail()]});
     });
     // Settings
     let setting_endpoint = `${PREFIX}${BASEURLS.base_roles_url}/route-data/new/`;
     xhr(setting_endpoint, 'GET', null, {}, 200, roleNewData);
   },
-  afterEach() {
-    random.uuid = original_uuid;
-    Ember.run(application, 'destroy');
-  }
 });
 
 test('(NEW URL) deep linking the new role url should push a tab into the tab store with correct properties', (assert) => {

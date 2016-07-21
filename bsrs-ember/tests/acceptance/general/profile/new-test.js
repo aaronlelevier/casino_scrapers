@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
@@ -26,20 +26,17 @@ const API_LIST_URL_PERSON = `${PREFIX}/admin/people/`;
 
 const SEARCH = '.ember-power-select-search input';
 
-var application, store, original_uuid, listData, listXhr, run = Ember.run;
+var application, store, listData, listXhr, run = Ember.run;
 
-module('Acceptance | profile new test', {
+moduleForAcceptance('Acceptance | profile new test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
     listData = PF.list();
     listXhr = xhr(API_LIST_URL, 'GET', null, {}, 200, listData);
-    original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
   },
   afterEach() {
-    random.uuid = original_uuid;
-    Ember.run(application, 'destroy');
   }
 });
 

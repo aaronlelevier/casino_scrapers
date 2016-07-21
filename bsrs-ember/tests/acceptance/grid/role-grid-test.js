@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import RF from 'bsrs-ember/vendor/role_fixtures';
@@ -22,20 +22,15 @@ const BACKSPACE = {keyCode: 8};
 const SORT_NAME_DIR = '.t-sort-name-dir';
 const SAVE_FILTERSET_MODAL = '.t-show-save-filterset-modal';
 
-var application, store, endpoint, list_xhr, original_uuid;
+var application, store, endpoint, list_xhr;
 
-module('Acceptance | role-grid-list', {
+moduleForAcceptance('Acceptance | role-grid-list', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';
     list_xhr = xhr(endpoint ,'GET',null,{},200,RF.list());
-    original_uuid = random.uuid;
   },
-  afterEach() {
-    random.uuid = original_uuid;
-    Ember.run(application, 'destroy');
-  }
 });
 
 test(`initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr`, function(assert) {

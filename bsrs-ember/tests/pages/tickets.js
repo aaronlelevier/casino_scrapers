@@ -113,7 +113,7 @@ var TicketPage = PageObject.create({
   commentFillIn: fillable('.t-ticket-comment'),
 
   //validation
-  requestError: hasClass('has-error', '.t-ticket-request-validator'),
+  requestError: hasClass('invalid', '.t-ticket-request-validator'),
   assigneeErrorHidden: isHidden('.t-ticket-assignee-error'),
   assigneeErrorVisible: isVisible('.t-ticket-assignee-error'),
   assigneeErrorText: text('.t-ticket-assignee-error'),

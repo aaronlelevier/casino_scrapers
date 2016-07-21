@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from "bsrs-ember/tests/helpers/module";
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import CF from 'bsrs-ember/vendor/category_fixtures';
@@ -25,9 +25,9 @@ const CATEGORY = '.t-category-children-select .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-let application, store, payload, list_xhr, children_xhr, original_uuid, run = Ember.run;
+let application, store, payload, list_xhr, children_xhr, run = Ember.run;
 
-module('Acceptance | category new test', {
+moduleForAcceptance('Acceptance | category new test', {
   beforeEach() {
     payload = {
       id: UUID.value,
@@ -39,23 +39,20 @@ module('Acceptance | category new test', {
       subcategory_label: CD.subCatLabelTwo,
       children: []
     };
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(CATEGORIES_URL + '?page=1', 'GET', null, {}, 200, CF.empty());
     let category_children_endpoint = `${CATEGORIES_URL}category__icontains=a/`;
     children_xhr = xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list_power_select());
     run(function() {
       store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
     });
-    original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
   },
   afterEach() {
     payload = null;
     list_xhr = null;
     children_xhr = null;
-    random.uuid = original_uuid;
-    Ember.run(application, 'destroy');
   }
 });
 
@@ -316,7 +313,7 @@ test('you can add and remove child from category', (assert) => {
 test('adding a new category should allow for another new category to be created after the first is persisted', (assert) => {
   clearxhr(children_xhr);
   let category_count;
-  random.uuid = original_uuid;
+  uuidReset();
   payload.id = 'abc123';
   patchRandomAsync(0);
   xhr(`${PREFIX}${BASE_URL}/`, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));

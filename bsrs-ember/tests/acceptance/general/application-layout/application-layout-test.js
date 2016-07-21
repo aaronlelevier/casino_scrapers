@@ -2,7 +2,7 @@ import Ember from 'ember';
 import { test } from 'qunit';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import BASEURLS from 'bsrs-ember/utilities/urls';
 import TD from 'bsrs-ember/vendor/defaults/tenant';
@@ -14,13 +14,13 @@ const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 
 var application;
 
-module('Acceptance | application layout test', {
+moduleForAcceptance('Acceptance | application layout test', {
   beforeEach(assert) {
-    application = startApp();
+    
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
   },
   afterEach(assert) {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

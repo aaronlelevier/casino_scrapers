@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -25,17 +25,17 @@ const DETAIL_URL = BASE_SETTINGS_URL + '/' + TD.id;
 
 var application, store, tenant_data, detail_xhr, url, translations;
 
-module('Acceptance | general settings (tenant)', {
+moduleForAcceptance('Acceptance | general settings (tenant)', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     url = `${PREFIX}/admin/tenant/${TD.id}/`;
     tenant_data = TF.detail();
     detail_xhr = xhr(url, 'GET', null, {}, 200, tenant_data);
     translations = BSRS_TRANSLATION_FACTORY.generate('en')['en'];
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

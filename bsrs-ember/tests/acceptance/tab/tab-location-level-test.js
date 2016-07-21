@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -27,20 +27,17 @@ const INDEX_ROUTE = 'admin.location-levels.index';
 const DETAIL_ROUTE = 'admin.location-levels.location-level';
 const DOC_TYPE = 'location-level';
 
-let application, store, list_xhr, location_detail_data, endpoint, detail_xhr, original_uuid;
+let application, store, list_xhr, location_detail_data, endpoint, detail_xhr;
 
-module('Acceptance | tab location-level test', {
+moduleForAcceptance('Acceptance | tab location-level test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/';
     location_detail_data = LLF.detail(LLD.idOne);
     detail_xhr = xhr(DJANGO_DETAIL_URL, 'GET', null, {}, 200, location_detail_data);
-    original_uuid = random.uuid;
   },
   afterEach() {
-    random.uuid = original_uuid;
-    Ember.run(application, 'destroy');
   }
 });
 

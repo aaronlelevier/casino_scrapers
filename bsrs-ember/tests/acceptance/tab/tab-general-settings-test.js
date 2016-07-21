@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -20,16 +20,16 @@ const general_settings_link = '.t-nav-general-settings:eq(0)';
 
 let application, store, settings_data, endpoint, detail_xhr;
 
-module('Acceptance | tab general settings (tenant) test', {
+moduleForAcceptance('Acceptance | tab general settings (tenant) test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_SETTINGS_URL + '/';
     settings_data = TF.detail();
     detail_xhr = xhr(`${PREFIX}/admin/tenant/${TD.id}/`, 'GET', null, {}, 200, settings_data);
   },
   afterEach() {
-    Ember.run(application, 'destroy');
+    
   }
 });
 

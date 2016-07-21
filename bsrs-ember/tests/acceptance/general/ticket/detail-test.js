@@ -1,7 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -54,12 +54,11 @@ const CC_SEARCH = '.ember-power-select-trigger-multiple-input';
 const SEARCH = '.ember-power-select-search input';
 const categories = '.categories-power-select-search input';
 
-let application, store, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, original_uuid, category_one_xhr, category_two_xhr, category_three_xhr, counter, activity_one;
+let application, store, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, category_one_xhr, category_two_xhr, category_three_xhr, counter, activity_one;
 
-module('Acceptance | ticket detail', {
+moduleForAcceptance('Acceptance | ticket detail', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+    store = this.application.__container__.lookup('service:simpleStore');
     detail_data = TF.detail(TD.idOne);
     list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
     detail_xhr = xhr(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_data);
@@ -68,9 +67,6 @@ module('Acceptance | ticket detail', {
     //   dateString: 'December 25, 2015 13:12:59'
     // });
   },
-  afterEach() {
-    Ember.run(application, 'destroy');
-  }
 });
 
 /* jshint ignore:start */

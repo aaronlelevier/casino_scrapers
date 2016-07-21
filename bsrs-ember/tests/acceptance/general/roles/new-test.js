@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import config from 'bsrs-ember/config/environment';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
@@ -31,9 +31,9 @@ const SPACEBAR = {keyCode: 32};
 const CATEGORY = '.t-role-category-select .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-select-options';
 
-let application, store, payload, list_xhr, original_uuid, url, counter, run = Ember.run;
+let application, store, payload, list_xhr, url, counter, run = Ember.run;
 
-module('Acceptance | role new', {
+moduleForAcceptance('Acceptance | role new', {
   beforeEach() {
     payload = {
       id: UUID.value,
@@ -43,11 +43,10 @@ module('Acceptance | role new', {
       categories: [CD.idOne],
       auth_amount: undefined,
     };
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
     let endpoint = PREFIX + BASE_URL + '/';
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, RF.empty());
-    original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
     url = `${PREFIX}${BASE_URL}/`;
     counter=0;
@@ -60,8 +59,6 @@ module('Acceptance | role new', {
   },
   afterEach() {
     counter=0;
-    random.uuid = original_uuid;
-    Ember.run(application, 'destroy');
   }
 });
 
@@ -316,7 +313,7 @@ test('can add multiple categories', (assert) => {
 
 test('adding a new role should allow for another new role to be created after the first is persisted', (assert) => {
   let role_count;
-  random.uuid = original_uuid;
+  uuidReset();
   payload.id = 'abc123';
   patchRandomAsync(0);
   visit(ROLE_URL);

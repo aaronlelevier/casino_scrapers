@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
-import module from 'bsrs-ember/tests/helpers/module';
+import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -26,20 +26,17 @@ const INDEX_ROUTE = 'admin.locations.index';
 const DETAIL_ROUTE = 'admin.locations.location';
 const DOC_TYPE = 'location';
 
-let application, store, list_xhr, location_detail_data, endpoint, detail_xhr, original_uuid;
+let application, store, list_xhr, location_detail_data, endpoint, detail_xhr;
 
-module('Acceptance | tab location test', {
+moduleForAcceptance('Acceptance | tab location test', {
   beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('service:simpleStore');
+
+    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_LOCATION_URL + '/';
     location_detail_data = LF.detail(LD.idOne);
     detail_xhr = xhr(endpoint + LD.idOne + '/', 'GET', null, {}, 200, location_detail_data);
-    original_uuid = random.uuid;
   },
   afterEach() {
-    random.uuid = original_uuid;
-    Ember.run(application, 'destroy');
   }
 });
 
