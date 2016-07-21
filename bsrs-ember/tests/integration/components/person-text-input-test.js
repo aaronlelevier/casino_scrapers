@@ -11,7 +11,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 var store, trans;
 const ERR_TEXT = '.validated-input-error-dialog';
 
-moduleForComponent('person-text-input', 'scott integration: person-text-input test', {
+moduleForComponent('person-text-input', 'integration: person-text-input test', {
   integration: true,
   setup() {
     store = module_registry(this.container, this.registry, ['model:person']);
