@@ -1,10 +1,8 @@
 %aAdmin {
-  line-height: 2em;
-  font-size: 0.9em;
   color: $darkGray;
   text-decoration: none;
-  padding: 3px 10px 3px 10%;
   display: block;
+  @include generalPadding();
   &:hover {
     cursor: pointer;
     color: $hoverColor;
@@ -17,8 +15,7 @@
     }
   }
   &.active {
-    color: $white;
-    background-color: $activeColor;
+    color: $activeColor;
     .fa {
       color: $white;
       &:hover {
@@ -28,6 +25,7 @@
   }
   &.active:hover {
     cursor: default;
+    background: none;
     .fa {
       color: $white;
       &:hover {
@@ -46,15 +44,15 @@
 }
 
 & {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   h3 {
     margin: 0;
     color: $medGray;
-    font-size: 0.8em;
-    padding: 25px 10px 10px 0;
+    font-size: 0.9em;
+    padding: 4%;
     i.menuIcon {
-      width: 10%;
-      text-align: center;
+      width: 1.6em;
+      text-align: left;
     }
   }//h3
   section {
@@ -62,18 +60,27 @@
     @include borderStyle(1px 0);
     a {
       @extend %aAdmin;
+      padding: 4%;
     }//a
   }//section
 }
 
+&.desktop-admin-menu {
+  section {
+    padding: 2% 0;
+  }
+}
+
 &.mobile-admin-menu {
-  font-size: 2rem;
+  font-size: $baseMobileMenuFontSize;
   margin-bottom: 30px;
+  h3 {
+    padding: 8% 4% 4%;
+  }
   section {
     @include borderStyle(1px 0 0);
     a {
       @include borderStyle(0 0 1px);
-      line-height: 2.2em;
       &:hover {
         background: none;
       }
