@@ -43,12 +43,9 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
       ticket = store.push('ticket', {id: TD.idOne, request: 'foo', dt_path: dt_path});
     });
     const flexi = this.container.lookup('service:device/layout');
-    let breakpoints = flexi.get('breakpoints');
-    let bp = {};
-    breakpoints.forEach((point) => {
-      bp[point.name] = point.begin + 5;
-    });
-    flexi.set('width', bp.huge);
+    const breakpoints = flexi.get('breakpoints');
+    const width = breakpoints.find(bp => bp.name === 'huge').begin + 5;
+    flexi.set('width', width);
   },
 });
 

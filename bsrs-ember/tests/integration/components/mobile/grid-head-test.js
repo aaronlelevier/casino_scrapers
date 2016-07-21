@@ -4,12 +4,11 @@ import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-let store, trans, bp, flexi;
+let store;
 
 moduleForComponent('grid/grid-head', 'Integration | Component | grid-head', {
   integration: true,
   beforeEach() {
-    trans = this.container.lookup('service:i18n');
     store = module_registry(this.container, this.registry, ['model:filterset']);
     const flexi = this.container.lookup('service:device/layout');
     const breakpoints = flexi.get('breakpoints');
