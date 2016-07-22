@@ -45,6 +45,7 @@ class AssignmentManager(BaseManager):
         """
         ticket = Ticket.objects.get(id=ticket_id)
 
+        # TODO: should be "order_by('order')"
         for assignment in self.filter(tenant__id=tenant_id):
             match = assignment.is_match(ticket)
             if match:
@@ -93,6 +94,8 @@ def update_order(sender, instance=None, created=False, **kwargs):
 
 
 class ProfileFilter(BaseModel):
+    # key,context,field - need to be bootstrapped, or sent when going to AP view
+    # will be different for NP, or AP
     key = models.CharField(max_length=100,
                            help_text="To use for i18n UI key, and also for mapping component based on selected filter")
     context = models.CharField(max_length=100, blank=True, default=settings.DEFAULT_PROFILE_FILTER_CONTEXT,
@@ -109,8 +112,11 @@ class ProfileFilter(BaseModel):
         ordering = ['id']
 
     def is_match(self, ticket):
+        # NOTE: checking the criteria will be different based on the "type"
+        # of ticket, which is really an 'object' of diff types, i.e. 'work_order'
         return str(getattr(ticket, self.field).id) in self.criteria
 
+    # TODO: how is this used
     @property
     def filter_criteria(self):
         """
