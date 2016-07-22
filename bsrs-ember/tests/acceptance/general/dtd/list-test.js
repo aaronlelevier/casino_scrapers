@@ -25,20 +25,16 @@ const DETAIL_PG2_TWO_URL = `${BASE_URL}/${DTD.idGridTwo}`;
 const DT_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
 const ERROR_URL = BASEURLS.error_url;
 
-let application, endpoint, detail_xhr, list_xhr;
+let endpoint, detail_xhr, list_xhr;
 
 moduleForAcceptance('Acceptance | dtd list test', {
   beforeEach() {
-    
     endpoint = `${PREFIX}${BASE_URL}/`;
     list_xhr = xhr(`${endpoint}?page=1`,'GET', null, {}, 200, DTDF.list());
     const detail_endpoint = `${PREFIX}${BASE_URL}/`;
     const detail_data = DTDF.detail(DTD.idOne);
     detail_xhr = xhr(`${detail_endpoint}${DTD.idOne}/`, 'GET', null, {}, 200, detail_data);
   },
-  afterEach() {
-    
-  }
 });
 
 test('visiting /dtds', (assert) => {

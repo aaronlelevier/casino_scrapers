@@ -17,7 +17,7 @@ const BASE_URL = BASEURLS.base_third_parties_url;
 const LIST_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + TPD.idOne;
 
-let application, store, endpoint, endpoint_detail, list_xhr, detail_xhr;
+let store, endpoint, endpoint_detail, list_xhr, detail_xhr;
 
 moduleForAcceptance('Acceptance | third-party detail test', {
   beforeEach() {

@@ -32,12 +32,12 @@ const DJANGO_DTD_NEW_URL = `${DJANGO_DTD_URL}${UUID.value}/`;
 const DTD_ERROR_URL = BASEURLS.dtd_error_url;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
-let application, store, list_xhr;
+let store;
 
 moduleForAcceptance('Acceptance | dtd-new', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
-    list_xhr = xhr(`${DJANGO_DTD_URL}?page=1`, 'GET', null, {}, 201, DTDF.list());
+    xhr(`${DJANGO_DTD_URL}?page=1`, 'GET', null, {}, 201, DTDF.list());
     random.uuid = function() { return UUID.value; };
   },
 });

@@ -21,7 +21,7 @@ const DJANGO_THIRD_PARTY_URL = PREFIX + '/admin/third-parties/';
 const DETAIL_URL = BASE_URL + '/' + TPD.idOne;
 const DJANGO_DETAIL_URL = PREFIX + DJANGO_THIRD_PARTY_URL + TPD.idOne + '/';
 
-let application, store, payload, list_xhr;
+let store, payload, list_xhr;
 
 moduleForAcceptance('Acceptance | third-party new test', {
   beforeEach() {

@@ -1,0 +1,93 @@
+<div class="col-md-4 user-info">
+  <section>
+    <div class="row">
+      <div class="col-md-12">
+        {{form-photo icon="user"}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        {{people/person-text-input
+          model=model
+          field="first_name"
+        }}
+      </div>
+      <div class="col-md-4">
+        {{people/person-text-input
+          model=model
+          field="middle_initial"
+          maxlength=1
+        }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        {{people/person-text-input
+          model=model
+          field="last_name"
+        }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        {{#form-group title="admin.person.label.title" for="title"}}
+        {{input type="text" placeholder=(t "admin.person.label.title") value=model.title class="form-control t-person-title" id="title"}}
+        {{/form-group}}
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="col-md-8">
+  <section>
+    <div class="row">
+      <div class="col-md-12">
+        {{#form-group title="admin.person.label.role-name" for="role"}}
+        {{role-select model=model options=roles role_change=role_change}}
+        {{/form-group}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        {{#form-group title="admin.person.label.location" for="location"}}
+        {{db-fetch-multi-select model=model multiAttr="locations" multiAttrIds="locations_ids" selectedAttr=model.locations className="t-person-locations-select" displayName="name" add_func="add_location" remove_func="remove_location" repository=locationRepo searchMethod="findPersonsLocations" extra_params=extra_params}}
+        {{/form-group}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        {{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
+        {{#if model.inherited.auth_amount.inherits_from}}
+        <p class="inherited-msg t-inherited-msg-auth_amount">
+          {{#link-to "admin.roles.role" model.inherited.auth_amount.inherits_from_id class="t-inherited-msg-auth_amount-link"}}
+          {{t "crud.inherited_from" from=model.inherited.auth_amount.inherits_from}}
+          {{/link-to}}
+        </p>
+        {{/if}}
+        {{input-currency
+          model=model
+          field="auth_amount"
+          currencyField="auth_currency"
+          placeholder=(t 'crud.default_value' value=model.inherited.auth_amount.inherited_value)
+          inheritsFrom=model.inherited.auth_amount.inherits_from
+        }}
+        {{/form-group}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        {{#form-group title="admin.person.label.employee_id" for="employee_id"}}
+        {{input type="text" placeholder=(t "admin.person.label.employee_id") value=model.employee_id class="form-control t-person-employee_id" id="employee_id"}}
+        {{/form-group}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        {{#form-group title="admin.person.label.language" for="locale"}}
+        {{power-select-foreign-key mainModel=model selected=model.locale change_method="change_locale" relatedModels=locales relatedModelName="locale"}}
+        {{/form-group}}
+      </div>
+    </div>
+  </section>
+</div>

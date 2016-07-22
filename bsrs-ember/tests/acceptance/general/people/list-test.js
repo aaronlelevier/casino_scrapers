@@ -10,16 +10,11 @@ import BASEURLS, { PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 const BASE_PEOPLE_LIST_URL = BASEURLS.base_people_url;
 const PEOPLE_INDEX_URL = BASE_PEOPLE_LIST_URL + '/index';
 
-var application;
 
 moduleForAcceptance('Acceptance | person list test', {
   beforeEach() {
-    
     xhr(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
   },
-  afterEach() {
-    
-  }
 });
 
 test('visiting /people', function(assert) {

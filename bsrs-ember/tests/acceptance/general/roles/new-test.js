@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { test } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
@@ -31,7 +32,7 @@ const SPACEBAR = {keyCode: 32};
 const CATEGORY = '.t-role-category-select .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-select-options';
 
-let application, store, payload, list_xhr, url, counter, run = Ember.run;
+let store, payload, list_xhr, url, counter;
 
 moduleForAcceptance('Acceptance | role new', {
   beforeEach() {

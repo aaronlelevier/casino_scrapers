@@ -25,14 +25,13 @@ const ATTACHMENT_DELETE_URL = `${PREFIX}/admin/attachments/${UUID.value}/`;
 const ADMIN_URL = BASEURLS.base_admin_url;
 const PROGRESS_BAR = '.progress-bar';
 
-let application, store, detail_xhr, list_xhr, endpoint, model, img_payload;
+let store, detail_xhr, endpoint, model, img_payload;
 
 moduleForAcceptance('Acceptance | dtd file upload test', {
   beforeEach() {
-
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/`;
-    list_xhr = xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, DTDF.list());
+    xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, DTDF.list());
     detail_xhr = xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 200, DTDF.detail(DTD.idOne));
     random.uuid = function() { return UUID.value; };
     model = store.find('dtd', DTD.idOne);

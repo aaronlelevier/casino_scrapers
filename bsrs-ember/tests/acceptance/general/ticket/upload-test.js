@@ -25,7 +25,7 @@ const TICKET_PUT_URL = PREFIX + DETAIL_URL + '/';
 const ATTACHMENT_DELETE_URL = ATTACHMENTS_URL + UUID.value + '/';
 const PROGRESS_BAR = '.progress-bar';
 
-let application, store;
+let store;
 
 moduleForAcceptance('Acceptance | ticket file upload test', {
   beforeEach() {

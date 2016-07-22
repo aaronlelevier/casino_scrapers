@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-md-12">
+    <section>
+      <div class="row card-title">
+        <h2 class="col-md-12">{{t "admin.person.label.credentials"}}</h2>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          {{#form-group title="admin.person.label.status" for="status"}}
+          {{power-select-foreign-key mainModel=model selected=model.status change_method="change_status" relatedModels=statuses relatedModelName="status"}}
+          {{/form-group}}
+        </div>
+        <div class="col-md-4">
+          {{#form-group title="admin.person.label.username" for="username"}}
+          {{input-backend-validation model=model value=model.username valuePath="username" placeholder=(t "admin.person.label.username") className="form-control t-person-username" didValidate=didValidate idZ="username"}}
+          {{/form-group}}
+        </div>
+        <div class="col-md-4">
+          {{#form-group title="admin.person.label.password" for="password"}}
+          {{#if changingPassword}}
+          {{input-focus type="password" placeholder=(t "admin.person.label.password") value=model.password class="form-control t-person-password" id="password"}}
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value={{model.password_one_time}} onclick={{action changeBool "password_one_time"}} checked={{model.password_one_time}} class="t-person-password_one_time" name="password_one_time">
+              <span class="t-person-password_one_time-label">{{t "admin.setting.password_one_time"}}</span>
+            </label>
+          </div>
+          <div><button class="btn btn-default btn-sm" {{action "changePassword"}}>{{fa-icon "ban"}} {{t "crud.cancel.button"}}</button></div>
+          {{#validation-error-field submitted=submitted field="password" className="t-password-validation-error" model=model validation=passwordValidation}}{{t "validation.invalid"}} {{t "admin.person.label.password"}}{{/validation-error-field}}
+          {{else}}
+          <div><button class="btn btn-default btn-sm t-person-change-password" {{action "changePassword"}}>{{fa-icon "key"}} {{t "admin.person.label.change_password"}}</button></div>
+          {{/if}}
+          {{/form-group}}
+
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

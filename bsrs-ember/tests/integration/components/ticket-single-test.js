@@ -42,6 +42,7 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
       }];
       ticket = store.push('ticket', {id: TD.idOne, request: 'foo', dt_path: dt_path});
     });
+    /* Desktop */
     const flexi = this.container.lookup('service:device/layout');
     const breakpoints = flexi.get('breakpoints');
     const width = breakpoints.find(bp => bp.name === 'huge').begin + 5;
@@ -58,28 +59,26 @@ test('validation on ticket request works', function(assert) {
   this.model = ticket;
   this.statuses = statuses;
   this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
-  let $component = this.$('.invalid');
-  assert.equal($component.text().trim(), '');
-  this.$(REQUEST).val('wat').keyup();
+  const $component = this.$('.invalid');
   assert.notOk($component.is(':visible'));
   this.$(REQUEST).val('').keyup();
   Ember.run.later(() => {
     const $component = this.$('.invalid');
-    assert.ok($component.is(':visible'));
+    assert.ok($component.is(':visible'), 'no entry. Too low');
     assert.equal($('.validated-input-error-dialog').text().trim(), trans.t('errors.ticket.request'));
     this.$(REQUEST).val('a'.repeat(4)).keyup();
     Ember.run.later(() => {
       const $component = this.$('.invalid');
-      assert.ok($component.is(':visible'));
+      assert.ok($component.is(':visible'), 'only 4 characters. Too low');
       assert.equal($('.validated-input-error-dialog').text().trim(), trans.t('errors.ticket.request.length'));
       this.$(REQUEST).val('a'.repeat(5)).keyup();
       Ember.run.later(() => {
         const $component = this.$('.invalid');
-        assert.notOk($component.is(':visible'));
+        assert.notOk($component.is(':visible'), 'meets min length');
         done();
-      }, 200);
-    }, 200);
-  }, 1800);
+      }, 300);
+    }, 300);
+  }, 1900);
 });
 
 test('each status shows up as a valid select option', function(assert) {

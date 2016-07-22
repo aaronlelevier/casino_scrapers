@@ -1,0 +1,17 @@
+{{#ember-wormhole to="mobile-single-wormhole"}}
+  {{#mobile/full-screen
+    model=model
+    statuses=statuses
+    title=model.fullname
+    close="closeMobileDetail"
+    redirectRoute="admin.people.index"
+    hashComponents=hashComponents
+    repository=repository
+  }}
+  <article class="main fixed">
+    {{people/person-single
+      model=model
+    }}
+  </article>
+  {{/mobile/full-screen}}
+{{/ember-wormhole}}

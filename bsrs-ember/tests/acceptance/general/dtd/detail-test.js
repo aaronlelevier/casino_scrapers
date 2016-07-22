@@ -35,7 +35,7 @@ const BACKSPACE = {keyCode: 8};
 const DTD_ERROR_URL = BASEURLS.dtd_error_url;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
-let application, store, endpoint, list_xhr, detail_xhr, detail_data;
+let store, endpoint, list_xhr, detail_xhr, detail_data;
 
 moduleForAcceptance('Acceptance | dtd detail', {
   beforeEach() {

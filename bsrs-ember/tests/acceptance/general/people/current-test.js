@@ -19,11 +19,10 @@ const PEOPLE_INDEX_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + PD.id;
 const PERSON_CURRENT_URL = BASE_URL + '/' + PCD.id;
 
-var application, store, list_xhr;
+var store, list_xhr;
 
 moduleForAcceptance('Acceptance | person current test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     var people_list_data = PF.list();
     var current_person_data = PF.detail(PCD.id);
@@ -33,9 +32,6 @@ moduleForAcceptance('Acceptance | person current test', {
     list_xhr = xhr(PEOPLE_URL + '?page=1', 'GET', null, {}, 200, people_list_data);
     xhr(PEOPLE_URL + PCD.id + '/', 'GET', null, {}, 200, current_person_data);
   },
-  afterEach() {
-    
-  }
 });
 
 test('when changing the locale for the current user, the language is updated on the site', (assert) => {
