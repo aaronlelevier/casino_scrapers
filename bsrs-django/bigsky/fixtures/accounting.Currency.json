@@ -3,24 +3,8 @@
   "model": "accounting.currency",
   "pk": "009530c4-ce6c-4724-9cfd-37a16e787001",
   "fields": {
-    "created": "2016-05-16T20:51:28.916Z",
-    "modified": "2016-05-16T20:51:28.916Z",
-    "deleted": null,
-    "name": "US Dollar",
-    "name_plural": "US Dollars",
-    "code": "USD",
-    "symbol": "$",
-    "symbol_native": "$",
-    "decimal_digits": 2,
-    "rounding": 0
-  }
-},
-{
-  "model": "accounting.currency",
-  "pk": "009530c4-ce6c-4724-9cfd-37a16e787002",
-  "fields": {
-    "created": "2016-05-16T20:51:28.903Z",
-    "modified": "2016-05-16T20:51:28.903Z",
+    "created": "2016-07-22T21:05:15.904Z",
+    "modified": "2016-07-22T21:05:15.904Z",
     "deleted": null,
     "name": "Chinese Yuan",
     "name_plural": "Chinese Yuan",
@@ -33,10 +17,10 @@
 },
 {
   "model": "accounting.currency",
-  "pk": "009530c4-ce6c-4724-9cfd-37a16e787003",
+  "pk": "009530c4-ce6c-4724-9cfd-37a16e787002",
   "fields": {
-    "created": "2016-05-16T20:51:28.908Z",
-    "modified": "2016-05-16T20:51:28.908Z",
+    "created": "2016-07-22T21:05:15.908Z",
+    "modified": "2016-07-22T21:05:15.908Z",
     "deleted": null,
     "name": "Canadian Dollar",
     "name_plural": "Canadian Dollars",
@@ -49,16 +33,32 @@
 },
 {
   "model": "accounting.currency",
-  "pk": "009530c4-ce6c-4724-9cfd-37a16e787004",
+  "pk": "009530c4-ce6c-4724-9cfd-37a16e787003",
   "fields": {
-    "created": "2016-05-16T20:51:28.912Z",
-    "modified": "2016-05-16T20:51:28.912Z",
+    "created": "2016-07-22T21:05:15.911Z",
+    "modified": "2016-07-22T21:05:15.911Z",
     "deleted": null,
     "name": "Euro",
     "name_plural": "Euros",
     "code": "EUR",
     "symbol": "\u20ac",
     "symbol_native": "\u20ac",
+    "decimal_digits": 2,
+    "rounding": 0
+  }
+},
+{
+  "model": "accounting.currency",
+  "pk": "009530c4-ce6c-4724-9cfd-37a16e787004",
+  "fields": {
+    "created": "2016-07-22T21:05:15.915Z",
+    "modified": "2016-07-22T21:05:15.915Z",
+    "deleted": null,
+    "name": "US Dollar",
+    "name_plural": "US Dollars",
+    "code": "USD",
+    "symbol": "$",
+    "symbol_native": "$",
     "decimal_digits": 2,
     "rounding": 0
   }

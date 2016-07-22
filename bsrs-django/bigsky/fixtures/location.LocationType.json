@@ -1,10 +1,10 @@
 [
 {
   "model": "location.locationtype",
-  "pk": "62dd6356-f184-44c6-be54-39af6a8fa47e",
+  "pk": "2d601509-d5ab-4ae7-93e0-d16f8585288b",
   "fields": {
-    "created": "2016-04-01T20:14:52.370Z",
-    "modified": "2016-04-01T20:14:52.370Z",
+    "created": "2016-07-22T20:55:04.357Z",
+    "modified": "2016-07-22T20:55:04.357Z",
     "deleted": null,
     "name": "big_store"
   }
