@@ -17,7 +17,7 @@ function validatePassword() {
 var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, EditMixin, {
   didValidate: false,
   simpleStore: Ember.inject.service(),
-  currency: Ember.inject.service(),
+  // currency: Ember.inject.service(),
   repository: inject('person'),
   locationRepo: inject('location'),
   child_components: ['input-multi-phone', 'input-multi-address', 'input-multi-email'],
@@ -41,10 +41,11 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Edit
         this.set('didValidate', true);
       }
     },
-    localeChanged(locale) {
-      this.sendAction('localeChanged', locale);
-    },
+    // localeChanged(locale) {
+    //   this.sendAction('localeChanged', locale);
+    // },
     changeBool(key) {
+      // closure action to credentials section
       const store = this.get('simpleStore');
       let model = store.find('person', this.get('model.id'));
       model.toggleProperty(key);

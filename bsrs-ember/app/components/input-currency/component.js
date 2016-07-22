@@ -9,7 +9,6 @@ export default Ember.Component.extend({
     let currencyField = this.get('currencyField');
     let inheritsFrom = this.get('inheritsFrom');
     let currency_service = this.get('currency');
-
     if (this.get(`model.${currencyField}`)) {
       return store.find('currency', this.get(`model.${currencyField}`));
     } else if (inheritsFrom) {
