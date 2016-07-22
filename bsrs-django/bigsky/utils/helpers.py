@@ -27,6 +27,11 @@ def get_content_type_number(model):
 
 
 def generate_uuid(model):
+    """
+    Used to create predictable sychronous UUIDs for generating fixtures.
+
+    :model: the model class. i.e. TicketPriority
+    """
     model_number = get_content_type_number(model)
     number = "{:03d}".format(model.objects.count()+1)
     return uuid.UUID("{model_number}{base_id}{number}".format(model_number=model_number,

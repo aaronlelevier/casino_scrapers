@@ -19,6 +19,11 @@ class TenantTests(TestCase):
         self.assertEqual(ret.company_name, settings.DEFAULT_TENANT_COMPANY_NAME)
         self.assertTrue(ret.company_code)
 
+    def test_id(self):
+        ret = factory.get_or_create_tenant()
+        # always ends in a 1 b/c this uses: ``utils.helpers.generate_uuid``
+        self.assertEqual(str(ret.id)[-1], '1')
+
     def test_get_existing(self):
         ret = factory.get_or_create_tenant()
         ret_two = factory.get_or_create_tenant()
