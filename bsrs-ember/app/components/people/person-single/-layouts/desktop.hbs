@@ -21,7 +21,7 @@
         </div>
       </section>
     </div>
-    {{mobile/person/detail-section
+    {{people/detail-section
       model=model
       roles=roles
       role_change=role_change
@@ -39,7 +39,7 @@
       </section>
     </div>
   </div>
-  {{mobile/person/credentials-section
+  {{people/credentials-section
     model=model
     statuses=statuses
     changeBool=(action "changeBool")
@@ -53,7 +53,7 @@
       </section>
     </div>
   </div>
-  {{mobile/person/contact-section
+  {{people/contact-section
     model=model
     phone_number_types=phone_number_types
     email_types=email_types
@@ -69,7 +69,7 @@
       </section>
     </div>
   </div>
-  {{mobile/person/settings-section
+  {{people/settings-section
     model=model
     changeBool=(action "changeBool")
   }}
