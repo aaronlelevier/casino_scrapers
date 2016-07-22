@@ -25,7 +25,6 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Edit
   //TODO: what is this used for?
   attemptedTransition: '',
   passwordValidation: validate('model.password', validatePassword),
-  changingPassword: false,
   extra_params: Ember.computed(function() {
     const model = this.get('model');
     return {
@@ -44,10 +43,6 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Edit
     },
     localeChanged(locale) {
       this.sendAction('localeChanged', locale);
-    },
-    changePassword() {
-      this.toggleProperty('changingPassword');
-      this.get('model').clearPassword();
     },
     changeBool(key) {
       const store = this.get('simpleStore');

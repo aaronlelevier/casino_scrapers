@@ -1,0 +1,35 @@
+<div class="row">
+  <div class="col-md-12">
+    <section>
+      <div class="row card-title">
+        <h2 class="col-md-12">{{t "admin.person.label.contact"}}</h2>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          {{#form-group title="admin.person.label.phone_number.other"}}
+          {{input-multi-phone
+            placeholder=(t "admin.person.label.phone_number.one")
+            model=model.phone_numbers
+            types=phone_number_types
+            default_type=default_phone_number_type
+            related_pk=model.id
+          }}
+          {{/form-group}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          {{#form-group title="admin.person.label.email"}}
+          {{input-multi-email
+            placeholder=(t "admin.person.label.email.one")
+            model=model.emails
+            types=email_types
+            default_type=default_email_type
+            related_pk=model.id
+          }}
+          {{/form-group}}
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

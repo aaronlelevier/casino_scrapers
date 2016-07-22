@@ -54,6 +54,11 @@ moduleForComponent('person-single', 'integration: person-single test', {
     });
     email_types = store.find('email-type');
     default_email_type = email_types.objectAt(0);
+    /* Desktop */
+    const flexi = this.container.lookup('service:device/layout');
+    const breakpoints = flexi.get('breakpoints');
+    const width = breakpoints.find(bp => bp.name === 'huge').begin + 5;
+    flexi.set('width', width);
   },
   afterEach() {
     page.removeContext(this);

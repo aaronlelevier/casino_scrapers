@@ -15,7 +15,7 @@ import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 
 let store, ticket, trans, width;
 
-moduleForComponent('tickets/ticket-single', 'scott integration: ticket-single test', {
+moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
   integration: true,
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status', 'model:model-category', 'service:device/layout']);
