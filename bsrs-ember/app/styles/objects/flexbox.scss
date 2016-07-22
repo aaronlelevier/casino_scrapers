@@ -5,3 +5,22 @@
 .flex-item--auto { //1 1 auto
   flex: auto;
 }
+
+%flex-item--none {
+  flex: 0 0 auto;
+}
+
+%flex-item--auto { //1 1 auto
+  flex: auto;
+}
+
+flexauto {
+  @extend %flex-item--auto;
+}
+
+%flex-item--grow {
+  flex: 1 0 auto;
+}
+flexgrow {
+  @extend %flex-item--grow;
+}

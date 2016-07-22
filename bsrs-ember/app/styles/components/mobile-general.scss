@@ -28,7 +28,6 @@ section.mobile-main {
   .mobile-inner{
     @include generalPadding;
     background: $white;
-    flex: 1 0 auto;
   }
 }
 

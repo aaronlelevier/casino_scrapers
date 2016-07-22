@@ -1,12 +1,10 @@
-<div class="mobile-meta-data">
-  <div class="mobile-meta-data__priority-status">
-    {{tickets/ticket-priority-tag item=model}}
-    {{tickets/ticket-status-tag item=model}}
-  </div>
-  <div class="mobile-meta-data__created">
-    {{timestamp-created model=model}}
-  </div>
-  <div class="mobile-meta-data__request">
-    {{model.request}}
-  </div>
+<div class="mobile-meta-data__priority-status">
+  {{tickets/ticket-priority-tag item=model}}
+  {{tickets/ticket-status-tag item=model}}
+</div>
+<div class="mobile-meta-data__created">
+  {{timestamp-created model=model}}
+</div>
+<div class="mobile-meta-data__request">
+  {{model.request}}
 </div>

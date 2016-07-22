@@ -1,8 +1,8 @@
 import Ember from 'ember';
+import Base from 'bsrs-ember/components/mobile/base';
 
-export default Ember.Component.extend({
+export default Base.extend({
   changingPassword: false,
-  classNames: ['mobile-inner'],
   actions: {
     changePassword() {
       this.toggleProperty('changingPassword');

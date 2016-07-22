@@ -1,7 +1,7 @@
 import Ember from 'ember';
+import Base from 'bsrs-ember/components/mobile/base';
 
-export default Ember.Component.extend({
-  classNames: ['mobile-inner'],
+export default Base.extend({
   simpleStore: Ember.inject.service(),
   actions: {
     changeBool(key) {

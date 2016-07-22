@@ -1,4 +1,4 @@
-<section class="inner">
+<div class="mobile-inner">
   <div class="row">
     <div class="col-md-12">
       {{comment-save model=model}}
@@ -18,7 +18,7 @@
   </div>
   <div class="row">
     {{#if attachmentErrMsg}}
-      <h2 class="t-ticket-attachment-error">{{t attachmentErrMsg}}</h2>
+    <h2 class="t-ticket-attachment-error">{{t attachmentErrMsg}}</h2>
     {{/if}}
     {{#each model.attachments as |attachment|}}
     {{#if attachment.new}}
@@ -36,13 +36,14 @@
     {{/if}}
     {{/each}}
   </div>
-</section>
-<div class="activity-list-wrap">
+</div>
+
+<flexgrow class="activity-list-wrap">
   <div class="activity-list">
     {{#each (sort-created activities) as |activity|}}
-      <div class="t-activity-list-item activity-list-item activity-{{activity.type}} animated-fast fadeInDown">
-        {{component (component-postfix activity.type) activity=activity i18nString=(activity-description activity timestamp=(moment-from-now activity.created) i18n=i18n) fulltime=(moment-format activity.created 'dddd, MMMM Do YYYY, h:mm:ss a z') }}
-      </div>
+    <div class="t-activity-list-item activity-list-item activity-{{activity.type}} animated-fast fadeInDown">
+      {{component (component-postfix activity.type) activity=activity i18nString=(activity-description activity timestamp=(moment-from-now activity.created) i18n=i18n) fulltime=(moment-format activity.created 'dddd, MMMM Do YYYY, h:mm:ss a z') }}
+    </div>
     {{/each}}
   </div>
-</div>
+</flexgrow>

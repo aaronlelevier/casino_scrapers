@@ -4,6 +4,7 @@ import inject from 'bsrs-ember/utilities/inject';
 
 var FullScreen = Ember.Component.extend(FullScreenMixin, {
   activityRepository: inject('activity'),
+  mobile: true,
   init() {
     this._super(...arguments);
     this.componentStringFunc();

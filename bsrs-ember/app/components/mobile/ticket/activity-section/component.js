@@ -6,7 +6,7 @@ export default Ember.Component.extend({
   i18n: Ember.inject.service(),
   uuid: injectUUID('uuid'),
   repository: inject('attachment'),
-  classNames: ['t-mobile-ticket-activity-section', 'mobile-inner'],
+  classNames: ['t-mobile-ticket-activity-section'],
   actions: {
     upload(e) {
       var repoUpload = (i, files) => {

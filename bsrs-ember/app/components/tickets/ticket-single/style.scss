@@ -61,10 +61,11 @@ textarea.ticket-request{
 }
 
 /* MOBILE */
-.mobile-meta-data {
+&.mobile-meta-data {
 	padding: 4%;
 	background: $white;
   @include borderStyle(0 0 1px);
+	@extend %flex-item--none;
 	.mobile-meta-data__priority-status {
 		padding-bottom: 3%;
 	}
