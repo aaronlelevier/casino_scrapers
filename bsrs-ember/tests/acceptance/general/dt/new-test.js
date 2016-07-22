@@ -48,7 +48,7 @@ const DT_START_URL = `${DT_URL}/${DT.idOne}/ticket/1`;
 const DT_TWO_URL = `${DT_URL}/${DT.idTwo}/ticket/1`;
 const TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
 
-let application, store, endpoint;
+let store, endpoint;
 
 moduleForAcceptance('Acceptance | dt new', {
   beforeEach() {
@@ -56,8 +56,6 @@ moduleForAcceptance('Acceptance | dt new', {
     endpoint = `${PREFIX}${DTD_URL}/`;
     random.uuid = function() { return UUID.value; };
   },
-  afterEach() {
-  }
 });
 
 // Bring back when we have the draft ticket grid on the dashboard.

@@ -19,7 +19,7 @@ import generalPage, { mobileSearch } from 'bsrs-ember/tests/pages/general-mobile
 import random from 'bsrs-ember/models/random';
 import BASEURLS, { TICKETS_URL, PEOPLE_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
-var application, store, list_xhr, flexi, bp;
+var store, list_xhr;
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;

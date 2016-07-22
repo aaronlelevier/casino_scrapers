@@ -21,7 +21,7 @@ const LOCATION_LEVEL = '.t-location-level-children-select .ember-basic-dropdown-
 const LOCATION_LEVEL_DROPDOWN = options;
 const LOCATION_LEVEL_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-var application, store, endpoint_detail, list_xhr, detail_xhr, location_level_district_detail_data;
+var store, endpoint_detail, list_xhr, detail_xhr, location_level_district_detail_data;
 
 moduleForAcceptance('Acceptance | detail-test', {
   beforeEach() {

@@ -33,7 +33,7 @@ const LOCATION_URL = `${BASE_URL}/index`;
 const DETAIL_URL = `${BASE_URL}/${LD.idOne}`;
 const LOCATION_PUT_URL = PREFIX + DETAIL_URL + '/';
 
-let application, store, list_xhr, url;
+let store, list_xhr, url;
 
 const CHILDREN = '.t-location-children-select';
 const CHILDREN_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';

@@ -39,7 +39,7 @@ const TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
 const TICKET_SUBMIT_URL = `${PREFIX}/dt/submit/`;
 const BAIL_TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idOne}/ticket/`;
 
-let application, store, endpoint, link, dtd, dt_path, returned_ticket, dt_one;
+let store, endpoint, link, dtd, dt_path, returned_ticket, dt_one;
 
 moduleForAcceptance('Acceptance | dt detail', {
   beforeEach() {

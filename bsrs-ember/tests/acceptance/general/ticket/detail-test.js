@@ -54,7 +54,7 @@ const CC_SEARCH = '.ember-power-select-trigger-multiple-input';
 const SEARCH = '.ember-power-select-search input';
 const categories = '.categories-power-select-search input';
 
-let application, store, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, category_one_xhr, category_two_xhr, category_three_xhr, counter, activity_one;
+let store, list_xhr, detail_xhr, top_level_xhr, detail_data, activity_one;
 
 moduleForAcceptance('Acceptance | ticket detail', {
   beforeEach() {

@@ -40,11 +40,10 @@ const PARENTS = '.t-location-parent-select';
 const PARENTS_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
 const PARENTS_MULTIPLE_OPTION = `.t-location-parent-select > .ember-power-select-trigger > .ember-power-select-multiple-options`;
 
-let application, store, payload, list_xhr;
+let store, payload, list_xhr;
 
 moduleForAcceptance('Acceptance | location-new', {
   beforeEach() {
-
     store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${LOCATIONS_URL}?page=1`, "GET", null, {}, 201, LOCATION_FIXTURES.empty());
     payload = {

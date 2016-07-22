@@ -28,7 +28,7 @@ const PEOPLE_INDEX_URL = BASE_PEOPLE_URL + '/index';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + UUID.value;
 const NEW_URL = BASE_PEOPLE_URL + '/new/1';
 
-var application, store, payload, detail_xhr, list_xhr, people_detail_data, detailEndpoint, username_search;
+var store, payload, detail_xhr, list_xhr, people_detail_data, detailEndpoint, username_search;
 
 moduleForAcceptance('Acceptance | person new test', {
   beforeEach() {

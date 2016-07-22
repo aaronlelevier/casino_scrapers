@@ -9,22 +9,16 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import pageDrawer from 'bsrs-ember/tests/pages/nav-drawer';
 import BASEURLS, { DASHBOARD_URL } from 'bsrs-ember/utilities/urls';
 
-var application, store, dashboard_xhr, flexi, bp;
+var store, dashboard_xhr;
 
 const NAVBAR = '.t-navbar-items';
 
 moduleForAcceptance('Acceptance | mobile dashboard test', {
   beforeEach() {
-    /* SETUP */
-    
+    setWidth('mobile');
     store = this.application.__container__.lookup('service:simpleStore');
     dashboard_xhr = xhr(`${DASHBOARD_URL}`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
-    /* MOBILE RENDER */
-    setWidth('mobile');
   },
-  afterEach() {
-    
-  }
 });
 
 /* jshint ignore:start */

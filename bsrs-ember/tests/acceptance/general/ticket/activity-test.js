@@ -32,7 +32,7 @@ const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
 const TICKET_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
 const ACTIVITY_ITEMS = '.t-activity-list-item';
 
-let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid;
+let store, endpoint, list_xhr, detail_xhr;
 
 moduleForAcceptance('Acceptance | ticket activity test', {
   beforeEach() {
@@ -41,7 +41,7 @@ moduleForAcceptance('Acceptance | ticket activity test', {
     // });
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/`;
-    detail_data = TF.detail(TD.idOne);
+    const detail_data = TF.detail(TD.idOne);
     detail_xhr = ajax(endpoint + TD.idOne + '/', 'GET', null, {}, 200, detail_data);
   },
 });

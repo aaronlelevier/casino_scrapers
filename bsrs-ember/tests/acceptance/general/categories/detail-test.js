@@ -28,7 +28,7 @@ const CATEGORY = '.t-category-children-select .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-let application, store, detail_xhr, list_xhr, detail_data;
+let store, detail_xhr, list_xhr, detail_data;
 
 moduleForAcceptance('Acceptance | category detail test', {
   beforeEach() {

@@ -19,7 +19,7 @@ import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { TICKETS_URL, PEOPLE_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
-var application, store, list_xhr, flexi, bp;
+var store, list_xhr;
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -35,7 +35,6 @@ const LOCATION = '.t-ticket-location-select';
 
 moduleForAcceptance('Acceptance | grid ticket mobile test', {
   beforeEach() {
-    /* SETUP */
     setWidth('mobile');
     store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());

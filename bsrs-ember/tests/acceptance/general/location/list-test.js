@@ -9,16 +9,10 @@ import BASEURLS, { LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
 const LOCATION_URL = BASEURLS.base_locations_url + '/index';
 
-let application;
-
 moduleForAcceptance('Acceptance | location-list', {
   beforeEach() {
-    
     xhr(LOCATIONS_URL + '?page=1','GET', null, {}, 200, LOCATION_FIXTURES.list() );
   },
-  afterEach() {
-    
-  }
 });
 
 test('visiting /locations', (assert) => {

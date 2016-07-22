@@ -25,7 +25,7 @@ const CATEGORY = '.t-category-children-select .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-let application, store, payload, list_xhr, children_xhr, run = Ember.run;
+let store, payload, list_xhr, children_xhr, run = Ember.run;
 
 moduleForAcceptance('Acceptance | category new test', {
   beforeEach() {

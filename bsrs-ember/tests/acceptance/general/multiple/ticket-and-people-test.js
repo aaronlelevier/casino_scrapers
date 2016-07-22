@@ -30,12 +30,8 @@ var application, store, person, ticket;
 
 moduleForAcceptance('Acceptance | ticket and people test', {
   beforeEach() {
-
     store = this.application.__container__.lookup('service:simpleStore');
   },
-  afterEach() {
-
-  }
 });
 
 test('clicking between person detail and ticket detail will not dirty the active person model', (assert) => {

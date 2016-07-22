@@ -18,7 +18,7 @@ import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { TICKETS_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
-var application, store, list_xhr, activity, flexi, bp;
+var store, list_xhr, activity;
 
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_tickets_url;

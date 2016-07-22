@@ -38,11 +38,10 @@ const CC = '.t-ticket-cc-select .ember-basic-dropdown-trigger';
 const CC_SEARCH = '.ember-power-select-trigger-multiple-input';
 const SEARCH = '.ember-power-select-search input';
 
-let application, store, list_xhr, location_xhr, people_xhr, counter;
+let store, list_xhr, location_xhr, people_xhr, counter;
 
 moduleForAcceptance('Acceptance | ticket new test', {
   beforeEach() {
-
     store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(TICKETS_URL+'?page=1', 'GET', null, {}, 200, TF.empty());
     location_xhr = xhr(`${LOCATIONS_URL}location__icontains=6/`, 'GET', null, {}, 200, LF.search_power_select());

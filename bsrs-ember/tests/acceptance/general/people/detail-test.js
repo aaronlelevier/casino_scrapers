@@ -54,7 +54,7 @@ const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-options > .ember-p
 const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-var application, store, list_xhr, people_detail_data, detail_xhr, url, translations, role_route_data_endpoint;
+var store, list_xhr, people_detail_data, detail_xhr, url, translations, role_route_data_endpoint;
 
 moduleForAcceptance('Acceptance | person detail test', {
   beforeEach() {
