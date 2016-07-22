@@ -30,11 +30,29 @@
       locationRepo=locationRepo
     }}
   </div>
+  <div class="row">
+    <div class="col-md-12">
+      <section>
+        <div class="row card-title">
+          <h2 class="col-md-12">{{t "admin.person.label.credentials"}}</h2>
+        </div>
+      </section>
+    </div>
+  </div>
   {{mobile/person/credentials-section
     model=model
     statuses=statuses
     changeBool=(action "changeBool")
   }}
+  <div class="row">
+    <div class="col-md-12">
+      <section>
+        <div class="row card-title">
+          <h2 class="col-md-12">{{t "admin.person.label.contact"}}</h2>
+        </div>
+      </section>
+    </div>
+  </div>
   {{mobile/person/contact-section
     model=model
     phone_number_types=phone_number_types
@@ -42,6 +60,15 @@
     default_phone_number_type=default_phone_number_type
     default_email_type=default_email_type
   }}
+  <div class="row">
+    <div class="col-md-12">
+      <section>
+        <div class="row card-title">
+          <h2 class="col-md-12">{{t "admin.person.label.settings"}}</h2>
+        </div>
+      </section>
+    </div>
+  </div>
   {{mobile/person/settings-section
     model=model
     changeBool=(action "changeBool")
