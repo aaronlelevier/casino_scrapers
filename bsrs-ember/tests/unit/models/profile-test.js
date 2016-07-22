@@ -6,18 +6,14 @@ import PD from 'bsrs-ember/vendor/defaults/profile';
 import PersonD from 'bsrs-ember/vendor/defaults/person';
 import PFD from 'bsrs-ember/vendor/defaults/profile-filter';
 import PPFD from 'bsrs-ember/vendor/defaults/profile-profile-filter';
-import ProfileDeserializer from 'bsrs-ember/deserializers/profile';
 import PF from 'bsrs-ember/vendor/profile_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 
-var store, profile, assignee;
+var store, profile;
 
 module('unit: profile test', {
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:profile', 'model:profile-join-pfilter', 'model:pfilter', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
-    deserializer = ProfileDeserializer.create({
-      simpleStore: store
-    });
     run(() => {
       profile = store.push('profile', {id: PD.idOne});
     });
@@ -33,10 +29,10 @@ test('dirty test | description', assert => {
 });
 
 test('serialize', assert => {
-  let json = PF.detail();
-  run(() => {
-    deserializer.deserialize(json, PD.idOne);
-  });
+  profile = store.push('profile', {id: PD.idOne, description: PD.descOne, assignee_fk: PersonD.idOne});
+  store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
+  store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
+  store.push('pfilter', {id: PFD.idOne, key: PFD.keyOne, context: PFD.contextOne, field: PFD.fieldOne, criteria_fks: [TD.priorityOneId]});
   let ret = profile.serialize();
   assert.equal(ret.id, PD.idOne);
   assert.equal(ret.description, PD.descOne);
@@ -70,7 +66,7 @@ test('related person should return one person for a profile', (assert) => {
 
 test('change_assignee - will update the persons assignee and dirty the model', (assert) => {
   profile = store.push('profile', {id: PD.idOne, assignee_fk: undefined});
-  assignee = store.push('person', {id: PersonD.idOne, profiles: []});
+  store.push('person', {id: PersonD.idOne, profiles: []});
   let inactive_assignee = store.push('person', {id: PersonD.idTwo, profiles: []});
   assert.equal(profile.get('assignee'), undefined);
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
@@ -153,7 +149,7 @@ test('pfs property is not dirty when no pfs present (empty array)', (assert) => 
 
 test('remove_pf - will remove join model and mark model as dirty', (assert) => {
   store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
-  let pfilter = store.push('pfilter', {id: PFD.idOne});
+  store.push('pfilter', {id: PFD.idOne});
   profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne]});
   assert.equal(profile.get('pfs').get('length'), 1);
   assert.equal(profile.get('profile_pfs_ids').length, 1);
@@ -170,7 +166,7 @@ test('remove_pf - will remove join model and mark model as dirty', (assert) => {
 
 test('add_pf - will create join model and mark model dirty', (assert) => {
   store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
-  let pfilter = store.push('pfilter', {id: PFD.idOne});
+  store.push('pfilter', {id: PFD.idOne});
   profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne]});
   assert.equal(profile.get('pfs').get('length'), 1);
   assert.equal(profile.get('profile_pfs_ids').length, 1);
