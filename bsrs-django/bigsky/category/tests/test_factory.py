@@ -5,6 +5,7 @@ from model_mommy import mommy
 
 from category.tests import factory
 from category.models import Category, CategoryStatus, CATEGORY_STATUSES
+from tenant.models import Tenant
 from utils.helpers import generate_uuid
 
 
@@ -16,7 +17,7 @@ class CreateSingleCategoryTests(TestCase):
         self.assertTrue(category.name)
         self.assertIsNone(category.parent)
 
-    def test_name(self):
+    def test_attrs(self):
         name = 'My Cool Category'
 
         category = factory.create_single_category(name)
@@ -24,6 +25,7 @@ class CreateSingleCategoryTests(TestCase):
         self.assertEqual(category.name, name)
         self.assertEqual(category.subcategory_label, 'trade')
         self.assertIsInstance(category.status, CategoryStatus)
+        self.assertIsInstance(category.tenant, Tenant)
 
     def test_parent(self):
         parent = factory.create_single_category()
@@ -185,3 +187,6 @@ class CreateCategoriesTests(TestCase):
         self.assertEqual(raw_data[2], category.label)
         self.assertEqual(raw_data[3], category.subcategory_label)
         self.assertEqual(Category.objects.get(description=raw_data[4]), category.parent)
+
+    def test_tenant_exists_on_all_categories(self):
+        self.assertEqual(Category.objects.filter(tenant__isnull=True).count(), 0)

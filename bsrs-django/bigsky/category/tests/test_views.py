@@ -5,7 +5,7 @@ from model_mommy import mommy
 from rest_framework.test import APITestCase, APITransactionTestCase
 
 from category.models import Category
-from category.serializers import CategorySerializer
+from category.serializers import CategoryUpdateSerializer
 from category.tests.factory import create_single_category, create_categories
 from person.tests.factory import PASSWORD, create_person
 
@@ -185,57 +185,6 @@ class CategoryDetailTests(APITestCase):
         self.assertIn(str(self.trade.children.first().id), [c['id'] for c in data['children']])
 
 
-class CategorySerializerDataTests(APITestCase):
-
-    def setUp(self):
-        create_categories()
-        self.password = PASSWORD
-        self.person = create_person()
-        # Category
-        self.category = (Category.objects.exclude(parent__isnull=True)
-                                         .filter(label='Trade').first())
-        # Data
-        serializer = CategorySerializer(self.category)
-        self.data = serializer.data
-        # Login
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def tearDown(self):
-        self.client.logout()
-
-    def test_setup(self):
-        self.assertIsNotNone(self.category.parent)
-        self.assertTrue(self.category.children.all())
-
-    def test_data(self):
-        self.data['name'] = 'new category name'
-
-        response = self.client.put('/api/admin/categories/{}/'.format(self.category.id),
-            self.data, format='json')
-
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        # category
-        category = Category.objects.get(id=data['id'])
-        self.assertEqual(self.category.id, category.id)
-        # data
-        self.assertEqual(data['id'], str(category.id))
-        self.assertEqual(data['name'], category.name)
-        self.assertEqual(data['description'], category.description)
-        self.assertEqual(data['label'], category.label)
-        self.assertEqual(data['subcategory_label'], category.subcategory_label)
-        self.assertEqual(data['cost_amount'], category.cost_amount)
-        self.assertEqual(data['cost_currency'], str(category.cost_currency.id))
-        self.assertEqual(data['cost_code'], category.cost_code)
-        self.assertEqual(data['parent'], str(category.parent.id))
-        # children
-        self.assertIsInstance(data['children'], list)
-        self.assertIn(
-            data['children'][0],
-            [str(x) for x in category.children.values_list('id', flat=True)]
-        )
-
-
 class CategoryUpdateTests(APITestCase):
 
     def setUp(self):
@@ -246,13 +195,35 @@ class CategoryUpdateTests(APITestCase):
         self.type = Category.objects.filter(subcategory_label='Trade').first()
         self.trade = Category.objects.filter(label='Trade').first()
         # Data
-        serializer = CategorySerializer(self.trade)
+        serializer = CategoryUpdateSerializer(self.trade)
         self.data = serializer.data
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
         self.client.logout()
+
+    def test_data(self):
+        response = self.client.put('/api/admin/categories/{}/'.format(self.trade.id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['id'], self.data['id'])
+        self.assertEqual(data['name'], self.data['name'])
+        self.assertEqual(data['description'], self.data['description'])
+        self.assertEqual(data['label'], self.data['label'])
+        self.assertEqual(data['cost_amount'], self.data['cost_amount'])
+        self.assertEqual(data['cost_currency'], str(self.data['cost_currency']))
+        self.assertEqual(data['cost_code'], self.data['cost_code'])
+        self.assertNotIn('tenant', data)
+        self.assertEqual(data['parent'], str(self.trade.parent.id))
+        # children
+        self.assertIsInstance(data['children'], list)
+        self.assertIn(
+            data['children'][0],
+            [str(x) for x in self.trade.children.values_list('id', flat=True)]
+        )
 
     def test_no_change(self):
         response = self.client.put('/api/admin/categories/{}/'.format(self.trade.id),
@@ -310,7 +281,7 @@ class CategoryUpdateTests(APITestCase):
     def test_child_added_level_reflects_change(self):
         new_sub_category = create_single_category()
         self.assertEqual(new_sub_category.level, 0)
-        serializer = CategorySerializer(self.type)
+        serializer = CategoryUpdateSerializer(self.type)
         data = serializer.data
         data['children'] = [new_sub_category.id]
 
@@ -334,7 +305,7 @@ class CategoryCreateTests(APITestCase):
         self.type = Category.objects.filter(subcategory_label='Trade').first()
         self.trade = Category.objects.filter(label='Trade').first()
         # Data
-        serializer = CategorySerializer(self.trade)
+        serializer = CategoryUpdateSerializer(self.trade)
         self.data = serializer.data
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -342,16 +313,27 @@ class CategoryCreateTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_create(self):
+    def test_data(self):
         # Change the Trade name, and POST to create a new Trade
         self.data.update({
             'id': str(uuid.uuid4()),
             'name': 'plumbing'
             })
+
         response = self.client.post('/api/admin/categories/', self.data, format='json')
+
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201)
-        self.assertIsInstance(Category.objects.get(id=data['id']), Category)
+        self.assertEqual(data['id'], self.data['id'])
+        self.assertEqual(data['name'], self.data['name'])
+        self.assertEqual(data['description'], self.data['description'])
+        self.assertEqual(data['label'], self.data['label'])
+        self.assertEqual(data['cost_amount'], self.data['cost_amount'])
+        self.assertEqual(data['cost_currency'], str(self.data['cost_currency']))
+        self.assertEqual(data['cost_code'], self.data['cost_code'])
+        category = Category.objects.get(id=data['id'])
+        self.assertNotIn('tenant', data)
+        self.assertEqual(category.tenant.id, self.person.role.tenant.id)
 
     def test_create_parent(self):
         self.data.update({

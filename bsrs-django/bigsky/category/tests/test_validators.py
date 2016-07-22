@@ -3,7 +3,7 @@ import uuid
 
 from rest_framework.test import APITestCase
 
-from category.serializers import CategorySerializer
+from category.serializers import CategoryUpdateSerializer
 from category.tests.factory import create_single_category
 from person.tests.factory import PASSWORD, create_single_person
 
@@ -20,7 +20,7 @@ class CategoryParentAndNameValidatorTests(APITestCase):
     def test_unique_top_level(self):
         name = 'foo'
         category_one = create_single_category(name=name)
-        serializer = CategorySerializer(category_one)
+        serializer = CategoryUpdateSerializer(category_one)
         data_two = serializer.data
         data_two.update({
             'id': str(uuid.uuid4()),
@@ -39,7 +39,7 @@ class CategoryParentAndNameValidatorTests(APITestCase):
         name = 'foo'
         parent = create_single_category()
         category_one = create_single_category(name=name, parent=parent)
-        serializer = CategorySerializer(category_one)
+        serializer = CategoryUpdateSerializer(category_one)
         data_two = serializer.data
         data_two.update({
             'id': str(uuid.uuid4()),
@@ -59,7 +59,7 @@ class CategoryParentAndNameValidatorTests(APITestCase):
         name = 'foo'
         category_one = create_single_category(name=name)
         category_one.delete()
-        serializer = CategorySerializer(category_one)
+        serializer = CategoryUpdateSerializer(category_one)
         data_two = serializer.data
         data_two.update({
             'id': str(uuid.uuid4()),
@@ -73,7 +73,7 @@ class CategoryParentAndNameValidatorTests(APITestCase):
     def test_unique_does_not_check_against_own_record_on_a_put(self):
         name = 'foo'
         category_one = create_single_category(name=name)
-        serializer = CategorySerializer(category_one)
+        serializer = CategoryUpdateSerializer(category_one)
         data = serializer.data
 
         response = self.client.put('/api/admin/categories/{}/'.format(category_one.id), data, format='json')

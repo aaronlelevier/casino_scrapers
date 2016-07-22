@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from category.models import Category
 from category.validators import CategoryParentAndNameValidator
+from tenant.mixins import RemoveTenantMixin
 from utils.serializers import BaseCreateSerializer
 
 
@@ -75,7 +76,7 @@ class CategoryDetailSerializer(BaseCreateSerializer):
                         .prefetch_related('children__children'))
 
 
-class CategorySerializer(BaseCreateSerializer):
+class CategoryUpdateSerializer(BaseCreateSerializer):
 
     children = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(),
                                                   many=True, required=False)
@@ -84,3 +85,14 @@ class CategorySerializer(BaseCreateSerializer):
         model = Category
         validators = [CategoryParentAndNameValidator()]
         fields = CATEGORY_FIELDS + ('subcategory_label', 'parent', 'children',)
+
+
+class CategoryCreateSerializer(RemoveTenantMixin, BaseCreateSerializer):
+
+    children = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(),
+                                                  many=True, required=False)
+
+    class Meta:
+        model = Category
+        validators = [CategoryParentAndNameValidator()]
+        fields = CATEGORY_FIELDS + ('tenant', 'subcategory_label', 'parent', 'children',)

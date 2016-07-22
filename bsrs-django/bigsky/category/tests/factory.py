@@ -2,6 +2,7 @@ from collections import namedtuple
 import random
 
 from category.models import Category, CATEGORY_STATUSES, CategoryStatus
+from tenant.tests.factory import get_or_create_tenant
 from utils.create import random_lorem
 from utils.helpers import generate_uuid
 
@@ -11,11 +12,13 @@ def create_single_category(name=None, parent=None):
         name = random_lorem()
 
     status = create_category_status()
+    tenant = get_or_create_tenant()
 
     return Category.objects.create(
         name=name,
         subcategory_label='trade',
         status=status,
+        tenant=tenant,
         parent=parent
     )
 
@@ -92,6 +95,7 @@ CATEGORIES = [
 
 def create_categories():
     statuses = create_category_statuses()
+    tenant = get_or_create_tenant()
 
     for x in CATEGORIES:
         CategoryData = namedtuple('CategoryData', ['id', 'name', 'label', 'subcategory_label', 'parent_id'])
@@ -111,7 +115,8 @@ def create_categories():
                 name=data['name'],
                 label=data['label'],
                 subcategory_label=data['subcategory_label'],
-                parent=parent
+                parent=parent,
+                tenant=tenant
             )
 
     return Category.objects.all()
