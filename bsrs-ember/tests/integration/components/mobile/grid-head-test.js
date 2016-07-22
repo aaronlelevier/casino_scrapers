@@ -4,30 +4,21 @@ import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-let store, trans, bp, flexi;
+let store;
 
 moduleForComponent('grid/grid-head', 'Integration | Component | grid-head', {
   integration: true,
   beforeEach() {
-    trans = this.container.lookup('service:i18n');
     store = module_registry(this.container, this.registry, ['model:filterset']);
-    flexi = this.container.lookup('service:device/layout');
-    let breakpoints = flexi.get('breakpoints');
-    bp = {};
-    breakpoints.forEach((point) => {
-      bp[point.name] = point.begin + 5;
-    });
-    flexi.set('width', bp.mobile);
+    const flexi = this.container.lookup('service:device/layout');
+    const breakpoints = flexi.get('breakpoints');
+    const width = breakpoints.find(bp => bp.name === 'mobile').begin + 5;
+    flexi.set('width', width);
     run(() => {
       store.push('filterset', {'id': '55639133-fd6f-4a03-b7bc-ec2a6a3cb049', 'name': 'ordered by assignee',
       'endpoint_name': 'tickets.index', 'endpoint_uri': '?sort=assignee.fullname', 'created': Date.now() });
     });
   },
-  afterEach() {
-    run(() => {
-      flexi.set('width', bp.desktop);
-    });
-  }
 });
 
 test('it renders saved filtersets', function(assert) {

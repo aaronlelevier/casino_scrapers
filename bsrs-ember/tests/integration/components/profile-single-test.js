@@ -16,22 +16,15 @@ const ERR_TEXT = '.validated-input-error-dialog';
 moduleForComponent('profile-single', 'integration: profile-single test', {
   integration: true,
   setup() {
-    page.setContext(this);
-    generalPage.setContext(this);
     store = module_registry(this.container, this.registry, ['model:profile']);
     trans = this.container.lookup('service:i18n');
-    run(function() {
+    run(() => {
       model = store.push('profile', {
         id: PD.idOne,
         description: PD.descOne,
       });
     });
-    this.set('model', model);
   },
-  afterEach() {
-    page.removeContext(this);
-    generalPage.removeContext(this);
-  }
 });
 
 test('header - shows detail if not model.new', function(assert) {
