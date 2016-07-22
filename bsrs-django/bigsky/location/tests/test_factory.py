@@ -4,6 +4,7 @@ from django.test import TestCase
 from location.models import (Location, LocationLevel, LOCATION_COMPANY,
 LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE, LOCATION_FMU,)
 from location.tests import factory
+from tenant.models import Tenant
 
 
 class CreateLocationLevelsTests(TestCase):
@@ -64,6 +65,12 @@ class CreateLocationLevelTests(TestCase):
         ret = factory.create_location_level()
         self.assertIsInstance(ret, LocationLevel)
         self.assertEqual(ret.name, LOCATION_COMPANY)
+        self.assertIsInstance(ret.tenant, Tenant)
+
+    def test_with_arbitrary_name(self):
+        name = 'foo'
+        ret = factory.create_location_level(name)
+        self.assertEqual(ret.name, name)
 
 
 class CreateLocationsTests(TestCase):

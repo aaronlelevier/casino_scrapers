@@ -355,14 +355,23 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
         self.assertEqual(json.loads(response.content.decode('utf8'))['priority'], ['This field may not be null.'])
 
     @patch("ticket.views.process_ticket")
-    def test_process_ticket(self, was_called):
+    def test_process_ticket(self, mock_process_ticket):
+        new_ticket_id = str(uuid.uuid4())
         self.data.update({
-            'id': str(uuid.uuid4()),
+            'id': new_ticket_id,
             'request': 'plumbing',
         })
+
         response = self.client.post('/api/tickets/', self.data, format='json')
+
         self.assertEqual(response.status_code, 201)
-        self.assertTrue(was_called)
+        self.assertTrue(mock_process_ticket)
+        # tenant id
+        data = json.loads(response.content.decode('utf8'))
+        ticket = Ticket.objects.get(id=data['id'])
+        self.assertEqual(mock_process_ticket.call_args[0][0], ticket.location.location_level.tenant.id)
+        # ticket id
+        self.assertEqual(mock_process_ticket.call_args[1]['ticket_id'], new_ticket_id)
 
 
 class TicketSearchTests(TicketSetupMixin, APITestCase):
@@ -762,9 +771,11 @@ class TicketAndTicketActivityTests(APITestCase):
     def test_create(self):
         name = 'create'
         self.assertEqual(TicketActivity.objects.count(), 0)
+        location = create_location()
         self.data.update({
             'id': str(uuid.uuid4()),
             'request': 'plumbing',
+            'location': str(location.id)
         })
 
         response = self.client.post('/api/tickets/', self.data, format='json')

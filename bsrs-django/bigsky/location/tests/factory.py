@@ -13,11 +13,11 @@ LOS_ANGELES = 'los_angeles'
 def create_location_levels():
     tenant = get_or_create_tenant()
 
-    company, _ = LocationLevel.objects.get_or_create(name=LOCATION_COMPANY, tenant=tenant)
-    region, _ = LocationLevel.objects.get_or_create(name=LOCATION_REGION, tenant=tenant)
-    district, _ = LocationLevel.objects.get_or_create(name=LOCATION_DISTRICT, tenant=tenant)
-    store, _ = LocationLevel.objects.get_or_create(name=LOCATION_STORE, tenant=tenant)
-    fmu, _ = LocationLevel.objects.get_or_create(name=LOCATION_FMU, tenant=tenant)
+    company = create_location_level(name=LOCATION_COMPANY)
+    region = create_location_level(name=LOCATION_REGION)
+    district = create_location_level(name=LOCATION_DISTRICT)
+    store = create_location_level(name=LOCATION_STORE)
+    fmu = create_location_level(name=LOCATION_FMU)
     # JOIN's
     company.children.add(region)
     company.children.add(fmu)
@@ -26,9 +26,12 @@ def create_location_levels():
     fmu.children.add(store)
 
 
-def create_location_level(name=None):
-    name = name or LOCATION_COMPANY
-    obj, _ = LocationLevel.objects.get_or_create(name=name)
+def create_location_level(name=LOCATION_COMPANY):
+    try:
+        obj = LocationLevel.objects.get(name=name)
+    except LocationLevel.DoesNotExist:
+        tenant = get_or_create_tenant()
+        obj = LocationLevel.objects.create(name=name, tenant=tenant)
     return obj
 
 

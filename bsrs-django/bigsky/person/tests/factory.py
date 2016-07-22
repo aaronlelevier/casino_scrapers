@@ -10,7 +10,8 @@ from category.models import Category, CategoryStatus
 from category.tests.factory import create_single_category
 from location.models import (LocationLevel, Location, LocationStatus, LocationType,
     LOCATION_COMPANY, LOCATION_DISTRICT, LOCATION_REGION,)
-from location.tests.factory import create_location, create_locations, create_location_levels
+from location.tests.factory import (
+    create_location, create_locations, create_location_level, create_location_levels)
 from person.models import Role, Person, PersonStatus
 from tenant.tests.factory import get_or_create_tenant
 from translation.tests.factory import create_locale, LOCALES
@@ -56,9 +57,9 @@ def create_role(name=None, location_level=None, category=None):
     currency = Currency.objects.default()
 
     if not location_level:
-        location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_REGION)
+        location_level = create_location_level(LOCATION_REGION)
 
-    tenant = get_or_create_tenant()
+    tenant = location_level.tenant
 
     try:
         role = Role.objects.get(name=name)

@@ -3,6 +3,7 @@ from model_mommy import mommy
 from category.models import Category, CategoryStatus
 from category.tests.factory import create_categories
 from location.models import LocationStatus, LocationType
+from location.tests.factory import create_location
 from person.tests.factory import PASSWORD, DistrictManager
 from ticket.models import Ticket
 from ticket.tests.factory_related import (create_ticket_priorities, create_ticket_statuses)
@@ -26,6 +27,9 @@ class TicketSetupNoLoginMixin(object):
         create_ticket_statuses()
         create_ticket_priorities()
         self.ticket = create_ticket(assignee=self.person)
+        self.location = create_location()
+        self.ticket.location = self.location
+        self.ticket.save()
         self.ticket_two = create_ticket()
 
 

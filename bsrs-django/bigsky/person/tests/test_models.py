@@ -16,8 +16,7 @@ from contact.models import Email
 from contact.tests.factory import create_contact
 from location.models import Location
 from location.tests.factory import create_locations
-from person.models import (Person, PersonManager, PersonQuerySet, PersonStatus,
-    Role, RoleManager, RoleQuerySet)
+from person.models import Person, PersonStatus, Role, RoleManager, RoleQuerySet
 from person.tests.factory import (PASSWORD, create_person, create_role, create_single_person,
     get_or_create_tenant)
 from translation.models import Locale
