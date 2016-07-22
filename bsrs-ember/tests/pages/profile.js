@@ -7,6 +7,7 @@ let { value, visitable, fillable, clickable, hasClass, count, text } = PageObjec
 
 const ASSIGNEE = '.t-profile-assignee-select';
 const DROPDOWN = options;
+const FILTER_SELECT = '.t-filter-selector .ember-basic-dropdown-trigger';
 
 export default PageObject.create({
   descValue: value('.t-ap-description'),
@@ -23,4 +24,10 @@ export default PageObject.create({
   addFilterBtnText: text('.t-add-filter-btn'),
   addFilterBtnClick: clickable('.t-add-filter-btn'),
   removeFilterBtnClick: clickable('.t-del-filter-btn'),
+
+  filterInput: text(FILTER_SELECT),
+  filterClickDropdown: clickable(FILTER_SELECT),
+  filterClickOne: clickable('.ember-power-select-option:eq(1)', { scope: DROPDOWN }),
+  filterTextOne: text('.ember-power-select-option:eq(1)'),
+
 });

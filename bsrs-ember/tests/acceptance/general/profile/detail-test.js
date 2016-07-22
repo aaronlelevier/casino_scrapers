@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
-import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
@@ -14,6 +13,8 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import PF from 'bsrs-ember/vendor/profile_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
 import page from 'bsrs-ember/tests/pages/profile';
+import UUID from 'bsrs-ember/vendor/defaults/uuid';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_profile_url;
@@ -30,19 +31,16 @@ var application, store, detailData, detailXhr, listData, listXhr, run = Ember.ru
 
 moduleForAcceptance('Acceptance | profile detail test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     listData = PF.list();
     listXhr = xhr(API_LIST_URL_PAGE_ONE, 'GET', null, {}, 200, listData);
     detailData = PF.detail();
     detailXhr = xhr(API_DETAIL_URL, 'GET', null, {}, 200, detailData);
-  },
-  afterEach() {
-    
+    random.uuid = function() { return UUID.value; };
   }
 });
 
-test('visit detail and update all fields', assert => {
+test('visit detail and update description and assignee', assert => {
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -72,6 +70,46 @@ test('visit detail and update all fields', assert => {
       context: PFD.contextOne,
       field: PFD.fieldOne,
       criteria: [TD.priorityOneId]
+    }]
+  };
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, {});
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), LIST_URL);
+  });
+});
+
+test('visit detail and add a pfilter', assert => {
+  visit(DETAIL_URL);
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-filter-selector').length, 1);
+    assert.equal(find('.t-filter-selector').text().trim(), t(PFD.keyOne));
+  });
+  page.removeFilterBtnClick();
+  andThen(() => {
+    assert.equal(find('.t-filter-selector').length, 0);
+  });
+  page.addFilterBtnClick();
+  andThen(() => {
+    assert.equal(find('.t-filter-selector').length, 1);
+    assert.equal(find('.t-filter-selector').text().trim(),t(PFD.keyOne));
+  });
+  page.filterClickDropdown();
+  selectChoose('.t-filter-selector', PFD.keyTwo);
+  andThen(() => {
+    assert.equal(find('.t-filter-selector').text().trim(), t(PFD.keyTwo));
+  });
+  let payload = {
+    id: PD.idOne,
+    description: PD.descOne,
+    assignee: PD.assigneeOne,
+    filters: [{
+      id: UUID.value,
+      key: PFD.keyTwo,
+      context: PFD.contextOne,
+      field: PFD.fieldTwo,
+      criteria: []
     }]
   };
   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, {});

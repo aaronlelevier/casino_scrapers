@@ -67,14 +67,17 @@
               <button class="t-del-filter-btn btn btn-default btn-sm delete" type="button" {{action "removeFilter" filter}}>{{fa-icon "minus"}}</button>
             </span>
             <span class="input-group-btn">
-              {{general-power-select
-                model=model
-                className="t-filter-selector"
+              {{#power-select
+                class="t-filter-selector"
+                tagName="div"
                 selected=filter
-                field="key"
-                isObject=true
+                onchange=(action "select" filter)
+                searchEnabled=false
                 options=model.availablePfilters
+                as |option|
               }}
+                {{t option.key}}
+              {{/power-select}}
             </span>
           </div>
         {{/each}}

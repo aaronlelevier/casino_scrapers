@@ -16,6 +16,7 @@ const ERR_TEXT = '.validated-input-error-dialog';
 moduleForComponent('profile-single', 'integration: profile-single test', {
   integration: true,
   setup() {
+    page.setContext(this);
     store = module_registry(this.container, this.registry, ['model:profile']);
     trans = this.container.lookup('service:i18n');
     run(() => {
@@ -25,6 +26,9 @@ moduleForComponent('profile-single', 'integration: profile-single test', {
       });
     });
   },
+  afterEach() {
+    page.removeContext(this);
+  }
 });
 
 test('header - shows detail if not model.new', function(assert) {

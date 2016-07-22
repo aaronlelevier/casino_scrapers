@@ -29,16 +29,16 @@ export default Model.extend(OptConfMixin, Validations, {
   simpleStore: Ember.inject.service(),
   description: attr(''),
   defaultPfilter: {
-    key:'admin.placeholder.ticket_priority',
+    key: 'admin.placeholder.ticket_priority',
     context: 'ticket.ticket',
     field: 'priority'
   },
   availablePfilters: [{
-    key:'admin.placeholder.ticket_priority',
+    key: 'admin.placeholder.ticket_priority',
     context: 'ticket.ticket',
     field: 'priority'
   },{
-    key:'admin.placeholder.location_store',
+    key: 'admin.placeholder.location_store',
     context: 'ticket.ticket',
     field: 'location'
   }],
