@@ -4,6 +4,7 @@ from contact.serializers import (PhoneNumberSerializer, EmailSerializer, Address
 from location.models import LocationLevel, LocationStatus, LocationType, Location
 from location.validators import LocationParentChildValidator
 from person.serializers_leaf import PersonSimpleSerializer
+from tenant.mixins import RemoveTenantMixin
 from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin, NestedCreateContactSerializerMixin
 from utils.validators import UniqueForActiveValidator
 
@@ -31,7 +32,14 @@ class LocationLevelDetailSerializer(serializers.ModelSerializer):
             ('children', 'parents',)
 
 
-class LocationLevelCreateSerializer(BaseCreateSerializer):
+class LocationLevelCreateSerializer(RemoveTenantMixin, BaseCreateSerializer):
+
+    class Meta:
+        model = LocationLevel
+        fields = LOCATION_LEVEL_BASE_DETAIL_FIELDS + ('tenant', 'children',)
+
+
+class LocationLevelUpdateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = LocationLevel

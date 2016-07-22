@@ -54,6 +54,9 @@ class CreateLocationLevelsTests(TestCase):
     def test_default(self):
         self.assertEqual(settings.DEFAULT_LOCATION_LEVEL, 'Company')
 
+    def test_all_location_levels_have_a_tenant(self):
+        self.assertEqual(LocationLevel.objects.filter(tenant__isnull=True).count(), 0)
+
 
 class CreateLocationLevelTests(TestCase):
 

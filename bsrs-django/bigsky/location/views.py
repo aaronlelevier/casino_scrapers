@@ -61,10 +61,16 @@ class LocationLevelViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseMode
             return ls.LocationLevelSerializer
         elif self.action == 'retrieve':
             return ls.LocationLevelDetailSerializer
-        elif self.action in ('create', 'update', 'partial_update'):
+        elif self.action == 'create':
             return ls.LocationLevelCreateSerializer
+        elif self.action in ('update', 'partial_update'):
+            return ls.LocationLevelUpdateSerializer
         else:
             raise MethodNotAllowed(method=self.action)
+
+    def create(self, request, *args, **kwargs):
+        request.data['tenant'] = request.user.role.tenant.id
+        return super(LocationLevelViewSet, self).create(request, *args, **kwargs)
 
     @property
     def _all_related_serializer(self):
