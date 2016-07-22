@@ -77,9 +77,9 @@ test('validation on ticket request works', function(assert) {
         const $component = this.$('.invalid');
         assert.notOk($component.is(':visible'));
         done();
-      }, 200);
-    }, 200);
-  }, 1800);
+      }, 300);
+    }, 300);
+  }, 1900);
 });
 
 test('each status shows up as a valid select option', function(assert) {
