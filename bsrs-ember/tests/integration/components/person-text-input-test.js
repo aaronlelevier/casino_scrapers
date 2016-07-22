@@ -55,10 +55,10 @@ test('first_name validation error if not present or greater than 30 characters',
           $err = this.$('.invalid');
           assert.notOk($err.is(':visible'));
           done();
-        }, 200);
-      }, 1800);
-    }, 200);
-  }, 1800);
+        }, 300);
+      }, 1900);
+    }, 300);
+  }, 1900);
 });
 
 test('middle_initial validation error if not present or greater than 30 characters', function(assert) {
@@ -85,9 +85,9 @@ test('middle_initial validation error if not present or greater than 30 characte
         assert.ok($err.is(':visible'));
         assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.person.middle_initial'));
         done();
-      }, 1800);
-    }, 200);
-  }, 1800);
+      }, 1900);
+    }, 300);
+  }, 1900);
 });
 
 test('last_name validation error if not present or greater than 30 characters', function(assert) {
@@ -119,8 +119,8 @@ test('last_name validation error if not present or greater than 30 characters', 
           $err = this.$('.invalid');
           assert.notOk($err.is(':visible'));
           done();
-        }, 200);
-      }, 1800);
-    }, 200);
-  }, 1800);
+        }, 300);
+      }, 1900);
+    }, 300);
+  }, 1900);
 });

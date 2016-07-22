@@ -76,9 +76,9 @@ test('validation on dtd key works', function(assert) {
         assert.ok($component.is(':visible'));
         assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.dtd.key.length'));
         done();
-      }, 1800);
-    }, 200);
-  }, 1800);
+      }, 1900);
+    }, 300);
+  }, 1900);
 });
 
 test('validation on fields when click save', function(assert) {
@@ -126,7 +126,7 @@ test('validation - clear out text, and validation msg still works', function(ass
       assert.ok($component.is(':visible'));
       assert.equal($(`${ERR_TEXT}:eq(0)`).text().trim(), trans.t('errors.link.text'));
       done();
-    }, 1800);
+    }, 1900);
   });
 
   test('add and remove dtd links', function(assert) {
