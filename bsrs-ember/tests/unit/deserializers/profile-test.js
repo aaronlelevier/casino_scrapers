@@ -30,13 +30,11 @@ test('deserialize single - existing filters', assert => {
   assert.equal(profile.get('assignee_fk'), PD.assigneeOne);
   assert.equal(profile.get('assignee').get('id'), PD.assigneeOne);
   assert.equal(profile.get('assignee').get('username'), PD.username);
-  // pFilter
   assert.equal(profile.get('pfs').get('length'), 1);
   assert.equal(profile.get('pfs').objectAt(0).get('id'), PFD.idOne);
   assert.equal(profile.get('pfs').objectAt(0).get('context'), PFD.contextOne);
   assert.equal(profile.get('pfs').objectAt(0).get('field'), PFD.fieldOne);
   assert.deepEqual(profile.get('pfs').objectAt(0).get('criteria_fks'), [TD.priorityOneId]);
-  // should not be dirty
   assert.ok(profile.get('isNotDirty'));
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
 });
@@ -54,14 +52,11 @@ test('deserialize single - no filters', assert => {
 });
 
 test('existing profile w/ filters, and server returns no filters - want no filters b/c that is the most recent', assert => {
-  // deserialize w/ filters
-  // NOTE: uses store.push's here to be explicit
-  let m2m = store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
+  store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
   profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne]});
-  let profile_filter = store.push('pfilter', {id: PFD.idOne});
+  store.push('pfilter', {id: PFD.idOne});
   let pfs = profile.get('pfs');
   assert.equal(pfs.get('length'), 1);
-  // deserialize w/o filters
   let json = PF.detail();
   json.filters = [];
   run(() => {
@@ -70,15 +65,13 @@ test('existing profile w/ filters, and server returns no filters - want no filte
   profile = store.find('profile', PD.idOne);
   assert.equal(profile.get('pfs').get('length'), 0);
   assert.ok(profile.get('isNotDirty'));
-  // assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('existing profile w/ filters, and server returns w/ 1 extra filter', assert => {
-  // deserialize w/ filters
-  run(() => {
-    deserializer.deserialize(PF.detail(), PD.idOne);
-  });
-  // deserialize w/ extra filters
+  store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
+  store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne]});
+  store.push('pfilter', {id: PFD.idOne});
   let json = PF.detail();
   json.filters.push({id: PFD.unusedId});
   run(() => {
@@ -91,12 +84,9 @@ test('existing profile w/ filters, and server returns w/ 1 extra filter', assert
 });
 
 test('existing profile w/ filter and get same filter', assert => {
-  // deserialize w/ filters
-  let json = PF.detail();
-  run(() => {
-    deserializer.deserialize(json, PD.idOne);
-  });
-  // deserialize w/ same filters
+  store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
+  store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne]});
+  store.push('pfilter', {id: PFD.idOne});
   json = PF.detail();
   run(() => {
     deserializer.deserialize(json, PD.idOne);
