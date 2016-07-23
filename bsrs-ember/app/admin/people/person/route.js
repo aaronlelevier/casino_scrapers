@@ -46,7 +46,8 @@ var PersonRoute = TabRoute.extend(FindById, ContactRouteMixin, {
                                  phone_number_types:phone_number_types, default_phone_number_type:default_phone_number_type,
                                 //  address_types:address_types, default_address_type:default_address_type,
                                  countries:countries, state_list:state_list, statuses:statuses,
-                                 locales:locales, roles:roles, role_change:role_change, hashComponents:hashComponents}, override);
+                                 locales:locales, roles:roles, role_change:role_change, hashComponents:hashComponents,
+                                 repository: repository}, override);
   },
   setupController(controller, hash) {
     controller.setProperties(hash);

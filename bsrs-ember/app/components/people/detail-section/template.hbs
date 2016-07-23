@@ -50,7 +50,18 @@
       <div class="row">
         <div class="col-md-12">
           {{#form-group title="admin.person.label.location" for="location"}}
-          {{db-fetch-multi-select model=model multiAttr="locations" multiAttrIds="locations_ids" selectedAttr=model.locations className="t-person-locations-select" displayName="name" add_func="add_location" remove_func="remove_location" repository=locationRepo searchMethod="findPersonsLocations" extra_params=extra_params}}
+          {{db-fetch-multi-select
+            model=model
+            multiAttr="locations"
+            multiAttrIds="locations_ids"
+            selectedAttr=model.locations
+            className="t-person-locations-select"
+            displayName="name"
+            add_func="add_location"
+            remove_func="remove_location"
+            repository=locationRepo
+            searchMethod="findPersonsLocations"
+            extra_params=extra_params}}
           {{/form-group}}
         </div>
       </div>

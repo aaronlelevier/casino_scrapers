@@ -19,18 +19,11 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Edit
   simpleStore: Ember.inject.service(),
   // currency: Ember.inject.service(),
   repository: inject('person'),
-  locationRepo: inject('location'),
   child_components: ['input-multi-phone', 'input-multi-address', 'input-multi-email'],
   classNames: ['wrapper', 'form'],
   //TODO: what is this used for?
   attemptedTransition: '',
   passwordValidation: validate('model.password', validatePassword),
-  extra_params: Ember.computed(function() {
-    const model = this.get('model');
-    return {
-      location_level: model.get('location_level_pk')
-    };
-  }),
   actions: {
     save() {
       this.set('submitted', true);

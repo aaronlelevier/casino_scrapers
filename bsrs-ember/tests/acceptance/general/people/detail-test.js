@@ -48,10 +48,8 @@ const DETAIL_URL = `${BASE_PEOPLE_URL}/${PD.idOne}`;
 const LETTER_A = {keyCode: 65};
 const LETTER_M = {keyCode: 77};
 const BACKSPACE = {keyCode: 8};
-const LOCATION = '.t-person-locations-select .ember-basic-dropdown-trigger';
+const LOCATION = '.t-person-locations-select';
 const LOCATION_DROPDOWN = options;
-const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-options > .ember-power-select-multiple-option`;
-const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 var store, list_xhr, people_detail_data, detail_xhr, url, translations, role_route_data_endpoint;
@@ -1065,19 +1063,9 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       assert.equal(person.get('locations').get('length'), 1);
       assert.equal(page.locationOneSelected.indexOf(LD.storeName), 2);
     });
-    page.locationClickDropdown();
-    andThen(() => {
-      assert.equal(page.locationOptionLength, 1);
-      assert.equal(find(LOCATION_DROPDOWN).text().trim(), GLOBALMSG.power_search);
-    });
-    let locations_endpoint = `${LOCATIONS_URL}location__icontains=ABC1234/?location_level=${LLD.idOne}`;
-    const response = LF.list_power_select();
-    xhr(locations_endpoint, 'GET', null, {}, 200, response);
-    fillIn(LOCATION_SEARCH, 'ABC1234');
-    andThen(() => {
-      assert.equal(page.locationOptionLength, POWER_SELECT_LENGTH);
-    });
-    page.locationClickOptionTwo();
+    xhr(`${LOCATIONS_URL}location__icontains=ABC1234/?location_level=${LLD.idOne}`, 'GET', null, {}, 200, LF.list_power_select());
+    selectSearch(LOCATION, 'ABC1234');
+    selectChoose(LOCATION, `${LD.baseStoreName}4`);
     andThen(() => {
       let person = store.find('person', PD.idOne);
       assert.equal(person.get('locations').get('length'), 2);
