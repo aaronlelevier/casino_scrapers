@@ -101,11 +101,12 @@ class LocationListSerializer(serializers.ModelSerializer):
 
 class LocationSearchSerializer(serializers.ModelSerializer):
 
+    # Addresses for power select component
     addresses = AddressSerializer(required=False, many=True)
 
     class Meta:
         model = Location
-        fields = ('id', 'name', 'number', 'addresses')
+        fields = ('id', 'name', 'number', 'addresses', 'location_level')
 
 
 class LocationDetailSerializer(serializers.ModelSerializer):
