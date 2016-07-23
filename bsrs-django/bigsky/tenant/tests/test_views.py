@@ -1,4 +1,5 @@
 import json
+import uuid
 
 from rest_framework.test import APITestCase
 
@@ -8,6 +9,7 @@ from accounting.models import Currency
 from dtd.models import TreeData, DTD_START_ID
 from person.tests.factory import PASSWORD, create_single_person
 from tenant.models import Tenant
+from tenant.serializers import TenantSerializer
 
 
 class TenantViewTests(APITestCase):
@@ -16,6 +18,8 @@ class TenantViewTests(APITestCase):
         mommy.make(TreeData, id=DTD_START_ID)
         self.person = create_single_person()
         self.tenant = self.person.role.tenant
+        serializer = TenantSerializer(self.tenant)
+        self.data = serializer.data
 
         self.person_two = create_single_person()
         self.tenant_two = mommy.make(Tenant)
@@ -68,11 +72,38 @@ class TenantViewTests(APITestCase):
 
     def test_list(self):
         response = self.client.get('/api/admin/tenant/')
-        self.assertEqual(response.status_code, 405)
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 2)
+        data = data['results'][0]
+        self.assertEqual(data['id'], str(self.tenant.id))
+        self.assertEqual(data['company_code'], self.tenant.company_code)
+        self.assertEqual(data['company_name'], self.tenant.company_name)
+        self.assertEqual(data['dashboard_text'], self.tenant.dashboard_text)
+        self.assertEqual(data['dt_start'], str(self.tenant.dt_start.id))
+        self.assertEqual(data['default_currency'], str(self.tenant.default_currency.id))
+        self.assertEqual(data['test_mode'], self.tenant.test_mode)
 
     def test_create(self):
-        response = self.client.post('/api/admin/tenant/')
-        self.assertEqual(response.status_code, 405)
+        new_id = str(uuid.uuid4())
+        new_company_code = 'foo'
+        self.data.update({
+            'id': new_id,
+            'company_code': new_company_code
+        })
+
+        response = self.client.post('/api/admin/tenant/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['id'], new_id)
+        self.assertEqual(data['company_code'], new_company_code)
+        self.assertEqual(data['company_name'], self.tenant.company_name)
+        self.assertEqual(data['dashboard_text'], self.tenant.dashboard_text)
+        self.assertEqual(data['dt_start'], str(self.tenant.dt_start.id))
+        self.assertEqual(data['default_currency'], str(self.tenant.default_currency.id))
+        self.assertEqual(data['test_mode'], self.tenant.test_mode)
 
     def test_delete(self):
         response = self.client.delete('/api/admin/tenant/{}/'.format(self.tenant.id))
