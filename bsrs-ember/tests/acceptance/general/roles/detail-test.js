@@ -402,7 +402,7 @@ test('role has an auth_amount and auth_currency', assert => {
     assert.equal(inputCurrencyPage.authAmountValue, CURRENCY_DEFAULTS.authAmountOne);
     assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.code);
   });
-  selectChoose('.t-currency-code', CURRENCY_DEFAULTS.codeCAD);
+  selectChoose('.t-currency-code-select', CURRENCY_DEFAULTS.codeCAD);
   andThen(() => {
     assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.codeCAD);
     let role = store.find('role', RD.idOne);
