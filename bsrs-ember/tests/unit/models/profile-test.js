@@ -1,6 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
-import {test, module} from 'bsrs-ember/tests/helpers/qunit';
+import { moduleFor, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PD from 'bsrs-ember/vendor/defaults/profile';
 import PersonD from 'bsrs-ember/vendor/defaults/person';
@@ -11,7 +11,8 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 
 var store, profile;
 
-module('unit: profile test', {
+moduleFor('model:profile', 'Unit | Model | profile', {
+  needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username'],
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:profile', 'model:profile-join-pfilter', 'model:pfilter', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     run(() => {
@@ -29,10 +30,12 @@ test('dirty test | description', assert => {
 });
 
 test('serialize', assert => {
-  profile = store.push('profile', {id: PD.idOne, description: PD.descOne, assignee_fk: PersonD.idOne});
-  store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
-  store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
-  store.push('pfilter', {id: PFD.idOne, key: PFD.keyOne, context: PFD.contextOne, field: PFD.fieldOne, criteria_fks: [TD.priorityOneId]});
+  run(() => {
+    profile = store.push('profile', {id: PD.idOne, description: PD.descOne, assignee_fk: PersonD.idOne});
+    store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
+    store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
+    store.push('pfilter', {id: PFD.idOne, key: PFD.keyOne, context: PFD.contextOne, field: PFD.fieldOne, criteria_fks: [TD.priorityOneId]});
+  });
   let ret = profile.serialize();
   assert.equal(ret.id, PD.idOne);
   assert.equal(ret.description, PD.descOne);
@@ -59,15 +62,20 @@ test('availablePfilters - will be used in the profile filter power select', asse
 
 /* ASSIGNEE */
 test('related person should return one person for a profile', (assert) => {
-  profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
-  store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
+  run(() => {
+    profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
+    store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
+  });
   assert.equal(profile.get('assignee').get('id'), PersonD.idOne);
 });
 
 test('change_assignee - will update the persons assignee and dirty the model', (assert) => {
-  profile = store.push('profile', {id: PD.idOne, assignee_fk: undefined});
-  store.push('person', {id: PersonD.idOne, profiles: []});
-  let inactive_assignee = store.push('person', {id: PersonD.idTwo, profiles: []});
+  let inactive_assignee;
+  run(() => {
+    profile = store.push('profile', {id: PD.idOne, assignee_fk: undefined});
+    store.push('person', {id: PersonD.idOne, profiles: []});
+    inactive_assignee = store.push('person', {id: PersonD.idTwo, profiles: []});
+  });
   assert.equal(profile.get('assignee'), undefined);
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(profile.get('assigneeIsNotDirty'));
@@ -84,9 +92,12 @@ test('change_assignee - will update the persons assignee and dirty the model', (
 });
 
 test('saveAssignee - assignee - profile will set assignee_fk to current assignee id', (assert) => {
-  profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
-  store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
-  let inactive_assignee = store.push('person', {id: PersonD.idTwo, profiles: []});
+  let inactive_assignee;
+  run(() => {
+    profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
+    store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
+    inactive_assignee = store.push('person', {id: PersonD.idTwo, profiles: []});
+  });
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(profile.get('assignee_fk'), PersonD.idOne);
   assert.equal(profile.get('assignee.id'), PersonD.idOne);
@@ -103,9 +114,12 @@ test('saveAssignee - assignee - profile will set assignee_fk to current assignee
 });
 
 test('rollbackAssignee - assignee - profile will set assignee to current assignee_fk', (assert) => {
-  profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
-  store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
-  let inactive_assignee = store.push('person', {id: PersonD.idTwo, profiles: []});
+  let inactive_assignee;
+  run(() => {
+    profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
+    store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
+    inactive_assignee = store.push('person', {id: PersonD.idTwo, profiles: []});
+  });
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(profile.get('assignee_fk'), PersonD.idOne);
   assert.equal(profile.get('assignee.id'), PersonD.idOne);
@@ -123,9 +137,11 @@ test('rollbackAssignee - assignee - profile will set assignee to current assigne
 
 /* PROFILE & PROFILE_FILTER */
 test('pfs property should return all associated pfs. also confirm related and join model attr values', (assert) => {
-  let m2m = store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
-  profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne]});
-  let profile_filter = store.push('pfilter', {id: PFD.idOne});
+  run(() => {
+    store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
+    profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne]});
+    store.push('pfilter', {id: PFD.idOne});
+  });
   let pfs = profile.get('pfs');
   assert.equal(pfs.get('length'), 1);
   assert.deepEqual(profile.get('pfs_ids'), [PFD.idOne]);
@@ -134,23 +150,29 @@ test('pfs property should return all associated pfs. also confirm related and jo
 });
 
 test('pfs property is not dirty when no pfs present (undefined)', (assert) => {
-  profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: undefined});
-  store.push('pfilter', {id: PFD.id});
+  run(() => {
+    profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: undefined});
+    store.push('pfilter', {id: PFD.id});
+  });
   assert.equal(profile.get('pfs').get('length'), 0);
   assert.ok(profile.get('pfsIsNotDirty'));
 });
 
 test('pfs property is not dirty when no pfs present (empty array)', (assert) => {
-  profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: []});
-  store.push('pfilter', {id: PFD.id});
+  run(() => {
+    profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: []});
+    store.push('pfilter', {id: PFD.id});
+  });
   assert.equal(profile.get('pfs').get('length'), 0);
   assert.ok(profile.get('pfsIsNotDirty'));
 });
 
 test('remove_pf - will remove join model and mark model as dirty', (assert) => {
-  store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
-  store.push('pfilter', {id: PFD.idOne});
-  profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne]});
+  run(() => {
+    store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
+    store.push('pfilter', {id: PFD.idOne});
+    profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne]});
+  });
   assert.equal(profile.get('pfs').get('length'), 1);
   assert.equal(profile.get('profile_pfs_ids').length, 1);
   assert.equal(profile.get('profile_pfs_fks').length, 1);
@@ -165,9 +187,11 @@ test('remove_pf - will remove join model and mark model as dirty', (assert) => {
 });
 
 test('add_pf - will create join model and mark model dirty', (assert) => {
-  store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
-  store.push('pfilter', {id: PFD.idOne});
-  profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne]});
+  run(() => {
+    store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
+    store.push('pfilter', {id: PFD.idOne});
+    profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne]});
+  });
   assert.equal(profile.get('pfs').get('length'), 1);
   assert.equal(profile.get('profile_pfs_ids').length, 1);
   assert.equal(profile.get('profile_pfs_fks').length, 1);
@@ -186,12 +210,14 @@ test('add_pf - will create join model and mark model dirty', (assert) => {
 });
 
 test('savePfs - pfs - will reset the previous pfs with multiple profiles', (assert) => {
-  store.push('pfilter', {id: PFD.idOne});
-  store.push('pfilter', {id: PFD.idTwo});
+  run(() => {
+    store.push('pfilter', {id: PFD.idOne});
+    store.push('pfilter', {id: PFD.idTwo});
+    store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
+    store.push('profile-join-pfilter', {id: PPFD.idTwo, profile_pk: PD.idOne, pfilter_pk: PFD.idTwo});
+    profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne, PPFD.idTwo]});
+  });
   const pfilter_unused = {id: PFD.unusedId};
-  store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
-  store.push('profile-join-pfilter', {id: PPFD.idTwo, profile_pk: PD.idOne, pfilter_pk: PFD.idTwo});
-  profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne, PPFD.idTwo]});
   assert.equal(profile.get('pfs').get('length'), 2);
   profile.remove_pf(PFD.idOne);
   assert.equal(profile.get('pfs').get('length'), 1);
@@ -214,11 +240,14 @@ test('savePfs - pfs - will reset the previous pfs with multiple profiles', (asse
 });
 
 test('rollbackPfs - pfs - multiple profiles with the same pfs will rollbackPfs correctly', (assert) => {
-  store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
-  store.push('profile-join-pfilter', {id: PPFD.idTwo, profile_pk: PD.idTwo, pfilter_pk: PFD.idOne});
-  store.push('pfilter', {id: PFD.idOne});
-  profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne]});
-  let profile_two = store.push('profile', {id: PD.idTwo, profile_pfs_fks: [PPFD.idTwo]});
+  let profile_two;
+  run(() => {
+    store.push('profile-join-pfilter', {id: PPFD.idOne, profile_pk: PD.idOne, pfilter_pk: PFD.idOne});
+    store.push('profile-join-pfilter', {id: PPFD.idTwo, profile_pk: PD.idTwo, pfilter_pk: PFD.idOne});
+    store.push('pfilter', {id: PFD.idOne});
+    profile = store.push('profile', {id: PD.idOne, profile_pfs_fks: [PPFD.idOne]});
+    profile_two = store.push('profile', {id: PD.idTwo, profile_pfs_fks: [PPFD.idTwo]});
+  });
   assert.equal(profile.get('pfs').get('length'), 1);
   assert.equal(profile_two.get('pfs').get('length'), 1);
   assert.ok(profile.get('pfsIsNotDirty'));
@@ -259,7 +288,10 @@ test('rollbackPfs - pfs - multiple profiles with the same pfs will rollbackPfs c
 
 test('saveRelated - change assignee and pfs', assert => {
   // assignee
-  let inactive_assignee = store.push('person', {id: PersonD.idTwo, profiles: []});
+  let inactive_assignee;
+  run(() => {
+    inactive_assignee = store.push('person', {id: PersonD.idTwo, profiles: []});
+  })
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
   profile.change_assignee({id: inactive_assignee.get('id')});
   assert.ok(profile.get('isDirtyOrRelatedDirty'));
@@ -267,7 +299,9 @@ test('saveRelated - change assignee and pfs', assert => {
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
   // pfs
   assert.equal(profile.get('pfs').get('length'), 0);
-  store.push('pfilter', {id: PFD.idOne});
+  run(() => {
+    store.push('pfilter', {id: PFD.idOne});
+  });
   profile.add_pf({id: PFD.idOne});
   assert.equal(profile.get('pfs').get('length'), 1);
   assert.ok(profile.get('isDirtyOrRelatedDirty'));
@@ -277,9 +311,12 @@ test('saveRelated - change assignee and pfs', assert => {
 
 test('rollback - assignee and pfs', assert => {
   // assignee
-  profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
-  assignee = store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
-  let inactive_assignee = store.push('person', {id: PersonD.idTwo, profiles: []});
+  let inactive_assignee;
+  run(() => {
+    profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
+    assignee = store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
+    inactive_assignee = store.push('person', {id: PersonD.idTwo, profiles: []});
+  });
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
   profile.change_assignee({id: inactive_assignee.get('id')});
   assert.equal(profile.get('assignee').get('id'), inactive_assignee.get('id'));
@@ -289,11 +326,25 @@ test('rollback - assignee and pfs', assert => {
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
   // pfs
   assert.equal(profile.get('pfs').get('length'), 0);
-  store.push('pfilter', {id: PFD.idOne});
+  run(() => {
+    store.push('pfilter', {id: PFD.idOne});
+  });
   profile.add_pf({id: PFD.idOne});
   assert.equal(profile.get('pfs').get('length'), 1);
   assert.ok(profile.get('isDirtyOrRelatedDirty'));
   profile.rollback();
   assert.equal(profile.get('pfs').get('length'), 0);
   assert.ok(profile.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('validations', assert => {
+  run(() => {
+    profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
+  });
+  const attrs = profile.get('validations').get('attrs');
+  assert.ok(attrs.get('description'));
+  assert.equal(profile.get('validations').get('_validators').description[0].get('_type'), 'presence');
+  assert.equal(profile.get('validations').get('_validators').description[1].get('_type'), 'length');
+  assert.deepEqual(attrs.get('description').get('messages'), ['errors.profile.description']);
+  // assert.ok(attrs.get('assignee'));
 });
