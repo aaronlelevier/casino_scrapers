@@ -7,7 +7,7 @@ import { validator, buildValidations } from 'ember-cp-validations';
 import OptConfMixin from 'bsrs-ember/mixins/optconfigure/<%= dasherizedModuleName %>';
 
 const Validations = buildValidations({
-  description: [
+  <%= firstPropertySnake %>: [
     validator('presence', {
       presence: true,
       message: 'errors.<%= dasherizedModuleName %>.<%= firstPropertySnake %>'
@@ -17,6 +17,12 @@ const Validations = buildValidations({
       max: 500,
       message: 'errors.<%= dasherizedModuleName %>.<%= firstPropertySnake %>.min_max'
     })
+  ],
+  <%= secondPropertySnake %>: [
+    validator('presence', {
+      presence: true,
+      message: 'errors.<%= dasherizedModuleName %>.<%= secondPropertySnake %>'
+    }),
   ],
 });
 

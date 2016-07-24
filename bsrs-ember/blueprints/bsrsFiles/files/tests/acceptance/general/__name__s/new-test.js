@@ -47,7 +47,7 @@ test('visit new URL and create a new record', assert => {
   xhr(`${<%= secondModelPluralCaps %>_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, <%= secondModelTitle %>F.search_power_select());
   selectSearch('.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select', keyword);
   selectChoose('.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select', keyword);
-  xhr(<%= CapitalizeModule %>_URL, 'POST', <%= camelizedModuleName %>F.put({id: UUID.value, <%= camelizedModuleName %>D.<%= secondProperty %>SelectOne}), {}, 200, <%= camelizedModuleName %>F.list());
+  xhr(<%= CapitalizeModule %>_URL, 'POST', <%= camelizedModuleName %>F.put({id: UUID.value, <%= camelizedModuleName %>D.<%= secondPropertyCamel %>SelectOne}), {}, 200, <%= camelizedModuleName %>F.list());
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);
