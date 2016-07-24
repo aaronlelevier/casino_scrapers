@@ -5,6 +5,7 @@ from django.db import models
 from django.db.models import Q
 
 from contact.models import PhoneNumber, Address, Email
+from tenant.models import Tenant
 from utils.models import (BaseModel, BaseManager, BaseNameModel, DefaultNameManager,
     DefaultToDictMixin)
 
@@ -153,6 +154,7 @@ class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
     '''
     LocationLevel records must be unique by: name, role_type
     '''
+    tenant = models.ForeignKey(Tenant, related_name="location_levels", null=True)
     contact = models.BooleanField(blank=True, default=True,
         help_text="Defines whether locations in this type will have related Contact models.")
     can_create_tickets = models.BooleanField(blank=True, default=True,

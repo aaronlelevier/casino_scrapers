@@ -2,7 +2,7 @@ from rest_framework import exceptions, permissions, viewsets
 
 from tenant.models import Tenant
 from tenant.permissions import TenantPermissions
-from tenant.serializers import TenantDetailSerializer, TenantUpdateSerializer
+from tenant.serializers import TenantDetailSerializer, TenantSerializer
 
 
 class TenantViewSet(viewsets.ModelViewSet):
@@ -15,9 +15,8 @@ class TenantViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return TenantDetailSerializer
-        elif self.action == 'update':
-            return TenantUpdateSerializer
-        raise exceptions.MethodNotAllowed(method=self.action)
+        else:
+            return TenantSerializer
 
     def destroy(self, request, *args, **kwargs):
         raise exceptions.MethodNotAllowed(method="delete")

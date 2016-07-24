@@ -2,6 +2,7 @@ from model_mommy import mommy
 
 from location.models import (Location, LocationStatus, LocationType, LocationLevel,
     LOCATION_COMPANY, LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE, LOCATION_FMU,)
+from tenant.tests.factory import get_or_create_tenant
 from utils.create import _generate_chars
 
 
@@ -10,11 +11,13 @@ LOS_ANGELES = 'los_angeles'
 
 
 def create_location_levels():
-    company, _ = LocationLevel.objects.get_or_create(name=LOCATION_COMPANY)
-    region, _ = LocationLevel.objects.get_or_create(name=LOCATION_REGION)
-    district, _ = LocationLevel.objects.get_or_create(name=LOCATION_DISTRICT)
-    store, _ = LocationLevel.objects.get_or_create(name=LOCATION_STORE)
-    fmu, _ = LocationLevel.objects.get_or_create(name=LOCATION_FMU)
+    tenant = get_or_create_tenant()
+
+    company = create_location_level(name=LOCATION_COMPANY)
+    region = create_location_level(name=LOCATION_REGION)
+    district = create_location_level(name=LOCATION_DISTRICT)
+    store = create_location_level(name=LOCATION_STORE)
+    fmu = create_location_level(name=LOCATION_FMU)
     # JOIN's
     company.children.add(region)
     company.children.add(fmu)
@@ -23,9 +26,12 @@ def create_location_levels():
     fmu.children.add(store)
 
 
-def create_location_level(name=None):
-    name = name or LOCATION_COMPANY
-    obj, _ = LocationLevel.objects.get_or_create(name=name)
+def create_location_level(name=LOCATION_COMPANY):
+    try:
+        obj = LocationLevel.objects.get(name=name)
+    except LocationLevel.DoesNotExist:
+        tenant = get_or_create_tenant()
+        obj = LocationLevel.objects.create(name=name, tenant=tenant)
     return obj
 
 

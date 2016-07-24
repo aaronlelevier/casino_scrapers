@@ -45,8 +45,14 @@ class CategoryViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet
             return cs.CategoryListSerializer
         elif self.action == 'retrieve':
             return cs.CategoryDetailSerializer
-        else:
-            return cs.CategorySerializer
+        elif self.action in ('update', 'partial_update'):
+            return cs.CategoryUpdateSerializer
+        elif self.action == 'create':
+            return cs.CategoryCreateSerializer
+
+    def create(self, request, *args, **kwargs):
+        request.data['tenant'] = request.user.role.tenant.id
+        return super(CategoryViewSet, self).create(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
         """

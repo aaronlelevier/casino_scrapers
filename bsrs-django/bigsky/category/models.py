@@ -4,6 +4,7 @@ from django.db.models import Q
 
 from accounting.models import Currency
 from location.models import SelfReferencingQuerySet, SelfReferencingManager
+from tenant.models import Tenant
 from utils.models import BaseModel, BaseNameModel, DefaultNameManager
 
 
@@ -77,6 +78,7 @@ class Category(BaseModel):
     - Parent or Label is required to create a Category.
     - If the ``parent`` FK is null, then it is a Top Level Category.
     """
+    tenant = models.ForeignKey(Tenant, related_name="categories", null=True)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100, blank=True, null=True)
     label = models.CharField(max_length=100, editable=False, blank=True, null=True,

@@ -1,6 +1,7 @@
 from person.serializers_leaf import PersonIdUsernameSerializer
 from routing.models import Assignment, ProfileFilter
 from routing.validators import ProfileFilterFieldValidator, UniqueByTenantValidator
+from tenant.mixins import RemoveTenantMixin
 from utils.create import update_model
 from utils.serializers import BaseCreateSerializer
 
@@ -14,14 +15,6 @@ class ProfileFilterSerializer(BaseCreateSerializer):
         model = ProfileFilter
         validators = [ProfileFilterFieldValidator()]
         fields = ('id', 'key', 'context', 'field', 'criteria')
-
-
-class RemoveTenantMixin(object):
-
-    def to_representation(self, instance):
-        data = super(RemoveTenantMixin, self).to_representation(instance)
-        data.pop('tenant', None)
-        return data
 
 
 class AssignmentCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):

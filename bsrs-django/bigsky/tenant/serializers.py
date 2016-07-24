@@ -5,6 +5,7 @@ from rest_framework import serializers
 from accounting.models import Currency
 from dtd.serializers import TreeDataLeafNodeSerializer
 from tenant.models import Tenant
+from utils.serializers import BaseCreateSerializer
 
 
 class TenantDetailSerializer(serializers.ModelSerializer):
@@ -26,7 +27,7 @@ class TenantDetailSerializer(serializers.ModelSerializer):
         return data
 
 
-class TenantUpdateSerializer(serializers.ModelSerializer):
+class TenantSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Tenant

@@ -57,7 +57,6 @@ class LocationLevelTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
 
-
     ### GET
 
     def test_get_response(self):
@@ -128,6 +127,9 @@ class LocationLevelTests(APITestCase):
             data['children'][0],
             [str(id) for id in new_location_level.children.values_list('id', flat=True)]
         )
+        # tenant
+        self.assertNotIn('tenant', data)
+        self.assertEqual(new_location_level.tenant, self.person.role.tenant)
 
     def test_create__bool_fields_not_required(self):
         new_name = 'region_lp'
@@ -167,6 +169,7 @@ class LocationLevelTests(APITestCase):
         self.assertEqual(data['warranty'], updated_obj.warranty)
         self.assertEqual(data['catalog_categories'], updated_obj.catalog_categories)
         self.assertEqual(data['assets'], updated_obj.assets)
+        self.assertNotIn('tenant', data)
 
     ### DETAIL ROUTES
 

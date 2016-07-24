@@ -53,7 +53,9 @@ class TicketViewSet(EagerLoadQuerySetMixin, TicketQuerySetFilters, CreateTicketM
         """
         request.data['creator'] = request.user.id
         response = super(TicketViewSet, self).create(request, *args, **kwargs)
-        process_ticket(request.user.role.tenant.id, ticket_id=response.data['id'])
+        # TODO: don't process in "draft" status, move to save() method of Ticket
+        ticket = Ticket.objects.get(id=response.data['id'])
+        process_ticket(ticket.location.location_level.tenant.id, ticket_id=response.data['id'])
         return response
 
 

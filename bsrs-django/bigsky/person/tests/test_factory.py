@@ -79,6 +79,10 @@ class CreateRoleTests(TestCase):
 
         self.assertEqual(role.location_level.name, location_level.name)
 
+    def test_tenant(self):
+        role = factory.create_role()
+        self.assertIsInstance(role.location_level.tenant, Tenant)
+
     def test_explicit_category(self):
         category = create_single_category('foo')
         role = factory.create_role(category=category)
