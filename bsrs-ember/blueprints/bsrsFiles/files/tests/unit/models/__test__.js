@@ -35,7 +35,7 @@ test('serialize', assert => {
   let ret = <%= camelizedModuleName %>.serialize();
   assert.equal(ret.id, <%= camelizedModuleName %>D.idOne);
   assert.equal(ret.<%= firstProperty %>, <%= camelizedModuleName %>D.descOne);
-  assert.equal(ret.<%= secondPropertySnake %>, <%= camelizedModuleName %>D.<%= secondPropertySnake %>One);
+  assert.equal(ret.<%= secondPropertySnake %>, <%= camelizedModuleName %>D.<%= secondPropertyCamel %>One);
   assert.equal(ret.filters.length, 1);
 });
 

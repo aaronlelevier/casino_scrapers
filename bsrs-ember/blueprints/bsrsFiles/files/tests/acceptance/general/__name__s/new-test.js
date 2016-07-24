@@ -21,21 +21,15 @@ const LIST_URL = `${BASE_URL}/index`;
 
 const SEARCH = '.ember-power-select-search input';
 
-var application, store, original_uuid, listXhr;
+var store, listXhr;
 
 moduleForAcceptance('Acceptance | <%= dasherizedModuleName %> new test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     const listData = <%= camelizedModuleName %>F.list();
     listXhr = xhr(`${<%= CapitalizeModule %>_URL}?page=1`, 'GET', null, {}, 200, listData);
-    original_uuid = random.uuid;
     random.uuid = function() { return UUID.value; };
   },
-  afterEach() {
-    random.uuid = original_uuid;
-    
-  }
 });
 
 test('visit new URL and create a new record', assert => {
@@ -53,12 +47,7 @@ test('visit new URL and create a new record', assert => {
   xhr(`${<%= secondModelPluralCaps %>_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, <%= secondModelTitle %>F.search_power_select());
   selectSearch('.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select', keyword);
   selectChoose('.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select', keyword);
-  let payload = {
-    id: UUID.value,
-    <%= firstProperty %>: <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One,
-    <%= secondProperty %>: '249543cf-8fea-426a-8bc3-09778cd78001'
-  };
-  xhr(<%= CapitalizeModule %>_URL, 'POST', payload, {}, 200, {});
+  xhr(<%= CapitalizeModule %>_URL, 'POST', <%= camelizedModuleName %>F.put({id: UUID.value, <%= camelizedModuleName %>D.<%= secondProperty %>SelectOne}), {}, 200, <%= camelizedModuleName %>F.list());
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);
