@@ -29,6 +29,7 @@ export const I18N_LIST_URL = '/admin/translations/index';
 export const LOCATION_LIST_URL = '/admin/locations/index';
 export const LOCATION_LEVEL_LIST_URL = '/admin/location-levels/index';
 export const PEOPLE_LIST_URL = '/admin/people/index';
+export const PROFILE_LIST_URL = '/admin/profiles/index';
 export const ROLE_LIST_URL = '/admin/roles/index';
 export const THIRD_PARTY_LIST_URL = '/admin/third-parties/index';
 export const TICKET_LIST_URL = '/tickets/index';

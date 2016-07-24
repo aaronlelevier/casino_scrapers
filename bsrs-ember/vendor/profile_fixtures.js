@@ -25,8 +25,14 @@ var BSRS_PROFILE_FACTORY = (function() {
   factory.prototype.detail = function(id) {
     return this.generate(id);
   };
-  factory.prototype.put = function(id) {
-    return this.generate();
+  factory.prototype.put = function(profile) {
+    var id = profile && profile.id || this.profile.idOne;
+    var response = this.generate(id);
+    response.assignee = response.assignee.id;
+    for(var key in profile) {
+      response[key] = profile[key];
+    }
+    return response;
   };
   factory.prototype.list = function() {
     return this._list(0, 20);
