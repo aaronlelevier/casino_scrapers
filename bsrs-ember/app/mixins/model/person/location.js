@@ -1,5 +1,6 @@
 import Ember from 'ember';
-import { many_to_many_rollback } from 'bsrs-components/attr/many-to-many';
+import injectDeserializer from 'bsrs-ember/utilities/deserializer';
+import { add_many_to_many, many_to_many_rollback } from 'bsrs-components/attr/many-to-many';
 
 const { run } = Ember;
 
@@ -11,6 +12,17 @@ var LocationMixin = Ember.Mixin.create({
       return location_level ? location_level.get('id') : undefined;
     }
   }),
+  /*
+  * store push of a location from power select needs to setup llevel if change role
+  */
+  add_location(location) {
+    // setup llevel w/ location
+    const store = this.get('simpleStore');
+    const location_store = store.push('location', location);
+    location_store.change_location_level(location.location_level_fk);
+    this.add_locations_container(location);
+  },
+  add_locations_container: add_many_to_many('locations', 'person_locations', 'person'),
   saveLocations() {
     this.resetPersonLocationFks({save: true});
   },

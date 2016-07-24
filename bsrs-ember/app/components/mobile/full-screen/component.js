@@ -24,6 +24,9 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
         });
       }
     },
+    /*
+    * Called from clicking on footer item
+    */
     renderSection(activeComponent) {
       const hashComponents = this.get('hashComponents');
       hashComponents.forEach((componentObj) => {

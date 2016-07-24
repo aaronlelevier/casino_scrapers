@@ -10,6 +10,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import RD from 'bsrs-ember/vendor/defaults/role';
 import config from 'bsrs-ember/config/environment';
 import page from 'bsrs-ember/tests/pages/person-mobile';
 import peoplePage from 'bsrs-ember/tests/pages/person';
@@ -25,7 +26,7 @@ const PEOPLE_INDEX_URL = `${BASE_URL}/index`;
 const DETAIL_URL = `${BASE_URL}/${PD.idOne}`;
 const PEOPLE_PUT_URL = `${PEOPLE_URL}${PD.idOne}/`;
 const LOCATION = '.t-person-locations-select';
-// const PEOPLE_PUT_URL = `${PREFIX}${BASE_URL}/${PD.idOne}/`;
+const ROLE = '.t-person-role-select';
 
 moduleForAcceptance('Acceptance | mobile people detail test', {
   beforeEach() {
@@ -74,8 +75,10 @@ test('can update fields and save', async assert => {
   assert.equal(find('.t-detail-title').text(), person.get('fullname'));
   xhr(`${LOCATIONS_URL}location__icontains=ABC1234/?location_level=${LLD.idOne}`, 'GET', null, {}, 200, LF.list_power_select());
   await selectSearch(LOCATION, 'ABC1234');
+  // role change will clear out locations
   await selectChoose(LOCATION, `${LD.baseStoreName}4`);
-  const payload = PF.put({id: PD.idOne, locations: [LD.idOne, LD.gridLocSelect]});
+  await selectChoose(ROLE, RD.nameTwo);
+  const payload = PF.put({id: PD.idOne, role: RD.idTwo, locations: []});
   xhr(PEOPLE_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   await generalMobilePage.mobileActionDropdownClick();
   await generalPage.save()
