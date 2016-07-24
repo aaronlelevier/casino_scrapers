@@ -16,7 +16,14 @@
 </header>
 <section class="mobile-main flex-item--auto">
   {{yield}}
-  {{component componentString model=model activities=activities save=(action "save") mobile=mobile tagName="flexgrow"}}
+  {{component componentString model=model
+    activities=activities
+    save=(action "save")
+    mobile=mobile
+    tagName="flexgrow"
+    mobileComponentData=(filter-by "component" componentString hashComponents)
+    role_change=role_change
+  }}
 </section>
 <footer class="mobile-footer flex-item--none">
   <hbox class="mobile-footer__wrapper">

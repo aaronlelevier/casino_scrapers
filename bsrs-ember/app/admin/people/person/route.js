@@ -37,7 +37,8 @@ var PersonRoute = TabRoute.extend(FindById, ContactRouteMixin, {
     /* Person's role is dirty, then always fetch. Why would I do that? */
     const override = person.get('roleIsDirty');
     const hashComponents = [
-      {'title': 'Details', 'component': 'people/detail-section', active: 'active'},
+      {'title': 'Details', 'component': 'people/detail-section', active: 'active', roles:roles,
+      statuses:statuses, locales:locales},
       {'title': 'Credentials', 'component': 'people/credentials-section', active: ''},
       {'title': 'Contact', 'component': 'people/contact-section', active: ''},
       {'title': 'Settings', 'component': 'people/settings-section', active: ''},
