@@ -1,16 +1,19 @@
 <div class="bs-mobile">
   <div id="mobile-grid-filter-wormhole">
   </div>
+  <!-- full screen + detail module -->
   <div id="mobile-single-wormhole">
   </div>
+  <!-- Drawer -->
   {{input type="checkbox" checked=drawerOpen id="nav-trigger" class="nav-trigger t-nav-trigger"}}
   <label for="nav-trigger"></label>
   <vbox class="mobile-tray">
     <div class="mobile-tray__inner flex-item--auto">
       <ul>
-          {{#mobile-search-wrapper tagName="li"}}
-            {{grid-search-input placeholder=(t "selects.searchPlaceholder")}}
-          {{/mobile-search-wrapper}}
+        {{#mobile-search-wrapper tagName="li"}}
+          {{grid-search-input placeholder=(t "selects.searchPlaceholder")}}
+        {{/mobile-search-wrapper}}
+
         <li class="nav-section">
           <ul class="nav-section-inner">
             <li class="nav-item t-nav-mobile-tray-item">{{#link-to "dashboard"}}{{t "modules.tickets.newTickets"}}{{/link-to}}</li>
@@ -28,11 +31,13 @@
             <li class="nav-item t-nav-mobile-tray-item">{{#link-to "dashboard"}}{{t "modules.invoices.titleShort"}}{{/link-to}}</li>
           </ul>
         </li>
+
         <li class="nav-section">
           <ul class="nav-section-inner">
             <li class="nav-item t-nav-mobile-tray-item" {{action "closeDrawer"}}>{{#link-to "admin-mobile" class="t-mobile-tray-admin"}}{{t "admin.title"}}{{/link-to}}</li>
           </ul>
         </li>
+
       </ul>
     </div>
     <ul class="flex-item--none">
@@ -40,11 +45,11 @@
     </ul>
   </vbox>
 
+  <!-- Contents within flow of app -->
   <vbox class="mobile-wrap">
     <header class="mobile-header flex-item--none">
       {{nav-bar}}
     </header>
-    {{tab-list tabs=tabs closeTabMaster=(action "closeTabMaster")}}
     <section class="mobile-main flex-item--auto" id="infinity-loading">
       {{outlet}}
     </section>
