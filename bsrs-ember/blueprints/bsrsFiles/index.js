@@ -50,6 +50,9 @@ module.exports = {
 
       joinModel_associatedModelFks: `${options.thirdProperty}_${thirdAssociatedName}s_fks`,
       joinModel_associatedModelIds: `${options.thirdProperty}_${thirdAssociatedName}s_ids`,
+
+      hashComponentOne: firstArr(options.hashComponents),
+      hashComponentTwo: secondArr(options.hashComponents),
     };
   }
 };
@@ -103,4 +106,12 @@ function plural(str) {
     case 'person':
       return 'people';
   }
+}
+
+function firstArr(str) {
+  return str.split(',')[0];
+}
+
+function secondArr(str) {
+  return str.split(',')[1];
 }
