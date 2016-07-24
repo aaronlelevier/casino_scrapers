@@ -12,7 +12,6 @@ var ApplicationRoute = Ember.Route.extend({
   i18n: inject.service(),
   moment: inject.service(),
   tabList: inject.service(),
-  modalIsShowing: false,
   beforeModel() {
     let store = this.get('simpleStore');
     const email_types = Ember.$('[data-preload-email_types]').data('configuration');
