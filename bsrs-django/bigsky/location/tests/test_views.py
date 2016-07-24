@@ -306,7 +306,7 @@ class LocationListTests(APITestCase):
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['id'], str(location.id))
         self.assertEqual(data[0]['name'], 'foobar')
-        self.assertEqual(data[0]['location_level'], str(location.location_level.id))
+        self.assertEqual(data[0]['location_level_fk'], str(location.location_level.id))
         self.assertNotIn('status', data[0])
 
     def test_power_select_location_number(self):
