@@ -18,6 +18,12 @@ const Validations = buildValidations({
       message: 'errors.profile.description.min_max'
     })
   ],
+  assignee: [
+    validator('presence', {
+      presence: true,
+      message: 'errors.profile.assignee'
+    }),
+  ],
 });
 
 export default Model.extend(OptConfMixin, Validations, {

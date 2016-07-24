@@ -346,5 +346,6 @@ test('validations', assert => {
   assert.equal(profile.get('validations').get('_validators').description[0].get('_type'), 'presence');
   assert.equal(profile.get('validations').get('_validators').description[1].get('_type'), 'length');
   assert.deepEqual(attrs.get('description').get('messages'), ['errors.profile.description']);
-  // assert.ok(attrs.get('assignee'));
+  assert.ok(attrs.get('assignee'));
+  assert.deepEqual(attrs.get('assignee').get('messages'), ['errors.profile.assignee']);
 });
