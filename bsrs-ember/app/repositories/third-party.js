@@ -16,12 +16,6 @@ var ThirdPartyRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRU
   url: THIRD_PARTIES_URL,
   ThirdPartyDeserializer: inject('third-party'),
   deserializer: Ember.computed.alias('ThirdPartyDeserializer'),
-  update(model) {
-    return PromiseMixin.xhr(THIRD_PARTIES_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
-      model.save();
-      model.saveRelated();
-    });
-  },
 });
 
 export default ThirdPartyRepo;

@@ -1,6 +1,7 @@
 import Ember from 'ember';
+import Base from 'bsrs-ember/components/mobile/base';
 
-export default Ember.Component.extend({
+export default Base.extend({
   changingPassword: false,
   actions: {
     changePassword() {

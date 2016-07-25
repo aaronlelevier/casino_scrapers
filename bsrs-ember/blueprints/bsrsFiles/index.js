@@ -33,6 +33,26 @@ module.exports = {
       secondModelDisplayCamel: camel(options.secondDisplay),
       //All properties called by snake name to enfore this. Can't name it foo-bar
       secondModelDisplaySnake: snake(options.secondDisplay),
+
+      /* M2M profile, profile-join-filter, profile-filter, pfs */
+      thirdProperty: options.third,
+      thirdPropertyCamel: camel(options.third),
+      thirdPropertyTitle: title(options.third),
+      //All properties called by snake name to enfore this. Can't name it foo-bar
+      thirdPropertySnake: snake(options.third),
+
+      thirdJoinModel: options.thirdJoinModel,
+      thirdJoinModelTitle: title(options.thirdJoinModel),
+      thirdAssociatedModel: options.thirdAssociatedModel,
+      thirdAssociatedModelSnake: snake(options.thirdAssociatedModel),
+      thirdAssociatedModelTitle: title(options.thirdAssociatedModel),
+      thirdAssociatedName: options.thirdAssociatedName,
+
+      joinModel_associatedModelFks: `${options.thirdProperty}_${thirdAssociatedName}s_fks`,
+      joinModel_associatedModelIds: `${options.thirdProperty}_${thirdAssociatedName}s_ids`,
+
+      hashComponentOne: firstArr(options.hashComponents),
+      hashComponentTwo: secondArr(options.hashComponents),
     };
   }
 };
@@ -56,6 +76,7 @@ var camel = function(str) {
   return str;
 };
 
+/* assignee -> Assignee or location_level -> LocationLevel */
 var title = function(str) {
   if (str.includes('_')){
     const indx = str.indexOf('_');
@@ -73,6 +94,7 @@ function first(str) {
   return first.toUpperCase();
 }
 
+/* assignee -> Assignee */
 function firstWhole(str) {
   var first = str.substr(0, 1);
   var rest = str.substr(1);
@@ -84,4 +106,12 @@ function plural(str) {
     case 'person':
       return 'people';
   }
+}
+
+function firstArr(str) {
+  return str.split(',')[0];
+}
+
+function secondArr(str) {
+  return str.split(',')[1];
 }

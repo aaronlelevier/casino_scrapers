@@ -309,8 +309,8 @@ class LocationListTests(APITestCase):
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['id'], str(location.id))
         self.assertEqual(data[0]['name'], 'foobar')
+        self.assertEqual(data[0]['location_level_fk'], str(location.location_level.id))
         self.assertNotIn('status', data[0])
-        self.assertNotIn('location_level', data[0])
 
     def test_power_select_location_number(self):
         location = create_location()
@@ -373,7 +373,6 @@ class LocationListTests(APITestCase):
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data), 1)
-        self.assertNotIn('location_level', data[0])
 
 
 class LocationDetailTests(APITestCase):
@@ -467,7 +466,6 @@ class LocationDetailTests(APITestCase):
             Location.objects.filter(location_level=location_level, name__icontains=keyword).count()
         )
         self.assertNotIn('status', data[0])
-        self.assertNotIn('location_level', data[0])
 
     def test_get_level_parents__filtered(self):
         location = Location.objects.get(name='ca')
@@ -485,7 +483,6 @@ class LocationDetailTests(APITestCase):
             Location.objects.filter(location_level=location_level, name__icontains=keyword).count()
         )
         self.assertNotIn('status', data[0])
-        self.assertNotIn('location_level', data[0])
 
 
 class LocationCreateTests(APITestCase):

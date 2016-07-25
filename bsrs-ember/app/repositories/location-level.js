@@ -15,11 +15,6 @@ var LocationLevelRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, 
   uuid: injectUUID('uuid'),
   LocationLevelDeserializer: inject('location-level'),
   deserializer: Ember.computed.alias('LocationLevelDeserializer'),
-  update(model) {
-    return PromiseMixin.xhr(LOCATION_LEVELS_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
-      model.save();
-    });
-  },
   peek(filter, computed_keys) {
     return this.get('simpleStore').find('location-level', filter);
   },

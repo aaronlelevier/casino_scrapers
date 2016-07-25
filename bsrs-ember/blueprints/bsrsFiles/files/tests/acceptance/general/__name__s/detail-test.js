@@ -20,20 +20,16 @@ const API_DETAIL_URL = `${<%= CapitalizeModule %>_URL}${<%= camelizedModuleName 
 
 const SEARCH = '.ember-power-select-search input';
 
-var application, store, detailXhr, listXhr;
+var store, detailXhr, listXhr;
 
 moduleForAcceptance('Acceptance | <%= dasherizedModuleName %> detail test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     const listData = <%= camelizedModuleName %>F.list();
     listXhr = xhr(`${<%= CapitalizeModule %>_URL}?page=1`, 'GET', null, {}, 200, listData);
     const detailData = <%= camelizedModuleName %>F.detail();
     detailXhr = xhr(API_DETAIL_URL, 'GET', null, {}, 200, detailData);
   },
-  afterEach() {
-    
-  }
 });
 
 test('by clicking record in list view, User is sent to detail view', assert => {
@@ -67,12 +63,7 @@ test('visit detail and update all fields', assert => {
   andThen(() => {
     assert.equal(page.<%= secondProperty %>Input, keyword);
   });
-  let payload = {
-    id: <%= camelizedModuleName %>D.idOne,
-    <%= firstProperty %>: <%= camelizedModuleName %>D.<%= firstPropertyCamel %>Two,
-    <%= secondProperty %>: <%= camelizedModuleName %>D.<%= secondProperty %>SelectOne
-  };
-  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, {});
+  xhr(API_DETAIL_URL, 'PUT', <%= camelizedModuleName %>F.put({<%= camelizedModuleName %>D.<%= firstPropertyCamel %>Two, <%= camelizedModuleName %>D.<%= secondPropertyCamel %>SelectOne}), {}, 200, <%= camelizedModuleName %>F.list());
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);

@@ -65,6 +65,11 @@ label[for="nav-trigger"] {
   cursor: pointer;
   display: block;
   margin: 0;
+  &:after{
+    font-weight: normal;
+    content: "\f0c9";
+    font-family: FontAwesome;
+  }
 }
 
 .nav-trigger:checked + label {

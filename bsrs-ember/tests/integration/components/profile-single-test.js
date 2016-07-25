@@ -120,9 +120,9 @@ test('description is required validation, cannot save w/o description', function
             const $component = this.$('.invalid');
             assert.notOk($component.is(':visible'));
             done();
-          }, 200);
-        }, 1800);
-      }, 1800);
-    }, 200);
-  }, 1800);
+          }, 300);
+        }, 1900);
+      }, 1900);
+    }, 300);
+  }, 1900);
 });

@@ -122,6 +122,7 @@ var LocationDeserializer = Ember.Object.extend({
     response.location_children_fks = extract_children(response, store);
     response.location_parents_fks = extract_parents(response, store);
     response.detail = true;
+    // TODO: Does it come back w/ a status?
     delete response.status;
     location = store.push('location', response);
     location.save();

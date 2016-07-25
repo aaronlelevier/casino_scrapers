@@ -35,6 +35,7 @@ var BSRS_LOCATION_FACTORY = (function() {
       id: i || this.location_defaults.idOne,
       name: name || this.location_defaults.baseStoreName,
       number: this.location_defaults.storeNumber,
+      location_level_fk: this.location_defaults.location_level.id,
     }
   };
   factory.prototype.generate_list = function(i) {

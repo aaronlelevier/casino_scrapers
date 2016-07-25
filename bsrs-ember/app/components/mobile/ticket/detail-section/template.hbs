@@ -1,33 +1,32 @@
-<div style="padding:4%">
-  <div class="row">
-    <div class="col-md-12">
-      {{#form-group title="ticket.label.assignee-fullname" for="assignee"}}
-      {{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=personRepo searchMethod="findPeople" valuePath="assignee" didValidate=didValidate errorClass="error t-ticket-assignee-error"}}
-      {{/form-group}}
-    </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      {{#form-group title="ticket.label.cc" for="cc"}}
-      {{db-fetch-multi-select model=model multiAttr="cc" multiAttrIds="cc_ids" selectedAttr=model.cc className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=personRepo searchMethod="findPeople"}}
-      {{/form-group}}
-    </div>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="ticket.label.assignee-fullname" for="assignee"}}
+    {{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=personRepo searchMethod="findPeople" valuePath="assignee" didValidate=didValidate errorClass="error t-ticket-assignee-error"}}
+    {{/form-group}}
   </div>
+</div>
 
-  <div class="row gutter-top">
-    <div class="col-md-12">
-      {{#parent-model-category-select ticket=model as |child_valid|}}
-      <span class="validation validation-under category-validation-error t-category-validation-error {{child-validation submitted child_valid}}">{{t "validation.invalid"}} {{t "admin.category.label.name"}}</span>
-      {{/parent-model-category-select}}
-    </div>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="ticket.label.cc" for="cc"}}
+    {{db-fetch-multi-select model=model multiAttr="cc" multiAttrIds="cc_ids" selectedAttr=model.cc className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=personRepo searchMethod="findPeople"}}
+    {{/form-group}}
   </div>
+</div>
 
-  <div class="row gutter-top gutter-bottom">
-    <div class="col-md-12">
-      {{#form-group title="ticket.label.request" for="request"}}
-      {{validated-input model=model value=model.request placeholder=(t "ticket.label.request") valuePath="request" className="form-control t-mobile-ticket-request ticket-request" didValidate=didValidate textarea=true class="t-ticket-request-validator"}}
-      {{/form-group}}
-    </div>
+<div class="row gutter-top">
+  <div class="col-md-12">
+    {{#parent-model-category-select ticket=model as |child_valid|}}
+    <span class="validation validation-under category-validation-error t-category-validation-error {{child-validation submitted child_valid}}">{{t "validation.invalid"}} {{t "admin.category.label.name"}}</span>
+    {{/parent-model-category-select}}
+  </div>
+</div>
+
+<div class="row gutter-top gutter-bottom">
+  <div class="col-md-12">
+    {{#form-group title="ticket.label.request" for="request"}}
+    {{validated-input model=model value=model.request placeholder=(t "ticket.label.request") valuePath="request" className="form-control t-mobile-ticket-request ticket-request" didValidate=didValidate textarea=true class="t-ticket-request-validator"}}
+    {{/form-group}}
   </div>
 </div>

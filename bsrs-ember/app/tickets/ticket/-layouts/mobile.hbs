@@ -11,10 +11,9 @@
       otherXhrs=otherXhrs
       repository=repository
     }}
-      <article class="main fixed">
-        {{tickets/ticket-single
-          model=model
-        }}
-      </article>
+      {{tickets/ticket-single
+        model=model
+        mobile=true
+      }}
     {{/mobile/full-screen}}
 {{/ember-wormhole}}

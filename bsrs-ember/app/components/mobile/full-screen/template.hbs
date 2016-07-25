@@ -16,7 +16,14 @@
 </header>
 <section class="mobile-main flex-item--auto">
   {{yield}}
-  {{component componentString model=model activities=activities save=(action "save")}}
+  {{component componentString model=model
+    activities=activities
+    save=(action "save")
+    mobile=mobile
+    tagName="flexgrow"
+    mobileComponentData=(filter-by "component" componentString hashComponents)
+    role_change=role_change
+  }}
 </section>
 <footer class="mobile-footer flex-item--none">
   <hbox class="mobile-footer__wrapper">
@@ -28,3 +35,21 @@
   </hbox>
 </footer>
 </vbox>
+
+<!-- mobile dialog -->
+{{#if mobileDialog}}
+  {{#modal-dialog translucentOverlay=true}}
+    <div>
+      <div class="modal-header">
+        <h4 class="modal-title t-modal-title">{{t 'crud.discard_changes'}}</h4>
+      </div>
+      <div class="modal-body t-modal-body">
+        <p>{{t 'crud.discard_changes_confirm'}}</p>
+      </div>
+      <div class="modal-footer t-modal-footer">
+        <button type="button" class="btn btn-default t-modal-cancel-btn" {{action "cancel_modal"}}>{{t 'crud.no'}}</button>
+        <button type="button" class="btn btn-primary t-modal-rollback-btn" {{action "rollback_model"}}>{{t 'crud.yes'}}</button>
+      </div>
+    </div>
+  {{/modal-dialog}}
+{{/if}}

@@ -21,25 +21,50 @@
         </div>
       </section>
     </div>
-    {{mobile/person/detail-section
+    {{people/detail-section
       model=model
       roles=roles
       role_change=role_change
-      extra_params=extra_params
       locales=locales
-      locationRepo=locationRepo
     }}
   </div>
-  {{mobile/person/credentials-section
+  <div class="row">
+    <div class="col-md-12">
+      <section>
+        <div class="row card-title">
+          <h2 class="col-md-12">{{t "admin.person.label.credentials"}}</h2>
+        </div>
+      </section>
+    </div>
+  </div>
+  {{people/credentials-section
     model=model
     statuses=statuses
     changeBool=(action "changeBool")
   }}
-  {{mobile/person/contact-section
+  <div class="row">
+    <div class="col-md-12">
+      <section>
+        <div class="row card-title">
+          <h2 class="col-md-12">{{t "admin.person.label.contact"}}</h2>
+        </div>
+      </section>
+    </div>
+  </div>
+  {{people/contact-section
     model=model
     phone_number_types=phone_number_types
     email_types=email_types
     default_phone_number_type=default_phone_number_type
     default_email_type=default_email_type
   }}
+  <div class="row">
+    <div class="col-md-12">
+      <section>
+        <div class="row card-title">
+          <h2 class="col-md-12">{{t "admin.person.label.settings"}}</h2>
+        </div>
+      </section>
+    </div>
+  </div>
 </section>

@@ -1,10 +1,9 @@
 import Ember from 'ember';
 const { computed } = Ember;
-import { Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 
 //TODO: does this need to be a model
-export default Model.extend({
+export default Ember.Object.extend({
   simpleStore: Ember.inject.service(),
   ticket: computed(function() {
     const store = this.get('simpleStore');

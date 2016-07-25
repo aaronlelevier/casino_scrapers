@@ -36,7 +36,6 @@ test('visiting dashboard can click on tray and show base modules', async assert 
   await pageDrawer.clickDrawer();
   assert.ok(find('.t-nav-trigger').prop('checked'));
   assert.equal(currentURL(), BASEURLS.DASHBOARD_URL);
-  assert.equal(find('label > i').attr('class').split(/-/)[2], 'reorder');
   assert.equal(find('li.t-nav-mobile-tray-item:eq(0)').text(), t('modules.tickets.newTickets'));
   assert.equal(find('li.t-nav-mobile-tray-item:eq(1)').text(), t('modules.tickets.openTickets'));
   assert.equal(find('li.t-nav-mobile-tray-item:eq(2)').text(), t('modules.workOrders.overdue'));

@@ -3,17 +3,15 @@
     {{currencyObject.symbol}}
   </div>
   {{input type="text" placeholder=(if placeholder placeholder (t "admin.amount_and_default_value" value=placeholderAmount)) focus-out="format_currency" value=bound_field class="form-control t-amount" id="amount" disabled=editPrivilege}}
-  <div class="input-group-btn t-currency-code">
-    {{#power-select
-      selected=currencyObject
-      options=currencyObjects
-      onchange=(action "selected")
-      class="t-currency-code-select"
-      tagName="div"
-      searchEnabled=false
-      as |op|
-    }}
+  {{#power-select
+    selected=currencyObject
+    options=currencyObjects
+    onchange=(action "selected")
+    class="input-group-btn t-currency-code-select"
+    tagName="div"
+    searchEnabled=false
+    as |op|
+  }}
     {{op.code}}
-    {{/power-select}}
-  </div>
+  {{/power-select}}
 </div>

@@ -23,6 +23,12 @@ header.mobile-header {
 section.mobile-main {
   @include smoothScrolling;
   z-index: 0;
+  display: flex;
+  flex-direction: column;
+  .mobile-inner{
+    @include generalPadding;
+    background: $white;
+  }
 }
 
 footer.mobile-footer {

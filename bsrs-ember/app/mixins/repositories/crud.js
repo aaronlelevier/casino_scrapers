@@ -26,6 +26,12 @@ export default Ember.Mixin.create({
       this.get('error').transToError(this.get('errorUrl'));
     });
   },
+  update(model) {
+    return PromiseMixin.xhr(this.get('url') + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
+      model.save();
+      model.saveRelated();
+    });
+  },
   delete(id) {
     const type = this.get('type');
     return PromiseMixin.xhr(this.get('url') + id + '/', 'DELETE').then(() => {

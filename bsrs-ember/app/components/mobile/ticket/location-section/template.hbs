@@ -1,9 +1,7 @@
-<div style="padding:4%">
-  <div class="row">
-    <div class="col-md-12">
-      {{#form-group title="ticket.label.location-name" for="location"}}
-      {{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket" valuePath="location" didValidate=didValidate errorClass="error t-ticket-location-error"}}
-      {{/form-group}}
-    </div>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="ticket.label.location-name" for="location"}}
+    {{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket" valuePath="location" didValidate=didValidate errorClass="error t-ticket-location-error"}}
+    {{/form-group}}
   </div>
 </div>

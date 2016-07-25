@@ -33,12 +33,6 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMix
     ticket.change_priority(priority_id);
     return ticket;
   },
-  update(model) {
-    return PromiseMixin.xhr(TICKETS_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
-      model.save();
-      model.saveRelated();
-    });
-  },
   patch(ticket, link, patch_id) {
     return PromiseMixin.xhr(`${PREFIX}/dt/${patch_id}${TICKET_URL}/`, 'PATCH', {data: JSON.stringify(ticket.patchSerialize(link))}).then((response) => {
       ticket.save();

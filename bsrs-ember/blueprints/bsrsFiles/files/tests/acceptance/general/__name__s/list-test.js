@@ -14,18 +14,14 @@ const LIST_URL = `${BASE_URL}/index`;
 const DETAIL_URL = `${BASE_URL}/${<%= camelizedModuleName %>D.idZero}`;
 const API_DETAIL_URL = `${<%= CapitalizeModule %>_URL}${<%= camelizedModuleName %>D.idZero}/`;
 
-let application, store;
+let store;
 
 moduleForAcceptance('Acceptance | <%= dasherizedModuleName %> list test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     const listData = <%= camelizedModuleName %>F.list();
     xhr(`${<%= CapitalizeModule %>_URL}?page=1`, 'GET', null, {}, 200, listData);
   },
-  afterEach() {
-    
-  }
 });
 
 test('can click <%= dasherizedModuleName %>s from the Dashboard to grid  and then to detail', assert => {

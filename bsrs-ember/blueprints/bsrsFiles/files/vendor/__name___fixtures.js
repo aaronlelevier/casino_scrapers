@@ -7,8 +7,8 @@ var BSRS_<%= CapitalizeModule %>_FACTORY = (function() {
     return {
       id: id,
       <%= firstPropertySnake %>: this.<%= camelizedModuleName %>.<%= firstPropertyCamel %>One,
-      <%= secondProperty %>: {
-        id: this.<%= camelizedModuleName %>.<%= secondProperty %>One,
+      <%= secondPropertySnake %>: {
+        id: this.<%= camelizedModuleName %>.<%= secondPropertyCamel %>One,
         <%= secondModelDisplaySnake %>: this.<%= camelizedModuleName %>.<%= secondModelDisplaySnake %>
       }
     };
@@ -16,8 +16,14 @@ var BSRS_<%= CapitalizeModule %>_FACTORY = (function() {
   factory.prototype.detail = function(id) {
     return this.generate(id);
   };
-  factory.prototype.put = function(id) {
-    return this.generate();
+  factory.prototype.put = function(<%= SnakeModuleName %>) {
+    var id = <%= SnakeModuleName %> && <%= camelizedModuleName %>.id || this.<%= camelizedModuleName %>.idOne;
+    var response = this.generate(id);
+    response.<%= secondPropertySnake %> = response.<%= secondPropertySnake %>.id;
+    for(var key in <%= SnakeModuleName %>) {
+      response[key] = <%= SnakeModuleName %>[key];
+    }
+    return response;
   };
   factory.prototype.list = function() {
     return this._list(0, 20);
@@ -45,7 +51,7 @@ var BSRS_<%= CapitalizeModule %>_FACTORY = (function() {
       id: `${this.<%= camelizedModuleName %>.idOne.slice(0,-1)}${i}`,
       <%= firstPropertySnake %>: `${this.<%= camelizedModuleName %>.<%= firstPropertyCamel %>One}${i}`,
       <%= secondPropertySnake %>: {
-        id: `${this.<%= camelizedModuleName %>.<%= secondProperty %>One.slice(0,-1)}${i}`,
+        id: `${this.<%= camelizedModuleName %>.<%= secondPropertyCamel %>One.slice(0,-1)}${i}`,
         <%= secondModelDisplaySnake %>: `${this.<%= camelizedModuleName %>.<%= secondModelDisplaySnake %>}${i}`,
       },
     };

@@ -17,6 +17,16 @@ function npmInstall {
     fi
 }
 
+function bowerInstall {
+    bower install
+    BOWER_INSTALL=$?
+    echo $BOWER_INSTALL
+    if [ "$BOWER_INSTALL" == 1 ]; then
+      echo "bower install failed"
+      exit $BOWER_INSTALL
+    fi
+}
+
 function emberUnitTest {
     if [ "$(uname)" == "Darwin" ]; then
       ./node_modules/ember-cli/bin/ember test -f unit
@@ -43,6 +53,19 @@ function emberIntegrationTest {
     fi
 }
 
+function emberAddonTest {
+  if [ "$(uname)" == "Darwin" ]; then
+    ./node_modules/ember-cli/bin/ember test
+  else
+    xvfb-run ./node_modules/ember-cli/bin/ember test
+  fi
+  EMBER_TEST=$?
+  if [" $EMBER_TEST" == 1 ]; then
+    echo "ember addon tests failed"
+    exit $EMBER_TEST
+  fi
+}
+
 cd bsrs-ember
 
 echo $(date -u) "NPM INSTALL"
@@ -56,6 +79,13 @@ rm -rf tmp dist
 
 echo $(date -u) "EMBER INTEGRATION TESTS"
 emberIntegrationTest
+
+cd addons/bsrs-components
+echo $(date -u) $(pwd) "NPM INSTALL ADDON"
+npmInstall
+bowerInstall
+echo $(date -u) "EMBER ADDON TESTS"
+emberAddonTest
 
 echo $(date -u) "BUILD SUCCESSFUL!"
 

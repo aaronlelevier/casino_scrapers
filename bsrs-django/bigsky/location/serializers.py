@@ -109,11 +109,14 @@ class LocationListSerializer(serializers.ModelSerializer):
 
 class LocationSearchSerializer(serializers.ModelSerializer):
 
+    # Addresses for power select component
     addresses = AddressSerializer(required=False, many=True)
+    # fk b/c manually link location and llevel in add_location function
+    location_level_fk = serializers.PrimaryKeyRelatedField(queryset=LocationLevel.objects.all(), source='location_level')
 
     class Meta:
         model = Location
-        fields = ('id', 'name', 'number', 'addresses')
+        fields = ('id', 'name', 'number', 'addresses', 'location_level_fk')
 
 
 class LocationDetailSerializer(serializers.ModelSerializer):

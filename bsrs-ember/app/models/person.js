@@ -78,11 +78,11 @@ const Validations = buildValidations({
 
 var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, LocationMixin, NewMixin, OptConf, RoleMixin, LocaleMixin, {
   init() {
+    this._super(...arguments);
     belongs_to.bind(this)('status', 'person', {bootstrapped:true});
     belongs_to.bind(this)('role', 'person', {bootstrapped:true, change_func:false, rollback: false});
     belongs_to.bind(this)('locale', 'person', {bootstrapped:true, change_func:false});
-    many_to_many.bind(this)('location', 'person', {plural:true, rollback:false, save:false});
-    this._super(...arguments);
+    many_to_many.bind(this)('location', 'person', {plural:true, add_func: false, rollback:false, save:false});
   },
   type: 'person',
   simpleStore: Ember.inject.service(),

@@ -48,10 +48,8 @@ const DETAIL_URL = `${BASE_PEOPLE_URL}/${PD.idOne}`;
 const LETTER_A = {keyCode: 65};
 const LETTER_M = {keyCode: 77};
 const BACKSPACE = {keyCode: 8};
-const LOCATION = '.t-person-locations-select .ember-basic-dropdown-trigger';
+const LOCATION = '.t-person-locations-select';
 const LOCATION_DROPDOWN = options;
-const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-options > .ember-power-select-multiple-option`;
-const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 var store, list_xhr, people_detail_data, detail_xhr, url, translations, role_route_data_endpoint;
@@ -265,7 +263,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(inputCurrencyPage.authAmountPlaceholder(), 'Default: ' + PD.auth_amount);
       assert.equal(inputCurrencyPage.authAmountInheritedFromText, 'Inherited from: ' + TENANT_DEFAULTS.inherits_from_role);
-      assert.equal(inputCurrencyPage.authAmountValue, "");
+      assert.equal(inputCurrencyPage.authAmountValue, '');
     });
     xhr(role_route_data_endpoint, 'GET', null, {}, 200, {});
     xhr(`${ROLES_URL}${RD.idOne}/`, 'GET', null, {}, 200, RF.detail(RD.idOne));
@@ -284,7 +282,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       assert.equal(person.get('inherited').auth_currency.inherited_value, CURRENCY_DEFAULTS.id);
       assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.code);
     });
-    selectChoose('.t-currency-code', CURRENCY_DEFAULTS.codeCAD);
+    selectChoose('.t-currency-code-select', CURRENCY_DEFAULTS.codeCAD);
     andThen(() => {
       assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.codeCAD);
       let person = store.find('person', PD.id);
@@ -983,7 +981,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     people_list_data_mod.results[0].role = RD.idTwo;
     list_xhr = xhr(PEOPLE_URL + '?page=1', 'GET', null, {}, 200, people_list_data_mod);
     page.visitDetail();
-    let url = PREFIX + DETAIL_URL + "/";
+    let url = PREFIX + DETAIL_URL + '/';
     let role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
     let payload = PF.put({id: PD.id, role: role.id, locations: []});
     xhr(url,'PUT',JSON.stringify(payload),{},200);
@@ -1018,7 +1016,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     people_list_data_mod.results[0].role = RD.idTwo;
     list_xhr = xhr(PEOPLE_URL + '?page=1', 'GET', null, {}, 200, people_list_data_mod);
     page.visitDetail();
-    let url = PREFIX + DETAIL_URL + "/";
+    let url = PREFIX + DETAIL_URL + '/';
     let role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
     let payload = PF.put({id: PD.id, role: role.id, locations: []});
     xhr(url,'PUT',JSON.stringify(payload),{},200);
@@ -1065,19 +1063,9 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       assert.equal(person.get('locations').get('length'), 1);
       assert.equal(page.locationOneSelected.indexOf(LD.storeName), 2);
     });
-    page.locationClickDropdown();
-    andThen(() => {
-      assert.equal(page.locationOptionLength, 1);
-      assert.equal(find(LOCATION_DROPDOWN).text().trim(), GLOBALMSG.power_search);
-    });
-    let locations_endpoint = `${LOCATIONS_URL}location__icontains=ABC1234/?location_level=${LLD.idOne}`;
-    const response = LF.list_power_select();
-    xhr(locations_endpoint, 'GET', null, {}, 200, response);
-    fillIn(LOCATION_SEARCH, 'ABC1234');
-    andThen(() => {
-      assert.equal(page.locationOptionLength, POWER_SELECT_LENGTH);
-    });
-    page.locationClickOptionTwo();
+    xhr(`${LOCATIONS_URL}location__icontains=ABC1234/?location_level=${LLD.idOne}`, 'GET', null, {}, 200, LF.list_power_select());
+    selectSearch(LOCATION, 'ABC1234');
+    selectChoose(LOCATION, `${LD.baseStoreName}4`);
     andThen(() => {
       let person = store.find('person', PD.idOne);
       assert.equal(person.get('locations').get('length'), 2);
@@ -1093,7 +1081,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       let person = store.find('person', PD.idOne);
       assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
-    let url = PREFIX + DETAIL_URL + "/";
+    let url = PREFIX + DETAIL_URL + '/';
     let payload = PF.put({id: PD.idOne, locations: [LD.idOne, LD.gridLocSelect]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
@@ -1121,7 +1109,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       assert.equal(page.locationOneSelected.indexOf(LD.storeName), 2);
       assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
-    let url = PREFIX + DETAIL_URL + "/";
+    let url = PREFIX + DETAIL_URL + '/';
     let payload = PF.put({id: PD.idOne, locations: [LD.idOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
@@ -1159,7 +1147,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       assert.equal(page.locationOneSelected.indexOf(LD.storeNameOne), 2);
       assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
-    let url = PREFIX + DETAIL_URL + "/";
+    let url = PREFIX + DETAIL_URL + '/';
     let payload = PF.put({id: PD.idOne, locations: [LD.idOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
@@ -1308,12 +1296,12 @@ test('when you deep link to the person detail view you get bound attrs', (assert
       assert.ok(person.get('id') !== PERSON_CURRENT_DEFAULTS.id);
       assert.equal(find('.t-person-first-name').val(), PD.first_name);
       assert.equal(page.localeInput, PD.localeFull);
-      assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
+      assert.equal(find('.t-person-first-name').prop('placeholder'), 'First Name');
     });
     page.localeClickDropdown();
     page.localeClickOptionTwo();
     andThen(() => {
-      assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
+      assert.equal(find('.t-person-first-name').prop('placeholder'), 'First Name');
     });
   });
 
