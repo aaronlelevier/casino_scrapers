@@ -88,3 +88,13 @@ def create_location(location_level=None):
     location_level = location_level or create_location_level()
     return mommy.make(Location, name=_generate_chars(), number=_generate_chars(),
         location_level=location_level)
+
+
+@create_location_related_defaults
+def create_top_level_location():
+    try:
+        location = Location.objects.get(name=LOCATION_COMPANY)
+    except Location.DoesNotExist:
+        location_level = create_location_level()
+        location = mommy.make(Location, name=LOCATION_COMPANY, location_level=location_level)
+    return location

@@ -5,6 +5,7 @@ from location.models import (Location, LocationLevel, LOCATION_COMPANY,
 LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE, LOCATION_FMU,)
 from location.tests import factory
 from tenant.models import Tenant
+from tenant.tests.factory import get_or_create_tenant
 
 
 class CreateLocationLevelsTests(TestCase):
@@ -174,3 +175,20 @@ class CreateLocationTests(TestCase):
 
         self.assertIsInstance(ret, Location)
         self.assertEqual(ret.location_level, location_level)
+
+class CreateTopLevelLocation(TestCase):
+
+    def test_main(self):
+        tenant = get_or_create_tenant()
+
+        ret = factory.create_top_level_location()
+
+        self.assertIsInstance(ret, Location)
+        self.assertEqual(ret.name, LOCATION_COMPANY)
+        self.assertEqual(ret.location_level.name, LOCATION_COMPANY)
+        self.assertEqual(ret.location_level.tenant, tenant)
+
+    def test_indempotent(self):
+        ret = factory.create_top_level_location()
+        ret_two = factory.create_top_level_location()
+        self.assertEqual(ret, ret_two)
