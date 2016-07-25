@@ -42,8 +42,8 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
     rollback_model() {
 
     },
-    cancel_model() {
-
+    cancel_modal() {
+      this.set('mobileDialog', false);
     }
   }
 });
