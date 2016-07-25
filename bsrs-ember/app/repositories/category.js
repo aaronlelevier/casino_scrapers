@@ -16,12 +16,6 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
   uuid: injectUUID('uuid'),
   CategoryDeserializer: inject('category'),
   deserializer: Ember.computed.alias('CategoryDeserializer'),
-  update(model) {
-    return PromiseMixin.xhr(CATEGORIES_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
-      model.save();
-      model.saveRelated();
-    });
-  },
   findCategoryChildren(search) {
     let url = CATEGORIES_URL;
     if (search) {

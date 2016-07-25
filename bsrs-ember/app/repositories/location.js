@@ -15,12 +15,6 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
   uuid: injectUUID('uuid'),
   LocationDeserializer: inject('location'),
   deserializer: Ember.computed.alias('LocationDeserializer'),
-  update(model) {
-    return PromiseMixin.xhr(LOCATIONS_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
-      model.save();
-      model.saveRelated();
-    });
-  },
   findLocationChildren(search_criteria, extra_params) {
     const { llevel, pk } = extra_params;
     let url = `${LOCATIONS_URL}get-level-children/${llevel}/${pk}/`;
