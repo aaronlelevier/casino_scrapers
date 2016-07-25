@@ -71,6 +71,7 @@ echo $(date -u) "EMBER INTEGRATION TESTS"
 emberIntegrationTest
 
 cd addons/bsrs-components
+echo $(date -u) $(pwd) "NPM INSTALL ADDON"
 npmInstall
 echo $(date -u) "EMBER ADDON TESTS"
 emberAddonTest
