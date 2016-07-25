@@ -43,6 +43,19 @@ function emberIntegrationTest {
     fi
 }
 
+function emberAddonTest {
+  if [ "$(uname)" == "Darwin" ]; then
+    ./node_modules/ember-cli/bin/ember test
+  else
+    xvfb-run ./node_modules/ember-cli/bin/ember test
+  fi
+  EMBER_TEST=$?
+  if [" $EMBER_TEST" == 1 ]; then
+    echo "ember addon tests failed"
+    exit $EMBER_TEST
+  fi
+}
+
 cd bsrs-ember
 
 echo $(date -u) "NPM INSTALL"
@@ -56,6 +69,11 @@ rm -rf tmp dist
 
 echo $(date -u) "EMBER INTEGRATION TESTS"
 emberIntegrationTest
+
+cd addon/bsrs-components
+npmInstall
+echo $(date -u) "EMBER ADDON TESTS"
+emberAddonTest
 
 echo $(date -u) "BUILD SUCCESSFUL!"
 
