@@ -180,12 +180,7 @@ var ApplicationRoute = Ember.Route.extend({
     },
     /* MOBILE */
     closeMobileDetail(model, redirectRoute) {
-      if (model.get('isDirtyOrRelatedDirty')) {
-        this.trx.attemptedTransitionModel = model;
-        this.trx.attemptedAction = 'closeMobileDetail';
-      } else {
-        this.transitionTo(redirectRoute);
-      }
+      this.transitionTo(redirectRoute);
     }
   }
 });

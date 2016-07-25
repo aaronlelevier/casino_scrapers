@@ -30,7 +30,11 @@ export default Ember.Mixin.create({
     cancel() {
       const model = this.get('model');
       const redirectRoute = this.get('redirectRoute');
-      this.sendAction('close', model, redirectRoute);
+      if (model.get('isNotDirtyOrRelatedNotDirty')) {
+        this.sendAction('close', model, redirectRoute);
+      } else {
+        this.set('mobileDialog', true);
+      }
     },
   }
 });

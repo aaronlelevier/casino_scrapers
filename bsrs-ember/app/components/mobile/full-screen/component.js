@@ -5,6 +5,7 @@ import inject from 'bsrs-ember/utilities/inject';
 var FullScreen = Ember.Component.extend(FullScreenMixin, {
   activityRepository: inject('activity'),
   mobile: true,
+  mobileDialog: false,
   init() {
     this._super(...arguments);
     this.componentStringFunc();
@@ -38,6 +39,12 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
       });
       this.componentStringFunc(activeComponent.component);
     },
+    rollback_model() {
+
+    },
+    cancel_model() {
+
+    }
   }
 });
 
