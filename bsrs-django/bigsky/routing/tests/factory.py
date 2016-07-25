@@ -1,4 +1,4 @@
-from location.models import Location
+from location.tests.factory import create_top_level_location
 from person.tests.factory import create_single_person
 from routing.models import Assignment, ProfileFilter
 from ticket.models import TicketPriority
@@ -13,7 +13,7 @@ def create_ticket_priority_filter():
 
 
 def create_ticket_location_filter():
-    location = Location.objects.create_top_level()
+    location = create_top_level_location()
     return ProfileFilter.objects.create(key='admin.placeholder.location_store',
                                         field='location', criteria=[str(location.id)])
 

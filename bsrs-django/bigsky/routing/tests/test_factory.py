@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth.models import ContentType
 from django.test import TestCase
 
-from location.models import Location
+from location.tests.factory import create_top_level_location
 from person.models import Person
 from routing.models import Assignment
 from routing.tests import factory
@@ -28,7 +28,7 @@ class FactoryTests(TestCase):
 
     def test_create_ticket_location_filter(self):
         # don't test 'context' b/c populated by default and tested above
-        location = Location.objects.create_top_level()
+        location = create_top_level_location()
 
         pf = factory.create_ticket_location_filter()
 

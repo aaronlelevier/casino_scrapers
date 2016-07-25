@@ -45,8 +45,7 @@ class AssignmentManager(BaseManager):
         """
         ticket = Ticket.objects.get(id=ticket_id)
 
-        # TODO: should be "order_by('order')"
-        for assignment in self.filter(tenant__id=tenant_id):
+        for assignment in self.filter(tenant__id=tenant_id).order_by('order'):
             match = assignment.is_match(ticket)
             if match:
                 ticket.assignee = assignment.assignee
@@ -88,7 +87,7 @@ class Assignment(BaseModel):
 @receiver(post_save, sender=Assignment)
 def update_order(sender, instance=None, created=False, **kwargs):
     "Post-save hook for incrementing order if not set"
-    if not instance.order:
+    if instance.order is None:
         instance.order = Assignment.objects.filter(tenant=instance.tenant).count()
         instance.save()
 

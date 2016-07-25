@@ -4,8 +4,7 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from location.models import Location
-from location.tests.factory import create_location
+from location.tests.factory import create_location, create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
 from routing.models import Assignment, AssignmentManager, AssignmentQuerySet, ProfileFilter
@@ -26,7 +25,7 @@ class AssignmentManagerTests(TestCase):
 
         self.ticket = create_ticket()
         self.ticket.assignee = None
-        self.ticket.location = Location.objects.create_top_level()
+        self.ticket.location = create_top_level_location()
         self.ticket.save()
 
         self.assignment = create_assignment('a')
@@ -102,6 +101,25 @@ class AssignmentManagerTests(TestCase):
         ticket = Ticket.objects.get(id=self.ticket.id)
         self.assertIsNone(ticket.assignee)
 
+    def test_process_ticket__both_match_so_determined_by_order(self):
+        # 1st matching
+        assignment_three = create_assignment('c')
+        assignment_three.order = 0
+        assignment_three.save()
+        self.assertEqual(assignment_three.order, 0)
+        self.assertTrue(assignment_three.is_match(self.ticket))
+        # 2nd matching
+        self.assertEqual(self.assignment.order, 1)
+        self.assertTrue(self.assignment.is_match(self.ticket))
+        # processed Ticket should get the first matching AP assignee
+        self.assertIsNone(self.ticket.assignee)
+
+        Assignment.objects.process_ticket(self.ticket.location.location_level.tenant.id,
+                                          self.ticket.id)
+
+        ticket = Ticket.objects.get(id=self.ticket.id)
+        self.assertEqual(ticket.assignee, assignment_three.assignee)
+
 
 class AssignmentTests(TestCase):
 
@@ -109,7 +127,7 @@ class AssignmentTests(TestCase):
         self.tenant = get_or_create_tenant()
         self.assignment = create_assignment()
         self.ticket = create_ticket()
-        self.ticket.location = Location.objects.create_top_level()
+        self.ticket.location = create_top_level_location()
         self.ticket.save()
 
     def test_meta__ordering(self):
