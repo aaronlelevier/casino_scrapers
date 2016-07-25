@@ -269,20 +269,35 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
         serializer = TicketCreateSerializer(self.ticket)
         self.data = serializer.data
 
-    def test_ticket(self):
+    def test_data(self):
+        self.data.pop('cc', None)
         self.data.update({
             'id': str(uuid.uuid4()),
             'request': 'plumbing',
-            'dt_path': [{'foo': 'bar'}]
+            'dt_path': [{'foo': 'bar'}],
+            'completion_date': now()
         })
 
         response = self.client.post('/api/tickets/', self.data, format='json')
 
-        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(self.data['id'], data['id'])
-        self.assertEqual(self.data['request'], data['request'])
-        self.assertEqual(self.data['dt_path'], data['dt_path'])
+        data = json.loads(response.content.decode('utf8'))
+        ticket = Ticket.objects.get(id=data['id'])
+        self.assertEqual(data['id'], str(ticket.id))
+        self.assertEqual(data['location'], str(ticket.location.id))
+        self.assertEqual(data['status'], str(ticket.status.id))
+        self.assertEqual(ticket.status.name, TICKET_STATUS_NEW)
+        self.assertEqual(data['priority'], str(ticket.priority.id))
+        self.assertEqual(data['assignee'], str(ticket.assignee.id))
+        self.assertEqual(data['requester'], str(ticket.requester))
+        self.assertIn(data['categories'][0],
+            [str(id) for id in ticket.categories.values_list('id', flat=True)])
+        self.assertEqual(data['attachments'],
+            list(ticket.attachments.values_list('id', flat=True)))
+        self.assertEqual(data['request'], ticket.request)
+        self.assertEqual(data['dt_path'], self.data['dt_path'])
+        self.assertTrue(data['completion_date'])
+        self.assertEqual(data['creator'], str(self.person.id))
 
     def test_attachments_field_not_required(self):
         self.data.update({
@@ -310,34 +325,6 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(self.data['id'], data['id'])
         self.assertEqual(self.data['request'], data['request'])
-
-    def test_data(self):
-        self.data.pop('cc', None)
-        self.data.update({
-            'id': str(uuid.uuid4()),
-            'request': 'plumbing',
-            'completion_date': now()
-        })
-
-        response = self.client.post('/api/tickets/', self.data, format='json')
-
-        self.assertEqual(response.status_code, 201)
-        data = json.loads(response.content.decode('utf8'))
-        ticket = Ticket.objects.get(id=data['id'])
-        self.assertEqual(data['id'], str(ticket.id))
-        self.assertEqual(data['location'], str(ticket.location.id))
-        self.assertEqual(data['status'], str(ticket.status.id))
-        self.assertEqual(ticket.status.name, TICKET_STATUS_NEW)
-        self.assertEqual(data['priority'], str(ticket.priority.id))
-        self.assertEqual(data['assignee'], str(ticket.assignee.id))
-        self.assertEqual(data['requester'], str(ticket.requester))
-        self.assertIn(data['categories'][0],
-            [str(id) for id in ticket.categories.values_list('id', flat=True)])
-        self.assertEqual(data['attachments'],
-            list(ticket.attachments.values_list('id', flat=True)))
-        self.assertEqual(data['request'], ticket.request)
-        self.assertTrue(data['completion_date'])
-        self.assertEqual(data['creator'], str(self.person.id))
 
     def test_status_and_priority_required(self):
         self.data.pop('cc', None)
