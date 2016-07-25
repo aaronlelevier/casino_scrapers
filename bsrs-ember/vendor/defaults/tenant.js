@@ -22,8 +22,6 @@ var DEFAULT_GENERIAL_TENANT = (function() {
       default_currency_id: this.currency.id,
       // Initial Role
       create_all: true,
-      accept_assign: false,
-      accept_notify: false,
       password_one_time: false,
 
       // Other
@@ -42,8 +40,6 @@ var DEFAULT_GENERIAL_TENANT = (function() {
       default_currency_idOther: this.currency.idCAD,
       // Other Role
       create_allOther: false,
-      accept_assignOther: true,
-      accept_notifyOther: true,
       password_one_timeOther: true,
 
       // Misc.

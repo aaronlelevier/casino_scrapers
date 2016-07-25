@@ -68,19 +68,6 @@ export default PageObject.create({
   usernameFillIn: fillable('.t-person-username'),
   username: value('.t-person-username'),
 
-  //settings
-  acceptAssignChecked: () => Ember.$('.t-person-accept_assign').is(':checked'),
-  acceptAssignClick: clickable('.t-person-accept_assign-label'),
-  acceptAssignInheritedFromLabelText: text('.t-person-accept_assign-label-inherits_from'),
-  acceptAssignLabelText: text('.t-person-accept_assign-label'),
-  acceptAssignInheritedFromClick: clickable('.t-inherited-msg-accept_assign-link'),
-
-  acceptNotifyChecked: () => Ember.$('.t-person-accept_notify').is(':checked'),
-  acceptNotifyClick: clickable('.t-person-accept_notify-label'),
-  acceptNotifyInheritedFromLabelText: text('.t-person-accept_notify-label-inherits_from'),
-  acceptNotifyLabelText: text('.t-person-accept_notify-label'),
-  acceptNotifyInheritedFromClick: clickable('.t-inherited-msg-accept_notify-link'),
-
   clickChangePassword: clickable('.t-person-change-password'),
   passwordFillIn: fillable('.t-person-password'),
   passwordOneTimeChecked: () => Ember.$('.t-person-password_one_time').is(':checked'),

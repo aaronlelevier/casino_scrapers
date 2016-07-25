@@ -66,8 +66,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
       employee_id : this.person_defaults.employee_id,
       auth_amount : undefined,
       auth_currency : undefined,
-      accept_notify : undefined,
-      accept_assign : undefined,
       status_fk : this.status_defaults.activeId,
       role: this.role_defaults.idOne,
       locations: [],

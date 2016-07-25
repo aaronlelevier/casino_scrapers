@@ -60,20 +60,6 @@ test('default state for auth amount on person model is undefined', (assert) => {
     assert.ok(person.get('isNotDirty'));
 });
 
-test('accept_assign', assert => {
-    person = store.push('person', {id: PD.idOne});
-    assert.ok(person.get('isNotDirty'));
-    person.set('accept_assign', true);
-    assert.ok(person.get('isDirty'));
-});
-
-test('accept_notify', assert => {
-    person = store.push('person', {id: PD.idOne});
-    assert.ok(person.get('isNotDirty'));
-    person.set('accept_notify', true);
-    assert.ok(person.get('isDirty'));
-});
-
 test('password_one_time', assert => {
     person = store.push('person', {id: PD.idOne});
     assert.ok(person.get('isNotDirty'));

@@ -347,13 +347,9 @@ test('destructure inherited obj to first level attrs', assert => {
   // setting attrs
   assert.equal(person.get('auth_amount'), PD.inherited.auth_amount.value);
   assert.equal(person.get('auth_currency'), PD.inherited.auth_currency.value);
-  assert.equal(person.get('accept_assign'), PD.inherited.accept_assign.value);
-  assert.equal(person.get('accept_notify'), PD.inherited.accept_notify.value);
   // settings_object
   assert.deepEqual(person.get('inherited').auth_amount, PD.inherited.auth_amount);
   assert.deepEqual(person.get('inherited').auth_currency, PD.inherited.auth_currency);
-  assert.deepEqual(person.get('inherited').accept_assign, PD.inherited.accept_assign);
-  assert.deepEqual(person.get('inherited').accept_notify, PD.inherited.accept_notify);
 });
 
 // TODO: Need to add Currency to Person Deserializer

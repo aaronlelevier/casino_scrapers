@@ -99,16 +99,6 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
           inherited_value: this.currency_defaults.id,
           inherits_from: 'role',
           inherits_from_id: this.role_defaults.idOne
-        },
-        accept_assign: {
-          inherited_value: false,
-          inherits_from: 'role',
-          inherits_from_id: this.role_defaults.idOne
-        },
-        accept_notify: {
-          inherited_value: false,
-          inherits_from: 'role',
-          inherits_from_id: this.role_defaults.idOne
         }
       }
     };

@@ -1334,13 +1334,6 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     page.visitDetail();
     andThen(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      // inherited
-      assert.equal(page.acceptAssignLabelText, translations['admin.setting.accept_assign']);
-      assert.equal(page.acceptAssignChecked(), PD.inherited.accept_assign.inherited_value);
-      assert.equal(page.acceptAssignInheritedFromLabelText, 'Inherited from: ' + TENANT_DEFAULTS.inherits_from_role);
-      assert.equal(page.acceptNotifyLabelText, translations['admin.setting.accept_notify']);
-      assert.equal(page.acceptNotifyChecked(), PD.inherited.accept_notify.inherited_value);
-      assert.equal(page.acceptNotifyInheritedFromLabelText, 'Inherited from: ' + TENANT_DEFAULTS.inherits_from_role);
       // not inherited
       page.clickChangePassword();
       andThen(() => {
@@ -1354,12 +1347,10 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     });
   });
 
-  test('update accept_assign accept_notify password_one_time', assert => {
+  test('update password_one_time', assert => {
     page.visitDetail();
     andThen(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.equal(page.acceptAssignChecked(), PD.inherited.accept_assign.inherited_value);
-      assert.equal(page.acceptNotifyChecked(), PD.inherited.accept_notify.inherited_value);
       page.clickChangePassword();
       andThen(() => {
         assert.equal(page.passwordOneTimeLabelText, translations['admin.setting.password_one_time']);
@@ -1370,12 +1361,8 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.ok(page.passwordOneTimeChecked());
       });
     });
-    page.acceptAssignClick();
-    page.acceptNotifyClick();
     andThen(() => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.equal(page.acceptAssignChecked(), !PD.inherited.accept_assign.inherited_value);
-      assert.equal(page.acceptNotifyChecked(), !PD.inherited.accept_notify.inherited_value);
     });
     let person = store.find('person', {id: PD.id});
     let payload = PF.put({id: PD.id});
@@ -1383,33 +1370,5 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     generalPage.save();
     andThen(() => {
       assert.equal(currentURL(), PEOPLE_INDEX_URL);
-    });
-  });
-
-  test('link-to for accept_assign setting, and link routes to person.role', assert => {
-    xhr(role_route_data_endpoint, 'GET', null, {}, 200, {});
-    clearxhr(list_xhr);
-    page.visitDetail();
-    andThen(() => {
-      assert.equal(currentURL(), DETAIL_URL);
-    });
-    xhr(`${ROLES_URL}${RD.idOne}/`, 'GET', null, {}, 200, RF.detail(RD.idOne));
-    page.acceptAssignInheritedFromClick();
-    andThen(() => {
-      assert.equal(currentURL(), `${BASEURLS.base_roles_url}/${RD.idOne}`);
-    });
-  });
-
-  test('link-to for accept_notify setting, and link routes to person.role', assert => {
-    xhr(role_route_data_endpoint, 'GET', null, {}, 200, {});
-    clearxhr(list_xhr);
-    page.visitDetail();
-    andThen(() => {
-      assert.equal(currentURL(), DETAIL_URL);
-    });
-    xhr(`${ROLES_URL}${RD.idOne}/`, 'GET', null, {}, 200, RF.detail(RD.idOne));
-    page.acceptNotifyInheritedFromClick();
-    andThen(() => {
-      assert.equal(currentURL(), `${BASEURLS.base_roles_url}/${RD.idOne}`);
     });
   });
