@@ -97,8 +97,7 @@ def create_roles():
     return Role.objects.all()
 
 
-def create_single_person(name=None, role=None, location=None, status=None, locale=None,
-                         accept_assign=True):
+def create_single_person(name=None, role=None, location=None, status=None, locale=None):
     args_required_together = [role, location]
     if not all(args_required_together) and any(args_required_together):
         raise ValidationError("These arguments must all be passed together")
@@ -125,8 +124,7 @@ def create_single_person(name=None, role=None, location=None, status=None, local
             role=role,
             status=status,
             locale=locale,
-            employee_id=create._generate_ph(),
-            accept_assign=accept_assign
+            employee_id=create._generate_ph()
         )
         person.locations.add(location)
 

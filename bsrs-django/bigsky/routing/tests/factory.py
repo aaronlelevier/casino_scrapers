@@ -18,11 +18,11 @@ def create_ticket_location_filter():
                                         field='location', criteria=[str(location.id)])
 
 
-def create_assignment(description=None, tenant=None, **kwargs):
-    kwargs.update({
+def create_assignment(description=None, tenant=None):
+    kwargs = {
         'description': description or random_lorem(1),
         'tenant': tenant
-    })
+    }
 
     try:
         assignment = Assignment.objects.get(**kwargs)
