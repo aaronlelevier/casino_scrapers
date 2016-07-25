@@ -47,7 +47,7 @@ class AssignmentManager(BaseManager):
 
         for assignment in self.filter(tenant__id=tenant_id).order_by('order'):
             match = assignment.is_match(ticket)
-            if match:
+            if match and assignment.assignee.accept_assign:
                 ticket.assignee = assignment.assignee
                 ticket.save()
                 break

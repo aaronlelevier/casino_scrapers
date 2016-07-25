@@ -194,6 +194,10 @@ class CreateSinglePersonTests(TestCase):
         with self.assertRaises(ValidationError):
             factory.create_single_person(location=location)
 
+    def test_accept_assign(self):
+        ret = factory.create_single_person()
+        self.assertTrue(ret.accept_assign)
+
 
 class CreatePersonTests(TestCase):
 

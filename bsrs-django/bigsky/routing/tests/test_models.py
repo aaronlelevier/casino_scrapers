@@ -103,9 +103,7 @@ class AssignmentManagerTests(TestCase):
 
     def test_process_ticket__both_match_so_determined_by_order(self):
         # 1st matching
-        assignment_three = create_assignment('c')
-        assignment_three.order = 0
-        assignment_three.save()
+        assignment_three = create_assignment('c', order=0)
         self.assertEqual(assignment_three.order, 0)
         self.assertTrue(assignment_three.is_match(self.ticket))
         # 2nd matching
@@ -119,6 +117,28 @@ class AssignmentManagerTests(TestCase):
 
         ticket = Ticket.objects.get(id=self.ticket.id)
         self.assertEqual(ticket.assignee, assignment_three.assignee)
+
+    def test_process_ticket__person_must_be_able_to_accept_assignments(self):
+        assignment_three = create_assignment('c', order=0)
+        # assignee - that can't take assignments
+        assignment_three.assignee.accept_assign = False
+        assignment_three.assignee.save()
+        # test setup
+        self.assertEqual(assignment_three.order, 0)
+        self.assertTrue(assignment_three.is_match(self.ticket))
+        self.assertFalse(assignment_three.assignee.accept_assign)
+        self.assertEqual(self.assignment.order, 1)
+        self.assertTrue(self.assignment.is_match(self.ticket))
+        self.assertTrue(self.assignment.assignee.accept_assign)
+        # assignee can't accept assignments, even tho order says
+        # then should get the assignment, so assign to assignee_two
+        self.assertIsNone(self.ticket.assignee)
+
+        Assignment.objects.process_ticket(self.ticket.location.location_level.tenant.id,
+                                          self.ticket.id)
+
+        ticket = Ticket.objects.get(id=self.ticket.id)
+        self.assertEqual(ticket.assignee, self.assignment.assignee)
 
 
 class AssignmentTests(TestCase):

@@ -380,7 +380,7 @@ class PersonListTests(TestCase):
 class PersonDetailTests(TestCase):
 
     def setUp(self):
-        self.person = create_single_person()
+        self.person = create_single_person(accept_assign=False)
         # Contact info
         create_contacts(self.person)
         # Location
