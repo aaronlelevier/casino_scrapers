@@ -1,13 +1,9 @@
-import logging
-logger = logging.getLogger(__name__)
-
 from django.conf import settings
 
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from routing.tasks import process_ticket
 from ticket.mixins import CreateTicketModelMixin, UpdateTicketModelMixin
 from ticket.models import Ticket, TicketActivity
 from ticket.serializers import (TicketSerializer, TicketCreateSerializer,
@@ -23,7 +19,6 @@ class TicketQuerySetFilters(object):
 
         if settings.TICKET_FILTERING_ON:
             queryset = queryset.filter_on_categories_and_location(self.request.user)
-            logging.info(queryset.query)
         return queryset
 
 
@@ -52,11 +47,7 @@ class TicketViewSet(EagerLoadQuerySetMixin, TicketQuerySetFilters, CreateTicketM
         Add the User making the POST request as the 'creator' of this Ticket.
         """
         request.data['creator'] = request.user.id
-        response = super(TicketViewSet, self).create(request, *args, **kwargs)
-        # TODO: don't process in "draft" status, move to save() method of Ticket
-        ticket = Ticket.objects.get(id=response.data['id'])
-        process_ticket(ticket.location.location_level.tenant.id, ticket_id=response.data['id'])
-        return response
+        return  super(TicketViewSet, self).create(request, *args, **kwargs)
 
 
 class TicketActivityViewSet(BaseModelViewSet):

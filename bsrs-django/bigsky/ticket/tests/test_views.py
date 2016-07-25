@@ -1,6 +1,5 @@
 import datetime
 import json
-from mock import patch
 import uuid
 
 from django.utils.timezone import now
@@ -353,25 +352,6 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(json.loads(response.content.decode('utf8'))['status'], ['This field may not be null.'])
         self.assertEqual(json.loads(response.content.decode('utf8'))['priority'], ['This field may not be null.'])
-
-    @patch("ticket.views.process_ticket")
-    def test_process_ticket(self, mock_process_ticket):
-        new_ticket_id = str(uuid.uuid4())
-        self.data.update({
-            'id': new_ticket_id,
-            'request': 'plumbing',
-        })
-
-        response = self.client.post('/api/tickets/', self.data, format='json')
-
-        self.assertEqual(response.status_code, 201)
-        self.assertTrue(mock_process_ticket)
-        # tenant id
-        data = json.loads(response.content.decode('utf8'))
-        ticket = Ticket.objects.get(id=data['id'])
-        self.assertEqual(mock_process_ticket.call_args[0][0], ticket.location.location_level.tenant.id)
-        # ticket id
-        self.assertEqual(mock_process_ticket.call_args[1]['ticket_id'], new_ticket_id)
 
 
 class TicketSearchTests(TicketSetupMixin, APITestCase):

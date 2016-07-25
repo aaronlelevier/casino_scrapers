@@ -1,3 +1,5 @@
+from mock import patch
+
 from django.conf import settings
 from django.db.models import Q, Max
 from django.test import TestCase
@@ -10,7 +12,8 @@ from location.models import LocationStatus
 from location.tests.factory import create_location
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketManager, TicketQuerySet, TicketStatus, TicketPriority,
-    TicketActivityType, TicketActivity, TICKET_STATUS_DEFAULT, TICKET_PRIORITY_DEFAULT)
+    TicketActivityType, TicketActivity, TICKET_STATUS_DEFAULT, TICKET_STATUS_NEW,
+    TICKET_STATUS_DRAFT, TICKET_PRIORITY_DEFAULT)
 from ticket.tests.factory_related import create_ticket_statuses, create_ticket_priorities
 from ticket.tests.factory import RegionManagerWithTickets, create_ticket, create_tickets
 from ticket.tests.mixins import TicketCategoryOrderingSetupMixin
@@ -216,6 +219,9 @@ class TicketTests(TestCase):
         create_single_person()
         create_ticket_statuses()
         create_tickets(_many=2)
+        self.ticket = Ticket.objects.first()
+        self.status_new = TicketStatus.objects.get(name=TICKET_STATUS_NEW)
+        self.status_draft = TicketStatus.objects.get(name=TICKET_STATUS_DRAFT)
 
     def test_ordering(self):
         self.assertEqual(Ticket._meta.ordering, ('-created',))
@@ -226,6 +232,38 @@ class TicketTests(TestCase):
 
         two = Ticket.objects.get(number=2)
         self.assertIsInstance(two, Ticket)
+
+    @patch("ticket.signals.process_ticket")
+    def test_save__process_ticket__new_status_and_no_assignee(self, mock_process_ticket):
+        # This is the only tiime that wee wan't the "process_ticket"
+        # function to be called
+        self.ticket.status = self.status_new
+        self.ticket.assignee = None
+
+        self.ticket.save()
+
+        self.assertTrue(mock_process_ticket.called)
+        self.assertEqual(mock_process_ticket.call_args[0][0], self.ticket.location.location_level.tenant.id)
+        self.assertEqual(mock_process_ticket.call_args[1]['ticket_id'], self.ticket.id)
+
+    @patch("ticket.signals.process_ticket")
+    def test_save__process_ticket__not_new_status_and_no_assignee(self, mock_process_ticket):
+        self.ticket.status = self.status_draft
+        self.ticket.assignee = None
+
+        self.ticket.save()
+
+        self.assertFalse(mock_process_ticket.called)
+
+    @patch("ticket.signals.process_ticket")
+    def test_save__process_ticket__new_status_and_assignee(self, mock_process_ticket):
+        assignee = create_single_person()
+        self.ticket.status = self.status_new
+        self.ticket.assignee = assignee
+
+        self.ticket.save()
+
+        self.assertFalse(mock_process_ticket.called)
 
 
 class TicketActivityTests(TestCase):

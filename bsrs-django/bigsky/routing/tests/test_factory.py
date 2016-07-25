@@ -6,6 +6,7 @@ from location.tests.factory import create_top_level_location
 from person.models import Person
 from routing.models import Assignment
 from routing.tests import factory
+from tenant.models import Tenant
 from ticket.models import Ticket, TicketPriority
 from utils.create import LOREM_IPSUM_WORDS
 from utils.helpers import create_default
@@ -41,6 +42,7 @@ class FactoryTests(TestCase):
         self.assertIsInstance(assignment, Assignment)
         self.assertIn(assignment.description, LOREM_IPSUM_WORDS.split())
         self.assertIsInstance(assignment.assignee, Person)
+        self.assertIsInstance(assignment.tenant, Tenant)
         # profile_filters
         self.assertEqual(assignment.filters.count(), 2)
         self.assertEqual(assignment.filters.filter(field='priority').count(), 1)

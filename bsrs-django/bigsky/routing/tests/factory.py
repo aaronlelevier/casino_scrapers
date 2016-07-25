@@ -1,6 +1,7 @@
 from location.tests.factory import create_top_level_location
 from person.tests.factory import create_single_person
 from routing.models import Assignment, ProfileFilter
+from tenant.tests.factory import get_or_create_tenant
 from ticket.models import TicketPriority
 from utils.create import random_lorem
 from utils.helpers import create_default
@@ -21,7 +22,7 @@ def create_ticket_location_filter():
 def create_assignment(description=None, tenant=None):
     kwargs = {
         'description': description or random_lorem(1),
-        'tenant': tenant
+        'tenant': tenant or get_or_create_tenant()
     }
 
     try:

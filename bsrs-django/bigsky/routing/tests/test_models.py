@@ -9,7 +9,6 @@ from person.models import Person
 from person.tests.factory import create_single_person
 from routing.models import Assignment, AssignmentManager, AssignmentQuerySet, ProfileFilter
 from routing.tests.factory import create_assignment, create_ticket_priority_filter
-from tenant.models import Tenant
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority, TICKET_PRIORITY_DEFAULT
 from ticket.tests.factory import create_ticket
@@ -140,9 +139,6 @@ class AssignmentTests(TestCase):
 
     def test_manager(self):
         self.assertIsInstance(Assignment.objects, AssignmentManager)
-
-    def test_default_tenant(self):
-        self.assertIsInstance(self.assignment.tenant, Tenant)
 
     def test_order_increments_by_tenant(self):
         self.assertEqual(self.assignment.order, 1)

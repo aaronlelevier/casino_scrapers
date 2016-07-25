@@ -8,7 +8,6 @@ from django.db.models import Q
 from django.db.models.signals import post_save
 
 from tenant.models import Tenant
-from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket
 from utils.fields import MyGenericForeignKey
 from utils.models import BaseQuerySet, BaseManager, BaseModel
@@ -65,14 +64,6 @@ class Assignment(BaseModel):
 
     class Meta:
         ordering = ['order']
-
-    def save(self, *args, **kwargs):
-        self._update_defaults()
-        return super(Assignment, self).save(*args, **kwargs)
-
-    def _update_defaults(self):
-        if not self.tenant:
-            self.tenant = get_or_create_tenant()
 
     def is_match(self, ticket):
         matches = []
