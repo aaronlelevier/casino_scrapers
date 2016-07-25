@@ -1,9 +1,14 @@
 import Ember from 'ember';
 const { run } = Ember;
 import { belongs_to_extract, belongs_to_extract_contacts } from 'bsrs-components/repository/belongs-to';
-import { many_to_many_extract } from 'bsrs-components/repository/many-to-many';
+import { many_to_many_extract, many_to_many } from 'bsrs-components/repository/many-to-many';
+import OPT_CONF from 'dummy/mixins/user_config';
 
-var Deserializer = Ember.Object.extend({
+var Deserializer = Ember.Object.extend(OPT_CONF, {
+  init() {
+    this._super(...arguments);
+    many_to_many.bind(this)('shoe', 'user', {'plural':true});
+  },
   simpleStore: Ember.inject.service(),
   deserialize(response){
     const store = this.get('simpleStore');
@@ -20,12 +25,7 @@ var Deserializer = Ember.Object.extend({
     const user = store.push('user', response);
     const shoes_json = response.shoes;
     delete response.shoes;
-    let [m2ms, shoes_arr, server_sum] = many_to_many_extract(shoes_json, store, user, 'user_shoes', 'user_pk', 'shoe', 'shoe_pk');
-    run(() => {
-      store.push('shoe', shoes_arr[0]);
-      store.push('user-shoe', m2ms[0]);
-      store.push('user', {id: response.id, user_shoes_fks: server_sum});
-    });
+    this.setup_m2m(shoes_json, user);
   }
 });
 
