@@ -506,8 +506,8 @@ test('ticket-status m2m is added after deserialize single (starting with existin
   person = store.push('person', {id: PD.id, fullname: PD.fullname});
   assert.equal(ticket.get('cc.length'), 1);
   let response = TF.generate(TD.idOne);
-  let second_person = PF.get(PD.unusedId);
-  response.cc = [PF.get(), second_person];
+  let second_person = PF.get_no_related(PD.unusedId);
+  response.cc = [PF.get_no_related(), second_person];
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   run(function() {
     subject.deserialize(response, TD.idOne);
@@ -550,7 +550,6 @@ test('ticket-person m2m is removed when server payload no longer reflects what s
 test('model-category m2m added including parent id for categories without a fat parent model', (assert) => {
   store.clear('ticket');
   let response = TF.generate(TD.idOne);
-  response.cc = [PF.get()];
   run(() => {
     subject.deserialize(response, TD.idOne);
   });
@@ -576,8 +575,7 @@ test('model-category m2m added including parent id for categories without a fat 
 test('ticket-person m2m added even when ticket did not exist before the deserializer executes', (assert) => {
   store.clear('ticket');
   let response = TF.generate(TD.idOne);
-  response.cc = [PF.get()];
-  run(function() {
+  run(() => {
     subject.deserialize(response, TD.idOne);
   });
   ticket = store.find('ticket', TD.idOne);

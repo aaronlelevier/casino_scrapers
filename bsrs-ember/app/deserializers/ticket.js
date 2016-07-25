@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import { belongs_to_extract } from 'bsrs-components/repository/belongs-to';
-import { many_to_many_extract } from 'bsrs-components/repository/many-to-many';
+import { many_to_many_extract, many_to_many } from 'bsrs-components/repository/many-to-many';
+import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
 
 const { run } = Ember;
 
@@ -26,7 +27,11 @@ var extract_ticket_location = function(location_json, store, ticket) {
   return [location_pk];
 };
 
-var TicketDeserializer = Ember.Object.extend({
+var TicketDeserializer = Ember.Object.extend(OptConf, {
+  init() {
+    this._super(...arguments);
+    many_to_many.bind(this)('cc', 'ticket');
+  },
   deserialize(response, options) {
     if (typeof options === 'undefined') {
       this._deserializeList(response);
@@ -62,7 +67,8 @@ var TicketDeserializer = Ember.Object.extend({
     if (assignee_json) {
       extract_assignee(assignee_json, store, ticket);
     }
-    let [m2m_ccs, ccs, cc_server_sum] = many_to_many_extract(cc_json, store, ticket, 'ticket_cc', 'ticket_pk', 'person', 'person_pk');
+    this.setup_m2m(cc_json, ticket);
+    // let [m2m_ccs, ccs, cc_server_sum] = many_to_many_extract(cc_json, store, ticket, 'ticket_cc', 'ticket_pk', 'person', 'person_pk');
     let [m2m_categories, categories, server_sum] = many_to_many_extract(categories_json, store, ticket, 'model_categories', 'model_pk', 'category', 'category_pk');
     run(() => {
       if(ticket_location_json){
@@ -86,13 +92,13 @@ var TicketDeserializer = Ember.Object.extend({
       m2m_categories.forEach((m2m) => {
         store.push('model-category', m2m);
       });
-      ccs.forEach((cc) => {
-        store.push('person', cc);
-      });
-      m2m_ccs.forEach((m2m) => {
-        store.push('ticket-person', m2m);
-      });
-      ticket = store.push('ticket', {id: response.id, ticket_cc_fks: cc_server_sum, model_categories_fks: server_sum});
+      // ccs.forEach((cc) => {
+      //   store.push('person', cc);
+      // });
+      // m2m_ccs.forEach((m2m) => {
+      //   store.push('ticket-person', m2m);
+      // });
+      ticket = store.push('ticket', {id: response.id, model_categories_fks: server_sum});
       ticket.save();
     });
     return ticket;

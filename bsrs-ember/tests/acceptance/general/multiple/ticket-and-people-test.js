@@ -64,6 +64,8 @@ test('clicking between person detail and ticket detail will not dirty the active
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     person = store.find('person', PD.idOne);
     assert.ok(person.get('statusIsNotDirty'));
+    assert.ok(person.get('roleIsNotDirty'));
+    assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(person.get('person_locations_fks').length, 1);
     assert.equal(person.get('locations.length'), 1);
