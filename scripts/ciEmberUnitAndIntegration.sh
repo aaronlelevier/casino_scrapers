@@ -70,7 +70,7 @@ rm -rf tmp dist
 echo $(date -u) "EMBER INTEGRATION TESTS"
 emberIntegrationTest
 
-cd addon/bsrs-components
+cd addons/bsrs-components
 npmInstall
 echo $(date -u) "EMBER ADDON TESTS"
 emberAddonTest
