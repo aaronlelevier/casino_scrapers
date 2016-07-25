@@ -11,7 +11,7 @@ import waitFor from 'ember-test-helpers/wait';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
-import TPD from 'bsrs-ember/vendor/defaults/ticket-person';
+import TPD from 'bsrs-ember/vendor/defaults/ticket-join-person';
 
 let store, m2m, m2m_two, ticket, person_one, person_two, person_three, trans, run = Ember.run, person_repo;
 const PowerSelect = '.ember-power-select-trigger > .ember-power-select-multiple-options';
@@ -25,10 +25,10 @@ moduleForComponent('ticket-cc-power-select', 'integration: ticket-cc-power-selec
     trans = this.container.lookup('service:i18n');
     loadTranslations(trans, translations.generate('en'));
     translation.initialize(this);
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:ticket-person']);
+    store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:ticket-join-person']);
     run(function() {
-      m2m = store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
-      m2m_two = store.push('ticket-person', {id: TPD.idTwo, ticket_pk: TD.idOne, person_pk: PD.idTwo});
+      m2m = store.push('ticket-join-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
+      m2m_two = store.push('ticket-join-person', {id: TPD.idTwo, ticket_pk: TD.idOne, person_pk: PD.idTwo});
       ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne, TPD.idTwo]});
       person_one = store.push('person', {id: PD.id, first_name: PD.first_name, last_name: PD.last_name});
       person_two = store.push('person', {id: PD.idTwo, first_name: 'Scooter', last_name: 'McGavin'});
@@ -43,7 +43,7 @@ moduleForComponent('ticket-cc-power-select', 'integration: ticket-cc-power-selec
 
 test('should render a selectbox when with options selected (initial state)', function(assert) {
   run(function() {
-    store.clear('ticket-person');
+    store.clear('ticket-join-person');
   });
   let ticket_cc_options = Ember.A([]);
   this.model = ticket;

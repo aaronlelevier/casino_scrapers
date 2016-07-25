@@ -38,7 +38,7 @@ export default Ember.Mixin.create({
     },
     cc: {
       associated_model: 'person',
-      join_model: 'ticket-person'
+      join_model: 'ticket-join-person'
     },
     categories: {
       associated_model: 'category',
