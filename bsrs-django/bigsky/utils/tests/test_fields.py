@@ -40,15 +40,17 @@ class InheritedValueField(TestCase):
         self.tenant = self.role.tenant
 
     def test_instance_has_value(self):
-        self.assertFalse(hasattr(self.tenant, 'accept_assign'))
-        self.assertFalse(self.role.accept_assign)
-        self.person.accept_assign = True
+        usd = Currency.objects.default()
+        jpy = mommy.make(Currency, code='JPY')
+        self.assertEqual(self.tenant.default_currency, usd)
+        self.assertEqual(self.role.auth_currency, None)
+        self.person.auth_currency = jpy
         self.person.save()
 
-        ret = self.person.inherited()['accept_assign']
+        ret = self.person.inherited()['auth_currency']
 
-        self.assertEqual(ret['value'], True)
-        self.assertEqual(ret['inherited_value'], False)
+        self.assertEqual(ret['value'], str(jpy.id))
+        self.assertEqual(ret['inherited_value'], str(usd.id))
         self.assertEqual(ret['inherits_from'], 'role')
         self.assertEqual(ret['inherits_from_id'], str(self.role.id))
 

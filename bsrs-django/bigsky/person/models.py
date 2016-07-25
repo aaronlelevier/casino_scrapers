@@ -86,11 +86,6 @@ class Role(BaseModel):
     # Proxy
     proxy_set = models.BooleanField(blank=True, default=False,
         help_text="Users in this Role can set their own proxy")
-    # Default Settings
-    # that set the Person settings for these fields when first
-    # adding a Person to a Role
-    accept_assign = models.BooleanField(blank=True, default=False)
-    accept_notify = models.BooleanField(blank=True, default=False)
     # Auth Amounts
     auth_amount = models.DecimalField(
         max_digits=15, decimal_places=4, blank=True, null=True, default=0)
@@ -317,8 +312,6 @@ class Person(BaseModel, AbstractUser):
     fullname = models.CharField(max_length=100, blank=True)
     auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, null=True)
     auth_currency = models.ForeignKey(Currency, blank=True, null=True)
-    accept_assign = models.NullBooleanField(null=True)
-    accept_notify = models.NullBooleanField(null=True)
     next_approver = models.ForeignKey("self", related_name='nextapprover',
                                       blank=True, null=True)
     # optional
@@ -353,17 +346,13 @@ class Person(BaseModel, AbstractUser):
     def inherited(self):
         return {
             'auth_amount': self.proxy_auth_amount,
-            'auth_currency': self.proxy_auth_currency,
-            'accept_assign': self.proxy_accept_assign,
-            'accept_notify': self.proxy_accept_notify
+            'auth_currency': self.proxy_auth_currency
         }
 
     # proxy fields (won't create a field in the database)
     proxy_auth_amount = InheritedValueField('auth_amount', [('role', 'auth_amount')])
     proxy_auth_currency = InheritedValueField('auth_currency',
                                               [('role', 'auth_currency'), ('tenant', 'default_currency')])
-    proxy_accept_assign = InheritedValueField('accept_assign', [('role', 'accept_assign')])
-    proxy_accept_notify = InheritedValueField('accept_notify', [('role', 'accept_notify')])
 
     # Managers
     objects = PersonManager()

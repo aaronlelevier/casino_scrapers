@@ -66,8 +66,6 @@ class RoleDetailTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['auth_amount'], "{:.4f}".format(self.role.auth_amount))
         self.assertEqual(data['auth_currency'], None)
         self.assertNotIn('dashboard_text', data)
-        self.assertNotIn('accept_assign', data)
-        self.assertNotIn('accept_notify', data)
         self.assertIn(
             data['categories'][0]['id'],
             [str(c.id) for c in self.role.categories.all()]
@@ -125,8 +123,6 @@ class RoleCreateTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['auth_amount'], "{:.4f}".format(self.role_data['auth_amount']))
         self.assertEqual(data['auth_currency'], self.role_data['auth_currency'])
         self.assertEqual(data['dashboard_text'], self.role_data['dashboard_text'])
-        self.assertFalse(data['accept_assign'])
-        self.assertFalse(data['accept_notify'])
         self.assertEqual(sorted(data['categories']), sorted(self.role_data['categories']))
 
     def test_new_roles_tenant_set_to_logged_in_users_tenant(self):
@@ -149,8 +145,6 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
         role_data['auth_currency'] = str(mommy.make(Currency, code='FOO').id)
         role_data['dashboard_text'] = 'foo'
         role_data['categories'].append(str(category.id))
-        role_data['accept_assign'] = True
-        role_data['accept_notify'] = True
 
         response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
             role_data, format='json')
@@ -164,8 +158,6 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['auth_amount'], "{:.4f}".format(self.role.auth_amount))
         self.assertEqual(data['auth_currency'], role_data['auth_currency'])
         self.assertEqual(data['dashboard_text'], role_data['dashboard_text'])
-        self.assertTrue(data['accept_assign'])
-        self.assertTrue(data['accept_notify'])
         self.assertIsInstance(data['categories'], list)
 
     def test_update__location_level(self):
@@ -328,8 +320,6 @@ class PersonListTests(TestCase):
         self.assertEqual(data['title'], person.title)
         self.assertNotIn('employee_id', data)
         self.assertNotIn('auth_amount', data)
-        self.assertNotIn('accept_assign', data)
-        self.assertNotIn('accept_notify', data)
 
     ### CUSTOM LIST ROUTES
 
@@ -425,8 +415,6 @@ class PersonDetailTests(TestCase):
         self.assertIn('date_joined', self.data)
         self.assertNotIn('auth_amount', self.data)
         self.assertNotIn('auth_currency', self.data)
-        self.assertNotIn('accept_assign', self.data)
-        self.assertNotIn('accept_notify', self.data)
 
     def test_data__inherited(self):
         # auth_amount
@@ -439,16 +427,6 @@ class PersonDetailTests(TestCase):
         self.assertEqual(self.data['inherited']['auth_currency']['inherited_value'], str(self.person.role.tenant.default_currency.id))
         self.assertEqual(self.data['inherited']['auth_currency']['inherits_from'], 'role')
         self.assertEqual(self.data['inherited']['auth_currency']['inherits_from_id'], str(self.person.role.id))
-        # accept_assign
-        self.assertNotIn('value', self.data['inherited']['accept_assign'])
-        self.assertEqual(self.data['inherited']['accept_assign']['inherited_value'], self.person.role.accept_assign)
-        self.assertEqual(self.data['inherited']['accept_assign']['inherits_from'], 'role')
-        self.assertEqual(self.data['inherited']['accept_assign']['inherits_from_id'], str(self.person.role.id))
-        # accept_notify
-        self.assertNotIn('value', self.data['inherited']['accept_notify'])
-        self.assertEqual(self.data['inherited']['accept_notify']['inherited_value'], self.person.role.accept_notify)
-        self.assertEqual(self.data['inherited']['accept_notify']['inherits_from'], 'role')
-        self.assertEqual(self.data['inherited']['accept_notify']['inherits_from_id'], str(self.person.role.id))
 
     def test_data_status(self):
         self.assertEqual(self.data['status_fk'], str(self.person.status.id))
@@ -578,8 +556,6 @@ class PersonUpdateTests(APITestCase):
     def test_auth_amount(self):
         new_auth_amount = '1234.1010'
         self.data['auth_amount'] = new_auth_amount
-        self.data['accept_assign'] = True
-        self.data['accept_notify'] = True
         self.data['password_one_time'] = True
 
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
@@ -596,8 +572,6 @@ class PersonUpdateTests(APITestCase):
         self.assertEqual(data['role'], str(self.person.role.id))
         self.assertEqual(data['title'], self.person.title)
         self.assertEqual(data['employee_id'], self.person.employee_id)
-        self.assertTrue(data['accept_assign'])
-        self.assertTrue(data['accept_notify'])
         self.assertTrue(data['password_one_time'])
 
     def test_no_change(self):

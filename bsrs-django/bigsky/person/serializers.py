@@ -16,7 +16,7 @@ ROLE_LIST_FIELDS = ('id', 'name', 'role_type', 'location_level')
 ROLE_DETAIL_FIELDS = ROLE_LIST_FIELDS + ('auth_currency', 'auth_amount', 'categories',)
 
 ROLE_CREATE_UPDATE_FIELDS = ROLE_LIST_FIELDS + \
-    ('auth_currency', 'auth_amount', 'dashboard_text', 'accept_assign', 'accept_notify', 'categories',)
+    ('auth_currency', 'auth_amount', 'dashboard_text', 'categories',)
 
 
 class RoleListSerializer(BaseCreateSerializer):
@@ -44,10 +44,9 @@ class RoleUpdateSerializer(BaseCreateSerializer):
 
 class RoleDetailSerializer(BaseCreateSerializer):
     """
-    Fields that have the ability to be inherited. i.e accept_assign, accept_notify,
-    etc.. are not represented as first level fields in the detail payload. Instead
-    they are nested within an ``inherited`` object. Each is an object with inherited
-    properties.
+    Fields that have the ability to be inherited are not represented as first level
+    fields in the detail payload. Instead they are nested within an ``inherited``
+    object. Each is an object with inherited properties.
     """
     categories = CategoryRoleSerializer(many=True)
 
@@ -182,8 +181,7 @@ class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSeriali
         model = Person
         validators = [RoleLocationValidator('role', 'locations')]
         write_only_fields = ('password',)
-        fields = PERSON_DETAIL_FIELDS_WITH_STATUS + ('auth_amount', 'auth_currency', 'password',
-                                         'accept_assign', 'accept_notify',)
+        fields = PERSON_DETAIL_FIELDS_WITH_STATUS + ('auth_amount', 'auth_currency', 'password')
 
     def update(self, instance, validated_data):
         # Pasword
