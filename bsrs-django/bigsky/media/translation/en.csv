@@ -1,4 +1,5 @@
 LOCALE,KEY,ENGLISH,VALUE,CONTEXT,FIXUTURE,VALUE-UNDERSCORE,VALUE-TRANSLATABLE
+en,activity.one,Activity,Activity,,"'activity.one':'Activity',",Activity,Activity
 en,activity.empty.comments,No Comments,No Comments,,"'activity.empty.comments':'No Comments',",No Comments,No Comments
 en,activity.empty.status_updates,No Status Updates,No Status Updates,,"'activity.empty.status_updates':'No Status Updates',",No Status Updates,No Status Updates
 en,activity.tabs.all_updates,All Updates,All Updates,,"'activity.tabs.all_updates':'All Updates',",All Updates,All Updates
@@ -237,8 +238,6 @@ en,admin.role.other,Roles,Roles,,"'admin.role.other':'Roles',",Roles,Roles
 en,admin.role.search,Search Role,Search Role,,"'admin.role.search':'Search Role',",Search Role,Search Role
 en,admin.role.type.internal,Internal,Internal,,"'admin.role.type.internal':'Internal',",Internal,Internal
 en,admin.role.type.third_party,Third Party,Third Party,,"'admin.role.type.third_party':'Third Party',",Third Party,Third Party
-en,admin.setting.accept_assign,Accept Assign,Accept Assign,,"'admin.setting.accept_assign':'Accept Assign',",Accept Assign,Accept Assign
-en,admin.setting.accept_notify,Accept Notify,Accept Notify,,"'admin.setting.accept_notify':'Accept Notify',",Accept Notify,Accept Notify
 en,admin.setting.company_code,Company Code,Company Code,,"'admin.setting.company_code':'Company Code',",Company Code,Company Code
 en,admin.setting.company_name,Company Name,Company Name,,"'admin.setting.company_name':'Company Name',",Company Name,Company Name
 en,admin.setting.create_all,Create All,Create All,,"'admin.setting.create_all':'Create All',",Create All,Create All
@@ -315,12 +314,21 @@ en,dt.start,Start,Start,,"'dt.start':'Start',",Start,Start
 en,dt.ticket.launch,Launch Ticket Decision Tree,Launch Ticket Decision Tree,,"'dt.ticket.launch':'Launch Ticket Decision Tree',",Launch Ticket Decision Tree,Launch Ticket Decision Tree
 en,errors.dtd.description,Description must be provided,Description must be provided,,"'errors.dtd.description':'Description must be provided',",Description must be provided,Description must be provided
 en,errors.dtd.key,Key must be provided,Key must be provided,,"'errors.dtd.key':'Key must be provided',",Key must be provided,Key must be provided
+en,errors.dtd.key.length,Key must less than 12 characters,Key must less than 12 characters,,"'errors.dtd.key.length':'Key must less than 12 characters',",Key must less than 12 characters,Key must less than 12 characters
 en,errors.link.text,Text must be provided,Text must be provided,,"'errors.link.text':'Text must be provided',",Text must be provided,Text must be provided
-en,errors.person.middle_initial,Middle Initial must be less than 2 characters,Middle Initial must be less than 2 characters,,"'errors.person.middle_initial':'Middle Initial must be less than 2 characters',",Middle Initial must be less than 2 characters,Middle Initial must be less than 2 characters
+en,errors.person.middle_initial,Middle Initial can only contain characters,Middle Initial can only contain characters,,"'errors.person.middle_initial':'Middle Initial can only contain characters',",Middle Initial can only contain characters,Middle Initial can only contain characters
 en,errors.person.password,"Password must include at least one upper case letter, one lower case letter, and a number","Password must include at least one upper case letter, one lower case letter, and a number",,"'errors.person.password':'Password must include at least one upper case letter, one lower case letter, and a number',","Password must include at least one upper case letter, one lower case letter, and a number","Password must include at least one upper case letter, one lower case letter, and a number"
+en,errors.person.password.length,Password can't be more than 15 characters,Password can't be more than 15 characters,,"'errors.person.password.length':'Password can't be more than 15 characters',",Password can't be more than 15 characters,Password can't be more than 15 characters
 en,errors.person.username,Username must be provided,Username must be provided,,"'errors.person.username':'Username must be provided',",Username must be provided,Username must be provided
+en,errors.person.first_name,First name must be provided. ,First name must be provided. ,,"'errors.person.first_name':'First name must be provided. ',",First name must be provided. ,First name must be provided. 
+en,errors.person.first_name.length,Max length of 30,Max length of 30,,"'errors.person.first_name.length':'Max length of 30',",Max length of 30,Max length of 30
+en,errors.person.last_name,Last name must be provided. Max length 30,Last name must be provided. Max length 30,,"'errors.person.last_name':'Last name must be provided. Max length 30',",Last name must be provided. Max length 30,Last name must be provided. Max length 30
+en,errors.profile.description,Description must be provided,Description must be provided,,"'errors.profile.description':'Description must be provided',",Description must be provided,Description must be provided
+en,errors.profile.description.min_max,Must be between 5 and 500 characters,Must be between 5 and 500 characters,,"'errors.profile.description.min_max':'Must be between 5 and 500 characters',",Must be between 5 and 500 characters,Must be between 5 and 500 characters
+en,errors.person.last_name.length,Max length of 30,Max length of 30,,"'errors.person.last_name.length':'Max length of 30',",Max length of 30,Max length of 30
 en,errors.ticket.assignee,Assignee must be provided,Assignee must be provided,,"'errors.ticket.assignee':'Assignee must be provided',",Assignee must be provided,Assignee must be provided
 en,errors.ticket.request,Request must be provided,Request must be provided,,"'errors.ticket.request':'Request must be provided',",Request must be provided,Request must be provided
+en,errors.ticket.request.length,Request must be at least 5 characters,Request must be at least 5 characters,,"'errors.ticket.request.length':'Request must be at least 5 characters',",Request must be at least 5 characters,Request must be at least 5 characters
 en,general.new,New,New,,"'general.new':'New',",New,New
 en,grid.filter,Filter,Filter,,"'grid.filter':'Filter',",Filter,Filter
 en,grid.filter.other,Filters,Filters,,"'grid.filter.other':'Filters',",Filters,Filters
@@ -329,6 +337,7 @@ en,grid.per_page,{{size}} per page,{{size}} per page,,"'grid.per_page':'{{size}}
 en,grid.reset_all_options,Reset All Options,Reset All Options,,"'grid.reset_all_options':'Reset All Options',",Reset All Options,Reset All Options
 en,grid.save_filter,Save Filter,Save Filter,,"'grid.save_filter':'Save Filter',",Save Filter,Save Filter
 en,menu.home,Home,Home,,"'menu.home':'Home',",Home,Home
+en,mobile.label.detail,Details,Details,,"'mobile.label.detail':'Details',",Details,Details
 en,modules.assets.titleShort,Assets,Assets,,"'modules.assets.titleShort':'Assets',",Assets,Assets
 en,modules.invoices.titleShort,Invoices,Invoices,,"'modules.invoices.titleShort':'Invoices',",Invoices,Invoices
 en,modules.pms.titleShort,PM,PM,,"'modules.pms.titleShort':'PM',",PM,PM
