@@ -1,10 +1,10 @@
 import Ember from 'ember';
+const { run } = Ember;
 import equal from 'bsrs-components/utils/equal';
 import camel from 'bsrs-components/utils/camel';
 import caps from 'bsrs-components/utils/caps';
 import pluralize from 'bsrs-components/utils/plural';
 
-var run = Ember.run;
 
 /**
  * Creates properties defined on join  model
@@ -18,7 +18,7 @@ var run = Ember.run;
  * @return list of defined properties/methods/computed to handle many_to_many relationship with parent
  */
 var many_to_many = function(_associatedModel, modelName, noSetup) {
-  let { plural=false, add_func=true, remove_func=true, many_to_many=true, rollback=true, save=true, dirty=true, unlessAddedM2MDirty=false } = noSetup || {};
+  let { plural=false, add_func=true, remove_func=true, rollback=true, save=true, dirty=true, unlessAddedM2MDirty=false } = noSetup || {};
   const _singularName = _associatedModel;
   if (plural) {
     _associatedModel = pluralize(_associatedModel);
@@ -28,12 +28,10 @@ var many_to_many = function(_associatedModel, modelName, noSetup) {
   const _joinModelName = `${modelName}_${_associatedModel}`;
 
   //many_to_many
-  if (many_to_many) {
-    Ember.defineProperty(this, `${_joinModelName}`, many_to_many_generator(modelName, _associatedModel));
-    Ember.defineProperty(this, `${_joinModelName}_ids`, many_to_many_ids(_joinModelName));
-    Ember.defineProperty(this, `${_associatedModel}`, many_models(_joinModelName, _associatedModel));
-    Ember.defineProperty(this, `${_associatedModel}_ids`, many_models_ids(_associatedModel));
-  }
+  Ember.defineProperty(this, `${_joinModelName}`, many_to_many_generator(modelName, _associatedModel));
+  Ember.defineProperty(this, `${_joinModelName}_ids`, many_to_many_ids(_joinModelName));
+  Ember.defineProperty(this, `${_associatedModel}`, many_models(_joinModelName, _associatedModel));
+  Ember.defineProperty(this, `${_associatedModel}_ids`, many_models_ids(_associatedModel));
 
   //add
   if (add_func) {
@@ -56,7 +54,7 @@ var many_to_many = function(_associatedModel, modelName, noSetup) {
   //rollback
   if (rollback) {
     Ember.defineProperty(this, `rollback${_capsOwnerName}`, undefined, many_to_many_rollback(_associatedModel, _joinModelName, modelName));
-  } 
+  }
 
   //save
   if (save) {
@@ -92,7 +90,7 @@ var many_to_many_generator = function(modelName, _associatedModel) {
  */
 var many_to_many_ids = function(_joinModelName) {
   return Ember.computed(`${_joinModelName}.[]`, function() {
-    return this.get(`${_joinModelName}`).mapBy('id'); 
+    return this.get(`${_joinModelName}`).mapBy('id');
   });
 };
 
@@ -175,7 +173,7 @@ var many_to_many_dirty_unlessAddedM2M = function(_joinModelName) {
 
 /**
  * Rollback
- * - 
+ * -
  *
  * @method many_to_many_rollback
  * @return {boolean}
@@ -212,7 +210,7 @@ var many_to_many_rollback = function(_associatedModel, _joinModelName, modelName
 
 /**
  * Save
- * - main model might be defined in order to allow for mixins, which might use a `model_pk` but you want that model associated with a ticket model and a category model. 
+ * - main model might be defined in order to allow for mixins, which might use a `model_pk` but you want that model associated with a ticket model and a category model.
  *
  * @method many_to_many_save
  * @return {function}
@@ -240,14 +238,14 @@ var many_to_many_save = function(_joinModelName, _associatedModel, modelName) {
           });
           new_model.set(m2m_models_fks, updated_m2m_fks);
         });
-      } 
+      }
     });
     const updated_previous_m2m_fks = this.get(m2m_models_fks);
     //remove
     for (let i=previous_m2m_fks.length-1; i>=0; --i) {
       if (Ember.$.inArray(previous_m2m_fks[i], many_relateds_ids) === -1) {
         updated_previous_m2m_fks.removeObject(previous_m2m_fks[i]);
-      } 
+      }
     }
   };
 };
@@ -286,10 +284,10 @@ var add_many_to_many = function(_associatedModel, _joinModelName, modelName) {
     new_join_model[many_fk] = many_related_pk;
     let new_model;
     run(() => {
-      if(existing){ 
-        new_model = store.push(join_model, {id: existing.get('id'), removed: undefined}); 
-      } else{ 
-        new_model = store.push(join_model, new_join_model); 
+      if(existing){
+        new_model = store.push(join_model, {id: existing.get('id'), removed: undefined});
+      } else{
+        new_model = store.push(join_model, new_join_model);
       }
     });
     return new_model;
