@@ -200,8 +200,8 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
         self.assertEqual(data_cc['first_name'], cc.first_name)
         self.assertEqual(data_cc['middle_initial'], cc.middle_initial)
         self.assertEqual(data_cc['last_name'], cc.last_name)
-        self.assertEqual(data_cc['status'], str(cc.status.id))
-        self.assertEqual(data_cc['role'], str(cc.role.id))
+        self.assertNotIn('status', data_cc)
+        self.assertNotIn('role', data_cc)
 
 
 class TicketUpdateTests(TicketSetupMixin, APITestCase):
