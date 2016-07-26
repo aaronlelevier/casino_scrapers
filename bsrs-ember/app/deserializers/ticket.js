@@ -1,9 +1,9 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { belongs_to_extract, belongs_to } from 'bsrs-components/repository/belongs-to';
 import { many_to_many_extract, many_to_many } from 'bsrs-components/repository/many-to-many';
 import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
 
-const { run } = Ember;
 
 var extract_attachments = function(model, store) {
   model.attachments.forEach((attachment_id) => {
@@ -12,26 +12,13 @@ var extract_attachments = function(model, store) {
   return model.attachments;
 };
 
-var extract_assignee = function(assignee_json, store, ticket_model) {
-  let assignee_id = assignee_json.id;
-  if(ticket_model.get('assignee.id') !== assignee_id) {
-    ticket_model.change_assignee(assignee_json);
-  }
-};
-
-var extract_ticket_location = function(location_json, store, ticket) {
-  let location_pk = location_json.id;
-  if (ticket.get('location.id') !== location_pk) {
-    return [location_pk, location_json];
-  }
-  return [location_pk];
-};
-
 var TicketDeserializer = Ember.Object.extend(OptConf, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('status', 'ticket', 'general');
     belongs_to.bind(this)('priority', 'ticket', 'ticket');
+    belongs_to.bind(this)('assignee', 'ticket', 'person');
+    belongs_to.bind(this)('location', 'ticket', 'location');
     many_to_many.bind(this)('cc', 'ticket');
   },
   deserialize(response, options) {
@@ -42,10 +29,8 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     }
   },
   _deserializeSingle(response, id) {
-    //TODO: oh my should I do with this...need to refactor, provide notes, etc...fix apart of deserialize refactor
     let store = this.get('simpleStore');
-    let existing = store.find('ticket', id);
-    let ticket = existing;
+    let ticket = store.find('ticket', id);
     /* FindById mixin prevents xhr if dirty */
     let location_json = response.location;
     response.location_fk = location_json.id;
@@ -62,19 +47,17 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     delete response.categories;
     response.detail = true;
     ticket = store.push('ticket', response);
-    //TODO: only returns one variable
-    const [location_fk, ticket_location_json] = extract_ticket_location(location_json, store, ticket);
     this.setup_status(response.status_fk, ticket);
     this.setup_priority(response.priority_fk, ticket);
     if (assignee_json) {
-      extract_assignee(assignee_json, store, ticket);
+      this.setup_assignee(assignee_json, ticket);
+    }
+    if (location_json) {
+      this.setup_location(location_json, ticket);
     }
     this.setup_cc(cc_json, ticket);
     let [m2m_categories, categories, server_sum] = many_to_many_extract(categories_json, store, ticket, 'model_categories', 'model_pk', 'category', 'category_pk');
     run(() => {
-      if(ticket_location_json){
-        ticket.change_location(ticket_location_json);
-      }
       categories.forEach((cat) => {
         const children_json = cat.children;
         delete cat.children;
