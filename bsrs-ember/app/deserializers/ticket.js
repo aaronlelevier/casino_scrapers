@@ -67,7 +67,7 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     if (assignee_json) {
       extract_assignee(assignee_json, store, ticket);
     }
-    this.setup_m2m(cc_json, ticket);
+    this.setup_cc(cc_json, ticket);
     // let [m2m_ccs, ccs, cc_server_sum] = many_to_many_extract(cc_json, store, ticket, 'ticket_cc', 'ticket_pk', 'person', 'person_pk');
     let [m2m_categories, categories, server_sum] = many_to_many_extract(categories_json, store, ticket, 'model_categories', 'model_pk', 'category', 'category_pk');
     run(() => {

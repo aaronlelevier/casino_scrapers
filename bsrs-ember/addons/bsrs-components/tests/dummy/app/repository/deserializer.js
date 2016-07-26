@@ -25,7 +25,7 @@ var Deserializer = Ember.Object.extend(OPT_CONF, {
     const user = store.push('user', response);
     const shoes_json = response.shoes;
     delete response.shoes;
-    this.setup_m2m(shoes_json, user);
+    this.setup_shoes(shoes_json, user);
   }
 });
 

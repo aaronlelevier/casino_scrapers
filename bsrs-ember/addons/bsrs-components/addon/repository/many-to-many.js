@@ -46,7 +46,7 @@ var many_to_many = function(_associatedModel, modelName, noSetup) {
     _associatedModel = pluralize(_associatedModel);
   }
   const _joinModelName = `${modelName}_${_associatedModel}`;
-  Ember.defineProperty(this, 'setup_m2m', undefined, many_to_many_json(modelName, _associatedModel, _singularAssociatedName, _joinModelName));
+  Ember.defineProperty(this, `setup_${_associatedModel}`, undefined, many_to_many_json(modelName, _associatedModel, _singularAssociatedName, _joinModelName));
 };
 
 /**
