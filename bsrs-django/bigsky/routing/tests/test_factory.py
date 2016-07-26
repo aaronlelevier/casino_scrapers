@@ -79,7 +79,6 @@ class AvailableFilterTests(TestCase):
         # indempotent
         self.assertEqual(ret, ret_two)
         # attrs
-        self.assertEqual(ret.type, 'assignment')
         self.assertEqual(ret.key, 'admin.placeholder.ticket_priority')
         self.assertEqual(ret.key_is_i18n, True)
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
