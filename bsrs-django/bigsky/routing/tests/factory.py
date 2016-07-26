@@ -20,7 +20,6 @@ def create_ticket_priority_filter():
     return ProfileFilter.objects.create(key='admin.placeholder.ticket_priority',
                                         field='priority', criteria=[str(priority.id)])
 
-
 def create_ticket_location_filter():
     location = create_top_level_location()
     return ProfileFilter.objects.create(key='admin.placeholder.location_store',
@@ -49,8 +48,8 @@ def create_assignment(description=None, tenant=None):
         assignment = Assignment.objects.create(**kwargs)
 
         priority_filter = create_ticket_priority_filter()
-        location_filter = create_ticket_location_filter()
-        assignment.filters.add(priority_filter, location_filter)
+        category_filter = create_ticket_categories_filter()
+        assignment.filters.add(priority_filter, category_filter)
 
     return assignment
 

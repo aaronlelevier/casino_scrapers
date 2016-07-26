@@ -108,14 +108,28 @@ class AvailableFilter(BaseModel):
 
 
 class ProfileFilter(BaseModel):
-    # key,context,field - need to be bootstrapped, or sent when going to AP view
-    # will be different for NP, or AP
+    """
+    The first 4 fields are the same as the AvailableFilter fields, but
+    the "lookups" field is different. It will contain criteria for the
+    dynamic AvailableFilter that was selected.
+
+    ex: AvailableFilter.lookups: {'filters': 'location_level'}
+        ProfileFilter.lookups: {'location_level': <location_level_id>}
+
+    expl: Basically ProfileFilter has the serialized value returned by the
+        list saved to it, indicating the dynamic filter selected.
+    """
     key = models.CharField(max_length=100,
                            help_text="To use for i18n UI key, and also for mapping component based on selected filter")
+    key_is_i18n = models.BooleanField(default=True, help_text="is the 'key' field i18n'able")
     context = models.CharField(max_length=100, blank=True, default=settings.DEFAULT_PROFILE_FILTER_CONTEXT,
                                help_text="The namespace of the model to look the field up on. ex: 'app_name.model_name'")
     field = models.CharField(max_length=100,
                              help_text="Model field to look up from the Model class specified in the 'context'")
+    lookups = JSONField(null=True, default={},
+        help_text="if used, provide extra lookup information beyond the 'field'"
+                  "this should be a string array")
+
     criteria = JSONField(help_text="Must be a list. Criteria to match on.")
     # GenericForeignKey
     content_type = models.ForeignKey(ContentType, null=True)

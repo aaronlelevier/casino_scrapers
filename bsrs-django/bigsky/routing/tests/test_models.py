@@ -1,18 +1,18 @@
-from django.db import models
 from django.db.models import Q
 from django.test import TestCase
 
 from model_mommy import mommy
 
 from category.models import Category
-from location.tests.factory import create_location, create_top_level_location
+from category.tests.factory import create_single_category
+from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
 from routing.models import Assignment, AssignmentManager, AssignmentQuerySet, ProfileFilter
 from routing.tests.factory import (create_assignment, create_ticket_priority_filter,
-create_ticket_categories_filter)
+create_ticket_categories_filter, REPAIR)
 from tenant.tests.factory import get_or_create_tenant
-from ticket.models import Ticket, TicketPriority, TICKET_PRIORITY_DEFAULT
+from ticket.models import Ticket, TicketPriority
 from ticket.tests.factory import create_ticket
 from ticket.tests.factory_related import create_ticket_statuses
 
@@ -28,6 +28,9 @@ class AssignmentManagerTests(TestCase):
         self.ticket.assignee = None
         self.ticket.location = create_top_level_location()
         self.ticket.save()
+
+        self.category = mommy.make(Category, name=REPAIR)
+        self.ticket.categories.add(self.category)
 
         self.assignment = create_assignment('a')
         # non-maching
@@ -86,8 +89,8 @@ class AssignmentManagerTests(TestCase):
 
     def test_process_ticket__no_match(self):
         # filter_one make false
-        filter_one = self.assignment.filters.filter(field='location')[0]
-        filter_one.criteria = [str(create_location().id)]
+        filter_one = self.assignment.filters.filter(field='categories')[0]
+        filter_one.criteria = [str(create_single_category().id)]
         filter_one.save()
         self.assertFalse(filter_one.is_match(self.ticket))
         self.assertFalse(self.assignment.is_match(self.ticket))
@@ -171,9 +174,9 @@ class AssignmentTests(TestCase):
 
     def test_is_match_false(self):
         self.assertEqual(self.assignment.filters.count(), 2)
-        filter_one = self.assignment.filters.filter(field='location')[0]
+        filter_one = self.assignment.filters.filter(field='categories')[0]
         filter_two = self.assignment.filters.exclude(id=filter_one.id)[0]
-        filter_one.criteria = [str(create_location().id)]
+        filter_one.criteria = [str(create_single_category().id)]
         filter_one.save()
         self.assertFalse(filter_one.is_match(self.ticket))
         self.assertTrue(filter_two.is_match(self.ticket))

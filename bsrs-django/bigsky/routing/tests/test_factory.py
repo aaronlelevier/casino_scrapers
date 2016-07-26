@@ -27,6 +27,7 @@ class PriorityFilterTests(TestCase):
         self.assertEqual(content_type.model_class(), Ticket)
         # other fields
         self.assertEqual(pf.key, 'admin.placeholder.ticket_priority')
+        self.assertTrue(pf.key_is_i18n)
         self.assertEqual(pf.field, 'priority')
         self.assertEqual(pf.criteria, [str(create_default(TicketPriority).id)])
 
@@ -61,7 +62,7 @@ class AssignmentTests(TestCase):
         # profile_filters
         self.assertEqual(assignment.filters.count(), 2)
         self.assertEqual(assignment.filters.filter(field='priority').count(), 1)
-        self.assertEqual(assignment.filters.filter(field='location').count(), 1)
+        self.assertEqual(assignment.filters.filter(field='categories').count(), 1)
 
     def test_create_assignments(self):
         self.assertEqual(Assignment.objects.count(), 0)
