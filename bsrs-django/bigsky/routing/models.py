@@ -119,13 +119,9 @@ class ProfileFilter(BaseModel):
     expl: Basically ProfileFilter has the serialized value returned by the
         list saved to it, indicating the dynamic filter selected.
     """
-    key = models.CharField(max_length=100,
-                           help_text="To use for i18n UI key, and also for mapping component based on selected filter")
-    key_is_i18n = models.BooleanField(default=True, help_text="is the 'key' field i18n'able")
-    context = models.CharField(max_length=100, blank=True, default=settings.DEFAULT_PROFILE_FILTER_CONTEXT,
-                               help_text="The namespace of the model to look the field up on. ex: 'app_name.model_name'")
-    field = models.CharField(max_length=100,
-                             help_text="Model field to look up from the Model class specified in the 'context'")
+    source = models.ForeignKey(AvailableFilter,
+        help_text="Use to get info on what type of filter, if this is a dynamic filter, use"
+                  "the lookup field")
     lookups = JSONField(null=True, default={},
         help_text="if used, provide extra lookup information beyond the 'field'"
                   "this should be a string array")

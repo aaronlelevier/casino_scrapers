@@ -1,5 +1,3 @@
-from collections import namedtuple
-
 from model_mommy import mommy
 
 from category.models import Category
@@ -14,16 +12,44 @@ from utils.helpers import create_default
 
 REPAIR = 'Repair'
 
+# AvailableFilters
+
+def create_available_filter_priority():
+    try:
+        return AvailableFilter.objects.get(key='admin.placeholder.ticket_priority')
+    except AvailableFilter.DoesNotExist:
+        return AvailableFilter.objects.create(key='admin.placeholder.ticket_priority',
+                                              field='priority')
+
+
+def create_available_filter_categories():
+    try:
+        return AvailableFilter.objects.get(key='admin.placeholder.category_filter')
+    except AvailableFilter.DoesNotExist:
+        return AvailableFilter.objects.create(key='admin.placeholder.category_filter',
+                                              field='categories')
+
+
+def create_available_filter_location():
+    try:
+        return AvailableFilter.objects.filter(lookups__filters='location_level')[0]
+    except IndexError:
+        return AvailableFilter.objects.create(key_is_i18n=False, field='location',
+                                              lookups={'filters': 'location_level'})
+
+
+def create_available_filters():
+    create_available_filter_priority()
+    create_available_filter_categories()
+    create_available_filter_location()
+
+
+# ProfileFilters
 
 def create_ticket_priority_filter():
     priority = create_default(TicketPriority)
-    return ProfileFilter.objects.create(key='admin.placeholder.ticket_priority',
-                                        field='priority', criteria=[str(priority.id)])
-
-def create_ticket_location_filter():
-    location = create_top_level_location()
-    return ProfileFilter.objects.create(key='admin.placeholder.location_store',
-                                        field='location', criteria=[str(location.id)])
+    source = create_available_filter_priority()
+    return ProfileFilter.objects.create(source=source, criteria=[str(priority.id)])
 
 
 def create_ticket_categories_filter():
@@ -31,9 +57,19 @@ def create_ticket_categories_filter():
         category = Category.objects.get(name=REPAIR)
     except Category.DoesNotExist:
         category = mommy.make(Category, name=REPAIR)
-    return ProfileFilter.objects.create(key='admin.placeholder.category_filter',
-                                        field='categories', criteria=[str(category.id)])
 
+    source = create_available_filter_categories()
+    return ProfileFilter.objects.create(source=source, criteria=[str(category.id)])
+
+
+def create_ticket_location_filter():
+    location = create_top_level_location()
+    source = create_available_filter_location()
+    return ProfileFilter.objects.create(source=source, criteria=[str(location.id)],
+                                        lookups={'filters': 'location_level'})
+
+
+# Assignments
 
 def create_assignment(description=None, tenant=None):
     kwargs = {
@@ -57,30 +93,3 @@ def create_assignment(description=None, tenant=None):
 def create_assignments():
     for i in range(10):
         create_assignment()
-
-
-def create_available_filter():
-    try:
-        return AvailableFilter.objects.get(key='admin.placeholder.ticket_priority')
-    except AvailableFilter.DoesNotExist:
-        return AvailableFilter.objects.create(key='admin.placeholder.ticket_priority',
-                                              field='priority')
-
-
-def create_available_filters():
-    # key, key_is_i18n, field, lookups
-    AVAILABLE_FILTERS = [
-        ('admin.placeholder.ticket_priority', True, 'priority', {}),
-        ('admin.placeholder.category_filter', True, 'categories', {}),
-        ('', False, 'location', {'filters': 'location_level'})
-    ]
-
-
-    for x in AVAILABLE_FILTERS:
-        AFData = namedtuple('AFData', ['key', 'key_is_i18n', 'field', 'lookups'])
-        data = AFData._make(x)._asdict()
-
-        try:
-            AvailableFilter.objects.get(key=data['key'])
-        except AvailableFilter.DoesNotExist:
-            AvailableFilter.objects.create(**data)
