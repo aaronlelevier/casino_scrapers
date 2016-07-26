@@ -128,7 +128,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
     return first_name + ' ' + last_name;
   }),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'emailsIsDirty', 'phoneNumbersIsDirty', 'roleIsDirty', 'locationsIsDirty', 'statusIsDirty', 'localeIsDirty', function() {
-    return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty') || this.get('statusIsDirty') || this.get('emailsIsDirty') || this.get('localeIsDirty');
+    return ( this.get('detail') || this.get('new') ) && ( this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty') || this.get('statusIsDirty') || this.get('emailsIsDirty') || this.get('localeIsDirty') );
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   clearPassword() {

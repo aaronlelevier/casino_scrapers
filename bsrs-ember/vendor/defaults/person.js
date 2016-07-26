@@ -40,7 +40,7 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
       first_name: BSRS_PERSON_FIRST_NAME,
       middle_initial: BSRS_PERSON_MIDDLE_INITIAL,
       last_name: BSRS_PERSON_LAST_NAME,
-      fullname: BSRS_PERSON_FIRST_NAME + " " + BSRS_PERSON_LAST_NAME,
+      fullname: BSRS_PERSON_FIRST_NAME + ' ' + BSRS_PERSON_LAST_NAME,
       role: this.role_defaults.idOne,
       status: this.status_defaults.activeId,
       phone_numbers: BSRS_PERSON_PHONE_NUMBERS,

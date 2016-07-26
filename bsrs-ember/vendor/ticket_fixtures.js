@@ -59,7 +59,7 @@ var BSRS_TICKET_FACTORY = (function() {
       request: this.ticket.requestOne,
       status_fk: status_id || this.ticket.statusOneId,
       priority_fk: this.ticket.priorityOneId,
-      cc: [this.people_fixtures.get()],
+      cc: [this.people_fixtures.get_no_related()],
       categories: [categories[0], categories[1], categories[2]],
       requester: this.people_defaults.nameMel,
       assignee: this.people_fixtures.get(),

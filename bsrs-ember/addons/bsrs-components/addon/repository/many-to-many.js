@@ -1,4 +1,6 @@
 import Ember from 'ember';
+const { run } = Ember;
+import pluralize from 'bsrs-components/utils/plural';
 
 var many_to_many_extract = function(json, store, model, join_models_str, main_pk, related_str, related_pk) {
   //cc_json, store, ticket, ticket_cc, ticket_pk, person, person_pk
@@ -9,6 +11,7 @@ var many_to_many_extract = function(json, store, model, join_models_str, main_pk
   const join_models = model.get(`${join_models_str}`) || [];
   const join_model_pks = join_models.mapBy(`${related_pk}`);//client side people
   const model_pk = model.get('id');
+  store = store || this.get('simpleStore');
   for (let i = json.length-1; i >= 0; i--){
     const pk = Ember.uuid();
     const many_models = json[i];
@@ -36,5 +39,40 @@ var many_to_many_extract = function(json, store, model, join_models_str, main_pk
   return [m2m_models, relateds, server_sum];
 };
 
-export { many_to_many_extract };
+var many_to_many = function(_associatedModel, modelName, noSetup) {
+  let { plural=false } = noSetup || {};
+  const _singularAssociatedName = _associatedModel;
+  if (plural) {
+    _associatedModel = pluralize(_associatedModel);
+  }
+  const _joinModelName = `${modelName}_${_associatedModel}`;
+  Ember.defineProperty(this, `setup_${_associatedModel}`, undefined, many_to_many_json(modelName, _associatedModel, _singularAssociatedName, _joinModelName));
+};
 
+/**
+ * Creates many to many setup for deserializer
+ *
+ * @method many_to_many_json
+ */
+var many_to_many_json = function(modelName, _associatedModel, _singularAssociatedName, _joinModelName) {
+  return function(json, model) {
+    const store = this.get('simpleStore');
+    let [m2m_models, relateds, server_sum] = many_to_many_extract(json, store, model, _joinModelName, `${modelName}_pk`, _singularAssociatedName, `${this.OPT_CONF[_associatedModel]['associated_model']}_pk`);
+    run(() => {
+      relateds.forEach((related) => {
+        const ass_model = this.OPT_CONF[_associatedModel]['associated_model'];
+        const existing_ass_model = store.find(ass_model, related.id);
+        if (!existing_ass_model.get('id') || existing_ass_model.get('isNotDirtyOrRelatedNotDirty')) {
+          const model = store.push(this.OPT_CONF[_associatedModel]['associated_model'], related);
+          model.save();
+        }
+      });
+      m2m_models.forEach((m2m) => {
+        store.push(this.OPT_CONF[_associatedModel]['join_model'], m2m);
+      });
+      store.push(modelName, {id: model.get('id'), [`${modelName}_${_associatedModel}_fks`]: server_sum});
+    });
+  };
+};
+
+export { many_to_many_extract, many_to_many };

@@ -3,7 +3,7 @@ const { run } = Ember;
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
-import TICKET_PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-person';
+import TICKET_PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-join-person';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 import PERSON_LD from 'bsrs-ember/vendor/defaults/person-location';
 import SD from 'bsrs-ember/vendor/defaults/status';
@@ -26,7 +26,7 @@ let store, subject, uuid, person_deserializer, location_level_deserializer, loca
 
 module('unit: ticket deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-list', 'model:person-list', 'model:ticket-person', 'model:model-category', 'model:ticket-status', 'model:ticket-priority', 'model:status', 'model:location', 'model:location-list','model:person-location', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:attachment', 'model:location-status', 'service:person-current','service:translations-fetcher','service:i18n', 'model:locale', 'model:role', 'model:general-status-list', 'model:ticket-priority-list', 'model:category-list', 'model:category-children']);
+    store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-list', 'model:person-list', 'model:ticket-join-person', 'model:model-category', 'model:ticket-status', 'model:ticket-priority', 'model:status', 'model:location', 'model:location-list','model:person-location', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:attachment', 'model:location-status', 'service:person-current','service:translations-fetcher','service:i18n', 'model:locale', 'model:role', 'model:general-status-list', 'model:ticket-priority-list', 'model:category-list', 'model:category-children']);
     uuid = this.container.lookup('model:uuid');
     location_level_deserializer = LocationLevelDeserializer.create({simpleStore: store});
     location_deserializer = LocationDeserializer.create({simpleStore: store, LocationLevelDeserializer: location_level_deserializer});
@@ -481,7 +481,7 @@ test('ticket status will be updated when server returns same status (single)', (
 // });
 
 /*TICKET PERSON M2M*/
-test('ticket-person m2m is set up correctly using deserialize single (starting with no m2m relationship)', (assert) => {
+test('ticket-join-person m2m is set up correctly using deserialize single (starting with no m2m relationship)', (assert) => {
   let response = TF.generate(TD.idOne);
   let cc = ticket.get('cc');
   assert.equal(cc.get('length'), 0);
@@ -493,7 +493,7 @@ test('ticket-person m2m is set up correctly using deserialize single (starting w
   cc = original.get('cc');
   assert.equal(cc.get('length'), 1);
   assert.equal(cc.objectAt(0).get('fullname'), PD.fullname);
-  assert.equal(store.find('ticket-person').get('length'), 1);
+  assert.equal(store.find('ticket-join-person').get('length'), 1);
   assert.ok(original.get('isNotDirty'));
   assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
 });
@@ -502,12 +502,12 @@ test('ticket-status m2m is added after deserialize single (starting with existin
   let m2m, person;
   ticket.set('ticket_cc_fks', [TICKET_PERSON_DEFAULTS.idOne]);
   ticket.save();
-  m2m = store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
+  m2m = store.push('ticket-join-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
   person = store.push('person', {id: PD.id, fullname: PD.fullname});
   assert.equal(ticket.get('cc.length'), 1);
   let response = TF.generate(TD.idOne);
-  let second_person = PF.get(PD.unusedId);
-  response.cc = [PF.get(), second_person];
+  let second_person = PF.get_no_related(PD.unusedId);
+  response.cc = [PF.get_no_related(), second_person];
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   run(function() {
     subject.deserialize(response, TD.idOne);
@@ -519,14 +519,14 @@ test('ticket-status m2m is added after deserialize single (starting with existin
   assert.equal(cc.objectAt(1).get('fullname'), PD.fullname);
   assert.ok(original.get('isNotDirty'));
   assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(store.find('ticket-person').get('length'), 2);
+  assert.equal(store.find('ticket-join-person').get('length'), 2);
 });
 
-test('ticket-person m2m is removed when server payload no longer reflects what server has for m2m relationship', (assert) => {
+test('ticket-join-person m2m is removed when server payload no longer reflects what server has for m2m relationship', (assert) => {
   let m2m, person;
   ticket.set('ticket_cc_fks', [TICKET_PERSON_DEFAULTS.idOne]);
   ticket.save();
-  m2m = store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
+  m2m = store.push('ticket-join-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
   person = store.push('person', {id: PD.id, name: PD.fullname});
   assert.equal(ticket.get('cc').get('length'), 1);
   let response = TF.generate(TD.id);
@@ -544,13 +544,12 @@ test('ticket-person m2m is removed when server payload no longer reflects what s
   assert.equal(cc.objectAt(0).get('id'), PD.idTwo);
   assert.ok(original.get('isNotDirty'));
   assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(store.find('ticket-person').get('length'), 3);
+  assert.equal(store.find('ticket-join-person').get('length'), 3);
 });
 
 test('model-category m2m added including parent id for categories without a fat parent model', (assert) => {
   store.clear('ticket');
   let response = TF.generate(TD.idOne);
-  response.cc = [PF.get()];
   run(() => {
     subject.deserialize(response, TD.idOne);
   });
@@ -558,7 +557,7 @@ test('model-category m2m added including parent id for categories without a fat 
   assert.ok(ticket.get('isNotDirty'));
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(ticket.get('ccIsNotDirty'));
-  assert.equal(store.find('ticket-person').get('length'), 1);
+  assert.equal(store.find('ticket-join-person').get('length'), 1);
   assert.equal(store.find('model-category').get('length'), 3);
   let categories = ticket.get('sorted_categories');
   assert.equal(categories.get('length'), 3);
@@ -573,11 +572,10 @@ test('model-category m2m added including parent id for categories without a fat 
   assert.deepEqual(categories.objectAt(2).get('children').mapBy('id'), []);
 });
 
-test('ticket-person m2m added even when ticket did not exist before the deserializer executes', (assert) => {
+test('ticket-join-person m2m added even when ticket did not exist before the deserializer executes', (assert) => {
   store.clear('ticket');
   let response = TF.generate(TD.idOne);
-  response.cc = [PF.get()];
-  run(function() {
+  run(() => {
     subject.deserialize(response, TD.idOne);
   });
   ticket = store.find('ticket', TD.idOne);
@@ -586,7 +584,7 @@ test('ticket-person m2m added even when ticket did not exist before the deserial
   assert.equal(cc.objectAt(0).get('id'), PD.id);
   assert.ok(ticket.get('isNotDirty'));
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(store.find('ticket-person').get('length'), 1);
+  assert.equal(store.find('ticket-join-person').get('length'), 1);
 });
 
 /*TICKET CATEGORY M2M*/

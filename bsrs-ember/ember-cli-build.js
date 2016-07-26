@@ -88,7 +88,7 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/third-party-status.js');
       app.import('vendor/defaults/ticket.js');
       app.import('vendor/defaults/ticket_activity.js');
-      app.import('vendor/defaults/ticket-person.js');
+      app.import('vendor/defaults/ticket-join-person.js');
       app.import('vendor/defaults/ticket-priority.js');
       app.import('vendor/defaults/model-category.js');
       app.import('vendor/defaults/translation.js');

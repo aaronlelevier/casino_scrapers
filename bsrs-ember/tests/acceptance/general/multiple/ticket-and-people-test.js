@@ -12,16 +12,16 @@ import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LF from 'bsrs-ember/vendor/location_fixtures';
-import BASEURLS from 'bsrs-ember/utilities/urls';
+import generalPage from 'bsrs-ember/tests/pages/general';
+import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, PEOPLE_URL, PEOPLE_LIST_URL, CATEGORIES_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
-const TICKET_LIST_URL = `${BASEURLS.base_tickets_url}/index`;
 const TICKET_DETAIL_URL = `${BASEURLS.base_tickets_url}/${TD.idOne}`;
 const PEOPLE_DETAIL_URL = `${BASEURLS.base_people_url}/${PD.idOne}`;
 const PEOPLE_DONALD_DETAIL_URL = `${BASEURLS.base_people_url}/${PD.idDonald}`;
-const TOP_LEVEL_CATEGORIES_URL = `${PREFIX}/admin/categories/parents/`;
-const TICKET_ACTIVITIES_URL = `${PREFIX}/tickets/${TD.idOne}/activity/`;
+const TOP_LEVEL_CATEGORIES_URL = `${CATEGORIES_URL}parents/`;
+const TICKET_ACTIVITIES_URL = `${TICKETS_URL}${TD.idOne}/activity/`;
 const LOCATION = '.t-person-locations-select .ember-basic-dropdown-trigger';
 const LOCATION_DROPDOWN = '.t-person-locations-select-dropdown > .ember-power-select-options';
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
@@ -64,6 +64,8 @@ test('clicking between person detail and ticket detail will not dirty the active
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     person = store.find('person', PD.idOne);
     assert.ok(person.get('statusIsNotDirty'));
+    assert.ok(person.get('roleIsNotDirty'));
+    assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(person.get('person_locations_fks').length, 1);
     assert.equal(person.get('locations.length'), 1);
@@ -131,5 +133,35 @@ test('filter tickets by their location matching the logged in Persons location',
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
     // assert.equal(find('.t-grid-data').length, 0);
+  });
+});
+
+test('adding a new cc and navigating to the people url wont dirty the person model', (assert) => {
+  ajax(`${PREFIX}${BASEURLS.base_tickets_url}/?page=1`, 'GET', null, {}, 200, TF.list());
+  visit(TICKET_LIST_URL);
+  ajax(`${PREFIX}${TICKET_DETAIL_URL}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
+  ajax(TICKET_ACTIVITIES_URL, 'GET', null, {}, 200, TA_FIXTURES.empty());
+  click('.t-grid-data:eq(0)');
+  let PEOPLE_TICKETS_URL = `${PEOPLE_URL}person__icontains=m/`;
+  ajax(PEOPLE_TICKETS_URL, 'GET', null, {}, 200, PF.get_for_power_select(PD.personListTwo));
+  selectSearch('.t-ticket-cc-select', 'm');
+  selectChoose('.t-ticket-cc-select', PD.fullname);
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_DETAIL_URL);
+    ticket = store.find('ticket', TD.idOne);
+    assert.ok(ticket.get('ccIsDirty'));
+    person = store.find('person', PD.personListTwo);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('roleIsNotDirty'));
+    // assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  });
+  generalPage.clickAdmin();
+  ajax(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, PF.list());
+  generalPage.clickPeople();
+  andThen(() => {
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
+    person = store.find('person', PD.personListTwo);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   });
 });
