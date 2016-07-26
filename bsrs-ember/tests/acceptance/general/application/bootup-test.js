@@ -31,17 +31,17 @@ var application, store, run = Ember.run;
 
 moduleForAcceptance('Acceptance | bootup test', {
   beforeEach() {
-    
+
     store = this.application.__container__.lookup('service:simpleStore');
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
   },
   afterEach() {
     store = null;
-    
+
   }
 });
 
-test('on boot we should fetch and load the email configuration', function(assert) {
+test('on boot we should fetch and load the email configuration', assert => {
   visit(HOME_URL);
   andThen(() => {
     assert.equal(store.find('email-type').get('length'), 2);
@@ -52,7 +52,7 @@ test('on boot we should fetch and load the email configuration', function(assert
   });
 });
 
-test('on boot we should fetch and load the phone number configuration', function(assert) {
+test('on boot we should fetch and load the phone number configuration', assert => {
   visit(HOME_URL);
   andThen(() => {
     assert.equal(store.find('phone-number-type').get('length'), 2);
@@ -63,7 +63,7 @@ test('on boot we should fetch and load the phone number configuration', function
   });
 });
 
-test('on boot we should fetch and load the address configuration', function(assert) {
+test('on boot we should fetch and load the address configuration', assert => {
   visit(HOME_URL);
   andThen(() => {
     assert.equal(store.find('address-type').get('length'), 2);
@@ -74,7 +74,7 @@ test('on boot we should fetch and load the address configuration', function(asse
   });
 });
 
-test('on boot we should fetch and load the country configuration', function(assert) {
+test('on boot we should fetch and load the country configuration', assert => {
   visit(HOME_URL);
   andThen(() => {
     assert.equal(store.find('country').get('length'), 2);
@@ -85,7 +85,7 @@ test('on boot we should fetch and load the country configuration', function(asse
   });
 });
 
-test('on boot we should fetch and load the state configuration', function(assert) {
+test('on boot we should fetch and load the state configuration', assert => {
   visit(HOME_URL);
   andThen(() => {
     assert.equal(store.find('state').get('length'), 51);
@@ -95,7 +95,7 @@ test('on boot we should fetch and load the state configuration', function(assert
   });
 });
 
-test('on boot we should fetch and load the person status configuration', function(assert) {
+test('on boot we should fetch and load the person status configuration', assert => {
   visit(HOME_URL);
   andThen(() => {
     assert.equal(store.find('status').get('length'), 3);
@@ -108,7 +108,7 @@ test('on boot we should fetch and load the person status configuration', functio
   });
 });
 
-test('on boot we should fetch and load the store status configuration', function(assert) {
+test('on boot we should fetch and load the store status configuration', assert => {
   visit(HOME_URL);
   andThen(() => {
     assert.equal(store.find('location-status').get('length'), 3);
@@ -121,7 +121,7 @@ test('on boot we should fetch and load the store status configuration', function
   });
 });
 
-test('on boot we should fetch and load the ticket status configuration', function(assert) {
+test('on boot we should fetch and load the ticket status configuration', assert => {
   visit(HOME_URL);
   andThen(() => {
     assert.equal(store.find('ticket-status').get('length'), 8);
@@ -144,7 +144,7 @@ test('on boot we should fetch and load the ticket status configuration', functio
   });
 });
 
-test('on boot we should fetch and load the ticket priority configuration', function(assert) {
+test('on boot we should fetch and load the ticket priority configuration', assert => {
   visit(HOME_URL);
   andThen(() => {
     assert.equal(store.find('ticket-priority').get('length'), 4);
@@ -159,7 +159,7 @@ test('on boot we should fetch and load the ticket priority configuration', funct
   });
 });
 
-test('on boot we should fetch and load the currency configuration', function(assert) {
+test('on boot we should fetch and load the currency configuration', assert => {
   visit(HOME_URL);
   andThen(() => {
     var currency_models = store.find('currency');
@@ -175,7 +175,7 @@ test('on boot we should fetch and load the currency configuration', function(ass
   });
 });
 
-test('on boot we should fetch and load the role configuration', function(assert) {
+test('on boot we should fetch and load the role configuration', assert => {
   visit(HOME_URL);
   andThen(() => {
     var role_models = store.find('role');
@@ -193,7 +193,7 @@ test('on boot we should fetch and load the role configuration', function(assert)
   });
 });
 
-test('on boot we should fetch and load the role types configuration', function(assert) {
+test('on boot we should fetch and load the role types configuration', assert => {
   visit(HOME_URL);
   andThen(() => {
     var role_types_models = store.find('role-type');
@@ -203,7 +203,7 @@ test('on boot we should fetch and load the role types configuration', function(a
   });
 });
 
-test('on boot we should fetch and load the location level configuration', function(assert) {
+test('on boot we should fetch and load the location level configuration', assert => {
   run(function() {
     store.clear('location-level');
   });
@@ -230,7 +230,7 @@ test('locale', assert => {
   });
 });
 
-test('on boot we should fetch and load the person-current, logged in Person, configuration', function(assert) {
+test('on boot we should fetch and load the person-current, logged in Person, configuration', assert => {
   visit(HOME_URL);
   andThen(() => {
     var person_current = store.findOne('person');
@@ -246,7 +246,7 @@ test('on boot we should fetch and load the person-current, logged in Person, con
   });
 });
 
-test('on boot we should fetch and load the default model ordering configuration', function(assert) {
+test('on boot we should fetch and load the default model ordering configuration', assert => {
   visit(HOME_URL);
   andThen(() => {
     var model_ordering = store.find('model-ordering');
@@ -256,7 +256,7 @@ test('on boot we should fetch and load the default model ordering configuration'
   });
 });
 
-test('on boot we should fetch and load the saved filterset configuration', function(assert) {
+test('on boot we should fetch and load the saved filterset configuration', assert => {
   visit(HOME_URL);
   andThen(() => {
     var filtersets = store.find('filterset');

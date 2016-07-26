@@ -122,10 +122,8 @@ var change_belongs_to = function(_ownerName) {
     } else if (typeof new_related !== 'object') { //may be # or string
       let new_related_obj = store.find(name, new_related);
       const new_related_existing = new_related_obj.get(collection) || [];
-      const new_related_pojo = {id: new_related_obj.get('id')};
-      new_related_pojo[collection] = new_related_existing.concat(this.get('id'));
       run(() => {
-        store.push(name, new_related_pojo);
+        store.push(name, { id: new_related_obj.get('id'), [collection]: new_related_existing.concat(this.get('id')) });
       });
     }
   };
@@ -204,10 +202,8 @@ var belongs_to_save = function(modelName, _ownerName) {
   return function() {
     const pk = this.get('id');
     const has_many_model = this.get(name);
-    const updated_this = {id: pk};
-    updated_this[has_many_fk_name] = has_many_model ? has_many_model.get('id') : null;
     run(() => {
-      this.get('simpleStore').push(model, updated_this);
+      this.get('simpleStore').push(model, { id: pk, [has_many_fk_name]: has_many_model ? has_many_model.get('id') : null });
     });
   };
 };
