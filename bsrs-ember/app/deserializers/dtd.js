@@ -20,17 +20,16 @@ var extract_destination = function(destination_json, store, link_model) {
 };
 
 var DTDDeserializer = Ember.Object.extend({
-  deserialize(response, options) {
-    if (typeof options === 'undefined') {
-      return this._deserializeList(response);
+  deserialize(response, id) {
+    if (id) {
+      return this._deserializeSingle(response, id);
     } else {
-      return this._deserializeSingle(response, options);
+      return this._deserializeList(response);
     }
   },
   _deserializeSingle(response, id) {
     const store = this.get('simpleStore');
     let existing = store.find('dtd', id);
-    let return_dtd = existing;
     if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
       // Prep and Attachments
       response.dtd_attachments_fks = extract_attachments(response, store);
@@ -65,16 +64,16 @@ var DTDDeserializer = Ember.Object.extend({
           categories.forEach((cat) => {
               const children_json = cat.children;
               delete cat.children;
-              const category = store.push('category', cat); 
+              const category = store.push('category', cat);
               if(children_json){
                   let [m2m_children, children, server_sum] = many_to_many_extract(children_json, store, category, 'category_children', 'category_pk', 'category', 'children_pk');
                   children.forEach((cat) => {
-                      store.push('category', cat); 
+                      store.push('category', cat);
                   });
                   m2m_children.forEach((m2m) => {
                       store.push('category-children', m2m);
                   });
-                  store.push('category', {id: cat.id, category_children_fks: server_sum}); 
+                  store.push('category', {id: cat.id, category_children_fks: server_sum});
               }
           });
           m2m_categories.forEach((m2m) => {
@@ -117,9 +116,9 @@ var DTDDeserializer = Ember.Object.extend({
       });
       dtd = store.push('dtd', {id: dtd.get('id'), dtd_links_fks: links_server_sum});
       dtd.save();
-      return_dtd = dtd;
+      existing = dtd;
     }
-    return return_dtd;
+    return existing;
   },
   _deserializeList(response) {
     const store = this.get('simpleStore');
@@ -138,9 +137,3 @@ var DTDDeserializer = Ember.Object.extend({
 });
 
 export default DTDDeserializer;
-
-
-
-
-
-
