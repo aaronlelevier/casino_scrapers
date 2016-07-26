@@ -2,6 +2,9 @@ from django.conf import settings
 from django.contrib.auth.models import ContentType
 from django.test import TestCase
 
+from model_mommy import mommy
+
+from category.models import Category
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from routing.models import Assignment
@@ -36,6 +39,15 @@ class FactoryTests(TestCase):
         self.assertEqual(pf.key, 'admin.placeholder.location_store')
         self.assertEqual(pf.field, 'location')
         self.assertEqual(pf.criteria, [str(location.id)])
+
+    def test_create_ticket_categories_filter(self):
+        category = mommy.make(Category, name=factory.REPAIR)
+
+        pf = factory.create_ticket_categories_filter()
+
+        self.assertEqual(pf.key, 'admin.placeholder.category_filter')
+        self.assertEqual(pf.field, 'categories')
+        self.assertEqual(pf.criteria, [str(category.id)])
 
     def test_create_assignment(self):
         assignment = factory.create_assignment()

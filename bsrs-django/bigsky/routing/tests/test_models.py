@@ -4,11 +4,13 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
+from category.models import Category
 from location.tests.factory import create_location, create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
 from routing.models import Assignment, AssignmentManager, AssignmentQuerySet, ProfileFilter
-from routing.tests.factory import create_assignment, create_ticket_priority_filter
+from routing.tests.factory import (create_assignment, create_ticket_priority_filter,
+create_ticket_categories_filter)
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority, TICKET_PRIORITY_DEFAULT
 from ticket.tests.factory import create_ticket
@@ -185,29 +187,35 @@ class ProfilefilterTests(TestCase):
 
     def setUp(self):
         self.pf = create_ticket_priority_filter()
+        self.cf = create_ticket_categories_filter()
         create_single_person()
         self.ticket = create_ticket()
+
 
     def test_meta__ordering(self):
         # order by id, so that way are returned to User in the same order
         # each time if nested in the Assignment Detail view
         self.assertEqual(ProfileFilter._meta.ordering, ['id'])
 
-    def test_is_match__true(self):
+    def test_is_match__foreign_key__true(self):
         self.assertIn(str(self.ticket.priority.id), self.pf.criteria)
         self.assertTrue(self.pf.is_match(self.ticket))
 
-    def test_is_match__false(self):
+    def test_is_match__foreign_key__false(self):
         self.ticket.priority = mommy.make(TicketPriority)
         self.ticket.save()
         self.assertNotIn(str(self.ticket.priority.id), self.pf.criteria)
         self.assertFalse(self.pf.is_match(self.ticket))
 
-    def test_get_filter_criteria(self):
-        ret = self.pf.filter_criteria
+    def test_is_match__many_to_many__true(self):
+        self.category = Category.objects.get(id=self.cf.criteria[0])
+        self.ticket.categories.add(self.category)
 
-        self.assertIsInstance(ret, models.query.QuerySet)
-        self.assertEqual(ret.count(), 1)
-        self.assertIsInstance(ret.first(), TicketPriority)
-        priority = TicketPriority.objects.get(name=TICKET_PRIORITY_DEFAULT)
-        self.assertEqual(ret.first().id, priority.id)
+        category_ids = (str(x) for x in self.ticket.categories.values_list('id', flat=True))
+        self.assertTrue(set(category_ids).intersection(set(self.cf.criteria)))
+        self.assertTrue(self.cf.is_match(self.ticket))
+
+    def test_is_match__many_to_many__false(self):
+        category_ids = (str(x) for x in self.ticket.categories.values_list('id', flat=True))
+        self.assertFalse(set(category_ids).intersection(set(self.cf.criteria)))
+        self.assertFalse(self.cf.is_match(self.ticket))
