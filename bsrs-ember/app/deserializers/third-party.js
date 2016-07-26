@@ -2,19 +2,17 @@ import Ember from 'ember';
 import { belongs_to_extract } from 'bsrs-components/repository/belongs-to';
 
 var ThirdPartyDeserializer = Ember.Object.extend({
-  deserialize(model, options) {
-    if (typeof options === 'undefined') {
-      this._deserializeList(model);
+  deserialize(model, id) {
+    if (id) {
+      return this._deserializeSingle(model);
     } else {
-      return this._deserializeSingle(model, options);
+      this._deserializeList(model);
     }
   },
-  _deserializeSingle(model, id) {
+  _deserializeSingle(model) {
     const store = this.get('simpleStore');
-    let existing = store.find('third-party', id);
-    let third_party = existing;
     model.detail = true;
-    third_party = store.push('third-party', model);
+    let third_party = store.push('third-party', model);
     belongs_to_extract(model.status_fk, store, third_party, 'status', 'general', 'third_parties');
     third_party.save();
     return third_party;
