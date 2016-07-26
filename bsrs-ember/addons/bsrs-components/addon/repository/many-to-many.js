@@ -72,6 +72,8 @@ var many_to_many_json = function(modelName, _associatedModel, _singularAssociate
       });
       store.push(modelName, {id: model.get('id'), [`${modelName}_${_associatedModel}_fks`]: server_sum});
     });
+    // return optional
+    return [m2m_models, relateds, server_sum];
   };
 };
 

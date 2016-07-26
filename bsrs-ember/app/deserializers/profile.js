@@ -1,8 +1,13 @@
 import Ember from 'ember';
 const { run } = Ember;
-import { many_to_many_extract } from 'bsrs-components/repository/many-to-many';
+import OptConf from 'bsrs-ember/mixins/optconfigure/profile';
+import { many_to_many_extract, many_to_many } from 'bsrs-components/repository/many-to-many';
 
-export default Ember.Object.extend({
+export default Ember.Object.extend(OptConf, {
+  init() {
+    this._super(...arguments);
+    many_to_many.bind(this)('pf', 'profile', {plural:true});
+  },
   deserialize(response, id) {
     const store = this.get('simpleStore');
     if (id) {
@@ -22,7 +27,7 @@ export default Ember.Object.extend({
     delete model.filters;
     profile = store.push('profile', model);
     profile.change_assignee(assignee);
-    let [m2m_pfs, pfs, pf_server_sum] = many_to_many_extract(pfilters, store, profile, 'profile_pfs', 'profile_pk', 'pfilter', 'pfilter_pk');
+    const [,pfs,] = this.setup_pfs(pfilters, profile);
     pfs.forEach((pf) => {
       if (pf.criteria) {
         const criteriaIds = pf.criteria;
@@ -31,17 +36,11 @@ export default Ember.Object.extend({
       }
       store.push('pfilter', pf);
     });
-    m2m_pfs.forEach((m2m) => {
-      store.push('profile-join-pfilter', m2m);
-    });
     let pfsIds = pfilters.map((obj) => {
       return obj.id;
     });
     run(() => {
-      profile = store.push('profile', {
-        id: model.id,
-        profile_pfs_fks: pf_server_sum
-      });
+      profile = store.push('profile', { id: model.id, });
       profile.save();
     });
     return profile;
