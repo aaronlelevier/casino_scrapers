@@ -36,4 +36,20 @@ var belongs_to_extract_contacts = function(model, store, contact_model_str, cont
     return contact_fks;
 };
 
-export { belongs_to_extract, belongs_to_extract_contacts };
+var belongs_to = function(_ownerName, modelName) {
+  Ember.defineProperty(this, `setup_${_ownerName}`, undefined, belongs_to_json(modelName, _ownerName));
+};
+
+/**
+ * Creates many to many setup for deserializer
+ *
+ * @method belongs_to_json
+ */
+var belongs_to_json = function(modelName, _ownerName) {
+  return function(json, model) {
+    const store = this.get('simpleStore');
+    belongs_to_extract(json, store, model, _ownerName, modelName, model[`change_${_ownerName}`], this.OPT_CONF[_ownerName]['collection']);
+  };
+};
+
+export { belongs_to_extract, belongs_to_extract_contacts, belongs_to };

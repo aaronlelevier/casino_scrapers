@@ -52,8 +52,7 @@ var many_to_many = function(_associatedModel, modelName, noSetup) {
 /**
  * Creates many to many setup for deserializer
  *
- * @method many_to_many_generator
- * @return {array} [m2m_models, relateds, server_sum]
+ * @method many_to_many_json
  */
 var many_to_many_json = function(modelName, _associatedModel, _singularAssociatedName, _joinModelName) {
   return function(json, model) {
