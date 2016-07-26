@@ -1,5 +1,7 @@
+from rest_framework import serializers
+
 from person.serializers_leaf import PersonIdUsernameSerializer
-from routing.models import Assignment, ProfileFilter
+from routing.models import Assignment, ProfileFilter, AvailableFilter
 from routing.validators import ProfileFilterFieldValidator, UniqueByTenantValidator
 from tenant.mixins import RemoveTenantMixin
 from utils.create import update_model
@@ -92,3 +94,10 @@ class AssignmentDetailSerializer(RemoveTenantMixin, BaseCreateSerializer):
     @staticmethod
     def eager_load(queryset):
         return queryset.select_related('assignee').prefetch_related('filters')
+
+
+class AvailableFilterListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AvailableFilter
+        fields = ('id', 'key', 'key_is_i18n', 'context', 'field', 'lookups',)

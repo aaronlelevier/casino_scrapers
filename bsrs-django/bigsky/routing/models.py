@@ -95,6 +95,8 @@ class AvailableFilter(BaseModel):
                          available filter for each location_level
             }
     """
+    # type isn't exposed in list, only used internally on which available
+    # filters to return
     type = models.CharField(max_length=100, null=True, default='assignment',
         help_text="could be different for the model being filtered. i.e. assignment, notification, etc...")
     key = models.CharField(max_length=100, blank=True,

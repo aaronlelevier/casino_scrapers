@@ -6,14 +6,16 @@ from django.conf import settings
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
-from person.tests.factory import create_single_person
-from routing.models import Assignment, ProfileFilter
-from routing.tests.factory import create_assignment
+from location.models import LocationLevel
+from location.tests.factory import create_location_levels
+from person.tests.factory import create_single_person, PASSWORD
+from routing.models import Assignment, ProfileFilter, AvailableFilter
+from routing.tests.factory import create_assignment, create_available_filters
 from routing.tests.mixins import ViewTestSetupMixin
 from utils.create import _generate_chars
 
 
-class ViewTests(ViewTestSetupMixin, APITestCase):
+class AssignmentTests(ViewTestSetupMixin, APITestCase):
 
     def test_list(self):
         response = self.client.get('/api/admin/assignments/')
@@ -189,3 +191,75 @@ class ViewTests(ViewTestSetupMixin, APITestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(ProfileFilter.objects.count(), init_count)
+
+
+class AvailableFilterTests(APITestCase):
+
+    def setUp(self):
+        self.person = create_single_person()
+        create_location_levels()
+        create_available_filters()
+        self.af = AvailableFilter.objects.first()
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_list_non_dynamic(self):
+        response = self.client.get('/api/admin/assignments-available-filters/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        # non-dynamic record
+        for d in data['results']:
+            if d['field'] == 'priority':
+                priority_data = d
+        self.assertTrue(priority_data['id'])
+        self.assertEqual(priority_data['key'], 'admin.placeholder.ticket_priority')
+        self.assertTrue(priority_data['key_is_i18n'])
+        self.assertEqual(priority_data['context'], settings.DEFAULT_PROFILE_FILTER_CONTEXT)
+        self.assertEqual(priority_data['field'], 'priority')
+        self.assertEqual(priority_data['lookups'], {})
+
+    def test_list__dynamic(self):
+        raw_filter_count = AvailableFilter.objects.count()
+        dynamic_filter_count = AvailableFilter.objects.filter(lookups__filters='location_level').count()
+        location_level_filters = LocationLevel.objects.count()
+        self.assertEqual(raw_filter_count, 3)
+        self.assertEqual(dynamic_filter_count, 1)
+        self.assertEqual(location_level_filters, 5)
+        desired_count = raw_filter_count - dynamic_filter_count + location_level_filters
+
+        response = self.client.get('/api/admin/assignments-available-filters/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        # count dynamic and non-dynamic
+        self.assertEqual(data['count'], 7)
+        # dynamic location_level record
+        for d in data['results']:
+            if 'location_level' in d['lookups']:
+                location_data = d
+        location_level = LocationLevel.objects.get(id=location_data['lookups']['location_level'])
+        self.assertTrue(location_data['id'])
+        self.assertEqual(location_data['key'], location_level.name)
+        self.assertFalse(location_data['key_is_i18n'])
+        self.assertEqual(location_data['context'], settings.DEFAULT_PROFILE_FILTER_CONTEXT)
+        self.assertEqual(location_data['field'], 'location')
+        self.assertEqual(location_data['lookups'], {'location_level': str(location_level.id)})
+
+    def test_detail(self):
+        response = self.client.get('/api/admin/assignments-available-filters/{}/'.format(self.af.id))
+        self.assertEqual(response.status_code, 405)
+
+    def test_create(self):
+        response = self.client.post('/api/admin/assignments-available-filters/', {}, format='json')
+        self.assertEqual(response.status_code, 405)
+
+    def test_update(self):
+        response = self.client.put('/api/admin/assignments-available-filters/{}/'.format(self.af.id))
+        self.assertEqual(response.status_code, 405)
+
+    def test_delete(self):
+        response = self.client.delete('/api/admin/assignments-available-filters/{}/'.format(self.af.id))
+        self.assertEqual(response.status_code, 405)

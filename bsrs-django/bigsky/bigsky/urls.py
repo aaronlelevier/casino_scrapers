@@ -61,6 +61,7 @@ router.register(r'admin/people', person_views.PersonViewSet)
 router.register(r'admin/roles', person_views.RoleViewSet)
 # ROUTING
 router.register(r'admin/assignments', routing_views.AssignmentViewSet)
+router.register(r'admin/assignments-available-filters', routing_views.AvailableFilterViewSet)
 # TENANT
 router.register(r'admin/tenant', tenant_views.TenantViewSet)
 # THIRD PARTY
