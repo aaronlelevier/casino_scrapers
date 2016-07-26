@@ -1,11 +1,13 @@
 import Ember from 'ember';
 const { run } = Ember;
 import OptConf from 'bsrs-ember/mixins/optconfigure/profile';
+import { belongs_to } from 'bsrs-components/repository/belongs-to';
 import { many_to_many_extract, many_to_many } from 'bsrs-components/repository/many-to-many';
 
 export default Ember.Object.extend(OptConf, {
   init() {
     this._super(...arguments);
+    belongs_to.bind(this)('assignee', 'profile', 'person');
     many_to_many.bind(this)('pf', 'profile', {plural:true});
   },
   deserialize(response, id) {
@@ -25,8 +27,9 @@ export default Ember.Object.extend(OptConf, {
     delete model.assignee;
     const pfilters = model.filters;
     delete model.filters;
+    model.detail = true;
     profile = store.push('profile', model);
-    profile.change_assignee(assignee);
+    this.setup_assignee(assignee, profile);
     const [,pfs,] = this.setup_pfs(pfilters, profile);
     pfs.forEach((pf) => {
       if (pf.criteria) {
@@ -36,13 +39,8 @@ export default Ember.Object.extend(OptConf, {
       }
       store.push('pfilter', pf);
     });
-    let pfsIds = pfilters.map((obj) => {
-      return obj.id;
-    });
-    run(() => {
-      profile = store.push('profile', { id: model.id, });
-      profile.save();
-    });
+    let pfsIds = pfilters.map(obj => obj.id);
+    profile.save();
     return profile;
   },
   _deserializeList(store, response) {
