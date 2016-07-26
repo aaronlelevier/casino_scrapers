@@ -113,8 +113,8 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
       const priority_json = model.priority;
       delete model.priority;
       const ticket = store.push('ticket-list', model);
-      belongs_to_extract(status_json, store, ticket, 'status', 'general', 'tickets');
-      belongs_to_extract(priority_json, store, ticket, 'priority', 'ticket', 'tickets');
+      this.setup_status(status_json, ticket);
+      this.setup_priority(priority_json, ticket);
     });
   }
 });
