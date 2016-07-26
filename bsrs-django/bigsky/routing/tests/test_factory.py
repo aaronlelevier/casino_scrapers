@@ -7,7 +7,7 @@ from model_mommy import mommy
 from category.models import Category
 from location.tests.factory import create_top_level_location
 from person.models import Person
-from routing.models import Assignment
+from routing.models import Assignment, AvailableFilter
 from routing.tests import factory
 from tenant.models import Tenant
 from ticket.models import Ticket, TicketPriority
@@ -15,7 +15,7 @@ from utils.create import LOREM_IPSUM_WORDS
 from utils.helpers import create_default
 
 
-class FactoryTests(TestCase):
+class PriorityFilterTests(TestCase):
 
     def test_create_ticket_priority_filter(self):
         pf = factory.create_ticket_priority_filter()
@@ -49,6 +49,9 @@ class FactoryTests(TestCase):
         self.assertEqual(pf.field, 'categories')
         self.assertEqual(pf.criteria, [str(category.id)])
 
+
+class AssignmentTests(TestCase):
+
     def test_create_assignment(self):
         assignment = factory.create_assignment()
         self.assertIsInstance(assignment, Assignment)
@@ -66,3 +69,29 @@ class FactoryTests(TestCase):
         # not an exact equal here b/c is created w/ a random desc
         # using a "get_or_create" so count might not be 10 ea. time
         self.assertTrue(Assignment.objects.count() > 5)
+
+
+class AvailableFilterTests(TestCase):
+
+    def test_create_available_filter(self):
+        ret = factory.create_available_filter()
+        ret_two = factory.create_available_filter()
+        # indempotent
+        self.assertEqual(ret, ret_two)
+        # attrs
+        self.assertEqual(ret.type, 'assignment')
+        self.assertEqual(ret.key, 'admin.placeholder.ticket_priority')
+        self.assertEqual(ret.key_is_i18n, True)
+        self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
+        self.assertEqual(ret.field, 'priority')
+        self.assertEqual(ret.lookups, {})
+
+    def test_create_available_filters(self):
+        self.assertEqual(AvailableFilter.objects.count(), 0)
+
+        factory.create_available_filters()
+
+        self.assertEqual(AvailableFilter.objects.count(), 3)
+        fields = ['priority', 'categories', 'location']
+        for af in AvailableFilter.objects.all():
+            self.assertIn(af.field, fields)

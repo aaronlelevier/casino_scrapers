@@ -83,6 +83,32 @@ def update_order(sender, instance=None, created=False, **kwargs):
         instance.save()
 
 
+class AvailableFilter(BaseModel):
+    """
+    :lookups: (dict)
+        if there's a lookup, use it to generate dynamic AvailableFilters
+
+        Idea for structure:
+            {
+                filters: if dynamic filters need to be generated of the base fields
+                    ex - location_level,  on serialization generate an
+                         available filter for each location_level
+            }
+    """
+    type = models.CharField(max_length=100, null=True, default='assignment',
+        help_text="could be different for the model being filtered. i.e. assignment, notification, etc...")
+    key = models.CharField(max_length=100, blank=True,
+                           help_text="To use for i18n UI key, and also for mapping component based on selected filter")
+    key_is_i18n = models.BooleanField(default=True, help_text="is the 'key' field i18n'able")
+    context = models.CharField(max_length=100, blank=True, default=settings.DEFAULT_PROFILE_FILTER_CONTEXT,
+                               help_text="The namespace of the model to look the field up on. ex: 'app_name.model_name'")
+    field = models.CharField(max_length=100,
+                             help_text="Model field to look up from the Model class specified in the 'context'")
+    lookups = JSONField(null=True, default={},
+        help_text="if used, provide extra lookup information beyond the 'field'"
+                  "this should be a string array")
+
+
 class ProfileFilter(BaseModel):
     # key,context,field - need to be bootstrapped, or sent when going to AP view
     # will be different for NP, or AP

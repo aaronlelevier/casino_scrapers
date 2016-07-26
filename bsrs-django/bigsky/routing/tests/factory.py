@@ -1,9 +1,11 @@
+from collections import namedtuple
+
 from model_mommy import mommy
 
 from category.models import Category
 from location.tests.factory import create_top_level_location
 from person.tests.factory import create_single_person
-from routing.models import Assignment, ProfileFilter
+from routing.models import Assignment, ProfileFilter, AvailableFilter
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import TicketPriority
 from utils.create import random_lorem
@@ -56,3 +58,30 @@ def create_assignment(description=None, tenant=None):
 def create_assignments():
     for i in range(10):
         create_assignment()
+
+
+def create_available_filter():
+    try:
+        return AvailableFilter.objects.get(key='admin.placeholder.ticket_priority')
+    except AvailableFilter.DoesNotExist:
+        return AvailableFilter.objects.create(key='admin.placeholder.ticket_priority',
+                                              field='priority')
+
+
+def create_available_filters():
+    # key, key_is_i18n, field, lookups
+    AVAILABLE_FILTERS = [
+        ('admin.placeholder.ticket_priority', True, 'priority', {}),
+        ('admin.placeholder.category_filter', True, 'categories', {}),
+        ('', False, 'location', {'filters': 'location_level'})
+    ]
+
+
+    for x in AVAILABLE_FILTERS:
+        AFData = namedtuple('AFData', ['key', 'key_is_i18n', 'field', 'lookups'])
+        data = AFData._make(x)._asdict()
+
+        try:
+            AvailableFilter.objects.get(key=data['key'])
+        except AvailableFilter.DoesNotExist:
+            AvailableFilter.objects.create(**data)
