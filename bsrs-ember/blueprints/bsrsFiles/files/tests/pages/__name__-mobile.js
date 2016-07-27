@@ -1,0 +1,29 @@
+import Ember from 'ember';
+import { visitable, fillable, value, create, clickable, text, isVisible } from 'ember-cli-page-object';
+import <%= camelizedModuleName %>D from 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>';
+import config from 'bsrs-ember/config/environment';
+import BASEURLS from 'bsrs-ember/utilities/urls';
+
+const BASE_URL = BASEURLS.BASE_<%= CapitalizeModule %>_URL;
+const <%= secondPropertyTitle %> = '.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select .ember-basic-dropdown-trigger';
+const DETAIL_URL = `${BASE_URL}/${<%= camelizedModuleName %>D.idOne}`;
+
+export default create({
+  visitDetail: visitable(DETAIL_URL),
+  clickFilter<%= firstPropertyTitle %>: clickable('.t-filter-<%= firstPropertySnake %>'),
+  clickFilter<%= secondModelTitle %>: clickable('.t-filter-<%= secondProperty %>-name'),
+  // clickFilterPriority: clickable('.t-filter-priority-translated-name'),
+  // clickFilterStatus: clickable('.t-filter-status-translated-name'),
+  // priorityOneCheck: clickable('.t-checkbox-options-<%= dasherizedModuleName %>-priority input:eq(0)'),
+  // priorityTwoCheck: clickable('.t-checkbox-list input:eq(1)'),
+  // statusOneCheck: clickable('.t-checkbox-options-<%= dasherizedModuleName %>-status input:eq(0)'),
+  // priorityOneIsChecked: () => Ember.$('.t-checkbox-list input:eq(0)').is(':checked'),
+  // priorityTwoIsChecked: () => Ember.$('.t-checkbox-list input:eq(1)').is(':checked'),
+  // priorityThreeIsChecked: () => Ember.$('.t-checkbox-list input:eq(2)').is(':checked'),
+  // priorityFourIsChecked: () => Ember.$('.t-checkbox-list input:eq(3)').is(':checked'),
+
+  <%= firstPropertySnake %>: value('.t-mobile-<%= dasherizedModuleName %>-<%= firstPropertySnake %>'),
+  <%= firstPropertySnake %>FillIn: fillable('.t-mobile-<%= dasherizedModuleName %>-<%= firstPropertySnake %>'),
+  
+  <%= secondPropertyCamel %>Input: text(<%= secondPropertyTitle %>),
+});

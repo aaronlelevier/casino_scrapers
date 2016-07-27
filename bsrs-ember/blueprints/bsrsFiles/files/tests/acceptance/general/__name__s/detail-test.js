@@ -18,8 +18,6 @@ const LIST_URL = `${BASE_URL}/index`;
 const DETAIL_URL = `${BASE_URL}/${<%= camelizedModuleName %>D.idOne}`;
 const API_DETAIL_URL = `${<%= CapitalizeModule %>_URL}${<%= camelizedModuleName %>D.idOne}/`;
 
-const SEARCH = '.ember-power-select-search input';
-
 var store, detailXhr, listXhr;
 
 moduleForAcceptance('Acceptance | <%= dasherizedModuleName %> detail test', {
