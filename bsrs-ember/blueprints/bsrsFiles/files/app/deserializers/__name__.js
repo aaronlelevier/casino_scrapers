@@ -28,7 +28,7 @@ export default Ember.Object.extend(OptConf, {
     // if (<%= secondPropertySnake %>) {
       this.setup_<%= secondPropertySnake %>(<%= secondPropertySnake %>, <%= camelizedModuleName %>);
     // }
-    // if (<%= thirdPropertSnake %>s) {
+    // if (<%= thirdPropertySnake %>s) {
       this.setup_<%= thirdPropertySnake %>(<%= thirdPropertySnake %>, <%= camelizedModuleName %>);
     // }
     <%= camelizedModuleName %>.save();
