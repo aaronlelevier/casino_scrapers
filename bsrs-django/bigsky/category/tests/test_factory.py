@@ -4,7 +4,7 @@ from django.test import TestCase, TransactionTestCase
 from model_mommy import mommy
 
 from category.tests import factory
-from category.models import Category, CategoryStatus, CATEGORY_STATUSES
+from category.models import Category, CategoryStatus, CATEGORY_STATUSES, LABEL_TRADE, LABEL_TYPE
 from tenant.models import Tenant
 from utils.helpers import generate_uuid
 
@@ -23,7 +23,7 @@ class CreateSingleCategoryTests(TestCase):
         category = factory.create_single_category(name)
 
         self.assertEqual(category.name, name)
-        self.assertEqual(category.subcategory_label, 'trade')
+        self.assertEqual(category.subcategory_label, LABEL_TRADE)
         self.assertIsInstance(category.status, CategoryStatus)
         self.assertIsInstance(category.tenant, Tenant)
 
@@ -34,6 +34,14 @@ class CreateSingleCategoryTests(TestCase):
 
         self.assertEqual(category.parent, parent)
         self.assertEqual(category.label, parent.subcategory_label)
+
+    def test_create_repair_category(self):
+        ret = factory.create_repair_category()
+
+        self.assertEqual(ret.name, factory.REPAIR)
+        self.assertEqual(ret.label, LABEL_TYPE)
+        self.assertEqual(ret.subcategory_label, LABEL_TRADE)
+        self.assertEqual(ret.description, 1)
 
 
 class CategoryTests(TransactionTestCase):
@@ -100,12 +108,10 @@ class CategoryTests(TransactionTestCase):
 
 class CreateCategoriesTests(TestCase):
 
-    @classmethod
-    def setUpClass(cls):
+    def setUp(cls):
         factory.create_categories()
 
-    @classmethod
-    def tearDownClass(cls):
+    def tearDown(cls):
         ContentType.objects.clear_cache()
 
     def test_type(self):

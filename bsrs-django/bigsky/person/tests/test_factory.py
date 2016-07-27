@@ -5,6 +5,7 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
+from category.models import LABEL_TRADE
 from category.tests.factory import create_single_category, create_categories
 from location.models import (Location, LocationLevel, LOCATION_COMPANY, LOCATION_DISTRICT,
     LOCATION_REGION)
@@ -26,9 +27,9 @@ class DistrictManagerFactoryTests(TestCase):
 
         self.assertEqual(self.dm.role.categories.count(), 1)
         self.assertEqual(category, self.dm.role.categories.first())
-        self.assertEqual(category.name, factory.CATEGORY_REPAIR)
+        self.assertEqual(category.name, factory.REPAIR)
         self.assertEqual(category.label, settings.TOP_LEVEL_CATEGORY_LABEL)
-        self.assertEqual(category.subcategory_label, 'trade')
+        self.assertEqual(category.subcategory_label, LABEL_TRADE)
         self.assertIsNone(category.parent)
         self.assertEqual(category.children.count(), 0)
 

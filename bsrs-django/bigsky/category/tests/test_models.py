@@ -41,7 +41,7 @@ class CategoryStatusTests(TestCase):
 class CategoryManagerTests(TestCase):
 
     def setUp(self):
-        self.repair = factory.create_single_category('repair')
+        self.repair = factory.create_single_category(factory.REPAIR)
         self.store = factory.create_single_category('store', self.repair)
         self.windows = factory.create_single_category('windows', self.store)
 

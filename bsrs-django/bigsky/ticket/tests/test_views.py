@@ -106,11 +106,11 @@ class TicketListTests(TicketSetupMixin, APITestCase):
         """
         Filter for all 'light fixture' Tickets for example.
         """
-        keyword = self.category.name[:5]
+        keyword = self.ticket.categories.first().name[:5]
 
         response = self.client.get('/api/tickets/?categories__name__icontains={}'.format(keyword))
-        data = json.loads(response.content.decode('utf8'))
 
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['count'],
             Ticket.objects.filter(categories__name__icontains=keyword).count()

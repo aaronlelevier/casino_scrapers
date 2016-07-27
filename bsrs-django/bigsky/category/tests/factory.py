@@ -1,10 +1,23 @@
 from collections import namedtuple
 import random
 
-from category.models import Category, CATEGORY_STATUSES, CategoryStatus
+from model_mommy import mommy
+
+from category.models import Category, CATEGORY_STATUSES, CategoryStatus, LABEL_TRADE
 from tenant.tests.factory import get_or_create_tenant
 from utils.create import random_lorem
 from utils.helpers import generate_uuid
+
+
+REPAIR = 'Repair'
+
+def create_repair_category():
+    try:
+        return Category.objects.get(name=REPAIR)
+    except Category.MultipleObjectsReturned:
+        return Category.objects.filter(name=REPAIR).first()
+    except Category.DoesNotExist:
+        return mommy.make(Category, name=REPAIR, subcategory_label=LABEL_TRADE, description=1)
 
 
 def create_single_category(name=None, parent=None):
@@ -16,7 +29,7 @@ def create_single_category(name=None, parent=None):
 
     return Category.objects.create(
         name=name,
-        subcategory_label='trade',
+        subcategory_label=LABEL_TRADE,
         status=status,
         tenant=tenant,
         parent=parent
