@@ -45,13 +45,13 @@ module.exports = {
       // profile-join-filter
       thirdJoinModel: options.thirdJoinModel,
       thirdJoinModelTitle: title(options.thirdJoinModel),
-      thirdJoinModelCaps: allCaps(options.thirdJoinModel),
+      thirdJoinModelCaps: allCaps(title(options.thirdJoinModel)),
       // pfilter
       thirdAssociatedModel: options.thirdAssociatedModel,
       thirdAssociatedModelSnake: snake(options.thirdAssociatedModel),
       thirdAssociatedModelTitle: title(options.thirdAssociatedModel),
       thirdAssociatedModelCamel: camel(options.thirdAssociatedModel),
-      thirdAssociatedModelCaps: allCaps(options.thirdAssociatedModel),
+      thirdAssociatedModelCaps: allCaps(title(options.thirdAssociatedModel)),
 
       // cc.fullname
       thirdAssociatedModelDisplay: options.thirdDisplay,
