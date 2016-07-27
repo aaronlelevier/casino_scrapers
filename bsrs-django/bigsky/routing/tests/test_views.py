@@ -242,7 +242,7 @@ class AvailableFilterTests(APITestCase):
         self.assertTrue(priority_data['key_is_i18n'])
         self.assertEqual(priority_data['context'], settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(priority_data['field'], 'priority')
-        self.assertEqual(priority_data['lookups'], {})
+        self.assertEqual(priority_data['lookups'], {'unique_key': 'priority'})
 
     def test_list__dynamic(self):
         raw_filter_count = AvailableFilter.objects.count()
@@ -269,6 +269,7 @@ class AvailableFilterTests(APITestCase):
         self.assertFalse(location_data['key_is_i18n'])
         self.assertEqual(location_data['context'], settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(location_data['field'], 'location')
+        self.assertEqual(location_data['lookups']['unique_key'], "location-location_level-{}".format(location_level.name))
         self.assertEqual(location_data['lookups']['location_level']['id'], str(location_level.id))
         self.assertEqual(location_data['lookups']['location_level']['name'], location_level.name)
 
@@ -287,3 +288,15 @@ class AvailableFilterTests(APITestCase):
     def test_delete(self):
         response = self.client.delete('/api/admin/assignments-available-filters/{}/'.format(self.af.id))
         self.assertEqual(response.status_code, 405)
+
+    def test_unique_key__exists_on_all_and_is_unique(self):
+        response = self.client.get('/api/admin/assignments-available-filters/')
+
+        data = json.loads(response.content.decode('utf8'))
+
+        # exists on all
+        for d in data['results']:
+            self.assertIn('unique_key', d['lookups'])
+        # is unique accross all
+        unique_keys = set([d['lookups']['unique_key'] for d in data['results']])
+        self.assertEqual(data['count'], len(unique_keys))

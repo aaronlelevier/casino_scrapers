@@ -62,6 +62,8 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
         for i, d in enumerate(data['results']):
             if d['lookups'] == {'filters': 'location_level'}:
                 location_level_filter = data['results'].pop(i)
+            else:
+                data['results'][i]['lookups'] = {'unique_key': d['field']}
 
         if location_level_filter:
             filters = []
@@ -73,6 +75,7 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
                     'context': settings.DEFAULT_PROFILE_FILTER_CONTEXT,
                     'field': 'location',
                     'lookups': {
+                        'unique_key': 'location-location_level-{}'.format(x.name),
                         'location_level': {
                             'id': str(x.id),
                             'name': x.name
