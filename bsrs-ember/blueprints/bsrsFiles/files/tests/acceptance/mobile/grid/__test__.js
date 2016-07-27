@@ -20,10 +20,8 @@ var store, list_xhr;
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.BASE_<%= CapitalizeModule %>_URL;
-const <%= CapitalizeModule %>_LIST_URL = `${BASE_URL}/index`;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 const DETAIL_URL = `${BASE_URL}/index/${<%= camelizedModuleName %>D.idOne}`;
-const <%= secondPropertyTitle %> = '.t-<%= dasherizedModuleName %>-<%= secondPropertySnake %>-select';
 const <%= secondPropertyTitle %> = '.t-<%= dasherizedModuleName %>-<%= secondPropertySnake %>-select';
 
 moduleForAcceptance('Acceptance | grid <%= dasherizedModuleName %> mobile test', {
@@ -56,7 +54,7 @@ test('only renders grid items from server and not other <%= dasherizedModuleName
 test('visiting mobile <%= dasherizedModuleName %> grid show correct layout', assert => {
   <%= camelizedModuleName %>Page.visit();
   andThen(() => {
-    const <%= camelizedModuleName %>- = store.findOne('<%= dasherizedModuleName %>-list');
+    const <%= camelizedModuleName %> = store.findOne('<%= dasherizedModuleName %>-list');
     assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
     assert.equal(find('.t-mobile-grid-title').text().trim(), '19 <%= CapFirstLetterModuleName %>');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);

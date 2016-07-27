@@ -27,13 +27,9 @@ let application, store, listXhr;
 
 moduleForAcceptance('Acceptance | <%= dasherizedModuleName %>-grid-test', {
   beforeEach() {
-
     store = this.application.__container__.lookup('service:simpleStore');
     const listData = <%= camelizedModuleName %>F.list();
     listXhr = xhr(`${<%= CapitalizeModule %>_URL}?page=1`, 'GET', null, {}, 200, listData);
-  },
-  afterEach() {
-
   }
 });
 

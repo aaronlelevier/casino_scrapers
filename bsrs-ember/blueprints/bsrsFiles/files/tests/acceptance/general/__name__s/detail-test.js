@@ -61,7 +61,7 @@ test('visit detail and update all fields', assert => {
   andThen(() => {
     assert.equal(page.<%= secondProperty %>Input, keyword);
   });
-  xhr(API_DETAIL_URL, 'PUT', <%= camelizedModuleName %>F.put({<%= camelizedModuleName %>D.<%= firstPropertyCamel %>Two, <%= camelizedModuleName %>D.<%= secondPropertyCamel %>SelectOne}), {}, 200, <%= camelizedModuleName %>F.list());
+  xhr(API_DETAIL_URL, 'PUT', <%= camelizedModuleName %>F.put({<%= firstPropertyCamel %>: <%= camelizedModuleName %>D.<%= firstPropertySnake %>Two, <%= secondPropertyCamel %>: <%= camelizedModuleName %>D.<%= secondPropertySnake %>SelectOne}), {}, 200, <%= camelizedModuleName %>F.list());
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);

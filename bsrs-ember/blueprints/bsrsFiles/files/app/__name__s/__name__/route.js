@@ -14,10 +14,10 @@ export default TabRoute.extend(FindById, {
     const model = this.get('simpleStore').find('<%= dasherizedModuleName %>', pk);
     /* Mobile - put data needed in hasComponents (ie status, otherXhrs) */
     const hashComponents = [
-      {'title': '<%= hashComponentOne %>', 'component': '<%= dasherizedModuleName %>/<%= hashComponentOne %>-section', active: 'active'},
-      {'title': '<%= hashComponentTwo %>', 'component': '<%= dasherizedModuleName %>/<%= hashComponentTwo %>-section', active: ''},
+      {'title': '<%= hashComponentOne %>', 'component': '<%= dasherizedModuleName %>/<%= hashComponentOne %>', active: 'active'},
+      {'title': '<%= hashComponentTwo %>', 'component': '<%= dasherizedModuleName %>/<%= hashComponentTwo %>', active: ''},
     ];
-    return this.findByIdScenario(model, pk { hashComponents:hashComponents });
+    return this.findByIdScenario(model, pk, { hashComponents:hashComponents });
   },
   setupController(controller, hash) {
     controller.setProperties(hash);
