@@ -5,7 +5,8 @@ from rest_framework import serializers
 from location.models import LocationLevel
 from person.serializers_leaf import PersonIdUsernameSerializer
 from routing.models import Assignment, ProfileFilter, AvailableFilter
-from routing.validators import ProfileFilterFieldValidator, UniqueByTenantValidator
+from routing.validators import (ProfileFilterFieldValidator, UniqueByTenantValidator,
+    AvailableFilterValidator)
 from tenant.mixins import RemoveTenantMixin
 from utils.create import update_model
 from utils.serializers import BaseCreateSerializer
@@ -59,7 +60,8 @@ class AssignmentCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
     class Meta:
         model = Assignment
-        validators = [UniqueByTenantValidator('order'),
+        validators = [AvailableFilterValidator(),
+                      UniqueByTenantValidator('order'),
                       UniqueByTenantValidator('description')]
         fields = ASSIGNMENT_FIELDS + ('filters',)
 

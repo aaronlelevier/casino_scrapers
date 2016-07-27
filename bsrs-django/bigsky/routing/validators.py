@@ -35,6 +35,33 @@ class ProfileFilterFieldValidator(object):
             raise ValidationError("'{}' not valid. Must be a list of UUIDs".format(self.criteria))
 
 
+class AvailableFilterValidator(object):
+    """Each AvailableFilter can only be used 1x. The AF is the 'source'
+    attr for an Assignment's related ProfileFilters."""
+
+    def __call__(self, data):
+        filters = data.get('filters', [])
+
+        unique_keys = set()
+        dupe_keys = []
+        for f in filters:
+            field = f['source'].field
+
+            addit_model_id = ''
+            if 'location_level' in f['lookups']:
+                addit_model_id = "-location_level-"+f['lookups']['location_level']
+
+            key = "{}{}".format(field, addit_model_id)
+
+            if key in unique_keys:
+                dupe_keys.append(key)
+
+            unique_keys.update([key])
+
+        if dupe_keys:
+            raise ValidationError("Duplicate filter(s): {}".format(' ,'.join(dupe_keys)))
+
+
 class UniqueByTenantValidator(object):
 
     def __init__(self, field):

@@ -152,7 +152,8 @@ class AssignmentTests(ViewTestSetupMixin, APITestCase):
         self.data['filters'].append({
             'id': new_filter_id,
             'source': str(source.id),
-            'criteria': [str(self.location.id)]
+            'criteria': [str(self.location.id)],
+            'lookups': {}
         })
 
         response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
