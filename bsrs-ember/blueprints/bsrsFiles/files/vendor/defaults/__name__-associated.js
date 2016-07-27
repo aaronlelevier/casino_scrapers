@@ -18,6 +18,6 @@ if (typeof window === 'undefined') {
 else {
   define('bsrs-ember/vendor/defaults/<%= thirdAssociatedModel %>', ['exports'], function(exports) {
     'use strict';
-    return new BSRS_<%= CapitalizeModule %>_<%= thirdAssociatedModel %>_DEFAULTS_OBJECT().defaults();
+    return new BSRS_<%= CapitalizeModule %>_<%= thirdAssociatedModelCaps %>_DEFAULTS_OBJECT().defaults();
   });
 }
