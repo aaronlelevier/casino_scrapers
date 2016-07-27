@@ -49,6 +49,7 @@ module.exports = {
       thirdAssociatedModel: options.thirdAssociatedModel,
       thirdAssociatedModelSnake: snake(options.thirdAssociatedModel),
       thirdAssociatedModelTitle: title(options.thirdAssociatedModel),
+      thirdAssociatedModelCamel: camel(options.thirdAssociatedModel),
 
       // cc.fullname
       thirdAssociatedModelDisplay: options.thirdDisplay,

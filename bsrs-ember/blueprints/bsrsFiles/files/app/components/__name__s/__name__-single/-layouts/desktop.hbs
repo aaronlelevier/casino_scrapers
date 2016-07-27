@@ -48,6 +48,23 @@
             {{/form-group}}
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="<%= dasherizedModuleName %>.<%= thirdProperty %>" for="<%= thirdProperty %>"}}
+            {{db-fetch-multi-select
+              model=model
+              multiAttrIds="<%= thirdPropertySnake %>_ids"
+              selectedAttr=model.<%= thirdPropertySnake %>
+              className="t-<%= dasherizedModuleName %>-<%= thirdProperty %>-select"
+              displayName="<%= thirdAssociatedModelDisplay %>"
+              add_func="change_<%= thirdPropertySnake %>"
+              remove_func="change_<%= thirdPropertySnake %>"
+              repository=<%= thirdAssociatedModelCamel %>Repo
+              searchMethod="find<%= thirdAssociatedModelTitle %>"
+            }}
+            {{/form-group}}
+          </div>
+        </div>
       </section>
     </div>
   </div>

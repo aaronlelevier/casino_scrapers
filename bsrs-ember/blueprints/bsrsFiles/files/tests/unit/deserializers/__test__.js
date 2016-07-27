@@ -34,14 +34,14 @@ test('deserialize single', assert => {
   assert.equal(<%= camelizedModuleName %>.get('<%= secondPropertySnake %>').get('<%= secondModelDisplaySnake %>'), <%= camelizedModuleName %>D.<%= secondModelDisplaySnake %>);
 });
 
-test('existing <%= camelizedModuleName %> w/ filters, and server returns no filters - want no filters b/c that is the most recent', assert => {
+test('existing <%= camelizedModuleName %> w/ <%= thirdPropertySnake %>s, and server returns no <%= thirdPropertySnake %>s - want no <%= thirdPropertySnake %>s b/c that is the most recent', assert => {
   store.push('<%= thirdJoinModel %>', {id: <%= thirdJoinModelTitle %>D.idOne, <%= SnakeModuleName %>_pk: <%= camelizedModuleName %>D.idOne, <%= thirdAssociatedModelSnake %>_pk: <%= thirdAssociatedModelTitle %>D.idOne});
   <%= camelizedModuleName %> = store.push('<%= dasherizedModuleName %>', {id: <%= camelizedModuleName %>D.idOne, joinModel_associatedModelFks: [<%= thirdJoinModelTitle %>D.idOne]});
-  store.push('pfilter', {id: <%= thirdAssociatedModelTitle %>D.idOne});
+  store.push('<%= thirdAssociatedModel %>', {id: <%= thirdAssociatedModelTitle %>D.idOne});
   const <%= thirdProperty %>s = <%= camelizedModuleName %>.get('<%= thirdProperty %>s');
   assert.equal(<%= thirdProperty %>s.get('length'), 1);
-  let json = PF.detail();
-  json.filters = [];
+  let json = <%= camelizedModuleName %>F.detail();
+  json.<%= thirdPropertySnake %>s = [];
   run(() => {
     deserializer.deserialize(json, <%= camelizedModuleName %>D.idOne);
   });
@@ -51,12 +51,12 @@ test('existing <%= camelizedModuleName %> w/ filters, and server returns no filt
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('existing <%= camelizedModuleName %> w/ filters, and server returns w/ 1 extra filter', assert => {
+test('existing <%= camelizedModuleName %> w/ <%= thirdPropertySnake %>s, and server returns w/ 1 extra <%= thirdPropertySnake %>', assert => {
   store.push('<%= thirdJoinModel %>', {id: <%= thirdJoinModelTitle %>D.idOne, <%= SnakeModuleName %>_pk: <%= camelizedModuleName %>D.idOne, <%= thirdAssociatedModelSnake %>_pk: <%= thirdAssociatedModelTitle %>D.idOne});
   store.push('<%= dasherizedModuleName %>', {id: <%= camelizedModuleName %>D.idOne, joinModel_associatedModelFks: [<%= thirdJoinModelTitle %>D.idOne]});
-  store.push('pfilter', {id: <%= thirdAssociatedModelTitle %>D.idOne});
-  let json = PF.detail();
-  json.filters.push({id: <%= thirdAssociatedModelTitle %>D.unusedId});
+  store.push('<%= thirdAssociatedModel %>', {id: <%= thirdAssociatedModelTitle %>D.idOne});
+  let json = <%= camelizedModuleName %>F.detail();
+  json.<%= thirdPropertySnake %>s.push({id: <%= thirdAssociatedModelTitle %>D.unusedId});
   run(() => {
     deserializer.deserialize(json, <%= camelizedModuleName %>D.idOne);
   });
@@ -66,11 +66,11 @@ test('existing <%= camelizedModuleName %> w/ filters, and server returns w/ 1 ex
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('existing <%= camelizedModuleName %> w/ filter and get same filter', assert => {
+test('existing <%= camelizedModuleName %> w/ <%= thirdPropertySnake %> and get same <%= thirdPropertySnake %>', assert => {
   store.push('<%= thirdJoinModel %>', {id: <%= thirdJoinModelTitle %>D.idOne, <%= SnakeModuleName %>_pk: <%= camelizedModuleName %>D.idOne, <%= thirdAssociatedModelSnake %>_pk: <%= thirdAssociatedModelTitle %>D.idOne});
   store.push('<%= dasherizedModuleName %>', {id: <%= camelizedModuleName %>D.idOne, joinModel_associatedModelFks: [<%= thirdJoinModelTitle %>D.idOne]});
-  store.push('pfilter', {id: <%= thirdAssociatedModelTitle %>D.idOne});
-  const json = PF.detail();
+  store.push('<%= thirdAssociatedModel %>', {id: <%= thirdAssociatedModelTitle %>D.idOne});
+  const json = <%= camelizedModuleName %>F.detail();
   run(() => {
     deserializer.deserialize(json, <%= camelizedModuleName %>D.idOne);
   });
