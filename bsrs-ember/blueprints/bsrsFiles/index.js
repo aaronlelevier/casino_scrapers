@@ -27,7 +27,7 @@ module.exports = {
       secondModelCamel: camel(options.secondModel),
       secondModelTitle: title(options.secondModel),
       secondModelSnake: snake(options.secondModel),
-      secondModelPlural: plural(options.secondModel),
+      secondModelCaps: allCaps(options.secondModel),
       secondModelPluralCaps: allCaps(plural(options.secondModel)),
 
       secondModelDisplaySnake: options.secondDisplay,
@@ -116,9 +116,15 @@ function firstWhole(str) {
 }
 
 function plural(str) {
-  switch(str) {
-    case 'person':
-      return 'people';
+  const len = str.length;
+  let last_letter = str.charAt(len-1);
+  if(str === 'person') {
+    return 'people';
+  } else if(last_letter === 'y') {
+    last_letter = 'ies';
+    return str.substr(0, len-1) + last_letter;
+  } else {
+    return `${str}s`;
   }
 }
 

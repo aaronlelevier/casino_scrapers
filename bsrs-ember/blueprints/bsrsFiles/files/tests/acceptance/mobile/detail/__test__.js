@@ -5,7 +5,7 @@ import { test } from 'qunit';
 import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
 import <%= camelizedModuleName %>D from 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>';
 import <%= camelizedModuleName %>F from 'bsrs-ember/vendor/<%= dasherizedModuleName %>_fixtures';
-import <%= secondModelTitle %>F from 'bsrs-ember/vendor/<%= secondModelPlural %>_fixtures';
+import <%= secondModelTitle %>F from 'bsrs-ember/vendor/<%= secondModel %>_fixtures';
 import config from 'bsrs-ember/config/environment';
 import page from 'bsrs-ember/tests/pages/<%= dasherizedModuleName %>-mobile';
 import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';

@@ -7,7 +7,7 @@ import { waitFor } from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
 import <%= camelizedModuleName %>D from 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>';
 import <%= camelizedModuleName %>F from 'bsrs-ember/vendor/<%= dasherizedModuleName %>_fixtures';
-import <%= secondModelTitle %>F from 'bsrs-ember/vendor/<%= secondModelPlural %>_fixtures';
+import <%= secondModelTitle %>F from 'bsrs-ember/vendor/<%= secondModel %>_fixtures';
 import page from 'bsrs-ember/tests/pages/<%= dasherizedModuleName %>';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { <%= CapitalizeModule %>_URL, <%= secondModelPluralCaps %>_URL } from 'bsrs-ember/utilities/urls';
