@@ -33,6 +33,7 @@ module.exports = function(defaults) {
       app.import('vendor/mixin.js');
       app.import('vendor/address_fixtures.js');
       app.import('vendor/admin_translation_fixtures.js');
+      app.import('vendor/assignment_fixtures.js');
       app.import('vendor/dtd_fixtures.js');
       app.import('vendor/email_fixtures.js');
       app.import('vendor/locale_fixtures.js');
@@ -51,6 +52,10 @@ module.exports = function(defaults) {
       app.import('vendor/translation_fixtures.js');
       app.import('vendor/defaults/address-type.js');
       app.import('vendor/defaults/address.js');
+      app.import('vendor/defaults/address.js');
+      app.import('vendor/defaults/assignment-join-filter.js');
+      app.import('vendor/defaults/assignment.js');
+      app.import('vendor/defaults/assignmentfilter.js');
       app.import('vendor/defaults/category-children.js');
       app.import('vendor/defaults/country.js');
       app.import('vendor/defaults/currencies.js');
