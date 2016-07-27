@@ -24,7 +24,7 @@ module('unit: person test', {
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency', 'model:phonenumber', 'model:location', 'model:location-level', 'model:person-location', 'service:currency','service:person-current','service:translations-fetcher','service:i18n', 'model:uuid', 'model:status', 'model:email', 'model:locale']);
     run(function() {
-    person = store.push('person', {id: PD.idOne, first_name: PD.first_name, last_name: PD.last_name, role_fk: RD.idOne, status_fk: SD.activeId, locale_fk: LOCALED.idOne});
+    person = store.push('person', {id: PD.idOne, first_name: PD.first_name, last_name: PD.last_name, role_fk: RD.idOne, status_fk: SD.activeId, locale_fk: LOCALED.idOne, detail: true});
     role = store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.idOne]});
     store.push('status', {id: SD.activeId, people: [PD.idOne]});
     store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
@@ -188,7 +188,7 @@ test('related role will update when the roles people array suddenly has the pers
 
 test('related role will update when the roles people array changes and is dirty', (assert) => {
   store.clear('person');
-  person = store.push('person', {id: PD.idOne});
+  person = store.push('person', {id: PD.idOne, detail: true});
   role = store.push('role', {id: RD.idOne, people: [PD.unusedId]});
   assert.equal(person.get('role'), undefined);
   person.change_role(role);
@@ -292,7 +292,7 @@ test('related phone number model is dirty when phone number is dirty (and phone 
 
 test('person is dirty or related is dirty when model has been updated', (assert) => {
   store.clear('person');
-  person = store.push('person', {id: PD.idOne, username: PD.username, phone_number_fks: [PND.idOne], status_fk: SD.activeId, email_fks: [ED.idOne], locale_fk: LOCALED.idOne, role_fk: RD.idOne});
+  person = store.push('person', {id: PD.idOne, username: PD.username, phone_number_fks: [PND.idOne], status_fk: SD.activeId, email_fks: [ED.idOne], locale_fk: LOCALED.idOne, role_fk: RD.idOne, detail: true});
   let phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PNTD.officeId, model_fk: PD.idOne});
   // let address = store.push('address', {id: AD.idOne, type: ATD.officeId, model_fk: PD.idOne});
   let email = store.push('email', {id: ED.idOne, type: ETD.workId, model_fk: PD.idOne});

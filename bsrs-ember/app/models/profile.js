@@ -2,7 +2,7 @@ import Ember from 'ember';
 const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
-import OptConfMixin from 'bsrs-ember/mixins/optconfigure/profile';
+import OptConf from 'bsrs-ember/mixins/optconfigure/profile';
 import { validator, buildValidations } from 'ember-cp-validations';
 import { many_to_many } from 'bsrs-components/attr/many-to-many';
 
@@ -26,7 +26,7 @@ const Validations = buildValidations({
   ],
 });
 
-export default Model.extend(OptConfMixin, Validations, {
+export default Model.extend(OptConf, Validations, {
   init() {
     belongs_to.bind(this)('assignee', 'profile');
     many_to_many.bind(this)('pf', 'profile', {plural:true});

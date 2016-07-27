@@ -7,7 +7,7 @@ import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import CD from 'bsrs-ember/vendor/defaults/category';
-import TPD from 'bsrs-ember/vendor/defaults/ticket-person';
+import TPD from 'bsrs-ember/vendor/defaults/ticket-join-person';
 import TCD from 'bsrs-ember/vendor/defaults/model-category';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import RD from 'bsrs-ember/vendor/defaults/role';
@@ -20,7 +20,7 @@ var store, ticket, link, uuid;
 
 module('unit: ticket test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:location', 'model:ticket-person', 'model:model-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'model:attachment', 'model:status', 'model:role', 'model:location-level', 'model:dtd', 'model:link']);
+    store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:location', 'model:ticket-join-person', 'model:model-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'model:attachment', 'model:status', 'model:role', 'model:location-level', 'model:dtd', 'model:link']);
     run(() => {
       store.push('status', {id: SD.activeId, name: SD.activeName});
       store.push('role', {id: RD.idOne, name: RD.nameOne, location_level_fk: LLD.idOne});
@@ -167,14 +167,14 @@ test('status will save correctly as undefined', (assert) => {
 
 // /*TICKET TO CC*/
 test('cc property should return all associated cc or empty array', (assert) => {
-  let m2m = store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.idOne});
+  let m2m = store.push('ticket-join-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.idOne});
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne]});
   let person = store.push('person', {id: PD.idOne});
   let cc = ticket.get('cc');
   assert.equal(cc.get('length'), 1);
   assert.equal(cc.objectAt(0).get('id'), PD.id);
   run(function() {
-    store.push('ticket-person', {id: m2m.get('id'), removed: true});
+    store.push('ticket-join-person', {id: m2m.get('id'), removed: true});
   });
   assert.equal(ticket.get('cc').get('length'), 0);
 });
@@ -194,7 +194,7 @@ test('cc property is not dirty when no cc present (empty array)', (assert) => {
 });
 
 test('cc property is not dirty when attr on person is changed', (assert) => {
-  store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
+  store.push('ticket-join-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
   let person = store.push('person', {id: PD.id});
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne]});
   assert.equal(ticket.get('cc').get('length'), 1);
@@ -208,8 +208,8 @@ test('cc property is not dirty when attr on person is changed', (assert) => {
   assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.first_name);
 });
 
-test('removing a ticket-person will mark the ticket as dirty and reduce the associated cc models to zero', (assert) => {
-  store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
+test('removing a ticket-join-person will mark the ticket as dirty and reduce the associated cc models to zero', (assert) => {
+  store.push('ticket-join-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
   let person = store.push('person', {id: PD.id});
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne]});
   assert.equal(ticket.get('cc').get('length'), 1);
@@ -219,8 +219,8 @@ test('removing a ticket-person will mark the ticket as dirty and reduce the asso
   assert.equal(ticket.get('cc').get('length'), 0);
 });
 
-test('replacing a ticket-person with some other ticket-person still shows the ticket model as dirty', (assert) => {
-  store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
+test('replacing a ticket-join-person with some other ticket-join-person still shows the ticket model as dirty', (assert) => {
+  store.push('ticket-join-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
   store.push('person', {id: PD.id});
   const person_two = {id: PD.idTwo};
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne]});
@@ -240,7 +240,7 @@ test('replacing a ticket-person with some other ticket-person still shows the ti
 
 /*TICKET TO PEOPLE M2M*/
 test('cc property only returns the single matching item even when multiple people (cc) exist', (assert) => {
-  store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.idTwo});
+  store.push('ticket-join-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.idTwo});
   const person_two = {id: PD.idTwo};
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne]});
   ticket.add_cc(person_two);
@@ -252,8 +252,8 @@ test('cc property only returns the single matching item even when multiple peopl
 test('cc property returns multiple matching items when multiple people (cc) exist', (assert) => {
   store.push('person', {id: PD.id});
   store.push('person', {id: PD.idTwo});
-  store.push('ticket-person', {id: TPD.idOne, person_pk: PD.idTwo, ticket_pk: TD.idOne});
-  store.push('ticket-person', {id: TPD.idTwo, person_pk: PD.id, ticket_pk: TD.idOne});
+  store.push('ticket-join-person', {id: TPD.idOne, person_pk: PD.idTwo, ticket_pk: TD.idOne});
+  store.push('ticket-join-person', {id: TPD.idTwo, person_pk: PD.id, ticket_pk: TD.idOne});
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne, TPD.idTwo]});
   let cc = ticket.get('cc');
   assert.equal(cc.get('length'), 2);
@@ -275,7 +275,7 @@ test('cc property will update when the m2m array suddenly has the person pk (sta
 });
 
 test('cc property will update when the m2m array suddenly has the person pk', (assert) => {
-  store.push('ticket-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
+  store.push('ticket-join-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne]});
   let person = store.push('person', {id: PD.id});
   let person_two = {id: PD.idTwo};
@@ -291,7 +291,7 @@ test('cc property will update when the m2m array suddenly has the person pk', (a
 });
 
 test('cc property will update when the m2m array suddenly removes the person', (assert) => {
-  let m2m = store.push('ticket-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
+  let m2m = store.push('ticket-join-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne]});
   let person = store.push('person', {id: PD.id});
   assert.equal(ticket.get('cc').get('length'), 1);
@@ -300,7 +300,7 @@ test('cc property will update when the m2m array suddenly removes the person', (
 });
 
 test('when cc is changed dirty tracking works as expected (removing)', (assert) => {
-  store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
+  store.push('ticket-join-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
   let person = store.push('person', {id: PD.id});
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne]});
   assert.equal(ticket.get('cc').get('length'), 1);
@@ -327,8 +327,8 @@ test('add_cc will add back old join model after it was removed and dirty the mod
   const ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne, TPD.idTwo]});
   const person_two = store.push('person', {id: PD.idTwo});
   const person_three = store.push('person', {id: PD.idThree});
-  store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.idTwo});
-  store.push('ticket-person', {id: TPD.idTwo, ticket_pk: TD.idOne, person_pk: PD.idThree});
+  store.push('ticket-join-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.idTwo});
+  store.push('ticket-join-person', {id: TPD.idTwo, ticket_pk: TD.idOne, person_pk: PD.idThree});
   ticket.remove_cc(person_three.get('id'));
   assert.equal(ticket.get('cc').get('length'), 1);
   ticket.add_cc({id: PD.idThree});
@@ -337,8 +337,8 @@ test('add_cc will add back old join model after it was removed and dirty the mod
 });
 
 test('multiple ticket\'s with same cc will rollback correctly', (assert) => {
-  store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
-  store.push('ticket-person', {id: TPD.idTwo, ticket_pk: TD.idTwo, person_pk: PD.id});
+  store.push('ticket-join-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
+  store.push('ticket-join-person', {id: TPD.idTwo, ticket_pk: TD.idTwo, person_pk: PD.id});
   let person = store.push('person', {id: PD.id});
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne]});
   let ticket_two = store.push('ticket', {id: TD.idTwo, ticket_cc_fks: [TPD.idTwo]});
@@ -372,7 +372,7 @@ test('multiple ticket\'s with same cc will rollback correctly', (assert) => {
 });
 
 test('when cc is changed dirty tracking works as expected (replacing)', (assert) => {
-  store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
+  store.push('ticket-join-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
   store.push('person', {id: PD.id});
   const person_two = {id: PD.idTwo};
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne]});
@@ -403,8 +403,8 @@ test('when cc is changed dirty tracking works as expected (replacing)', (assert)
 test('when person is suddently removed it shows as a dirty relationship (when it has multiple locations to begin with)', (assert) => {
   store.push('person', {id: PD.id});
   store.push('person', {id: PD.idTwo});
-  store.push('ticket-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
-  store.push('ticket-person', {id: TPD.idTwo, person_pk: PD.idTwo, ticket_pk: TD.idOne});
+  store.push('ticket-join-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
+  store.push('ticket-join-person', {id: TPD.idTwo, person_pk: PD.idTwo, ticket_pk: TD.idOne});
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne, TPD.idTwo]});
   assert.equal(ticket.get('cc').get('length'), 2);
   assert.ok(ticket.get('ccIsNotDirty'));
@@ -418,8 +418,8 @@ test('when person is suddently removed it shows as a dirty relationship (when it
 test('rollback ticket will reset the previously used people (cc) when switching from valid cc array to nothing', (assert) => {
   store.push('person', {id: PD.id});
   store.push('person', {id: PD.idTwo});
-  store.push('ticket-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
-  store.push('ticket-person', {id: TPD.idTwo, person_pk: PD.idTwo, ticket_pk: TD.idOne});
+  store.push('ticket-join-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
+  store.push('ticket-join-person', {id: TPD.idTwo, person_pk: PD.idTwo, ticket_pk: TD.idOne});
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne, TPD.idTwo]});
   assert.equal(ticket.get('cc').get('length'), 2);
   assert.ok(ticket.get('ccIsNotDirty'));
@@ -449,8 +449,8 @@ test('rollback cc will reset the previous people (cc) when switching from one pe
   store.push('person', {id: PD.id});
   store.push('person', {id: PD.idTwo});
   const person_unused = {id: PD.unusedId};
-  store.push('ticket-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
-  store.push('ticket-person', {id: TPD.idTwo, person_pk: PD.idTwo, ticket_pk: TD.idOne});
+  store.push('ticket-join-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
+  store.push('ticket-join-person', {id: TPD.idTwo, person_pk: PD.idTwo, ticket_pk: TD.idOne});
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne, TPD.idTwo]});
   assert.equal(ticket.get('cc').get('length'), 2);
   ticket.remove_cc(PD.id);
@@ -478,8 +478,8 @@ test('rollback cc will reset the previous people (cc) when switching from one pe
 test('cc_ids computed returns a flat list of ids for each person', (assert) => {
   store.push('person', {id: PD.id});
   store.push('person', {id: PD.idTwo});
-  store.push('ticket-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
-  store.push('ticket-person', {id: TPD.idTwo, person_pk: PD.idTwo, ticket_pk: TD.idOne});
+  store.push('ticket-join-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
+  store.push('ticket-join-person', {id: TPD.idTwo, person_pk: PD.idTwo, ticket_pk: TD.idOne});
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne, TPD.idTwo]});
   assert.equal(ticket.get('cc').get('length'), 2);
   assert.deepEqual(ticket.get('cc_ids'), [PD.id, PD.idTwo]);
@@ -491,8 +491,8 @@ test('cc_ids computed returns a flat list of ids for each person', (assert) => {
 test('ticket_cc_ids computed returns a flat list of ids for each person', (assert) => {
   store.push('person', {id: PD.id});
   store.push('person', {id: PD.idTwo});
-  store.push('ticket-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
-  store.push('ticket-person', {id: TPD.idTwo, person_pk: PD.idTwo, ticket_pk: TD.idOne});
+  store.push('ticket-join-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
+  store.push('ticket-join-person', {id: TPD.idTwo, person_pk: PD.idTwo, ticket_pk: TD.idOne});
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne, TPD.idTwo]});
   assert.equal(ticket.get('cc').get('length'), 2);
   assert.deepEqual(ticket.get('ticket_cc_ids'), [TPD.idOne, TPD.idTwo]);

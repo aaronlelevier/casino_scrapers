@@ -1,8 +1,9 @@
 import Ember from 'ember';
 const { run } = Ember;
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
-import { belongs_to_extract, belongs_to_extract_contacts } from 'bsrs-components/repository/belongs-to';
+import { belongs_to, belongs_to_extract, belongs_to_extract_contacts } from 'bsrs-components/repository/belongs-to';
 import copySettingsToFirstLevel from 'bsrs-ember/utilities/copy-settings-to-first-level';
+import OptConf from 'bsrs-ember/mixins/optconfigure/person';
 
 
 var extract_role_location_level = function(model, store) {
@@ -80,7 +81,11 @@ var extract_locale = (model, store) => {
   delete model.locale;
 };
 
-var PersonDeserializer = Ember.Object.extend({
+var PersonDeserializer = Ember.Object.extend(OptConf, {
+  init() {
+    this._super(...arguments);
+    belongs_to.bind(this)('status', 'person', 'person');
+  },
   LocationDeserializer: injectDeserializer('location'),
   deserialize(response, options) {
     let location_deserializer = this.get('LocationDeserializer');
@@ -119,7 +124,8 @@ var PersonDeserializer = Ember.Object.extend({
       const status_json = model.status;
       delete model.status;
       const person = store.push('person-list', model);
-      belongs_to_extract(status_json, store, person, 'status', 'person', 'people');
+      this.setup_status(status_json, person);
+      // belongs_to_extract(status_json, store, person, 'status', 'person', 'people');
     });
   }
 });

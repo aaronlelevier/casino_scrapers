@@ -309,8 +309,8 @@ test('clicking and typing into power select for people will fire off xhr request
     assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.first_name);
     assert.equal(page.ccSelected.indexOf(PD.first_name), 2);
   });
-  let people_TICKETS_URL = `${PEOPLE_URL}person__icontains=a/`;
-  xhr(people_TICKETS_URL, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
+  let PEOPLE_TICKETS_URL = `${PEOPLE_URL}person__icontains=a/`;
+  xhr(PEOPLE_TICKETS_URL, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
   page.ccClickDropdown();
   fillIn(`${CC_SEARCH}`, 'a');
   andThen(() => {
@@ -396,8 +396,8 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
-  let people_TICKETS_URL = `${PEOPLE_URL}person__icontains=a/`;
-  xhr(people_TICKETS_URL, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
+  let PEOPLE_TICKETS_URL = `${PEOPLE_URL}person__icontains=a/`;
+  xhr(PEOPLE_TICKETS_URL, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
   page.ccClickDropdown();//don't know why I have to do this
   fillIn(`${CC_SEARCH}`, 'a');
   andThen(() => {
@@ -467,10 +467,10 @@ test('starting with multiple cc, can remove all ccs (while not populating option
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     assert.equal(page.ccsSelected, 0);
   });
-  let people_TICKETS_URL = `${PEOPLE_URL}person__icontains=Mel/`;
-  ajax(people_TICKETS_URL, 'GET', null, {}, 200, PF.get_for_power_select());
+  let PEOPLE_TICKETS_URL = `${PEOPLE_URL}person__icontains=Mel/`;
+  ajax(PEOPLE_TICKETS_URL, 'GET', null, {}, 200, PF.get_for_power_select());
   page.ccClickDropdown();
-  fillIn(`${CC_SEARCH}`, 'Mel');
+  fillIn(CC_SEARCH, 'Mel');
   andThen(() => {
     let ticket = store.find('ticket', TD.idOne);
     assert.equal(ticket.get('cc').get('length'), 0);

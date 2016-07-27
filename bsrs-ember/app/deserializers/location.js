@@ -1,5 +1,6 @@
 import Ember from 'ember';
-import { belongs_to_extract, belongs_to_extract_contacts } from 'bsrs-components/repository/belongs-to';
+import { belongs_to, belongs_to_extract, belongs_to_extract_contacts } from 'bsrs-components/repository/belongs-to';
+import OptConf from 'bsrs-ember/mixins/optconfigure/location';
 
 const { run } = Ember;
 
@@ -103,7 +104,11 @@ var extract_children = function(model, store) {
   return server_sum;
 };
 
-var LocationDeserializer = Ember.Object.extend({
+var LocationDeserializer = Ember.Object.extend(OptConf, {
+  init() {
+    this._super(...arguments);
+    belongs_to.bind(this)('status', 'location', 'location');
+  },
   deserialize(response, options) {
     if (typeof options === 'undefined') {
       this._deserializeList(response);
@@ -136,7 +141,7 @@ var LocationDeserializer = Ember.Object.extend({
       const status_json = model.status;
       delete model.status;
       const location = store.push('location-list', model);
-      belongs_to_extract(status_json, store, location, 'status', 'location', 'locations');
+      this.setup_status(status_json, location);
     });
   }
 });
