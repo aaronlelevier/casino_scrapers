@@ -20,7 +20,7 @@ export default Ember.Object.extend(OptConf, {
     const store = this.get('simpleStore');
     response.<%= secondPropertySnake %>_fk = response.<%= secondPropertySnake %>.id;
     const <%= secondPropertySnake %> = response.<%= secondPropertySnake %>;
-    const <%= thirdPropertySnake %>s = response.<%= thirdPropertySnake %>;
+    const <%= thirdPropertySnake %> = response.<%= thirdPropertySnake %>;
     delete response.<%= secondPropertySnake %>;
     delete response.<%= thirdPropertySnake %>;
     response.detail = true;
@@ -29,7 +29,7 @@ export default Ember.Object.extend(OptConf, {
       this.setup_<%= secondPropertySnake %>(<%= secondPropertySnake %>, <%= camelizedModuleName %>);
     // }
     // if (<%= thirdPropertSnake %>s) {
-      this.setup_<%= thirdProperty %>s(<%= thirdPropertySnake %>s, <%= camelizedModuleName %>);
+      this.setup_<%= thirdPropertySnake %>(<%= thirdPropertySnake %>, <%= camelizedModuleName %>);
     // }
     <%= camelizedModuleName %>.save();
     return <%= camelizedModuleName %>;
