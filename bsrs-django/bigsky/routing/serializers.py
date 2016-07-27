@@ -2,12 +2,14 @@ import copy
 
 from rest_framework import serializers
 
-from location.models import LocationLevel
+from category.models import Category
+from location.models import Location, LocationLevel
 from person.serializers_leaf import PersonIdUsernameSerializer
 from routing.models import Assignment, ProfileFilter, AvailableFilter
 from routing.validators import (ProfileFilterFieldValidator, UniqueByTenantValidator,
     AvailableFilterValidator)
 from tenant.mixins import RemoveTenantMixin
+from ticket.models import TicketPriority
 from utils.create import update_model
 from utils.serializers import BaseCreateSerializer
 
@@ -43,12 +45,28 @@ class ProfileFilterSerializer(BaseCreateSerializer):
         return self._combined_data(data)
 
     def _combined_data(self, data):
+        field = data['source']['field']
+        criteria = data['criteria']
+
+        if field == 'priority':
+            data['criteria'] = TicketPriority.objects.filter(id__in=criteria).values('id', 'name')
+
+        if field == 'location':
+            data['criteria'] = Location.objects.filter(id__in=criteria).values('id', 'name')
+
+        if field == 'categories':
+            category_criteria = []
+            for c in Category.objects.filter(id__in=criteria):
+                category_criteria.append({'id': str(c.id), 'name': c.parents_and_self_as_string()})
+            data['criteria'] = category_criteria
+
         if 'location_level' in data['lookups']:
             location_level = LocationLevel.objects.get(id=data['lookups']['location_level'])
             data['lookups']['location_level'] = {
                 'id': location_level.id,
                 'name': location_level.name
             }
+
         return data
 
 

@@ -6,19 +6,24 @@ from django.conf import settings
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
+from category.models import Category
 from location.models import LocationLevel
 from location.tests.factory import create_location_levels, create_top_level_location
 from person.tests.factory import create_single_person, PASSWORD
 from routing.models import Assignment, ProfileFilter, AvailableFilter
-from routing.tests.factory import (create_assignment, create_available_filters,
-    create_available_filter_location, create_ticket_location_filter)
+from routing.tests.factory import (
+    create_assignment, create_available_filters,
+    create_available_filter_location, create_ticket_location_filter,
+    create_ticket_categories_mid_level_filter)
 from routing.tests.mixins import ViewTestSetupMixin
+from ticket.models import TicketPriority
 from utils.create import _generate_chars
+from utils.helpers import create_default
 
 
-class AssignmentTests(ViewTestSetupMixin, APITestCase):
+class AssignmentListTests(ViewTestSetupMixin, APITestCase):
 
-    def test_list(self):
+    def test_data(self):
         response = self.client.get('/api/admin/assignments/')
 
         self.assertEqual(response.status_code, 200)
@@ -43,7 +48,10 @@ class AssignmentTests(ViewTestSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
 
-    def test_detail(self):
+
+class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
+
+    def test_data(self):
         response = self.client.get('/api/admin/assignments/{}/'.format(self.assignment.id))
 
         self.assertEqual(response.status_code, 200)
@@ -58,7 +66,6 @@ class AssignmentTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(len(data['filters']), 2)
         self.assertEqual(data['filters'][0]['id'], str(self.profile_filter.id))
         self.assertEqual(data['filters'][0]['lookups'], self.profile_filter.lookups)
-        self.assertEqual(data['filters'][0]['criteria'], self.profile_filter.criteria)
         # profile_filter - available_filter
         af = AvailableFilter.objects.get(id=data['filters'][0]['source']['id'])
         self.assertEqual(data['filters'][0]['source']['key'], af.key)
@@ -67,7 +74,7 @@ class AssignmentTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['filters'][0]['source']['field'], af.field)
         self.assertEqual(data['filters'][0]['source']['lookups'], af.lookups)
 
-    def test_detail__dynamic_source_filter(self):
+    def test_data__dynamic_source_filter(self):
         # dynamic available filter for "location" linked to ProfileFilter.source
         location_filter = create_ticket_location_filter()
         location_level = create_top_level_location().location_level
@@ -91,6 +98,52 @@ class AssignmentTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(filter_data['source']['context'], location_filter.source.context)
         self.assertEqual(filter_data['source']['field'], location_filter.source.field)
         self.assertEqual(filter_data['source']['lookups'], {'filters': 'location_level'})
+
+    def test_criteria__priority(self):
+        priority = create_default(TicketPriority)
+        for pf in self.assignment.filters.exclude(source__field='priority'):
+            self.assignment.filters.remove(pf)
+
+        response = self.client.get('/api/admin/assignments/{}/'.format(self.assignment.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['filters']), 1)
+        self.assertEqual(len(data['filters'][0]['criteria']), 1)
+        self.assertEqual(data['filters'][0]['criteria'][0]['id'], str(priority.id))
+        self.assertEqual(data['filters'][0]['criteria'][0]['name'], str(priority.name))
+
+    def test_criteria__location(self):
+        self.assignment.filters.clear()
+        self.assertEqual(self.assignment.filters.count(), 0)
+        location = create_top_level_location()
+        location_filter = create_ticket_location_filter()
+        self.assignment.filters.add(location_filter)
+
+        response = self.client.get('/api/admin/assignments/{}/'.format(self.assignment.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['filters']), 1)
+        self.assertEqual(len(data['filters'][0]['criteria']), 1)
+        self.assertEqual(data['filters'][0]['criteria'][0]['id'], str(location.id))
+        self.assertEqual(data['filters'][0]['criteria'][0]['name'], location.name)
+
+    def test_criteria__categories(self):
+        self.assignment.filters.clear()
+        self.assertEqual(self.assignment.filters.count(), 0)
+        category_filter = create_ticket_categories_mid_level_filter()
+        category = Category.objects.get(id=category_filter.criteria[0])
+        self.assignment.filters.add(category_filter)
+
+        response = self.client.get('/api/admin/assignments/{}/'.format(self.assignment.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['filters']), 1)
+        self.assertEqual(len(data['filters'][0]['criteria']), 1)
+        self.assertEqual(data['filters'][0]['criteria'][0]['id'], str(category.id))
+        self.assertEqual(data['filters'][0]['criteria'][0]['name'], category.parents_and_self_as_string())
+
+
+class AssignmentCreateTests(ViewTestSetupMixin, APITestCase):
 
     def test_create(self):
         self.data['id'] = str(uuid.uuid4())
@@ -119,6 +172,9 @@ class AssignmentTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['filters'][0]['lookups'], profile_filter.lookups)
         self.assertEqual(data['filters'][0]['criteria'], profile_filter.criteria)
         self.assertEqual(data['filters'][0]['source'], str(profile_filter.source.id))
+
+
+class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
 
     def test_update(self):
         assignee = create_single_person()

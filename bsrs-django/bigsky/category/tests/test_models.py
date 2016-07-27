@@ -166,6 +166,30 @@ class CategoryTests(CategorySetupMixin, TestCase):
         self.assertEqual(d['name'], self.child.name)
         self.assertEqual(d['parent'], str(self.child.parent.id))
 
+    def test_parents_and_self_as_string(self):
+        parent = factory.create_single_category()
+        child = factory.create_single_category(parent=parent)
+        grand_child = factory.create_single_category(parent=child)
+        self.assertIsNone(parent.parent)
+        self.assertEqual(child.parent, parent)
+        self.assertEqual(grand_child.parent, child)
+
+        ret = grand_child.parents_and_self_as_string()
+
+        self.assertEqual(ret, "{} - {} - {}".format(parent.name, child.name, grand_child.name))
+
+    def test_parents_and_self_as_string__children_indicated_with_all_keyword(self):
+        parent = factory.create_single_category(name='a')
+        child = factory.create_single_category(name='b', parent=parent)
+        grand_child = factory.create_single_category(name='c', parent=child)
+        self.assertIsNone(parent.parent)
+        self.assertEqual(child.parent, parent)
+        self.assertEqual(grand_child.parent, child)
+
+        ret = child.parents_and_self_as_string()
+
+        self.assertEqual(ret, "{} - {} - all".format(parent.name, child.name))
+
 
 class CategoryLevelTests(CategorySetupMixin, TestCase):
 

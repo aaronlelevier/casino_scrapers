@@ -1,7 +1,4 @@
-from model_mommy import mommy
-
-from category.models import Category
-from category.tests.factory import create_repair_category
+from category.tests.factory import create_repair_category, create_single_category
 from location.tests.factory import create_top_level_location
 from person.tests.factory import create_single_person
 from routing.models import Assignment, ProfileFilter, AvailableFilter, AUTO_ASSIGN
@@ -61,6 +58,13 @@ def create_ticket_categories_filter():
     category = create_repair_category()
     source = create_available_filter_categories()
     return ProfileFilter.objects.create(source=source, criteria=[str(category.id)])
+
+
+def create_ticket_categories_mid_level_filter():
+    category = create_repair_category()
+    child_category = create_single_category(parent=category)
+    source = create_available_filter_categories()
+    return ProfileFilter.objects.create(source=source, criteria=[str(child_category.id)])
 
 
 def create_ticket_location_filter():

@@ -161,3 +161,33 @@ class Category(BaseModel):
             'parent': str(self.parent.id) if self.parent else None,
             'level': self.level
         }
+
+    def parents_and_self_as_string(self, category=None, names=None):
+        """
+        For use with the ProfileFilter for Categories to display to
+        the User which Categories they have selected, their parents,
+        and if they have child categories.
+
+        Returns:
+            "parent - child - grand_child - etc..."
+
+            If the category has children, since only returns names from
+            it's parents, will append the string "all" to the end.
+        """
+        if not category:
+            category = self
+
+        if not names:
+            names = []
+
+        names.append({'level': category.level, 'name': category.name})
+
+        if not category.parent:
+            if self.children.first():
+                child_level = max((n['level'] for n in names))
+                names.append({'level': child_level+1, 'name': 'all'})
+
+            sorted_list = sorted(names, key=lambda k: k['level'])
+            return " - ".join([s['name'] for s in sorted_list])
+        else:
+            return self.parents_and_self_as_string(category.parent, names)

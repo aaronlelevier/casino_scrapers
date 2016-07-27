@@ -2,10 +2,8 @@ from django.conf import settings
 from django.contrib.auth.models import ContentType
 from django.test import TestCase
 
-from model_mommy import mommy
-
 from category.models import Category
-from category.tests.factory import REPAIR
+from category.tests.factory import create_repair_category
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from routing.models import Assignment, AvailableFilter, AUTO_ASSIGN
@@ -108,7 +106,7 @@ class PriorityFilterTests(TestCase):
         self.assertEqual(pf.criteria, [str(priority.id)])
 
     def test_create_ticket_categories_filter(self):
-        category = mommy.make(Category, name=REPAIR)
+        category = create_repair_category()
         source = factory.create_available_filter_categories()
 
         pf = factory.create_ticket_categories_filter()
@@ -116,6 +114,18 @@ class PriorityFilterTests(TestCase):
         self.assertEqual(pf.source, source)
         self.assertEqual(pf.lookups, {})
         self.assertEqual(pf.criteria, [str(category.id)])
+
+    def test_create_ticket_categories_mid_level_filter(self):
+        category = create_repair_category()
+        source = factory.create_available_filter_categories()
+
+        pf = factory.create_ticket_categories_mid_level_filter()
+
+        self.assertEqual(pf.source, source)
+        self.assertEqual(pf.lookups, {})
+        self.assertEqual(len(pf.criteria), 1)
+        child_category = Category.objects.get(id=pf.criteria[0])
+        self.assertEqual(child_category.parent, category)
 
     def test_create_ticket_location_filter(self):
         # don't test 'context' b/c populated by default and tested above
