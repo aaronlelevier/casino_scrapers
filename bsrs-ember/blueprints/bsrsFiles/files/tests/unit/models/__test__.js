@@ -37,7 +37,7 @@ test('serialize', assert => {
   assert.equal(ret.id, <%= camelizedModuleName %>D.idOne);
   assert.equal(ret.<%= firstProperty %>, <%= camelizedModuleName %>D.descOne);
   assert.equal(ret.<%= secondPropertySnake %>, <%= camelizedModuleName %>D.<%= secondPropertyCamel %>One);
-  assert.equal(ret.filters.length, 1);
+  assert.equal(ret.<%= thirdPropertySnake %>.length, 1);
 });
 
 /* <%= secondProperty %> */
@@ -105,45 +105,45 @@ test('rollback<%= secondPropertyTitle %> - <%= secondPropertySnake %> - <%= Snak
 });
 
 /* <%= SnakeModuleName %>& PROFILE_FILTER */
-test('<%= thirdProperty %>s property should return all associated <%= thirdProperty %>s. also confirm related and join model attr values', (assert) => {
+test('<%= thirdPropertySnake %> property should return all associated <%= thirdPropertySnake %>. also confirm related and join model attr values', (assert) => {
   store.push('<%= thirdJoinModel %>', {id: <%= thirdJoinModelTitle %>D.idOne, <%= SnakeModuleName %>_pk: <%= camelizedModuleName %>D.idOne, <%= thirdAssociatedModelSnake %>_pk: <%= thirdAssociatedModelTitle %>D.idOne});
   <%= camelizedModuleName %> = store.push('<%= dasherizedModuleName %>', {id: <%= camelizedModuleName %>D.idOne, <%= joinModel_associatedModelFks %>: [<%= thirdJoinModelTitle %>D.idOne]});
   store.push('<%= thirdAssociatedModel %>', {id: <%= thirdAssociatedModelTitle %>D.idOne});
-  let <%= thirdProperty %>s = <%= camelizedModuleName %>.get('<%= thirdProperty %>s');
-  assert.equal(<%= thirdProperty %>s.get('length'), 1);
-  assert.deepEqual(<%= camelizedModuleName %>.get('<%= thirdProperty %>s_ids'), [<%= thirdAssociatedModelTitle %>D.idOne]);
+  let <%= thirdPropertySnake %> = <%= camelizedModuleName %>.get('<%= thirdPropertySnake %>');
+  assert.equal(<%= thirdPropertySnake %>.get('length'), 1);
+  assert.deepEqual(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>_ids'), [<%= thirdAssociatedModelTitle %>D.idOne]);
   assert.deepEqual(<%= camelizedModuleName %>.get('<%= joinModel_associatedModelIds %>'), [<%= thirdJoinModelTitle %>D.idOne]);
-  assert.equal(<%= thirdProperty %>s.objectAt(0).get('id'), <%= thirdAssociatedModelTitle %>D.idOne);
+  assert.equal(<%= thirdPropertySnake %>.objectAt(0).get('id'), <%= thirdAssociatedModelTitle %>D.idOne);
 });
 
-test('<%= thirdProperty %>s property is not dirty when no <%= thirdProperty %>s present (undefined)', (assert) => {
+test('<%= thirdPropertySnake %> property is not dirty when no <%= thirdPropertySnake %> present (undefined)', (assert) => {
   <%= camelizedModuleName %> = store.push('<%= dasherizedModuleName %>', {id: <%= camelizedModuleName %>D.idOne, <%= joinModel_associatedModelFks %>: undefined});
   store.push('<%= thirdAssociatedModel %>', {id: <%= thirdAssociatedModelTitle %>D.id});
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 0);
-  assert.ok(<%= camelizedModuleName %>.get('<%= thirdProperty %>sIsNotDirty'));
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 0);
+  assert.ok(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>IsNotDirty'));
 });
 
-test('<%= thirdProperty %>s property is not dirty when no <%= thirdProperty %>s present (empty array)', (assert) => {
+test('<%= thirdPropertySnake %> property is not dirty when no <%= thirdPropertySnake %> present (empty array)', (assert) => {
   <%= camelizedModuleName %> = store.push('<%= dasherizedModuleName %>', {id: <%= camelizedModuleName %>D.idOne, <%= joinModel_associatedModelFks %>: []});
   store.push('<%= thirdAssociatedModel %>', {id: <%= thirdAssociatedModelTitle %>D.id});
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 0);
-  assert.ok(<%= camelizedModuleName %>.get('<%= thirdProperty %>sIsNotDirty'));
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 0);
+  assert.ok(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>IsNotDirty'));
 });
 
 test('remove_<%= thirdProperty %> - will remove join model and mark model as dirty', (assert) => {
   store.push('<%= thirdJoinModel %>', {id: <%= thirdJoinModelTitle %>D.idOne, <%= SnakeModuleName %>_pk: <%= camelizedModuleName %>D.idOne, <%= thirdAssociatedModelSnake %>_pk: <%= thirdAssociatedModelTitle %>D.idOne});
   store.push('<%= thirdAssociatedModel %>', {id: <%= thirdAssociatedModelTitle %>D.idOne});
   <%= camelizedModuleName %> = store.push('<%= dasherizedModuleName %>', {id: <%= camelizedModuleName %>D.idOne, <%= joinModel_associatedModelFks %>: [<%= thirdJoinModelTitle %>D.idOne]});
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 1);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 1);
   assert.equal(<%= camelizedModuleName %>.get('<%= joinModel_associatedModelIds %>').length, 1);
   assert.equal(<%= camelizedModuleName %>.get('<%= joinModel_associatedModelFks %>').length, 1);
-  assert.ok(<%= camelizedModuleName %>.get('<%= thirdProperty %>sIsNotDirty'));
+  assert.ok(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>IsNotDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
   <%= camelizedModuleName %>.remove_<%= thirdProperty %>(<%= thirdAssociatedModelTitle %>D.idOne);
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 0);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 0);
   assert.equal(<%= camelizedModuleName %>.get('<%= joinModel_associatedModelIds %>').length, 0);
   assert.equal(<%= camelizedModuleName %>.get('<%= joinModel_associatedModelFks %>').length, 1);
-  assert.ok(<%= camelizedModuleName %>.get('<%= thirdProperty %>sIsDirty'));
+  assert.ok(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>IsDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isDirtyOrRelatedDirty'));
 });
 
@@ -151,96 +151,96 @@ test('add_<%= thirdProperty %> - will create join model and mark model dirty', (
   store.push('<%= thirdJoinModel %>', {id: <%= thirdJoinModelTitle %>D.idOne, <%= SnakeModuleName %>_pk: <%= camelizedModuleName %>D.idOne, <%= thirdAssociatedModelSnake %>_pk: <%= thirdAssociatedModelTitle %>D.idOne});
   store.push('<%= thirdAssociatedModel %>', {id: <%= thirdAssociatedModelTitle %>D.idOne});
   <%= camelizedModuleName %> = store.push('<%= dasherizedModuleName %>', {id: <%= camelizedModuleName %>D.idOne, <%= joinModel_associatedModelFks %>: [<%= thirdJoinModelTitle %>D.idOne]});
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 1);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 1);
   assert.equal(<%= camelizedModuleName %>.get('<%= joinModel_associatedModelIds %>').length, 1);
   assert.equal(<%= camelizedModuleName %>.get('<%= joinModel_associatedModelFks %>').length, 1);
-  assert.deepEqual(<%= camelizedModuleName %>.get('<%= thirdProperty %>s_ids'), [<%= thirdAssociatedModelTitle %>D.idOne]);
-  assert.ok(<%= camelizedModuleName %>.get('<%= thirdProperty %>sIsNotDirty'));
+  assert.deepEqual(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>_ids'), [<%= thirdAssociatedModelTitle %>D.idOne]);
+  assert.ok(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>IsNotDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
   <%= camelizedModuleName %>.add_<%= thirdProperty %>({id: <%= thirdAssociatedModelTitle %>D.idTwo});
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 2);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 2);
   assert.equal(<%= camelizedModuleName %>.get('<%= joinModel_associatedModelIds %>').length, 2);
   assert.equal(<%= camelizedModuleName %>.get('<%= joinModel_associatedModelFks %>').length, 1);
-  assert.deepEqual(<%= camelizedModuleName %>.get('<%= thirdProperty %>s_ids'), [<%= thirdAssociatedModelTitle %>D.idOne, <%= thirdAssociatedModelTitle %>D.idTwo]);
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').objectAt(0).get('id'), <%= thirdAssociatedModelTitle %>D.idOne);
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').objectAt(1).get('id'), <%= thirdAssociatedModelTitle %>D.idTwo);
-  assert.ok(<%= camelizedModuleName %>.get('<%= thirdProperty %>sIsDirty'));
+  assert.deepEqual(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>_ids'), [<%= thirdAssociatedModelTitle %>D.idOne, <%= thirdAssociatedModelTitle %>D.idTwo]);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').objectAt(0).get('id'), <%= thirdAssociatedModelTitle %>D.idOne);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').objectAt(1).get('id'), <%= thirdAssociatedModelTitle %>D.idTwo);
+  assert.ok(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>IsDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isDirtyOrRelatedDirty'));
 });
 
-test('savePfs - <%= thirdProperty %>s - will reset the previous <%= thirdProperty %>s with multiple <%= SnakeModuleName %>s', (assert) => {
+test('savePfs - <%= thirdPropertySnake %> - will reset the previous <%= thirdPropertySnake %> with multiple <%= SnakeModuleName %>s', (assert) => {
   store.push('<%= thirdAssociatedModel %>', {id: <%= thirdAssociatedModelTitle %>D.idOne});
   store.push('<%= thirdAssociatedModel %>', {id: <%= thirdAssociatedModelTitle %>D.idTwo});
   const <%= thirdAssociatedModelSnake %>_unused = {id: <%= thirdAssociatedModelTitle %>D.unusedId};
   store.push('<%= thirdJoinModel %>', {id: <%= thirdJoinModelTitle %>D.idOne, <%= SnakeModuleName %>_pk: <%= camelizedModuleName %>D.idOne, <%= thirdAssociatedModelSnake %>_pk: <%= thirdAssociatedModelTitle %>D.idOne});
   store.push('<%= thirdJoinModel %>', {id: <%= thirdJoinModelTitle %>D.idTwo, <%= SnakeModuleName %>_pk: <%= camelizedModuleName %>D.idOne, <%= thirdAssociatedModelSnake %>_pk: <%= thirdAssociatedModelTitle %>D.idTwo});
   <%= camelizedModuleName %> = store.push('<%= dasherizedModuleName %>', {id: <%= camelizedModuleName %>D.idOne, <%= joinModel_associatedModelFks %>: [<%= thirdJoinModelTitle %>D.idOne, <%= thirdJoinModelTitle %>D.idTwo]});
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 2);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 2);
   <%= camelizedModuleName %>.remove_<%= thirdProperty %>(<%= thirdAssociatedModelTitle %>D.idOne);
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 1);
-  assert.ok(<%= camelizedModuleName %>.get('<%= thirdProperty %>sIsDirty'));
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 1);
+  assert.ok(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>IsDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isDirtyOrRelatedDirty'));
   <%= camelizedModuleName %>.savePfs();
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 1);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 1);
   assert.ok(<%= camelizedModuleName %>.get('isNotDirty'));
-  assert.ok(<%= camelizedModuleName %>.get('<%= thirdProperty %>sIsNotDirty'));
+  assert.ok(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>IsNotDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
   <%= camelizedModuleName %>.add_<%= thirdProperty %>(<%= thirdAssociatedModelSnake %>_unused);
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 2);
-  assert.ok(<%= camelizedModuleName %>.get('<%= thirdProperty %>sIsDirty'));
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 2);
+  assert.ok(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>IsDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isDirtyOrRelatedDirty'));
   <%= camelizedModuleName %>.savePfs();
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 2);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 2);
   assert.ok(<%= camelizedModuleName %>.get('isNotDirty'));
-  assert.ok(<%= camelizedModuleName %>.get('<%= thirdProperty %>sIsNotDirty'));
+  assert.ok(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>IsNotDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('rollbackPfs - <%= thirdProperty %>s - multiple <%= SnakeModuleName %>s with the same <%= thirdProperty %>s will rollbackPfs correctly', (assert) => {
+test('rollbackPfs - <%= thirdPropertySnake %> - multiple <%= SnakeModuleName %>s with the same <%= thirdPropertySnake %> will rollbackPfs correctly', (assert) => {
   store.push('<%= thirdJoinModel %>', {id: <%= thirdJoinModelTitle %>D.idOne, <%= SnakeModuleName %>_pk: <%= camelizedModuleName %>D.idOne, <%= thirdAssociatedModelSnake %>_pk: <%= thirdAssociatedModelTitle %>D.idOne});
   store.push('<%= thirdJoinModel %>', {id: <%= thirdJoinModelTitle %>D.idTwo, <%= SnakeModuleName %>_pk: <%= camelizedModuleName %>D.idTwo, <%= thirdAssociatedModelSnake %>_pk: <%= thirdAssociatedModelTitle %>D.idOne});
   store.push('<%= thirdAssociatedModel %>', {id: <%= thirdAssociatedModelTitle %>D.idOne});
   <%= camelizedModuleName %> = store.push('<%= dasherizedModuleName %>', {id: <%= camelizedModuleName %>D.idOne, <%= joinModel_associatedModelFks %>: [<%= thirdJoinModelTitle %>D.idOne]});
   let <%= SnakeModuleName %>_two = store.push('<%= dasherizedModuleName %>', {id: <%= camelizedModuleName %>D.idTwo, <%= joinModel_associatedModelFks %>: [<%= thirdJoinModelTitle %>D.idTwo]});
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 1);
-  assert.equal(<%= SnakeModuleName %>_two.get('<%= thirdProperty %>s').get('length'), 1);
-  assert.ok(<%= camelizedModuleName %>.get('<%= thirdProperty %>sIsNotDirty'));
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 1);
+  assert.equal(<%= SnakeModuleName %>_two.get('<%= thirdPropertySnake %>').get('length'), 1);
+  assert.ok(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>IsNotDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
-  assert.ok(<%= SnakeModuleName %>_two.get('<%= thirdProperty %>sIsNotDirty'));
+  assert.ok(<%= SnakeModuleName %>_two.get('<%= thirdPropertySnake %>IsNotDirty'));
   assert.ok(<%= SnakeModuleName %>_two.get('isNotDirtyOrRelatedNotDirty'));
   <%= SnakeModuleName %>_two.remove_<%= thirdProperty %>(<%= thirdAssociatedModelTitle %>D.idOne);
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 1);
-  assert.equal(<%= SnakeModuleName %>_two.get('<%= thirdProperty %>s').get('length'), 0);
-  assert.ok(<%= camelizedModuleName %>.get('<%= thirdProperty %>sIsNotDirty'));
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 1);
+  assert.equal(<%= SnakeModuleName %>_two.get('<%= thirdPropertySnake %>').get('length'), 0);
+  assert.ok(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>IsNotDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
-  assert.ok(<%= SnakeModuleName %>_two.get('<%= thirdProperty %>sIsDirty'));
+  assert.ok(<%= SnakeModuleName %>_two.get('<%= thirdPropertySnake %>IsDirty'));
   assert.ok(<%= SnakeModuleName %>_two.get('isDirtyOrRelatedDirty'));
   <%= SnakeModuleName %>_two.rollbackPfs();
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 1);
-  assert.equal(<%= SnakeModuleName %>_two.get('<%= thirdProperty %>s').get('length'), 1);
-  assert.ok(<%= camelizedModuleName %>.get('<%= thirdProperty %>sIsNotDirty'));
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 1);
+  assert.equal(<%= SnakeModuleName %>_two.get('<%= thirdPropertySnake %>').get('length'), 1);
+  assert.ok(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>IsNotDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
-  assert.ok(<%= SnakeModuleName %>_two.get('<%= thirdProperty %>sIsNotDirty'));
+  assert.ok(<%= SnakeModuleName %>_two.get('<%= thirdPropertySnake %>IsNotDirty'));
   assert.ok(<%= SnakeModuleName %>_two.get('isNotDirtyOrRelatedNotDirty'));
   <%= camelizedModuleName %>.remove_<%= thirdProperty %>(<%= thirdAssociatedModelTitle %>D.idOne);
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 0);
-  assert.equal(<%= SnakeModuleName %>_two.get('<%= thirdProperty %>s').get('length'), 1);
-  assert.ok(<%= camelizedModuleName %>.get('<%= thirdProperty %>sIsDirty'));
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 0);
+  assert.equal(<%= SnakeModuleName %>_two.get('<%= thirdPropertySnake %>').get('length'), 1);
+  assert.ok(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>IsDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isDirtyOrRelatedDirty'));
-  assert.ok(<%= SnakeModuleName %>_two.get('<%= thirdProperty %>sIsNotDirty'));
+  assert.ok(<%= SnakeModuleName %>_two.get('<%= thirdPropertySnake %>IsNotDirty'));
   assert.ok(<%= SnakeModuleName %>_two.get('isNotDirtyOrRelatedNotDirty'));
   <%= camelizedModuleName %>.rollbackPfs();
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 1);
-  assert.equal(<%= SnakeModuleName %>_two.get('<%= thirdProperty %>s').get('length'), 1);
-  assert.ok(<%= camelizedModuleName %>.get('<%= thirdProperty %>sIsNotDirty'));
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 1);
+  assert.equal(<%= SnakeModuleName %>_two.get('<%= thirdPropertySnake %>').get('length'), 1);
+  assert.ok(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>IsNotDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
-  assert.ok(<%= SnakeModuleName %>_two.get('<%= thirdProperty %>sIsNotDirty'));
+  assert.ok(<%= SnakeModuleName %>_two.get('<%= thirdPropertySnake %>IsNotDirty'));
   assert.ok(<%= SnakeModuleName %>_two.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 /* Over Arching Test of saveRelated / rollBack */
 
-test('saveRelated - change <%= secondPropertySnake %> and <%= thirdProperty %>s', assert => {
+test('saveRelated - change <%= secondPropertySnake %> and <%= thirdPropertySnake %>', assert => {
   // <%= secondPropertySnake %>
   let inactive_<%= secondPropertySnake %> = store.push('<%= secondModel %>', {id: <%= secondModelTitle %>D.idTwo, <%= SnakeModuleName %>s: []});
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
@@ -248,17 +248,17 @@ test('saveRelated - change <%= secondPropertySnake %> and <%= thirdProperty %>s'
   assert.ok(<%= camelizedModuleName %>.get('isDirtyOrRelatedDirty'));
   <%= camelizedModuleName %>.saveRelated();
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
-  // <%= thirdProperty %>s
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 0);
+  // <%= thirdPropertySnake %>
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 0);
   store.push('<%= thirdAssociatedModel %>', {id: <%= thirdAssociatedModelTitle %>D.idOne});
   <%= camelizedModuleName %>.add_<%= thirdProperty %>({id: <%= thirdAssociatedModelTitle %>D.idOne});
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 1);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 1);
   assert.ok(<%= camelizedModuleName %>.get('isDirtyOrRelatedDirty'));
   <%= camelizedModuleName %>.saveRelated();
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('rollback - <%= secondPropertySnake %> and <%= thirdProperty %>s', assert => {
+test('rollback - <%= secondPropertySnake %> and <%= thirdPropertySnake %>', assert => {
   // <%= secondPropertySnake %>
   <%= camelizedModuleName %> = store.push('<%= dasherizedModuleName %>', {id: <%= camelizedModuleName %>D.idOne, <%= secondPropertySnake %>_fk: <%= secondModelTitle %>D.idOne});
   <%= secondPropertySnake %> = store.push('<%= secondModel %>', {id: <%= secondModelTitle %>D.idOne, <%= SnakeModuleName %>s: [<%= camelizedModuleName %>D.idOne]});
@@ -270,14 +270,14 @@ test('rollback - <%= secondPropertySnake %> and <%= thirdProperty %>s', assert =
   <%= camelizedModuleName %>.rollback();
   assert.equal(<%= camelizedModuleName %>.get('<%= secondPropertySnake %>').get('id'), <%= secondPropertySnake %>.get('id'));
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
-  // <%= thirdProperty %>s
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 0);
+  // <%= thirdPropertySnake %>
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 0);
   store.push('<%= thirdAssociatedModel %>', {id: <%= thirdAssociatedModelTitle %>D.idOne});
   <%= camelizedModuleName %>.add_<%= thirdProperty %>({id: <%= thirdAssociatedModelTitle %>D.idOne});
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 1);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 1);
   assert.ok(<%= camelizedModuleName %>.get('isDirtyOrRelatedDirty'));
   <%= camelizedModuleName %>.rollback();
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 0);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 0);
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
 });
 

@@ -34,34 +34,34 @@ test('deserialize single', assert => {
   assert.equal(<%= camelizedModuleName %>.get('<%= secondPropertySnake %>').get('<%= secondModelDisplaySnake %>'), <%= camelizedModuleName %>D.<%= secondModelDisplaySnake %>);
 });
 
-test('existing <%= camelizedModuleName %> w/ <%= thirdPropertySnake %>s, and server returns no <%= thirdPropertySnake %>s - want no <%= thirdPropertySnake %>s b/c that is the most recent', assert => {
+test('existing <%= camelizedModuleName %> w/ <%= thirdPropertySnake %>, and server returns no <%= thirdPropertySnake %> - want no <%= thirdPropertySnake %> b/c that is the most recent', assert => {
   store.push('<%= thirdJoinModel %>', {id: <%= thirdJoinModelTitle %>D.idOne, <%= SnakeModuleName %>_pk: <%= camelizedModuleName %>D.idOne, <%= thirdAssociatedModelSnake %>_pk: <%= thirdAssociatedModelTitle %>D.idOne});
   <%= camelizedModuleName %> = store.push('<%= dasherizedModuleName %>', {id: <%= camelizedModuleName %>D.idOne, joinModel_associatedModelFks: [<%= thirdJoinModelTitle %>D.idOne]});
   store.push('<%= thirdAssociatedModel %>', {id: <%= thirdAssociatedModelTitle %>D.idOne});
-  const <%= thirdProperty %>s = <%= camelizedModuleName %>.get('<%= thirdProperty %>s');
-  assert.equal(<%= thirdProperty %>s.get('length'), 1);
+  const <%= thirdPropertySnake %> = <%= camelizedModuleName %>.get('<%= thirdPropertySnake %>');
+  assert.equal(<%= thirdPropertySnake %>.get('length'), 1);
   let json = <%= camelizedModuleName %>F.detail();
-  json.<%= thirdPropertySnake %>s = [];
+  json.<%= thirdPropertySnake %> = [];
   run(() => {
     deserializer.deserialize(json, <%= camelizedModuleName %>D.idOne);
   });
   <%= camelizedModuleName %> = store.find('<%= dasherizedModuleName %>', <%= camelizedModuleName %>D.idOne);
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 0);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 0);
   assert.ok(<%= camelizedModuleName %>.get('isNotDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('existing <%= camelizedModuleName %> w/ <%= thirdPropertySnake %>s, and server returns w/ 1 extra <%= thirdPropertySnake %>', assert => {
+test('existing <%= camelizedModuleName %> w/ <%= thirdPropertySnake %>, and server returns w/ 1 extra <%= thirdPropertySnake %>', assert => {
   store.push('<%= thirdJoinModel %>', {id: <%= thirdJoinModelTitle %>D.idOne, <%= SnakeModuleName %>_pk: <%= camelizedModuleName %>D.idOne, <%= thirdAssociatedModelSnake %>_pk: <%= thirdAssociatedModelTitle %>D.idOne});
   store.push('<%= dasherizedModuleName %>', {id: <%= camelizedModuleName %>D.idOne, joinModel_associatedModelFks: [<%= thirdJoinModelTitle %>D.idOne]});
   store.push('<%= thirdAssociatedModel %>', {id: <%= thirdAssociatedModelTitle %>D.idOne});
   let json = <%= camelizedModuleName %>F.detail();
-  json.<%= thirdPropertySnake %>s.push({id: <%= thirdAssociatedModelTitle %>D.unusedId});
+  json.<%= thirdPropertySnake %>.push({id: <%= thirdAssociatedModelTitle %>D.unusedId});
   run(() => {
     deserializer.deserialize(json, <%= camelizedModuleName %>D.idOne);
   });
   <%= camelizedModuleName %> = store.find('<%= dasherizedModuleName %>', <%= camelizedModuleName %>D.idOne);
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 2);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 2);
   assert.ok(<%= camelizedModuleName %>.get('isNotDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
 });
@@ -75,7 +75,7 @@ test('existing <%= camelizedModuleName %> w/ <%= thirdPropertySnake %> and get s
     deserializer.deserialize(json, <%= camelizedModuleName %>D.idOne);
   });
   <%= camelizedModuleName %> = store.find('<%= dasherizedModuleName %>', <%= camelizedModuleName %>D.idOne);
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 1);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdPropertySnake %>').get('length'), 1);
   assert.ok(<%= camelizedModuleName %>.get('isNotDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
 });

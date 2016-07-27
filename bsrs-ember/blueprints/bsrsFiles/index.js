@@ -36,7 +36,7 @@ module.exports = {
       secondModelDisplaySnake: snake(options.secondDisplay),
 
       /* M2M profile - pf */
-      thirdProperty: plural(options.third),
+      thirdProperty: options.third,
       thirdPropertyCamel: camel(options.third),
       thirdPropertyTitle: title(options.third),
       //All properties called by snake name to enfore this. Can't name it foo-bar
@@ -56,8 +56,8 @@ module.exports = {
       thirdAssociatedModelDisplaySnake: snake(options.thirdDisplay),
       thirdAssociatedModelDisplayCaps: allCaps(options.thirdDisplay),
 
-      joinModel_associatedModelFks: `${snake(options.name)}_${options.thirdProperty}s_fks`,
-      joinModel_associatedModelIds: `${snake(options.name)}_${options.thirdProperty}s_ids`,
+      joinModel_associatedModelFks: `${snake(options.name)}_${options.thirdProperty}_fks`,
+      joinModel_associatedModelIds: `${snake(options.name)}_${options.thirdProperty}_ids`,
 
       hashComponentOne: firstArr(options.hashComponents),
       hashComponentTwo: secondArr(options.hashComponents),
