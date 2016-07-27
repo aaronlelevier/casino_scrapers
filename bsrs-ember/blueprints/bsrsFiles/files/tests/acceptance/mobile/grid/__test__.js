@@ -5,7 +5,7 @@ import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import <%= camelizedModuleName %>D from 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>';
 import <%= camelizedModuleName %>F from 'bsrs-ember/vendor/<%= dasherizedModuleName %>_fixtures';
-import <%= secondModelTitle %>F from 'bsrs-ember/vendor/<%= secondModelPlural %>_fixtures';
+import <%= secondModelTitle %>F from 'bsrs-ember/vendor/<%= secondModel %>_fixtures';
 import <%= secondModelTitle %>D from 'bsrs-ember/vendor/defaults/<%= secondModel %>';
 import TENANT_DEFAULTS from 'bsrs-ember/vendor/defaults/tenant';
 import config from 'bsrs-ember/config/environment';
