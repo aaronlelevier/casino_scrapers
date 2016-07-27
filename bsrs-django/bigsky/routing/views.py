@@ -44,7 +44,7 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'list':
-            return rs.AvailableFilterListSerializer
+            return rs.AvailableFilterSerializer
         else:
             raise MethodNotAllowed(method=self.action)
 
@@ -73,7 +73,10 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
                     'context': settings.DEFAULT_PROFILE_FILTER_CONTEXT,
                     'field': 'location',
                     'lookups': {
-                        'location_level': str(x.id)
+                        'location_level': {
+                            'id': str(x.id),
+                            'name': x.name
+                        }
                     }
                 })
         data['results'] += filters

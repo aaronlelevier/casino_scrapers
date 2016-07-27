@@ -138,10 +138,10 @@ class ProfileFilter(BaseModel):
     def is_match(self, ticket):
         # NOTE: checking the criteria will be different based on the "type"
         # of ticket, which is really an 'object' of diff types, i.e. 'work_order'
-        field_type = ticket._meta.get_field(self.field)
+        field_type = ticket._meta.get_field(self.source.field)
 
         if isinstance(field_type, models.ManyToManyField):
             category_ids = (str(x) for x in ticket.categories.values_list('id', flat=True))
             return set(category_ids).intersection(set(self.criteria))
         elif isinstance(field_type, models.ForeignKey):
-            return str(getattr(ticket, self.field).id) in self.criteria
+            return str(getattr(ticket, self.source.field).id) in self.criteria

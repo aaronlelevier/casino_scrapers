@@ -12,39 +12,20 @@ class ProfileFilterFieldValidator(object):
 
     def __call__(self, data):
         self.id = data.get('id', None)
-        self.context = data.get('context', None)
-        self.field = data.get('field', None)
+        self.source = data.get('source', None)
         self.criteria = data.get('criteria', [])
 
-        if self.context:
-            content_type = self.is_model_class()
+        if self.source.context:
+            app_label, model = self.source.context.split('.')
         else:
             app_label, model = settings.DEFAULT_PROFILE_FILTER_CONTEXT.split('.')
-            content_type = ContentType.objects.get(app_label=app_label, model=model)
+        content_type = ContentType.objects.get(app_label=app_label, model=model)
 
         klass = content_type.model_class()
-        self.is_model_field(klass)
         self.is_valid_field_filter(klass)
 
-    def is_model_class(self):
-        try:
-            app_label, model = self.context.split('.')
-        except ValueError:
-            raise ValidationError("{} must be an 'app_label.model'".format(self.context))
-
-        try:
-            content_type = ContentType.objects.get(app_label=app_label, model=model)
-        except ContentType.DoesNotExist:
-            raise ValidationError("'{}' content type does not exist.".format(self.context))
-
-        return content_type
-
-    def is_model_field(self, klass):
-        if not hasattr(klass, self.field):
-            raise ValidationError("'{}' is not a field on '{}'".format(self.field, klass.__name__))
-
     def is_valid_field_filter(self, klass):
-        rel_klass = klass._meta.get_field(self.field).rel.to
+        rel_klass = klass._meta.get_field(self.source.field).rel.to
         try:
             if not rel_klass.objects.filter(id__in=self.criteria).exists():
                 raise ValidationError("'{}' is not a valid id for '{}'"

@@ -1,6 +1,7 @@
+from location.tests.factory import create_top_level_location
 from person.tests.factory import create_single_person, PASSWORD
 from routing.serializers import AssignmentCreateUpdateSerializer
-from routing.tests.factory import create_assignment
+from routing.tests.factory import create_assignment, create_available_filter_location
 from ticket.tests.factory import create_ticket
 
 
@@ -13,8 +14,10 @@ class ViewTestSetupMixin(object):
         self.assignment.assignee = self.person
         self.assignment.save()
         self.profile_filter = self.assignment.filters.first()
+        self.source = create_available_filter_location()
         self.ticket = create_ticket()
         self.ticket_priority = self.ticket.priority
+        self.location = create_top_level_location()
         self.data = AssignmentCreateUpdateSerializer(self.assignment).data
         self.data.pop('order', None)
         self.data.pop('tenant', None)

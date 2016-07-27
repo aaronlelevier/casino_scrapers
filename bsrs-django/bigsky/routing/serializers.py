@@ -1,5 +1,8 @@
+import copy
+
 from rest_framework import serializers
 
+from location.models import LocationLevel
 from person.serializers_leaf import PersonIdUsernameSerializer
 from routing.models import Assignment, ProfileFilter, AvailableFilter
 from routing.validators import ProfileFilterFieldValidator, UniqueByTenantValidator
@@ -8,20 +11,51 @@ from utils.create import update_model
 from utils.serializers import BaseCreateSerializer
 
 
-ASSIGNMENT_FIELDS = ('id', 'tenant', 'order', 'description', 'assignee',)
+class AvailableFilterSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AvailableFilter
+        fields = ('id', 'key', 'key_is_i18n', 'context', 'field', 'lookups',)
 
 
-class ProfileFilterSerializer(BaseCreateSerializer):
+PROFILE_FILTER_FIELDS = ('id', 'lookups', 'criteria', 'source',)
+
+class ProfileFilterUnnestedSerializer(BaseCreateSerializer):
 
     class Meta:
         model = ProfileFilter
         validators = [ProfileFilterFieldValidator()]
-        fields = ('id', 'key', 'context', 'field', 'criteria')
+        fields = PROFILE_FILTER_FIELDS
 
+
+class ProfileFilterSerializer(BaseCreateSerializer):
+
+    source = AvailableFilterSerializer()
+
+    class Meta:
+        model = ProfileFilter
+        fields = PROFILE_FILTER_FIELDS
+
+    def to_representation(self, instance):
+        init_data = super(ProfileFilterSerializer, self).to_representation(instance)
+        data = copy.copy(init_data)
+        return self._combined_data(data)
+
+    def _combined_data(self, data):
+        if 'location_level' in data['lookups']:
+            location_level = LocationLevel.objects.get(id=data['lookups']['location_level'])
+            data['lookups']['location_level'] = {
+                'id': location_level.id,
+                'name': location_level.name
+            }
+        return data
+
+
+ASSIGNMENT_FIELDS = ('id', 'tenant', 'order', 'description', 'assignee',)
 
 class AssignmentCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
-    filters = ProfileFilterSerializer(required=False, many=True)
+    filters = ProfileFilterUnnestedSerializer(required=False, many=True)
 
     class Meta:
         model = Assignment
@@ -94,10 +128,3 @@ class AssignmentDetailSerializer(RemoveTenantMixin, BaseCreateSerializer):
     @staticmethod
     def eager_load(queryset):
         return queryset.select_related('assignee').prefetch_related('filters')
-
-
-class AvailableFilterListSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = AvailableFilter
-        fields = ('id', 'key', 'key_is_i18n', 'context', 'field', 'lookups',)

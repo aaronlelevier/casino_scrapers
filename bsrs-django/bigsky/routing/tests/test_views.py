@@ -7,10 +7,11 @@ from model_mommy import mommy
 from rest_framework.test import APITestCase
 
 from location.models import LocationLevel
-from location.tests.factory import create_location_levels
+from location.tests.factory import create_location_levels, create_top_level_location
 from person.tests.factory import create_single_person, PASSWORD
 from routing.models import Assignment, ProfileFilter, AvailableFilter
-from routing.tests.factory import create_assignment, create_available_filters
+from routing.tests.factory import (create_assignment, create_available_filters,
+    create_available_filter_location, create_ticket_location_filter)
 from routing.tests.mixins import ViewTestSetupMixin
 from utils.create import _generate_chars
 
@@ -56,10 +57,40 @@ class AssignmentTests(ViewTestSetupMixin, APITestCase):
         # profile_filter
         self.assertEqual(len(data['filters']), 2)
         self.assertEqual(data['filters'][0]['id'], str(self.profile_filter.id))
-        self.assertEqual(data['filters'][0]['key'], self.profile_filter.key)
-        self.assertEqual(data['filters'][0]['context'], self.profile_filter.context)
-        self.assertEqual(data['filters'][0]['field'], self.profile_filter.field)
+        self.assertEqual(data['filters'][0]['lookups'], self.profile_filter.lookups)
         self.assertEqual(data['filters'][0]['criteria'], self.profile_filter.criteria)
+        # profile_filter - available_filter
+        af = AvailableFilter.objects.get(id=data['filters'][0]['source']['id'])
+        self.assertEqual(data['filters'][0]['source']['key'], af.key)
+        self.assertEqual(data['filters'][0]['source']['key_is_i18n'], af.key_is_i18n)
+        self.assertEqual(data['filters'][0]['source']['context'], af.context)
+        self.assertEqual(data['filters'][0]['source']['field'], af.field)
+        self.assertEqual(data['filters'][0]['source']['lookups'], af.lookups)
+
+    def test_detail__dynamic_source_filter(self):
+        # dynamic available filter for "location" linked to ProfileFilter.source
+        location_filter = create_ticket_location_filter()
+        location_level = create_top_level_location().location_level
+        # simulate what an existing location_filter.lookup will hold
+        location_filter.lookups = {'location_level': str(location_level.id)}
+        location_filter.save()
+        self.assignment.filters.add(location_filter)
+
+        response = self.client.get('/api/admin/assignments/{}/'.format(self.assignment.id))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        for f in data['filters']:
+            if f['id'] == str(location_filter.id):
+                filter_data = f
+        self.assertEqual(filter_data['lookups']['location_level']['id'], str(location_level.id))
+        self.assertEqual(filter_data['lookups']['location_level']['name'], location_level.name)
+        # unchanged
+        self.assertEqual(filter_data['source']['key'], location_filter.source.key)
+        self.assertEqual(filter_data['source']['key_is_i18n'], location_filter.source.key_is_i18n)
+        self.assertEqual(filter_data['source']['context'], location_filter.source.context)
+        self.assertEqual(filter_data['source']['field'], location_filter.source.field)
+        self.assertEqual(filter_data['source']['lookups'], {'filters': 'location_level'})
 
     def test_create(self):
         self.data['id'] = str(uuid.uuid4())
@@ -85,25 +116,9 @@ class AssignmentTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(len(data['filters']), 2)
         self.assertIn(data['filters'][0]['id'], [f['id'] for f in self.data['filters']])
         profile_filter = ProfileFilter.objects.get(id=data['filters'][0]['id'])
-        self.assertEqual(data['filters'][0]['key'], profile_filter.key)
-        self.assertEqual(data['filters'][0]['context'], profile_filter.context)
-        self.assertEqual(data['filters'][0]['field'], profile_filter.field)
+        self.assertEqual(data['filters'][0]['lookups'], profile_filter.lookups)
         self.assertEqual(data['filters'][0]['criteria'], profile_filter.criteria)
-
-    def test_create__context_not_required(self):
-        self.data['id'] = str(uuid.uuid4())
-        self.data['description'] = 'foo'
-        self.data['filters'] = self.data['filters'][:1]
-        self.data['filters'][0]['id'] = str(uuid.uuid4())
-        self.data['filters'][0].pop('context', None)
-
-        response = self.client.post('/api/admin/assignments/', self.data, format='json')
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(response.status_code, 201)
-        self.assertEqual(len(data['filters']), 1)
-        self.assertEqual(data['filters'][0]['id'], self.data['filters'][0]['id'])
-        self.assertEqual(data['filters'][0]['context'], settings.DEFAULT_PROFILE_FILTER_CONTEXT)
+        self.assertEqual(data['filters'][0]['source'], str(profile_filter.source.id))
 
     def test_update(self):
         assignee = create_single_person()
@@ -125,20 +140,19 @@ class AssignmentTests(ViewTestSetupMixin, APITestCase):
         # profile_filter
         self.assertEqual(len(data['filters']), 2)
         self.assertEqual(data['filters'][0]['id'], str(self.profile_filter.id))
-        self.assertEqual(data['filters'][0]['key'], self.profile_filter.key)
-        self.assertEqual(data['filters'][0]['context'], self.profile_filter.context)
-        self.assertEqual(data['filters'][0]['field'], self.profile_filter.field)
+        self.assertEqual(data['filters'][0]['lookups'], self.profile_filter.lookups)
         self.assertEqual(data['filters'][0]['criteria'], self.profile_filter.criteria)
+        self.assertEqual(data['filters'][0]['source'], str(self.profile_filter.source.id))
 
     def test_update__nested_create(self):
         self.assertEqual(self.assignment.filters.count(), 2)
         new_filter_id = str(uuid.uuid4())
+        source = create_available_filter_location()
         self.data['description'] = _generate_chars()
         self.data['filters'].append({
             'id': new_filter_id,
-            'key': self.profile_filter.key,
-            'field': 'priority',
-            'criteria': [str(self.ticket_priority.id)]
+            'source': str(source.id),
+            'criteria': [str(self.location.id)]
         })
 
         response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
@@ -152,8 +166,9 @@ class AssignmentTests(ViewTestSetupMixin, APITestCase):
     def test_update__nested_update(self):
         self.assertEqual(self.assignment.filters.count(), 2)
         new_filter_id = str(uuid.uuid4())
+        source = create_available_filter_location()
         self.data['filters'][0].update({
-            'field': 'location',
+            'source': str(source.id),
             'criteria': [str(self.ticket.location.id)]
         })
 
@@ -164,10 +179,14 @@ class AssignmentTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(data['filters']), 2)
         profile_filter = ProfileFilter.objects.get(id=self.data['filters'][0]['id'])
-        self.assertEqual(profile_filter.field, self.data['filters'][0]['field'])
-        self.assertEqual(profile_filter.criteria, self.data['filters'][0]['criteria'])
+        self.assertEqual(data['filters'][0]['source'], self.data['filters'][0]['source'])
+        self.assertEqual(data['filters'][0]['criteria'], self.data['filters'][0]['criteria'])
 
     def test_update__nested_delete(self):
+        """
+        Related ProfileFilters are "hard" deleted if they have been
+        removed from the Assignment.
+        """
         self.assertEqual(self.assignment.filters.count(), 2)
         deleted_id = self.data['filters'][1]['id']
         self.data['filters'] = self.data['filters'][:1]
@@ -183,6 +202,10 @@ class AssignmentTests(ViewTestSetupMixin, APITestCase):
         self.assertFalse(ProfileFilter.objects_all.filter(id=deleted_id).exists())
 
     def test_update__other_assignment_filters_not_affected(self):
+        """
+        Confirms that the nested remove clean up loop filters for the related
+        ProfileFilters only for the Assignment instance.
+        """
         mommy.make(ProfileFilter, criteria=self.profile_filter.criteria)
         init_count = ProfileFilter.objects.count()
 
@@ -240,13 +263,14 @@ class AvailableFilterTests(APITestCase):
         for d in data['results']:
             if 'location_level' in d['lookups']:
                 location_data = d
-        location_level = LocationLevel.objects.get(id=location_data['lookups']['location_level'])
+        location_level = LocationLevel.objects.get(id=location_data['lookups']['location_level']['id'])
         self.assertTrue(location_data['id'])
         self.assertEqual(location_data['key'], location_level.name)
         self.assertFalse(location_data['key_is_i18n'])
         self.assertEqual(location_data['context'], settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(location_data['field'], 'location')
-        self.assertEqual(location_data['lookups'], {'location_level': str(location_level.id)})
+        self.assertEqual(location_data['lookups']['location_level']['id'], str(location_level.id))
+        self.assertEqual(location_data['lookups']['location_level']['name'], location_level.name)
 
     def test_detail(self):
         response = self.client.get('/api/admin/assignments-available-filters/{}/'.format(self.af.id))

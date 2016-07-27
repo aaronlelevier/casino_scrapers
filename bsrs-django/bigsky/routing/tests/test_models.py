@@ -89,7 +89,7 @@ class AssignmentManagerTests(TestCase):
 
     def test_process_ticket__no_match(self):
         # filter_one make false
-        filter_one = self.assignment.filters.filter(field='categories')[0]
+        filter_one = self.assignment.filters.filter(source__field='categories')[0]
         filter_one.criteria = [str(create_single_category().id)]
         filter_one.save()
         self.assertFalse(filter_one.is_match(self.ticket))
@@ -174,7 +174,7 @@ class AssignmentTests(TestCase):
 
     def test_is_match_false(self):
         self.assertEqual(self.assignment.filters.count(), 2)
-        filter_one = self.assignment.filters.filter(field='categories')[0]
+        filter_one = self.assignment.filters.filter(source__field='categories')[0]
         filter_two = self.assignment.filters.exclude(id=filter_one.id)[0]
         filter_one.criteria = [str(create_single_category().id)]
         filter_one.save()
@@ -193,7 +193,6 @@ class ProfilefilterTests(TestCase):
         self.cf = create_ticket_categories_filter()
         create_single_person()
         self.ticket = create_ticket()
-
 
     def test_meta__ordering(self):
         # order by id, so that way are returned to User in the same order
