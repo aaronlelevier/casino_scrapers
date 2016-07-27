@@ -73,17 +73,20 @@ function snake(str) {
   return str.replace('-', '_');
 }
 
-var replaceWithChar = function(typeofStr) {
+var replaceWithChar = function(str, typeofStr) {
+  if (!str.includes(typeofStr)) {
+    return str;
+  }
   const indx = str.indexOf(typeofStr);
   const character = str.charAt(indx+1);
   const upperCaseLetter = character.toUpperCase();
-  const rgx = new RegExp(`${typeofStr}${character}`);
-  return str.replace(rgx, upperCaseLetter);
+  const rgx = new RegExp(`${typeofStr}${character}`, 'g');
+  return replaceWithChar(str.replace(rgx, upperCaseLetter), typeofStr);
 }
 
 var camel = function(str) {
   if (str.includes('_')) {
-    return replaceWithChar('_');
+    return replaceWithChar(str, '_');
   }
   return str;
 };
@@ -91,10 +94,10 @@ var camel = function(str) {
 /* assignee -> Assignee or location_level -> LocationLevel, profile-join-filter -> ProfileJoinFilter */
 var title = function(str) {
   if (str.includes('_')) {
-    return replaceWithChar('_');
+    return replaceWithChar(str, '_');
   }
   if (str.includes('-')) {
-    return replaceWithChar('-');
+    return replaceWithChar(str, '-');
   }
   return firstWhole(str);
 };
