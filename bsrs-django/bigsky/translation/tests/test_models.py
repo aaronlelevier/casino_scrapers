@@ -137,16 +137,15 @@ class TranslationManagerTests(TestCase):
         self.assertEqual(t.locale, locale)
         self.assertEqual(locale.name, 'admin.locale.{}'.format(locale))
 
-    def test_export_csv(self):
-        mypath = Translation.objects.translation_dir
-        t = Translation.objects.import_csv('en')
-
-        file_ = os.path.join(mypath, '{}-out.csv'.format(t.locale))
-        if os.path.exists(file_):
-            os.remove(file_)
+    @patch('translation.models.open')
+    def test_export_csv(self, mock_func):
+        t = mommy.make(Translation, locale__locale='en')
 
         Translation.objects.export_csv(t.id)
-        os.path.isfile(os.path.join(mypath, '{}-out.csv'.format(t.locale)))
+
+        mock_func.assert_called_with(
+            os.path.join(Translation.objects.translation_dir,
+                         '{}-out.csv'.format(t.locale)), 'w', newline='')
 
     def test_all_distinct_keys(self):
         trans_values = {'abe':'a', 'bob':'b'}
