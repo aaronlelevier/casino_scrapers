@@ -5,20 +5,19 @@ var BSRS_<%= CapitalizeModule %>_<%= secondModelCaps %>_DEFAULTS_OBJECT = (funct
     return {
       idOne: '1ee82b8c-89bd-45a2-8d57-4b920c8b1111',
       idTwo: '2cc82b8c-89bd-45a2-8d57-4b920c8b1112',
-      unusedId: '00082b8c-89bd-45a2-8d57-4b920c8b1000',
-      <%= thirdAssociatedModelDisplaySnake %>One: '',
-      <%= thirdAssociatedModelDisplaySnake %>Two: '',
+      <%= secondPropertyCamel %>One: '',
+      <%= secondPropertyCamel %>Two: '',
     };
   };
   return factory;
 })();
 
 if (typeof window === 'undefined') {
-  module.exports = new BSRS_<%= CapitalizeModule %>_<%= thirdAssociatedModelCaps %>_DEFAULTS_OBJECT().defaults();
+  module.exports = new BSRS_<%= CapitalizeModule %>_<%= secondModelCaps %>_DEFAULTS_OBJECT().defaults();
 }
 else {
-  define('bsrs-ember/vendor/defaults/<%= thirdAssociatedModel %>', ['exports'], function(exports) {
+  define('bsrs-ember/vendor/defaults/<%= secondModel %>', ['exports'], function(exports) {
     'use strict';
-    return new BSRS_<%= CapitalizeModule %>_<%= thirdAssociatedModelCaps %>_DEFAULTS_OBJECT().defaults();
+    return new BSRS_<%= CapitalizeModule %>_<%= secondModelCaps %>_DEFAULTS_OBJECT().defaults();
   });
 }
