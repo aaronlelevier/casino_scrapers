@@ -12,7 +12,7 @@ var store, <%= camelizedModuleName %>, deserializer;
 
 module('unit: <%= dasherizedModuleName %> deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:<%= dasherizedModuleName %>', 'model:<%= dasherizedModuleName %>-list', 'model:<%= secondModel %>', 'model:<%= thirdJoinModel %>', 'model:<%= thirdAssociatedModelSnake %>', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:<%= dasherizedModuleName %>', 'model:<%= dasherizedModuleName %>-list', 'model:<%= secondModel %>', 'model:<%= thirdJoinModel %>', 'model:<%= thirdAssociatedModel %>', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     deserializer = <%= camelizedModuleName %>Deserializer.create({
       simpleStore: store
     });
@@ -38,15 +38,15 @@ test('existing <%= camelizedModuleName %> w/ filters, and server returns no filt
   store.push('<%= thirdJoinModel %>', {id: <%= thirdJoinModelTitle %>D.idOne, <%= SnakeModuleName %>_pk: <%= camelizedModuleName %>D.idOne, <%= thirdAssociatedModelSnake %>_pk: <%= thirdAssociatedModelTitle %>D.idOne});
   <%= camelizedModuleName %> = store.push('<%= dasherizedModuleName %>', {id: <%= camelizedModuleName %>D.idOne, joinModel_associatedModelFks: [<%= thirdJoinModelTitle %>D.idOne]});
   store.push('pfilter', {id: <%= thirdAssociatedModelTitle %>D.idOne});
-  const <%= thirdAssociatedName %>s = <%= camelizedModuleName %>.get('<%= thirdAssociatedName %>s');
-  assert.equal(<%= thirdAssociatedName %>s.get('length'), 1);
+  const <%= thirdProperty %>s = <%= camelizedModuleName %>.get('<%= thirdProperty %>s');
+  assert.equal(<%= thirdProperty %>s.get('length'), 1);
   let json = PF.detail();
   json.filters = [];
   run(() => {
     deserializer.deserialize(json, <%= camelizedModuleName %>D.idOne);
   });
   <%= camelizedModuleName %> = store.find('<%= dasherizedModuleName %>', <%= camelizedModuleName %>D.idOne);
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdAssociatedName %>s').get('length'), 0);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 0);
   assert.ok(<%= camelizedModuleName %>.get('isNotDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
 });
@@ -61,7 +61,7 @@ test('existing <%= camelizedModuleName %> w/ filters, and server returns w/ 1 ex
     deserializer.deserialize(json, <%= camelizedModuleName %>D.idOne);
   });
   <%= camelizedModuleName %> = store.find('<%= dasherizedModuleName %>', <%= camelizedModuleName %>D.idOne);
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdAssociatedName %>s').get('length'), 2);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 2);
   assert.ok(<%= camelizedModuleName %>.get('isNotDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
 });
@@ -75,7 +75,7 @@ test('existing <%= camelizedModuleName %> w/ filter and get same filter', assert
     deserializer.deserialize(json, <%= camelizedModuleName %>D.idOne);
   });
   <%= camelizedModuleName %> = store.find('<%= dasherizedModuleName %>', <%= camelizedModuleName %>D.idOne);
-  assert.equal(<%= camelizedModuleName %>.get('<%= thirdAssociatedName %>s').get('length'), 1);
+  assert.equal(<%= camelizedModuleName %>.get('<%= thirdProperty %>s').get('length'), 1);
   assert.ok(<%= camelizedModuleName %>.get('isNotDirty'));
   assert.ok(<%= camelizedModuleName %>.get('isNotDirtyOrRelatedNotDirty'));
 });

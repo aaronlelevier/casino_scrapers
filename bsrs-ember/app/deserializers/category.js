@@ -12,22 +12,20 @@ var extract_tree = function(model, store) {
 };
 
 var CategoryDeserializer = Ember.Object.extend({
-  deserialize(response, options) {
-    if (typeof options === 'undefined') {
-      this._deserializeList(response);
+  deserialize(response, id) {
+    if (id) {
+      return this._deserializeSingle(response);
     } else {
-      return this._deserializeSingle(response, options);
+      this._deserializeList(response);
     }
   },
-  _deserializeSingle(response, id) {
+  _deserializeSingle(response) {
     const store = this.get('simpleStore');
-    const existing = store.find('category', id);
-    let category = existing;
     let children_json = response.children;
     delete response.children;
     [response.parent_id] = extract_tree(response, store);
     response.detail = true;
-    category = store.push('category', response);
+    let category = store.push('category', response);
     if(children_json){
       let [m2m_children, children, server_sum] = many_to_many_extract(children_json, store, category, 'category_children', 'category_pk', 'category', 'children_pk');
       children.forEach((cat) => {

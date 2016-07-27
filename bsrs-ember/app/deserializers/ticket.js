@@ -21,16 +21,15 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     belongs_to.bind(this)('location', 'ticket', 'location');
     many_to_many.bind(this)('cc', 'ticket');
   },
-  deserialize(response, options) {
-    if (typeof options === 'undefined') {
-      this._deserializeList(response);
+  deserialize(response, id) {
+    if (id) {
+      return this._deserializeSingle(response);
     } else {
-      return this._deserializeSingle(response, options);
+      this._deserializeList(response);
     }
   },
-  _deserializeSingle(response, id) {
+  _deserializeSingle(response) {
     let store = this.get('simpleStore');
-    let ticket = store.find('ticket', id);
     /* FindById mixin prevents xhr if dirty */
     let location_json = response.location;
     response.location_fk = location_json.id;
@@ -46,7 +45,7 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     const categories_json = response.categories;
     delete response.categories;
     response.detail = true;
-    ticket = store.push('ticket', response);
+    let ticket = store.push('ticket', response);
     this.setup_status(response.status_fk, ticket);
     this.setup_priority(response.priority_fk, ticket);
     if (assignee_json) {

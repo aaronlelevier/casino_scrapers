@@ -109,17 +109,15 @@ var LocationDeserializer = Ember.Object.extend(OptConf, {
     this._super(...arguments);
     belongs_to.bind(this)('status', 'location', 'location');
   },
-  deserialize(response, options) {
-    if (typeof options === 'undefined') {
-      this._deserializeList(response);
+  deserialize(response, id) {
+    if (id) {
+      return this._deserializeSingle(response);
     } else {
-      return this._deserializeSingle(response, options);
+      this._deserializeList(response);
     }
   },
-  _deserializeSingle(response, id) {
+  _deserializeSingle(response) {
     const store = this.get('simpleStore');
-    const existing = store.find('location', id);
-    let location = existing;
     response.email_fks = belongs_to_extract_contacts(response, store, 'email', 'emails');
     response.phone_number_fks = belongs_to_extract_contacts(response, store, 'phonenumber', 'phone_numbers');
     response.address_fks = belongs_to_extract_contacts(response, store, 'address', 'addresses');
@@ -129,7 +127,7 @@ var LocationDeserializer = Ember.Object.extend(OptConf, {
     response.detail = true;
     // TODO: Does it come back w/ a status?
     delete response.status;
-    location = store.push('location', response);
+    let location = store.push('location', response);
     location.save();
     belongs_to_extract(response.status_fk, store, location, 'status', 'location', 'locations');
     return location;

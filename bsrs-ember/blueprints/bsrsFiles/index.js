@@ -15,6 +15,7 @@ module.exports = {
       firstProperty: options.first,
       firstPropertyCamel: camel(options.first),
       firstPropertySnake: snake(options.first),
+      firstPropertyTitle: title(options.first),
 
       secondProperty: options.second,
       secondPropertyCamel: camel(options.second),
@@ -34,22 +35,28 @@ module.exports = {
       //All properties called by snake name to enfore this. Can't name it foo-bar
       secondModelDisplaySnake: snake(options.secondDisplay),
 
-      /* M2M profile, profile-join-filter, profile-filter, pfs */
-      thirdProperty: options.third,
+      /* M2M profile - pf */
+      thirdProperty: plural(options.third),
       thirdPropertyCamel: camel(options.third),
       thirdPropertyTitle: title(options.third),
       //All properties called by snake name to enfore this. Can't name it foo-bar
       thirdPropertySnake: snake(options.third),
 
+      // profile-join-filter
       thirdJoinModel: options.thirdJoinModel,
       thirdJoinModelTitle: title(options.thirdJoinModel),
+      // pfilter
       thirdAssociatedModel: options.thirdAssociatedModel,
       thirdAssociatedModelSnake: snake(options.thirdAssociatedModel),
       thirdAssociatedModelTitle: title(options.thirdAssociatedModel),
-      thirdAssociatedName: options.thirdAssociatedName,
 
-      joinModel_associatedModelFks: `${options.thirdProperty}_${thirdAssociatedName}s_fks`,
-      joinModel_associatedModelIds: `${options.thirdProperty}_${thirdAssociatedName}s_ids`,
+      // cc.fullname
+      thirdAssociatedModelDisplay: options.thirdDisplay,
+      thirdAssociatedModelDisplaySnake: snake(options.thirdDisplay),
+      thirdAssociatedModelDisplayCaps: allCaps(options.thirdDisplay),
+
+      joinModel_associatedModelFks: `${snake(options.name)}_${options.thirdProperty}s_fks`,
+      joinModel_associatedModelIds: `${snake(options.name)}_${options.thirdProperty}s_ids`,
 
       hashComponentOne: firstArr(options.hashComponents),
       hashComponentTwo: secondArr(options.hashComponents),

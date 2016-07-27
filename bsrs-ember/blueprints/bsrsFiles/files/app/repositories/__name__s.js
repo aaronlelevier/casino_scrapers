@@ -12,9 +12,7 @@ import BASEURLS, { <%= CapitalizeModule %>_URL, <%= secondModelPluralCaps %>_URL
 export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: '<%= dasherizedModuleName %>',
   typeGrid: '<%= dasherizedModuleName %>-list',
-  garbage_collection: Ember.computed(function() {
-    return ['<%= dasherizedModuleName %>-list'];
-  }),
+  garbage_collection: ['<%= dasherizedModuleName %>-list'],
   uuid: injectUUID('uuid'),
   <%= camelizedModuleName %>Deserializer: injectDeserializer('<%= dasherizedModuleName %>'),
   url: <%= CapitalizeModule %>_URL,

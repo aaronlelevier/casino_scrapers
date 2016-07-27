@@ -18,6 +18,14 @@ export default GridViewComponent.extend({
       isSortable: true,
       isFilterable: true,
       isSearchable: true
+    },
+    {
+      field: '<%= thirdProperty %>.<%= thirdAssociatedModelDisplaySnake %>',
+      headerLabel: '<%= dasherizedModuleName %>.label.<%= thirdProperty %>',
+      headerIsTranslatable: true,
+      isSortable: true,
+      isFilterable: true,
+      isSearchable: true
     }
   ]
 });

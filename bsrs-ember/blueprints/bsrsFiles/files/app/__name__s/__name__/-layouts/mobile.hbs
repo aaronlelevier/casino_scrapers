@@ -1,0 +1,15 @@
+{{#ember-wormhole to="mobile-single-wormhole"}}
+  {{#mobile/full-screen
+    model=model
+    title=""
+    close="closeMobileDetail"
+    redirectRoute="admin.<%= dasherizedModuleName %>.index"
+    hashComponents=hashComponents
+  }}
+  <article class="main fixed">
+    {{<%= dasherizedModuleName %>s/<%= dasherizedModuleName %>-single
+      model=model
+    }}
+  </article>
+  {{/mobile/full-screen}}
+{{/ember-wormhole}}
