@@ -249,7 +249,7 @@ class AvailableFilterTests(APITestCase):
         raw_filter_count = AvailableFilter.objects.count()
         dynamic_filter_count = AvailableFilter.objects.filter(lookups__filters='location_level').count()
         location_level_filters = LocationLevel.objects.count()
-        self.assertEqual(raw_filter_count, 3)
+        self.assertEqual(raw_filter_count, 4)
         self.assertEqual(dynamic_filter_count, 1)
         self.assertEqual(location_level_filters, 5)
         desired_count = raw_filter_count - dynamic_filter_count + location_level_filters
@@ -259,7 +259,7 @@ class AvailableFilterTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         # count dynamic and non-dynamic
-        self.assertEqual(data['count'], 7)
+        self.assertEqual(data['count'], 8)
         # dynamic location_level record
         for d in data['results']:
             if 'location_level' in d['lookups']:

@@ -13,6 +13,8 @@ from utils.fields import MyGenericForeignKey
 from utils.models import BaseQuerySet, BaseManager, BaseModel
 
 
+AUTO_ASSIGN = 'auto_assign'
+
 class AssignmentQuerySet(BaseQuerySet):
 
     def search_multi(self, keyword):
@@ -67,11 +69,15 @@ class Assignment(BaseModel):
 
     def is_match(self, ticket):
         matches = []
-        for f in self.filters.all():
+        for f in self.filters.all().select_related('source'):
+            if f.source.field == AUTO_ASSIGN:
+                return True
+
             if f.is_match(ticket):
                 matches.append(True)
             else:
                 matches.append(False)
+
         return all(matches)
 
 
@@ -126,7 +132,7 @@ class ProfileFilter(BaseModel):
         help_text="if used, provide extra lookup information beyond the 'field'"
                   "this should be a string array")
 
-    criteria = JSONField(help_text="Must be a list. Criteria to match on.")
+    criteria = JSONField(default=[], help_text="Must be a list. Criteria to match on.")
     # GenericForeignKey
     content_type = models.ForeignKey(ContentType, null=True)
     object_id = models.UUIDField(null=True)

@@ -4,13 +4,13 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from category.models import Category
-from category.tests.factory import create_single_category
+from category.tests.factory import create_single_category, REPAIR
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
 from routing.models import Assignment, AssignmentManager, AssignmentQuerySet, ProfileFilter
 from routing.tests.factory import (create_assignment, create_ticket_priority_filter,
-create_ticket_categories_filter, REPAIR)
+create_ticket_categories_filter, create_auto_assign_filter)
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority
 from ticket.tests.factory import create_ticket
@@ -172,7 +172,7 @@ class AssignmentTests(TestCase):
 
         self.assertTrue(ret)
 
-    def test_is_match_false(self):
+    def test_is_match__false(self):
         self.assertEqual(self.assignment.filters.count(), 2)
         filter_one = self.assignment.filters.filter(source__field='categories')[0]
         filter_two = self.assignment.filters.exclude(id=filter_one.id)[0]
@@ -184,6 +184,25 @@ class AssignmentTests(TestCase):
         ret = self.assignment.is_match(self.ticket)
 
         self.assertFalse(ret)
+
+    def test_is_match__auto_assign(self):
+        self.assertEqual(self.assignment.filters.count(), 2)
+        filter_one = self.assignment.filters.filter(source__field='categories')[0]
+        filter_two = self.assignment.filters.exclude(id=filter_one.id)[0]
+        filter_one.criteria = [str(create_single_category().id)]
+        filter_one.save()
+        # the below line assertion of False, says that this Ticket
+        # shouldn't match, but it has an "auto_assign" filter, so
+        # it's an automatic match
+        self.assertFalse(filter_one.is_match(self.ticket))
+        self.assertTrue(filter_two.is_match(self.ticket))
+        # add auto_assign filter
+        auto_assign_filter = create_auto_assign_filter()
+        self.assignment.filters.add(auto_assign_filter)
+
+        ret = self.assignment.is_match(self.ticket)
+
+        self.assertTrue(ret)
 
 
 class ProfilefilterTests(TestCase):

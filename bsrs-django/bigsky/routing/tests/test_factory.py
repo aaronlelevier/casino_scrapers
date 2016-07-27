@@ -5,9 +5,10 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from category.models import Category
+from category.tests.factory import REPAIR
 from location.tests.factory import create_top_level_location
 from person.models import Person
-from routing.models import Assignment, AvailableFilter
+from routing.models import Assignment, AvailableFilter, AUTO_ASSIGN
 from routing.tests import factory
 from tenant.models import Tenant
 from ticket.models import Ticket, TicketPriority
@@ -25,6 +26,18 @@ class AvailableFilterTests(TestCase):
         app_label, model = ret.context.split('.')
         content_type = ContentType.objects.get(app_label=app_label, model=model)
         self.assertEqual(content_type.model_class(), Ticket)
+
+    def test_create_available_filter_auto_assign(self):
+        ret = factory.create_available_filter_auto_assign()
+        ret_two = factory.create_available_filter_auto_assign()
+        # indempotent
+        self.assertEqual(ret, ret_two)
+        # attrs
+        self.assertEqual(ret.key, 'admin.placeholder.auto_assign')
+        self.assertEqual(ret.key_is_i18n, True)
+        self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
+        self.assertEqual(ret.field, AUTO_ASSIGN)
+        self.assertEqual(ret.lookups, {})
 
     def test_create_available_filter_priority(self):
         ret = factory.create_available_filter_priority()
@@ -64,16 +77,24 @@ class AvailableFilterTests(TestCase):
 
     def test_create_available_filters(self):
         self.assertEqual(AvailableFilter.objects.count(), 0)
-
         factory.create_available_filters()
+        self.assertEqual(AvailableFilter.objects.count(), 4)
 
-        self.assertEqual(AvailableFilter.objects.count(), 3)
-        fields = ['priority', 'categories', 'location']
-        for af in AvailableFilter.objects.all():
-            self.assertIn(af.field, fields)
+        fields = [AUTO_ASSIGN, 'priority', 'categories', 'location']
+        ret_fields = AvailableFilter.objects.values_list('field', flat=True)
+        self.assertEqual(sorted(fields), sorted(ret_fields))
 
 
 class PriorityFilterTests(TestCase):
+
+    def test_create_auto_assign_filter(self):
+        source = factory.create_available_filter_auto_assign()
+
+        pf = factory.create_auto_assign_filter()
+
+        self.assertEqual(pf.source, source)
+        self.assertEqual(pf.lookups, {})
+        self.assertEqual(pf.criteria, [])
 
     def test_create_ticket_priority_filter(self):
         priority = create_default(TicketPriority)
@@ -87,7 +108,7 @@ class PriorityFilterTests(TestCase):
         self.assertEqual(pf.criteria, [str(priority.id)])
 
     def test_create_ticket_categories_filter(self):
-        category = mommy.make(Category, name=factory.REPAIR)
+        category = mommy.make(Category, name=REPAIR)
         source = factory.create_available_filter_categories()
 
         pf = factory.create_ticket_categories_filter()
