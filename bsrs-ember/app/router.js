@@ -25,7 +25,11 @@ Router.map(function() {
       this.route('category', {path: '/:category_id'});
     });
     this.route('notifications');
-    this.route('assignments');
+    this.route('assignments', function() {
+      this.route('index');
+      this.route('new', {path: 'new/:new_id'});
+      this.route('assignment', {path: '/:assignment_id'});
+    });
     this.route('approvals');
     this.route('translations', function() {
       this.route('index');

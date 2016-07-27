@@ -1,0 +1,76 @@
+{{base-component
+  model=model
+  save="save"
+  cancel="cancel"
+  delete="delete"
+}}
+
+<section class="docSection container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <section style="padding-bottom: 0">
+        <div class="row card-title">
+          <h1 class="col-md-12 t-assignment-header">
+            <span class="new">
+            {{#if model.new}}
+              {{t "assignment.new"}}
+            {{else}}
+              {{t "assignment.detail"}}
+            {{/if}}
+            </span>
+          </h1>
+        </div>
+      </section>
+    </div>
+    <div class="col-md-12">
+      <section>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="assignment.description" for="description"}}
+              {{validated-input
+                model=model
+                valuePath="description"
+                didValidate=didValidate
+                className="form-control t-assignment-description"
+                placeholder=(t "admin.assignment.description")
+              }}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="assignment.assignee" for="assignee"}}
+            {{db-fetch-select
+              model=model
+              selectedAttr=model.assignee
+              className="t-assignment-assignee-select"
+              displayName="username"
+              change_func="change_assignee"
+              repository=personRepo
+              searchMethod="findPeople"
+              valuePath="assignee"
+            }}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="assignment.pf" for="pf"}}
+            {{db-fetch-multi-select
+              model=model
+              multiAttrIds="pf_ids"
+              selectedAttr=model.pf
+              className="t-assignment-pf-select"
+              displayName="fukc"
+              add_func="change_pf"
+              remove_func="change_pf"
+              repository=assignfilterRepo
+              searchMethod="findAssignfilter"
+            }}
+            {{/form-group}}
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>

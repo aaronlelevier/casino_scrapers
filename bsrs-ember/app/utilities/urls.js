@@ -5,6 +5,7 @@ const PREFIX = config.APP.NAMESPACE;
 // API Urls
 export const ADMIN_URL = `${PREFIX}/admin/`;
 export const ADMIN_TRANSLATIONS_URL = `${PREFIX}/admin/translations/`;
+export const ASSIGNMENT_URL = `${PREFIX}/admin/assignments/`;
 export const ATTACHMENTS_URL = `${PREFIX}/admin/attachments/`;
 export const CATEGORIES_URL = `${PREFIX}/admin/categories/`;
 export const DASHBOARD_URL = `${PREFIX}/dashboard/`;
@@ -24,6 +25,7 @@ export const TICKETS_URL = `${PREFIX}/tickets/`;
 export const WOS_URL = `${PREFIX}/work-orders/`;
 
 // App Urls
+export const ASSIGNMENT_LIST_URL = '/admin/assignments/index';
 export const CATEGORY_LIST_URL = '/admin/categories/index';
 export const I18N_LIST_URL = '/admin/translations/index';
 export const LOCATION_LIST_URL = '/admin/locations/index';
@@ -36,6 +38,7 @@ export const TICKET_LIST_URL = '/tickets/index';
 
 var BASEURLS = {
   base_admin_url: '/admin',
+  BASE_ASSIGNMENT_URL: '/admin/assignments',
   ADMIN_MOBILE_URL: '/admin-mobile',
   base_admin_translations_url: '/admin/translations',
   base_categories_url: '/admin/categories',
