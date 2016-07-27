@@ -45,6 +45,7 @@ module.exports = {
       // profile-join-filter
       thirdJoinModel: options.thirdJoinModel,
       thirdJoinModelTitle: title(options.thirdJoinModel),
+      thirdJoinModelCaps: allCaps(options.thirdJoinModel),
       // pfilter
       thirdAssociatedModel: options.thirdAssociatedModel,
       thirdAssociatedModelSnake: snake(options.thirdAssociatedModel),
