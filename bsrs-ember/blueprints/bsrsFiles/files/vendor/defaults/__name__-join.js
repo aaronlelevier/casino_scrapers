@@ -1,4 +1,4 @@
-var BSRS_<%= CapitalizeModule %>_<%= thirdAssociatedModelDisplayCaps %>_DEFAULTS_OBJECT = (function() {
+var BSRS_<%= CapitalizeModule %>_<%= thirdAssociatedModelCaps %>_DEFAULTS_OBJECT = (function() {
   var factory = function() {
   };
   factory.prototype.defaults = function() {
@@ -14,11 +14,11 @@ var BSRS_<%= CapitalizeModule %>_<%= thirdAssociatedModelDisplayCaps %>_DEFAULTS
 })();
 
 if (typeof window === 'undefined') {
-  module.exports = new BSRS_<%= CapitalizeModule %>_<%= thirdAssociatedModelDisplayCaps %>_DEFAULTS_OBJECT().defaults();
+  module.exports = new BSRS_<%= CapitalizeModule %>_<%= thirdAssociatedModelCaps %>_DEFAULTS_OBJECT().defaults();
 }
 else {
   define('bsrs-ember/vendor/defaults/<%= thirdAssociatedModel %>', ['exports'], function(exports) {
     'use strict';
-    return new BSRS_<%= CapitalizeModule %>_<%= thirdAssociatedModelDisplayCaps %>_DEFAULTS_OBJECT().defaults();
+    return new BSRS_<%= CapitalizeModule %>_<%= thirdAssociatedModelCaps %>_DEFAULTS_OBJECT().defaults();
   });
 }
