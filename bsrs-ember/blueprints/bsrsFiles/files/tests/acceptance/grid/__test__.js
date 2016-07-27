@@ -299,7 +299,7 @@ test('sort by <%= thirdProperty %> <%= thirdAssociatedModelDisplaySnake %>', fun
   });
   var sort = `${<%= CapitalizeModule %>_URL}?page=1&ordering=-<%= thirdProperty %>__<%= thirdAssociatedModelDisplaySnake %>`;
   xhr(sort ,'GET',null,{},200, <%= camelizedModuleName %>F.list_reverse());
-  click('.t-sort-<%= thirdProperty %>-<%= thirdModelDisplay %>-dir');
+  click('.t-sort-<%= thirdProperty %>-<%= thirdAssociatedModelDisplay %>-dir');
   andThen(() => {
     assert.equal(currentURL(), LIST_URL + '?sort=<%= thirdProperty %>.<%= thirdAssociatedModelDisplaySnake %>');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
