@@ -71,7 +71,7 @@ test('visit mobile detail and update all fields', async assert => {
   await selectSearch('.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select', keyword);
   await selectChoose('.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select', keyword);
   assert.equal(page.<%= secondProperty %>Input, keyword);
-  xhr(API_DETAIL_URL, 'PUT', <%= camelizedModuleName %>F.put({<%= camelizedModuleName %>D.<%= firstPropertyCamel %>Two, <%= camelizedModuleName %>D.<%= secondPropertyCamel %>SelectOne}), {}, 200, <%= camelizedModuleName %>F.list());
+  xhr(API_DETAIL_URL, 'PUT', <%= camelizedModuleName %>F.put({<%= firstPropertySnake %>: <%= camelizedModuleName %>D.<%= firstPropertyCamel %>Two, <%= secondPropertySnake %>: <%= camelizedModuleName %>D.<%= secondPropertyCamel %>SelectOne}), {}, 200, <%= camelizedModuleName %>F.list());
   await generalMobilePage.mobileActionDropdownClick();
   await generalPage.save()
   assert.equal(currentURL(), LIST_URL);
