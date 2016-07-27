@@ -4,8 +4,8 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PD from 'bsrs-ember/vendor/defaults/profile';
 import PF from 'bsrs-ember/vendor/profile_fixtures';
 import ProfileDeserializer from 'bsrs-ember/deserializers/profile';
-import PFD from 'bsrs-ember/vendor/defaults/profile-filter';
-import PPFD from 'bsrs-ember/vendor/defaults/profile-profile-filter';
+import PFD from 'bsrs-ember/vendor/defaults/pfilter';
+import PPFD from 'bsrs-ember/vendor/defaults/profile-join-filter';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 
 var store, profile, run = Ember.run, deserializer;

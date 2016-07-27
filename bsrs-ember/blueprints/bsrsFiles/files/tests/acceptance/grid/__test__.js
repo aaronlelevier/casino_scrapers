@@ -27,13 +27,9 @@ let application, store, listXhr;
 
 moduleForAcceptance('Acceptance | <%= dasherizedModuleName %>-grid-test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     const listData = <%= camelizedModuleName %>F.list();
     listXhr = xhr(`${<%= CapitalizeModule %>_URL}?page=1`, 'GET', null, {}, 200, listData);
-  },
-  afterEach() {
-    
   }
 });
 
@@ -279,5 +275,30 @@ test('sort by <%= secondProperty %> <%= secondModelDisplaySnake %>', function(as
     assert.equal(currentURL(), LIST_URL + '?sort=-<%= secondProperty %>.<%= secondModelDisplaySnake %>');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= secondProperty %>-<%= secondModelDisplaySnake %>').text().trim(), <%= camelizedModuleName %>D.<%= secondModelDisplaySnake %>GridTen);
+  });
+});
+
+test('sort by <%= thirdProperty %> <%= thirdAssociatedModelDisplaySnake %>', function(assert) {
+  visit(LIST_URL);
+  andThen(() => {
+    assert.equal(currentURL(), LIST_URL);
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= thirdProperty %>-<%= thirdAssociatedModelDisplaySnake %>').text().trim(), <%= camelizedModuleName %>D.<%= thirdAssociatedModelDisplaySnake %>GridOne);
+  });
+  var sort_one = `${<%= CapitalizeModule %>_URL}?page=1&ordering=<%= thirdProperty %>__<%= thirdAssociatedModelDisplaySnake %>`;
+  xhr(sort_one ,'GET',null,{},200, <%= camelizedModuleName %>F.sorted_page_one('<%= thirdProperty %>'));
+  click('.t-sort-<%= thirdProperty %>-<%= thirdAssociatedModelDisplaySnake %>-dir');
+  andThen(() => {
+    assert.equal(currentURL(), LIST_URL + '?sort=<%= thirdProperty %>.<%= thirdAssociatedModelDisplaySnake %>');
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= thirdProperty %>-<%= thirdAssociatedModelDisplaySnake %>').text().trim(), <%= camelizedModuleName %>D.<%= thirdAssociatedModelDisplaySnake %>GridOne);
+  });
+  var sort = `${<%= CapitalizeModule %>_URL}?page=1&ordering=-<%= thirdProperty %>__<%= thirdAssociatedModelDisplaySnake %>`;
+  xhr(sort ,'GET',null,{},200, <%= camelizedModuleName %>F.list_reverse());
+  click('.t-sort-<%= thirdProperty %>-<%= thirdAssociatedModelDisplay %>-dir');
+  andThen(() => {
+    assert.equal(currentURL(), LIST_URL + '?sort=<%= thirdProperty %>.<%= thirdAssociatedModelDisplaySnake %>');
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= thirdProperty %>-<%= thirdAssociatedModelDisplaySnake %>').text().trim(), <%= camelizedModuleName %>D.<%= thirdAssociatedModelDisplaySnake %>GridTen);
   });
 });

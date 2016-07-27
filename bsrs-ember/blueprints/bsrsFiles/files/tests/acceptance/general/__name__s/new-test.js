@@ -9,7 +9,7 @@ import random from 'bsrs-ember/models/random';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import <%= camelizedModuleName %>D from 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>';
 import <%= camelizedModuleName %>F from 'bsrs-ember/vendor/<%= dasherizedModuleName %>_fixtures';
-import <%= secondModelTitle %>F from 'bsrs-ember/vendor/<%= secondModelPlural %>_fixtures';
+import <%= secondModelTitle %>F from 'bsrs-ember/vendor/<%= secondModel %>_fixtures';
 import page from 'bsrs-ember/tests/pages/<%= dasherizedModuleName %>';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { <%= CapitalizeModule %>_URL, <%= secondModelPluralCaps %>_URL } from 'bsrs-ember/utilities/urls';
@@ -47,7 +47,7 @@ test('visit new URL and create a new record', assert => {
   xhr(`${<%= secondModelPluralCaps %>_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, <%= secondModelTitle %>F.search_power_select());
   selectSearch('.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select', keyword);
   selectChoose('.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select', keyword);
-  xhr(<%= CapitalizeModule %>_URL, 'POST', <%= camelizedModuleName %>F.put({id: UUID.value, <%= camelizedModuleName %>D.<%= secondPropertyCamel %>SelectOne}), {}, 200, <%= camelizedModuleName %>F.list());
+  xhr(<%= CapitalizeModule %>_URL, 'POST', <%= camelizedModuleName %>F.put({id: UUID.value, <%= secondPropertySnake %>: <%= camelizedModuleName %>D.<%= secondPropertyCamel %>SelectOne}), {}, 200, <%= camelizedModuleName %>F.list());
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);

@@ -7,7 +7,7 @@ import { waitFor } from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
 import <%= camelizedModuleName %>D from 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>';
 import <%= camelizedModuleName %>F from 'bsrs-ember/vendor/<%= dasherizedModuleName %>_fixtures';
-import <%= secondModelTitle %>F from 'bsrs-ember/vendor/<%= secondModelPlural %>_fixtures';
+import <%= secondModelTitle %>F from 'bsrs-ember/vendor/<%= secondModel %>_fixtures';
 import page from 'bsrs-ember/tests/pages/<%= dasherizedModuleName %>';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { <%= CapitalizeModule %>_URL, <%= secondModelPluralCaps %>_URL } from 'bsrs-ember/utilities/urls';
@@ -17,8 +17,6 @@ const BASE_URL = BASEURLS.BASE_<%= CapitalizeModule %>_URL;
 const LIST_URL = `${BASE_URL}/index`;
 const DETAIL_URL = `${BASE_URL}/${<%= camelizedModuleName %>D.idOne}`;
 const API_DETAIL_URL = `${<%= CapitalizeModule %>_URL}${<%= camelizedModuleName %>D.idOne}/`;
-
-const SEARCH = '.ember-power-select-search input';
 
 var store, detailXhr, listXhr;
 
@@ -63,7 +61,7 @@ test('visit detail and update all fields', assert => {
   andThen(() => {
     assert.equal(page.<%= secondProperty %>Input, keyword);
   });
-  xhr(API_DETAIL_URL, 'PUT', <%= camelizedModuleName %>F.put({<%= camelizedModuleName %>D.<%= firstPropertyCamel %>Two, <%= camelizedModuleName %>D.<%= secondPropertyCamel %>SelectOne}), {}, 200, <%= camelizedModuleName %>F.list());
+  xhr(API_DETAIL_URL, 'PUT', <%= camelizedModuleName %>F.put({<%= firstPropertyCamel %>: <%= camelizedModuleName %>D.<%= firstPropertySnake %>Two, <%= secondPropertyCamel %>: <%= camelizedModuleName %>D.<%= secondPropertySnake %>SelectOne}), {}, 200, <%= camelizedModuleName %>F.list());
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);

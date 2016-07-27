@@ -15,6 +15,7 @@ module.exports = {
       firstProperty: options.first,
       firstPropertyCamel: camel(options.first),
       firstPropertySnake: snake(options.first),
+      firstPropertyTitle: title(options.first),
 
       secondProperty: options.second,
       secondPropertyCamel: camel(options.second),
@@ -26,7 +27,7 @@ module.exports = {
       secondModelCamel: camel(options.secondModel),
       secondModelTitle: title(options.secondModel),
       secondModelSnake: snake(options.secondModel),
-      secondModelPlural: plural(options.secondModel),
+      secondModelCaps: allCaps(options.secondModel),
       secondModelPluralCaps: allCaps(plural(options.secondModel)),
 
       secondModelDisplaySnake: options.secondDisplay,
@@ -34,22 +35,31 @@ module.exports = {
       //All properties called by snake name to enfore this. Can't name it foo-bar
       secondModelDisplaySnake: snake(options.secondDisplay),
 
-      /* M2M profile, profile-join-filter, profile-filter, pfs */
+      /* M2M profile - pf */
       thirdProperty: options.third,
       thirdPropertyCamel: camel(options.third),
       thirdPropertyTitle: title(options.third),
       //All properties called by snake name to enfore this. Can't name it foo-bar
       thirdPropertySnake: snake(options.third),
 
+      // profile-join-filter
       thirdJoinModel: options.thirdJoinModel,
       thirdJoinModelTitle: title(options.thirdJoinModel),
+      thirdJoinModelCaps: allCaps(options.thirdJoinModel),
+      // pfilter
       thirdAssociatedModel: options.thirdAssociatedModel,
       thirdAssociatedModelSnake: snake(options.thirdAssociatedModel),
       thirdAssociatedModelTitle: title(options.thirdAssociatedModel),
-      thirdAssociatedName: options.thirdAssociatedName,
+      thirdAssociatedModelCamel: camel(options.thirdAssociatedModel),
+      thirdAssociatedModelCaps: allCaps(options.thirdAssociatedModel),
 
-      joinModel_associatedModelFks: `${options.thirdProperty}_${thirdAssociatedName}s_fks`,
-      joinModel_associatedModelIds: `${options.thirdProperty}_${thirdAssociatedName}s_ids`,
+      // cc.fullname
+      thirdAssociatedModelDisplay: options.thirdDisplay,
+      thirdAssociatedModelDisplaySnake: snake(options.thirdDisplay),
+      thirdAssociatedModelDisplayCaps: allCaps(options.thirdDisplay),
+
+      joinModel_associatedModelFks: `${snake(options.entity.name)}_${options.thirdProperty}_fks`,
+      joinModel_associatedModelIds: `${snake(options.entity.name)}_${options.thirdProperty}_ids`,
 
       hashComponentOne: firstArr(options.hashComponents),
       hashComponentTwo: secondArr(options.hashComponents),
@@ -65,26 +75,31 @@ function snake(str) {
   return str.replace('-', '_');
 }
 
+var replaceWithChar = function(str, typeofStr) {
+  if (!str.includes(typeofStr)) {
+    return str;
+  }
+  var indx = str.indexOf(typeofStr);
+  var character = str.charAt(indx+1);
+  var upperCaseLetter = character.toUpperCase();
+  var rgx = new RegExp(`${typeofStr}${character}`, 'g');
+  return replaceWithChar(str.replace(rgx, upperCaseLetter), typeofStr);
+}
+
 var camel = function(str) {
-  if (str.includes('_')){
-    const indx = str.indexOf('_');
-    const character = str.charAt(indx+1);
-    const upperCaseLetter = character.toUpperCase();
-    const rgx = new RegExp(`_${character}`);
-    return str.replace(rgx, upperCaseLetter);
+  if (str.includes('_')) {
+    return replaceWithChar(str, '_');
   }
   return str;
 };
 
-/* assignee -> Assignee or location_level -> LocationLevel */
+/* assignee -> Assignee or location_level -> LocationLevel, profile-join-filter -> ProfileJoinFilter */
 var title = function(str) {
-  if (str.includes('_')){
-    const indx = str.indexOf('_');
-    const character = str.charAt(indx+1);
-    const upperCaseLetter = character.toUpperCase();
-    const rgx = new RegExp(`_${character}`);
-    const newString = str.replace(rgx, upperCaseLetter);
-    return firstWhole(newString);
+  if (str.includes('_')) {
+    return replaceWithChar(str, '_');
+  }
+  if (str.includes('-')) {
+    return replaceWithChar(str, '-');
   }
   return firstWhole(str);
 };
@@ -102,9 +117,15 @@ function firstWhole(str) {
 }
 
 function plural(str) {
-  switch(str) {
-    case 'person':
-      return 'people';
+  var len = str.length;
+  var last_letter = str.charAt(len-1);
+  if(str === 'person') {
+    return 'people';
+  } else if(last_letter === 'y') {
+    last_letter = 'ies';
+    return str.substr(0, len-1) + last_letter;
+  } else {
+    return `${str}s`;
   }
 }
 

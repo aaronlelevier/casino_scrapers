@@ -1,5 +1,5 @@
 /*
-  This is for the profile & profile-filter join model
+  This is for the profile & pfilter join model
 */
 var BSRS_PROFILE_PROFILE_FILTER_DEFAULTS_OBJECT = (function() {
   var factory = function() {
@@ -18,7 +18,7 @@ if (typeof window === 'undefined') {
   module.exports = new BSRS_PROFILE_PROFILE_FILTER_DEFAULTS_OBJECT().defaults();
 }
 else {
-  define('bsrs-ember/vendor/defaults/profile-profile-filter', ['exports'], function(exports) {
+  define('bsrs-ember/vendor/defaults/profile-join-filter', ['exports'], function(exports) {
     'use strict';
     return new BSRS_PROFILE_PROFILE_FILTER_DEFAULTS_OBJECT().defaults();
   });

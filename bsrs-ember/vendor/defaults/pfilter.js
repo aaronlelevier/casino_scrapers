@@ -20,7 +20,7 @@ if (typeof window === 'undefined') {
   module.exports = new BSRS_PROFILE_FILTER_DEFAULTS_OBJECT().defaults();
 }
 else {
-  define('bsrs-ember/vendor/defaults/profile-filter', ['exports'], function(exports) {
+  define('bsrs-ember/vendor/defaults/pfilter', ['exports'], function(exports) {
     'use strict';
     return new BSRS_PROFILE_FILTER_DEFAULTS_OBJECT().defaults();
   });
