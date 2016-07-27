@@ -78,10 +78,10 @@ var replaceWithChar = function(str, typeofStr) {
   if (!str.includes(typeofStr)) {
     return str;
   }
-  const indx = str.indexOf(typeofStr);
-  const character = str.charAt(indx+1);
-  const upperCaseLetter = character.toUpperCase();
-  const rgx = new RegExp(`${typeofStr}${character}`, 'g');
+  var indx = str.indexOf(typeofStr);
+  var character = str.charAt(indx+1);
+  var upperCaseLetter = character.toUpperCase();
+  var rgx = new RegExp(`${typeofStr}${character}`, 'g');
   return replaceWithChar(str.replace(rgx, upperCaseLetter), typeofStr);
 }
 
@@ -116,8 +116,8 @@ function firstWhole(str) {
 }
 
 function plural(str) {
-  const len = str.length;
-  let last_letter = str.charAt(len-1);
+  var len = str.length;
+  var last_letter = str.charAt(len-1);
   if(str === 'person') {
     return 'people';
   } else if(last_letter === 'y') {
