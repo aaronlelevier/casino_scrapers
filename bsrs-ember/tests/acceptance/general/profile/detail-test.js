@@ -9,7 +9,7 @@ import config from 'bsrs-ember/config/environment';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS from 'bsrs-ember/utilities/urls';
 import PD from 'bsrs-ember/vendor/defaults/profile';
-import PFD from 'bsrs-ember/vendor/defaults/profile-filter';
+import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import PF from 'bsrs-ember/vendor/profile_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';

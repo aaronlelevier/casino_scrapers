@@ -4,8 +4,8 @@ import { moduleFor, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PD from 'bsrs-ember/vendor/defaults/profile';
 import PersonD from 'bsrs-ember/vendor/defaults/person';
-import PFD from 'bsrs-ember/vendor/defaults/profile-filter';
-import PPFD from 'bsrs-ember/vendor/defaults/profile-profile-filter';
+import PFD from 'bsrs-ember/vendor/defaults/pfilter';
+import PPFD from 'bsrs-ember/vendor/defaults/profile-join-filter';
 import PF from 'bsrs-ember/vendor/profile_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 

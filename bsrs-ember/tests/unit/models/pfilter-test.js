@@ -2,7 +2,7 @@ import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PD from 'bsrs-ember/vendor/defaults/profile';
-import PFD from 'bsrs-ember/vendor/defaults/profile-filter';
+import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import PersonD from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 

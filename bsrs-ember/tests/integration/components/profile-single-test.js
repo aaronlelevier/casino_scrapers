@@ -6,7 +6,7 @@ import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import PD from 'bsrs-ember/vendor/defaults/profile';
-import PFD from 'bsrs-ember/vendor/defaults/profile-filter';
+import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import page from 'bsrs-ember/tests/pages/profile';
 
 var store, model, trans;

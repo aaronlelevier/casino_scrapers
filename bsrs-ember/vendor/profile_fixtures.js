@@ -72,14 +72,14 @@ if (typeof window === 'undefined') {
   var objectAssign = require('object-assign');
   var mixin = require('../vendor/mixin');
   var profile = require('./defaults/profile');
-  var pfilter = require('./defaults/profile-filter');
+  var pfilter = require('./defaults/pfilter');
   var ticket = require('./defaults/ticket');
   objectAssign(BSRS_PROFILE_FACTORY.prototype, mixin.prototype);
   module.exports = new BSRS_PROFILE_FACTORY(profile, pfilter, ticket);
 }
 else {
   define('bsrs-ember/vendor/profile_fixtures',
-    ['exports', 'bsrs-ember/vendor/defaults/profile', 'bsrs-ember/vendor/defaults/profile-filter', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/mixin'],
+    ['exports', 'bsrs-ember/vendor/defaults/profile', 'bsrs-ember/vendor/defaults/pfilter', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/mixin'],
     function(exports, profile, pfilter, ticket, mixin) {
       'use strict';
       Object.assign(BSRS_PROFILE_FACTORY.prototype, mixin.prototype);
