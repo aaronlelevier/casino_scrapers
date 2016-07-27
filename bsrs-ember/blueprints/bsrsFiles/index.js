@@ -56,8 +56,8 @@ module.exports = {
       thirdAssociatedModelDisplaySnake: snake(options.thirdDisplay),
       thirdAssociatedModelDisplayCaps: allCaps(options.thirdDisplay),
 
-      joinModel_associatedModelFks: `${snake(options.name)}_${options.thirdProperty}_fks`,
-      joinModel_associatedModelIds: `${snake(options.name)}_${options.thirdProperty}_ids`,
+      joinModel_associatedModelFks: `${snake(options.entity.name)}_${options.thirdProperty}_fks`,
+      joinModel_associatedModelIds: `${snake(options.entity.name)}_${options.thirdProperty}_ids`,
 
       hashComponentOne: firstArr(options.hashComponents),
       hashComponentTwo: secondArr(options.hashComponents),
