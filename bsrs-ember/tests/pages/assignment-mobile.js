@@ -1,12 +1,12 @@
 import Ember from 'ember';
 import { visitable, fillable, value, create, clickable, text, isVisible } from 'ember-cli-page-object';
-import assignmentD from 'bsrs-ember/vendor/defaults/assignment';
+import AD from 'bsrs-ember/vendor/defaults/assignment';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/utilities/urls';
 
 const BASE_URL = BASEURLS.BASE_ASSIGNMENT_URL;
 const Assignee = '.t-assignment-assignee-select .ember-basic-dropdown-trigger';
-const DETAIL_URL = `${BASE_URL}/${assignmentD.idOne}`;
+const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
 
 export default create({
   visitDetail: visitable(DETAIL_URL),

@@ -8,28 +8,28 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/assignment';
-import assignmentD from 'bsrs-ember/vendor/defaults/assignment';
-import assignmentF from 'bsrs-ember/vendor/assignment_fixtures';
+import AD from 'bsrs-ember/vendor/defaults/assignment';
+import AF from 'bsrs-ember/vendor/assignment_fixtures';
 import BASEURLS, { ASSIGNMENT_URL, ASSIGNMENT_LIST_URL } from 'bsrs-ember/utilities/urls';
 
 
 // Edit based on module
 const BASE_URL = BASEURLS.BASE_ASSIGNMENT_URL;
 const TAB_TITLE_NAME = 'New Assignment';
-const TAB_TITLE = assignmentD.descriptionOne;
+const TAB_TITLE = AD.descriptionOne;
 const MODEL = 'assignment';
 const ROUTE_NAME_NEW = 'admin.assignments.new';
 const ROUTE_NAME_DETAIL = 'admin.assignments.assignment';
 const ROUTE_NAME_INDEX = 'admin.assignments.index';
-const ID_ONE = assignmentD.idOne;
-const ID_TWO = assignmentD.idTwo;
-const ID_GRID_TWO = assignmentD.idGridTwo;
-const EDIT_FIELD_VALUE = assignmentD.descriptionTwo;
+const ID_ONE = AD.idOne;
+const ID_TWO = AD.idTwo;
+const ID_GRID_TWO = AD.idGridTwo;
+const EDIT_FIELD_VALUE = AD.descriptionTwo;
 
 // Fixed
 const NEW_URL = BASE_URL + '/new/1';
 const NEW_URL_2 = BASE_URL + '/new/2';
-const DETAIL_URL = BASE_URL + '/' + assignmentD.idOne;
+const DETAIL_URL = BASE_URL + '/' + AD.idOne;
 
 
 let application, store, list_xhr, endpoint, detail_xhr, detail_data_two, list_data, original_uuid, counter;
@@ -38,10 +38,10 @@ moduleForAcceptance('scott Acceptance | tab assignment test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     // Edit based on module
-    const detail_data = assignmentF.detail(ID_ONE);
+    const detail_data = AF.detail(ID_ONE);
     detail_xhr = xhr(`${ASSIGNMENT_URL}${ID_ONE}/`, 'GET', null, {}, 200, detail_data);
-    detail_data_two = assignmentF.detail(ID_GRID_TWO);
-    list_data = assignmentF.list();
+    detail_data_two = AF.detail(ID_GRID_TWO);
+    list_data = AF.list();
   },
 });
 

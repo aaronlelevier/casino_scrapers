@@ -5,8 +5,8 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
 import { waitFor } from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
-import assignmentD from 'bsrs-ember/vendor/defaults/assignment';
-import assignmentF from 'bsrs-ember/vendor/assignment_fixtures';
+import AD from 'bsrs-ember/vendor/defaults/assignment';
+import AF from 'bsrs-ember/vendor/assignment_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
 import page from 'bsrs-ember/tests/pages/assignment';
 import generalPage from 'bsrs-ember/tests/pages/general';
@@ -14,17 +14,17 @@ import BASEURLS, { ASSIGNMENT_URL, ASSIGNMENT_LIST_URL, PEOPLE_URL } from 'bsrs-
 
 const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_ASSIGNMENT_URL;
-const DETAIL_URL = `${BASE_URL}/${assignmentD.idOne}`;
-const API_DETAIL_URL = `${ASSIGNMENT_URL}${assignmentD.idOne}/`;
+const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
+const API_DETAIL_URL = `${ASSIGNMENT_URL}${AD.idOne}/`;
 
 var store, detailXhr, listXhr;
 
 moduleForAcceptance('Acceptance | assignment detail test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
-    const listData = assignmentF.list();
+    const listData = AF.list();
     listXhr = xhr(`${ASSIGNMENT_URL}?page=1`, 'GET', null, {}, 200, listData);
-    const detailData = assignmentF.detail();
+    const detailData = AF.detail();
     detailXhr = xhr(API_DETAIL_URL, 'GET', null, {}, 200, detailData);
   },
 });
@@ -44,15 +44,15 @@ test('visit detail and update all fields', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.descriptionValue, assignmentD.descriptionOne);
-    assert.equal(page.assigneeInput, assignmentD.username);
+    assert.equal(page.descriptionValue, AD.descriptionOne);
+    assert.equal(page.assigneeInput, AD.username);
   });
   // description
-  page.descriptionFill(assignmentD.descriptionTwo);
+  page.descriptionFill(AD.descriptionTwo);
   andThen(() => {
-    assert.equal(page.descriptionValue, assignmentD.descriptionTwo);
-    const assignment = store.find('assignment', assignmentD.idOne);
-    assert.equal(assignment.get('description'), assignmentD.descriptionTwo);
+    assert.equal(page.descriptionValue, AD.descriptionTwo);
+    const assignment = store.find('assignment', AD.idOne);
+    assert.equal(assignment.get('description'), AD.descriptionTwo);
   });
   // assignee
   let keyword = 'boy1';
@@ -62,7 +62,7 @@ test('visit detail and update all fields', assert => {
   andThen(() => {
     assert.equal(page.assigneeInput, keyword);
   });
-  xhr(API_DETAIL_URL, 'PUT', assignmentF.put({description: assignmentD.descriptionTwo, assignee: assignmentD.assigneeSelectOne}), {}, 200, assignmentF.list());
+  xhr(API_DETAIL_URL, 'PUT', AF.put({description: AD.descriptionTwo, assignee: AD.assigneeSelectOne}), {}, 200, AF.list());
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
@@ -74,7 +74,7 @@ test('visit detail and update all fields', assert => {
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
   clearxhr(listXhr);
   page.visitDetail();
-  page.descriptionFill(assignmentD.descriptionTwo);
+  page.descriptionFill(AD.descriptionTwo);
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
@@ -87,7 +87,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.equal(page.descriptionValue, assignmentD.descriptionTwo);
+      assert.equal(page.descriptionValue, AD.descriptionTwo);
       assert.ok(generalPage.modalIsHidden);
     });
   });
@@ -95,7 +95,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
   page.visitDetail();
-  page.descriptionFill(assignmentD.descriptionTwo);
+  page.descriptionFill(AD.descriptionTwo);
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
@@ -107,8 +107,8 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
-      var assignment = store.find('assignment', assignmentD.idOne);
-      assert.equal(assignment.get('description'), assignmentD.descriptionOne);
+      var assignment = store.find('assignment', AD.idOne);
+      assert.equal(assignment.get('description'), AD.descriptionOne);
     });
   });
 });
@@ -141,12 +141,12 @@ test('when click delete, modal displays and when click ok, assignment is deleted
       assert.equal(Ember.$('.t-modal-delete-btn').text().trim(), t('crud.delete.button'));
     });
   });
-  xhr(`${ASSIGNMENT_URL}${assignmentD.idOne}/`, 'DELETE', null, {}, 204, {});
+  xhr(`${ASSIGNMENT_URL}${AD.idOne}/`, 'DELETE', null, {}, 204, {});
   generalPage.clickModalDelete();
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
-      assert.equal(store.find('assignment', assignmentD.idOne).get('length'), undefined);
+      assert.equal(store.find('assignment', AD.idOne).get('length'), undefined);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
@@ -183,7 +183,7 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
   clearxhr(detailXhr);
   clearxhr(listXhr);
   const exception = `This record does not exist.`;
-  xhr(`${ASSIGNMENT_URL}${assignmentD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+  xhr(`${ASSIGNMENT_URL}${AD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);

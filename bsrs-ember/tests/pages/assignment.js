@@ -2,10 +2,10 @@ import Ember from 'ember';
 import { create, visitable, fillable, text, value } from 'ember-cli-page-object';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BASEURLS, { ASSIGNMENT_URL, ASSIGNMENT_LIST_URL } from 'bsrs-ember/utilities/urls';
-import assignmentD from 'bsrs-ember/vendor/defaults/assignment';
+import AD from 'bsrs-ember/vendor/defaults/assignment';
 
 const BASE_URL = BASEURLS.BASE_ASSIGNMENT_URL;
-const DETAIL_URL = `${BASE_URL}/${assignmentD.idOne}`;
+const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
 
 const assignee = '.t-assignment-assignee-select';
 
