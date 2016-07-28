@@ -21,9 +21,5 @@ export default create({
   // priorityTwoIsChecked: () => Ember.$('.t-checkbox-list input:eq(1)').is(':checked'),
   // priorityThreeIsChecked: () => Ember.$('.t-checkbox-list input:eq(2)').is(':checked'),
   // priorityFourIsChecked: () => Ember.$('.t-checkbox-list input:eq(3)').is(':checked'),
-
-  <%= firstPropertySnake %>: value('.t-mobile-<%= dasherizedModuleName %>-<%= firstPropertySnake %>'),
-  <%= firstPropertySnake %>FillIn: fillable('.t-mobile-<%= dasherizedModuleName %>-<%= firstPropertySnake %>'),
-  
   <%= secondPropertyCamel %>Input: text(<%= secondPropertyTitle %>),
 });
