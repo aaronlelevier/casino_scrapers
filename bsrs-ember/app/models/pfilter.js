@@ -3,9 +3,7 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import equal from 'bsrs-components/utils/equal';
 
 export default Model.extend({
-  key: attr(''),
-  context: attr(''),
-  field: attr(''),
+  lookups: attr(''),
   criteria_fks: [],
   criteria_ids: [],
   criteriaIsDirty: Ember.computed('criteria_fks.[]', 'criteria_ids.[]', function() {
@@ -30,9 +28,7 @@ export default Model.extend({
   serialize() {
     return {
       id: this.get('id'),
-      key: this.get('key'),
-      context: this.get('context'),
-      field: this.get('field'),
+      lookups: this.get('lookups'),
       criteria: this.get('criteria_fks')
     };
   }
