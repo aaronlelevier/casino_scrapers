@@ -4,29 +4,34 @@ import uuid
 from django.conf import settings
 
 from model_mommy import mommy
-from rest_framework.test import APITestCase, APITransactionTestCase
+from rest_framework.test import APITestCase
 
-from category.models import Category
+from category.models import Category, LABEL_TRADE
 from category.serializers import CategoryUpdateSerializer
 from category.tests.factory import create_single_category, create_categories
 from person.tests.factory import PASSWORD, create_person
 
 
-### CATEGORY
-
-class CategoryListTests(APITestCase):
+class CategoryViewTestSetupMixin(object):
 
     def setUp(self):
         self.password = PASSWORD
         self.person = create_person()
-        # Category
+        # Categories
         create_categories()
-        self.top_level = Category.objects.filter(parent__isnull=True).first()
+        self.type = Category.objects.filter(parent__isnull=True).first()
+        self.trade = Category.objects.filter(label=LABEL_TRADE).first()
+        # Data
+        serializer = CategoryUpdateSerializer(self.trade)
+        self.data = serializer.data
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
         self.client.logout()
+
+
+class CategoryListTests(CategoryViewTestSetupMixin, APITestCase):
 
     def test_data(self):
         response = self.client.get('/api/admin/categories/')
@@ -53,34 +58,8 @@ class CategoryListTests(APITestCase):
 
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(len(data['results']) > 0)
-        self.assertFalse(self.top_level.parent)
-        self.assertTrue(self.top_level.children)
-
-    def test_power_select_category_name(self):
-        category = create_single_category(name='foobar')
-
-        response = self.client.get('/api/admin/categories/category__icontains={}/'.format('foobar'))
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]['id'], str(category.id))
-        self.assertEqual(data[0]['name'], 'foobar')
-        self.assertNotIn('parent', data[0]['name'])
-        self.assertNotIn('status', data[0]['name'])
-        self.assertNotIn('description', data[0])
-        self.assertNotIn('label', data[0])
-
-    def test_power_select_category_cost_code(self):
-        category = create_single_category(name='nothing')
-        category.cost_code = '760521'
-        category.save()
-
-        response = self.client.get('/api/admin/categories/category__icontains={}/'.format('760521'))
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]['id'], str(category.id))
-        self.assertEqual(data[0]['cost_code'], str('760521'))
+        self.assertFalse(self.type.parent)
+        self.assertTrue(self.type.children)
 
     def test_search(self):
         category = create_single_category(name='foobar')
@@ -92,20 +71,7 @@ class CategoryListTests(APITestCase):
         self.assertEqual(data['count'], 1)
 
 
-class CategoryDetailTests(APITestCase):
-
-    def setUp(self):
-        self.password = PASSWORD
-        self.person = create_person()
-        # Category
-        create_categories()
-        self.type = Category.objects.filter(parent__isnull=True).first()
-        self.trade = Category.objects.filter(label='Trade').first()
-        # Login
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def tearDown(self):
-        self.client.logout()
+class CategoryDetailTests(CategoryViewTestSetupMixin, APITestCase):
 
     def test_response(self):
         response = self.client.get('/api/admin/categories/{}/'.format(self.trade.id))
@@ -182,23 +148,7 @@ class CategoryDetailTests(APITestCase):
         self.assertIn(str(self.trade.children.first().id), [c['id'] for c in data['children']])
 
 
-class CategoryUpdateTests(APITestCase):
-
-    def setUp(self):
-        create_categories()
-        self.password = PASSWORD
-        self.person = create_person()
-        # Category
-        self.type = Category.objects.filter(subcategory_label='Trade').first()
-        self.trade = Category.objects.filter(label='Trade').first()
-        # Data
-        serializer = CategoryUpdateSerializer(self.trade)
-        self.data = serializer.data
-        # Login
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def tearDown(self):
-        self.client.logout()
+class CategoryUpdateTests(CategoryViewTestSetupMixin, APITestCase):
 
     def test_data(self):
         response = self.client.put('/api/admin/categories/{}/'.format(self.trade.id),
@@ -292,23 +242,7 @@ class CategoryUpdateTests(APITestCase):
         self.assertEqual(1, child.level)
 
 
-class CategoryCreateTests(APITestCase):
-
-    def setUp(self):
-        self.password = PASSWORD
-        self.person = create_person()
-        # Category
-        create_categories()
-        self.type = Category.objects.filter(subcategory_label='Trade').first()
-        self.trade = Category.objects.filter(label='Trade').first()
-        # Data
-        serializer = CategoryUpdateSerializer(self.trade)
-        self.data = serializer.data
-        # Login
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def tearDown(self):
-        self.client.logout()
+class CategoryCreateTests(CategoryViewTestSetupMixin, APITestCase):
 
     def test_data(self):
         # Change the Trade name, and POST to create a new Trade
@@ -359,44 +293,10 @@ class CategoryCreateTests(APITestCase):
         self.assertIn(str(new_sub_category.id), data['children'])
 
 
-class CategoryFilterTests(APITransactionTestCase):
+class CategoryFilterTests(CategoryViewTestSetupMixin, APITestCase):
 
     # NOTE: These tests are testing the ``FilterRelatedMixin`` with Categories
     # needed API endpoints
-
-    def setUp(self):
-        self.password = PASSWORD
-        self.person = create_person()
-        # Category
-        create_categories()
-        self.type = Category.objects.filter(subcategory_label='Trade').first()
-        self.trade = Category.objects.filter(label='Trade').first()
-        # Login
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def tearDown(self):
-        self.client.logout()
-
-    def test_filter_top_level_is_paginated(self):
-        response = self.client.get('/api/admin/categories/parents/')
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], Category.objects.filter(parent__isnull=True).count())
-        self.assertIn('results', data)
-
-    def test_filter_top_level_has_children(self):
-        response = self.client.get('/api/admin/categories/parents/')
-        # data
-        data = json.loads(response.content.decode('utf8'))
-        data = data['results'][0]
-        # db object
-        category = Category.objects.filter(parent__isnull=True).first()
-        self.assertEqual(data['label'], category.label)
-        self.assertEqual(data['subcategory_label'], category.subcategory_label)
-        self.assertEqual(data['parent_id'], None)
-        self.assertTrue(data['children'][0]['id'])
-        self.assertTrue(data['children'][0]['name'])
-        self.assertTrue(data['children'][0]['level'])
-        self.assertIn('children', data)
 
     def test_filter_by_parent(self):
         response = self.client.get('/api/admin/categories/?parent={}'.format(self.trade.id))
@@ -432,7 +332,63 @@ class CategoryFilterTests(APITransactionTestCase):
                 Category.objects.filter(name__icontains=name).count()
         )
 
-class CategoryProfileFilterTests(APITestCase):
+
+# Sub Routes
+
+class CategorySubRouteParentsTests(CategoryViewTestSetupMixin, APITestCase):
+
+    def test_filter_top_level_is_paginated(self):
+        response = self.client.get('/api/admin/categories/parents/')
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], Category.objects.filter(parent__isnull=True).count())
+        self.assertIn('results', data)
+
+    def test_filter_top_level_has_children(self):
+        response = self.client.get('/api/admin/categories/parents/')
+        # data
+        data = json.loads(response.content.decode('utf8'))
+        data = data['results'][0]
+        # db object
+        category = Category.objects.filter(parent__isnull=True).first()
+        self.assertEqual(data['label'], category.label)
+        self.assertEqual(data['subcategory_label'], category.subcategory_label)
+        self.assertEqual(data['parent_id'], None)
+        self.assertTrue(data['children'][0]['id'])
+        self.assertTrue(data['children'][0]['name'])
+        self.assertTrue(data['children'][0]['level'])
+        self.assertIn('children', data)
+
+
+class CategorySubRouteSearchTests(CategoryViewTestSetupMixin, APITestCase):
+
+    def test_power_select_category_name(self):
+        category = create_single_category(name='foobar')
+
+        response = self.client.get('/api/admin/categories/category__icontains={}/'.format('foobar'))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['id'], str(category.id))
+        self.assertEqual(data[0]['name'], 'foobar')
+        self.assertNotIn('parent', data[0]['name'])
+        self.assertNotIn('status', data[0]['name'])
+        self.assertNotIn('description', data[0])
+        self.assertNotIn('label', data[0])
+
+    def test_power_select_category_cost_code(self):
+        category = create_single_category(name='nothing')
+        category.cost_code = '760521'
+        category.save()
+
+        response = self.client.get('/api/admin/categories/category__icontains={}/'.format('760521'))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['id'], str(category.id))
+        self.assertEqual(data[0]['cost_code'], str('760521'))
+
+
+class CategorySubRouteProfileFilterTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
