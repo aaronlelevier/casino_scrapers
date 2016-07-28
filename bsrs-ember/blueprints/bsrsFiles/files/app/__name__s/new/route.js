@@ -3,7 +3,7 @@ import inject from 'bsrs-ember/utilities/inject';
 import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 
 export default TabNewRoute.extend({
-  repository: inject('<%= dasherizedModuleName %>s'),
+  repository: inject('<%= dasherizedModuleName %>'),
   redirectRoute: '<%= dasherizedModuleName %>s.index',
   module: '<%= dasherizedModuleName %>',
   templateModelField: '<%= CapFirstLetterModuleName %>',
