@@ -12,20 +12,15 @@ export default GridViewComponent.extend({
       isSearchable: true
     },
     {
-      field: 'assignee.username',
+      field: 'assignee.fullname',
       headerLabel: 'assignment.label.assignee',
       headerIsTranslatable: true,
       isSortable: true,
       isFilterable: true,
-      isSearchable: true
+      isSearchable: true,
+      classNames: ['assignment-assignee'],
+      filterComponent: 'grid/filters/assignee-select-grid',
+      powerSelect: true
     },
-    {
-      field: 'pf.fukc',
-      headerLabel: 'assignment.label.pf',
-      headerIsTranslatable: true,
-      isSortable: true,
-      isFilterable: true,
-      isSearchable: true
-    }
   ]
 });

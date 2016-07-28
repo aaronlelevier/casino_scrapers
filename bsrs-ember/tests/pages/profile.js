@@ -17,8 +17,8 @@ export default PageObject.create({
   descError: text('.t-ap-description-validation-error'),
 
   assigneeInput: text(ASSIGNEE),
-  assigneeSortText: text('.t-sort-assignee-username'),
-  assigneeGridOne: text('.t-profile-assignee-username:eq(0)'),
+  assigneeSortText: text('.t-sort-assignee-fullname'),
+  assigneeGridOne: text('.t-profile-assignee-fullname:eq(0)'),
 
   filterSectionTitleText: text('.t-filter-section-title'),
   addFilterBtnText: text('.t-add-filter-btn'),

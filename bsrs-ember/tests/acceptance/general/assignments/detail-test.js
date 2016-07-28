@@ -8,6 +8,7 @@ import config from 'bsrs-ember/config/environment';
 import AD from 'bsrs-ember/vendor/defaults/assignment';
 import AF from 'bsrs-ember/vendor/assignment_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
+import PD from 'bsrs-ember/vendor/defaults/person';
 import page from 'bsrs-ember/tests/pages/assignment';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { ASSIGNMENT_URL, ASSIGNMENT_LIST_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
@@ -45,7 +46,7 @@ test('visit detail and update all fields', assert => {
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(page.descriptionValue, AD.descriptionOne);
-    assert.equal(page.assigneeInput, AD.username);
+    assert.equal(page.assigneeInput, AD.fullname);
   });
   // description
   page.descriptionFill(AD.descriptionTwo);
@@ -55,12 +56,12 @@ test('visit detail and update all fields', assert => {
     assert.equal(assignment.get('description'), AD.descriptionTwo);
   });
   // assignee
-  let keyword = 'boy1';
+  let keyword = 'Boy1';
   xhr(`${PEOPLE_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, PersonF.search_power_select());
   selectSearch('.t-assignment-assignee-select', keyword);
   selectChoose('.t-assignment-assignee-select', keyword);
   andThen(() => {
-    assert.equal(page.assigneeInput, keyword);
+    assert.equal(page.assigneeInput, PD.fullnameBoy);
   });
   xhr(API_DETAIL_URL, 'PUT', AF.put({description: AD.descriptionTwo, assignee: AD.assigneeSelectOne}), {}, 200, AF.list());
   generalPage.save();

@@ -42,14 +42,14 @@ test('serialize', assert => {
 });
 
 test('default pfilterContext', assert => {
-  ret = profile.get('defaultPfilter');
+  ret = assignment.get('defaultPfilter');
   assert.equal(ret.key, 'admin.placeholder.ticket_priority');
   assert.equal(ret.context, 'ticket.ticket');
   assert.equal(ret.field, 'priority');
 });
 
-test('availablePfilters - will be used in the profile filter power select', assert => {
-  ret = profile.get('availablePfilters');
+test('availablePfilters - will be used in the assignment filter power select', assert => {
+  ret = assignment.get('availablePfilters');
   assert.equal(ret.length, 2);
 });
 

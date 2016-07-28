@@ -34,6 +34,20 @@ export default Model.extend(OptConf, Validations, {
   },
   simpleStore: Ember.inject.service(),
   description: attr(''),
+  defaultPfilter: {
+    key: 'admin.placeholder.ticket_priority',
+    context: 'ticket.ticket',
+    field: 'priority'
+  },
+  availablePfilters: [{
+    key: 'admin.placeholder.ticket_priority',
+    context: 'ticket.ticket',
+    field: 'priority'
+  },{
+    key: 'admin.placeholder.location_store',
+    context: 'ticket.ticket',
+    field: 'location'
+  }],
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'pfIsDirty', function() {
     return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('pfIsDirty');
   }),

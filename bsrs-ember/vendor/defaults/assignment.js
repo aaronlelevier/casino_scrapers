@@ -15,11 +15,12 @@ var BSRS_ASSIGNMENT_DEFAULTS_OBJECT = (function() {
       assigneeOne: this.person.idOne,
       assigneeTwo: this.person.idTwo,
       assigneeSelectOne: '249543cf-8fea-426a-8bc3-09778cd78001',
-      username: this.person.username,
-      usernameOne: this.person.usernameOne,
-      usernameTwo: this.person.usernameTwo,
-      usernameGridOne: this.person.username+"1",
-      usernameGridTen: this.person.username+"10",
+      fullname: this.person.fullname,
+      // fullnameOne: this.person.fullnameOne,
+      // fullnameTwo: this.person.fullnameTwo,
+      fullnameGridOne: this.person.fullname+"1",
+      fullnameGridTen: this.person.fullname+"10",
+      descriptionLastPage2Grid: 'foobar20',
     };
   };
   return factory;

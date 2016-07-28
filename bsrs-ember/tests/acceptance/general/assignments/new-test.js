@@ -40,7 +40,7 @@ test('visit new URL and create a new record', assert => {
     assert.equal(page.descriptionValue, AD.descriptionOne);
   });
   // assignee
-  let keyword = 'boy1';
+  let keyword = 'Boy1';
   xhr(`${PEOPLE_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, PersonF.search_power_select());
   selectSearch('.t-assignment-assignee-select', keyword);
   selectChoose('.t-assignment-assignee-select', keyword);

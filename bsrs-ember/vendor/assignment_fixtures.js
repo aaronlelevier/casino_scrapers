@@ -12,7 +12,7 @@ var BSRS_ASSIGNMENT_FACTORY = (function() {
       description: this.assignment.descriptionOne,
       assignee: {
         id: this.assignment.assigneeOne,
-        username: this.assignment.username
+        fullname: this.assignment.fullname
       },
       filters: [{
         id: this.assignmentfilter.idOne,
@@ -65,7 +65,7 @@ var BSRS_ASSIGNMENT_FACTORY = (function() {
       description: `${this.assignment.descriptionOne}${i}`,
       assignee: {
         id: `${this.assignment.assigneeOne.slice(0,-1)}${i}`,
-        username: `${this.assignment.username}${i}`,
+        fullname: `${this.assignment.fullname}${i}`,
       }
     };
   };

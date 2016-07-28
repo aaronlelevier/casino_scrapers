@@ -5,13 +5,14 @@ import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/utilities/urls';
 
 const BASE_URL = BASEURLS.BASE_ASSIGNMENT_URL;
-const Assignee = '.t-assignment-assignee-select .ember-basic-dropdown-trigger';
 const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
+const ASSIGNEE = '.t-ticket-assignee-select';
 
 export default create({
   visitDetail: visitable(DETAIL_URL),
   clickFilterDescription: clickable('.t-filter-description'),
-  clickFilterPerson: clickable('.t-filter-assignee-name'),
+  clickFilterAssignee: clickable('.t-filter-assignee-fullname'),
+  assigneeInput: text(ASSIGNEE),
   // clickFilterPriority: clickable('.t-filter-priority-translated-name'),
   // clickFilterStatus: clickable('.t-filter-status-translated-name'),
   // priorityOneCheck: clickable('.t-checkbox-options-assignment-priority input:eq(0)'),
@@ -21,5 +22,5 @@ export default create({
   // priorityTwoIsChecked: () => Ember.$('.t-checkbox-list input:eq(1)').is(':checked'),
   // priorityThreeIsChecked: () => Ember.$('.t-checkbox-list input:eq(2)').is(':checked'),
   // priorityFourIsChecked: () => Ember.$('.t-checkbox-list input:eq(3)').is(':checked'),
-  assigneeInput: text(Assignee),
+  assigneeInput: text(ASSIGNEE),
 });

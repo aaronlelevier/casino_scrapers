@@ -6,6 +6,7 @@ import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
 import AD from 'bsrs-ember/vendor/defaults/assignment';
 import AF from 'bsrs-ember/vendor/assignment_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
+import PD from 'bsrs-ember/vendor/defaults/person';
 import config from 'bsrs-ember/config/environment';
 import page from 'bsrs-ember/tests/pages/assignment-mobile';
 import assignmentPage from 'bsrs-ember/tests/pages/assignment';
@@ -62,15 +63,15 @@ test('visit mobile detail and update all fields', async assert => {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(assignmentPage.descriptionValue, AD.descriptionOne);
-  assert.equal(assignmentPage.assigneeInput, AD.username);
+  assert.equal(assignmentPage.assigneeInput, AD.fullname);
   // description
   await assignmentPage.descriptionFill(AD.descriptionTwo);
   assert.equal(assignmentPage.descriptionValue, AD.descriptionTwo);
-  let keyword = 'boy1';
+  let keyword = 'Boy1';
   xhr(`${PEOPLE_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, PersonF.search_power_select());
   await selectSearch('.t-assignment-assignee-select', keyword);
   await selectChoose('.t-assignment-assignee-select', keyword);
-  assert.equal(assignmentPage.assigneeInput, keyword);
+  assert.equal(assignmentPage.assigneeInput, PD.fullnameBoy);
   xhr(ASSIGNMENT_PUT_URL, 'PUT', AF.put({'description': AD.descriptionTwo, 'assignee': AD.assigneeSelectOne}), {}, 200, AF.list());
   await generalMobilePage.mobileActionDropdownClick();
   await generalPage.save()

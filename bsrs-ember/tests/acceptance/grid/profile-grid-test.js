@@ -77,7 +77,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     assert.equal(currentURL(), LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-profile-description').text().trim()), PD.descOne);
-    assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim()), PD.username.slice(0,-1));
+    assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-profile-assignee-fullname').text().trim()), PD.username.slice(0,-1));
     var pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 2);
     assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -109,7 +109,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     assert.equal(currentURL(), LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descOne+"0");
-    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridOne);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-fullname').text().trim(), PD.usernameGridOne);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
     isNotDisabledElement('.t-next');
@@ -120,7 +120,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     assert.equal(currentURL(), LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descOne+"10");
-    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), `${PD.usernameGridOne.slice(0,-1)}10`);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-fullname').text().trim(), `${PD.usernameGridOne.slice(0,-1)}10`);
     isNotDisabledElement('.t-first');
     isNotDisabledElement('.t-previous');
     isDisabledElement('.t-next');
@@ -131,7 +131,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     assert.equal(currentURL(), LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descOne+"0");
-    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridOne);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-fullname').text().trim(), PD.usernameGridOne);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
     isNotDisabledElement('.t-next');
@@ -142,7 +142,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     assert.equal(currentURL(), LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descOne+"10");
-    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), `${PD.usernameGridOne.slice(0,-1)}10`);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-fullname').text().trim(), `${PD.usernameGridOne.slice(0,-1)}10`);
     isNotDisabledElement('.t-first');
     isNotDisabledElement('.t-previous');
     isDisabledElement('.t-next');
@@ -153,7 +153,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     assert.equal(currentURL(), LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-profile-description').text().trim(), PD.descOne+"0");
-    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridOne);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-fullname').text().trim(), PD.usernameGridOne);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
     isNotDisabledElement('.t-next');
@@ -233,7 +233,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
   visit(LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);
-    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridOne);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-fullname').text().trim(), PD.usernameGridOne);
   });
   const searchText = '10';
   var search_two = PREFIX + BASE_URL + `/?page=1&search=${searchText}`;
@@ -243,13 +243,13 @@ test('typing a search will reset page to 1 and require an additional xhr and res
   andThen(() => {
     assert.equal(currentURL(),LIST_URL + `?search=${searchText}`);
     assert.equal(find('.t-grid-data').length, 1);
-    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridTen);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-fullname').text().trim(), PD.usernameGridTen);
   });
   click('.t-reset-grid');
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridOne);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-fullname').text().trim(), PD.usernameGridOne);
   });
 });
 
@@ -258,22 +258,22 @@ test('sort by assignee username', function(assert) {
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridOne);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-fullname').text().trim(), PD.usernameGridOne);
   });
   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=assignee__username';
   xhr(sort_one ,"GET",null,{},200, PF.sorted_page_one('assignee'));
-  click('.t-sort-assignee-username-dir');
+  click('.t-sort-assignee-fullname-dir');
   andThen(() => {
     assert.equal(currentURL(), LIST_URL + '?sort=assignee.username');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridOne);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-fullname').text().trim(), PD.usernameGridOne);
   });
   var sort = PREFIX + BASE_URL + '/?page=1&ordering=-assignee__username';
   xhr(sort ,"GET",null,{},200, PF.list_reverse());
-  click('.t-sort-assignee-username-dir');
+  click('.t-sort-assignee-fullname-dir');
   andThen(() => {
     assert.equal(currentURL(), LIST_URL + '?sort=-assignee.username');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-username').text().trim(), PD.usernameGridTen);
+    assert.equal(find('.t-grid-data:eq(0) .t-profile-assignee-fullname').text().trim(), PD.usernameGridTen);
   });
 });

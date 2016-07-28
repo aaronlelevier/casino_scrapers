@@ -6,8 +6,7 @@ import AD from 'bsrs-ember/vendor/defaults/assignment';
 
 const BASE_URL = BASEURLS.BASE_ASSIGNMENT_URL;
 const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
-
-const assignee = '.t-assignment-assignee-select';
+const ASSIGNEE = '.t-assignment-assignee-select';
 
 export default create({
   visit: visitable(ASSIGNMENT_LIST_URL),
@@ -17,7 +16,7 @@ export default create({
   descriptionGridOne: text('.t-assignment-description:eq(0)'),
   descriptionSortText: text('.t-sort-description'),
 
-  assigneeInput: text(assignee),
-  assigneeSortText: text('.t-sort-assignee-username'),
-  assigneeGridOne: text('.t-assignment-assignee-username:eq(0)'),
+  assigneeInput: text(ASSIGNEE),
+  assigneeSortText: text('.t-sort-assignee-fullname'),
+  assigneeGridOne: text('.t-assignment-assignee-fullname:eq(0)'),
 });

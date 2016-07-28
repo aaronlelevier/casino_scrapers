@@ -31,7 +31,7 @@ test('deserialize single', assert => {
   assert.equal(assignment.get('description'), AD.descriptionOne);
   assert.equal(assignment.get('assignee_fk'), AD.assigneeOne);
   assert.equal(assignment.get('assignee').get('id'), AD.assigneeOne);
-  assert.equal(assignment.get('assignee').get('username'), AD.username);
+  assert.equal(assignment.get('assignee').get('fullname'), AD.fullname);
 });
 
 // test('existing assignment w/ pf, and server returns no pf - want no pf b/c that is the most recent', assert => {
@@ -85,11 +85,10 @@ test('deserialize list', assert => {
   run(() => {
     deserializer.deserialize(json);
   });
-  assert.equal(store.find('assignment-list').get('length'), 20);
-  const i = 0;
-  assignment = store.find('assignment-list').objectAt(i);
-  assert.equal(assignment.get('id'), `${AD.idOne.slice(0,-1)}${i}`);
-  assert.equal(assignment.get('description'), `${AD.descriptionOne}${i}`);
-  assert.equal(assignment.get('assignee').id, `${AD.assigneeOne.slice(0,-1)}${i}`);
-  assert.equal(assignment.get('assignee').username, `${AD.username}${i}`);
+  assert.equal(store.find('assignment-list').get('length'), 10);
+  assignment = store.find('assignment-list').objectAt(0);
+  assert.equal(assignment.get('id'), AD.idOne);
+  assert.equal(assignment.get('description'), AD.descriptionOne+'1');
+  assert.equal(assignment.get('assignee').id, AD.assigneeOne);
+  assert.equal(assignment.get('assignee').fullname, AD.fullname+'1');
 });
