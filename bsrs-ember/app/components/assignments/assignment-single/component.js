@@ -4,7 +4,7 @@ import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 
 export default Ember.Component.extend(TabMixin, EditMixin, {
-  repository: injectRepo('assignments'),
+  repository: injectRepo('assignment'),
   personRepo: injectRepo('person'),
   actions: {
     save() {

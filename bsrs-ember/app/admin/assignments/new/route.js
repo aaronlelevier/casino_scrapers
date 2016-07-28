@@ -3,7 +3,7 @@ import inject from 'bsrs-ember/utilities/inject';
 import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 
 export default TabNewRoute.extend({
-  repository: inject('assignments'),
+  repository: inject('assignment'),
   redirectRoute: 'admin.assignments.index',
   module: 'assignment',
   templateModelField: 'Assignment',

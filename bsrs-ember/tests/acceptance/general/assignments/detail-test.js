@@ -19,7 +19,7 @@ const API_DETAIL_URL = `${ASSIGNMENT_URL}${AD.idOne}/`;
 
 var store, detailXhr, listXhr;
 
-moduleForAcceptance('Acceptance | assignment detail test', {
+moduleForAcceptance('scott Acceptance | assignment detail test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     const listData = AF.list();

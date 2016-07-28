@@ -4,7 +4,7 @@ import TabRoute from 'bsrs-ember/route/tab/route';
 import FindById from 'bsrs-ember/mixins/route/findById';
 
 export default TabRoute.extend(FindById, {
-  repository: injectRepo('assignments'),
+  repository: injectRepo('assignment'),
   redirectRoute: 'admin.assignments.index',
   module: 'assignment',
   templateModelField: 'description',

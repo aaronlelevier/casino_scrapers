@@ -41,6 +41,18 @@ test('serialize', assert => {
   assert.equal(ret.assignee, AD.assigneeOne);
 });
 
+test('default pfilterContext', assert => {
+  ret = profile.get('defaultPfilter');
+  assert.equal(ret.key, 'admin.placeholder.ticket_priority');
+  assert.equal(ret.context, 'ticket.ticket');
+  assert.equal(ret.field, 'priority');
+});
+
+test('availablePfilters - will be used in the profile filter power select', assert => {
+  ret = profile.get('availablePfilters');
+  assert.equal(ret.length, 2);
+});
+
 /* assignee */
 test('related person should return one person for a assignment', (assert) => {
   run(() => {
@@ -113,7 +125,7 @@ test('rollbackAssignee - assignee - assignmentwill set assignee to current assig
   assert.equal(assignment.get('assignee_fk'), PersonD.idOne);
 });
 
-/* assignment& PROFILE_FILTER */
+/* ASSIGNMENT & PROFILE_FILTER */
 test('pf property should return all associated pf. also confirm related and join model attr values', (assert) => {
   run(() => {
     store.push('assignment-join-filter', {id: AJFD.idOne, assignment_pk: AD.idOne, assignmentfilter_pk: AFD.idOne});
