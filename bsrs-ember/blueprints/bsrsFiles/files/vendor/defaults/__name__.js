@@ -10,8 +10,7 @@ var BSRS_<%= CapitalizeModule %>_DEFAULTS_OBJECT = (function() {
       idGridTwo: '1ee82b8c-89bd-45a2-8d57-5b920c8b0002',
       <%= firstPropertyCamel %>One: 'foo',
       <%= firstPropertyCamel %>Two: 'bar',
-      <%= firstPropertyCamel %>GridOne: 'foo0',
-      <%= firstPropertyCamel %>GridTwo: 'foo1',
+      <%= firstPropertyCamel %>GridOne: 'foo1',
       <%= firstPropertyCamel %>GridOneReverse: 'foo10',
       <%= secondPropertyCamel %>One: this.<%= secondModelCamel %>.idOne,
       <%= secondPropertyCamel %>Two: this.<%= secondModelCamel %>.idTwo,
@@ -19,8 +18,7 @@ var BSRS_<%= CapitalizeModule %>_DEFAULTS_OBJECT = (function() {
       <%= secondModelDisplayCamel %>: this.<%= secondModelCamel %>.<%= secondModelDisplayCamel %>,
       <%= secondModelDisplayCamel %>One: this.<%= secondModelCamel %>.<%= secondModelDisplayCamel %>One,
       <%= secondModelDisplayCamel %>Two: this.<%= secondModelCamel %>.<%= secondModelDisplayCamel %>Two,
-      <%= secondModelDisplayCamel %>GridOne: this.<%= secondModelCamel %>.<%= secondModelDisplaySnake %>+'0',
-      <%= secondModelDisplayCamel %>GridTwo: this.<%= secondModelCamel %>.<%= secondModelDisplaySnake %>+'1',
+      <%= secondModelDisplayCamel %>GridOne: this.<%= secondModelCamel %>.<%= secondModelDisplaySnake %>+'1',
       <%= secondModelDisplayCamel %>GridTen: this.<%= secondModelCamel %>.<%= secondModelDisplaySnake %>+'10',
     };
   };

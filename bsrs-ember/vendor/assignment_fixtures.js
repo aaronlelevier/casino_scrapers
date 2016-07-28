@@ -1,8 +1,9 @@
 var BSRS_ASSIGNMENT_FACTORY = (function() {
-  var factory = function(assignment, assignmentfilter, ticket) {
+  var factory = function(assignment, assignmentfilter, ticket, config) {
     this.assignment = assignment;
     this.assignmentfilter = assignmentfilter;
     this.ticket = ticket;
+    this.config = config;
   };
   factory.prototype.generate = function(i) {
     var id = i || this.assignment.idOne;
@@ -35,25 +36,28 @@ var BSRS_ASSIGNMENT_FACTORY = (function() {
     return response;
   };
   factory.prototype.list = function() {
-    return this._list(0, 20);
+    var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
+    return this._list(1, page_size);
   };
   factory.prototype.list_two = function() {
-    return this._list(10, 20);
+    var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
+    return this._list(page_size+1, 20);
   };
   factory.prototype.list_reverse = function() {
-    const page_size = 10;
+    var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
     var results = [];
     for(var i = page_size; i > 0; i--) {
       results.push(this._generate_item(i));
     }
     return {count: page_size-1, next: null, previous: null, results: results};
   };
-  factory.prototype._list = function(start, page_size) {
+  factory.prototype._list = function(start, end) {
+    var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
     var results = [];
-    for(var i = start; i < page_size; i++) {
+    for(var i = start; i <= end; i++) {
       results.push(this._generate_item(i));
     }
-    return {count: page_size-1, next: null, previous: null, results: results};
+    return {count: page_size*2-1, next: null, previous: null, results: results};
   };
   factory.prototype._generate_item = function(i) {
     return {
@@ -72,15 +76,19 @@ if (typeof window === 'undefined') {
   var objectAssign = require('object-assign');
   var mixin = require('../vendor/mixin');
   var assignment = require('./defaults/assignment');
+  var assignmentfilter = require('./defaults/assignmentfilter');
+  var ticket = require('./defaults/ticket');
+  var config = require('../config/environment');
   objectAssign(BSRS_assignment_FACTORY.prototype, mixin.prototype);
-  module.exports = new BSRS_ASSIGNMENT_FACTORY(assignment);
+  module.exports = new BSRS_ASSIGNMENT_FACTORY(assignment, assignmentfilter, ticket, config);
 }
 else {
-  define('bsrs-ember/vendor/assignment_fixtures', ['exports', 'bsrs-ember/vendor/defaults/assignment', 'bsrs-ember/vendor/defaults/assignmentfilter', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/mixin'],
-    function(exports, assignment, assignmentfilter, ticket, mixin) {
+  define('bsrs-ember/vendor/assignment_fixtures', ['exports', 'bsrs-ember/vendor/defaults/assignment', 'bsrs-ember/vendor/defaults/assignmentfilter',
+   'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
+    function(exports, assignment, assignmentfilter, ticket, mixin, config) {
       'use strict';
       Object.assign(BSRS_ASSIGNMENT_FACTORY.prototype, mixin.prototype);
-      return new BSRS_ASSIGNMENT_FACTORY(assignment, assignmentfilter, ticket);
+      return new BSRS_ASSIGNMENT_FACTORY(assignment, assignmentfilter, ticket, config);
     }
   );
 }

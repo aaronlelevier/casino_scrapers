@@ -26,7 +26,7 @@ const Validations = buildValidations({
   ],
 });
 
-export default Model.extend(OptConf, {
+export default Model.extend(OptConf, Validations, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('<%= secondProperty %>', '<%= dasherizedModuleName %>');

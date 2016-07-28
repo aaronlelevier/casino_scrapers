@@ -1,11 +1,10 @@
 import Ember from 'ember';
 import injectRepo from 'bsrs-ember/utilities/inject';
-import injectStore from 'bsrs-ember/utilities/store';
 import TabRoute from 'bsrs-ember/route/tab/route';
 import FindById from 'bsrs-ember/mixins/route/findById';
 
 export default TabRoute.extend(FindById, {
-  repository: injectRepo('<%= dasherizedModuleName %>s'),
+  repository: injectRepo('<%= dasherizedModuleName %>'),
   redirectRoute: '<%= dasherizedModuleName %>s.index',
   module: '<%= dasherizedModuleName %>',
   templateModelField: 'description',

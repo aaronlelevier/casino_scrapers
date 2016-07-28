@@ -8,49 +8,43 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/<%= dasherizedModuleName %>';
+import generalPage from 'bsrs-ember/tests/pages/general';
 // Edit
-import <%= camelizedModuleName %>D from 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>';
-import <%= camelizedModuleName %>F from 'bsrs-ember/vendor/<%= dasherizedModuleName %>_fixtures';
-import BASEURLS, { <%= CapitalizeModule %>_URL } from 'bsrs-ember/utilities/urls';
+import <%= FirstCharacterModuleName %>D from 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>';
+import <%= FirstCharacterModuleName %>F from 'bsrs-ember/vendor/<%= dasherizedModuleName %>_fixtures';
+import BASEURLS, { <%= CapitalizeModule %>_URL, <%= CapitalizeModule %>_LIST_URL } from 'bsrs-ember/utilities/urls';
 
 
 // Edit based on module
 const BASE_URL = BASEURLS.BASE_<%= CapitalizeModule %>_URL;
 const TAB_TITLE_NAME = 'New <%= CapFirstLetterModuleName %>';
-const TAB_TITLE = <%= camelizedModuleName %>D.<%= firstPropertyCamel %>One;
+const TAB_TITLE = <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One;
 const MODEL = '<%= dasherizedModuleName %>';
 const ROUTE_NAME_NEW = '<%= dasherizedModuleName %>s.new';
 const ROUTE_NAME_DETAIL = '<%= dasherizedModuleName %>s.<%= dasherizedModuleName %>';
 const ROUTE_NAME_INDEX = '<%= dasherizedModuleName %>s.index';
-const ID_ONE = <%= camelizedModuleName %>D.idOne;
-const ID_TWO = <%= camelizedModuleName %>D.idTwo;
-const ID_GRID_TWO = <%= camelizedModuleName %>D.idGridTwo;
-const EDIT_FIELD_VALUE = <%= camelizedModuleName %>D.<%= firstPropertyCamel %>Two;
+const ID_ONE = <%= FirstCharacterModuleName %>D.idOne;
+const ID_TWO = <%= FirstCharacterModuleName %>D.idTwo;
+const ID_GRID_TWO = <%= FirstCharacterModuleName %>D.idGridTwo;
+const EDIT_FIELD_VALUE = <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>Two;
 
 // Fixed
-const LIST_URL = BASE_URL + '/index';
 const NEW_URL = BASE_URL + '/new/1';
 const NEW_URL_2 = BASE_URL + '/new/2';
-const DETAIL_URL = BASE_URL + '/' + <%= camelizedModuleName %>D.idOne;
+const DETAIL_URL = BASE_URL + '/' + <%= FirstCharacterModuleName %>D.idOne;
 
 
-let application, store, list_xhr, endpoint, detail_xhr, detail_data_two, list_data, original_uuid, counter;
+let store, list_xhr, endpoint, detail_xhr, detail_data_two, list_data;
 
 moduleForAcceptance('Acceptance | tab <%= dasherizedModuleName %> test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
-    original_uuid = random.uuid;
     // Edit based on module
-    const detail_data = <%= camelizedModuleName %>F.detail(ID_ONE);
+    const detail_data = <%= FirstCharacterModuleName %>F.detail(ID_ONE);
     detail_xhr = xhr(`${<%= CapitalizeModule %>_URL}${ID_ONE}/`, 'GET', null, {}, 200, detail_data);
-    detail_data_two = <%= camelizedModuleName %>F.detail(ID_GRID_TWO);
-    list_data = <%= camelizedModuleName %>F.list();
+    detail_data_two = <%= FirstCharacterModuleName %>F.detail(ID_GRID_TWO);
+    list_data = <%= FirstCharacterModuleName %>F.list();
   },
-  afterEach() {
-    random.uuid = original_uuid;
-    
-  }
 });
 
 test('(NEW URL) deep linking the new <%= dasherizedModuleName %> url should push a tab into the tab store with correct properties', assert => {
@@ -88,11 +82,11 @@ test('visiting the <%= dasherizedModuleName %> detail url from the list url shou
   list_xhr = xhr(`${<%= CapitalizeModule %>_URL}?page=1`, 'GET', null, {}, 200, list_data);
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), LIST_URL);
+    assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
-  click('.t-grid-data:eq(1)');
+  generalPage.gridItemZeroClick();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     let tabs = store.find('tab');
@@ -110,11 +104,11 @@ test('clicking on a tab that is not dirty from the list url should take you to t
   list_xhr = xhr(`${<%= CapitalizeModule %>_URL}?page=1`, 'GET', null, {}, 200, list_data);
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), LIST_URL);
+    assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
-  click('.t-grid-data:eq(1)');
+  generalPage.gridItemZeroClick();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     let model = store.find(MODEL, ID_ONE);
@@ -125,7 +119,7 @@ test('clicking on a tab that is not dirty from the list url should take you to t
   });
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), LIST_URL);
+    assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
   });
   click('.t-tab:eq(0)');
   andThen(() => {
@@ -139,11 +133,11 @@ test('clicking on a new model from the grid view will not dirty the original tab
   list_xhr = xhr(`${<%= CapitalizeModule %>_URL}?page=1`, 'GET', null, {}, 200, list_data);
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), LIST_URL);
+    assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
-  click('.t-grid-data:eq(1)');
+  generalPage.gridItemZeroClick();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     let model = store.find(MODEL, ID_ONE);
@@ -151,10 +145,10 @@ test('clicking on a new model from the grid view will not dirty the original tab
   });
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), LIST_URL);
+    assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
   });
   detail_xhr = xhr(`${<%= CapitalizeModule %>_URL}${ID_GRID_TWO}/`, 'GET', null, {}, 200, detail_data_two);
-  click('.t-grid-data:eq(2)');
+  generalPage.gridItemOneClick();
   andThen(() => {
     assert.equal(currentURL(), `${BASE_URL}/${ID_GRID_TWO}`);
     let model = store.find(MODEL, ID_ONE);
@@ -176,7 +170,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
   list_xhr = xhr(`${<%= CapitalizeModule %>_URL}?page=1`, 'GET', null, {}, 200, list_data);
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), LIST_URL);
+    assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
   });
   click('.t-tab:eq(0)');
   andThen(() => {
@@ -198,7 +192,7 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
   list_xhr = xhr(`${<%= CapitalizeModule %>_URL}?page=1`, 'GET', null, {}, 200, list_data);
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), LIST_URL);
+    assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
     let model = store.find(MODEL, UUID.value);
     assert.equal(model.get('<%= firstProperty %>'), EDIT_FIELD_VALUE);
     assert.equal(model.get('isDirtyOrRelatedDirty'), true);
@@ -216,11 +210,11 @@ test('clicking on a tab that is dirty from the list url should take you to the d
   list_xhr = xhr(`${<%= CapitalizeModule %>_URL}?page=1`, 'GET', null, {}, 200, list_data);
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), LIST_URL);
+    assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
-  click('.t-grid-data:eq(1)');
+  generalPage.gridItemZeroClick();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
   });
@@ -236,7 +230,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
   andThen(() => {
     page.visit();
     andThen(() => {
-      assert.equal(currentURL(), LIST_URL);
+      assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
     });
   });
   click('.t-tab:eq(0)');
@@ -291,7 +285,7 @@ test('opening a new tab, navigating away and closing the tab should remove the t
   });
   click('.t-tab-close:eq(0)');
   andThen(() => {
-    assert.equal(currentURL(), LIST_URL);
+    assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
@@ -309,7 +303,7 @@ test('opening a tab, navigating away and closing the tab should remove the tab',
   });
   click('.t-tab-close:eq(0)');
   andThen(() => {
-    assert.equal(currentURL(), LIST_URL);
+    assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
@@ -332,7 +326,7 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
   page.visit();
   click('.t-tab-close:eq(0)');
   andThen(() => {
-    assert.equal(currentURL(), LIST_URL);
+    assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
     waitFor(assert, () => {
       assert.equal(find('.t-modal-body').length, 1);
     });
@@ -352,7 +346,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
   list_xhr = xhr(`${<%= CapitalizeModule %>_URL}?page=1`, 'GET', null, {}, 200, list_data);
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), LIST_URL);
+    assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
   });

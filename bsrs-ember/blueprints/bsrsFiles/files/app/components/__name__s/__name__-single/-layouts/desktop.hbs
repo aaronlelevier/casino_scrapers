@@ -27,8 +27,14 @@
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="<%= dasherizedModuleName %>.<%= firstProperty %>" for="<%= firstProperty %>"}}
-              {{input type="text" placeholder=(t "<%= dasherizedModuleName %>.<%= firstProperty %>") value=model.<%= firstPropertySnake %> class="form-control t-<%= dasherizedModuleName %>-<%= firstProperty %>" id="<%= firstProperty %>"}}
-                {{#validation-error-field submitted=submitted field="<%= firstProperty %>" className="validation validation-under t-<%= dasherizedModuleName %>-<%= firstProperty %>-validation-error" model=model validation=<%= firstPropertyCamel %>Validation}}{{t "validation.invalid"}} {{t "<%= dasherizedModuleName %>.<%= firstProperty %>"}}{{/validation-error-field}}
+              {{validated-input
+                model=model
+                value=model.<%= firstPropertySnake %>
+                valuePath="<%= firstPropertySnake %>"
+                didValidate=didValidate
+                className="form-control t-<%= dasherizedModuleName %>-<%= firstProperty %>"
+                placeholder=(t "<%= dasherizedModuleName %>.<%= firstPropertySnake %>")
+              }}
             {{/form-group}}
           </div>
         </div>
@@ -57,8 +63,8 @@
               selectedAttr=model.<%= thirdPropertySnake %>
               className="t-<%= dasherizedModuleName %>-<%= thirdProperty %>-select"
               displayName="<%= thirdAssociatedModelDisplay %>"
-              add_func="change_<%= thirdPropertySnake %>"
-              remove_func="change_<%= thirdPropertySnake %>"
+              add_func="add_<%= thirdPropertySnake %>"
+              remove_func="remove_<%= thirdPropertySnake %>"
               repository=<%= thirdAssociatedModelCamel %>Repo
               searchMethod="find<%= thirdAssociatedModelTitle %>"
             }}

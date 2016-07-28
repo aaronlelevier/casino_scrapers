@@ -7,8 +7,8 @@ import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
 import { waitFor } from 'bsrs-ember/tests/helpers/utilities';
 import random from 'bsrs-ember/models/random';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
-import assignmentD from 'bsrs-ember/vendor/defaults/assignment';
-import assignmentF from 'bsrs-ember/vendor/assignment_fixtures';
+import AD from 'bsrs-ember/vendor/defaults/assignment';
+import AF from 'bsrs-ember/vendor/assignment_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
 import page from 'bsrs-ember/tests/pages/assignment';
 import generalPage from 'bsrs-ember/tests/pages/general';
@@ -23,7 +23,7 @@ var store, listXhr;
 moduleForAcceptance('Acceptance | assignment new test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
-    const listData = assignmentF.list();
+    const listData = AF.list();
     listXhr = xhr(`${ASSIGNMENT_URL}?page=1`, 'GET', null, {}, 200, listData);
     random.uuid = function() { return UUID.value; };
   },
@@ -35,16 +35,16 @@ test('visit new URL and create a new record', assert => {
     assert.equal(currentURL(), NEW_URL);
   });
   // description
-  page.descriptionFill(assignmentD.descriptionOne);
+  page.descriptionFill(AD.descriptionOne);
   andThen(() => {
-    assert.equal(page.descriptionValue, assignmentD.descriptionOne);
+    assert.equal(page.descriptionValue, AD.descriptionOne);
   });
   // assignee
   let keyword = 'boy1';
   xhr(`${PEOPLE_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, PersonF.search_power_select());
   selectSearch('.t-assignment-assignee-select', keyword);
   selectChoose('.t-assignment-assignee-select', keyword);
-  xhr(ASSIGNMENT_URL, 'POST', assignmentF.put({id: UUID.value, assignee: assignmentD.assigneeSelectOne, filters: []}), {}, 200, assignmentF.list());
+  xhr(ASSIGNMENT_URL, 'POST', AF.put({id: UUID.value, assignee: AD.assigneeSelectOne, filters: []}), {}, 200, AF.list());
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
@@ -56,7 +56,7 @@ test('visit new URL and create a new record', assert => {
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
   clearxhr(listXhr);
   visit(NEW_URL);
-  page.descriptionFill(assignmentD.descriptionTwo);
+  page.descriptionFill(AD.descriptionTwo);
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
@@ -69,7 +69,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), NEW_URL);
-      assert.equal(page.descriptionValue, assignmentD.descriptionTwo);
+      assert.equal(page.descriptionValue, AD.descriptionTwo);
       assert.ok(generalPage.modalIsHidden);
     });
   });
@@ -77,7 +77,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
   visit(NEW_URL);
-  page.descriptionFill(assignmentD.descriptionTwo);
+  page.descriptionFill(AD.descriptionTwo);
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {

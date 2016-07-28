@@ -1,12 +1,12 @@
 import Ember from 'ember';
 import { visitable, fillable, value, create, clickable, text, isVisible } from 'ember-cli-page-object';
-import <%= camelizedModuleName %>D from 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>';
+import <%= FirstCharacterModuleName %>D from 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/utilities/urls';
 
 const BASE_URL = BASEURLS.BASE_<%= CapitalizeModule %>_URL;
 const <%= secondPropertyTitle %> = '.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select .ember-basic-dropdown-trigger';
-const DETAIL_URL = `${BASE_URL}/${<%= camelizedModuleName %>D.idOne}`;
+const DETAIL_URL = `${BASE_URL}/${<%= FirstCharacterModuleName %>D.idOne}`;
 
 export default create({
   visitDetail: visitable(DETAIL_URL),
