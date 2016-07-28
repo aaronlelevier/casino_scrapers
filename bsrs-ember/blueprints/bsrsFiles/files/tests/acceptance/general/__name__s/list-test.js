@@ -10,8 +10,8 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 
 const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_<%= CapitalizeModule %>_URL;
-const DETAIL_URL = `${BASE_URL}/${<%= FirstCharacterModuleName %>D.idZero}`;
-const API_DETAIL_URL = `${<%= CapitalizeModule %>_URL}${<%= FirstCharacterModuleName %>D.idZero}/`;
+const DETAIL_URL = `${BASE_URL}/${<%= FirstCharacterModuleName %>D.idOne}`;
+const API_DETAIL_URL = `${<%= CapitalizeModule %>_URL}${<%= FirstCharacterModuleName %>D.idOne}/`;
 
 let store;
 
