@@ -8,7 +8,6 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
   <%= secondModelCamel %>Repo: injectRepo('<%= secondModel %>'),
   actions: {
     save() {
-      const model = this.get('model');
       if (this.get('model.validations.isValid')) {
         this._super(...arguments);
       }

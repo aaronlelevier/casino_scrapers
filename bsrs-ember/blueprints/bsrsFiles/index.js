@@ -22,6 +22,7 @@ module.exports = {
       secondPropertyTitle: title(options.second),
       //All properties called by snake name to enfore this. Can't name it foo-bar
       secondPropertySnake: snake(options.second),
+      SecondModelSingleCharacter: first(options.entity.name),
 
       secondModel: options.secondModel,
       secondModelCamel: camel(options.secondModel),
@@ -58,8 +59,8 @@ module.exports = {
       thirdAssociatedModelDisplaySnake: snake(options.thirdDisplay),
       thirdAssociatedModelDisplayCaps: allCaps(options.thirdDisplay),
 
-      joinModel_associatedModelFks: `${snake(options.entity.name)}_${options.thirdProperty}_fks`,
-      joinModel_associatedModelIds: `${snake(options.entity.name)}_${options.thirdProperty}_ids`,
+      joinModel_associatedModelFks: `${snake(options.entity.name)}_${options.third}_fks`,
+      joinModel_associatedModelIds: `${snake(options.entity.name)}_${options.third}_ids`,
 
       hashComponentOne: firstArr(options.hashComponents),
       hashComponentTwo: secondArr(options.hashComponents),

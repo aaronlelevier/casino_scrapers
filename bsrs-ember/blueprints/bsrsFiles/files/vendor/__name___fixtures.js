@@ -1,6 +1,7 @@
 var BSRS_<%= CapitalizeModule %>_FACTORY = (function() {
-  var factory = function(<%= camelizedModuleName %>) {
+  var factory = function(<%= camelizedModuleName %>, <%= secondModelCamel %>) {
     this.<%= camelizedModuleName %> = <%= camelizedModuleName %>;
+    this.<%= secondModelCamel %> = <%= secondModelCamel %>;
   };
   factory.prototype.generate = function(i) {
     var id = i || this.<%= camelizedModuleName %>.idOne;
@@ -67,11 +68,11 @@ if (typeof window === 'undefined') {
   module.exports = new BSRS_<%= CapitalizeModule %>_FACTORY(<%= camelizedModuleName %>);
 }
 else {
-  define('bsrs-ember/vendor/<%= dasherizedModuleName %>_fixtures', ['exports', 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>', 'bsrs-ember/vendor/mixin'],
-    function(exports, <%= dasherizedModuleName %>, mixin) {
+  define('bsrs-ember/vendor/<%= dasherizedModuleName %>_fixtures', ['exports', 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>', 'bsrs-ember/vendor/defaults/<%= secondModel %>', 'bsrs-ember/vendor/mixin'],
+    function(exports, <%= dasherizedModuleName %>, <%= secondModelCamel %>, mixin) {
       'use strict';
       Object.assign(BSRS_<%= CapitalizeModule %>_FACTORY.prototype, mixin.prototype);
-      return new BSRS_<%= CapitalizeModule %>_FACTORY(<%= dasherizedModuleName %>);
+      return new BSRS_<%= CapitalizeModule %>_FACTORY(<%= dasherizedModuleName %>, <%= secondModelCamel %>);
     }
   );
 }
