@@ -8,6 +8,7 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/<%= dasherizedModuleName %>';
+import generalPage from 'bsrs-ember/tests/pages/general';
 // Edit
 import <%= FirstCharacterModuleName %>D from 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>';
 import <%= FirstCharacterModuleName %>F from 'bsrs-ember/vendor/<%= dasherizedModuleName %>_fixtures';
@@ -85,7 +86,7 @@ test('visiting the <%= dasherizedModuleName %> detail url from the list url shou
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
-  click('.t-grid-data:eq(1)');
+  generalPage.gridItemZeroClick();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     let tabs = store.find('tab');
@@ -107,7 +108,7 @@ test('clicking on a tab that is not dirty from the list url should take you to t
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
-  click('.t-grid-data:eq(1)');
+  generalPage.gridItemZeroClick();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     let model = store.find(MODEL, ID_ONE);
@@ -136,7 +137,7 @@ test('clicking on a new model from the grid view will not dirty the original tab
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
-  click('.t-grid-data:eq(1)');
+  generalPage.gridItemZeroClick();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     let model = store.find(MODEL, ID_ONE);
@@ -147,7 +148,7 @@ test('clicking on a new model from the grid view will not dirty the original tab
     assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
   });
   detail_xhr = xhr(`${<%= CapitalizeModule %>_URL}${ID_GRID_TWO}/`, 'GET', null, {}, 200, detail_data_two);
-  click('.t-grid-data:eq(2)');
+  generalPage.gridItemOneClick();
   andThen(() => {
     assert.equal(currentURL(), `${BASE_URL}/${ID_GRID_TWO}`);
     let model = store.find(MODEL, ID_ONE);
@@ -213,7 +214,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
-  click('.t-grid-data:eq(1)');
+  generalPage.gridItemZeroClick();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
   });

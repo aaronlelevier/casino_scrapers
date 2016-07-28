@@ -17,8 +17,8 @@ import BASEURLS, { <%= CapitalizeModule %>_URL, <%= CapitalizeModule %>_LIST_URL
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.BASE_<%= CapitalizeModule %>_URL;
-const DETAIL_URL = `${BASE_URL}/${<%= FirstCharacterModuleName %>D.idZero}`;
-const API_DETAIL_URL = `${<%= CapitalizeModule %>_URL}${<%= FirstCharacterModuleName %>D.idZero}/`;
+const DETAIL_URL = `${BASE_URL}/${<%= FirstCharacterModuleName %>D.idOne}`;
+const API_DETAIL_URL = `${<%= CapitalizeModule %>_URL}${<%= FirstCharacterModuleName %>D.idOne}/`;
 
 const NUMBER_FOUR = {keyCode: 52};
 
@@ -50,7 +50,7 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
   andThen(() => {
     assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(page.<%= firstPropertyCamel %>GridOne, <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'0');
+    assert.equal(page.<%= firstPropertyCamel %>GridOne, <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'1');
     assert.equal(page.<%= secondProperty %>GridOne, <%= FirstCharacterModuleName %>D.<%= secondModelDisplaySnake %>+'0');
     var pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 2);
@@ -68,7 +68,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
   click('.t-page:eq(1) a');
   andThen(() => {
     const <%= dasherizedModuleName %>s = store.find('<%= dasherizedModuleName %>-list');
-    assert.equal(<%= dasherizedModuleName %>s.get('length'), 20);
+    assert.equal(<%= dasherizedModuleName %>s.get('length'), 10);
     assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim()), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One);
@@ -83,10 +83,10 @@ test('clicking page 2 will load in another set of data as well as clicking page 
   click('.t-page:eq(0) a');
   andThen(() => {
     const <%= dasherizedModuleName %>s = store.find('<%= dasherizedModuleName %>-list');
-    assert.equal(<%= dasherizedModuleName %>s.get('length'), 20);
+    assert.equal(<%= dasherizedModuleName %>s.get('length'), 10);
     assert.equal(currentURL(),<%= CapitalizeModule %>_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'0');
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'1');
     var pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 2);
     assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -103,7 +103,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   andThen(() => {
     assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'0');
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'1');
     assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= secondProperty %>-<%= secondModelDisplaySnake %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= secondModelDisplaySnake %>GridOne);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
@@ -114,8 +114,8 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   andThen(() => {
     assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'10');
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= secondProperty %>-<%= secondModelDisplaySnake %>').text().trim(), `${<%= FirstCharacterModuleName %>D.<%= secondModelDisplaySnake %>GridOne.slice(0,-1)}10`);
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'11');
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= secondProperty %>-<%= secondModelDisplaySnake %>').text().trim(), `${<%= FirstCharacterModuleName %>D.<%= secondModelDisplaySnake %>GridOne.slice(0,-1)}11`);
     isNotDisabledElement('.t-first');
     isNotDisabledElement('.t-previous');
     isDisabledElement('.t-next');
@@ -125,7 +125,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   andThen(() => {
     assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'0');
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'1');
     assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= secondProperty %>-<%= secondModelDisplaySnake %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= secondModelDisplaySnake %>GridOne);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
@@ -136,8 +136,8 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   andThen(() => {
     assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'10');
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= secondProperty %>-<%= secondModelDisplaySnake %>').text().trim(), `${<%= FirstCharacterModuleName %>D.<%= secondModelDisplaySnake %>GridOne.slice(0,-1)}10`);
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'11');
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= secondProperty %>-<%= secondModelDisplaySnake %>').text().trim(), `${<%= FirstCharacterModuleName %>D.<%= secondModelDisplaySnake %>GridOne.slice(0,-1)}11`);
     isNotDisabledElement('.t-first');
     isNotDisabledElement('.t-previous');
     isDisabledElement('.t-next');
@@ -147,7 +147,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   andThen(() => {
     assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'0');
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'1');
     assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= secondProperty %>-<%= secondModelDisplaySnake %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= secondModelDisplaySnake %>GridOne);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
@@ -165,13 +165,13 @@ test('clicking header will sort by given property and reset page to 1 (also requ
   var sort_one = `${<%= CapitalizeModule %>_URL}?page=1&ordering=<%= firstProperty %>`;
   xhr(sort_one ,'GET',null,{},200,<%= FirstCharacterModuleName %>F.sorted_page_one('<%= firstProperty %>'));
   andThen(() => {
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'0');
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'1');
   });
   click('.t-sort-<%= firstProperty %>-dir');
   andThen(() => {
     assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL + '?sort=<%= firstProperty %>');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'0');
+    assert.equal(find('.t-grid-data:eq(0) .t-<%= dasherizedModuleName %>-<%= firstProperty %>').text().trim(), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'1');
   });
 });
 
