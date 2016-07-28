@@ -188,7 +188,7 @@ class CategoryTests(CategorySetupMixin, TestCase):
 
         ret = child.parents_and_self_as_string()
 
-        self.assertEqual(ret, "{} - {} - all".format(parent.name, child.name))
+        self.assertEqual(ret, "{} - {} - All".format(parent.name, child.name))
 
 
 class CategoryLevelTests(CategorySetupMixin, TestCase):

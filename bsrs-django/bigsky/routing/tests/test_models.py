@@ -8,9 +8,10 @@ from category.tests.factory import create_single_category, REPAIR
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
-from routing.models import Assignment, AssignmentManager, AssignmentQuerySet, ProfileFilter
-from routing.tests.factory import (create_assignment, create_ticket_priority_filter,
-create_ticket_categories_filter, create_auto_assign_filter)
+from routing.models import Assignment, AssignmentManager, AssignmentQuerySet, ProfileFilter, AUTO_ASSIGN
+from routing.tests.factory import (
+    create_assignment, create_ticket_priority_filter, create_ticket_categories_filter,
+    create_auto_assign_filter, create_auto_assign_filter)
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority
 from ticket.tests.factory import create_ticket
@@ -123,6 +124,17 @@ class AssignmentManagerTests(TestCase):
 
         ticket = Ticket.objects.get(id=self.ticket.id)
         self.assertEqual(ticket.assignee, assignment_three.assignee)
+
+    def test_auto_assign_filter_in_use(self):
+        self.assertFalse(Assignment.objects.auto_assign_filter_in_use(self.tenant))
+
+        auto_assign_filter = create_auto_assign_filter()
+        self.assignment.filters.add(auto_assign_filter)
+        self.assertTrue(Assignment.objects.filter(tenant=self.tenant, filters__source__field=AUTO_ASSIGN).exists())
+
+        ret = Assignment.objects.auto_assign_filter_in_use(self.tenant)
+
+        self.assertTrue(ret)
 
 
 class AssignmentTests(TestCase):

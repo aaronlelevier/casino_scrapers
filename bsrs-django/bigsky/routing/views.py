@@ -7,7 +7,7 @@ from rest_framework import permissions, viewsets
 from rest_framework.exceptions import MethodNotAllowed
 
 from location.models import LocationLevel
-from routing.models import Assignment, AvailableFilter
+from routing.models import Assignment, AvailableFilter, AUTO_ASSIGN
 from routing import serializers as rs
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.views import BaseModelViewSet
@@ -52,7 +52,18 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
             raise MethodNotAllowed(method=self.action)
 
     def list(self, request, *args, **kwargs):
-        response = super(AvailableFilterViewSet, self).list(request, *args, **kwargs)
+        queryset = self.filter_queryset(self.get_queryset())
+        # custom: start
+        if Assignment.objects.auto_assign_filter_in_use(request.user.role.tenant):
+            queryset = AvailableFilter.objects.exclude(field=AUTO_ASSIGN)
+        # custom: end
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            response = self.get_paginated_response(serializer.data)
+        else:
+            serializer = self.get_serializer(queryset, many=True)
+            response = Response(serializer.data)
 
         data = copy.copy(response.data)
         response.data = self._combine_dynamic_data(data)

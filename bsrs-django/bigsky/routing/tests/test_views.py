@@ -10,11 +10,11 @@ from category.models import Category
 from location.models import LocationLevel
 from location.tests.factory import create_location_levels, create_top_level_location
 from person.tests.factory import create_single_person, PASSWORD
-from routing.models import Assignment, ProfileFilter, AvailableFilter
+from routing.models import Assignment, ProfileFilter, AvailableFilter, AUTO_ASSIGN
 from routing.tests.factory import (
-    create_assignment, create_available_filters,
+    create_assignment, create_available_filters, create_auto_assign_filter,
     create_available_filter_location, create_ticket_location_filter,
-    create_ticket_categories_mid_level_filter)
+    create_ticket_categories_mid_level_filter, create_assignment)
 from routing.tests.mixins import ViewTestSetupMixin
 from ticket.models import TicketPriority
 from utils.create import _generate_chars
@@ -277,6 +277,8 @@ class AvailableFilterTests(APITestCase):
 
     def setUp(self):
         self.person = create_single_person()
+        self.tenant = self.person.role.tenant
+        self.assignment = create_assignment(tenant=self.tenant)
         create_location_levels()
         create_available_filters()
         self.af = AvailableFilter.objects.first()
@@ -329,6 +331,31 @@ class AvailableFilterTests(APITestCase):
         self.assertEqual(location_data['lookups']['unique_key'], "location-location_level-{}".format(location_level.name))
         self.assertEqual(location_data['lookups']['location_level']['id'], str(location_level.id))
         self.assertEqual(location_data['lookups']['location_level']['name'], location_level.name)
+
+    def test_auto_assign_filter_removed_if_already_in_use(self):
+        # AUTO_ASSIGN included
+        self.assertFalse(Assignment.objects.auto_assign_filter_in_use(self.tenant))
+
+        response = self.client.get('/api/admin/assignments-available-filters/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertIn(
+            AUTO_ASSIGN,
+            [f['field'] for f in data['results']]
+        )
+
+        # AUTO_ASSIGN excluded
+        auto_assign_filter = create_auto_assign_filter()
+        self.assignment.filters.add(auto_assign_filter)
+        self.assertTrue(Assignment.objects.auto_assign_filter_in_use(self.tenant))
+
+        response = self.client.get('/api/admin/assignments-available-filters/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertNotIn(
+            AUTO_ASSIGN,
+            [f['field'] for f in data['results']]
+        )
 
     def test_detail(self):
         response = self.client.get('/api/admin/assignments-available-filters/{}/'.format(self.af.id))

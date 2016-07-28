@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from rest_framework.decorators import list_route
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -18,14 +20,18 @@ class CategoryViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet
 
     Must send the Parent/Children on every Update.
 
-    ### Filters
+    ### Sub API Endpoints
     1. Get top level Categories
 
-        `/api/admin/categories/parents`
+        `/api/admin/categories/parents/`
 
-    2. Get Children for a specified Parent
+    2. General power-select endpoint
 
-        `/api/admin/categories/?parent=id`
+        `/api/admin/categories/category__icontains=<search_key>/`
+
+    3. ProfileFilter power-select endpoint
+
+        `/api/admin/categories/profile-filter/<search_key>/`
 
     '''
     model = Category
@@ -79,15 +85,17 @@ class CategoryViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet
         serializer = cs.CategoryIDNameSerializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-    # @list_route(methods=['GET'], url_path=r"parent=(?P<search_id>[\w\-]+)")
-    # def parent(self, request, search_id=None):
-    #     # for ticket category open power select (not top level).  Will tackle later today
-    #     categories = Category.objects.filter(parent__id__in=[search_id])
-    #     serializer = cs.CategorySearchSerializer(categories, many=True)
-    #     return Response(serializer.data)
-
     @list_route(methods=['GET'], url_path=r"category__icontains=(?P<search_key>[\w\-]+)")
     def search(self, request, search_key=None):
         queryset = Category.objects.search_power_select(search_key)
         serializer = cs.CategorySearchSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @list_route(methods=['GET'], url_path=r"profile-filter/(?P<search_key>[\w\-]+)")
+    def profile_filter(self, request, search_key=None):
+        queryset = Category.objects.filter(name__icontains=search_key)
+        if queryset:
+            queryset = queryset[:settings.PAGE_SIZE]
+
+        serializer = cs.CategoryProfileFilterSerializer(queryset, many=True)
         return Response(serializer.data)

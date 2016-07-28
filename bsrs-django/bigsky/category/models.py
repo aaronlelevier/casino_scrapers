@@ -185,7 +185,7 @@ class Category(BaseModel):
         if not category.parent:
             if self.children.first():
                 child_level = max((n['level'] for n in names))
-                names.append({'level': child_level+1, 'name': 'all'})
+                names.append({'level': child_level+1, 'name': 'All'})
 
             sorted_list = sorted(names, key=lambda k: k['level'])
             return " - ".join([s['name'] for s in sorted_list])

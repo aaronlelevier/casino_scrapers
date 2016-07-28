@@ -147,4 +147,4 @@ class AssignmentDetailSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
     @staticmethod
     def eager_load(queryset):
-        return queryset.select_related('assignee').prefetch_related('filters')
+        return queryset.select_related('assignee').prefetch_related('filters', 'filters__source')

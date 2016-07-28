@@ -53,6 +53,11 @@ class AssignmentManager(BaseManager):
                 ticket.save()
                 break
 
+    def auto_assign_filter_in_use(self, tenant):
+        return (self.filter(tenant=tenant, filters__source__field=AUTO_ASSIGN)
+                    .select_related('tenant', 'filters', 'filters__source')
+                    .exists())
+
 
 class Assignment(BaseModel):
     tenant = models.ForeignKey(Tenant, null=True)
