@@ -21,9 +21,5 @@ export default create({
   // priorityTwoIsChecked: () => Ember.$('.t-checkbox-list input:eq(1)').is(':checked'),
   // priorityThreeIsChecked: () => Ember.$('.t-checkbox-list input:eq(2)').is(':checked'),
   // priorityFourIsChecked: () => Ember.$('.t-checkbox-list input:eq(3)').is(':checked'),
-
-  description: value('.t-mobile-assignment-description'),
-  descriptionFillIn: fillable('.t-mobile-assignment-description'),
-  
   assigneeInput: text(Assignee),
 });

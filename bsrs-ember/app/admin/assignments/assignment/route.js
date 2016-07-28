@@ -16,7 +16,7 @@ export default TabRoute.extend(FindById, {
       {'title': 'Detail Section', 'component': 'assignments/detail-section', active: 'active'},
       {'title': 'Filter Section', 'component': 'assignments/filter-section', active: ''},
     ];
-    return this.findByIdScenario(model, pk, { hashComponents:hashComponents });
+    return this.findByIdScenario(model, pk, { hashComponents:hashComponents, repository:this.get('repository') });
   },
   setupController(controller, hash) {
     controller.setProperties(hash);
