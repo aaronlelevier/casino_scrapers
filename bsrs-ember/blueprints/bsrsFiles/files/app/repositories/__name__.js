@@ -14,7 +14,7 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
   typeGrid: '<%= dasherizedModuleName %>-list',
   garbage_collection: ['<%= dasherizedModuleName %>-list'],
   uuid: injectUUID('uuid'),
-  <%= camelizedModuleName %>Deserializer: injectDeserializer('<%= dasherizedModuleName %>'),
+  <%= FirstCharacterModuleName %>Deserializer: injectDeserializer('<%= dasherizedModuleName %>'),
   url: <%= CapitalizeModule %>_URL,
-  deserializer: Ember.computed.alias('<%= camelizedModuleName %>Deserializer'),
+  deserializer: Ember.computed.alias('<%= FirstCharacterModuleName %>Deserializer'),
 });

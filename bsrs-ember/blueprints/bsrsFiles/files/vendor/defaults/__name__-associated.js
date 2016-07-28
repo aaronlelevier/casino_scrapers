@@ -5,6 +5,7 @@ var BSRS_<%= CapitalizeModule %>_<%= thirdAssociatedModelCaps %>_DEFAULTS_OBJECT
     return {
       idOne: '1ee82b8c-89bd-45a2-8d57-4b920c8b1111',
       idTwo: '2cc82b8c-89bd-45a2-8d57-4b920c8b1112',
+      unusedId: '00082b8c-89bd-45a2-8d57-4b920c8b1000',
       <%= secondPropertyCamel %>One: '',
       <%= secondPropertyCamel %>Two: '',
     };
