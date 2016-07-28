@@ -5,6 +5,7 @@ import { test } from 'qunit';
 import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
 import <%= FirstCharacterModuleName %>D from 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>';
 import <%= FirstCharacterModuleName %>F from 'bsrs-ember/vendor/<%= dasherizedModuleName %>_fixtures';
+import <%= SecondModelSingleCharacter %>D from 'bsrs-ember/vendor/<%= secondModel %>';
 import <%= SecondModelSingleCharacter %>F from 'bsrs-ember/vendor/<%= secondModel %>_fixtures';
 import config from 'bsrs-ember/config/environment';
 import page from 'bsrs-ember/tests/pages/<%= dasherizedModuleName %>-mobile';
@@ -67,11 +68,11 @@ test('visit mobile detail and update all fields', async assert => {
   await <%= camelizedModuleName %>page.<%= firstPropertyCamel %>Fill(<%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>Two);
   assert.equal(<%= camelizedModuleName %>page.<%= firstPropertyCamel %>Value, <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>Two);
   // <%= secondProperty %>
-  let keyword = 'boy1';
+  let keyword = 'Boy1';
   xhr(`${<%= secondModelPluralCaps %>_URL}<%= secondModelSnake %>__icontains=${keyword}/`, 'GET', null, {}, 200, <%= SecondModelSingleCharacter %>F.search_power_select());
   await selectSearch('.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select', keyword);
   await selectChoose('.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select', keyword);
-  assert.equal(<%= camelizedModuleName %>page.<%= secondProperty %>Input, keyword);
+  assert.equal(<%= camelizedModuleName %>page.<%= secondProperty %>Input, <%= SecondModelSingleCharacter %>D.<%= secondModelDisplaySnake %>Boy);
   xhr(<%= CapitalizeModule %>_PUT_URL, 'PUT', <%= FirstCharacterModuleName %>F.put({<%= firstPropertySnake %>: <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>Two, <%= secondPropertySnake %>: <%= FirstCharacterModuleName %>D.<%= secondPropertyCamel %>SelectOne}), {}, 200, <%= FirstCharacterModuleName %>F.list());
   await generalMobilePage.mobileActionDropdownClick();
   await generalPage.save()

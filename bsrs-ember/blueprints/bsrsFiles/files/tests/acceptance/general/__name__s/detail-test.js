@@ -8,6 +8,7 @@ import config from 'bsrs-ember/config/environment';
 import <%= FirstCharacterModuleName %>D from 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>';
 import <%= FirstCharacterModuleName %>F from 'bsrs-ember/vendor/<%= dasherizedModuleName %>_fixtures';
 import <%= SecondModelSingleCharacter %>F from 'bsrs-ember/vendor/<%= secondModel %>_fixtures';
+import <%= SecondModelSingleCharacter %>D from 'bsrs-ember/vendor/<%= secondModel %>';
 import page from 'bsrs-ember/tests/pages/<%= dasherizedModuleName %>';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { <%= CapitalizeModule %>_URL, <%= CapitalizeModule %>_LIST_URL, <%= secondModelPluralCaps %>_URL } from 'bsrs-ember/utilities/urls';
@@ -53,12 +54,14 @@ test('visit detail and update all fields', assert => {
     assert.equal(page.<%= firstPropertyCamel %>Value, <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>Two);
   });
   // <%= secondProperty %>
-  let keyword = 'boy1';
+  // Assuming secondModel is person
+  let keyword = 'Boy1';
   xhr(`${<%= secondModelPluralCaps %>_URL}<%= secondModelSnake %>__icontains=${keyword}/`, 'GET', null, {}, 200, <%= SecondModelSingleCharacter %>F.search_power_select());
   selectSearch('.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select', keyword);
   selectChoose('.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select', keyword);
   andThen(() => {
-    assert.equal(page.<%= secondProperty %>Input, keyword);
+    // ex. PD.fullnameBoy
+    assert.equal(page.<%= secondProperty %>Input, <%= SecondModelSingleCharacter %>D.<%= secondModelDisplaySnake %>Boy);
   });
   xhr(API_DETAIL_URL, 'PUT', <%= FirstCharacterModuleName %>F.put({<%= firstPropertyCamel %>: <%= FirstCharacterModuleName %>D.<%= firstPropertySnake %>Two, <%= secondPropertyCamel %>: <%= FirstCharacterModuleName %>D.<%= secondPropertySnake %>SelectOne}), {}, 200, <%= FirstCharacterModuleName %>F.list());
   generalPage.save();

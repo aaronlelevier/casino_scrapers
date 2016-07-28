@@ -26,6 +26,9 @@ export default GridViewComponent.extend({
       isSortable: true,
       isFilterable: true,
       isSearchable: true
+      classNames: ['<%= dasherizedModuleName %>-<%= secondProperty %>'],
+      filterComponent: 'grid/filters/<%= secondProperty %>-select-grid',
+      powerSelect: true
     }
   ]
 });

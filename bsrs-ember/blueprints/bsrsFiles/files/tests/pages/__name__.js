@@ -6,8 +6,7 @@ import <%= FirstCharacterModuleName %>D from 'bsrs-ember/vendor/defaults/<%= das
 
 const BASE_URL = BASEURLS.BASE_<%= CapitalizeModule %>_URL;
 const DETAIL_URL = `${BASE_URL}/${<%= FirstCharacterModuleName %>D.idOne}`;
-
-const <%= secondPropertyCamel %> = '.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select';
+const <%= secondPropertyCaps %> = '.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select';
 
 export default create({
   visit: visitable(<%= CapitalizeModule %>_LIST_URL),
@@ -17,7 +16,7 @@ export default create({
   <%= firstPropertyCamel %>GridOne: text('.t-<%= dasherizedModuleName %>-<%= firstProperty %>:eq(0)'),
   <%= firstPropertyCamel %>SortText: text('.t-sort-<%= firstProperty %>'),
 
-  <%= secondProperty %>Input: text(<%= secondPropertyCamel %>),
+  <%= secondProperty %>Input: text(<%= secondPropertyCaps %>),
   <%= secondProperty %>SortText: text('.t-sort-<%= secondProperty %>-<%= secondModelDisplaySnake %>'),
   <%= secondProperty %>GridOne: text('.t-<%= dasherizedModuleName %>-<%= secondProperty %>-<%= secondModelDisplaySnake %>:eq(0)'),
 });

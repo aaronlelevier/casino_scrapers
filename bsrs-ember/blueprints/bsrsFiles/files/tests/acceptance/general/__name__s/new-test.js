@@ -40,7 +40,8 @@ test('visit new URL and create a new record', assert => {
     assert.equal(page.<%= firstPropertyCamel %>Value, <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One);
   });
   // <%= secondProperty %>
-  let keyword = 'boy1';
+  // Assuming secondModel is person
+  let keyword = 'Boy1';
   xhr(`${<%= secondModelPluralCaps %>_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, <%= SecondModelSingleCharacter %>F.search_power_select());
   selectSearch('.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select', keyword);
   selectChoose('.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select', keyword);

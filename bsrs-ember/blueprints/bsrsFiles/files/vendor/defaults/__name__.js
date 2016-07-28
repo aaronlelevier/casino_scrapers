@@ -12,12 +12,12 @@ var BSRS_<%= CapitalizeModule %>_DEFAULTS_OBJECT = (function() {
       <%= firstPropertyCamel %>Two: 'bar',
       <%= firstPropertyCamel %>GridOne: 'foo1',
       <%= firstPropertyCamel %>GridOneReverse: 'foo10',
+      <%= firstPropertyCamel %>LastPage2Grid: 'foobar20',
       <%= secondPropertyCamel %>One: this.<%= secondModelCamel %>.idOne,
       <%= secondPropertyCamel %>Two: this.<%= secondModelCamel %>.idTwo,
       <%= secondPropertyCamel %>SelectOne: this.<%= secondModelCamel %>.idBoy,
       <%= secondModelDisplayCamel %>: this.<%= secondModelCamel %>.<%= secondModelDisplayCamel %>,
       <%= secondModelDisplayCamel %>One: this.<%= secondModelCamel %>.<%= secondModelDisplayCamel %>One,
-      <%= secondModelDisplayCamel %>Two: this.<%= secondModelCamel %>.<%= secondModelDisplayCamel %>Two,
       <%= secondModelDisplayCamel %>GridOne: this.<%= secondModelCamel %>.<%= secondModelDisplaySnake %>+'1',
       <%= secondModelDisplayCamel %>GridTen: this.<%= secondModelCamel %>.<%= secondModelDisplaySnake %>+'10',
     };
