@@ -39,7 +39,6 @@ test('serialize', assert => {
   assert.equal(ret.id, assignmentD.idOne);
   assert.equal(ret.description, assignmentD.descOne);
   assert.equal(ret.assignee, assignmentD.assigneeOne);
-  assert.equal(ret.pf.length, 1);
 });
 
 /* assignee */

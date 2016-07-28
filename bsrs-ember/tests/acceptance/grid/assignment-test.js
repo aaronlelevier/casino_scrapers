@@ -277,28 +277,3 @@ test('sort by assignee username', function(assert) {
     assert.equal(find('.t-grid-data:eq(0) .t-assignment-assignee-username').text().trim(), assignmentD.usernameGridTen);
   });
 });
-
-test('sort by pf fukc', function(assert) {
-  visit(LIST_URL);
-  andThen(() => {
-    assert.equal(currentURL(), LIST_URL);
-    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-assignment-pf-fukc').text().trim(), assignmentD.fukcGridOne);
-  });
-  var sort_one = `${ASSIGNMENT_URL}?page=1&ordering=pf__fukc`;
-  xhr(sort_one ,'GET',null,{},200, assignmentF.sorted_page_one('pf'));
-  click('.t-sort-pf-fukc-dir');
-  andThen(() => {
-    assert.equal(currentURL(), LIST_URL + '?sort=pf.fukc');
-    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-assignment-pf-fukc').text().trim(), assignmentD.fukcGridOne);
-  });
-  var sort = `${ASSIGNMENT_URL}?page=1&ordering=-pf__fukc`;
-  xhr(sort ,'GET',null,{},200, assignmentF.list_reverse());
-  click('.t-sort-pf-fukc-dir');
-  andThen(() => {
-    assert.equal(currentURL(), LIST_URL + '?sort=pf.fukc');
-    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-assignment-pf-fukc').text().trim(), assignmentD.fukcGridTen);
-  });
-});
