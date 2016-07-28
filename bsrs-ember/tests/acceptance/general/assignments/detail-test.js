@@ -34,7 +34,7 @@ test('by clicking record in list view, User is sent to detail view', assert => {
   andThen(() => {
     assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
   });
-  generalPage.gridItemOneClick();
+  generalPage.gridItemZeroClick();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
   });

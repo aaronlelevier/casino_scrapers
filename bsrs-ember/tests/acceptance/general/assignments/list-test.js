@@ -10,8 +10,8 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 
 const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_ASSIGNMENT_URL;
-const DETAIL_URL = `${BASE_URL}/${AD.idZero}`;
-const API_DETAIL_URL = `${ASSIGNMENT_URL}${AD.idZero}/`;
+const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
+const API_DETAIL_URL = `${ASSIGNMENT_URL}${AD.idOne}/`;
 
 let store;
 

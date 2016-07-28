@@ -10,7 +10,7 @@ var BSRS_ASSIGNMENT_DEFAULTS_OBJECT = (function() {
       idGridTwo: '1ee82b8c-89bd-45a2-8d57-5b920c8b0002',
       descriptionOne: 'foobar',
       descriptionTwo: 'barfoo',
-      descriptionGridOne: 'foobar0',
+      descriptionGridOne: 'foobar1',
       descriptionGridOneReverse: 'foobar10',
       assigneeOne: this.person.idOne,
       assigneeTwo: this.person.idTwo,
@@ -18,8 +18,7 @@ var BSRS_ASSIGNMENT_DEFAULTS_OBJECT = (function() {
       username: this.person.username,
       usernameOne: this.person.usernameOne,
       usernameTwo: this.person.usernameTwo,
-      usernameGridOne: this.person.username+"0",
-      usernameGridTwo: this.person.username+"1",
+      usernameGridOne: this.person.username+"1",
       usernameGridTen: this.person.username+"10",
     };
   };
