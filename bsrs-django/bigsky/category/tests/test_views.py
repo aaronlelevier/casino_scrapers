@@ -1,6 +1,8 @@
 import json
 import uuid
 
+from django.conf import settings
+
 from model_mommy import mommy
 from rest_framework.test import APITestCase, APITransactionTestCase
 
@@ -26,28 +28,15 @@ class CategoryListTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_response(self):
-        response = self.client.get('/api/admin/categories/')
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_top_level(self):
-        response = self.client.get('/api/admin/categories/')
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertTrue(len(data['results']) > 0)
-        self.assertFalse(self.top_level.parent)
-        self.assertTrue(self.top_level.children)
-
     def test_data(self):
         response = self.client.get('/api/admin/categories/')
 
+        self.assertEqual(response.status_code, 200)
         # data
         data = json.loads(response.content.decode('utf8'))
         data = data['results'][0]
         # db object
         category = Category.objects.get(id=data['id'])
-
         self.assertEqual(data['id'], str(category.id))
         self.assertEqual(data['name'], category.name)
         self.assertEqual(data['description'], category.description)
@@ -58,6 +47,14 @@ class CategoryListTests(APITestCase):
         self.assertEqual(data['level'], category.level)
         self.assertNotIn('parent', data)
         self.assertNotIn('children', data)
+
+    def test_top_level(self):
+        response = self.client.get('/api/admin/categories/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(len(data['results']) > 0)
+        self.assertFalse(self.top_level.parent)
+        self.assertTrue(self.top_level.children)
 
     def test_power_select_category_name(self):
         category = create_single_category(name='foobar')
@@ -434,3 +431,47 @@ class CategoryFilterTests(APITransactionTestCase):
                 data['count'],
                 Category.objects.filter(name__icontains=name).count()
         )
+
+class CategoryProfileFilterTests(APITestCase):
+
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_person()
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_data(self):
+        parent = create_single_category(name='aaa')
+        child = create_single_category(name='aaab', parent=parent)
+        grand_child = create_single_category(name='c', parent=child)
+
+        response = self.client.get('/api/admin/categories/profile-filter/{}/'.format(parent.name))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 2)
+        self.assertEqual(data[0]['id'], str(parent.id))
+        self.assertEqual(data[0]['name'], str(parent.parents_and_self_as_string()))
+        self.assertEqual(data[1]['id'], str(child.id))
+        self.assertEqual(data[1]['name'], str(child.parents_and_self_as_string()))
+
+    def test_data__limit_full_list(self):
+        create_categories()
+
+        response = self.client.get('/api/admin/categories/profile-filter/{}/'.format('a'))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), settings.PAGE_SIZE)
+
+    def test_data__no_match(self):
+        name = 'foobar'
+        self.assertFalse(Category.objects.filter(name__icontains=name).exists())
+
+        response = self.client.get('/api/admin/categories/profile-filter/{}/'.format(name))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 0)

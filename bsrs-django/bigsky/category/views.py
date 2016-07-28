@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from rest_framework.decorators import list_route
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -90,4 +92,13 @@ class CategoryViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet
     def search(self, request, search_key=None):
         queryset = Category.objects.search_power_select(search_key)
         serializer = cs.CategorySearchSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @list_route(methods=['GET'], url_path=r"profile-filter/(?P<search_key>[\w\-]+)")
+    def profile_filter(self, request, search_key=None):
+        queryset = Category.objects.filter(name__icontains=search_key)
+        if queryset:
+            queryset = queryset[:settings.PAGE_SIZE]
+
+        serializer = cs.CategoryProfileFilterSerializer(queryset, many=True)
         return Response(serializer.data)
