@@ -5,6 +5,7 @@ import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 
 export default Ember.Component.extend(TabMixin, EditMixin, {
   repository: injectRepo('<%= dasherizedModuleName %>'),
+  // For db-fetch if applicable
   <%= secondModelCamel %>Repo: injectRepo('<%= secondModel %>'),
   actions: {
     save() {

@@ -86,10 +86,9 @@ test('deserialize list', assert => {
     deserializer.deserialize(json);
   });
   assert.equal(store.find('<%= dasherizedModuleName %>-list').get('length'), 20);
-  const i = 0;
-  <%= camelizedModuleName %> = store.find('<%= dasherizedModuleName %>-list').objectAt(i);
-  assert.equal(<%= camelizedModuleName %>.get('id'), `${<%= FirstCharacterModuleName %>D.idOne.slice(0,-1)}${i}`);
-  assert.equal(<%= camelizedModuleName %>.get('<%= firstProperty %>'), `${<%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One}${i}`);
-  assert.equal(<%= camelizedModuleName %>.get('<%= secondPropertySnake %>').id, `${<%= FirstCharacterModuleName %>D.<%= secondPropertyCamel %>One.slice(0,-1)}${i}`);
-  assert.equal(<%= camelizedModuleName %>.get('<%= secondPropertySnake %>').<%= secondModelDisplaySnake %>, `${<%= FirstCharacterModuleName %>D.<%= secondModelDisplaySnake %>}${i}`);
+  <%= camelizedModuleName %> = store.find('<%= dasherizedModuleName %>-list').objectAt(0);
+  assert.equal(<%= camelizedModuleName %>.get('id'), <%= FirstCharacterModuleName %>D.idOne);
+  assert.equal(<%= camelizedModuleName %>.get('<%= firstProperty %>'), <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One+'1');
+  assert.equal(<%= camelizedModuleName %>.get('<%= secondPropertySnake %>').id, <%= FirstCharacterModuleName %>D.<%= secondPropertyCamel %>One);
+  assert.equal(<%= camelizedModuleName %>.get('<%= secondPropertySnake %>').<%= secondModelDisplaySnake %>, <%= FirstCharacterModuleName %>D.<%= secondModelDisplaySnake %>+'1');
 });

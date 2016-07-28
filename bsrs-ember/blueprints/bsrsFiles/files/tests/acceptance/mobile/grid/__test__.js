@@ -34,38 +34,32 @@ moduleForAcceptance('Acceptance | grid <%= dasherizedModuleName %> mobile test',
 
 /* jshint ignore:start */
 
-test('only renders grid items from server and not other <%= dasherizedModuleName %> objects already in store', assert => {
+test('only renders grid items from server and not other <%= dasherizedModuleName %> objects already in store', async assert => {
   /* MOBILE doesn't clear out grid items on every route call to allow for infinite scrolling. If other <%= dasherizedModuleName %> in store, this will fail */
   xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
-  visit(DASHBOARD_URL);
-  andThen(() => {
-    assert.equal(currentURL(), DASHBOARD_URL);
-    assert.equal(store.find('<%= dasherizedModuleName %>-list').get('length'), 0);
-  });
+  await visit(DASHBOARD_URL);
+  assert.equal(currentURL(), DASHBOARD_URL);
+  assert.equal(store.find('<%= dasherizedModuleName %>-list').get('length'), 0);
   clearxhr(list_xhr);
   xhr(`${<%= CapitalizeModule %>_URL}?page=1`, 'GET', null, {}, 200, <%= FirstCharacterModuleName %>F.list_two());
-  visit(<%= CapitalizeModule %>_LIST_URL);
-  andThen(() => {
-    assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
-    assert.equal(store.find('<%= dasherizedModuleName %>-list').get('length'), 9);
-  });
+  await visit(<%= CapitalizeModule %>_LIST_URL);
+  assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
+  assert.equal(store.find('<%= dasherizedModuleName %>-list').get('length'), 9);
 });
 
-test('visiting mobile <%= dasherizedModuleName %> grid show correct layout', assert => {
-  <%= camelizedModuleName %>Page.visit();
-  andThen(() => {
-    const <%= camelizedModuleName %> = store.findOne('<%= dasherizedModuleName %>-list');
-    assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
-    assert.equal(find('.t-mobile-grid-title').text().trim(), '19 <%= CapFirstLetterModuleName %>');
-    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').text().trim());
-    // Based on <%= dasherizedModuleName %>-list
-    assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').hasClass('t-<%= dasherizedModuleName %>-<%= firstPropertySnake %>'));
-  });
+test('visiting mobile <%= dasherizedModuleName %> grid show correct layout', async assert => {
+  await <%= camelizedModuleName %>Page.visit();
+  const <%= camelizedModuleName %> = store.findOne('<%= dasherizedModuleName %>-list');
+  assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
+  assert.equal(find('.t-mobile-grid-title').text().trim(), '19 <%= CapFirstLetterModuleName %>');
+  assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+  assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').text().trim());
+  // Based on <%= dasherizedModuleName %>-list
+  assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').hasClass('t-<%= dasherizedModuleName %>-<%= firstPropertySnake %>'));
 });
 
 test('<%= dasherizedModuleName %> <%= firstPropertySnake %> filter will filter down results and reset page to 1', async assert => {
-  xhr(`${<%= CapitalizeModule %>_URL}?page=1&<%= firstPropertySnake %>__icontains=ape19`, 'GET', null, {}, 200, <%= FirstCharacterModuleName %>F.searched('ape19', '<%= firstPropertySnake %>'));
+  xhr(`${<%= CapitalizeModule %>_URL}?page=1&<%= firstPropertySnake %>__icontains=${<%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>LastPage2Grid}`, 'GET', null, {}, 200, <%= FirstCharacterModuleName %>F.searched(<%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>LastPage2Grid, '<%= firstPropertySnake %>'));
   clearxhr(list_xhr);
   xhr(`${<%= CapitalizeModule %>_URL}?page=2`, 'GET', null, {}, 200, <%= FirstCharacterModuleName %>F.list());
   await visit(<%= CapitalizeModule %>_LIST_URL+'?page=2');
@@ -74,13 +68,14 @@ test('<%= dasherizedModuleName %> <%= firstPropertySnake %> filter will filter d
   await generalMobilePage.clickFilterOpen();
   await page.clickFilter<%= firstPropertyTitle %>();
   assert.equal(find('.t-filter-input').length, 1);
-  await generalMobilePage.filterInput('ape19');
+  await generalMobilePage.filterInput(<%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>LastPage2Grid);
   await triggerEvent('.t-filter-input', 'keyup', {keyCode: 68});
   await generalMobilePage.submitFilterSort();
   assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), <%= FirstCharacterModuleName %>D.<%= firstPropertySnake %>LastPage2Grid);
 });
 
 test('filtering on priority will sort when filter is clicked', async assert => {
+  // This is just an example
   xhr(`${<%= CapitalizeModule %>_URL}?page=1&priority__id__in=${<%= FirstCharacterModuleName %>D.priorityOneId}`, 'GET', null, {}, 200, <%= FirstCharacterModuleName %>F.searched_related(<%= FirstCharacterModuleName %>D.priorityOneId, 'priority'));
   await <%= camelizedModuleName %>Page.visit();
   assert.equal(store.find('<%= dasherizedModuleName %>-list').get('length'), 10);
@@ -144,6 +139,7 @@ test('filtering on priority will sort when filter is clicked', async assert => {
 // });
 
 test('filtering on multiple parameters', async assert => {
+  // This is just an example
   xhr(`${<%= CapitalizeModule %>_URL}?page=1&priority__id__in=${<%= FirstCharacterModuleName %>D.priorityOneId}&status__id__in=${<%= FirstCharacterModuleName %>D.statusOneId}`, 'GET', null, {}, 200, <%= FirstCharacterModuleName %>F.searched_related(<%= FirstCharacterModuleName %>D.priorityOneId, 'priority'));
   await <%= camelizedModuleName %>Page.visit();
   await generalMobilePage.clickFilterOpen();
@@ -156,7 +152,9 @@ test('filtering on multiple parameters', async assert => {
 });
 
 test('filtering <%= secondPropertySnake %> on power select and can remove', async assert => {
-  xhr(`${<%= CapitalizeModule %>_URL}?page=1&<%= secondPropertySnake %>__id__in=${<%= secondModelTitle %>D.idBoy}`, 'GET', null, {}, 200, <%= FirstCharacterModuleName %>F.searched_related(<%= FirstCharacterModuleName %>D.priorityOneId, 'priority'));
+  // Replace priority with secondProperty
+  // Assuming secondModel is person
+  xhr(`${<%= CapitalizeModule %>_URL}?page=1&<%= secondPropertySnake %>__id__in=${<%= secondModelTitle %>D.idBoy}`, 'GET', null, {}, 200, <%= FirstCharacterModuleName %>F.searched_related(<%= FirstCharacterModuleName %>D.<%= secondPropertyCamel %>SelectOne, '<%= secondPropertyCamel %>'));
   await <%= camelizedModuleName %>Page.visit();
   assert.equal(store.find('<%= dasherizedModuleName %>-list').get('length'), 10);
   await generalMobilePage.clickFilterOpen();
@@ -176,6 +174,7 @@ test('filtering <%= secondPropertySnake %> on power select and can remove', asyn
 });
 
 test('filtering <%= secondPropertySnake %> on power select and can remove', async assert => {
+  // this is just an example.  Need multiple (assignee, status to use this test)
   xhr(`${<%= CapitalizeModule %>_URL}?page=1&<%= secondProperty %>__id__in=${<%= secondModelTitle %>D.idThree}&status__id__in=${<%= FirstCharacterModuleName %>D.statusOneId}`, 'GET', null, {}, 200, <%= FirstCharacterModuleName %>F.searched_related(<%= FirstCharacterModuleName %>D.priorityOneId, 'priority'));
   xhr(`${<%= CapitalizeModule %>_URL}?page=1&<%= secondProperty %>__id__in=${<%= secondModelTitle %>D.idFour},${<%= secondModelTitle %>D.idThree}&status__id__in=${<%= FirstCharacterModuleName %>D.statusOneId}`, 'GET', null, {}, 200, <%= FirstCharacterModuleName %>F.searched_related(<%= FirstCharacterModuleName %>D.priorityOneId, 'priority'));
   xhr(`${<%= CapitalizeModule %>_URL}?page=1&<%= secondProperty %>__id__in=${<%= secondModelTitle %>D.idFour}&status__id__in=${<%= FirstCharacterModuleName %>D.statusOneId}`, 'GET', null, {}, 200, <%= FirstCharacterModuleName %>F.searched_related(<%= FirstCharacterModuleName %>D.priorityOneId, 'priority'));
@@ -213,6 +212,7 @@ test('filtering <%= secondPropertySnake %> on power select and can remove', asyn
 });
 
 test('removing find or id_in filter will reset grid', async assert => {
+  // Replace idBoy with what you are searching on the secondModel
   xhr(`${<%= CapitalizeModule %>_URL}?page=1&<%= secondPropertySnake %>__id__in=${<%= secondModelTitle %>D.idBoy}`, 'GET', null, {}, 200, {'results': []});
   await <%= camelizedModuleName %>Page.visit();
   await generalMobilePage.clickFilterOpen();

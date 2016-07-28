@@ -5,8 +5,8 @@ import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/utilities/urls';
 
 const BASE_URL = BASEURLS.BASE_<%= CapitalizeModule %>_URL;
-const <%= secondPropertyTitle %> = '.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select .ember-basic-dropdown-trigger';
 const DETAIL_URL = `${BASE_URL}/${<%= FirstCharacterModuleName %>D.idOne}`;
+const <%= secondPropertyCaps %> = '.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select';
 
 export default create({
   visitDetail: visitable(DETAIL_URL),
@@ -21,9 +21,5 @@ export default create({
   // priorityTwoIsChecked: () => Ember.$('.t-checkbox-list input:eq(1)').is(':checked'),
   // priorityThreeIsChecked: () => Ember.$('.t-checkbox-list input:eq(2)').is(':checked'),
   // priorityFourIsChecked: () => Ember.$('.t-checkbox-list input:eq(3)').is(':checked'),
-
-  <%= firstPropertySnake %>: value('.t-mobile-<%= dasherizedModuleName %>-<%= firstPropertySnake %>'),
-  <%= firstPropertySnake %>FillIn: fillable('.t-mobile-<%= dasherizedModuleName %>-<%= firstPropertySnake %>'),
-  
-  <%= secondPropertyCamel %>Input: text(<%= secondPropertyTitle %>),
+  <%= secondPropertyCamel %>Input: text(<%= secondPropertyCaps %>),
 });

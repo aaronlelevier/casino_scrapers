@@ -16,7 +16,7 @@ export default TabRoute.extend(FindById, {
       {'title': '<%= hashComponentOne %>', 'component': '<%= dasherizedModuleName %>/<%= hashComponentOne %>', active: 'active'},
       {'title': '<%= hashComponentTwo %>', 'component': '<%= dasherizedModuleName %>/<%= hashComponentTwo %>', active: ''},
     ];
-    return this.findByIdScenario(model, pk, { hashComponents:hashComponents });
+    return this.findByIdScenario(model, pk, { hashComponents:hashComponents, repository: this.get('repository') });
   },
   setupController(controller, hash) {
     controller.setProperties(hash);
