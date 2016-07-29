@@ -1,8 +1,15 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import equal from 'bsrs-components/utils/equal';
+import { belongs_to } from 'bsrs-components/attr/belongs-to';
+import OptConf from 'bsrs-ember/mixins/optconfigure/pfilter';
 
-export default Model.extend({
+export default Model.extend(OptConf, {
+  init() {
+    this._super(...arguments);
+    belongs_to.bind(this)('afilter', 'pfilter');
+  },
+  simpleStore: Ember.inject.service(),
   lookups: attr(''),
   criteria_fks: [],
   criteria_ids: [],
@@ -10,8 +17,8 @@ export default Model.extend({
     const { criteria_fks, criteria_ids } = this.getProperties('criteria_fks', 'criteria_ids');
     return equal(criteria_fks, criteria_ids) ? false : true;
     }),
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'criteriaIsDirty', function() {
-    return this.get('isDirty') || this.get('criteriaIsDirty');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'criteriaIsDirty', 'afilterIsDirty', function() {
+    return this.get('isDirty') || this.get('criteriaIsDirty') || this.get('afilterIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   add_criteria(id) {
