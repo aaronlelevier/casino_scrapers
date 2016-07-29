@@ -47,7 +47,7 @@ test('dirty test | field', assert => {
   assert.equal(afilter.get('isDirty'), false);
 });
 
-test('aaron dirty test | lookups', assert => {
+test('dirty test | lookups', assert => {
   assert.equal(afilter.get('isDirty'), false);
   afilter.set('lookups', 'wat');
   assert.equal(afilter.get('isDirty'), true);

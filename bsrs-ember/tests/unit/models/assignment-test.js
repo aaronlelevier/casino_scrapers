@@ -5,15 +5,15 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import AD from 'bsrs-ember/vendor/defaults/assignment';
 import AF from 'bsrs-ember/vendor/assignment_fixtures';
 import PersonD from 'bsrs-ember/vendor/defaults/person';
-import AFD from 'bsrs-ember/vendor/defaults/assignmentfilter';
-import AJFD from 'bsrs-ember/vendor/defaults/assignment-join-filter';
+import PFD from 'bsrs-ember/vendor/defaults/pfilter';
+import AJFD from 'bsrs-ember/vendor/defaults/assignment-join-pfilter';
 
 var store, assignment, inactive_assignee;
 
 moduleFor('model:assignment', 'Unit | Model | assignment', {
   needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username'],
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:assignment', 'model:assignment-join-filter', 'model:assignmentfilter', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:assignment', 'model:assignment-join-pfilter', 'model:pfilter', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     run(() => {
       assignment = store.push('assignment', {id: AD.idOne});
     });
@@ -32,8 +32,8 @@ test('serialize', assert => {
   run(() => {
     assignment = store.push('assignment', {id: AD.idOne, description: AD.descOne, assignee_fk: PersonD.idOne});
     store.push('person', {id: PersonD.idOne, assignments: [AD.idOne]});
-    store.push('assignment-join-filter', {id: AJFD.idOne, assignment_pk: AD.idOne, assignmentfilter_pk: AFD.idOne});
-    store.push('assignmentfilter', {id: AFD.idOne});
+    store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
+    store.push('pfilter', {id: PFD.idOne});
   });
   let ret = assignment.serialize();
   assert.equal(ret.id, AD.idOne);
@@ -128,21 +128,21 @@ test('rollbackAssignee - assignee - assignmentwill set assignee to current assig
 /* ASSIGNMENT & PROFILE_FILTER */
 test('pf property should return all associated pf. also confirm related and join model attr values', (assert) => {
   run(() => {
-    store.push('assignment-join-filter', {id: AJFD.idOne, assignment_pk: AD.idOne, assignmentfilter_pk: AFD.idOne});
+    store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
     assignment = store.push('assignment', {id: AD.idOne, assignment_pf_fks: [AJFD.idOne]});
-    store.push('assignmentfilter', {id: AFD.idOne});
+    store.push('pfilter', {id: PFD.idOne});
   });
   let pf = assignment.get('pf');
   assert.equal(pf.get('length'), 1);
-  assert.deepEqual(assignment.get('pf_ids'), [AFD.idOne]);
+  assert.deepEqual(assignment.get('pf_ids'), [PFD.idOne]);
   assert.deepEqual(assignment.get('assignment_pf_ids'), [AJFD.idOne]);
-  assert.equal(pf.objectAt(0).get('id'), AFD.idOne);
+  assert.equal(pf.objectAt(0).get('id'), PFD.idOne);
 });
 
 test('pf property is not dirty when no pf present (undefined)', (assert) => {
   run(() => {
     assignment = store.push('assignment', {id: AD.idOne, assignment_pf_fks: undefined});
-    store.push('assignmentfilter', {id: AFD.id});
+    store.push('pfilter', {id: PFD.idOne});
   });
   assert.equal(assignment.get('pf').get('length'), 0);
   assert.ok(assignment.get('pfIsNotDirty'));
@@ -151,7 +151,7 @@ test('pf property is not dirty when no pf present (undefined)', (assert) => {
 test('pf property is not dirty when no pf present (empty array)', (assert) => {
   run(() => {
     assignment = store.push('assignment', {id: AD.idOne, assignment_pf_fks: []});
-    store.push('assignmentfilter', {id: AFD.id});
+    store.push('pfilter', {id: PFD.idOne});
   });
   assert.equal(assignment.get('pf').get('length'), 0);
   assert.ok(assignment.get('pfIsNotDirty'));
@@ -159,8 +159,8 @@ test('pf property is not dirty when no pf present (empty array)', (assert) => {
 
 test('remove_pf - will remove join model and mark model as dirty', (assert) => {
   run(() => {
-    store.push('assignment-join-filter', {id: AJFD.idOne, assignment_pk: AD.idOne, assignmentfilter_pk: AFD.idOne});
-    store.push('assignmentfilter', {id: AFD.idOne});
+    store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
+    store.push('pfilter', {id: PFD.idOne});
     assignment = store.push('assignment', {id: AD.idOne, assignment_pf_fks: [AJFD.idOne]});
   });
   assert.equal(assignment.get('pf').get('length'), 1);
@@ -168,7 +168,7 @@ test('remove_pf - will remove join model and mark model as dirty', (assert) => {
   assert.equal(assignment.get('assignment_pf_fks').length, 1);
   assert.ok(assignment.get('pfIsNotDirty'));
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
-  assignment.remove_pf(AFD.idOne);
+  assignment.remove_pf(PFD.idOne);
   assert.equal(assignment.get('pf').get('length'), 0);
   assert.equal(assignment.get('assignment_pf_ids').length, 0);
   assert.equal(assignment.get('assignment_pf_fks').length, 1);
@@ -178,38 +178,38 @@ test('remove_pf - will remove join model and mark model as dirty', (assert) => {
 
 test('add_pf - will create join model and mark model dirty', (assert) => {
   run(() => {
-    store.push('assignment-join-filter', {id: AJFD.idOne, assignment_pk: AD.idOne, assignmentfilter_pk: AFD.idOne});
-    store.push('assignmentfilter', {id: AFD.idOne});
+    store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
+    store.push('pfilter', {id: PFD.idOne});
     assignment = store.push('assignment', {id: AD.idOne, assignment_pf_fks: [AJFD.idOne]});
   });
   assert.equal(assignment.get('pf').get('length'), 1);
   assert.equal(assignment.get('assignment_pf_ids').length, 1);
   assert.equal(assignment.get('assignment_pf_fks').length, 1);
-  assert.deepEqual(assignment.get('pf_ids'), [AFD.idOne]);
+  assert.deepEqual(assignment.get('pf_ids'), [PFD.idOne]);
   assert.ok(assignment.get('pfIsNotDirty'));
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
-  assignment.add_pf({id: AFD.idTwo});
+  assignment.add_pf({id: PFD.idTwo});
   assert.equal(assignment.get('pf').get('length'), 2);
   assert.equal(assignment.get('assignment_pf_ids').length, 2);
   assert.equal(assignment.get('assignment_pf_fks').length, 1);
-  assert.deepEqual(assignment.get('pf_ids'), [AFD.idOne, AFD.idTwo]);
-  assert.equal(assignment.get('pf').objectAt(0).get('id'), AFD.idOne);
-  assert.equal(assignment.get('pf').objectAt(1).get('id'), AFD.idTwo);
+  assert.deepEqual(assignment.get('pf_ids'), [PFD.idOne, PFD.idTwo]);
+  assert.equal(assignment.get('pf').objectAt(0).get('id'), PFD.idOne);
+  assert.equal(assignment.get('pf').objectAt(1).get('id'), PFD.idTwo);
   assert.ok(assignment.get('pfIsDirty'));
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
 });
 
 test('savePf - pf - will reset the previous pf with multiple assignments', (assert) => {
-  let assignmentfilter_unused = {id: AFD.unusedId};
+  let pfilter_unused = {id: PFD.unusedId};
   run(() => {
-    store.push('assignmentfilter', {id: AFD.idOne});
-    store.push('assignmentfilter', {id: AFD.idTwo});
-    store.push('assignment-join-filter', {id: AJFD.idOne, assignment_pk: AD.idOne, assignmentfilter_pk: AFD.idOne});
-    store.push('assignment-join-filter', {id: AJFD.idTwo, assignment_pk: AD.idOne, assignmentfilter_pk: AFD.idTwo});
+    store.push('pfilter', {id: PFD.idOne});
+    store.push('pfilter', {id: PFD.idTwo});
+    store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
+    store.push('assignment-join-pfilter', {id: AJFD.idTwo, assignment_pk: AD.idOne, pfilter_pk: PFD.idTwo});
     assignment = store.push('assignment', {id: AD.idOne, assignment_pf_fks: [AJFD.idOne, AJFD.idTwo]});
   });
   assert.equal(assignment.get('pf').get('length'), 2);
-  assignment.remove_pf(AFD.idOne);
+  assignment.remove_pf(PFD.idOne);
   assert.equal(assignment.get('pf').get('length'), 1);
   assert.ok(assignment.get('pfIsDirty'));
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
@@ -218,7 +218,7 @@ test('savePf - pf - will reset the previous pf with multiple assignments', (asse
   assert.ok(assignment.get('isNotDirty'));
   assert.ok(assignment.get('pfIsNotDirty'));
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
-  assignment.add_pf(assignmentfilter_unused);
+  assignment.add_pf(pfilter_unused);
   assert.equal(assignment.get('pf').get('length'), 2);
   assert.ok(assignment.get('pfIsDirty'));
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
@@ -232,9 +232,9 @@ test('savePf - pf - will reset the previous pf with multiple assignments', (asse
 test('rollbackPf - pf - multiple assignments with the same pf will rollbackPf correctly', (assert) => {
   let assignment_two;
   run(() => {
-    store.push('assignment-join-filter', {id: AJFD.idOne, assignment_pk: AD.idOne, assignmentfilter_pk: AFD.idOne});
-    store.push('assignment-join-filter', {id: AJFD.idTwo, assignment_pk: AD.idTwo, assignmentfilter_pk: AFD.idOne});
-    store.push('assignmentfilter', {id: AFD.idOne});
+    store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
+    store.push('assignment-join-pfilter', {id: AJFD.idTwo, assignment_pk: AD.idTwo, pfilter_pk: PFD.idOne});
+    store.push('pfilter', {id: PFD.idOne});
     assignment = store.push('assignment', {id: AD.idOne, assignment_pf_fks: [AJFD.idOne]});
     assignment_two = store.push('assignment', {id: AD.idTwo, assignment_pf_fks: [AJFD.idTwo]});
   });
@@ -244,7 +244,7 @@ test('rollbackPf - pf - multiple assignments with the same pf will rollbackPf co
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(assignment_two.get('pfIsNotDirty'));
   assert.ok(assignment_two.get('isNotDirtyOrRelatedNotDirty'));
-  assignment_two.remove_pf(AFD.idOne);
+  assignment_two.remove_pf(PFD.idOne);
   assert.equal(assignment.get('pf').get('length'), 1);
   assert.equal(assignment_two.get('pf').get('length'), 0);
   assert.ok(assignment.get('pfIsNotDirty'));
@@ -258,7 +258,7 @@ test('rollbackPf - pf - multiple assignments with the same pf will rollbackPf co
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(assignment_two.get('pfIsNotDirty'));
   assert.ok(assignment_two.get('isNotDirtyOrRelatedNotDirty'));
-  assignment.remove_pf(AFD.idOne);
+  assignment.remove_pf(PFD.idOne);
   assert.equal(assignment.get('pf').get('length'), 0);
   assert.equal(assignment_two.get('pf').get('length'), 1);
   assert.ok(assignment.get('pfIsDirty'));
@@ -289,9 +289,9 @@ test('saveRelated - change assignee and pf', assert => {
   // pf
   assert.equal(assignment.get('pf').get('length'), 0);
   run(() => {
-    store.push('assignmentfilter', {id: AFD.idOne});
+    store.push('pfilter', {id: PFD.idOne});
   });
-  assignment.add_pf({id: AFD.idOne});
+  assignment.add_pf({id: PFD.idOne});
   assert.equal(assignment.get('pf').get('length'), 1);
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assignment.saveRelated();
@@ -315,9 +315,9 @@ test('rollback - assignee and pf', assert => {
   // pf
   assert.equal(assignment.get('pf').get('length'), 0);
   run(() => {
-    store.push('assignmentfilter', {id: AFD.idOne});
+    store.push('pfilter', {id: PFD.idOne});
   });
-  assignment.add_pf({id: AFD.idOne});
+  assignment.add_pf({id: PFD.idOne});
   assert.equal(assignment.get('pf').get('length'), 1);
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assignment.rollback();

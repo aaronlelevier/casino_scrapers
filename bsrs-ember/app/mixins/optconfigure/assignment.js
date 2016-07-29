@@ -23,8 +23,8 @@ export default Ember.Mixin.create({
       related_model: 'assignee',
     },
     pf: {
-      associated_model: 'assignmentfilter',
-      join_model: 'assignment-join-filter',
+      associated_model: 'pfilter',
+      join_model: 'assignment-join-pfilter',
     }
   }
 });

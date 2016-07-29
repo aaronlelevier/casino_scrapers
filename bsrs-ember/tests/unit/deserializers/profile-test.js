@@ -5,7 +5,7 @@ import PD from 'bsrs-ember/vendor/defaults/profile';
 import PF from 'bsrs-ember/vendor/profile_fixtures';
 import ProfileDeserializer from 'bsrs-ember/deserializers/profile';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
-import PPFD from 'bsrs-ember/vendor/defaults/profile-join-filter';
+import PPFD from 'bsrs-ember/vendor/defaults/profile-join-pfilter';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 
 var store, profile, run = Ember.run, deserializer;

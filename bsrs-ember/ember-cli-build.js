@@ -54,9 +54,8 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/address-type.js');
       app.import('vendor/defaults/address.js');
       app.import('vendor/defaults/afilter.js');
-      app.import('vendor/defaults/assignment-join-filter.js');
+      app.import('vendor/defaults/assignment-join-pfilter.js');
       app.import('vendor/defaults/assignment.js');
-      app.import('vendor/defaults/assignmentfilter.js');
       app.import('vendor/defaults/category-children.js');
       app.import('vendor/defaults/country.js');
       app.import('vendor/defaults/currencies.js');
@@ -84,7 +83,7 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/phone-number-type.js');
       app.import('vendor/defaults/profile.js');
       app.import('vendor/defaults/pfilter.js');
-      app.import('vendor/defaults/profile-join-filter.js');
+      app.import('vendor/defaults/profile-join-pfilter.js');
       app.import('vendor/defaults/role.js');
       app.import('vendor/defaults/role-category.js');
       app.import('vendor/defaults/state.js');

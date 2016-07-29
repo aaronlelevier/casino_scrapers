@@ -33,7 +33,7 @@ export default Ember.Object.extend(OptConf, {
         delete pf.criteria;
         pf.criteria_fks = criteriaIds
       }
-      store.push('assignmentfilter', pf);
+      store.push('pfilter', pf);
     });
     // let pfsIds = pfilters.map(obj => obj.id);
     assignment.save();

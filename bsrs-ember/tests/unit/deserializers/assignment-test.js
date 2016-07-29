@@ -5,14 +5,14 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import AD from 'bsrs-ember/vendor/defaults/assignment';
 import AF from 'bsrs-ember/vendor/assignment_fixtures';
 import assignmentDeserializer from 'bsrs-ember/deserializers/assignment';
-import AFD from 'bsrs-ember/vendor/defaults/assignmentfilter';
-import AJFD from 'bsrs-ember/vendor/defaults/assignment-join-filter';
+import PFD from 'bsrs-ember/vendor/defaults/pfilter';
+import AJFD from 'bsrs-ember/vendor/defaults/assignment-join-pfilter';
 
 var store, assignment, deserializer;
 
 module('unit: assignment deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:assignment', 'model:assignment-list', 'model:person', 'model:assignment-join-filter', 'model:assignmentfilter', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:assignment', 'model:assignment-list', 'model:person', 'model:assignment-join-pfilter', 'model:pfilter', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     deserializer = assignmentDeserializer.create({
       simpleStore: store
     });
@@ -35,9 +35,9 @@ test('deserialize single', assert => {
 });
 
 // test('existing assignment w/ pf, and server returns no pf - want no pf b/c that is the most recent', assert => {
-//   store.push('assignment-join-filter', {id: AJFD.idOne, assignment_pk: AD.idOne, assignmentfilter_pk: AFD.idOne});
+//   store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
 //   assignment = store.push('assignment', {id: AD.idOne, joinModel_associatedModelFks: [AJFD.idOne]});
-//   store.push('assignmentfilter', {id: AFD.idOne});
+//   store.push('pfilter', {id: PFD.idOne});
 //   const pf = assignment.get('pf');
 //   assert.equal(pf.get('length'), 1);
 //   let json = AF.detail();
@@ -52,11 +52,11 @@ test('deserialize single', assert => {
 // });
 
 test('existing assignment w/ pf, and server returns w/ 1 extra pf', assert => {
-  store.push('assignment-join-filter', {id: AJFD.idOne, assignment_pk: AD.idOne, assignmentfilter_pk: AFD.idOne});
+  store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
   store.push('assignment', {id: AD.idOne, joinModel_associatedModelFks: [AJFD.idOne]});
-  store.push('assignmentfilter', {id: AFD.idOne});
+  store.push('pfilter', {id: PFD.idOne});
   let json = AF.detail();
-  json.filters.push({id: AFD.unusedId});
+  json.filters.push({id: PFD.unusedId});
   run(() => {
     deserializer.deserialize(json, AD.idOne);
   });
@@ -67,9 +67,9 @@ test('existing assignment w/ pf, and server returns w/ 1 extra pf', assert => {
 });
 
 test('existing assignment w/ pf and get same pf', assert => {
-  store.push('assignment-join-filter', {id: AJFD.idOne, assignment_pk: AD.idOne, assignmentfilter_pk: AFD.idOne});
+  store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
   store.push('assignment', {id: AD.idOne, joinModel_associatedModelFks: [AJFD.idOne]});
-  store.push('assignmentfilter', {id: AFD.idOne});
+  store.push('pfilter', {id: PFD.idOne});
   const json = AF.detail();
   run(() => {
     deserializer.deserialize(json, AD.idOne);

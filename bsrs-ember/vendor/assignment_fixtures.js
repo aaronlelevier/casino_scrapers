@@ -1,7 +1,7 @@
 var BSRS_ASSIGNMENT_FACTORY = (function() {
-  var factory = function(assignment, assignmentfilter, ticket, config) {
+  var factory = function(assignment, pfilter, ticket, config) {
     this.assignment = assignment;
-    this.assignmentfilter = assignmentfilter;
+    this.pfilter = pfilter;
     this.ticket = ticket;
     this.config = config;
   };
@@ -15,10 +15,7 @@ var BSRS_ASSIGNMENT_FACTORY = (function() {
         fullname: this.assignment.fullname
       },
       filters: [{
-        id: this.assignmentfilter.idOne,
-        key: this.assignmentfilter.keyOne,
-        context: this.assignmentfilter.contextOne,
-        field: this.assignmentfilter.fieldOne,
+        id: this.pfilter.idOne,
         criteria: [this.ticket.priorityOneId]
       }]
     };
@@ -76,19 +73,19 @@ if (typeof window === 'undefined') {
   var objectAssign = require('object-assign');
   var mixin = require('../vendor/mixin');
   var assignment = require('./defaults/assignment');
-  var assignmentfilter = require('./defaults/assignmentfilter');
+  var pfilter = require('./defaults/pfilter');
   var ticket = require('./defaults/ticket');
   var config = require('../config/environment');
   objectAssign(BSRS_assignment_FACTORY.prototype, mixin.prototype);
-  module.exports = new BSRS_ASSIGNMENT_FACTORY(assignment, assignmentfilter, ticket, config);
+  module.exports = new BSRS_ASSIGNMENT_FACTORY(assignment, pfilter, ticket, config);
 }
 else {
-  define('bsrs-ember/vendor/assignment_fixtures', ['exports', 'bsrs-ember/vendor/defaults/assignment', 'bsrs-ember/vendor/defaults/assignmentfilter',
+  define('bsrs-ember/vendor/assignment_fixtures', ['exports', 'bsrs-ember/vendor/defaults/assignment', 'bsrs-ember/vendor/defaults/pfilter',
    'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
-    function(exports, assignment, assignmentfilter, ticket, mixin, config) {
+    function(exports, assignment, pfilter, ticket, mixin, config) {
       'use strict';
       Object.assign(BSRS_ASSIGNMENT_FACTORY.prototype, mixin.prototype);
-      return new BSRS_ASSIGNMENT_FACTORY(assignment, assignmentfilter, ticket, config);
+      return new BSRS_ASSIGNMENT_FACTORY(assignment, pfilter, ticket, config);
     }
   );
 }

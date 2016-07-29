@@ -1,7 +1,7 @@
 /*
   This is for the profile & pfilter join model
 */
-var BSRS_PROFILE_PROFILE_FILTER_DEFAULTS_OBJECT = (function() {
+var BSRS_PROFILE_JOIN_PFILTER_DEFAULTS_OBJECT = (function() {
   var factory = function() {
   };
   factory.prototype.defaults = function() {
@@ -15,11 +15,11 @@ var BSRS_PROFILE_PROFILE_FILTER_DEFAULTS_OBJECT = (function() {
 })();
 
 if (typeof window === 'undefined') {
-  module.exports = new BSRS_PROFILE_PROFILE_FILTER_DEFAULTS_OBJECT().defaults();
+  module.exports = new BSRS_PROFILE_JOIN_PFILTER_DEFAULTS_OBJECT().defaults();
 }
 else {
-  define('bsrs-ember/vendor/defaults/profile-join-filter', ['exports'], function(exports) {
+  define('bsrs-ember/vendor/defaults/profile-join-pfilter', ['exports'], function(exports) {
     'use strict';
-    return new BSRS_PROFILE_PROFILE_FILTER_DEFAULTS_OBJECT().defaults();
+    return new BSRS_PROFILE_JOIN_PFILTER_DEFAULTS_OBJECT().defaults();
   });
 }

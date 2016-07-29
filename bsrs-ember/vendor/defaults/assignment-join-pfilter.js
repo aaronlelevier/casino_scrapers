@@ -15,7 +15,7 @@ if (typeof window === 'undefined') {
   module.exports = new BSRS_ASSIGNMENT_ASSIGNMENTJOINFILTER_DEFAULTS_OBJECT().defaults();
 }
 else {
-  define('bsrs-ember/vendor/defaults/assignment-join-filter', ['exports'], function(exports) {
+  define('bsrs-ember/vendor/defaults/assignment-join-pfilter', ['exports'], function(exports) {
     'use strict';
     return new BSRS_ASSIGNMENT_ASSIGNMENTJOINFILTER_DEFAULTS_OBJECT().defaults();
   });
