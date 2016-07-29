@@ -70,6 +70,10 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
         return response
 
     def _combine_dynamic_data(self, data):
+        """
+        Looks for dynamic AvailableFilters. If it finds one, remove that filter
+        placeholder, and replace it with dynamic versions of itself.
+        """
         for i, d in enumerate(data['results']):
             if d['lookups'] == {'filters': 'location_level'}:
                 location_level_filter = data['results'].pop(i)
@@ -79,20 +83,8 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
         if location_level_filter:
             filters = []
             for x in LocationLevel.objects.all():
-                filters.append({
-                    'id': str(uuid.uuid4()),
-                    'key': x.name,
-                    'key_is_i18n': False,
-                    'context': settings.DEFAULT_PROFILE_FILTER_CONTEXT,
-                    'field': 'location',
-                    'lookups': {
-                        'unique_key': 'location-location_level-{}'.format(x.name),
-                        'location_level': {
-                            'id': str(x.id),
-                            'name': x.name
-                        }
-                    }
-                })
+                filters.append(x.available_filter_data)
+
         data['results'] += filters
         data['count'] = len(data['results'])
         return data

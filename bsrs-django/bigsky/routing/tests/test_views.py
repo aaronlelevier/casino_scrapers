@@ -328,7 +328,7 @@ class AvailableFilterTests(APITestCase):
         self.assertFalse(location_data['key_is_i18n'])
         self.assertEqual(location_data['context'], settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(location_data['field'], 'location')
-        self.assertEqual(location_data['lookups']['unique_key'], "location-location_level-{}".format(location_level.name))
+        self.assertEqual(location_data['lookups']['unique_key'], "location_level-{}".format(location_level.name))
         self.assertEqual(location_data['lookups']['location_level']['id'], str(location_level.id))
         self.assertEqual(location_data['lookups']['location_level']['name'], location_level.name)
 
@@ -381,6 +381,7 @@ class AvailableFilterTests(APITestCase):
         # exists on all
         for d in data['results']:
             self.assertIn('unique_key', d['lookups'])
+            self.assertTrue(d['lookups']['unique_key'])
         # is unique accross all
         unique_keys = set([d['lookups']['unique_key'] for d in data['results']])
         self.assertEqual(data['count'], len(unique_keys))

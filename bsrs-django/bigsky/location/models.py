@@ -1,3 +1,5 @@
+import uuid
+
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.fields import GenericRelation
@@ -176,6 +178,23 @@ class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
         children = [str(child.id) for child in self.children.all()]
         parents = [str(parent.id) for parent in self.parents.all()]
         return {"id": str(self.id), "name": self.name, "children": children, "parents": parents}
+
+    @property
+    def available_filter_data(self):
+        return {
+            'id': str(uuid.uuid4()),
+            'key': self.name,
+            'key_is_i18n': False,
+            'context': settings.DEFAULT_PROFILE_FILTER_CONTEXT,
+            'field': 'location',
+            'lookups': {
+                'unique_key': 'location_level-{}'.format(self.name),
+                'location_level': {
+                    'id': str(self.id),
+                    'name': self.name
+                }
+            }
+        }
 
 
 ### LOCATION STATUS
