@@ -24,10 +24,10 @@ class Country(BaseModel):
 
 class State(BaseModel):
     country = models.ForeignKey(Country, null=True)
-    country_code = models.CharField(max_length=10)
-    state_code = models.CharField(max_length=10)
-    name = models.CharField(max_length=100)
-    classification = models.CharField(max_length=100)
+    country_code = models.CharField(max_length=100, blank=True)
+    state_code = models.CharField(max_length=100, blank=True)
+    name = models.CharField(max_length=100, blank=True)
+    classification = models.CharField(max_length=100, blank=True)
 
     def to_dict(self):
         return {
@@ -124,3 +124,25 @@ class Email(BaseContactModel):
 
     class Meta:
         ordering = ('email',)
+
+
+
+
+{
+    "Sub Type": "",
+    "ITU-T Telephone Code": "93",
+    "ISO 3166-1 2 Letter Code": "AF",
+    "Formal Name": "Islamic State of Afghanistan",
+    "Common Name": "Afghanistan",
+    "ISO 3166-1 3 Letter Code": "AFG",
+    "IANA Country Code TLD": ".af",
+    "Capital": "Kabul",
+    "Sort Order": "1",
+    "ISO 3166-1 Number": "4",
+    "ISO 4217 Currency Name": "Afghani",
+    "ISO 4217 Currency Code": "AFN",
+    "Sovereignty": "",
+    "Type": "Independent State"
+}
+
+
