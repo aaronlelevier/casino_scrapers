@@ -46,6 +46,11 @@ class AssignmentManager(BaseManager):
         """
         ticket = Ticket.objects.get(id=ticket_id)
 
+        if ticket.creator and not ticket.creator.role.process_assign:
+            ticket.assignee = ticket.creator
+            ticket.save()
+            return
+
         for assignment in self.filter(tenant__id=tenant_id).order_by('order'):
             match = assignment.is_match(ticket)
             if match:

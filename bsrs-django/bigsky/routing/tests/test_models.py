@@ -125,6 +125,28 @@ class AssignmentManagerTests(TestCase):
         ticket = Ticket.objects.get(id=self.ticket.id)
         self.assertEqual(ticket.assignee, assignment_three.assignee)
 
+    def test_process_ticket__process_assign_attr_on_role_is_false(self):
+        # the creator's role.process_assign == False, so assign the ticket
+        # automatically to it's creator
+        creator = create_single_person()
+        creator.role.process_assign = False
+        creator.role.save()
+        self.ticket.creator = creator
+        self.ticket.save()
+        self.assertFalse(self.ticket.creator.role.process_assign)
+        # auto-assign filter
+        auto_assign_filter = create_auto_assign_filter()
+        self.assignment.filters.add(auto_assign_filter)
+        # person is different, so would expect the auto-assign filter to be
+        # used, but if role.process_assign == False, that takes precedence
+        self.assertNotEqual(self.assignment.assignee, creator)
+        self.assertIsNone(self.ticket.assignee)
+
+        Assignment.objects.process_ticket(self.assignment.tenant.id, self.ticket.id)
+
+        ticket = Ticket.objects.get(id=self.ticket.id)
+        self.assertEqual(ticket.assignee, creator)
+
     def test_auto_assign_filter_in_use(self):
         self.assertFalse(Assignment.objects.auto_assign_filter_in_use(self.tenant))
 
