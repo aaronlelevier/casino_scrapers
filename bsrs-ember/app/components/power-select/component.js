@@ -18,4 +18,7 @@ export default EmberPowerSelect.extend({
   noMatchesMessage: Ember.computed('i18n.locale', function() {
     return this.get('i18n').t('selects.noMatchesMessage');
   }),
+  placeholder: Ember.computed('i18n.locale', function() {
+    return this.get('i18n').t('power.select.select');
+  }),
 });
