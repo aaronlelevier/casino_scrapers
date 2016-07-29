@@ -17,6 +17,7 @@ export default Model.extend(OptConf, {
     const { criteria_fks, criteria_ids } = this.getProperties('criteria_fks', 'criteria_ids');
     return equal(criteria_fks, criteria_ids) ? false : true;
     }),
+  criteriaIsNotDirty: Ember.computed.not('criteriaIsDirty'),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'criteriaIsDirty', 'afilterIsDirty', function() {
     return this.get('isDirty') || this.get('criteriaIsDirty') || this.get('afilterIsDirty');
   }),

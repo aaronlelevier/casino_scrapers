@@ -29,12 +29,14 @@ test('dirty test | lookups', assert => {
 });
 
 test('dirty test | criteria', assert => {
-  assert.equal(pfilter.get('criteriaIsDirty'), false);
+  assert.ok(pfilter.get('criteriaIsNotDirty'));
   pfilter.set('criteria_fks', [TD.priorityOneId]);
   pfilter.set('criteria_ids', [TD.priorityOneId]);
-  assert.equal(pfilter.get('criteriaIsDirty'), false);
+  assert.ok(pfilter.get('criteriaIsNotDirty'));
+  assert.ok(pfilter.get('isNotDirtyOrRelatedNotDirty'));
   pfilter.set('criteria_ids', []);
-  assert.equal(pfilter.get('criteriaIsDirty'), true);
+  assert.ok(pfilter.get('criteriaIsDirty'));
+  assert.ok(pfilter.get('isDirtyOrRelatedDirty'));
 });
 
 test('related dirty', assert => {
