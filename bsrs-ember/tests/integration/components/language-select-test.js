@@ -35,7 +35,7 @@ test('should render a selectbox when locale options are empty (initial state of 
   this.set('locales', locales);
   this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.locale change_method='change_locale' relatedModels=locales relatedModelName='locale'}}`);
   let $component = this.$(COMPONENT);
-  assert.equal($component.find(PowerSelect).text().trim(), '');
+  assert.equal($('.ember-power-select-placeholder').text().trim(), trans.t('power.select.select'));
   clickTrigger();
   assert.equal($(DROPDOWN).length, 1);
   assert.equal($('.ember-power-select-options > li').length, 1);
@@ -64,7 +64,7 @@ test('should be able to select new locale when one doesnt exist', function(asser
   this.set('locales', locales);
   this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.locale change_method='change_locale' relatedModels=locales relatedModelName='locale'}}`);
   let $component = this.$(COMPONENT);
-  assert.equal($component.find(PowerSelect).text().trim(), '');
+  assert.equal($('.ember-power-select-placeholder').text().trim(), trans.t('power.select.select'));
   clickTrigger();
   assert.equal($(DROPDOWN).length, 1);
   assert.equal($('.ember-power-select-options > li').length, 3);
