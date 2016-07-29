@@ -21,10 +21,30 @@ export default Ember.Component.extend({
     let person = this.get('model');
     return currency_service.getCurrencies();
   }),
-  initialize: Ember.on('init', function() {
-    let field = this.get('field');
-    Ember.Binding.from('model.' + field).to('bound_field').connect(this);
-  }),
+  init() {
+    this._super(...arguments);
+    const field = this.get('field');
+    Ember.defineProperty(this, 'bound_field', Ember.computed('model.' + field, function() {
+      let currency_service = this.get('currency');
+      let precision = this.get('currencyObject').get('decimal_digits');
+      return currency_service.format_currency(this.get('model').get(field), precision);
+    }));
+  },
+  // initialize: Ember.on('init', function() {
+  //   const field = this.get('field');
+  //   Ember.defineProperty(this, 'bound_field', Ember.computed('model.' + field, function() {
+  //     let currency_service = this.get('currency');
+  //     let precision = this.get('currencyObject').get('decimal_digits');
+  //     return currency_service.format_currency(this.get('model').get(field), precision);
+  //   }));
+  // //   let field = this.get('field');
+  // //   // Ember.Binding.from('model.' + field).to('bound_field').connect(this);
+  // //   Ember.defineProperty(this, 'bound_field', Ember.computed('model.field', function() {
+  // //     let precision = this.get('currencyObject').get('decimal_digits');
+  // //     return field;
+  // //   }));
+  // }),
+  // bound_field: Ember.computed.alias('model.field'),
   placeholderAmount: Ember.computed(function() {
     let currency = this.get('currencyObject');
     let field = this.get('field');

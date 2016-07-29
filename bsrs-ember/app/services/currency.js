@@ -21,7 +21,8 @@ let CurrencyService = Ember.Service.extend({
         return store.find('currency');
     },
     format_currency(val, precision) {
-        return val ? parseFloat(val).toFixed(precision) : '';
+        // 0 may be falsy but we still want to display something?
+        return !isNaN(val) ? parseFloat(val).toFixed(precision) : '';
     }
 });
 
