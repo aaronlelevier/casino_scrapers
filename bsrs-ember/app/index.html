@@ -11,8 +11,8 @@
     {{content-for "head"}}
 
     <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
-    <link rel="stylesheet" href="assets/vendor.css">
-    <link rel="stylesheet" href="assets/bsrs-ember.css">
+    <link rel="stylesheet" href="{{rootURL}}assets/vendor.css">
+    <link rel="stylesheet" href="{{rootURL}}assets/bsrs-ember.css">
 
     {{content-for "head-footer"}}
   </head>
@@ -23,8 +23,8 @@
 
     {{content-for "body"}}
 
-    <script src="assets/vendor.js" integrity=""></script>
-    <script src="assets/bsrs-ember.js" integrity=""></script>
+    <script src="{{rootURL}}assets/vendor.js" integrity=""></script>
+    <script src="{{rootURL}}assets/bsrs-ember.js" integrity=""></script>
 
     {{content-for "body-footer"}}
 
