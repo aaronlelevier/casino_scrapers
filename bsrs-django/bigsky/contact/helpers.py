@@ -3,6 +3,7 @@ from contact.models import Country, State
 
 encoding = 'ISO-8859-2'
 
+
 def import_countries():
     file_str = "/Users/alelevier/Desktop/countries.csv"
 
@@ -29,6 +30,7 @@ def import_countries():
             except Exception as e:
                 print(i, ":", e)
 
+
 def import_states():
     file_str = "/Users/alelevier/Desktop/states.csv"
 
@@ -44,3 +46,16 @@ def import_states():
                 )
             except Exception as e:
                 print(i, ":", e)
+
+
+def join_states_to_countries():
+    for s in State.objects.filter(country__isnull=True):
+        try:
+            country = Country.objects.get(two_letter_code=s.country_code)
+        except Country.DoesNotExist:
+            pass
+        except Country.MultipleObjectsReturned:
+            print(s.country_code)
+        else:
+            s.country = country
+            s.save()
