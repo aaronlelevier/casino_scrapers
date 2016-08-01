@@ -42,7 +42,7 @@ var RoleModel = Model.extend(NewMixin, OptConf, {
       role_type: this.get('role_type'),
       location_level: location_level_id || null,
       categories: this.get('categories_ids'),
-      auth_amount: this.get('auth_amount') ? this.get('auth_amount') : undefined,
+      auth_amount: this.get('auth_amount') ? this.get('auth_amount') : 0.0000,
       auth_currency: this.get('auth_currency'),
       dashboard_text: this.get('dashboard_text')
     };

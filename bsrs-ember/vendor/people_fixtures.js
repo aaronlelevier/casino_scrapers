@@ -64,10 +64,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
       last_name : this.person_defaults.last_name,
       title : this.person_defaults.title,
       employee_id : this.person_defaults.employee_id,
-      auth_amount : undefined,
-      auth_currency : undefined,
-      accept_notify : undefined,
-      accept_assign : undefined,
       status_fk : this.status_defaults.activeId,
       role: this.role_defaults.idOne,
       locations: [],
@@ -147,6 +143,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
     for(var key in person) {
       response[key] = person[key];
     }
+    response.auth_amount = response.auth_amount || null;
     return response;
   };
   factory.prototype.search = function() {

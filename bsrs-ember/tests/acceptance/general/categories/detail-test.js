@@ -255,12 +255,12 @@ test('cost_amount - is not required', (assert) => {
   let url = PREFIX + DETAIL_URL + '/';
   let response = CF.detail(CD.idOne);
   let payload = CF.put({id: CD.idOne, name: CD.nameOne, description: CD.descriptionMaintenance,
-                       label: CD.labelOne, subcategory_label: CD.subCatLabelTwo, cost_amount: null, cost_code: CD.costCodeOne});
-                       xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-                       generalPage.save();
-                       andThen(() => {
-                         assert.equal(currentURL(), CATEGORIES_INDEX_URL);
-                       });
+                     label: CD.labelOne, subcategory_label: CD.subCatLabelTwo, cost_code: CD.costCodeOne});
+                     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), CATEGORIES_INDEX_URL);
+  });
 });
 
 /* CATEGORY TO CHILDREN */
