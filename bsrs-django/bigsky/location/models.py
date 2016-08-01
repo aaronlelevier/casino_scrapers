@@ -369,3 +369,7 @@ class Location(SelfRefrencingBaseModel, BaseModel):
             self.status = LocationStatus.objects.default()
         if not self.type:
             self.type = LocationType.objects.default()
+
+    @property
+    def is_office_or_store(self):
+        return any((x.is_office_or_store for x in self.addresses.all()))

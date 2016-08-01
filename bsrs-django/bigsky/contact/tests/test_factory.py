@@ -2,9 +2,11 @@ from mock import patch
 
 from django.test import TestCase
 
-from contact.models import (PhoneNumber, PhoneNumberType, Email, EmailType,
+from contact.models import (
+    State, PhoneNumber, PhoneNumberType, Email, EmailType,
     Address, AddressType, PHONE_NUMBER_TYPES, EMAIL_TYPES, ADDRESS_TYPES)
 from contact.tests import factory
+from location.tests.factory import create_location
 from person.tests.factory import create_person
 
 
@@ -108,7 +110,20 @@ class FactoryTests(TestCase):
     @patch("contact.tests.factory.create_phone_number_types")
     @patch("contact.tests.factory.create_email_types")
     @patch("contact.tests.factory.create_address_types")
-    def test_create_contact_types(self, phone_mock, email_mock, address_mock):
-        self.assertTrue(phone_mock.was_called)
-        self.assertTrue(email_mock.was_called)
+    def test_create_contact_types(self, address_mock, email_mock, ph_num_mock):
         self.assertTrue(address_mock.was_called)
+        self.assertTrue(email_mock.was_called)
+        self.assertTrue(ph_num_mock.was_called)
+
+    def test_create_contact_state(self):
+        ret = factory.create_contact_state()
+        self.assertIsInstance(ret, State)
+        self.assertEqual(ret.state_code, "CA")
+
+    def test_add_office_to_location(self):
+        location = create_location()
+        self.assertFalse(location.is_office_or_store)
+
+        factory.add_office_to_location(location)
+
+        self.assertTrue(location.is_office_or_store)

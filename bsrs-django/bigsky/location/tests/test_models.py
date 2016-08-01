@@ -1,4 +1,5 @@
 import uuid
+
 from django.db import models
 from django.db.models import Q
 from django.conf import settings
@@ -6,8 +7,8 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from contact.models import Address
-from contact.tests.factory import create_contact
+from contact.models import Address, AddressType
+from contact.tests.factory import create_contact, create_address_type
 from location.models import (
     Location, LocationManager, LocationQuerySet,  LocationLevel, LocationLevelManager,
     LocationLevelQuerySet, LocationStatus, LocationType, LOCATION_COMPANY, LOCATION_REGION,
@@ -356,6 +357,8 @@ class LocationTests(TestCase):
 
     def setUp(self):
         self.location = create_location()
+        self.store = create_address_type('admin.address_type.store')
+        self.office = create_address_type('admin.address_type.office')
 
     def test_manager(self):
         self.assertIsInstance(Location.objects, LocationManager)
@@ -377,3 +380,18 @@ class LocationTests(TestCase):
 
         self.assertEqual(self.location.status, LocationStatus.objects.default())
         self.assertEqual(self.location.type, LocationType.objects.default())
+
+    def test_is_office_or_store(self):
+        address_type = mommy.make(AddressType)
+        address = create_contact(Address, self.location)
+        address.type = address_type
+        address.save()
+        for ad in self.location.addresses.all():
+            self.assertNotIn(ad, [self.office, self.store])
+        self.assertFalse(self.location.is_office_or_store)
+
+        address.type = self.office
+        address.save()
+        self.assertTrue(address.is_office_or_store)
+        self.location.addresses.add(address)
+        self.assertTrue(self.location.is_office_or_store)

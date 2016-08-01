@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 
 from utils.fields import MyGenericForeignKey
-from utils.models import BaseNameModel, BaseNameOrderModel, BaseModel
+from utils.models import BaseNameOrderModel, BaseModel
 
 
 class Country(BaseModel):
@@ -81,6 +81,7 @@ class PhoneNumber(BaseContactModel):
 ADDRESS_TYPES = [
     'admin.address_type.location',
     'admin.address_type.office',
+    'admin.address_type.store',
     'admin.address_type.shipping',
 ]
 
@@ -106,6 +107,11 @@ class Address(BaseContactModel):
     class Meta:
         ordering = ('address',)
 
+    @property
+    def is_office_or_store(self):
+        return self.type and self.type.name in ['admin.address_type.office',
+                                                'admin.address_type.store']
+
 
 EMAIL_TYPES = [
     'admin.emailtype.location',
@@ -124,25 +130,3 @@ class Email(BaseContactModel):
 
     class Meta:
         ordering = ('email',)
-
-
-
-
-{
-    "Sub Type": "",
-    "ITU-T Telephone Code": "93",
-    "ISO 3166-1 2 Letter Code": "AF",
-    "Formal Name": "Islamic State of Afghanistan",
-    "Common Name": "Afghanistan",
-    "ISO 3166-1 3 Letter Code": "AFG",
-    "IANA Country Code TLD": ".af",
-    "Capital": "Kabul",
-    "Sort Order": "1",
-    "ISO 3166-1 Number": "4",
-    "ISO 4217 Currency Name": "Afghani",
-    "ISO 4217 Currency Code": "AFN",
-    "Sovereignty": "",
-    "Type": "Independent State"
-}
-
-

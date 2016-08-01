@@ -1,3 +1,5 @@
+from mock import patch
+
 from django.db.models import Q
 from django.test import TestCase
 
@@ -5,13 +7,17 @@ from model_mommy import mommy
 
 from category.models import Category
 from category.tests.factory import create_single_category, REPAIR
+from contact.tests.factory import add_office_to_location, create_contact_state
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
-from routing.models import Assignment, AssignmentManager, AssignmentQuerySet, ProfileFilter, AUTO_ASSIGN
+from routing.models import (
+    Assignment, AssignmentManager, AssignmentQuerySet, AvailableFilter,
+    ProfileFilter, AUTO_ASSIGN)
 from routing.tests.factory import (
     create_assignment, create_ticket_priority_filter, create_ticket_categories_filter,
-    create_auto_assign_filter, create_auto_assign_filter)
+    create_auto_assign_filter, create_auto_assign_filter, create_available_filters,
+    create_ticket_location_state_filter)
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority
 from ticket.tests.factory import create_ticket
@@ -238,14 +244,32 @@ class AssignmentTests(TestCase):
 
         self.assertTrue(ret)
 
+class AvailableFilterTests(TestCase):
 
-class ProfilefilterTests(TestCase):
+    def setUp(self):
+        create_available_filters()
+
+    def test_is_state_filter(self):
+        count = 0
+        for af in AvailableFilter.objects.all():
+            if af.is_state_filter:
+                count += 1
+        self.assertEqual(count, 1)
+
+
+class ProfileFilterTests(TestCase):
 
     def setUp(self):
         self.pf = create_ticket_priority_filter()
         self.cf = create_ticket_categories_filter()
         create_single_person()
         self.ticket = create_ticket()
+        # address setup
+        add_office_to_location(self.ticket.location)
+        self.office_address = self.ticket.location.addresses.first()
+        self.state = create_contact_state()
+        self.office_address.state = self.state
+        self.office_address.save()
 
     def test_meta__ordering(self):
         # order by id, so that way are returned to User in the same order
@@ -274,3 +298,31 @@ class ProfilefilterTests(TestCase):
         category_ids = (str(x) for x in self.ticket.categories.values_list('id', flat=True))
         self.assertFalse(set(category_ids).intersection(set(self.cf.criteria)))
         self.assertFalse(self.cf.is_match(self.ticket))
+
+    def test_is_match__location_state__true(self):
+        state_filter = create_ticket_location_state_filter()
+        # pre-test
+        self.assertTrue(state_filter.source.is_state_filter)
+        self.assertTrue(self.ticket.location.is_office_or_store)
+        self.assertIn(str(self.office_address.state.id), state_filter.criteria)
+
+        ret = state_filter.is_match(self.ticket)
+
+        self.assertTrue(ret)
+
+    @patch("routing.models.ProfileFilter._is_state_match")
+    def test_is_match__location_state__false__no_a_state_filter(self, mock_func):
+        self.assertFalse(self.pf.source.is_state_filter)
+        self.assertTrue(self.ticket.location.is_office_or_store)
+
+        self.assertFalse(mock_func.called)
+
+    @patch("routing.models.ProfileFilter._is_state_match")
+    def test_is_match__location_state__false__location_is_not_an_office(self, mock_func):
+        state_filter = create_ticket_location_state_filter()
+        self.ticket.location.addresses.remove(self.office_address)
+        # pre-test
+        self.assertTrue(state_filter.source.is_state_filter)
+        self.assertFalse(self.ticket.location.is_office_or_store)
+
+        self.assertFalse(mock_func.called)

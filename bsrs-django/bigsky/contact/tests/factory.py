@@ -2,8 +2,9 @@ import random
 
 from model_mommy import mommy
 
-from contact.models import (PhoneNumber, PhoneNumberType, Email, EmailType,
-    Address, AddressType, PHONE_NUMBER_TYPES, EMAIL_TYPES, ADDRESS_TYPES)
+from contact.models import (
+    State, PhoneNumber, PhoneNumberType, Email, EmailType,
+    Address, AddressType, PHONE_NUMBER_TYPES, EMAIL_TYPES, ADDRESS_TYPES,)
 from utils.helpers import generate_uuid
 
 
@@ -77,3 +78,18 @@ def create_contact_types():
     create_phone_number_types()
     create_email_types()
     create_address_types()
+
+
+def create_contact_state(state_code="CA"):
+    try:
+        return State.objects.get(state_code=state_code)
+    except State.DoesNotExist:
+        return mommy.make(State, state_code=state_code)
+
+
+def add_office_to_location(location):
+    address = create_contact(Address, location)
+    office = create_address_type('admin.address_type.office')
+    address.type = office
+    address.save()
+    location.addresses.add(address)

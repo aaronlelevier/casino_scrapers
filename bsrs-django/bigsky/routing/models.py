@@ -122,6 +122,10 @@ class AvailableFilter(BaseModel):
         help_text="if used, provide extra lookup information beyond the 'field'"
                   "this should be a string array")
 
+    @property
+    def is_state_filter(self):
+        return self.lookups.get('filters', None) == 'state'
+
 
 class ProfileFilter(BaseModel):
     """
@@ -152,12 +156,22 @@ class ProfileFilter(BaseModel):
         ordering = ['id']
 
     def is_match(self, ticket):
-        # NOTE: checking the criteria will be different based on the "type"
+        # Checking the criteria will be different based on the "type"
         # of ticket, which is really an 'object' of diff types, i.e. 'work_order'
         field_type = ticket._meta.get_field(self.source.field)
 
-        if isinstance(field_type, models.ManyToManyField):
+        # "state" filter
+        if all([self.source.is_state_filter, ticket.location.is_office_or_store]):
+            return self._is_state_match(ticket)
+
+        # location, priority, etc..
+        if isinstance(field_type, models.ForeignKey):
+            return str(getattr(ticket, self.source.field).id) in self.criteria
+        # categories
+        elif isinstance(field_type, models.ManyToManyField):
             category_ids = (str(x) for x in ticket.categories.values_list('id', flat=True))
             return set(category_ids).intersection(set(self.criteria))
-        elif isinstance(field_type, models.ForeignKey):
-            return str(getattr(ticket, self.source.field).id) in self.criteria
+
+    def _is_state_match(self, ticket):
+        state_ids = (str(x) for x in ticket.location.addresses.values_list('state__id', flat=True))
+        return set(state_ids).intersection(set(self.criteria))
