@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from model_mommy import mommy
 
 from contact.models import Country
+from location.models import LocationType
 from person.tests.factory import create_single_person, create_role
 from utils import create
 from utils.exceptions import QuerySetClassNotDefined
@@ -58,7 +59,7 @@ class BaseModelTests(TestCase):
 class BaseNameModelTests(TestCase):
 
     def setUp(self):
-        self.x = mommy.make(Country)
+        self.x = mommy.make(LocationType)
 
     def test_str(self):
         self.assertEqual(str(self.x), self.x.name)

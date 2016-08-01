@@ -21,6 +21,11 @@ class Country(BaseModel):
     number = models.CharField("ISO 3166-1 Number", max_length=100, blank=True)
     country_code_tld = models.CharField("IANA Country Code TLD", max_length=100, blank=True)
 
+    def to_dict(self):
+        return {
+            'id': str(self.id),
+            'common_name': self.common_name
+        }
 
 class State(BaseModel):
     country = models.ForeignKey(Country, related_name='states', null=True)
@@ -33,7 +38,7 @@ class State(BaseModel):
         return {
             'id': str(self.id),
             'name': self.name,
-            'abbr': self.abbr
+            'state_code': self.state_code
         }
 
 

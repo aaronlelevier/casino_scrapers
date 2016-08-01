@@ -228,13 +228,13 @@ class BootstrappedDataTests(TestCase):
 
         obj = State.objects.get(id=data[0]['id'])
         self.assertEqual(obj.name, data[0]['name'])
-        self.assertEqual(obj.abbr, data[0]['abbr'])
+        self.assertEqual(obj.state_code, data[0]['state_code'])
 
     def test_countries(self):
         data = json.loads(self.response.context['countries'])
 
         obj = Country.objects.get(id=data[0]['id'])
-        self.assertEqual(obj.name, data[0]['name'])
+        self.assertEqual(obj.common_name, data[0]['common_name'])
 
     def test_roles(self):
         configuration = json.loads(self.response.context['role_config'])
