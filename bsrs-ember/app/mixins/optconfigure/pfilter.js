@@ -17,9 +17,9 @@ import Ember from 'ember';
  */
 export default Ember.Mixin.create({
   OPT_CONF: {
-    afilter: {
-      collection: 'pfilters',
-      property: 'afilter'
+    criteria: {
+      associated_model: 'criteria',
+      join_model: 'pfilter-join-criteria',
     }
   }
 });
