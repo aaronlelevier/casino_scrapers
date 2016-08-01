@@ -30,6 +30,9 @@ var RoleRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
   get_default() {
     return this.get('simpleStore').find('role');
   },
+  /* @method getRouteData
+  * gets settings data such as dashboard_text
+  */
   getRouteData() {
     return PromiseMixin.xhr(ROLES_URL + 'route-data/new/', 'GET').then((response) => {
       return response;

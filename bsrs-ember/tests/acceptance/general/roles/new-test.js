@@ -42,7 +42,7 @@ moduleForAcceptance('Acceptance | role new', {
       role_type: RD.t_roleTypeGeneral,
       location_level: RD.locationLevelOne,
       categories: [CD.idOne],
-      auth_amount: undefined,
+      auth_amount: 0.0000,
     };
 
     store = this.application.__container__.lookup('service:simpleStore');
@@ -72,14 +72,14 @@ test('visiting role/new', (assert) => {
     assert.equal(store.find('role-type').get('length'), 2);
     assert.equal(page.roleTypeInput, t(RD.t_roleTypeGeneral));
     assert.equal(store.find('location-level').get('length'), 8);
-    assert.equal(page.categorySelectText, "");
+    assert.equal(page.categorySelectText, '');
     assert.equal(find('.t-amount').get(0)['placeholder'], 'Amount: 0.00');
-    assert.equal(inputCurrencyPage.authAmountValue, "");
+    assert.equal(inputCurrencyPage.authAmountValue, '');
     assert.equal(inputCurrencyPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
     assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.code);
     assert.equal(find('.t-inherited-msg-dashboard_text-link').text().trim(), 'Inherited from: general');
     assert.equal(find('.t-settings-dashboard_text').get(0)['placeholder'], 'Default: ' + TD.dashboard_text);
-    assert.equal(page.dashboard_textValue, "");
+    assert.equal(page.dashboard_textValue, '');
     const role = store.find('role', UUID.value);
     assert.ok(role.get('new'));
   });
@@ -91,6 +91,9 @@ test('visiting role/new', (assert) => {
   page.categoryClickDropdown();
   page.categoryClickOptionOneEq();
   fillIn('.t-amount', CURRENCY_DEFAULTS.authAmountOne);
+  andThen(() => {
+    $('.t-amount').focusout();
+  });
   let postPayload = Object.assign(payload, {
     auth_amount: parseFloat(CURRENCY_DEFAULTS.authAmountOne).toFixed(2),
     dashboard_text: RD.dashboard_textTwo

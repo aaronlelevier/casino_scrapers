@@ -74,6 +74,9 @@ test('visiting /category/new', (assert) => {
   fillIn('.t-category-label', CD.labelOne);
   fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
   fillIn('.t-amount', CD.costAmountOne);
+  andThen(() => {
+    $('.t-amount').focusout();
+  });
   fillIn('.t-category-cost-code', CD.costCodeOne);
   generalPage.save();
   andThen(() => {
@@ -125,6 +128,9 @@ test('validation works and when hit save, we do same post', (assert) => {
   });
   fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
   fillIn('.t-amount', CD.costAmountOne);
+  andThen(() => {
+    $('.t-amount').focusout();
+  });
   fillIn('.t-category-name', CD.nameOne);
   generalPage.save();
   andThen(() => {
@@ -224,6 +230,9 @@ test('clicking and typing into power select for categories children will fire of
   fillIn('.t-category-label', CD.labelOne);
   fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
   fillIn('.t-amount', CD.costAmountOne);
+  andThen(() => {
+    $('.t-amount').focusout();
+  });
   fillIn('.t-category-cost-code', CD.costCodeOne);
   selectSearch('.t-category-children-select', 'a');
   page.categoryClickOptionOneEq();
@@ -262,6 +271,9 @@ test('clicking and typing into power select for categories children will not fil
   fillIn('.t-category-label', CD.labelOne);
   fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
   fillIn('.t-amount', CD.costAmountOne);
+  andThen(() => {
+    $('.t-amount').focusout();
+  });
   fillIn('.t-category-cost-code', CD.costCodeOne);
   generalPage.save();
   andThen(() => {
@@ -284,6 +296,9 @@ test('you can add and remove child from category', (assert) => {
   fillIn('.t-category-label', CD.labelOne);
   fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
   fillIn('.t-amount', CD.costAmountOne);
+  andThen(() => {
+    $('.t-amount').focusout();
+  });
   fillIn('.t-category-cost-code', CD.costCodeOne);
   selectSearch('.t-category-children-select', 'a');
   andThen(() => {
@@ -325,6 +340,9 @@ test('adding a new category should allow for another new category to be created 
   fillIn('.t-category-label', CD.labelOne);
   fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
   fillIn('.t-amount', CD.costAmountOne);
+  andThen(() => {
+    $('.t-amount').focusout();
+  });
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), CATEGORIES_INDEX_URL);

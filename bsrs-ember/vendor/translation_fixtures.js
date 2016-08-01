@@ -357,6 +357,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
           'modules.tickets.titleShort':'Tickets',
           'modules.workOrders.overdue':'Overdue Work Orders',
           'modules.workOrders.titleShort':'Work Orders',
+          'power.select.select': 'Click to select',
           'selects.loading':'Loading',
           'selects.noMatchesMessage':'No Matches',
           'selects.searchMessage':'Type to search',

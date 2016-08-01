@@ -39,6 +39,7 @@ export default Ember.Object.extend(OPT_CONF, {
      */
     many_to_many.bind(this)('shoe', 'user', {'plural':true});
     many_to_many.bind(this)('feet', 'user', {'unlessAddedM2MDirty':true});
+    many_to_many.bind(this)('finger', 'user', {'plural':true});
   },
   simpleStore: Ember.inject.service(),
   user_shoes_fks: [],

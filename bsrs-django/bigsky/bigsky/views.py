@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib import auth
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
@@ -85,14 +85,12 @@ def logout(request):
 
 
 def handler404(request):
-    response = render_to_response('error/404.html', {},
-        context_instance=RequestContext(request))
+    response = render(request, 'error/404.html')
     response.status_code = 404
     return response
 
 
 def handler500(request):
-    response = render_to_response('error/500.html', {},
-        context_instance=RequestContext(request))
+    response = render(request, 'error/500.html')
     response.status_code = 500
     return response

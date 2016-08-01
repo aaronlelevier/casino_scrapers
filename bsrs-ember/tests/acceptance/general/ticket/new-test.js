@@ -396,7 +396,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
   clearxhr(location_xhr);
   page.visitNew();
   andThen(() => {
-    assert.equal(page.assigneeInput, GLOBALMSG.assignee_power_select);
+    assert.equal(page.assigneeInput, t(GLOBALMSG.assignee_power_select));
     let ticket = store.findOne('ticket');
     assert.equal(ticket.get('assignee.id'), undefined);
     assert.equal(ticket.get('assignee_fk'), undefined);
@@ -406,7 +406,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
   page.assigneeClickDropdown();
   fillIn(SEARCH, 'b');
   andThen(() => {
-    assert.equal(page.assigneeInput, GLOBALMSG.assignee_power_select);
+    assert.equal(page.assigneeInput, t(GLOBALMSG.assignee_power_select));
     assert.equal(page.assigneeOptionLength, 10);
     assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
     assert.equal(find(`${DROPDOWN} > li:eq(1)`).text().trim(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);

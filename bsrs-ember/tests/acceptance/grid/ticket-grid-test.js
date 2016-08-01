@@ -35,18 +35,10 @@ var application, store, endpoint, list_xhr;
 
 moduleForAcceptance('Acceptance | ticket grid test', {
   beforeEach() {
-    // timemachine.config({
-    //   dateString: 'December 25, 2014 13:12:59'
-    // });
-
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';
     list_xhr = xhr(endpoint, 'GET', null, {}, 200, TF.list());
   },
-  afterEach() {
-
-    // timemachine.reset();
-  }
 });
 
 test('initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr', function(assert) {

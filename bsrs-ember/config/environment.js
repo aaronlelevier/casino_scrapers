@@ -9,7 +9,7 @@ module.exports = function(environment) {
     },
     modulePrefix: 'bsrs-ember',
     environment: environment,
-    baseURL: '/',
+    rootURL: '/',
     locationType: 'auto',
     EmberENV: {
       FEATURES: {
@@ -55,7 +55,6 @@ module.exports = function(environment) {
   if (environment === 'test') {
     // Testem prefers this...
     ENV.DEBOUNCE_TIMEOUT_INTERVAL = 0;
-    ENV.baseURL = '/';
     ENV.locationType = 'none';
     ENV.APP.emberModalDialog = {
       modalRootElementId: 'ember-testing'
