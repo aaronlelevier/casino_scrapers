@@ -126,6 +126,10 @@ class AvailableFilter(BaseModel):
     def is_state_filter(self):
         return self.lookups.get('filters', None) == 'state'
 
+    @property
+    def is_country_filter(self):
+        return self.lookups.get('filters', None) == 'country'
+
 
 class ProfileFilter(BaseModel):
     """
@@ -160,18 +164,20 @@ class ProfileFilter(BaseModel):
         # of ticket, which is really an 'object' of diff types, i.e. 'work_order'
         field_type = ticket._meta.get_field(self.source.field)
 
-        # "state" filter
-        if all([self.source.is_state_filter, ticket.location.is_office_or_store]):
-            return self._is_state_match(ticket)
-
+        # State filter
+        if self.source.is_state_filter and ticket.location.is_office_or_store:
+            return self._is_address_match(ticket, 'state__id')
+        # Country filter
+        elif self.source.is_country_filter and ticket.location.is_office_or_store:
+            return self._is_address_match(ticket, 'country__id')
         # location, priority, etc..
-        if isinstance(field_type, models.ForeignKey):
+        elif isinstance(field_type, models.ForeignKey):
             return str(getattr(ticket, self.source.field).id) in self.criteria
         # categories
         elif isinstance(field_type, models.ManyToManyField):
             category_ids = (str(x) for x in ticket.categories.values_list('id', flat=True))
             return set(category_ids).intersection(set(self.criteria))
 
-    def _is_state_match(self, ticket):
-        state_ids = (str(x) for x in ticket.location.addresses.values_list('state__id', flat=True))
-        return set(state_ids).intersection(set(self.criteria))
+    def _is_address_match(self, ticket, related__id):
+        related_ids = (str(x) for x in ticket.location.addresses.values_list(related__id, flat=True))
+        return set(related_ids).intersection(set(self.criteria))

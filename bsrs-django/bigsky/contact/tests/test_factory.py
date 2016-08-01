@@ -3,8 +3,8 @@ from mock import patch
 from django.test import TestCase
 
 from contact.models import (
-    State, PhoneNumber, PhoneNumberType, Email, EmailType,
-    Address, AddressType, PHONE_NUMBER_TYPES, EMAIL_TYPES, ADDRESS_TYPES)
+    State, Country, PhoneNumber, PhoneNumberType, Email, EmailType,
+    Address, AddressType, PHONE_NUMBER_TYPES, EMAIL_TYPES, ADDRESS_TYPES,)
 from contact.tests import factory
 from location.tests.factory import create_location
 from person.tests.factory import create_person
@@ -118,7 +118,12 @@ class FactoryTests(TestCase):
     def test_create_contact_state(self):
         ret = factory.create_contact_state()
         self.assertIsInstance(ret, State)
-        self.assertEqual(ret.state_code, "CA")
+        self.assertEqual(ret.state_code, factory.STATE_CODE)
+
+    def test_create_contact_country(self):
+        ret = factory.create_contact_country()
+        self.assertIsInstance(ret, Country)
+        self.assertEqual(ret.common_name, factory.COUNTRY_COMMON_NAME)
 
     def test_add_office_to_location(self):
         location = create_location()

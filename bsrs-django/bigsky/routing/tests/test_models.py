@@ -7,7 +7,7 @@ from model_mommy import mommy
 
 from category.models import Category
 from category.tests.factory import create_single_category, REPAIR
-from contact.tests.factory import add_office_to_location, create_contact_state
+from contact.tests.factory import add_office_to_location, create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
@@ -17,7 +17,8 @@ from routing.models import (
 from routing.tests.factory import (
     create_assignment, create_ticket_priority_filter, create_ticket_categories_filter,
     create_auto_assign_filter, create_auto_assign_filter, create_available_filters,
-    create_ticket_location_state_filter)
+    create_ticket_location_state_filter, create_ticket_location_country_filter,
+    create_available_filter_country)
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority
 from ticket.tests.factory import create_ticket
@@ -256,6 +257,10 @@ class AvailableFilterTests(TestCase):
                 count += 1
         self.assertEqual(count, 1)
 
+    def test_is_country_filter(self):
+        ret = create_available_filter_country()
+        self.assertTrue(ret.is_country_filter)
+
 
 class ProfileFilterTests(TestCase):
 
@@ -269,6 +274,8 @@ class ProfileFilterTests(TestCase):
         self.office_address = self.ticket.location.addresses.first()
         self.state = create_contact_state()
         self.office_address.state = self.state
+        self.country = create_contact_country()
+        self.office_address.country = self.country
         self.office_address.save()
 
     def test_meta__ordering(self):
@@ -310,19 +317,47 @@ class ProfileFilterTests(TestCase):
 
         self.assertTrue(ret)
 
-    @patch("routing.models.ProfileFilter._is_state_match")
+    @patch("routing.models.ProfileFilter._is_address_match")
     def test_is_match__location_state__false__no_a_state_filter(self, mock_func):
         self.assertFalse(self.pf.source.is_state_filter)
         self.assertTrue(self.ticket.location.is_office_or_store)
 
         self.assertFalse(mock_func.called)
 
-    @patch("routing.models.ProfileFilter._is_state_match")
+    @patch("routing.models.ProfileFilter._is_address_match")
     def test_is_match__location_state__false__location_is_not_an_office(self, mock_func):
         state_filter = create_ticket_location_state_filter()
         self.ticket.location.addresses.remove(self.office_address)
         # pre-test
         self.assertTrue(state_filter.source.is_state_filter)
+        self.assertFalse(self.ticket.location.is_office_or_store)
+
+        self.assertFalse(mock_func.called)
+
+    def test_is_match__location_country__true(self):
+        country_filter = create_ticket_location_country_filter()
+        # pre-test
+        self.assertTrue(country_filter.source.is_country_filter)
+        self.assertTrue(self.ticket.location.is_office_or_store)
+        self.assertIn(str(self.office_address.country.id), country_filter.criteria)
+
+        ret = country_filter.is_match(self.ticket)
+
+        self.assertTrue(ret)
+
+    @patch("routing.models.ProfileFilter._is_address_match")
+    def test_is_match__location_country__false__no_a_country_filter(self, mock_func):
+        self.assertFalse(self.pf.source.is_country_filter)
+        self.assertTrue(self.ticket.location.is_office_or_store)
+
+        self.assertFalse(mock_func.called)
+
+    @patch("routing.models.ProfileFilter._is_address_match")
+    def test_is_match__location_country__false__location_is_not_an_office(self, mock_func):
+        country_filter = create_ticket_location_country_filter()
+        self.ticket.location.addresses.remove(self.office_address)
+        # pre-test
+        self.assertTrue(country_filter.source.is_country_filter)
         self.assertFalse(self.ticket.location.is_office_or_store)
 
         self.assertFalse(mock_func.called)

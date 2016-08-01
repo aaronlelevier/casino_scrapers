@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from category.models import Category
 from category.tests.factory import create_repair_category
-from contact.tests.factory import create_contact_state
+from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from routing.models import Assignment, AvailableFilter, AUTO_ASSIGN
@@ -86,12 +86,24 @@ class AvailableFilterTests(TestCase):
         self.assertEqual(ret.field, 'location')
         self.assertEqual(ret.lookups, {'filters': 'state', 'unique_key': 'state'})
 
+    def test_create_available_filter_country(self):
+        ret = factory.create_available_filter_country()
+        ret_two = factory.create_available_filter_country()
+        # indempotent
+        self.assertEqual(ret, ret_two)
+        # attrs
+        self.assertEqual(ret.key, 'admin.placeholder.country_filter')
+        self.assertEqual(ret.key_is_i18n, True)
+        self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
+        self.assertEqual(ret.field, 'location')
+        self.assertEqual(ret.lookups, {'filters': 'country', 'unique_key': 'country'})
+
     def test_create_available_filters(self):
         self.assertEqual(AvailableFilter.objects.count(), 0)
         factory.create_available_filters()
-        self.assertEqual(AvailableFilter.objects.count(), 5)
+        self.assertEqual(AvailableFilter.objects.count(), 6)
 
-        fields = [AUTO_ASSIGN, 'priority', 'categories', 'location', 'location']
+        fields = [AUTO_ASSIGN, 'priority', 'categories', 'location', 'location', 'location']
         ret_fields = AvailableFilter.objects.values_list('field', flat=True)
         self.assertEqual(sorted(fields), sorted(ret_fields))
 
@@ -141,7 +153,6 @@ class PriorityFilterTests(TestCase):
         self.assertEqual(child_category.parent, category)
 
     def test_create_ticket_location_filter(self):
-        # don't test 'context' b/c populated by default and tested above
         location = create_top_level_location()
         source = factory.create_available_filter_location()
 
@@ -152,7 +163,6 @@ class PriorityFilterTests(TestCase):
         self.assertEqual(pf.criteria, [str(location.id)])
 
     def test_create_ticket_location_state_filter(self):
-        # don't test 'context' b/c populated by default and tested above
         state = create_contact_state()
         source = factory.create_available_filter_state()
 
@@ -161,6 +171,16 @@ class PriorityFilterTests(TestCase):
         self.assertEqual(pf.source, source)
         self.assertEqual(pf.lookups, {})
         self.assertEqual(pf.criteria, [str(state.id)])
+
+    def test_create_ticket_location_state_filter(self):
+        country = create_contact_country()
+        source = factory.create_available_filter_country()
+
+        pf = factory.create_ticket_location_country_filter()
+
+        self.assertEqual(pf.source, source)
+        self.assertEqual(pf.lookups, {})
+        self.assertEqual(pf.criteria, [str(country.id)])
 
 
 class AssignmentTests(TestCase):

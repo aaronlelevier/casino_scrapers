@@ -27,6 +27,7 @@ class Country(BaseModel):
             'common_name': self.common_name
         }
 
+
 class State(BaseModel):
     country = models.ForeignKey(Country, related_name='states', null=True)
     country_code = models.CharField(max_length=100, blank=True)
