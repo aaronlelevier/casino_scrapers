@@ -21,6 +21,10 @@ export default Ember.Mixin.create({
     feet: {
       associated_model: 'feet',
       join_model: 'user-feet'
-    }
+    },
+    fingers: {
+      associated_model: 'finger',
+      join_model: 'user-finger'
+    },
   },
 });
