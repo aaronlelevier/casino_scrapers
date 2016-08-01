@@ -81,6 +81,9 @@ test('when you deep link to the category detail view you get bound attrs', (asse
   page.descriptionFill(CD.descriptionMaintenance);
   page.labelFill(CD.labelTwo);
   page.amountFill(CD.costAmountTwo);
+  andThen(() => {
+    $('.t-amount').focusout();
+  });
   page.costCodeFill(CD.costCodeTwo);
   andThen(() => {
     let category = store.find('category', CD.idOne);
@@ -238,10 +241,10 @@ test('validation works and when hit save, we do same post', (assert) => {
   let payload = CF.put({id: CD.idOne, name: CD.nameOne, description: CD.descriptionMaintenance,
                        label: CD.labelOne, subcategory_label: CD.subCatLabelTwo, cost_amount: CD.costAmountOne, cost_code: CD.costCodeOne});
                        xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-                       generalPage.save();
-                       andThen(() => {
-                         assert.equal(currentURL(), CATEGORIES_INDEX_URL);
-                       });
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), CATEGORIES_INDEX_URL);
+  });
 });
 
 test('cost_amount - is not required', (assert) => {
@@ -250,12 +253,19 @@ test('cost_amount - is not required', (assert) => {
   page.descriptionFill(CD.descriptionMaintenance);
   page.labelFill(CD.labelOne);
   page.amountFill('');
+  andThen(() => {
+    $('.t-amount').focusout();
+  });
+  andThen(() => {
+    const category = store.find('category', CD.idOne);
+    assert.equal(category.get('cost_amount'), '');
+  });
   page.costCodeFill(CD.costCodeOne);
   page.subLabelFill(CD.subCatLabelTwo);
   let url = PREFIX + DETAIL_URL + '/';
   let response = CF.detail(CD.idOne);
   let payload = CF.put({id: CD.idOne, name: CD.nameOne, description: CD.descriptionMaintenance,
-                     label: CD.labelOne, subcategory_label: CD.subCatLabelTwo, cost_code: CD.costCodeOne});
+                     label: CD.labelOne, subcategory_label: CD.subCatLabelTwo, cost_amount: null, cost_code: CD.costCodeOne});
                      xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
   generalPage.save();
   andThen(() => {

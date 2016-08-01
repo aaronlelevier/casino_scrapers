@@ -34,7 +34,7 @@ const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-selec
 
 let store, payload, list_xhr, url, counter;
 
-moduleForAcceptance('scott Acceptance | role new', {
+moduleForAcceptance('Acceptance | role new', {
   beforeEach() {
     payload = {
       id: UUID.value,

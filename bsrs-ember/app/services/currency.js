@@ -22,7 +22,8 @@ let CurrencyService = Ember.Service.extend({
   },
   format_currency(val, precision) {
     // 0 may be falsy but we still want to display something?
-    return !isNaN(val) ? parseFloat(val).toFixed(precision) : '';
+    // isNaN(parseFloat()) takes care of '' and 'abc' b/c '' gets converted to 0, so thinks it is a number
+    return !isNaN(parseFloat(val)) ? parseFloat(val).toFixed(precision) : '';
   }
 });
 
