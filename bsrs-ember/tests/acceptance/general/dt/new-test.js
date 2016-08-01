@@ -200,7 +200,6 @@ test('has_multi_locations === true, validation: cant click next until select loc
   andThen(() => {
     assert.equal(currentURL(), DT_NEW_URL);
     assert.equal(dtPage.requester, '');
-    assert.equal(dtPage.locationsValue, '');
     assert.ok(find('.t-dt-start').attr('disabled'));
   });
   // requester

@@ -200,7 +200,7 @@ test('dtd can clear out link priority', (assert) => {
   });
   page.removePriority();
   andThen(() => {
-    assert.equal(ticketPage.priorityInput.split(' ')[0], '');
+    assert.equal(ticketPage.priorityInput, t('power.select.select'));
   });
   xhr(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload_no_priority), {}, 200, {});
   generalPage.save();
@@ -217,7 +217,7 @@ test('dtd can clear out link status', (assert) => {
   });
   page.removeStatus();
   andThen(() => {
-    assert.equal(ticketPage.statusInput.split(' ')[0], '');
+    assert.equal(ticketPage.statusInput, t('power.select.select'));
   });
   xhr(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload_no_status), {}, 200, {});
   generalPage.save();
