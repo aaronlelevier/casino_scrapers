@@ -5,8 +5,29 @@ from utils.fields import MyGenericForeignKey
 from utils.models import BaseNameModel, BaseNameOrderModel, BaseModel
 
 
-class State(BaseNameModel):
-    abbr = models.CharField(max_length=2)
+class Country(BaseModel):
+    sort_order = models.IntegerField()
+    common_name = models.CharField(max_length=100, blank=True)
+    formal_name = models.CharField(max_length=100, blank=True)
+    type = models.CharField(max_length=100, blank=True)
+    sub_type = models.CharField(max_length=100, blank=True)
+    sovereignty = models.CharField(max_length=100, blank=True)
+    capital = models.CharField(max_length=100, blank=True)
+    currency_code = models.CharField("ISO 4217 Currency Code", max_length=100, blank=True)
+    currency_name = models.CharField("ISO 4217 Currency Name", max_length=100, blank=True)
+    telephone_code = models.CharField("ITU-T Telephone Code", max_length=100, blank=True)
+    two_letter_code = models.CharField("ISO 3166-1 2 Letter Code", max_length=100, blank=True)
+    three_letter_code = models.CharField("ISO 3166-1 3 Letter Code", max_length=100, blank=True)
+    number = models.CharField("ISO 3166-1 Number", max_length=100, blank=True)
+    country_code_tld = models.CharField("IANA Country Code TLD", max_length=100, blank=True)
+
+
+class State(BaseModel):
+    country = models.ForeignKey(Country, related_name='states', null=True)
+    country_code = models.CharField(max_length=100, blank=True)
+    state_code = models.CharField(max_length=100, blank=True)
+    name = models.CharField(max_length=100, blank=True)
+    classification = models.CharField(max_length=100, blank=True)
 
     def to_dict(self):
         return {
@@ -14,11 +35,6 @@ class State(BaseNameModel):
             'name': self.name,
             'abbr': self.abbr
         }
-
-class Country(BaseNameModel):
-
-    class Meta:
-        verbose_name_plural = 'Countries'
 
 
 class BaseContactModel(BaseModel):
@@ -108,3 +124,25 @@ class Email(BaseContactModel):
 
     class Meta:
         ordering = ('email',)
+
+
+
+
+{
+    "Sub Type": "",
+    "ITU-T Telephone Code": "93",
+    "ISO 3166-1 2 Letter Code": "AF",
+    "Formal Name": "Islamic State of Afghanistan",
+    "Common Name": "Afghanistan",
+    "ISO 3166-1 3 Letter Code": "AFG",
+    "IANA Country Code TLD": ".af",
+    "Capital": "Kabul",
+    "Sort Order": "1",
+    "ISO 3166-1 Number": "4",
+    "ISO 4217 Currency Name": "Afghani",
+    "ISO 4217 Currency Code": "AFN",
+    "Sovereignty": "",
+    "Type": "Independent State"
+}
+
+
