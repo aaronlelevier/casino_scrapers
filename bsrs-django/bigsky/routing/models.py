@@ -179,5 +179,7 @@ class ProfileFilter(BaseModel):
             return set(category_ids).intersection(set(self.criteria))
 
     def _is_address_match(self, ticket, related__id):
-        related_ids = (str(x) for x in ticket.location.addresses.values_list(related__id, flat=True))
+        related_ids = ((str(x) for x in ticket.location.addresses
+                                              .office_and_stores()
+                                              .values_list(related__id, flat=True)))
         return set(related_ids).intersection(set(self.criteria))

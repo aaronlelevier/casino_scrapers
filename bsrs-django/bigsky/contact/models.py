@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 
 from utils.fields import MyGenericForeignKey
-from utils.models import BaseNameOrderModel, BaseModel
+from utils.models import BaseNameOrderModel, BaseModel, BaseManager, BaseQuerySet
 
 
 class Country(BaseModel):
@@ -84,6 +84,11 @@ class PhoneNumber(BaseContactModel):
         ordering = ('number',)
 
 
+LOCATION_ADDRESS_TYPE = 'admin.address_type.location'
+OFFICE_ADDRESS_TYPE = 'admin.address_type.office'
+STORE_ADDRESS_TYPE = 'admin.address_type.store'
+SHIPPING_ADDRESS_TYPE = 'admin.address_type.shipping'
+
 ADDRESS_TYPES = [
     'admin.address_type.location',
     'admin.address_type.office',
@@ -93,6 +98,22 @@ ADDRESS_TYPES = [
 
 class AddressType(BaseNameOrderModel):
     pass
+
+
+class AddressQuerySet(BaseQuerySet):
+
+    def office_and_stores(self):
+        return (self.filter(type__name__in=[OFFICE_ADDRESS_TYPE,
+                                            STORE_ADDRESS_TYPE])
+                    .distinct())
+
+
+class AddressManager(BaseManager):
+
+    queryset_cls = AddressQuerySet
+
+    def office_and_stores(self):
+        return self.get_queryset().office_and_stores()
 
 
 class Address(BaseContactModel):
@@ -109,6 +130,8 @@ class Address(BaseContactModel):
     state = models.ForeignKey(State, blank=True, null=True)
     postal_code = models.TextField(blank=True, null=True)
     country = models.ForeignKey(Country, blank=True, null=True)
+
+    objects = AddressManager()
 
     class Meta:
         ordering = ('address',)

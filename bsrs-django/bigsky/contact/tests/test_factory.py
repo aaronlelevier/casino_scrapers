@@ -4,7 +4,8 @@ from django.test import TestCase
 
 from contact.models import (
     State, Country, PhoneNumber, PhoneNumberType, Email, EmailType,
-    Address, AddressType, PHONE_NUMBER_TYPES, EMAIL_TYPES, ADDRESS_TYPES,)
+    Address, AddressType, PHONE_NUMBER_TYPES, EMAIL_TYPES, ADDRESS_TYPES,
+    OFFICE_ADDRESS_TYPE)
 from contact.tests import factory
 from location.tests.factory import create_location
 from person.tests.factory import create_person
@@ -19,6 +20,14 @@ class FactoryTests(TestCase):
 
         self.assertIsInstance(email, Email)
         self.assertEqual(str(email.content_object.id), str(person.id))
+
+    def test_create_contact__with_type(self):
+        person = create_person()
+        address_type = factory.create_address_type(OFFICE_ADDRESS_TYPE)
+
+        ret = factory.create_contact(Address, person, address_type)
+
+        self.assertEqual(ret.type, address_type)
 
     def test_create_contacts(self):
         person = create_person()

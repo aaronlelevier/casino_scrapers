@@ -7,7 +7,8 @@ from model_mommy import mommy
 
 from category.models import Category
 from category.tests.factory import create_single_category, REPAIR
-from contact.tests.factory import add_office_to_location, create_contact_state, create_contact_country
+from contact.models import Address
+from contact.tests.factory import create_contact, add_office_to_location, create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
@@ -272,8 +273,8 @@ class ProfileFilterTests(TestCase):
         # address setup
         add_office_to_location(self.ticket.location)
         self.office_address = self.ticket.location.addresses.first()
-        self.state = create_contact_state()
-        self.office_address.state = self.state
+        self.state_ca = create_contact_state()
+        self.office_address.state = self.state_ca
         self.country = create_contact_country()
         self.office_address.country = self.country
         self.office_address.save()
@@ -361,3 +362,20 @@ class ProfileFilterTests(TestCase):
         self.assertFalse(self.ticket.location.is_office_or_store)
 
         self.assertFalse(mock_func.called)
+
+    def test_is_match__location_address_should_only_check_offices_and_store_types(self):
+        state_nv = create_contact_state("NV")
+        self.office_address.state = state_nv
+        self.office_address.save()
+        address_two = create_contact(Address, self.ticket.location)
+        address_two.state = self.state_ca
+        address_two.save()
+        self.assertIn(address_two, self.ticket.location.addresses.all())
+        self.assertFalse(address_two.is_office_or_store)
+
+        state_filter = create_ticket_location_state_filter()
+        self.assertEqual([str(self.state_ca.id)], state_filter.criteria)
+
+        ret = state_filter.is_match(self.ticket)
+
+        self.assertFalse(ret)

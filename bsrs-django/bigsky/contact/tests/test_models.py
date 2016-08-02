@@ -3,7 +3,8 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from contact.models import (State, Country, PhoneNumber, PhoneNumberType,
-    Address, AddressType, Email)
+    Address, AddressType, Email,  LOCATION_ADDRESS_TYPE, OFFICE_ADDRESS_TYPE,
+    STORE_ADDRESS_TYPE, SHIPPING_ADDRESS_TYPE,)
 from contact.tests.factory import create_contact, create_address_type
 from location.models import Location
 from location.tests.factory import create_location
@@ -46,6 +47,28 @@ class PhoneNumberTests(TestCase):
         self.assertIsInstance(ph, PhoneNumber)
         self.assertEqual(str(ph.content_object.id), str(self.person.id))
         self.assertEqual(str(ph.object_id), str(self.person.id))
+
+
+class AddressManagerTests(TestCase):
+
+    def test_office_and_stores(self):
+        location_type = create_address_type(LOCATION_ADDRESS_TYPE)
+        office_type = create_address_type(OFFICE_ADDRESS_TYPE)
+        store_type = create_address_type(STORE_ADDRESS_TYPE)
+        shipping_type = create_address_type(SHIPPING_ADDRESS_TYPE)
+
+        location = create_location()
+
+        a = create_contact(Address, location, location_type)
+        b = create_contact(Address, location, office_type)
+        c = create_contact(Address, location, store_type)
+        d = create_contact(Address, location, shipping_type)
+
+        ret = Address.objects.office_and_stores()
+
+        self.assertEqual(ret.count(), 2)
+        self.assertIn(b, ret)
+        self.assertIn(c, ret)
 
 
 class AddressTests(TestCase):

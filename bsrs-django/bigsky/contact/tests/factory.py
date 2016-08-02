@@ -12,7 +12,7 @@ STATE_CODE = "CA"
 COUNTRY_COMMON_NAME = "United States"
 
 
-def create_contact(model, content_object):
+def create_contact(model, content_object, type=None):
     """
     `object_id` is a UUID, which `model_mommy` doesn't know how to make,
     so it must be specified.
@@ -21,7 +21,11 @@ def create_contact(model, content_object):
     :content_object: object to create foreign key for. i.e. ``person`` instance
     """
     create_method = load_create_contact(model)
-    return create_method(content_object)
+    instance = create_method(content_object)
+    if type:
+        instance.type = type
+        instance.save()
+    return instance
 
 
 def create_contacts(content_object):
