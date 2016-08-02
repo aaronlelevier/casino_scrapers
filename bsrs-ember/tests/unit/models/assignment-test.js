@@ -348,7 +348,6 @@ test('rollback - pf and their criteria', (assert) => {
   assert.ok(pf.get('isDirtyOrRelatedDirty'));
   assert.ok(pf.get('criteriaIsDirty'));
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
-  assert.ok(pf.get('criteria').objectAt(0).get('isNotDirty'));
   assignment.rollback();
   assert.equal(assignment.get('pf').get('length'), 0);
   assert.ok(pf.get('isNotDirtyOrRelatedNotDirty'));
@@ -356,7 +355,6 @@ test('rollback - pf and their criteria', (assert) => {
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(pf.get('criteria').get('length'), 0);
   assert.equal(store.find('criteria').get('length'), 1);
-  assert.ok(store.findOne('criteria').get('isNotDirty'));
 });
 
 test('assignment validations', assert => {
