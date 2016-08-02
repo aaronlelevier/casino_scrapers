@@ -29,15 +29,11 @@ export default Ember.Object.extend(OptConf, {
     this.setup_assignee(assignee, assignment);
     const [,pfs,] = this.setup_pf(filters, assignment);
     pfs.forEach((pf) => {
-      // if (pf.criteria) {
       const criteria = pf.criteria;
       delete pf.criteria;
       pf = store.push('pfilter', pf);
       this.setup_criteria(criteria, pf);
-      // pf.criteria_fks = criteriaIds
-      // }
     });
-    // let pfsIds = pfilters.map(obj => obj.id);
     assignment.save();
     return assignment;
   },
