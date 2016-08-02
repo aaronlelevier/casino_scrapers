@@ -1,7 +1,4 @@
 import copy
-import uuid
-
-from django.conf import settings
 
 from rest_framework import permissions, viewsets
 from rest_framework.exceptions import MethodNotAllowed
@@ -74,7 +71,8 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
         Looks for dynamic AvailableFilters. If it finds one, remove that filter
         placeholder, and replace it with dynamic versions of itself.
         """
-        for i, d in enumerate(data['results']):
+        data_copy = copy.copy(data)
+        for i, d in enumerate(data_copy['results']):
             if d['lookups'] == {'filters': 'location_level'}:
                 location_level_filter = data['results'].pop(i)
             else:

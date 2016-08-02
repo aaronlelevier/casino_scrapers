@@ -1,4 +1,5 @@
 from category.tests.factory import create_repair_category, create_single_category
+from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.tests.factory import create_single_person
 from routing.models import Assignment, ProfileFilter, AvailableFilter, AUTO_ASSIGN
@@ -34,11 +35,26 @@ def create_available_filter_location():
     return obj
 
 
+def create_available_filter_state():
+    obj, _ = AvailableFilter.objects.get_or_create(key='admin.placeholder.state_filter',
+                                                   field='location',
+                                                   lookups={'filters': 'state', 'unique_key': 'state'})
+    return obj
+
+def create_available_filter_country():
+    obj, _ = AvailableFilter.objects.get_or_create(key='admin.placeholder.country_filter',
+                                                   field='location',
+                                                   lookups={'filters': 'country', 'unique_key': 'country'})
+    return obj
+
+
 def create_available_filters():
     create_available_filter_auto_assign()
     create_available_filter_priority()
     create_available_filter_categories()
     create_available_filter_location()
+    create_available_filter_state()
+    create_available_filter_country()
 
 
 # ProfileFilters
@@ -72,6 +88,18 @@ def create_ticket_location_filter():
     source = create_available_filter_location()
     return ProfileFilter.objects.create(source=source, criteria=[str(location.id)],
                                         lookups={'filters': 'location_level'})
+
+
+def create_ticket_location_state_filter():
+    state = create_contact_state()
+    source = create_available_filter_state()
+    return ProfileFilter.objects.create(source=source, criteria=[str(state.id)])
+
+
+def create_ticket_location_country_filter():
+    country = create_contact_country()
+    source = create_available_filter_country()
+    return ProfileFilter.objects.create(source=source, criteria=[str(country.id)])
 
 
 # Assignments

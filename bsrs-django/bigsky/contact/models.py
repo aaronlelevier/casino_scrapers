@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 
 from utils.fields import MyGenericForeignKey
-from utils.models import BaseNameModel, BaseNameOrderModel, BaseModel
+from utils.models import BaseNameOrderModel, BaseModel, BaseManager, BaseQuerySet
 
 
 class Country(BaseModel):
@@ -21,6 +21,12 @@ class Country(BaseModel):
     number = models.CharField("ISO 3166-1 Number", max_length=100, blank=True)
     country_code_tld = models.CharField("IANA Country Code TLD", max_length=100, blank=True)
 
+    def to_dict(self):
+        return {
+            'id': str(self.id),
+            'common_name': self.common_name
+        }
+
 
 class State(BaseModel):
     country = models.ForeignKey(Country, related_name='states', null=True)
@@ -33,7 +39,7 @@ class State(BaseModel):
         return {
             'id': str(self.id),
             'name': self.name,
-            'abbr': self.abbr
+            'state_code': self.state_code
         }
 
 
@@ -78,14 +84,36 @@ class PhoneNumber(BaseContactModel):
         ordering = ('number',)
 
 
+LOCATION_ADDRESS_TYPE = 'admin.address_type.location'
+OFFICE_ADDRESS_TYPE = 'admin.address_type.office'
+STORE_ADDRESS_TYPE = 'admin.address_type.store'
+SHIPPING_ADDRESS_TYPE = 'admin.address_type.shipping'
+
 ADDRESS_TYPES = [
     'admin.address_type.location',
     'admin.address_type.office',
+    'admin.address_type.store',
     'admin.address_type.shipping',
 ]
 
 class AddressType(BaseNameOrderModel):
     pass
+
+
+class AddressQuerySet(BaseQuerySet):
+
+    def office_and_stores(self):
+        return (self.filter(type__name__in=[OFFICE_ADDRESS_TYPE,
+                                            STORE_ADDRESS_TYPE])
+                    .distinct())
+
+
+class AddressManager(BaseManager):
+
+    queryset_cls = AddressQuerySet
+
+    def office_and_stores(self):
+        return self.get_queryset().office_and_stores()
 
 
 class Address(BaseContactModel):
@@ -103,8 +131,15 @@ class Address(BaseContactModel):
     postal_code = models.TextField(blank=True, null=True)
     country = models.ForeignKey(Country, blank=True, null=True)
 
+    objects = AddressManager()
+
     class Meta:
         ordering = ('address',)
+
+    @property
+    def is_office_or_store(self):
+        return self.type and self.type.name in ['admin.address_type.office',
+                                                'admin.address_type.store']
 
 
 EMAIL_TYPES = [
@@ -124,25 +159,3 @@ class Email(BaseContactModel):
 
     class Meta:
         ordering = ('email',)
-
-
-
-
-{
-    "Sub Type": "",
-    "ITU-T Telephone Code": "93",
-    "ISO 3166-1 2 Letter Code": "AF",
-    "Formal Name": "Islamic State of Afghanistan",
-    "Common Name": "Afghanistan",
-    "ISO 3166-1 3 Letter Code": "AFG",
-    "IANA Country Code TLD": ".af",
-    "Capital": "Kabul",
-    "Sort Order": "1",
-    "ISO 3166-1 Number": "4",
-    "ISO 4217 Currency Name": "Afghani",
-    "ISO 4217 Currency Code": "AFN",
-    "Sovereignty": "",
-    "Type": "Independent State"
-}
-
-

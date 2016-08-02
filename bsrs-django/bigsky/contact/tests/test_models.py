@@ -3,9 +3,11 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from contact.models import (State, Country, PhoneNumber, PhoneNumberType,
-    Address, AddressType, Email)
-from contact.tests.factory import create_contact
+    Address, AddressType, Email,  LOCATION_ADDRESS_TYPE, OFFICE_ADDRESS_TYPE,
+    STORE_ADDRESS_TYPE, SHIPPING_ADDRESS_TYPE,)
+from contact.tests.factory import create_contact, create_address_type
 from location.models import Location
+from location.tests.factory import create_location
 from person.models import Person
 from person.tests.factory import create_person
 
@@ -47,10 +49,35 @@ class PhoneNumberTests(TestCase):
         self.assertEqual(str(ph.object_id), str(self.person.id))
 
 
+class AddressManagerTests(TestCase):
+
+    def test_office_and_stores(self):
+        location_type = create_address_type(LOCATION_ADDRESS_TYPE)
+        office_type = create_address_type(OFFICE_ADDRESS_TYPE)
+        store_type = create_address_type(STORE_ADDRESS_TYPE)
+        shipping_type = create_address_type(SHIPPING_ADDRESS_TYPE)
+
+        location = create_location()
+
+        a = create_contact(Address, location, location_type)
+        b = create_contact(Address, location, office_type)
+        c = create_contact(Address, location, store_type)
+        d = create_contact(Address, location, shipping_type)
+
+        ret = Address.objects.office_and_stores()
+
+        self.assertEqual(ret.count(), 2)
+        self.assertIn(b, ret)
+        self.assertIn(c, ret)
+
+
 class AddressTests(TestCase):
 
     def setUp(self):
         self.person = create_person()
+        self.location = create_location()
+        self.store = create_address_type('admin.address_type.store')
+        self.office = create_address_type('admin.address_type.office')
 
     def test_ordering(self):
         create_contact(Address, self.person)
@@ -62,8 +89,8 @@ class AddressTests(TestCase):
         )
 
     def test_create(self):
-        state = mommy.make(State, name='California')
-        country = mommy.make(Country, name='U.S.')
+        state = mommy.make(State)
+        country = mommy.make(Country)
         address_type = mommy.make(AddressType)
 
         address = Address.objects.create(
@@ -76,6 +103,19 @@ class AddressTests(TestCase):
         self.assertIsInstance(address.state, State)
         self.assertEqual(address.state, state)
         self.assertEqual(address.country, country)
+
+    def test_is_office_or_store(self):
+        address_type = mommy.make(AddressType)
+        address = create_contact(Address, self.location)
+        address.type = address_type
+        address.save()
+        self.assertNotIn(address.type, [self.office, self.store])
+        self.assertFalse(address.is_office_or_store)
+
+        address.type = self.office
+        address.save()
+        self.assertIn(address.type, [self.office, self.store])
+        self.assertTrue(address.is_office_or_store)
 
 
 class EmailTests(TestCase):

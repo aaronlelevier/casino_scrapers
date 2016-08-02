@@ -1,3 +1,5 @@
+from mock import patch
+
 from django.db.models import Q
 from django.test import TestCase
 
@@ -5,13 +7,19 @@ from model_mommy import mommy
 
 from category.models import Category
 from category.tests.factory import create_single_category, REPAIR
+from contact.models import Address
+from contact.tests.factory import create_contact, add_office_to_location, create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
-from routing.models import Assignment, AssignmentManager, AssignmentQuerySet, ProfileFilter, AUTO_ASSIGN
+from routing.models import (
+    Assignment, AssignmentManager, AssignmentQuerySet, AvailableFilter,
+    ProfileFilter, AUTO_ASSIGN)
 from routing.tests.factory import (
     create_assignment, create_ticket_priority_filter, create_ticket_categories_filter,
-    create_auto_assign_filter, create_auto_assign_filter)
+    create_auto_assign_filter, create_auto_assign_filter, create_available_filters,
+    create_ticket_location_state_filter, create_ticket_location_country_filter,
+    create_available_filter_country)
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority
 from ticket.tests.factory import create_ticket
@@ -238,14 +246,38 @@ class AssignmentTests(TestCase):
 
         self.assertTrue(ret)
 
+class AvailableFilterTests(TestCase):
 
-class ProfilefilterTests(TestCase):
+    def setUp(self):
+        create_available_filters()
+
+    def test_is_state_filter(self):
+        count = 0
+        for af in AvailableFilter.objects.all():
+            if af.is_state_filter:
+                count += 1
+        self.assertEqual(count, 1)
+
+    def test_is_country_filter(self):
+        ret = create_available_filter_country()
+        self.assertTrue(ret.is_country_filter)
+
+
+class ProfileFilterTests(TestCase):
 
     def setUp(self):
         self.pf = create_ticket_priority_filter()
         self.cf = create_ticket_categories_filter()
         create_single_person()
         self.ticket = create_ticket()
+        # address setup
+        add_office_to_location(self.ticket.location)
+        self.office_address = self.ticket.location.addresses.first()
+        self.state_ca = create_contact_state()
+        self.office_address.state = self.state_ca
+        self.country = create_contact_country()
+        self.office_address.country = self.country
+        self.office_address.save()
 
     def test_meta__ordering(self):
         # order by id, so that way are returned to User in the same order
@@ -274,3 +306,76 @@ class ProfilefilterTests(TestCase):
         category_ids = (str(x) for x in self.ticket.categories.values_list('id', flat=True))
         self.assertFalse(set(category_ids).intersection(set(self.cf.criteria)))
         self.assertFalse(self.cf.is_match(self.ticket))
+
+    def test_is_match__location_state__true(self):
+        state_filter = create_ticket_location_state_filter()
+        # pre-test
+        self.assertTrue(state_filter.source.is_state_filter)
+        self.assertTrue(self.ticket.location.is_office_or_store)
+        self.assertIn(str(self.office_address.state.id), state_filter.criteria)
+
+        ret = state_filter.is_match(self.ticket)
+
+        self.assertTrue(ret)
+
+    @patch("routing.models.ProfileFilter._is_address_match")
+    def test_is_match__location_state__false__no_a_state_filter(self, mock_func):
+        self.assertFalse(self.pf.source.is_state_filter)
+        self.assertTrue(self.ticket.location.is_office_or_store)
+
+        self.assertFalse(mock_func.called)
+
+    @patch("routing.models.ProfileFilter._is_address_match")
+    def test_is_match__location_state__false__location_is_not_an_office(self, mock_func):
+        state_filter = create_ticket_location_state_filter()
+        self.ticket.location.addresses.remove(self.office_address)
+        # pre-test
+        self.assertTrue(state_filter.source.is_state_filter)
+        self.assertFalse(self.ticket.location.is_office_or_store)
+
+        self.assertFalse(mock_func.called)
+
+    def test_is_match__location_country__true(self):
+        country_filter = create_ticket_location_country_filter()
+        # pre-test
+        self.assertTrue(country_filter.source.is_country_filter)
+        self.assertTrue(self.ticket.location.is_office_or_store)
+        self.assertIn(str(self.office_address.country.id), country_filter.criteria)
+
+        ret = country_filter.is_match(self.ticket)
+
+        self.assertTrue(ret)
+
+    @patch("routing.models.ProfileFilter._is_address_match")
+    def test_is_match__location_country__false__no_a_country_filter(self, mock_func):
+        self.assertFalse(self.pf.source.is_country_filter)
+        self.assertTrue(self.ticket.location.is_office_or_store)
+
+        self.assertFalse(mock_func.called)
+
+    @patch("routing.models.ProfileFilter._is_address_match")
+    def test_is_match__location_country__false__location_is_not_an_office(self, mock_func):
+        country_filter = create_ticket_location_country_filter()
+        self.ticket.location.addresses.remove(self.office_address)
+        # pre-test
+        self.assertTrue(country_filter.source.is_country_filter)
+        self.assertFalse(self.ticket.location.is_office_or_store)
+
+        self.assertFalse(mock_func.called)
+
+    def test_is_match__location_address_should_only_check_offices_and_store_types(self):
+        state_nv = create_contact_state("NV")
+        self.office_address.state = state_nv
+        self.office_address.save()
+        address_two = create_contact(Address, self.ticket.location)
+        address_two.state = self.state_ca
+        address_two.save()
+        self.assertIn(address_two, self.ticket.location.addresses.all())
+        self.assertFalse(address_two.is_office_or_store)
+
+        state_filter = create_ticket_location_state_filter()
+        self.assertEqual([str(self.state_ca.id)], state_filter.criteria)
+
+        ret = state_filter.is_match(self.ticket)
+
+        self.assertFalse(ret)

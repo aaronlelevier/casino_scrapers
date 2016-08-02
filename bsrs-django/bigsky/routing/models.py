@@ -122,6 +122,14 @@ class AvailableFilter(BaseModel):
         help_text="if used, provide extra lookup information beyond the 'field'"
                   "this should be a string array")
 
+    @property
+    def is_state_filter(self):
+        return self.lookups.get('filters', None) == 'state'
+
+    @property
+    def is_country_filter(self):
+        return self.lookups.get('filters', None) == 'country'
+
 
 class ProfileFilter(BaseModel):
     """
@@ -152,12 +160,26 @@ class ProfileFilter(BaseModel):
         ordering = ['id']
 
     def is_match(self, ticket):
-        # NOTE: checking the criteria will be different based on the "type"
+        # Checking the criteria will be different based on the "type"
         # of ticket, which is really an 'object' of diff types, i.e. 'work_order'
         field_type = ticket._meta.get_field(self.source.field)
 
-        if isinstance(field_type, models.ManyToManyField):
-            category_ids = (str(x) for x in ticket.categories.values_list('id', flat=True))
-            return set(category_ids).intersection(set(self.criteria))
+        # State filter
+        if self.source.is_state_filter and ticket.location.is_office_or_store:
+            return self._is_address_match(ticket, 'state__id')
+        # Country filter
+        elif self.source.is_country_filter and ticket.location.is_office_or_store:
+            return self._is_address_match(ticket, 'country__id')
+        # location, priority, etc..
         elif isinstance(field_type, models.ForeignKey):
             return str(getattr(ticket, self.source.field).id) in self.criteria
+        # categories
+        elif isinstance(field_type, models.ManyToManyField):
+            category_ids = (str(x) for x in ticket.categories.values_list('id', flat=True))
+            return set(category_ids).intersection(set(self.criteria))
+
+    def _is_address_match(self, ticket, related__id):
+        related_ids = ((str(x) for x in ticket.location.addresses
+                                              .office_and_stores()
+                                              .values_list(related__id, flat=True)))
+        return set(related_ids).intersection(set(self.criteria))

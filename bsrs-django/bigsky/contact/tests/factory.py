@@ -2,12 +2,17 @@ import random
 
 from model_mommy import mommy
 
-from contact.models import (PhoneNumber, PhoneNumberType, Email, EmailType,
-    Address, AddressType, PHONE_NUMBER_TYPES, EMAIL_TYPES, ADDRESS_TYPES)
+from contact.models import (
+    State, Country, PhoneNumber, PhoneNumberType, Email, EmailType,
+    Address, AddressType, PHONE_NUMBER_TYPES, EMAIL_TYPES, ADDRESS_TYPES,)
 from utils.helpers import generate_uuid
 
 
-def create_contact(model, content_object):
+STATE_CODE = "CA"
+COUNTRY_COMMON_NAME = "United States"
+
+
+def create_contact(model, content_object, type=None):
     """
     `object_id` is a UUID, which `model_mommy` doesn't know how to make,
     so it must be specified.
@@ -16,7 +21,11 @@ def create_contact(model, content_object):
     :content_object: object to create foreign key for. i.e. ``person`` instance
     """
     create_method = load_create_contact(model)
-    return create_method(content_object)
+    instance = create_method(content_object)
+    if type:
+        instance.type = type
+        instance.save()
+    return instance
 
 
 def create_contacts(content_object):
@@ -77,3 +86,25 @@ def create_contact_types():
     create_phone_number_types()
     create_email_types()
     create_address_types()
+
+
+def create_contact_state(state_code=STATE_CODE):
+    try:
+        return State.objects.get(state_code=state_code)
+    except State.DoesNotExist:
+        return mommy.make(State, state_code=state_code)
+
+
+def create_contact_country(common_name=COUNTRY_COMMON_NAME):
+    try:
+        return Country.objects.get(common_name=common_name)
+    except Country.DoesNotExist:
+        return mommy.make(Country, common_name=common_name)
+
+
+def add_office_to_location(location):
+    address = create_contact(Address, location)
+    office = create_address_type('admin.address_type.office')
+    address.type = office
+    address.save()
+    location.addresses.add(address)
