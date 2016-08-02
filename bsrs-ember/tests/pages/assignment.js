@@ -1,12 +1,14 @@
 import Ember from 'ember';
-import { create, visitable, fillable, text, value } from 'ember-cli-page-object';
+import { create, visitable, fillable, text, value, clickable } from 'ember-cli-page-object';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BASEURLS, { ASSIGNMENT_URL, ASSIGNMENT_LIST_URL } from 'bsrs-ember/utilities/urls';
 import AD from 'bsrs-ember/vendor/defaults/assignment';
+import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 
 const BASE_URL = BASEURLS.BASE_ASSIGNMENT_URL;
 const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
 const ASSIGNEE = '.t-assignment-assignee-select';
+const DROPDOWN = options;
 
 export default create({
   visit: visitable(ASSIGNMENT_LIST_URL),
@@ -19,4 +21,9 @@ export default create({
   assigneeInput: text(ASSIGNEE),
   assigneeSortText: text('.t-sort-assignee-fullname'),
   assigneeGridOne: text('.t-assignment-assignee-fullname:eq(0)'),
+
+  addFilter: clickable('.t-add-pf-btn'),
+  filterOneClickDropdown: clickable('.t-assignment-pf-select:eq(0) .ember-basic-dropdown-trigger'),
+  // filterOneClickOptionOne: clickable(`.ember-power-select-option:contains(${PFD.keyOne})`, { scope: DROPDOWN }),
+  filterOneClickOptionTwo: clickable(`.ember-power-select-option:contains(${PFD.keyTwo})`, { scope: DROPDOWN }),
 });

@@ -127,7 +127,7 @@ test('rollbackAssignee - assignee - assignmentwill set assignee to current assig
 });
 
 /* ASSIGNMENT & PROFILE_FILTER */
-test('pf property should return all associated pf. also confirm related and join model attr values', (assert) => {
+test('pfilter property should return all associated pf. also confirm related and join model attr values', (assert) => {
   run(() => {
     store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
     assignment = store.push('assignment', {id: AD.idOne, assignment_pf_fks: [AJFD.idOne]});
@@ -140,7 +140,7 @@ test('pf property should return all associated pf. also confirm related and join
   assert.equal(pf.objectAt(0).get('id'), PFD.idOne);
 });
 
-test('pf property is not dirty when no pf present (undefined)', (assert) => {
+test('pfilter property is not dirty when no pf present (undefined)', (assert) => {
   run(() => {
     assignment = store.push('assignment', {id: AD.idOne, assignment_pf_fks: undefined});
     store.push('pfilter', {id: PFD.idOne});
@@ -149,7 +149,7 @@ test('pf property is not dirty when no pf present (undefined)', (assert) => {
   assert.ok(assignment.get('pfIsNotDirty'));
 });
 
-test('pf property is not dirty when no pf present (empty array)', (assert) => {
+test('pfilter property is not dirty when no pf present (empty array)', (assert) => {
   run(() => {
     assignment = store.push('assignment', {id: AD.idOne, assignment_pf_fks: []});
     store.push('pfilter', {id: PFD.idOne});
@@ -196,8 +196,8 @@ test('add_pf - will create join model and mark model dirty', (assert) => {
   assert.deepEqual(assignment.get('pf_ids'), [PFD.idOne, PFD.idTwo]);
   assert.equal(assignment.get('pf').objectAt(0).get('id'), PFD.idOne);
   assert.equal(assignment.get('pf').objectAt(1).get('id'), PFD.idTwo);
-  assert.ok(assignment.get('pfIsNotDirty'));
-  assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(assignment.get('pfIsDirty'));
+  assert.ok(assignment.get('isDirtyOrRelatedDirty'));
 });
 
 test('saveRelated - change assignee', assert => {
@@ -216,8 +216,8 @@ test('save - pfilter and their criteria not dirty when just add new filters but 
   assert.equal(assignment.get('pf').get('length'), 0);
   assignment.add_pf({id: PFD.idOne});
   assert.equal(assignment.get('pf').get('length'), 1);
-  assert.ok(assignment.get('pfIsNotDirty'));
-  assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(assignment.get('pfIsDirty'));
+  assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assignment.saveRelated();
   assert.ok(assignment.get('pfIsNotDirty'));
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
@@ -232,7 +232,7 @@ test('save - pfilter and their criteria not dirty when just add new filters but 
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('savePf - and add back olf pf with same id will keep criteria and wont be dirty', (assert) => {
+test('savePf - and add back old pf with same id will keep criteria and wont be dirty', (assert) => {
   let pfilter_unused = {id: PFD.unusedId};
   run(() => {
     store.push('pfilter', {id: PFD.idOne});
@@ -262,8 +262,8 @@ test('savePf - and add back olf pf with same id will keep criteria and wont be d
   assert.equal(assignment.get('pf').get('length'), 2);
   const pf_two = assignment.get('pf').objectAt(1);
   assert.equal(pf_two.get('criteria').get('length'), 1);
-  assert.ok(assignment.get('pfIsNotDirty'));
-  assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(assignment.get('pfIsDirty'));
+  assert.ok(assignment.get('isDirtyOrRelatedDirty'));
 });
 
 test('rollback - assignee and pf', assert => {
@@ -284,7 +284,7 @@ test('rollback - assignee and pf', assert => {
   assert.equal(assignment.get('pf').get('length'), 0);
   assignment.add_pf({id: PFD.idOne});
   assert.equal(assignment.get('pf').get('length'), 1);
-  assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assignment.rollback();
   assert.equal(assignment.get('pf').get('length'), 0);
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
@@ -340,8 +340,8 @@ test('rollback - pf and their criteria', (assert) => {
   assert.equal(assignment.get('pf').get('length'), 0);
   assignment.add_pf({id: PFD.idOne});
   assert.equal(assignment.get('pf').get('length'), 1);
-  assert.ok(assignment.get('pfIsNotDirty'));
-  assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(assignment.get('pfIsDirty'));
+  assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   // Add an Criteria to the Pf
   pf = assignment.get('pf').objectAt(0);
   pf.add_criteria({id: LD.idOne});

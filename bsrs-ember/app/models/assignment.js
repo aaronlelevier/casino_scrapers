@@ -2,7 +2,7 @@ import Ember from 'ember';
 const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
-import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
+import { many_to_many, many_to_many_dirty } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/assignment';
 
@@ -31,25 +31,11 @@ export default Model.extend(OptConf, Validations, {
     this._super(...arguments);
     belongs_to.bind(this)('assignee', 'assignment');
     //TODO: pf is available filters...or just filter...
-    many_to_many.bind(this)('pf', 'assignment', {dirty:false});
+    many_to_many.bind(this)('pf', 'assignment', {dirty: false});
   },
   simpleStore: Ember.inject.service(),
   description: attr(''),
-  // defaultPfilter: {
-  //   key: 'admin.placeholder.ticket_priority',
-  //   context: 'ticket.ticket',
-  //   field: 'priority'
-  // },
-  // availablePfilters: [{
-  //   key: 'admin.placeholder.ticket_priority',
-  //   context: 'ticket.ticket',
-  //   field: 'priority'
-  // },{
-  //   key: 'admin.placeholder.location_store',
-  //   context: 'ticket.ticket',
-  //   field: 'location'
-  // }],
-  pfIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('assignment_pf'),
+  pfIsDirtyContainer: many_to_many_dirty('assignment_pf'),
   pfIsDirty: Ember.computed('pf.@each.{isDirtyOrRelatedDirty}', 'pfIsDirtyContainer', function() {
     const pf = this.get('pf');
     return pf.isAny('isDirtyOrRelatedDirty') || this.get('pfIsDirtyContainer');
