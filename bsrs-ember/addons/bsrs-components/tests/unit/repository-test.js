@@ -8,7 +8,7 @@ var store, deserializer;
 
 module('unit: repository test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:user', 'model:hat', 'model:user-hat-list', 'model:email', 'model:shoe', 'model:user-shoe']);
+    store = module_registry(this.container, this.registry, ['model:user', 'model:hat', 'model:user-hat-list', 'model:email', 'model:shoe', 'model:user-shoe', 'model:finger', 'model:user-finger']);
     deserializer = Deserializer.create({simpleStore: store});
     run(() => {
       store.push('hat', {id: 2});
@@ -52,5 +52,22 @@ test('shoes relationship setup in deserializer', (assert) => {
   assert.deepEqual(user.get('user_shoes').objectAt(0).get('shoe_pk'), 2);
   const m2m_models = store.find('user-shoe');
   assert.equal(m2m_models.objectAt(0).get('shoe_pk'), 2);
+  assert.equal(m2m_models.objectAt(0).get('user_pk'), 1);
+});
+
+test('fingers relationship setup in deserializer', (assert) => {
+  const json = {id: 1, fingers: [{id: 2}]};
+  run(() => {
+    deserializer.deserialize_five(json);
+  });
+  const user = store.find('user', 1);
+  assert.deepEqual(user.get('user_fingers_fks').length, 1);
+  assert.equal(user.get('fingers').get('length'), 1);
+  assert.equal(user.get('fingers').objectAt(0).get('id'), 2);
+  assert.deepEqual(user.get('user_fingers_ids').length, 1);
+  assert.deepEqual(user.get('user_fingers').objectAt(0).get('user_pk'), 1);
+  assert.deepEqual(user.get('user_fingers').objectAt(0).get('finger_pk'), 2);
+  const m2m_models = store.find('user-finger');
+  assert.equal(m2m_models.objectAt(0).get('finger_pk'), 2);
   assert.equal(m2m_models.objectAt(0).get('user_pk'), 1);
 });
