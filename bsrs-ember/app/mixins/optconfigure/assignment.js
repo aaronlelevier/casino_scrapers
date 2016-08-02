@@ -25,6 +25,11 @@ export default Ember.Mixin.create({
     pf: {
       associated_model: 'pfilter',
       join_model: 'assignment-join-pfilter',
+    },
+    //deserializer
+    criteria: {
+      associated_model: 'criteria',
+      join_model: 'pfilter-join-criteria',
     }
   }
 });

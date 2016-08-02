@@ -7,15 +7,15 @@ import AF from 'bsrs-ember/vendor/assignment_fixtures';
 import assignmentDeserializer from 'bsrs-ember/deserializers/assignment';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import AJFD from 'bsrs-ember/vendor/defaults/assignment-join-pfilter';
+import PJCD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
 
 var store, assignment, deserializer;
 
 module('unit: assignment deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:assignment', 'model:assignment-list', 'model:person', 'model:assignment-join-pfilter', 'model:pfilter', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
-    deserializer = assignmentDeserializer.create({
-      simpleStore: store
-    });
+    store = module_registry(this.container, this.registry, ['model:assignment', 'model:assignment-list', 'model:person', 'model:assignment-join-pfilter', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    deserializer = assignmentDeserializer.create({ simpleStore: store });
     run(() => {
       assignment = store.push('assignment', { id: AD.idOne });
     });
@@ -32,11 +32,15 @@ test('deserialize single', assert => {
   assert.equal(assignment.get('assignee_fk'), AD.assigneeOne);
   assert.equal(assignment.get('assignee').get('id'), AD.assigneeOne);
   assert.equal(assignment.get('assignee').get('fullname'), AD.fullname);
+  assert.equal(assignment.get('pf').get('length'), 1);
+  assert.equal(assignment.get('pf').objectAt(0).get('id'), PFD.idOne);
+  assert.equal(assignment.get('pf').objectAt(0).get('criteria').get('length'), 1);
+  assert.equal(assignment.get('pf').objectAt(0).get('criteria').objectAt(0).get('id'), TD.priorityOneId);
 });
 
 // test('existing assignment w/ pf, and server returns no pf - want no pf b/c that is the most recent', assert => {
 //   store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
-//   assignment = store.push('assignment', {id: AD.idOne, joinModel_associatedModelFks: [AJFD.idOne]});
+//   assignment = store.push('assignment', {id: AD.idOne, assignment_pf_fks: [AJFD.idOne]});
 //   store.push('pfilter', {id: PFD.idOne});
 //   const pf = assignment.get('pf');
 //   assert.equal(pf.get('length'), 1);
@@ -51,12 +55,13 @@ test('deserialize single', assert => {
 //   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
 // });
 
+// pfilter
 test('existing assignment w/ pf, and server returns w/ 1 extra pf', assert => {
   store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
-  store.push('assignment', {id: AD.idOne, joinModel_associatedModelFks: [AJFD.idOne]});
+  store.push('assignment', {id: AD.idOne, assignment_pf_fks: [AJFD.idOne]});
   store.push('pfilter', {id: PFD.idOne});
   let json = AF.detail();
-  json.filters.push({id: PFD.unusedId});
+  json.filters.push({id: PFD.unusedId, criteria: [{id: TD.priorityOneId}]});
   run(() => {
     deserializer.deserialize(json, AD.idOne);
   });
@@ -68,7 +73,7 @@ test('existing assignment w/ pf, and server returns w/ 1 extra pf', assert => {
 
 test('existing assignment w/ pf and get same pf', assert => {
   store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
-  store.push('assignment', {id: AD.idOne, joinModel_associatedModelFks: [AJFD.idOne]});
+  store.push('assignment', {id: AD.idOne, assignment_pf_fks: [AJFD.idOne]});
   store.push('pfilter', {id: PFD.idOne});
   const json = AF.detail();
   run(() => {
@@ -78,6 +83,40 @@ test('existing assignment w/ pf and get same pf', assert => {
   assert.equal(assignment.get('pf').get('length'), 1);
   assert.ok(assignment.get('isNotDirty'));
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+//criteria
+test('existing pfilter w/ criteria, and server returns w/ 1 extra criteria', assert => {
+  store.push('pfilter-join-criteria', {id: PJCD.idOne, pfilter_pk: PFD.idOne, criteria_pk: PFD.idOne});
+  store.push('pfilter', {id: PFD.idOne, assignment_pf_fks: [PJCD.idOne]});
+  store.push('criteria', {id: PFD.idOne});
+  let json = AF.detail();
+  json.filters.push({id: PFD.unusedId, criteria: [{id: TD.priorityOneId}, {id: TD.priorityTwoId}]});
+  run(() => {
+    deserializer.deserialize(json, PFD.idOne);
+  });
+  pfilter = store.find('pfilter', PFD.idOne);
+  assert.equal(pfilter.get('criteria').get('length'), 1);
+  const pfilter_unused = store.find('pfilter', PFD.unusedId);
+  assert.equal(pfilter_unused.get('criteria').get('length'), 2);
+  assert.ok(pfilter.get('isNotDirty'));
+  assert.ok(pfilter.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(pfilter_unused.get('isNotDirty'));
+  assert.ok(pfilter_unused.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('existing pfilter w/ criteria and get same criteria', assert => {
+  store.push('pfilter-join-criteria', {id: PJCD.idOne, pfilter_pk: PFD.idOne, criteria_pk: PFD.idOne});
+  store.push('pfilter', {id: PFD.idOne, assignment_pf_fks: [PJCD.idOne]});
+  store.push('criteria', {id: PFD.idOne});
+  const json = AF.detail();
+  run(() => {
+    deserializer.deserialize(json, PFD.idOne);
+  });
+  pfilter = store.find('pfilter', PFD.idOne);
+  assert.equal(pfilter.get('criteria').get('length'), 1);
+  assert.ok(pfilter.get('isNotDirty'));
+  assert.ok(pfilter.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('deserialize list', assert => {
