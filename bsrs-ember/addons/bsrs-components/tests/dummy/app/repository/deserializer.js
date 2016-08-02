@@ -9,6 +9,7 @@ var Deserializer = Ember.Object.extend(OPT_CONF, {
     this._super(...arguments);
     belongs_to.bind(this)('hat', 'user');//, {bootstrapped:true});
     many_to_many.bind(this)('shoe', 'user', {'plural':true});
+    many_to_many.bind(this)('finger', 'user', {'plural':true});
   },
   simpleStore: Ember.inject.service(),
   deserialize(response){
@@ -27,6 +28,13 @@ var Deserializer = Ember.Object.extend(OPT_CONF, {
     const shoes_json = response.shoes;
     delete response.shoes;
     this.setup_shoes(shoes_json, user);
+  },
+  deserialize_five(response){
+    const store = this.get('simpleStore');
+    const user = store.push('user', response);
+    const finger_json = response.fingers;
+    delete response.fingers;
+    this.setup_fingers(finger_json, user);
   }
 });
 

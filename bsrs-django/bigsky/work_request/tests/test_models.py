@@ -50,14 +50,14 @@ class WorkRequestStatusTests(TestCase):
 class WorkRequestTests(TestCase):
 
     def setUp(self):
-        self.status_new = WorkRequestStatus.objects.create(
-            id=WorkRequestStatusEnum.NEW)
-        self.status_assigned = WorkRequestStatus.objects.create(
-            id=WorkRequestStatusEnum.ASSIGNED)
+        WorkRequestStatus.objects.create(id=WorkRequestStatusEnum.NEW)
+        WorkRequestStatus.objects.create(id=WorkRequestStatusEnum.DRAFT)
+        WorkRequestStatus.objects.create(id=WorkRequestStatusEnum.REQUESTED)
+        WorkRequestStatus.objects.create(id=WorkRequestStatusEnum.ASSIGNED)
         self.request = WorkRequest.objects.create()
 
     def test_initial_state_instatiated(self):
-        self.assertEqual(self.request.status, 'new',)
+        self.assertEqual(self.request.status, 'new')
 
     def test_transition(self):
         self.assertTrue(can_proceed(self.request.draft))

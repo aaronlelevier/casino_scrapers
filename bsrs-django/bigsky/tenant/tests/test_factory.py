@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.test import TestCase
 
-from dtd.models import TreeData, DTD_START_ID
+from dtd.models import TreeData, DTD_START_KEY
 from dtd.tests.factory import create_tree_data
 from tenant.models import Tenant
 from tenant.tests import factory
@@ -10,7 +10,7 @@ from tenant.tests import factory
 class TenantTests(TestCase):
 
     def test_get_or_create(self):
-        create_tree_data(id=DTD_START_ID)
+        create_tree_data(key=DTD_START_KEY)
 
         ret = factory.get_or_create_tenant()
 
