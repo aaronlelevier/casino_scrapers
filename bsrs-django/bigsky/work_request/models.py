@@ -4,22 +4,18 @@ from django.db import models
 from django_fsm import FSMKeyField, FSMFieldMixin, transition
 
 
-class FSMUuidField(FSMFieldMixin, models.UUIDField):
-    pass
-
-
 class WorkRequestStatusEnum(object):
-    DRAFT = "def11673-d4ab-41a6-a37f-0c6846b96001"
-    DENIED = "def11673-d4ab-41a6-a37f-0c6846b96002"
-    PROBLEM_SOLVED = "def11673-d4ab-41a6-a37f-0c6846b96003"
-    COMPLETE = "def11673-d4ab-41a6-a37f-0c6846b96004"
-    DEFERRED = "def11673-d4ab-41a6-a37f-0c6846b96005"
-    NEW = "def11673-d4ab-41a6-a37f-0c6846b96006"
-    ASSIGNED = "def11673-d4ab-41a6-a37f-0c6846b96007"
-    IN_PROGRESS = "def11673-d4ab-41a6-a37f-0c6846b96008"
-    UNSATISFACTORY_COMPLETION = "def11673-d4ab-41a6-a37f-0c6846b96009"
-    REQUESTED = "def11673-d4ab-41a6-a37f-0c6846b96010"
-    APPROVED = "def11673-d4ab-41a6-a37f-0c6846b96011"
+    DRAFT = 'draft'
+    DENIED = 'denied'
+    PROBLEM_SOLVED = 'problem_solved'
+    COMPLETE = 'complete'
+    DEFERRED = 'deferred'
+    NEW = 'new'
+    ASSIGNED = 'assigned'
+    IN_PROGRESS = 'in_progress'
+    UNSATISFACTORY_COMPLETION = 'unsatisfactory_completion'
+    REQUESTED = 'requested'
+    APPROVED = 'approved'
 
     @classmethod
     def to_dict(cls):
@@ -72,7 +68,7 @@ class WorkRequestStatus(models.Model):
 
 
 class WorkRequest(models.Model):
-    status = FSMKeyField(WorkRequestStatus, default='new', protected=True)
+    status = FSMKeyField(WorkRequestStatus, default=WorkRequestStatusEnum.NEW, protected=True)
     request = models.CharField(max_length=254, blank=True, null=True)
     approver = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
 
@@ -85,7 +81,7 @@ class WorkRequest(models.Model):
 
     def _update_defaults(self):
         if not self.status:
-            self.status = WorkRequestStatus.objects.default()
+            self.status = WorkRequestStatusEnum.NEW # WorkRequestStatus.objects.default()
 
     # condition booleans
 

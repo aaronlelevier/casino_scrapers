@@ -1,13 +1,12 @@
 import copy
 import itertools
 
-from django.forms.models import model_to_dict
-
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 
 from ticket.models import TicketActivityType, TicketActivity
+from utils.helpers import model_to_dict
 
 
 class CreateTicketModelMixin(object):

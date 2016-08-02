@@ -1,5 +1,5 @@
 # django
-Django==1.9.8
+Django>=1.10
 django-cors-headers>=1.1.0
 django-extensions>=1.6.1
 django-fsm>=2.3.0

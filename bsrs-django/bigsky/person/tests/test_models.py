@@ -338,11 +338,10 @@ class PersonTests(TestCase):
 
     def test_group(self):
         # The Person is still in one Group even after changing Roles
-        role = Role.objects.first()
-        role2 = create_role()
-        person = mommy.make(Person, role=role)
+        person = create_single_person()
         self.assertEqual(person.groups.count(), 1)
         # Change Role
+        role2 = create_role()
         person.role = role2
         person.save()
         person = Person.objects.get(id=person.id)
