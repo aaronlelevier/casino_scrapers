@@ -1,6 +1,7 @@
 from category.tests.factory import create_repair_category, create_single_category
 from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
+from person.models import Person
 from person.tests.factory import create_single_person
 from routing.models import Assignment, ProfileFilter, AvailableFilter, AUTO_ASSIGN
 from tenant.tests.factory import get_or_create_tenant
@@ -30,7 +31,7 @@ def create_available_filter_categories():
 
 
 def create_available_filter_location():
-    obj, _ = AvailableFilter.objects.get_or_create(key_is_i18n=False, field='location',
+    obj, _ = AvailableFilter.objects.get_or_create(field='location',
                                                    lookups={'filters': 'location_level'})
     return obj
 
@@ -104,7 +105,7 @@ def create_ticket_location_country_filter():
 
 # Assignments
 
-def create_assignment(description=None, tenant=None):
+def create_assignment(description=None, tenant=None, assignee=None):
     kwargs = {
         'description': description or random_lorem(1),
         'tenant': tenant or get_or_create_tenant()
@@ -113,7 +114,10 @@ def create_assignment(description=None, tenant=None):
     try:
         assignment = Assignment.objects.get(**kwargs)
     except Assignment.DoesNotExist:
-        kwargs['assignee'] = create_single_person()
+        if not assignee:
+            assignee = create_single_person()
+        kwargs['assignee'] = assignee
+
         assignment = Assignment.objects.create(**kwargs)
 
         priority_filter = create_ticket_priority_filter()
@@ -125,4 +129,7 @@ def create_assignment(description=None, tenant=None):
 
 def create_assignments():
     for i in range(10):
-        create_assignment()
+        assignee = Person.objects.first()
+        if not assignee:
+            assignee = create_single_person()
+        create_assignment(assignee=assignee)

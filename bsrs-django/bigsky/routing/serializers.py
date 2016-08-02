@@ -18,7 +18,7 @@ class AvailableFilterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AvailableFilter
-        fields = ('id', 'key', 'key_is_i18n', 'context', 'field', 'lookups',)
+        fields = ('id', 'key', 'context', 'field', 'lookups',)
 
 
 PROFILE_FILTER_FIELDS = ('id', 'lookups', 'criteria', 'source',)

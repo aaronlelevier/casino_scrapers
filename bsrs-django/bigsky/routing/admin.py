@@ -4,5 +4,15 @@ from routing import models
 
 
 @admin.register(models.Assignment)
-class PersonAdmin(admin.ModelAdmin):
+class AssignmentAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(models.ProfileFilter)
+class ProfileFilterAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(models.AvailableFilter)
+class AvailableFilterAdmin(admin.ModelAdmin):
     pass
