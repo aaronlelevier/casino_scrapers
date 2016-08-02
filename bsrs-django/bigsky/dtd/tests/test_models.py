@@ -3,7 +3,7 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from dtd.models import TreeData, TreeDataManager, TreeDataQuerySet, DTD_START_ID
+from dtd.models import TreeData, TreeDataManager, TreeDataQuerySet, DTD_START_KEY
 from dtd.tests.factory import create_dtd_fixture_data
 
 
@@ -33,7 +33,7 @@ class TreeDataManagerTests(TestCase):
         ret = TreeData.objects.get_start()
 
         self.assertIsInstance(ret, TreeData)
-        self.assertEqual(str(ret.id), DTD_START_ID)
+        self.assertEqual(str(ret.key), DTD_START_KEY)
 
 
 class TreeDataTests(TestCase):

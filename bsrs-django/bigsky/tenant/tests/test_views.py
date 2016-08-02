@@ -5,7 +5,7 @@ from rest_framework.test import APITestCase
 from model_mommy import mommy
 
 from accounting.models import Currency
-from dtd.models import TreeData, DTD_START_ID
+from dtd.models import TreeData, DTD_START_KEY
 from person.tests.factory import PASSWORD, create_single_person
 from tenant.models import Tenant
 
@@ -13,7 +13,7 @@ from tenant.models import Tenant
 class TenantViewTests(APITestCase):
 
     def setUp(self):
-        mommy.make(TreeData, id=DTD_START_ID)
+        mommy.make(TreeData, key=DTD_START_KEY)
         self.person = create_single_person()
         self.tenant = self.person.role.tenant
 
