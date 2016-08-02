@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
@@ -8,7 +9,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
 
-let store, model, currencyObjects, tenant_repo, trans, run = Ember.run;
+let store, model, tenant_repo, trans;
 
 moduleForComponent('settings/general-settings', 'integration: settings/general-settings (tenant) test', {
   integration: true,

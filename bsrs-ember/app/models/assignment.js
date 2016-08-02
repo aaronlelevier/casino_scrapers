@@ -2,7 +2,7 @@ import Ember from 'ember';
 const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
-import { many_to_many } from 'bsrs-components/attr/many-to-many';
+import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/assignment';
 
@@ -30,35 +30,56 @@ export default Model.extend(OptConf, Validations, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('assignee', 'assignment');
-    many_to_many.bind(this)('pf', 'assignment');
+    //TODO: pf is available filters...or just filter...
+    many_to_many.bind(this)('pf', 'assignment', {dirty:false});
   },
   simpleStore: Ember.inject.service(),
   description: attr(''),
-  defaultPfilter: {
-    key: 'admin.placeholder.ticket_priority',
-    context: 'ticket.ticket',
-    field: 'priority'
-  },
-  availablePfilters: [{
-    key: 'admin.placeholder.ticket_priority',
-    context: 'ticket.ticket',
-    field: 'priority'
-  },{
-    key: 'admin.placeholder.location_store',
-    context: 'ticket.ticket',
-    field: 'location'
-  }],
+  // defaultPfilter: {
+  //   key: 'admin.placeholder.ticket_priority',
+  //   context: 'ticket.ticket',
+  //   field: 'priority'
+  // },
+  // availablePfilters: [{
+  //   key: 'admin.placeholder.ticket_priority',
+  //   context: 'ticket.ticket',
+  //   field: 'priority'
+  // },{
+  //   key: 'admin.placeholder.location_store',
+  //   context: 'ticket.ticket',
+  //   field: 'location'
+  // }],
+  pfIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('assignment_pf'),
+  pfIsDirty: Ember.computed('pf.@each.{isDirtyOrRelatedDirty}', 'pfIsDirtyContainer', function() {
+    const pf = this.get('pf');
+    return pf.isAny('isDirtyOrRelatedDirty') || this.get('pfIsDirtyContainer');
+  }),
+  pfIsNotDirty: Ember.computed.not('pfIsDirty'),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'pfIsDirty', function() {
     return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('pfIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+  rollbackPfContainer() {
+    const pf = this.get('pf');
+    pf.forEach((model) => {
+      model.rollback();
+    });
+  },
   rollback() {
     this.rollbackAssignee();
+    this.rollbackPfContainer();
     this.rollbackPf();
     this._super(...arguments);
   },
+  savePfContainer() {
+    const pf = this.get('pf');
+    pf.forEach((model) => {
+      model.saveRelated();
+    });
+  },
   saveRelated() {
     this.saveAssignee();
+    this.savePfContainer();
     this.savePf();
   },
   removeRecord() {

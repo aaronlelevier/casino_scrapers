@@ -7,6 +7,7 @@ var BSRS_PROFILE_FILTER_DEFAULTS_OBJECT = (function() {
       idOne: '6f4e19c2-54c3-4db4-9742-387f64eca721',
       idTwo: '6f4e19c2-54c3-4db4-9742-387f64eca722',
       unusedId: '6f4e19c2-54c3-4db4-9742-387f64eca72b',
+      nameOne: 'Ticket Priority',
       lookupsEmpty: {}, // non-dynamic available filters
       lookupsDynamic: {
         location_level: this.location_level.idOne
@@ -17,7 +18,7 @@ var BSRS_PROFILE_FILTER_DEFAULTS_OBJECT = (function() {
 })();
 
 if (typeof window === 'undefined') {
-    var location_level = require('./location_level');
+    var location_level = require('./location-level');
   module.exports = new BSRS_PROFILE_FILTER_DEFAULTS_OBJECT(location_level).defaults();
 }
 else {

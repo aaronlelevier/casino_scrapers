@@ -6,6 +6,7 @@ var multi_new_put_payload = {
   first_name: PD.first_name,
   middle_initial: PD.middle_initial,
   last_name: PD.last_name,
+  auth_amount: null,
   status: PD.status,
   role: PD.role,
   locations: [],

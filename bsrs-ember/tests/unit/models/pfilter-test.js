@@ -1,151 +1,184 @@
 import Ember from 'ember';
-import {test, module} from 'bsrs-ember/tests/helpers/qunit';
+const { run } = Ember;
+import { test, module } from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import PD from 'bsrs-ember/vendor/defaults/profile';
-import PFD from 'bsrs-ember/vendor/defaults/pfilter';
-import AFD from 'bsrs-ember/vendor/defaults/afilter';
+import PD from 'bsrs-ember/vendor/defaults/pfilter';
+import CD from 'bsrs-ember/vendor/defaults/criteria';
 import PersonD from 'bsrs-ember/vendor/defaults/person';
-import TD from 'bsrs-ember/vendor/defaults/ticket';
+import PJFD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
 
-var store, profile, pfilter, afilter, person, run = Ember.run;
+var store, pfilter;
 
 module('unit: pfilter model test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:profile', 'model:pfilter', 'model:afilter', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:pfilter', 'model:pfilter-join-criteria', 'model:criteria', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     run(() => {
-      profile = store.push('profile', {id: PD.idOne, assignee_fk: PersonD.idOne});
-      person = store.push('person', {id: PersonD.idOne, profiles: [PD.idOne]});
-      pfilter = store.push('pfilter', {id: PFD.idOne});
+      pfilter = store.push('criteria', {id: CD.idOne});
     });
   }
 });
 
-test('dirty test | lookups', assert => {
-  assert.equal(pfilter.get('isDirty'), false);
-  pfilter.set('lookups', 'wat');
-  assert.equal(pfilter.get('isDirty'), true);
-  pfilter.set('lookups', '');
-  assert.equal(pfilter.get('isDirty'), false);
+// test('dirty test | lookups', assert => {
+//   assert.equal(pfilter.get('isDirty'), false);
+//   pfilter.set('lookups', 'wat');
+//   assert.equal(pfilter.get('isDirty'), true);
+//   pfilter.set('lookups', '');
+//   assert.equal(pfilter.get('isDirty'), false);
+// });
+
+// test('related dirty', assert => {
+//   assert.equal(pfilter.get('isDirty'), false);
+//   pfilter.set('lookups', 'wat');
+//   assert.equal(pfilter.get('isDirty'), true);
+//   assert.equal(pfilter.get('isDirtyOrRelatedDirty'), true);
+//   assert.equal(pfilter.get('isNotDirtyOrRelatedNotDirty'), false);
+// });
+
+// criteria method tests
+test('criteria property should return all associated criteria. also confirm related and join model attr values', (assert) => {
+  run(() => {
+    store.push('pfilter-join-criteria', {id: PJFD.idOne, pfilter_pk: PD.idOne, criteria_pk: CD.idOne});
+    pfilter = store.push('pfilter', {id: PD.idOne, pfilter_criteria_fks: [PJFD.idOne]});
+    store.push('criteria', {id: CD.idOne});
+  });
+  let criteria = pfilter.get('criteria');
+  assert.equal(criteria.get('length'), 1);
+  assert.deepEqual(pfilter.get('criteria_ids'), [CD.idOne]);
+  assert.deepEqual(pfilter.get('pfilter_criteria_ids'), [PJFD.idOne]);
+  assert.equal(criteria.objectAt(0).get('id'), CD.idOne);
 });
 
-test('dirty test | criteria', assert => {
+test('criteria property is not dirty when no pf present (undefined)', (assert) => {
+  run(() => {
+    pfilter = store.push('pfilter', {id: PD.idOne, pfilter_criteria_fks: undefined});
+    store.push('criteria', {id: CD.idOne});
+  });
+  assert.equal(pfilter.get('criteria').get('length'), 0);
   assert.ok(pfilter.get('criteriaIsNotDirty'));
-  pfilter.set('criteria_fks', [TD.priorityOneId]);
-  pfilter.set('criteria_ids', [TD.priorityOneId]);
+});
+
+test('criteria property is not dirty when no pf present (empty array)', (assert) => {
+  run(() => {
+    pfilter = store.push('pfilter', {id: PD.idOne, pfilter_criteria_fks: []});
+    store.push('criteria', {id: CD.idOne});
+  });
+  assert.equal(pfilter.get('criteria').get('length'), 0);
+  assert.ok(pfilter.get('criteriaIsNotDirty'));
+});
+
+test('remove_criteria - will remove join model and mark model as dirty', (assert) => {
+  run(() => {
+    store.push('pfilter-join-criteria', {id: PJFD.idOne, pfilter_pk: PD.idOne, criteria_pk: CD.idOne});
+    store.push('criteria', {id: CD.idOne});
+    pfilter = store.push('pfilter', {id: PD.idOne, pfilter_criteria_fks: [PJFD.idOne]});
+  });
+  assert.equal(pfilter.get('criteria').get('length'), 1);
+  assert.equal(pfilter.get('pfilter_criteria_ids').length, 1);
+  assert.equal(pfilter.get('pfilter_criteria_fks').length, 1);
   assert.ok(pfilter.get('criteriaIsNotDirty'));
   assert.ok(pfilter.get('isNotDirtyOrRelatedNotDirty'));
-  pfilter.set('criteria_ids', []);
+  pfilter.remove_criteria(CD.idOne);
+  assert.equal(pfilter.get('criteria').get('length'), 0);
+  assert.equal(pfilter.get('pfilter_criteria_ids').length, 0);
+  assert.equal(pfilter.get('pfilter_criteria_fks').length, 1);
   assert.ok(pfilter.get('criteriaIsDirty'));
   assert.ok(pfilter.get('isDirtyOrRelatedDirty'));
 });
 
-test('related dirty', assert => {
-  assert.equal(pfilter.get('isDirty'), false);
-  pfilter.set('lookups', 'wat');
-  assert.equal(pfilter.get('isDirty'), true);
-  assert.equal(pfilter.get('isDirtyOrRelatedDirty'), true);
-  assert.equal(pfilter.get('isNotDirtyOrRelatedNotDirty'), false);
-});
-
-// criteria method tests
-
-test('add_criteria', assert => {
-  assert.deepEqual(pfilter.get('criteria_fks'), []);
-  pfilter.add_criteria(TD.priorityOneId);
-  assert.deepEqual(pfilter.get('criteria_fks'), [TD.priorityOneId]);
-  // indempotent - b/c unique id's only
-  pfilter.add_criteria(TD.priorityOneId);
-  assert.deepEqual(pfilter.get('criteria_fks'), [TD.priorityOneId]);
-});
-
-test('remove_criteria', assert => {
-  pfilter.add_criteria(TD.priorityOneId);
-  assert.deepEqual(pfilter.get('criteria_fks'), [TD.priorityOneId]);
-  pfilter.remove_criteria(TD.priorityOneId);
-  assert.deepEqual(pfilter.get('criteria_fks'), []);
-  // fails gracefull if not present
-  pfilter.remove_criteria(TD.priorityOneId);
-  assert.deepEqual(pfilter.get('criteria_fks'), []);
-});
-
-test('serialize', assert => {
-    run(() => {
-      pfilter = store.push('pfilter', {id: PFD.idOne, lookups: PFD.lookupsEmpty, criteria_fks: [TD.priorityOneId]});
-    });
-  let data = pfilter.serialize();
-  assert.equal(data.id, PFD.idOne);
-  assert.equal(data.lookups, PFD.lookupsEmpty);
-  assert.deepEqual(data.criteria, [TD.priorityOneId]);
-});
-
-/* afilter */
-test('related afilter should return one afilter for a pfilter', (assert) => {
+test('add_criteria - will create join model and mark model dirty', (assert) => {
   run(() => {
-    pfilter = store.push('pfilter', {id: PFD.idOne, afilter_fk: AFD.idOne});
-    afilter = store.push('afilter', {id: AFD.idOne, pfilters: [PFD.idOne]});
+    store.push('pfilter-join-criteria', {id: PJFD.idOne, pfilter_pk: PD.idOne, criteria_pk: CD.idOne});
+    store.push('criteria', {id: CD.idOne});
+    pfilter = store.push('pfilter', {id: PD.idOne, pfilter_criteria_fks: [PJFD.idOne]});
   });
-  assert.equal(pfilter.get('afilter').get('id'), AFD.idOne);
+  assert.equal(pfilter.get('criteria').get('length'), 1);
+  assert.equal(pfilter.get('pfilter_criteria_ids').length, 1);
+  assert.equal(pfilter.get('pfilter_criteria_fks').length, 1);
+  assert.deepEqual(pfilter.get('criteria_ids'), [CD.idOne]);
+  assert.ok(pfilter.get('criteriaIsNotDirty'));
+  assert.ok(pfilter.get('isNotDirtyOrRelatedNotDirty'));
+  pfilter.add_criteria({id: CD.idTwo});
+  assert.equal(pfilter.get('criteria').get('length'), 2);
+  assert.equal(pfilter.get('pfilter_criteria_ids').length, 2);
+  assert.equal(pfilter.get('pfilter_criteria_fks').length, 1);
+  assert.deepEqual(pfilter.get('criteria_ids'), [CD.idOne, CD.idTwo]);
+  assert.equal(pfilter.get('criteria').objectAt(0).get('id'), CD.idOne);
+  assert.equal(pfilter.get('criteria').objectAt(1).get('id'), CD.idTwo);
+  assert.ok(pfilter.get('criteriaIsDirty'));
+  assert.ok(pfilter.get('isDirtyOrRelatedDirty'));
 });
 
-test('change_afilter - will update the afilters afilter and dirty the model', (assert) => {
+test('saveCriteria - will reset the previous pf with multiple assignments', (assert) => {
+  let criteria_unused = {id: CD.unusedId};
   run(() => {
-    pfilter = store.push('pfilter', {id: PFD.idOne, afilter_fk: undefined});
-    store.push('afilter', {id: AFD.idOne, pfilters: []});
-    inactive_afilter = store.push('afilter', {id: AFD.idTwo, pfilters: []});
+    store.push('criteria', {id: CD.idOne});
+    store.push('criteria', {id: CD.idTwo});
+    store.push('pfilter-join-criteria', {id: PJFD.idOne, pfilter_pk: PD.idOne, criteria_pk: CD.idOne});
+    store.push('pfilter-join-criteria', {id: PJFD.idTwo, pfilter_pk: PD.idOne, criteria_pk: CD.idTwo});
+    pfilter = store.push('pfilter', {id: PD.idOne, pfilter_criteria_fks: [PJFD.idOne, PJFD.idTwo]});
   });
-  assert.equal(pfilter.get('afilter'), undefined);
+  assert.equal(pfilter.get('criteria').get('length'), 2);
+  pfilter.remove_criteria(CD.idOne);
+  assert.equal(pfilter.get('criteria').get('length'), 1);
+  assert.ok(pfilter.get('criteriaIsDirty'));
+  assert.ok(pfilter.get('isDirtyOrRelatedDirty'));
+  pfilter.saveCriteria();
+  assert.equal(pfilter.get('criteria').get('length'), 1);
+  assert.ok(pfilter.get('isNotDirty'));
+  assert.ok(pfilter.get('criteriaIsNotDirty'));
   assert.ok(pfilter.get('isNotDirtyOrRelatedNotDirty'));
-  assert.ok(pfilter.get('afilterIsNotDirty'));
-  pfilter.change_afilter({id: AFD.idOne});
-  assert.equal(pfilter.get('afilter_fk'), undefined);
-  assert.equal(pfilter.get('afilter.id'), AFD.idOne);
-  pfilter.change_afilter({id: inactive_afilter.get('id')});
+  pfilter.add_criteria(criteria_unused);
+  assert.equal(pfilter.get('criteria').get('length'), 2);
+  assert.ok(pfilter.get('criteriaIsDirty'));
   assert.ok(pfilter.get('isDirtyOrRelatedDirty'));
-  assert.ok(pfilter.get('afilterIsDirty'));
-  assert.equal(pfilter.get('afilter_fk'), undefined);
-  assert.equal(pfilter.get('afilter.id'), AFD.idTwo);
-  assert.ok(pfilter.get('isDirtyOrRelatedDirty'));
-  assert.ok(pfilter.get('afilterIsDirty'));
+  pfilter.saveCriteria();
+  assert.equal(pfilter.get('criteria').get('length'), 2);
+  assert.ok(pfilter.get('isNotDirty'));
+  assert.ok(pfilter.get('criteriaIsNotDirty'));
+  assert.ok(pfilter.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('saveAfilter - afilter - pfilterwill set afilter_fk to current afilter id', (assert) => {
+test('rollbackCriteria - multiple assignments with the same pf will rollbackCriteria correctly', (assert) => {
+  let pfilter_two;
   run(() => {
-    pfilter = store.push('pfilter', {id: PFD.idOne, afilter_fk: AFD.idOne});
-    store.push('afilter', {id: AFD.idOne, pfilters: [PFD.idOne]});
-    inactive_afilter = store.push('afilter', {id: AFD.idTwo, pfilters: []});
+    store.push('pfilter-join-criteria', {id: PJFD.idOne, pfilter_pk: PD.idOne, criteria_pk: CD.idOne});
+    store.push('pfilter-join-criteria', {id: PJFD.idTwo, pfilter_pk: PD.idTwo, criteria_pk: CD.idOne});
+    store.push('criteria', {id: CD.idOne});
+    pfilter = store.push('pfilter', {id: PD.idOne, pfilter_criteria_fks: [PJFD.idOne]});
+    pfilter_two = store.push('pfilter', {id: PD.idTwo, pfilter_criteria_fks: [PJFD.idTwo]});
   });
+  assert.equal(pfilter.get('criteria').get('length'), 1);
+  assert.equal(pfilter_two.get('criteria').get('length'), 1);
+  assert.ok(pfilter.get('criteriaIsNotDirty'));
   assert.ok(pfilter.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(pfilter.get('afilter_fk'), AFD.idOne);
-  assert.equal(pfilter.get('afilter.id'), AFD.idOne);
-  pfilter.change_afilter({id: inactive_afilter.get('id')});
-  assert.equal(pfilter.get('afilter_fk'), AFD.idOne);
-  assert.equal(pfilter.get('afilter.id'), AFD.idTwo);
+  assert.ok(pfilter_two.get('criteriaIsNotDirty'));
+  assert.ok(pfilter_two.get('isNotDirtyOrRelatedNotDirty'));
+  pfilter_two.remove_criteria(CD.idOne);
+  assert.equal(pfilter.get('criteria').get('length'), 1);
+  assert.equal(pfilter_two.get('criteria').get('length'), 0);
+  assert.ok(pfilter.get('criteriaIsNotDirty'));
+  assert.ok(pfilter.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(pfilter_two.get('criteriaIsDirty'));
+  assert.ok(pfilter_two.get('isDirtyOrRelatedDirty'));
+  pfilter_two.rollbackCriteria();
+  assert.equal(pfilter.get('criteria').get('length'), 1);
+  assert.equal(pfilter_two.get('criteria').get('length'), 1);
+  assert.ok(pfilter.get('criteriaIsNotDirty'));
+  assert.ok(pfilter.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(pfilter_two.get('criteriaIsNotDirty'));
+  assert.ok(pfilter_two.get('isNotDirtyOrRelatedNotDirty'));
+  pfilter.remove_criteria(CD.idOne);
+  assert.equal(pfilter.get('criteria').get('length'), 0);
+  assert.equal(pfilter_two.get('criteria').get('length'), 1);
+  assert.ok(pfilter.get('criteriaIsDirty'));
   assert.ok(pfilter.get('isDirtyOrRelatedDirty'));
-  assert.ok(pfilter.get('afilterIsDirty'));
-  pfilter.saveAfilter();
+  assert.ok(pfilter_two.get('criteriaIsNotDirty'));
+  assert.ok(pfilter_two.get('isNotDirtyOrRelatedNotDirty'));
+  pfilter.rollbackCriteria();
+  assert.equal(pfilter.get('criteria').get('length'), 1);
+  assert.equal(pfilter_two.get('criteria').get('length'), 1);
+  assert.ok(pfilter.get('criteriaIsNotDirty'));
   assert.ok(pfilter.get('isNotDirtyOrRelatedNotDirty'));
-  assert.ok(!pfilter.get('afilterIsDirty'));
-  assert.equal(pfilter.get('afilter_fk'), AFD.idTwo);
-  assert.equal(pfilter.get('afilter.id'), AFD.idTwo);
-});
-
-test('rollbackAfilter - afilter - pfilterwill set afilter to current afilter_fk', (assert) => {
-  run(() => {
-    pfilter = store.push('pfilter', {id: PFD.idOne, afilter_fk: AFD.idOne});
-    store.push('afilter', {id: AFD.idOne, pfilters: [PFD.idOne]});
-    inactive_afilter = store.push('afilter', {id: AFD.idTwo, apfilters: []});
-  });
-  assert.ok(pfilter.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(pfilter.get('afilter_fk'), AFD.idOne);
-  assert.equal(pfilter.get('afilter.id'), AFD.idOne);
-  pfilter.change_afilter({id: inactive_afilter.get('id')});
-  assert.equal(pfilter.get('afilter_fk'), AFD.idOne);
-  assert.equal(pfilter.get('afilter.id'), AFD.idTwo);
-  assert.ok(pfilter.get('isDirtyOrRelatedDirty'));
-  assert.ok(pfilter.get('afilterIsDirty'));
-  pfilter.rollbackAfilter();
-  assert.ok(pfilter.get('isNotDirtyOrRelatedNotDirty'));
-  assert.ok(!pfilter.get('afilterIsDirty'));
-  assert.equal(pfilter.get('afilter.id'), AFD.idOne);
-  assert.equal(pfilter.get('afilter_fk'), AFD.idOne);
+  assert.ok(pfilter_two.get('criteriaIsNotDirty'));
+  assert.ok(pfilter_two.get('isNotDirtyOrRelatedNotDirty'));
 });

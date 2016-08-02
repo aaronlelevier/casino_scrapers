@@ -270,7 +270,10 @@ var add_many_to_many = function(_associatedModel, _joinModelName, modelName) {
     if(!new_many_related.get('content') || new_many_related.get('isNotDirtyOrRelatedNotDirty')){
       run(() => {
         new_many_related = store.push(relatedModelName, many_related);
-        new_many_related.save();
+        /* jshint ignore:start */
+        // new_many_related might be an Ember object
+        new_many_related.save && new_many_related.save();
+        /* jshint ignore:end */
       });
     }
     const many_related_pk = new_many_related.get('id');

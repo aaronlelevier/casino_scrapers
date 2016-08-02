@@ -7,7 +7,7 @@ var store, run = Ember.run, user;
 
 module('unit: many to many test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:user', 'model:shoe', 'model:issue', 'model:tag', 'model:user-shoe', 'model:feet', 'model:user-feet']);
+    store = module_registry(this.container, this.registry, ['model:user', 'model:shoe', 'model:issue', 'model:tag', 'model:user-shoe', 'model:feet', 'model:finger', 'model:user-feet', 'model:user-finger']);
   }
 });
 
@@ -435,6 +435,19 @@ test('on push, model will be saved if not dirty and gets updated properties', (a
   assert.ok(pushed_unused.get('isNotDirty'));
   assert.equal(user.get('shoes').get('length'), 3);
   assert.ok(user.get('shoesIsNotDirty'));
+});
+
+test('add many to many works with models defined with Ember.Object as well', (assert) => {
+  store.push('finger', {id: 2});
+  store.push('finger', {id: 5});
+  const pushed_unused = store.push('finger', {id: 6, name: 'wat'});
+  const finger_unused = {id: 6, name: 'who'};
+  store.push('user-finger', {id: 3, finger_pk: 2, user_pk: 1});
+  store.push('user-finger', {id: 4, finger_pk: 5, user_pk: 1});
+  user = store.push('user', {id: 1, user_fingers_fks: [3, 4]});
+  assert.equal(user.get('fingers').get('length'), 2);
+  user.add_finger(finger_unused);
+  assert.equal(user.get('fingers').get('length'), 3);
 });
 
 test('on push, model will be not be saved if dirty and gets updated properties', (assert) => {

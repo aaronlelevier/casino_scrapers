@@ -33,10 +33,9 @@ test('should render a selectbox when priority options are empty (initial state o
   this.set('priorities', priorities);
   this.render(hbs`{{power-select-foreign-key mainModel=ticket selected=ticket.priority change_method='change_priority' relatedModels=priorities relatedModelName='ticket-priority'}}`);
   let $component = this.$(COMPONENT);
-  assert.equal($component.find(PowerSelect).text().trim(), '');
   clickTrigger();
   assert.equal($(DROPDOWN).length, 1);
-  assert.equal($('.ember-basic-dropdown-content').length, 1);
+  assert.equal($('.ember-power-select-placeholder').text().trim(), trans.t('power.select.select'));
   assert.equal($('.ember-power-select-options > li').length, 1);
   assert.ok(!ticket.get('priority'));
   assert.notOk($('.ember-power-select-search').text());
@@ -64,7 +63,7 @@ test('should be able to select new priority when one doesnt exist', function(ass
   this.set('priorities', priorities);
   this.render(hbs`{{power-select-foreign-key mainModel=ticket selected=ticket.priority change_method='change_priority' relatedModels=priorities relatedModelName='ticket-priority'}}`);
   let $component = this.$(COMPONENT);
-  assert.equal($component.find(PowerSelect).text().trim(), '');
+  assert.equal($('.ember-power-select-placeholder').text().trim(), trans.t('power.select.select'));
   clickTrigger();
   assert.equal($(DROPDOWN).length, 1);
   assert.equal($('.ember-basic-dropdown-content').length, 1);

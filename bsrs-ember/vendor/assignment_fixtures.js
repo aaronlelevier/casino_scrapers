@@ -14,9 +14,12 @@ var BSRS_ASSIGNMENT_FACTORY = (function() {
         id: this.assignment.assigneeOne,
         fullname: this.assignment.fullname
       },
+      // TODO: these are pfilters which should just be the actual filter models. ie. Ticket-Prority
       filters: [{
         id: this.pfilter.idOne,
-        criteria: [this.ticket.priorityOneId]
+        name: this.pfilter.nameOne,
+        criteria: [{id: this.ticket.priorityOneId, name: this.ticket.priorityOneKey}],
+        lookup: {},
       }]
     };
   };
