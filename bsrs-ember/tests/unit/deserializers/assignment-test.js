@@ -12,7 +12,7 @@ var store, assignment, deserializer;
 
 module('unit: assignment deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:assignment', 'model:assignment-list', 'model:person', 'model:assignment-join-pfilter', 'model:pfilter', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:assignment', 'model:assignment-list', 'model:person', 'model:assignment-join-pfilter', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     deserializer = assignmentDeserializer.create({
       simpleStore: store
     });
@@ -22,7 +22,7 @@ module('unit: assignment deserializer test', {
   }
 });
 
-test('deserialize single', assert => {
+test('scott deserialize single', assert => {
   const json = AF.detail();
   run(() => {
     deserializer.deserialize(json, AD.idOne);
@@ -32,6 +32,8 @@ test('deserialize single', assert => {
   assert.equal(assignment.get('assignee_fk'), AD.assigneeOne);
   assert.equal(assignment.get('assignee').get('id'), AD.assigneeOne);
   assert.equal(assignment.get('assignee').get('fullname'), AD.fullname);
+  assert.equal(assignment.get('pf').get('length'), 1);
+  assert.equal(assignment.get('pf').get('criteria').get('length'), 1);
 });
 
 // test('existing assignment w/ pf, and server returns no pf - want no pf b/c that is the most recent', assert => {

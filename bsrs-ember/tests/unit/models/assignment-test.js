@@ -212,7 +212,7 @@ test('saveRelated - change assignee', assert => {
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('scott save - pfilter and their criteria not dirty when just add new filters but is dirty if add criteria (new location for example)', (assert) => {
+test('save - pfilter and their criteria not dirty when just add new filters but is dirty if add criteria (new location for example)', (assert) => {
   assert.equal(assignment.get('pf').get('length'), 0);
   assignment.add_pf({id: PFD.idOne});
   assert.equal(assignment.get('pf').get('length'), 1);

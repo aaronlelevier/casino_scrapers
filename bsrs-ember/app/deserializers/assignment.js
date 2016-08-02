@@ -8,6 +8,7 @@ export default Ember.Object.extend(OptConf, {
     this._super(...arguments);
     belongs_to.bind(this)('assignee', 'assignment', 'person');
     many_to_many.bind(this)('pf', 'assignment');
+    many_to_many.bind(this)('criteria', 'pfilter');
   },
   deserialize(response, id) {
     if (id) {
@@ -28,12 +29,13 @@ export default Ember.Object.extend(OptConf, {
     this.setup_assignee(assignee, assignment);
     const [,pfs,] = this.setup_pf(filters, assignment);
     pfs.forEach((pf) => {
-      if (pf.criteria) {
-        const criteriaIds = pf.criteria;
-        delete pf.criteria;
-        pf.criteria_fks = criteriaIds
-      }
-      store.push('pfilter', pf);
+      // if (pf.criteria) {
+      const criteria = pf.criteria;
+      delete pf.criteria;
+      pf = store.push('pfilter', pf);
+      this.setup_criteria(criteria, pf);
+      // pf.criteria_fks = criteriaIds
+      // }
     });
     // let pfsIds = pfilters.map(obj => obj.id);
     assignment.save();
