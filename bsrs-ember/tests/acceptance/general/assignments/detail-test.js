@@ -9,6 +9,7 @@ import AD from 'bsrs-ember/vendor/defaults/assignment';
 import AF from 'bsrs-ember/vendor/assignment_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
+import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import page from 'bsrs-ember/tests/pages/assignment';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { ASSIGNMENT_URL, ASSIGNMENT_LIST_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
@@ -63,14 +64,15 @@ test('visit detail and update all fields', assert => {
   andThen(() => {
     assert.equal(page.assigneeInput, PD.fullnameBoy);
   });
+  xhr(`${ASSIGNMENT_URL}available_filters/`, 'GET', null, {}, 200, AF.list_pfilters());
+  page.filterOneClickDropdown();
+  page.filterOneClickOptionTwo();
   xhr(API_DETAIL_URL, 'PUT', AF.put({description: AD.descriptionTwo, assignee: AD.assigneeSelectOne}), {}, 200, AF.list());
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
   });
 });
-
-// cancel modal tests
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
   clearxhr(listXhr);
@@ -125,8 +127,6 @@ test('clicking cancel button with no edits will take from detail view to list vi
   });
 });
 
-// delete modal tests
-
 test('when click delete, modal displays and when click ok, assignment is deleted and removed from store', assert => {
   page.visitDetail();
   andThen(() => {
@@ -177,8 +177,6 @@ test('when click delete, and click no modal disappears', assert => {
     });
   });
 });
-
-// modal tests: end
 
 test('deep linking with an xhr with a 404 status code will show up in the error component (person)', (assert) => {
   clearxhr(detailXhr);

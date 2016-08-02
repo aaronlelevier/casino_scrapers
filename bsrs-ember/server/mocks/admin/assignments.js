@@ -1,4 +1,4 @@
-var ASSIGMENT_FIXTURES = require('../../../vendor/assignment_fixtures.js');
+var ASSIGNMENT_FIXTURES = require('../../../vendor/assignment_fixtures.js');
 
 module.exports = function(app) {
   var express = require('express');
@@ -11,16 +11,20 @@ module.exports = function(app) {
     var page_size = req.query.page_size ? req.query.page_size.trim() : '';
     if(search && search.length > 0) {
         var term = decodeURIComponent(search);
-        res.send(ASSIGMENT_FIXTURES.searched(term, sort, page));
+        res.send(ASSIGNMENT_FIXTURES.searched(term, sort, page));
     } else if(sort && sort.length > 0) {
-        res.send(ASSIGMENT_FIXTURES.sorted(sort, page));
+        res.send(ASSIGNMENT_FIXTURES.sorted(sort, page));
     } else if(page_size && page_size.length > 0) {
-        res.send(ASSIGMENT_FIXTURES.paginated(page_size));
+        res.send(ASSIGNMENT_FIXTURES.paginated(page_size));
     } else if(parseInt(page) > 1) {
-        res.send(ASSIGMENT_FIXTURES.list_two());
+        res.send(ASSIGNMENT_FIXTURES.list_two());
     } else {
-        res.send(ASSIGMENT_FIXTURES.list());
+        res.send(ASSIGNMENT_FIXTURES.list());
     }
+  });
+
+  adminAssignmentsRouter.get('/available_filters/', function(req, res) {
+    res.send(ASSIGNMENT_FIXTURES.list_pfilters());
   });
 
   adminAssignmentsRouter.post('/', function(req, res) {
@@ -29,11 +33,11 @@ module.exports = function(app) {
   });
 
   adminAssignmentsRouter.get('/:id', function(req, res) {
-    res.send(ASSIGMENT_FIXTURES.detail());
+    res.send(ASSIGNMENT_FIXTURES.detail());
   });
 
   adminAssignmentsRouter.put('/:id', function(req, res) {
-    res.send(ASSIGMENT_FIXTURES.put(req.params.id));
+    res.send(ASSIGNMENT_FIXTURES.put(req.params.id));
   });
 
   adminAssignmentsRouter.delete('/:id', function(req, res) {

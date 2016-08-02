@@ -17,7 +17,7 @@ var BSRS_ASSIGNMENT_FACTORY = (function() {
       // TODO: these are pfilters which should just be the actual filter models. ie. Ticket-Prority
       filters: [{
         id: this.pfilter.idOne,
-        name: this.pfilter.nameOne,
+        key: this.pfilter.nameOne,
         criteria: [{id: this.ticket.priorityOneId, name: this.ticket.priorityOneKey}],
         lookup: {},
       }]
@@ -33,11 +33,22 @@ var BSRS_ASSIGNMENT_FACTORY = (function() {
     for(var key in assignment) {
       response[key] = assignment[key];
     }
+    response.filters.forEach((filter) => {
+      delete filter.key;
+      delete filter.lookup;
+      filter.criteria = filter.criteria.map((criteria) => {
+        return criteria.id;
+      });
+    });
     return response;
   };
   factory.prototype.list = function() {
     var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
     return this._list(1, page_size);
+  };
+  factory.prototype.list_pfilters = function() {
+    var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
+    return [{id: this.pfilter.idOne, key: this.pfilter.keyOne}, {id: this.pfilter.idTwo, key: this.pfilter.keyTwo}];
   };
   factory.prototype.list_two = function() {
     var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
@@ -79,7 +90,7 @@ if (typeof window === 'undefined') {
   var pfilter = require('./defaults/pfilter');
   var ticket = require('./defaults/ticket');
   var config = require('../config/environment');
-  objectAssign(BSRS_assignment_FACTORY.prototype, mixin.prototype);
+  objectAssign(BSRS_ASSIGNMENT_FACTORY.prototype, mixin.prototype);
   module.exports = new BSRS_ASSIGNMENT_FACTORY(assignment, pfilter, ticket, config);
 }
 else {

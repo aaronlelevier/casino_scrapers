@@ -56,24 +56,21 @@ test('description is required validation, cannot save w/o description', function
 });
 
 test('header - shows detail if not model.new', function(assert) {
+  this.model = model;
   this.render(hbs `{{assignments/assignment-single model=model}}`);
   assert.equal(this.$('.t-assignment-header').text().trim(), trans.t('assignment.detail'));
 });
 
 test('header - shows new if model.new', function(assert) {
   model.set('new', true);
-  this.set('model', model);
+  this.model = model;
   this.render(hbs `{{assignments/assignment-single model=model}}`);
   assert.equal(this.$('.t-assignment-header').text().trim(), trans.t('assignment.new'));
 });
 
 test('labels are translated', function(assert) {
-  this.render(hbs `{{assignments/assignment-single}}`);
+  this.model = model;
+  this.render(hbs `{{assignments/assignment-single model=model}}`);
   assert.equal(getLabelText('description'), trans.t('assignment.description'));
   assert.equal(getLabelText('assignee'), trans.t('assignment.assignee'));
-});
-
-test('placeholders are translated', function(assert) {
-  this.render(hbs `{{assignments/assignment-single}}`);
-  assert.equal(this.$('.t-assignment-description').get(0)['placeholder'], trans.t('admin.assignment.description'));
 });

@@ -9,7 +9,7 @@ export default Model.extend(OptConf, {
     many_to_many.bind(this)('criteria', 'pfilter');
   },
   simpleStore: Ember.inject.service(),
-  lookups: attr(''),
+  // lookups: attr(''),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'criteriaIsDirty', function() {
     return this.get('isDirty') || this.get('criteriaIsDirty');
   }),
