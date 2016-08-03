@@ -3,7 +3,7 @@ const { run } = Ember;
 import injectStore from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 
-var DtdLinkComponent = Ember.Component.extend({
+var DtdFieldComponent = Ember.Component.extend({
   simpleStore: Ember.inject.service(),
   uuid: injectUUID('uuid'),
   classNames: ['input-multi-dtd-field t-input-multi-dtd-field'],
@@ -38,4 +38,4 @@ var DtdLinkComponent = Ember.Component.extend({
   }
 });
 
-export default DtdLinkComponent;
+export default DtdFieldComponent;
