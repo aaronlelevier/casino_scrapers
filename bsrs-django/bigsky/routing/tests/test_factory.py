@@ -7,6 +7,7 @@ from category.tests.factory import create_repair_category
 from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
+from person.tests.factory import create_single_person
 from routing.models import Assignment, AvailableFilter, AUTO_ASSIGN
 from routing.tests import factory
 from tenant.models import Tenant
@@ -33,7 +34,6 @@ class AvailableFilterTests(TestCase):
         self.assertEqual(ret, ret_two)
         # attrs
         self.assertEqual(ret.key, 'admin.placeholder.auto_assign')
-        self.assertEqual(ret.key_is_i18n, True)
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, AUTO_ASSIGN)
         self.assertEqual(ret.lookups, {})
@@ -45,7 +45,6 @@ class AvailableFilterTests(TestCase):
         self.assertEqual(ret, ret_two)
         # attrs
         self.assertEqual(ret.key, 'admin.placeholder.ticket_priority')
-        self.assertEqual(ret.key_is_i18n, True)
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'priority')
         self.assertEqual(ret.lookups, {})
@@ -57,7 +56,6 @@ class AvailableFilterTests(TestCase):
         self.assertEqual(ret, ret_two)
         # attrs
         self.assertEqual(ret.key, 'admin.placeholder.category_filter')
-        self.assertEqual(ret.key_is_i18n, True)
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'categories')
         self.assertEqual(ret.lookups, {})
@@ -69,7 +67,6 @@ class AvailableFilterTests(TestCase):
         self.assertEqual(ret, ret_two)
         # attrs
         self.assertEqual(ret.key, '')
-        self.assertEqual(ret.key_is_i18n, False)
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'location')
         self.assertEqual(ret.lookups, {'filters': 'location_level'})
@@ -81,7 +78,6 @@ class AvailableFilterTests(TestCase):
         self.assertEqual(ret, ret_two)
         # attrs
         self.assertEqual(ret.key, 'admin.placeholder.state_filter')
-        self.assertEqual(ret.key_is_i18n, True)
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'location')
         self.assertEqual(ret.lookups, {'filters': 'state', 'unique_key': 'state'})
@@ -93,7 +89,6 @@ class AvailableFilterTests(TestCase):
         self.assertEqual(ret, ret_two)
         # attrs
         self.assertEqual(ret.key, 'admin.placeholder.country_filter')
-        self.assertEqual(ret.key_is_i18n, True)
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'location')
         self.assertEqual(ret.lookups, {'filters': 'country', 'unique_key': 'country'})
@@ -195,6 +190,13 @@ class AssignmentTests(TestCase):
         self.assertEqual(assignment.filters.count(), 2)
         self.assertEqual(assignment.filters.filter(source__field='priority').count(), 1)
         self.assertEqual(assignment.filters.filter(source__field='categories').count(), 1)
+
+    def test_create_assignment__arbitrary_assignee(self):
+        assignee = create_single_person()
+        a = factory.create_assignment()
+        b = factory.create_assignment(assignee=assignee)
+        self.assertNotEqual(a.assignee, b.assignee)
+        self.assertEqual(b.assignee, assignee)
 
     def test_create_assignments(self):
         self.assertEqual(Assignment.objects.count(), 0)

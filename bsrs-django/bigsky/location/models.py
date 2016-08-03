@@ -184,7 +184,6 @@ class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
         return {
             'id': str(uuid.uuid4()),
             'key': self.name,
-            'key_is_i18n': False,
             'context': settings.DEFAULT_PROFILE_FILTER_CONTEXT,
             'field': 'location',
             'lookups': {

@@ -69,7 +69,6 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         # profile_filter - available_filter
         af = AvailableFilter.objects.get(id=data['filters'][0]['source']['id'])
         self.assertEqual(data['filters'][0]['source']['key'], af.key)
-        self.assertEqual(data['filters'][0]['source']['key_is_i18n'], af.key_is_i18n)
         self.assertEqual(data['filters'][0]['source']['context'], af.context)
         self.assertEqual(data['filters'][0]['source']['field'], af.field)
         self.assertEqual(data['filters'][0]['source']['lookups'], af.lookups)
@@ -94,7 +93,6 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(filter_data['lookups']['location_level']['name'], location_level.name)
         # unchanged
         self.assertEqual(filter_data['source']['key'], location_filter.source.key)
-        self.assertEqual(filter_data['source']['key_is_i18n'], location_filter.source.key_is_i18n)
         self.assertEqual(filter_data['source']['context'], location_filter.source.context)
         self.assertEqual(filter_data['source']['field'], location_filter.source.field)
         self.assertEqual(filter_data['source']['lookups'], {'filters': 'location_level'})
@@ -298,7 +296,6 @@ class AvailableFilterTests(APITestCase):
                 priority_data = d
         self.assertTrue(priority_data['id'])
         self.assertEqual(priority_data['key'], 'admin.placeholder.ticket_priority')
-        self.assertTrue(priority_data['key_is_i18n'])
         self.assertEqual(priority_data['context'], settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(priority_data['field'], 'priority')
         self.assertEqual(priority_data['lookups'], {'unique_key': 'priority'})
@@ -325,7 +322,6 @@ class AvailableFilterTests(APITestCase):
         location_level = LocationLevel.objects.get(id=location_data['lookups']['location_level']['id'])
         self.assertTrue(location_data['id'])
         self.assertEqual(location_data['key'], location_level.name)
-        self.assertFalse(location_data['key_is_i18n'])
         self.assertEqual(location_data['context'], settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(location_data['field'], 'location')
         self.assertEqual(location_data['lookups']['unique_key'], "location_level-{}".format(location_level.name))
