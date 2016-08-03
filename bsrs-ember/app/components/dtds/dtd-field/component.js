@@ -10,14 +10,13 @@ var DtdLinkComponent = Ember.Component.extend({
   actions: {
     append(){
       const store = this.get('simpleStore');
-      let id, m2m;
+      const model = this.get('model');
+      const fields_length = model.get('fields.length');
+      const id = this.get('uuid').v4();
+      const obj = {id: id, new: true, order: fields_length};
+      model.add_field(obj);
+      const field = store.find('field', id);
       run(() => {
-        const model = this.get('model');
-        const fields_length = model.get('fields.length');
-        id = this.get('uuid').v4();
-        const obj = {id: id, new: true, order: fields_length};
-        m2m = this.get('model').add_field(obj);
-        const field = store.find('field', id);
         store.push('field', {id: id, type: field.get('typeDefault')});
         field.save();
       });
