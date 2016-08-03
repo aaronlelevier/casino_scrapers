@@ -3,21 +3,20 @@ const { run } = Ember;
 import injectStore from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 
-var DtdLinkComponent = Ember.Component.extend({
+var DtdFieldComponent = Ember.Component.extend({
   simpleStore: Ember.inject.service(),
   uuid: injectUUID('uuid'),
   classNames: ['input-multi-dtd-field t-input-multi-dtd-field'],
   actions: {
     append(){
       const store = this.get('simpleStore');
-      let id, m2m;
+      const model = this.get('model');
+      const fields_length = model.get('fields.length');
+      const id = this.get('uuid').v4();
+      const obj = {id: id, new: true, order: fields_length};
+      model.add_field(obj);
+      const field = store.find('field', id);
       run(() => {
-        const model = this.get('model');
-        const fields_length = model.get('fields.length');
-        id = this.get('uuid').v4();
-        const obj = {id: id, new: true, order: fields_length};
-        m2m = this.get('model').add_field(obj);
-        const field = store.find('field', id);
         store.push('field', {id: id, type: field.get('typeDefault')});
         field.save();
       });
@@ -39,4 +38,4 @@ var DtdLinkComponent = Ember.Component.extend({
   }
 });
 
-export default DtdLinkComponent;
+export default DtdFieldComponent;
