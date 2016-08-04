@@ -10,6 +10,7 @@ import AF from 'bsrs-ember/vendor/assignment_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
 import page from 'bsrs-ember/tests/pages/assignment';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { ASSIGNMENT_URL, ASSIGNMENT_LIST_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
@@ -67,7 +68,7 @@ test('visit detail and update all fields', assert => {
   xhr(`${ASSIGNMENT_URL}available_filters/`, 'GET', null, {}, 200, AF.list_pfilters());
   page.filterOneClickDropdown();
   page.filterOneClickOptionTwo();
-  xhr(API_DETAIL_URL, 'PUT', AF.put({description: AD.descriptionTwo, assignee: AD.assigneeSelectOne}), {}, 200, AF.list());
+  xhr(API_DETAIL_URL, 'PUT', AF.put({description: AD.descriptionTwo, assignee: AD.assigneeSelectOne, filters: [{id: PFD.idOne, criteria: [TD.priorityOneId]}, {id: PFD.idTwo, criteria: []}]}), {}, 200, AF.list());
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ASSIGNMENT_LIST_URL);

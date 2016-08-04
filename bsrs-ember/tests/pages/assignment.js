@@ -23,6 +23,7 @@ export default create({
   assigneeGridOne: text('.t-assignment-assignee-fullname:eq(0)'),
 
   addFilter: clickable('.t-add-pf-btn'),
+  deleteFilter: clickable('.t-del-pf-btn:eq(0)'),
   filterOneClickDropdown: clickable('.t-assignment-pf-select:eq(0) .ember-basic-dropdown-trigger'),
   // filterOneClickOptionOne: clickable(`.ember-power-select-option:contains(${PFD.keyOne})`, { scope: DROPDOWN }),
   filterOneClickOptionTwo: clickable(`.ember-power-select-option:contains(${PFD.keyTwo})`, { scope: DROPDOWN }),

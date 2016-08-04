@@ -33,13 +33,15 @@ var BSRS_ASSIGNMENT_FACTORY = (function() {
     for(var key in assignment) {
       response[key] = assignment[key];
     }
-    response.filters.forEach((filter) => {
-      delete filter.key;
-      delete filter.lookup;
-      filter.criteria = filter.criteria.map((criteria) => {
-        return criteria.id;
+    if (!assignment.filters) {
+      response.filters.forEach((filter) => {
+        delete filter.key;
+        delete filter.lookup;
+        filter.criteria = filter.criteria.map((criteria) => {
+          return criteria.id;
+        });
       });
-    });
+    }
     return response;
   };
   factory.prototype.list = function() {

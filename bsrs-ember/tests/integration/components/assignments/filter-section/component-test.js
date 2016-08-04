@@ -35,7 +35,7 @@ moduleForComponent('assignments/filter-section', 'Integration | Component | assi
   }
 });
 
-test('add new pfilter and assignment is not dirty until select pfilter', function(assert) {
+test('add new pfilter, disables btn, and assignment is not dirty until select pfilter', function(assert) {
   this.model = assignment;
   this.render(hbs`{{assignments/filter-section model=model}}`);
   // existing pfilter
@@ -43,23 +43,27 @@ test('add new pfilter and assignment is not dirty until select pfilter', functio
   assert.equal(this.$('.t-assignment-pf-select').length, 1);
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(assignment.get('pf').get('length'), 1);
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
   page.addFilter();
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
   // adds pfilter but not dirty
   assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), PFD.keyOne);
   assert.equal(this.$('.t-assignment-pf-select').length, 2);
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(assignment.get('pf').get('length'), 1);
-  clickTrigger('.t-assignment-pf-select:eq(1)');
-  assert.equal(this.$('li.ember-power-select-option').length, 1);
   // assignment is now dirty
+  clickTrigger('.t-assignment-pf-select:eq(1)');
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
+  assert.equal(this.$('li.ember-power-select-option').length, 1);
   nativeMouseUp(`.ember-power-select-option:contains(${PFD.keyTwo})`);
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
   assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), PFD.keyOne);
   assert.equal(this.$('.ember-power-select-selected-item:eq(1)').text().trim(), PFD.keyTwo);
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assert.equal(this.$('.t-assignment-pf-select').length, 2);
 });
 
-test('delete pfilter and assignment is dirty', function(assert) {
+test('delete pfilter and assignment is dirty and can add and remove filter sequentially as well', function(assert) {
   assignment.add_pf({id: PFD.idTwo, key: PFD.keyTwo});
   assignment.saveRelated();
   this.model = assignment;
@@ -70,12 +74,19 @@ test('delete pfilter and assignment is dirty', function(assert) {
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(assignment.get('pf').get('length'), 2);
   assert.ok(this.$('.t-del-pf-btn'));
-  this.$('.t-del-pf-btn:eq(0)').click();
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
+  page.deleteFilter();
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
   assert.equal(this.$('.t-assignment-pf-select').length, 1);
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assert.equal(assignment.get('pf').get('length'), 1);
-  this.$('.t-del-pf-btn:eq(0)').click();
+  page.deleteFilter();
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
   assert.equal(this.$('.t-assignment-pf-select').length, 0);
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assert.equal(assignment.get('pf').get('length'), 0);
+  page.addFilter();
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
+  page.deleteFilter();
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
 })

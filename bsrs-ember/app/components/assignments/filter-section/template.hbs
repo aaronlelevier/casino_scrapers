@@ -19,6 +19,6 @@
     </div>
   </div>
 {{/each}}
-<button class="t-add-pf-btn btn-add btn btn-default btn-sm" type="button" {{action "append"}}>
+<button class="t-add-pf-btn btn-add btn btn-default btn-sm" type="button" disabled={{addFilterDisabled}} {{action "append"}}>
   <span class="btn-label">{{fa-icon "plus"}} {{t "admin.assignment.pf.add"}}</span>
 </button>
