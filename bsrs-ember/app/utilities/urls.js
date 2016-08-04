@@ -16,7 +16,6 @@ export const ERROR_URL = '/error/';
 export const LOCATIONS_URL = `${PREFIX}/admin/locations/`;
 export const LOCATION_LEVELS_URL = `${PREFIX}/admin/location-levels/`;
 export const PEOPLE_URL = `${PREFIX}/admin/people/`;
-export const PROFILE_URL = `${PREFIX}/admin/profiles/`;
 export const ROLES_URL = `${PREFIX}/admin/roles/`;
 export const SETTING_URL = `${PREFIX}/admin/settings/`;
 export const THIRD_PARTIES_URL = `${PREFIX}/admin/third-parties/`;
@@ -31,7 +30,6 @@ export const I18N_LIST_URL = '/admin/translations/index';
 export const LOCATION_LIST_URL = '/admin/locations/index';
 export const LOCATION_LEVEL_LIST_URL = '/admin/location-levels/index';
 export const PEOPLE_LIST_URL = '/admin/people/index';
-export const PROFILE_LIST_URL = '/admin/profiles/index';
 export const ROLE_LIST_URL = '/admin/roles/index';
 export const THIRD_PARTY_LIST_URL = '/admin/third-parties/index';
 export const TICKET_LIST_URL = '/tickets/index';
@@ -47,7 +45,6 @@ var BASEURLS = {
   base_locations_url: '/admin/locations',
   base_location_levels_url: '/admin/location-levels',
   base_people_url: '/admin/people',
-  base_profile_url: '/admin/profiles',
   base_roles_url: '/admin/roles',
   base_third_parties_url: '/admin/third-parties',
   base_tickets_url: '/tickets',

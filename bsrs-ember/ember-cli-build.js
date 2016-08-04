@@ -42,7 +42,6 @@ module.exports = function(defaults) {
       app.import('vendor/location-level_fixtures.js');
       app.import('vendor/people_fixtures.js');
       app.import('vendor/phone_number_fixtures.js');
-      app.import('vendor/profile_fixtures.js');
       app.import('vendor/role_fixtures.js');
       app.import('vendor/tenant_fixtures.js');
       app.import('vendor/third_party_fixtures.js');
@@ -82,9 +81,7 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/person-put.js');
       app.import('vendor/defaults/phone-number.js');
       app.import('vendor/defaults/phone-number-type.js');
-      app.import('vendor/defaults/profile.js');
       app.import('vendor/defaults/pfilter.js');
-      app.import('vendor/defaults/profile-join-pfilter.js');
       app.import('vendor/defaults/role.js');
       app.import('vendor/defaults/role-category.js');
       app.import('vendor/defaults/state.js');
