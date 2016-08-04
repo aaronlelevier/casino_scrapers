@@ -17,18 +17,16 @@ moduleForComponent('base-component', 'integration: base-component test', {
     trans = this.container.lookup('service:i18n');
     run(() => {
       store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey});
+      ticket = store.push('ticket', {id: TD.idOne});
     });
   },
 });
 
 test('no delete button if existing record, only show if new:true', function(assert) {
-  run(() => {
-    ticket = store.push('ticket', {id: TD.idOne});
-  });
   this.model = ticket;
   let statuses = store.find('ticket-status');
   this.statuses = statuses;
-  this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
+  this.render(hbs`{{base-component model=model}}`);
   assert.equal(this.$('.t-delete-btn').text().trim(), trans.t('crud.delete.button'), 'Delete btn shows');
   run(() => {
     store.push('ticket', {id: TD.idOne, new: true});
