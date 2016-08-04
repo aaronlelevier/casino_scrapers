@@ -42,18 +42,6 @@ test('serialize', assert => {
   assert.equal(ret.assignee, AD.assigneeOne);
 });
 
-// test('default pfilterContext', assert => {
-//   ret = assignment.get('defaultPfilter');
-//   assert.equal(ret.key, 'admin.placeholder.ticket_priority');
-//   assert.equal(ret.context, 'ticket.ticket');
-//   assert.equal(ret.pf, 'priority');
-// });
-//
-// test('availablePfilters - will be used in the assignment filter power select', assert => {
-//   ret = assignment.get('availablePfilters');
-//   assert.equal(ret.length, 2);
-// });
-
 /* Assignee */
 test('related person should return one person for a assignment', (assert) => {
   run(() => {
