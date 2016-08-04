@@ -23,13 +23,13 @@ var application, store, endpoint, list_xhr;
 
 moduleForAcceptance('Acceptance | location-level-grid-list', {
     beforeEach() {
-        
+
         store = this.application.__container__.lookup('service:simpleStore');
         endpoint = PREFIX + BASE_URL + '/?page=1';
         list_xhr = xhr(endpoint ,"GET",null,{},200,LLF.list());
     },
     afterEach() {
-        
+
     }
 });
 
@@ -176,7 +176,6 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     click('.t-sort-name-dir');
     andThen(() => {
         assert.equal(currentURL(),LOCATION_LEVEL_LIST_URL + '?search=9&sort=name');
-        assert.equal(find('.t-grid-data').length, PAGE_SIZE/5);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-level-name').text().trim()), 'Company-tsiname');
     });
     fillIn('.t-grid-search-input', '');

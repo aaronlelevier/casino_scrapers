@@ -55,62 +55,66 @@ test('will return false when regex is not a match on nested object property', fu
     assert.equal(regex_property(object, property, regex), false);
 });
 
-test('will return true when regex is a match on last array object property', function(assert) {
-    const one = Ember.Object.create({name: 'ab'});
-    const two = Ember.Object.create({name: 'cd'});
-    const three = Ember.Object.create({name: 'ef'});
-    const object = Ember.Object.create({categories: Ember.A([one, two, three])});
-    const property = 'categories[name]';
-    const regex = new RegExp('f');
-    assert.equal(regex_property(object, property, regex), true);
-});
+/* categories[name] is not application anymore.  Leaving tests commented out for now.
+* search for categories[name] if need reference again in future
+*/
 
-test('will return true when regex is a match on middle array object property', function(assert) {
-    const one = Ember.Object.create({name: 'ab'});
-    const two = Ember.Object.create({name: 'cd'});
-    const three = Ember.Object.create({name: 'ef'});
-    const object = Ember.Object.create({categories: Ember.A([one, two, three])});
-    const property = 'categories[name]';
-    const regex = new RegExp('d');
-    assert.equal(regex_property(object, property, regex), true);
-});
+// test('will return true when regex is a match on last array object property', function(assert) {
+//     const one = Ember.Object.create({name: 'ab'});
+//     const two = Ember.Object.create({name: 'cd'});
+//     const three = Ember.Object.create({name: 'ef'});
+//     const object = Ember.Object.create({categories: Ember.A([one, two, three])});
+//     const property = 'categories[name]';
+//     const regex = new RegExp('f');
+//     assert.equal(regex_property(object, property, regex), true);
+// });
 
-test('will return true when regex is a match on first array object property', function(assert) {
-    const one = Ember.Object.create({name: 'ab'});
-    const two = Ember.Object.create({name: 'cd'});
-    const three = Ember.Object.create({name: 'ef'});
-    const object = Ember.Object.create({categories: Ember.A([one, two, three])});
-    const property = 'categories[name]';
-    const regex = new RegExp('a');
-    assert.equal(regex_property(object, property, regex), true);
-});
+// test('will return true when regex is a match on middle array object property', function(assert) {
+//     const one = Ember.Object.create({name: 'ab'});
+//     const two = Ember.Object.create({name: 'cd'});
+//     const three = Ember.Object.create({name: 'ef'});
+//     const object = Ember.Object.create({categories: Ember.A([one, two, three])});
+//     const property = 'categories[name]';
+//     const regex = new RegExp('d');
+//     assert.equal(regex_property(object, property, regex), true);
+// });
 
-test('will return false when regex is not a match on any array object property', function(assert) {
-    const one = Ember.Object.create({name: 'ab'});
-    const two = Ember.Object.create({name: 'cd'});
-    const three = Ember.Object.create({name: 'ef'});
-    const object = Ember.Object.create({categories: Ember.A([one, two, three])});
-    const property = 'categories[name]';
-    const regex = new RegExp('z');
-    assert.equal(regex_property(object, property, regex), false);
-});
+// test('will return true when regex is a match on first array object property', function(assert) {
+//     const one = Ember.Object.create({name: 'ab'});
+//     const two = Ember.Object.create({name: 'cd'});
+//     const three = Ember.Object.create({name: 'ef'});
+//     const object = Ember.Object.create({categories: Ember.A([one, two, three])});
+//     const property = 'categories[name]';
+//     const regex = new RegExp('a');
+//     assert.equal(regex_property(object, property, regex), true);
+// });
 
-test('will return true when regex is a match on any array object property (UPPERCASE)', function(assert) {
-    const one = Ember.Object.create({name: 'AB'});
-    const two = Ember.Object.create({name: 'CD'});
-    const three = Ember.Object.create({name: 'EF'});
-    const object = Ember.Object.create({categories: Ember.A([one, two, three])});
-    const property = 'categories[name]';
-    const regex = new RegExp('c');
-    assert.equal(regex_property(object, property, regex), true);
-});
+// test('will return false when regex is not a match on any array object property', function(assert) {
+//     const one = Ember.Object.create({name: 'ab'});
+//     const two = Ember.Object.create({name: 'cd'});
+//     const three = Ember.Object.create({name: 'ef'});
+//     const object = Ember.Object.create({categories: Ember.A([one, two, three])});
+//     const property = 'categories[name]';
+//     const regex = new RegExp('z');
+//     assert.equal(regex_property(object, property, regex), false);
+// });
 
-test('will return false when regex tries to match a null property on array object property', function(assert) {
-    const one = Ember.Object.create({name: 'ab'});
-    const two = Ember.Object.create({name: 'cd'});
-    const three = Ember.Object.create({name: 'ef'});
-    const object = Ember.Object.create({categories: Ember.A([one, two, three])});
-    const property = 'categories[hat]';
-    const regex = new RegExp('c');
-    assert.equal(regex_property(object, property, regex), false);
-});
+// test('will return true when regex is a match on any array object property (UPPERCASE)', function(assert) {
+//     const one = Ember.Object.create({name: 'AB'});
+//     const two = Ember.Object.create({name: 'CD'});
+//     const three = Ember.Object.create({name: 'EF'});
+//     const object = Ember.Object.create({categories: Ember.A([one, two, three])});
+//     const property = 'categories[name]';
+//     const regex = new RegExp('c');
+//     assert.equal(regex_property(object, property, regex), true);
+// });
+
+// test('will return false when regex tries to match a null property on array object property', function(assert) {
+//     const one = Ember.Object.create({name: 'ab'});
+//     const two = Ember.Object.create({name: 'cd'});
+//     const three = Ember.Object.create({name: 'ef'});
+//     const object = Ember.Object.create({categories: Ember.A([one, two, three])});
+//     const property = 'categories[hat]';
+//     const regex = new RegExp('c');
+//     assert.equal(regex_property(object, property, regex), false);
+// });

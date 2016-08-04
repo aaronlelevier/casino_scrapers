@@ -40,12 +40,12 @@ test('findWithQuery will format find url string correctly', (assert) => {
   subject.findWithQuery(1, '', 'status.translated_name:a,request:r,priority.translated_name:b');
 });
 
-test('findWithQuery will format find url string correctly with array based property', (assert) => {
-  assert.expect(1);
-  expected_endpoint = '?page=1&status__name__icontains=a&categories__name__icontains=x&request__icontains=r';
-  let subject = FakeRepo.create({simpleStore: store, type: 'ticket', url:''});
-  subject.findWithQuery(1, '', 'status.translated_name:a,categories[name]:x,request:r');
-});
+// test('findWithQuery will format find url string correctly with array based property', (assert) => {
+//   assert.expect(1);
+//   expected_endpoint = '?page=1&status__name__icontains=a&categories__name__icontains=x&request__icontains=r';
+//   let subject = FakeRepo.create({simpleStore: store, type: 'ticket', url:''});
+//   subject.findWithQuery(1, '', 'status.translated_name:a,categories[name]:x,request:r');
+// });
 
 test('it accepts id_in paramter single and correctly modifies url', function(assert) {
   let subject = FakeRepo.create({url: '/api/tickets/'});

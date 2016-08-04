@@ -1,3 +1,6 @@
+/* @method regex_core
+* @params - takes in closure functions from regex-property.js
+*/
 var regex_core = function(object, property, array_func, func, regex) {
     let attr;
     const array = /\[([^\]]*)\]/g;

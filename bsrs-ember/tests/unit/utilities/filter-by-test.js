@@ -74,10 +74,10 @@ test('related column name will set each field correctly', function(assert) {
     assert.equal(subject.get('filterPlaceholder'), 'priority.translated_name');
 });
 
-test('array column name will set each field correctly', function(assert) {
-    let subject = new FakeComponent();
-    let result = subject.run('categories[name]');
-    assert.equal(subject.get('filterField'), 'categories[name]');
-    assert.equal(subject.get('targetFilter'), '.t-filter-categories[name]');
-    assert.equal(subject.get('filterPlaceholder'), 'categories[name]');
-});
+// test('array column name will set each field correctly', function(assert) {
+//     let subject = new FakeComponent();
+//     let result = subject.run('categories[name]');
+//     assert.equal(subject.get('filterField'), 'categories[name]');
+//     assert.equal(subject.get('targetFilter'), '.t-filter-categories[name]');
+//     assert.equal(subject.get('filterPlaceholder'), 'categories[name]');
+// });

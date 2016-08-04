@@ -37,18 +37,18 @@ module('unit: grid-view test', {
     }
 });
 
-test('knows how to sort a list of people even when sortable column is null', (assert) => {
-    store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: PEOPLE_DEFAULTS.username, title: PEOPLE_DEFAULTS.title});
-    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns});
-    var people = subject.get('searched_content');
-    assert.equal(people.get('length'), 1);
-    store.push('person', {id: 1, username: 'wat', title: PEOPLE_DEFAULTS.title});
-    people = subject.get('searched_content');
-    assert.equal(people.get('length'), 2);
-    store.push('person', {id: 3, username: 'wat', first_name: PEOPLE_DEFAULTS.first_name, last_name: ''});
-    people = subject.get('searched_content');
-    assert.equal(people.get('length'), 3);
-});
+// test('knows how to sort a list of people even when sortable column is null', (assert) => {
+//     store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: PEOPLE_DEFAULTS.username, title: PEOPLE_DEFAULTS.title});
+//     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns});
+//     var people = subject.get('searched_content');
+//     assert.equal(people.get('length'), 1);
+//     store.push('person', {id: 1, username: 'wat', title: PEOPLE_DEFAULTS.title});
+//     people = subject.get('searched_content');
+//     assert.equal(people.get('length'), 2);
+//     store.push('person', {id: 3, username: 'wat', first_name: PEOPLE_DEFAULTS.first_name, last_name: ''});
+//     people = subject.get('searched_content');
+//     assert.equal(people.get('length'), 3);
+// });
 
 // test('sorted content is sorted by the defaultSort provided if no other value is specified and breaks cache when sort is updated', (assert) => {
 //     store.push('person', {id: 3, username: 'abc', first_name: PEOPLE_DEFAULTS.first_name, last_name: ''});
@@ -123,59 +123,59 @@ test('knows how to sort a list of people even when sortable column is null', (as
 // });
 
 
-test('searched content allows you to look through searchable keys and filter accordingly', (assert) => {
-    store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer'});
-    store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups'});
-    store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier'});
-    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns});
-    var people = subject.get('searched_content');
-    assert.equal(people.get('length'), 3);
-    subject.set('search', 'scot'); 
-    people = subject.get('searched_content');
-    assert.equal(people.get('length'), 1);
-    assert.equal(people.objectAt(0).get('title'), 'scott newcomer');
-    subject.set('search', ''); 
-    people = subject.get('searched_content');
-    assert.equal(people.get('length'), 3);
-    subject.set('search', 'q'); 
-    people = subject.get('searched_content');
-    assert.equal(people.get('length'), 0);
-    subject.set('search', 'd'); 
-    people = subject.get('searched_content');
-    assert.equal(people.get('length'), 2);
-    assert.equal(people.objectAt(0).get('id'), 2);
-    assert.equal(people.objectAt(1).get('id'), 3);
-    subject.set('search', 'c'); 
-    people = subject.get('searched_content');
-    assert.equal(people.get('length'), 2);
-    assert.equal(people.objectAt(0).get('id'), 2);
-    assert.equal(people.objectAt(1).get('id'), 1);
-    store.push('person', {id: 4, first_name: 'mmm', username: 'n', title: 'cup lelevier'});
-    people = subject.get('searched_content');
-    assert.equal(people.get('length'), 3);
-    assert.equal(people.objectAt(0).get('id'), 2);
-    assert.equal(people.objectAt(1).get('id'), 1);
-    assert.equal(people.objectAt(2).get('id'), 4);
-    subject.set('search', 'n l'); 
-    people = subject.get('searched_content');
-    assert.equal(people.get('length'), 2);
-    assert.equal(people.objectAt(0).get('id'), 2);
-    assert.equal(people.objectAt(1).get('id'), 3);
-    subject.set('search', 'n ');
-    people = subject.get('searched_content');
-    assert.equal(people.get('length'), 4);
-    assert.equal(people.objectAt(0).get('id'), 4);
-    assert.equal(people.objectAt(1).get('id'), 1);
-    assert.equal(people.objectAt(2).get('id'), 2);
-    assert.equal(people.objectAt(3).get('id'), 3);
-    subject.set('search', 'N');
-    people = subject.get('searched_content');
-    assert.equal(people.get('length'), 4);
-    assert.equal(people.objectAt(0).get('id'), 4);
-    assert.equal(people.objectAt(1).get('id'), 1);
-    assert.equal(people.objectAt(2).get('id'), 2);
-    assert.equal(people.objectAt(3).get('id'), 3);
-});
+// test('searched content allows you to look through searchable keys and filter accordingly', (assert) => {
+//     store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer'});
+//     store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups'});
+//     store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier'});
+//     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns});
+//     var people = subject.get('searched_content');
+//     assert.equal(people.get('length'), 3);
+//     subject.set('search', 'scot');
+//     people = subject.get('searched_content');
+//     assert.equal(people.get('length'), 1);
+//     assert.equal(people.objectAt(0).get('title'), 'scott newcomer');
+//     subject.set('search', '');
+//     people = subject.get('searched_content');
+//     assert.equal(people.get('length'), 3);
+//     subject.set('search', 'q');
+//     people = subject.get('searched_content');
+//     assert.equal(people.get('length'), 0);
+//     subject.set('search', 'd');
+//     people = subject.get('searched_content');
+//     assert.equal(people.get('length'), 2);
+//     assert.equal(people.objectAt(0).get('id'), 2);
+//     assert.equal(people.objectAt(1).get('id'), 3);
+//     subject.set('search', 'c');
+//     people = subject.get('searched_content');
+//     assert.equal(people.get('length'), 2);
+//     assert.equal(people.objectAt(0).get('id'), 2);
+//     assert.equal(people.objectAt(1).get('id'), 1);
+//     store.push('person', {id: 4, first_name: 'mmm', username: 'n', title: 'cup lelevier'});
+//     people = subject.get('searched_content');
+//     assert.equal(people.get('length'), 3);
+//     assert.equal(people.objectAt(0).get('id'), 2);
+//     assert.equal(people.objectAt(1).get('id'), 1);
+//     assert.equal(people.objectAt(2).get('id'), 4);
+//     subject.set('search', 'n l');
+//     people = subject.get('searched_content');
+//     assert.equal(people.get('length'), 2);
+//     assert.equal(people.objectAt(0).get('id'), 2);
+//     assert.equal(people.objectAt(1).get('id'), 3);
+//     subject.set('search', 'n ');
+//     people = subject.get('searched_content');
+//     assert.equal(people.get('length'), 4);
+//     assert.equal(people.objectAt(0).get('id'), 4);
+//     assert.equal(people.objectAt(1).get('id'), 1);
+//     assert.equal(people.objectAt(2).get('id'), 2);
+//     assert.equal(people.objectAt(3).get('id'), 3);
+//     subject.set('search', 'N');
+//     people = subject.get('searched_content');
+//     assert.equal(people.get('length'), 4);
+//     assert.equal(people.objectAt(0).get('id'), 4);
+//     assert.equal(people.objectAt(1).get('id'), 1);
+//     assert.equal(people.objectAt(2).get('id'), 2);
+//     assert.equal(people.objectAt(3).get('id'), 3);
+// });
 
 test('found content allows you to look through searchable keys and filter accordingly', (assert) => {
     store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'azd', title: 'scott newcomer'});
@@ -526,24 +526,24 @@ test('given a dynamic list of people and page number, should return the correct 
 //     assert.equal(content.objectAt(9).get('id'), 90);
 // });
 
-test('searched content allows you to look through related models', (assert) => {
-    store.push('role', {id: 1, name: 'role1', people: [1,2]});
-    store.push('role', {id: 2, name: 'role2', people: [3]});
-    store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer', role_fk: 1});
-    store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups', role_fk: 1});
-    store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier', role_fk: 2});
-    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns_with_role});
-    var people = subject.get('searched_content');
-    assert.equal(people.get('length'), 3);
-    subject.set('search', '1'); 
-    people = subject.get('searched_content');
-    assert.equal(people.get('length'), 2);
-    assert.equal(people.objectAt(0).get('title'), 'scott newcomer');
-    assert.equal(people.objectAt(1).get('title'), 'toran lillups');
-    subject.set('search', ''); 
-    people = subject.get('searched_content');
-    assert.equal(people.get('length'), 3);
-});
+// test('searched content allows you to look through related models', (assert) => {
+//     store.push('role', {id: 1, name: 'role1', people: [1,2]});
+//     store.push('role', {id: 2, name: 'role2', people: [3]});
+//     store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer', role_fk: 1});
+//     store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups', role_fk: 1});
+//     store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier', role_fk: 2});
+//     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns_with_role});
+//     var people = subject.get('searched_content');
+//     assert.equal(people.get('length'), 3);
+//     subject.set('search', '1');
+//     people = subject.get('searched_content');
+//     assert.equal(people.get('length'), 2);
+//     assert.equal(people.objectAt(0).get('title'), 'scott newcomer');
+//     assert.equal(people.objectAt(1).get('title'), 'toran lillups');
+//     subject.set('search', '');
+//     people = subject.get('searched_content');
+//     assert.equal(people.get('length'), 3);
+// });
 
 test('found content allows you to look through related models', (assert) => {
     store.push('role', {id: 1, name: 'role1', people: [1,2]});

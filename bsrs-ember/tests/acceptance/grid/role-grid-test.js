@@ -186,14 +186,12 @@ test('typing a search will reset page to 1 and require an additional xhr and res
   triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
   andThen(() => {
     assert.equal(currentURL(),ROLE_LIST_URL + '?search=4');
-    assert.equal(find('.t-grid-data').length, 2);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-role-name').text().trim()), 'xav');
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-role-name').text().trim()), 'zap');
   });
   click('.t-sort-role-type-dir');
   andThen(() => {
     assert.equal(currentURL(),ROLE_LIST_URL + '?search=4&sort=role_type');
-    assert.equal(find('.t-grid-data').length, 2);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-role-name').text().trim()), 'xav');
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-role-name').text().trim()), 'zap');
   });
