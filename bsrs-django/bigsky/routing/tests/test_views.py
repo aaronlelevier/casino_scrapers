@@ -14,7 +14,7 @@ from routing.models import Assignment, ProfileFilter, AvailableFilter, AUTO_ASSI
 from routing.tests.factory import (
     create_assignment, create_available_filters, create_auto_assign_filter,
     create_available_filter_location, create_ticket_location_filter,
-    create_ticket_categories_mid_level_filter, create_assignment)
+    create_ticket_categories_mid_level_filter, create_assignment, create_available_filter_priority)
 from routing.tests.mixins import ViewTestSetupMixin
 from ticket.models import TicketPriority
 from utils.create import _generate_chars
@@ -148,9 +148,15 @@ class AssignmentCreateTests(ViewTestSetupMixin, APITestCase):
         self.data['description'] = 'foo'
         self.assertEqual(len(self.data['filters']), 2)
         # POST will on create filters, not use existing
+        af = create_available_filter_priority()
         init_filter_count = ProfileFilter.objects.count()
-        self.data['filters'][0]['id'] = str(uuid.uuid4())
-        self.data['filters'][1]['id'] = str(uuid.uuid4())
+        self.data['filters'] = self.data['filters'][:1]
+        self.data['filters'][0] = {
+            'id': str(af.id),
+            'key': af.key,
+            'field': af.field,
+            'criteria': [str(self.ticket_priority.id)]
+        }
 
         response = self.client.post('/api/admin/assignments/', self.data, format='json')
 
@@ -163,13 +169,11 @@ class AssignmentCreateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['description'], assignment.description)
         self.assertEqual(data['assignee'], str(assignment.assignee.id))
         # profile_filter
-        self.assertEqual(ProfileFilter.objects.count(), init_filter_count+2)
-        self.assertEqual(len(data['filters']), 2)
-        self.assertIn(data['filters'][0]['id'], [f['id'] for f in self.data['filters']])
-        profile_filter = ProfileFilter.objects.get(id=data['filters'][0]['id'])
-        self.assertEqual(data['filters'][0]['lookups'], profile_filter.lookups)
+        self.assertEqual(ProfileFilter.objects.count(), init_filter_count+1)
+        self.assertEqual(len(data['filters']), 1)
+        profile_filter = assignment.filters.first()
         self.assertEqual(data['filters'][0]['criteria'], profile_filter.criteria)
-        self.assertEqual(data['filters'][0]['source'], str(profile_filter.source.id))
+        self.assertEqual(data['filters'][0]['lookups'], {})
 
 
 class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):

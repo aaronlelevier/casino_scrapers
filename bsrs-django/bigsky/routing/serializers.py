@@ -25,10 +25,19 @@ PROFILE_FILTER_FIELDS = ('id', 'lookups', 'criteria', 'source',)
 
 class ProfileFilterUnnestedSerializer(BaseCreateSerializer):
 
+    key = serializers.SerializerMethodField()
+    field = serializers.SerializerMethodField()
+    source = serializers.PrimaryKeyRelatedField(
+        queryset=AvailableFilter.objects.all(), required=False)
+
     class Meta:
         model = ProfileFilter
-        validators = [ProfileFilterFieldValidator()]
-        fields = PROFILE_FILTER_FIELDS
+        # validators = [ProfileFilterFieldValidator()]
+        fields = PROFILE_FILTER_FIELDS + ('key', 'field',)
+
+    # dummy fields to allow not model fields to be used above
+    def get_key(self, obj):pass
+    def get_field(self, obj):pass
 
 
 class ProfileFilterSerializer(BaseCreateSerializer):
@@ -85,9 +94,9 @@ class AssignmentCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
     class Meta:
         model = Assignment
-        validators = [AvailableFilterValidator(),
-                      UniqueByTenantValidator('order'),
-                      UniqueByTenantValidator('description')]
+        # validators = [AvailableFilterValidator(),
+        #               UniqueByTenantValidator('order'),
+        #               UniqueByTenantValidator('description')]
         fields = ASSIGNMENT_FIELDS + ('filters',)
 
     def create(self, validated_data):
@@ -97,12 +106,13 @@ class AssignmentCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
         if filters:
             for f in filters:
-                try:
-                    filter_object = ProfileFilter.objects.get(id=f['id'])
-                except ProfileFilter.DoesNotExist:
-                    filter_object = ProfileFilter.objects.create(**f)
-                finally:
-                    instance.filters.add(filter_object)
+                af = AvailableFilter.objects.get(id=f['id'])
+                filter_object = ProfileFilter.objects.create(
+                    source=af,
+                    criteria=f['criteria'],
+                    lookups=f.get('lookups', {})
+                )
+                instance.filters.add(filter_object)
 
         return instance
 
