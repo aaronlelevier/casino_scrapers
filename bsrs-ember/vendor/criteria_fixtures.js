@@ -14,10 +14,6 @@ var BSRS_AVAILABLE_FILTER_FACTORY = (function() {
   factory.prototype._generate_item = function(i) {
     return {
       id: `${this.criteria.idOne.slice(0,-1)}${i}`,
-      // key: `${this.criteria.key}${i}`,
-      // key_is_i18n: false,
-      // context: this.criteria.contextOne,
-      // field: `${this.criteria.field}${i}`,
     };
   };
   return factory;

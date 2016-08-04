@@ -7,8 +7,7 @@ var BSRS_PROFILE_FILTER_DEFAULTS_OBJECT = (function() {
       idOne: '6f4e19c2-54c3-4db4-9742-387f64eca721',
       idTwo: '6f4e19c2-54c3-4db4-9742-387f64eca722',
       unusedId: '6f4e19c2-54c3-4db4-9742-387f64eca72b',
-      nameOne: 'Ticket Priority',
-      keyOne: 'Ticket Priority',
+      keyOne: 'admin.placeholder.ticket_priority',
       keyTwo: 'Ticket Location',
       lookupsEmpty: {}, // non-dynamic available filters
       lookupsDynamic: {
