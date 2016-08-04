@@ -28,7 +28,7 @@ class ViewTestSetupMixin(object):
         self.data.pop('tenant', None)
         # assignment.filter payloads - b/c a combo of the PF & AF
         self.priority_af = create_available_filter_priority()
-        self.priority_payload = [{
+        self.data['filters'] = [{
             'id': str(self.priority_af.id),
             'criteria': [str(self.ticket_priority.id)]
         }]

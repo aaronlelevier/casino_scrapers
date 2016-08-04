@@ -30,7 +30,7 @@ class ProfileFilterUnnestedSerializer(BaseCreateSerializer):
 
     class Meta:
         model = ProfileFilter
-        # validators = [ProfileFilterFieldValidator()]
+        validators = [ProfileFilterFieldValidator()]
         fields = PROFILE_FILTER_FIELDS
 
 
@@ -88,9 +88,9 @@ class AssignmentCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
     class Meta:
         model = Assignment
-        # validators = [AvailableFilterValidator(),
-        #               UniqueByTenantValidator('order'),
-        #               UniqueByTenantValidator('description')]
+        validators = [AvailableFilterValidator(),
+                      UniqueByTenantValidator('order'),
+                      UniqueByTenantValidator('description')]
         fields = ASSIGNMENT_FIELDS + ('filters',)
 
     def create(self, validated_data):

@@ -144,7 +144,6 @@ class AssignmentCreateTests(ViewTestSetupMixin, APITestCase):
     def test_create(self):
         self.data['id'] = str(uuid.uuid4())
         self.data['description'] = 'foo'
-        self.data['filters'] = self.priority_payload
         # dynamic location filter
         location = mommy.make(Location)
         criteria_two = [str(location.id)]
@@ -294,7 +293,6 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
         """
         mommy.make(ProfileFilter, criteria=self.priority_filter.criteria)
         init_count = ProfileFilter.objects.count()
-        self.data['filters'] = self.priority_payload
 
         response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
             self.data, format='json')
