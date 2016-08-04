@@ -3,7 +3,7 @@ from django.contrib.auth.models import ContentType
 
 from rest_framework.exceptions import ValidationError
 
-from routing.models import Assignment
+from routing.models import Assignment, AvailableFilter
 
 
 class ProfileFilterFieldValidator(object):
@@ -12,20 +12,17 @@ class ProfileFilterFieldValidator(object):
 
     def __call__(self, data):
         self.id = data.get('id', None)
-        self.source = data.get('source', None)
         self.criteria = data.get('criteria', [])
 
-        if self.source.context:
-            app_label, model = self.source.context.split('.')
-        else:
-            app_label, model = settings.DEFAULT_PROFILE_FILTER_CONTEXT.split('.')
+        app_label, model = settings.DEFAULT_PROFILE_FILTER_CONTEXT.split('.')
         content_type = ContentType.objects.get(app_label=app_label, model=model)
 
         klass = content_type.model_class()
         self.is_valid_field_filter(klass)
 
     def is_valid_field_filter(self, klass):
-        rel_klass = klass._meta.get_field(self.source.field).rel.to
+        af = AvailableFilter.objects.get(id=self.id)
+        rel_klass = klass._meta.get_field(af.field).rel.to
         try:
             if not rel_klass.objects.filter(id__in=self.criteria).exists():
                 raise ValidationError("'{}' is not a valid id for '{}'"
@@ -36,8 +33,8 @@ class ProfileFilterFieldValidator(object):
 
 
 class AvailableFilterValidator(object):
-    """Each AvailableFilter can only be used 1x. The AF is the 'source'
-    attr for an Assignment's related ProfileFilters."""
+    """Each AvailableFilter can only be used 1x. Get the AF from the 'id'
+    attr for an Assignment's related ProfileFilters in order to check it."""
 
     def __call__(self, data):
         filters = data.get('filters', [])
@@ -45,10 +42,11 @@ class AvailableFilterValidator(object):
         unique_keys = set()
         dupe_keys = []
         for f in filters:
-            field = f['source'].field
+            af = AvailableFilter.objects.get(id=f['id'])
+            field = af.field
 
             addit_model_id = ''
-            if 'location_level' in f['lookups']:
+            if 'location_level' in f.get('lookups', []):
                 addit_model_id = "-location_level-"+f['lookups']['location_level']
 
             key = "{}{}".format(field, addit_model_id)

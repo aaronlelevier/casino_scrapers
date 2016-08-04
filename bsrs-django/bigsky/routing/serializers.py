@@ -18,12 +18,15 @@ class AvailableFilterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AvailableFilter
-        fields = ('id', 'key', 'context', 'field', 'lookups',)
+        fields = ('id', 'key', 'field', 'lookups',)
 
 
 PROFILE_FILTER_FIELDS = ('id', 'lookups', 'criteria', 'source',)
 
 class ProfileFilterUnnestedSerializer(BaseCreateSerializer):
+
+    source = serializers.PrimaryKeyRelatedField(
+        queryset=AvailableFilter.objects.all(), required=False)
 
     class Meta:
         model = ProfileFilter
@@ -42,10 +45,17 @@ class ProfileFilterSerializer(BaseCreateSerializer):
     def to_representation(self, instance):
         init_data = super(ProfileFilterSerializer, self).to_representation(instance)
         data = copy.copy(init_data)
+        source = data.pop('source', {})
+        # remove 'lookups' from source b/c both the PF and AF have
+        # this key, and don't want to override what's on the PF. PF
+        # could be storing a dynamic `location_level.id` for the
+        # dynamic AF that was used when creating it.
+        source.pop('lookups', {})
+        data.update(source)
         return self._combined_data(data)
 
     def _combined_data(self, data):
-        field = data['source']['field']
+        field = data['field']
         criteria = data['criteria']
 
         if field == 'priority':
@@ -90,28 +100,25 @@ class AssignmentCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
         if filters:
             for f in filters:
-                try:
-                    filter_object = ProfileFilter.objects.get(id=f['id'])
-                except ProfileFilter.DoesNotExist:
-                    filter_object = ProfileFilter.objects.create(**f)
-                finally:
-                    instance.filters.add(filter_object)
+                pf = self._create_profile_filter(f)
+                instance.filters.add(pf)
 
         return instance
 
     def update(self, instance, validated_data):
         filter_ids = []
-
-        # create/update nested ProfileFilters
         filters = validated_data.pop('filters')
+
         if filters:
             for f in filters:
                 try:
-                    pf = ProfileFilter.objects.get(id=f['id'])
+                    pf = instance.filters.get(source__id=f['id'])
                 except ProfileFilter.DoesNotExist:
-                    pf = ProfileFilter.objects.create(**f)
+                    pf  = self._create_profile_filter(f)
                 else:
-                    update_model(pf, f)
+                    pf.criteria = f.get('criteria', [])
+                    pf.lookups = f.get('lookups', {})
+                    pf.save()
                 finally:
                     filter_ids.append(pf.id)
                     instance.filters.add(pf)
@@ -121,6 +128,15 @@ class AssignmentCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
             x.delete(override=True)
 
         return super(AssignmentCreateUpdateSerializer, self).update(instance, validated_data)
+
+    @staticmethod
+    def _create_profile_filter(f):
+        af = AvailableFilter.objects.get(id=f['id'])
+        return ProfileFilter.objects.create(
+            source=af,
+            criteria=f.get('criteria', []),
+            lookups=f.get('lookups', {})
+        )
 
 
 class AssignmentListSerializer(RemoveTenantMixin, BaseCreateSerializer):
