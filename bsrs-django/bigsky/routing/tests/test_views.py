@@ -64,14 +64,14 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['assignee']['username'], self.assignment.assignee.username)
         # profile_filter
         self.assertEqual(len(data['filters']), 2)
-        self.assertEqual(data['filters'][0]['id'], str(self.profile_filter.id))
-        self.assertEqual(data['filters'][0]['lookups'], self.profile_filter.lookups)
-        # profile_filter - available_filter
-        af = AvailableFilter.objects.get(id=data['filters'][0]['source']['id'])
-        self.assertEqual(data['filters'][0]['source']['key'], af.key)
-        self.assertEqual(data['filters'][0]['source']['context'], af.context)
-        self.assertEqual(data['filters'][0]['source']['field'], af.field)
-        self.assertEqual(data['filters'][0]['source']['lookups'], af.lookups)
+        af = AvailableFilter.objects.get(id=data['filters'][0]['id'])
+        self.assertEqual(data['filters'][0]['id'], str(af.id))
+        self.assertEqual(data['filters'][0]['key'], af.key)
+        self.assertEqual(data['filters'][0]['context'], af.context)
+        self.assertEqual(data['filters'][0]['field'], af.field)
+        pf = self.assignment.filters.get(source=af)
+        self.assertEqual(data['filters'][0]['lookups'], pf.lookups)
+        self.assertEqual(data['filters'][0]['criteria'][0]['id'], pf.criteria[0])
 
     def test_data__dynamic_source_filter(self):
         # dynamic available filter for "location" linked to ProfileFilter.source
@@ -87,15 +87,15 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         for f in data['filters']:
-            if f['id'] == str(location_filter.id):
+            if f['id'] == str(location_filter.source.id):
                 filter_data = f
         self.assertEqual(filter_data['lookups']['location_level']['id'], str(location_level.id))
         self.assertEqual(filter_data['lookups']['location_level']['name'], location_level.name)
         # unchanged
-        self.assertEqual(filter_data['source']['key'], location_filter.source.key)
-        self.assertEqual(filter_data['source']['context'], location_filter.source.context)
-        self.assertEqual(filter_data['source']['field'], location_filter.source.field)
-        self.assertEqual(filter_data['source']['lookups'], {'filters': 'location_level'})
+        self.assertEqual(filter_data['id'], str(location_filter.source.id))
+        self.assertEqual(filter_data['key'], location_filter.source.key)
+        self.assertEqual(filter_data['context'], location_filter.source.context)
+        self.assertEqual(filter_data['field'], location_filter.source.field)
 
     def test_criteria__priority(self):
         priority = create_default(TicketPriority)

@@ -42,10 +42,17 @@ class ProfileFilterSerializer(BaseCreateSerializer):
     def to_representation(self, instance):
         init_data = super(ProfileFilterSerializer, self).to_representation(instance)
         data = copy.copy(init_data)
+        source = data.pop('source', {})
+        # remove 'lookups' from source b/c both the PF and AF have
+        # this key, and don't want to override what's on the PF. PF
+        # could be storing a dynamic `location_level.id` for the
+        # dynamic AF that was used when creating it.
+        source.pop('lookups', {})
+        data.update(source)
         return self._combined_data(data)
 
     def _combined_data(self, data):
-        field = data['source']['field']
+        field = data['field']
         criteria = data['criteria']
 
         if field == 'priority':
