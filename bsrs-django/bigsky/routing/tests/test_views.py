@@ -67,7 +67,6 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         af = AvailableFilter.objects.get(id=data['filters'][0]['id'])
         self.assertEqual(data['filters'][0]['id'], str(af.id))
         self.assertEqual(data['filters'][0]['key'], af.key)
-        self.assertEqual(data['filters'][0]['context'], af.context)
         self.assertEqual(data['filters'][0]['field'], af.field)
         pf = self.assignment.filters.get(source=af)
         self.assertEqual(data['filters'][0]['lookups'], pf.lookups)
@@ -94,7 +93,6 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         # unchanged
         self.assertEqual(filter_data['id'], str(location_filter.source.id))
         self.assertEqual(filter_data['key'], location_filter.source.key)
-        self.assertEqual(filter_data['context'], location_filter.source.context)
         self.assertEqual(filter_data['field'], location_filter.source.field)
 
     def test_criteria__priority(self):
@@ -330,7 +328,6 @@ class AvailableFilterTests(APITestCase):
                 priority_data = d
         self.assertTrue(priority_data['id'])
         self.assertEqual(priority_data['key'], 'admin.placeholder.ticket_priority')
-        self.assertEqual(priority_data['context'], settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(priority_data['field'], 'priority')
         self.assertEqual(priority_data['lookups'], {'unique_key': 'priority'})
 
@@ -356,7 +353,6 @@ class AvailableFilterTests(APITestCase):
         location_level = LocationLevel.objects.get(id=location_data['lookups']['location_level']['id'])
         self.assertTrue(location_data['id'])
         self.assertEqual(location_data['key'], location_level.name)
-        self.assertEqual(location_data['context'], settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(location_data['field'], 'location')
         self.assertEqual(location_data['lookups']['unique_key'], "location_level-{}".format(location_level.name))
         self.assertEqual(location_data['lookups']['location_level']['id'], str(location_level.id))
