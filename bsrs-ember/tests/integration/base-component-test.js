@@ -29,10 +29,10 @@ test('no delete button if existing record, only show if new:true', function(asse
   let statuses = store.find('ticket-status');
   this.statuses = statuses;
   this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
-  assert.equal(this.$('.t-delete-btn').text().trim(), trans.t('crud.delete.button'));
+  assert.equal(this.$('.t-delete-btn').text().trim(), trans.t('crud.delete.button'), 'Delete btn shows');
   run(() => {
     store.push('ticket', {id: TD.idOne, new: true});
   });
   this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
-  assert.equal(this.$('.t-delete-btn').text().trim(), '');
+  assert.equal(this.$('.t-delete-btn').text().trim(), '', 'Delete btn does not show');
 });
