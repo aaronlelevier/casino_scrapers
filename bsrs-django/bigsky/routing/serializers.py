@@ -10,7 +10,6 @@ from routing.validators import (ProfileFilterFieldValidator, UniqueByTenantValid
     AvailableFilterValidator)
 from tenant.mixins import RemoveTenantMixin
 from ticket.models import TicketPriority
-from utils.create import update_model
 from utils.serializers import BaseCreateSerializer
 
 
@@ -112,7 +111,8 @@ class AssignmentCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
         if filters:
             for f in filters:
                 try:
-                    pf = instance.filters.get(source__id=f['id'])
+                    pf = instance.filters.get(source__id=f['id'],
+                                              lookups=f.get('lookups', {}))
                 except ProfileFilter.DoesNotExist:
                     pf  = self._create_profile_filter(f)
                 else:

@@ -1,14 +1,13 @@
 import json
 import uuid
 
-from django.conf import settings
-
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
 from category.models import Category
-from location.models import Location, LocationLevel
-from location.tests.factory import create_location_levels, create_top_level_location
+from location.models import LocationLevel
+from location.tests.factory import (create_location_levels, create_top_level_location,
+    create_location_level, create_location)
 from person.tests.factory import create_single_person, PASSWORD
 from routing.models import Assignment, ProfileFilter, AvailableFilter, AUTO_ASSIGN
 from routing.tests.factory import (
@@ -145,7 +144,7 @@ class AssignmentCreateTests(ViewTestSetupMixin, APITestCase):
         self.data['id'] = str(uuid.uuid4())
         self.data['description'] = 'foo'
         # dynamic location filter
-        location = mommy.make(Location)
+        location = create_location()
         criteria_two = [str(location.id)]
         location_filter = create_ticket_location_filter()
         location_af = location_filter.source
@@ -170,6 +169,37 @@ class AssignmentCreateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(assignment.filters.first().source, location_af)
         self.assertEqual(assignment.filters.first().criteria, criteria_two)
         self.assertEqual(assignment.filters.first().lookups, {'location_level': str(location.location_level.id)})
+
+    def test_create__multiple_filters(self):
+        # filter 1 (will come w/ `self.data` by default)
+        self.data['id'] = str(uuid.uuid4())
+        self.data['description'] = 'foo'
+        # filter 2
+        location_filter = create_ticket_location_filter()
+        location_level = create_location_level('foo')
+        location = create_location(location_level)
+        self.data['filters'].append({
+            'id': str(location_filter.source.id),
+            'criteria': [str(location.id)],
+            'lookups': {'location_level': str(location_level.id)}
+        })
+        # filter 3 - shows being able to distinguish dynamic filters
+        location_level_two = create_location_level('bar')
+        location_two = create_location(location_level)
+        self.data['filters'].append({
+            'id': str(location_filter.source.id),
+            'criteria': [str(location_two.id)],
+            'lookups': {'location_level': str(location_level_two.id)}
+        })
+
+        response = self.client.post('/api/admin/assignments/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.content.decode('utf8'))
+        assignment = Assignment.objects.get(id=data['id'])
+        self.assertEqual(assignment.filters.filter(source__field='priority').count(), 1)
+        self.assertEqual(assignment.filters.filter(source__field='location', lookups={'location_level': str(location_level.id)}).count(), 1)
+        self.assertEqual(assignment.filters.filter(source__field='location', lookups={'location_level': str(location_level_two.id)}).count(), 1)
 
 
 class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
@@ -223,6 +253,36 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(self.assignment.filters.first().criteria, self.data['filters'][0]['criteria'])
         self.assertEqual(self.assignment.filters.first().lookups, self.data['filters'][0]['lookups'])
 
+    def test_update__nested_create__multiple(self):
+        # filter 1 - in existing record
+        # filter 2
+        location_filter = create_ticket_location_filter()
+        location_level = create_location_level('foo')
+        location = create_location(location_level)
+        self.data['filters'].append({
+            'id': str(location_filter.source.id),
+            'criteria': [str(location.id)],
+            'lookups': {'location_level': str(location_level.id)}
+        })
+        # filter 3 - shows being able to distinguish dynamic filters
+        location_level_two = create_location_level('bar')
+        location_two = create_location(location_level)
+        self.data['filters'].append({
+            'id': str(location_filter.source.id),
+            'criteria': [str(location_two.id)],
+            'lookups': {'location_level': str(location_level_two.id)}
+        })
+
+        response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
+            self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(data['filters']), 3)
+        self.assertEqual(self.assignment.filters.filter(source__field='priority').count(), 1)
+        self.assertEqual(self.assignment.filters.filter(source__field='location', lookups={'location_level': str(location_level.id)}).count(), 1)
+        self.assertEqual(self.assignment.filters.filter(source__field='location', lookups={'location_level': str(location_level_two.id)}).count(), 1)
+
     def test_update__nested_update(self):
         priority_two = mommy.make(TicketPriority)
         criteria_two = [str(priority_two.id)]
@@ -244,7 +304,7 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
 
     def test_update__nested_update__dynamic(self):
         self.assignment.filters.clear()
-        location = mommy.make(Location)
+        location = create_location()
         criteria_two = [str(location.id)]
         location_filter = create_ticket_location_filter()
         location_af = location_filter.source
@@ -267,6 +327,38 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(self.assignment.filters.first().source, location_af)
         self.assertEqual(self.assignment.filters.first().criteria, criteria_two)
         self.assertEqual(self.assignment.filters.first().lookups, self.data['filters'][0]['lookups'])
+
+    def test_update__nested_update__dynamic__multiple(self):
+        self.assignment.filters.clear()
+        location_filter = create_ticket_location_filter()
+        # filter 1 - will be an existing related record
+        location_level = create_location_level('foo')
+        location = create_location(location_level)
+        self.assignment.filters.add(location_filter)
+        self.assertEqual(self.assignment.filters.first().source, location_filter.source)
+        self.assertNotEqual(self.assignment.filters.first().criteria, [str(location.id)])
+        self.data['filters'] = [{
+            'id': str(location_filter.source.id),
+            'criteria': [str(location.id)],
+            'lookups': {'location_level': str(location.location_level.id)}
+        }]
+        # filter 2
+        location_level_two = create_location_level('bar')
+        location_two = create_location(location_level)
+        self.data['filters'].append({
+            'id': str(location_filter.source.id),
+            'criteria': [str(location_two.id)],
+            'lookups': {'location_level': str(location_level_two.id)}
+        })
+
+        response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
+            self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(data['filters']), 2)
+        self.assertEqual(self.assignment.filters.filter(source__field='location', lookups={'location_level': str(location_level.id)}).count(), 1)
+        self.assertEqual(self.assignment.filters.filter(source__field='location', lookups={'location_level': str(location_level_two.id)}).count(), 1)
 
     def test_update__nested_delete(self):
         """
