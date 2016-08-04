@@ -33,7 +33,7 @@ module.exports = function(app) {
   });
 
   adminAssignmentsRouter.get('/:id', function(req, res) {
-    res.send(ASSIGNMENT_FIXTURES.detail());
+    res.send(ASSIGNMENT_FIXTURES.detail(req.params.id));
   });
 
   adminAssignmentsRouter.put('/:id', function(req, res) {

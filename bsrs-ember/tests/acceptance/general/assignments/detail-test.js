@@ -97,6 +97,17 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
+test('when user adds a filter and hits cancel they are not prompted with a modal', (assert) => {
+  page.visitDetail();
+  page.addFilter();
+  generalPage.cancel();
+  andThen(() => {
+    assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
+    var assignment = store.find('assignment', AD.idOne);
+    assert.equal(assignment.get('pf').get('length'), 1);
+  });
+});
+
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
   page.visitDetail();
   page.descriptionFill(AD.descriptionTwo);
