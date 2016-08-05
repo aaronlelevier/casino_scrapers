@@ -348,29 +348,6 @@ class LocationListTests(APITestCase):
         self.assertEqual(data['results'][0]['id'], str(location.id))
         self.assertEqual(data['results'][0]['addresses'][0]['address'], '123 Drumpf Mansion St. ,')
 
-    # def test_power_select_location_address_postal_code(self):
-    #     location = create_location()
-    #     address = create_contact(Address, location)
-    #     address.postal_code = '12345-12345'
-    #     address.save()
-
-    #     response = self.client.get('/api/admin/locations/location__icontains={}/'.format(address.postal_code))
-
-    #     data = json.loads(response.content.decode('utf8'))
-    #     self.assertEqual(data['count'], 1)
-    #     self.assertEqual(data['results'][0]['id'], str(location.id))
-    #     self.assertEqual(data['results'][0]['addresses'][0]['postal_code'], '12345-12345')
-
-    # def test_power_select_location_name_with_llevel(self):
-    #     # test ensuring nothing wrong with custom endpoint
-    #     llevel = create_location_level()
-    #     location = create_location(llevel)
-
-    #     response = self.client.get('/api/admin/locations/location__icontains={}/?location_level={}'.format(location.name, location.location_level.id))
-
-    #     data = json.loads(response.content.decode('utf8'))
-    #     self.assertEqual(data['results']['count'], 1)
-
 
 class LocationDetailTests(APITestCase):
 
