@@ -74,14 +74,14 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
         data_copy = copy.copy(data)
         for i, d in enumerate(data_copy['results']):
             if d['lookups'] == {'filters': 'location_level'}:
-                location_level_filter = data['results'].pop(i)
+                location_filter = data['results'].pop(i)
             else:
                 data['results'][i]['lookups'] = {'unique_key': d['field']}
 
-        if location_level_filter:
+        if location_filter:
             filters = []
             for x in LocationLevel.objects.all():
-                filters.append(x.available_filter_data)
+                filters.append(x.available_filter_data(location_filter['id']))
 
         data['results'] += filters
         data['count'] = len(data['results'])

@@ -441,7 +441,8 @@ class AvailableFilterTests(APITestCase):
             if 'location_level' in d['lookups']:
                 location_data = d
         location_level = LocationLevel.objects.get(id=location_data['lookups']['location_level']['id'])
-        self.assertTrue(location_data['id'])
+        location_af = create_available_filter_location()
+        self.assertEqual(location_data['id'], str(location_af.id))
         self.assertEqual(location_data['key'], location_level.name)
         self.assertEqual(location_data['field'], 'location')
         self.assertEqual(location_data['lookups']['unique_key'], "location_level-{}".format(location_level.name))

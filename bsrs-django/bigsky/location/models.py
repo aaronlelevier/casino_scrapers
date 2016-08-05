@@ -179,12 +179,11 @@ class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
         parents = [str(parent.id) for parent in self.parents.all()]
         return {"id": str(self.id), "name": self.name, "children": children, "parents": parents}
 
-    @property
-    def available_filter_data(self):
+    def available_filter_data(self, id):
+        # 'id' is the 'location' AvailableFilter id
         return {
-            'id': str(uuid.uuid4()),
+            'id': id,
             'key': self.name,
-            'context': settings.DEFAULT_PROFILE_FILTER_CONTEXT,
             'field': 'location',
             'lookups': {
                 'unique_key': 'location_level-{}'.format(self.name),
