@@ -55,6 +55,23 @@ class ProfileFilterFieldValidatorTests(ViewTestSetupMixin, APITestCase):
             "'{}' not valid. Must be a list of UUIDs".format(criteria)
         )
 
+    def test_get_and_validate_available_filter(self):
+        dupe_field = 'priority'
+        invalid_id = str(uuid.uuid4())
+        self.data['filters'] = [{
+            'id': invalid_id,
+            'criteria': [str(self.ticket_priority.id)]
+        }]
+
+        response = self.client.post('/api/admin/assignments/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        msg = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            msg['filters'][0]['non_field_errors'][0],
+            "{} is not an AvailableFilter ID".format(invalid_id)
+        )
+
 
 class AvailableFilterValidatorTests(ViewTestSetupMixin, APITestCase):
 
