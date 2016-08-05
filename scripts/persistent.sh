@@ -39,14 +39,10 @@ echo "DJANGO"
 
 cd bsrs-django
 
-if [  -d "${PROJECT_DIR}/persistent/bsrs/bsrs-django/venv" ];
-    then
-        echo "VIRTUALENV EXISTS"
-    else
-        echo "VIRTUALENV DOES NOT EXIST"
-        virtualenv -p /usr/local/bin/python3.4 venv
-fi
-TEST=$?; if [ "$TEST" == 1 ]; then echo "create virtualenv failed"; exit $TEST; fi
+wait
+rm -rf venv
+wait
+virtualenv -p /usr/local/bin/python3.4 venv
 
 wait
 source venv/bin/activate
@@ -78,6 +74,7 @@ cd ../../bsrs-ember
 
 wait
 echo "NPM INSTALL"
+rm -rf node_modules/bsrs-components
 npm install --no-optional
 TEST=$?; if [ "$TEST" == 1 ]; then echo "npm install failed"; exit $TEST; fi
 
