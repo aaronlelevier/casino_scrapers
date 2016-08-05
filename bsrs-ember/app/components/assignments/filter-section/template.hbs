@@ -18,6 +18,7 @@
       {{/power-select}}
     </div>
   </div>
+  {{component (assignment-filter (model-at model.pf index)) model=(model-at model.pf index)}}
 {{/each}}
 <button class="t-add-pf-btn btn-add btn btn-default btn-sm" type="button" disabled={{addFilterDisabled}} {{action "append"}}>
   <span class="btn-label">{{fa-icon "plus"}} {{t "admin.assignment.pf.add"}}</span>

@@ -35,10 +35,11 @@ moduleForComponent('assignments/filter-section', 'Integration | Component | assi
   }
 });
 
-test('add new pfilter, disables btn, and assignment is not dirty until select pfilter', function(assert) {
+test('add new pfilter, disables btn, and assignment is not dirty until select pfilter which displays component', function(assert) {
   this.model = assignment;
   this.render(hbs`{{assignments/filter-section model=model}}`);
   // existing pfilter
+  assert.equal(this.$('.t-ticket-priority-select').length, 1);
   assert.equal(this.$('.ember-power-select-selected-item').text().trim(), PFD.keyOne);
   assert.equal(this.$('.t-assignment-pf-select').length, 1);
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
