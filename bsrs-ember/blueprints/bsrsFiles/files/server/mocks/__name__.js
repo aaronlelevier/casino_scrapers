@@ -29,7 +29,7 @@ module.exports = function(app) {
   });
 
   admin<%= CapFirstLetterModuleName %>sRouter.get('/:id', function(req, res) {
-    res.send(<%= CapitalizeModule %>_FIXTURES.detail());
+    res.send(<%= CapitalizeModule %>_FIXTURES.detail(req.params.id));
   });
 
   admin<%= CapFirstLetterModuleName %>sRouter.put('/:id', function(req, res) {

@@ -1,17 +1,9 @@
-{{#if model.new}}
-  {{base-component-new
-    model=model
-    save="save"
-    cancel="cancel"
-  }}
-  {{else}}
-  {{base-component
-    model=model
-    save="save"
-    cancel="cancel"
-    delete="delete"
-  }}
-{{/if}}
+{{base-component
+  model=model
+  save="save"
+  cancel="cancel"
+  delete="delete"
+}}
 
 <section class="docSection container-fluid">
   <div class="row">

@@ -25,18 +25,14 @@ const NUMBER_EIGHT = {keyCode: 56};
 const BACKSPACE = {keyCode: 8};
 const SORT_STATUS_DIR = '.t-sort-status-translated-name-dir';
 
-var application, store, endpoint, list_xhr;
+var store, endpoint, list_xhr;
 
 moduleForAcceptance('Acceptance | people-grid-list', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';
     list_xhr = xhr(endpoint ,"GET",null,{},200,PF.list());
   },
-  afterEach() {
-    
-  }
 });
 
 test('initial load should only show first 10 records ordered by fullname with correct pagination and no additional xhr', function(assert) {
@@ -185,7 +181,6 @@ test('typing a search will reset page to 1 and require an additional xhr and res
   triggerEvent('.t-grid-search-input', 'keyup', NUMBER_EIGHT);
   andThen(() => {
     assert.equal(currentURL(),PEOPLE_LIST_URL + '?search=8');
-    assert.equal(find('.t-grid-data').length, 1);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-person-username').text().trim()), 'scott');
   });
   click('.t-sort-title-dir');

@@ -8,25 +8,26 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 
 var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, {
   toggleFilter: false,
-  searched_content: Ember.computed('find', 'sort', 'page', 'search', 'model.[]', function() {
-    const search = this.get('search') ? this.get('search').trim().toLowerCase() : '';
-    const regex = new RegExp(search);
-    const columns = this.get('columns').filter(function(c) {
-      return c.isSearchable;
-    }).map(function(c) {
-      return c.field;
-    });
-    let filter = columns.map((property) => {
-      return this.get('model').filter((object) => {
-        //TODO: n+1 problem?  debugger here on list view will show this
-        return regex_property(object, property, regex);
-      });
-    }.bind(this));
-    return filter.reduce((a, b) => { return a.concat(b); }).uniq();
-  }),
-  found_content: Ember.computed('searched_content.[]', function() {
+  // searched_content: Ember.computed('find', 'sort', 'page', 'search', 'model.[]', function() {
+  //   const search = this.get('search') ? this.get('search').trim().toLowerCase() : '';
+  //   const regex = new RegExp(search);
+  //   const columns = this.get('columns').filter(function(c) {
+  //     return c.isSearchable;
+  //   }).map(function(c) {
+  //     return c.field;
+  //   });
+  //   // columns is an array of strings
+  //   let filter = columns.map((property) => {
+  //     return this.get('model').filter((object) => {
+  //       //TODO: n+1 problem?  debugger here on list view will show this
+  //       return regex_property(object, property, regex);
+  //     });
+  //   }.bind(this));
+  //   return filter.reduce((a, b) => { return a.concat(b); }).uniq();
+  // }),
+  found_content: Ember.computed('find', 'sort', 'page', 'search', 'model.[]', function() {
     const find = this.get('find') || '';
-    const searched_content = this.get('searched_content');
+    const searched_content = this.get('model');
     const params = find.split(',');
     if(params[0].trim() !== '') {
       let filter = params.map((option) => {

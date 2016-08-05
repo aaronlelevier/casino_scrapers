@@ -142,13 +142,14 @@ var BSRS_LOCATION_FACTORY = (function() {
   };
   factory.prototype.search_idThree = function() {
     var location_one = this.get_no_related(this.location_defaults.idThree, this.location_defaults.storeNameThree);
-    return [location_one];
+    var response = [location_one];
+    return {'count':1,'next':null,'previous':null,'results': response};
   };
   factory.prototype.search_power_select = function() {
     var location_one = this.get_no_related(this.location_defaults.idFour, this.location_defaults.storeNameFour);
     var location_two = this.get_no_related(this.location_defaults.idTwo, this.location_defaults.storeNameTwo);
     var response = [location_one, location_two];
-    return response;
+    return {'count':2,'next':null,'previous':null,'results': response};
   };
   factory.prototype.list_power_select = function() {
     var response = [];
@@ -169,7 +170,7 @@ var BSRS_LOCATION_FACTORY = (function() {
       location.number = location.number + i;
       response.push(location);
     }
-    return response;
+    return {'count':10,'next':null,'previous':null,'results': response};
   };
 
   return factory;

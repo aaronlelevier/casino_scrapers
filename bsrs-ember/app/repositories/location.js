@@ -22,7 +22,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
       url += `location__icontains=${search_criteria}/`;
     }
     return PromiseMixin.xhr(url, 'GET').then((response) => {
-      return response;
+      return response.results;
     });
   },
   findLocationParents(search_criteria, extra_params) {
@@ -32,7 +32,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
       url += `location__icontains=${search_criteria}/`;
     }
     return PromiseMixin.xhr(url, 'GET').then((response) => {
-      return response;
+      return response.results;
     });
   },
   /* @method findTicket - searches locations by name */
@@ -43,7 +43,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
       url += `location__icontains=${search}/`;
     }
     return PromiseMixin.xhr(url, 'GET').then((response) => {
-      return response;
+      return response.results;
     });
   },
   findPersonsLocations(search_criteria, filter) {
@@ -55,7 +55,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
       url += `location__icontains=${search_criteria}/`;
     }
     return PromiseMixin.xhr(url, 'GET').then((response) => {
-      return response;
+      return response.results;
     });
   },
   findLocationSelect(search_criteria, filter) {
@@ -65,7 +65,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
       url += `location__icontains=${search_criteria}/`;
     }
     return PromiseMixin.xhr(url, 'GET').then((response) => {
-      return response;
+      return response.results;
     });
   },
   find(filter) {

@@ -32,6 +32,22 @@ def run_person_migrations():
     for x in DominoPerson.objects.all():
         create_person(x)
 
+    # Make the 'bigsky' Person staff & superuser so they can view-all
+    # in the Django Admin. Admin can be used for debugging, etc.
+    bigsky_person_update()
+
+
+def bigsky_person_update():
+    try:
+        person = Person.objects.get(username='bigsky')
+    except Person.DoesNotExist:
+        pass
+    else:
+        person.is_staff = True
+        person.is_superuser = True
+        person.save()
+        return person
+
 
 def create_person(domino_instance):
     try:

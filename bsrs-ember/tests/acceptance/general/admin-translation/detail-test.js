@@ -20,7 +20,6 @@ var application, store, endpoint, translation_list_data, translation_detail_data
 
 moduleForAcceptance('Acceptance | translation detail test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/';
     translation_list_data = TF.list();
@@ -28,9 +27,6 @@ moduleForAcceptance('Acceptance | translation detail test', {
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, translation_list_data);
     detail_xhr = xhr(endpoint + TD.keyOneGrid + '/', 'GET', null, {}, 200, translation_detail_data);
   },
-  afterEach() {
-    
-  }
 });
 
 //TODO: FIREFOX discrepancy

@@ -306,11 +306,11 @@ class LocationListTests(APITestCase):
         response = self.client.get('/api/admin/locations/location__icontains={}/'.format('foobar'))
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]['id'], str(location.id))
-        self.assertEqual(data[0]['name'], 'foobar')
-        self.assertEqual(data[0]['location_level_fk'], str(location.location_level.id))
-        self.assertNotIn('status', data[0])
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(location.id))
+        self.assertEqual(data['results'][0]['name'], 'foobar')
+        self.assertEqual(data['results'][0]['location_level_fk'], str(location.location_level.id))
+        self.assertNotIn('status', data['results'][0])
 
     def test_power_select_location_number(self):
         location = create_location()
@@ -320,9 +320,9 @@ class LocationListTests(APITestCase):
         response = self.client.get('/api/admin/locations/location__icontains={}/'.format('1239'))
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]['id'], str(location.id))
-        self.assertEqual(data[0]['number'], '1239')
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(location.id))
+        self.assertEqual(data['results'][0]['number'], '1239')
 
     def test_power_select_location_address_city(self):
         # munged city in case create_location factory creates contact as well
@@ -334,9 +334,9 @@ class LocationListTests(APITestCase):
         response = self.client.get('/api/admin/locations/location__icontains={}/'.format(address.city))
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]['id'], str(location.id))
-        self.assertEqual(data[0]['addresses'][0]['city'], 'wawapalooza')
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(location.id))
+        self.assertEqual(data['results'][0]['addresses'][0]['city'], 'wawapalooza')
 
     def test_power_select_location_address_address(self):
         location = create_location()
@@ -347,32 +347,9 @@ class LocationListTests(APITestCase):
         response = self.client.get('/api/admin/locations/location__icontains={}/'.format(address.address))
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]['id'], str(location.id))
-        self.assertEqual(data[0]['addresses'][0]['address'], '123 Drumpf Mansion St. ,')
-
-    def test_power_select_location_address_postal_code(self):
-        location = create_location()
-        address = create_contact(Address, location)
-        address.postal_code = '12345-12345'
-        address.save()
-
-        response = self.client.get('/api/admin/locations/location__icontains={}/'.format(address.postal_code))
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]['id'], str(location.id))
-        self.assertEqual(data[0]['addresses'][0]['postal_code'], '12345-12345')
-
-    def test_power_select_location_name_with_llevel(self):
-        # test ensuring nothing wrong with custom endpoint
-        llevel = create_location_level()
-        location = create_location(llevel)
-
-        response = self.client.get('/api/admin/locations/location__icontains={}/?location_level={}'.format(location.name, location.location_level.id))
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 1)
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(location.id))
+        self.assertEqual(data['results'][0]['addresses'][0]['address'], '123 Drumpf Mansion St. ,')
 
 
 class LocationDetailTests(APITestCase):
@@ -462,10 +439,10 @@ class LocationDetailTests(APITestCase):
             .format(llevel_id=location.location_level.id, pk=location.id, name=keyword))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
-            len(data),
+            data['count'],
             Location.objects.filter(location_level=location_level, name__icontains=keyword).count()
         )
-        self.assertNotIn('status', data[0])
+        self.assertNotIn('status', data['results'][0])
 
     def test_get_level_parents__filtered(self):
         location = Location.objects.get(name='ca')
@@ -479,10 +456,10 @@ class LocationDetailTests(APITestCase):
             .format(llevel_id=location.location_level.id, pk=location.id, name=keyword))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
-            len(data),
+            data['count'],
             Location.objects.filter(location_level=location_level, name__icontains=keyword).count()
         )
-        self.assertNotIn('status', data[0])
+        self.assertNotIn('status', data['results'][0])
 
 
 class LocationCreateTests(APITestCase):
