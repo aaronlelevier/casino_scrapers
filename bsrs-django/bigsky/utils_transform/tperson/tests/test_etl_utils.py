@@ -1,4 +1,5 @@
 from decimal import Decimal
+from mock import patch
 
 from django.conf import settings
 from django.test import TestCase
@@ -16,7 +17,7 @@ from utils.create import LOREM_IPSUM_WORDS, _generate_chars
 from utils.tests.test_helpers import create_default
 from utils_transform.tperson.management.commands._etl_utils import (create_phone_numbers,
     create_email, create_person, run_person_migrations, top_level_with_locations,
-    non_top_level_with_no_locations, get_person_status, shorten_strings)
+    non_top_level_with_no_locations, get_person_status, shorten_strings, bigsky_person_update)
 from utils_transform.tperson.models import DominoPerson
 from utils_transform.tperson.tests.factory import create_domino_person
 
@@ -242,6 +243,39 @@ class CreatePersonTests(TestCase):
         self.assertEqual(person.role.name, 'Internal Audit')
         self.assertEqual(person.status.name, 'admin.person.status.active')
         self.assertEqual(person.auth_amount, Decimal('92826.33'))
+
+    @patch("utils_transform.tperson.management.commands._etl_utils.bigsky_person_update")
+    def test_run_migrations__calls_bigsky_person_update(self, mock_func):
+        run_person_migrations()
+        self.assertTrue(mock_func.called)
+
+    def test_bigsky_person_update(self):
+        username = 'bigsky'
+        domino_person = create_domino_person()
+        domino_person.username = username
+        domino_person.save()
+        person = create_person(domino_person)
+        self.assertEqual(person.username, username)
+        self.assertFalse(person.is_staff)
+        self.assertFalse(person.is_superuser)
+
+        person = bigsky_person_update()
+
+        self.assertTrue(person.is_staff)
+        self.assertTrue(person.is_superuser)
+
+    def test_bigsky_person_update__not_bigsky_person_no_change(self):
+        domino_person = create_domino_person()
+        person = create_person(domino_person)
+        self.assertNotEqual(person.username, 'bigsky')
+        self.assertFalse(person.is_staff)
+        self.assertFalse(person.is_superuser)
+
+        ret = bigsky_person_update()
+
+        self.assertIsNone(ret)
+        self.assertFalse(person.is_staff)
+        self.assertFalse(person.is_superuser)
 
     def test_blank_middle_initial(self):
         domino_person = create_domino_person()
