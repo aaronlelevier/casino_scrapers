@@ -65,13 +65,13 @@ class CategoryListTests(APITestCase):
         response = self.client.get('/api/admin/categories/category__icontains={}/'.format('foobar'))
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]['id'], str(category.id))
-        self.assertEqual(data[0]['name'], 'foobar')
-        self.assertNotIn('parent', data[0]['name'])
-        self.assertNotIn('status', data[0]['name'])
-        self.assertNotIn('description', data[0])
-        self.assertNotIn('label', data[0])
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(category.id))
+        self.assertEqual(data['results'][0]['name'], 'foobar')
+        self.assertNotIn('parent', data['results'][0]['name'])
+        self.assertNotIn('status', data['results'][0]['name'])
+        self.assertNotIn('description', data['results'][0])
+        self.assertNotIn('label', data['results'][0])
 
     def test_power_select_category_cost_code(self):
         category = create_single_category(name='nothing')
@@ -81,9 +81,9 @@ class CategoryListTests(APITestCase):
         response = self.client.get('/api/admin/categories/category__icontains={}/'.format('760521'))
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]['id'], str(category.id))
-        self.assertEqual(data[0]['cost_code'], str('760521'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(category.id))
+        self.assertEqual(data['results'][0]['cost_code'], str('760521'))
 
     def test_search(self):
         category = create_single_category(name='foobar')

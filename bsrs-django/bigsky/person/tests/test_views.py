@@ -343,13 +343,13 @@ class PersonListTests(TestCase):
         response = self.client.get('/api/admin/people/person__icontains={}/'.format('watter'))
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]['id'], str(person1.id))
-        self.assertEqual(data[0]['username'], 'watter')
-        self.assertEqual(data[0]['fullname'], 'nothing nothing')
-        self.assertNotIn('title', data[0])
-        self.assertNotIn('role', data[0])
-        self.assertNotIn('status', data[0])
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(person1.id))
+        self.assertEqual(data['results'][0]['username'], 'watter')
+        self.assertEqual(data['results'][0]['fullname'], 'nothing nothing')
+        self.assertNotIn('title', data['results'][0])
+        self.assertNotIn('role', data['results'][0])
+        self.assertNotIn('status', data['results'][0])
 
     def test_power_select_people_fullname(self):
         person1 = create_single_person(name='wat')
@@ -359,9 +359,9 @@ class PersonListTests(TestCase):
         response = self.client.get('/api/admin/people/person__icontains={}/'.format('foo'))
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]['id'], str(person1.id))
-        self.assertEqual(data[0]['fullname'], 'foo wat')
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(person1.id))
+        self.assertEqual(data['results'][0]['fullname'], 'foo wat')
 
     def test_power_select_people_email(self):
         # TODO: figure out email w/ @ in search
@@ -372,9 +372,9 @@ class PersonListTests(TestCase):
         response = self.client.get('/api/admin/people/person__icontains={}/'.format('foo-bar@gmail.com'))
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]['id'], str(person1.id))
-        self.assertEqual(data[0]['email'], 'foo-bar@gmail.com')
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(person1.id))
+        self.assertEqual(data['results'][0]['email'], 'foo-bar@gmail.com')
 
 
 class PersonDetailTests(TestCase):

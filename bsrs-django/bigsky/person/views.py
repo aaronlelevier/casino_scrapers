@@ -109,8 +109,9 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
     @list_route(methods=['GET'], url_path=r"person__icontains=(?P<search_key>[\w\s\.\-@]+)")
     def search_power_select(self, request, search_key=None):
         queryset = Person.objects.search_power_select(search_key)
+        self.paginate_queryset(queryset)
         serializer = ps.PersonSearchSerializer(queryset, many=True)
-        return Response(serializer.data)
+        return self.get_paginated_response(serializer.data)
 
     # TODO # add correct authorization to who can use this endpoint
     @list_route(methods=['post'], url_path=r"reset-password/(?P<person_id>[\w\-]+)")
