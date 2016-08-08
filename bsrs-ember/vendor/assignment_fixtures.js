@@ -50,7 +50,8 @@ var BSRS_ASSIGNMENT_FACTORY = (function() {
   };
   factory.prototype.list_pfilters = function() {
     var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
-    return [{id: this.pfilter.idOne, key: this.pfilter.keyOne}, {id: this.pfilter.idTwo, key: this.pfilter.keyTwo}];
+    var results = [{id: this.pfilter.idOne, key: this.pfilter.keyOne}, {id: this.pfilter.idTwo, key: this.pfilter.keyTwo}];
+    return {count: 2, next: null, previous: null, results: results};
   };
   factory.prototype.list_two = function() {
     var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;

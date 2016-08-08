@@ -6,7 +6,7 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
 import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
-import BASEURLS, { ASSIGNMENT_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { ASSIGNMENT_URL, ASSIGNMENT_AVAILABLE_FILTERS_URL } from 'bsrs-ember/utilities/urls';
 
 export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: 'assignment',
@@ -18,9 +18,8 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
   deserializer: Ember.computed.alias('assignmentDeserializer'),
   /* @method getFilters
   * fetch from custom endpoint to retrieve available filters (backend will filter down existing filters assigned to assignment)
-  * TODO: make a custom endpoint
   */
   getFilters() {
-    return PromiseMixin.xhr(`${ASSIGNMENT_URL}available_filters/`, 'GET').then(response => response);
+    return PromiseMixin.xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET').then(response => response);
   },
 });
