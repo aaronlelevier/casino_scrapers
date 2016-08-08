@@ -138,7 +138,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
       category.label += i;
       response.push(category);
     }
-    return response;
+    return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
   };
   return factory;
 })();
