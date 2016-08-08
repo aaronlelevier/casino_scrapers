@@ -7,11 +7,17 @@ var BSRS_PROFILE_FILTER_DEFAULTS_OBJECT = (function() {
       idOne: '6f4e19c2-54c3-4db4-9742-387f64eca721',
       idTwo: '6f4e19c2-54c3-4db4-9742-387f64eca722',
       unusedId: '6f4e19c2-54c3-4db4-9742-387f64eca72b',
+      autoAssignId: '9f4e19c2-54c3-4db4-8742-487f64eca72z',
       keyOne: 'admin.placeholder.ticket_priority',
-      keyTwo: 'Ticket Location',
+      keyTwo: this.location_level.nameDistrict,
+      autoAssignKey: 'admin.placeholder.auto_assign',
+      fieldOne: 'priority',
+      locationField: 'location',
+      autoAssignField: 'auto_assign',
       lookupsEmpty: {}, // non-dynamic available filters
       lookupsDynamic: {
-        location_level: this.location_level.idOne
+        id: this.location_level.idDistrict,
+        name: this.location_level.nameDistrict,
       }
     };
   };

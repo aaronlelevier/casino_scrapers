@@ -1,0 +1,13 @@
+{{db-fetch-multi-select
+  model=model
+  multiAttr="parents" 
+  multiAttrIds="parents_ids"
+  selectedAttr=model.parents
+  className="t-location-parent-select"
+  displayName="name"
+  add_func="add_parent"
+  remove_func="remove_parent"
+  repository=repository
+  searchMethod="findLocationParents"
+  extra_params=extra_params
+}}
