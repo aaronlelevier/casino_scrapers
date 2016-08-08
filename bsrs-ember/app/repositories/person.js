@@ -54,7 +54,7 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
     if (search) {
       url += `person__icontains=${search}/`;
       return PromiseMixin.xhr(url, 'GET').then((response) => {
-        return response;
+        return response.results;
       });
     }
   }
