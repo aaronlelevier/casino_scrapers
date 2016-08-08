@@ -230,7 +230,7 @@ class LocationQuerySet(SelfReferencingQuerySet):
             Q(addresses__postal_code__icontains=keyword)
         )
 
-    def search_power_select(self, keyword, llevel_id):
+    def search_power_select(self, keyword, llevel_id=None):
         q_obj = Q(name__icontains=keyword) | \
             Q(number__icontains=keyword) | \
             Q(addresses__city__icontains=keyword) | \
@@ -293,7 +293,7 @@ class LocationManager(SelfReferencingManager):
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
 
-    def search_power_select(self, keyword, llevel_id):
+    def search_power_select(self, keyword, llevel_id=None):
         '''
         llevel_id may be undefined. Only person location select passes llevel_id
         '''

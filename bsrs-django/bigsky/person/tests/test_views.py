@@ -2,8 +2,9 @@ import copy
 import json
 import uuid
 
-from django.test import TestCase
+from django.conf import settings
 from django.contrib.auth.models import ContentType
+from django.test import TestCase
 
 from model_mommy import mommy
 from rest_framework.test import APITestCase, APITransactionTestCase
@@ -375,6 +376,18 @@ class PersonListTests(TestCase):
         self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['id'], str(person1.id))
         self.assertEqual(data['results'][0]['email'], 'foo-bar@gmail.com')
+
+    def test_power_select_people__more_than_10_results(self):
+        search_key = 'foo'
+        for i in range(11):
+            create_single_person(name=search_key + create._generate_chars())
+        self.assertTrue(Person.objects.search_power_select(search_key).count() > 10)
+
+        response = self.client.get('/api/admin/people/person__icontains={}/'.format(search_key))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(data['count'] > 10)
+        self.assertEqual(len(data['results']), settings.PAGE_SIZE)
 
 
 class PersonDetailTests(TestCase):

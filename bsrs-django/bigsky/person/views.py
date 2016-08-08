@@ -109,7 +109,7 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
     @list_route(methods=['GET'], url_path=r"person__icontains=(?P<search_key>[\w\s\.\-@]+)")
     def search_power_select(self, request, search_key=None):
         queryset = Person.objects.search_power_select(search_key)
-        self.paginate_queryset(queryset)
+        queryset = self.paginate_queryset(queryset)
         serializer = ps.PersonSearchSerializer(queryset, many=True)
         return self.get_paginated_response(serializer.data)
 

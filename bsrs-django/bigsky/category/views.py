@@ -83,6 +83,6 @@ class CategoryViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet
     @list_route(methods=['GET'], url_path=r"category__icontains=(?P<search_key>[\w\-]+)")
     def search(self, request, search_key=None):
         queryset = Category.objects.search_power_select(search_key)
-        self.paginate_queryset(queryset)
+        queryset = self.paginate_queryset(queryset)
         serializer = cs.CategorySearchSerializer(queryset, many=True)
         return self.get_paginated_response(serializer.data)

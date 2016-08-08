@@ -1,6 +1,8 @@
 import json
 import uuid
 
+from django.conf import settings
+
 from model_mommy import mommy
 from rest_framework.test import APITestCase, APITransactionTestCase
 
@@ -8,6 +10,7 @@ from category.models import Category
 from category.serializers import CategorySerializer
 from category.tests.factory import create_single_category, create_categories
 from person.tests.factory import PASSWORD, create_person
+from utils import create
 
 
 ### CATEGORY
@@ -84,6 +87,18 @@ class CategoryListTests(APITestCase):
         self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['id'], str(category.id))
         self.assertEqual(data['results'][0]['cost_code'], str('760521'))
+
+    def test_power_select_category__more_than_10_results(self):
+        search_key = 'foo'
+        for i in range(11):
+            create_single_category(name=search_key + create._generate_chars())
+        self.assertTrue(Category.objects.search_power_select(search_key).count() > 10)
+
+        response = self.client.get('/api/admin/categories/?search={}'.format(search_key))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(data['count'] > 10)
+        self.assertEqual(len(data['results']), settings.PAGE_SIZE)
 
     def test_search(self):
         category = create_single_category(name='foobar')
