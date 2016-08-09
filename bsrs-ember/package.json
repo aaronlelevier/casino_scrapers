@@ -27,6 +27,7 @@
     "ember-ajax": "0.7.1",
     "ember-autoresize": "0.5.16",
     "ember-basic-dropdown": "0.13.0-beta.4",
+    "ember-browserify": "1.1.11",
     "ember-cli": "2.7.0",
     "ember-cli-app-version": "^1.0.0",
     "ember-cli-auto-register": "1.1.0",
@@ -65,8 +66,10 @@
     "ember-load-initializers": "^0.5.1",
     "ember-modal-dialog": "0.8.8",
     "ember-moment": "7.0.0-beta.3",
+    "ember-one-way-controls": "1.0.0",
     "ember-power-select": "1.0.0-beta.8",
     "ember-promise": "1.2.0",
+    "ember-redux": "1.5.1",
     "ember-resolver": "^2.0.3",
     "ember-test-helpers": "^0.5.19",
     "ember-tether": "0.3.1",
@@ -80,6 +83,8 @@
     "loader.js": "^4.0.1",
     "markdown-code-highlighting": "0.0.6",
     "morgan": "^1.6.1",
-    "object-assign": "^4.0.1"
+    "object-assign": "^4.0.1",
+    "redux": "3.5.2",
+    "redux-thunk": "2.1.0"
   }
 }
