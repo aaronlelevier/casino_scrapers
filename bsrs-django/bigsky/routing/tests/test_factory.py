@@ -80,7 +80,7 @@ class AvailableFilterTests(TestCase):
         self.assertEqual(ret.key, 'admin.placeholder.state_filter')
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'location')
-        self.assertEqual(ret.lookups, {'filters': 'state', 'unique_key': 'state'})
+        self.assertEqual(ret.lookups, {'filters': 'state', 'id': 'state'})
 
     def test_create_available_filter_country(self):
         ret = factory.create_available_filter_country()
@@ -91,7 +91,7 @@ class AvailableFilterTests(TestCase):
         self.assertEqual(ret.key, 'admin.placeholder.country_filter')
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'location')
-        self.assertEqual(ret.lookups, {'filters': 'country', 'unique_key': 'country'})
+        self.assertEqual(ret.lookups, {'filters': 'country', 'id': 'country'})
 
     def test_create_available_filters(self):
         self.assertEqual(AvailableFilter.objects.count(), 0)
@@ -149,12 +149,13 @@ class PriorityFilterTests(TestCase):
 
     def test_create_ticket_location_filter(self):
         location = create_top_level_location()
+        location_level = location.location_level
         source = factory.create_available_filter_location()
 
         pf = factory.create_ticket_location_filter()
 
         self.assertEqual(pf.source, source)
-        self.assertEqual(pf.lookups, {'filters': 'location_level'})
+        self.assertEqual(pf.lookups, {'filters': 'location_level', 'id': str(location_level.id), 'name': location_level.name})
         self.assertEqual(pf.criteria, [str(location.id)])
 
     def test_create_ticket_location_state_filter(self):

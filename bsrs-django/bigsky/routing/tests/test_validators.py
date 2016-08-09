@@ -81,7 +81,7 @@ class AvailableFilterValidatorTests(ViewTestSetupMixin, APITestCase):
         location_filter = create_ticket_location_filter()
         location_level = create_top_level_location().location_level
         # simulate what an existing location_filter.lookup will hold
-        location_filter.lookups = {'location_level': str(location_level.id)}
+        location_filter.lookups = {'id': str(location_level.id)}
         location_filter.save()
         self.assignment.filters.add(location_filter)
         self.data = AssignmentCreateUpdateSerializer(self.assignment).data
@@ -115,11 +115,11 @@ class AvailableFilterValidatorTests(ViewTestSetupMixin, APITestCase):
         self.data['filters'] = [{
             'id': str(self.source.id),
             'criteria': [str(self.location.id)],
-            'lookups': {'location_level': str(self.location.location_level.id)}
+            'lookups': {'id': str(self.location.location_level.id)}
         },{
             'id': str(self.source.id),
             'criteria': [str(self.location.id)],
-            'lookups': {'location_level': str(self.location.location_level.id)}
+            'lookups': {'id': str(self.location.location_level.id)}
         }]
 
         response = self.client.post('/api/admin/assignments/', self.data, format='json')
