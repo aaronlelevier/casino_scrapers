@@ -39,7 +39,7 @@
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.location.label.name" for="name"}}
-            {{one-way-input type="text" placeholder=(t "admin.location.label.name") value=model.name update=(action (mut model.name)) class="form-control t-location-name" id="location_name"}}
+            {{one-way-input type="text" placeholder=(t "admin.location.label.name") value=model.name update=(action (mut model.name)) class="form-control t-location-name"}}
             {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.location.label.name"}}{{/validation-error-field}}
             {{/form-group}}
           </div>
@@ -47,7 +47,7 @@
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.location.label.number" for="number"}}
-            {{input type="text" placeholder=(t "admin.location.label.number") value=model.number class="form-control t-location-number" id="location_number"}}
+            {{one-way-input type="text" placeholder=(t "admin.location.label.number") value=model.number update=(action (mut model.number)) class="form-control t-location-number"}}
             {{#validation-error-field submitted=submitted field="number" className="validation validation-under t-number-validation-error" model=model validation=numberValidation}}{{t "validation.invalid"}} {{t "admin.location.label.number"}}{{/validation-error-field}}
             {{/form-group}}
           </div>
