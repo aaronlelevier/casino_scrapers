@@ -41,7 +41,6 @@ var GeneralPage = PageObject.create({
   clickLocationLevel: clickable('.t-nav-admin-location-level'),
   clickRoles: clickable('.t-nav-admin-role'),
   clickGeneralSettingsLink: clickable('.t-nav-general-settings'),
-  clickAssignmentProfiles: clickable('.t-nav-assignment-profiles'),
   clickTickets: clickable('.t-nav-tickets'),
 });
 
