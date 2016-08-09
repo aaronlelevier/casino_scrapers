@@ -1,7 +1,9 @@
-{{power-select-foreign-key
-  mainModel=model
-  selected=model.priority
-  change_method='change_priority'
-  relatedModels=priorities
-  relatedModelName='ticket-priority'
+{{#power-select-multiple
+  options=options
+  selected=model.criteria
+  onchange=(action "update")
+  class="t-priority-criteria"
+  as |criteria|
 }}
+  {{criteria.name}}
+{{/power-select-multiple}}

@@ -1,6 +1,7 @@
 var BSRS_PROFILE_FILTER_DEFAULTS_OBJECT = (function() {
-  var factory = function(location_level) {
+  var factory = function(location_level, ticket) {
     this.location_level = location_level;
+    this.ticket = ticket;
   };
   factory.prototype.defaults = function() {
     return {
@@ -14,6 +15,7 @@ var BSRS_PROFILE_FILTER_DEFAULTS_OBJECT = (function() {
       fieldOne: 'priority',
       locationField: 'location',
       autoAssignField: 'auto_assign',
+      criteriaOne: [{id: this.ticket.priorityOneId, name: this.ticket.priorityOneKey}],
       lookupsEmpty: {}, // non-dynamic available filters
       lookupsDynamic: {
         id: this.location_level.idDistrict,
@@ -26,11 +28,13 @@ var BSRS_PROFILE_FILTER_DEFAULTS_OBJECT = (function() {
 
 if (typeof window === 'undefined') {
     var location_level = require('./location-level');
-  module.exports = new BSRS_PROFILE_FILTER_DEFAULTS_OBJECT(location_level).defaults();
+    var ticket = require('./ticket');
+  module.exports = new BSRS_PROFILE_FILTER_DEFAULTS_OBJECT(location_level, ticket).defaults();
 }
 else {
-  define('bsrs-ember/vendor/defaults/pfilter', ['exports', 'bsrs-ember/vendor/defaults/location-level'], function(exports, location_level) {
+  define('bsrs-ember/vendor/defaults/pfilter',
+    ['exports', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/defaults/ticket'], function(exports, location_level, ticket) {
     'use strict';
-    return new BSRS_PROFILE_FILTER_DEFAULTS_OBJECT(location_level).defaults();
+    return new BSRS_PROFILE_FILTER_DEFAULTS_OBJECT(location_level, ticket).defaults();
   });
 }

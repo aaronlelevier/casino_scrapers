@@ -23,7 +23,7 @@ moduleForComponent('assignments/filter-section', 'Integration | Component | assi
     run(() => {
       assignment = store.push('assignment', {id: AD.idOne, description: AD.descOne, assignment_pf_fks: [AJFD.idOne]});
       store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
-      store.push('pfilter', {id: PFD.idOne, key: PFD.keyOne, field: PFD.fieldOne, lookups: {}});
+      store.push('pfilter', {id: PFD.idOne, key: PFD.keyOne, field: PFD.fieldOne, criteria: PFD.criteriaOne, lookups: {}});
     });
     assignment_repo = repository.initialize(this.container, this.registry, 'assignment');
     assignment_repo.getFilters = () => new Ember.RSVP.Promise((resolve) => {
