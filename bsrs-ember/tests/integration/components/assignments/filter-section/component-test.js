@@ -23,13 +23,13 @@ moduleForComponent('assignments/filter-section', 'Integration | Component | assi
     run(() => {
       assignment = store.push('assignment', {id: AD.idOne, description: AD.descOne, assignment_pf_fks: [AJFD.idOne]});
       store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
-      store.push('pfilter', {id: PFD.idOne, key: PFD.keyOne, lookups: {}});
+      store.push('pfilter', {id: PFD.idOne, key: PFD.keyOne, field: PFD.fieldOne, lookups: {}});
     });
     assignment_repo = repository.initialize(this.container, this.registry, 'assignment');
     assignment_repo.getFilters = () => new Ember.RSVP.Promise((resolve) => {
       resolve({'results': [{id: PFD.autoAssignId, key: PFD.autoAssignKey, field: 'auto_assign', lookups: {}},
-                           {id: PFD.idOne, key: PFD.keyOne, lookups: {}},
-                           {id: PFD.idTwo, key: PFD.keyTwo, lookups: PFD.lookupsDynamic}
+                           {id: PFD.idOne, key: PFD.keyOne, field: PFD.fieldOne, lookups: {}},
+                           {id: PFD.idTwo, key: PFD.keyTwo, field: PFD.locationField, lookups: PFD.lookupsDynamic}
         ]});
     });
   },
@@ -67,6 +67,9 @@ test('add new pfilter, disables btn, and assignment is not dirty until select pf
   assert.equal(this.$('.ember-power-select-selected-item:eq(1)').text().trim(), PFD.keyTwo);
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assert.equal(this.$('.t-assignment-pf-select').length, 2);
+  // both power-selects render
+  assert.equal(this.$('.t-ticket-priority-select').length, 1);
+  assert.equal(this.$('.t-ticket-location-select').length, 1);
 });
 
 test('delete pfilter and assignment is dirty and can add and remove filter sequentially as well', function(assert) {

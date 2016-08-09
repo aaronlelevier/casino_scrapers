@@ -49,6 +49,7 @@ test('visit detail and update all fields', assert => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(page.descriptionValue, AD.descriptionOne);
     assert.equal(page.assigneeInput, AD.fullname);
+    assert.equal(find('.t-assignment-pf-select .ember-power-select-selected-item').text().trim(), PFD.keyOne);
   });
   // description
   page.descriptionFill(AD.descriptionTwo);
@@ -68,7 +69,8 @@ test('visit detail and update all fields', assert => {
   xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
   page.filterOneClickDropdown();
   page.filterOneClickOptionTwo();
-  xhr(API_DETAIL_URL, 'PUT', AF.put({description: AD.descriptionTwo, assignee: AD.assigneeSelectOne, filters: [{id: PFD.idOne, criteria: [TD.priorityOneId]}, {id: PFD.idTwo, criteria: []}]}), {}, 200, AF.list());
+  let payload = AF.put({description: AD.descriptionTwo, assignee: AD.assigneeSelectOne, filters: [{id: PFD.idOne, criteria: [TD.priorityOneId], lookups: {}}, {id: PFD.idTwo, criteria: [], lookups: PFD.lookupsDynamic}]});
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
