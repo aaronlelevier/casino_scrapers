@@ -23,11 +23,14 @@ moduleForComponent('assignments/filter-section', 'Integration | Component | assi
     run(() => {
       assignment = store.push('assignment', {id: AD.idOne, description: AD.descOne, assignment_pf_fks: [AJFD.idOne]});
       store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
-      store.push('pfilter', {id: PFD.idOne, key: PFD.keyOne});
+      store.push('pfilter', {id: PFD.idOne, key: PFD.keyOne, lookups: {}});
     });
     assignment_repo = repository.initialize(this.container, this.registry, 'assignment');
     assignment_repo.getFilters = () => new Ember.RSVP.Promise((resolve) => {
-      resolve({'results': [{id: PFD.autoAssignId, key: PFD.autoAssignKey, field: 'auto_assign'}, {id: PFD.idOne, key: PFD.keyOne}, {id: PFD.idTwo, key: PFD.keyTwo}]});
+      resolve({'results': [{id: PFD.autoAssignId, key: PFD.autoAssignKey, field: 'auto_assign', lookups: {}},
+                           {id: PFD.idOne, key: PFD.keyOne, lookups: {}},
+                           {id: PFD.idTwo, key: PFD.keyTwo, lookups: PFD.lookupsDynamic}
+        ]});
     });
   },
   afterEach() {
@@ -54,6 +57,7 @@ test('add new pfilter, disables btn, and assignment is not dirty until select pf
   assert.equal(assignment.get('pf').get('length'), 1);
   // assignment is now dirty
   clickTrigger('.t-assignment-pf-select:eq(1)');
+  assert.equal(this.$('.t-ticket-priority-select').length, 1);
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
   // options do not include existing filters on model nor auto_assign
   assert.equal(this.$('li.ember-power-select-option').length, 1);
@@ -106,6 +110,19 @@ test('if first filter selected is auto assign, disable btn', function(assert) {
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
 });
 
+test('if select auto_assign then disable add filter btn', function(assert) {
+  this.model = assignment;
+  this.render(hbs`{{assignments/filter-section model=model}}`);
+  assert.equal(assignment.get('pf').get('length'), 1);
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
+  clickTrigger('.t-assignment-pf-select:eq(0)');
+  nativeMouseUp(`.ember-power-select-option:contains(${PFD.autoAssignKey})`);
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
+  clickTrigger('.t-assignment-pf-select:eq(0)');
+  nativeMouseUp(`.ember-power-select-option:contains(${PFD.keyTwo})`);
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
+});
+
 test('if assignment has dynamic pfilter, power select component will filter out response result', function(assert) {
   run(() => {
     store.clear();
@@ -116,4 +133,6 @@ test('if assignment has dynamic pfilter, power select component will filter out 
   this.model = assignment;
   this.render(hbs`{{assignments/filter-section model=model}}`);
   assert.equal(assignment.get('pf').get('length'), 1);
+  clickTrigger('.t-assignment-pf-select:eq(0)');
+  assert.equal(this.$('li.ember-power-select-option').length, 2);
 });

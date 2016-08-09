@@ -10,7 +10,7 @@
         selected=(model-at model.pf index)
         options=options
         onchange=(action "setAssignmentFilter" (model-at model.pf index))
-        onopen=(action "fetchFilters")
+        onopen=(action "fetchFilters" index)
         searchEnabled=false
         as |pf|
       }}

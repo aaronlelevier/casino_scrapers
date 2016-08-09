@@ -16,21 +16,21 @@ export default Ember.Component.extend({
       this.set('addFilterDisabled', true);
     }
   },
-  _filterResponse(response) {
+  _filterResponse(response, index) {
     const model = this.get('model');
-    const filters = model.get('pf');
-    const filter_ids = filters.mapBy('id');
+    const pfilters = model.get('pf');
+    const filter_ids = pfilters.mapBy('id');
     return response.results.filter(avail_filter => {
-      // if has lookups populated
-      if (avail_filter.lookups && avail_filter.lookups.hasOwnProperty('id')) {
-        // loop through filters and check to see if already selected this dynamic filters
-        return filters.filter(pfilter => { return pfilter.lookups.id !== avail_filter.lookups.id; });
+      if (avail_filter.lookups.hasOwnProperty('id')) {
+        // loop through pfilters and check to see if already selected this dynamic pfilters
+        return pfilters.reduce((prev, pfilter) => {
+          return prev && !(pfilter.lookups.id === avail_filter.lookups.id);
+        }, true);
       } else {
         return Ember.$.inArray(avail_filter.id, filter_ids) === -1;
       }
     }).filter(avail_filter => {
-      const field = avail_filter.field;
-      return field !== 'auto_assign' && model.get('pf').get('length') > 0;
+      return avail_filter.field !== 'auto_assign' ? true : index === 0;
     });
   },
   actions: {
@@ -64,20 +64,20 @@ export default Ember.Component.extend({
     setAssignmentFilter(old_pfilter, pfilter) {
       const model = this.get('model');
       model.add_pf(pfilter);
-      // if (pfilter.key === 'admin.placeholder.auto_assign') {
-      //   // if pfliter.key === auto_assign, make sure btn is disabled
-      //   this.set('addFilterDisabled', true);
-      // }
-      this.toggleProperty('addFilterDisabled');
+      if (pfilter.field === 'auto_assign') {
+        this.set('addFilterDisabled', true);
+      } else {
+        this.toggleProperty('addFilterDisabled');
+      }
     },
     /* @method fetchFilters
     * fetches pfilters that are filtered down if already used as a filter && if auto assigned pfilter already used
     * The only filtering of filters on the django side is `auto_assign`
     */
-    fetchFilters() {
+    fetchFilters(index) {
       this.get('repository').getFilters().then((response) => {
         // filter options before setting - if already have one, don't show auto assign.  Also loop through existing filters and remove as well
-        const filtered_response = this._filterResponse(response);
+        const filtered_response = this._filterResponse(response, index);
         this.set('options', filtered_response);
       });
     }
