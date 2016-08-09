@@ -10,6 +10,7 @@ from category.models import Category, LABEL_TRADE
 from category.serializers import CategoryUpdateSerializer
 from category.tests.factory import create_single_category, create_categories
 from person.tests.factory import PASSWORD, create_person
+from utils import create
 
 
 class CategoryViewTestSetupMixin(object):
@@ -60,6 +61,44 @@ class CategoryListTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertTrue(len(data['results']) > 0)
         self.assertFalse(self.type.parent)
         self.assertTrue(self.type.children)
+
+    def test_power_select_category_name(self):
+        category = create_single_category(name='foobar')
+
+        response = self.client.get('/api/admin/categories/category__icontains={}/'.format('foobar'))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(category.id))
+        self.assertEqual(data['results'][0]['name'], 'foobar')
+        self.assertNotIn('parent', data['results'][0]['name'])
+        self.assertNotIn('status', data['results'][0]['name'])
+        self.assertNotIn('description', data['results'][0])
+        self.assertNotIn('label', data['results'][0])
+
+    def test_power_select_category_cost_code(self):
+        category = create_single_category(name='nothing')
+        category.cost_code = '760521'
+        category.save()
+
+        response = self.client.get('/api/admin/categories/category__icontains={}/'.format('760521'))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(category.id))
+        self.assertEqual(data['results'][0]['cost_code'], str('760521'))
+
+    def test_power_select_category__more_than_10_results(self):
+        search_key = 'foo'
+        for i in range(11):
+            create_single_category(name=search_key + create._generate_chars())
+        self.assertTrue(Category.objects.search_power_select(search_key).count() > 10)
+
+        response = self.client.get('/api/admin/categories/?search={}'.format(search_key))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(data['count'] > 10)
+        self.assertEqual(len(data['results']), settings.PAGE_SIZE)
 
     def test_search(self):
         category = create_single_category(name='foobar')
@@ -367,13 +406,13 @@ class CategorySubRouteSearchTests(CategoryViewTestSetupMixin, APITestCase):
         response = self.client.get('/api/admin/categories/category__icontains={}/'.format('foobar'))
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]['id'], str(category.id))
-        self.assertEqual(data[0]['name'], 'foobar')
-        self.assertNotIn('parent', data[0]['name'])
-        self.assertNotIn('status', data[0]['name'])
-        self.assertNotIn('description', data[0])
-        self.assertNotIn('label', data[0])
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(category.id))
+        self.assertEqual(data['results'][0]['name'], 'foobar')
+        self.assertNotIn('parent', data['results'][0]['name'])
+        self.assertNotIn('status', data['results'][0]['name'])
+        self.assertNotIn('description', data['results'][0])
+        self.assertNotIn('label', data['results'][0])
 
     def test_power_select_category_cost_code(self):
         category = create_single_category(name='nothing')
@@ -383,9 +422,9 @@ class CategorySubRouteSearchTests(CategoryViewTestSetupMixin, APITestCase):
         response = self.client.get('/api/admin/categories/category__icontains={}/'.format('760521'))
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]['id'], str(category.id))
-        self.assertEqual(data[0]['cost_code'], str('760521'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(category.id))
+        self.assertEqual(data['results'][0]['cost_code'], str('760521'))
 
 
 class CategorySubRouteProfileFilterTests(APITestCase):
