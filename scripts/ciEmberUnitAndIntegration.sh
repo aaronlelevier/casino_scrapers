@@ -31,7 +31,7 @@ function emberUnitTest {
     if [ "$(uname)" == "Darwin" ]; then
       ./node_modules/ember-cli/bin/ember test -f unit
     else
-      xvfb-run -e /tmp/xvfb.log firefox ./node_modules/ember-cli/bin/ember test -f unit
+      xvfb-run ./node_modules/ember-cli/bin/ember test -f unit
     fi
     EMBER_TEST=$?
     if [ "$EMBER_TEST" == 1 ]; then
@@ -44,7 +44,7 @@ function emberIntegrationTest {
     if [ "$(uname)" == "Darwin" ]; then
       ./node_modules/ember-cli/bin/ember test -f integration
     else
-      xvfb-run -e /tmp/xvfb.log ./node_modules/ember-cli/bin/ember test -f integration
+      xvfb-run ./node_modules/ember-cli/bin/ember test -f integration
     fi
     EMBER_TEST=$?
     if [ "$EMBER_TEST" == 1 ]; then
