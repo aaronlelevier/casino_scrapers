@@ -186,11 +186,8 @@ class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
             'key': self.name,
             'field': 'location',
             'lookups': {
-                'unique_key': 'location_level-{}'.format(self.name),
-                'location_level': {
-                    'id': str(self.id),
-                    'name': self.name
-                }
+                'id': str(self.id),
+                'name': self.name
             }
         }
 

@@ -57,6 +57,17 @@ class ProfileFilterSerializer(BaseCreateSerializer):
         field = data['field']
         criteria = data['criteria']
 
+        # TODO: May need to be more precise in the future for State/Country
+        # right now, will jump in this 'if' block if it is a dynamic filter
+        # and the only dynamic filter we're handing is for locations filtered
+        # by location_level
+        if data['lookups']:
+            location_level = LocationLevel.objects.get(id=data['lookups']['id'])
+            data['lookups'] = {
+                'id': location_level.id,
+                'name': location_level.name
+            }
+
         if field == 'priority':
             data['criteria'] = TicketPriority.objects.filter(id__in=criteria).values('id', 'name')
 
@@ -68,13 +79,6 @@ class ProfileFilterSerializer(BaseCreateSerializer):
             for c in Category.objects.filter(id__in=criteria):
                 category_criteria.append({'id': str(c.id), 'name': c.parents_and_self_as_string()})
             data['criteria'] = category_criteria
-
-        if 'location_level' in data['lookups']:
-            location_level = LocationLevel.objects.get(id=data['lookups']['location_level'])
-            data['lookups']['location_level'] = {
-                'id': location_level.id,
-                'name': location_level.name
-            }
 
         return data
 

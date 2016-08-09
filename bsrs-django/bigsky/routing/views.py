@@ -75,8 +75,6 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
         for i, d in enumerate(data_copy['results']):
             if d['lookups'] == {'filters': 'location_level'}:
                 location_filter = data['results'].pop(i)
-            else:
-                data['results'][i]['lookups'] = {'unique_key': d['field']}
 
         if location_filter:
             filters = []

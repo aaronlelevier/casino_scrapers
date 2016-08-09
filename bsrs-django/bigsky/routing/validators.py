@@ -53,8 +53,8 @@ class AvailableFilterValidator(object):
             field = af.field
 
             addit_model_id = ''
-            if 'location_level' in f.get('lookups', []):
-                addit_model_id = "-location_level-"+f['lookups']['location_level']
+            if f.get('lookups', {}):
+                addit_model_id = "-location_level-"+f['lookups']['id']
 
             key = "{}{}".format(field, addit_model_id)
 

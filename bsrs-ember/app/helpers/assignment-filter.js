@@ -3,9 +3,11 @@ import hbs from 'htmlbars-inline-precompile';
 
 export function assignmentFilter(params/*, hash*/) {
   if (params[0]) {
-    switch (params[0].get('key')) {
-      case 'admin.placeholder.ticket_priority':
+    switch (params[0].get('field')) {
+      case 'priority':
         return 'tickets/ticket-priority-select';
+      case 'location':
+        return 'tickets/ticket-location-select';
     }
   }
 }

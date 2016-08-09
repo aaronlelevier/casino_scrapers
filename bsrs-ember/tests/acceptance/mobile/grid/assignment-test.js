@@ -147,7 +147,7 @@ test('filtering assignee on power select and can remove', async assert => {
   await generalMobilePage.submitFilterSort();
 });
 
-test('emoving find or id_in filter will reset grid', async assert => {
+test('removing find or id_in filter will reset grid', async assert => {
   xhr(`${ASSIGNMENT_URL}?page=1&assignee__id__in=${PersonD.idBoy}`, 'GET', null, {}, 200, {'results': []});
   await assignmentPage.visit();
   await generalMobilePage.clickFilterOpen();

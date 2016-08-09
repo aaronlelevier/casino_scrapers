@@ -17,9 +17,10 @@ var BSRS_ASSIGNMENT_FACTORY = (function() {
       // TODO: these are pfilters which should just be the actual filter models. ie. Ticket-Prority
       filters: [{
         id: this.pfilter.idOne,
-        key: this.pfilter.nameOne,
+        key: this.pfilter.keyOne,
+        field: this.pfilter.fieldOne,
         criteria: [{id: this.ticket.priorityOneId, name: this.ticket.priorityOneKey}],
-        lookup: {},
+        lookups: {},
       }]
     };
   };
@@ -36,6 +37,7 @@ var BSRS_ASSIGNMENT_FACTORY = (function() {
     if (!assignment.filters) {
       response.filters.forEach((filter) => {
         delete filter.key;
+        delete filter.field;
         delete filter.lookup;
         filter.criteria = filter.criteria.map((criteria) => {
           return criteria.id;
@@ -50,7 +52,8 @@ var BSRS_ASSIGNMENT_FACTORY = (function() {
   };
   factory.prototype.list_pfilters = function() {
     var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
-    var results = [{id: this.pfilter.idOne, key: this.pfilter.keyOne}, {id: this.pfilter.idTwo, key: this.pfilter.keyTwo}];
+    var results = [{id: this.pfilter.idOne, key: this.pfilter.keyOne, lookups: {}},
+                   {id: this.pfilter.idTwo, key: this.pfilter.keyTwo, lookups: this.pfilter.lookupsDynamic}];
     return {count: 2, next: null, previous: null, results: results};
   };
   factory.prototype.list_two = function() {

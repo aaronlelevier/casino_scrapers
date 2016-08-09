@@ -39,13 +39,13 @@ def create_available_filter_location():
 def create_available_filter_state():
     obj, _ = AvailableFilter.objects.get_or_create(key='admin.placeholder.state_filter',
                                                    field='location',
-                                                   lookups={'filters': 'state', 'unique_key': 'state'})
+                                                   lookups={'filters': 'state', 'id': 'state'})
     return obj
 
 def create_available_filter_country():
     obj, _ = AvailableFilter.objects.get_or_create(key='admin.placeholder.country_filter',
                                                    field='location',
-                                                   lookups={'filters': 'country', 'unique_key': 'country'})
+                                                   lookups={'filters': 'country', 'id': 'country'})
     return obj
 
 
@@ -86,9 +86,12 @@ def create_ticket_categories_mid_level_filter():
 
 def create_ticket_location_filter():
     location = create_top_level_location()
+    location_level = location.location_level
     source = create_available_filter_location()
     return ProfileFilter.objects.create(source=source, criteria=[str(location.id)],
-                                        lookups={'filters': 'location_level'})
+                                        lookups={'filters': 'location_level',
+                                                 'id': str(location_level.id),
+                                                 'name': location_level.name})
 
 
 def create_ticket_location_state_filter():
