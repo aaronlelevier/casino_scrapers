@@ -38,7 +38,8 @@ moduleForComponent('location-level', 'integration: location-level test', {
 test('validation should enforce basic location name property', function(assert) {
   this.set('model', location_level);
   this.set('location_level_options', location_levels);
-  this.render(hbs`{{location-level-general model=model location_level_options=location_level_options}}`);
+  this.setName = function(name) { location_level.set('name', name) }
+  this.render(hbs`{{location-level-general model=model location_level_options=location_level_options setName=setName}}`);
   var $component = this.$('.t-location-level-name');
   let $validation = this.$('.t-name-validation-error');
   assert.ok($validation.is(':hidden'));

@@ -40,5 +40,5 @@ module.exports = function(app) {
     res.status(204).end();
   });
 
-  app.use('/api/admin/location_levels', adminLocationLevelsRouter);
+  app.use('/api/admin/location-levels', adminLocationLevelsRouter);
 };
