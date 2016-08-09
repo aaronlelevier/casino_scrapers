@@ -69,7 +69,6 @@
     "ember-one-way-controls": "1.0.0",
     "ember-power-select": "1.0.0-beta.8",
     "ember-promise": "1.2.0",
-    "ember-redux": "1.5.1",
     "ember-resolver": "^2.0.3",
     "ember-test-helpers": "^0.5.19",
     "ember-tether": "0.3.1",
