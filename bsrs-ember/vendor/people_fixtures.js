@@ -41,7 +41,9 @@ var BSRS_PEOPLE_FACTORY = (function() {
     }
   };
   factory.prototype.get_for_power_select = function(i, first_name, last_name) {
-    return [this.get_no_related(i, first_name, last_name)];
+    var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
+    response = [this.get_no_related(i, first_name, last_name)];
+    return {count:page_size*2-2, next:null, previous:null, results:response};
   };
   factory.prototype.generate_list = function(i) {
     return {
@@ -93,7 +95,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
       person.title = i + ' MVP';
       response.push(person);
     }
-    return {'count':page_size*2-2,'next':null,'previous':null,'results': response};
+    return {count:page_size*2-2,next:null,previous:null,results: response};
   };
   factory.prototype.list_two = function() {
     var response = [];
@@ -191,7 +193,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
       person.title = i + ' Mob Boss';
       response.push(person);
     }
-    return response;
+    return {count:10,next:null,previous:null,results: response};
   };
 
   return factory;

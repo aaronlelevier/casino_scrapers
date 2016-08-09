@@ -2,6 +2,8 @@ import json
 import random
 import uuid
 
+from django.conf import settings
+
 from rest_framework.test import APITestCase
 from model_mommy import mommy
 
@@ -350,6 +352,18 @@ class LocationListTests(APITestCase):
         self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['id'], str(location.id))
         self.assertEqual(data['results'][0]['addresses'][0]['address'], '123 Drumpf Mansion St. ,')
+
+    def test_search_power_select__more_than_10_results(self):
+        for i in range(11):
+            mommy.make(Location, name='a' + create._generate_chars())
+        search_key = 'a'
+        self.assertTrue(Location.objects.search_power_select(search_key).count() > 10)
+
+        response = self.client.get('/api/admin/locations/location__icontains={}/'.format(search_key))
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertTrue(data['count'] > 10)
+        self.assertEqual(len(data['results']), settings.PAGE_SIZE)
 
 
 class LocationDetailTests(APITestCase):

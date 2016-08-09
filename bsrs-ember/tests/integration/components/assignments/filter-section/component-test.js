@@ -42,7 +42,7 @@ test('add new pfilter, disables btn, and assignment is not dirty until select pf
   this.model = assignment;
   this.render(hbs`{{assignments/filter-section model=model}}`);
   // existing pfilter
-  assert.equal(this.$('.t-ticket-priority-select').length, 1);
+  assert.equal(this.$('.t-priority-criteria').length, 1);
   assert.equal(this.$('.ember-power-select-selected-item').text().trim(), PFD.keyOne);
   assert.equal(this.$('.t-assignment-pf-select').length, 1);
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
@@ -57,7 +57,7 @@ test('add new pfilter, disables btn, and assignment is not dirty until select pf
   assert.equal(assignment.get('pf').get('length'), 1);
   // assignment is now dirty
   clickTrigger('.t-assignment-pf-select:eq(1)');
-  assert.equal(this.$('.t-ticket-priority-select').length, 1);
+  assert.equal(this.$('.t-priority-criteria').length, 1);
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
   // options do not include existing filters on model nor auto_assign
   assert.equal(this.$('li.ember-power-select-option').length, 1);
@@ -68,7 +68,7 @@ test('add new pfilter, disables btn, and assignment is not dirty until select pf
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assert.equal(this.$('.t-assignment-pf-select').length, 2);
   // both power-selects render
-  assert.equal(this.$('.t-ticket-priority-select').length, 1);
+  assert.equal(this.$('.t-priority-criteria').length, 1);
   assert.equal(this.$('.t-ticket-location-select').length, 1);
 });
 

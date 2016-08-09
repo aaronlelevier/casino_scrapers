@@ -176,7 +176,7 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
         queryset = Location.objects.filter(
             Q(name__icontains=search_key)
         )
-        self.paginate_queryset(queryset)
+        queryset = self.paginate_queryset(queryset)
         serializer = ls.LocationSearchSerializer(queryset, many=True)
         return self.get_paginated_response(serializer.data)
 
@@ -186,7 +186,7 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
         queryset = Location.objects.filter(
             Q(name__icontains=search_key)
         )
-        self.paginate_queryset(queryset)
+        queryset = self.paginate_queryset(queryset)
         serializer = ls.LocationSearchSerializer(queryset, many=True)
         return self.get_paginated_response(serializer.data)
 
@@ -194,6 +194,6 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
     def search_power_select(self, request, search_key=None):
         llevel_id = request.query_params['location_level'] if 'location_level' in request.query_params else None
         queryset = Location.objects.search_power_select(search_key, llevel_id)
-        self.paginate_queryset(queryset)
+        queryset = self.paginate_queryset(queryset)
         serializer = ls.LocationSearchSerializer(queryset, many=True)
         return self.get_paginated_response(serializer.data)
