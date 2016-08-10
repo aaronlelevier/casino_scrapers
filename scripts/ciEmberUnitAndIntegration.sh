@@ -31,7 +31,6 @@ function emberUnitTest {
     if [ "$(uname)" == "Darwin" ]; then
       ./node_modules/ember-cli/bin/ember test -f unit
     else
-      echo "xvfb"
       xvfb-run -a --server-num=1 -e /tmp/unitlog.log ./node_modules/ember-cli/bin/ember test -f unit
     fi
     EMBER_TEST=$?

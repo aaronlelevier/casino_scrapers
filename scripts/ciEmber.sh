@@ -21,7 +21,6 @@ function emberTest {
     if [ "$(uname)" == "Darwin" ]; then
       ./node_modules/ember-cli/bin/ember test -f acceptance
     else
-      echo "xvfb"
       xvfb-run -e /tmp/emberlog.log ./node_modules/ember-cli/bin/ember test -f acceptance
     fi
     EMBER_TEST=$?
