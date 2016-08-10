@@ -64,6 +64,7 @@
     "ember-export-application-global": "^1.0.5",
     "ember-i18n": "4.2.2",
     "ember-load-initializers": "^0.5.1",
+    "ember-lodash": "0.0.10",
     "ember-modal-dialog": "0.8.8",
     "ember-moment": "7.0.0-beta.3",
     "ember-one-way-controls": "1.0.0",
