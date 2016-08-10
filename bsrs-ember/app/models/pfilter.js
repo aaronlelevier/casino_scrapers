@@ -7,7 +7,7 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/pfilter';
 const Validations = buildValidations({
   criteria: validator('length', {
     min: 1,
-    message: 'errors.link.text'
+    message: 'errors.assignment.pf.criteria.length'
   }),
 });
 

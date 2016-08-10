@@ -1,3 +1,8 @@
+{{power-select-validation
+  model=model
+  valuePath="pf"
+  didValidate=didValidate
+}}
 {{#each filterIds as |_ index|}}
   <div class="input-group-vertical">
     <div class="input-group">
@@ -15,12 +20,17 @@
         searchEnabled=false
         as |pf|
       }}
-      {{pf.key}}
+        {{pf.key}}
       {{/power-select}}
     </div>
   </div>
-  {{component (assignment-filter (model-at model.pf index)) model=(model-at model.pf index)}}
+  {{component (assignment-filter (model-at model.pf index))
+    model=(model-at model.pf index)
+    didValidate=didValidate
+    id=(concat "criteria" index)
+    index=index
+  }}
 {{/each}}
 <button class="t-add-pf-btn btn-add btn btn-default btn-sm" type="button" disabled={{addFilterDisabled}} {{action "append"}}>
-  <span class="btn-label">{{fa-icon "plus"}} {{t "admin.assignment.pf.add"}}</span>
+<span class="btn-label">{{fa-icon "plus"}} {{t "admin.assignment.pf.add"}}</span>
 </button>

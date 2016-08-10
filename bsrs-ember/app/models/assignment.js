@@ -27,7 +27,7 @@ const Validations = buildValidations({
   pf: [
     validator('length', {
       min: 1,
-      message: 'errors.link.text'
+      message: 'errors.assignment.pf.length'
     }),
     validator(function(value, options, model, attribute) {
       return model.get(attribute).reduce((prev, model) => {

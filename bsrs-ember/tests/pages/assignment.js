@@ -31,6 +31,7 @@ export default create({
   filterOneClickDropdown: clickable('.t-assignment-pf-select:eq(0) .ember-basic-dropdown-trigger'),
   // filterOneClickOptionOne: clickable(`.ember-power-select-option:contains(${PFD.keyOne})`, { scope: DROPDOWN }),
   filterOneClickOptionTwo: clickable(`.ember-power-select-option:contains(${PFD.keyTwo})`, { scope: DROPDOWN }),
+  filterOnePriorityOneRemove: clickable('.ember-power-select-multiple-remove-btn', { scope: `${PRIORITIES}:eq(0)` }),
 
   prioritySelectedOne: text(`${PRIORITIES}:eq(0)`),
   prioritySelectedTwo: text(`${PRIORITIES}:eq(1)`),

@@ -233,7 +233,6 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
 });
 
 test('remove filter and save - should stay on page because cant have an assignment with no filters', assert => {
-  clearxhr(listXhr);
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -247,6 +246,42 @@ test('remove filter and save - should stay on page because cant have an assignme
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.equal($('.validated-input-error-dialog').text().trim(), 'errors.assignment.pf.length');
+  });
+  xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
+  page.addFilter();
+  // if you add back a previously deleted pfilter, you get the criteria
+  selectChoose('.t-assignment-pf-select:eq(0)', PFD.keyOne);
+  andThen(() => {
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], TD.priorityOneKey);
+  });
+  page.filterOnePriorityOneRemove();
+  andThen(() => {
+    let assignment = store.find('assignment', AD.idOne);
+    assert.equal(assignment.get('pf').objectAt(0).get('criteria.length'), 0);
+  });
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    // TODO: need to refire validation for criteria
+    // assert.equal($('.validated-input-error-dialog').length, 1);
+    // assert.equal($('.validated-input-error-dialog').text().trim(), 'errors.assignment.pf.criteria.length');
+  });
+  selectChoose('.t-priority-criteria', TD.priorityOneKey);
+  let payload = AF.put({
+    description: AD.descriptionOne,
+    assignee: AD.assigneeOne,
+    filters: [{
+      id: PFD.idOne,
+      criteria: [TD.priorityOneId],
+      lookups: {}
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
   });
 });
 
@@ -255,4 +290,6 @@ test('remove filter and save - should stay on page because cant have an assignme
   remove criteria, save
   add filter, add criteria, remove filter, cancel
   add filter, don't fill it out, hit cancel
+  auto_assign - doesn't have criteria, so should not get validated for 'criteria.length'
+  add a previous filter back and it comes w/ it's selected criteria
 */
