@@ -231,3 +231,28 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
     assert.equal(find('.t-error-message').text(), 'WAT');
   });
 });
+
+test('remove filter and save - should stay on page because cant have an assignment with no filters', assert => {
+  clearxhr(listXhr);
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
+  page.deleteFilter();
+  andThen(() => {
+    assert.equal(find('.t-del-pf-btn').length, 0);
+    let assignment = store.find('assignment', AD.idOne);
+    assert.equal(assignment.get('pf').get('length'), 0);
+  });
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
+});
+
+/*  TODO:
+  remove filter, save
+  remove criteria, save
+  add filter, add criteria, remove filter, cancel
+  add filter, don't fill it out, hit cancel
+*/

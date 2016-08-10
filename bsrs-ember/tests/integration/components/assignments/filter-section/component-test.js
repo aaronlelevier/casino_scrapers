@@ -48,7 +48,9 @@ test('add new pfilter, disables btn, and assignment is not dirty until select pf
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(assignment.get('pf').get('length'), 1);
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
+  assert.equal(this.$('.ember-power-select-trigger-multiple-input:eq(0)').get(0)['placeholder'], 'admin.placeholder.available_filter.priority')
   page.addFilter();
+  assert.equal(this.$('.ember-power-select-placeholder').text().trim(), 'admin.placeholder.available_filter');
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
   // adds pfilter but not dirty
   assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), PFD.keyOne);
@@ -70,6 +72,7 @@ test('add new pfilter, disables btn, and assignment is not dirty until select pf
   // both power-selects render
   assert.equal(this.$('.t-priority-criteria').length, 1);
   assert.equal(this.$('.t-ticket-location-select').length, 1);
+  assert.equal(this.$('.ember-power-select-trigger-multiple-input:eq(1)').get(0)['placeholder'], 'admin.placeholder.available_filter.location')
 });
 
 test('delete pfilter and assignment is dirty and can add and remove filter sequentially as well', function(assert) {
@@ -126,7 +129,7 @@ test('if select auto_assign then disable add filter btn', function(assert) {
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
 });
 
-test('if assignment has dynamic pfilter, power select component will filter out response result', function(assert) {
+test('if assignment has dynamic pfilter, power-select component will filter out response result', function(assert) {
   run(() => {
     store.clear();
     assignment = store.push('assignment', {id: AD.idOne, description: AD.descOne, assignment_pf_fks: [AJFD.idOne]});

@@ -24,11 +24,17 @@ const Validations = buildValidations({
       message: 'errors.assignment.assignee'
     }),
   ],
-  pf: validator(function(value, options, model, attribute) {
-    return model.get(attribute).reduce((prev, model) => {
-      return prev && model.get('validations').get('isValid');
-    }, true);
-  })
+  pf: [
+    validator('length', {
+      min: 1,
+      message: 'errors.link.text'
+    }),
+    validator(function(value, options, model, attribute) {
+      return model.get(attribute).reduce((prev, model) => {
+        return prev && model.get('validations').get('isValid');
+      }, true);
+    })
+  ]
 });
 
 export default Model.extend(OptConf, Validations, {

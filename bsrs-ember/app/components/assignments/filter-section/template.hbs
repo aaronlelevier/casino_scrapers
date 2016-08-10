@@ -9,6 +9,7 @@
         tagName="div"
         selected=(model-at model.pf index)
         options=options
+        placeholder="admin.placeholder.available_filter"
         onchange=(action "setAssignmentFilter" (model-at model.pf index))
         onopen=(action "fetchFilters" index)
         searchEnabled=false

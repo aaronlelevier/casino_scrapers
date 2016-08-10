@@ -10,9 +10,11 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import AD from 'bsrs-ember/vendor/defaults/assignment';
 import AF from 'bsrs-ember/vendor/assignment_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
+import PFD from 'bsrs-ember/vendor/defaults/pfilter';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
 import page from 'bsrs-ember/tests/pages/assignment';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS, { ASSIGNMENT_URL, ASSIGNMENT_LIST_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { ASSIGNMENT_URL, ASSIGNMENT_LIST_URL, ASSIGNMENT_AVAILABLE_FILTERS_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
 const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_ASSIGNMENT_URL;
@@ -44,7 +46,23 @@ test('visit new URL and create a new record', assert => {
   xhr(`${PEOPLE_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, PersonF.search_power_select());
   selectSearch('.t-assignment-assignee-select', keyword);
   selectChoose('.t-assignment-assignee-select', keyword);
-  xhr(ASSIGNMENT_URL, 'POST', AF.put({id: UUID.value, assignee: AD.assigneeSelectOne, filters: []}), {}, 200, AF.list());
+  // filter w/ a criteria
+  page.addFilter();
+  andThen(() => {
+    assert.equal(find('.t-assignment-pf-select').length, 1);
+  });
+  xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
+  selectChoose('.t-assignment-pf-select:eq(0)', PFD.keyOne);
+  selectChoose('.t-priority-criteria', TD.priorityOneKey);
+  xhr(ASSIGNMENT_URL, 'POST', AF.put({
+    id: UUID.value,
+    assignee: AD.assigneeSelectOne,
+    filters: [{
+      id: PFD.idOne,
+      criteria: [TD.priorityOneId],
+      lookups: {}
+    }]
+  }), {}, 200, AF.list());
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
