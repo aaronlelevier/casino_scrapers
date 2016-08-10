@@ -10,6 +10,8 @@ import AF from 'bsrs-ember/vendor/assignment_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
+import LF from 'bsrs-ember/vendor/location_fixtures';
+import LD from 'bsrs-ember/vendor/defaults/location';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import page from 'bsrs-ember/tests/pages/assignment';
 import generalPage from 'bsrs-ember/tests/pages/general';
@@ -74,8 +76,15 @@ test('visit detail and update all fields', assert => {
     assert.equal(page.assigneeInput, PD.fullnameBoy);
   });
   xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
-  page.filterOneClickDropdown();
-  page.filterOneClickOptionTwo();
+  page.addFilter();
+  selectChoose('.t-assignment-pf-select:eq(1)', PFD.keyTwo);
+  keyword = 'a';
+  xhr(`/api/admin/locations/location__icontains=${keyword}/?location_level=${PFD.lookupsDynamic.id}`, 'GET', null, {}, 200, LF.search_power_select());
+  selectSearch('.t-ticket-location-select', keyword);
+  selectChoose('.t-ticket-location-select', LD.storeNameFour);
+  andThen(() => {
+    assert.equal(page.locationSelectedOne.split(/\s+/)[1], LD.storeNameFour);
+  });
   let payload = AF.put({
     description: AD.descriptionTwo,
     assignee: AD.assigneeSelectOne,
@@ -85,7 +94,7 @@ test('visit detail and update all fields', assert => {
       lookups: {}
     }, {
       id: PFD.idTwo,
-      criteria: [],
+      criteria: [LD.idFour],
       lookups: PFD.lookupsDynamic
     }]
   });

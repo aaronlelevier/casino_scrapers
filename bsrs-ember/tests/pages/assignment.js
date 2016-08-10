@@ -12,6 +12,7 @@ const ASSIGNEE = '.t-assignment-assignee-select';
 const DROPDOWN = options;
 const PRIORITY = '.t-priority-criteria .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
 const PRIORITIES = '.t-priority-criteria .ember-power-select-multiple-option';
+const LOCATIONS = '.t-ticket-location-select .ember-power-select-multiple-option';
 
 export default create({
   visit: visitable(ASSIGNMENT_LIST_URL),
@@ -36,4 +37,5 @@ export default create({
   priorityClickDropdown: clickable(PRIORITY),
   priorityClickTwo: clickable(`.ember-power-select-option:contains(${TD.priorityTwoKey})`, { scope: DROPDOWN }),
 
+  locationSelectedOne: text(`${LOCATIONS}:eq(0)`),
 });

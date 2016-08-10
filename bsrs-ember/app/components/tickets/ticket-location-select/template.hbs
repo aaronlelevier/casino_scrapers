@@ -1,13 +1,13 @@
 {{db-fetch-multi-select
   model=model
-  multiAttr="parents" 
-  multiAttrIds="parents_ids"
-  selectedAttr=model.parents
+  multiAttr="criteria"
+  multiAttrIds="criteria_ids"
+  selectedAttr=model.criteria
   className="t-ticket-location-select"
   displayName="name"
-  add_func="add_parent"
-  remove_func="remove_parent"
+  add_func="add_criteria"
+  remove_func="remove_criteria"
   repository=repository
-  searchMethod="findLocationParents"
+  searchMethod="findPersonsLocations"
   extra_params=extra_params
 }}

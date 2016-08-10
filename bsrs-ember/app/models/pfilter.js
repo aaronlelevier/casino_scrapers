@@ -1,9 +1,17 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
+import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/pfilter';
 
-export default Model.extend(OptConf, {
+const Validations = buildValidations({
+  criteria: validator('length', {
+    min: 1,
+    message: 'errors.link.text'
+  }),
+});
+
+export default Model.extend(Validations, OptConf, {
   init() {
     this._super(...arguments);
     many_to_many.bind(this)('criteria', 'pfilter');
