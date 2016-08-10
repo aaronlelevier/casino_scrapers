@@ -1,5 +1,6 @@
 import Ember from "ember";
 import QUnit from "qunit";
+import _ from 'lodash/lodash';
 
 var fauxjax = Ember.$.fauxjax;
 
