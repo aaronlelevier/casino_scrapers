@@ -83,7 +83,5 @@
     "markdown-code-highlighting": "0.0.6",
     "morgan": "^1.6.1",
     "object-assign": "^4.0.1",
-    "redux": "3.5.2",
-    "redux-thunk": "2.1.0"
   }
 }
