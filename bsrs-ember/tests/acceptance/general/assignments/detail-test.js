@@ -264,9 +264,8 @@ test('remove filter and save - should stay on page because cant have an assignme
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    // TODO: need to refire validation for criteria
-    // assert.equal($('.validated-input-error-dialog').length, 1);
-    // assert.equal($('.validated-input-error-dialog').text().trim(), 'errors.assignment.pf.criteria.length');
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.equal($('.validated-input-error-dialog').text().trim(), 'errors.assignment.pf.criteria.length');
   });
   selectChoose('.t-priority-criteria', TD.priorityOneKey);
   let payload = AF.put({

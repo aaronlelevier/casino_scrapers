@@ -29,11 +29,7 @@ const Validations = buildValidations({
       min: 1,
       message: 'errors.assignment.pf.length'
     }),
-    validator(function(value, options, model, attribute) {
-      return model.get(attribute).reduce((prev, model) => {
-        return prev && model.get('validations').get('isValid');
-      }, true);
-    })
+    validator('has-many')
   ]
 });
 

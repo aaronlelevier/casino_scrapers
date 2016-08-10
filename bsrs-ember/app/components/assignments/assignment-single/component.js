@@ -8,12 +8,7 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
   repository: injectRepo('assignment'),
   actions: {
     save() {
-      let pfValid = true;
-      this.get('model').get('pf').forEach((pf) => {
-        pfValid = pfValid && pf.get('validations.isValid');
-      });
-
-      if (this.get('model.validations.isValid') && pfValid) {
+      if (this.get('model.validations.isValid')) {
         this._super(...arguments);
       }
       this.set('didValidate', true);
