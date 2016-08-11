@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from category.models import Category
 from location.models import Location, LocationLevel
-from person.serializers_leaf import PersonIdUsernameSerializer
+from person.serializers_leaf import PersonSimpleSerializer
 from routing.models import Assignment, ProfileFilter, AvailableFilter
 from routing.validators import (ProfileFilterFieldValidator, UniqueByTenantValidator,
     AvailableFilterValidator)
@@ -145,7 +145,7 @@ class AssignmentCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
 class AssignmentListSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
-    assignee = PersonIdUsernameSerializer()
+    assignee = PersonSimpleSerializer()
 
     class Meta:
         model = Assignment
@@ -158,7 +158,7 @@ class AssignmentListSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
 class AssignmentDetailSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
-    assignee = PersonIdUsernameSerializer()
+    assignee = PersonSimpleSerializer()
     filters = ProfileFilterSerializer(required=False, many=True)
 
     class Meta:
