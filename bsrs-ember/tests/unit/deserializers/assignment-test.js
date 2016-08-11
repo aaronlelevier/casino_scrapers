@@ -10,7 +10,7 @@ import AJFD from 'bsrs-ember/vendor/defaults/assignment-join-pfilter';
 import PJCD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 
-var store, assignment, deserializer;
+var store, assignment, deserializer, pfilter;
 
 module('unit: assignment deserializer test', {
   beforeEach() {

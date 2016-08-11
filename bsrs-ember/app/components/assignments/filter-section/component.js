@@ -24,7 +24,7 @@ export default Ember.Component.extend({
       if (avail_filter.lookups.hasOwnProperty('id')) {
         // loop through pfilters and check to see if already selected this dynamic pfilters
         return pfilters.reduce((prev, pfilter) => {
-          return prev && !(pfilter.lookups.id === avail_filter.lookups.id);
+          return prev && pfilter.lookups.id !== avail_filter.lookups.id;
         }, true);
       } else {
         return Ember.$.inArray(avail_filter.id, filter_ids) === -1;

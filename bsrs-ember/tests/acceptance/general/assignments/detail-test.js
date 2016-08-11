@@ -292,7 +292,7 @@ test('add filter, add criteria, remove filter, cancel', assert => {
   xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
   page.addFilter();
   selectChoose('.t-assignment-pf-select:eq(1)', PFD.keyTwo);
-  keyword = 'a';
+  const keyword = 'a';
   xhr(`/api/admin/locations/location__icontains=${keyword}/?location_level=${PFD.lookupsDynamic.id}`, 'GET', null, {}, 200, LF.search_power_select());
   selectSearch('.t-ticket-location-select', keyword);
   selectChoose('.t-ticket-location-select', LD.storeNameFour);

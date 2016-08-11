@@ -1,10 +1,11 @@
+import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import AD from 'bsrs-ember/vendor/defaults/assignment';
 
-var store, trans;
+var store, trans, assignment;
 
 moduleForComponent('assignments/detail-section', 'Integration | Component | assignments/detail section', {
   integration: true,

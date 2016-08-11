@@ -12,7 +12,6 @@ export default create({
   visitDetail: visitable(DETAIL_URL),
   clickFilterDescription: clickable('.t-filter-description'),
   clickFilterAssignee: clickable('.t-filter-assignee-fullname'),
-  assigneeInput: text(ASSIGNEE),
   // clickFilterPriority: clickable('.t-filter-priority-translated-name'),
   // clickFilterStatus: clickable('.t-filter-status-translated-name'),
   // priorityOneCheck: clickable('.t-checkbox-options-assignment-priority input:eq(0)'),

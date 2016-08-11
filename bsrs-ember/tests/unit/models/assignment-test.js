@@ -9,10 +9,10 @@ import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import AJFD from 'bsrs-ember/vendor/defaults/assignment-join-pfilter';
 
-var store, assignment, inactive_assignee;
+var store, assignment, inactive_assignee, pf;
 
 moduleFor('model:assignment', 'Unit | Model | assignment', {
-  needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username'],
+  needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username', 'validator:has-many'],
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:assignment', 'model:assignment-join-pfilter', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     run(() => {
@@ -256,6 +256,7 @@ test('savePf - and add back old pf with same id will keep criteria and wont be d
 
 test('rollback - assignee and pf', assert => {
   // assignee
+  let assignee;
   run(() => {
     assignment = store.push('assignment', {id: AD.idOne, assignee_fk: PersonD.idOne});
     assignee = store.push('person', {id: PersonD.idOne, assignments: [AD.idOne]});

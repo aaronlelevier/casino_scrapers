@@ -4,7 +4,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import { clickTrigger, nativeMouseUp } from '../../../../helpers/ember-power-select'
+import { clickTrigger, nativeMouseUp } from '../../../../helpers/ember-power-select';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import AD from 'bsrs-ember/vendor/defaults/assignment';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
@@ -25,7 +25,7 @@ moduleForComponent('assignments/filter-section', 'Integration | Component | assi
       store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
       store.push('pfilter', {id: PFD.idOne, key: PFD.keyOne, field: PFD.fieldOne, criteria: PFD.criteriaOne, lookups: {}});
     });
-    assignment_repo = repository.initialize(this.container, this.registry, 'assignment');
+    const assignment_repo = repository.initialize(this.container, this.registry, 'assignment');
     assignment_repo.getFilters = () => new Ember.RSVP.Promise((resolve) => {
       resolve({'results': [{id: PFD.autoAssignId, key: PFD.autoAssignKey, field: 'auto_assign', lookups: {}},
                            {id: PFD.idOne, key: PFD.keyOne, field: PFD.fieldOne, lookups: {}},
@@ -48,7 +48,7 @@ test('add new pfilter, disables btn, and assignment is not dirty until select pf
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(assignment.get('pf').get('length'), 1);
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
-  assert.equal(this.$('.ember-power-select-trigger-multiple-input:eq(0)').get(0)['placeholder'], 'admin.placeholder.available_filter.priority')
+  assert.equal(this.$('.ember-power-select-trigger-multiple-input:eq(0)').get(0)['placeholder'], 'admin.placeholder.available_filter.priority');
   page.addFilter();
   assert.equal(this.$('.ember-power-select-placeholder').text().trim(), 'admin.placeholder.available_filter');
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
@@ -72,7 +72,7 @@ test('add new pfilter, disables btn, and assignment is not dirty until select pf
   // both power-selects render
   assert.equal(this.$('.t-priority-criteria').length, 1);
   assert.equal(this.$('.t-ticket-location-select').length, 1);
-  assert.equal(this.$('.ember-power-select-trigger-multiple-input:eq(1)').get(0)['placeholder'], 'admin.placeholder.available_filter.location')
+  assert.equal(this.$('.ember-power-select-trigger-multiple-input:eq(1)').get(0)['placeholder'], 'admin.placeholder.available_filter.location');
 });
 
 test('delete pfilter and assignment is dirty and can add and remove filter sequentially as well', function(assert) {
@@ -101,7 +101,7 @@ test('delete pfilter and assignment is dirty and can add and remove filter seque
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
   page.deleteFilter();
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
-})
+});
 
 test('if first filter selected is auto assign, disable btn', function(assert) {
   run(() => {
