@@ -50,7 +50,7 @@ test('should render a selectbox when with options selected (initial state)', fun
   this.selected = ticket.get('cc');
   this.person_repo = person_repo;
   this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
-  let $component = this.$(`${COMPONENT}`);
+  let $component = this.$(COMPONENT);
   clickTrigger();
   assert.equal($(`${DROPDOWN}`).length, 1);
   assert.equal($('.ember-power-select-options > li').length, 1);
@@ -58,27 +58,27 @@ test('should render a selectbox when with options selected (initial state)', fun
   assert.equal($(`${PowerSelect} > span.ember-power-select-multiple-option`).length, 0);
 });
 
-// test('should render a selectbox with bound options after type ahead for search', function(assert) {
-  // let ticket_cc_options = store.find('person');
-  // this.model = ticket;
-  // this.selected = ticket.get('cc');
-  // this.person_repo = person_repo;
-  // this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
-  // let $component = this.$(`${COMPONENT}`);
-  // clickTrigger();
-  // run(() => { typeInSearch('a'); });
-  // return waitFor().
-  // then(() => {
-  //   assert.equal($(`${DROPDOWN}`).length, 1);
-  //   assert.equal($('.ember-power-select-options > li').length, 3);
-  //   assert.equal($(`${OPTION}:eq(0)`).text().trim(), PD.fullname);
-  //   assert.equal($(`${OPTION}:eq(1)`).text().trim(), 'Scooter McGavin');
-  //   assert.equal($(`${OPTION}:eq(2)`).text().trim(), 'Aaron Wat');
-  //   assert.equal($(`${PowerSelect} > .ember-power-select-multiple-option`).length, 2);
-  //   assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains(${PD.fullname})`));
-  //   assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains('Scooter McGavin')`));
-  // });
-// });
+test('should render a selectbox with bound options after type ahead for search', function(assert) {
+  let ticket_cc_options = store.find('person');
+  this.model = ticket;
+  this.selected = ticket.get('cc');
+  this.person_repo = person_repo;
+  this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
+  let $component = this.$(COMPONENT);
+  clickTrigger();
+  run(() => { typeInSearch('a'); });
+  return waitFor().
+  then(() => {
+    assert.equal($(`${DROPDOWN}`).length, 1);
+    assert.equal($('.ember-power-select-options > li').length, 3);
+    assert.equal($(`${OPTION}:eq(0)`).text().trim(), PD.fullname);
+    assert.equal($(`${OPTION}:eq(1)`).text().trim(), 'Scooter McGavin');
+    assert.equal($(`${OPTION}:eq(2)`).text().trim(), 'Aaron Wat');
+    assert.equal($(`${PowerSelect} > .ember-power-select-multiple-option`).length, 2);
+    assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains(${PD.fullname})`));
+    assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains('Scooter McGavin')`));
+  });
+});
 
 // test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
   // var done = assert.async();
