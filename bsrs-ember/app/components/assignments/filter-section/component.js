@@ -10,8 +10,8 @@ export default Ember.Component.extend({
     this._super(...arguments);
     // Array that proxies all of the pfilters.  Thus changing the pfilter (add_pf && rmeove_pf) wont tear down component and cause err
     const pfilters = this.get('model').get('pf');
-    this.filterIds = pfilters.mapBy('id');
-    if (pfilters.get('length') === 1 && pfilters.objectAt(0).get('field') === 'auto_assign') {
+    this.filterIds = pfilters.mapBy('id').length > 0 ? pfilters.mapBy('id') : [1] ;
+    if (pfilters.get('length') === 0 || pfilters.objectAt(0).get('field') === 'auto_assign') {
       // if pfliter.key === auto_assign, make sure btn is disabled
       this.set('addFilterDisabled', true);
     }
@@ -49,6 +49,10 @@ export default Ember.Component.extend({
     delete(pf) {
       if (pf) {
         this.get('model').remove_pf(pf.get('id'));
+        if (this.filterIds.length === 1) {
+          this.set('addFilterDisabled', true);
+          return;
+        }
         const indx = this.filterIds.indexOf(pf.get('id'));
         if (indx === -1){
           this.set('filterIds', this.filterIds.slice(0, indx));

@@ -239,7 +239,7 @@ test('remove filter and save - should stay on page because cant have an assignme
   });
   page.deleteFilter();
   andThen(() => {
-    assert.equal(find('.t-del-pf-btn').length, 0);
+    assert.equal(find('.t-del-pf-btn').length, 1);
     let assignment = store.find('assignment', AD.idOne);
     assert.equal(assignment.get('pf').get('length'), 0);
   });
@@ -313,5 +313,4 @@ test('add filter, add criteria, remove filter, cancel', assert => {
 
 /*  TODO:
   auto_assign - doesn't have criteria, so should not get validated for 'criteria.length'
-  add a previous filter back and it comes w/ it's selected criteria
 */

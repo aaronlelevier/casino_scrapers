@@ -93,8 +93,8 @@ test('delete pfilter and assignment is dirty and can add and remove filter seque
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assert.equal(assignment.get('pf').get('length'), 1);
   page.deleteFilter();
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
-  assert.equal(this.$('.t-assignment-pf-select').length, 0);
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
+  assert.equal(this.$('.t-assignment-pf-select').length, 1);
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assert.equal(assignment.get('pf').get('length'), 0);
   page.addFilter();
@@ -141,4 +141,26 @@ test('if assignment has dynamic pfilter, power-select component will filter out 
   assert.equal(assignment.get('pf').get('length'), 1);
   clickTrigger('.t-assignment-pf-select:eq(0)');
   assert.equal(this.$('li.ember-power-select-option').length, 2);
+});
+
+test('deactivate add-filter-btn test', function(assert) {
+  this.model = assignment;
+  this.render(hbs`{{assignments/filter-section model=model}}`);
+  assert.equal($('.t-assignment-pf-select').length, 1);
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
+  page.deleteFilter();
+  assert.equal($('.t-assignment-pf-select').length, 1);
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
+});
+
+test('deactivate add-filter-btn test', function(assert) {
+  run(() => {
+    store.clear();
+    assignment = store.push('assignment', {id: AD.idOne, description: AD.descOne});
+  });
+  this.model = assignment;
+  this.render(hbs`{{assignments/filter-section model=model}}`);
+  assert.equal(assignment.get('pf').get('length'), 0);
+  assert.equal($('.t-assignment-pf-select').length, 1);
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
 });
