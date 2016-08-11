@@ -82,8 +82,8 @@ export default Ember.Component.extend({
       }
     },
     /* @method setAssigmentFilter
-    * @param {object} old_pf is the random uuid set in append method
-    * @param {object} pf is the selected pfilter
+    * @param {object} old_pfilter - is either undefined or a model.pf instance
+    * @param {object} pfilter - is the selected pfilter
     */
     setAssignmentFilter(old_pfilter, pfilter) {
       const model = this.get('model');
