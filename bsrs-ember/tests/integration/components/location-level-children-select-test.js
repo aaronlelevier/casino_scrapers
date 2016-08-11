@@ -14,7 +14,7 @@ const PowerSelect = '.ember-power-select-trigger > .ember-power-select-multiple-
 const COMPONENT = '.t-location-level-children-select';
 const DROPDOWN = '.ember-power-select-dropdown';
 
-moduleForComponent('location-level-children-select', 'scott integration: location-level-children-select test', {
+moduleForComponent('location-level-children-select', 'integration: location-level-children-select test', {
   integration: true,
   setup() {
     trans = this.container.lookup('service:i18n');
