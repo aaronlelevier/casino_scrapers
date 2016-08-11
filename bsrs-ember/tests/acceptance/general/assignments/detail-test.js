@@ -284,11 +284,34 @@ test('remove filter and save - should stay on page because cant have an assignme
   });
 });
 
+test('add filter, add criteria, remove filter, cancel', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
+  xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
+  page.addFilter();
+  selectChoose('.t-assignment-pf-select:eq(1)', PFD.keyTwo);
+  keyword = 'a';
+  xhr(`/api/admin/locations/location__icontains=${keyword}/?location_level=${PFD.lookupsDynamic.id}`, 'GET', null, {}, 200, LF.search_power_select());
+  selectSearch('.t-ticket-location-select', keyword);
+  selectChoose('.t-ticket-location-select', LD.storeNameFour);
+  andThen(() => {
+    assert.equal(page.locationSelectedOne.split(/\s+/)[1], LD.storeNameFour);
+    assert.equal(find('.t-del-pf-btn').length, 2);
+  });
+  page.deleteFilterTwo();
+  andThen(() => {
+    assert.equal(find('.t-del-pf-btn').length, 1);
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], TD.priorityOneKey);
+  });
+  generalPage.cancel();
+  andThen(() => {
+    assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
+  });
+});
+
 /*  TODO:
-  remove filter, save
-  remove criteria, save
-  add filter, add criteria, remove filter, cancel
-  add filter, don't fill it out, hit cancel
   auto_assign - doesn't have criteria, so should not get validated for 'criteria.length'
   add a previous filter back and it comes w/ it's selected criteria
 */

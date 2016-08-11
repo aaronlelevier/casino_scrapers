@@ -50,7 +50,11 @@ export default Ember.Component.extend({
       if (pf) {
         this.get('model').remove_pf(pf.get('id'));
         const indx = this.filterIds.indexOf(pf.get('id'));
-        this.set('filterIds', this.filterIds.slice(0, indx).concat(this.filterIds.slice(indx+1, this.filterIds.length)));
+        if (indx === -1){
+          this.set('filterIds', this.filterIds.slice(0, indx));
+        } else {
+          this.set('filterIds', this.filterIds.slice(0, indx).concat(this.filterIds.slice(indx+1, this.filterIds.length)));
+        }
       } else {
         this.filterIds.pop();
         this.set('filterIds', this.filterIds);

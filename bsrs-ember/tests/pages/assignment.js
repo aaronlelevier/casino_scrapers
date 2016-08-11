@@ -28,6 +28,7 @@ export default create({
 
   addFilter: clickable('.t-add-pf-btn'),
   deleteFilter: clickable('.t-del-pf-btn:eq(0)'),
+  deleteFilterTwo: clickable('.t-del-pf-btn:eq(1)'),
   filterOneClickDropdown: clickable('.t-assignment-pf-select:eq(0) .ember-basic-dropdown-trigger'),
   // filterOneClickOptionOne: clickable(`.ember-power-select-option:contains(${PFD.keyOne})`, { scope: DROPDOWN }),
   filterOneClickOptionTwo: clickable(`.ember-power-select-option:contains(${PFD.keyTwo})`, { scope: DROPDOWN }),
