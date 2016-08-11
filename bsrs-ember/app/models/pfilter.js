@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
-import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
+import { many_to_many } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/pfilter';
 
@@ -17,7 +17,6 @@ export default Model.extend(Validations, OptConf, {
     many_to_many.bind(this)('criteria', 'pfilter');
   },
   simpleStore: Ember.inject.service(),
-  // lookups: attr(''),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'criteriaIsDirty', function() {
     return this.get('isDirty') || this.get('criteriaIsDirty');
   }),

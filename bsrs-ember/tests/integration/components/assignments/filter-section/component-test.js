@@ -100,7 +100,9 @@ test('delete pfilter and assignment is dirty and can add and remove filter seque
   page.addFilter();
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
   page.deleteFilter();
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
+  assert.equal(assignment.get('pf').get('length'), 0);
+  assert.equal(this.$('.t-assignment-pf-select').length, 1);
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
 });
 
 test('if first filter selected is auto assign, disable btn', function(assert) {
@@ -143,7 +145,7 @@ test('if assignment has dynamic pfilter, power-select component will filter out 
   assert.equal(this.$('li.ember-power-select-option').length, 2);
 });
 
-test('deactivate add-filter-btn test', function(assert) {
+test('deactivate add-filter-btn test - for existing assignment', function(assert) {
   this.model = assignment;
   this.render(hbs`{{assignments/filter-section model=model}}`);
   assert.equal($('.t-assignment-pf-select').length, 1);
@@ -153,7 +155,7 @@ test('deactivate add-filter-btn test', function(assert) {
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
 });
 
-test('deactivate add-filter-btn test', function(assert) {
+test('add-filter-btn is deactivated if no filter and clicking delete wont change nothin', function(assert) {
   run(() => {
     store.clear();
     assignment = store.push('assignment', {id: AD.idOne, description: AD.descOne});
@@ -163,4 +165,27 @@ test('deactivate add-filter-btn test', function(assert) {
   assert.equal(assignment.get('pf').get('length'), 0);
   assert.equal($('.t-assignment-pf-select').length, 1);
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
+  page.deleteFilter();
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
+  page.deleteFilter();
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
+});
+
+test('delete the middle filter, and it correctly leaves the remaining start n end filter in the page', function(assert) {
+  run(() => {
+    let pf2 = store.push('pfilter', {id: PFD.idTwo, key: PFD.keyTwo, field: PFD.locationField, criteria: PFD.criteriaTwo, lookups: {}});
+    let pf3 = store.push('pfilter', {id: PFD.idThree, key: PFD.keyThree, field: PFD.locationField, criteria: PFD.criteriaThree, lookups: {}});
+    assignment.add_pf({id: PFD.idTwo});
+    assignment.add_pf({id: PFD.idThree});
+  });
+  this.model = assignment;
+  this.render(hbs`{{assignments/filter-section model=model}}`);
+  assert.equal(this.$('.t-assignment-pf-select').length, 3);
+  assert.equal(page.assignmentFilterOneText, PFD.keyOne);
+  assert.equal(page.assignmentFilterTwoText, PFD.keyTwo);
+  assert.equal(page.assignmentFilterThreeText, PFD.keyThree);
+  page.deleteFilterTwo();
+  assert.equal(this.$('.t-assignment-pf-select').length, 2);
+  assert.equal(page.assignmentFilterOneText, PFD.keyOne);
+  assert.equal(page.assignmentFilterTwoText, PFD.keyThree);
 });

@@ -34,6 +34,10 @@ export default create({
   filterOneClickOptionTwo: clickable(`.ember-power-select-option:contains(${PFD.keyTwo})`, { scope: DROPDOWN }),
   filterOnePriorityOneRemove: clickable('.ember-power-select-multiple-remove-btn', { scope: `${PRIORITIES}:eq(0)` }),
 
+  assignmentFilterOneText: text('.t-assignment-pf-select:eq(0)'),
+  assignmentFilterTwoText: text('.t-assignment-pf-select:eq(1)'),
+  assignmentFilterThreeText: text('.t-assignment-pf-select:eq(2)'),
+
   prioritySelectedOne: text(`${PRIORITIES}:eq(0)`),
   prioritySelectedTwo: text(`${PRIORITIES}:eq(1)`),
   priorityClickDropdown: clickable(PRIORITY),

@@ -138,6 +138,22 @@ test('when user adds a filter and hits cancel they are not prompted with a modal
   });
 });
 
+test('when user adds a filter and selects an available filter they are prompted with a modal', (assert) => {
+  clearxhr(listXhr);
+  page.visitDetail();
+  page.addFilter();
+  xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
+  selectChoose('.t-assignment-pf-select:eq(1)', PFD.keyTwo);
+  generalPage.cancel();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(generalPage.modalIsVisible);
+      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+    });
+  });
+});
+
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
   page.visitDetail();
   page.descriptionFill(AD.descriptionTwo);

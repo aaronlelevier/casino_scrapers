@@ -16,6 +16,11 @@ export default Ember.Component.extend({
       this.set('addFilterDisabled', true);
     }
   },
+  /* @method _filterResponse
+  *  @param {object} response - list api response
+  *  @param {int} index - nth db-fetch-power select
+
+  */
   _filterResponse(response, index) {
     const model = this.get('model');
     const pfilters = model.get('pf');
@@ -30,6 +35,7 @@ export default Ember.Component.extend({
         return Ember.$.inArray(avail_filter.id, filter_ids) === -1;
       }
     }).filter(avail_filter => {
+      // only show on first db-fetch component
       return avail_filter.field !== 'auto_assign' ? true : index === 0;
     });
   },
@@ -45,14 +51,24 @@ export default Ember.Component.extend({
     },
     /* @method delete
     * @param {object} pf - if not present, means delete filter w/ no selected pfilter
+
+      case 1: pf & filterIds > 1 => remove pf and slice filterIds array
+      case 2: pf & filterIds === 1 => remove pf, don't slice filterIds array, disable add-btn
+      case 3: no pf & filterIds > 1 => pop last filterIds b/c only allow one empty filter placeholder
+      case 4: no pf & filterIds === 1 => don't do anything b/c user removed all pf and
+        already have empty filter placeholder
     */
     delete(pf) {
+      if (this.filterIds.length === 1) {
+        if (pf) {
+          this.get('model').remove_pf(pf.get('id'));
+          this.set('addFilterDisabled', true);
+        }
+        return;
+      }
+
       if (pf) {
         this.get('model').remove_pf(pf.get('id'));
-        if (this.filterIds.length === 1) {
-          this.set('addFilterDisabled', true);
-          return;
-        }
         const indx = this.filterIds.indexOf(pf.get('id'));
         if (indx === -1){
           this.set('filterIds', this.filterIds.slice(0, indx));
