@@ -42,22 +42,21 @@ moduleForComponent('ticket-cc-power-select', 'integration: ticket-cc-power-selec
 });
 
 test('should render a selectbox when with options selected (initial state)', function(assert) {
-  assert.equal(1,1);
-  // run(function() {
-  //   store.clear('ticket-join-person');
-  // });
-  // let ticket_cc_options = Ember.A([]);
-  // this.model = ticket;
-  // this.selected = ticket.get('cc');
-  // this.person_repo = person_repo;
-  // this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
-  // let $component = this.$(`${COMPONENT}`);
-  // clickTrigger();
-  // assert.equal($(`${DROPDOWN}`).length, 1);
-  // assert.equal($('.ember-power-select-options > li').length, 1);
-  // assert.equal($(`${OPTION}`).text().trim(), GLOBALMSG.power_search);
-  // assert.equal($(`${PowerSelect} > span.ember-power-select-multiple-option`).length, 0);
-// });
+  run(function() {
+    store.clear('ticket-join-person');
+  });
+  let ticket_cc_options = Ember.A([]);
+  this.model = ticket;
+  this.selected = ticket.get('cc');
+  this.person_repo = person_repo;
+  this.render(hbs`{{db-fetch-multi-select model=model multiAttr="cc" selectedAttr=selected className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=person_repo searchMethod="findTicketPeople" extra_params=extra_params}}`);
+  let $component = this.$(`${COMPONENT}`);
+  clickTrigger();
+  assert.equal($(`${DROPDOWN}`).length, 1);
+  assert.equal($('.ember-power-select-options > li').length, 1);
+  assert.equal($(`${OPTION}`).text().trim(), GLOBALMSG.power_search);
+  assert.equal($(`${PowerSelect} > span.ember-power-select-multiple-option`).length, 0);
+});
 
 // test('should render a selectbox with bound options after type ahead for search', function(assert) {
   // let ticket_cc_options = store.find('person');
@@ -94,4 +93,4 @@ test('should render a selectbox when with options selected (initial state)', fun
   //   assert.equal($('.ember-power-select-options > li').length, 1);
   //   done();
   // }, 150);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
-});
+// });
