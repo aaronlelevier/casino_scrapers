@@ -76,8 +76,8 @@ test('validation on ticket request works', function(assert) {
         const $component = this.$('.invalid');
         assert.notOk($component.is(':visible'), 'meets min length');
         done();
-      }, 300);
-    }, 300);
+      }, 500);
+    }, 500);
   }, 1900);
 });
 
