@@ -23,10 +23,6 @@ module.exports = function(defaults) {
     minifyJS: {
         enabled: false
     },
-    'ember-font-awesome': {
-      useScss: true,
-      useLess: false
-    }
   });
   app.import('vendor/defaults/uuid.js');
   app.import('vendor/defaults/global-message.js');
