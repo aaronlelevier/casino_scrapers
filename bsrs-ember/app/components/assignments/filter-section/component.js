@@ -87,6 +87,9 @@ export default Ember.Component.extend({
     */
     setAssignmentFilter(old_pfilter, pfilter) {
       const model = this.get('model');
+      if (old_pfilter) {
+        model.remove_pf(old_pfilter.get('id'));
+      }
       model.add_pf(pfilter);
       if (pfilter.field === 'auto_assign') {
         this.set('addFilterDisabled', true);

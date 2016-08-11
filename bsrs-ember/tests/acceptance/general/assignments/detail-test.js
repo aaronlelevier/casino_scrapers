@@ -327,6 +327,29 @@ test('add filter, add criteria, remove filter, cancel', assert => {
   });
 });
 
-/*  TODO:
-  auto_assign - doesn't have criteria, so should not get validated for 'criteria.length'
-*/
+test('select auto_assign filter and update assignment', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-assignment-pf-select .ember-power-select-selected-item').text().trim(), PFD.keyOne);
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], TD.priorityOneKey);
+  });
+  // replace existing filter w/ 'auto_assign' filter
+  // this also tests that if there's an existing, the existing is removed n replaced on the model.pf array
+  xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
+  selectChoose('.t-assignment-pf-select:eq(0)', PFD.autoAssignKey);
+  let payload = AF.put({
+    description: AD.descriptionOne,
+    assignee: AD.assigneeOne,
+    filters: [{
+      id: PFD.autoAssignId,
+      criteria: [],
+      lookups: {}
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
+  });
+});

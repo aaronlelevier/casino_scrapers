@@ -53,8 +53,9 @@ var BSRS_ASSIGNMENT_FACTORY = (function() {
   factory.prototype.list_pfilters = function() {
     var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
     var results = [{id: this.pfilter.idOne, key: this.pfilter.keyOne, field: this.pfilter.fieldOne, lookups: {}},
-                   {id: this.pfilter.idTwo, key: this.pfilter.keyTwo, field: this.pfilter.locationField, lookups: this.pfilter.lookupsDynamic}];
-    return {count: 2, next: null, previous: null, results: results};
+                   {id: this.pfilter.idTwo, key: this.pfilter.keyTwo, field: this.pfilter.locationField, lookups: this.pfilter.lookupsDynamic},
+                   {id: this.pfilter.autoAssignId, key: this.pfilter.autoAssignKey, field: this.pfilter.autoAssignField, lookups: {}}];
+    return {count: 3, next: null, previous: null, results: results};
   };
   factory.prototype.list_two = function() {
     var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
