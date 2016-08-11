@@ -24,7 +24,7 @@ var store, personProxy, subject, personCurrent, uuid, location_deserializer, loc
 
 module('unit: person deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:random','model:uuid','model:person', 'model:person-list', 'model:role', 'model:person-location','model:location','model:location-level','model:email','model:phonenumber','service:person-current','service:translations-fetcher','service:i18n', 'model:status', 'model:person-status-list', 'model:location-status', 'model:locale', 'model:currency']);
+    store = module_registry(this.container, this.registry, ['model:random','model:uuid','model:person', 'model:person-list', 'model:role', 'model:person-location','model:location','model:location-level','model:email','model:phonenumber','service:person-current','service:translations-fetcher','service:i18n', 'model:status', 'model:person-status-list', 'model:location-status', 'model:locale', 'model:currency', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format']);
     uuid = this.container.lookup('model:uuid');
     location_level_deserializer = LocationLevelDeserializer.create({simpleStore: store});
     location_deserializer = LocationDeserializer.create({simpleStore: store, LocationLevelDeserializer: location_level_deserializer});

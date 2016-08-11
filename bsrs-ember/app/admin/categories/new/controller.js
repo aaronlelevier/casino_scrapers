@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-var CategoryController = Ember.Controller.extend({
+var CategoryNewController = Ember.Controller.extend({
   actions: {
     setName(name) {
       this.get('model').set('name', name);
@@ -17,4 +17,4 @@ var CategoryController = Ember.Controller.extend({
   }
 });
 
-export default CategoryController;
+export default CategoryNewController;

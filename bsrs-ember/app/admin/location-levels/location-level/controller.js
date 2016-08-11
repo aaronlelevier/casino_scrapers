@@ -6,12 +6,13 @@ var LocationLevelController = Ember.Controller.extend({
       this.send('closeTabMaster', tab, action);
     },
     setName(name) {
-      // mutable
       const model = this.get('model');
       model.set('name', name);
+    },
+    setChild(new_children) {
+      const model = this.get('model');
+      model.set_children(new_children);
     }
   }
 });
 export default LocationLevelController;
-
-
