@@ -97,6 +97,8 @@
 /**
 * DRUMPFS
 * Bootstrap............overrides
+* test............hack to display the app during pauseTest
 */
 @import 'app/styles/drumpfs/bootstrap.scss';
 @import 'app/styles/drumpfs/liquid-outlet.scss';
+@import 'app/styles/drumpfs/test.scss';
