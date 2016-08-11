@@ -72,6 +72,7 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
         placeholder, and replace it with dynamic versions of itself.
         """
         data_copy = copy.copy(data)
+        location_filter = None
         for i, d in enumerate(data_copy['results']):
             if d['lookups'] == {'filters': 'location_level'}:
                 location_filter = data['results'].pop(i)
@@ -80,7 +81,7 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
             filters = []
             for x in LocationLevel.objects.all():
                 filters.append(x.available_filter_data(location_filter['id']))
+            data['results'] += filters
 
-        data['results'] += filters
         data['count'] = len(data['results'])
         return data

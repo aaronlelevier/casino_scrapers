@@ -486,3 +486,11 @@ class AvailableFilterTests(APITestCase):
     def test_delete(self):
         response = self.client.delete('/api/admin/assignments-available-filters/{}/'.format(self.af.id))
         self.assertEqual(response.status_code, 405)
+
+    def test_list_non_dynamic_no_llevel(self):
+        AvailableFilter.objects.filter(lookups__filters='location_level').delete()
+        response = self.client.get('/api/admin/assignments-available-filters/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['count'], AvailableFilter.objects.count())
