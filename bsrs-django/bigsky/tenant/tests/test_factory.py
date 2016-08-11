@@ -18,6 +18,8 @@ class TenantTests(TestCase):
         self.assertIsInstance(ret.dt_start, TreeData)
         self.assertEqual(ret.company_name, settings.DEFAULT_TENANT_COMPANY_NAME)
         self.assertTrue(ret.company_code)
+        self.assertEqual(ret.countries.count(), 1)
+        self.assertEqual(ret.countries.first().states.count(), 2)
 
     def test_id(self):
         ret = factory.get_or_create_tenant()

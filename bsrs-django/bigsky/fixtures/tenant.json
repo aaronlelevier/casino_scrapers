@@ -1,17 +1,20 @@
 [
 {
   "model": "tenant.tenant",
-  "pk": "037530c4-ce6c-4724-9cfd-37a16e787001",
+  "pk": "038530c4-ce6c-4724-9cfd-37a16e787001",
   "fields": {
-    "created": "2016-07-22T21:10:28.446Z",
-    "modified": "2016-07-22T21:10:28.446Z",
+    "created": "2016-08-11T23:34:50.383Z",
+    "modified": "2016-08-11T23:34:50.393Z",
     "deleted": null,
-    "company_code": "iAlgMAfLbD",
+    "company_code": "SpEYLlCCSo",
     "company_name": "Andy's Pianos",
     "dashboard_text": "Welcome",
     "dt_start": "011530c4-ce6c-4724-9cfd-37a16e787001",
     "default_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
-    "test_mode": true
+    "test_mode": true,
+    "countries": [
+      "61760373-0b13-4a1e-8abe-8166ca841e01"
+    ]
   }
 }
 ]
