@@ -9,6 +9,7 @@ from utils.helpers import generate_uuid
 
 
 STATE_CODE = "CA"
+STATE_CODE_TWO = "NV"
 COUNTRY_COMMON_NAME = "United States"
 
 
@@ -92,14 +93,18 @@ def create_contact_state(state_code=STATE_CODE):
     try:
         return State.objects.get(state_code=state_code)
     except State.DoesNotExist:
-        return mommy.make(State, state_code=state_code)
+        country = mommy.make(Country, common_name=COUNTRY_COMMON_NAME)
+        return mommy.make(State, state_code=state_code, country=country)
 
 
 def create_contact_country(common_name=COUNTRY_COMMON_NAME):
     try:
         return Country.objects.get(common_name=common_name)
     except Country.DoesNotExist:
-        return mommy.make(Country, common_name=common_name)
+        country = mommy.make(Country, common_name=common_name)
+        mommy.make(State, state_code=STATE_CODE, country=country)
+        mommy.make(State, state_code=STATE_CODE_TWO, country=country)
+        return country
 
 
 def add_office_to_location(location):

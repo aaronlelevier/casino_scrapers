@@ -127,11 +127,13 @@ class FactoryTests(TestCase):
     def test_create_contact_state(self):
         ret = factory.create_contact_state()
         self.assertIsInstance(ret, State)
+        self.assertIsInstance(ret.country, Country)
         self.assertEqual(ret.state_code, factory.STATE_CODE)
 
     def test_create_contact_country(self):
         ret = factory.create_contact_country()
         self.assertIsInstance(ret, Country)
+        self.assertEqual(ret.states.count(), 2)
         self.assertEqual(ret.common_name, factory.COUNTRY_COMMON_NAME)
 
     def test_add_office_to_location(self):
