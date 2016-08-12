@@ -142,7 +142,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
   attachments: Ember.computed('ticket_attachments_fks.[]', function() {
     const related_fks = this.get('ticket_attachments_fks');
     const filter = function(attachment) {
-      return Ember.$.inArray(attachment.get('id'), related_fks) > -1;
+      return related_fks.includes(attachment.get('id'));
     };
     return this.get('simpleStore').find('attachment', filter);
   }),
