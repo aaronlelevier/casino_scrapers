@@ -48,9 +48,15 @@ class ProfileFilterSerializer(BaseCreateSerializer):
         # remove 'lookups' from source b/c both the PF and AF have
         # this key, and don't want to override what's on the PF. PF
         # could be storing a dynamic `location_level.id` for the
-        # dynamic AF that was used when creating it.
+        # dynamic AF that was used when creating it. If you don't pop
+        # this off, PF's lookups will be overrided by AF's
         source.pop('lookups', {})
         data.update(source)
+
+        # dynamic AF don't have 'key', so set it based on the dynamic 'name'
+        if data['lookups']:
+            data['key'] = data['lookups']['name']
+
         return self._combined_data(data)
 
     def _combined_data(self, data):

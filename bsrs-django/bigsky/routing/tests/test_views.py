@@ -88,7 +88,7 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(filter_data['lookups']['name'], location_level.name)
         # unchanged
         self.assertEqual(filter_data['id'], str(location_filter.source.id))
-        self.assertEqual(filter_data['key'], location_filter.source.key)
+        self.assertEqual(filter_data['key'], location_level.name)
         self.assertEqual(filter_data['field'], location_filter.source.field)
 
     def test_criteria__priority(self):
