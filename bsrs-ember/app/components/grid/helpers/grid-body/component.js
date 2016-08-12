@@ -40,7 +40,7 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, {
       }.bind(this));
       return filter.reduce((a,b) => {
         const one_match = a.filter(item => b.mapBy('id').includes(item.get('id')));
-        const two_match = b.filter(item => Ember.$.inArray(item.get('id'), a.mapBy('id')) > -1);
+        const two_match = b.filter(item => a.mapBy('id').includes(item.get('id')));
         return one_match.concat(two_match);
       }).uniq();
     }

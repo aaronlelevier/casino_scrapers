@@ -103,7 +103,7 @@ var CategoriesMixin = Ember.Mixin.create({
     const model_pk = this.get('id');
     //remove all m2m join models that don't relate to this category pk down the tree
     const m2m_models = this.get('model_categories').filter((m2m) => {
-      return m2m.get('model_pk') === model_pk && Ember.$.inArray(m2m.get('category_pk'), parent_ids) === -1;
+      return m2m.get('model_pk') === model_pk && !parent_ids.includes(m2m.get('category_pk'));
     });
     m2m_models.forEach((m2m) => {
       run(() => {
