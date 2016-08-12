@@ -19,7 +19,8 @@ export default Ember.Component.extend({
   /* @method _filterResponse
   *  @param {object} response - list api response
   *  @param {int} index - nth db-fetch-power select
-
+  *  @return {array} - filters plain js objects
+  *  filter options before setting - if have at least one pfilter, don't show auto assign.
   */
   _filterResponse(response, index) {
     const model = this.get('model');
@@ -32,7 +33,8 @@ export default Ember.Component.extend({
           return prev && pfilter.lookups.id !== avail_filter.lookups.id;
         }, true);
       } else {
-        return Ember.$.inArray(avail_filter.id, filter_ids) === -1;
+        // if not dynamic then if not already selected return true
+        return !filter_ids.includes(avail_filter.id);
       }
     }).filter(avail_filter => {
       // only show on first db-fetch component
@@ -51,7 +53,6 @@ export default Ember.Component.extend({
     },
     /* @method delete
     * @param {object} pf - if not present, means delete filter w/ no selected pfilter
-
       case 1: pf & filterIds > 1 => remove pf and slice filterIds array
       case 2: pf & filterIds === 1 => remove pf, don't slice filterIds array, disable add-btn
       case 3: no pf & filterIds > 1 => pop last filterIds b/c only allow one empty filter placeholder
@@ -59,25 +60,25 @@ export default Ember.Component.extend({
         already have empty filter placeholder
     */
     delete(pf) {
-      if (this.filterIds.length === 1) {
+      const filterIds = this.get('filterIds');
+      if (filterIds.length === 1) {
         if (pf) {
           this.get('model').remove_pf(pf.get('id'));
           this.set('addFilterDisabled', true);
         }
         return;
       }
-
       if (pf) {
         this.get('model').remove_pf(pf.get('id'));
-        const indx = this.filterIds.indexOf(pf.get('id'));
+        const indx = filterIds.indexOf(pf.get('id'));
         if (indx === -1){
-          this.set('filterIds', this.filterIds.slice(0, indx));
+          this.set('filterIds', filterIds.slice(0, indx));
         } else {
-          this.set('filterIds', this.filterIds.slice(0, indx).concat(this.filterIds.slice(indx+1, this.filterIds.length)));
+          this.set('filterIds', filterIds.slice(0, indx).concat(filterIds.slice(indx+1, filterIds.length)));
         }
       } else {
-        this.filterIds.pop();
-        this.set('filterIds', this.filterIds);
+        filterIds.pop();
+        this.set('filterIds', filterIds);
         this.toggleProperty('addFilterDisabled');
       }
     },
@@ -103,7 +104,6 @@ export default Ember.Component.extend({
     */
     fetchFilters(index) {
       this.get('repository').getFilters().then((response) => {
-        // filter options before setting - if already have one, don't show auto assign.  Also loop through existing filters and remove as well
         const filtered_response = this._filterResponse(response, index);
         this.set('options', filtered_response);
       });
