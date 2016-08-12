@@ -42,6 +42,8 @@ router.register(r'dtds', dtd_views.TreeDataViewSet)
 # CATEGORY
 router.register(r'admin/categories', category_views.CategoryViewSet)
 # CONTACT
+router.register(r'countries', contact_views.CountryViewSet)
+router.register(r'states', contact_views.StateViewSet)
 router.register(r'admin/phone-numbers', contact_views.PhoneNumberViewSet)
 router.register(r'admin/phone-number-types', contact_views.PhoneNumberTypeViewSet)
 router.register(r'admin/addresses', contact_views.AddressViewSet)

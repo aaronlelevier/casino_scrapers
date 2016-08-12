@@ -1,8 +1,38 @@
 from rest_framework import serializers
 
 from contact.models import (PhoneNumberType, PhoneNumber, AddressType,
-    Address, EmailType, Email)
+    Address, EmailType, Email, Country, State)
 from utils.serializers import BaseCreateSerializer
+
+
+class StateLeafSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = State
+        field = ('id', 'name',)
+
+
+class StateListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = State
+        field = ('id', 'name', 'state_code', 'classification',)
+
+
+class CountryListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Country
+        fields = ('id', 'common_name', 'three_letter_code')
+
+
+class CountryDetailSerializer(serializers.ModelSerializer):
+
+    states = StateLeafSerializer(many=True)
+
+    class Meta:
+        model = Country
+        fields = ('id', 'common_name', 'three_letter_code', 'states')
 
 
 ### PHONE NUMBER ###

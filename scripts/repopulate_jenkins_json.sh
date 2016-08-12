@@ -25,8 +25,10 @@ wait
 ./manage.py loaddata fixtures/dtd.json
 ./manage.py loaddata fixtures/tenant.json
 # category and location need a tenant
-./manage.py loaddata fixtures/category.json
-./manage.py loaddata fixtures/location.json
+./manage.py create_categories
+./manage.py dumpdata category --indent=2 > fixtures/category.json
+./manage.py create_locations
+./manage.py dumpdata location --indent=2 > fixtures/location.json
 # other
 ./manage.py loaddata fixtures/third_party.json
 ./manage.py loaddata fixtures/auth.json

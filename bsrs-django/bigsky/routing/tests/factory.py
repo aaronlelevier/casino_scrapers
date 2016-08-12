@@ -132,7 +132,9 @@ def create_assignment(description=None, tenant=None, assignee=None):
 
 def create_assignments():
     for i in range(10):
-        assignee = Person.objects.first()
-        if not assignee:
+        try:
+            assignee = Person.objects.order_by('?')[0]
+        except IndexError:
             assignee = create_single_person()
-        create_assignment(assignee=assignee)
+        finally:
+            create_assignment(assignee=assignee)

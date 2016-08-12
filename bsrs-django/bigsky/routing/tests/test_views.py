@@ -34,7 +34,7 @@ class AssignmentListTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['order'], 1)
         self.assertEqual(data['description'], self.assignment.description)
         self.assertEqual(data['assignee']['id'], str(self.assignment.assignee.id))
-        self.assertEqual(data['assignee']['username'], self.assignment.assignee.username)
+        self.assertEqual(data['assignee']['fullname'], self.assignment.assignee.fullname)
 
     def test_search(self):
         self.assignment_two = create_assignment(_generate_chars())
@@ -60,7 +60,7 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['order'], 1)
         self.assertEqual(data['description'], self.assignment.description)
         self.assertEqual(data['assignee']['id'], str(self.assignment.assignee.id))
-        self.assertEqual(data['assignee']['username'], self.assignment.assignee.username)
+        self.assertEqual(data['assignee']['fullname'], self.assignment.assignee.fullname)
         # profile_filter
         self.assertEqual(len(data['filters']), 2)
         af = AvailableFilter.objects.get(id=data['filters'][0]['id'])
