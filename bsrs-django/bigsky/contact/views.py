@@ -1,12 +1,68 @@
+from rest_framework.decorators import list_route
+from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.permissions import IsAuthenticated
 
 from contact.serializers import (
     PhoneNumberTypeSerializer, PhoneNumberSerializer,
     AddressTypeSerializer, AddressSerializer,
-    EmailTypeSerializer, EmailSerializer)
+    EmailTypeSerializer, EmailSerializer,
+    CountryListSerializer, CountryDetailSerializer,
+    StateListSerializer)
 from contact.models import (
-    PhoneNumber, PhoneNumberType, Address, AddressType, Email, EmailType)
+    PhoneNumber, PhoneNumberType, Address, AddressType, Email, EmailType,
+    Country, State)
 from utils.views import BaseModelViewSet
+
+
+class CountryViewSet(BaseModelViewSet):
+
+    model = Country
+    permissions = (IsAuthenticated,)
+    queryset = Country.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return CountryListSerializer
+        elif self.action == 'retrieve':
+            return CountryDetailSerializer
+        else:
+            raise MethodNotAllowed(method=self.action)
+
+    def destroy(self, request, *args, **kwargs):
+        raise MethodNotAllowed(method="delete")
+
+    @list_route(methods=['GET'])
+    def tenant(self, request):
+        queryset = Country.objects.filter(tenants=request.user.role.tenant)
+        queryset = self.paginate_queryset(queryset)
+        serializer = CountryListSerializer(queryset, many=True)
+        return self.get_paginated_response(serializer.data)
+
+
+class StateViewSet(BaseModelViewSet):
+
+    model = State
+    permissions = (IsAuthenticated,)
+    queryset = State.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return StateListSerializer
+        else:
+            raise MethodNotAllowed(method=self.action)
+
+    def destroy(self, request, *args, **kwargs):
+        raise MethodNotAllowed(method="delete")
+
+    @list_route(methods=['GET'])
+    def tenant(self, request):
+        tenant_countries_ids = request.user.role.tenant.countries.values_list('id', flat=True)
+
+        queryset = State.objects.filter(country__id__in=tenant_countries_ids)
+        queryset = self.paginate_queryset(queryset)
+        serializer = StateListSerializer(queryset, many=True)
+
+        return self.get_paginated_response(serializer.data)
 
 
 class PhoneNumberTypeViewSet(BaseModelViewSet):

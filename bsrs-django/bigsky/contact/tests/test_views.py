@@ -5,8 +5,112 @@ from rest_framework.test import APITestCase
 from model_mommy import mommy
 
 from contact.models import PhoneNumber, Address, Email
-from contact.tests.factory import create_contact
+from contact.tests.factory import create_contact, create_contact_country
 from person.tests.factory import PASSWORD, create_person
+
+
+class StateCountryViewTestSetupMixin(object):
+
+    def setUp(self):
+        self.country = create_contact_country()
+        self.country_two = create_contact_country('foo')
+        self.state = self.country.states.first()
+        self.person = create_person()
+        self.tenant = self.person.role.tenant
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+
+class CountryViewSetTests(StateCountryViewTestSetupMixin, APITestCase):
+
+    def test_list(self):
+        response = self.client.get('/api/countries/')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 2)
+        country_data = data['results'][0]
+        self.assertIn('id', country_data)
+        self.assertIn('common_name', country_data)
+        self.assertIn('three_letter_code', country_data)
+
+    def test_get(self):
+        response = self.client.get('/api/countries/{}/'.format(self.country.id))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertIn('id', data)
+        self.assertIn('common_name', data)
+        self.assertIn('three_letter_code', data)
+        self.assertEqual(len(data['states']), 2)
+        self.assertIn('id', data['states'][0])
+        self.assertIn('name', data['states'][0])
+
+    def test_create(self):
+        response = self.client.post('/api/countries/', {}, format='json')
+        self.assertEqual(response.status_code, 405)
+
+    def test_update(self):
+        response = self.client.post('/api/countries/{}/'.format(self.country.id), {}, format='json')
+        self.assertEqual(response.status_code, 405)
+
+    def test_delete(self):
+        response = self.client.delete('/api/countries/{}/'.format(self.country.id), {}, format='json')
+        self.assertEqual(response.status_code, 405)
+
+    def test_tenant_countries(self):
+        self.assertEqual(self.tenant.countries.first(), self.country)
+
+        response = self.client.get('/api/countries/tenant/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(self.tenant.countries.first().id))
+        self.assertIn('common_name', data['results'][0])
+        self.assertIn('three_letter_code', data['results'][0])
+
+
+class StateViewSetTests(StateCountryViewTestSetupMixin, APITestCase):
+
+    def test_list(self):
+        response = self.client.get('/api/states/')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        state_data = data['results'][0]
+        self.assertIn('id', state_data)
+        self.assertIn('state_code', state_data)
+        self.assertIn('name', state_data)
+        self.assertIn('classification', state_data)
+
+    def test_get(self):
+        response = self.client.get('/api/states/{}/'.format(self.state.id))
+        self.assertEqual(response.status_code, 405)
+
+    def test_create(self):
+        response = self.client.post('/api/states/', {}, format='json')
+        self.assertEqual(response.status_code, 405)
+
+    def test_update(self):
+        response = self.client.post('/api/states/{}/'.format(self.state.id), {}, format='json')
+        self.assertEqual(response.status_code, 405)
+
+    def test_delete(self):
+        response = self.client.delete('/api/states/{}/'.format(self.state.id), {}, format='json')
+        self.assertEqual(response.status_code, 405)
+
+    def test_tenant(self):
+        tenant_states = self.tenant.countries.first().states.all()
+        self.assertEqual(tenant_states.count(), 2)
+
+        response = self.client.get('/api/states/tenant/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 2)
+        self.assertIn(str(tenant_states[0].id), (x['id'] for x in data['results']))
+        self.assertIn(str(tenant_states[1].id), (x['id'] for x in data['results']))
 
 
 class PhoneNumberTypeViewSetTests(APITestCase):
