@@ -65,7 +65,7 @@ var belongs_to_generator = function(_ownerName) {
     const id = this.get('id');
     const filter = (related) => {
       const many = Ember.get(related, this.OPT_CONF[_ownerName]['collection']);
-      return Ember.$.inArray(id, many) > -1;
+      return many && many.includes(id);
     };
     return this.get('simpleStore').find(this.OPT_CONF[_ownerName]['property'], filter);
   }).property().readOnly();
