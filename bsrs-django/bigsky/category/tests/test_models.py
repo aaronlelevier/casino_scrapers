@@ -178,7 +178,7 @@ class CategoryTests(CategorySetupMixin, TestCase):
 
         self.assertEqual(ret, "{} - {} - {}".format(parent.name, child.name, grand_child.name))
 
-    def test_parents_and_self_as_string__children_indicated_with_all_keyword(self):
+    def test_parents_and_self_as_string__if_has_chilren_only_goes_up_n_gets_parent_strings(self):
         parent = factory.create_single_category(name='a')
         child = factory.create_single_category(name='b', parent=parent)
         grand_child = factory.create_single_category(name='c', parent=child)
@@ -188,7 +188,7 @@ class CategoryTests(CategorySetupMixin, TestCase):
 
         ret = child.parents_and_self_as_string()
 
-        self.assertEqual(ret, "{} - {} - All".format(parent.name, child.name))
+        self.assertEqual(ret, "{} - {}".format(parent.name, child.name))
 
 
 class CategoryLevelTests(CategorySetupMixin, TestCase):
