@@ -53,7 +53,7 @@ var extract_parents = function(model, store) {
   });
   server_sum.push(...prevented_duplicate_m2m);
   let m2m_to_remove = all_location_parents.filter((m2m) => {
-    return Ember.$.inArray(m2m.get('id'), server_sum) < 0 && m2m.get('location_pk') === model.id;
+    return !server_sum.includes(m2m.get('id')) && m2m.get('location_pk') === model.id;
   });
   m2m_to_remove.forEach((m2m) => {
     run(() => {
@@ -93,7 +93,7 @@ var extract_children = function(model, store) {
   });
   server_sum.push(...prevented_duplicate_m2m);
   let m2m_to_remove = all_location_children.filter((m2m) => {
-    return Ember.$.inArray(m2m.get('id'), server_sum) < 0 && m2m.get('location_pk') === model.id;
+    return !server_sum.includes(m2m.get('id')) && m2m.get('location_pk') === model.id;
   });
   m2m_to_remove.forEach((m2m) => {
     run(() => {
