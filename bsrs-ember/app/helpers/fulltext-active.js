@@ -12,5 +12,5 @@ export default Ember.Helper.helper((params) => {
             fulltext_search.push(attrs[0]);
         }
     });
-    return Ember.$.inArray(column, fulltext_search) > -1;
+    return fulltext_search.includes(column);
 });

@@ -26,7 +26,7 @@ let extract_category = (model, store, role_existing) => {
   });
   server_sum_category_fks.push(...prevented_duplicate_m2m);
   let m2m_to_remove = all_join_models.filter((m2m) => {
-    return Ember.$.inArray(m2m.get('id'), server_sum_category_fks) < 0 && m2m.get('role_pk') === model.id;
+    return !server_sum_category_fks.includes(m2m.get('id')) && m2m.get('role_pk') === model.id;
   });
   m2m_to_remove.forEach((m2m) => {
     store.push('role-category', {id: m2m.get('id'), removed: true});

@@ -42,16 +42,16 @@ var LocationLevel = Model.extend(NewMixin, {
     });
   },
   children: Ember.computed('children_fks.[]', function() {
-    const children_fks = this.get('children_fks');
+    const children_fks = this.get('children_fks') || [];
     const filter = (loc_level) => {
-      return Ember.$.inArray(loc_level.get('id'), children_fks) > -1 && loc_level.get('name') !== this.get('name');
+      return children_fks.includes(loc_level.get('id')) && loc_level.get('name') !== this.get('name');
     };
     return this.get('simpleStore').find('location-level', filter.bind(this));
   }),
   parents: Ember.computed('parent_fks.[]', function() {
-    const parent_fks = this.get('parent_fks');
+    const parent_fks = this.get('parent_fks') || [];
     const filter = (loc_level) => {
-      return Ember.$.inArray(loc_level.get('id'), parent_fks) > -1 && loc_level.get('name') !== this.get('name');
+      return parent_fks.includes(loc_level.get('id')) && loc_level.get('name') !== this.get('name');
     };
     return this.get('simpleStore').find('location-level', filter.bind(this));
   }),

@@ -28,7 +28,7 @@ export default Ember.Object.extend({
     const location_levels = store.find('location-level');
     return location_levels.filter((llevel) => {
       const location_pks = llevel.get('locations') || [];
-      return Ember.$.inArray(pk, location_pks) > -1;
+      return location_pks.includes(pk);
     }).objectAt(0);
   })
 }); 

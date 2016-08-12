@@ -109,7 +109,7 @@ var many_models = function(_joinModelName, _associatedModel) {
     const lookup_pk = this.OPT_CONF[_associatedModel]['associated_pointer'] || this.OPT_CONF[_associatedModel]['associated_model'];
     const filter = function(many_related) {
       const many_related_pks = this.mapBy(`${lookup_pk}_pk`);
-      return Ember.$.inArray(many_related.get('id'), many_related_pks) > -1;
+      return many_related_pks.includes(many_related.get('id'));
     };
     return this.get('simpleStore').find(relatedModelName, filter.bind(many_relateds));
   });
@@ -187,7 +187,7 @@ var many_to_many_rollback = function(_associatedModel, _joinModelName, modelName
     const previous_m2m_fks = this.get(join_model_fks) || [];
     const m2m_array = store.find(join_model).toArray();
     const m2m_to_throw_out = m2m_array.filter((m2m) => {
-      return Ember.$.inArray(m2m.get('id'), previous_m2m_fks) < 0 && !m2m.get('removed') && this.get('id') === m2m.get(main_many_fk);
+      return !previous_m2m_fks.includes(m2m.get('id')) && !m2m.get('removed') && this.get('id') === m2m.get(main_many_fk);
     });
     run(() => {
       m2m_to_throw_out.forEach((m2m) => {
@@ -229,7 +229,7 @@ var many_to_many_save = function(_joinModelName, _associatedModel, modelName) {
     //add
     let updated_m2m_fks = previous_m2m_fks;
     many_relateds.forEach((join_model) => {
-      if(Ember.$.inArray(join_model.get('id'), previous_m2m_fks) === -1){
+      if(!previous_m2m_fks.includes(join_model.get('id'))) {
         run(() => {
           updated_m2m_fks = updated_m2m_fks.concat(join_model.get('id'));
           let new_model;
@@ -243,7 +243,7 @@ var many_to_many_save = function(_joinModelName, _associatedModel, modelName) {
     const updated_previous_m2m_fks = this.get(m2m_models_fks);
     //remove
     for (let i=previous_m2m_fks.length-1; i>=0; --i) {
-      if (Ember.$.inArray(previous_m2m_fks[i], many_relateds_ids) === -1) {
+      if (!many_relateds_ids.includes(previous_m2m_fks[i])) {
         updated_previous_m2m_fks.removeObject(previous_m2m_fks[i]);
       }
     }
