@@ -116,7 +116,9 @@ class AvailableFilter(BaseModel):
     context = models.CharField(max_length=100, blank=True, default=settings.DEFAULT_PROFILE_FILTER_CONTEXT,
                                help_text="The namespace of the model to look the field up on. ex: 'app_name.model_name'")
     field = models.CharField(max_length=100,
-                             help_text="Model field to look up from the Model class specified in the 'context'")
+                             help_text="Model field to look up from the Model class specified in the 'context'"
+                                       "with the exception of State/Country. This field should also ben unique"
+                                       "because Ember case/switches on this field to generate the power-select")
     lookups = JSONField(null=True, default={},
         help_text="if used, provide extra lookup information beyond the 'field'"
                   "this should be a string array")
@@ -159,18 +161,18 @@ class ProfileFilter(BaseModel):
         ordering = ['id']
 
     def is_match(self, ticket):
-        # Checking the criteria will be different based on the "type"
-        # of ticket, which is really an 'object' of diff types, i.e. 'work_order'
-        field_type = ticket._meta.get_field(self.source.field)
-
         # State filter
         if self.source.is_state_filter and ticket.location.is_office_or_store:
             return self._is_address_match(ticket, 'state__id')
         # Country filter
         elif self.source.is_country_filter and ticket.location.is_office_or_store:
             return self._is_address_match(ticket, 'country__id')
+
+        # Checking the criteria will be different based on the "type"
+        # of ticket, which is really an 'object' of diff types, i.e. 'work_order'
+        field_type = ticket._meta.get_field(self.source.field)
         # location, priority, etc..
-        elif isinstance(field_type, models.ForeignKey):
+        if isinstance(field_type, models.ForeignKey):
             return str(getattr(ticket, self.source.field).id) in self.criteria
         # categories
         elif isinstance(field_type, models.ManyToManyField):

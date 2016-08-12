@@ -92,6 +92,8 @@ def create_contact_types():
 def create_contact_state(state_code=STATE_CODE):
     try:
         return State.objects.get(state_code=state_code)
+    except State.MultipleObjectsReturned:
+        return State.objects.filter(state_code=state_code)[0]
     except State.DoesNotExist:
         country = mommy.make(Country, common_name=COUNTRY_COMMON_NAME)
         return mommy.make(State, state_code=state_code, country=country)
