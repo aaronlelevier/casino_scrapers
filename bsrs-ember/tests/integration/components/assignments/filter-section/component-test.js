@@ -189,3 +189,10 @@ test('delete the middle filter, and it correctly leaves the remaining start n en
   assert.equal(page.assignmentFilterOneText, PFD.keyOne);
   assert.equal(page.assignmentFilterTwoText, PFD.keyThree);
 });
+
+test('ticket-priority-select is not searchable', function(assert) {
+  this.model = assignment;
+  this.render(hbs`{{assignments/filter-section model=model}}`);
+  assert.equal(this.$('.t-priority-criteria').length, 1);
+  // would be '.ember-power-select-trigger-multiple-input' if it was searchEnabled
+  assert.equal(this.$('.ember-power-select-multiple-trigger').length, 1);});
