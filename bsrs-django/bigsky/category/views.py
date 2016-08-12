@@ -92,11 +92,9 @@ class CategoryViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet
         serializer = cs.CategorySearchSerializer(queryset, many=True)
         return self.get_paginated_response(serializer.data)
 
-    @list_route(methods=['GET'], url_path=r"profile-filter/(?P<search_key>[\w\-]+)")
+    @list_route(methods=['GET'], url_path=r"assignment-criteria/(?P<search_key>[\w\-]+)")
     def profile_filter(self, request, search_key=None):
         queryset = Category.objects.filter(name__icontains=search_key)
-        if queryset:
-            queryset = queryset[:settings.PAGE_SIZE]
-
+        queryset = self.paginate_queryset(queryset)
         serializer = cs.CategoryProfileFilterSerializer(queryset, many=True)
-        return Response(serializer.data)
+        return self.get_paginated_response(serializer.data)

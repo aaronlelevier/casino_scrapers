@@ -442,31 +442,32 @@ class CategorySubRouteProfileFilterTests(APITestCase):
         child = create_single_category(name='aaab', parent=parent)
         grand_child = create_single_category(name='c', parent=child)
 
-        response = self.client.get('/api/admin/categories/profile-filter/{}/'.format(parent.name))
+        response = self.client.get('/api/admin/categories/assignment-criteria/{}/'.format(parent.name))
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 2)
-        self.assertEqual(data[0]['id'], str(parent.id))
-        self.assertEqual(data[0]['name'], str(parent.parents_and_self_as_string()))
-        self.assertEqual(data[1]['id'], str(child.id))
-        self.assertEqual(data[1]['name'], str(child.parents_and_self_as_string()))
+        self.assertEqual(data['count'], 2)
+        self.assertEqual(data['results'][0]['id'], str(parent.id))
+        self.assertEqual(data['results'][0]['name'], str(parent.parents_and_self_as_string()))
+        self.assertEqual(data['results'][1]['id'], str(child.id))
+        self.assertEqual(data['results'][1]['name'], str(child.parents_and_self_as_string()))
 
     def test_data__limit_full_list(self):
         create_categories()
+        self.assertTrue(Category.objects.count() > settings.PAGE_SIZE)
 
-        response = self.client.get('/api/admin/categories/profile-filter/{}/'.format('a'))
+        response = self.client.get('/api/admin/categories/assignment-criteria/{}/'.format('a'))
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), settings.PAGE_SIZE)
+        self.assertEqual(len(data['results']), settings.PAGE_SIZE)
 
     def test_data__no_match(self):
         name = 'foobar'
         self.assertFalse(Category.objects.filter(name__icontains=name).exists())
 
-        response = self.client.get('/api/admin/categories/profile-filter/{}/'.format(name))
+        response = self.client.get('/api/admin/categories/assignment-criteria/{}/'.format(name))
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 0)
+        self.assertEqual(len(data['results']), 0)
