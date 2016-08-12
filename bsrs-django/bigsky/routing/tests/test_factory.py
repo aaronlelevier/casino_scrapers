@@ -8,7 +8,7 @@ from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
-from routing.models import Assignment, AvailableFilter, AUTO_ASSIGN
+from routing.models import Assignment, ProfileFilter, AvailableFilter, AUTO_ASSIGN
 from routing.tests import factory
 from tenant.models import Tenant
 from ticket.models import Ticket, TicketPriority
@@ -79,7 +79,7 @@ class AvailableFilterTests(TestCase):
         # attrs
         self.assertEqual(ret.key, 'admin.placeholder.state_filter')
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
-        self.assertEqual(ret.field, 'location')
+        self.assertEqual(ret.field, 'state')
         self.assertEqual(ret.lookups, {'filters': 'state', 'id': 'state'})
 
     def test_create_available_filter_country(self):
@@ -90,7 +90,7 @@ class AvailableFilterTests(TestCase):
         # attrs
         self.assertEqual(ret.key, 'admin.placeholder.country_filter')
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
-        self.assertEqual(ret.field, 'location')
+        self.assertEqual(ret.field, 'country')
         self.assertEqual(ret.lookups, {'filters': 'country', 'id': 'country'})
 
     def test_create_available_filters(self):
@@ -98,9 +98,10 @@ class AvailableFilterTests(TestCase):
         factory.create_available_filters()
         self.assertEqual(AvailableFilter.objects.count(), 6)
 
-        fields = [AUTO_ASSIGN, 'priority', 'categories', 'location', 'location', 'location']
+        fields = [AUTO_ASSIGN, 'priority', 'categories', 'location', 'state', 'country']
         ret_fields = AvailableFilter.objects.values_list('field', flat=True)
         self.assertEqual(sorted(fields), sorted(ret_fields))
+        self.assertEqual(len(set(ret_fields)), 6)
 
 
 class PriorityFilterTests(TestCase):
@@ -178,6 +179,11 @@ class PriorityFilterTests(TestCase):
         self.assertEqual(pf.lookups, {})
         self.assertEqual(pf.criteria, [str(country.id)])
 
+    def test_create_profile_filters(self):
+        self.assertEqual(ProfileFilter.objects.count(), 0)
+        factory.create_profile_filters()
+        self.assertEqual(ProfileFilter.objects.count(), 6)
+
 
 class AssignmentTests(TestCase):
 
@@ -201,7 +207,34 @@ class AssignmentTests(TestCase):
 
     def test_create_assignments(self):
         self.assertEqual(Assignment.objects.count(), 0)
+        factory.create_profile_filters()
+
         factory.create_assignments()
-        # not an exact equal here b/c is created w/ a random desc
-        # using a "get_or_create" so count might not be 10 ea. time
-        self.assertTrue(Assignment.objects.count() > 5)
+
+        self.assertEqual(Assignment.objects.count(), 6)
+        # Assignments w/ static ProfileFilter.source
+        self.assertEqual(Assignment.objects.exclude(filters__lookups__filters='location_level').count(), 5)
+        # auto_assign
+        key = 'admin.placeholder.auto_assign'
+        x = Assignment.objects.get(filters__source__key=key)
+        self.assertEqual(x.description, key)
+        # priority
+        key = 'admin.placeholder.ticket_priority'
+        x = Assignment.objects.get(filters__source__key=key)
+        self.assertEqual(x.description, key)
+        # location
+        x = Assignment.objects.get(filters__lookups__filters='location_level')
+        self.assertIsInstance(x, Assignment)
+        self.assertEqual(x.description, 'location')
+        # category
+        key = 'admin.placeholder.category_filter'
+        x = Assignment.objects.get(filters__source__key=key)
+        self.assertEqual(x.description, key)
+        # state
+        key = 'admin.placeholder.state_filter'
+        x = Assignment.objects.get(filters__source__key=key)
+        self.assertEqual(x.description, key)
+        # country
+        key = 'admin.placeholder.country_filter'
+        x = Assignment.objects.get(filters__source__key=key)
+        self.assertEqual(x.description, key)

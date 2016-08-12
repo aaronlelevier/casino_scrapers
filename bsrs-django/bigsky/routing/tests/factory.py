@@ -38,13 +38,13 @@ def create_available_filter_location():
 
 def create_available_filter_state():
     obj, _ = AvailableFilter.objects.get_or_create(key='admin.placeholder.state_filter',
-                                                   field='location',
+                                                   field='state',
                                                    lookups={'filters': 'state', 'id': 'state'})
     return obj
 
 def create_available_filter_country():
     obj, _ = AvailableFilter.objects.get_or_create(key='admin.placeholder.country_filter',
-                                                   field='location',
+                                                   field='country',
                                                    lookups={'filters': 'country', 'id': 'country'})
     return obj
 
@@ -106,6 +106,15 @@ def create_ticket_location_country_filter():
     return ProfileFilter.objects.create(source=source, criteria=[str(country.id)])
 
 
+def create_profile_filters():
+    create_auto_assign_filter()
+    create_ticket_priority_filter()
+    create_ticket_categories_filter()
+    create_ticket_location_filter()
+    create_ticket_location_state_filter()
+    create_ticket_location_country_filter()
+
+
 # Assignments
 
 def create_assignment(description=None, tenant=None, assignee=None):
@@ -131,10 +140,23 @@ def create_assignment(description=None, tenant=None, assignee=None):
 
 
 def create_assignments():
-    for i in range(10):
+    tenant = get_or_create_tenant()
+
+    for pf in ProfileFilter.objects.all():
         try:
-            assignee = Person.objects.order_by('?')[0]
-        except IndexError:
-            assignee = create_single_person()
-        finally:
-            create_assignment(assignee=assignee)
+            assignment = Assignment.objects.get(filters=pf)
+        except Assignment.DoesNotExist:
+            try:
+                assignee = Person.objects.order_by('?')[0]
+            except IndexError:
+                assignee = create_single_person()
+
+            assignment = Assignment.objects.create(tenant=tenant,
+                description=pf.source.key, assignee=assignee,
+            )
+            if not assignment.description:
+                assignment.description = pf.source.field
+                assignment.save()
+
+            assignment.filters.add(pf)
+
