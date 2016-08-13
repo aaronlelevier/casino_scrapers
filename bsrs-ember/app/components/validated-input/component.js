@@ -9,7 +9,7 @@ import { task, timeout } from 'ember-concurrency';
 export default Ember.Component.extend({
   type: 'text',
   focusedOut: false,
-  attributevalidation: null,
+  attributeValidation: null,
   classNameBindings: ['showMessage:invalid'],
   init() {
     this._super(...arguments);
@@ -17,8 +17,13 @@ export default Ember.Component.extend({
     defineProperty(this, 'attributeValidation', computed.oneWay(`model.validations.attrs.${valuePath}`));
     defineProperty(this, 'value', computed.alias(`model.${valuePath}`));
   },
-  showMessage: computed('didValidate', 'focusedOut', function() {
-    return this.get('didValidate') || this.get('focusedOut');
+  showMessage: computed('localDidValidate', 'focusedOut', function() {
+    return this.get('localDidValidate') || this.get('focusedOut');
+  }),
+  localDidValidate: Ember.computed('didValidate', function() {
+    // Create local didValidate boolean so that can show err msg right away on save and 
+    // set back when fill in input
+    return this.get('didValidate') && this.get('isInvalid');
   }),
   isValid: computed.oneWay('attributeValidation.isValid'),
   isInvalid: computed.oneWay('attributeValidation.isInvalid'),
@@ -36,6 +41,7 @@ export default Ember.Component.extend({
       if (this.get('isInvalid')) {
         this.get('setFocusedOut').perform();
       } else {
+        this.set('localDidValidate', false);
         this.set('focusedOut', false);
       }
     }

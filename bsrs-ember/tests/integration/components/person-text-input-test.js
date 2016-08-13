@@ -84,7 +84,7 @@ test('middle_initial validation error if not present or greater than 30 characte
         $err = this.$('.invalid');
         assert.ok($err.is(':visible'));
         assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.person.middle_initial'));
-        done();
+         done();
       }, 1900);
     }, 300);
   }, 1900);
