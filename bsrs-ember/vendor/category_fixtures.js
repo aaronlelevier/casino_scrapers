@@ -130,12 +130,27 @@ var BSRS_CATEGORY_FACTORY = (function() {
       var uuid = 'ec62006b-6275-4aa9-abfa-38b146383d4';
       if (i < page_size) {
         uuid = uuid + '0' + i;
-      } else{
+      } else {
         uuid = uuid + i;
       }
       var category = this.generate_for_power_select(uuid);
       category.name += i;
       category.label += i;
+      response.push(category);
+    }
+    return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
+  };
+  factory.prototype.list_power_select_id_name = function() {
+    var response = [];
+    var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
+    for (var i=1; i <= page_size; i++) {
+      var uuid = 'ec62006b-6275-4aa9-abfa-38b146383d4';
+      if (i < page_size) {
+        uuid = uuid + '0' + i;
+      } else {
+        uuid = uuid + i;
+      }
+      var category = {id: uuid, name: 'foo'+i};
       response.push(category);
     }
     return {'count':page_size*2-1,'next':null,'previous':null,'results': response};

@@ -26,6 +26,13 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
       });
     }
   },
+  findAssignmentCriteria(search) {
+    if (search) {
+      return PromiseMixin.xhr(`${CATEGORIES_URL}assignment-criteria/${search}/`, 'GET').then((response) => {
+        return response.results;
+      });
+    }
+  }
 });
 
 export default CategoryRepo;

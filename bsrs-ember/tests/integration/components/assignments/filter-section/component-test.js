@@ -48,7 +48,6 @@ test('add new pfilter, disables btn, and assignment is not dirty until select pf
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(assignment.get('pf').get('length'), 1);
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
-  assert.equal(this.$('.ember-power-select-trigger-multiple-input:eq(0)').get(0)['placeholder'], 'admin.placeholder.available_filter.priority');
   page.addFilter();
   assert.equal(this.$('.ember-power-select-placeholder').text().trim(), 'admin.placeholder.available_filter');
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
@@ -72,7 +71,7 @@ test('add new pfilter, disables btn, and assignment is not dirty until select pf
   // both power-selects render
   assert.equal(this.$('.t-priority-criteria').length, 1);
   assert.equal(this.$('.t-ticket-location-select').length, 1);
-  assert.equal(this.$('.ember-power-select-trigger-multiple-input:eq(1)').get(0)['placeholder'], 'admin.placeholder.available_filter.location');
+  assert.equal(this.$('.ember-power-select-trigger-multiple-input:eq(0)').get(0)['placeholder'], 'admin.placeholder.available_filter.location');
 });
 
 test('delete pfilter and assignment is dirty and can add and remove filter sequentially as well', function(assert) {

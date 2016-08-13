@@ -8,6 +8,8 @@ export function assignmentFilter(params/*, hash*/) {
         return 'tickets/ticket-priority-select';
       case 'location':
         return 'tickets/ticket-location-select';
+      case 'categories':
+        return 'tickets/ticket-category-select';
     }
   }
 }
