@@ -12,11 +12,10 @@
 
 
 .form-control{
+  font-size: 1em;
   -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
   -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
-}
-.form-control{
   border-radius: $borderRadius;
   border-color: $gray;
   color: $dark;
@@ -26,7 +25,11 @@
     z-index: 3;
   }
 }
-.btn-default{
+select.form-control{
+  font-size: 1.3rem;
+}
+.btn{
+  font-size: 1.3rem;
   border: $borderStyle;
 }
 

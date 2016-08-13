@@ -6,8 +6,13 @@ textarea.ticket-request{
 
 .request-wrap{
 	margin: 0 0 15px;
+	clear: both;
 	*{
 		font-size: 1.2rem;
+	}
+	.input-group-addon{
+		min-width: 72px;
+		text-align: left;
 	}
 }
 
@@ -17,31 +22,27 @@ textarea.ticket-request{
 }
 
 .ticket-categories{
-	*{
-		font-size: 1.2rem;
-	}
 	.category{
 		float: left;
     margin-right: -1px;
     min-width: 120px;
     display: block;
 		.input-group-addon{
-			float: left;
 	    font-size: 1.2rem;
 	    width: auto;
-			height: 26px;
-			line-height: 24px;
+			min-width: 72px;
 			padding-top: 0;
 			padding-bottom: 0;
+			text-align: left;
 		}
 		.category-select {
 			float: left;
 		    .ember-power-select-trigger{
 					font-size: 1.2rem;
-					min-height: 26px;
+					min-height: 31px;
 					min-width: 120px;
 					height: 26px;
-					line-height: 24px;
+					line-height: 28px;
 					border-radius: 0;
 					width: 100%;
 					position: relative;
@@ -56,6 +57,17 @@ textarea.ticket-request{
 			.ember-power-select-search input{
 		        font-size: 1.2rem;
 		    }
+		}
+
+	}
+	.category:first-child{
+		.input-group-addon{
+			border-radius: $borderRadiusLeft;
+		}
+	}
+	.category:last-child{
+		.ember-power-select-trigger{
+			border-radius: $borderRadiusRight;
 		}
 	}
 }

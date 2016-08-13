@@ -35,7 +35,7 @@ header.main {
   line-height: $menuHeight;
   height: $menuHeight;
   @include nav-box-shadow;
-  z-index: 1; //dropdown in header needs to drumpf section.wrap z-index = 0
+  z-index: 2; //dropdown in header needs to drumpf nav.tabs z-index = 1
 }
 /*
 * DESKTOP AND MOBILE END
