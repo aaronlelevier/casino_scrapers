@@ -19,7 +19,7 @@ var many_to_many_extract = function(json, store, model, join_models_str, main_pk
     if(!existing.get('content')){
       relateds.push(many_models);
     }
-    if(Ember.$.inArray(many_models.id, join_model_pks) < 0){
+    if (!join_model_pks.includes(many_models.id)) {
       server_sum.push(pk);
       let m2m_model = {id: pk};
       m2m_model[`${main_pk}`] = model_pk;
@@ -28,11 +28,11 @@ var many_to_many_extract = function(json, store, model, join_models_str, main_pk
     }
   }
   join_models.forEach((m2m) => {
-    if(Ember.$.inArray(m2m.get(`${related_pk}`), related_ids) > -1){
+    if (related_ids.includes(m2m.get(related_pk))) {
       server_sum.push(m2m.id);
       return;
       //TODO: just make else statement and see if all tests pass
-    }else if(Ember.$.inArray(m2m.get(`${related_pk}`), related_ids) < 0){
+    }else if (!related_ids.includes(m2m.get(related_pk))) {
       m2m_models.push({id: m2m.get('id'), removed: true});
     }
   });

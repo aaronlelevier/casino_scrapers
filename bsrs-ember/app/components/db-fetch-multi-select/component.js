@@ -19,13 +19,13 @@ var DBFetch = Ember.Component.extend({
       const old_selection_ids = model.get(multiAttrIds);
       const new_selection_ids = new_selection.mapBy('id');
       new_selection.forEach((new_model) => {
-        if(Ember.$.inArray(new_model.id, old_selection_ids) < 0) {
+        if(!old_selection_ids.includes(new_model.id)) {
           model[add_func](new_model);
         }
       });
       old_selection.forEach((old_model) => {
         /* if new selection does not contain old id, then remove */
-        if(Ember.$.inArray(old_model.get('id'), new_selection_ids) < 0){
+        if (!new_selection_ids.includes(old_model.get('id'))) {
           model[remove_func](old_model.get('id'));
         }
       });

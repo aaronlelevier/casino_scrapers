@@ -17,14 +17,16 @@ export default Ember.Object.extend({
     const store = this.get('simpleStore');
     const ticket_status_list = store.find('general-status-list');
     return ticket_status_list.filter((ts) => {
-      return Ember.$.inArray(this.get('id'), ts.get('tickets')) > -1;
+      const ts_tickets = ts.get('tickets') || [];
+      return ts_tickets.includes(this.get('id'));
     }).objectAt(0);
   }),
   priority: computed(function() {
     const store = this.get('simpleStore');
     const ticket_priority_list = store.find('ticket-priority-list');
     return ticket_priority_list.filter((tp) => {
-      return Ember.$.inArray(this.get('id'), tp.get('tickets')) > -1;
+      const tp_tickets = tp.get('tickets') || [];
+      return tp_tickets.includes(this.get('id'));
     }).objectAt(0);
   }),
   status_class: computed('status', function(){
@@ -40,7 +42,7 @@ export default Ember.Object.extend({
     const categories = store.find('category-list');
     const category_ids = this.get('category_ids');
     const filtered_categories = categories.filter((cat) => {
-      return Ember.$.inArray(cat.get('id'), category_ids) > -1;
+      return category_ids.includes(cat.get('id'));
     });
     const names = filtered_categories.sortBy('level').map((category) => {
       return category.get('name');

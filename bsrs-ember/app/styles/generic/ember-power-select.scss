@@ -71,7 +71,7 @@
     outline: none;
 }
 .ember-power-select-dropdown{
-    font-size: 1.4rem;
+    font-size: 1em;
     border-color: $activeColor !important;
     border-radius: $borderRadiusBottom;
 }
@@ -104,4 +104,8 @@
     li{
         font-size: 1.2rem;
     }
+}
+.ember-power-select-selected-item,
+.ember-power-select-placeholder{
+  margin: 0
 }
