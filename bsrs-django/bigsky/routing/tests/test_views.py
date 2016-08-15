@@ -357,6 +357,23 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(self.assignment.filters.filter(source__field='location', lookups={'id': str(location_level.id)}).count(), 1)
         self.assertEqual(self.assignment.filters.filter(source__field='location', lookups={'id': str(location_level_two.id)}).count(), 1)
 
+    def test_update_auto_assign(self):
+        self.assignment.filters.clear()
+        auto_assign_filter = create_auto_assign_filter()
+        self.data['filters'] = [{
+            'id': str(auto_assign_filter.source.id),
+            'criteria': [],
+            'lookups': {}
+        }]
+
+        response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
+            self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(data['filters']), 1)
+        self.assertEqual(data['filters'][0]['source'], str(auto_assign_filter.source.id))
+
     def test_update__nested_delete(self):
         """
         Related ProfileFilters are "hard" deleted if they have been

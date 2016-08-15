@@ -29,14 +29,16 @@ class ProfileFilterFieldValidator(object):
 
     def is_valid_field_filter(self, klass):
         af = get_and_validate_available_filter(self.id)
-        rel_klass = klass._meta.get_field(af.field).rel.to
-        try:
-            if not rel_klass.objects.filter(id__in=self.criteria).exists():
-                raise ValidationError("'{}' is not a valid id for '{}'"
-                                      .format(self.criteria, rel_klass.__name__))
-        except ValueError:
-            # raised if a NULL value or non-list type is passed to the try block
-            raise ValidationError("'{}' not valid. Must be a list of UUIDs".format(self.criteria))
+
+        if af.field in ('location', 'priority', 'categories'):
+            rel_klass = klass._meta.get_field(af.field).rel.to
+            try:
+                if not rel_klass.objects.filter(id__in=self.criteria).exists():
+                    raise ValidationError("'{}' is not a valid id for '{}'"
+                                          .format(self.criteria, rel_klass.__name__))
+            except ValueError:
+                # raised if a NULL value or non-list type is passed to the try block
+                raise ValidationError("'{}' not valid. Must be a list of UUIDs".format(self.criteria))
 
 
 class AvailableFilterValidator(object):
