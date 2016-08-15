@@ -43,24 +43,20 @@ moduleForAcceptance('Acceptance | person new test', {
       status: SD.activeId,
       locale: LD.idOne
     };
-
     store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(PEOPLE_URL + '?page=1','GET',null,{},200,PF.empty());
     detailEndpoint = PEOPLE_URL;
     people_detail_data = {id: UUID.value, username: PD.username, role: RD.idOne, phone_numbers:[], addresses: [], locations: [], status_fk: SD.activeId, locale: PD.locale_id};
-    detail_xhr = xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
     const username_response = {'count':0,'next':null,'previous':null,'results': []};
     username_search = xhr(PEOPLE_URL + '?username=mgibson1', 'GET', null, {}, 200, username_response);
     random.uuid = function() { return UUID.value; };
   },
   afterEach() {
     payload = null;
-    detail_xhr = null;
   }
 });
 
 test('username backend validation', (assert) => {
-  clearxhr(detail_xhr);
   clearxhr(username_search);
   clearxhr(list_xhr);
   visit(NEW_URL);
@@ -75,8 +71,31 @@ test('username backend validation', (assert) => {
   });
 });
 
+test('clicking save reveals validation messages', (assert) => {
+  clearxhr(username_search);
+  clearxhr(list_xhr);
+  visit(NEW_URL);
+  andThen(() => {
+    assert.equal(find('[data-test-id="first-name"] .invalid').length, 0);
+    assert.equal(find('[data-test-id="last-name"] .invalid').length, 0);
+    assert.equal(find('[data-test-id="middle-initial"] .invalid').length, 0);
+  });
+  generalPage.save();
+  andThen(() => {
+    assert.equal(find('[data-test-id="first-name"] .invalid').length, 1);
+    assert.equal(find('[data-test-id="last-name"] .invalid').length, 1);
+    assert.equal(find('[data-test-id="middle-initial"] .invalid').length, 0);
+  });
+  fillIn('.t-person-first-name', 'scott');
+  triggerEvent('.t-person-first-name', 'keyup', {keyCode: 68});
+  andThen(() => {
+    assert.equal(find('[data-test-id="first-name"] .invalid').length, 0);
+    assert.equal(find('[data-test-id="last-name"] .invalid').length, 1);
+    assert.equal(find('[data-test-id="middle-initial"] .invalid').length, 0);
+  });
+});
+
 test('visiting /people/new and creating a new person', (assert) => {
-  clearxhr(detail_xhr);
   var response = Ember.$.extend(true, {}, payload);
   page.visitPeople();
   click('.t-add-new');
@@ -115,7 +134,6 @@ test('visiting /people/new and creating a new person', (assert) => {
 });
 
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
-  clearxhr(detail_xhr);
   clearxhr(list_xhr);
   visit(NEW_URL);
   fillIn('.t-person-username', PD.username);
@@ -141,7 +159,6 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
 });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
-  clearxhr(detail_xhr);
   visit(NEW_URL);
   andThen(() => {
     const person = store.find('person', UUID.value);
@@ -175,7 +192,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 
 test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
   clearxhr(username_search);
-  clearxhr(detail_xhr);
   visit(NEW_URL);
   generalPage.cancel();
   andThen(() => {
@@ -229,7 +245,6 @@ test('can change default role and locale', (assert) => {
 });
 
 test('adding a new person should allow for another new person to be created after the first is persisted', (assert) => {
-  clearxhr(detail_xhr);
   let person_count;
   uuidReset();
   payload.id = 'abc123';

@@ -38,6 +38,8 @@ moduleForComponent('person-new', 'integration: person-new test', {
 });
 
 test('username validation error if not present', function(assert) {
+  let modalDialogService = this.container.lookup('service:modal-dialog');
+  modalDialogService.destinationElementId = 'username';
   run(() => {
     this.set('model', store.push('person', {}));
   });
