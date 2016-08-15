@@ -5,6 +5,7 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 export default Ember.Component.extend({
   repository: injectRepo('assignment'),
   uuid: injectUUID('uuid'),
+  simpleStore: Ember.inject.service(),
   addFilterDisabled: false,
   init() {
     this._super(...arguments);
@@ -38,7 +39,17 @@ export default Ember.Component.extend({
       }
     }).filter(avail_filter => {
       // only show on first db-fetch component
-      return avail_filter.field !== 'auto_assign' ? true : index === 0;
+      if (avail_filter.field !== 'auto_assign') {
+        return true;
+      } else if (index === 0) {
+        // // defend against tabs here. If the 'auto_assign' filter is in use
+        // // in another tab, it should not be available
+        return this.get('simpleStore').find('assignment').reduce((prev, obj) => {
+          return prev && !obj.get('pf').isAny('field', 'auto_assign');
+        }, true);
+      } else {
+        return false;
+      }
     });
   },
   actions: {

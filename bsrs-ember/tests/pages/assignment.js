@@ -10,6 +10,7 @@ const BASE_URL = BASEURLS.BASE_ASSIGNMENT_URL;
 const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
 const ASSIGNEE = '.t-assignment-assignee-select';
 const DROPDOWN = options;
+const AF_SELECT_ONE = '.t-assignment-pf-select:eq(0) .ember-basic-dropdown-trigger';
 const PRIORITY = '.t-priority-criteria .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
 const PRIORITIES = '.t-priority-criteria .ember-power-select-multiple-option';
 const LOCATIONS = '.t-ticket-location-select .ember-power-select-multiple-option';
@@ -31,18 +32,23 @@ export default create({
   deleteFilter: clickable('.t-del-pf-btn:eq(0)'),
   deleteFilterTwo: clickable('.t-del-pf-btn:eq(1)'),
   filterOneClickDropdown: clickable('.t-assignment-pf-select:eq(0) .ember-basic-dropdown-trigger'),
-  // filterOneClickOptionOne: clickable(`.ember-power-select-option:contains(${PFD.keyOne})`, { scope: DROPDOWN }),
   filterOneClickOptionTwo: clickable(`.ember-power-select-option:contains(${PFD.keyTwo})`, { scope: DROPDOWN }),
+  filterOneClickOptionAutoAssign: clickable(`.ember-power-select-option:contains(${PFD.autoAssignKey})`, { scope: DROPDOWN }),
   filterOnePriorityOneRemove: clickable('.ember-power-select-multiple-remove-btn', { scope: `${PRIORITIES}:eq(0)` }),
 
   assignmentFilterOneText: text('.t-assignment-pf-select:eq(0)'),
   assignmentFilterTwoText: text('.t-assignment-pf-select:eq(1)'),
   assignmentFilterThreeText: text('.t-assignment-pf-select:eq(2)'),
 
+  assignmentFilterOneInput: text(AF_SELECT_ONE),
+  assignmentFilterOneClickDropdown: clickable(AF_SELECT_ONE),
+  assignmentFilterOneOptionOneText: text('li:eq(0)', { scope: DROPDOWN }),
+  assignmentFilterOneOptionTwoText: text('li:eq(1)', { scope: DROPDOWN }),
+  assignmentFilterOneOptionThreeText: text('li:eq(2)', { scope: DROPDOWN }),
+
   prioritySelectedOne: text(`${PRIORITIES}:eq(0)`),
   prioritySelectedTwo: text(`${PRIORITIES}:eq(1)`),
   priorityClickDropdown: clickable(PRIORITY),
-  priorityClickTwo: clickable(`.ember-power-select-option:contains(${TD.priorityTwoKey})`, { scope: DROPDOWN }),
 
   locationSelectedOne: text(`${LOCATIONS}:eq(0)`),
 

@@ -10,8 +10,9 @@ import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/assignment';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import AD from 'bsrs-ember/vendor/defaults/assignment';
+import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import AF from 'bsrs-ember/vendor/assignment_fixtures';
-import BASEURLS, { ASSIGNMENT_URL, ASSIGNMENT_LIST_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { ASSIGNMENT_URL, ASSIGNMENT_LIST_URL, ASSIGNMENT_AVAILABLE_FILTERS_URL } from 'bsrs-ember/utilities/urls';
 
 
 // Edit based on module
@@ -354,5 +355,33 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
     assert.equal(currentURL(), NEW_URL_2);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 2);
+  });
+});
+
+test('auto_assign is filtered out from one tabs available filters if it is in use in another tab', assert => {
+  let tabs = store.find('tab');
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(tabs.get('length'), 1);
+  });
+  xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
+  selectChoose('.t-assignment-pf-select:eq(0)', PFD.autoAssignKey);
+  andThen(() => {
+    assert.equal(page.assignmentFilterOneText, PFD.autoAssignKey);
+  });
+  visit(NEW_URL);
+  andThen(() => {
+    assert.equal(currentURL(), NEW_URL);
+    assert.equal(tabs.get('length'), 2);
+    assert.equal(find('.t-tab-title:eq(1)').text(), TAB_TITLE_NAME);
+  });
+  page.addFilter();
+  page.assignmentFilterOneClickDropdown();
+  andThen(() => {
+    assert.equal($('.ember-power-select-option').length, 3);
+    assert.notEqual(page.assignmentFilterOneOptionOneText, PFD.autoAssignKey);
+    assert.notEqual(page.assignmentFilterOneOptionTwoText, PFD.autoAssignKey);
+    assert.notEqual(page.assignmentFilterOneOptionThreeText, PFD.autoAssignKey);
   });
 });
