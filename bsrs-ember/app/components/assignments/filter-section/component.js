@@ -102,6 +102,8 @@ export default Ember.Component.extend({
       if (old_pfilter) {
         model.remove_pf(old_pfilter.get('id'));
       }
+      pfilter.source_id = pfilter.id;
+      pfilter.id = this.get('uuid').v4();
       model.add_pf(pfilter);
       if (pfilter.field === 'auto_assign') {
         this.set('addFilterDisabled', true);

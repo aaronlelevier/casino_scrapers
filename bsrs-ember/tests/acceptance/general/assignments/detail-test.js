@@ -5,6 +5,8 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
 import { waitFor } from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
+import random from 'bsrs-ember/models/random';
+import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import AD from 'bsrs-ember/vendor/defaults/assignment';
 import AF from 'bsrs-ember/vendor/assignment_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
@@ -32,6 +34,7 @@ moduleForAcceptance('Acceptance | assignment detail test', {
     listXhr = xhr(`${ASSIGNMENT_URL}?page=1`, 'GET', null, {}, 200, listData);
     const detailData = AF.detail();
     detailXhr = xhr(API_DETAIL_URL, 'GET', null, {}, 200, detailData);
+    random.uuid = function() { return UUID.value; };
   },
 });
 
@@ -95,7 +98,8 @@ test('visit detail and update all fields', assert => {
       criteria: [TD.priorityOneId, TD.priorityTwoId],
       lookups: {}
     }, {
-      id: PFD.idTwo,
+      id: UUID.value,
+      source_id: PFD.sourceIdTwo,
       // TODO: should have a source_id for the AF being used
       criteria: [LD.idFour],
       lookups: PFD.lookupsDynamic
@@ -251,11 +255,24 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
   });
 });
 
-test('remove filter and save - should stay on page because cant have an assignment with no filters', assert => {
+test('remove filter and save - should stay on page because an assignment must have at least one filter and criteria unless auto-assign', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
   });
+  // criteria is required (unless auto-assign)
+  page.filterOnePriorityOneRemove();
+  andThen(() => {
+    let assignment = store.find('assignment', AD.idOne);
+    assert.equal(assignment.get('pf').objectAt(0).get('criteria.length'), 0);
+  });
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.equal($('.validated-input-error-dialog').text().trim(), 'errors.assignment.pf.criteria.length');
+  });
+  // have to have at lease 1 pfilter per assignment
   page.deleteFilter();
   andThen(() => {
     assert.equal(find('.t-del-pf-btn').length, 1);
@@ -268,30 +285,19 @@ test('remove filter and save - should stay on page because cant have an assignme
     assert.equal($('.validated-input-error-dialog').length, 1);
     assert.equal($('.validated-input-error-dialog').text().trim(), 'errors.assignment.pf.length');
   });
+  // add back pfilter w/ 1 criteria to make valid, and save
   xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
   page.addFilter();
-  // if you add back a previously deleted pfilter, you get the criteria
   selectChoose('.t-assignment-pf-select:eq(0)', PFD.keyOne);
+  selectChoose('.t-priority-criteria', TD.priorityOneKey);
   andThen(() => {
     assert.equal(page.prioritySelectedOne.split(/\s+/)[1], TD.priorityOneKey);
   });
-  page.filterOnePriorityOneRemove();
-  andThen(() => {
-    let assignment = store.find('assignment', AD.idOne);
-    assert.equal(assignment.get('pf').objectAt(0).get('criteria.length'), 0);
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.equal($('.validated-input-error-dialog').text().trim(), 'errors.assignment.pf.criteria.length');
-  });
-  selectChoose('.t-priority-criteria', TD.priorityOneKey);
   let payload = AF.put({
     description: AD.descriptionOne,
     assignee: AD.assigneeOne,
     filters: [{
-      id: PFD.idOne,
+      id: UUID.value,
       source_id: PFD.sourceIdOne,
       criteria: [TD.priorityOneId],
       lookups: {}
@@ -346,7 +352,8 @@ test('select auto_assign filter and update assignment', assert => {
     description: AD.descriptionOne,
     assignee: AD.assigneeOne,
     filters: [{
-      id: PFD.autoAssignId,
+      id: UUID.value,
+      source_id: PFD.sourceIdThree,
       criteria: [],
       lookups: {}
     }]
@@ -384,7 +391,8 @@ test('select category filter and update assignment', assert => {
     description: AD.descriptionOne,
     assignee: AD.assigneeOne,
     filters: [{
-      id: PFD.categoryId,
+      id: UUID.value,
+      source_id: PFD.sourceIdFour,
       criteria: [firstItemId],
       lookups: {}
     }]
