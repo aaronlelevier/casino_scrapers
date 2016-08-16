@@ -9,6 +9,7 @@ import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import AJFD from 'bsrs-ember/vendor/defaults/assignment-join-pfilter';
 import PJCD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
+import LD from 'bsrs-ember/vendor/defaults/location';
 
 var store, assignment, deserializer, pfilter;
 
@@ -34,6 +35,7 @@ test('deserialize single', assert => {
   assert.equal(assignment.get('assignee').get('fullname'), AD.fullname);
   assert.equal(assignment.get('pf').get('length'), 1);
   assert.equal(assignment.get('pf').objectAt(0).get('id'), PFD.idOne);
+  assert.equal(assignment.get('pf').objectAt(0).get('source_id'), PFD.sourceIdOne);
   assert.equal(assignment.get('pf').objectAt(0).get('criteria').get('length'), 1);
   assert.equal(assignment.get('pf').objectAt(0).get('criteria').objectAt(0).get('id'), TD.priorityOneId);
 });
@@ -130,4 +132,31 @@ test('deserialize list', assert => {
   assert.equal(assignment.get('description'), AD.descriptionOne+'1');
   assert.equal(assignment.get('assignee').id, AD.assigneeOne);
   assert.equal(assignment.get('assignee').fullname, AD.fullname+'1');
+});
+
+test('different assignments that have different criteria but the same available filter type', assert => {
+  const json = AF.detail(AD.idOne);
+  run(() => {
+    deserializer.deserialize(json, AD.idOne);
+  });
+  assert.equal(assignment.get('id'), AD.idOne);
+  assert.equal(assignment.get('pf').get('length'), 1);
+  assert.equal(assignment.get('pf').objectAt(0).get('id'), PFD.idOne);
+  assert.equal(assignment.get('pf').objectAt(0).get('source_id'), PFD.sourceIdOne);
+  assert.equal(assignment.get('pf').objectAt(0).get('criteria').get('length'), 1);
+  assert.equal(assignment.get('pf').objectAt(0).get('criteria').objectAt(0).get('id'), TD.priorityOneId);
+  // two
+  let json_two = AF.detail(AD.idTwo);
+  json_two.filters[0].id = PFD.idTwo;
+  json_two.filters[0].criteria = PFD.criteriaTwo;
+  run(() => {
+    deserializer.deserialize(json_two, AD.idOne);
+  });
+  let assignment_two = store.find('assignment', AD.idTwo);
+  assert.equal(assignment_two.get('id'), AD.idTwo);
+  assert.equal(assignment_two.get('pf').get('length'), 1);
+  assert.equal(assignment_two.get('pf').objectAt(0).get('id'), PFD.idTwo);
+  assert.equal(assignment_two.get('pf').objectAt(0).get('source_id'), PFD.sourceIdOne);
+  assert.equal(assignment_two.get('pf').objectAt(0).get('criteria').get('length'), 1);
+  assert.equal(assignment_two.get('pf').objectAt(0).get('criteria').objectAt(0).get('id'), LD.idOne);
 });

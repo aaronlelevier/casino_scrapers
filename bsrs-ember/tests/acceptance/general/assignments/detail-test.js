@@ -91,10 +91,12 @@ test('visit detail and update all fields', assert => {
     assignee: AD.assigneeSelectOne,
     filters: [{
       id: PFD.idOne,
+      source_id: PFD.sourceIdOne,
       criteria: [TD.priorityOneId, TD.priorityTwoId],
       lookups: {}
     }, {
       id: PFD.idTwo,
+      // TODO: should have a source_id for the AF being used
       criteria: [LD.idFour],
       lookups: PFD.lookupsDynamic
     }]
@@ -290,6 +292,7 @@ test('remove filter and save - should stay on page because cant have an assignme
     assignee: AD.assigneeOne,
     filters: [{
       id: PFD.idOne,
+      source_id: PFD.sourceIdOne,
       criteria: [TD.priorityOneId],
       lookups: {}
     }]

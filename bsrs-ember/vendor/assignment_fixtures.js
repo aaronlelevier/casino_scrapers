@@ -17,9 +17,10 @@ var BSRS_ASSIGNMENT_FACTORY = (function() {
       // TODO: these are pfilters which should just be the actual filter models. ie. Ticket-Prority
       filters: [{
         id: this.pfilter.idOne,
+        source_id: this.pfilter.sourceIdOne,
         key: this.pfilter.keyOne,
         field: this.pfilter.fieldOne,
-        criteria: [{id: this.ticket.priorityOneId, name: this.ticket.priorityOneKey}],
+        criteria: this.pfilter.criteriaOne,
         lookups: {},
       }]
     };

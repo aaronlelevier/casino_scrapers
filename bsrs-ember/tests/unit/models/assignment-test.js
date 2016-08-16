@@ -4,17 +4,22 @@ import { moduleFor, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import AD from 'bsrs-ember/vendor/defaults/assignment';
 import AF from 'bsrs-ember/vendor/assignment_fixtures';
+import assignmentDeserializer from 'bsrs-ember/deserializers/assignment';
 import PersonD from 'bsrs-ember/vendor/defaults/person';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import AJFD from 'bsrs-ember/vendor/defaults/assignment-join-pfilter';
+import PJCD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
+import CD from 'bsrs-ember/vendor/defaults/criteria';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
 
-var store, assignment, inactive_assignee, pf;
+var store, assignment, inactive_assignee, pf, deserializer;
 
 moduleFor('model:assignment', 'Unit | Model | assignment', {
   needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username', 'validator:has-many'],
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:assignment', 'model:assignment-join-pfilter', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    deserializer = assignmentDeserializer.create({ simpleStore: store });
     run(() => {
       assignment = store.push('assignment', {id: AD.idOne});
     });
@@ -40,6 +45,20 @@ test('serialize', assert => {
   assert.equal(ret.id, AD.idOne);
   assert.equal(ret.description, AD.descOne);
   assert.equal(ret.assignee, AD.assigneeOne);
+});
+
+test('serialize related', assert => {
+  const json = AF.detail();
+  run(() => {
+    deserializer.deserialize(json, AD.idOne);
+  });
+  let data = assignment.serialize();
+  assert.equal(data.id, AD.idOne);
+  assert.equal(data.filters.length, 1);
+  assert.equal(data.filters[0].id, PFD.idOne);
+  assert.equal(data.filters[0].source_id, PFD.sourceIdOne);
+  assert.deepEqual(data.filters[0].lookups, {});
+  assert.deepEqual(data.filters[0].criteria, [TD.priorityOneId]);
 });
 
 /* Assignee */
@@ -114,7 +133,7 @@ test('rollbackAssignee - assignee - assignmentwill set assignee to current assig
   assert.equal(assignment.get('assignee_fk'), PersonD.idOne);
 });
 
-/* ASSIGNMENT & PROFILE_FILTER */
+/* ASSIGNMENT & PROFILE_FILTER: Start */
 test('pfilter property should return all associated pf. also confirm related and join model attr values', (assert) => {
   run(() => {
     store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
@@ -187,6 +206,48 @@ test('add_pf - will create join model and mark model dirty', (assert) => {
   assert.ok(assignment.get('pfIsDirty'));
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
 });
+
+test('multiple filters with the save availableFilterId (sourceId) are unique by their id, and criteria is unique per filter', (assert) => {
+  let assignment_two;
+  run(() => {
+    // one
+    store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
+    assignment = store.push('assignment', {id: AD.idOne, assignment_pf_fks: [AJFD.idOne]});
+    store.push('pfilter', {id: PFD.idOne, source_id: PFD.sourceIdOne});
+    store.push('pfilter-join-criteria', {id: PJCD.idOne, pfilter_pk: PFD.idOne, criteria_pk: CD.idOne});
+    store.push('criteria', {id: CD.idOne});
+    // two
+    store.push('assignment-join-pfilter', {id: AJFD.idTwo, assignment_pk: AD.idTwo, pfilter_pk: PFD.idTwo});
+    assignment_two = store.push('assignment', {id: AD.idTwo, assignment_pf_fks: [AJFD.idTwo]});
+    store.push('pfilter', {id: PFD.idTwo, source_id: PFD.sourceIdTwo});
+    store.push('pfilter-join-criteria', {id: PJCD.idTwo, pfilter_pk: PFD.idTwo, criteria_pk: CD.idTwo});
+    store.push('criteria', {id: CD.idTwo});
+  });
+  assert.equal(store.find('assignment').get('length'), 2);
+  assert.equal(store.find('pfilter').get('length'), 2);
+  // one
+  let pfs = assignment.get('pf');
+  assert.equal(pfs.get('length'), 1);
+  assert.deepEqual(assignment.get('pf_ids'), [PFD.idOne]);
+  assert.deepEqual(assignment.get('assignment_pf_ids'), [AJFD.idOne]);
+  let pf = pfs.objectAt(0);
+  assert.equal(pf.get('id'), PFD.idOne);
+  assert.equal(pf.get('source_id'), PFD.sourceIdOne);
+  assert.equal(pf.get('criteria').get('length'), 1);
+  assert.equal(pf.get('criteria').objectAt(0).get('id'), CD.idOne);
+  // two
+  let pfs_two = assignment_two.get('pf');
+  assert.equal(pfs_two.get('length'), 1);
+  assert.deepEqual(assignment_two.get('pf_ids'), [PFD.idTwo]);
+  assert.deepEqual(assignment_two.get('assignment_pf_ids'), [AJFD.idTwo]);
+  let pf_two = pfs_two.objectAt(0);
+  assert.equal(pf_two.get('id'), PFD.idTwo);
+  assert.equal(pf_two.get('source_id'), PFD.sourceIdTwo);
+  assert.equal(pf_two.get('criteria').get('length'), 1);
+  assert.equal(pf_two.get('criteria').objectAt(0).get('id'), CD.idTwo);
+});
+
+/* ASSIGNMENT & PROFILE_FILTER: End */
 
 test('saveRelated - change assignee', assert => {
   // assignee
