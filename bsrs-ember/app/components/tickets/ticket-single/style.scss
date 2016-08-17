@@ -7,7 +7,7 @@ textarea.ticket-request{
 .request-wrap{
 	margin: 0 0 15px;
 	clear: both;
-	*{
+	* {
 		font-size: 1.2rem;
 	}
 	.input-group-addon{
@@ -24,12 +24,12 @@ textarea.ticket-request{
 .ticket-categories{
 	.category{
 		float: left;
-    margin-right: -1px;
-    min-width: 120px;
-    display: block;
+		margin-right: -1px;
+		min-width: 120px;
+		display: block;
 		.input-group-addon{
-	    font-size: 1.2rem;
-	    width: auto;
+			font-size: 1.2rem;
+			width: auto;
 			min-width: 72px;
 			padding-top: 0;
 			padding-bottom: 0;
@@ -37,26 +37,26 @@ textarea.ticket-request{
 		}
 		.category-select {
 			float: left;
-		    .ember-power-select-trigger{
-					font-size: 1.2rem;
-					min-height: 31px;
-					min-width: 120px;
-					height: 26px;
-					line-height: 28px;
-					border-radius: 0;
-					width: 100%;
-					position: relative;
+			.ember-power-select-trigger{
+				font-size: 1.2rem;
+				min-height: 31px;
+				min-width: 120px;
+				height: 26px;
+				line-height: 28px;
+				border-radius: 0;
+				width: 100%;
+				position: relative;
 				&:focus{
 					z-index: 3;
 				}
-		  }
+			}
 			.ember-power-select-dropdown{
 				top: 26px;
 			}
-		  .ember-power-select-option,
+			.ember-power-select-option,
 			.ember-power-select-search input{
-		        font-size: 1.2rem;
-		    }
+				font-size: 1.2rem;
+			}
 		}
 
 	}
@@ -76,7 +76,7 @@ textarea.ticket-request{
 &.mobile-meta-data {
 	padding: 4%;
 	background: $white;
-  @include borderStyle(0 0 1px);
+	@include borderStyle(0 0 1px);
 	@extend %flex-item--none;
 	.mobile-meta-data__priority-status {
 		padding-bottom: 3%;
