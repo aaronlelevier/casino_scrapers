@@ -59,7 +59,7 @@ test('visit new URL and create a new record', assert => {
     assignee: AD.assigneeSelectOne,
     filters: [{
       id: UUID.value,
-      source_id: PFD.sourceIdOne,
+      source: PFD.sourceIdOne,
       criteria: [TD.priorityOneId],
       lookups: {}
     }]

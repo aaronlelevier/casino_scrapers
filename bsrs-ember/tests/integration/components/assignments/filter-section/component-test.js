@@ -15,7 +15,7 @@ import page from 'bsrs-ember/tests/pages/assignment';
 
 var store, trans, assignment;
 
-moduleForComponent('assignments/filter-section', 'aaron Integration | Component | assignments/detail section', {
+moduleForComponent('assignments/filter-section', 'Integration | Component | assignments/detail section', {
   integration: true,
   beforeEach() {
     page.setContext(this);

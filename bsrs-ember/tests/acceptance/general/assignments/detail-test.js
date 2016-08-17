@@ -94,12 +94,12 @@ test('visit detail and update all fields', assert => {
     assignee: AD.assigneeSelectOne,
     filters: [{
       id: PFD.idOne,
-      source_id: PFD.sourceIdOne,
+      source: PFD.sourceIdOne,
       criteria: [TD.priorityOneId, TD.priorityTwoId],
       lookups: {}
     }, {
       id: UUID.value,
-      source_id: PFD.sourceIdTwo,
+      source: PFD.sourceIdTwo,
       // TODO: should have a source_id for the AF being used
       criteria: [LD.idFour],
       lookups: PFD.lookupsDynamic
@@ -298,7 +298,7 @@ test('remove filter and save - should stay on page because an assignment must ha
     assignee: AD.assigneeOne,
     filters: [{
       id: UUID.value,
-      source_id: PFD.sourceIdOne,
+      source: PFD.sourceIdOne,
       criteria: [TD.priorityOneId],
       lookups: {}
     }]
@@ -353,7 +353,7 @@ test('select auto_assign filter and update assignment', assert => {
     assignee: AD.assigneeOne,
     filters: [{
       id: UUID.value,
-      source_id: PFD.sourceIdThree,
+      source: PFD.sourceIdThree,
       criteria: [],
       lookups: {}
     }]
@@ -392,7 +392,7 @@ test('select category filter and update assignment', assert => {
     assignee: AD.assigneeOne,
     filters: [{
       id: UUID.value,
-      source_id: PFD.sourceIdFour,
+      source: PFD.sourceIdFour,
       criteria: [firstItemId],
       lookups: {}
     }]

@@ -34,7 +34,7 @@ export default Model.extend(Validations, OptConf, {
   serialize() {
     return {
       id: this.get('id'),
-      source_id: this.get('source_id'),
+      source: this.get('source_id'),
       lookups: this.get('lookups'),
       criteria: this.get('criteria_ids')
     };
