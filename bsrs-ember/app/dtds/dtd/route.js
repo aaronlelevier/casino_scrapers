@@ -27,7 +27,7 @@ export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
     let dtd = repository.fetch(pk);
     const priorities = this.get('priorities');
     const statuses = this.get('statuses');
-    return this.findByIdScenario(dtd, pk, { statuses:statuses, priorities:priorities });
+    return this.findByIdScenario(dtd, pk, { statuses:statuses, priorities:priorities, repository:repository });
   },
   afterModel(model, transition) {
     this.get('tabList').createSingleTab({
@@ -51,9 +51,7 @@ export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
     });
   },
   setupController: function(controller, hash) {
-    controller.set('model', hash.model);
-    controller.set('priorities', hash.priorities);
-    controller.set('statuses', hash.statuses);
+    controller.setProperties(hash);
   },
   actions: {
     error(){

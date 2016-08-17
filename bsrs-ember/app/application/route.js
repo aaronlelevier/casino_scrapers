@@ -175,8 +175,15 @@ var ApplicationRoute = Ember.Route.extend({
         tabService.closeTab(tab, action);
       }
     },
-    delete(tab, callback){
-      this.send('closeTabMaster', tab, {action:'delete', deleteCB:callback});
+    delete(model, repository){
+      const id = model.get('id');
+      const deleteCB = function() {
+        return repository.delete(id);
+      };
+      const service = this.get('tabList');
+      const tab = service.findTab(id);
+      // this.sendAction('delete', this.tab(), deleteCB);
+      this.send('closeTabMaster', tab, {action:'delete', deleteCB:deleteCB});
     },
     deleteAttachment(tab, callback){
       this.send('closeTabMaster', tab, {action:'deleteAttachment', deleteCB:callback});

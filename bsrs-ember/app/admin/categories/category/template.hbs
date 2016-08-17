@@ -1,9 +1,9 @@
 {{categories/category-single
   model=model
-  delete="delete"
   close="closeTabMaster"
   setName=(action "setName")
   setDescription=(action "setDescription")
   setLabel=(action "setLabel")
   setSubLabel=(action "setSubLabel")
+  delete=(route-action "delete" model repository)
 }}

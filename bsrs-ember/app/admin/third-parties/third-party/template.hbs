@@ -1,6 +1,6 @@
-  {{third-party-single
-    model=model
-    statuses=statuses
-    delete="delete"
-    close="closeTabMaster"
-  }}
+{{third-party-single
+  model=model
+  statuses=statuses
+  close="closeTabMaster"
+  delete=(route-action "delete" model repository)
+}}

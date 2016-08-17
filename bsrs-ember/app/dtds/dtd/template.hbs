@@ -1,7 +1,7 @@
-{{dtds/dtd-single 
+{{dtds/dtd-single
   model=model
   close="closeTabMaster"
-  delete="delete"
+  delete=(route-action "delete" model repository)
   deleteAttachment="deleteAttachment"
   priorities=priorities
   statuses=statuses

@@ -1,6 +1,5 @@
 {{people/person-single
   model=model
-  delete="delete"
   close="closeTabMaster"
   state_list=state_list
   countries=countries
@@ -13,4 +12,5 @@
   roles=roles
   role_change=role_change
   save=(route-action "save")
+  delete=(route-action "delete" model repository)
 }}

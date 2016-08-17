@@ -19,7 +19,7 @@ var RoleRoute = TabRoute.extend(FindById, {
     /* otherXhrs - array of additional promises to be returned from model hook. Must pass override to work */
     const otherXhrs = [repository.getRouteData()];
     const override = true;
-    return this.findByIdScenario(role, pk, {all_role_types:all_role_types, all_location_levels:all_location_levels}, override, otherXhrs);
+    return this.findByIdScenario(role, pk, {repository:repository, all_role_types:all_role_types, all_location_levels:all_location_levels}, override, otherXhrs);
   },
   setupController: function(controller, hash) {
     controller.setProperties(hash);
