@@ -22,7 +22,8 @@ class ProfileFilterFieldValidatorTests(ViewTestSetupMixin, APITestCase):
         self.invalid_id= str(uuid.uuid4())
         self.invalid_criteria_id = str(uuid.uuid4())
         self.data['filters'] = [{
-            'id': str(self.source.id),
+            'id': str(uuid.uuid4()),
+            'source': str(self.source.id),
             'criteria': [str(self.location.id)]
         }]
 
@@ -55,23 +56,6 @@ class ProfileFilterFieldValidatorTests(ViewTestSetupMixin, APITestCase):
             "'{}' not valid. Must be a list of UUIDs".format(criteria)
         )
 
-    def test_get_and_validate_available_filter(self):
-        dupe_field = 'priority'
-        invalid_id = str(uuid.uuid4())
-        self.data['filters'] = [{
-            'id': invalid_id,
-            'criteria': [str(self.ticket_priority.id)]
-        }]
-
-        response = self.client.post('/api/admin/assignments/', self.data, format='json')
-
-        self.assertEqual(response.status_code, 400)
-        msg = json.loads(response.content.decode('utf8'))
-        self.assertEqual(
-            msg['filters'][0]['non_field_errors'][0],
-            "{} is not an AvailableFilter ID".format(invalid_id)
-        )
-
 
 class AvailableFilterValidatorTests(ViewTestSetupMixin, APITestCase):
 
@@ -94,10 +78,12 @@ class AvailableFilterValidatorTests(ViewTestSetupMixin, APITestCase):
     def test_non_dynamic_filter(self):
         dupe_field = 'priority'
         self.data['filters'] = [{
-            'id': str(self.priority_af.id),
+            'id': str(uuid.uuid4()),
+            'source': str(self.priority_af.id),
             'criteria': [str(self.ticket_priority.id)]
         },{
-            'id': str(self.priority_af.id),
+            'id': str(uuid.uuid4()),
+            'source': str(self.priority_af.id),
             'criteria': [str(self.ticket_priority.id)]
         }]
 
@@ -113,11 +99,13 @@ class AvailableFilterValidatorTests(ViewTestSetupMixin, APITestCase):
     def test_dynamic_filter(self):
         dupe_field = 'location'
         self.data['filters'] = [{
-            'id': str(self.source.id),
+            'id': str(uuid.uuid4()),
+            'source': str(self.source.id),
             'criteria': [str(self.location.id)],
             'lookups': {'id': str(self.location.location_level.id)}
         },{
-            'id': str(self.source.id),
+            'id': str(uuid.uuid4()),
+            'source': str(self.source.id),
             'criteria': [str(self.location.id)],
             'lookups': {'id': str(self.location.location_level.id)}
         }]

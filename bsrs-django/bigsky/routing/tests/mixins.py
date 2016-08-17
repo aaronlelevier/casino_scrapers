@@ -1,3 +1,5 @@
+import uuid
+
 from location.tests.factory import create_top_level_location
 from person.tests.factory import create_single_person, PASSWORD
 from routing.serializers import AssignmentCreateUpdateSerializer
@@ -29,7 +31,8 @@ class ViewTestSetupMixin(object):
         # assignment.filter payloads - b/c a combo of the PF & AF
         self.priority_af = create_available_filter_priority()
         self.data['filters'] = [{
-            'id': str(self.priority_af.id),
+            'id': str(uuid.uuid4()),
+            'source': str(self.priority_af.id),
             'criteria': [str(self.ticket_priority.id)]
         }]
 

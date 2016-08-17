@@ -13,7 +13,8 @@ from routing.models import Assignment, ProfileFilter, AvailableFilter, AUTO_ASSI
 from routing.tests.factory import (
     create_assignment, create_available_filters, create_auto_assign_filter,
     create_available_filter_location, create_ticket_location_filter,
-    create_ticket_categories_mid_level_filter, create_assignment,)
+    create_ticket_categories_mid_level_filter, create_assignment,
+    create_available_filter_auto_assign)
 from routing.tests.mixins import ViewTestSetupMixin
 from ticket.models import TicketPriority
 from utils.create import _generate_chars
@@ -63,11 +64,12 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['assignee']['fullname'], self.assignment.assignee.fullname)
         # profile_filter
         self.assertEqual(len(data['filters']), 2)
-        af = AvailableFilter.objects.get(id=data['filters'][0]['id'])
-        self.assertEqual(data['filters'][0]['id'], str(af.id))
+        pf = self.assignment.filters.get(id=data['filters'][0]['id'])
+        af = pf.source
+        self.assertEqual(data['filters'][0]['id'], str(pf.id))
+        self.assertEqual(data['filters'][0]['source_id'], str(af.id))
         self.assertEqual(data['filters'][0]['key'], af.key)
         self.assertEqual(data['filters'][0]['field'], af.field)
-        pf = self.assignment.filters.get(source=af)
         self.assertEqual(data['filters'][0]['lookups'], pf.lookups)
         self.assertEqual(data['filters'][0]['criteria'][0]['id'], pf.criteria[0])
 
@@ -87,7 +89,8 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(filter_data['lookups']['id'], str(location_level.id))
         self.assertEqual(filter_data['lookups']['name'], location_level.name)
         # unchanged
-        self.assertEqual(filter_data['id'], str(location_filter.source.id))
+        self.assertEqual(filter_data['id'], str(location_filter.id))
+        self.assertEqual(filter_data['source_id'], str(location_filter.source.id))
         self.assertEqual(filter_data['key'], location_level.name)
         self.assertEqual(filter_data['field'], location_filter.source.field)
 
@@ -143,10 +146,10 @@ class AssignmentCreateTests(ViewTestSetupMixin, APITestCase):
         # dynamic location filter
         location = create_location()
         criteria_two = [str(location.id)]
-        location_filter = create_ticket_location_filter()
-        location_af = location_filter.source
+        location_af = create_available_filter_location()
         self.data['filters'] = [{
-            'id': str(location_af.id),
+            'id': str(uuid.uuid4()),
+            'source': str(location_af.id),
             'criteria': criteria_two,
             'lookups': {'id': str(location.location_level.id)}
         }]
@@ -172,11 +175,12 @@ class AssignmentCreateTests(ViewTestSetupMixin, APITestCase):
         self.data['id'] = str(uuid.uuid4())
         self.data['description'] = 'foo'
         # filter 2
-        location_filter = create_ticket_location_filter()
+        location_af = create_available_filter_location()
         location_level = create_location_level('foo')
         location = create_location(location_level)
         self.data['filters'].append({
-            'id': str(location_filter.source.id),
+            'id': str(uuid.uuid4()),
+            'source': str(location_af.id),
             'criteria': [str(location.id)],
             'lookups': {'id': str(location_level.id)}
         })
@@ -184,7 +188,8 @@ class AssignmentCreateTests(ViewTestSetupMixin, APITestCase):
         location_level_two = create_location_level('bar')
         location_two = create_location(location_level)
         self.data['filters'].append({
-            'id': str(location_filter.source.id),
+            'id': str(uuid.uuid4()),
+            'source': str(location_af.id),
             'criteria': [str(location_two.id)],
             'lookups': {'id': str(location_level_two.id)}
         })
@@ -235,7 +240,8 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertNotEqual(self.assignment.filters.first().source, af)
         self.assertNotEqual(self.assignment.filters.first().criteria, [str(self.location.id)])
         self.data['filters'] = [{
-            'id': str(af.id),
+            'id': str(uuid.uuid4()),
+            'source': str(af.id),
             'criteria': [str(self.location.id)],
             'lookups': {'id': str(self.location.location_level.id)}
         }]
@@ -246,6 +252,7 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(data['filters']), 1)
+        self.assertEqual(str(self.assignment.filters.first().id), data['filters'][0]['id'])
         self.assertEqual(self.assignment.filters.first().source.id, af.id)
         self.assertEqual(self.assignment.filters.first().criteria, self.data['filters'][0]['criteria'])
         self.assertEqual(self.assignment.filters.first().lookups, self.data['filters'][0]['lookups'])
@@ -253,11 +260,12 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
     def test_update__nested_create__multiple(self):
         # filter 1 - in existing record
         # filter 2
-        location_filter = create_ticket_location_filter()
+        location_af = create_available_filter_location()
         location_level = create_location_level('foo')
         location = create_location(location_level)
         self.data['filters'].append({
-            'id': str(location_filter.source.id),
+            'id': str(uuid.uuid4()),
+            'source': str(location_af.id),
             'criteria': [str(location.id)],
             'lookups': {'id': str(location_level.id)}
         })
@@ -265,7 +273,8 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
         location_level_two = create_location_level('bar')
         location_two = create_location(location_level)
         self.data['filters'].append({
-            'id': str(location_filter.source.id),
+            'id': str(uuid.uuid4()),
+            'source': str(location_af.id),
             'criteria': [str(location_two.id)],
             'lookups': {'id': str(location_level_two.id)}
         })
@@ -283,10 +292,12 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
     def test_update__nested_update(self):
         priority_two = mommy.make(TicketPriority)
         criteria_two = [str(priority_two.id)]
+        profile_filter = self.assignment.filters.first()
         self.assertEqual(self.assignment.filters.first().source, self.priority_af)
         self.assertNotEqual(self.assignment.filters.first().criteria, criteria_two)
         self.data['filters'] = [{
-            'id': str(self.priority_af.id),
+            'id': str(profile_filter.id),
+            'source': str(profile_filter.source.id),
             'criteria': criteria_two
         }]
 
@@ -296,6 +307,7 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(data['filters']), 1)
+        self.assertEqual(self.assignment.filters.first(), profile_filter)
         self.assertEqual(self.assignment.filters.first().source, self.priority_af)
         self.assertEqual(self.assignment.filters.first().criteria, criteria_two)
 
@@ -310,7 +322,8 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(self.assignment.filters.first().source, location_af)
         self.assertNotEqual(self.assignment.filters.first().criteria, criteria_two)
         self.data['filters'] = [{
-            'id': str(location_filter.source.id),
+            'id': str(location_filter.id),
+            'source': str(location_af.id),
             'criteria': criteria_two,
             'lookups': {'id': str(location.location_level.id)}
         }]
@@ -321,6 +334,7 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(data['filters']), 1)
+        self.assertEqual(self.assignment.filters.first(), location_filter)
         self.assertEqual(self.assignment.filters.first().source, location_af)
         self.assertEqual(self.assignment.filters.first().criteria, criteria_two)
         self.assertEqual(self.assignment.filters.first().lookups, self.data['filters'][0]['lookups'])
@@ -335,15 +349,19 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(self.assignment.filters.first().source, location_filter.source)
         self.assertNotEqual(self.assignment.filters.first().criteria, [str(location.id)])
         self.data['filters'] = [{
-            'id': str(location_filter.source.id),
+            'id': str(location_filter.id),
+            'source': str(location_filter.source.id),
             'criteria': [str(location.id)],
             'lookups': {'id': str(location.location_level.id)}
         }]
         # filter 2
+        location_filter_two = create_ticket_location_filter()
+        self.assignment.filters.add(location_filter_two)
         location_level_two = create_location_level('bar')
         location_two = create_location(location_level)
         self.data['filters'].append({
-            'id': str(location_filter.source.id),
+            'id': str(location_filter_two.id),
+            'source': str(location_filter_two.source.id),
             'criteria': [str(location_two.id)],
             'lookups': {'id': str(location_level_two.id)}
         })
@@ -359,9 +377,10 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
 
     def test_update_auto_assign(self):
         self.assignment.filters.clear()
-        auto_assign_filter = create_auto_assign_filter()
+        auto_assign_af = create_available_filter_auto_assign()
         self.data['filters'] = [{
-            'id': str(auto_assign_filter.source.id),
+            'id': str(uuid.uuid4()),
+            'source': str(auto_assign_af.id),
             'criteria': [],
             'lookups': {}
         }]
@@ -372,7 +391,8 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(data['filters']), 1)
-        self.assertEqual(data['filters'][0]['source'], str(auto_assign_filter.source.id))
+        self.assertEqual(data['filters'][0]['id'], self.data['filters'][0]['id'])
+        self.assertEqual(data['filters'][0]['source'], str(auto_assign_af.id))
 
     def test_update__nested_delete(self):
         """

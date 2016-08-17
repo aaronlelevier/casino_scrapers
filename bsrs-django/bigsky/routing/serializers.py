@@ -51,6 +51,8 @@ class ProfileFilterSerializer(BaseCreateSerializer):
         # dynamic AF that was used when creating it. If you don't pop
         # this off, PF's lookups will be overrided by AF's
         source.pop('lookups', {})
+        # source_id is the AvalableFitler.id
+        data['source_id'] = source.pop('id')
         data.update(source)
 
         # dynamic AF don't have 'key', so set it based on the dynamic 'name'
@@ -109,7 +111,7 @@ class AssignmentCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
         if filters:
             for f in filters:
-                pf = self._create_profile_filter(f)
+                pf = ProfileFilter.objects.create(**f)
                 instance.filters.add(pf)
 
         return instance
@@ -121,10 +123,9 @@ class AssignmentCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
         if filters:
             for f in filters:
                 try:
-                    pf = instance.filters.get(source__id=f['id'],
-                                              lookups=f.get('lookups', {}))
+                    pf = instance.filters.get(id=f['id'])
                 except ProfileFilter.DoesNotExist:
-                    pf  = self._create_profile_filter(f)
+                    pf = ProfileFilter.objects.create(**f)
                 else:
                     pf.criteria = f.get('criteria', [])
                     pf.lookups = f.get('lookups', {})
@@ -138,15 +139,6 @@ class AssignmentCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
             x.delete(override=True)
 
         return super(AssignmentCreateUpdateSerializer, self).update(instance, validated_data)
-
-    @staticmethod
-    def _create_profile_filter(f):
-        af = AvailableFilter.objects.get(id=f['id'])
-        return ProfileFilter.objects.create(
-            source=af,
-            criteria=f.get('criteria', []),
-            lookups=f.get('lookups', {})
-        )
 
 
 class AssignmentListSerializer(RemoveTenantMixin, BaseCreateSerializer):

@@ -6,19 +6,13 @@ from rest_framework.exceptions import ValidationError
 from routing.models import Assignment, AvailableFilter
 
 
-def get_and_validate_available_filter(id):
-    try:
-        return AvailableFilter.objects.get(id=id)
-    except AvailableFilter.DoesNotExist:
-        raise ValidationError("{} is not an AvailableFilter ID".format(id))
-
-
 class ProfileFilterFieldValidator(object):
     """Validate that the Model class returned by the 'context' has
     the 'field' and that the 'field' has valid 'criteria'."""
 
     def __call__(self, data):
-        self.id = data.get('id', None)
+        # import pdb; pdb.set_trace()
+        self.source = data.get('source', None)
         self.criteria = data.get('criteria', [])
 
         app_label, model = settings.DEFAULT_PROFILE_FILTER_CONTEXT.split('.')
@@ -28,7 +22,7 @@ class ProfileFilterFieldValidator(object):
         self.is_valid_field_filter(klass)
 
     def is_valid_field_filter(self, klass):
-        af = get_and_validate_available_filter(self.id)
+        af = self.source
 
         if af.field in ('location', 'priority', 'categories'):
             rel_klass = klass._meta.get_field(af.field).rel.to
@@ -51,7 +45,7 @@ class AvailableFilterValidator(object):
         unique_keys = set()
         dupe_keys = []
         for f in filters:
-            af = get_and_validate_available_filter(f['id'])
+            af = f['source']
             field = af.field
 
             addit_model_id = ''
