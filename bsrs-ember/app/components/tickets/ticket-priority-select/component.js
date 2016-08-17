@@ -24,6 +24,11 @@ export default Ember.Component.extend({
           model[remove_func](old_model.get('id'));
         }
       });
+      if (new_selection.length === 0) {
+        this.set('addFilterDisabled', true);
+      } else {
+        this.set('addFilterDisabled', false);
+      }
     }
   }
 });

@@ -7,6 +7,9 @@ var BSRS_AVAILABLE_FILTER_DEFAULTS_OBJECT = (function() {
       idOne: '2z7813ee-0d02-4c75-a7eb-773420a4c971',
       idTwo: '2z7813ee-0d02-4c75-a7eb-773420a4c972',
       unusedId: '0a7813ee-0d02-4c75-a7eb-773420a4c97f',
+      nameOne: 'foo',
+      nameTwo: 'bar',
+      nameThree: 'biz'
       // keyOne: 'admin.placeholder.ticket_priority',
       // keyTwo: 'admin.placeholder.location_store',
       // key_is_i18nOne: true,

@@ -4,16 +4,19 @@ import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import { clickTrigger, nativeMouseUp } from '../../../../helpers/ember-power-select';
+import { clickTrigger, nativeMouseUp, nativeMouseDown } from '../../../../helpers/ember-power-select';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import random from 'bsrs-ember/models/random';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
+import page from 'bsrs-ember/tests/pages/assignment';
 import AD from 'bsrs-ember/vendor/defaults/assignment';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import AJFD from 'bsrs-ember/vendor/defaults/assignment-join-pfilter';
-import page from 'bsrs-ember/tests/pages/assignment';
+import CD from 'bsrs-ember/vendor/defaults/criteria';
+import PJFD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
 
-var store, trans, assignment;
+var store, trans, assignment, results;
 
 moduleForComponent('assignments/filter-section', 'Integration | Component | assignments/detail section', {
   integration: true,
@@ -26,19 +29,44 @@ moduleForComponent('assignments/filter-section', 'Integration | Component | assi
       assignment = store.push('assignment', {id: AD.idOne, description: AD.descOne, assignment_pf_fks: [AJFD.idOne]});
       store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
       store.push('pfilter', {id: PFD.idOne, source_id: PFD.sourceIdOne, key: PFD.keyOne, field: PFD.fieldOne, criteria: PFD.criteriaOne, lookups: {}});
+      // ticket-priorities
+      store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne});
     });
     const assignment_repo = repository.initialize(this.container, this.registry, 'assignment');
+    results = [{id: PFD.sourceIdOne, key: PFD.keyOne, field: PFD.fieldOne, lookups: {}},
+                     {id: PFD.sourceIdTwo, key: PFD.keyTwo, field: PFD.locationField, lookups: PFD.lookupsDynamic},
+                     {id: PFD.sourceIdThree, key: PFD.keyThree, field: PFD.autoAssignField, lookups: {}},
+                     {id: PFD.sourceIdFour, key: PFD.autoAssignKey, field: PFD.autoAssignField, lookups: {}}];
     assignment_repo.getFilters = () => new Ember.RSVP.Promise((resolve) => {
-      resolve({'results': [{id: PFD.sourceIdOne, key: PFD.keyOne, field: PFD.fieldOne, lookups: {}},
-                           {id: PFD.sourceIdTwo, key: PFD.keyTwo, field: PFD.locationField, lookups: PFD.lookupsDynamic},
-                           {id: PFD.sourceIdThree, key: PFD.keyThree, field: PFD.autoAssignField, lookups: {}}
-        ]});
+      resolve({'results': results});
     });
     random.uuid = function() { return UUID.value; };
   },
   afterEach() {
     page.removeContext(this);
   }
+});
+
+test('remove then add back criteria and add-filter-btn is still invalid', function(assert) {
+  run(() => {
+    store.push('pfilter-join-criteria', {id: PJFD.idOne, pfilter_pk: PFD.idOne, criteria_pk: CD.idOne});
+    store.push('pfilter', {id: PFD.idOne, pfilter_criteria_fks: [PJFD.idOne]});
+    store.push('criteria', {id: CD.idOne, name: CD.nameOne});
+  });
+  assert.equal(assignment.get('pf').get('length'), 1);
+  assert.equal(assignment.get('pf').objectAt(0).get('criteria').get('length'), 1);
+  this.model = assignment;
+  this.render(hbs`{{assignments/filter-section model=model}}`);
+  assert.equal(this.$('.t-assignment-pf-select').length, 1);
+  assert.equal(this.$('.t-priority-criteria').length, 1);
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
+  nativeMouseDown('.ember-power-select-multiple-remove-btn');
+  assert.equal(this.$('.ember-power-select-multiple-option').length, 0);
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
+  clickTrigger('.t-priority-criteria');
+  nativeMouseUp(`.ember-power-select-option:contains(${TD.priorityOne})`);
+  assert.equal(this.$('.ember-power-select-multiple-option').length, 1);
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
 });
 
 test('add pfilter - adds a filter with a random uuid and a source_id for the AvailableFilter [AF] selected', function(assert) {
@@ -197,7 +225,7 @@ test('if assignment has dynamic pfilter, power-select component will filter out 
   this.render(hbs`{{assignments/filter-section model=model}}`);
   assert.equal(assignment.get('pf').get('length'), 1);
   clickTrigger('.t-assignment-pf-select:eq(0)');
-  assert.equal(this.$('li.ember-power-select-option').length, 2);
+  assert.equal(this.$('li.ember-power-select-option').length, results.length - 1);
 });
 
 test('deactivate add-filter-btn test - for existing assignment', function(assert) {

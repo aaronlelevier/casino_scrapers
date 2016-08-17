@@ -5,6 +5,7 @@ import BASEURLS, { ASSIGNMENT_URL, ASSIGNMENT_LIST_URL } from 'bsrs-ember/utilit
 import AD from 'bsrs-ember/vendor/defaults/assignment';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
+import CD from 'bsrs-ember/vendor/defaults/criteria';
 
 const BASE_URL = BASEURLS.BASE_ASSIGNMENT_URL;
 const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
@@ -13,6 +14,7 @@ const DROPDOWN = options;
 const AF_SELECT_ONE = '.t-assignment-pf-select:eq(0) .ember-basic-dropdown-trigger';
 const PRIORITY = '.t-priority-criteria .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
 const PRIORITIES = '.t-priority-criteria .ember-power-select-multiple-option';
+
 const LOCATIONS = '.t-ticket-location-select .ember-power-select-multiple-option';
 const CATEGORIES = '.t-ticket-category-select .ember-power-select-multiple-option';
 
