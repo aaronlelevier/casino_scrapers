@@ -21,6 +21,13 @@ export default Ember.Object.extend(OptConf, {
     const store = this.get('simpleStore');
     response.assignee_fk = response.assignee.id;
     const assignee = response.assignee;
+    // extract criteria
+    let criteriaMap = {};
+    for (let i in response.filters) {
+      const f = response.filters[i];
+      criteriaMap[f.id] = f.criteria;
+      delete response.filters[i].criteria;
+    }
     const filters = response.filters;
     delete response.assignee;
     delete response.filters;
@@ -29,8 +36,7 @@ export default Ember.Object.extend(OptConf, {
     this.setup_assignee(assignee, assignment);
     const [,pfs,] = this.setup_pf(filters, assignment);
     pfs.forEach((pf) => {
-      const criteria = pf.criteria;
-      delete pf.criteria;
+      const criteria = criteriaMap[pf.id];
       pf = store.push('pfilter', pf);
       this.setup_criteria(criteria, pf);
     });

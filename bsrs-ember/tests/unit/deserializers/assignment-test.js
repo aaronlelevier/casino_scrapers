@@ -160,3 +160,20 @@ test('different assignments that have different criteria but the same available 
   assert.equal(assignment_two.get('pf').objectAt(0).get('criteria').get('length'), 1);
   assert.equal(assignment_two.get('pf').objectAt(0).get('criteria').objectAt(0).get('id'), LD.idOne);
 });
+
+test('2nd deserialize, criteria is a simple-store instance and not a POJO', assert => {
+  // deserialize once
+  const json = AF.detail();
+  run(() => {
+    deserializer.deserialize(json, AD.idOne);
+  });
+  assert.equal(assignment.get('pf').objectAt(0).get('criteria').get('length'), 1);
+  assert.equal(assignment.get('pf').objectAt(0).get('criteria').objectAt(0).get('id'), TD.priorityOneId);
+  // 2nd deserialize
+  const json_two = AF.detail();
+  run(() => {
+    deserializer.deserialize(json_two, AD.idOne);
+  });
+  assert.equal(assignment.get('pf').objectAt(0).get('criteria').get('length'), 1);
+  assert.equal(assignment.get('pf').objectAt(0).get('criteria').objectAt(0).get('id'), TD.priorityOneId);
+});
