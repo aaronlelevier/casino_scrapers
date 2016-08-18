@@ -68,6 +68,7 @@ export default Model.extend(OptConf, Validations, {
     const pf = this.get('pf');
     pf.forEach((model) => {
       model.saveRelated();
+      model.save();
     });
   },
   saveRelated() {

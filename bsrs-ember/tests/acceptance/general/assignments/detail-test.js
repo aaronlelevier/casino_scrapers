@@ -100,7 +100,6 @@ test('visit detail and update all fields', assert => {
     }, {
       id: UUID.value,
       source: PFD.sourceIdTwo,
-      // TODO: should have a source_id for the AF being used
       criteria: [LD.idFour],
       lookups: PFD.lookupsDynamic
     }]
@@ -134,20 +133,16 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-// TODO: Should not be prompted. Use a silent remove empty bound pf on the assignment
-test('when user adds a filter and hits cancel they are not prompted with a modal', (assert) => {
-  clearxhr(listXhr);
-  page.visitDetail();
-  page.addFilter();
-  generalPage.cancel();
-  andThen(() => {
-    waitFor(assert, () => {
-      assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.modalIsVisible);
-      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
-    });
-  });
-});
+// test('when user adds a filter and hits cancel they are not prompted with a modal', (assert) => {
+//   page.visitDetail();
+//   // a filter is added here, but it's empty, so the Assignment is still considered
+//   // clean, and can cancel w/o getting the modal prompt.
+//   page.addFilter();
+//   generalPage.cancel();
+//   andThen(() => {
+//     assert.equal(currentURL(), ASSIGNMENT_LIST_URL)
+//   });
+// });
 
 test('when user adds a filter and selects an available filter they are prompted with a modal', (assert) => {
   clearxhr(listXhr);

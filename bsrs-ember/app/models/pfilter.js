@@ -20,6 +20,9 @@ export default Model.extend(Validations, OptConf, {
     this._super(...arguments);
     many_to_many.bind(this)('criteria', 'pfilter');
   },
+  source_id: attr(''),
+  key: attr(''),
+  field: attr(''),
   simpleStore: Ember.inject.service(),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'criteriaIsDirty', function() {
     return this.get('isDirty') || this.get('criteriaIsDirty');
