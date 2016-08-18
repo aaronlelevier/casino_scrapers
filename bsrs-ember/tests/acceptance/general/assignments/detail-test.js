@@ -134,14 +134,18 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
+// TODO: Should not be prompted. Use a silent remove empty bound pf on the assignment
 test('when user adds a filter and hits cancel they are not prompted with a modal', (assert) => {
+  clearxhr(listXhr);
   page.visitDetail();
   page.addFilter();
   generalPage.cancel();
   andThen(() => {
-    assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
-    var assignment = store.find('assignment', AD.idOne);
-    assert.equal(assignment.get('pf').get('length'), 1);
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(generalPage.modalIsVisible);
+      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+    });
   });
 });
 
@@ -275,7 +279,7 @@ test('remove filter and save - should stay on page because an assignment must ha
   // have to have at lease 1 pfilter per assignment
   page.deleteFilter();
   andThen(() => {
-    assert.equal(find('.t-del-pf-btn').length, 1);
+    assert.equal(find('.t-del-pf-btn').length, 0);
     let assignment = store.find('assignment', AD.idOne);
     assert.equal(assignment.get('pf').get('length'), 0);
   });
@@ -352,7 +356,7 @@ test('select auto_assign filter and update assignment', assert => {
     description: AD.descriptionOne,
     assignee: AD.assigneeOne,
     filters: [{
-      id: UUID.value,
+      id: PFD.idOne,
       source: PFD.sourceIdThree,
       criteria: [],
       lookups: {}
@@ -391,7 +395,7 @@ test('select category filter and update assignment', assert => {
     description: AD.descriptionOne,
     assignee: AD.assigneeOne,
     filters: [{
-      id: UUID.value,
+      id: PFD.idOne,
       source: PFD.sourceIdFour,
       criteria: [firstItemId],
       lookups: {}

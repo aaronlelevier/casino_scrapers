@@ -3,7 +3,7 @@
   valuePath="pf"
   didValidate=didValidate
 }}
-{{#each filterIds as |_ index|}}
+{{#each model.pf as |_ index|}}
   <div class="input-group-vertical">
     <div class="input-group">
       <span class="input-group-btn">
@@ -29,7 +29,6 @@
     didValidate=didValidate
     id=(concat "criteria" index)
     index=index
-    addFilterDisabled=addFilterDisabled
   }}
 {{/each}}
 <button class="t-add-pf-btn btn-add btn btn-default btn-sm" type="button" disabled={{addFilterDisabled}} {{action "append"}}>

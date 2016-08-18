@@ -47,28 +47,6 @@ moduleForComponent('assignments/filter-section', 'Integration | Component | assi
   }
 });
 
-test('remove then add back criteria and add-filter-btn is still invalid', function(assert) {
-  run(() => {
-    store.push('pfilter-join-criteria', {id: PJFD.idOne, pfilter_pk: PFD.idOne, criteria_pk: CD.idOne});
-    store.push('pfilter', {id: PFD.idOne, pfilter_criteria_fks: [PJFD.idOne]});
-    store.push('criteria', {id: CD.idOne, name: CD.nameOne});
-  });
-  assert.equal(assignment.get('pf').get('length'), 1);
-  assert.equal(assignment.get('pf').objectAt(0).get('criteria').get('length'), 1);
-  this.model = assignment;
-  this.render(hbs`{{assignments/filter-section model=model}}`);
-  assert.equal(this.$('.t-assignment-pf-select').length, 1);
-  assert.equal(this.$('.t-priority-criteria').length, 1);
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
-  nativeMouseDown('.ember-power-select-multiple-remove-btn');
-  assert.equal(this.$('.ember-power-select-multiple-option').length, 0);
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
-  clickTrigger('.t-priority-criteria');
-  nativeMouseUp(`.ember-power-select-option:contains(${TD.priorityOne})`);
-  assert.equal(this.$('.ember-power-select-multiple-option').length, 1);
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
-});
-
 test('add pfilter - adds a filter with a random uuid and a source_id for the AvailableFilter [AF] selected', function(assert) {
   this.model = assignment;
   this.render(hbs`{{assignments/filter-section model=model}}`);
@@ -78,7 +56,7 @@ test('add pfilter - adds a filter with a random uuid and a source_id for the Ava
   page.addFilter();
   assert.equal(this.$('.t-assignment-pf-select').length, 2);
   // still a count of "1" b/c no AF has been selected
-  assert.equal(assignment.get('pf').get('length'), 1);
+  assert.equal(assignment.get('pf').get('length'), 2);
   clickTrigger('.t-assignment-pf-select:eq(1)');
   nativeMouseUp(`.ember-power-select-option:contains(${PFD.keyTwo})`);
   assert.equal(assignment.get('pf').get('length'), 2);
@@ -94,7 +72,7 @@ test('delete - removes assignment.pf in the store', function(assert) {
   assert.equal(this.$('.t-assignment-pf-select').length, 1);
   assert.equal(assignment.get('pf').get('length'), 1);
   page.deleteFilter();
-  assert.equal(this.$('.t-assignment-pf-select').length, 1);
+  assert.equal(this.$('.t-assignment-pf-select').length, 0);
   assert.equal(assignment.get('pf').get('length'), 0);
 });
 
@@ -109,17 +87,25 @@ test('add an empty filter then delete it', function(assert) {
 });
 
 test('change pfilter from an existing to a different pfilter', function(assert) {
+  run(() => {
+    store.push('pfilter-join-criteria', {id: PJFD.idOne, pfilter_pk: PFD.idOne, criteria_pk: CD.idOne});
+    store.push('pfilter', {id: PFD.idOne, pfilter_criteria_fks: [PJFD.idOne]});
+    store.push('criteria', {id: CD.idOne});
+  });
   this.model = assignment;
   this.render(hbs`{{assignments/filter-section model=model}}`);
   assert.equal(this.$('.t-assignment-pf-select').length, 1);
   assert.equal(assignment.get('pf').get('length'), 1);
   assert.equal(assignment.get('pf').objectAt(0).get('id'), PFD.idOne);
   assert.equal(assignment.get('pf').objectAt(0).get('source_id'), PFD.sourceIdOne);
+  assert.equal(this.$('.ember-power-select-multiple-option').length, 1);
   clickTrigger('.t-assignment-pf-select:eq(0)');
   nativeMouseUp(`.ember-power-select-option:contains(${PFD.keyTwo})`);
   assert.equal(assignment.get('pf').get('length'), 1);
-  assert.equal(assignment.get('pf').objectAt(0).get('id'), UUID.value);
+  assert.equal(assignment.get('pf').objectAt(0).get('id'), PFD.idOne);
   assert.equal(assignment.get('pf').objectAt(0).get('source_id'), PFD.sourceIdTwo);
+  // no criteria because the AF type has changed
+  assert.equal(this.$('.ember-power-select-multiple-option').length, 0);
 });
 
 test('add new pfilter, disables btn, and assignment is not dirty until select pfilter which displays component', function(assert) {
@@ -133,26 +119,23 @@ test('add new pfilter, disables btn, and assignment is not dirty until select pf
   assert.equal(assignment.get('pf').get('length'), 1);
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
   page.addFilter();
-  assert.equal(this.$('.ember-power-select-placeholder').text().trim(), 'admin.placeholder.available_filter');
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
   // adds pfilter but not dirty
   assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), PFD.keyOne);
   assert.equal(this.$('.t-assignment-pf-select').length, 2);
-  assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(assignment.get('pf').get('length'), 1);
+  assert.ok(assignment.get('isDirtyOrRelatedDirty'));
+  assert.equal(assignment.get('pf').get('length'), 2);
   // assignment is now dirty
   clickTrigger('.t-assignment-pf-select:eq(1)');
   assert.equal(this.$('.t-priority-criteria').length, 1);
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
-  // options do not include existing filters on model nor auto_assign
-  assert.equal(this.$('li.ember-power-select-option').length, 2);
+  // options (AFs) are filtered out if they've already been used
+  assert.equal(this.$('li.ember-power-select-option').length, 1);
   nativeMouseUp(`.ember-power-select-option:contains(${PFD.keyTwo})`);
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
   assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), PFD.keyOne);
   assert.equal(this.$('.ember-power-select-selected-item:eq(1)').text().trim(), PFD.keyTwo);
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assert.equal(this.$('.t-assignment-pf-select').length, 2);
-  // both power-selects render
+  // // both power-selects render
   assert.equal(this.$('.t-priority-criteria').length, 1);
   assert.equal(this.$('.t-ticket-location-select').length, 1);
   assert.equal(this.$('.ember-power-select-trigger-multiple-input:eq(0)').get(0)['placeholder'], 'admin.placeholder.available_filter.location');
@@ -169,23 +152,19 @@ test('delete pfilter and assignment is dirty and can add and remove filter seque
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(assignment.get('pf').get('length'), 2);
   assert.ok(this.$('.t-del-pf-btn'));
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
   page.deleteFilter();
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
   assert.equal(this.$('.t-assignment-pf-select').length, 1);
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assert.equal(assignment.get('pf').get('length'), 1);
   page.deleteFilter();
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
-  assert.equal(this.$('.t-assignment-pf-select').length, 1);
+  assert.equal(this.$('.t-assignment-pf-select').length, 0);
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assert.equal(assignment.get('pf').get('length'), 0);
   page.addFilter();
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
   page.deleteFilter();
+  assert.equal(this.$('.t-assignment-pf-select').length, 0);
+  assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assert.equal(assignment.get('pf').get('length'), 0);
-  assert.equal(this.$('.t-assignment-pf-select').length, 1);
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
 });
 
 test('if first filter selected is auto assign, disable btn', function(assert) {
@@ -228,32 +207,6 @@ test('if assignment has dynamic pfilter, power-select component will filter out 
   assert.equal(this.$('li.ember-power-select-option').length, results.length - 1);
 });
 
-test('deactivate add-filter-btn test - for existing assignment', function(assert) {
-  this.model = assignment;
-  this.render(hbs`{{assignments/filter-section model=model}}`);
-  assert.equal($('.t-assignment-pf-select').length, 1);
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
-  page.deleteFilter();
-  assert.equal($('.t-assignment-pf-select').length, 1);
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
-});
-
-test('add-filter-btn is deactivated if no filter and clicking delete wont change nothin', function(assert) {
-  run(() => {
-    store.clear();
-    assignment = store.push('assignment', {id: AD.idOne, description: AD.descOne});
-  });
-  this.model = assignment;
-  this.render(hbs`{{assignments/filter-section model=model}}`);
-  assert.equal(assignment.get('pf').get('length'), 0);
-  assert.equal($('.t-assignment-pf-select').length, 1);
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
-  page.deleteFilter();
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
-  page.deleteFilter();
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
-});
-
 test('delete the middle filter, and it correctly leaves the remaining start n end filter in the page', function(assert) {
   run(() => {
     let pf2 = store.push('pfilter', {id: PFD.idTwo, key: PFD.keyTwo, field: PFD.locationField, criteria: PFD.criteriaTwo, lookups: {}});
@@ -278,4 +231,5 @@ test('ticket-priority-select is not searchable', function(assert) {
   this.render(hbs`{{assignments/filter-section model=model}}`);
   assert.equal(this.$('.t-priority-criteria').length, 1);
   // would be '.ember-power-select-trigger-multiple-input' if it was searchEnabled
-  assert.equal(this.$('.ember-power-select-multiple-trigger').length, 1);});
+  assert.equal(this.$('.ember-power-select-multiple-trigger').length, 1);
+});
