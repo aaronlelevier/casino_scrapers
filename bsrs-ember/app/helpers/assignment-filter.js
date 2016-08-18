@@ -10,6 +10,10 @@ export function assignmentFilter(params/*, hash*/) {
         return 'tickets/ticket-location-select';
       case 'categories':
         return 'tickets/ticket-category-select';
+      case 'state':
+        return 'tickets/ticket-state-select';
+      case 'country':
+        return 'tickets/ticket-country-select';
     }
   }
 }

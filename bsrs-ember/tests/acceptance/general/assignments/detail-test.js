@@ -13,6 +13,8 @@ import PersonF from 'bsrs-ember/vendor/people_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import CF from 'bsrs-ember/vendor/category_fixtures';
+import CountryF from 'bsrs-ember/vendor/country_fixtures';
+import SF from 'bsrs-ember/vendor/state_fixtures';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
@@ -424,6 +426,84 @@ test('select category filter and update assignment', assert => {
     filters: [{
       id: PFD.idOne,
       source: PFD.sourceIdFour,
+      criteria: [firstItemId],
+      lookups: {}
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
+  });
+});
+
+test('select state filter and update assignment', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-assignment-pf-select .ember-power-select-selected-item').text().trim(), PFD.keyOne);
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], TD.priorityOneKey);
+  });
+  xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
+  selectChoose('.t-assignment-pf-select:eq(0)', PFD.stateKey);
+  andThen(() => {
+    assert.equal(find('.ember-power-select-trigger-multiple-input:eq(0)').get(0)['placeholder'], 'admin.placeholder.available_filter.state');
+  });
+  const keyword = 'a';
+  const response = SF.list_power_select();
+  const firstItemId = response.results[0]['id'];
+  const firstItemName = response.results[0]['name'];
+  xhr(`/api/states/tenant/?search=${keyword}`, 'GET', null, {}, 200, response);
+  selectSearch('.t-ticket-state-select', keyword);
+  selectChoose('.t-ticket-state-select', firstItemName);
+  andThen(() => {
+    assert.equal(page.stateSelectedOne.split(/\s+/)[1], firstItemName);
+  });
+  let payload = AF.put({
+    description: AD.descriptionOne,
+    assignee: AD.assigneeOne,
+    filters: [{
+      id: PFD.idOne,
+      source: PFD.sourceIdFive,
+      criteria: [firstItemId],
+      lookups: {}
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
+  });
+});
+
+test('select country filter and update assignment', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-assignment-pf-select .ember-power-select-selected-item').text().trim(), PFD.keyOne);
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], TD.priorityOneKey);
+  });
+  xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
+  selectChoose('.t-assignment-pf-select:eq(0)', PFD.countryKey);
+  andThen(() => {
+    assert.equal(find('.ember-power-select-trigger-multiple-input:eq(0)').get(0)['placeholder'], 'admin.placeholder.available_filter.country');
+  });
+  const keyword = 'a';
+  const response = CountryF.list_power_select();
+  const firstItemId = response.results[0]['id'];
+  const firstItemName = response.results[0]['name'];
+  xhr(`/api/countries/tenant/?search=${keyword}`, 'GET', null, {}, 200, response);
+  selectSearch('.t-ticket-country-select', keyword);
+  selectChoose('.t-ticket-country-select', firstItemName);
+  andThen(() => {
+    assert.equal(page.countrySelectedOne.split(/\s+/)[1], firstItemName);
+  });
+  let payload = AF.put({
+    description: AD.descriptionOne,
+    assignee: AD.assigneeOne,
+    filters: [{
+      id: PFD.idOne,
+      source: PFD.sourceIdSix,
       criteria: [firstItemId],
       lookups: {}
     }]

@@ -33,8 +33,9 @@ module.exports = function(defaults) {
       app.import('vendor/mixin.js');
       app.import('vendor/address_fixtures.js');
       app.import('vendor/admin_translation_fixtures.js');
-      app.import('vendor/criteria_fixtures.js');
       app.import('vendor/assignment_fixtures.js');
+      app.import('vendor/country_fixtures.js');
+      app.import('vendor/criteria_fixtures.js');
       app.import('vendor/dtd_fixtures.js');
       app.import('vendor/email_fixtures.js');
       app.import('vendor/locale_fixtures.js');
@@ -43,6 +44,7 @@ module.exports = function(defaults) {
       app.import('vendor/people_fixtures.js');
       app.import('vendor/phone_number_fixtures.js');
       app.import('vendor/role_fixtures.js');
+      app.import('vendor/state_fixtures.js');
       app.import('vendor/tenant_fixtures.js');
       app.import('vendor/third_party_fixtures.js');
       app.import('vendor/ticket_fixtures.js');
