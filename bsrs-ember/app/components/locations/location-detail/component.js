@@ -2,11 +2,10 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import { validate } from 'ember-cli-simple-validation/mixins/validate';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
-import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 import ParentValidationComponent from 'bsrs-ember/mixins/validation/parent';
 import RelaxedMixin from 'bsrs-ember/mixins/validation/relaxed';
 
-var LocationSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, EditMixin, {
+var LocationSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, {
   repository: inject('location'),
   child_components: ['input-multi-phone', 'input-multi-address', 'input-multi-email'],
   classNames: ['wrapper', 'form'],
@@ -30,7 +29,8 @@ var LocationSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Ed
       //this is for insert and update location methods and transitions to list route
       this.set('submitted', true);
       if (this.all_components_valid()) {
-        this._super(...arguments);
+        const tab = this.tab();
+        return this.get('save')(tab);
       }
     },
   }

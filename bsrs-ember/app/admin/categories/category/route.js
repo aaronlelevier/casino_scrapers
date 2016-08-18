@@ -12,10 +12,10 @@ var CategorySingle = TabRoute.extend(FindById, {
     const pk = params.category_id;
     const repository = this.get('repository');
     let category = repository.fetch(pk);
-    return this.findByIdScenario(category, pk);
+    return this.findByIdScenario(category, pk, {repository: repository});
   },
   setupController: function(controller, hash) {
-    controller.set('model', hash.model);
+    controller.setProperties(hash);
   },
 });
 

@@ -10,9 +10,10 @@ export default TabNewRoute.extend({
   model(params) {
     let new_pk = parseInt(params.new_id, 10);
     const repository = this.get('repository');
-    const model = this.get('repository').create(new_pk);
+    const model = repository.create(new_pk);
     return Ember.RSVP.hash({
-      model
+      model,
+      repository
     });
   },
   setupController: function(controller, hash) {

@@ -3,7 +3,6 @@ import inject from 'bsrs-ember/utilities/inject';
 import ParentValidationComponent from 'bsrs-ember/mixins/validation/parent';
 import { validate } from 'ember-cli-simple-validation/mixins/validate';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
-import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 import RelaxedMixin from 'bsrs-ember/mixins/validation/relaxed';
 
 function validatePassword() {
@@ -14,7 +13,7 @@ function validatePassword() {
   }
 }
 
-var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, EditMixin, {
+var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, {
   didValidate: false,
   simpleStore: Ember.inject.service(),
   // currency: Ember.inject.service(),
@@ -27,7 +26,8 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Edit
       this.set('submitted', true);
       if (this.all_components_valid()) {
         if (this.get('model.validations.isValid')) {
-          this._super(...arguments);
+          const tab = this.tab();
+          return this.get('save')(tab);
         }
         this.set('didValidate', true);
       }

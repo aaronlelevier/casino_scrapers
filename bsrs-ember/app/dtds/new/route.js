@@ -31,7 +31,7 @@ var DtdNewRoute = Ember.Route.extend(PriorityMixin, StatusMixin, {
     // if(!model){
     const uuid = this.get('uuid');
     const m2m_id = uuid.v4();
-    let model = this.get('repository').create(new_pk, { dtd_links_fks: [m2m_id] });
+    let model = repository.create(new_pk, { dtd_links_fks: [m2m_id] });
     const link_id = uuid.v4();
     const link = store.push('link', {id: link_id, order: 0});
     store.push('dtd-link', {id: m2m_id, dtd_pk: model.get('id'), link_pk: link_id});
@@ -39,7 +39,8 @@ var DtdNewRoute = Ember.Route.extend(PriorityMixin, StatusMixin, {
     return {
       model: model,
       statuses: statuses,
-      priorities: priorities
+      priorities: priorities,
+      repository: repository
     };
   },
   afterModel(model, transition) {
@@ -66,9 +67,7 @@ var DtdNewRoute = Ember.Route.extend(PriorityMixin, StatusMixin, {
     });
   },
   setupController: function(controller, hash) {
-    controller.set('model', hash.model);
-    controller.set('priorities', hash.priorities);
-    controller.set('statuses', hash.statuses);
+    controller.setProperties(hash);
   },
   actions: {
     editDTD() {
@@ -78,4 +77,3 @@ var DtdNewRoute = Ember.Route.extend(PriorityMixin, StatusMixin, {
 });
 
 export default DtdNewRoute;
-

@@ -1,14 +1,15 @@
-  {{locations/location-detail
-    model=model
-    all_statuses=all_statuses
-    all_location_levels=all_location_levels
-    close="closeTabMaster"
-    state_list=state_list
-    countries=countries
-    address_types=address_types
-    default_address_type=default_address_type
-    phone_number_types=phone_number_types
-    default_phone_number_type=default_phone_number_type
-    email_types=email_types
-    default_email_type=default_email_type
-  }}
+{{locations/location-detail
+  model=model
+  all_statuses=all_statuses
+  all_location_levels=all_location_levels
+  close="closeTabMaster"
+  state_list=state_list
+  countries=countries
+  address_types=address_types
+  default_address_type=default_address_type
+  phone_number_types=phone_number_types
+  default_phone_number_type=default_phone_number_type
+  email_types=email_types
+  default_email_type=default_email_type
+  save=(route-action "save" model repository)
+}}

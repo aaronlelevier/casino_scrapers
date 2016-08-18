@@ -2,7 +2,7 @@
   model=model
   save="save"
   cancel="cancel"
-  delete="delete"
+  delete=delete
 }}
 
 <section class="docSection container-fluid">
@@ -33,8 +33,8 @@
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.locationlevel.label.childOrg"}}
-            {{location-level-children-power-select 
-              model=model 
+            {{location-level-children-power-select
+              model=model
               options=location_level_options
               setChild=setChild
             }}

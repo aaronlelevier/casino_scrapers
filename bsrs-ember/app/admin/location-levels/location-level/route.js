@@ -13,12 +13,11 @@ var LocationLevelRoute = TabRoute.extend(FindById, {
     const repository = this.get('repository');
     let location_level = this.get('simpleStore').find('location-level', pk);
     const override = true;
-    return this.findByIdScenario(location_level, pk, {}, override);
-  }, 
+    return this.findByIdScenario(location_level, pk, {repository:repository}, override);
+  },
   setupController: function(controller, hash) {
-    controller.set('model', hash.model);
+    controller.setProperties(hash);
   }
 });
 
 export default LocationLevelRoute;
-

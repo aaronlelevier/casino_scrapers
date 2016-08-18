@@ -1,6 +1,7 @@
-{{tickets/ticket-new 
-  model=model 
+{{tickets/ticket-new
+  model=model
   statuses=statuses
   priorities=priorities
   close="closeTabMaster"
+  save=(route-action "save" model repository)
 }}

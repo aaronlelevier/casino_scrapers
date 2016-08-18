@@ -165,15 +165,25 @@ var ApplicationRoute = Ember.Route.extend({
           tabService.redirectRoute(tab, action, confirmed, this.transitionTo.bind(this));
         }
 
-        /* close tab */
+        /* close tab
+        if rollback, then saveModel is undefined and newModel is true
+        if save, don't removeRecord
+        */
         if (tab.get('newModel') && !tab.get('saveModel')) {
           model.removeRecord();
         }
         tabService.closeTab(tab, action);
       }
     },
-    delete(tab, callback){
-      this.send('closeTabMaster', tab, {action:'delete', deleteCB:callback});
+    delete(model, repository){
+      const id = model.get('id');
+      const deleteCB = function() {
+        return repository.delete(id);
+      };
+      const service = this.get('tabList');
+      const tab = service.findTab(id);
+      // this.sendAction('delete', this.tab(), deleteCB);
+      this.send('closeTabMaster', tab, {action:'delete', deleteCB:deleteCB});
     },
     deleteAttachment(tab, callback){
       this.send('closeTabMaster', tab, {action:'deleteAttachment', deleteCB:callback});
@@ -181,7 +191,35 @@ var ApplicationRoute = Ember.Route.extend({
     /* MOBILE */
     closeMobileDetail(model, redirectRoute) {
       this.transitionTo(redirectRoute);
-    }
+    },
+    save(model, repository, tab, activityRepository, update, updateActivities=false) {//update arg determines if transition or not and close out tab
+      if(update && model.get('isNotDirtyOrRelatedNotDirty')){
+        return;
+      }
+      const pk = model.get('id');
+      // some components used for single and new, so need to handle both situations
+      const persisted = model.get('new');
+      const action = persisted === true ? 'insert' : 'update';
+      return repository[action](model).then(() => {
+        // if new model then set saveModel for use in application route so doesn't remove record for new models
+        tab.set('saveModel', persisted);
+        if(!update){
+          //All other routes
+           this.send('closeTabMaster', tab, {action:'closeTab'});
+        } else if (update && updateActivities) {
+          //TICKET sends update in args
+          return activityRepository.find('ticket', 'tickets', pk);
+        }
+      }, (xhr) => {
+        if(xhr.status === 400) {
+          var response = JSON.parse(xhr.responseText), errors = [];
+          Object.keys(response).forEach(function(key) {
+            errors.push({name: key, value: response[key].toString()});
+          });
+          this.set('ajaxError', errors);
+        }
+      });
+    },
   }
 });
 

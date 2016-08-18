@@ -13,8 +13,9 @@ var LocationNewRoute = TabRoute.extend(ContactRouteMixin, {
     let all_location_levels = this.get('simpleStore').find('location-level');
     const all_statuses = this.get('simpleStore').find('location-status');
     let model = this.get('simpleStore').find('location', {new_pk: new_pk}).objectAt(0);
+    const repository = this.get('repository');
     if(!model){
-      model = this.get('repository').create(new_pk);
+      model = repository.create(new_pk);
     }
     return Ember.RSVP.hash({
       model: model,
@@ -28,20 +29,11 @@ var LocationNewRoute = TabRoute.extend(ContactRouteMixin, {
       default_address_type: this.address_type_repo.get_default(),
       countries: this.country_repo.find(),
       state_list: this.state_repo.find(),
+      repository: repository
     });
   },
   setupController: function(controller, hash) {
-    controller.set('model', hash.model);
-    controller.set('all_statuses', hash.all_statuses);
-    controller.set('all_location_levels', hash.all_location_levels);
-    controller.set('email_types', hash.email_types);
-    controller.set('default_email_type', hash.default_email_type);
-    controller.set('phone_number_types', hash.phone_number_types);
-    controller.set('default_phone_number_type', hash.default_phone_number_type);
-    controller.set('address_types', hash.address_types);
-    controller.set('default_address_type', hash.default_address_type);
-    controller.set('state_list', hash.state_list);
-    controller.set('countries', hash.countries);
+    controller.setProperties(hash);
   }
 });
 

@@ -11,17 +11,18 @@ var LocationLevelNew = TabRoute.extend({
     let new_pk = parseInt(params.new_id, 10);
     let location_level_options = this.get('simpleStore').find('location-level');
     let model = this.get('simpleStore').find('location-level', {new_pk: new_pk}).objectAt(0);
+    const repository = this.get('repository');
     if(!model){
-      model = this.get('repository').create(new_pk);
+      model = repository.create(new_pk);
     }
     return Ember.RSVP.hash({
       model: model,
-      location_level_options: location_level_options
+      location_level_options: location_level_options,
+      repository: repository
     });
   },
   setupController: function(controller, hash) {
-    controller.set('model', hash.model);
-    controller.set('location_level_options', hash.location_level_options);
+    controller.setProperties(hash);
   }
 });
 

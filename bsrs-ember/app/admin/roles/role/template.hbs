@@ -1,8 +1,9 @@
-  {{roles/role-single
-    model=model
-    all_role_types=all_role_types
-    all_location_levels=all_location_levels
-    close="closeTabMaster"
-    delete="delete"
-    otherXhrs=otherXhrs
-  }}
+{{roles/role-single
+  model=model
+  all_role_types=all_role_types
+  all_location_levels=all_location_levels
+  close="closeTabMaster"
+  otherXhrs=otherXhrs
+  save=(route-action "save" model repository)
+  delete=(route-action "delete" model repository)
+}}

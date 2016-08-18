@@ -1,11 +1,10 @@
 import Ember from 'ember';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
-import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 import inject from 'bsrs-ember/utilities/inject';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import injectStore from 'bsrs-ember/utilities/store';
 
-export default Ember.Component.extend(TabMixin, EditMixin, {
+export default Ember.Component.extend(TabMixin, {
   didValidate: false,
   simpleStore: Ember.inject.service(),
   error: Ember.inject.service(),
@@ -20,9 +19,9 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
     save(update=true) {
       const model = this.get('model');
       if (this.get('model.validations.isValid')) {
-        const newModel = this.get('model').get('new');
-        this._super(update);
-        if(newModel){
+        const tab = this.tab();
+        this.attrs.save(tab, undefined, update);
+        if(model.get('new')){
           this.sendAction('editDTD');
         }
       }

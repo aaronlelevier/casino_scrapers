@@ -15,16 +15,16 @@ var CategoryNewRoute = TabNewRoute.extend({
     let categories_children = repository.findCategoryChildren(search);
     let model = this.get('simpleStore').find('category', {new_pk: new_pk}).objectAt(0);
     if(!model){
-      model = this.get('repository').create(new_pk);
+      model = repository.create(new_pk);
     }
     return Ember.RSVP.hash({
       model: model,
       categories_children: categories_children,
+      repository: repository
     });
   },
   setupController: function(controller, hash) {
-    controller.set('model', hash.model);
-    controller.set('categories_children', hash.categories_children);
+    controller.setProperties(hash);
   }
 });
 

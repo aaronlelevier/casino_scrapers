@@ -8,11 +8,13 @@ var EditMixin = Ember.Mixin.create({
         return;
       }
       const pk = this.get('model').get('id');
+      // some components used for single and new, so need to handle both situations
       const persisted = model.get('new');
       const repository = this.get('repository');
       const action = persisted === true ? 'insert' : 'update';
       return repository[action](model).then(() => {
         let tab = this.tab();
+        // if new model then set saveModel for use in application route so doesn't remove record for new models
         tab.set('saveModel', persisted);
         if(!update){
           //All other routes

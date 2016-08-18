@@ -1,7 +1,8 @@
 {{location-level
   model=model
   close=(action "closeTab")
-  delete="delete"
   setName=(action "setName")
   setChild=(action "setChild")
+  save=(route-action "save" model repository)
+  delete=(route-action "delete" model repository)
 }}
