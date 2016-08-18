@@ -151,7 +151,7 @@ test('when user adds a filter and hits cancel they are not prompted with a modal
   });
 });
 
-test('aaron add an empty filter and do a PUT, and the empty filter isnt sent and is silently ignored', assert => {
+test('add an empty filter and do a PUT, and the empty filter isnt sent and is silently ignored', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(store.find('assignment', AD.idOne).get('pf').get('length'), 1);
