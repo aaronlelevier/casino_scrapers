@@ -27,22 +27,6 @@ test('dirty test | source_id', assert => {
   assert.equal(pfilter.get('isDirty'), false);
 });
 
-test('dirty test | key', assert => {
-  assert.equal(pfilter.get('isDirty'), false);
-  pfilter.set('key', 'wat');
-  assert.equal(pfilter.get('isDirty'), true);
-  pfilter.set('key', '');
-  assert.equal(pfilter.get('isDirty'), false);
-});
-
-test('dirty test | field', assert => {
-  assert.equal(pfilter.get('isDirty'), false);
-  pfilter.set('field', 'wat');
-  assert.equal(pfilter.get('isDirty'), true);
-  pfilter.set('field', '');
-  assert.equal(pfilter.get('isDirty'), false);
-});
-
 // criteria method tests
 test('criteria property should return all associated criteria. also confirm related and join model attr values', (assert) => {
   run(() => {

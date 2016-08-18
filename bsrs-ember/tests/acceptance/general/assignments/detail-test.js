@@ -137,9 +137,41 @@ test('when user adds a filter and hits cancel they are not prompted with a modal
   page.visitDetail();
   // a filter is added here, but it's empty, so the Assignment is still considered
   // clean, and can cancel w/o getting the modal prompt.
+  andThen(() => {
+    assert.equal(store.find('assignment', AD.idOne).get('pf').get('length'), 1);
+  });
   page.addFilter();
+  andThen(() => {
+    assert.equal(store.find('assignment', AD.idOne).get('pf').get('length'), 2);
+  });
   generalPage.cancel();
   andThen(() => {
+    assert.equal(store.find('assignment', AD.idOne).get('pf').get('length'), 1);
+    assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
+  });
+});
+
+test('aaron add an empty filter and do a PUT, and the empty filter isnt sent and is silently ignored', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(store.find('assignment', AD.idOne).get('pf').get('length'), 1);
+  });
+  page.addFilter();
+  andThen(() => {
+    assert.equal(store.find('assignment', AD.idOne).get('pf').get('length'), 2);
+  });
+  let payload = AF.put({
+    filters: [{
+      id: PFD.idOne,
+      source: PFD.sourceIdOne,
+      criteria: [TD.priorityOneId],
+      lookups: {}
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(store.find('assignment', AD.idOne).get('pf').get('length'), 1);
     assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
   });
 });

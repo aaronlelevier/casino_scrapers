@@ -132,7 +132,7 @@ test('add new pfilter, and assignment is not dirty until select pfilter which di
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
   assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), PFD.keyOne);
   assert.equal(this.$('.ember-power-select-selected-item:eq(1)').text().trim(), PFD.keyTwo);
-  // now the assignment is dirty b/c pfilter has an assignment
+  // now the assignment is dirty b/c pfilter has an criteria
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assert.equal(this.$('.t-assignment-pf-select').length, 2);
   // // both power-selects render

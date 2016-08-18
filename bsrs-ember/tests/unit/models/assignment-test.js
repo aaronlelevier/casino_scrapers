@@ -199,7 +199,7 @@ test('add_pf - will create join model and mark model dirty', (assert) => {
   // if an attr on the 'pf' changes
   assert.ok(assignment.get('pfIsNotDirty'));
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
-  pfilter.set('key', PFD.keyOne);
+  pfilter.set('source_id', PFD.sourceIdOne);
   assert.ok(pfilter.get('isDirty'));
   assert.ok(assignment.get('pfIsDirty'));
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
@@ -290,7 +290,7 @@ test('rollback - assignee and pf', assert => {
   assignment.add_pf({id: PFD.idOne});
   assert.equal(assignment.get('pf').get('length'), 1);
   pfilter = store.find('pfilter', PFD.idOne);
-  pfilter.set('key', PFD.keyOne);
+  pfilter.set('source_id', PFD.sourceIdOne);
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assignment.rollback();
   assert.equal(assignment.get('pf').get('length'), 0);
