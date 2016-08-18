@@ -4,6 +4,7 @@ export default Ember.Component.extend({
   tagName: 'button',
   classNames: ['btn', 'btn-default'],
   classNameBindings: ['classSetter'],
+  attributeBindings: ['btnDisabled:disabled'],
   classSetter: Ember.computed(function() {
     return 't-' + this.get('type') + '-btn';
   }),

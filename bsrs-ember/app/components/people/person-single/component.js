@@ -4,6 +4,7 @@ import ParentValidationComponent from 'bsrs-ember/mixins/validation/parent';
 import { validate } from 'ember-cli-simple-validation/mixins/validate';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import RelaxedMixin from 'bsrs-ember/mixins/validation/relaxed';
+import { task } from 'ember-concurrency';
 
 function validatePassword() {
   if (this.changingPassword && (this.get('model.password').length > 0 || this.get('model.password') === '')) {
@@ -21,16 +22,19 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, {
   child_components: ['input-multi-phone', 'input-multi-address', 'input-multi-email'],
   classNames: ['wrapper', 'form'],
   passwordValidation: validate('model.password', validatePassword),
+  saveTask: task(function * () {
+    this.set('submitted', true);
+    if (this.all_components_valid()) {
+      if (this.get('model.validations.isValid')) {
+        const tab = this.tab();
+        yield this.get('save')(tab);
+      }
+      this.set('didValidate', true);
+    }
+  }),
   actions: {
     save() {
-      this.set('submitted', true);
-      if (this.all_components_valid()) {
-        if (this.get('model.validations.isValid')) {
-          const tab = this.tab();
-          return this.get('save')(tab);
-        }
-        this.set('didValidate', true);
-      }
+      this.get('saveTask').perform();
     },
     // localeChanged(locale) {
     //   this.sendAction('localeChanged', locale);
