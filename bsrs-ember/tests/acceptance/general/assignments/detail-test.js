@@ -133,16 +133,16 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-// test('when user adds a filter and hits cancel they are not prompted with a modal', (assert) => {
-//   page.visitDetail();
-//   // a filter is added here, but it's empty, so the Assignment is still considered
-//   // clean, and can cancel w/o getting the modal prompt.
-//   page.addFilter();
-//   generalPage.cancel();
-//   andThen(() => {
-//     assert.equal(currentURL(), ASSIGNMENT_LIST_URL)
-//   });
-// });
+test('when user adds a filter and hits cancel they are not prompted with a modal', (assert) => {
+  page.visitDetail();
+  // a filter is added here, but it's empty, so the Assignment is still considered
+  // clean, and can cancel w/o getting the modal prompt.
+  page.addFilter();
+  generalPage.cancel();
+  andThen(() => {
+    assert.equal(currentURL(), ASSIGNMENT_LIST_URL)
+  });
+});
 
 test('when user adds a filter and selects an available filter they are prompted with a modal', (assert) => {
   clearxhr(listXhr);

@@ -2,7 +2,7 @@ import Ember from 'ember';
 const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
-import { many_to_many, many_to_many_dirty } from 'bsrs-components/attr/many-to-many';
+import { many_to_many, many_to_many_dirty, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/assignment';
 
@@ -42,7 +42,7 @@ export default Model.extend(OptConf, Validations, {
   },
   simpleStore: Ember.inject.service(),
   description: attr(''),
-  pfIsDirtyContainer: many_to_many_dirty('assignment_pf'),
+  pfIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('assignment_pf'),
   pfIsDirty: Ember.computed('pf.@each.{isDirtyOrRelatedDirty}', 'pfIsDirtyContainer', function() {
     const pf = this.get('pf');
     return pf.isAny('isDirtyOrRelatedDirty') || this.get('pfIsDirtyContainer');
