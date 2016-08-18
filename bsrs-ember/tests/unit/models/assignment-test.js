@@ -34,14 +34,14 @@ test('dirty test | description', assert => {
 
 test('serialize', assert => {
   run(() => {
-    assignment = store.push('assignment', {id: AD.idOne, description: AD.descOne, assignee_fk: PersonD.idOne});
+    assignment = store.push('assignment', {id: AD.idOne, description: AD.descriptionOne, assignee_fk: PersonD.idOne});
     store.push('person', {id: PersonD.idOne, assignments: [AD.idOne]});
     store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
     store.push('pfilter', {id: PFD.idOne});
   });
   let ret = assignment.serialize();
   assert.equal(ret.id, AD.idOne);
-  assert.equal(ret.description, AD.descOne);
+  assert.equal(ret.description, AD.descriptionOne);
   assert.equal(ret.assignee, AD.assigneeOne);
 });
 

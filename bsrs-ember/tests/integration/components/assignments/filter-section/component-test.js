@@ -16,7 +16,7 @@ import CD from 'bsrs-ember/vendor/defaults/criteria';
 import PJFD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 
-var store, trans, assignment, results;
+var store, trans, assignment, results, assignment_repo;
 
 moduleForComponent('assignments/filter-section', 'Integration | Component | assignments/detail section', {
   integration: true,
@@ -26,17 +26,17 @@ moduleForComponent('assignments/filter-section', 'Integration | Component | assi
     // translation.initialize(this);
     // trans = this.container.lookup('service:i18n');
     run(() => {
-      assignment = store.push('assignment', {id: AD.idOne, description: AD.descOne, assignment_pf_fks: [AJFD.idOne]});
+      assignment = store.push('assignment', {id: AD.idOne, description: AD.descriptionOne, assignment_pf_fks: [AJFD.idOne]});
       store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
       store.push('pfilter', {id: PFD.idOne, source_id: PFD.sourceIdOne, key: PFD.keyOne, field: PFD.fieldOne, criteria: PFD.criteriaOne, lookups: {}});
       // ticket-priorities
       store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne});
     });
-    const assignment_repo = repository.initialize(this.container, this.registry, 'assignment');
+    assignment_repo = repository.initialize(this.container, this.registry, 'assignment');
     results = [{id: PFD.sourceIdOne, key: PFD.keyOne, field: PFD.fieldOne, lookups: {}},
                      {id: PFD.sourceIdTwo, key: PFD.keyTwo, field: PFD.locationField, lookups: PFD.lookupsDynamic},
                      {id: PFD.sourceIdThree, key: PFD.keyThree, field: PFD.autoAssignField, lookups: {}},
-                     {id: PFD.sourceIdFour, key: PFD.autoAssignKey, field: PFD.autoAssignField, lookups: {}}];
+                     {id: PFD.sourceIdFour, key: PFD.autoAssignKey, field: PFD.autoAssignField, lookups: {} }];
     assignment_repo.getFilters = () => new Ember.RSVP.Promise((resolve) => {
       resolve({'results': results});
     });
@@ -127,8 +127,7 @@ test('add new pfilter, and assignment is not dirty until select pfilter which di
   // assignment is now dirty
   clickTrigger('.t-assignment-pf-select:eq(1)');
   assert.equal(this.$('.t-priority-criteria').length, 1);
-  // options (AFs) are filtered out if they've already been used
-  assert.equal(this.$('li.ember-power-select-option').length, 1);
+  assert.equal(this.$('li.ember-power-select-option').length, 3);
   nativeMouseUp(`.ember-power-select-option:contains(${PFD.keyTwo})`);
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
   assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), PFD.keyOne);
@@ -171,7 +170,7 @@ test('delete pfilter and assignment is dirty and can add and remove filter seque
 test('if first filter selected is auto assign, disable btn', function(assert) {
   run(() => {
     store.clear();
-    assignment = store.push('assignment', {id: AD.idOne, description: AD.descOne, assignment_pf_fks: [AJFD.idOne]});
+    assignment = store.push('assignment', {id: AD.idOne, description: AD.descriptionOne, assignment_pf_fks: [AJFD.idOne]});
     store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idThree});
     store.push('pfilter', {id: PFD.idThree, key: PFD.autoAssignKey, field: PFD.autoAssignField});
   });
@@ -179,6 +178,28 @@ test('if first filter selected is auto assign, disable btn', function(assert) {
   this.render(hbs`{{assignments/filter-section model=model}}`);
   assert.equal(assignment.get('pf').get('length'), 1);
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
+});
+
+test('if another assignment has auto_assign, then display that assignment in dropdown', function(assert) {
+  results[3].existingAssignment = AD.descriptionOne;
+  results[3].disabled = "true";
+  assignment_repo.getFilters = () => new Ember.RSVP.Promise((resolve) => {
+    resolve({'results': results});
+  });
+  run(() => {
+    store.clear();
+    assignment = store.push('assignment', {id: AD.idOne, description: AD.descriptionOne, assignment_pf_fks: []});
+    store.push('assignment', {id: AD.idTwo, description: AD.descTwo, assignment_pf_fks: [AJFD.idTwo]});
+    store.push('assignment-join-pfilter', {id: AJFD.idTwo, assignment_pk: AD.idTwo, pfilter_pk: PFD.idThree});
+    store.push('pfilter', {id: PFD.idThree, key: PFD.autoAssignKey, field: PFD.autoAssignField});
+  });
+  this.model = assignment;
+  this.render(hbs`{{assignments/filter-section model=model}}`);
+  // on init adds a dummy pf if none present
+  assert.equal(assignment.get('pf').get('length'), 1);
+  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
+  clickTrigger('.t-assignment-pf-select:eq(0)');
+  assert.equal(this.$('.ember-power-select-option:eq(3)').attr('aria-disabled'), "true");
 });
 
 test('if select auto_assign then disable add filter btn', function(assert) {
@@ -197,7 +218,7 @@ test('if select auto_assign then disable add filter btn', function(assert) {
 test('if assignment has dynamic pfilter, power-select component will filter out response result', function(assert) {
   run(() => {
     store.clear();
-    assignment = store.push('assignment', {id: AD.idOne, description: AD.descOne, assignment_pf_fks: [AJFD.idOne]});
+    assignment = store.push('assignment', {id: AD.idOne, description: AD.descriptionOne, assignment_pf_fks: [AJFD.idOne]});
     store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idTwo});
     store.push('pfilter', {id: PFD.idTwo, key: PFD.keyTwo, field: PFD.locationField, lookups: PFD.lookupsDynamic});
   });
