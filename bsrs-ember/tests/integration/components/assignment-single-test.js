@@ -20,7 +20,7 @@ moduleForComponent('assignment-single', 'integration: assignment-single test', {
     run(function() {
       model = store.push('assignment', {
         id: AD.idOne,
-        description: AD.descOne,
+        description: AD.descriptionOne,
       });
     });
     this.set('model', model);

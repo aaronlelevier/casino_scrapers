@@ -13,7 +13,7 @@ moduleForComponent('assignments/detail-section', 'Integration | Component | assi
     store = module_registry(this.container, this.registry, ['model:assignment']);
     translation.initialize(this);
     trans = this.container.lookup('service:i18n');
-    assignment = store.push('assignment', {id: AD.idOne, description: AD.descOne});
+    assignment = store.push('assignment', {id: AD.idOne, description: AD.descriptionOne});
   }
 });
 

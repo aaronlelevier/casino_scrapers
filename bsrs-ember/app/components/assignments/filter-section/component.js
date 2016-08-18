@@ -9,9 +9,13 @@ export default Ember.Component.extend({
   addFilterDisabled: false,
   init() {
     this._super(...arguments);
-    const pfilters = this.get('model').get('pf');
+    const model = this.get('model');
+    const pfilters = model.get('pf');
     if (pfilters.objectAt(0) && pfilters.objectAt(0).get('field') === 'auto_assign') {
       this.set('addFilterDisabled', true);
+    } else if (pfilters.get('length') === 0) {
+      const id = this.get('uuid').v4();
+      model.add_pf({id: id, lookups: {}});
     }
   },
   /* @method _filterResponse
@@ -34,20 +38,21 @@ export default Ember.Component.extend({
         // if not dynamic then if not already selected return true
         return !filter_ids.includes(avail_filter.id);
       }
-    }).filter(avail_filter => {
-      // only show on first db-fetch component
-      if (avail_filter.field !== 'auto_assign') {
-        return true;
-      } else if (index === 0) {
-        // defend against tabs here. If the 'auto_assign' filter is in use
-        // in another tab, it should not be available
-        return this.get('simpleStore').find('assignment').reduce((prev, obj) => {
-          return prev && !obj.get('pf').isAny('field', 'auto_assign');
-        }, true);
-      } else {
-        return false;
-      }
     });
+    //.filter(avail_filter => {
+      // only show on first db-fetch component
+      // if (avail_filter.field !== 'auto_assign') {
+      //   return true;
+      // } else if (index === 0) {
+      //   // defend against tabs here. If the 'auto_assign' filter is in use
+      //   // in another tab, it should not be available
+      //   return this.get('simpleStore').find('assignment').reduce((prev, obj) => {
+      //     return prev && !obj.get('pf').isAny('field', 'auto_assign');
+      //   }, true);
+      // } else {
+      //   return false;
+      // }
+    // });
   },
   actions: {
     /* @method append
