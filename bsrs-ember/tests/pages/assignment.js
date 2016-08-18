@@ -41,6 +41,7 @@ export default create({
   assignmentFilterOneText: text('.t-assignment-pf-select:eq(0)'),
   assignmentFilterTwoText: text('.t-assignment-pf-select:eq(1)'),
   assignmentFilterThreeText: text('.t-assignment-pf-select:eq(2)'),
+  assignmentFilterFourText: text('.t-assignment-pf-select:eq(3)'),
 
   assignmentFilterOneInput: text(AF_SELECT_ONE),
   assignmentFilterOneClickDropdown: clickable(AF_SELECT_ONE),

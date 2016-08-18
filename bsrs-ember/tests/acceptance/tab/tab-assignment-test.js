@@ -379,9 +379,10 @@ test('auto_assign is filtered out from one tabs available filters if it is in us
   page.addFilter();
   page.assignmentFilterOneClickDropdown();
   andThen(() => {
-    assert.equal($('.ember-power-select-option').length, 3);
+    assert.equal($('.ember-power-select-option').length, 4);
     assert.notEqual(page.assignmentFilterOneOptionOneText, PFD.autoAssignKey);
     assert.notEqual(page.assignmentFilterOneOptionTwoText, PFD.autoAssignKey);
-    assert.notEqual(page.assignmentFilterOneOptionThreeText, PFD.autoAssignKey);
+    assert.equal(page.assignmentFilterOneOptionThreeText, PFD.autoAssignKey);
+    assert.notEqual(page.assignmentFilterOneOptionFourText, PFD.autoAssignKey);
   });
 });

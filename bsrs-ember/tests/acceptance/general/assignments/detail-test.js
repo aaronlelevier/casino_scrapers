@@ -140,7 +140,7 @@ test('when user adds a filter and hits cancel they are not prompted with a modal
   page.addFilter();
   generalPage.cancel();
   andThen(() => {
-    assert.equal(currentURL(), ASSIGNMENT_LIST_URL)
+    assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
   });
 });
 
