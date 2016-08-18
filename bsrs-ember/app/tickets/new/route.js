@@ -24,20 +24,20 @@ var TicketNewRoute = TabNewRoute.extend({
     const new_pk = parseInt(params.new_id, 10);
     const statuses = this.get('statuses');
     const priorities = this.get('priorities');
+    const repository = this.get('repository');
     let model = this.get('simpleStore').find('ticket', {new_pk: new_pk}).objectAt(0);
     if(!model){
-      model = this.get('repository').create(new_pk);
+      model = repository.create(new_pk);
     }
     return Ember.RSVP.hash({
       model: model,
       statuses: statuses,
       priorities: priorities,
+      repository: repository
     });
   },
   setupController: function(controller, hash) {
-    controller.set('model', hash.model);
-    controller.set('statuses', hash.statuses);
-    controller.set('priorities', hash.priorities);
+    controller.setProperties(hash);
   }
 });
 

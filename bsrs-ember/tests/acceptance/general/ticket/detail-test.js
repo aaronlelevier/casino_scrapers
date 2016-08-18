@@ -1026,7 +1026,7 @@ test('clicking update with no changes will not fire off xhr', async assert => {
   assert.equal(currentURL(), DETAIL_URL);
 });
 
-test('scott clicking update will not transition away from ticket detail and bring in latest activities in correct order', async assert => {
+test('clicking update will not transition away from ticket detail and bring in latest activities in correct order', async assert => {
   let iso;
   clearxhr(list_xhr);
   await page.visitDetail();

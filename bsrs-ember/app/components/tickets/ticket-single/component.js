@@ -27,9 +27,8 @@ var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMi
       this.set('submitted', true);
       if (this.all_components_valid()) {
         if (this.get('model.validations.isValid')) {
-          const model = this.get('model');
           const tab = this.tab();
-          const promise = this.get('save')(model, this.get('repository'), tab, this.get('activityRepository'), update, updateActivities);
+          const promise = this.get('save')(tab, this.get('activityRepository'), update, updateActivities);
           if (promise && promise.then && updateActivities) {
             promise.then((activities) => {
               this.set('activities', activities);

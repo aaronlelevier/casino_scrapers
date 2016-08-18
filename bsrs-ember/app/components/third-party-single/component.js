@@ -11,9 +11,8 @@ var ThirdPartySingle = Ember.Component.extend(TabMixin, ValidationMixin, {
     save() {
       this.set('submitted', true);
       if (this.get('valid')) {
-        const model = this.get('model');
         const tab = this.tab();
-        return this.get('save')(model, this.get('repository'), tab);
+        return this.get('save')(tab);
       }
     },
     changedStatus(model, val) {

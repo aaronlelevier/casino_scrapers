@@ -6,9 +6,8 @@ var TranslationSingle = Ember.Component.extend(TabMixin, {
   repository: inject('translation'),
   actions: {
     save() {
-      const model = this.get('model');
       const tab = this.tab();
-      return this.get('save')(model, this.get('repository'), tab);
+      return this.get('save')(tab);
     }
   }
 });

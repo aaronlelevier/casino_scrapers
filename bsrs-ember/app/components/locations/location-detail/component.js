@@ -29,9 +29,8 @@ var LocationSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, {
       //this is for insert and update location methods and transitions to list route
       this.set('submitted', true);
       if (this.all_components_valid()) {
-        const model = this.get('model');
         const tab = this.tab();
-        return this.get('save')(model, this.get('repository'), tab);
+        return this.get('save')(tab);
       }
     },
   }

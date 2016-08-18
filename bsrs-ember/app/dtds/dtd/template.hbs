@@ -1,9 +1,10 @@
 {{dtds/dtd-single
   model=model
   close="closeTabMaster"
-  delete=(route-action "delete" model repository)
   deleteAttachment="deleteAttachment"
   priorities=priorities
   statuses=statuses
   title="admin.dtd.detail"
+  save=(route-action "save" model repository)
+  delete=(route-action "delete" model repository)
 }}

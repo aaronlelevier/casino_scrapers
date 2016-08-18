@@ -11,7 +11,7 @@ export default Ember.Component.extend({
     return this.get('type');
   }),
   click() {
-    // seond the type up to the base component, which also uses sendAction
+    // seond the type up to the base component, which also uses sendAction to send up to the single component where closure action is called
   	this.sendAction(this.get('actionSetter'));
     return false;
   }

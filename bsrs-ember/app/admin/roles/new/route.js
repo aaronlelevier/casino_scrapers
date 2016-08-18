@@ -16,14 +16,15 @@ var RoleNewRoute = TabNewRoute.extend({
     if(!model){
       const all_role_types = this.get('simpleStore').find('role-type');
       const default_role_type = all_role_types.objectAt(0).get('name');
-      model = this.get('repository').create(default_role_type, new_pk);
+      model = repository.create(default_role_type, new_pk);
     }
     const otherXhrs = [repository.getRouteData()];
     return Ember.RSVP.hash({
       model,
       all_role_types,
       all_location_levels,
-      otherXhrs: Ember.RSVP.all(otherXhrs)
+      otherXhrs: Ember.RSVP.all(otherXhrs),
+      repository
     });
   },
   setupController: function(controller, hash) {

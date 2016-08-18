@@ -13,7 +13,8 @@ var ThirdPartysNewComponent = Ember.Component.extend(TabMixin, NewMixin, Validat
     save() {
       this.set('submitted', true);
       if (this.get('valid')) {
-        this._super(...arguments);
+        const tab = this.tab();
+        return this.get('save')(tab);
       }
     },
     changedStatus(model, val) {
