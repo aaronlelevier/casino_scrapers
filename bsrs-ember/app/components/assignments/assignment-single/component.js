@@ -1,9 +1,8 @@
 import Ember from 'ember';
 import injectRepo from 'bsrs-ember/utilities/inject';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
-import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 
-export default Ember.Component.extend(TabMixin, EditMixin, {
+export default Ember.Component.extend(TabMixin, {
   init() {
     this._super(...arguments);
     this.didValidate = false;
@@ -12,7 +11,8 @@ export default Ember.Component.extend(TabMixin, EditMixin, {
   actions: {
     save() {
       if (this.get('model.validations.isValid')) {
-        this._super(...arguments);
+        const tab = this.tab();
+        return this.get('save')(tab);
       }
       this.set('didValidate', true);
     }
