@@ -192,27 +192,24 @@ var ApplicationRoute = Ember.Route.extend({
     closeMobileDetail(model, redirectRoute) {
       this.transitionTo(redirectRoute);
     },
-    save(model, repository, tab) {//update arg determines if transition or not and close out tab
-      // const model = this.get('model');
-      // if(model.get('isNotDirtyOrRelatedNotDirty')){
-      //   return;
-      // }
+    save(model, repository, tab, activityRepository, update, updateActivities=false) {//update arg determines if transition or not and close out tab
+      if(update && model.get('isNotDirtyOrRelatedNotDirty')){
+        return;
+      }
       const pk = model.get('id');
       // some components used for single and new, so need to handle both situations
       const persisted = model.get('new');
       const action = persisted === true ? 'insert' : 'update';
       return repository[action](model).then(() => {
-        //let tab = this.tab();
         // if new model then set saveModel for use in application route so doesn't remove record for new models
-        // tab.set('saveModel', persisted);
-        // if(!update){
-        //   //All other routes
+        tab.set('saveModel', persisted);
+        if(!update){
+          //All other routes
            this.send('closeTabMaster', tab, {action:'closeTab'});
-           // this.send('close', tab);
-        // } else if (update && updateActivities) {
-        //   //TICKET sends update in args
-        //   return this.get('activityRepository').find('ticket', 'tickets', pk);
-        // }
+        } else if (update && updateActivities) {
+          //TICKET sends update in args
+          return activityRepository.find('ticket', 'tickets', pk);
+        }
       }, (xhr) => {
         if(xhr.status === 400) {
           var response = JSON.parse(xhr.responseText), errors = [];

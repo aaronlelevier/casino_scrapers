@@ -2,10 +2,9 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
-import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 import ChangeBoolMixin from 'bsrs-ember/mixins/components/change-bool';
 
-var RoleSingle = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, ChangeBoolMixin, {
+var RoleSingle = Ember.Component.extend(TabMixin, ValidationMixin, ChangeBoolMixin, {
   repository: inject('role'),
   simpleStore: Ember.inject.service(),
   nameValidation: validate('model.name'),
@@ -14,7 +13,9 @@ var RoleSingle = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, Ch
     save() {
       this.set('submitted', true);
       if (this.get('valid')) {
-        this._super(...arguments);
+        const model = this.get('model');
+        const tab = this.tab();
+        return this.get('save')(model, this.get('repository'), tab);
       }
     },
     changedLocLevel(model, val) {
