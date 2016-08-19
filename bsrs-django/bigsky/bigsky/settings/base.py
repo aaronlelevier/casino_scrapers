@@ -38,7 +38,6 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     'accounting',
-    'assignment',
     'bigsky',
     'dt',
     'dtd',

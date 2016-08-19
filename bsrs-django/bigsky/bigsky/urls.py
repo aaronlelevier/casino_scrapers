@@ -11,7 +11,6 @@ from rest_framework import routers
 from rest_framework.routers import Route, SimpleRouter, DynamicListRoute
 
 from accounting import views as accounting_views
-from assignment import views as assignment_views
 from bigsky import views as bigsky_views
 from bigsky import views_api as bigsky_views_api
 from bigsky.forms import BsAuthenticationForm
@@ -35,8 +34,6 @@ router = routers.DefaultRouter()
 
 # ACCOUNTING
 router.register(r'admin/currencies', accounting_views.CurrencyViewSet)
-# ASSIGNMENT
-router.register(r'admin/profiles', assignment_views.ProfileViewSet)
 # DECISION TREE
 router.register(r'dtds', dtd_views.TreeDataViewSet)
 # CATEGORY
