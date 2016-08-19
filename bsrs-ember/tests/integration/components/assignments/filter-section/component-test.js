@@ -15,6 +15,7 @@ import AJFD from 'bsrs-ember/vendor/defaults/assignment-join-pfilter';
 import CD from 'bsrs-ember/vendor/defaults/criteria';
 import PJFD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
+import SD from 'bsrs-ember/vendor/defaults/state';
 
 var store, trans, assignment, results, assignment_repo;
 

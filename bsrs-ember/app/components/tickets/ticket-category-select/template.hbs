@@ -1,20 +1,7 @@
-{{power-select-validation
+{{db-fetch-multi-select-criteria
   model=model
-  valuePath="criteria"
-  didValidate=didValidate
-  index=index
-}}
-{{db-fetch-multi-select
-  model=model
-  multiAttr="criteria"
-  multiAttrIds="criteria_ids"
-  selectedAttr=model.criteria
   className="t-ticket-category-select"
   placeholder="admin.placeholder.available_filter.category"
-  displayName="name"
-  add_func="add_criteria"
-  remove_func="remove_criteria"
   repository=repository
   searchMethod="findAssignmentCriteria"
-  extra_params=extra_params
 }}
