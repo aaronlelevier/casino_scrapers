@@ -475,7 +475,8 @@ test('count is shown and updated as the user filters down the list from django',
     // assert.equal(find('.t-grid-data').length, 2);
     assert.equal(find('.t-page-count').text(), '2 Tickets');
   });
-  fillIn('.t-grid-search-input', '');
+  // this tests that a space will be trimmed in the grid-search-input component
+  fillIn('.t-grid-search-input', ' ');
   triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
   andThen(() => {
     assert.equal(currentURL(),TICKET_LIST_URL + '?search=');

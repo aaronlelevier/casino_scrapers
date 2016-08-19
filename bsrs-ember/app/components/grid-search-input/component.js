@@ -19,7 +19,8 @@ var GridSearch =  Ember.TextField.extend({
   },
   sendValueUp: task(function * (searchValue) {
     yield timeout(DEBOUNCE_MS);
-    this.sendAction('keyup', this.get('val'));
+    // need to trim spaces if user types space a bunch of times
+    this.sendAction('keyup', this.get('val').trim());
   }).restartable(),
   keyUp: function() {
     const searchValue = this.get('val');
