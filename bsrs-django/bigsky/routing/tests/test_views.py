@@ -495,7 +495,6 @@ class AvailableFilterTests(APITestCase):
             [f['field'] for f in data['results']]
         )
 
-        # AUTO_ASSIGN excluded
         auto_assign_filter = create_auto_assign_filter()
         self.assignment.filters.add(auto_assign_filter)
         self.assertTrue(Assignment.objects.auto_assign_filter_in_use(self.tenant))
@@ -503,10 +502,8 @@ class AvailableFilterTests(APITestCase):
         response = self.client.get('/api/admin/assignments-available-filters/')
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertNotIn(
-            AUTO_ASSIGN,
-            [f['field'] for f in data['results']]
-        )
+        self.assertEqual(self.assignment.description, [i.get('existingAssignment') for i in data['results'] if i.get('existingAssignment')][0])
+        self.assertEqual(True, [i.get('disabled') for i in data['results'] if i.get('disabled')][0])
 
     def test_detail(self):
         response = self.client.get('/api/admin/assignments-available-filters/{}/'.format(self.af.id))

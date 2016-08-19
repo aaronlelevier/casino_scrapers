@@ -50,10 +50,6 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-        # custom: start
-        if Assignment.objects.auto_assign_filter_in_use(request.user.role.tenant):
-            queryset = AvailableFilter.objects.exclude(field=AUTO_ASSIGN)
-        # custom: end
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -63,19 +59,27 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
             response = Response(serializer.data)
 
         data = copy.copy(response.data)
-        response.data = self._combine_dynamic_data(data)
+        assignment_with_auto_assign = Assignment.objects.auto_assign_filter_in_use(request.user.role.tenant)
+        response.data = self._combine_dynamic_data(data, assignment_with_auto_assign)
         return response
 
-    def _combine_dynamic_data(self, data):
+    def _combine_dynamic_data(self, data, assignment_with_auto_assign):
         """
         Looks for dynamic AvailableFilters. If it finds one, remove that filter
         placeholder, and replace it with dynamic versions of itself.
+        Adds data to auto assign filter for use in power select only if another assignment
+        has auto_assign (which is likely the case for all customers after they are setup)
         """
         data_copy = copy.copy(data)
         location_filter = None
+        auto_assign_filter = None
         for i, d in enumerate(data_copy['results']):
             if d['lookups'] == {'filters': 'location_level'}:
                 location_filter = data['results'].pop(i)
+
+            if d['field'] == AUTO_ASSIGN and assignment_with_auto_assign:
+                data['results'][i]['existingAssignment'] = assignment_with_auto_assign.description
+                data['results'][i]['disabled'] = True
 
         if location_filter:
             filters = []
