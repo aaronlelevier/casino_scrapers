@@ -35,6 +35,15 @@ class CountryDetailSerializer(serializers.ModelSerializer):
         fields = ('id', 'common_name', 'three_letter_code', 'states')
 
 
+class CountryIdNameSerializer(serializers.ModelSerializer):
+
+    name = serializers.CharField(source='common_name')
+
+    class Meta:
+        model = Country
+        fields = ('id', 'name')
+
+
 ### PHONE NUMBER ###
 
 class PhoneNumberTypeSerializer(serializers.ModelSerializer):
