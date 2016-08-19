@@ -90,6 +90,16 @@ test('each status shows up as a valid select option', function(assert) {
   assert.equal($component.length, 1);
 });
 
+test('if save isRunning, btn is disabled', function(assert) {
+  let statuses = store.find('ticket-status');
+  this.set('model', ticket);
+  this.set('statuses', statuses);
+  // monkey patched.  Not actually passed to component but save.isRunning comes from save ember-concurrency task
+  this.saveIsRunning = { isRunning: 'disabled' };
+  this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses saveTask=saveIsRunning}}`);
+  assert.equal(this.$('.t-save-btn').attr('disabled'), 'disabled', 'Button is disabled if xhr save is outstanding');
+});
+
 test('each priority shows up as a valid select option', function(assert) {
   let priorities = store.find('ticket-priority');
   this.set('model', ticket);

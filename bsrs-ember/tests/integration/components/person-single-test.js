@@ -95,6 +95,16 @@ test('validation on person username works if clear out username', function(asser
   }, 300);
 });
 
+test('if save isRunning, btn is disabled', function(assert) {
+  run(() => {
+    this.model = store.push('person', {id: PD.idOne});
+  });
+  // monkey patched.  Not actually passed to component but save.isRunning comes from save ember-concurrency task
+  this.saveIsRunning = { isRunning: 'disabled' };
+  this.render(hbs`{{people/person-single model=model saveTask=saveIsRunning}}`);
+  assert.equal(this.$('.t-save-btn').attr('disabled'), 'disabled', 'Button is disabled if xhr save is outstanding');
+});
+
 test('filling in invalid email reveal validation messages', function(assert) {
   run(() => {
     this.model = store.push('person', {id: PD.idOne});

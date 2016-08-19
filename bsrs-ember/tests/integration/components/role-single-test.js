@@ -40,3 +40,13 @@ test('translation keys', function(assert) {
   assert.equal(getLabelText('auth_amount'), trans.t('admin.person.label.auth_amount'));
   assert.equal(getLabelText('dashboard_text'), trans.t('admin.setting.dashboard_text'));
 });
+
+test('if save isRunning, btn is disabled', function(assert) {
+  run(() => {
+    this.set('model', store.push('role', {}));
+  });
+  // monkey patched.  Not actually passed to component but save.isRunning comes from save ember-concurrency task
+  this.saveIsRunning = { isRunning: 'disabled' };
+  this.render(hbs`{{roles/role-single model=model saveTask=saveIsRunning}}`);
+  assert.equal(this.$('.t-save-btn').attr('disabled'), 'disabled', 'Button is disabled if xhr save is outstanding');
+});
