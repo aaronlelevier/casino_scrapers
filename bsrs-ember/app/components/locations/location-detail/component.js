@@ -4,6 +4,7 @@ import { validate } from 'ember-cli-simple-validation/mixins/validate';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import ParentValidationComponent from 'bsrs-ember/mixins/validation/parent';
 import RelaxedMixin from 'bsrs-ember/mixins/validation/relaxed';
+import { task } from 'ember-concurrency';
 
 var LocationSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, {
   repository: inject('location'),
@@ -19,6 +20,13 @@ var LocationSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, {
     }
     return false;
   }),
+  saveTask: task(function * () {
+    this.set('submitted', true);
+    if (this.all_components_valid()) {
+      const tab = this.tab();
+      yield this.get('save')(tab);
+    }
+  }),
   extra_params: Ember.computed(function(){
     const llevel = this.get('model.location_level.id') ? this.get('model.location_level.id') : this.get('model.top_location_level.id');
     const pk = this.get('model').get('id');
@@ -26,12 +34,7 @@ var LocationSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, {
   }),
   actions: {
     save() {
-      //this is for insert and update location methods and transitions to list route
-      this.set('submitted', true);
-      if (this.all_components_valid()) {
-        const tab = this.tab();
-        return this.get('save')(tab);
-      }
+      this.get('saveTask').perform();
     },
   }
 });

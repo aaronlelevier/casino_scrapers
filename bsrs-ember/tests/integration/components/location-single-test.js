@@ -108,6 +108,16 @@ test('filling in invalid phone number reveal validation messages', function(asse
     assert.ok($component.is(':hidden'));
 });
 
+test('if save isRunning, btn is disabled', function(assert) {
+  run(() => {
+    this.model = store.push('location', {id: LD.idOne});
+  });
+  // monkey patched.  Not actually passed to component but save.isRunning comes from save ember-concurrency task
+  this.saveIsRunning = { isRunning: 'disabled' };
+  this.render(hbs`{{locations/location-detail model=model saveTask=saveIsRunning}}`);
+  assert.equal(this.$('.t-save-btn').attr('disabled'), 'disabled', 'Button is disabled if xhr save is outstanding');
+});
+
 test('filling in invalid address reveals validation messages', function(assert) {
     run(() => {
         this.model = store.push('location', {});

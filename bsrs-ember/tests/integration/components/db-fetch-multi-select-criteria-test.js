@@ -6,11 +6,7 @@ import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import { clickTrigger, nativeMouseUp, nativeMouseDown, typeInSearch } from '../../helpers/ember-power-select';
 import repository from 'bsrs-ember/tests/helpers/repository';
-import random from 'bsrs-ember/models/random';
-import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import waitFor from 'ember-test-helpers/wait';
-import page from 'bsrs-ember/tests/pages/assignment';
-import generalPage from 'bsrs-ember/tests/pages/general';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import CD from 'bsrs-ember/vendor/defaults/criteria';
 import PJFD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
@@ -23,8 +19,6 @@ var store, trans, pfilter, results, state_repo, component;
 moduleForComponent('db-fetch-multi-select-criteria', 'Integration | Component | db-fetch-multi-select-criteria assignment profile criteria', {
   integration: true,
   beforeEach() {
-    page.setContext(this);
-    generalPage.setContext(this);
     store = module_registry(this.container, this.registry, ['model:pfilter', 'model:criteria', 'model:state']);
     translation.initialize(this);
     trans = this.container.lookup('service:i18n');
@@ -41,7 +35,6 @@ moduleForComponent('db-fetch-multi-select-criteria', 'Integration | Component | 
     state_repo.findState = (search) => new Ember.RSVP.Promise((resolve) => {
       resolve(results);
     });
-    random.uuid = function() { return UUID.value; };
     component = hbs `{{
       db-fetch-multi-select-criteria
       model=model
@@ -50,10 +43,6 @@ moduleForComponent('db-fetch-multi-select-criteria', 'Integration | Component | 
       repository=repository
       searchMethod="findState"
     }}`;
-  },
-  afterEach() {
-    page.removeContext(this);
-    generalPage.removeContext(this);
   }
 });
 

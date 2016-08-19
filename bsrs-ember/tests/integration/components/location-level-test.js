@@ -6,7 +6,7 @@ import translations from "bsrs-ember/vendor/translation_fixtures";
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
-import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
+import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location-level_fixtures';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 
@@ -24,7 +24,7 @@ moduleForComponent('location-level', 'integration: location-level test', {
         store.push('location-level', location_level); 
       });
     });
-    location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+    location_level = store.find('location-level', LLD.idOne);
     location_levels = store.find('location-level');
     translation.initialize(this);
     var service = this.container.lookup('service:i18n');
@@ -43,11 +43,22 @@ test('validation should enforce basic location name property', function(assert) 
   var $component = this.$('.t-location-level-name');
   let $validation = this.$('.t-name-validation-error');
   assert.ok($validation.is(':hidden'));
-  assert.equal($component.val(), LOCATION_LEVEL_DEFAULTS.nameCompany);
+  assert.equal($component.val(), LLD.nameCompany);
   $component.val('').trigger('input');
   $validation = this.$('.t-name-validation-error');
   assert.ok($validation.is(':visible'));
-  $component.val(LOCATION_LEVEL_DEFAULTS.nameRegion).trigger('input');
+  $component.val(LLD.nameRegion).trigger('input');
   $validation = this.$('.t-name-validation-error');
   assert.ok($validation.is(':hidden'));
+});
+
+test('if save isRunning, btn is disabled', function(assert) {
+  run(() => {
+    this.model = store.push('location-level', {id: LLD.idOne});
+  });
+  // monkey patched.  Not actually passed to component but save.isRunning comes from save ember-concurrency task
+  this.saveIsRunning = { isRunning: 'disabled' };
+  this.setName = function(name) { location_level.set('name', name); };
+  this.render(hbs`{{location_level-general model=model saveTask=saveIsRunning setName=setName}}`);
+  assert.equal(this.$('.t-save-btn').attr('disabled'), 'disabled', 'Button is disabled if xhr save is outstanding');
 });
