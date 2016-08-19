@@ -20,7 +20,7 @@
         searchEnabled=false
         as |pf|
       }}
-        {{pf.key}} {{if pf.existingAssignment (t "assigned.filter") pf.existingAssignment}}
+        {{pf.key}} {{if pf.existingAssignment (concat (t "assigned.filter") " " pf.existingAssignment)}}
       {{/power-select}}
     </div>
   </div>

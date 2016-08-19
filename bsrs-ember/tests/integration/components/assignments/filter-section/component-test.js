@@ -23,8 +23,8 @@ moduleForComponent('assignments/filter-section', 'Integration | Component | assi
   beforeEach() {
     page.setContext(this);
     store = module_registry(this.container, this.registry, ['model:assignment', 'model:assignment-join-pfilter', 'model:pfilter']);
-    // translation.initialize(this);
-    // trans = this.container.lookup('service:i18n');
+    translation.initialize(this);
+    trans = this.container.lookup('service:i18n');
     run(() => {
       assignment = store.push('assignment', {id: AD.idOne, description: AD.descriptionOne, assignment_pf_fks: [AJFD.idOne]});
       store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
@@ -198,7 +198,8 @@ test('if another assignment has auto_assign, then display that assignment in dro
   assert.equal(assignment.get('pf').get('length'), 1);
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
   clickTrigger('.t-assignment-pf-select:eq(0)');
-  assert.equal(this.$('.ember-power-select-option:eq(3)').attr('aria-disabled'), "true");
+  assert.equal(this.$('.ember-power-select-option:eq(3)').attr('aria-disabled'), 'true');
+  assert.equal(this.$('.ember-power-select-option:eq(3)').text().trim().replace(/[\s\n]+/g, ''), trans.t('admin.placeholder.auto_assign') + trans.t('assigned.filter') + AD.descriptionOne);
 });
 
 test('if select auto_assign then disable add filter btn', function(assert) {
