@@ -31,6 +31,13 @@ moduleForComponent('assignment-single', 'integration: assignment-single test', {
   }
 });
 
+test('if save isRunning, btn is disabled', function(assert) {
+  // monkey patched.  Not actually passed to component but save.isRunning comes from save ember-concurrency task
+  this.saveIsRunning = { isRunning: 'disabled' };
+  this.render(hbs`{{assignments/assignment-single model=model saveTask=saveIsRunning}}`);
+  assert.equal(this.$('.t-save-btn').attr('disabled'), 'disabled', 'Button is disabled if xhr save is outstanding');
+});
+
 test('description is required validation, cannot save w/o description', function(assert) {
   let modalDialogService = this.container.lookup('service:modal-dialog');
   modalDialogService.destinationElementId = 'description';
