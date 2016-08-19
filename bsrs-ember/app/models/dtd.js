@@ -70,9 +70,7 @@ var DTDModel = Model.extend(Validations, OptConf, {
     const links = this.get('links').map((link) => {
       return link.serialize();
     });
-    const fields = this.get('fields').map((field) => {
-      return field.serialize();
-    });
+    const fields = this.get('fields').filter(field => field.get('type')).map(field => field.serialize());
     return {
       id: this.get('id'),
       key: this.get('key'),

@@ -20,13 +20,13 @@ module('unit: dtd test', {
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-link', 'model:link', 'model:ticket-priority', 'model:ticket-status', 'model:field', 'model:dtd-field', 'model:option', 'model:field-option', 'model:attachment', 'model:category', 'model:model-category', 'service:i18n']);
     run(() => {
-    dtd = store.push('dtd', {id: DTD.idOne, dtd_links_fks: [DTDL.idOne]});
-    dtd_2 = store.push('dtd', {id: DTD.idTwo, destination_links: [LINK.idOne]});
-    store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
-    link = store.push('link', {id: LINK.idOne, destination_fk: DTD.idTwo});
-    field = store.push('field', {id: FD.idOne, required: FD.requiredOne});
-  });
-}
+      dtd = store.push('dtd', {id: DTD.idOne, dtd_links_fks: [DTDL.idOne]});
+      dtd_2 = store.push('dtd', {id: DTD.idTwo, destination_links: [LINK.idOne]});
+      store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
+      link = store.push('link', {id: LINK.idOne, destination_fk: DTD.idTwo});
+      field = store.push('field', {id: FD.idOne, required: FD.requiredOne});
+    });
+  }
 });
 
 test('link_types - should be pre-defined on the model, so dont need to be pushed into the store', assert => {
@@ -169,6 +169,12 @@ test('remove_field', (assert) => {
   assert.equal(dtd.get('dtd_fields_ids').length, 0);
   assert.ok(dtd.get('fieldsIsDirty'));
   assert.ok(dtd.get('isDirtyOrRelatedDirty'));
+});
+
+test('if add_field but no type, then wont serialize and wont send in payload to server (saveRelated will remove it b/c invalid)', (assert) => {
+  dtd.add_field({id: FD.idOne});
+  const obj = dtd.serialize();
+  assert.deepEqual(obj.fields, []);
 });
 
 // Priority
