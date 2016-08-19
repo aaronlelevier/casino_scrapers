@@ -80,7 +80,7 @@ class AvailableFilterTests(TestCase):
         self.assertEqual(ret.key, 'admin.placeholder.state_filter')
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'state')
-        self.assertEqual(ret.lookups, {'filters': 'state', 'id': 'state'})
+        self.assertEqual(ret.lookups, {'filters': 'state'})
 
     def test_create_available_filter_country(self):
         ret = factory.create_available_filter_country()
@@ -91,7 +91,7 @@ class AvailableFilterTests(TestCase):
         self.assertEqual(ret.key, 'admin.placeholder.country_filter')
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'country')
-        self.assertEqual(ret.lookups, {'filters': 'country', 'id': 'country'})
+        self.assertEqual(ret.lookups, {'filters': 'country'})
 
     def test_create_available_filters(self):
         self.assertEqual(AvailableFilter.objects.count(), 0)

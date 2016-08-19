@@ -3,6 +3,7 @@ import copy
 from rest_framework import serializers
 
 from category.models import Category
+from contact.models import State, Country
 from location.models import Location, LocationLevel
 from person.serializers_leaf import PersonSimpleSerializer
 from routing.models import Assignment, ProfileFilter, AvailableFilter
@@ -56,7 +57,7 @@ class ProfileFilterSerializer(BaseCreateSerializer):
         data.update(source)
 
         # dynamic AF don't have 'key', so set it based on the dynamic 'name'
-        if data['lookups']:
+        if data['lookups'] and data['lookups'].get('filters', None) == 'location_level':
             data['key'] = data['lookups']['name']
 
         return self._combined_data(data)
@@ -65,28 +66,37 @@ class ProfileFilterSerializer(BaseCreateSerializer):
         field = data['field']
         criteria = data['criteria']
 
-        # TODO: May need to be more precise in the future for State/Country
+        # NOTE: May need to be more precise in the future for State/Country
         # right now, will jump in this 'if' block if it is a dynamic filter
         # and the only dynamic filter we're handing is for locations filtered
         # by location_level
-        if data['lookups']:
+        if data['lookups'] and data['lookups'].get('filters', None) == 'location_level':
             location_level = LocationLevel.objects.get(id=data['lookups']['id'])
             data['lookups'] = {
                 'id': location_level.id,
                 'name': location_level.name
             }
 
-        if field == 'priority':
-            data['criteria'] = TicketPriority.objects.filter(id__in=criteria).values('id', 'name')
-
         if field == 'location':
             data['criteria'] = Location.objects.filter(id__in=criteria).values('id', 'name')
 
-        if field == 'categories':
+        elif field == 'priority':
+            data['criteria'] = TicketPriority.objects.filter(id__in=criteria).values('id', 'name')
+
+        elif field == 'state':
+            data['criteria'] = State.objects.filter(id__in=criteria).values('id', 'name')
+
+        elif field == 'categories':
             category_criteria = []
             for c in Category.objects.filter(id__in=criteria):
                 category_criteria.append({'id': str(c.id), 'name': c.parents_and_self_as_string()})
             data['criteria'] = category_criteria
+
+        elif field == 'country':
+            country_criteria = []
+            for c in Country.objects.filter(id__in=criteria):
+                country_criteria.append({'id': str(c.id), 'name': c.common_name})
+            data['criteria'] = country_criteria
 
         return data
 

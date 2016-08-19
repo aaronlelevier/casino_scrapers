@@ -5,6 +5,7 @@ from model_mommy import mommy
 from rest_framework.test import APITestCase
 
 from category.models import Category
+from contact.models import State, Country
 from location.models import LocationLevel
 from location.tests.factory import (create_location_levels, create_top_level_location,
     create_location_level, create_location)
@@ -14,7 +15,8 @@ from routing.tests.factory import (
     create_assignment, create_available_filters, create_auto_assign_filter,
     create_available_filter_location, create_ticket_location_filter,
     create_ticket_categories_mid_level_filter, create_assignment,
-    create_available_filter_auto_assign)
+    create_available_filter_auto_assign, create_ticket_location_state_filter,
+    create_ticket_location_country_filter)
 from routing.tests.mixins import ViewTestSetupMixin
 from ticket.models import TicketPriority
 from utils.create import _generate_chars
@@ -136,6 +138,36 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(len(data['filters'][0]['criteria']), 1)
         self.assertEqual(data['filters'][0]['criteria'][0]['id'], str(category.id))
         self.assertEqual(data['filters'][0]['criteria'][0]['name'], category.parents_and_self_as_string())
+
+    def test_criteria_state(self):
+        self.assignment.filters.clear()
+        self.assertEqual(self.assignment.filters.count(), 0)
+        state_filter = create_ticket_location_state_filter()
+        state = State.objects.get(id=state_filter.criteria[0])
+        self.assignment.filters.add(state_filter)
+
+        response = self.client.get('/api/admin/assignments/{}/'.format(self.assignment.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['filters']), 1)
+        self.assertEqual(len(data['filters'][0]['criteria']), 1)
+        self.assertEqual(data['filters'][0]['criteria'][0]['id'], str(state.id))
+        self.assertEqual(data['filters'][0]['criteria'][0]['name'], state.name)
+
+    def test_criteria_country(self):
+        self.assignment.filters.clear()
+        self.assertEqual(self.assignment.filters.count(), 0)
+        country_filter = create_ticket_location_country_filter()
+        country = Country.objects.get(id=country_filter.criteria[0])
+        self.assignment.filters.add(country_filter)
+
+        response = self.client.get('/api/admin/assignments/{}/'.format(self.assignment.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['filters']), 1)
+        self.assertEqual(len(data['filters'][0]['criteria']), 1)
+        self.assertEqual(data['filters'][0]['criteria'][0]['id'], str(country.id))
+        self.assertEqual(data['filters'][0]['criteria'][0]['name'], country.common_name)
 
 
 class AssignmentCreateTests(ViewTestSetupMixin, APITestCase):
