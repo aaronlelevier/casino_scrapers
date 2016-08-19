@@ -5,18 +5,18 @@ from contact.models import (PhoneNumberType, PhoneNumber, AddressType,
 from utils.serializers import BaseCreateSerializer
 
 
-class StateLeafSerializer(serializers.ModelSerializer):
+class StateIdNameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = State
-        field = ('id', 'name',)
+        fields = ('id', 'name',)
 
 
 class StateListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = State
-        field = ('id', 'name', 'state_code', 'classification',)
+        fields = ('id', 'name', 'state_code', 'classification',)
 
 
 class CountryListSerializer(serializers.ModelSerializer):
@@ -28,7 +28,7 @@ class CountryListSerializer(serializers.ModelSerializer):
 
 class CountryDetailSerializer(serializers.ModelSerializer):
 
-    states = StateLeafSerializer(many=True)
+    states = StateIdNameSerializer(many=True)
 
     class Meta:
         model = Country

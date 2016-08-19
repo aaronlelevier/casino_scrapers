@@ -60,15 +60,17 @@ class CountryViewSetTests(StateCountryViewTestSetupMixin, APITestCase):
         response = self.client.delete('/api/countries/{}/'.format(self.country.id), {}, format='json')
         self.assertEqual(response.status_code, 405)
 
-    def test_tenant_countries(self):
+    def test_tenant(self):
         self.assertEqual(self.tenant.countries.first(), self.country)
 
         response = self.client.get('/api/countries/tenant/')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
-        self.assertEqual(data['results'][0]['id'], str(self.tenant.countries.first().id))
+        self.assertEqual(len(data['results'][0]), 2)
+        self.assertIn('id', data['results'][0])
         self.assertIn('name', data['results'][0])
+        self.assertEqual(data['results'][0]['id'], str(self.tenant.countries.first().id))
 
     def test_tenant_countries__filter_by_search(self):
         country = create_contact_country('bar')
@@ -122,6 +124,9 @@ class StateViewSetTests(StateCountryViewTestSetupMixin, APITestCase):
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 2)
+        self.assertEqual(len(data['results'][0]), 2)
+        self.assertIn('id', data['results'][0])
+        self.assertIn('name', data['results'][0])
         self.assertIn(str(tenant_states[0].id), (x['id'] for x in data['results']))
         self.assertIn(str(tenant_states[1].id), (x['id'] for x in data['results']))
 
