@@ -59,11 +59,10 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
             response = Response(serializer.data)
 
         data = copy.copy(response.data)
-        assignment_with_auto_assign = Assignment.objects.auto_assign_filter_in_use(request.user.role.tenant)
-        response.data = self._combine_dynamic_data(data, assignment_with_auto_assign)
+        response.data = self._combine_dynamic_data(data, request)
         return response
 
-    def _combine_dynamic_data(self, data, assignment_with_auto_assign):
+    def _combine_dynamic_data(self, data, request):
         """
         Looks for dynamic AvailableFilters. If it finds one, remove that filter
         placeholder, and replace it with dynamic versions of itself.
@@ -73,6 +72,7 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
         data_copy = copy.copy(data)
         location_filter = None
         auto_assign_filter = None
+        assignment_with_auto_assign = Assignment.objects.auto_assign_filter_in_use(request.user.role.tenant)
         for i, d in enumerate(data_copy['results']):
             if d['lookups'] == {'filters': 'location_level'}:
                 location_filter = data['results'].pop(i)
