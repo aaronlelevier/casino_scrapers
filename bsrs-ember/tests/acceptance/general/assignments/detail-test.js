@@ -292,6 +292,7 @@ test('remove filter and save - should stay on page because an assignment must ha
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.validated-input-error-dialog').length, 0);
   });
   // criteria is required (unless auto-assign)
   page.filterOnePriorityOneRemove();
