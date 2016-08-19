@@ -7,7 +7,8 @@ from contact.serializers import (
     AddressTypeSerializer, AddressSerializer,
     EmailTypeSerializer, EmailSerializer,
     CountryListSerializer, CountryDetailSerializer,
-    CountryIdNameSerializer, StateListSerializer)
+    CountryIdNameSerializer, StateListSerializer,
+    StateIdNameSerializer,)
 from contact.models import (
     PhoneNumber, PhoneNumberType, Address, AddressType, Email, EmailType,
     Country, State)
@@ -69,7 +70,7 @@ class StateViewSet(BaseModelViewSet):
             queryset = State.objects.filter(name__icontains=search)
 
         queryset = self.paginate_queryset(queryset)
-        serializer = StateListSerializer(queryset, many=True)
+        serializer = StateIdNameSerializer(queryset, many=True)
         return self.get_paginated_response(serializer.data)
 
 
