@@ -354,6 +354,25 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
   andThen(() => {
     assert.equal(currentURL(), NEW_URL_2);
     let tabs = store.find('tab');
+    assert.equal(tabs.get('length'), 2);
+  });
+});
+
+test('(NEW URL) clicking on an open new tab will not open a new tab', assert => {
+  clearxhr(detail_xhr);
+  list_xhr = xhr(`${<%= CapitalizeModule %>_URL}?page=1`, 'GET', null, {}, 200, list_data);
+  page.visit();
+  click('.t-add-new');
+  andThen(() => {
+    assert.equal(currentURL(), NEW_URL);
+    let tabs = store.find('tab');
+    assert.equal(tabs.get('length'), 1);
+  });
+  page.visit();
+  click('.t-tab:eq(0)');
+  andThen(() => {
+    assert.equal(currentURL(), NEW_URL);
+    let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
   });
 });
