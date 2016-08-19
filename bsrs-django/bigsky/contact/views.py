@@ -3,12 +3,10 @@ from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.permissions import IsAuthenticated
 
 from contact.serializers import (
-    PhoneNumberTypeSerializer, PhoneNumberSerializer,
-    AddressTypeSerializer, AddressSerializer,
-    EmailTypeSerializer, EmailSerializer,
-    CountryListSerializer, CountryDetailSerializer,
-    CountryIdNameSerializer, StateListSerializer,
-    StateIdNameSerializer,)
+    PhoneNumberTypeSerializer, PhoneNumberSerializer, AddressTypeSerializer,
+    AddressSerializer, EmailTypeSerializer, EmailSerializer,
+    CountryListSerializer, CountryDetailSerializer, CountryIdNameSerializer,
+    StateListSerializer, StateIdNameSerializer,)
 from contact.models import (
     PhoneNumber, PhoneNumberType, Address, AddressType, Email, EmailType,
     Country, State)
@@ -38,7 +36,7 @@ class CountryViewSet(BaseModelViewSet):
 
         search = self.request.query_params.get('search', None)
         if search:
-            queryset = Country.objects.filter(common_name__icontains=search)
+            queryset = queryset.filter(common_name__icontains=search)
 
         queryset = self.paginate_queryset(queryset)
         serializer = CountryIdNameSerializer(queryset, many=True)
@@ -67,7 +65,7 @@ class StateViewSet(BaseModelViewSet):
 
         search = self.request.query_params.get('search', None)
         if search:
-            queryset = State.objects.filter(name__icontains=search)
+            queryset = queryset.filter(name__icontains=search)
 
         queryset = self.paginate_queryset(queryset)
         serializer = StateIdNameSerializer(queryset, many=True)

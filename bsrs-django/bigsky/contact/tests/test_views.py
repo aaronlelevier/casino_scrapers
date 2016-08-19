@@ -73,13 +73,11 @@ class CountryViewSetTests(StateCountryViewTestSetupMixin, APITestCase):
         self.assertEqual(data['results'][0]['id'], str(self.tenant.countries.first().id))
 
     def test_tenant_countries__filter_by_search(self):
-        country = create_contact_country('bar')
         tenant = self.person.role.tenant
-        tenant.countries.add(country)
-        self.assertEqual(Country.objects.count(), 3)
-        self.assertEqual(tenant.countries.count(), 2)
-        keyword = 'foo'
-        self.assertEqual(Country.objects.filter(common_name__icontains=keyword).count(), 1)
+        keyword = tenant.countries.first().common_name
+        country = create_contact_country(keyword+'foo')
+        self.assertEqual(Country.objects.filter(common_name__icontains=keyword).count(), 2)
+        self.assertEqual(tenant.countries.filter(common_name__icontains=keyword).count(), 1)
 
         response = self.client.get('/api/countries/tenant/?search={}'.format(keyword))
 
@@ -134,7 +132,8 @@ class StateViewSetTests(StateCountryViewTestSetupMixin, APITestCase):
         keyword = 'foo'
         self.state.name = keyword
         self.state.save()
-        self.assertEqual(State.objects.count(), 4)
+        mommy.make(State, name=keyword+'bar')
+        self.assertEqual(State.objects.filter(name__icontains=keyword).count(), 2)
         tenant_countries_ids = self.person.role.tenant.countries.values_list('id', flat=True)
         self.assertEqual(State.objects.filter(country__id__in=tenant_countries_ids,
                                               name__icontains=keyword).count(), 1)
