@@ -108,7 +108,7 @@ test('change pfilter from an existing to a different pfilter', function(assert) 
   assert.equal(this.$('.ember-power-select-multiple-option').length, 0);
 });
 
-test('add new pfilter, disables btn, and assignment is not dirty until select pfilter which displays component', function(assert) {
+test('add new pfilter, and assignment is not dirty until select pfilter which displays component', function(assert) {
   this.model = assignment;
   this.render(hbs`{{assignments/filter-section model=model}}`);
   // existing pfilter
@@ -122,7 +122,7 @@ test('add new pfilter, disables btn, and assignment is not dirty until select pf
   // adds pfilter but not dirty
   assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), PFD.keyOne);
   assert.equal(this.$('.t-assignment-pf-select').length, 2);
-  assert.ok(assignment.get('isDirtyOrRelatedDirty'));
+  assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(assignment.get('pf').get('length'), 2);
   // assignment is now dirty
   clickTrigger('.t-assignment-pf-select:eq(1)');
@@ -132,6 +132,7 @@ test('add new pfilter, disables btn, and assignment is not dirty until select pf
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
   assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), PFD.keyOne);
   assert.equal(this.$('.ember-power-select-selected-item:eq(1)').text().trim(), PFD.keyTwo);
+  // now the assignment is dirty b/c pfilter has an criteria
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assert.equal(this.$('.t-assignment-pf-select').length, 2);
   // // both power-selects render

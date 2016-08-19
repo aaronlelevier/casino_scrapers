@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 
 from model_mommy import mommy
 
-from contact.models import PhoneNumber, Address, Email
+from contact.models import Country, State, PhoneNumber, Address, Email
 from contact.tests.factory import create_contact, create_contact_country
 from person.tests.factory import PASSWORD, create_person
 
@@ -68,8 +68,21 @@ class CountryViewSetTests(StateCountryViewTestSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['id'], str(self.tenant.countries.first().id))
-        self.assertIn('common_name', data['results'][0])
-        self.assertIn('three_letter_code', data['results'][0])
+        self.assertIn('name', data['results'][0])
+
+    def test_tenant_countries__filter_by_search(self):
+        country = create_contact_country('bar')
+        tenant = self.person.role.tenant
+        tenant.countries.add(country)
+        self.assertEqual(Country.objects.count(), 3)
+        self.assertEqual(tenant.countries.count(), 2)
+        keyword = 'foo'
+        self.assertEqual(Country.objects.filter(common_name__icontains=keyword).count(), 1)
+
+        response = self.client.get('/api/countries/tenant/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
 
 
 class StateViewSetTests(StateCountryViewTestSetupMixin, APITestCase):
@@ -111,6 +124,20 @@ class StateViewSetTests(StateCountryViewTestSetupMixin, APITestCase):
         self.assertEqual(data['count'], 2)
         self.assertIn(str(tenant_states[0].id), (x['id'] for x in data['results']))
         self.assertIn(str(tenant_states[1].id), (x['id'] for x in data['results']))
+
+    def test_tenant_states__filter_by_search(self):
+        keyword = 'foo'
+        self.state.name = keyword
+        self.state.save()
+        self.assertEqual(State.objects.count(), 4)
+        tenant_countries_ids = self.person.role.tenant.countries.values_list('id', flat=True)
+        self.assertEqual(State.objects.filter(country__id__in=tenant_countries_ids,
+                                              name__icontains=keyword).count(), 1)
+
+        response = self.client.get('/api/states/tenant/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
 
 
 class PhoneNumberTypeViewSetTests(APITestCase):

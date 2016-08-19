@@ -17,6 +17,8 @@ const PRIORITIES = '.t-priority-criteria .ember-power-select-multiple-option';
 
 const LOCATIONS = '.t-ticket-location-select .ember-power-select-multiple-option';
 const CATEGORIES = '.t-ticket-category-select .ember-power-select-multiple-option';
+const STATES = '.t-ticket-state-select .ember-power-select-multiple-option';
+const COUNTRIES = '.t-ticket-country-select .ember-power-select-multiple-option';
 
 export default create({
   visit: visitable(ASSIGNMENT_LIST_URL),
@@ -41,6 +43,7 @@ export default create({
   assignmentFilterOneText: text('.t-assignment-pf-select:eq(0)'),
   assignmentFilterTwoText: text('.t-assignment-pf-select:eq(1)'),
   assignmentFilterThreeText: text('.t-assignment-pf-select:eq(2)'),
+  assignmentFilterFourText: text('.t-assignment-pf-select:eq(3)'),
 
   assignmentFilterOneInput: text(AF_SELECT_ONE),
   assignmentFilterOneClickDropdown: clickable(AF_SELECT_ONE),
@@ -53,6 +56,7 @@ export default create({
   priorityClickDropdown: clickable(PRIORITY),
 
   locationSelectedOne: text(`${LOCATIONS}:eq(0)`),
-
   categorySelectedOne: text(`${CATEGORIES}:eq(0)`),
+  stateSelectedOne: text(`${STATES}:eq(0)`),
+  countrySelectedOne: text(`${COUNTRIES}:eq(0)`),
 });

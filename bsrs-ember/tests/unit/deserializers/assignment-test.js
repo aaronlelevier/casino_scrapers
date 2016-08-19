@@ -11,7 +11,7 @@ import PJCD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
 
-var store, assignment, deserializer, pfilter;
+var store, assignment, deserializer, pfilter, pfilter_unused;
 
 module('unit: assignment deserializer test', {
   beforeEach() {
@@ -90,7 +90,7 @@ test('existing assignment w/ pf and get same pf', assert => {
 //criteria
 test('existing pfilter w/ criteria, and server returns w/ 1 extra criteria', assert => {
   store.push('pfilter-join-criteria', {id: PJCD.idOne, pfilter_pk: PFD.idOne, criteria_pk: PFD.idOne});
-  store.push('pfilter', {id: PFD.idOne, assignment_pf_fks: [PJCD.idOne]});
+  store.push('pfilter', {id: PFD.idOne, assignment_pf_fks: [PJCD.idOne], pfilter_criteria_fks: [PJCD.idOne]});
   store.push('criteria', {id: PFD.idOne});
   let json = AF.detail();
   json.filters.push({id: PFD.unusedId, criteria: [{id: TD.priorityOneId}, {id: TD.priorityTwoId}]});
@@ -99,7 +99,7 @@ test('existing pfilter w/ criteria, and server returns w/ 1 extra criteria', ass
   });
   pfilter = store.find('pfilter', PFD.idOne);
   assert.equal(pfilter.get('criteria').get('length'), 1);
-  const pfilter_unused = store.find('pfilter', PFD.unusedId);
+  pfilter_unused = store.find('pfilter', PFD.unusedId);
   assert.equal(pfilter_unused.get('criteria').get('length'), 2);
   assert.ok(pfilter.get('isNotDirty'));
   assert.ok(pfilter.get('isNotDirtyOrRelatedNotDirty'));
@@ -109,7 +109,7 @@ test('existing pfilter w/ criteria, and server returns w/ 1 extra criteria', ass
 
 test('existing pfilter w/ criteria and get same criteria', assert => {
   store.push('pfilter-join-criteria', {id: PJCD.idOne, pfilter_pk: PFD.idOne, criteria_pk: PFD.idOne});
-  store.push('pfilter', {id: PFD.idOne, assignment_pf_fks: [PJCD.idOne]});
+  store.push('pfilter', {id: PFD.idOne, assignment_pf_fks: [PJCD.idOne], pfilter_criteria_fks: [PJCD.idOne]});
   store.push('criteria', {id: PFD.idOne});
   const json = AF.detail();
   run(() => {

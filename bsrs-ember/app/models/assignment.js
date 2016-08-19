@@ -2,7 +2,7 @@ import Ember from 'ember';
 const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
-import { many_to_many, many_to_many_dirty } from 'bsrs-components/attr/many-to-many';
+import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/assignment';
 
@@ -42,7 +42,7 @@ export default Model.extend(OptConf, Validations, {
   },
   simpleStore: Ember.inject.service(),
   description: attr(''),
-  pfIsDirtyContainer: many_to_many_dirty('assignment_pf'),
+  pfIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('assignment_pf'),
   pfIsDirty: Ember.computed('pf.@each.{isDirtyOrRelatedDirty}', 'pfIsDirtyContainer', function() {
     const pf = this.get('pf');
     return pf.isAny('isDirtyOrRelatedDirty') || this.get('pfIsDirtyContainer');
@@ -68,6 +68,7 @@ export default Model.extend(OptConf, Validations, {
     const pf = this.get('pf');
     pf.forEach((model) => {
       model.saveRelated();
+      model.save();
     });
   },
   saveRelated() {
@@ -81,11 +82,16 @@ export default Model.extend(OptConf, Validations, {
     });
   },
   serialize() {
+    this.get('pf').forEach(f => {
+      if (!f.get('source_id')) {
+        this.remove_pf(f.get('id'));
+      }
+    });
     return {
       id: this.get('id'),
       description: this.get('description'),
       assignee: this.get('assignee').get('id'),
-      filters: this.get('pf').map((obj) => { return obj.serialize(); })
+      filters: this.get('pf').map((obj) => obj.serialize())
     };
   },
 });

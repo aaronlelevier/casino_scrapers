@@ -8,7 +8,7 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/pfilter';
 
 const Validations = buildValidations({
   criteria: validator((value, options, model, attribute) => {
-    if (model.get('field') === 'auto_assign') {
+    if (model.get('field') === 'auto_assign' || !model.get('source_id')) {
       return true;
     }
     return get(value, 'length') > 0 ? true : 'errors.assignment.pf.criteria.length';
@@ -20,6 +20,7 @@ export default Model.extend(Validations, OptConf, {
     this._super(...arguments);
     many_to_many.bind(this)('criteria', 'pfilter');
   },
+  source_id: attr(''),
   simpleStore: Ember.inject.service(),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'criteriaIsDirty', function() {
     return this.get('isDirty') || this.get('criteriaIsDirty');

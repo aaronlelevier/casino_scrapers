@@ -7,7 +7,7 @@ from contact.serializers import (
     AddressTypeSerializer, AddressSerializer,
     EmailTypeSerializer, EmailSerializer,
     CountryListSerializer, CountryDetailSerializer,
-    StateListSerializer)
+    CountryIdNameSerializer, StateListSerializer)
 from contact.models import (
     PhoneNumber, PhoneNumberType, Address, AddressType, Email, EmailType,
     Country, State)
@@ -34,8 +34,13 @@ class CountryViewSet(BaseModelViewSet):
     @list_route(methods=['GET'])
     def tenant(self, request):
         queryset = Country.objects.filter(tenants=request.user.role.tenant)
+
+        search = self.request.query_params.get('search', None)
+        if search:
+            queryset = Country.objects.filter(common_name__icontains=search)
+
         queryset = self.paginate_queryset(queryset)
-        serializer = CountryListSerializer(queryset, many=True)
+        serializer = CountryIdNameSerializer(queryset, many=True)
         return self.get_paginated_response(serializer.data)
 
 
@@ -57,11 +62,14 @@ class StateViewSet(BaseModelViewSet):
     @list_route(methods=['GET'])
     def tenant(self, request):
         tenant_countries_ids = request.user.role.tenant.countries.values_list('id', flat=True)
-
         queryset = State.objects.filter(country__id__in=tenant_countries_ids)
+
+        search = self.request.query_params.get('search', None)
+        if search:
+            queryset = State.objects.filter(name__icontains=search)
+
         queryset = self.paginate_queryset(queryset)
         serializer = StateListSerializer(queryset, many=True)
-
         return self.get_paginated_response(serializer.data)
 
 
