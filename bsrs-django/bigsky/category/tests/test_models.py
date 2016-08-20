@@ -87,6 +87,23 @@ class CategoryManagerTests(TestCase):
 
         self.assertEqual(ret.count(), raw_ret.count())
 
+    def test_ordered_parents_and_self_as_strings(self):
+        parent_b = factory.create_single_category('b')
+        parent_a = factory.create_single_category('a')
+        c = factory.create_single_category('xx', parent_b)
+        b = factory.create_single_category('xx', parent_a)
+        # pre-test
+        keyword = 'xx'
+        categories = Category.objects.filter(name__icontains=keyword)
+        self.assertEqual(categories.count(), 2)
+        self.assertEqual(categories[0].parents_and_self_as_string(), 'b - xx')
+        self.assertEqual(categories[1].parents_and_self_as_string(), 'a - xx')
+
+        ret = Category.objects.ordered_parents_and_self_as_strings(keyword)
+
+        self.assertEqual(ret[0].parents_and_self_as_string(), 'a - xx')
+        self.assertEqual(ret[1].parents_and_self_as_string(), 'b - xx')
+
 
 class CategoryTests(CategorySetupMixin, TestCase):
 
