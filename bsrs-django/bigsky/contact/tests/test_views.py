@@ -5,7 +5,7 @@ from rest_framework.test import APITestCase
 from model_mommy import mommy
 
 from contact.models import Country, State, PhoneNumber, Address, Email
-from contact.tests.factory import create_contact, create_contact_country
+from contact.tests.factory import create_contact, create_contact_country, create_contact_state
 from person.tests.factory import PASSWORD, create_person
 
 
@@ -84,6 +84,22 @@ class CountryViewSetTests(StateCountryViewTestSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
 
+    def test_tenant_ordering(self):
+        keyword = 'aa'
+        b = create_contact_country('aab')
+        a = create_contact_country('aaa')
+        self.person.role.tenant.countries.add(a,b)
+        countries = Country.objects.filter(common_name__icontains=keyword)
+        self.assertEqual(countries[0], b)
+        self.assertEqual(countries[1], a)
+
+        response = self.client.get('/api/countries/tenant/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 2)
+        self.assertEqual(data['results'][0]['name'], 'aaa')
+        self.assertEqual(data['results'][1]['name'], 'aab')
+
 
 class StateViewSetTests(StateCountryViewTestSetupMixin, APITestCase):
 
@@ -142,6 +158,22 @@ class StateViewSetTests(StateCountryViewTestSetupMixin, APITestCase):
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
+
+    def test_tenant_ordering(self):
+        keyword = 'aa'
+        country = self.person.role.tenant.countries.first()
+        b = create_contact_state('aab', country=country)
+        a = create_contact_state('aaa', country=country)
+        states = State.objects.filter(name__icontains=keyword)
+        self.assertEqual(states[0], b)
+        self.assertEqual(states[1], a)
+
+        response = self.client.get('/api/states/tenant/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 2)
+        self.assertEqual(data['results'][0]['name'], 'aaa')
+        self.assertEqual(data['results'][1]['name'], 'aab')
 
 
 class PhoneNumberTypeViewSetTests(APITestCase):

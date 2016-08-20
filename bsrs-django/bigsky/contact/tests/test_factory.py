@@ -129,6 +129,12 @@ class FactoryTests(TestCase):
         self.assertIsInstance(ret, State)
         self.assertIsInstance(ret.country, Country)
         self.assertEqual(ret.state_code, factory.STATE_CODE)
+        self.assertEqual(ret.name, factory.STATE_CODE)
+
+    def test_create_contact_state__with_country(self):
+        country = factory.create_contact_country()
+        state = factory.create_contact_state(country=country)
+        self.assertEqual(state.country, country)
 
     def test_create_contact_country(self):
         ret = factory.create_contact_country()

@@ -38,6 +38,7 @@ class CountryViewSet(BaseModelViewSet):
         if search:
             queryset = queryset.filter(common_name__icontains=search)
 
+        queryset = queryset.order_by('common_name')
         queryset = self.paginate_queryset(queryset)
         serializer = CountryIdNameSerializer(queryset, many=True)
         return self.get_paginated_response(serializer.data)
@@ -67,6 +68,7 @@ class StateViewSet(BaseModelViewSet):
         if search:
             queryset = queryset.filter(name__icontains=search)
 
+        queryset = queryset.order_by('name')
         queryset = self.paginate_queryset(queryset)
         serializer = StateIdNameSerializer(queryset, many=True)
         return self.get_paginated_response(serializer.data)

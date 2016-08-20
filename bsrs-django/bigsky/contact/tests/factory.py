@@ -89,14 +89,14 @@ def create_contact_types():
     create_address_types()
 
 
-def create_contact_state(state_code=STATE_CODE):
+def create_contact_state(state_code=STATE_CODE, **kwargs):
     try:
         return State.objects.get(state_code=state_code)
     except State.MultipleObjectsReturned:
         return State.objects.filter(state_code=state_code)[0]
     except State.DoesNotExist:
-        country = mommy.make(Country, common_name=COUNTRY_COMMON_NAME)
-        return mommy.make(State, state_code=state_code, country=country)
+        country = kwargs.get('country', mommy.make(Country, common_name=COUNTRY_COMMON_NAME))
+        return mommy.make(State, name=state_code, state_code=state_code, country=country)
 
 
 def create_contact_country(common_name=COUNTRY_COMMON_NAME):
