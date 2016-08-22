@@ -56,10 +56,6 @@ class ProfileFilterSerializer(BaseCreateSerializer):
         data['source_id'] = source.pop('id')
         data.update(source)
 
-        # dynamic AF don't have 'key', so set it based on the dynamic 'name'
-        if data['lookups'] and data['lookups'].get('filters', None) == 'location_level':
-            data['key'] = data['lookups']['name']
-
         return self._combined_data(data)
 
     def _combined_data(self, data):
@@ -70,12 +66,13 @@ class ProfileFilterSerializer(BaseCreateSerializer):
         # right now, will jump in this 'if' block if it is a dynamic filter
         # and the only dynamic filter we're handing is for locations filtered
         # by location_level
-        if data['lookups'] and data['lookups'].get('filters', None) == 'location_level':
+        if data['lookups']:
             location_level = LocationLevel.objects.get(id=data['lookups']['id'])
             data['lookups'] = {
                 'id': location_level.id,
                 'name': location_level.name
             }
+            data['key'] = data['lookups']['name']
 
         if field == 'location':
             data['criteria'] = Location.objects.filter(id__in=criteria).values('id', 'name')

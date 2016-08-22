@@ -18,8 +18,8 @@ from routing.models import (
 from routing.tests.factory import (
     create_assignment, create_ticket_priority_filter, create_ticket_categories_filter,
     create_auto_assign_filter, create_auto_assign_filter, create_available_filters,
-    create_ticket_location_state_filter, create_ticket_location_country_filter,
-    create_available_filter_country)
+    create_ticket_location_state_filter, create_available_filter_state,
+    create_ticket_location_country_filter, create_available_filter_country)
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority
 from ticket.tests.factory import create_ticket
@@ -252,11 +252,8 @@ class AvailableFilterTests(TestCase):
         create_available_filters()
 
     def test_is_state_filter(self):
-        count = 0
-        for af in AvailableFilter.objects.all():
-            if af.is_state_filter:
-                count += 1
-        self.assertEqual(count, 1)
+        ret = create_available_filter_state()
+        self.assertTrue(ret.is_state_filter)
 
     def test_is_country_filter(self):
         ret = create_available_filter_country()

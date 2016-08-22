@@ -123,11 +123,11 @@ class AvailableFilter(BaseModel):
 
     @property
     def is_state_filter(self):
-        return self.lookups.get('filters', None) == 'state'
+        return self.field == 'state'
 
     @property
     def is_country_filter(self):
-        return self.lookups.get('filters', None) == 'country'
+        return self.field == 'country'
 
 
 class ProfileFilter(BaseModel):

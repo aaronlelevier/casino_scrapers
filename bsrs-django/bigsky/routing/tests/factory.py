@@ -38,14 +38,12 @@ def create_available_filter_location():
 
 def create_available_filter_state():
     obj, _ = AvailableFilter.objects.get_or_create(key='admin.placeholder.state_filter',
-                                                   field='state',
-                                                   lookups={'filters': 'state'})
+                                                   field='state')
     return obj
 
 def create_available_filter_country():
     obj, _ = AvailableFilter.objects.get_or_create(key='admin.placeholder.country_filter',
-                                                   field='country',
-                                                   lookups={'filters': 'country'})
+                                                   field='country')
     return obj
 
 

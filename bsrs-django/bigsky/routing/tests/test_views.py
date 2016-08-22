@@ -79,6 +79,7 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         # dynamic available filter for "location" linked to ProfileFilter.source
         location_level = create_top_level_location().location_level
         location_filter = create_ticket_location_filter()
+        location_filter.lookups.pop('filters', None)
         self.assignment.filters.clear()
         self.assignment.filters.add(location_filter)
 
@@ -90,6 +91,7 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         filter_data = data['filters'][0]
         self.assertEqual(filter_data['lookups']['id'], str(location_level.id))
         self.assertEqual(filter_data['lookups']['name'], location_level.name)
+        self.assertNotIn('filters', filter_data)
         # unchanged
         self.assertEqual(filter_data['id'], str(location_filter.id))
         self.assertEqual(filter_data['source_id'], str(location_filter.source.id))
