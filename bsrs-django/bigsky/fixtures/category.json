@@ -1,70 +1,70 @@
 [
 {
   "model": "category.categorystatus",
-  "pk": "016530c4-ce6c-4724-9cfd-37a16e787001",
+  "pk": "015530c4-ce6c-4724-9cfd-37a16e787001",
   "fields": {
-    "created": "2016-08-12T21:02:17.844Z",
-    "modified": "2016-08-12T21:02:17.844Z",
+    "created": "2016-08-22T18:20:45.899Z",
+    "modified": "2016-08-22T18:20:45.899Z",
     "deleted": null,
     "name": "category.status.active"
   }
 },
 {
   "model": "category.categorystatus",
-  "pk": "016530c4-ce6c-4724-9cfd-37a16e787002",
+  "pk": "015530c4-ce6c-4724-9cfd-37a16e787002",
   "fields": {
-    "created": "2016-08-12T21:02:17.850Z",
-    "modified": "2016-08-12T21:02:17.850Z",
+    "created": "2016-08-22T18:20:45.904Z",
+    "modified": "2016-08-22T18:20:45.904Z",
     "deleted": null,
     "name": "category.status.inactive"
   }
 },
 {
   "model": "category.categorystatus",
-  "pk": "016530c4-ce6c-4724-9cfd-37a16e787003",
+  "pk": "015530c4-ce6c-4724-9cfd-37a16e787003",
   "fields": {
-    "created": "2016-08-12T21:02:17.853Z",
-    "modified": "2016-08-12T21:02:17.853Z",
+    "created": "2016-08-22T18:20:45.907Z",
+    "modified": "2016-08-22T18:20:45.907Z",
     "deleted": null,
     "name": "Type"
   }
 },
 {
   "model": "category.categorystatus",
-  "pk": "016530c4-ce6c-4724-9cfd-37a16e787004",
+  "pk": "015530c4-ce6c-4724-9cfd-37a16e787004",
   "fields": {
-    "created": "2016-08-12T21:02:17.856Z",
-    "modified": "2016-08-12T21:02:17.856Z",
+    "created": "2016-08-22T18:20:45.910Z",
+    "modified": "2016-08-22T18:20:45.910Z",
     "deleted": null,
     "name": "Trade"
   }
 },
 {
   "model": "category.categorystatus",
-  "pk": "016530c4-ce6c-4724-9cfd-37a16e787005",
+  "pk": "015530c4-ce6c-4724-9cfd-37a16e787005",
   "fields": {
-    "created": "2016-08-12T21:02:17.859Z",
-    "modified": "2016-08-12T21:02:17.859Z",
+    "created": "2016-08-22T18:20:45.913Z",
+    "modified": "2016-08-22T18:20:45.913Z",
     "deleted": null,
     "name": "Issue"
   }
 },
 {
   "model": "category.categorystatus",
-  "pk": "016530c4-ce6c-4724-9cfd-37a16e787006",
+  "pk": "015530c4-ce6c-4724-9cfd-37a16e787006",
   "fields": {
-    "created": "2016-08-12T21:02:17.862Z",
-    "modified": "2016-08-12T21:02:17.862Z",
+    "created": "2016-08-22T18:20:45.917Z",
+    "modified": "2016-08-22T18:20:45.917Z",
     "deleted": null,
     "name": "Sub-Issue"
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787001",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787001",
   "fields": {
-    "created": "2016-08-12T21:02:17.876Z",
-    "modified": "2016-08-12T21:02:17.876Z",
+    "created": "2016-08-22T18:20:45.930Z",
+    "modified": "2016-08-22T18:20:45.930Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Repair",
@@ -75,16 +75,16 @@
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
     "parent": null,
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 0
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787002",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787002",
   "fields": {
-    "created": "2016-08-12T21:02:17.884Z",
-    "modified": "2016-08-12T21:02:17.884Z",
+    "created": "2016-08-22T18:20:45.938Z",
+    "modified": "2016-08-22T18:20:45.938Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Appliances",
@@ -94,17 +94,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787001",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787001",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 1
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787003",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787003",
   "fields": {
-    "created": "2016-08-12T21:02:17.893Z",
-    "modified": "2016-08-12T21:02:17.893Z",
+    "created": "2016-08-22T18:20:45.947Z",
+    "modified": "2016-08-22T18:20:45.947Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Microwave",
@@ -114,17 +114,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787002",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787002",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787004",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787004",
   "fields": {
-    "created": "2016-08-12T21:02:17.903Z",
-    "modified": "2016-08-12T21:02:17.903Z",
+    "created": "2016-08-22T18:20:45.956Z",
+    "modified": "2016-08-22T18:20:45.956Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Broken",
@@ -134,17 +134,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787003",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787003",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 3
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787005",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787005",
   "fields": {
-    "created": "2016-08-12T21:02:17.913Z",
-    "modified": "2016-08-12T21:02:17.913Z",
+    "created": "2016-08-22T18:20:45.966Z",
+    "modified": "2016-08-22T18:20:45.966Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Replace",
@@ -154,17 +154,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787003",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787003",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 3
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787006",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787006",
   "fields": {
-    "created": "2016-08-12T21:02:17.921Z",
-    "modified": "2016-08-12T21:02:17.922Z",
+    "created": "2016-08-22T18:20:45.974Z",
+    "modified": "2016-08-22T18:20:45.974Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Refrigerator",
@@ -174,17 +174,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787002",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787002",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787007",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787007",
   "fields": {
-    "created": "2016-08-12T21:02:17.932Z",
-    "modified": "2016-08-12T21:02:17.932Z",
+    "created": "2016-08-22T18:20:45.983Z",
+    "modified": "2016-08-22T18:20:45.983Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Broken",
@@ -194,17 +194,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787006",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787006",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 3
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787008",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787008",
   "fields": {
-    "created": "2016-08-12T21:02:17.941Z",
-    "modified": "2016-08-12T21:02:17.941Z",
+    "created": "2016-08-22T18:20:45.993Z",
+    "modified": "2016-08-22T18:20:45.993Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Replace",
@@ -214,17 +214,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787006",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787006",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 3
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787009",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787009",
   "fields": {
-    "created": "2016-08-12T21:02:17.950Z",
-    "modified": "2016-08-12T21:02:17.950Z",
+    "created": "2016-08-22T18:20:46.001Z",
+    "modified": "2016-08-22T18:20:46.001Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Stove",
@@ -234,17 +234,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787002",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787002",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787010",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787010",
   "fields": {
-    "created": "2016-08-12T21:02:17.960Z",
-    "modified": "2016-08-12T21:02:17.960Z",
+    "created": "2016-08-22T18:20:46.010Z",
+    "modified": "2016-08-22T18:20:46.010Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Broken",
@@ -254,17 +254,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787009",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787009",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 3
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787011",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787011",
   "fields": {
-    "created": "2016-08-12T21:02:17.969Z",
-    "modified": "2016-08-12T21:02:17.969Z",
+    "created": "2016-08-22T18:20:46.023Z",
+    "modified": "2016-08-22T18:20:46.023Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Replace",
@@ -274,17 +274,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787009",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787009",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 3
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787012",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787012",
   "fields": {
-    "created": "2016-08-12T21:02:17.977Z",
-    "modified": "2016-08-12T21:02:17.977Z",
+    "created": "2016-08-22T18:20:46.030Z",
+    "modified": "2016-08-22T18:20:46.030Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Doors",
@@ -294,17 +294,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787001",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787001",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 1
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787013",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787013",
   "fields": {
-    "created": "2016-08-12T21:02:17.985Z",
-    "modified": "2016-08-12T21:02:17.985Z",
+    "created": "2016-08-22T18:20:46.038Z",
+    "modified": "2016-08-22T18:20:46.038Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Manual Door",
@@ -314,17 +314,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787012",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787012",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787014",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787014",
   "fields": {
-    "created": "2016-08-12T21:02:17.995Z",
-    "modified": "2016-08-12T21:02:17.995Z",
+    "created": "2016-08-22T18:20:46.047Z",
+    "modified": "2016-08-22T18:20:46.047Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Hinges",
@@ -334,17 +334,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787013",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787013",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 3
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787015",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787015",
   "fields": {
-    "created": "2016-08-12T21:02:18.004Z",
-    "modified": "2016-08-12T21:02:18.004Z",
+    "created": "2016-08-22T18:20:46.057Z",
+    "modified": "2016-08-22T18:20:46.057Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Knobs",
@@ -354,17 +354,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787013",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787013",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 3
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787016",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787016",
   "fields": {
-    "created": "2016-08-12T21:02:18.014Z",
-    "modified": "2016-08-12T21:02:18.014Z",
+    "created": "2016-08-22T18:20:46.066Z",
+    "modified": "2016-08-22T18:20:46.066Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Locks",
@@ -374,17 +374,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787013",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787013",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 3
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787017",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787017",
   "fields": {
-    "created": "2016-08-12T21:02:18.023Z",
-    "modified": "2016-08-12T21:02:18.023Z",
+    "created": "2016-08-22T18:20:46.074Z",
+    "modified": "2016-08-22T18:20:46.074Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Automatic Door",
@@ -394,17 +394,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787012",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787012",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787018",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787018",
   "fields": {
-    "created": "2016-08-12T21:02:18.033Z",
-    "modified": "2016-08-12T21:02:18.033Z",
+    "created": "2016-08-22T18:20:46.083Z",
+    "modified": "2016-08-22T18:20:46.083Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Sensors",
@@ -414,17 +414,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787017",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787017",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 3
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787019",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787019",
   "fields": {
-    "created": "2016-08-12T21:02:18.042Z",
-    "modified": "2016-08-12T21:02:18.042Z",
+    "created": "2016-08-22T18:20:46.092Z",
+    "modified": "2016-08-22T18:20:46.092Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Pads",
@@ -434,17 +434,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787017",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787017",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 3
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787020",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787020",
   "fields": {
-    "created": "2016-08-12T21:02:18.052Z",
-    "modified": "2016-08-12T21:02:18.052Z",
+    "created": "2016-08-22T18:20:46.101Z",
+    "modified": "2016-08-22T18:20:46.101Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Tracks",
@@ -454,17 +454,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787017",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787017",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 3
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787021",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787021",
   "fields": {
-    "created": "2016-08-12T21:02:18.060Z",
-    "modified": "2016-08-12T21:02:18.060Z",
+    "created": "2016-08-22T18:20:46.109Z",
+    "modified": "2016-08-22T18:20:46.109Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Electrical",
@@ -474,17 +474,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787001",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787001",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 1
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787022",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787022",
   "fields": {
-    "created": "2016-08-12T21:02:18.068Z",
-    "modified": "2016-08-12T21:02:18.068Z",
+    "created": "2016-08-22T18:20:46.117Z",
+    "modified": "2016-08-22T18:20:46.117Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Outlets",
@@ -494,17 +494,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787021",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787021",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787023",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787023",
   "fields": {
-    "created": "2016-08-12T21:02:18.077Z",
-    "modified": "2016-08-12T21:02:18.077Z",
+    "created": "2016-08-22T18:20:46.125Z",
+    "modified": "2016-08-22T18:20:46.125Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Wiring",
@@ -514,17 +514,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787021",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787021",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787024",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787024",
   "fields": {
-    "created": "2016-08-12T21:02:18.085Z",
-    "modified": "2016-08-12T21:02:18.085Z",
+    "created": "2016-08-22T18:20:46.133Z",
+    "modified": "2016-08-22T18:20:46.133Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Surge Protector",
@@ -534,17 +534,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787021",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787021",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787025",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787025",
   "fields": {
-    "created": "2016-08-12T21:02:18.093Z",
-    "modified": "2016-08-12T21:02:18.093Z",
+    "created": "2016-08-22T18:20:46.141Z",
+    "modified": "2016-08-22T18:20:46.141Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Fire",
@@ -554,17 +554,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787001",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787001",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 1
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787026",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787026",
   "fields": {
-    "created": "2016-08-12T21:02:18.101Z",
-    "modified": "2016-08-12T21:02:18.101Z",
+    "created": "2016-08-22T18:20:46.149Z",
+    "modified": "2016-08-22T18:20:46.149Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Extinguisher",
@@ -574,17 +574,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787025",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787025",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787027",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787027",
   "fields": {
-    "created": "2016-08-12T21:02:18.110Z",
-    "modified": "2016-08-12T21:02:18.110Z",
+    "created": "2016-08-22T18:20:46.157Z",
+    "modified": "2016-08-22T18:20:46.157Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Smoke Detector",
@@ -594,17 +594,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787025",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787025",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787028",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787028",
   "fields": {
-    "created": "2016-08-12T21:02:18.118Z",
-    "modified": "2016-08-12T21:02:18.118Z",
+    "created": "2016-08-22T18:20:46.165Z",
+    "modified": "2016-08-22T18:20:46.165Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Alarm",
@@ -614,17 +614,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787025",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787025",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787029",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787029",
   "fields": {
-    "created": "2016-08-12T21:02:18.126Z",
-    "modified": "2016-08-12T21:02:18.127Z",
+    "created": "2016-08-22T18:20:46.172Z",
+    "modified": "2016-08-22T18:20:46.172Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Gutters",
@@ -634,17 +634,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787001",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787001",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 1
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787030",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787030",
   "fields": {
-    "created": "2016-08-12T21:02:18.134Z",
-    "modified": "2016-08-12T21:02:18.134Z",
+    "created": "2016-08-22T18:20:46.179Z",
+    "modified": "2016-08-22T18:20:46.179Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "HVAC",
@@ -654,17 +654,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787001",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787001",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 1
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787031",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787031",
   "fields": {
-    "created": "2016-08-12T21:02:18.142Z",
-    "modified": "2016-08-12T21:02:18.142Z",
+    "created": "2016-08-22T18:20:46.188Z",
+    "modified": "2016-08-22T18:20:46.188Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Thermostats",
@@ -674,17 +674,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787030",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787030",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787032",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787032",
   "fields": {
-    "created": "2016-08-12T21:02:18.150Z",
-    "modified": "2016-08-12T21:02:18.150Z",
+    "created": "2016-08-22T18:20:46.196Z",
+    "modified": "2016-08-22T18:20:46.196Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Too Hot",
@@ -694,17 +694,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787030",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787030",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787033",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787033",
   "fields": {
-    "created": "2016-08-12T21:02:18.159Z",
-    "modified": "2016-08-12T21:02:18.159Z",
+    "created": "2016-08-22T18:20:46.205Z",
+    "modified": "2016-08-22T18:20:46.205Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Too Cold",
@@ -714,17 +714,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787030",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787030",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787034",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787034",
   "fields": {
-    "created": "2016-08-12T21:02:18.166Z",
-    "modified": "2016-08-12T21:02:18.166Z",
+    "created": "2016-08-22T18:20:46.212Z",
+    "modified": "2016-08-22T18:20:46.212Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Janitorial",
@@ -734,17 +734,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787001",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787001",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 1
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787035",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787035",
   "fields": {
-    "created": "2016-08-12T21:02:18.175Z",
-    "modified": "2016-08-12T21:02:18.175Z",
+    "created": "2016-08-22T18:20:46.221Z",
+    "modified": "2016-08-22T18:20:46.221Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Cleaning",
@@ -754,17 +754,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787034",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787034",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787036",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787036",
   "fields": {
-    "created": "2016-08-12T21:02:18.183Z",
-    "modified": "2016-08-12T21:02:18.183Z",
+    "created": "2016-08-22T18:20:46.229Z",
+    "modified": "2016-08-22T18:20:46.229Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Disaster Recovery",
@@ -774,17 +774,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787034",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787034",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787037",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787037",
   "fields": {
-    "created": "2016-08-12T21:02:18.191Z",
-    "modified": "2016-08-12T21:02:18.191Z",
+    "created": "2016-08-22T18:20:46.236Z",
+    "modified": "2016-08-22T18:20:46.236Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Parking Lot",
@@ -794,17 +794,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787001",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787001",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 1
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787038",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787038",
   "fields": {
-    "created": "2016-08-12T21:02:18.200Z",
-    "modified": "2016-08-12T21:02:18.200Z",
+    "created": "2016-08-22T18:20:46.244Z",
+    "modified": "2016-08-22T18:20:46.244Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Potholes",
@@ -814,17 +814,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787037",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787037",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787039",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787039",
   "fields": {
-    "created": "2016-08-12T21:02:18.209Z",
-    "modified": "2016-08-12T21:02:18.209Z",
+    "created": "2016-08-22T18:20:46.252Z",
+    "modified": "2016-08-22T18:20:46.252Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Repaving",
@@ -834,17 +834,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787037",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787037",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787040",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787040",
   "fields": {
-    "created": "2016-08-12T21:02:18.217Z",
-    "modified": "2016-08-12T21:02:18.217Z",
+    "created": "2016-08-22T18:20:46.261Z",
+    "modified": "2016-08-22T18:20:46.261Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Striping",
@@ -854,17 +854,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787037",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787037",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787041",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787041",
   "fields": {
-    "created": "2016-08-12T21:02:18.225Z",
-    "modified": "2016-08-12T21:02:18.225Z",
+    "created": "2016-08-22T18:20:46.268Z",
+    "modified": "2016-08-22T18:20:46.268Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Plumbing",
@@ -874,17 +874,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787001",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787001",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 1
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787042",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787042",
   "fields": {
-    "created": "2016-08-12T21:02:18.233Z",
-    "modified": "2016-08-12T21:02:18.233Z",
+    "created": "2016-08-22T18:20:46.276Z",
+    "modified": "2016-08-22T18:20:46.276Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Toilet",
@@ -894,17 +894,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787041",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787041",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787043",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787043",
   "fields": {
-    "created": "2016-08-12T21:02:18.242Z",
-    "modified": "2016-08-12T21:02:18.242Z",
+    "created": "2016-08-22T18:20:46.285Z",
+    "modified": "2016-08-22T18:20:46.285Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Sink",
@@ -914,17 +914,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787041",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787041",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787044",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787044",
   "fields": {
-    "created": "2016-08-12T21:02:18.250Z",
-    "modified": "2016-08-12T21:02:18.250Z",
+    "created": "2016-08-22T18:20:46.293Z",
+    "modified": "2016-08-22T18:20:46.293Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Water Heater",
@@ -934,17 +934,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787041",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787041",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787045",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787045",
   "fields": {
-    "created": "2016-08-12T21:02:18.258Z",
-    "modified": "2016-08-12T21:02:18.258Z",
+    "created": "2016-08-22T18:20:46.301Z",
+    "modified": "2016-08-22T18:20:46.301Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Urinals",
@@ -954,17 +954,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787041",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787041",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787046",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787046",
   "fields": {
-    "created": "2016-08-12T21:02:18.267Z",
-    "modified": "2016-08-12T21:02:18.267Z",
+    "created": "2016-08-22T18:20:46.309Z",
+    "modified": "2016-08-22T18:20:46.309Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Pipes",
@@ -974,17 +974,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787041",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787041",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787047",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787047",
   "fields": {
-    "created": "2016-08-12T21:02:18.274Z",
-    "modified": "2016-08-12T21:02:18.274Z",
+    "created": "2016-08-22T18:20:46.316Z",
+    "modified": "2016-08-22T18:20:46.316Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Signage",
@@ -994,17 +994,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787001",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787001",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 1
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787048",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787048",
   "fields": {
-    "created": "2016-08-12T21:02:18.282Z",
-    "modified": "2016-08-12T21:02:18.282Z",
+    "created": "2016-08-22T18:20:46.324Z",
+    "modified": "2016-08-22T18:20:46.324Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Channel Lighting",
@@ -1014,17 +1014,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787047",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787047",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787049",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787049",
   "fields": {
-    "created": "2016-08-12T21:02:18.291Z",
-    "modified": "2016-08-12T21:02:18.291Z",
+    "created": "2016-08-22T18:20:46.333Z",
+    "modified": "2016-08-22T18:20:46.333Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Brand Signage",
@@ -1034,17 +1034,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787047",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787047",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787050",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787050",
   "fields": {
-    "created": "2016-08-12T21:02:18.299Z",
-    "modified": "2016-08-12T21:02:18.299Z",
+    "created": "2016-08-22T18:20:46.341Z",
+    "modified": "2016-08-22T18:20:46.341Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Pylon",
@@ -1054,17 +1054,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787047",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787047",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787051",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787051",
   "fields": {
-    "created": "2016-08-12T21:02:18.308Z",
-    "modified": "2016-08-12T21:02:18.308Z",
+    "created": "2016-08-22T18:20:46.350Z",
+    "modified": "2016-08-22T18:20:46.350Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Monument",
@@ -1074,17 +1074,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787047",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787047",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787052",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787052",
   "fields": {
-    "created": "2016-08-12T21:02:18.316Z",
-    "modified": "2016-08-12T21:02:18.316Z",
+    "created": "2016-08-22T18:20:46.361Z",
+    "modified": "2016-08-22T18:20:46.361Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Lettering",
@@ -1094,17 +1094,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787047",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787047",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787053",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787053",
   "fields": {
-    "created": "2016-08-12T21:02:18.328Z",
-    "modified": "2016-08-12T21:02:18.328Z",
+    "created": "2016-08-22T18:20:46.371Z",
+    "modified": "2016-08-22T18:20:46.371Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "New",
@@ -1114,17 +1114,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787052",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787052",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 3
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787054",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787054",
   "fields": {
-    "created": "2016-08-12T21:02:18.338Z",
-    "modified": "2016-08-12T21:02:18.338Z",
+    "created": "2016-08-22T18:20:46.381Z",
+    "modified": "2016-08-22T18:20:46.381Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Replace",
@@ -1134,17 +1134,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787052",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787052",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 3
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787055",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787055",
   "fields": {
-    "created": "2016-08-12T21:02:18.345Z",
-    "modified": "2016-08-12T21:02:18.345Z",
+    "created": "2016-08-22T18:20:46.388Z",
+    "modified": "2016-08-22T18:20:46.388Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Maintenance",
@@ -1155,16 +1155,16 @@
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
     "parent": null,
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 0
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787056",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787056",
   "fields": {
-    "created": "2016-08-12T21:02:18.352Z",
-    "modified": "2016-08-12T21:02:18.352Z",
+    "created": "2016-08-22T18:20:46.396Z",
+    "modified": "2016-08-22T18:20:46.396Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Parking Lot",
@@ -1174,17 +1174,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787055",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787055",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 1
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787057",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787057",
   "fields": {
-    "created": "2016-08-12T21:02:18.360Z",
-    "modified": "2016-08-12T21:02:18.360Z",
+    "created": "2016-08-22T18:20:46.405Z",
+    "modified": "2016-08-22T18:20:46.405Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Potholes",
@@ -1194,17 +1194,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787056",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787056",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787058",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787058",
   "fields": {
-    "created": "2016-08-12T21:02:18.369Z",
-    "modified": "2016-08-12T21:02:18.369Z",
+    "created": "2016-08-22T18:20:46.413Z",
+    "modified": "2016-08-22T18:20:46.413Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Repaving",
@@ -1214,17 +1214,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787056",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787056",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787059",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787059",
   "fields": {
-    "created": "2016-08-12T21:02:18.378Z",
-    "modified": "2016-08-12T21:02:18.378Z",
+    "created": "2016-08-22T18:20:46.423Z",
+    "modified": "2016-08-22T18:20:46.423Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Striping",
@@ -1234,17 +1234,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787056",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787056",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787060",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787060",
   "fields": {
-    "created": "2016-08-12T21:02:18.385Z",
-    "modified": "2016-08-12T21:02:18.385Z",
+    "created": "2016-08-22T18:20:46.434Z",
+    "modified": "2016-08-22T18:20:46.434Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Plumbing",
@@ -1254,17 +1254,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787055",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787055",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 1
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787061",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787061",
   "fields": {
-    "created": "2016-08-12T21:02:18.394Z",
-    "modified": "2016-08-12T21:02:18.394Z",
+    "created": "2016-08-22T18:20:46.443Z",
+    "modified": "2016-08-22T18:20:46.443Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Toilet",
@@ -1274,17 +1274,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787060",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787060",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787062",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787062",
   "fields": {
-    "created": "2016-08-12T21:02:18.402Z",
-    "modified": "2016-08-12T21:02:18.402Z",
+    "created": "2016-08-22T18:20:46.451Z",
+    "modified": "2016-08-22T18:20:46.451Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Sink",
@@ -1294,17 +1294,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787060",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787060",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787063",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787063",
   "fields": {
-    "created": "2016-08-12T21:02:18.410Z",
-    "modified": "2016-08-12T21:02:18.410Z",
+    "created": "2016-08-22T18:20:46.459Z",
+    "modified": "2016-08-22T18:20:46.459Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Water Heater",
@@ -1314,17 +1314,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787060",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787060",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787064",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787064",
   "fields": {
-    "created": "2016-08-12T21:02:18.419Z",
-    "modified": "2016-08-12T21:02:18.419Z",
+    "created": "2016-08-22T18:20:46.467Z",
+    "modified": "2016-08-22T18:20:46.467Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Urinals",
@@ -1334,17 +1334,17 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787060",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787060",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 },
 {
   "model": "category.category",
-  "pk": "015530c4-ce6c-4724-9cfd-37a16e787065",
+  "pk": "014530c4-ce6c-4724-9cfd-37a16e787065",
   "fields": {
-    "created": "2016-08-12T21:02:18.427Z",
-    "modified": "2016-08-12T21:02:18.427Z",
+    "created": "2016-08-22T18:20:46.475Z",
+    "modified": "2016-08-22T18:20:46.475Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "name": "Pipes",
@@ -1354,8 +1354,8 @@
     "cost_amount": null,
     "cost_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
     "cost_code": null,
-    "parent": "015530c4-ce6c-4724-9cfd-37a16e787060",
-    "status": "016530c4-ce6c-4724-9cfd-37a16e787001",
+    "parent": "014530c4-ce6c-4724-9cfd-37a16e787060",
+    "status": "015530c4-ce6c-4724-9cfd-37a16e787001",
     "level": 2
   }
 }
