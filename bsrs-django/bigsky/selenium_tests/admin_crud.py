@@ -79,11 +79,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
     def tearDown(self):
         self.driver.close()
 
-    # def test_translated_value(self):
-    #     """Translation key 'modules.tickets.titleShort' -> 'Tickets' in 'en' """
-    #     node = self.driver.find_element_by_class_name("t-nav-tickets")
-    #     assert node.text == 'Tickets'
-
     def test_keypress__enter(self):
         # Go to Location Area
         self.nav_page.find_location_link().click()
@@ -102,6 +97,108 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.wait_for_xhr_request("t-location-name").send_keys(Keys.RETURN)
         post_title = self.wait_for_xhr_request_xpath("//*/div/h1")
         assert init_title == post_title
+
+    def test_assignment_profile(self):
+        ap_link = self.nav_page.find_assignment_profiles_link()
+        ap_link.click()
+        # Create AP Page Object
+        page = ModelPage(
+            driver = self.driver,
+            new_link = "t-add-new",
+            list_name = "t-assignment-description",
+            list_data = "t-grid-data"
+        )
+        # Create
+        page.find_new_link().click()
+        # description
+        description = rand_chars()
+        assignment = InputHelper(description=description)
+        self.wait_for_xhr_request("t-assignment-description")
+        self._fill_in(assignment)
+        # assignee
+        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-assignment-assignee-select ')]/div")
+        assignee_dropdown.click()
+        assignee_input = self.wait_for_xhr_request("ember-power-select-search-input")
+        assignee_input.send_keys('a')
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
+        # pf
+        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-assignment-pf-select ')]/div")
+        assignee_dropdown.click()
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
+        # criteria
+        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-country-select ')]/div")
+        assignee_dropdown.click()
+        assignee_input = self.wait_for_xhr_request("ember-power-select-trigger-multiple-input")
+        assignee_input.send_keys('a')
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
+        # save
+        self.gen_elem_page.click_save_btn()
+
+        # Find in list
+        assignment = page.find_list_data()
+        self.driver.refresh()
+        list_view = page.find_list_name()
+        page.click_name_in_list(description, list_view)
+
+        # Update
+        # description
+        description = rand_chars()
+        assignment = InputHelper(description=description)
+        assignment_input = self.wait_for_xhr_request("t-assignment-description")
+        assignment_input.clear()
+        self._fill_in(assignment)
+        # assignee
+        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-assignment-assignee-select ')]/div")
+        assignee_dropdown.click()
+        assignee_input = self.wait_for_xhr_request("ember-power-select-search-input")
+        assignee_input.send_keys('a')
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]//li[2]").click()
+        # pf
+        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-assignment-pf-select ')]/div")
+        assignee_dropdown.click()
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]//li[2]").click()
+        # criteria
+        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-category-select ')]/div")
+        assignee_dropdown.click()
+        assignee_input = self.wait_for_xhr_request("ember-power-select-trigger-multiple-input")
+        assignee_input.send_keys('a')
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
+        # save
+        self.gen_elem_page.click_save_btn()
+
+        # Find in list
+        assignment = page.find_list_data()
+        self.driver.refresh()
+        list_view = page.find_list_name()
+        page.click_name_in_list(description, list_view)
+
+        # Delete
+        assignment_input = self.wait_for_xhr_request("t-assignment-description")
+        self.gen_elem_page.click_dropdown_delete()
+        self.wait_for_xhr_request("t-delete-btn").click()
+        self.wait_for_xhr_request("t-modal-delete-btn").click()
+
+        # check removed from list
+        page.find_list_data()
+        self.driver.refresh()
+        page.find_list_data()
+        list_view = page.find_list_name()
+        self.assertNotIn(
+            description,
+            [r.text for r in list_view]
+        )
 
     def test_role(self):
         ### CREATE
