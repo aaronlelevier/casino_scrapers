@@ -310,14 +310,29 @@ class ProfileFilterTests(TestCase):
         # pre-test
         self.assertTrue(state_filter.source.is_state_filter)
         self.assertTrue(self.ticket.location.is_office_or_store)
+        self.assertIn(self.office_address, self.ticket.location.addresses.all())
         self.assertIn(str(self.office_address.state.id), state_filter.criteria)
 
         ret = state_filter.is_match(self.ticket)
 
         self.assertTrue(ret)
 
+    def test_is_match__location_state__false(self):
+        state_filter = create_ticket_location_state_filter()
+        state_filter.criteria = []
+        state_filter.save()
+        # pre-test
+        self.assertTrue(state_filter.source.is_state_filter)
+        self.assertTrue(self.ticket.location.is_office_or_store)
+        self.assertIn(self.office_address, self.ticket.location.addresses.all())
+        self.assertNotIn(str(self.office_address.state.id), state_filter.criteria)
+
+        ret = state_filter.is_match(self.ticket)
+
+        self.assertFalse(ret)
+
     @patch("routing.models.ProfileFilter._is_address_match")
-    def test_is_match__location_state__false__no_a_state_filter(self, mock_func):
+    def test_is_match__location_state__false__not_a_state_filter(self, mock_func):
         self.assertFalse(self.pf.source.is_state_filter)
         self.assertTrue(self.ticket.location.is_office_or_store)
 
@@ -344,6 +359,19 @@ class ProfileFilterTests(TestCase):
 
         self.assertTrue(ret)
 
+    def test_is_match__location_country__false(self):
+        country_filter = create_ticket_location_country_filter()
+        country_filter.criteria = []
+        country_filter.save()
+        # pre-test
+        self.assertTrue(country_filter.source.is_country_filter)
+        self.assertTrue(self.ticket.location.is_office_or_store)
+        self.assertNotIn(str(self.office_address.country.id), country_filter.criteria)
+
+        ret = country_filter.is_match(self.ticket)
+
+        self.assertFalse(ret)
+
     @patch("routing.models.ProfileFilter._is_address_match")
     def test_is_match__location_country__false__no_a_country_filter(self, mock_func):
         self.assertFalse(self.pf.source.is_country_filter)
@@ -365,10 +393,14 @@ class ProfileFilterTests(TestCase):
         state_nv = create_contact_state("NV")
         self.office_address.state = state_nv
         self.office_address.save()
+        self.assertIn(self.office_address, self.ticket.location.addresses.all())
+        self.assertTrue(self.office_address.is_office_or_store)
         address_two = create_contact(Address, self.ticket.location)
         address_two.state = self.state_ca
         address_two.save()
         self.assertIn(address_two, self.ticket.location.addresses.all())
+        # even though the "State" requirement is met, the address isn't
+        # an office or store type, so it's ignored in the matching
         self.assertFalse(address_two.is_office_or_store)
 
         state_filter = create_ticket_location_state_filter()
