@@ -40,7 +40,6 @@ moduleForComponent('assignments/filter-section', 'Integration | Component | assi
     assignment_repo.getFilters = () => new Ember.RSVP.Promise((resolve) => {
       resolve({'results': results});
     });
-    random.uuid = function() { return UUID.value; };
   },
   afterEach() {
     page.removeContext(this);
@@ -60,7 +59,7 @@ test('add pfilter - adds a filter with a random uuid and a source_id for the Ava
   clickTrigger('.t-assignment-pf-select:eq(1)');
   nativeMouseUp(`.ember-power-select-option:contains(${PFD.keyTwo})`);
   assert.equal(assignment.get('pf').get('length'), 2);
-  assert.equal(assignment.get('pf').objectAt(1).get('id'), UUID.value);
+  assert.ok(assignment.get('pf').objectAt(1).get('id'));
   assert.equal(assignment.get('pf').objectAt(1).get('source_id'), PFD.sourceIdTwo);
   assert.equal(assignment.get('pf').objectAt(1).get('field'), PFD.locationField);
   assert.equal(assignment.get('pf').objectAt(1).get('lookups'), PFD.lookupsDynamic);

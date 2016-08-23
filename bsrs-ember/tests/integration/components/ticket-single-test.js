@@ -50,7 +50,7 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
   },
 });
 
-// test('scott validation on ticket request works', function(assert) {
+// test('validation on ticket request works', function(assert) {
 //   const REQUEST = '.t-ticket-request';
 //   let modalDialogService = this.container.lookup('service:modal-dialog');
 //   modalDialogService.destinationElementId = 'request';
