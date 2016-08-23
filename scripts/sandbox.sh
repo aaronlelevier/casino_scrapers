@@ -31,7 +31,7 @@ TEST=$?; if [ "$TEST" == 1 ]; then echo "rm failed"; exit $TEST; fi
 
 wait
 echo "GIT - CLONE REPO"
-git clone git@github.com:bigskytech/bsrs.git
+git clone -b profile-filter git@github.com:bigskytech/bsrs.git
 TEST=$?; if [ "$TEST" == 1 ]; then echo "git clone failed"; exit $TEST; fi
 
 echo "Checkout to branch"
