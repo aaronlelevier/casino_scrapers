@@ -299,7 +299,21 @@ class ExportDataTests(APITestCase):
 
         response = self.client.post(reverse("export_data"), data, format='json')
 
-        mock_func.assert_called_with(Person, {'username': 'aaa'}, ['id', 'username'])
+        # last arg here is "fields". This is limited due to EXPORT_FIELDS
+        # being set on the Person Model.
+        mock_func.assert_called_with({'username': 'aaa'}, ['id', 'username'])
+
+    @patch("generic.views.ExportData._filter_with_fields")
+    def test_post__fields__all(self, mock_func):
+        # confirm that the fields to export isn't explicitly set on the model
+        with self.assertRaises(AttributeError):
+            SavedSearch.EXPORT_FIELDS
+
+        data = {"model": "savedsearch"}
+
+        response = self.client.post(reverse("export_data"), data, format='json')
+
+        mock_func.assert_called_with({}, ['id', 'created', 'modified', 'deleted', 'name', 'person', 'endpoint_name', 'endpoint_uri'])
 
     def test_post__invalid_model(self):
         model_name = "foo"

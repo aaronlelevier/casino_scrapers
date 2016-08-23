@@ -75,32 +75,35 @@ class ExportData(APIView):
     def post(self, request, *args, **kwargs):
         data = request.data
         params = data.get('params', {})
-        model = self._get_model(data)
-        fields = ['id', 'username']
+        self._set_model(data)
+        fields = self._get_fields()
 
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="{name}.csv"'.format(
-            name=model._meta.verbose_name_plural)
+            name=self.model._meta.verbose_name_plural)
 
         writer = csv.writer(response)
         writer.writerow(fields)
-        for d in self._filter_with_fields(model, params, fields):
+        for d in self._filter_with_fields(params, fields):
             writer.writerow([d[f] for f in fields])
 
         return response
 
-    @staticmethod
-    def _get_model(data):
+    def _set_model(self, data):
         try:
             model_name = data.get('model')
             content_type = ContentType.objects.get(model=model_name)
-            model = content_type.model_class()
         except ContentType.DoesNotExist:
             raise ValidationError("Model with model name: {} DoesNotExist"
                                   .format(model_name))
         else:
-            return model
+            self.model = content_type.model_class()
 
-    @staticmethod
-    def _filter_with_fields(model, params, fields):
-        return model.objects.filter(**params).values(*fields)
+    def _get_fields(self):
+        try:
+            return self.model.EXPORT_FIELDS
+        except AttributeError:
+            return [x.name for x in self.model._meta.get_fields()]
+
+    def _filter_with_fields(self, params, fields):
+        return self.model.objects.filter(**params).values(*fields)
