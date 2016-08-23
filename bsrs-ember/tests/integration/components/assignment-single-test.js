@@ -62,10 +62,17 @@ test('description is required validation, cannot save w/o description', function
   // }, 300);
 });
 
-test('header - shows detail if not model.new', function(assert) {
+test('header - shows detail if not model.new and not description', function(assert) {
+  model.set('description', undefined);
   this.model = model;
   this.render(hbs `{{assignments/assignment-single model=model}}`);
   assert.equal(this.$('.t-assignment-header').text().trim(), trans.t('assignment.detail'));
+});
+
+test('header - shows detail if description if description exists and not model.new', function(assert) {
+  this.model = model;
+  this.render(hbs `{{assignments/assignment-single model=model}}`);
+  assert.equal(this.$('.t-assignment-header').text().trim(), model.get('description'));
 });
 
 test('header - shows new if model.new', function(assert) {
