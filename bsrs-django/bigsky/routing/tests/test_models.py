@@ -160,7 +160,8 @@ class AssignmentManagerTests(TestCase):
 
         auto_assign_filter = create_auto_assign_filter()
         self.assignment.filters.add(auto_assign_filter)
-        self.assertTrue(Assignment.objects.filter(tenant=self.tenant, filters__source__field=AUTO_ASSIGN).exists())
+        self.assertTrue(Assignment.objects.filter(tenant=self.tenant,
+                                                  filters__source__field=AUTO_ASSIGN).exists())
 
         ret = Assignment.objects.auto_assign_filter_in_use(self.tenant)
 

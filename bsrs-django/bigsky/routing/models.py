@@ -59,7 +59,9 @@ class AssignmentManager(BaseManager):
                 break
 
     def auto_assign_filter_in_use(self, tenant):
-        return self.filter(tenant=tenant, filters__source__field=AUTO_ASSIGN).select_related('tenant').prefetch_related('filters').first()
+        return (self.filter(tenant=tenant, filters__source__field=AUTO_ASSIGN)
+                    .select_related('tenant')
+                    .prefetch_related('filters').first())
 
 
 class Assignment(BaseModel):
