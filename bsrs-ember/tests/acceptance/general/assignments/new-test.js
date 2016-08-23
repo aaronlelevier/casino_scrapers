@@ -52,8 +52,8 @@ test('visit new URL and create a new record', assert => {
     assert.equal(find('.t-assignment-pf-select').length, 1);
   });
   xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
-  selectChoose('.t-assignment-pf-select:eq(0)', PFD.keyOne);
-  selectChoose('.t-priority-criteria', TD.priorityOneKey);
+  selectChoose('.t-assignment-pf-select:eq(0)', PFD.keyOneTranslated);
+  selectChoose('.t-priority-criteria', TD.priorityOne);
   xhr(ASSIGNMENT_URL, 'POST', AF.put({
     id: UUID.value,
     assignee: AD.assigneeSelectOne,

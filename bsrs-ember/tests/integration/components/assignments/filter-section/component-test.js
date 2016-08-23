@@ -3,6 +3,8 @@ const { run } = Ember;
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
+import translations from 'bsrs-ember/vendor/translation_fixtures';
+import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import { clickTrigger, nativeMouseUp, nativeMouseDown } from '../../../../helpers/ember-power-select';
 import repository from 'bsrs-ember/tests/helpers/repository';
@@ -18,13 +20,16 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 
 var store, trans, assignment, results, assignment_repo;
 
-moduleForComponent('assignments/filter-section', 'Integration | Component | assignments/detail section', {
+moduleForComponent('assignments/filter-section', 'Integration | Component | assignments/filter-section', {
   integration: true,
   beforeEach() {
     page.setContext(this);
     store = module_registry(this.container, this.registry, ['model:assignment', 'model:assignment-join-pfilter', 'model:pfilter']);
-    translation.initialize(this);
+
     trans = this.container.lookup('service:i18n');
+    loadTranslations(trans, translations.generate('en'));
+    translation.initialize(this);
+
     run(() => {
       assignment = store.push('assignment', {id: AD.idOne, description: AD.descriptionOne, assignment_pf_fks: [AJFD.idOne]});
       store.push('assignment-join-pfilter', {id: AJFD.idOne, assignment_pk: AD.idOne, pfilter_pk: PFD.idOne});
@@ -112,14 +117,14 @@ test('add new pfilter, and assignment is not dirty until select pfilter which di
   this.render(hbs`{{assignments/filter-section model=model}}`);
   // existing pfilter
   assert.equal(this.$('.t-priority-criteria').length, 1);
-  assert.equal(this.$('.ember-power-select-selected-item').text().trim(), PFD.keyOne);
+  assert.equal(this.$('.ember-power-select-selected-item').text().trim(), trans.t(PFD.keyOne));
   assert.equal(this.$('.t-assignment-pf-select').length, 1);
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(assignment.get('pf').get('length'), 1);
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
   page.addFilter();
   // adds pfilter but not dirty
-  assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), PFD.keyOne);
+  assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), trans.t(PFD.keyOne));
   assert.equal(this.$('.t-assignment-pf-select').length, 2);
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(assignment.get('pf').get('length'), 2);
@@ -129,15 +134,15 @@ test('add new pfilter, and assignment is not dirty until select pfilter which di
   assert.equal(this.$('li.ember-power-select-option').length, 3);
   nativeMouseUp(`.ember-power-select-option:contains(${PFD.keyTwo})`);
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
-  assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), PFD.keyOne);
-  assert.equal(this.$('.ember-power-select-selected-item:eq(1)').text().trim(), PFD.keyTwo);
+  assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), trans.t(PFD.keyOne));
+  assert.equal(this.$('.ember-power-select-selected-item:eq(1)').text().trim(), trans.t(PFD.keyTwo));
   // now the assignment is dirty b/c pfilter has an criteria
   assert.ok(assignment.get('isDirtyOrRelatedDirty'));
   assert.equal(this.$('.t-assignment-pf-select').length, 2);
   // // both power-selects render
   assert.equal(this.$('.t-priority-criteria').length, 1);
   assert.equal(this.$('.t-ticket-location-select').length, 1);
-  assert.equal(this.$('.ember-power-select-trigger-multiple-input:eq(0)').get(0)['placeholder'], 'admin.placeholder.available_filter.location');
+  assert.equal(this.$('.ember-power-select-trigger-multiple-input:eq(0)').get(0)['placeholder'], trans.t('admin.placeholder.location_filter_select'));
 });
 
 test('delete pfilter and assignment is dirty and can add and remove filter sequentially as well', function(assert) {
@@ -145,8 +150,8 @@ test('delete pfilter and assignment is dirty and can add and remove filter seque
   assignment.saveRelated();
   this.model = assignment;
   this.render(hbs`{{assignments/filter-section model=model}}`);
-  assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), PFD.keyOne);
-  assert.equal(this.$('.ember-power-select-selected-item:eq(1)').text().trim(), PFD.keyTwo);
+  assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), trans.t(PFD.keyOne));
+  assert.equal(this.$('.ember-power-select-selected-item:eq(1)').text().trim(), trans.t(PFD.keyTwo));
   assert.equal(this.$('.t-assignment-pf-select').length, 2);
   assert.ok(assignment.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(assignment.get('pf').get('length'), 2);
@@ -199,7 +204,7 @@ test('if another assignment has auto_assign, then display that assignment in dro
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
   clickTrigger('.t-assignment-pf-select:eq(0)');
   assert.equal(this.$('.ember-power-select-option:eq(3)').attr('aria-disabled'), 'true');
-  assert.equal(this.$('.ember-power-select-option:eq(3)').text().trim().replace(/[\s\n]+/g, ''), trans.t('admin.placeholder.auto_assign') + trans.t('assigned.filter') + AD.descriptionOne);
+  assert.equal(this.$('.ember-power-select-option:eq(3)').text().trim(), trans.t('admin.placeholder.auto_assign') + " " + trans.t('admin.assignment.selected_in') + " " + AD.descriptionOne);
 });
 
 test('if select auto_assign then disable add filter btn', function(assert) {
@@ -239,13 +244,13 @@ test('delete the middle filter, and it correctly leaves the remaining start n en
   this.model = assignment;
   this.render(hbs`{{assignments/filter-section model=model}}`);
   assert.equal(this.$('.t-assignment-pf-select').length, 3);
-  assert.equal(page.assignmentFilterOneText, PFD.keyOne);
-  assert.equal(page.assignmentFilterTwoText, PFD.keyTwo);
-  assert.equal(page.assignmentFilterThreeText, PFD.keyThree);
+  assert.equal(page.assignmentFilterOneText, trans.t(PFD.keyOne));
+  assert.equal(page.assignmentFilterTwoText, trans.t(PFD.keyTwo));
+  assert.equal(page.assignmentFilterThreeText, trans.t(PFD.keyThree));
   page.deleteFilterTwo();
   assert.equal(this.$('.t-assignment-pf-select').length, 2);
-  assert.equal(page.assignmentFilterOneText, PFD.keyOne);
-  assert.equal(page.assignmentFilterTwoText, PFD.keyThree);
+  assert.equal(page.assignmentFilterOneText, trans.t(PFD.keyOne));
+  assert.equal(page.assignmentFilterTwoText, trans.t(PFD.keyThree));
 });
 
 test('ticket-priority-select is not searchable', function(assert) {

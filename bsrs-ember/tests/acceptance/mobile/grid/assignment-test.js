@@ -56,7 +56,7 @@ test('visiting mobile assignment grid show correct layout', assert => {
   andThen(() => {
     const assignment = store.findOne('assignment-list');
     assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
-    assert.equal(find('.t-mobile-grid-title').text().trim(), '19 '+t('assignment.other'));
+    assert.equal(find('.t-mobile-grid-title').text().trim(), '19 '+t('admin.assignment.other'));
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').text().trim());
     // Based on assignment-list

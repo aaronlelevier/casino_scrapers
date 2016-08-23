@@ -2,6 +2,8 @@ import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
+import translations from 'bsrs-ember/vendor/translation_fixtures';
+import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import AD from 'bsrs-ember/vendor/defaults/assignment';
 
@@ -11,8 +13,9 @@ moduleForComponent('assignments/detail-section', 'Integration | Component | assi
   integration: true,
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:assignment']);
-    translation.initialize(this);
     trans = this.container.lookup('service:i18n');
+    loadTranslations(trans, translations.generate('en'));
+    translation.initialize(this);
     assignment = store.push('assignment', {id: AD.idOne, description: AD.descriptionOne});
   }
 });

@@ -64,7 +64,7 @@ test('header - shows detail if not model.new and not description', function(asse
   model.set('description', undefined);
   this.model = model;
   this.render(hbs `{{assignments/assignment-single model=model}}`);
-  assert.equal(page.headerText, trans.t('assignment.detail'));
+  assert.equal(page.headerText, trans.t('admin.assignment.detail'));
 });
 
 test('header - shows detail if description if description exists and not model.new', function(assert) {
@@ -77,12 +77,12 @@ test('header - shows new if model.new', function(assert) {
   model.set('new', true);
   this.model = model;
   this.render(hbs `{{assignments/assignment-single model=model}}`);
-  assert.equal(page.headerText, trans.t('assignment.new'));
+  assert.equal(page.headerText, trans.t('admin.assignment.new'));
 });
 
 test('labels are translated', function(assert) {
   this.model = model;
   this.render(hbs `{{assignments/assignment-single model=model}}`);
-  assert.equal(getLabelText('description'), trans.t('assignment.description'));
-  assert.equal(getLabelText('assignee'), trans.t('assignment.assignee'));
+  assert.equal(getLabelText('description'), trans.t('admin.assignment.description'));
+  assert.equal(getLabelText('assignee'), trans.t('admin.assignment.assignee'));
 });

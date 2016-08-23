@@ -5,7 +5,7 @@ export default GridViewComponent.extend({
   columns: [
     {
       field: 'description',
-      headerLabel: 'assignment.label.description',
+      headerLabel: 'admin.assignment.description',
       headerIsTranslatable: true,
       isSortable: true,
       isFilterable: true,
@@ -13,7 +13,7 @@ export default GridViewComponent.extend({
     },
     {
       field: 'assignee.fullname',
-      headerLabel: 'assignment.label.assignee',
+      headerLabel: 'admin.assignment.assignee',
       headerIsTranslatable: true,
       isSortable: true,
       isFilterable: true,

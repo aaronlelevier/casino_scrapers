@@ -57,14 +57,14 @@ test('visit detail and update all fields', assert => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(page.descriptionValue, AD.descriptionOne);
     assert.equal(page.assigneeInput, AD.fullname);
-    assert.equal(find('.t-assignment-pf-select .ember-power-select-selected-item').text().trim(), PFD.keyOne);
-    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], TD.priorityOneKey);
+    assert.equal(find('.t-assignment-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
   });
   // criteria
-  selectChoose('.t-priority-criteria', TD.priorityTwoKey);
+  selectChoose('.t-priority-criteria', TD.priorityTwo);
   andThen(() => {
-    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], TD.priorityOneKey);
-    assert.equal(page.prioritySelectedTwo.split(/\s+/)[1], TD.priorityTwoKey);
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
+    assert.equal(page.prioritySelectedTwo.split(/\s+/)[1], t(TD.priorityTwoKey));
   });
   // description
   page.descriptionFill(AD.descriptionTwo);
@@ -304,7 +304,7 @@ test('remove filter and save - should stay on page because an assignment must ha
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.equal($('.validated-input-error-dialog').text().trim(), 'errors.assignment.pf.criteria.length');
+    assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.assignment.pf.criteria.length'));
   });
   // have to have at lease 1 pfilter per assignment
   page.deleteFilter();
@@ -317,15 +317,15 @@ test('remove filter and save - should stay on page because an assignment must ha
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.equal($('.validated-input-error-dialog').text().trim(), 'errors.assignment.pf.length');
+    assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.assignment.pf.length'));
   });
   // add back pfilter w/ 1 criteria to make valid, and save
   xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
   page.addFilter();
-  selectChoose('.t-assignment-pf-select:eq(0)', PFD.keyOne);
-  selectChoose('.t-priority-criteria', TD.priorityOneKey);
+  selectChoose('.t-assignment-pf-select:eq(0)', PFD.keyOneTranslated);
+  selectChoose('.t-priority-criteria', TD.priorityOne);
   andThen(() => {
-    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], TD.priorityOneKey);
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
   });
   let payload = AF.put({
     description: AD.descriptionOne,
@@ -363,7 +363,7 @@ test('add filter, add criteria, remove filter, cancel', assert => {
   page.deleteFilterTwo();
   andThen(() => {
     assert.equal(find('.t-del-pf-btn').length, 1);
-    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], TD.priorityOneKey);
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
   });
   generalPage.cancel();
   andThen(() => {
@@ -375,13 +375,13 @@ test('select auto_assign filter and update assignment', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-assignment-pf-select .ember-power-select-selected-item').text().trim(), PFD.keyOne);
-    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], TD.priorityOneKey);
+    assert.equal(find('.t-assignment-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
   });
   // replace existing filter w/ 'auto_assign' filter
   // this also tests that if there's an existing, the existing is removed n replaced on the model.pf array
   xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
-  selectChoose('.t-assignment-pf-select:eq(0)', PFD.autoAssignKey);
+  selectChoose('.t-assignment-pf-select:eq(0)', PFD.autoAssignKeyTranslated);
   let payload = AF.put({
     description: AD.descriptionOne,
     assignee: AD.assigneeOne,
@@ -403,13 +403,13 @@ test('select category filter and update assignment', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-assignment-pf-select .ember-power-select-selected-item').text().trim(), PFD.keyOne);
-    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], TD.priorityOneKey);
+    assert.equal(find('.t-assignment-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
   });
   xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
-  selectChoose('.t-assignment-pf-select:eq(0)', PFD.categoryKey);
+  selectChoose('.t-assignment-pf-select:eq(0)', PFD.categoryKeyTranslated);
   andThen(() => {
-    assert.equal(find('.ember-power-select-trigger-multiple-input:eq(0)').get(0)['placeholder'], 'admin.placeholder.available_filter.category');
+    assert.equal(find('.ember-power-select-trigger-multiple-input:eq(0)').get(0)['placeholder'], t('admin.placeholder.category_filter_select'));
   });
   const keyword = 'a';
   const response = CF.list_power_select_id_name();
@@ -442,13 +442,13 @@ test('select state filter and update assignment', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-assignment-pf-select .ember-power-select-selected-item').text().trim(), PFD.keyOne);
-    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], TD.priorityOneKey);
+    assert.equal(find('.t-assignment-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
   });
   xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
-  selectChoose('.t-assignment-pf-select:eq(0)', PFD.stateKey);
+  selectChoose('.t-assignment-pf-select:eq(0)', PFD.stateKeyTranslated);
   andThen(() => {
-    assert.equal(find('.ember-power-select-trigger-multiple-input:eq(0)').get(0)['placeholder'], 'admin.placeholder.available_filter.state');
+    assert.equal(find('.ember-power-select-trigger-multiple-input:eq(0)').get(0)['placeholder'], t('admin.placeholder.state_filter_select'));
   });
   const keyword = 'a';
   const response = SF.list_power_select();
@@ -481,13 +481,13 @@ test('select country filter and update assignment', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-assignment-pf-select .ember-power-select-selected-item').text().trim(), PFD.keyOne);
-    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], TD.priorityOneKey);
+    assert.equal(find('.t-assignment-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
   });
   xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
-  selectChoose('.t-assignment-pf-select:eq(0)', PFD.countryKey);
+  selectChoose('.t-assignment-pf-select:eq(0)', PFD.countryKeyTranslated);
   andThen(() => {
-    assert.equal(find('.ember-power-select-trigger-multiple-input:eq(0)').get(0)['placeholder'], 'admin.placeholder.available_filter.country');
+    assert.equal(find('.ember-power-select-trigger-multiple-input:eq(0)').get(0)['placeholder'], t('admin.placeholder.country_filter_select'));
   });
   const keyword = 'a';
   const response = CountryF.list_power_select();

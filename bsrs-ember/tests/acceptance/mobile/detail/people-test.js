@@ -57,8 +57,8 @@ test('can click through component sections and save to redirect to index', async
   assert.ok(Ember.$('.t-mobile-footer-item:eq(1)').hasClass('active'));
   await generalMobilePage.footerItemThreeClick();
   assert.ok(Ember.$('.t-mobile-footer-item:eq(2)').hasClass('active'));
-  await generalMobilePage.footerItemFourClick();
-  assert.ok(Ember.$('.t-mobile-footer-item:eq(3)').hasClass('active'));
+  // await generalMobilePage.footerItemFourClick();
+  // assert.ok(Ember.$('.t-mobile-footer-item:eq(3)').hasClass('active'));
   await generalMobilePage.footerItemOneClick();
   assert.ok(Ember.$('.t-mobile-footer-item:eq(0)').hasClass('active'));
   let payload = PF.put({id: PD.idOne});

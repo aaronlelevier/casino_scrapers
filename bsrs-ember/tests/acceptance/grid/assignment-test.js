@@ -36,12 +36,12 @@ test('template translation tags as variables', function(assert) {
   visit(ASSIGNMENT_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
-    assert.equal(generalPage.gridTitle, t('assignment.other'));
-    assert.equal(Ember.$('.t-grid-search-input').get(0)['placeholder'], t('assignment.search'));
-    assert.equal(generalPage.gridPageCountText, '19 '+t('assignment.other'));
+    assert.equal(generalPage.gridTitle, t('admin.assignment.other'));
+    assert.equal(Ember.$('.t-grid-search-input').get(0)['placeholder'], t('admin.assignment.search'));
+    assert.equal(generalPage.gridPageCountText, '19 ' + t('admin.assignment.other'));
     // column headers
-    assert.equal(page.descriptionSortText, t('assignment.label.description'));
-    assert.equal(page.assigneeSortText, t('assignment.label.assignee'));
+    assert.equal(page.descriptionSortText, t('admin.assignment.description'));
+    assert.equal(page.assigneeSortText, t('admin.assignment.assignee'));
   });
 });
 

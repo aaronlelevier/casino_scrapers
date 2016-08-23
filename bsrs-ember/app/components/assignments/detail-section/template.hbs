@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-12">
-    {{#form-group title="assignment.description" for="description"}}
+    {{#form-group title="admin.assignment.description" for="description"}}
     {{validated-input
       model=model
       valuePath="description"
@@ -13,7 +13,7 @@
 </div>
 <div class="row">
   <div class="col-md-12">
-    {{#form-group title="assignment.assignee" for="assignee"}}
+    {{#form-group title="admin.assignment.assignee" for="assignee"}}
     {{db-fetch-select
       model=model
       selectedAttr=model.assignee
