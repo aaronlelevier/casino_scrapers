@@ -1,109 +1,117 @@
 .ember-basic-dropdown{
-    .ember-power-select-trigger{
-        min-height: 34px;
-        min-width: 120px;
-        background-image: none;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        border-radius: $borderRadius;
-        .ember-power-select-status-icon {
-            right: 10px;
-            border-width: 5px 4px 0 4px;
-            border-color: $darkGray transparent transparent transparent;
-        }
+  .ember-power-select-trigger{
+    min-height: 34px;
+    min-width: 120px;
+    background-image: none;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    border-radius: $borderRadius;
+    .ember-power-select-status-icon {
+      right: 10px;
+      border-width: 5px 4px 0 4px;
+      border-color: $darkGray transparent transparent transparent;
     }
-    .ember-power-select-trigger[aria-expanded=true]{
-        border-color: $activeColor;
-        outline: 0;
-        -webkit-box-shadow: none;
-        box-shadow: none;
-        border-radius: $borderRadiusTop;
-        background-image: none !important;
-        position: relative;
-        z-index: 1;
-        input[type="search"] {
-            display: block;
-            margin: 4px 0 0;
-            padding: 0 1px;
-        }
+  }
+  .ember-power-select-trigger[aria-expanded=true]{
+    border-color: $activeColor;
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-radius: $borderRadiusTop;
+    background-image: none !important;
+    position: relative;
+    z-index: 1;
+    input[type="search"] {
+      display: block;
+      margin: 4px 0 0;
+      padding: 0 3px;
     }
+  }
+  .ember-power-select-trigger{
+    input[type="search"] {
+      display: block;
+      margin: 4px 0 0;
+      padding: 0 3px;
+    }
+  }
 }
+
 .ember-power-select-multiple{
-    .ember-power-select-trigger{
-        line-height: 0;
-        padding: 1px 36px 4px 4px !important;
-        .ember-power-select-multiple-options{
-            max-width: 100%;
-            .ember-power-select-multiple-option{
-                border-radius: $borderRadius;
-                border: $borderStyle;
-                background: $light;
-                margin: 4px 4px 0 0;
-                line-height: 20px;
-                max-width: 100%;
-            @include truncate;
-                .ember-power-select-multiple-remove-btn:hover,
-                .ember-power-select-multiple-remove-btn:not(:hover){
-                    opacity: 1;
-                    color: $medGray;
-                    border-radius: $borderRadius;
-                    background: $gray;
-                    float: right;
-                    height: 15px;
-                    width: 15px;
-                    line-height: 15px;
-                    text-align: center;
-                    margin: 3px 0 0 3px;
-                }
-                .ember-power-select-multiple-remove-btn:hover{
-                    background: $orange;
-                    color: $white;
-                }
-            }
+  .ember-power-select-trigger{
+    line-height: 0;
+    padding: 1px 36px 4px 4px !important;
+    .ember-power-select-multiple-options{
+      max-width: 100%;
+      .ember-power-select-multiple-option{
+        border-radius: $borderRadius;
+        border: $borderStyle;
+        background: $light;
+        margin: 4px 4px 0 0;
+        line-height: 20px;
+        max-width: 100%;
+        @include truncate;
+        .ember-power-select-multiple-remove-btn:hover,
+        .ember-power-select-multiple-remove-btn:not(:hover){
+          opacity: 1;
+          color: $medGray;
+          border-radius: $borderRadius;
+          background: $gray;
+          float: right;
+          height: 15px;
+          width: 15px;
+          line-height: 15px;
+          text-align: center;
+          margin: 3px 0 0 3px;
         }
-        .ember-power-select-trigger-multiple-input{
-            height: 22px;
-            padding: 3px;
+        .ember-power-select-multiple-remove-btn:hover{
+          background: $orange;
+          color: $white;
         }
+      }
     }
+    .ember-power-select-trigger-multiple-input{
+      height: 22px;
+      padding: 3px;
+    }
+  }
 }
 .ember-power-select-trigger:focus{
-    outline: none;
+  outline: none;
 }
 .ember-power-select-dropdown{
-    font-size: 1em;
-    border-color: $activeColor !important;
-    border-radius: $borderRadiusBottom;
+  font-size: 1em;
+  border-color: $activeColor !important;
+  border-radius: $borderRadiusBottom;
 }
 .ember-power-select-search input{
-    border: $borderStyle;
-    &:focus{
-        border-color: $activeColor;
-    }
+  border: $borderStyle;
+  &:focus{
+    border-color: $activeColor;
+  }
 }
 .ember-power-select-option{
-    padding: 3px 12px;
-    &.ember-power-select-option[aria-selected=true]{
-        color: $hoverColor;
-        background-color: $hoverColorLight;
-    }
-    &.ember-power-select-option[aria-current=true]{
-        color: $hoverColor;
-        background-color: $hoverColorLight;
-    }
+  padding: 3px 12px;
+  &.ember-power-select-option[aria-selected=true]{
+    color: $hoverColor;
+    background-color: $hoverColorLight;
+  }
+  &.ember-power-select-option[aria-current=true]{
+    color: $hoverColor;
+    background-color: $hoverColorLight;
+  }
 }
 .ember-power-select-option[aria-selected=true]{
-    background: $light;
+  background: $light;
 }
 .ember-power-select-option[aria-current=true]{
-    background: $hoverColorLight;
+  background: $hoverColorLight;
 }
 //Ticket and DTD styles
 .ticket-priority-select,
 .ticket-status-select{
-    li{
-        font-size: 1.2rem;
-    }
+  li{
+    font-size: 1.2rem;
+  }
 }
 .ember-power-select-selected-item,
 .ember-power-select-placeholder{
