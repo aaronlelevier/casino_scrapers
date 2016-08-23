@@ -323,7 +323,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
           'errors.dtd.key':'Key must be provided',
           'errors.dtd.key.length':'Key must less than 12 characters',
           'errors.link.text':'Text must be provided',
-          'errors.person.first_name':'First name must be provided. ',
+          'errors.person.first_name':'First name must be provided',
           'errors.person.first_name.length':'Max length of 30',
           'errors.person.last_name':'Last name must be provided. Max length 30',
           'errors.person.last_name.length':'Max length of 30',
