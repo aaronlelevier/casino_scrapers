@@ -9,23 +9,40 @@
 <section class="docSection container-fluid">
   <div class="row">
     <div class="col-md-12">
-      <section style="padding-bottom: 0">
+      <section>
         <div class="row card-title">
           <h1 class="col-md-12 t-assignment-header">
-            <span class="new">
             {{#if model.new}}
-              {{t "assignment.new"}}
+              <span class="new">{{t "assignment.new"}}</span>
             {{else}}
-              {{t "assignment.detail"}}
+              {{#if model.description}}
+                {{model.description}}
+              {{else}}
+                <span class="new">{{t "assignment.detail"}}</span>
+              {{/if}}
             {{/if}}
-            </span>
           </h1>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <section>
+        {{assignments/detail-section model=model didValidate=didValidate}}
+      </section>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <section>
+        <div class="row card-title">
+          <h2 class="col-md-12">{{t "assignment.filters"}}</h2>
         </div>
       </section>
     </div>
     <div class="col-md-12">
       <section>
-        {{assignments/detail-section model=model didValidate=didValidate}}
         {{assignments/filter-section model=model didValidate=didValidate id="pf"}}
       </section>
     </div>
