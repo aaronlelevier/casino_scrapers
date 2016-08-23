@@ -23,6 +23,7 @@ const COUNTRIES = '.t-ticket-country-select .ember-power-select-multiple-option'
 export default create({
   visit: visitable(ASSIGNMENT_LIST_URL),
   visitDetail: visitable(DETAIL_URL),
+  headerText: text('.t-assignment-header'),
   descriptionValue: value('.t-assignment-description'),
   descriptionFill: fillable('.t-assignment-description'),
   descriptionGridOne: text('.t-assignment-description:eq(0)'),

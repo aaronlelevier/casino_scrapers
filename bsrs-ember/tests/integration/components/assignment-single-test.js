@@ -58,33 +58,26 @@ test('description is required validation, cannot save w/o description', function
   generalPage.save();
   $err = this.$('.invalid');
   assert.ok($err.is(':visible'));
-  // TODO: bug b/c already saved??
-  // this.$('.t-assignment-description').val('a'.repeat(15)).keyup();
-  // var done = assert.async();
-  // Ember.run.later(() => {
-  //   $err = this.$('.invalid');
-  //   assert.notOk($err.is(':visible'));
-  // }, 300);
 });
 
 test('header - shows detail if not model.new and not description', function(assert) {
   model.set('description', undefined);
   this.model = model;
   this.render(hbs `{{assignments/assignment-single model=model}}`);
-  assert.equal(this.$('.t-assignment-header').text().trim(), trans.t('assignment.detail'));
+  assert.equal(page.headerText, trans.t('assignment.detail'));
 });
 
 test('header - shows detail if description if description exists and not model.new', function(assert) {
   this.model = model;
   this.render(hbs `{{assignments/assignment-single model=model}}`);
-  assert.equal(this.$('.t-assignment-header').text().trim(), model.get('description'));
+  assert.equal(page.headerText, model.get('description'));
 });
 
 test('header - shows new if model.new', function(assert) {
   model.set('new', true);
   this.model = model;
   this.render(hbs `{{assignments/assignment-single model=model}}`);
-  assert.equal(this.$('.t-assignment-header').text().trim(), trans.t('assignment.new'));
+  assert.equal(page.headerText, trans.t('assignment.new'));
 });
 
 test('labels are translated', function(assert) {
