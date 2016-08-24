@@ -11,6 +11,7 @@ var BSRS_LOCATION_LEVEL_DEFAULTS_OBJECT = (function() {
       idLossRegion: 'f7199d15-b78b-4db9-b28f-cc95b4662804',
       idLossDistrict: '558d3cb9-f076-4303-a818-84799806d698',
       idFacility: 'ef2b1f9c-f277-433f-8431-bda21d2d9a74',
+      idRegion: 'ef2b1f9c-f277-433f-8431-bda21d2d9a75',
       nameCompany: 'Company',
       nameFacilityManagement: 'Facility Management',
       nameLossPreventionRegion: 'Loss Prevention Region',

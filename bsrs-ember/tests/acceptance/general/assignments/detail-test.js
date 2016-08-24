@@ -113,6 +113,34 @@ test('visit detail and update all fields', assert => {
   });
 });
 
+test('changing from one dynamic location available filter to another changes the location_level query param', assert => {
+  clearxhr(listXhr);
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
+  // 1st filter
+  xhr(`${ASSIGNMENT_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
+  selectChoose('.t-assignment-pf-select:eq(0)', PFD.keyTwo);
+  let keyword = 'a';
+  xhr(`/api/admin/locations/location__icontains=${keyword}/?location_level=${PFD.lookupsDynamic.id}`, 'GET', null, {}, 200, LF.search_power_select());
+  selectSearch('.t-ticket-location-select', keyword);
+  selectChoose('.t-ticket-location-select', LD.storeNameFour);
+  andThen(() => {
+    assert.equal(page.locationSelectedOne.split(/\s+/)[1], LD.storeNameFour);
+  });
+  // 2nd filter
+  selectChoose('.t-assignment-pf-select:eq(0)', PFD.keyThree);
+  keyword = 'b';
+  // main thing we're testing is this 'xhr' mock, that the location_level query param changed
+  xhr(`/api/admin/locations/location__icontains=${keyword}/?location_level=${PFD.lookupsDynamicTwo.id}`, 'GET', null, {}, 200, LF.search_power_select());
+  selectSearch('.t-ticket-location-select', keyword);
+  selectChoose('.t-ticket-location-select', LD.storeNameFour);
+  andThen(() => {
+    assert.equal(page.locationSelectedOne.split(/\s+/)[1], LD.storeNameFour);
+  });
+});
+
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
   clearxhr(listXhr);
   page.visitDetail();

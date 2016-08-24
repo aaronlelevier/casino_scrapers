@@ -61,7 +61,8 @@ var BSRS_ASSIGNMENT_FACTORY = (function() {
       {id: this.pfilter.sourceIdThree, key: this.pfilter.autoAssignKey, field: this.pfilter.autoAssignField, lookups: {}},
       {id: this.pfilter.sourceIdFour, key: this.pfilter.categoryKey, field: this.pfilter.categoryField, lookups: {}},
       {id: this.pfilter.sourceIdFive, key: this.pfilter.stateKey, field: this.pfilter.stateField, lookups: {}},
-      {id: this.pfilter.sourceIdSix, key: this.pfilter.countryKey, field: this.pfilter.countryField, lookups: {}}
+      {id: this.pfilter.sourceIdSix, key: this.pfilter.countryKey, field: this.pfilter.countryField, lookups: {}},
+      {id: this.pfilter.sourceIdSeven, key: this.pfilter.keyThree, field: this.pfilter.locationField, lookups: this.pfilter.lookupsDynamicTwo},
     ];
     return {count: 3, next: null, previous: null, results: results};
   };

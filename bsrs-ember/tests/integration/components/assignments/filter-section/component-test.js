@@ -40,7 +40,7 @@ moduleForComponent('assignments/filter-section', 'Integration | Component | assi
     assignment_repo = repository.initialize(this.container, this.registry, 'assignment');
     results = [{id: PFD.sourceIdOne, key: PFD.keyOne, field: PFD.fieldOne, lookups: {}},
                      {id: PFD.sourceIdTwo, key: PFD.keyTwo, field: PFD.locationField, lookups: PFD.lookupsDynamic},
-                     {id: PFD.sourceIdThree, key: PFD.keyThree, field: PFD.autoAssignField, lookups: {}},
+                     {id: PFD.sourceIdThree, key: PFD.keyThree, field: PFD.autoAssignField, lookups: PFD.lookupsDynamicTwo},
                      {id: PFD.sourceIdFour, key: PFD.autoAssignKey, field: PFD.autoAssignField, lookups: {} }];
     assignment_repo.getFilters = () => new Ember.RSVP.Promise((resolve) => {
       resolve({'results': results});

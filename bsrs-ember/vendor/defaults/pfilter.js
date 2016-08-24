@@ -21,6 +21,7 @@ var BSRS_PROFILE_FILTER_DEFAULTS_OBJECT = (function() {
       sourceIdFour: '08b81793-7eaa-421e-ae75-d9292e4a8094',
       sourceIdFive: '08b81793-7eaa-421e-ae75-d9292e4a8095',
       sourceIdSix: '08b81793-7eaa-421e-ae75-d9292e4a8096',
+      sourceIdSeven: '08b81793-7eaa-421e-ae75-d9292e4a8097',
       keyOne: 'admin.placeholder.ticket_priority',
       keyOneTranslated: 'Priority',
       keyTwo: this.location_level.nameDistrict,
@@ -47,6 +48,10 @@ var BSRS_PROFILE_FILTER_DEFAULTS_OBJECT = (function() {
       lookupsDynamic: {
         id: this.location_level.idDistrict,
         name: this.location_level.nameDistrict,
+      },
+      lookupsDynamicTwo: {
+        id: this.location_level.idRegion,
+        name: this.location_level.nameRegion,
       }
     };
   };
