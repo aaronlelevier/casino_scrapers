@@ -44,7 +44,7 @@ class AvailableFilterTests(TestCase):
         # indempotent
         self.assertEqual(ret, ret_two)
         # attrs
-        self.assertEqual(ret.key, 'admin.placeholder.ticket_priority_select')
+        self.assertEqual(ret.key, 'admin.placeholder.priority_filter_select')
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'priority')
         self.assertEqual(ret.lookups, {})
@@ -219,7 +219,7 @@ class AssignmentTests(TestCase):
         x = Assignment.objects.get(filters__source__key=key)
         self.assertEqual(x.description, key)
         # priority
-        key = 'admin.placeholder.ticket_priority_select'
+        key = 'admin.placeholder.priority_filter_select'
         x = Assignment.objects.get(filters__source__key=key)
         self.assertEqual(x.description, key)
         # location

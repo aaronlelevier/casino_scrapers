@@ -19,7 +19,7 @@ def create_available_filter_auto_assign():
 
 
 def create_available_filter_priority():
-    obj, _ = AvailableFilter.objects.get_or_create(key='admin.placeholder.ticket_priority_select',
+    obj, _ = AvailableFilter.objects.get_or_create(key='admin.placeholder.priority_filter_select',
                                                    field='priority')
     return obj
 
