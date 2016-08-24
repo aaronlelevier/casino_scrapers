@@ -67,7 +67,6 @@ test('validation works and when hit save, we do same post', (assert) => {
     assert.ok(find('.t-status-validation-error').is(':hidden'));
     assert.equal(find('.t-status-validation-error').text(), GLOBALMSG.invalid_status);
     assert.ok(find('.t-priority-validation-error').is(':hidden'));
-    assert.ok(find('.t-assignee-validation-error').is(':hidden'));
     assert.ok(find('.t-location-validation-error').is(':hidden'));
     assert.ok(find('.t-category-validation-error').is(':hidden'));
     assert.ok(find('.t-requester-validation-error').is(':hidden'));
@@ -75,7 +74,6 @@ test('validation works and when hit save, we do same post', (assert) => {
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), TICKET_NEW_URL);
-    assert.ok(find('.t-assignee-validation-error').is(':visible'));
     assert.ok(find('.t-location-validation-error').is(':visible'));
     assert.ok(find('.t-category-validation-error').is(':visible'));
     assert.ok(find('.t-requester-validation-error').is(':visible'));
@@ -83,7 +81,6 @@ test('validation works and when hit save, we do same post', (assert) => {
   page.requesterFillIn(TD.requesterOne);
   andThen(() => {
     assert.equal(currentURL(), TICKET_NEW_URL);
-    assert.ok(find('.t-assignee-validation-error').is(':visible'));
     assert.ok(find('.t-location-validation-error').is(':visible'));
     assert.ok(find('.t-category-validation-error').is(':visible'));
     assert.ok(find('.t-requester-validation-error').is(':hidden'));
@@ -94,8 +91,6 @@ test('validation works and when hit save, we do same post', (assert) => {
   andThen(() => {
     assert.equal(currentURL(), TICKET_NEW_URL);
     assert.equal(find('.t-priority-validation-error').text(), GLOBALMSG.invalid_priority);
-    assert.ok(find('.t-assignee-validation-error').is(':visible'));
-    assert.equal(find('.t-assignee-validation-error').text(), 'Invalid Assignee');
     assert.ok(find('.t-location-validation-error').is(':visible'));
     assert.equal(find('.t-location-validation-error').text(), GLOBALMSG.invalid_location);
     assert.ok(find('.t-category-validation-error').is(':visible'));
@@ -106,7 +101,6 @@ test('validation works and when hit save, we do same post', (assert) => {
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), TICKET_NEW_URL);
-    assert.ok(find('.t-assignee-validation-error').is(':visible'));
     assert.ok(find('.t-location-validation-error').is(':visible'));
     assert.ok(find('.t-category-validation-error').is(':visible'));
   });

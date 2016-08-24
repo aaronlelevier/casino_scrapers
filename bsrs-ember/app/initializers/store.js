@@ -1,7 +1,6 @@
 import Store from 'ember-cli-simple-store/store';
 
-export function initialize() {
-  var application = arguments[1] || arguments[0];
+export function initialize(application) {
   application.register('service:simpleStore', Store);
   application.inject('controller', 'simpleStore', 'service:simpleStore');
   application.inject('route', 'simpleStore', 'service:simpleStore');

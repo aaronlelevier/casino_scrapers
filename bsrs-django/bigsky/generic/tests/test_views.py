@@ -1,18 +1,20 @@
 import os
-from os.path import dirname, join
 import json
 import uuid
 from io import BytesIO
+from mock import patch
+from os.path import dirname, join
 
+from django.contrib.auth.models import ContentType
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.apps import apps
 
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
 from generic.models import SavedSearch, Attachment
 from generic.serializers import SavedSearchSerializer
+from person.models import Person
 from person.tests.factory import PASSWORD, create_single_person, create_person
 from utils.tests.helpers import remove_attachment_test_files
 
@@ -93,47 +95,6 @@ class SavedSearchTests(APITestCase):
         data['id'] = str(uuid.uuid4())
         response = self.client.post('/api/admin/saved-searches/', data=data, format='json')
         self.assertEqual(response.status_code, 201)
-
-
-class ExportDataTests(APITestCase):
-
-    def setUp(self):
-        # Role
-        self.person = create_single_person()
-        create_person(_many=10)
-        # Login
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def tearDown(self):
-        self.client.logout()
-
-    def test_get(self):
-        response = self.client.get(reverse("export_data"))
-        self.assertEqual(response.status_code, 403)
-
-    def test_post_bad_data(self):
-        data = {
-            'app_name': 'person',
-            'model_name': 'person'
-        }
-        response = self.client.post(reverse("export_data"), data, format='json')
-        self.assertEqual(response.status_code, 400)
-
-    def test_post_good(self):
-        data = {
-            'app_name': 'person',
-            'model_name': 'person',
-            'fields': ['id', 'username'],
-            'query_params': {'username__icontains': 'aaron'}
-        }
-        model = apps.get_model(data['app_name'], data['model_name'])
-        response = self.client.post(reverse("export_data"), data, format='json')
-        self.assertEqual(response.status_code, 200)
-        self.assertEquals(
-            response.get('Content-Disposition'),
-            'attachment; filename="{name}.csv"'.format(
-                name=model._meta.verbose_name_plural)
-        )
 
 
 class AttachmentTests(APITestCase):
@@ -270,3 +231,100 @@ class AttachmentTests(APITestCase):
         for a in attachments:
             self.assertFalse(os.path.isfile(
                 os.path.join(settings.MEDIA_ROOT, str(a.file))))
+
+
+class ExportDataTests(APITestCase):
+
+    def setUp(self):
+        # Role
+        self.person = create_single_person(name='aaa')
+        create_person(_many=10)
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_get(self):
+        response = self.client.get(reverse("export_data"))
+        self.assertEqual(response.status_code, 405)
+
+    def test_post(self):
+        data = {"model": "person"}
+        content_type = ContentType.objects.get(model="person")
+        model = content_type.model_class()
+
+        response = self.client.post(reverse("export_data"), data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEquals(
+            response.get('Content-Disposition'),
+            'attachment; filename="{name}.csv"'.format(
+                name=model._meta.verbose_name_plural)
+        )
+
+    def test_post__filtered(self):
+        data = {
+            "model": "person",
+            "params": {
+                "username": self.person.username
+            }
+        }
+        content_type = ContentType.objects.get(model="person")
+        model = content_type.model_class()
+
+        response = self.client.post(reverse("export_data"), data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEquals(
+            response.get('Content-Disposition'),
+            'attachment; filename="{name}.csv"'.format(
+                name=model._meta.verbose_name_plural)
+        )
+        # -2 from data length b/c 1 item is csv headers, and ends in \n
+        # so the last \n turns into a list item
+        self.assertTrue(
+            len(response.content.decode('utf8').split("\n"))-2 < \
+            Person.objects.count()
+        )
+
+    @patch("generic.views.ExportData._filter_with_fields")
+    def test_post__filtered__arguments(self, mock_func):
+        data = {
+            "model": "person",
+            "params": {
+                "username": self.person.username
+            }
+        }
+
+        response = self.client.post(reverse("export_data"), data, format='json')
+
+        # last arg here is "fields". This is limited due to EXPORT_FIELDS
+        # being set on the Person Model.
+        mock_func.assert_called_with({'username': 'aaa'}, ['id', 'username'])
+
+    @patch("generic.views.ExportData._filter_with_fields")
+    def test_post__fields__all(self, mock_func):
+        # confirm that the fields to export isn't explicitly set on the model
+        with self.assertRaises(AttributeError):
+            SavedSearch.EXPORT_FIELDS
+
+        data = {"model": "savedsearch"}
+
+        response = self.client.post(reverse("export_data"), data, format='json')
+
+        mock_func.assert_called_with({}, ['id', 'created', 'modified', 'deleted', 'name', 'person', 'endpoint_name', 'endpoint_uri'])
+
+    def test_post__invalid_model(self):
+        model_name = "foo"
+        data = {"model": model_name}
+
+        response = self.client.post(reverse("export_data"), data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), 1)
+        self.assertEqual(
+            data[0],
+            "Model with model name: {} DoesNotExist".format(model_name)
+        )

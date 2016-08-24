@@ -302,6 +302,10 @@ class Person(BaseModel, AbstractUser):
     :pw: password
     :ooto: out-of-the-office
     '''
+
+    # Static list of fields to export via the Ember GridView
+    EXPORT_FIELDS = ['id', 'username']
+
     # Keys
     role = models.ForeignKey(Role)
     status = models.ForeignKey(PersonStatus, blank=True, null=True)

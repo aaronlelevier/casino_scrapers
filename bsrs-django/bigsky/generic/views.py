@@ -1,14 +1,7 @@
 import csv
-import json
 
-from django.core.exceptions import PermissionDenied
+from django.contrib.auth.models import ContentType
 from django.http import HttpResponse
-
-try:
-    from django.apps import apps
-    get_model = apps.get_model
-except ImportError:
-    from django.db.models.loading import get_model
 
 from rest_framework import status
 from rest_framework.decorators import list_route
@@ -74,44 +67,43 @@ class ExportData(APIView):
 
     :app_name: string
     :model_name: string
-    :query_params: dict - filters, sorting, etc.  TBD: Django ORM, or need to convert from Ember ??
-    :fields: array - Person defined fields to output
+
+    # works if endpoint isn't autorized to output data
+    curl -v -H "Content-Type: application/json" -X POST --data '{"model_name": "person", "app_name": "person"}' -u admin:1234 http://localhost:8000/csv/export_data/ --header "Content-Type:application/json"
     """
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.method.lower() != u'post':
-            raise PermissionDenied("{} not allowed".format(request.method.lower()))
-        return super(ExportData, self).dispatch(request, *args, **kwargs)
-
-    def set_model_and_fields(self, data):
-        try:
-            self.app_name = data.get('app_name')
-            self.model_name = data.get('model_name')
-            self.model = get_model(self.app_name, self.model_name)
-            self.fields = data.get('fields')
-            self.query_params = data.get('query_params')
-        except KeyError as e:
-            raise ValidationError(str(e))
-
-    def validate_required(self):
-        required = [self.app_name, self.model_name, self.model, self.fields, self.query_params]
-        if not all(required):
-            raise ValidationError("Required arguments missing: {}".format(required))
-
     def post(self, request, *args, **kwargs):
-        data = json.loads(request.body.decode('utf8'))
-        self.set_model_and_fields(data)
-        self.validate_required()
+        data = request.data
+        params = data.get('params', {})
+        self._set_model(data)
+        fields = self._get_fields()
 
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="{name}.csv"'.format(
             name=self.model._meta.verbose_name_plural)
 
         writer = csv.writer(response)
-        writer.writerow(self.fields)
-
-        # Data
-        for obj in self.model.objects.filter(**self.query_params):
-            writer.writerow([str(getattr(obj, field)) for field in self.fields])
+        writer.writerow(fields)
+        for d in self._filter_with_fields(params, fields):
+            writer.writerow([d[f] for f in fields])
 
         return response
+
+    def _set_model(self, data):
+        try:
+            model_name = data.get('model')
+            content_type = ContentType.objects.get(model=model_name)
+        except ContentType.DoesNotExist:
+            raise ValidationError("Model with model name: {} DoesNotExist"
+                                  .format(model_name))
+        else:
+            self.model = content_type.model_class()
+
+    def _get_fields(self):
+        try:
+            return self.model.EXPORT_FIELDS
+        except AttributeError:
+            return [x.name for x in self.model._meta.get_fields()]
+
+    def _filter_with_fields(self, params, fields):
+        return self.model.objects.filter(**params).values(*fields)
