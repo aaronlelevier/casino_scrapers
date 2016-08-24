@@ -71,7 +71,6 @@ class CreateTicketTests(TestCase):
 
     def test_status(self):
         self.assertIsInstance(self.ticket.status, TicketStatus)
-        self.assertEqual(self.ticket.status.name, TICKET_STATUS_NEW)
 
     def test_priority(self):
         self.assertIsInstance(self.ticket.priority, TicketPriority)

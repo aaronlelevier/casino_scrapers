@@ -13,7 +13,7 @@ from location.tests.factory import create_location, create_locations
 from generic.models import Attachment
 from generic.tests.factory import create_file_attachment
 from person.tests.factory import PASSWORD, create_single_person, DistrictManager
-from ticket.models import Ticket, TicketActivity, TicketActivityType, TICKET_STATUS_NEW
+from ticket.models import Ticket, TicketStatus, TicketActivity, TicketActivityType, TICKET_STATUS_NEW
 from ticket.serializers import TicketCreateSerializer
 from ticket.tests.factory_related import (create_ticket_priority, create_ticket_status)
 from ticket.tests.factory import (create_ticket, create_ticket_activity,
@@ -286,7 +286,7 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
         self.assertEqual(data['id'], str(ticket.id))
         self.assertEqual(data['location'], str(ticket.location.id))
         self.assertEqual(data['status'], str(ticket.status.id))
-        self.assertEqual(ticket.status.name, TICKET_STATUS_NEW)
+        self.assertIsInstance(ticket.status, TicketStatus)
         self.assertEqual(data['priority'], str(ticket.priority.id))
         self.assertEqual(data['assignee'], str(ticket.assignee.id))
         self.assertEqual(data['requester'], str(ticket.requester))

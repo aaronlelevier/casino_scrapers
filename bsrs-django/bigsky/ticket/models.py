@@ -1,7 +1,9 @@
 import uuid
 
+from django.dispatch import receiver
 from django.db import models
 from django.db.models import Q, Max
+from django.db.models.signals import post_save
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import JSONField
@@ -10,6 +12,7 @@ from category.models import Category
 from generic.models import Attachment
 from location.models import Location
 from person.models import Person
+from routing.tasks import process_ticket
 from utils.models import (BaseModel, BaseQuerySet, BaseManager, BaseNameModel,
     DefaultToDictMixin)
 
@@ -152,6 +155,14 @@ class Ticket(BaseModel):
 
     class Meta:
         ordering = ('-created',)
+
+
+@receiver(post_save, sender=Ticket)
+def process_ticket_post_save(sender, instance=None, created=False, **kwargs):
+    """Post-save hook to process assignments"""
+    if not instance.deleted and instance.status.name == TICKET_STATUS_NEW and not instance.assignee:
+        process_ticket(instance.location.location_level.tenant.id,
+                       ticket_id=instance.id)
 
 
 TICKET_ACTIVITY_TYPES = [
