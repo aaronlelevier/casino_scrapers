@@ -36,6 +36,24 @@ moduleForComponent('assignment-single', 'integration: assignment-single test', {
   }
 });
 
+test('shows correct title if model has new property, description, or no description', function(assert) {
+  run(() => {
+    store.push('assignment', {id: AD.idOne, new: true});
+  });
+  model.set('new', true);
+  this.model = model;
+  this.render(hbs`{{assignments/assignment-single model=model}}`);
+  assert.equal(this.$('.t-assignment-header').text().trim(), trans.t('admin.assignment.new'));
+  run(() => {
+    store.push('assignment', {id: AD.idOne, new: false});
+  });
+  assert.equal(this.$('.t-assignment-header').text().trim(), AD.descriptionOne);
+  run(() => {
+    store.push('assignment', {id: AD.idOne, description: undefined});
+  });
+  assert.equal(this.$('.t-assignment-header').text().trim(), trans.t('admin.assignment.detail'));
+});
+
 test('if save isRunning, btn is disabled', function(assert) {
   // monkey patched.  Not actually passed to component but save.isRunning comes from save ember-concurrency task
   this.saveIsRunning = { isRunning: 'disabled' };
