@@ -30,7 +30,6 @@
       <div class="col-md-12">
         {{#form-group title="ticket.label.assignee-fullname" for="assignee"}}
         {{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=personRepo searchMethod="findPeople"}}
-        {{#validation-error-field submitted=submitted field="assignee" className="validation validation-under t-assignee-validation-error" model=model validation=assigneeValidation}}{{t "validation.invalid"}} {{t "ticket.label.assignee-fullname"}}{{/validation-error-field}}
         {{/form-group}}
       </div>
     </section>

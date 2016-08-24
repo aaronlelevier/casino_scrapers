@@ -14,7 +14,6 @@ var TicketNewComponent = ParentValidationComponent.extend(StrictMixin, TabMixin,
   requesterValidation: validate('model.requester'),
   statusValidation: validate('model.status'),
   priorityValidation: validate('model.priority'),
-  assigneeValidation: validate('model.assignee'),
   locationValidation: validate('model.location'),
   actions: {
     changed_status(new_status_id) {
