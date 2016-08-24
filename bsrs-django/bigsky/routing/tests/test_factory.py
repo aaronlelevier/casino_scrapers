@@ -44,7 +44,7 @@ class AvailableFilterTests(TestCase):
         # indempotent
         self.assertEqual(ret, ret_two)
         # attrs
-        self.assertEqual(ret.key, 'admin.placeholder.ticket_priority')
+        self.assertEqual(ret.key, 'admin.placeholder.priority_filter_select')
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'priority')
         self.assertEqual(ret.lookups, {})
@@ -55,7 +55,7 @@ class AvailableFilterTests(TestCase):
         # indempotent
         self.assertEqual(ret, ret_two)
         # attrs
-        self.assertEqual(ret.key, 'admin.placeholder.category_filter')
+        self.assertEqual(ret.key, 'admin.placeholder.category_filter_select')
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'categories')
         self.assertEqual(ret.lookups, {})
@@ -77,7 +77,7 @@ class AvailableFilterTests(TestCase):
         # indempotent
         self.assertEqual(ret, ret_two)
         # attrs
-        self.assertEqual(ret.key, 'admin.placeholder.state_filter')
+        self.assertEqual(ret.key, 'admin.placeholder.state_filter_select')
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'state')
         self.assertEqual(ret.lookups, {})
@@ -88,7 +88,7 @@ class AvailableFilterTests(TestCase):
         # indempotent
         self.assertEqual(ret, ret_two)
         # attrs
-        self.assertEqual(ret.key, 'admin.placeholder.country_filter')
+        self.assertEqual(ret.key, 'admin.placeholder.country_filter_select')
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'country')
         self.assertEqual(ret.lookups, {})
@@ -219,7 +219,7 @@ class AssignmentTests(TestCase):
         x = Assignment.objects.get(filters__source__key=key)
         self.assertEqual(x.description, key)
         # priority
-        key = 'admin.placeholder.ticket_priority'
+        key = 'admin.placeholder.priority_filter_select'
         x = Assignment.objects.get(filters__source__key=key)
         self.assertEqual(x.description, key)
         # location
@@ -227,14 +227,14 @@ class AssignmentTests(TestCase):
         self.assertIsInstance(x, Assignment)
         self.assertEqual(x.description, 'location')
         # category
-        key = 'admin.placeholder.category_filter'
+        key = 'admin.placeholder.category_filter_select'
         x = Assignment.objects.get(filters__source__key=key)
         self.assertEqual(x.description, key)
         # state
-        key = 'admin.placeholder.state_filter'
+        key = 'admin.placeholder.state_filter_select'
         x = Assignment.objects.get(filters__source__key=key)
         self.assertEqual(x.description, key)
         # country
-        key = 'admin.placeholder.country_filter'
+        key = 'admin.placeholder.country_filter_select'
         x = Assignment.objects.get(filters__source__key=key)
         self.assertEqual(x.description, key)

@@ -15,7 +15,7 @@ from person.models import Person
 from ticket.models import (Ticket, TicketStatus, TicketActivityType,
     TicketActivity, TICKET_ACTIVITY_TYPES)
 from ticket.tests.factory_related import (create_ticket_status, get_or_create_ticket_status,
-    get_or_create_ticket_priority)
+    get_or_create_ticket_priority, create_ticket_statuses, create_ticket_priorities)
 from utils.create import _generate_chars
 from utils.helpers import generate_uuid, create_default
 
@@ -104,8 +104,8 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
     request = request or _generate_chars()
     assignee = assignee or random.choice(people)
 
-    status = get_or_create_ticket_status()
-    priority = get_or_create_ticket_priority()
+    status = random.choice(create_ticket_statuses())
+    priority = random.choice(create_ticket_priorities())
 
     kwargs = {
         'location': assignee.locations.first(),

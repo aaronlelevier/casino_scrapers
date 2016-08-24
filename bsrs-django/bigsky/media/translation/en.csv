@@ -1,7 +1,7 @@
 LOCALE,KEY,ENGLISH,VALUE,CONTEXT,FIXUTURE,VALUE-UNDERSCORE,VALUE-TRANSLATABLE
-en,activity.one,Activity,Activity,,"'activity.one':'Activity',",Activity,Activity
 en,activity.empty.comments,No Comments,No Comments,,"'activity.empty.comments':'No Comments',",No Comments,No Comments
 en,activity.empty.status_updates,No Status Updates,No Status Updates,,"'activity.empty.status_updates':'No Status Updates',",No Status Updates,No Status Updates
+en,activity.one,Activity,Activity,,"'activity.one':'Activity',",Activity,Activity
 en,activity.tabs.all_updates,All Updates,All Updates,,"'activity.tabs.all_updates':'All Updates',",All Updates,All Updates
 en,activity.tabs.comments,Comments,Comments,,"'activity.tabs.comments':'Comments',",Comments,Comments
 en,activity.tabs.status_updates,Status Updates,Status Updates,,"'activity.tabs.status_updates':'Status Updates',",Status Updates,Status Updates
@@ -36,8 +36,16 @@ en,admin.amount,Amount,Amount,,"'admin.amount':'Amount',",Amount,Amount
 en,admin.amount_and_default_value,Amount: {{value}},Amount: {{value}},,"'admin.amount_and_default_value':'Amount: {{value}}',",Amount: {{value_var_,Amount: _value_var_
 en,admin.approval.one,Approval,Approval,,"'admin.approval.one':'Approval',",Approval,Approval
 en,admin.approval.other,Approvals,Approvals,,"'admin.approval.other':'Approvals',",Approvals,Approvals
+en,admin.assignment.assignee,Assignee,Assignee,,"'admin.assignment.assignee':'Assignee',",Assignee,
+en,admin.assignment.description,Description,Description,,"'admin.assignment.description':'Description',",Description,
+en,admin.assignment.detail,Assignment Profile,Assignment Profile,,"'admin.assignment.detail':'Assignment Profile',",Assignment Profile,
+en,admin.assignment.filters,Filters,Filters,,"'admin.assignment.filters':'Filters',",Filters,
 en,admin.assignment.one,Assignment Profile,Assignment Profile,,"'admin.assignment.one':'Assignment Profile',",Assignment Profile,Assignment Profile
 en,admin.assignment.other,Assignment Profiles,Assignment Profiles,,"'admin.assignment.other':'Assignment Profiles',",Assignment Profiles,Assignment Profiles
+en,admin.assignment.pf.add,Add,Add,,"'admin.assignment.pf.add':'Add',",Add,
+en,admin.assignment.placeholder.available_filter,Please select a filter,Please select a filter,,"'admin.assignment.placeholder.available_filter':'Please select a filter',",Please select a filter,
+en,admin.assignment.search,Search Assignment Profiles,Search Assignment Profiles,,"'admin.assignment.search':'Search Assignment Profiles',",Search Assignment Profiles,Search Assignment Profiles
+en,admin.assignment.selected_in,selected in:,selected in:,,"'admin.assignment.selected_in':'selected in:',",selected in:,selected in:
 en,admin.category.label.children,Sub Categories,Sub Categories,,"'admin.category.label.children':'Sub Categories',",Sub Categories,Sub Categories
 en,admin.category.label.cost_amount,Cost Amount,Cost Amount,,"'admin.category.label.cost_amount':'Cost Amount',",Cost Amount,Cost Amount
 en,admin.category.label.cost_code,Cost Code,Cost Code,,"'admin.category.label.cost_code':'Cost Code',",Cost Code,Cost Code
@@ -215,16 +223,19 @@ en,admin.phonenumbertype.fax,Fax,Fax,,"'admin.phonenumbertype.fax':'Fax',",Fax,F
 en,admin.phonenumbertype.mobile,Mobile,Mobile,,"'admin.phonenumbertype.mobile':'Mobile',",Mobile,Mobile
 en,admin.phonenumbertype.office,Office,Office,,"'admin.phonenumbertype.office':'Office',",Office,Office
 en,admin.phonenumbertype.telephone,Telephone,Telephone,,"'admin.phonenumbertype.telephone':'Telephone',",Telephone,Telephone
-en,admin.profile,Profile,Profile,,"'admin.profile':'Profile',",Profile,Profile
-en,admin.profile.assignee,Assignee,Assignee,,"'admin.profile.assignee':'Assignee',",Assignee,Assignee
-en,admin.profile.description,Description,Description,,"'admin.profile.description':'Description',",Description,Description
-en,admin.profile.detail,Profile Detail,Profile Detail,,"'admin.profile.detail':'Profile Detail',",Profile Detail,Profile Detail
-en,admin.profile.label.assignee,Assignee,Assignee,,"'admin.profile.label.assignee':'Assignee',",Assignee,Assignee
-en,admin.profile.label.description,Description,Description,,"'admin.profile.label.description':'Description',",Description,Description
-en,admin.profile.new,New Profile,New Profile,,"'admin.profile.new':'New Profile',",New Profile,New Profile
-en,admin.profile.one,Profile,Profile,,"'admin.profile.one':'Profile',",Profile,Profile
-en,admin.profile.other,Profiles,Profiles,,"'admin.profile.other':'Profiles',",Profiles,Profiles
-en,admin.profile.search,Search Profiles,Search Profiles,,"'admin.profile.search':'Search Profiles',",Search Profiles,Search Profiles
+en,admin.placeholder.auto_assign,All Tickets,All Tickets,,"'admin.placeholder.auto_assign':'All Tickets',",All Tickets,All Tickets
+en,admin.placeholder.available_filter,Add Filter,Add Filter,,"'admin.placeholder.available_filter':'Add Filter',",Work,Work
+en,admin.placeholder.available_filter.location,Add Locations...,Add Locations...,,"'admin.placeholder.available_filter.location':'Add Locations...',",Work,Work
+en,admin.placeholder.available_filter.priority,Add Priorities...,Add Priorities...,,"'admin.placeholder.available_filter.priority':'Add Priorities...',",Work,Work
+en,admin.placeholder.category_filter,Category,Category,,"'admin.placeholder.category_filter':'Category',",Category,Category
+en,admin.placeholder.category_filter_select,Select Categories,Select Categories,,"'admin.placeholder.category_filter_select':'Select Categories',",Select Categories,
+en,admin.placeholder.country_filter,Country,Country,,"'admin.placeholder.country_filter':'Country',",Country,Country
+en,admin.placeholder.country_filter_select,Select Countries,Select Countries,,"'admin.placeholder.country_filter_select':'Select Countries',",Select Countries,
+en,admin.placeholder.location_filter_select,Select Locations,Select Locations,,"'admin.placeholder.location_filter_select':'Select Locations',",Select Locations,
+en,admin.placeholder.priority_filter_select,Select Priorities,Select Priorities,,"'admin.placeholder.priority_filter_select':'Select Priorities',",Select Priorities,
+en,admin.placeholder.state_filter,State,State,,"'admin.placeholder.state_filter':'State',",State,State
+en,admin.placeholder.state_filter_select,Select States,Select States,,"'admin.placeholder.state_filter_select':'Select States',",Select States,
+en,admin.placeholder.ticket_priority,Priority,Priority,,"'admin.placeholder.ticket_priority':'Priority',",Priority,Priority
 en,admin.role.label.category,Category,Category,,"'admin.role.label.category':'Category',",Category,Category
 en,admin.role.label.general,General,General,,"'admin.role.label.general':'General',",General,General
 en,admin.role.label.location_level,Location Organization,Location Organization,,"'admin.role.label.location_level':'Location Organization',",Location Organization,Location Organization
@@ -264,6 +275,7 @@ en,admin.third_party.label.name,Name,Name,,"'admin.third_party.label.name':'Name
 en,admin.third_party.label.number,Number,Number,,"'admin.third_party.label.number':'Number',",Number,Number
 en,admin.third_party.status.active,Inactive,Inactive,,"'admin.third_party.status.active':'Inactive',",Inactive,Inactive
 en,admin.third_party.status.inactive,Active,Active,,"'admin.third_party.status.inactive':'Active',",Active,Active
+en,admin.ticket.requester.placeholder,Requester,Requester,,"'admin.ticket.requester.placeholder':'Requester',",Requester,Requester
 en,admin.title,Admin,Admin,,"'admin.title':'Admin',",Admin,Admin
 en,admin.translation.label.helper,Helper,Helper,,"'admin.translation.label.helper':'Helper',",Helper,Helper
 en,admin.translation.label.key,Key,Key,,"'admin.translation.label.key':'Key',",Key,Key
@@ -289,7 +301,7 @@ en,crud.delete.confirm,Are you sure you want to delete this {{module}}?,Are you 
 en,crud.delete.error,Error deleting {{model}}.,Error deleting {{model}}.,,"'crud.delete.error':'Error deleting {{model}}.',",Error deleting {{model_var_.,Error deleting _model_var_.
 en,crud.delete.title,Delete Record,Delete Record,,"'crud.delete.title':'Delete Record',",Delete Record,Delete Record
 en,crud.discard_changes,Unsaved Changes,Unsaved Changes,,"'crud.discard_changes':'Unsaved Changes',",Unsaved Changes,Unsaved Changes
-en,crud.discard_changes_confirm,All unsaved changes will be lost.  Are you sure you want to continue?,All unsaved changes will be lost.  Are you sure you want to continue?,,"'crud.discard_changes_confirm':'All unsaved changes will be lost.  Are you sure you want to continue?',",All unsaved changes will be lost.  Are you sure you want to continue?,All unsaved changes will be lost.  Are you sure you want to continue?
+en,crud.discard_changes_confirm,All unsaved changes will be lost.  Are you sure you want to continue?,All unsaved changes will be lost.  Are you sure you want to continue?,,"'crud.discard_changes_confirm':'All unsaved changes will be lost. Are you sure you want to continue?',",All unsaved changes will be lost.  Are you sure you want to continue?,All unsaved changes will be lost.  Are you sure you want to continue?
 en,crud.duplicate.button,Duplicate,Duplicate,,"'crud.duplicate.button':'Duplicate',",Duplicate,Duplicate
 en,crud.inherited_from,Inherited from: {{from}},Inherited from: {{from}},,"'crud.inherited_from':'Inherited from: {{from}}',",Inherited from: {{from_var_,Inherited from: _from_var_
 en,crud.no,No,No,,"'crud.no':'No',",No,No
@@ -298,7 +310,7 @@ en,crud.restore.button,Restore,Restore,,"'crud.restore.button':'Restore',",Resto
 en,crud.restore.error,Error restoring {{model}},Error restoring {{model}},,"'crud.restore.error':'Error restoring {{model}}',",Error restoring {{model_var_,Error restoring _model_var_
 en,crud.restore.success,{{model}} restored successfully.,{{model}} restored successfully.,,"'crud.restore.success':'{{model}} restored successfully.',",{{model_var_ restored successfully.,_model_var_ restored successfully.
 en,crud.save_only.button,Save,Save,,"'crud.save_only.button':'Save',",Save,Save
-en,crud.save_progress,You currently have unsaved changes.  Would you like to save your progress?,You currently have unsaved changes.  Would you like to save your progress?,,"'crud.save_progress':'You currently have unsaved changes.  Would you like to save your progress?',",You currently have unsaved changes.  Would you like to save your progress?,You currently have unsaved changes.  Would you like to save your progress?
+en,crud.save_progress,You currently have unsaved changes.  Would you like to save your progress?,You currently have unsaved changes.  Would you like to save your progress?,,"'crud.save_progress':'You currently have unsaved changes. Would you like to save your progress?',",You currently have unsaved changes.  Would you like to save your progress?,You currently have unsaved changes.  Would you like to save your progress?
 en,crud.save.button,Save and Close,Save and Close,,"'crud.save.button':'Save and Close',",Save and Close,Save and Close
 en,crud.save.error,Error saving {{model}}.,Error saving {{model}}.,,"'crud.save.error':'Error saving {{model}}.',",Error saving {{model_var_.,Error saving _model_var_.
 en,crud.save.success,{{model}} saved successfully.,{{model}} saved successfully.,,"'crud.save.success':'{{model}} saved successfully.',",{{model_var_ saved successfully.,_model_var_ saved successfully.
@@ -312,20 +324,25 @@ en,dt.new,New,New,,"'dt.new':'New',",New,New
 en,dt.placeholder_submit,Leave blank if Submit,Leave blank if Submit,,"'dt.placeholder_submit':'Leave blank if Submit',",Leave blank if Submit,Leave blank if Submit
 en,dt.start,Start,Start,,"'dt.start':'Start',",Start,Start
 en,dt.ticket.launch,Launch Ticket Decision Tree,Launch Ticket Decision Tree,,"'dt.ticket.launch':'Launch Ticket Decision Tree',",Launch Ticket Decision Tree,Launch Ticket Decision Tree
+en,errors.assignment.assignee,Please select an Assignee,Please select an Assignee,,"'errors.assignment.assignee':'Please select an Assignee',",Please select an Assignee,
+en,errors.assignment.description.min_max,Description must be at least 5 charachters long,Description must be at least 5 charachters long,,"'errors.assignment.description.min_max':'Description must be at least 5 charachters long',",Description must be at least 5 charachters long,
+en,errors.assignment.pf.criteria.length,Must have at least one criteria,Must have at least one criteria,,"'errors.assignment.pf.criteria.length':'Must have at least one criteria',",Must have at least one criteria,Must have at least one criteria
+en,errors.assignment.pf.length,Must have at least one filter,Must have at least one filter,,"'errors.assignment.pf.length':'Must have at least one filter',",Must have at least one filter,Must have at least one filter
+en,errors.assignment.pf.length,Please add at least one filter,Please add at least one filter,,"'errors.assignment.pf.length':'Please add at least one filter',",Please add at least one filter,
 en,errors.dtd.description,Description must be provided,Description must be provided,,"'errors.dtd.description':'Description must be provided',",Description must be provided,Description must be provided
 en,errors.dtd.key,Key must be provided,Key must be provided,,"'errors.dtd.key':'Key must be provided',",Key must be provided,Key must be provided
 en,errors.dtd.key.length,Key must less than 12 characters,Key must less than 12 characters,,"'errors.dtd.key.length':'Key must less than 12 characters',",Key must less than 12 characters,Key must less than 12 characters
 en,errors.link.text,Text must be provided,Text must be provided,,"'errors.link.text':'Text must be provided',",Text must be provided,Text must be provided
-en,errors.person.middle_initial,Middle Initial can only contain characters,Middle Initial can only contain characters,,"'errors.person.middle_initial':'Middle Initial can only contain characters',",Middle Initial can only contain characters,Middle Initial can only contain characters
-en,errors.person.password,"Password must include at least one upper case letter, one lower case letter, and a number","Password must include at least one upper case letter, one lower case letter, and a number",,"'errors.person.password':'Password must include at least one upper case letter, one lower case letter, and a number',","Password must include at least one upper case letter, one lower case letter, and a number","Password must include at least one upper case letter, one lower case letter, and a number"
-en,errors.person.password.length,Password can't be more than 15 characters,Password can't be more than 15 characters,,"'errors.person.password.length':'Password can't be more than 15 characters',",Password can't be more than 15 characters,Password can't be more than 15 characters
-en,errors.person.username,Username must be provided,Username must be provided,,"'errors.person.username':'Username must be provided',",Username must be provided,Username must be provided
-en,errors.person.first_name,First name must be provided. ,First name must be provided. ,,"'errors.person.first_name':'First name must be provided. ',",First name must be provided. ,First name must be provided. 
+en,errors.person.first_name,First name must be provided. ,First name must be provided. ,,"'errors.person.first_name':'First name must be provided.',",First name must be provided. ,First name must be provided. 
 en,errors.person.first_name.length,Max length of 30,Max length of 30,,"'errors.person.first_name.length':'Max length of 30',",Max length of 30,Max length of 30
 en,errors.person.last_name,Last name must be provided. Max length 30,Last name must be provided. Max length 30,,"'errors.person.last_name':'Last name must be provided. Max length 30',",Last name must be provided. Max length 30,Last name must be provided. Max length 30
+en,errors.person.last_name.length,Max length of 30,Max length of 30,,"'errors.person.last_name.length':'Max length of 30',",Max length of 30,Max length of 30
+en,errors.person.middle_initial,Middle Initial can only contain characters,Middle Initial can only contain characters,,"'errors.person.middle_initial':'Middle Initial can only contain characters',",Middle Initial can only contain characters,Middle Initial can only contain characters
+en,errors.person.password,"Password must include at least one upper case letter, one lower case letter, and a number","Password must include at least one upper case letter, one lower case letter, and a number",,"'errors.person.password':'Password must include at least one upper case letter, one lower case letter, and a number',","Password must include at least one upper case letter, one lower case letter, and a number","Password must include at least one upper case letter, one lower case letter, and a number"
+en,errors.person.password.length,Password cannot be more than 15 characters,Password cannot be more than 15 characters,,"'errors.person.password.length':'Password cannot be more than 15 characters',",Password cannot be more than 15 characters,Password cannot be more than 15 characters
+en,errors.person.username,Username must be provided,Username must be provided,,"'errors.person.username':'Username must be provided',",Username must be provided,Username must be provided
 en,errors.profile.description,Description must be provided,Description must be provided,,"'errors.profile.description':'Description must be provided',",Description must be provided,Description must be provided
 en,errors.profile.description.min_max,Must be between 5 and 500 characters,Must be between 5 and 500 characters,,"'errors.profile.description.min_max':'Must be between 5 and 500 characters',",Must be between 5 and 500 characters,Must be between 5 and 500 characters
-en,errors.person.last_name.length,Max length of 30,Max length of 30,,"'errors.person.last_name.length':'Max length of 30',",Max length of 30,Max length of 30
 en,errors.ticket.assignee,Assignee must be provided,Assignee must be provided,,"'errors.ticket.assignee':'Assignee must be provided',",Assignee must be provided,Assignee must be provided
 en,errors.ticket.request,Request must be provided,Request must be provided,,"'errors.ticket.request':'Request must be provided',",Request must be provided,Request must be provided
 en,errors.ticket.request.length,Request must be at least 5 characters,Request must be at least 5 characters,,"'errors.ticket.request.length':'Request must be at least 5 characters',",Request must be at least 5 characters,Request must be at least 5 characters
@@ -350,6 +367,7 @@ en,modules.tickets.openTickets,Open Tickets,Open Tickets,,"'modules.tickets.open
 en,modules.tickets.titleShort,Tickets,Tickets,,"'modules.tickets.titleShort':'Tickets',",Tickets,Tickets
 en,modules.workOrders.overdue,Overdue Work Orders,Overdue Work Orders,,"'modules.workOrders.overdue':'Overdue Work Orders',",Overdue Work Orders,Overdue Work Orders
 en,modules.workOrders.titleShort,Work Orders,Work Orders,,"'modules.workOrders.titleShort':'Work Orders',",Work Orders,Work Orders
+en,power.select.select,Click to select,Click to select,,"'power.select.select':'Click to select',",Click to select,Click to select
 en,selects.loading,Loading,Loading,,"'selects.loading':'Loading',",Loading,Loading
 en,selects.noMatchesMessage,No Matches,No Matches,,"'selects.noMatchesMessage':'No Matches',",No Matches,No Matches
 en,selects.searchMessage,Type to search,Type to search,,"'selects.searchMessage':'Type to search',",Type to search,Type to search
@@ -390,29 +408,6 @@ en,ticket.status.unsatisfactory_completion,Unsatisfactory,Unsatisfactory,,"'tick
 en,upload.progress,Progress,Progress,,"'upload.progress':'Progress',",Progress,Progress
 en,validation.invalid,Invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid,Invalid
 en,validation.valid,Valid,Valid,,"'validation.valid':'Valid',",Valid,Valid
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
 ,,,,,,,
 ,,,,,,,
 ,,,,,,,
