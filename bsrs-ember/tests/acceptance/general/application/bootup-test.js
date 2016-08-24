@@ -89,7 +89,7 @@ test('on boot we should fetch and load the state configuration', assert => {
   visit(HOME_URL);
   andThen(() => {
     assert.equal(store.find('state').get('length'), 51);
-    assert.equal(store.find('state').objectAt(4).get('id'), STATE_DEFAULTS.id);
+    assert.equal(store.find('state').objectAt(4).get('id'), STATE_DEFAULTS.idFive);
     assert.equal(store.find('state').objectAt(4).get('name'), STATE_DEFAULTS.name);
     assert.equal(store.find('state').objectAt(4).get('abbr'), STATE_DEFAULTS.abbr);
   });
