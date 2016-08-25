@@ -31,6 +31,18 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
       });
       // this.setProperties({ page:1, search: searchValue });
     },
+    /*
+    * @method export
+    * takes no params and sends command to repository
+    */
+
+    exportGrid(){
+      // const repo = this.get('repository');
+      // repo.exportGrid().then((results) => {
+      //   // Do stuff
+      // });
+    },
+
     // searchGrid() {
       // this.toggleProperty('showSaveFilterInput');
     // },
