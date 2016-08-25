@@ -130,7 +130,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         time.sleep(2)
         self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
         # criteria
-        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-country-select ')]/div")
+        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-location-select ')]/div")
         assignee_dropdown.click()
         assignee_input = self.wait_for_xhr_request("ember-power-select-trigger-multiple-input")
         assignee_input.send_keys('a')
@@ -168,7 +168,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         time.sleep(2)
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]//li[2]").click()
         # criteria
-        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-category-select ')]/div")
+        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-location-select ')]/div")
         assignee_dropdown.click()
         assignee_input = self.wait_for_xhr_request("ember-power-select-trigger-multiple-input")
         assignee_input.send_keys('a')

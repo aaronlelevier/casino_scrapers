@@ -517,7 +517,17 @@ class AvailableFilterTests(APITestCase):
         self.assertEqual(location_data['lookups']['id'], str(location_level.id))
         self.assertEqual(location_data['lookups']['name'], location_level.name)
 
-    def test_auto_assign_filter_removed_if_already_in_use(self):
+    def test_list_sorted_in_ascending_order_by_key(self):
+        response = self.client.get('/api/admin/assignments-available-filters/')
+
+        data = json.loads(response.content.decode('utf8'))
+        prev = None
+        for i, af in enumerate(data['results']):
+            if i > 0:
+                self.assertTrue(af['key'] > prev['key'])
+            prev = af
+
+    def test_auto_assign_filter_decorated_if_in_use(self):
         # AUTO_ASSIGN included
         self.assertFalse(Assignment.objects.auto_assign_filter_in_use(self.tenant))
 

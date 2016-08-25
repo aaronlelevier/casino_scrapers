@@ -87,5 +87,6 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
                 filters.append(x.available_filter_data(location_filter['id']))
             data['results'] += filters
 
+        data['results'] = sorted(data['results'], key=lambda x: x['key'])
         data['count'] = len(data['results'])
         return data
