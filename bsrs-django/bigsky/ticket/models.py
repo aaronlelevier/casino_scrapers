@@ -1,5 +1,6 @@
 import uuid
 
+from django.apps import apps
 from django.dispatch import receiver
 from django.db import models
 from django.db.models import Q, Max
@@ -12,7 +13,7 @@ from category.models import Category
 from generic.models import Attachment
 from location.models import Location
 from person.models import Person
-from routing.tasks import process_ticket
+# from routing.tasks import process_ticket
 from utils.models import (BaseModel, BaseQuerySet, BaseManager, BaseNameModel,
     DefaultToDictMixin)
 
@@ -156,13 +157,18 @@ class Ticket(BaseModel):
     class Meta:
         ordering = ('-created',)
 
+    def save(self, *args, **kwargs):
+        super(Ticket, self).save(*args, **kwargs)
+        self._process_ticket_if_no_assignee()
 
-@receiver(post_save, sender=Ticket)
-def process_ticket_post_save(sender, instance=None, created=False, **kwargs):
-    """Post-save hook to process assignments"""
-    if not instance.deleted and instance.status.name == TICKET_STATUS_NEW and not instance.assignee:
-        process_ticket(instance.location.location_level.tenant.id,
-                       ticket_id=instance.id)
+    def _process_ticket_if_no_assignee(self):
+        if not self.deleted and self.status.name == TICKET_STATUS_NEW and not self.assignee:
+            self._process_ticket(self.location.location_level.tenant.id,
+                                 ticket=self)
+
+    def _process_ticket(self, tenant_id, ticket):
+        model = apps.get_model("routing", "assignment")
+        model.objects.process_ticket(tenant_id, ticket)
 
 
 TICKET_ACTIVITY_TYPES = [

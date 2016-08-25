@@ -100,7 +100,7 @@ class AssignmentManagerTests(SetupMixin, TestCase):
         self.assertTrue(self.assignment.is_match(self.ticket))
         self.assertFalse(self.assignment_two.is_match(self.ticket))
 
-        Assignment.objects.process_ticket(self.tenant.id, self.ticket.id)
+        Assignment.objects.process_ticket(self.tenant.id, self.ticket)
 
         ticket = Ticket.objects.get(id=self.ticket.id)
         self.assertEqual(ticket.assignee, self.assignment.assignee)
@@ -119,7 +119,7 @@ class AssignmentManagerTests(SetupMixin, TestCase):
         for assignment in Assignment.objects.filter(tenant__id=self.tenant.id):
             self.assertFalse(assignment.is_match(self.ticket))
 
-        Assignment.objects.process_ticket(self.tenant.id, self.ticket.id)
+        Assignment.objects.process_ticket(self.tenant.id, self.ticket)
 
         ticket = Ticket.objects.get(id=self.ticket.id)
         self.assertIsNone(ticket.assignee)
@@ -138,7 +138,7 @@ class AssignmentManagerTests(SetupMixin, TestCase):
         self.assertIsNone(self.ticket.assignee)
 
         Assignment.objects.process_ticket(self.ticket.location.location_level.tenant.id,
-                                          self.ticket.id)
+                                          self.ticket)
 
         ticket = Ticket.objects.get(id=self.ticket.id)
         self.assertEqual(ticket.assignee, assignment_three.assignee)
@@ -158,9 +158,10 @@ class AssignmentManagerTests(SetupMixin, TestCase):
         # person is different, so would expect the auto-assign filter to be
         # used, but if role.process_assign == False, that takes precedence
         self.assertNotEqual(self.assignment.assignee, creator)
+        self.ticket.assignee = None
         self.assertIsNone(self.ticket.assignee)
 
-        Assignment.objects.process_ticket(self.assignment.tenant.id, self.ticket.id)
+        Assignment.objects.process_ticket(self.assignment.tenant.id, self.ticket)
 
         ticket = Ticket.objects.get(id=self.ticket.id)
         self.assertEqual(ticket.assignee, creator)

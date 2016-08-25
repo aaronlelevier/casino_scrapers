@@ -233,7 +233,7 @@ class TicketTests(TestCase):
         two = Ticket.objects.get(number=2)
         self.assertIsInstance(two, Ticket)
 
-    @patch("ticket.models.process_ticket")
+    @patch("ticket.models.Ticket._process_ticket")
     def test_save__process_ticket__new_status_and_no_assignee(self, mock_process_ticket):
         # This is the only tiime that wee wan't the "process_ticket"
         # function to be called
@@ -244,9 +244,9 @@ class TicketTests(TestCase):
 
         self.assertTrue(mock_process_ticket.called)
         self.assertEqual(mock_process_ticket.call_args[0][0], self.ticket.location.location_level.tenant.id)
-        self.assertEqual(mock_process_ticket.call_args[1]['ticket_id'], self.ticket.id)
+        self.assertEqual(mock_process_ticket.call_args[1]['ticket'], self.ticket)
 
-    @patch("ticket.models.process_ticket")
+    @patch("ticket.models.Ticket._process_ticket")
     def test_save__process_ticket__not_new_status_and_no_assignee(self, mock_process_ticket):
         self.ticket.status = self.status_draft
         self.ticket.assignee = None
@@ -255,7 +255,7 @@ class TicketTests(TestCase):
 
         self.assertFalse(mock_process_ticket.called)
 
-    @patch("ticket.models.process_ticket")
+    @patch("ticket.models.Ticket._process_ticket")
     def test_save__process_ticket__new_status_and_assignee(self, mock_process_ticket):
         assignee = create_single_person()
         self.ticket.status = self.status_new

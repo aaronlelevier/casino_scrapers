@@ -31,7 +31,7 @@ class AssignmentManager(BaseManager):
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
 
-    def process_ticket(self, tenant_id, ticket_id):
+    def process_ticket(self, tenant_id, ticket):
         """
         for each assignment-profile in this Tenant's Assignment Profiles
           does it match?
@@ -44,8 +44,6 @@ class AssignmentManager(BaseManager):
             break out of for-loop
 
         """
-        ticket = Ticket.objects.get(id=ticket_id)
-
         if ticket.creator and not ticket.creator.role.process_assign:
             ticket.assignee = ticket.creator
             ticket.save()

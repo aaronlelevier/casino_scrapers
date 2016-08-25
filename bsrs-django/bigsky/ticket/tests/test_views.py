@@ -342,7 +342,7 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
         self.assertEqual(json.loads(response.content.decode('utf8'))['status'], ['This field may not be null.'])
         self.assertEqual(json.loads(response.content.decode('utf8'))['priority'], ['This field may not be null.'])
 
-    def test_ticket_with_no_assignee_is_processed_but_assginee_is_not_returned_in_response(self):
+    def test_process_ticket_if_no_assignee(self):
         assignment = create_assignment()
         auto_assign_filter = create_auto_assign_filter()
         assignment.filters.add(auto_assign_filter)
@@ -364,7 +364,7 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
         self.assertTrue(assignment.is_match(ticket))
         self.assertEqual(ticket.assignee, assignment.assignee)
         # response check
-        self.assertIsNone(data['assignee'])
+        self.assertEqual(data['assignee'], str(assignment.assignee.id))
 
 
 class TicketSearchTests(TicketSetupMixin, APITestCase):
