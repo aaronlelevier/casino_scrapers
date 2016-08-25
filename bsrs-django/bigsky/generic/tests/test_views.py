@@ -246,7 +246,7 @@ class ExportDataTests(APITestCase):
         self.client.logout()
 
     def test_get(self):
-        response = self.client.get(reverse("export_data"))
+        response = self.client.get("/api/export-data/")
         self.assertEqual(response.status_code, 405)
 
     def test_post(self):
@@ -254,7 +254,7 @@ class ExportDataTests(APITestCase):
         content_type = ContentType.objects.get(model="person")
         model = content_type.model_class()
 
-        response = self.client.post(reverse("export_data"), data, format='json')
+        response = self.client.post("/api/export-data/", data, format='json')
 
         self.assertEqual(response.status_code, 200)
         self.assertEquals(
@@ -273,7 +273,7 @@ class ExportDataTests(APITestCase):
         content_type = ContentType.objects.get(model="person")
         model = content_type.model_class()
 
-        response = self.client.post(reverse("export_data"), data, format='json')
+        response = self.client.post("/api/export-data/", data, format='json')
 
         self.assertEqual(response.status_code, 200)
         self.assertEquals(
@@ -297,7 +297,7 @@ class ExportDataTests(APITestCase):
             }
         }
 
-        response = self.client.post(reverse("export_data"), data, format='json')
+        response = self.client.post("/api/export-data/", data, format='json')
 
         # last arg here is "fields". This is limited due to EXPORT_FIELDS
         # being set on the Person Model.
@@ -311,7 +311,7 @@ class ExportDataTests(APITestCase):
 
         data = {"model": "savedsearch"}
 
-        response = self.client.post(reverse("export_data"), data, format='json')
+        response = self.client.post("/api/export-data/", data, format='json')
 
         mock_func.assert_called_with({}, ['id', 'created', 'modified', 'deleted', 'name', 'person', 'endpoint_name', 'endpoint_uri'])
 
@@ -319,7 +319,7 @@ class ExportDataTests(APITestCase):
         model_name = "foo"
         data = {"model": model_name}
 
-        response = self.client.post(reverse("export_data"), data, format='json')
+        response = self.client.post("/api/export-data/", data, format='json')
 
         self.assertEqual(response.status_code, 400)
         data = json.loads(response.content.decode('utf8'))
