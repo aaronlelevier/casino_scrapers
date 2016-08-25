@@ -16,12 +16,11 @@ from person.tests.factory import PASSWORD, create_single_person, DistrictManager
 from routing.tests.factory import create_assignment, create_auto_assign_filter
 from ticket.models import Ticket, TicketStatus, TicketActivity, TicketActivityType, TICKET_STATUS_NEW
 from ticket.serializers import TicketCreateSerializer
-from ticket.tests.factory_related import (create_ticket_priority, create_ticket_status,
-    get_or_create_ticket_status)
+from ticket.tests.factory_related import create_ticket_priority, create_ticket_status
 from ticket.tests.factory import (create_ticket, create_ticket_activity,
     create_ticket_activity_type, create_ticket_activity_types,)
 from ticket.tests.mixins import TicketSetupNoLoginMixin, TicketSetupMixin
-from utils.helpers import media_path
+from utils.helpers import media_path, create_default
 
 
 class TicketListFulltextTests(TicketSetupMixin, APITestCase):
@@ -347,7 +346,7 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
         auto_assign_filter = create_auto_assign_filter()
         assignment.filters.add(auto_assign_filter)
 
-        status = get_or_create_ticket_status()
+        status = create_default(TicketStatus)
         self.data.update({
             'id': str(uuid.uuid4()),
             'request': 'plumbing',

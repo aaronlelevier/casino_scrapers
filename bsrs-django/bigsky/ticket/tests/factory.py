@@ -14,8 +14,8 @@ from location.tests.factory import create_locations
 from person.models import Person
 from ticket.models import (Ticket, TicketStatus, TicketActivityType,
     TicketActivity, TICKET_ACTIVITY_TYPES)
-from ticket.tests.factory_related import (create_ticket_status, get_or_create_ticket_status,
-    get_or_create_ticket_priority, create_ticket_statuses, create_ticket_priorities)
+from ticket.tests.factory_related import (create_ticket_status, create_ticket_statuses,
+    create_ticket_priorities)
 from utils.create import _generate_chars
 from utils.helpers import generate_uuid, create_default
 

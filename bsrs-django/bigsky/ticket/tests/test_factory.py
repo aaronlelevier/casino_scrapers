@@ -136,25 +136,6 @@ class CreateTicketTests(TestCase):
         self.assertEqual(self.ticket.dt_path[1]['dtd']['description'], 'You are almost done')
 
 
-class GetOrCreateTicketStatusAndPriorityTests(TestCase):
-
-    def test_get_or_create_ticket_status(self):
-        self.assertEqual(TicketStatus.objects.count(), 0)
-
-        status = factory.get_or_create_ticket_status()
-
-        self.assertEqual(TicketStatus.objects.count(), 1)
-        self.assertEqual(status.name, TICKET_STATUS_NEW)
-
-    def test_get_or_create_ticket_priority(self):
-        self.assertEqual(TicketPriority.objects.count(), 0)
-
-        priority = factory.get_or_create_ticket_priority()
-
-        self.assertEqual(TicketPriority.objects.count(), 1)
-        self.assertEqual(priority.name, TICKET_PRIORITY_DEFAULT)
-
-
 class CreateTicketKwargTests(TestCase):
 
     def test_ticket_request_and_requester(self):

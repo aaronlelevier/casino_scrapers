@@ -38,13 +38,3 @@ def create_ticket_priority(name=None):
 def create_ticket_priorities():
     [create_ticket_priority(p) for p in TICKET_PRIORITIES]
     return TicketPriority.objects.all()
-
-
-def get_or_create_ticket_status():
-    obj, _ = TicketStatus.objects.get_or_create(name=TICKET_STATUS_NEW)
-    return obj
-
-
-def get_or_create_ticket_priority():
-    obj, _ = TicketPriority.objects.get_or_create(name=TICKET_PRIORITY_DEFAULT)
-    return obj

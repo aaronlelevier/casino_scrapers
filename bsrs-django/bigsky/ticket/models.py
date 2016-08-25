@@ -33,7 +33,7 @@ TICKET_STATUS_MAP = {
 
 TICKET_STATUSES = [v for k,v in TICKET_STATUS_MAP.items()]
 
-TICKET_STATUS_DEFAULT = TICKET_STATUS_MAP['7']
+TICKET_STATUS_DEFAULT = TICKET_STATUS_MAP['1']
 
 TICKET_STATUS_NEW = TICKET_STATUS_MAP['1']
 TICKET_STATUS_DEFERRED = TICKET_STATUS_MAP['2']
@@ -105,7 +105,7 @@ class TicketQuerySet(BaseQuerySet):
             q &= Q(
                 Q(categories__id__in=person.role.categories.filter(parent__isnull=True)
                                                            .values_list('id', flat=True)) | \
-                Q(categories__isnull=True, status__name=TICKET_STATUS_DEFAULT)
+                Q(categories__isnull=True, status__name=TICKET_STATUS_DRAFT)
             )
 
         return self.filter(q).distinct()

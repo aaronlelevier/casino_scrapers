@@ -21,10 +21,10 @@ from routing.tests.factory import (
     create_ticket_location_state_filter, create_available_filter_state,
     create_ticket_location_country_filter, create_available_filter_country)
 from tenant.tests.factory import get_or_create_tenant
-from ticket.models import Ticket, TicketPriority
+from ticket.models import Ticket, TicketPriority, TicketStatus
 from ticket.tests.factory import create_ticket
-from ticket.tests.factory_related import (create_ticket_statuses, get_or_create_ticket_status,
-    get_or_create_ticket_priority)
+from ticket.tests.factory_related import create_ticket_statuses
+from utils.helpers import create_default
 
 
 class SetupMixin(object):
@@ -32,8 +32,8 @@ class SetupMixin(object):
     def setUp(self):
         self.person = create_single_person()
         self.ticket = create_ticket()
-        self.ticket.status = get_or_create_ticket_status()
-        self.ticket.priority = get_or_create_ticket_priority()
+        self.ticket.status = create_default(TicketStatus)
+        self.ticket.priority = create_default(TicketPriority)
         self.ticket.save()
 
 
