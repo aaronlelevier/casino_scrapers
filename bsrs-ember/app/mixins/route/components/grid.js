@@ -12,6 +12,7 @@ var GridViewRoute = Ember.Route.extend({
   personCurrent: Ember.inject.service(),
   filtersetRepository: inject('filterset'),
   init() {
+    /* MOBILE PROPERTIES */
     this._super(...arguments);
     /* @property gridFilterParams
     * object that holds key of type string ('location.name') and value of type string ('wat')
@@ -24,6 +25,10 @@ var GridViewRoute = Ember.Route.extend({
     * for power selects, value is [obj, obj] b/c need to preserve object if return to filter
     */
     this.gridIdInParams = {};
+    /*
+     * @property {obj} filterModel
+     * object that holds 'find' query state
+    */
     this.filterModel = Ember.Object.create();
   },
   queryParams: {

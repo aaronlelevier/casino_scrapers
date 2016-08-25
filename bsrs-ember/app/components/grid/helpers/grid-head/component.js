@@ -19,6 +19,7 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
     },
     /*
     * MOBILE - Need to see how Ember modularization RFC pans out.  Same component functions duplicated right now
+    * EVERYTHING BELOW
     */
     /* @method keyup
     * asks repository for raw results
