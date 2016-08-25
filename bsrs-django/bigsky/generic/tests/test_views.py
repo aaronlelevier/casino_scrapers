@@ -245,16 +245,16 @@ class ExportDataTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_get(self):
-        response = self.client.get("/api/export-data/")
+    def test_post(self):
+        response = self.client.post("/api/export-data/", {}, format='json')
         self.assertEqual(response.status_code, 405)
 
-    def test_post(self):
-        data = {"model": "person"}
-        content_type = ContentType.objects.get(model="person")
+    def test_model_name(self):
+        model_name = "person"
+        content_type = ContentType.objects.get(model=model_name)
         model = content_type.model_class()
 
-        response = self.client.post("/api/export-data/", data, format='json')
+        response = self.client.get("/api/export-data/{}/".format(model_name))
 
         self.assertEqual(response.status_code, 200)
         self.assertEquals(
@@ -263,17 +263,12 @@ class ExportDataTests(APITestCase):
                 name=model._meta.verbose_name_plural)
         )
 
-    def test_post__filtered(self):
-        data = {
-            "model": "person",
-            "params": {
-                "username": self.person.username
-            }
-        }
+    def test_model_name__filtered(self):
         content_type = ContentType.objects.get(model="person")
         model = content_type.model_class()
 
-        response = self.client.post("/api/export-data/", data, format='json')
+        response = self.client.get("/api/export-data/person/?username={}"
+                                   .format(self.person.username))
 
         self.assertEqual(response.status_code, 200)
         self.assertEquals(
@@ -289,37 +284,28 @@ class ExportDataTests(APITestCase):
         )
 
     @patch("generic.views.ExportData._filter_with_fields")
-    def test_post__filtered__arguments(self, mock_func):
-        data = {
-            "model": "person",
-            "params": {
-                "username": self.person.username
-            }
-        }
-
-        response = self.client.post("/api/export-data/", data, format='json')
+    def test_filtered__arguments(self, mock_func):
+        response = self.client.get("/api/export-data/person/?username={}"
+                                   .format(self.person.username))
 
         # last arg here is "fields". This is limited due to EXPORT_FIELDS
         # being set on the Person Model.
         mock_func.assert_called_with({'username': 'aaa'}, ['id', 'username'])
 
     @patch("generic.views.ExportData._filter_with_fields")
-    def test_post__fields__all(self, mock_func):
+    def test_fields__all(self, mock_func):
         # confirm that the fields to export isn't explicitly set on the model
         with self.assertRaises(AttributeError):
             SavedSearch.EXPORT_FIELDS
 
-        data = {"model": "savedsearch"}
-
-        response = self.client.post("/api/export-data/", data, format='json')
+        response = self.client.get("/api/export-data/{}/".format("savedsearch"))
 
         mock_func.assert_called_with({}, ['id', 'created', 'modified', 'deleted', 'name', 'person', 'endpoint_name', 'endpoint_uri'])
 
-    def test_post__invalid_model(self):
+    def test_invalid_model(self):
         model_name = "foo"
-        data = {"model": model_name}
 
-        response = self.client.post("/api/export-data/", data, format='json')
+        response = self.client.get("/api/export-data/{}/".format(model_name))
 
         self.assertEqual(response.status_code, 400)
         data = json.loads(response.content.decode('utf8'))

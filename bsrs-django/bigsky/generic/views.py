@@ -72,10 +72,11 @@ class ExportData(APIView):
     curl -v -H "Content-Type: application/json" -X POST --data '{"model_name": "person", "app_name": "person"}' -u admin:1234 http://localhost:8000/csv/export_data/ --header "Content-Type:application/json"
     """
 
-    def post(self, request, *args, **kwargs):
-        data = request.data
-        params = data.get('params', {})
-        self._set_model(data)
+    def get(self, request, *args, **kwargs):
+        model_name = kwargs.get('model_name', None)
+        self._set_model(model_name)
+
+        params = {k:v for k, v in request.query_params.items()}
         fields = self._get_fields()
 
         response = HttpResponse(content_type='text/csv')
@@ -89,9 +90,8 @@ class ExportData(APIView):
 
         return response
 
-    def _set_model(self, data):
+    def _set_model(self, model_name):
         try:
-            model_name = data.get('model')
             content_type = ContentType.objects.get(model=model_name)
         except ContentType.DoesNotExist:
             raise ValidationError("Model with model name: {} DoesNotExist"
