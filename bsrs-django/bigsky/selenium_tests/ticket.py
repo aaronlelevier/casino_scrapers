@@ -251,6 +251,84 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         #     [r.text for r in ticket_list_view]
         # )
 
+    def test_ticket__for_assignment_processing(self):
+        ### CREATE
+        # Create Ticket Page Object
+        ticket_page = ModelPage(
+            driver = self.driver,
+            new_link = "t-add-new",
+            list_name = "t-ticket-request",
+            list_data = "t-grid-data"
+        )
+        ticket_page.find_list_data()
+        # Get to "ticket create view"
+        ticket_new_link = ticket_page.find_new_link()
+        ticket_new_link.click()
+        # Enter info and hit "save"
+        ticket_request = rand_chars()
+        ticket_requester = rand_chars()
+        ticket = InputHelper(ticket_request=ticket_request, ticket_requester=ticket_requester)
+        self._fill_in_using_class(ticket)
+        ticket_priority_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-priority-select ')]/div")
+        ticket_priority_input.click()
+        priority_option = self.driver.find_element_by_xpath("//*[@aria-current='true']")
+        priority_option.click()
+        ticket_status_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-status-select ')]/div")
+        ticket_status_input.click()
+        # New is the first option, pick that because status must equal "new" in order to 
+        # process ticket
+        status_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]")
+        status_option.click()
+        ticket_location = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-location-select ')]/div")
+        ticket_location.click()
+        ticket_location_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-search ')]/input")
+        ticket_location_input.send_keys("Company")
+        self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]", debounce=True)
+        location_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]")
+        location_option.click()
+        # NOT ASSIGNEE IS SELECTED! This what we want b/c we want it to get assigned by the
+        # backend `process ticket` function
+        ticket_category = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-model-category-select ')]/div")
+        ticket_category.click()
+        # Select 3 Categories for this Ticket
+        # one
+        category_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
+        category_option.click()
+        # two
+        ticket_category = self.wait_for_xhr_request_xpath("(//*[contains(@class, 't-model-category-select')])[last()]")
+        ticket_category.click()
+        category_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
+        category_option.click()
+        # three
+        ticket_category = self.wait_for_xhr_request_xpath("(//*[contains(@class, 't-model-category-select')])[last()]")
+        ticket_category.click()
+        category_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
+        category_option.click()
+        # four
+        ticket_category = self.wait_for_xhr_request_xpath("(//*[contains(@class, 't-model-category-select')])[last()]")
+        ticket_category.click()
+        category_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
+        category_option.click()
+        # assignee was not filled out
+        assignee_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-assignee-select ')]/div")
+        assert assignee_input.text == 'power.select.select'
+        # save
+        self.gen_elem_page.click_save_btn()
+        # Go to newly created ticket's Detail view
+        ticket_page.find_list_data()
+        self.wait_for_xhr_request("t-sort-request-dir").click()
+        self.driver.refresh()
+        ticket_list_view = ticket_page.find_list_name()
+        new_ticket = ticket_page.click_name_in_list_pages(ticket_request, new_model=None)
+        try:
+            new_ticket.click()
+        except AttributeError as e:
+            raise e("new ticket not found")
+        # find "assignee" in DOM, and it has been populated
+        assignee_input = self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-assignee-select ')]/div")
+        assert assignee_input.text != 'power.select.select'
+        assert assignee_input.text
+
 
 if __name__ == "__main__":
     unittest.main()
