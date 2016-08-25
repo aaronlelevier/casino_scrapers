@@ -3,7 +3,7 @@ from django.contrib.auth.models import ContentType
 
 from rest_framework.exceptions import ValidationError
 
-from routing.models import Assignment, AvailableFilter
+from routing.models import Assignment
 
 
 class ProfileFilterFieldValidator(object):

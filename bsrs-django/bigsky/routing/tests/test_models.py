@@ -23,17 +23,28 @@ from routing.tests.factory import (
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority
 from ticket.tests.factory import create_ticket
-from ticket.tests.factory_related import create_ticket_statuses
+from ticket.tests.factory_related import (create_ticket_statuses, get_or_create_ticket_status,
+    get_or_create_ticket_priority)
 
 
-class AssignmentManagerTests(TestCase):
+class SetupMixin(object):
 
     def setUp(self):
         self.person = create_single_person()
+        self.ticket = create_ticket()
+        self.ticket.status = get_or_create_ticket_status()
+        self.ticket.priority = get_or_create_ticket_priority()
+        self.ticket.save()
+
+
+class AssignmentManagerTests(SetupMixin, TestCase):
+
+    def setUp(self):
+        super(AssignmentManagerTests, self).setUp()
+
         self.tenant = self.person.role.tenant
         create_ticket_statuses()
 
-        self.ticket = create_ticket()
         self.ticket.assignee = None
         self.ticket.location = create_top_level_location()
         self.ticket.save()
@@ -80,7 +91,6 @@ class AssignmentManagerTests(TestCase):
 
         ret = Assignment.objects.search_multi(keyword)
 
-        self.assertEqual(ret.count(), 1)
         self.assertEqual(ret.count(), raw_ret.count())
 
     # process_ticket - "on Ticket POST" tests
@@ -168,14 +178,21 @@ class AssignmentManagerTests(TestCase):
         self.assertTrue(ret)
 
 
-class AssignmentTests(TestCase):
+class AssignmentTests(SetupMixin, TestCase):
 
     def setUp(self):
+        super(AssignmentTests, self).setUp()
+
         self.tenant = get_or_create_tenant()
         self.assignment = create_assignment()
-        self.ticket = create_ticket()
+
         self.ticket.location = create_top_level_location()
         self.ticket.save()
+
+        self.ticket.categories.clear()
+        category_filter = self.assignment.filters.filter(source__field='categories')[0]
+        category = Category.objects.get(id=category_filter.criteria[0])
+        self.ticket.categories.add(category)
 
     def test_meta__ordering(self):
         # order by ascending 'order' b/c this demostrates processing order
@@ -254,20 +271,22 @@ class AvailableFilterTests(TestCase):
 
     def test_is_state_filter(self):
         ret = create_available_filter_state()
+        self.assertIsInstance(ret, AvailableFilter)
         self.assertTrue(ret.is_state_filter)
 
     def test_is_country_filter(self):
         ret = create_available_filter_country()
+        self.assertIsInstance(ret, AvailableFilter)
         self.assertTrue(ret.is_country_filter)
 
 
-class ProfileFilterTests(TestCase):
+class ProfileFilterTests(SetupMixin, TestCase):
 
     def setUp(self):
+        super(ProfileFilterTests, self).setUp()
+
         self.pf = create_ticket_priority_filter()
         self.cf = create_ticket_categories_filter()
-        create_single_person()
-        self.ticket = create_ticket()
         # address setup
         add_office_to_location(self.ticket.location)
         self.office_address = self.ticket.location.addresses.first()
