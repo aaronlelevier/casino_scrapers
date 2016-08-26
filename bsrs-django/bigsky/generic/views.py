@@ -71,8 +71,13 @@ class ExportData(APIView):
     # works if endpoint isn't autorized to output data
     curl -v -H "Content-Type: application/json" -X POST --data '{"model_name": "person", "app_name": "person"}' -u admin:1234 http://localhost:8000/csv/export_data/ --header "Content-Type:application/json"
     """
+    def get(self, request, *args, **kwargs):
+        return self._process_export(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        return self._process_export(request, *args, **kwargs)
+
+    def _process_export(self, request, *args, **kwargs):
         model_name = kwargs.get('model_name', None)
         self._set_model(model_name)
 

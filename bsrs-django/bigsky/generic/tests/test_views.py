@@ -245,9 +245,23 @@ class ExportDataTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_post(self):
-        response = self.client.post("/api/export-data/", {}, format='json')
-        self.assertEqual(response.status_code, 405)
+    def test_get(self):
+        model_name = "person"
+        content_type = ContentType.objects.get(model=model_name)
+        model = content_type.model_class()
+
+        response = self.client.get("/api/export-data/{}/".format(model_name))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEquals(
+            response.get('Content-Disposition'),
+            'attachment; filename="{name}.csv"'.format(
+                name=model._meta.verbose_name_plural)
+        )
+
+    @patch("generic.views.ExportData._process_export")
+    def test_process_export_is_called(self, mock_func):
+        self.assertTrue(mock_func.was_called)
 
     def test_model_name(self):
         model_name = "person"
