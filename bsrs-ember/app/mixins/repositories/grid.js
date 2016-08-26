@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import PromiseMixin from 'ember-promise/mixins/promise';
+import { EXPORT_DATA_URL } from 'bsrs-ember/utilities/urls';
 
 const { run } = Ember;
 
@@ -18,9 +19,8 @@ var GridRepositoryMixin = Ember.Mixin.create({
       return response.results;
     });
   },
-  modifyEndpoint(page, search, find, id_in, page_size, sort, special_url) {
-    let url = url || this.get('url');
-    let endpoint = url + '?page=' + page;
+  modifyEndpoint(url, page, search, find, id_in, page_size, sort, special_url) {
+    let endpoint = url + (page ? '?page='+page : '');
 
     if(sort && sort !== 'id' && sort.indexOf('.') < 0){
       endpoint = endpoint + '&ordering=' + sort;
@@ -59,11 +59,49 @@ var GridRepositoryMixin = Ember.Mixin.create({
     }
     return endpoint;
   },
+  exportGrid(find, search, sort){
+    let id_in, page_size, special_url, page = undefined;
+    const type = this.get('type');
+    const url = `${EXPORT_DATA_URL}${type}/`;
+    const endpoint = this.modifyEndpoint(url, page, search, find, id_in, page_size, sort, special_url);
+    return PromiseMixin.xhr(endpoint, 'POST', {});
+    // Ember.$.ajax({
+    //     url: endpoint,
+    //     type: 'POST',
+    //     data: {},
+    //     dataType: 'text',
+    //     success: function(result) {
+    //         var uri = 'data:application/csv;charset=UTF-8,' + encodeURIComponent(result);
+    //         window.open(uri, 'foo.csv');
+    //     }
+    // });
+
+    // let options = {
+    //     url: endpoint,
+    //     type: 'POST',
+    //     data: {},
+    //     dataType: 'text'
+    // };
+    // return new Ember.RSVP.Promise((resolve, reject) => {
+    //   options.success = function(result) {
+    //       debugger
+    //       var uri = 'data:application/csv;charset=UTF-8,' + encodeURIComponent(result);
+    //       window.open(uri, 'foo.csv');
+    //   };
+    //   options.error = (xhr, errorThrown) => {
+    //     console.log('error');
+    //     debugger
+    //     // return Ember.run(null, reject, this.didError(xhr, xhr.status, xhr.responseJSON, 1));
+    //   };
+    //   Ember.$.ajax(options);
+    // });
+  },
   /* Non Optimistic Rendering: Mobile */
   findWithQueryMobile(page, search, find, id_in, special_url=undefined) {
     const store = this.get('simpleStore');
     page = page || 1;
-    let endpoint = this.modifyEndpoint(page, search, find, id_in, special_url);
+    const url = this.get('url');
+    let endpoint = this.modifyEndpoint(url, page, search, find, id_in, special_url);
     return PromiseMixin.xhr(endpoint).then((response) => {
       return this.deserializeResponse(response);
     }, (xhr) => {
@@ -74,7 +112,8 @@ var GridRepositoryMixin = Ember.Mixin.create({
   findWithQuery(page, search, find, id_in, page_size, sort, special_url=undefined) {
     const store = this.get('simpleStore');
     page = page || 1;
-    let endpoint = this.modifyEndpoint(page, search, find, id_in, page_size, sort, special_url);
+    const url = this.get('url');
+    let endpoint = this.modifyEndpoint(url, page, search, find, id_in, page_size, sort, special_url);
     return PromiseMixin.xhr(endpoint).then((response) => {
       const garbage_collection = this.get('garbage_collection') || [];
       /* Remove all types of ex// ticket-list models before render of ticket-list grid */

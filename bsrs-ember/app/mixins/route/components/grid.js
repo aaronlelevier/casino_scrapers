@@ -71,7 +71,7 @@ var GridViewRoute = Ember.Route.extend({
     } else {
       return new Ember.RSVP.Promise((resolve, reject) => {
         return repository.findWithQuery(query.page, query.search, query.find, query.id_in, query.page_size, query.sort, special_url).then((model) => {
-          resolve({ count, model, requested, filtersets, routeName, search });
+          resolve({ count, model, requested, filtersets, routeName, search, repository });
         });
       });
     }
@@ -81,6 +81,11 @@ var GridViewRoute = Ember.Route.extend({
     controller.set('filterModel', this.filterModel);
     controller.set('gridFilterParams', this.gridFilterParams);
     controller.set('gridIdInParams', this.gridIdInParams);
+  },
+  actions: {
+    exportGrid(find, search, sort) {
+      this.get('repository').exportGrid(find, search, sort);
+    }
   }
 });
 

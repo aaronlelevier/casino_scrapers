@@ -9,7 +9,7 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS, { TICKET_LIST_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { TICKET_LIST_URL, EXPORT_DATA_URL } from 'bsrs-ember/utilities/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
@@ -863,13 +863,13 @@ test('grid debounces correctly with structured concurrency', (assert) => {
   });
 });
 
-test('amk export csv button shows in grid header', (assert) => {
-  // xhr(TICKET_LIST_URL, 'GET',  null, {}, 200, {});
+test('export csv button shows in grid header', (assert) => {
   visit(TICKET_LIST_URL);
   andThen(() => {
     assert.equal(find('[data-test-id="grid-export-btn"]').length, 1);
     assert.equal(find('[data-test-id="grid-export-btn"]').text().trim(), t('grid.export'));
   });
+  xhr(`${EXPORT_DATA_URL}ticket/`, 'POST', null, {}, 200, {});
   click('[data-test-id="grid-export-btn"]');
   andThen(() => {
     

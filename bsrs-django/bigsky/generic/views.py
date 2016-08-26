@@ -72,11 +72,13 @@ class ExportData(APIView):
     curl -v -H "Content-Type: application/json" -X POST --data '{"model_name": "person", "app_name": "person"}' -u admin:1234 http://localhost:8000/csv/export_data/ --header "Content-Type:application/json"
     """
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         model_name = kwargs.get('model_name', None)
         self._set_model(model_name)
 
-        params = {k:v for k, v in request.query_params.items()}
+        all_fields = [x.name for x in self.model._meta.get_fields()]
+        params = {k:v for k, v in request.query_params.items()
+                      if k in all_fields}
         fields = self._get_fields()
 
         response = HttpResponse(content_type='text/csv')
@@ -104,6 +106,7 @@ class ExportData(APIView):
             return self.model.EXPORT_FIELDS
         except AttributeError:
             return [x.name for x in self.model._meta.get_fields()]
+
 
     def _filter_with_fields(self, params, fields):
         return self.model.objects.filter(**params).values(*fields)

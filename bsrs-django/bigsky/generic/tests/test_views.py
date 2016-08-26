@@ -254,7 +254,7 @@ class ExportDataTests(APITestCase):
         content_type = ContentType.objects.get(model=model_name)
         model = content_type.model_class()
 
-        response = self.client.get("/api/export-data/{}/".format(model_name))
+        response = self.client.post("/api/export-data/{}/".format(model_name))
 
         self.assertEqual(response.status_code, 200)
         self.assertEquals(
@@ -267,7 +267,7 @@ class ExportDataTests(APITestCase):
         content_type = ContentType.objects.get(model="person")
         model = content_type.model_class()
 
-        response = self.client.get("/api/export-data/person/?username={}"
+        response = self.client.post("/api/export-data/person/?username={}"
                                    .format(self.person.username))
 
         self.assertEqual(response.status_code, 200)
@@ -285,7 +285,7 @@ class ExportDataTests(APITestCase):
 
     @patch("generic.views.ExportData._filter_with_fields")
     def test_filtered__arguments(self, mock_func):
-        response = self.client.get("/api/export-data/person/?username={}"
+        response = self.client.post("/api/export-data/person/?username={}"
                                    .format(self.person.username))
 
         # last arg here is "fields". This is limited due to EXPORT_FIELDS
@@ -298,14 +298,14 @@ class ExportDataTests(APITestCase):
         with self.assertRaises(AttributeError):
             SavedSearch.EXPORT_FIELDS
 
-        response = self.client.get("/api/export-data/{}/".format("savedsearch"))
+        response = self.client.post("/api/export-data/{}/".format("savedsearch"))
 
         mock_func.assert_called_with({}, ['id', 'created', 'modified', 'deleted', 'name', 'person', 'endpoint_name', 'endpoint_uri'])
 
     def test_invalid_model(self):
         model_name = "foo"
 
-        response = self.client.get("/api/export-data/{}/".format(model_name))
+        response = self.client.post("/api/export-data/{}/".format(model_name))
 
         self.assertEqual(response.status_code, 400)
         data = json.loads(response.content.decode('utf8'))
