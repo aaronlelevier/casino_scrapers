@@ -2,12 +2,14 @@
 All Model, Manager, and QuerySet definitions in this module 
 should be Abstract.
 """
+import copy
 import decimal
 import uuid
 
 from django.db import models
 from django.utils import timezone
 
+from utils import classproperty
 from utils.exceptions import QuerySetClassNotDefined
 
 
@@ -38,10 +40,36 @@ from. This will enforce not deleting, but just hiding records.
 '''
 
 class BaseQuerySet(models.query.QuerySet):
-    pass
+
+    def filter_export_data(self, query_params):
+        """
+        NOTE: search supporting 'in', and case insensitive ordering won't
+        currently work with this method. If these features are needed,
+        then this will need to be extended.
+        """
+        query_dict = copy.copy({k:v for k,v in query_params.items()})
+
+        search = query_dict.pop('search', None)
+        ordering = query_dict.pop('ordering', None)
+        params = {k:v for k,v in query_dict.items()
+                      if k in self.model.export_fields}
+
+        qs = self.filter(**params).values(*self.model.export_fields)
+        if search:
+            qs = qs.search_multi(search)
+        if ordering:
+            qs = qs.order_by(*ordering)
+
+        return qs
 
 
-class BaseManager(models.Manager):
+class BaseManagerMixin(object):
+
+    def filter_export_data(self, query_params):
+        return self.get_queryset().filter_export_data(query_params)
+
+
+class BaseManager(BaseManagerMixin, models.Manager):
     '''
     Auto exclude deleted records
 
@@ -93,6 +121,13 @@ timestamp of when the record was deleted.""")
 
     def to_dict(self):
         return {"id": str(self.pk)}
+
+    @classproperty
+    def export_fields(cls):
+        try:
+            return cls.EXPORT_FIELDS
+        except AttributeError:
+            return [x.name for x in cls._meta.get_fields()]
 
 
 class TesterQuerySet(BaseQuerySet):

@@ -7,7 +7,7 @@ from os.path import dirname, join
 
 from django.contrib.auth.models import ContentType
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.http.request import QueryDict
 
 from model_mommy import mommy
 from rest_framework.test import APITestCase
@@ -284,23 +284,24 @@ class ExportDataTests(APITestCase):
         )
 
     @patch("generic.views.ExportData._filter_with_fields")
-    def test_filtered__arguments(self, mock_func):
-        response = self.client.post("/api/export-data/person/?username={}"
-                                   .format(self.person.username))
+    def test_filtered__query_params(self, mock_func):
+        response = self.client.post("/api/export-data/person/?username={}&first_name__icontains={}"
+                                   .format(self.person.username, 'a'))
 
-        # last arg here is "fields". This is limited due to EXPORT_FIELDS
-        # being set on the Person Model.
-        mock_func.assert_called_with({'username': 'aaa'}, ['id', 'username'])
+        self.assertIsInstance(mock_func.call_args[0][0], QueryDict)
+        self.assertEqual(len(mock_func.call_args[0][0]), 2)
+        self.assertEqual(mock_func.call_args[0][0]['username'], self.person.username)
+        self.assertEqual(mock_func.call_args[0][0]['first_name__icontains'], 'a')
 
     @patch("generic.views.ExportData._filter_with_fields")
-    def test_fields__all(self, mock_func):
+    def test_fields__no_query_params(self, mock_func):
         # confirm that the fields to export isn't explicitly set on the model
         with self.assertRaises(AttributeError):
             SavedSearch.EXPORT_FIELDS
 
         response = self.client.post("/api/export-data/{}/".format("savedsearch"))
 
-        mock_func.assert_called_with({}, ['id', 'created', 'modified', 'deleted', 'name', 'person', 'endpoint_name', 'endpoint_uri'])
+        mock_func.assert_called_with({})
 
     def test_invalid_model(self):
         model_name = "foo"

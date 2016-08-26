@@ -76,19 +76,14 @@ class ExportData(APIView):
         model_name = kwargs.get('model_name', None)
         self._set_model(model_name)
 
-        all_fields = [x.name for x in self.model._meta.get_fields()]
-        params = {k:v for k, v in request.query_params.items()
-                      if k in all_fields}
-        fields = self._get_fields()
-
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="{name}.csv"'.format(
             name=self.model._meta.verbose_name_plural)
 
         writer = csv.writer(response)
-        writer.writerow(fields)
-        for d in self._filter_with_fields(params, fields):
-            writer.writerow([d[f] for f in fields])
+        writer.writerow(self.model.export_fields)
+        for d in self._filter_with_fields(request.query_params):
+            writer.writerow([d[f] for f in self.model.export_fields])
 
         return response
 
@@ -101,12 +96,5 @@ class ExportData(APIView):
         else:
             self.model = content_type.model_class()
 
-    def _get_fields(self):
-        try:
-            return self.model.EXPORT_FIELDS
-        except AttributeError:
-            return [x.name for x in self.model._meta.get_fields()]
-
-
-    def _filter_with_fields(self, params, fields):
-        return self.model.objects.filter(**params).values(*fields)
+    def _filter_with_fields(self, query_params):
+        return self.model.objects.filter_export_data(query_params)
