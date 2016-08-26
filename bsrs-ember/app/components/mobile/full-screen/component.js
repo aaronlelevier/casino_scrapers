@@ -25,6 +25,9 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
         });
       }
     },
+    delete() {
+      this.sendAction('delete', this.get('model'), this.get('repository'));
+    },
     /*
     * Called from clicking on footer item
     */

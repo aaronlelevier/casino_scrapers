@@ -78,4 +78,15 @@ test('visit mobile detail and update all fields', async assert => {
   assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
 });
 
+// NOTE: Use this when the 'mobile' not having 'tabs' is resolved. For now, can't show
+// modal b/c no modal in mobile, thus can't delete and transition back to list.
+test('visit detail and delete record', async assert => {
+  await page.visitDetail();
+  assert.equal(currentURL(), DETAIL_URL);
+  await generalMobilePage.mobileActionDropdownClick();
+  xhr(`${ASSIGNMENT_URL}${AD.idOne}/`, 'DELETE', null, {}, 204, {});
+  await generalPage.delete();
+  assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
+});
+
 /* jshint ignore:end */
