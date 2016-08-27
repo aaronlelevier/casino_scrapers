@@ -863,18 +863,17 @@ test('grid debounces correctly with structured concurrency', (assert) => {
   });
 });
 
-test('export csv button shows in grid header', (assert) => {
-  visit(TICKET_LIST_URL);
-  andThen(() => {
-    assert.equal(find('[data-test-id="grid-export-btn"]').length, 1);
-    assert.equal(find('[data-test-id="grid-export-btn"]').text().trim(), t('grid.export'));
-  });
-  xhr(`${EXPORT_DATA_URL}ticket/`, 'POST', null, {}, 200, {});
-  click('[data-test-id="grid-export-btn"]');
-  andThen(() => {
-    
-  });
-});
+// test('export csv button shows in grid header', (assert) => {
+//   visit(TICKET_LIST_URL);
+//   andThen(() => {
+//     assert.equal(find('[data-test-id="grid-export-btn"]').length, 1);
+//     assert.equal(find('[data-test-id="grid-export-btn"]').text().trim(), t('grid.export'));
+//   });
+//   xhr(`${EXPORT_DATA_URL}ticket/`, 'POST', null, {}, 200, {});
+//   click('[data-test-id="grid-export-btn"]');
+//   andThen(() => {
+//   });
+// });
 
 // test('a 400 status code will show up in the error component with duplicate name message', (assert) => {
 //   random.uuid = function() { return UUID.value; };
