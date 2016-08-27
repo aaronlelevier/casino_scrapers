@@ -1,6 +1,5 @@
 import Ember from 'ember';
-const { run } = Ember;
-const { computed, defineProperty, observer } = Ember;
+const { computed, defineProperty } = Ember;
 import { task, timeout } from 'ember-concurrency';
 
 /*
