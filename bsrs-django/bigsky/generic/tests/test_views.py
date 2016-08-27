@@ -8,12 +8,14 @@ from os.path import dirname, join
 from django.contrib.auth.models import ContentType
 from django.conf import settings
 from django.http.request import QueryDict
+from django.utils.timezone import localtime, now
 
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
 from generic.models import SavedSearch, Attachment
 from generic.serializers import SavedSearchSerializer
+from generic.views import ExportData
 from person.models import Person
 from person.tests.factory import PASSWORD, create_single_person, create_person
 from utils.tests.helpers import remove_attachment_test_files
@@ -245,61 +247,84 @@ class ExportDataTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_get(self):
+    def test_post(self):
+        response = self.client.post("/api/export-data/person/")
+        self.assertEqual(response.status_code, 405)
+
+    def test_filename(self):
+        iso_format_date = localtime(now()).date().isoformat().replace('-', '')
+        model_name = "person"
+        raw_ret = "{}_{}.csv".format(model_name, iso_format_date)
+
+        ret = ExportData()._filename_with_datestamp(model_name)
+
+        self.assertEqual(ret, raw_ret)
+
+    @patch("generic.views.ExportData._write_file")
+    def test_export(self, mock_func):
         model_name = "person"
         content_type = ContentType.objects.get(model=model_name)
         model = content_type.model_class()
+        # file info
+        export_data = ExportData()
+        raw_content = "{}{}{}".format(settings.MEDIA_URL,
+                                      export_data.downloads_sub_path,
+                                      export_data._filename_with_datestamp(model_name))
 
         response = self.client.get("/api/export-data/{}/".format(model_name))
 
         self.assertEqual(response.status_code, 200)
         self.assertEquals(
-            response.get('Content-Disposition'),
-            'attachment; filename="{name}.csv"'.format(
-                name=model._meta.verbose_name_plural)
+            response.content.decode('utf-8'),
+            raw_content
         )
+        # mocked file create
+        self.assertEqual(len(mock_func.call_args[0]), 2)
+        # filepath
+        self.assertEqual(
+            mock_func.call_args[0][0],
+            os.path.join(settings.MEDIA_ROOT,
+                         "{}{}".format(export_data.downloads_sub_path,
+                                       export_data._filename_with_datestamp(model_name)))
+        )
+        # query_params
+        self.assertEqual(mock_func.call_args[0][1], {})
 
-    @patch("generic.views.ExportData._process_export")
-    def test_process_export_is_called(self, mock_func):
-        self.assertTrue(mock_func.was_called)
-
-    def test_model_name(self):
+    @patch("generic.views.ExportData._write_file")
+    def test_export__filtered(self, mock_func):
         model_name = "person"
         content_type = ContentType.objects.get(model=model_name)
         model = content_type.model_class()
+        export_data = ExportData()
+        raw_content = "{}{}{}".format(settings.MEDIA_URL,
+                                      export_data.downloads_sub_path,
+                                      export_data._filename_with_datestamp(model_name))
 
-        response = self.client.post("/api/export-data/{}/".format(model_name))
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEquals(
-            response.get('Content-Disposition'),
-            'attachment; filename="{name}.csv"'.format(
-                name=model._meta.verbose_name_plural)
-        )
-
-    def test_model_name__filtered(self):
-        content_type = ContentType.objects.get(model="person")
-        model = content_type.model_class()
-
-        response = self.client.post("/api/export-data/person/?username={}"
-                                   .format(self.person.username))
+        response = self.client.get("/api/export-data/{}/?username={}"
+                                   .format(model_name, self.person.username))
 
         self.assertEqual(response.status_code, 200)
         self.assertEquals(
-            response.get('Content-Disposition'),
-            'attachment; filename="{name}.csv"'.format(
-                name=model._meta.verbose_name_plural)
+            response.content.decode('utf8'),
+            raw_content
         )
-        # -2 from data length b/c 1 item is csv headers, and ends in \n
-        # so the last \n turns into a list item
-        self.assertTrue(
-            len(response.content.decode('utf8').split("\n"))-2 < \
-            Person.objects.count()
+        # mocked file create
+        self.assertEqual(len(mock_func.call_args[0]), 2)
+        # filepath
+        self.assertEqual(
+            mock_func.call_args[0][0],
+            os.path.join(settings.MEDIA_ROOT,
+                         "{}{}".format(export_data.downloads_sub_path,
+                                       export_data._filename_with_datestamp(model_name)))
         )
+        # query_params
+        self.assertIsInstance(mock_func.call_args[0][1], QueryDict)
+        self.assertEqual(len(mock_func.call_args[0][1]), 1)
+        self.assertEqual(mock_func.call_args[0][1]['username'], self.person.username)
 
     @patch("generic.views.ExportData._filter_with_fields")
     def test_filtered__query_params(self, mock_func):
-        response = self.client.post("/api/export-data/person/?username={}&first_name__icontains={}"
+        response = self.client.get("/api/export-data/person/?username={}&first_name__icontains={}"
                                    .format(self.person.username, 'a'))
 
         self.assertIsInstance(mock_func.call_args[0][0], QueryDict)
@@ -313,14 +338,14 @@ class ExportDataTests(APITestCase):
         with self.assertRaises(AttributeError):
             SavedSearch.EXPORT_FIELDS
 
-        response = self.client.post("/api/export-data/{}/".format("savedsearch"))
+        response = self.client.get("/api/export-data/{}/".format("savedsearch"))
 
         mock_func.assert_called_with({})
 
     def test_invalid_model(self):
         model_name = "foo"
 
-        response = self.client.post("/api/export-data/{}/".format(model_name))
+        response = self.client.get("/api/export-data/{}/".format(model_name))
 
         self.assertEqual(response.status_code, 400)
         data = json.loads(response.content.decode('utf8'))

@@ -1,7 +1,10 @@
 import csv
+import os
 
+from django.conf import settings
 from django.contrib.auth.models import ContentType
 from django.http import HttpResponse
+from django.utils.timezone import localtime, now
 
 from rest_framework import status
 from rest_framework.decorators import list_route
@@ -61,36 +64,22 @@ class AttachmentViewSet(BaseModelViewSet):
 
 class ExportData(APIView):
     """
-    Parse the requested CSV report requested from the Person.
-
-    Requires the POST params:
-
-    :app_name: string
-    :model_name: string
-
-    # works if endpoint isn't autorized to output data
-    curl -v -H "Content-Type: application/json" -X POST --data '{"model_name": "person", "app_name": "person"}' -u admin:1234 http://localhost:8000/csv/export_data/ --header "Content-Type:application/json"
+    Parse the requested data from the query params, then return the
+    URL path to the file.
     """
+    downloads_sub_path = 'downloads/'
+
     def get(self, request, *args, **kwargs):
-        return self._process_export(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self._process_export(request, *args, **kwargs)
-
-    def _process_export(self, request, *args, **kwargs):
         model_name = kwargs.get('model_name', None)
         self._set_model(model_name)
 
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="{name}.csv"'.format(
-            name=self.model._meta.verbose_name_plural)
+        filename = self._filename_with_datestamp(model_name)
+        filepath =  os.path.join(settings.MEDIA_ROOT,
+                                "{}{}".format(self.downloads_sub_path, filename))
+        self._write_file(filepath, request.query_params)
 
-        writer = csv.writer(response)
-        writer.writerow(self.model.export_fields)
-        for d in self._filter_with_fields(request.query_params):
-            writer.writerow([d[f] for f in self.model.export_fields])
-
-        return response
+        return HttpResponse("{}{}{}".format(settings.MEDIA_URL,
+                                            self.downloads_sub_path, filename))
 
     def _set_model(self, model_name):
         try:
@@ -100,6 +89,18 @@ class ExportData(APIView):
                                   .format(model_name))
         else:
             self.model = content_type.model_class()
+
+    @staticmethod
+    def _filename_with_datestamp(model_name):
+        iso_format_date = localtime(now()).date().isoformat().replace('-', '')
+        return "{}_{}.csv".format(model_name, iso_format_date)
+
+    def _write_file(self, filepath, query_params):
+        with open(filepath, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',')
+            writer.writerow(self.model.export_fields)
+            for d in self._filter_with_fields(query_params):
+                writer.writerow([d[f] for f in self.model.export_fields])
 
     def _filter_with_fields(self, query_params):
         return self.model.objects.filter_export_data(query_params)

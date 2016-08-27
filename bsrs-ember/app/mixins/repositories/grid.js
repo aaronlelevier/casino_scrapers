@@ -60,41 +60,26 @@ var GridRepositoryMixin = Ember.Mixin.create({
     return endpoint;
   },
   exportGrid(find, search, sort){
-    let id_in, page_size, special_url, page = undefined;
+    let id_in, page_size, special_url, page;
     const type = this.get('type');
     const url = `${EXPORT_DATA_URL}${type}/`;
     const endpoint = this.modifyEndpoint(url, page, search, find, id_in, page_size, sort, special_url);
-    return PromiseMixin.xhr(endpoint, 'POST', {});
-    // Ember.$.ajax({
-    //     url: endpoint,
-    //     type: 'POST',
-    //     data: {},
-    //     dataType: 'text',
-    //     success: function(result) {
-    //         var uri = 'data:application/csv;charset=UTF-8,' + encodeURIComponent(result);
-    //         window.open(uri, 'foo.csv');
-    //     }
-    // });
-
-    // let options = {
-    //     url: endpoint,
-    //     type: 'POST',
-    //     data: {},
-    //     dataType: 'text'
-    // };
-    // return new Ember.RSVP.Promise((resolve, reject) => {
-    //   options.success = function(result) {
-    //       debugger
-    //       var uri = 'data:application/csv;charset=UTF-8,' + encodeURIComponent(result);
-    //       window.open(uri, 'foo.csv');
-    //   };
-    //   options.error = (xhr, errorThrown) => {
-    //     console.log('error');
-    //     debugger
-    //     // return Ember.run(null, reject, this.didError(xhr, xhr.status, xhr.responseJSON, 1));
-    //   };
-    //   Ember.$.ajax(options);
-    // });
+    let options = {
+      url: endpoint,
+      type: 'GET',
+    };
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      options.success = function(responseURL) {
+        if (responseURL) {
+          location.href = responseURL;
+        }
+        return Ember.run(null, resolve, {});
+      };
+      options.error = (xhr, errorThrown) => {
+        return Ember.run(null, reject, this.didError(xhr, xhr.status, xhr.responseJSON));
+      };
+      Ember.$.ajax(options);
+    });
   },
   /* Non Optimistic Rendering: Mobile */
   findWithQueryMobile(page, search, find, id_in, special_url=undefined) {
