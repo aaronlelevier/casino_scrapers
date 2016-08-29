@@ -71,27 +71,29 @@ class ExportData(APIView):
     # works if endpoint isn't autorized to output data
     curl -v -H "Content-Type: application/json" -X POST --data '{"model_name": "person", "app_name": "person"}' -u admin:1234 http://localhost:8000/csv/export_data/ --header "Content-Type:application/json"
     """
+    def get(self, request, *args, **kwargs):
+        return self._process_export(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        data = request.data
-        params = data.get('params', {})
-        self._set_model(data)
-        fields = self._get_fields()
+        return self._process_export(request, *args, **kwargs)
+
+    def _process_export(self, request, *args, **kwargs):
+        model_name = kwargs.get('model_name', None)
+        self._set_model(model_name)
 
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="{name}.csv"'.format(
             name=self.model._meta.verbose_name_plural)
 
         writer = csv.writer(response)
-        writer.writerow(fields)
-        for d in self._filter_with_fields(params, fields):
-            writer.writerow([d[f] for f in fields])
+        writer.writerow(self.model.export_fields)
+        for d in self._filter_with_fields(request.query_params):
+            writer.writerow([d[f] for f in self.model.export_fields])
 
         return response
 
-    def _set_model(self, data):
+    def _set_model(self, model_name):
         try:
-            model_name = data.get('model')
             content_type = ContentType.objects.get(model=model_name)
         except ContentType.DoesNotExist:
             raise ValidationError("Model with model name: {} DoesNotExist"
@@ -99,11 +101,5 @@ class ExportData(APIView):
         else:
             self.model = content_type.model_class()
 
-    def _get_fields(self):
-        try:
-            return self.model.EXPORT_FIELDS
-        except AttributeError:
-            return [x.name for x in self.model._meta.get_fields()]
-
-    def _filter_with_fields(self, params, fields):
-        return self.model.objects.filter(**params).values(*fields)
+    def _filter_with_fields(self, query_params):
+        return self.model.objects.filter_export_data(query_params)

@@ -12,6 +12,7 @@ var GridViewRoute = Ember.Route.extend({
   personCurrent: Ember.inject.service(),
   filtersetRepository: inject('filterset'),
   init() {
+    /* MOBILE PROPERTIES */
     this._super(...arguments);
     /* @property gridFilterParams
     * object that holds key of type string ('location.name') and value of type string ('wat')
@@ -24,6 +25,10 @@ var GridViewRoute = Ember.Route.extend({
     * for power selects, value is [obj, obj] b/c need to preserve object if return to filter
     */
     this.gridIdInParams = {};
+    /*
+     * @property {obj} filterModel
+     * object that holds 'find' query state
+    */
     this.filterModel = Ember.Object.create();
   },
   queryParams: {
@@ -66,7 +71,7 @@ var GridViewRoute = Ember.Route.extend({
     } else {
       return new Ember.RSVP.Promise((resolve, reject) => {
         return repository.findWithQuery(query.page, query.search, query.find, query.id_in, query.page_size, query.sort, special_url).then((model) => {
-          resolve({ count, model, requested, filtersets, routeName, search });
+          resolve({ count, model, requested, filtersets, routeName, search, repository });
         });
       });
     }
@@ -76,6 +81,11 @@ var GridViewRoute = Ember.Route.extend({
     controller.set('filterModel', this.filterModel);
     controller.set('gridFilterParams', this.gridFilterParams);
     controller.set('gridIdInParams', this.gridIdInParams);
+  },
+  actions: {
+    exportGrid(find, search, sort) {
+      this.get('repository').exportGrid(find, search, sort);
+    }
   }
 });
 

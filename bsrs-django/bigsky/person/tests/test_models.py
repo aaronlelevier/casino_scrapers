@@ -1,4 +1,5 @@
 from datetime import date
+from mock import patch
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, Group
@@ -473,8 +474,8 @@ class PersonPasswordHistoryTests(TestCase):
 class PersonManagerTests(TestCase):
 
     def setUp(self):
-        create_person()
-        create_person()
+        self.person = create_person(username='b')
+        self.person_two = create_person(username='a')
 
     def test_search_multi_username(self):
         search = Person.objects.first().username
@@ -522,3 +523,41 @@ class PersonManagerTests(TestCase):
 
         self.assertEqual(ret, raw_qs_count)
         self.assertEqual(ret, 1)
+
+    def test_filter_export_data(self):
+        query_params = {'username': self.person.username}
+        fields = Person.EXPORT_FIELDS # ['id', 'username']
+
+        ret = Person.objects.filter_export_data(query_params)
+
+        self.assertIsInstance(ret, PersonQuerySet)
+        self.assertEqual(ret.count(), 1)
+        self.assertEqual(len(ret[0]), len(fields))
+        self.assertEqual(ret[0]['id'], self.person.id)
+        self.assertEqual(ret[0]['username'], self.person.username)
+
+    def test_filter_export_data__none_field_arg(self):
+        query_params = {'_': 'foo'}
+
+        ret = Person.objects.filter_export_data(query_params)
+
+        self.assertIsInstance(ret, PersonQuerySet)
+        self.assertEqual(ret.count(), Person.objects.count())
+
+    @patch("person.models.PersonQuerySet.search_multi")
+    def test_filter_export_data__search(self, mock_func):
+        query_params = {'search': 'a'}
+
+        Person.objects.filter_export_data(query_params)
+
+        self.assertEqual(mock_func.call_args[0][0], 'a')
+
+    def test_filter_export_data__ordering(self):
+        self.assertTrue(self.person_two.username < self.person.username)
+        query_params = {'ordering': ['username']}
+
+        ret = Person.objects.filter_export_data(query_params)
+
+        self.assertEqual(ret.count(), 2)
+        self.assertEqual(ret[0]['username'], self.person_two.username)
+        self.assertEqual(ret[1]['username'], self.person.username)

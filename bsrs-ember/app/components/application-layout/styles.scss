@@ -78,30 +78,35 @@ label[for="nav-trigger"] {
   bottom: 0;
   height: auto;
   left: $mobileDrawerWidth;
+  // -webkit-transform: translateX($mobileDrawerWidth);
+			// transform: translateX($mobileDrawerWidth);
   padding-left: 15px;
 }
 .nav-trigger:checked ~ .mobile-wrap {
-  left: $mobileDrawerWidth;
+  -webkit-transform: translateX($mobileDrawerWidth);
+			transform: translateX($mobileDrawerWidth);
+  // this is expensive to keep around, so one possiblility is to remove it
+  will-change: transform;
 }
 .nav-trigger:checked ~ vbox.mobile-tray {
-  left: 0;
+  -webkit-transform: none;
+			transform: none;
+  will-change: transform;
 }
 
 .nav-trigger + label,
 .mobile-wrap ,
 vbox.mobile-tray {
-  transition: left 0.2s;
+  transition: all 150ms ease-in;
 }
 
 vbox.mobile-tray { //slideout navigation tray
   background: $dark;
   width: $mobileDrawerWidth;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: -$mobileDrawerWidth;
-  // overflow: hidden;
+  position: relative;
+  height: 100vh;
+  -webkit-transform: translateX(-100%);
+			transform: translateX(-100%);
   div.mobile-tray__inner {
     -webkit-overflow-scrolling: touch; //DO NOT REMOVE
     overflow: auto;

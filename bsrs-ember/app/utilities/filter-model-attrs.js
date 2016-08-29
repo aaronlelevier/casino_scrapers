@@ -1,5 +1,8 @@
 import Ember from 'ember';
 
+/*
+ * rehydrate filterModel object in route which is used in the input-dynamic-filter
+*/
 var set_filter_model_attrs = function(filterModel, query) {
     let columns = query ? query.split(',') : [];
     columns.forEach((pair) => {

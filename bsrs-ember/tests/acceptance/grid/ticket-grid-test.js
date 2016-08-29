@@ -9,7 +9,7 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS, { TICKET_LIST_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { TICKET_LIST_URL, EXPORT_DATA_URL } from 'bsrs-ember/utilities/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
@@ -64,7 +64,7 @@ test('initial load should only show first ${PAGE_SIZE} records ordered by id wit
 
 test('clicking page 2 will load in another set of data as well as clicking page 1 after that reloads the original set of data (both require an additional xhr)', function(assert) {
   var page_two = PREFIX + BASE_URL + '/?page=2';
-  xhr(page_two ,"GET",null,{},200,TF.list_two());
+  xhr(page_two ,'GET',null,{},200,TF.list_two());
   visit(TICKET_LIST_URL);
   click('.t-page:eq(1) a');
   andThen(() => {
@@ -102,7 +102,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
 
 test('clicking first,last,next and previous will request page 1 and 2 correctly', function(assert) {
   var page_two = PREFIX + BASE_URL + '/?page=2';
-  xhr(page_two ,"GET",null,{},200,TF.list_two());
+  xhr(page_two ,'GET',null,{},200,TF.list_two());
   visit(TICKET_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
@@ -152,11 +152,11 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
 
 test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', function(assert) {
   var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=request,location__name';
-  xhr(sort_two ,"GET",null,{},200,TF.sorted('request,location'));
+  xhr(sort_two ,'GET',null,{},200,TF.sorted('request,location'));
   var page_two = PREFIX + BASE_URL + '/?page=2&ordering=location__name';
-  xhr(page_two ,"GET",null,{},200,TF.sorted_page_two('location'));
+  xhr(page_two ,'GET',null,{},200,TF.sorted_page_two('location'));
   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=location__name';
-  xhr(sort_one ,"GET",null,{},200,TF.sorted('location'));
+  xhr(sort_one ,'GET',null,{},200,TF.sorted('location'));
   visit(TICKET_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
@@ -185,15 +185,15 @@ test('clicking header will sort by given property and reset page to 1 (also requ
 
 test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
   var search_two = PREFIX + BASE_URL + '/?page=1&ordering=request&search=14';
-  xhr(search_two ,"GET",null,{},200,TF.searched('14', 'request'));
+  xhr(search_two ,'GET',null,{},200,TF.searched('14', 'request'));
   var page_two = PREFIX + BASE_URL + '/?page=2&ordering=request';
-  xhr(page_two ,"GET",null,{},200,TF.searched('', 'request', 2));
+  xhr(page_two ,'GET',null,{},200,TF.searched('', 'request', 2));
   var page_one = PREFIX + BASE_URL + '/?page=1&ordering=request';
-  xhr(page_one ,"GET",null,{},200,TF.searched('', 'request'));
+  xhr(page_one ,'GET',null,{},200,TF.searched('', 'request'));
   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=request&search=5';
-  xhr(sort_one ,"GET",null,{},200,TF.searched('5', 'request'));
+  xhr(sort_one ,'GET',null,{},200,TF.searched('5', 'request'));
   var search_one = PREFIX + BASE_URL + '/?page=1&search=5';
-  xhr(search_one ,"GET",null,{},200,TF.searched('5', 'name'));
+  xhr(search_one ,'GET',null,{},200,TF.searched('5', 'name'));
   visit(TICKET_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
@@ -246,9 +246,9 @@ test('typing a search will reset page to 1 and require an additional xhr and res
 
 test('multiple sort options appear in the query string as expected', function(assert) {
   var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=request,location__name';
-  xhr(sort_two ,"GET",null,{},200,TF.sorted('request,location'));
+  xhr(sort_two ,'GET',null,{},200,TF.sorted('request,location'));
   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=location__name';
-  xhr(sort_one ,"GET",null,{},200,TF.sorted('location'));
+  xhr(sort_one ,'GET',null,{},200,TF.sorted('location'));
   visit(TICKET_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
@@ -271,13 +271,13 @@ test('multiple sort options appear in the query string as expected', function(as
 
 test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', function(assert) {
   var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=request';
-  xhr(sort_four ,"GET",null,{},200,TF.sorted('location,request'));
+  xhr(sort_four ,'GET',null,{},200,TF.sorted('location,request'));
   var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-location__name,request';
-  xhr(sort_three ,"GET",null,{},200,TF.sorted('-location,request'));
+  xhr(sort_three ,'GET',null,{},200,TF.sorted('-location,request'));
   var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=request,location__name';
-  xhr(sort_two ,"GET",null,{},200,TF.sorted('request,location'));
+  xhr(sort_two ,'GET',null,{},200,TF.sorted('request,location'));
   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=location__name';
-  xhr(sort_one ,"GET",null,{},200,TF.sorted('location'));
+  xhr(sort_one ,'GET',null,{},200,TF.sorted('location'));
   visit(TICKET_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
@@ -329,9 +329,9 @@ test('clicking the same sort option over and over will flip the direction and re
 
 test('full text search will filter down the result set and query django accordingly and reset clears all full text searches', function(assert) {
   let find_three = PREFIX + BASE_URL + '/?page=1&priority__name__icontains=h';
-  xhr(find_three, "GET",null,{},200,TF.sorted('id'));
+  xhr(find_three, 'GET',null,{},200,TF.sorted('id'));
   let find_one = PREFIX + BASE_URL + '/?page=1&request__icontains=ape';
-  xhr(find_one ,"GET",null,{},200,TF.fulltext('request:ape', 1));
+  xhr(find_one ,'GET',null,{},200,TF.fulltext('request:ape', 1));
   visit(TICKET_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
@@ -366,7 +366,7 @@ test('full text search will filter down the result set and query django accordin
 
 test('loading screen shown before any xhr and hidden after', function(assert) {
   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=location__name';
-  xhr(sort_one ,"GET",null,{},200,TF.sorted('priority'));
+  xhr(sort_one ,'GET',null,{},200,TF.sorted('priority'));
   visitSync(TICKET_LIST_URL);
   Ember.run.later(function() {
     assert.equal(find('.t-grid-data').length, 0);
@@ -400,11 +400,11 @@ test('when a full text filter is selected the input inside the modal is focused'
 
 test('full text searched columns will have a special on css class when active', function(assert) {
   let find_three = PREFIX + BASE_URL + '/?page=1&priority__name__icontains=7';
-  xhr(find_three ,"GET",null,{},200,TF.sorted('priority:7'));
+  xhr(find_three ,'GET',null,{},200,TF.sorted('priority:7'));
   let find_two = PREFIX + BASE_URL + '/?page=1&request__icontains=num&priority__name__icontains=7';
-  xhr(find_two ,"GET",null,{},200,TF.sorted('request:num,priority:7'));
+  xhr(find_two ,'GET',null,{},200,TF.sorted('request:num,priority:7'));
   let find_one = PREFIX + BASE_URL + '/?page=1&request__icontains=num';
-  xhr(find_one ,"GET",null,{},200,TF.fulltext('request:num', 1));
+  xhr(find_one ,'GET',null,{},200,TF.fulltext('request:num', 1));
   visit(TICKET_LIST_URL);
   andThen(() => {
     assert.ok(!find(FILTER_PRIORITY).hasClass('on'));
@@ -862,6 +862,18 @@ test('grid debounces correctly with structured concurrency', (assert) => {
     }, 100);
   });
 });
+
+// test('export csv button shows in grid header', (assert) => {
+//   visit(TICKET_LIST_URL);
+//   andThen(() => {
+//     assert.equal(find('[data-test-id="grid-export-btn"]').length, 1);
+//     assert.equal(find('[data-test-id="grid-export-btn"]').text().trim(), t('grid.export'));
+//   });
+//   xhr(`${EXPORT_DATA_URL}ticket/`, 'POST', null, {}, 200, {});
+//   click('[data-test-id="grid-export-btn"]');
+//   andThen(() => {
+//   });
+// });
 
 // test('a 400 status code will show up in the error component with duplicate name message', (assert) => {
 //   random.uuid = function() { return UUID.value; };

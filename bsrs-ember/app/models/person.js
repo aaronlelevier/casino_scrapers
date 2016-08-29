@@ -105,7 +105,6 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
   // address_fks: [],
   email_fks: [],
   person_locations_fks: [],
-  isModelDirty: false,
   changingPassword: false,
   //models are leaf nodes and should be given a set of data and encapsulate and work on that data
   //tightly coupled.  Ideally, route would get services or hand off to another service to collect them all

@@ -7,6 +7,7 @@ from model_mommy import mommy
 
 from contact.models import Country
 from location.models import LocationType
+from person.models import Person
 from person.tests.factory import create_single_person, create_role
 from utils import create
 from utils.exceptions import QuerySetClassNotDefined
@@ -53,6 +54,21 @@ class BaseModelTests(TestCase):
         self.assertEqual(
             self.t_ok.to_dict(),
             {'id': str(self.t_ok.id)}
+        )
+
+    def test_export_fields__explicit(self):
+        self.assertEqual(Person.EXPORT_FIELDS, ['id', 'username'])
+
+        self.assertEqual(Person.export_fields, Person.EXPORT_FIELDS)
+
+    def test_export_fields__all_fields(self):
+        # if EXPORT_FIELDS isn't set on the Model, then return all fields
+        with self.assertRaises(AttributeError):
+            Tester.EXPORT_FIELDS
+
+        self.assertEqual(
+            Tester.export_fields,
+            [x.name for x in Tester._meta.get_fields()]
         )
 
 

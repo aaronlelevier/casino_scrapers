@@ -67,7 +67,6 @@ test('can update fields and save', async assert => {
   ajax(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
   selectSearch(ASSIGNEE, 'b');
   selectChoose(ASSIGNEE, PD.fullnameBoy);
-  await generalMobilePage.mobileActionDropdownClick();
   let response_put = TF.detail(TD.idOne);
   response_put.assignee = {id: PD.idBoy, first_name: PD.nameBoy};
   let payload = TF.put({id: TD.idOne, assignee: PD.idBoy});

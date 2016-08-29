@@ -15,6 +15,7 @@ export const DTD_URL = `${PREFIX}/dtds/`;
 export const DTD_ERROR_URL = `${PREFIX}/dtds/dtd-error/`;
 export const DT_URL = `${PREFIX}/dt/`;
 export const ERROR_URL = '/error/';
+export const EXPORT_DATA_URL = `${PREFIX}/export-data/`;
 export const LOCATIONS_URL = `${PREFIX}/admin/locations/`;
 export const LOCATION_LEVELS_URL = `${PREFIX}/admin/location-levels/`;
 export const PEOPLE_URL = `${PREFIX}/admin/people/`;

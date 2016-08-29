@@ -3,7 +3,13 @@ import config from 'bsrs-ember/config/environment';
 import KeyCodes  from 'bsrs-ember/utilities/key-codes';
 import InputDynamic from 'bsrs-ember/components/input-dynamic/component';
 
-export default InputDynamic.extend({
+/* @class InputDynamicFilter
+ * @param {obj} obj=filterModel 
+ * @param {string} placeholder 
+ * @param {...} prop=filterField
+ * getter/setter on InputDynamic Component
+*/
+var InputDynamicFilter = InputDynamic.extend({
   eventbus: Ember.inject.service(),
   observeValid: Ember.observer('value', function() {
     Ember.run.debounce(this, this.valueUpdated, config.DEBOUNCE_TIMEOUT_INTERVAL, false);
@@ -21,3 +27,5 @@ export default InputDynamic.extend({
     }
   }
 });
+
+export default InputDynamicFilter;

@@ -288,12 +288,16 @@ class LocationManagerTests(TestCase):
         )
 
     def test_search_multi_name(self):
-        search = Location.objects.first().name
+        keyword = Location.objects.first().name
         raw_qs_count = Location.objects.filter(
-                Q(name__icontains=search)
-            ).count()
+            Q(name__icontains=keyword) | \
+            Q(number__icontains=keyword) | \
+            Q(addresses__city__icontains=keyword) | \
+            Q(addresses__address__icontains=keyword) | \
+            Q(addresses__postal_code__icontains=keyword)
+        ).count()
 
-        ret = Location.objects.search_multi(keyword=search).count()
+        ret = Location.objects.search_multi(keyword).count()
 
         self.assertEqual(ret, raw_qs_count)
         self.assertTrue(ret > 0)

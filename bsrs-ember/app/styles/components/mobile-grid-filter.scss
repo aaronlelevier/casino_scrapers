@@ -3,15 +3,16 @@ $headerChildMargin: ($mobileHeaderHeight - $headerChildHeight) / 2;
 
 .filters { // fixed positioning filters for the grid that comes up from the bottom
   @include fullScreen;
-  hbox.filters__head {
-    align-items: center;
-    height: $mobileHeaderHeight;
-  }
-  button.filters__head__btn {
+}
+
+hbox.filters__head, hbox.detail__head {
+  align-items: center;
+  height: $mobileHeaderHeight;
+  button.filters__head__btn, .detail__head__btn {
     height: $headerChildHeight;
     margin: $headerChildMargin;
   }
-  button.filters__head__btn--action {
+  button.filters__head__btn--action, button.detail__head__btn--action {
     background: $activeColor;
   }
   h1.filters__head__title {

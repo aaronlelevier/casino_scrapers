@@ -19,6 +19,7 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
     },
     /*
     * MOBILE - Need to see how Ember modularization RFC pans out.  Same component functions duplicated right now
+    * EVERYTHING BELOW
     */
     /* @method keyup
     * asks repository for raw results
@@ -30,6 +31,15 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
       });
       // this.setProperties({ page:1, search: searchValue });
     },
+    /*
+    * @method export
+    * takes no params and sends command to repository
+    */
+
+    exportGrid(){
+      this.attrs.exportGrid();
+    },
+
     // searchGrid() {
       // this.toggleProperty('showSaveFilterInput');
     // },

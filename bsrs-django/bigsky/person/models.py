@@ -24,7 +24,8 @@ from person import config, helpers
 from tenant.models import Tenant
 from translation.models import Locale
 from utils.fields import InheritedValueField
-from utils.models import BaseModel, BaseManager, BaseQuerySet, BaseNameModel, DefaultNameManager
+from utils.models import (BaseModel, BaseManager, BaseManagerMixin, BaseQuerySet,
+    BaseNameModel, DefaultNameManager)
 from utils.validators import (contains_digit, contains_upper_char, contains_lower_char,
     contains_special_char, contains_no_whitespaces)
 from work_order.models import WorkOrderStatus
@@ -261,7 +262,7 @@ class PersonStatus(BaseNameModel):
         verbose_name_plural = 'Person statuses'
 
 
-class PersonQuerySet(models.query.QuerySet):
+class PersonQuerySet(BaseQuerySet):
 
     def search_multi(self, keyword):
         return self.filter(
@@ -279,8 +280,7 @@ class PersonQuerySet(models.query.QuerySet):
         )
 
 
-class PersonManager(UserManager):
-
+class PersonManager(BaseManagerMixin, UserManager):
     '''
     Auto exclude deleted records
     '''
