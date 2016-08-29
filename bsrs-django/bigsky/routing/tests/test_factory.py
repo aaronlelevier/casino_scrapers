@@ -200,10 +200,8 @@ class AssignmentTests(TestCase):
 
     def test_create_assignment__arbitrary_assignee(self):
         assignee = create_single_person()
-        a = factory.create_assignment()
-        b = factory.create_assignment(assignee=assignee)
-        self.assertNotEqual(a.assignee, b.assignee)
-        self.assertEqual(b.assignee, assignee)
+        a = factory.create_assignment(assignee=assignee)
+        self.assertEqual(a.assignee, assignee)
 
     def test_create_assignments(self):
         self.assertEqual(Assignment.objects.count(), 0)
