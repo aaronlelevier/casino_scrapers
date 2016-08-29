@@ -54,7 +54,6 @@ test('can click through component sections and save to redirect to index', async
   assert.ok(Ember.$('.t-mobile-footer-item:eq(0)').hasClass('active'));
   let payload = AF.put({id: AD.idOne});
   xhr(ASSIGNMENT_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
-  await generalMobilePage.mobileActionDropdownClick();
   await generalPage.save();
   assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
 });
@@ -73,20 +72,18 @@ test('visit mobile detail and update all fields', async assert => {
   await selectChoose('.t-assignment-assignee-select', keyword);
   assert.equal(assignmentPage.assigneeInput, PD.fullnameBoy);
   xhr(ASSIGNMENT_PUT_URL, 'PUT', AF.put({'description': AD.descriptionTwo, 'assignee': AD.assigneeSelectOne}), {}, 200, AF.list());
-  await generalMobilePage.mobileActionDropdownClick();
   await generalPage.save()
   assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
 });
 
-// NOTE: Use this when the 'mobile' not having 'tabs' is resolved. For now, can't show
-// modal b/c no modal in mobile, thus can't delete and transition back to list.
-test('visit detail and delete record', async assert => {
-  await page.visitDetail();
-  assert.equal(currentURL(), DETAIL_URL);
-  await generalMobilePage.mobileActionDropdownClick();
-  xhr(`${ASSIGNMENT_URL}${AD.idOne}/`, 'DELETE', null, {}, 204, {});
-  await generalPage.delete();
-  assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
-});
+
+// NOTE: Delete button not available
+// test('visit detail and delete record', async assert => {
+//   await page.visitDetail();
+//   assert.equal(currentURL(), DETAIL_URL);
+//   xhr(`${ASSIGNMENT_URL}${AD.idOne}/`, 'DELETE', null, {}, 204, {});
+//   await generalPage.delete();
+//   assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
+// });
 
 /* jshint ignore:end */
