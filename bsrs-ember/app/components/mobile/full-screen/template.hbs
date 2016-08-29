@@ -3,15 +3,7 @@
   <hbox class="detail__head">
     <button class="detail__head__btn--back mobile-btn t-detail-back" {{action "cancel"}}>{{fa-icon "angle-left"}}</button>
     <h1 class="detail__head__title t-detail-title">{{title}}</h1>
-    <div class="dropdown">
-      <button class="dropdown-toggle detail__head__btn detail__head__btn mobile-btn t-mobile-action-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu dropdown-menu-right bs-dropdown-menu">
-        <li>{{save-button save="save"}}</li>
-        <li>{{delete-button delete="delete"}}</li>
-      </ul>
-    </div>
+    <button class="detail__head__btn detail__head__btn--action mobile-btn t-save-btn" {{action "save"}}>{{t "crud.save_only.button"}}</button>
   </hbox>
 </header>
 <section class="mobile-main flex-item--auto">

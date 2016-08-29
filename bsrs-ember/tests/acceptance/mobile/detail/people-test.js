@@ -63,7 +63,6 @@ test('can click through component sections and save to redirect to index', async
   assert.ok(Ember.$('.t-mobile-footer-item:eq(0)').hasClass('active'));
   let payload = PF.put({id: PD.idOne});
   xhr(PEOPLE_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
-  await generalMobilePage.mobileActionDropdownClick();
   await generalPage.save();
   assert.equal(currentURL(), PEOPLE_INDEX_URL);
 });
@@ -80,7 +79,6 @@ test('can update fields and save', async assert => {
   await selectChoose(ROLE, RD.nameTwo);
   const payload = PF.put({id: PD.idOne, role: RD.idTwo, locations: []});
   xhr(PEOPLE_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
-  await generalMobilePage.mobileActionDropdownClick();
   await generalPage.save()
   assert.equal(currentURL(), PEOPLE_INDEX_URL);
 });
