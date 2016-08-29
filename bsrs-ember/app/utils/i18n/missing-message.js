@@ -9,6 +9,9 @@ import Ember from 'ember';
 //
 // `Function(String, String, Object) -> String`.
 export default function missingMessage(locale, key /*, data */) {
-  Ember.Logger.warn('Missing translation: ' + key);
+  // NOTE: comment out for time being b/c output being generated alongside
+  // tests, and tests harder to debug.
+
+  // Ember.Logger.warn('Missing translation: ' + key);
   return key;
 }
