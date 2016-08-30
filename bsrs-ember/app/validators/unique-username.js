@@ -10,7 +10,9 @@ export default BaseValidator.extend({
   validate(value, options, model, attribute) {
     const repository = this.get('repository');
     if (Ember.isEmpty(value)) { return 'errors.person.username'; }//check to see if needed w/ two validators
-    if (model.get('isNotDirtyOrRelatedNotDirty')) { return true; }
+    if (model.get('isNotDirtyOrRelatedNotDirty') || !model.get('usernameIsDirty')) { 
+      return true; 
+    }
     return repository.findUsername(value).then(response => {
       return response.count === 0 ? true : 'admin.person.unique_username';
     });

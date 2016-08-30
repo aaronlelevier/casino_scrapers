@@ -52,9 +52,9 @@ class BaseQuerySet(models.query.QuerySet):
         search = query_dict.pop('search', None)
         ordering = query_dict.pop('ordering', None)
         params = {k:v for k,v in query_dict.items()
-                      if k in self.model.export_fields}
+                      if k in self.model.model_fields}
 
-        qs = self.filter(**params).values(*self.model.export_fields)
+        qs = self.filter(**params).values(*self.model.model_fields)
         if search:
             qs = qs.search_multi(search)
         if ordering:
@@ -123,7 +123,17 @@ timestamp of when the record was deleted.""")
         return {"id": str(self.pk)}
 
     @classproperty
+    def model_fields(cls):
+        """Base Fields that exist on the model to be exported
+        that aren't aliased."""
+        try:
+            return cls.MODEL_FIELDS
+        except AttributeError:
+            return [x.name for x in cls._meta.get_fields()]
+
+    @classproperty
     def export_fields(cls):
+        """Combined Base and Aliased field to be exported."""
         try:
             return cls.EXPORT_FIELDS
         except AttributeError:

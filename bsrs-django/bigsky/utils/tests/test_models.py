@@ -56,6 +56,21 @@ class BaseModelTests(TestCase):
             {'id': str(self.t_ok.id)}
         )
 
+    def test_model_fields__explicit(self):
+        self.assertEqual(Person.MODEL_FIELDS, ['id', 'username'])
+
+        self.assertEqual(Person.model_fields, Person.MODEL_FIELDS)
+
+    def test_model_fields__all_fields(self):
+        # if MODEL_FIELDS isn't set on the Model, then return all fields
+        with self.assertRaises(AttributeError):
+            Tester.MODEL_FIELDS
+
+        self.assertEqual(
+            Tester.export_fields,
+            [x.name for x in Tester._meta.get_fields()]
+        )
+
     def test_export_fields__explicit(self):
         self.assertEqual(Person.EXPORT_FIELDS, ['id', 'username'])
 

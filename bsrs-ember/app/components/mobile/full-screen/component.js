@@ -18,11 +18,13 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
   },
   actions: {
     save(update) {
-      const promise = this._super(update);
-      if (promise.then) {
-        return promise.then((activities) => {
-          return activities;
-        });
+      if (this.get('model.validations.isValid')) {
+        const promise = this._super(update);
+        if (promise.then) {
+          return promise.then((activities) => {
+            return activities;
+          });
+        }
       }
     },
     delete() {
