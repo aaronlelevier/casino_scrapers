@@ -10,6 +10,7 @@ var PersonRoute = TabRoute.extend(FindById, ContactRouteMixin, {
   repository: inject('person'),
   status_repo: inject('status'),
   role_repo: inject('role'),
+  i18n: Ember.inject.service(),
   queryParams: {
     role_change: {
       refreshModel: true
@@ -37,10 +38,10 @@ var PersonRoute = TabRoute.extend(FindById, ContactRouteMixin, {
     /* Person's role is dirty, then always fetch. Why would I do that? */
     const override = person.get('roleIsDirty');
     const hashComponents = [
-      {'title': 'Details', 'component': 'people/detail-section', active: 'active', roles:roles,
+      {'title': this.get('i18n').t('admin.person.section.details'), 'component': 'people/detail-section', active: 'active', roles:roles,
       statuses:statuses, locales:locales},
-      {'title': 'Credentials', 'component': 'people/credentials-section', active: ''},
-      {'title': 'Contact', 'component': 'people/contact-section', active: ''},
+      {'title': this.get('i18n').t('admin.person.section.credentials'), 'component': 'people/credentials-section', active: ''},
+      {'title': this.get('i18n').t('admin.person.section.contact'), 'component': 'people/contact-section', active: ''},
     ];
     return this.findByIdScenario(person, pk, {email_types:email_types, default_email_type:default_email_type,
                                  phone_number_types:phone_number_types, default_phone_number_type:default_phone_number_type,

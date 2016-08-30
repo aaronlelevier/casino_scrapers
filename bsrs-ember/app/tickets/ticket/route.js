@@ -12,6 +12,7 @@ var TicketSingleRoute = TabRoute.extend(FindById, PriorityMixin, StatusMixin, {
   activityRepository: inject('activity'),
   repository: inject('ticket'),
   attachmentRepository: inject('attachment'),
+  i18n: Ember.inject.service(),
   transitionCB() {
     return {
       //should be an array
@@ -29,9 +30,9 @@ var TicketSingleRoute = TabRoute.extend(FindById, PriorityMixin, StatusMixin, {
     const priorities = this.get('priorities');
     const otherXhrs = [this.get('activityRepository').find('ticket', 'tickets', pk)];
     const hashComponents = [
-      {'title': 'Activity', 'component': 'mobile/ticket/activity-section', active: 'active'},
-      {'title': 'Details', 'component': 'mobile/ticket/detail-section', active: ''},
-      {'title': 'Location', 'component': 'mobile/ticket/location-section', active: ''},
+      {'title': this.get('i18n').t('ticket.section.activity'), 'component': 'mobile/ticket/activity-section', active: 'active'},
+      {'title': this.get('i18n').t('ticket.section.details'), 'component': 'mobile/ticket/detail-section', active: ''},
+      {'title': this.get('i18n').t('ticket.section.location'), 'component': 'mobile/ticket/location-section', active: ''},
     ];
     return this.findByIdScenario(ticket, pk, {statuses:statuses, priorities:priorities, repository:repository, hashComponents:hashComponents }, false, otherXhrs);
   },

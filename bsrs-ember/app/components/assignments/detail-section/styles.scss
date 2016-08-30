@@ -1,0 +1,11 @@
+.appliedFilters{
+  padding: 40px 0 30px;
+  text-align: center;
+  color: $medGray;
+  &:after{
+    padding: 0 5px;
+    font-size: 2rem;
+    content: "\f0a7";
+    font-family: FontAwesome;
+  }
+}
