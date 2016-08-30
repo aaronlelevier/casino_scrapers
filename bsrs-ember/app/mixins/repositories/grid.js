@@ -71,7 +71,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
     return new Ember.RSVP.Promise((resolve, reject) => {
       options.success = function(responseURL) {
         if (responseURL) {
-          location.href = responseURL;
+          document.location.href = responseURL;
         }
         return Ember.run(null, resolve, {});
       };
