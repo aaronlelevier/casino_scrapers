@@ -76,7 +76,7 @@ test('visit mobile detail and update all fields', async assert => {
   assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
 });
 
-test('aaron if the assignment does not have at least one filter, it is invalid and cannot save', async assert => {
+test('if the assignment does not have at least one filter, it is invalid and cannot save', async assert => {
   clearxhr(listXhr)
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
