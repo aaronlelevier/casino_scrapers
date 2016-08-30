@@ -18,12 +18,13 @@ section.wrap {
   background: $white;
   font-size: 1.3rem;
   z-index: 0;
-  .liquid-container{
-    height: 100%;
-    .liquid-child{
-      height: 100%;
-    }
-  }
+  // not using liquid container right now
+  // .liquid-container{
+  //   height: 100%;
+  //   .liquid-child{
+  //     height: 100%;
+  //   }
+  // }
 }//section.wrap
 header.main {
   font-size: 1.3rem;
@@ -84,19 +85,24 @@ label[for="nav-trigger"] {
 }
 .nav-trigger:checked ~ .mobile-wrap {
   -webkit-transform: translateX($mobileDrawerWidth);
-			transform: translateX($mobileDrawerWidth);
+  -ms-transform: translateX($mobileDrawerWidth);
+  transform: translateX($mobileDrawerWidth);
   // this is expensive to keep around, so one possiblility is to remove it
   will-change: transform;
 }
 .nav-trigger:checked ~ vbox.mobile-tray {
   -webkit-transform: none;
-			transform: none;
+  -ms-transform: none;
+  transform: none;
   will-change: transform;
 }
 
 .nav-trigger + label,
 .mobile-wrap ,
 vbox.mobile-tray {
+  -webkit-transition: all 150ms ease-in;
+  -moz-transition: all 150ms ease-in;
+  -o-transition: all 150ms ease-in;
   transition: all 150ms ease-in;
 }
 
@@ -106,7 +112,8 @@ vbox.mobile-tray { //slideout navigation tray
   position: relative;
   height: 100vh;
   -webkit-transform: translateX(-100%);
-			transform: translateX(-100%);
+  -ms-transform: translateX(-100%);
+  transform: translateX(-100%);
   div.mobile-tray__inner {
     -webkit-overflow-scrolling: touch; //DO NOT REMOVE
     overflow: auto;
