@@ -533,9 +533,8 @@ class PersonManagerTests(TestCase):
 
         self.assertIsInstance(ret, PersonQuerySet)
         self.assertEqual(ret.count(), 1)
-        self.assertEqual(len(ret[0]), len(fields))
-        self.assertEqual(ret[0]['id'], self.person.id)
-        self.assertEqual(ret[0]['username'], self.person.username)
+        self.assertEqual(ret[0].id, self.person.id)
+        self.assertEqual(ret[0].username, self.person.username)
 
     def test_filter_export_data__none_field_arg(self):
         query_params = {'_': 'foo'}
@@ -560,5 +559,5 @@ class PersonManagerTests(TestCase):
         ret = Person.objects.filter_export_data(query_params)
 
         self.assertEqual(ret.count(), 2)
-        self.assertEqual(ret[0]['username'], self.person_two.username)
-        self.assertEqual(ret[1]['username'], self.person.username)
+        self.assertEqual(ret[0].username, self.person_two.username)
+        self.assertEqual(ret[1].username, self.person.username)

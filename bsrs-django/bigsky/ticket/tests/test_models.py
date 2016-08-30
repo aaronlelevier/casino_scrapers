@@ -212,15 +212,16 @@ class TicketManagerTests(TestCase):
         ticket = create_ticket(assignee=assignee)
 
         ret = Ticket.objects.filter_export_data({'id': ticket.id})
-        self.assertEqual(len(ret[0]), 8)
-        self.assertEqual(ret[0]['id'], ticket.id)
-        self.assertEqual(ret[0]['priority_name'], ticket.priority.name)
-        self.assertEqual(ret[0]['status_name'], ticket.status.name)
-        self.assertEqual(ret[0]['number'], ticket.number)
-        self.assertEqual(ret[0]['created'], ticket.created)
-        self.assertEqual(ret[0]['location_name'], ticket.location.name)
-        self.assertEqual(ret[0]['assignee_name'], ticket.assignee.fullname)
-        self.assertEqual(ret[0]['request'], ticket.request)
+        self.assertEqual(ret.count(), 1)
+        self.assertEqual(ret[0].id, ticket.id)
+        self.assertEqual(ret[0].priority_name, ticket.priority.name)
+        self.assertEqual(ret[0].status_name, ticket.status.name)
+        self.assertEqual(ret[0].number, ticket.number)
+        self.assertEqual(ret[0].created, ticket.created)
+        self.assertEqual(ret[0].location_name, ticket.location.name)
+        self.assertEqual(ret[0].assignee_name, ticket.assignee.fullname)
+        self.assertEqual(ret[0].request, ticket.request)
+        self.assertEqual(ret[0].category, ticket.category)
 
 
 class TicketTests(TestCase):
@@ -241,6 +242,21 @@ class TicketTests(TestCase):
 
         two = Ticket.objects.get(number=2)
         self.assertIsInstance(two, Ticket)
+
+    def test_category(self):
+        # categories - are joined directly onto the Ticket, but do
+        # need the parent/child relationship in order to setup level
+        ticket = Ticket.objects.first()
+        parent = ticket.categories.first()
+        child = create_single_category(parent=parent)
+        grand_child = create_single_category(parent=child)
+        ticket.categories.add(child, grand_child)
+        self.assertEqual(ticket.categories.count(), 3)
+
+        self.assertEqual(
+            ticket.category,
+            "{} - {} - {}".format(parent.name, child.name, grand_child.name)
+        )
 
 
 class TicketActivityTests(TestCase):
