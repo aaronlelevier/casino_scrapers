@@ -1,7 +1,7 @@
 import uuid
 
 from django.db import models
-from django.db.models import Q, Max
+from django.db.models import F, Q, Max
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import JSONField
@@ -106,6 +106,13 @@ class TicketQuerySet(BaseQuerySet):
 
         return self.filter(q).distinct()
 
+    def filter_export_data(self, query_params):
+        qs = super(TicketQuerySet, self).filter_export_data(query_params)
+        return qs.annotate(priority_name=F('priority__name'),
+                           status_name=F('status__name'),
+                           location_name=F('location__name'),
+                           assignee_name=F('assignee__fullname'))
+
 
 class TicketManager(BaseManager):
 
@@ -122,6 +129,11 @@ class TicketManager(BaseManager):
 
 
 class Ticket(BaseModel):
+
+    MODEL_FIELDS = ['id',  'number', 'created', 'request']
+
+    EXPORT_FIELDS = ['id', 'priority_name', 'status_name', 'number', 'created',
+                     'location_name', 'assignee_name', 'request']
 
     def next_number():
         return Ticket.objects.next_number()

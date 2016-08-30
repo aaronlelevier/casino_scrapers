@@ -207,6 +207,21 @@ class TicketManagerTests(TestCase):
 
         self.assertEqual(ret, 1)
 
+    def test_filter_export_data(self):
+        assignee = create_single_person()
+        ticket = create_ticket(assignee=assignee)
+
+        ret = Ticket.objects.filter_export_data({'id': ticket.id})
+        self.assertEqual(len(ret[0]), 8)
+        self.assertEqual(ret[0]['id'], ticket.id)
+        self.assertEqual(ret[0]['priority_name'], ticket.priority.name)
+        self.assertEqual(ret[0]['status_name'], ticket.status.name)
+        self.assertEqual(ret[0]['number'], ticket.number)
+        self.assertEqual(ret[0]['created'], ticket.created)
+        self.assertEqual(ret[0]['location_name'], ticket.location.name)
+        self.assertEqual(ret[0]['assignee_name'], ticket.assignee.fullname)
+        self.assertEqual(ret[0]['request'], ticket.request)
+
 
 class TicketTests(TestCase):
 

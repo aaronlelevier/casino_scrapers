@@ -306,6 +306,7 @@ class Person(BaseModel, AbstractUser):
     '''
 
     # Static list of fields to export via the Ember GridView
+    MODEL_FIELDS = ['id', 'username']
     EXPORT_FIELDS = ['id', 'username']
 
     # Keys
