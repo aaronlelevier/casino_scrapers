@@ -65,7 +65,7 @@ class BaseQuerySet(models.query.QuerySet):
 
 class BaseManagerMixin(object):
 
-    def filter_export_data(self, query_params):
+    def filter_export_data(self, query_params={}):
         return self.get_queryset().filter_export_data(query_params)
 
 

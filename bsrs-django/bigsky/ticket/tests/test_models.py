@@ -212,6 +212,7 @@ class TicketManagerTests(TestCase):
         ticket = create_ticket(assignee=assignee)
 
         ret = Ticket.objects.filter_export_data({'id': ticket.id})
+
         self.assertEqual(ret.count(), 1)
         self.assertEqual(ret[0].id, ticket.id)
         self.assertEqual(ret[0].priority_name, ticket.priority.name)
@@ -232,9 +233,18 @@ class TicketTests(TestCase):
         create_single_person()
         create_ticket_statuses()
         create_tickets(_many=2)
+        self.ticket = Ticket.objects.first()
 
-    def test_ordering(self):
-        self.assertEqual(Ticket._meta.ordering, ('-created',))
+    def test_export_fields(self):
+        export_fields = ['id', 'priority_name', 'status_name', 'number', 'created',
+                         'location_name', 'assignee_name', 'request', 'category']
+
+        self.assertEqual(Ticket.EXPORT_FIELDS, export_fields)
+
+    def test_filter_export_data__queryset_matches_export_fields(self):
+        ticket = Ticket.objects.filter_export_data().first()
+        for f in Ticket.EXPORT_FIELDS:
+            self.assertTrue(hasattr(ticket, f))
 
     def test_number(self):
         one = Ticket.objects.get(number=1)
@@ -246,17 +256,19 @@ class TicketTests(TestCase):
     def test_category(self):
         # categories - are joined directly onto the Ticket, but do
         # need the parent/child relationship in order to setup level
-        ticket = Ticket.objects.first()
-        parent = ticket.categories.first()
+        parent = self.ticket.categories.first()
         child = create_single_category(parent=parent)
         grand_child = create_single_category(parent=child)
-        ticket.categories.add(child, grand_child)
-        self.assertEqual(ticket.categories.count(), 3)
+        self.ticket.categories.add(child, grand_child)
+        self.assertEqual(self.ticket.categories.count(), 3)
 
         self.assertEqual(
-            ticket.category,
+            self.ticket.category,
             "{} - {} - {}".format(parent.name, child.name, grand_child.name)
         )
+
+    def test_ordering(self):
+        self.assertEqual(Ticket._meta.ordering, ('-created',))
 
 
 class TicketActivityTests(TestCase):
