@@ -89,6 +89,9 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
   status_repo: injectRepo('status'),
   locale_repo: injectRepo('locale'),
   username: attr(''),
+  usernameIsDirty() {
+    return this.get('_dirty')['username'];
+  },
   password: attr(''),
   first_name: attr(''),
   middle_initial: attr(''),
