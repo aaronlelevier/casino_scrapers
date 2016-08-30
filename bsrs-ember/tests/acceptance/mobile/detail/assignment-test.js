@@ -15,7 +15,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import pageDrawer from 'bsrs-ember/tests/pages/nav-drawer';
 import BASEURLS, { ASSIGNMENT_URL, ASSIGNMENT_LIST_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
-var store;
+var store, listXhr;
 
 const BASE_URL = BASEURLS.BASE_ASSIGNMENT_URL;
 const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
@@ -27,7 +27,7 @@ moduleForAcceptance('Acceptance | mobile assignment detail test', {
   beforeEach() {
     setWidth('mobile');
     store = this.application.__container__.lookup('service:simpleStore');
-    xhr(`${ASSIGNMENT_URL}?page=1`, 'GET', null, {}, 200, AF.list());
+    listXhr = xhr(`${ASSIGNMENT_URL}?page=1`, 'GET', null, {}, 200, AF.list());
     xhr(`${ASSIGNMENT_URL}${AD.idOne}/`, 'GET', null, {}, 200, AF.detail(AD.idOne));
   },
 });
@@ -74,6 +74,18 @@ test('visit mobile detail and update all fields', async assert => {
   xhr(ASSIGNMENT_PUT_URL, 'PUT', AF.put({'description': AD.descriptionTwo, 'assignee': AD.assigneeSelectOne}), {}, 200, AF.list());
   await generalPage.save()
   assert.equal(currentURL(), ASSIGNMENT_LIST_URL);
+});
+
+test('aaron if the assignment does not have at least one filter, it is invalid and cannot save', async assert => {
+  clearxhr(listXhr)
+  await page.visitDetail();
+  assert.equal(currentURL(), DETAIL_URL);
+  Ember.$('.t-mobile-footer-item:eq(1)').click();
+  assert.equal(Ember.$('.t-assignment-pf-select').length, 1);
+  Ember.$('.t-del-pf-btn').click();
+  assert.equal(Ember.$('.t-assignment-pf-select').length, 0);
+  await generalPage.save();
+  assert.equal(currentURL(), DETAIL_URL);
 });
 
 
