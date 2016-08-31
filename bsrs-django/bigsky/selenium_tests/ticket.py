@@ -311,7 +311,6 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         category_option.click()
         # assignee was not filled out
         assignee_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-assignee-select ')]/div")
-        assert assignee_input.text == 'power.select.select'
         # save
         self.gen_elem_page.click_save_btn()
         # Go to newly created ticket's Detail view
