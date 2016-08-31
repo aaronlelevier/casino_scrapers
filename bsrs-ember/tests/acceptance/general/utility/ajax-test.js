@@ -23,12 +23,8 @@ var application;
 
 moduleForAcceptance('Acceptance | ajax async test helper tests', {
   beforeEach() {
-    
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
   },
-  afterEach() {
-    
-  }
 });
 
 

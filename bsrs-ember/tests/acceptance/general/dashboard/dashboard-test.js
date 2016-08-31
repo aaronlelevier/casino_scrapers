@@ -20,13 +20,9 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 
 moduleForAcceptance('Acceptance | dashboard', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
   },
-  afterEach() {
-    
-  }
 });
 
 test('welcome h1 header and dashboard_text from settings', assert => {

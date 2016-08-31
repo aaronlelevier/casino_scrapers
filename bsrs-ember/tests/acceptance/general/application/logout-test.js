@@ -17,12 +17,8 @@ var application;
 
 moduleForAcceptance('Acceptance | logout test', {
   beforeEach() {
-    
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
   },
-  afterEach() {
-    
-  }
 });
 
 test('logout of application correctly directs to login page', (assert) => {

@@ -30,15 +30,11 @@ let application, store, list_xhr, category_detail_data, endpoint, detail_xhr;
 
 moduleForAcceptance('Acceptance | tab category test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_CATEGORY_URL + '/';
     category_detail_data = CF.detail(CD.idGridOne);
     detail_xhr = xhr(endpoint + CD.idGridOne + '/', 'GET', null, {}, 200, category_detail_data);
   },
-  afterEach() {
-    
-  }
 });
 
 test('(NEW URL) deep linking the new category url should push a tab into the tab store with correct properties', (assert) => {

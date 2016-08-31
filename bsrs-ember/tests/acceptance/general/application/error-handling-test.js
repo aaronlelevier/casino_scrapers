@@ -24,7 +24,6 @@ var application, store, payload, new_xhr, list_xhr, originalLoggerError, origina
 
 moduleForAcceptance('Acceptance | error handling test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     new_xhr = xhr(DJANGO_LOCATION_URL + '?page=1', "GET", null, {}, 200, LF.empty());
     payload = {id: UUID.value, name: LD.storeName, number: LD.storeNumber, status: LD.status, location_level: LLD.idOne, children: [], parents: [], emails: [], phone_numbers: [], addresses: []};

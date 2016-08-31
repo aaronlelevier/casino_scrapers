@@ -27,16 +27,12 @@ var application, store, tenant_data, detail_xhr, url, translations;
 
 moduleForAcceptance('Acceptance | general settings (tenant)', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     url = `${PREFIX}/admin/tenant/${TD.id}/`;
     tenant_data = TF.detail();
     detail_xhr = xhr(url, 'GET', null, {}, 200, tenant_data);
     translations = BSRS_TRANSLATION_FACTORY.generate('en')['en'];
   },
-  afterEach() {
-    
-  }
 });
 
 test('from admin click general-settings link, and go to general settings page', assert => {

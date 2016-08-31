@@ -17,15 +17,11 @@ var application, store, endpoint, setting_data, detail_xhr;
 
 moduleForAcceptance('Acceptance | admin settings layout test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + SETTING_URL + '/';
     setting_data = TF.detail();
     detail_xhr = xhr(endpoint, 'GET', null, {}, 200, setting_data);
   },
-  afterEach() {
-    
-  }
 });
 
 test('admin panel displays correct headers and h3 headers', function(assert) {

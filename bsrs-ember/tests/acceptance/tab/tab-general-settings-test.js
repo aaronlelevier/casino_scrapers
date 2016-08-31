@@ -22,15 +22,11 @@ let application, store, settings_data, endpoint, detail_xhr;
 
 moduleForAcceptance('Acceptance | tab general settings (tenant) test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_SETTINGS_URL + '/';
     settings_data = TF.detail();
     detail_xhr = xhr(`${PREFIX}/admin/tenant/${TD.id}/`, 'GET', null, {}, 200, settings_data);
   },
-  afterEach() {
-    
-  }
 });
 
 test('deep linking the settings detail url should push a tab into the tab store with correct properties', (assert) => {

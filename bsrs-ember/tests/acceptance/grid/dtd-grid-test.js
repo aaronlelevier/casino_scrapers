@@ -30,14 +30,10 @@ var application, store, endpoint, list_xhr;
 
 moduleForAcceptance('Acceptance | dtd grid test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/?page=1`;
     list_xhr = xhr(endpoint, 'GET', null, {}, 200, DTDF.list());
   },
-  afterEach() {
-    
-  }
 });
 
 test('initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr', function(assert) {

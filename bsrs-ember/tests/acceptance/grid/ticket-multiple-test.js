@@ -27,16 +27,12 @@ var application, store, ticket_endpoint, ticket_list_xhr, people_endpoint, peopl
 
 moduleForAcceptance('Acceptance | ticket multiple grid test', {
   beforeEach() {
-    
     store = this.application.__container__.lookup('service:simpleStore');
     ticket_endpoint = `${PREFIX}${BASE_TICKET_URL}/?page=1`;
     ticket_list_xhr = xhr(ticket_endpoint, 'GET', null, {}, 200, TF.list());
     people_endpoint = `${PREFIX}${BASE_PEOPLE_URL}/?page=1`;
     people_list_xhr = xhr(people_endpoint, 'GET', null, {}, 200, PF.list());
   },
-  afterEach() {
-    
-  }
 });
 
 test('navigating between ticket and people and locations and category will not dirty models and will clear m2m models (categories only)', function(assert) {
