@@ -14,6 +14,9 @@ import PNF from 'bsrs-ember/vendor/phone_number_fixtures';
 import AND from 'bsrs-ember/vendor/defaults/address';
 import ANF from 'bsrs-ember/vendor/address_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
+import CD from 'bsrs-ember/vendor/defaults/country';
+import SD from 'bsrs-ember/vendor/defaults/state';
+import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import LocationDeserializer from 'bsrs-ember/deserializers/location';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 
@@ -21,7 +24,7 @@ var store, location_unused, location_level_deserializer, subject, location_statu
 
 module('unit: location deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:location', 'model:location-list', 'model:location-status-list', 'model:location-level', 'model:location-status', 'model:location-children', 'model:location-parents', 'model:address', 'model:phonenumber', 'model:email', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:location', 'model:location-list', 'model:location-status-list', 'model:location-level', 'model:location-status', 'model:location-children', 'model:location-parents', 'model:address', 'model:phonenumber', 'model:email', 'model:country', 'model:state', 'model:address-type', 'service:i18n']);
     location_level_deserializer = LocationLevelDeserializer.create({simpleStore: store});
     subject = LocationDeserializer.create({simpleStore: store, LocationLevelDeserializer: location_level_deserializer});
     run(function() {
@@ -233,6 +236,7 @@ test('location will setup the correct relationship with addresses when _deserial
   assert.deepEqual(location.get('address_fks'), [AND.idOne, AND.idTwo]);
   assert.ok(location.get('isNotDirty'));
   assert.equal(address.get('model_fk'), LD.idOne);
+  assert.equal(location.get('addresses').objectAt(0).get('id'), AND.idOne);
 });
 
 test('location will setup the correct relationship with address when _deserializeSingle is invoked with location setup with address relationship', (assert) => {
@@ -249,6 +253,30 @@ test('location will setup the correct relationship with address when _deserializ
   assert.deepEqual(location.get('address_fks'), [AND.idOne, AND.idTwo]);
   assert.ok(location.get('isNotDirty'));
   assert.equal(address.get('model_fk'), LD.idOne);
+});
+
+test('deserialize location and address with its related models: type, state, and country', assert => {
+  let response = LF.generate(LD.idOne);
+  response.addresses = ANF.get();
+  run(() => {
+    subject.deserialize(response, LD.idOne);
+  });
+  assert.equal(store.find('location', LD.idOne).get('id'), LD.idOne);
+  let location = store.find('location', LD.idOne);
+  assert.equal(location.get('name'), LD.baseStoreName);
+  // addresses
+  assert.equal(location.get('addresses').get('length'), 2);
+  let address = location.get('addresses').objectAt(0);
+  assert.equal(address.get('id'), AND.idOne);
+  // country
+  assert.equal(address.get('country').get('id'), CD.idOne);
+  assert.equal(address.get('country').get('name'), CD.name);
+  // state
+  assert.equal(address.get('state').get('id'), SD.id);
+  assert.equal(address.get('state').get('name'), SD.name);
+  // address-type
+  assert.equal(address.get('address_type').get('id'), ATD.idOne);
+  assert.equal(address.get('address_type').get('name'), ATD.officeName);
 });
 
 /*PARENT AND CHILDREN M2M*/

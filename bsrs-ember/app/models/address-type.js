@@ -1,7 +1,5 @@
-import Ember from 'ember';
+import { Model } from 'ember-cli-simple-store/model';
 
-var AddressType = Ember.Object.extend({
+export default Model.extend({
   name: ''
 });
-
-export default AddressType;

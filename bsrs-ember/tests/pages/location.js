@@ -5,12 +5,7 @@ import LDS from 'bsrs-ember/vendor/defaults/location-status';
 import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BASEURLS, { LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
-let {
-  visitable,
-  clickable,
-  text,
-  count
-} = PageObject;
+let { visitable, clickable, text, count, fillable, value } = PageObject;
 
 const BASE_URL = BASEURLS.base_locations_url;
 const DETAIL_URL = `${BASE_URL}/${LD.idOne}`;
@@ -34,6 +29,10 @@ const PARENTS_TWO = `${PARENTS}:eq(1)`;
 const PARENTS_THREE = `${PARENTS}:eq(2)`;
 const PARENTS_FOUR = `${PARENTS}:eq(3)`;
 const PARENTS_DROPDOWN = `.ember-basic-dropdown-content > ${options}`;
+
+const COUNTRIES = '.t-address-country .ember-basic-dropdown-trigger';
+const STATES = '.t-address-state .ember-basic-dropdown-trigger';
+
 
 export default PageObject.create({
   visit: visitable(BASE_URL + '/index'),
@@ -88,4 +87,15 @@ export default PageObject.create({
   // parentsClickMel: clickable(`${PARENTS_DROPDOWN} > .ember-power-select-option:contains(${LD.nameMel})`),
   parentsOptionLength: count(`${PARENTS_DROPDOWN} > li`),
   // parentssSelected: count(PARENTSS),
+
+  addressAddressFill: fillable('.t-address-address'),
+  addressCityFill: fillable('.t-address-city'),
+  addressPostalCodeFill: fillable('.t-address-postal-code'),
+
+  addressAddressValue: value('.t-address-address'),
+  addressCityValue: value('.t-address-city'),
+  addressPostalCodeValue: value('.t-address-postal-code'),
+
+  countrySelectedOne: text(`${COUNTRIES}:eq(0)`),
+  stateSelectedOne: text(`${STATES}:eq(0)`),
 });

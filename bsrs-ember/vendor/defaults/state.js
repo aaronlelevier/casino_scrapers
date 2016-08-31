@@ -3,12 +3,14 @@ var BSRS_STATE_DEFAULTS_OBJECT = (function() {
     };
     factory.prototype.defaults = function() {
         return {
-            idFive: 5,
             id: '634e9828-74d8-48fb-88af-44e9ec1cdab1',
-            name: 'California',
-            abbr: 'CA',
+            idOne: '634e9828-74d8-48fb-88af-44e9ec1cdab1',
             idTwo: '634e9828-74d8-48fb-88af-44e9ec1cdab2',
+            idThree: '634e9828-74d8-48fb-88af-44e9ec1cdab3',
+            idFive: 5,
+            name: 'California',
             nameTwo: 'Alabama',
+            abbr: 'CA',
             abbrTwo: 'AL',
         }
     };

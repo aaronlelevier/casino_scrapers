@@ -36,6 +36,10 @@ def model_to_dict(instance):
     return d
 
 
+def queryset_to_json(queryset):
+    return json.dumps([m.to_dict() for m in queryset.all()])
+
+
 def get_content_type_number(model):
     model_name = model.__name__.lower()
     content_type = ContentType.objects.get(model=model_name)

@@ -4,11 +4,13 @@
     <span class="input-group-btn">
       <button class="t-del-address-btn btn btn-default btn-sm delete" type="button" {{action 'delete' address}}>{{fa-icon "minus"}}</button>
     </span>
-    <select class="t-address-type form-control address-type" onchange={{action (action "changed" address) value="target.value"}}>
-    {{#each types as |addressType|}}
-    <option value={{addressType.id}} selected={{is-equal address.type addressType.id}}>{{t addressType.name}}</option>
-    {{/each}}
-    </select>
+      {{power-select-foreign-key
+        mainModel=address
+        selected=address.address_type
+        change_method='change_address_type'
+        relatedModels=address_types
+        relatedModelName='address-type'
+      }}
   </div>
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.address"}}</span>
@@ -21,12 +23,16 @@
   </div>
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.state.one"}}</span>
-    <select class="form-control t-address-state" onchange={{action (action "changeState" address) value="target.value"}}>
-      <option value=""></option>
-      {{#each state_list as |state_single|}}
-      <option value={{state_single.id}} selected={{is-equal address.state state_single.id}}>{{state_single.name}}</option>
-      {{/each}}
-    </select>
+    {{db-fetch-select
+      model=address
+      selectedAttr=address.state
+      className="t-address-state"
+      displayName="name"
+      change_func="change_state"
+      repository=stateDbFetch
+      searchMethod="findState"
+      valuePath="name"
+    }}
   </div>
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.postal_code"}}</span>
@@ -35,12 +41,16 @@
   </div>
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.country.one"}}</span>
-    <select class="form-control t-address-country" onchange={{action (action "changeCountry" address) value="target.value"}}>
-      <option value=""></option>
-      {{#each countries as |country|}}
-      <option value={{country.id}} selected={{is-equal address.country country.id}}>{{country.name}}</option>
-      {{/each}}
-    </select>
+    {{db-fetch-select
+      model=address
+      selectedAttr=address.country
+      className="t-address-country"
+      displayName="name"
+      change_func="change_country"
+      repository=countryDbFetch
+      searchMethod="findCountry"
+      valuePath="name"
+    }}
   </div>
 </div>
 {{/each}}

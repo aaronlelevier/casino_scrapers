@@ -23,6 +23,18 @@ export default Ember.Mixin.create({
       property: 'location-status',
       related_model: 'status'
     },
+    country: {
+      collection: 'locations',
+      property: 'country',
+    },
+    state: {
+      collection: 'locations',
+      property: 'state',
+    },
+    address_type: {
+      collection: 'locations',
+      property: 'address-type',
+    },
     location_level: {
       collection: 'locations',
       property: 'location-level',

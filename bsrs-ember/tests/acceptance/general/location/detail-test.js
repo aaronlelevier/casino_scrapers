@@ -20,6 +20,10 @@ import PND from 'bsrs-ember/vendor/defaults/phone-number';
 import PNTD from 'bsrs-ember/vendor/defaults/phone-number-type';
 import AD from 'bsrs-ember/vendor/defaults/address';
 import AF from 'bsrs-ember/vendor/address_fixtures';
+import CD from 'bsrs-ember/vendor/defaults/country';
+import CF from 'bsrs-ember/vendor/country_fixtures';
+import SD from 'bsrs-ember/vendor/defaults/state';
+import SF from 'bsrs-ember/vendor/state_fixtures';
 import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/location';
@@ -87,18 +91,16 @@ test('visiting admin/location', (assert) => {
     assert.equal(find('.t-input-multi-phone').find('input:eq(0)').val(), PND.numberOne);
     assert.equal(find('.t-input-multi-phone').find('input:eq(1)').val(), PND.numberTwo);
     assert.equal(find('.t-input-multi-address').find('.t-address-group').length, 2);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type').val(), ATD.officeId);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type option:selected').text(), t(ATD.officeName));
+    assert.equal(find('.t-address-type-select:eq(0)').text().trim(), t(ATD.officeName));
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-address').val(), AD.streetOne);
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-city').val(), AD.cityOne);
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-postal-code').val(), AD.zipOne);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-country').val(), AD.countryOne);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type').val(), ATD.shippingId);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type option:selected').text(), t(ATD.shippingName));
+    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-country').text().trim(), CD.name);
+    assert.equal(find('.t-address-type-select:eq(1)').text().trim(), t(ATD.shippingName));
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-address').val(), AD.streetTwo);
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-city').val(), AD.cityTwo);
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), AD.zipTwo);
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), AD.countryTwo);
+    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').text().trim(), CD.nameTwo);
     assert.equal(page.statusInput, t(LDS.openName));
   });
   fillIn('.t-location-name', LD.storeNameTwo);
@@ -1214,3 +1216,64 @@ test('clicking and typing into power select for location will not filter if spac
     assert.equal(currentURL(), LOCATION_URL);
   });
 });
+
+// TODO: failing b/c need to setup relationship b/t Location and Country
+test('fill out an address for a Person including Country and State', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
+  click('.t-del-address-btn:eq(0)');
+  andThen(() => {
+    // # of delete button's is the # of address input widgets
+    assert.equal(Ember.$('.t-del-address-btn').length, 1);
+  });
+  page.addressAddressFill(AD.streetOne);
+  page.addressCityFill(AD.cityOne);
+  page.addressPostalCodeFill(AD.zipOne);
+  andThen(() => {
+    assert.equal(page.addressAddressValue, AD.streetOne);
+    assert.equal(page.addressCityValue, AD.cityOne);
+    assert.equal(page.addressPostalCodeValue, AD.zipOne);
+  });
+  // Country
+  let keyword = 'a';
+  let countryListResults = CF.list_power_select();
+  let countryId = countryListResults.results[0].id;
+  let countryName = countryListResults.results[0].name;
+  xhr(`/api/countries/tenant/?search=${keyword}`, 'GET', null, {}, 200, countryListResults);
+  selectSearch('.t-address-country', keyword);
+  selectChoose('.t-address-country', countryName);
+  andThen(() => {
+    assert.equal(page.countrySelectedOne, countryName);
+  });
+  // State
+  keyword = 'a';
+  let stateListResults = SF.list_power_select();
+  let stateId = stateListResults.results[0].id;
+  let stateName = stateListResults.results[0].name;
+  xhr(`/api/states/tenant/?search=${keyword}`, 'GET', null, {}, 200, stateListResults);
+  selectSearch('.t-address-state', keyword);
+  selectChoose('.t-address-state', stateName);
+  andThen(() => {
+    assert.equal(page.stateSelectedOne, stateName);
+  });
+  // // PUT
+  let payload = LF.put({id: LD.idOne, status: LDS.openId});
+  payload.addresses.splice(1,1);
+  payload.addresses[0] = {
+    id: AD.idTwo,
+    type: ATD.idTwo,
+    address: AD.streetOne,
+    city: AD.cityOne,
+    state: stateId,
+    postal_code: AD.zipOne,
+    country: countryId,
+  };
+  xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), LOCATION_URL);
+  });
+});
+  

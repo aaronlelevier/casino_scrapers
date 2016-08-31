@@ -2,14 +2,38 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from contact.models import (State, Country, PhoneNumber, PhoneNumberType,
-    Address, AddressType, Email,  LOCATION_ADDRESS_TYPE, OFFICE_ADDRESS_TYPE,
+from contact.models import (State, StateManager, StateQuerySet, Country, PhoneNumber,
+    PhoneNumberType, Address, AddressType, Email,  LOCATION_ADDRESS_TYPE, OFFICE_ADDRESS_TYPE,
     STORE_ADDRESS_TYPE, SHIPPING_ADDRESS_TYPE,)
 from contact.tests.factory import create_contact, create_address_type
 from location.models import Location
 from location.tests.factory import create_location
 from person.models import Person
 from person.tests.factory import create_person
+from tenant.tests.factory import get_or_create_tenant
+
+
+class StateManagerTests(TestCase):
+
+    def test_queryset_cls(self):
+        self.assertEqual(StateManager.queryset_cls, StateQuerySet)
+
+    def test_tenant(self):
+        tenant = get_or_create_tenant()
+        self.assertEqual(tenant.countries.count(), 1)
+        country = tenant.countries.first()
+
+        ret = State.objects.tenant(tenant)
+
+        self.assertEqual(ret.count(), 2)
+        self.assertEqual(ret[0].country, country)
+        self.assertEqual(ret[1].country, country)
+
+
+class StateTests(TestCase):
+
+    def test_manager(self):
+        self.assertIsInstance(State.objects, StateManager)
 
 
 class PhoneNumberTests(TestCase):

@@ -117,7 +117,7 @@ var BSRS_LOCATION_FACTORY = (function() {
     response.location_level = this.location_level_fixtures.detail().id;
     response.emails = this.emails.get();
     response.phone_numbers = this.phone_numbers.get();
-    response.addresses = this.addresses.get();
+    response.addresses = this.addresses.get_with_related_ids();
     response.children = response.children.map(function(map) {
       return map.id;
     });

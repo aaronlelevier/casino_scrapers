@@ -14,7 +14,7 @@ from person.models import Role, PersonStatus
 from person.tests.factory import create_role
 from utils.helpers import (BASE_UUID, model_to_json, model_to_json_select_related,
     model_to_json_prefetch_related, generate_uuid, get_content_type_number, media_path,
-    create_default, local_strftime)
+    create_default, local_strftime, queryset_to_json)
 
 
 class ModelToJsonTests(TestCase):
@@ -53,6 +53,24 @@ class ModelToJsonTests(TestCase):
         self.assertEqual(ret[0]['name'], location_level.name)
         self.assertIn('children', ret[0])
         self.assertIn('parents', ret[0])
+
+
+class QuerySetToJsonTests(TestCase):
+
+    def setUp(self):
+        self.role = create_role(name=settings.DEFAULT_ROLE)
+
+    def test_queryset_to_json(self):
+        queryset = Role.objects.all()
+
+        ret = queryset_to_json(queryset)
+
+        ret = json.loads(ret)
+        self.assertEqual(len(ret), 1)
+        self.assertEqual(ret[0]['id'], str(self.role.id))
+        self.assertEqual(ret[0]['name'], self.role.name)
+        self.assertEqual(ret[0]['location_level'], str(self.role.location_level.id))
+        self.assertEqual(ret[0]['default'], True)
 
 
 class GenerateUuidTests(TestCase):

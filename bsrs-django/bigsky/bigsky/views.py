@@ -19,7 +19,7 @@ from person.models import Role, PersonStatus
 from ticket.models import TicketStatus, TicketPriority
 from translation.models import Locale
 from utils.helpers import (model_to_json, model_to_json_select_related,
-    model_to_json_prefetch_related)
+    model_to_json_prefetch_related, queryset_to_json)
 
 
 class IndexView(TemplateView):
@@ -43,13 +43,15 @@ class IndexView(TemplateView):
             return super(IndexView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
+        tenant = self.request.user.role.tenant
+
         context = super(IndexView, self).get_context_data(**kwargs)
         context.update({
             'email_types_config': model_to_json(EmailType),
             'phone_number_types_config': model_to_json(PhoneNumberType),
             'address_types': model_to_json(AddressType),
-            'states_us': model_to_json(State),
-            'countries': model_to_json(Country),
+            'states_us': queryset_to_json(State.objects.tenant(tenant)),
+            'countries': queryset_to_json(tenant.countries.all()),
             'role_config': model_to_json_select_related(Role, 'location_level'),
             'role_types_config': json.dumps(ROLE_TYPES),
             'person_status_config': model_to_json(PersonStatus),

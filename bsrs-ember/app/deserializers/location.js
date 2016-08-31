@@ -108,6 +108,9 @@ var LocationDeserializer = Ember.Object.extend(OptConf, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('status', 'location', 'location');
+    belongs_to.bind(this)('country', 'location', 'location');
+    belongs_to.bind(this)('state', 'location', 'location');
+    belongs_to.bind(this)('address_type', 'location', 'location');
   },
   deserialize(response, id) {
     if (id) {
@@ -120,7 +123,7 @@ var LocationDeserializer = Ember.Object.extend(OptConf, {
     const store = this.get('simpleStore');
     response.email_fks = belongs_to_extract_contacts(response, store, 'email', 'emails');
     response.phone_number_fks = belongs_to_extract_contacts(response, store, 'phonenumber', 'phone_numbers');
-    response.address_fks = belongs_to_extract_contacts(response, store, 'address', 'addresses');
+    response.address_fks = this.extract_addresses(response); // belongs_to_extract_contacts(response, store, 'address', 'addresses');
     response.location_level_fk = extract_location_level(response, store);
     response.location_children_fks = extract_children(response, store);
     response.location_parents_fks = extract_parents(response, store);
@@ -141,6 +144,32 @@ var LocationDeserializer = Ember.Object.extend(OptConf, {
       const location = store.push('location-list', model);
       this.setup_status(status_json, location);
     });
+  },
+  extract_addresses(response) {
+    const store = this.get('simpleStore');
+    let address_fks = [];
+    let addresses = response.addresses || [];
+    addresses.forEach((a) => {
+      address_fks.push(a.id);
+      // related models
+      const country = a.country;
+      delete a.country;
+      const state = a.state;
+      delete a.state;
+      const type = a.type;
+      delete a.type;
+      // main model
+      a.model_fk = response.id;
+      a.detail = true;
+      const address = store.push('address', a);
+      // setup related models
+      this.setup_country(country, address);
+      this.setup_state(state, address);
+      this.setup_address_type(type, address);
+
+    });
+    delete response.addresses;
+    return address_fks;
   }
 });
 

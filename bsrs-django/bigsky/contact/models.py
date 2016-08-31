@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 
 from utils.fields import MyGenericForeignKey
-from utils.models import BaseNameOrderModel, BaseModel, BaseManager, BaseQuerySet
+from utils.models import BaseModel, BaseManager, BaseQuerySet, BaseNameOrderModel
 
 
 class Country(BaseModel):
@@ -28,12 +28,28 @@ class Country(BaseModel):
         }
 
 
+class StateQuerySet(BaseQuerySet):
+
+    def tenant(self, tenant):
+        return self.filter(country__tenants=tenant)
+
+
+class StateManager(BaseManager):
+
+    queryset_cls = StateQuerySet
+
+    def tenant(self, tenant):
+        return self.get_queryset().tenant(tenant)
+
+
 class State(BaseModel):
     country = models.ForeignKey(Country, related_name='states', null=True)
     country_code = models.CharField(max_length=100, blank=True)
     state_code = models.CharField(max_length=100, blank=True)
     name = models.CharField(max_length=100, blank=True)
     classification = models.CharField(max_length=100, blank=True)
+
+    objects = StateManager()
 
     def to_dict(self):
         return {
