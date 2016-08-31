@@ -40,11 +40,15 @@ en,admin.assignment.assignee,Assignee,Assignee,,"'admin.assignment.assignee':'As
 en,admin.assignment.description,Description,Description,,"'admin.assignment.description':'Description',",Description,
 en,admin.assignment.detail,Assignment Profile,Assignment Profile,,"'admin.assignment.detail':'Assignment Profile',",Assignment Profile,
 en,admin.assignment.filters,Filters,Filters,,"'admin.assignment.filters':'Filters',",Filters,
+en,admin.assignment.filtersApplied.one,There is {{count}} filter applied,There is {{count}} filter applied,,"'admin.assignment.filtersApplied.one':'There is {{count}} filter applied',",There is {{count_var_ filter applied,There is _count_var_ filter applied
+en,admin.assignment.filtersApplied.other,There are {{count}} filters applied,There are {{count}} filters applied,,"'admin.assignment.filtersApplied.other':'There are {{count}} filters applied',",There are {{count_var_ filters applied,There are _count_var_ filters applied
 en,admin.assignment.one,Assignment Profile,Assignment Profile,,"'admin.assignment.one':'Assignment Profile',",Assignment Profile,Assignment Profile
 en,admin.assignment.other,Assignment Profiles,Assignment Profiles,,"'admin.assignment.other':'Assignment Profiles',",Assignment Profiles,Assignment Profiles
 en,admin.assignment.pf.add,Add,Add,,"'admin.assignment.pf.add':'Add',",Add,
 en,admin.assignment.placeholder.available_filter,Please select a filter,Please select a filter,,"'admin.assignment.placeholder.available_filter':'Please select a filter',",Please select a filter,
 en,admin.assignment.search,Search Assignment Profiles,Search Assignment Profiles,,"'admin.assignment.search':'Search Assignment Profiles',",Search Assignment Profiles,Search Assignment Profiles
+en,admin.assignment.section.details,Details,Details,,"'admin.assignment.section.details':'Details',",Details,Details
+en,admin.assignment.section.filters,Filters,Filters,,"'admin.assignment.section.filters':'Filters',",Filters,Filters
 en,admin.assignment.selected_in,selected in:,selected in:,,"'admin.assignment.selected_in':'selected in:',",selected in:,selected in:
 en,admin.category.label.children,Sub Categories,Sub Categories,,"'admin.category.label.children':'Sub Categories',",Sub Categories,Sub Categories
 en,admin.category.label.cost_amount,Cost Amount,Cost Amount,,"'admin.category.label.cost_amount':'Cost Amount',",Cost Amount,Cost Amount
@@ -211,6 +215,9 @@ en,admin.person.new,New Person,New Person,,"'admin.person.new':'New Person',",Ne
 en,admin.person.one,Person,Person,,"'admin.person.one':'Person',",Person,Person
 en,admin.person.other,People,People,,"'admin.person.other':'People',",People,People
 en,admin.person.search,Search People,Search People,,"'admin.person.search':'Search People',",Search People,Search People
+en,admin.person.section.contact,Contact,Contact,,"'admin.person.section.contact':'Contact',",Contact,Contact
+en,admin.person.section.credentials,Credentials,Credentials,,"'admin.person.section.credentials':'Credentials',",Credentials,Credentials
+en,admin.person.section.details,Details,Details,,"'admin.person.section.details':'Details',",Details,Details
 en,admin.person.status.active,Active,Active,,"'admin.person.status.active':'Active',",Active,Active
 en,admin.person.status.expired,Expired,Expired,,"'admin.person.status.expired':'Expired',",Expired,Expired
 en,admin.person.status.inactive,Inactive,Inactive,,"'admin.person.status.inactive':'Inactive',",Inactive,Inactive
@@ -347,6 +354,7 @@ en,errors.ticket.assignee,Assignee must be provided,Assignee must be provided,,"
 en,errors.ticket.request,Request must be provided,Request must be provided,,"'errors.ticket.request':'Request must be provided',",Request must be provided,Request must be provided
 en,errors.ticket.request.length,Request must be at least 5 characters,Request must be at least 5 characters,,"'errors.ticket.request.length':'Request must be at least 5 characters',",Request must be at least 5 characters,Request must be at least 5 characters
 en,general.new,New,New,,"'general.new':'New',",New,New
+en,grid.export,Export,Export,,"'grid.export':'Export',",Export,Export
 en,grid.filter,Filter,Filter,,"'grid.filter':'Filter',",Filter,Filter
 en,grid.filter.other,Filters,Filters,,"'grid.filter.other':'Filters',",Filters,Filters
 en,grid.filterset_name,Name your filter,Name your filter,,"'grid.filterset_name':'Name your filter',",Name your filter,Name your filter
@@ -394,6 +402,9 @@ en,ticket.priority.high,High,High,,"'ticket.priority.high':'High',",High,High
 en,ticket.priority.low,Low,Low,,"'ticket.priority.low':'Low',",Low,Low
 en,ticket.priority.medium,Medium,Medium,,"'ticket.priority.medium':'Medium',",Medium,Medium
 en,ticket.search,Search Tickets,Search Tickets,,"'ticket.search':'Search Tickets',",Search Tickets,Search Tickets
+en,ticket.section.activity,Activity,Activity,,"'ticket.section.activity':'Activity',",Activity,Activity
+en,ticket.section.details,Details,Details,,"'ticket.section.details':'Details',",Details,Details
+en,ticket.section.location,Location,Location,,"'ticket.section.location':'Location',",Location,Location
 en,ticket.status.cancelled,Cancelled,Cancelled,,"'ticket.status.cancelled':'Cancelled',",Cancelled,Cancelled
 en,ticket.status.closed,Closed,Closed,,"'ticket.status.closed':'Closed',",Closed,Closed
 en,ticket.status.complete,Complete,Complete,,"'ticket.status.complete':'Complete',",Complete,Complete
@@ -408,6 +419,4 @@ en,ticket.status.unsatisfactory_completion,Unsatisfactory,Unsatisfactory,,"'tick
 en,upload.progress,Progress,Progress,,"'upload.progress':'Progress',",Progress,Progress
 en,validation.invalid,Invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid,Invalid
 en,validation.valid,Valid,Valid,,"'validation.valid':'Valid',",Valid,Valid
-,,,,,,,
-,,,,,,,
 ,,,,,,,
