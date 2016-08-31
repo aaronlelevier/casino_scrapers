@@ -4,7 +4,7 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from dtd.models import TreeData, TreeDataManager, TreeDataQuerySet, DTD_START_KEY
-from dtd.tests.factory import create_dtd_fixture_data
+from dtd.tests.factory import create_tree_data, create_dtd_fixture_data
 
 
 class TreeDataManagerTests(TestCase):
@@ -37,6 +37,19 @@ class TreeDataManagerTests(TestCase):
 
 
 class TreeDataTests(TestCase):
+
+    def setUp(self):
+        create_tree_data()
+
+    def test_export_fields(self):
+        export_fields = ['id', 'key', 'description']
+
+        self.assertEqual(TreeData.EXPORT_FIELDS, export_fields)
+
+    def test_filter_export_data__queryset_matches_export_fields(self):
+        tree_data = TreeData.objects.filter_export_data().first()
+        for f in TreeData.EXPORT_FIELDS:
+            self.assertTrue(hasattr(tree_data, f))
 
     def test_manager(self):
         self.assertIsInstance(TreeData.objects, TreeDataManager)

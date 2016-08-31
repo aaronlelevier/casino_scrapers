@@ -107,6 +107,16 @@ class CategoryManagerTests(TestCase):
 
 class CategoryTests(CategorySetupMixin, TestCase):
 
+    def test_export_fields(self):
+        export_fields = ['id', 'name', 'description', 'label', 'cost_amount', 'cost_code']
+
+        self.assertEqual(Category.EXPORT_FIELDS, export_fields)
+
+    def test_filter_export_data__queryset_matches_export_fields(self):
+        category = Category.objects.filter_export_data().first()
+        for f in Category.EXPORT_FIELDS:
+            self.assertTrue(hasattr(category, f))
+
     def test_label__no_parent_no_label_set(self):
         category = Category.objects.create(
             name='foo',

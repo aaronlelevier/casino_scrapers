@@ -82,13 +82,31 @@ class ExportData(APIView):
                                             self.downloads_sub_path, filename))
 
     def _set_model(self, model_name):
+        """
+        All exportable grids should be able to retrieve the model
+        class via this method.
+        """
         try:
-            content_type = ContentType.objects.get(model=model_name)
+            model = self._resolve_model_name(model_name)
+            content_type = ContentType.objects.get(model=model)
         except ContentType.DoesNotExist:
             raise ValidationError("Model with model name: {} DoesNotExist"
                                   .format(model_name))
         else:
             self.model = content_type.model_class()
+
+    def _resolve_model_name(self, model_name):
+        """This method resolves name differences between the string
+        name used by Django's ContentType class and the model name
+        'type' string used in each Ember repository."""
+        name_mapper = {
+            'dtd': 'treedata',
+            'location-level': 'locationlevel'
+        }
+        try:
+            return name_mapper[model_name]
+        except KeyError:
+            return model_name
 
     @staticmethod
     def _filename_with_datestamp(model_name):

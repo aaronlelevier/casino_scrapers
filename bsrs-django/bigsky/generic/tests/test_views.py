@@ -7,10 +7,12 @@ from os.path import dirname, join
 
 from django.contrib.auth.models import ContentType
 from django.conf import settings
+from django.db import models
 from django.http.request import QueryDict
 from django.utils.timezone import localtime, now
 
 from model_mommy import mommy
+from rest_framework.exceptions import ValidationError
 from rest_framework.test import APITestCase
 
 from generic.models import SavedSearch, Attachment
@@ -354,3 +356,19 @@ class ExportDataTests(APITestCase):
             data[0],
             "Model with model name: {} DoesNotExist".format(model_name)
         )
+
+    def test_set_model(self):
+        model_names = ['assignment', 'category', 'dtd', 'location',
+                       'location-level', 'person', 'role', 'ticket']
+
+        for name in model_names:
+            try:
+                ed = ExportData()
+                ed._set_model(name)
+                self.assertTrue(issubclass(ed.model, models.Model))
+            except ValidationError:
+                self.fail("%s is not the string name of a model class" % name)
+
+    def test_set_model__raises_validation_error_for_invalid_model_name(self):
+        with self.assertRaises(ValidationError):
+            ExportData()._set_model('foo')

@@ -4,12 +4,12 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
-from django.db.models import Q
+from django.db.models import F, Q
 
 from contact.models import PhoneNumber, Address, Email
 from tenant.models import Tenant
-from utils.models import (BaseModel, BaseManager, BaseNameModel, DefaultNameManager,
-    DefaultToDictMixin)
+from utils.models import (BaseModel, BaseManager, BaseQuerySet, BaseNameModel,
+    DefaultNameManager, DefaultToDictMixin)
 
 
 LOCATION_COMPANY = 'Company'
@@ -21,7 +21,7 @@ LOCATION_FMU = 'Facility Management Unit'
 
 ### SELF REFERENCING BASE
 
-class SelfReferencingQuerySet(models.query.QuerySet):
+class SelfReferencingQuerySet(BaseQuerySet):
     "Query Parent / Child relationships for all SelfRefrencing Objects."
 
     def get_all_children(self, parent, all_children=None):
@@ -156,6 +156,8 @@ class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
     '''
     LocationLevel records must be unique by: name, role_type
     '''
+    EXPORT_FIELDS = ['id', 'name']
+
     tenant = models.ForeignKey(Tenant, related_name="location_levels", null=True)
     contact = models.BooleanField(blank=True, default=True,
         help_text="Defines whether locations in this type will have related Contact models.")
@@ -289,6 +291,11 @@ class LocationQuerySet(SelfReferencingQuerySet):
                     .filter(location_level__can_create_tickets=True)
                     .values_list("id", flat=True))
 
+    def filter_export_data(self, query_params):
+        qs = super(LocationQuerySet, self).filter_export_data(query_params)
+        return qs.annotate(status_name=F('status__name'),
+                           location_level_name=F('location_level__name'))
+
 
 class LocationManager(SelfReferencingManager):
 
@@ -336,6 +343,7 @@ class Location(SelfRefrencingBaseModel, BaseModel):
         At the *Region* ``LocationLevel`` there is a
         *East* ``Location``.
     '''
+    EXPORT_FIELDS = ['id', 'status_name', 'name', 'number', 'location_level_name']
     # keys
     location_level = models.ForeignKey(LocationLevel, related_name='locations')
     status = models.ForeignKey(LocationStatus, related_name='locations', blank=True, null=True)

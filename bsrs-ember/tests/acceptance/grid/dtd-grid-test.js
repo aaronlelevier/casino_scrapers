@@ -6,7 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/utilities/urls';
+import BASEURLS, { EXPORT_DATA_URL } from 'bsrs-ember/utilities/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
@@ -589,4 +589,14 @@ test('save filterset button only available when a dynamic filter is present', fu
   andThen(() => {
     assert.equal(find('.t-show-save-filterset-modal').length, 1);
   });
+});
+
+test('export csv button shows in grid header', (assert) => {
+  visit(DTD_URL);
+  andThen(() => {
+    assert.equal(find('[data-test-id="grid-export-btn"]').length, 1);
+    assert.equal(find('[data-test-id="grid-export-btn"]').text().trim(), t('grid.export'));
+  });
+  xhr(`${EXPORT_DATA_URL}dtd/`, 'GET', null, {}, 200, undefined);
+  click('[data-test-id="grid-export-btn"]');
 });

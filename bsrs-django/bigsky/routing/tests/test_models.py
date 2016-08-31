@@ -178,6 +178,14 @@ class AssignmentManagerTests(SetupMixin, TestCase):
 
         self.assertTrue(ret)
 
+    def test_filter_export_data(self):
+        ret = Assignment.objects.filter_export_data({'id': self.assignment.id})
+
+        self.assertEqual(ret.count(), 1)
+        self.assertEqual(ret[0].id, self.assignment.id)
+        self.assertEqual(ret[0].description, self.assignment.description)
+        self.assertEqual(ret[0].assignee_name, self.assignment.assignee.fullname)
+
 
 class AssignmentTests(SetupMixin, TestCase):
 
@@ -194,6 +202,16 @@ class AssignmentTests(SetupMixin, TestCase):
         category_filter = self.assignment.filters.filter(source__field='categories')[0]
         category = Category.objects.get(id=category_filter.criteria[0])
         self.ticket.categories.add(category)
+
+    def test_export_fields(self):
+        export_fields = ['id', 'description', 'assignee_name']
+
+        self.assertEqual(Assignment.EXPORT_FIELDS, export_fields)
+
+    def test_filter_export_data__queryset_matches_export_fields(self):
+        assignment = Assignment.objects.filter_export_data().first()
+        for f in Assignment.EXPORT_FIELDS:
+            self.assertTrue(hasattr(assignment, f))
 
     def test_meta__ordering(self):
         # order by ascending 'order' b/c this demostrates processing order

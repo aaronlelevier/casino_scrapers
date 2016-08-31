@@ -37,6 +37,8 @@ class TreeDataManager(BaseManager):
 
 
 class TreeData(BaseModel):
+    EXPORT_FIELDS = ['id', 'key', 'description']
+
     key = models.CharField(unique=True, max_length=254)
     description = models.TextField()
     attachments = GenericRelation(Attachment)

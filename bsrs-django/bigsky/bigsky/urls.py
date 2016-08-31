@@ -166,7 +166,7 @@ urlpatterns += required(
         url(r'^media/', bigsky_views.MediaView.as_view(), name="media"),
         url(r'^logout/$', bigsky_views.logout, name='logout'),
         url(r'^django-admin/', include(admin.site.urls)),
-        url(r'api/export-data/(?P<model_name>[\w]+)/$', generic_views.ExportData.as_view()),
+        url(r'api/export-data/(?P<model_name>[\w-]+)/$', generic_views.ExportData.as_view()),
         # This URL must be the last Django URL defined, or else the URLs defined
         # below it won't resolve, and this URL will catch the URL request.
         url(r'^.*$', bigsky_views.IndexView.as_view(), name='index'),

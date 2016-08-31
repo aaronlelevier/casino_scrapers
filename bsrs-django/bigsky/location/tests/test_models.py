@@ -116,6 +116,16 @@ class LocationLevelTests(TestCase):
     def setUp(self):
         self.location = create_location()
 
+    def test_export_fields(self):
+        export_fields = ['id', 'name']
+
+        self.assertEqual(LocationLevel.EXPORT_FIELDS, export_fields)
+
+    def test_filter_export_data__queryset_matches_export_fields(self):
+        location_level = LocationLevel.objects.filter_export_data().first()
+        for f in LocationLevel.EXPORT_FIELDS:
+            self.assertTrue(hasattr(location_level, f))
+
     def test_manager(self):
         self.assertIsInstance(LocationLevel.objects, LocationLevelManager)
 
@@ -356,6 +366,18 @@ class LocationManagerTests(TestCase):
         self.assertEqual(ret, raw_qs_count)
         self.assertTrue(ret > 0)
 
+    def test_filter_export_data(self):
+        location = Location.objects.first()
+
+        ret = Location.objects.filter_export_data({'id': location.id})
+
+        self.assertEqual(ret.count(), 1)
+        self.assertEqual(ret[0].id, location.id)
+        self.assertEqual(ret[0].status_name, location.status.name)
+        self.assertEqual(ret[0].name, location.name)
+        self.assertEqual(ret[0].number, location.number)
+        self.assertEqual(ret[0].location_level_name, location.location_level.name)
+
 
 class LocationTests(TestCase):
 
@@ -363,6 +385,16 @@ class LocationTests(TestCase):
         self.location = create_location()
         self.store = create_address_type('admin.address_type.store')
         self.office = create_address_type('admin.address_type.office')
+
+    def test_export_fields(self):
+        export_fields = ['id', 'status_name', 'name', 'number', 'location_level_name']
+
+        self.assertEqual(Location.EXPORT_FIELDS, export_fields)
+
+    def test_filter_export_data__queryset_matches_export_fields(self):
+        location = Location.objects.filter_export_data().first()
+        for f in Location.EXPORT_FIELDS:
+            self.assertTrue(hasattr(location, f))
 
     def test_manager(self):
         self.assertIsInstance(Location.objects, LocationManager)

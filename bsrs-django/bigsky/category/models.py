@@ -85,6 +85,8 @@ class Category(BaseModel):
     - Parent or Label is required to create a Category.
     - If the ``parent`` FK is null, then it is a Top Level Category.
     """
+    EXPORT_FIELDS = ['id', 'name', 'description', 'label', 'cost_amount', 'cost_code']
+
     tenant = models.ForeignKey(Tenant, related_name="categories", null=True)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100, blank=True, null=True)

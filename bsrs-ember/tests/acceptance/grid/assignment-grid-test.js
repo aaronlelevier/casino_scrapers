@@ -12,7 +12,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import { isDisabledElement, isNotDisabledElement } from 'bsrs-ember/tests/helpers/disabled';
 import random from 'bsrs-ember/models/random';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
-import BASEURLS, { ASSIGNMENT_URL, ASSIGNMENT_LIST_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { ASSIGNMENT_URL, ASSIGNMENT_LIST_URL, EXPORT_DATA_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -275,4 +275,14 @@ test('sort by assignee fullname', function(assert) {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-assignment-assignee-fullname').text().trim(), AD.fullnameGridTen);
   });
+});
+
+test('export csv button shows in grid header', (assert) => {
+  visit(ASSIGNMENT_LIST_URL);
+  andThen(() => {
+    assert.equal(find('[data-test-id="grid-export-btn"]').length, 1);
+    assert.equal(find('[data-test-id="grid-export-btn"]').text().trim(), t('grid.export'));
+  });
+  xhr(`${EXPORT_DATA_URL}assignment/`, 'GET', null, {}, 200, undefined);
+  click('[data-test-id="grid-export-btn"]');
 });

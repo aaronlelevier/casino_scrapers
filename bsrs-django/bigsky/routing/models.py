@@ -3,9 +3,9 @@ from django.contrib.auth.models import ContentType
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.dispatch import receiver
-from django.db.models import Q
+from django.db.models import F, Q
 from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from tenant.models import Tenant
 from ticket.models import Ticket
@@ -22,6 +22,10 @@ class AssignmentQuerySet(BaseQuerySet):
             Q(description=keyword) |
             Q(assignee__username=keyword)
         )
+
+    def filter_export_data(self, query_params):
+        qs = super(AssignmentQuerySet, self).filter_export_data(query_params)
+        return qs.annotate(assignee_name=F('assignee__fullname'))
 
 
 class AssignmentManager(BaseManager):
@@ -63,6 +67,8 @@ class AssignmentManager(BaseManager):
 
 
 class Assignment(BaseModel):
+    EXPORT_FIELDS = ['id', 'description', 'assignee_name']
+    # keys
     tenant = models.ForeignKey(Tenant, null=True)
     order = models.IntegerField(null=True)
     description = models.CharField(max_length=500)

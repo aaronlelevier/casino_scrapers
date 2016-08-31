@@ -8,7 +8,7 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import LDS from 'bsrs-ember/vendor/defaults/location-status';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS, { LOCATION_LIST_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { LOCATION_LIST_URL, EXPORT_DATA_URL } from 'bsrs-ember/utilities/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
@@ -722,4 +722,14 @@ test('location level name is a functional related filter', function(assert) {
     assert.equal(find('.t-grid-data:eq(0) .t-location-location_level-name').text().trim(), LLD.nameDepartment);
     assert.equal(find('.t-grid-data:eq(1) .t-location-location_level-name').text().trim(), LLD.nameDepartment);
   });
+});
+
+test('export csv button shows in grid header', (assert) => {
+  visit(LOCATION_LIST_URL);
+  andThen(() => {
+    assert.equal(find('[data-test-id="grid-export-btn"]').length, 1);
+    assert.equal(find('[data-test-id="grid-export-btn"]').text().trim(), t('grid.export'));
+  });
+  xhr(`${EXPORT_DATA_URL}location/`, 'GET', null, {}, 200, undefined);
+  click('[data-test-id="grid-export-btn"]');
 });
