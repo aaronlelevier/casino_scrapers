@@ -163,12 +163,12 @@ class LocationRegionTests(LocationSetupMixin, TestCase):
         self.assertIsInstance(ret, State)
 
     def test_resolve_state__get(self):
-        abbr = "NY"
-        state = mommy.make(State, abbr=abbr)
+        state_code = "NY"
+        state = mommy.make(State, state_code=state_code)
         init_count = State.objects.count()
-        self.location_region.state = abbr
+        self.location_region.state = state_code
         self.location_region.save()
-        self.assertEqual(self.location_region.state, state.abbr)
+        self.assertEqual(self.location_region.state, state.state_code)
 
         ret = _resolve_state(self.location_region.state)
 
@@ -193,12 +193,12 @@ class LocationRegionTests(LocationSetupMixin, TestCase):
         self.assertIsInstance(ret, Country)
 
     def test_resolve_country__get(self):
-        name = "U.S"
-        country = mommy.make(Country, name=name)
+        common_name = "U.S"
+        country = mommy.make(Country, common_name=common_name)
         init_count = Country.objects.count()
-        self.location_region.country = name
+        self.location_region.country = common_name
         self.location_region.save()
-        self.assertEqual(self.location_region.country, country.name)
+        self.assertEqual(self.location_region.country, country.common_name)
 
         ret = _resolve_country(self.location_region.country)
 

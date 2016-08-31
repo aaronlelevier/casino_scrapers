@@ -62,9 +62,9 @@ def _resolve_state(domino_abbr):
     domino_abbr = domino_abbr.strip() if domino_abbr else None
     if domino_abbr:
         try:
-            state = State.objects.get(abbr=domino_abbr)
+            state = State.objects.get(state_code=domino_abbr)
         except State.DoesNotExist:
-            state = State.objects.create(name=domino_abbr, abbr=domino_abbr)
+            state = State.objects.create(name=domino_abbr, state_code=domino_abbr)
         return state
 
 
@@ -72,9 +72,9 @@ def _resolve_country(country):
     country = country.strip() if country else None
     if country:
         try:
-            country = Country.objects.get(name=country)
+            country = Country.objects.get(common_name=country)
         except Country.DoesNotExist:
-            country = Country.objects.create(name=country)
+            country = Country.objects.create(common_name=country)
         return country
 
 

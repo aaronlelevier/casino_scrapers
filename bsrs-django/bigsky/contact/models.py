@@ -6,7 +6,7 @@ from utils.models import BaseNameOrderModel, BaseModel, BaseManager, BaseQuerySe
 
 
 class Country(BaseModel):
-    sort_order = models.IntegerField()
+    sort_order = models.IntegerField(default=0)
     common_name = models.CharField(max_length=100, blank=True)
     formal_name = models.CharField(max_length=100, blank=True)
     type = models.CharField(max_length=100, blank=True)
