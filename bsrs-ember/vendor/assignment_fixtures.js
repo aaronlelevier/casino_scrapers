@@ -36,13 +36,13 @@ var BSRS_ASSIGNMENT_FACTORY = (function() {
       response[key] = assignment[key];
     }
     if (!assignment.filters) {
-      response.filters.forEach((filter) => {
+      response.filters.forEach(function(filter) {
         delete filter.key;
         delete filter.field;
         delete filter.lookup;
         filter.source = filter.source_id;
         delete filter.source_id;
-        filter.criteria = filter.criteria.map((criteria) => {
+        filter.criteria = filter.criteria.map(function(criteria) {
           return criteria.id;
         });
       });
