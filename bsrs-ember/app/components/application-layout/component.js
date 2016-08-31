@@ -9,6 +9,9 @@ export default Ember.Component.extend({
     //TODO: test
     closeDrawer() {
       this.set('drawerOpen', false);
+    },
+    toggleDrawer() {
+      this.toggleProperty('drawerOpen');
     }
   }
 });

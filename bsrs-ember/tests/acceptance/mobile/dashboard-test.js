@@ -32,9 +32,9 @@ test('dashboard renders with welcome text and no sidebar', async assert => {
 
 test('visiting dashboard can click on tray and show base modules', async assert => {
   await generalPage.visitDashboard();
-  assert.notOk(find('.t-nav-trigger').prop('checked'));
+  assert.notOk(find('.t-bs-mobile').hasClass('mobile-tray-open'));
   await pageDrawer.clickDrawer();
-  assert.ok(find('.t-nav-trigger').prop('checked'));
+  assert.ok(find('.t-bs-mobile').hasClass('mobile-tray-open'));
   assert.equal(currentURL(), BASEURLS.DASHBOARD_URL);
   assert.equal(find('li.t-nav-mobile-tray-item:eq(0)').text(), t('modules.tickets.newTickets'));
   assert.equal(find('li.t-nav-mobile-tray-item:eq(1)').text(), t('modules.tickets.openTickets'));
@@ -45,17 +45,17 @@ test('visiting dashboard can click on tray and show base modules', async assert 
   assert.equal(find('li.t-nav-mobile-tray-item:eq(7)').text(), t('modules.invoices.titleShort'));
   assert.equal(find('li.t-nav-mobile-tray-item:eq(8)').text(), t('admin.title'));
   await pageDrawer.clickDrawer();
-  assert.notOk(find('.t-nav-trigger').prop('checked'));
+  assert.notOk(find('.t-bs-mobile').hasClass('mobile-tray-open'));
 });
 
 test('visiting admin-mobile', async assert => {
   await generalPage.visitDashboard();
-  assert.notOk(find('.t-nav-trigger').prop('checked'));
+  assert.notOk(find('.t-bs-mobile').hasClass('mobile-tray-open'));
   await pageDrawer.clickDrawer();
-  assert.ok(find('.t-nav-trigger').prop('checked'));
+  assert.ok(find('.t-bs-mobile').hasClass('mobile-tray-open'));
   await pageDrawer.clickAdmin();
   assert.equal(currentURL(), BASEURLS.ADMIN_MOBILE_URL);
-  assert.notOk(find('.t-nav-trigger').prop('checked'));
+  assert.notOk(find('.t-bs-mobile').hasClass('mobile-tray-open'));
 });
 
 /* jshint ignore:end */

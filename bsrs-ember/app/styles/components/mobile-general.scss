@@ -14,7 +14,7 @@ vbox.mobile-wrap { //wraps header/section/footer
 header.mobile-header {
   height: $mobileHeaderHeight;
   position: relative;
-  z-index: 1;
+  z-index: 2; // trump footer (z-index = 1)
   @include nav-box-shadow;
   @include headerColors;
 }
@@ -22,7 +22,6 @@ header.mobile-header {
 /* DO NOT NEST since this class declaration is used in nav-bar and in outer wormhole */
 section.mobile-main {
   @include smoothScrolling;
-  z-index: 0;
   display: flex;
   flex-direction: column;
   .mobile-inner{

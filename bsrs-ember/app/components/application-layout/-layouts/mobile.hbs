@@ -1,13 +1,11 @@
 <!-- Main wrapper -->
-<div class="bs-mobile">
+<div class="bs-mobile t-bs-mobile {{if drawerOpen 'mobile-tray-open'}}">
   <div id="mobile-grid-filter-wormhole">
   </div>
   <!-- full screen + detail module -->
   <div id="mobile-single-wormhole">
   </div>
   <!-- Drawer -->
-  {{input type="checkbox" checked=drawerOpen id="nav-trigger" class="nav-trigger t-nav-trigger"}}
-  <label for="nav-trigger"></label>
   <vbox class="mobile-tray">
     <div class="mobile-tray__inner flex-item--auto">
       <ul>
@@ -49,7 +47,7 @@
   <!-- Contents within flow of app -->
   <vbox class="mobile-wrap">
     <header class="mobile-header flex-item--none">
-      {{nav-bar}}
+      {{nav-bar toggleDrawer=(action "toggleDrawer")}}
     </header>
     <section class="mobile-main flex-item--auto" id="infinity-loading">
       {{outlet}}

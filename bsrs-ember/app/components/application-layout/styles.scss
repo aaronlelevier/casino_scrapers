@@ -18,13 +18,6 @@ section.wrap {
   background: $white;
   font-size: 1.3rem;
   z-index: 0;
-  // not using liquid container right now
-  // .liquid-container{
-  //   height: 100%;
-  //   .liquid-child{
-  //     height: 100%;
-  //   }
-  // }
 }//section.wrap
 header.main {
   font-size: 1.3rem;
@@ -47,19 +40,14 @@ header.main {
 * NAV MOBILE START
 * slideout tray
 */
-input.nav-trigger {
-  position: absolute;
-  clip: rect(0, 0, 0, 0);
-}
 
-label[for="nav-trigger"] {
-  position: fixed;
+span.mobile-tray-trigger {
+  position: absolute;
   left: 0;
   top: 0;
-  z-index: 3; //hamburger must drumpf header.mobile-header z-index = 0
+  bottom: 0;
   font-size: 26px;
   line-height: $mobileHeaderHeight;
-  height: $mobileHeaderHeight;
   width: $mobileHeaderHeight;
   text-align: center;
   color: $light;
@@ -73,37 +61,32 @@ label[for="nav-trigger"] {
   }
 }
 
-.nav-trigger:checked + label {
-  top: 0;
-  right: 0;
-  bottom: 0;
-  height: auto;
-  left: $mobileDrawerWidth;
-  // -webkit-transform: translateX($mobileDrawerWidth);
-			// transform: translateX($mobileDrawerWidth);
-  padding-left: 15px;
-}
-.nav-trigger:checked ~ .mobile-wrap {
-  -webkit-transform: translateX($mobileDrawerWidth);
-  -ms-transform: translateX($mobileDrawerWidth);
-  transform: translateX($mobileDrawerWidth);
-  // this is expensive to keep around, so one possiblility is to remove it
-  will-change: transform;
-}
-.nav-trigger:checked ~ vbox.mobile-tray {
-  -webkit-transform: none;
-  -ms-transform: none;
-  transform: none;
-  will-change: transform;
+.mobile-tray-open {
+  .mobile-wrap {
+    -webkit-transform: translateX($mobileDrawerWidth);
+    -ms-transform: translateX($mobileDrawerWidth);
+    transform: translateX($mobileDrawerWidth);
+    // this is expensive to keep around, so one possiblility is to remove it
+    will-change: transform;
+  }
+  vbox.mobile-tray {
+    @include nav-box-shadow();
+    -webkit-transform: none;
+    -ms-transform: none;
+    transform: none;
+    will-change: transform;
+  }
+  span.mobile-tray-trigger {
+    position: fixed;
+  }
 }
 
-.nav-trigger + label,
-.mobile-wrap ,
+.mobile-wrap,
 vbox.mobile-tray {
-  -webkit-transition: all 150ms ease-in;
-  -moz-transition: all 150ms ease-in;
-  -o-transition: all 150ms ease-in;
-  transition: all 150ms ease-in;
+  -webkit-transition: all 150ms ease-in-out;
+  -moz-transition: all 150ms ease-in-out;
+  -o-transition: all 150ms ease-in-out;
+  transition: all 150ms ease-in-out;
 }
 
 vbox.mobile-tray { //slideout navigation tray
@@ -114,6 +97,7 @@ vbox.mobile-tray { //slideout navigation tray
   -webkit-transform: translateX(-100%);
   -ms-transform: translateX(-100%);
   transform: translateX(-100%);
+  z-index: 1; //
   div.mobile-tray__inner {
     -webkit-overflow-scrolling: touch; //DO NOT REMOVE
     overflow: auto;
