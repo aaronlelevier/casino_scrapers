@@ -21,11 +21,12 @@
         }}
       </div>
       <div class="row">
-        <header>
+        <header class="dtd-grid-header">
           {{t.gridSearch
             page=page
             search=search 
             placeholder=search_placeholder 
+            class="flex-item--none"
           }}
           {{t.head
             add_model_text=add_model_text
@@ -33,6 +34,7 @@
             count=count
             add_model_url=add_model_url
             savingFilter=savingFilter
+            class="flex-item--auto"
           }}
         </header>
       </div>

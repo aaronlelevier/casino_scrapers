@@ -1,5 +1,8 @@
 import Ember from 'ember';
 
+/*
+ * Only used in DTD
+ */
 export default Ember.Component.extend({
   classNames: ['search-wrap pull-left'],
   actions: {
