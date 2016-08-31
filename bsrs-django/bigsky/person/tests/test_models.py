@@ -50,11 +50,32 @@ class RoleManagerTests(TestCase):
 
         self.assertEqual(ret.count(), raw_ret.count())
 
+    def test_filter_export_data(self):
+        role = self.role_one
+
+        ret = Role.objects.filter_export_data({'id': role.id})
+
+        self.assertEqual(ret.count(), 1)
+        self.assertEqual(ret[0].id, role.id)
+        self.assertEqual(ret[0].name, role.name)
+        self.assertEqual(ret[0].role_type, role.role_type)
+        self.assertEqual(ret[0].location_level_name, role.location_level.name)
+
 
 class RoleTests(TestCase):
 
     def setUp(self):
         self.role = create_role()
+
+    def test_export_fields(self):
+        export_fields = ['id', 'name', 'role_type', 'location_level_name']
+
+        self.assertEqual(Role.EXPORT_FIELDS, export_fields)
+
+    def test_filter_export_data__queryset_matches_export_fields(self):
+        role = Role.objects.filter_export_data().first()
+        for f in Role.EXPORT_FIELDS:
+            self.assertTrue(hasattr(role, f))
 
     def test_manager(self):
         self.assertIsInstance(Role.objects, RoleManager)
@@ -202,6 +223,71 @@ class PersonStatusTests(TestCase):
 
 ### PERSON
 
+class PersonManagerTests(TestCase):
+
+    def setUp(self):
+        self.person = create_person(username='b')
+        self.person_two = create_person(username='a')
+
+    def test_search_multi_username(self):
+        search = Person.objects.first().username
+        raw_qs_count = Person.objects.filter(
+                Q(username__icontains=search)
+            ).count()
+
+        ret = Person.objects.search_multi(keyword=search).count()
+
+        self.assertEqual(ret, raw_qs_count)
+        self.assertEqual(ret, 1)
+
+    def test_search_multi_username(self):
+        search = Person.objects.first().fullname
+        raw_qs_count = Person.objects.filter(
+                Q(fullname__icontains=search)
+            ).count()
+
+        ret = Person.objects.search_multi(keyword=search).count()
+
+        self.assertEqual(ret, raw_qs_count)
+        self.assertEqual(ret, 1)
+
+    def test_search_multi_title(self):
+        person = Person.objects.first()
+        person.title = 'another title'
+        person.save()
+        search = 'another title'
+        raw_qs_count = Person.objects.filter(
+                Q(title__icontains=search)
+            ).count()
+
+        ret = Person.objects.search_multi(keyword=search).count()
+
+        self.assertEqual(ret, raw_qs_count)
+        self.assertEqual(ret, 1)
+
+    def test_search_multi_role__name(self):
+        search = Person.objects.first().role.name
+        raw_qs_count = Person.objects.filter(
+                Q(role__name__icontains=search)
+            ).count()
+
+        ret = Person.objects.search_multi(keyword=search).count()
+
+        self.assertEqual(ret, raw_qs_count)
+        self.assertEqual(ret, 1)
+
+    def test_filter_export_data(self):
+        ret = Person.objects.filter_export_data({'id': self.person.id})
+
+        self.assertEqual(ret.count(), 1)
+        self.assertEqual(ret[0].id, self.person.id)
+        self.assertEqual(ret[0].status_name, self.person.status.name)
+        self.assertEqual(ret[0].fullname, self.person.fullname)
+        self.assertEqual(ret[0].username, self.person.username)
+        self.assertEqual(ret[0].title, self.person.title)
+        self.assertEqual(ret[0].role_name, self.person.role.name)
+
+
 class PersonTests(TestCase):
 
     def setUp(self):
@@ -213,6 +299,17 @@ class PersonTests(TestCase):
 
     def test_person_is_user_subclass(self):
         self.assertIsInstance(self.person, AbstractUser)
+
+    def test_export_fields(self):
+        export_fields = ['id', 'status_name', 'fullname', 'username',
+                         'title', 'role_name']
+
+        self.assertEqual(Person.EXPORT_FIELDS, export_fields)
+
+    def test_filter_export_data__queryset_matches_export_fields(self):
+        person = Person.objects.filter_export_data().first()
+        for f in Person.EXPORT_FIELDS:
+            self.assertTrue(hasattr(person, f), "%s is not an attr on Person" % f)
 
     def test_emails_filtering(self):
         email_one = create_contact(Email, self.person)
@@ -470,94 +567,3 @@ class PersonPasswordHistoryTests(TestCase):
             init_password_change,
             post_password_change
         )
-
-class PersonManagerTests(TestCase):
-
-    def setUp(self):
-        self.person = create_person(username='b')
-        self.person_two = create_person(username='a')
-
-    def test_search_multi_username(self):
-        search = Person.objects.first().username
-        raw_qs_count = Person.objects.filter(
-                Q(username__icontains=search)
-            ).count()
-
-        ret = Person.objects.search_multi(keyword=search).count()
-
-        self.assertEqual(ret, raw_qs_count)
-        self.assertEqual(ret, 1)
-
-    def test_search_multi_username(self):
-        search = Person.objects.first().fullname
-        raw_qs_count = Person.objects.filter(
-                Q(fullname__icontains=search)
-            ).count()
-
-        ret = Person.objects.search_multi(keyword=search).count()
-
-        self.assertEqual(ret, raw_qs_count)
-        self.assertEqual(ret, 1)
-
-    def test_search_multi_title(self):
-        person = Person.objects.first()
-        person.title = 'another title'
-        person.save()
-        search = 'another title'
-        raw_qs_count = Person.objects.filter(
-                Q(title__icontains=search)
-            ).count()
-
-        ret = Person.objects.search_multi(keyword=search).count()
-
-        self.assertEqual(ret, raw_qs_count)
-        self.assertEqual(ret, 1)
-
-    def test_search_multi_role__name(self):
-        search = Person.objects.first().role.name
-        raw_qs_count = Person.objects.filter(
-                Q(role__name__icontains=search)
-            ).count()
-
-        ret = Person.objects.search_multi(keyword=search).count()
-
-        self.assertEqual(ret, raw_qs_count)
-        self.assertEqual(ret, 1)
-
-    def test_filter_export_data(self):
-        query_params = {'username': self.person.username}
-        fields = Person.EXPORT_FIELDS # ['id', 'username']
-
-        ret = Person.objects.filter_export_data(query_params)
-
-        self.assertIsInstance(ret, PersonQuerySet)
-        self.assertEqual(ret.count(), 1)
-        self.assertEqual(len(ret[0]), len(fields))
-        self.assertEqual(ret[0]['id'], self.person.id)
-        self.assertEqual(ret[0]['username'], self.person.username)
-
-    def test_filter_export_data__none_field_arg(self):
-        query_params = {'_': 'foo'}
-
-        ret = Person.objects.filter_export_data(query_params)
-
-        self.assertIsInstance(ret, PersonQuerySet)
-        self.assertEqual(ret.count(), Person.objects.count())
-
-    @patch("person.models.PersonQuerySet.search_multi")
-    def test_filter_export_data__search(self, mock_func):
-        query_params = {'search': 'a'}
-
-        Person.objects.filter_export_data(query_params)
-
-        self.assertEqual(mock_func.call_args[0][0], 'a')
-
-    def test_filter_export_data__ordering(self):
-        self.assertTrue(self.person_two.username < self.person.username)
-        query_params = {'ordering': ['username']}
-
-        ret = Person.objects.filter_export_data(query_params)
-
-        self.assertEqual(ret.count(), 2)
-        self.assertEqual(ret[0]['username'], self.person_two.username)
-        self.assertEqual(ret[1]['username'], self.person.username)

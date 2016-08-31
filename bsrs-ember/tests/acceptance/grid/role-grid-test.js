@@ -6,7 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS, { ROLE_LIST_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { ROLE_LIST_URL, EXPORT_DATA_URL } from 'bsrs-ember/utilities/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
@@ -807,6 +807,16 @@ test('when a filterset that has a search is applied both the querystring and the
     assert.ok(!find('.t-filterset-wrap div:eq(1) a').hasClass('active'));
     assert.ok(find('.t-filterset-wrap div:eq(2) a').hasClass('active'));
   });
+});
+
+test('export csv button shows in grid header', (assert) => {
+  visit(ROLE_LIST_URL);
+  andThen(() => {
+    assert.equal(find('[data-test-id="grid-export-btn"]').length, 1);
+    assert.equal(find('[data-test-id="grid-export-btn"]').text().trim(), t('grid.export'));
+  });
+  xhr(`${EXPORT_DATA_URL}role/`, 'GET', null, {}, 200, undefined);
+  click('[data-test-id="grid-export-btn"]');
 });
 
 ////this test is specifically for applying saved filtersets ... it just happens to use this module and the role fixture data

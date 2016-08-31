@@ -136,7 +136,7 @@ class Ticket(BaseModel):
     MODEL_FIELDS = ['id',  'number', 'created', 'request']
 
     EXPORT_FIELDS = ['id', 'priority_name', 'status_name', 'number', 'created',
-                     'location_name', 'assignee_name', 'request']
+                     'location_name', 'assignee_name', 'request', 'category']
 
     def next_number():
         return Ticket.objects.next_number()
@@ -180,6 +180,16 @@ class Ticket(BaseModel):
     def _process_ticket(self, tenant_id, ticket):
         model = apps.get_model("routing", "assignment")
         model.objects.process_ticket(tenant_id, ticket)
+
+    @property
+    def category(self):
+        """
+        Formated String of the Ticket's categories.
+        ex: parent - child - grand_child
+        """
+        categories = (self.categories.prefetch_related('categories')
+                                     .values('level', 'name'))
+        return " - ".join(x['name'] for x in sorted(categories, key=lambda k: k['level']))
 
 
 TICKET_ACTIVITY_TYPES = [

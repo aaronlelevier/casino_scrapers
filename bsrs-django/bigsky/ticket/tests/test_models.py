@@ -215,15 +215,17 @@ class TicketManagerTests(TestCase):
         ticket = create_ticket(assignee=assignee)
 
         ret = Ticket.objects.filter_export_data({'id': ticket.id})
-        self.assertEqual(len(ret[0]), 8)
-        self.assertEqual(ret[0]['id'], ticket.id)
-        self.assertEqual(ret[0]['priority_name'], ticket.priority.name)
-        self.assertEqual(ret[0]['status_name'], ticket.status.name)
-        self.assertEqual(ret[0]['number'], ticket.number)
-        self.assertEqual(ret[0]['created'], ticket.created)
-        self.assertEqual(ret[0]['location_name'], ticket.location.name)
-        self.assertEqual(ret[0]['assignee_name'], ticket.assignee.fullname)
-        self.assertEqual(ret[0]['request'], ticket.request)
+
+        self.assertEqual(ret.count(), 1)
+        self.assertEqual(ret[0].id, ticket.id)
+        self.assertEqual(ret[0].priority_name, ticket.priority.name)
+        self.assertEqual(ret[0].status_name, ticket.status.name)
+        self.assertEqual(ret[0].number, ticket.number)
+        self.assertEqual(ret[0].created, ticket.created)
+        self.assertEqual(ret[0].location_name, ticket.location.name)
+        self.assertEqual(ret[0].assignee_name, ticket.assignee.fullname)
+        self.assertEqual(ret[0].request, ticket.request)
+        self.assertEqual(ret[0].category, ticket.category)
 
 
 class TicketTests(TestCase):
@@ -238,8 +240,16 @@ class TicketTests(TestCase):
         self.status_new = TicketStatus.objects.get(name=TICKET_STATUS_NEW)
         self.status_draft = TicketStatus.objects.get(name=TICKET_STATUS_DRAFT)
 
-    def test_ordering(self):
-        self.assertEqual(Ticket._meta.ordering, ('-created',))
+    def test_export_fields(self):
+        export_fields = ['id', 'priority_name', 'status_name', 'number', 'created',
+                         'location_name', 'assignee_name', 'request', 'category']
+
+        self.assertEqual(Ticket.EXPORT_FIELDS, export_fields)
+
+    def test_filter_export_data__queryset_matches_export_fields(self):
+        ticket = Ticket.objects.filter_export_data().first()
+        for f in Ticket.EXPORT_FIELDS:
+            self.assertTrue(hasattr(ticket, f))
 
     def test_number(self):
         one = Ticket.objects.get(number=1)
@@ -247,6 +257,9 @@ class TicketTests(TestCase):
 
         two = Ticket.objects.get(number=2)
         self.assertIsInstance(two, Ticket)
+
+    def test_ordering(self):
+        self.assertEqual(Ticket._meta.ordering, ('-created',))
 
     @patch("ticket.models.Ticket._process_ticket")
     def test_save__process_ticket__new_status_and_no_assignee(self, mock_process_ticket):
@@ -279,6 +292,20 @@ class TicketTests(TestCase):
         self.ticket.save()
 
         self.assertFalse(mock_process_ticket.called)
+
+    def test_category(self):
+        # categories - are joined directly onto the Ticket, but do
+        # need the parent/child relationship in order to setup level
+        parent = self.ticket.categories.first()
+        child = create_single_category(parent=parent)
+        grand_child = create_single_category(parent=child)
+        self.ticket.categories.add(child, grand_child)
+        self.assertEqual(self.ticket.categories.count(), 3)
+
+        self.assertEqual(
+            self.ticket.category,
+            "{} - {} - {}".format(parent.name, child.name, grand_child.name)
+        )
 
 
 class TicketActivityTests(TestCase):

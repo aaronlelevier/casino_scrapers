@@ -100,7 +100,7 @@ class ExportData(APIView):
             writer = csv.writer(csvfile, delimiter=',')
             writer.writerow(self.model.export_fields)
             for d in self._filter_with_fields(query_params):
-                writer.writerow([d[f] for f in self.model.export_fields])
+                writer.writerow([getattr(d, f) for f in self.model.export_fields])
 
     def _filter_with_fields(self, query_params):
         return self.model.objects.filter_export_data(query_params)

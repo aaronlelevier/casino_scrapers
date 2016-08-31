@@ -1,3 +1,5 @@
+from mock import patch
+
 from django.test import TestCase, TransactionTestCase
 from django.utils import timezone
 from django.contrib.auth.models import ContentType, Permission
@@ -7,12 +9,56 @@ from model_mommy import mommy
 
 from contact.models import Country
 from location.models import LocationType
-from person.models import Person
+from person.models import Person, PersonQuerySet
 from person.tests.factory import create_single_person, create_role
 from utils import create
 from utils.exceptions import QuerySetClassNotDefined
 from utils.models import Tester, TesterManager
 from utils.permissions import perms_map
+
+
+class BaseManagerTests(TestCase):
+
+    def setUp(self):
+        self.person = create_single_person('b')
+        self.person_two = create_single_person('a')
+
+    def test_filter_export_data(self):
+        query_params = {'username': self.person.username}
+        fields = Person.EXPORT_FIELDS # ['id', 'username']
+
+        ret = Person.objects.filter_export_data(query_params)
+
+        self.assertIsInstance(ret, PersonQuerySet)
+        self.assertEqual(ret.count(), 1)
+        self.assertEqual(ret[0].id, self.person.id)
+        self.assertEqual(ret[0].username, self.person.username)
+
+    def test_filter_export_data__none_field_arg(self):
+        query_params = {'_': 'foo'}
+
+        ret = Person.objects.filter_export_data(query_params)
+
+        self.assertIsInstance(ret, PersonQuerySet)
+        self.assertEqual(ret.count(), Person.objects.count())
+
+    @patch("person.models.PersonQuerySet.search_multi")
+    def test_filter_export_data__search(self, mock_func):
+        query_params = {'search': 'a'}
+
+        Person.objects.filter_export_data(query_params)
+
+        self.assertEqual(mock_func.call_args[0][0], 'a')
+
+    def test_filter_export_data__ordering(self):
+        self.assertTrue(self.person_two.username < self.person.username)
+        query_params = {'ordering': ['username']}
+
+        ret = Person.objects.filter_export_data(query_params)
+
+        self.assertEqual(ret.count(), 2)
+        self.assertEqual(ret[0].username, self.person_two.username)
+        self.assertEqual(ret[1].username, self.person.username)
 
 
 class BaseModelTests(TestCase):
@@ -72,7 +118,10 @@ class BaseModelTests(TestCase):
         )
 
     def test_export_fields__explicit(self):
-        self.assertEqual(Person.EXPORT_FIELDS, ['id', 'username'])
+        self.assertEqual(
+            Person.EXPORT_FIELDS,
+            ['id', 'status_name', 'fullname', 'username', 'title', 'role_name']
+        )
 
         self.assertEqual(Person.export_fields, Person.EXPORT_FIELDS)
 

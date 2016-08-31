@@ -12,7 +12,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db import models, IntegrityError
 from django.db.models.signals import post_save
-from django.db.models import Q
+from django.db.models import F, Q
 from django.dispatch import receiver
 from django.utils import timezone
 
@@ -39,6 +39,10 @@ class RoleQuerySet(BaseQuerySet):
             Q(role_type__icontains=keyword)
         )
 
+    def filter_export_data(self, query_params):
+        qs = super(RoleQuerySet, self).filter_export_data(query_params)
+        return qs.annotate(location_level_name=F('location_level__name'))
+
 
 class RoleManager(BaseManager):
 
@@ -49,6 +53,8 @@ class RoleManager(BaseManager):
 
 
 class Role(BaseModel):
+    EXPORT_FIELDS = ['id', 'name', 'role_type', 'location_level_name']
+
     # keys
     tenant = models.ForeignKey(Tenant, related_name="roles", null=True)
     group = models.OneToOneField(Group, blank=True, null=True)
@@ -279,6 +285,12 @@ class PersonQuerySet(BaseQuerySet):
             Q(email__icontains=keyword)
         )
 
+    def filter_export_data(self, query_params):
+        qs = super(PersonQuerySet, self).filter_export_data(query_params)
+        return qs.annotate(status_name=F('status__name'),
+                           role_name=F('role__name'))
+
+
 
 class PersonManager(BaseManagerMixin, UserManager):
     '''
@@ -305,8 +317,8 @@ class Person(BaseModel, AbstractUser):
 
     # Static list of fields to export via the Ember GridView
     MODEL_FIELDS = ['id', 'username']
-    EXPORT_FIELDS = ['id', 'username']
-
+    EXPORT_FIELDS = ['id', 'status_name', 'fullname', 'username',
+                     'title', 'role_name']
     # Keys
     role = models.ForeignKey(Role)
     status = models.ForeignKey(PersonStatus, blank=True, null=True)

@@ -54,7 +54,7 @@ class BaseQuerySet(models.query.QuerySet):
         params = {k:v for k,v in query_dict.items()
                       if k in self.model.model_fields}
 
-        qs = self.filter(**params).values(*self.model.model_fields)
+        qs = self.filter(**params)
         if search:
             qs = qs.search_multi(search)
         if ordering:
@@ -65,7 +65,7 @@ class BaseQuerySet(models.query.QuerySet):
 
 class BaseManagerMixin(object):
 
-    def filter_export_data(self, query_params):
+    def filter_export_data(self, query_params={}):
         return self.get_queryset().filter_export_data(query_params)
 
 

@@ -8,7 +8,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS, { PEOPLE_LIST_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { PEOPLE_LIST_URL, EXPORT_DATA_URL } from 'bsrs-ember/utilities/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
@@ -735,4 +735,14 @@ test('status.translated_name is a functional related filter', function(assert) {
     assert.equal(currentURL(),PEOPLE_LIST_URL + '?find=status.translated_name%3Arr&search=&sort=-status.translated_name');
     assert.equal(find('.t-grid-data').length, 0);
   });
+});
+
+test('export csv button shows in grid header', (assert) => {
+  visit(PEOPLE_LIST_URL);
+  andThen(() => {
+    assert.equal(find('[data-test-id="grid-export-btn"]').length, 1);
+    assert.equal(find('[data-test-id="grid-export-btn"]').text().trim(), t('grid.export'));
+  });
+  xhr(`${EXPORT_DATA_URL}person/`, 'GET', null, {}, 200, undefined);
+  click('[data-test-id="grid-export-btn"]');
 });
