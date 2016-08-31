@@ -545,7 +545,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
   assert.equal(components, 3);
   // select same
   let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
-  top_level_xhr = xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
+  const top_level_xhr = xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
   await ticketPage.categoryOneClickDropdown();
   await ticketPage.categoryOneClickOptionOne();
   assert.equal(store.find('link').get('length'), 1);
@@ -638,7 +638,7 @@ test('changing tree and reverting tree should not show as dirty', async assert =
   assert.ok(link.get('categoriesIsNotDirty'));
   //select same
   let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
-  top_level_xhr = xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
+  const top_level_xhr = xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
   await ticketPage.categoryOneClickDropdown();
   await ticketPage.categoryOneClickOptionOne();
   assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
@@ -675,7 +675,7 @@ test('selecting and removing a top level category will remove children categorie
   assert.equal(store.find('category').get('length'), 4);
   //change top level
   let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
-  top_level_xhr = xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
+  const top_level_xhr = xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
   await ticketPage.categoryOneClickDropdown();
   await ticketPage.categoryOneClickOptionTwo();
   components = ticketPage.powerSelectComponents;
@@ -703,7 +703,7 @@ test('when selecting a new parent category it should remove previously selected 
   components = ticketPage.powerSelectComponents;
   assert.equal(components, 3);
   let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
-  top_level_xhr = xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
+  const top_level_xhr = xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
   await ticketPage.categoryOneClickDropdown();
   await ticketPage.categoryOneClickOptionTwo();
   assert.ok(link.get('isDirtyOrRelatedDirty'));
