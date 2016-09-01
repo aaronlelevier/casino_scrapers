@@ -69,7 +69,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    let role = store.find('role').objectAt(0);
+    const role = store.find('role').objectAt(0);
     assert.ok(role.get('isNotDirty'));
     assert.equal(role.get('location_level').get('id'), LLD.idOne);
     assert.equal(page.roleTypeInput, RD.roleTypeGeneral);
@@ -85,15 +85,15 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     location_level: location_level.id,
     categories: [CD.idOne],
   }));
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
   page.nameFill(RD.namePut);
   page.dashboard_textFill(TD.dashboard_textOther);
   selectChoose('.t-role-role-type', RD.roleTypeContractor);
   selectChoose('.t-location-level-select', LLD.nameLossPreventionRegion);
   andThen(() => {
-    let role = store.find('role').objectAt(0);
-    assert.ok(role.get('isDirty'));
+    const role = store.find('role').objectAt(0);
+    assert.ok(role.get('isDirtyOrRelatedDirty'));
   });
+  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
   let list = RF.list();
   list.results[0].name = RD.namePut;
   list.results[0].role_type = RD.roleTypeContractor;
@@ -103,30 +103,36 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
   andThen(() => {
     assert.equal(currentURL(), ROLE_URL);
     let role = store.find('role').objectAt(0);
-    assert.ok(role.get('isNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
   });
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
   visit(DETAIL_URL);
   andThen(() => {
-    assert.ok(page.nameValidationErrorHidden());
+    assert.equal($('.validated-input-error-dialog').length, 0);
   });
   fillIn('.t-role-name', '');
   page.categoryOneRemove();
   generalPage.save();
   andThen(() => {
-    assert.ok(page.nameValidationErrorVisible());
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.ok(page.nameValidationErrorVisible);
+    assert.ok(find('.t-role-name-validator').hasClass('invalid'));
+    assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.role.name'));
   });
   fillIn('.t-role-name', RD.nameOne);
+  triggerEvent('.t-role-name', 'keyup', {keyCode: 65});
   andThen(() => {
-    assert.ok(page.nameValidationErrorHidden());
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.notOk(page.nameValidationErrorVisible);
   });
   xhr(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
   page.categoryClickDropdown();
   page.categoryClickOptionOneEq();
   andThen(() => {
-    assert.ok(page.nameValidationErrorHidden());
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.notOk(page.nameValidationErrorVisible);
   });
   let payload = RF.put(Object.assign(basePayload, {categories: [CD.idOne]}));
   let response = Ember.$.extend(true, {}, payload);

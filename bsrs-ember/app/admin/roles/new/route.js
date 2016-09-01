@@ -7,6 +7,7 @@ var RoleNewRoute = TabNewRoute.extend({
   redirectRoute: 'admin.roles.index',
   module: 'role',
   templateModelField: Ember.computed(function() { return 'Role'; }),
+  i18n: Ember.inject.service(),
   model(params) {
     let new_pk = parseInt(params.new_id, 10);
     const repository = this.get('repository');
@@ -19,12 +20,17 @@ var RoleNewRoute = TabNewRoute.extend({
       model = repository.create(default_role_type, new_pk);
     }
     const otherXhrs = [repository.getRouteData()];
+    const hashComponents = [
+      {'title': this.get('i18n').t('admin.role.section.details'), 'component': 'roles/detail-section', active: 'active'},
+      {'title': this.get('i18n').t('admin.role.section.settings'), 'component': 'roles/settings-section', active: ''},
+    ];
     return Ember.RSVP.hash({
       model,
       all_role_types,
       all_location_levels,
       otherXhrs: Ember.RSVP.all(otherXhrs),
-      repository
+      repository,
+      hashComponents
     });
   },
   setupController: function(controller, hash) {

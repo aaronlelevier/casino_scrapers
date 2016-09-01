@@ -117,6 +117,12 @@ var TicketPage = PageObject.create({
   assigneeErrorHidden: isHidden('.t-ticket-assignee-error'),
   assigneeErrorVisible: isVisible('.t-ticket-assignee-error'),
   assigneeErrorText: text('.t-ticket-assignee-error'),
+  requestValidationErrorVisible: hasClass('invalid', '.t-ticket-request-validator'),
+  requesterValidationErrorVisible: hasClass('invalid', '.t-ticket-requester-validator'),
+  locationValidationErrorVisible: hasClass('invalid', '.t-ticket-location-select .ember-power-select-trigger'),
+  assigneeValidationErrorVisible: hasClass('invalid', '.t-ticket-assignee-select .ember-power-select-trigger'),
+  // statusValidationErrorVisible: hasClass('invalid', '.t-ticket-status-validator'),
+  // priorityValidationErrorVisible: hasClass('invalid', '.t-ticket-priority-validator'),
 
   //DT
   continueDT: clickable('.t-dt-continue'),

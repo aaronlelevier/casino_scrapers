@@ -4,6 +4,11 @@ export default Ember.Component.extend({
   currency: Ember.inject.service(),
   simpleStore: Ember.inject.service(),
   classNames: ['input-currency t-input-currency'],
+  /* @method currencyObject
+   * @param { string } currencyField - API e.g. "auth_currency"
+   * @param { string } inheritsFrom - not req from API
+   * model.currencyField is an FK to a currency object loaded on boot
+  */
   currencyObject: Ember.computed('model.auth_currency', 'model.cost_currency', function() {
     let store = this.get('simpleStore');
     let currencyField = this.get('currencyField');
@@ -16,9 +21,11 @@ export default Ember.Component.extend({
     }
     return currency_service.getDefaultCurrency();
   }),
+  /* @method currencyObjects
+   * power select dropdown list of currencies
+  */
   currencyObjects: Ember.computed(function() {
     let currency_service = this.get('currency');
-    let person = this.get('model');
     return currency_service.getCurrencies();
   }),
   init() {
@@ -26,7 +33,9 @@ export default Ember.Component.extend({
     const field = this.get('field');
     Ember.defineProperty(this, 'bound_field', Ember.computed('model.' + field, function() {
       const currency_service = this.get('currency');
+      // get currency from store based on currencyField API ('auth_currency')
       const precision = this.get('currencyObject').get('decimal_digits');
+      // 'field' is the actual Decimal Field on the backend ('auth_amount')
       return currency_service.format_currency(this.get('model').get(field), precision);
     }));
   },

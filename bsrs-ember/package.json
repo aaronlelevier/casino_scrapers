@@ -24,6 +24,7 @@
     "broccoli-asset-rev": "^2.4.2",
     "broccoli-funnel": "^1.0.1",
     "bsrs-components": "file:addons/bsrs-components",
+    "ember-power-select-mobile": "file:addons/ember-power-select-mobile",
     "ember-ajax": "2.5.1",
     "ember-autoresize": "0.5.16",
     "ember-basic-dropdown": "0.13.0-beta.6",

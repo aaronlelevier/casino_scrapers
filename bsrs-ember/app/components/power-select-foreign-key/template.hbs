@@ -1,12 +1,29 @@
-{{#power-select
-  class=(concat relatedModelName '-select' ' t-' relatedModelName '-select')
+<span id={{valuePath}}></span>
+{{#power-select-mobile
+  class=(concat relatedModelName '-select' ' t-' relatedModelName '-select' (if showMessage ' invalid'))
   tagName="div"
   selected=selected
   allowClear=clear
   onchange=(action "selected")
   searchEnabled=false
   options=relatedModels
+  labelText=labelText
   as |optionModel|
 }}
   {{unless notTranslated (t (get optionModel displayName)) (get optionModel displayName)}}
-{{/power-select}}
+{{/power-select-mobile}}
+
+{{#if showMessage}}
+  {{#tether-dialog
+    container-class="tether-dialog-reset"
+    target=(concat "#" valuePath)
+    hasOverlay=false
+    attachment="bottom left"
+    targetAttachment="top left"
+    offset="5px 0"
+  }}
+  <div class="validated-input-error-dialog animated flipInX error">
+    {{t (v-get model valuePath "message")}}
+  </div>
+  {{/tether-dialog}}
+{{/if}}

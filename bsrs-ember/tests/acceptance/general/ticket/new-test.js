@@ -64,44 +64,54 @@ test('validation works and when hit save, we do same post', (assert) => {
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), TICKET_NEW_URL);
-    assert.ok(find('.t-status-validation-error').is(':hidden'));
-    assert.equal(find('.t-status-validation-error').text(), GLOBALMSG.invalid_status);
-    assert.ok(find('.t-priority-validation-error').is(':hidden'));
-    assert.ok(find('.t-location-validation-error').is(':hidden'));
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.notOk(page.requestValidationErrorVisible);
+    assert.notOk(page.requesterValidationErrorVisible);
     assert.ok(find('.t-category-validation-error').is(':hidden'));
-    assert.ok(find('.t-requester-validation-error').is(':hidden'));
   });
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), TICKET_NEW_URL);
-    assert.ok(find('.t-location-validation-error').is(':visible'));
+    assert.equal($('.validated-input-error-dialog').length, 3);
+    assert.ok(page.requestValidationErrorVisible);
+    assert.ok(page.requesterValidationErrorVisible);
+    assert.ok(page.locationValidationErrorVisible);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.ticket.location'));
+    assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), t('errors.ticket.requester'));
     assert.ok(find('.t-category-validation-error').is(':visible'));
-    assert.ok(find('.t-requester-validation-error').is(':visible'));
   });
   page.requesterFillIn(TD.requesterOne);
+  triggerEvent('.t-ticket-requester', 'keyup', {keyCode: 65});
   andThen(() => {
     assert.equal(currentURL(), TICKET_NEW_URL);
-    assert.ok(find('.t-location-validation-error').is(':visible'));
+    assert.equal($('.validated-input-error-dialog').length, 2);
+    assert.ok(page.requestValidationErrorVisible);
+    assert.notOk(page.requesterValidationErrorVisible);
+    assert.ok(page.locationValidationErrorVisible);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.ticket.location'));
     assert.ok(find('.t-category-validation-error').is(':visible'));
-    assert.ok(find('.t-requester-validation-error').is(':hidden'));
   });
   page.statusClickDropdown();
   page.statusClickOptionOne();
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), TICKET_NEW_URL);
-    assert.equal(find('.t-priority-validation-error').text(), GLOBALMSG.invalid_priority);
-    assert.ok(find('.t-location-validation-error').is(':visible'));
-    assert.equal(find('.t-location-validation-error').text(), GLOBALMSG.invalid_location);
+    assert.equal($('.validated-input-error-dialog').length, 2);
+    assert.notOk(page.requesterValidationErrorVisible);
+    assert.ok(page.locationValidationErrorVisible);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.ticket.location'));
     assert.ok(find('.t-category-validation-error').is(':visible'));
-    assert.equal(find('.t-category-validation-error').text(), GLOBALMSG.invalid_category);
   });
   page.priorityClickDropdown();
   page.priorityClickOptionOne();
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), TICKET_NEW_URL);
-    assert.ok(find('.t-location-validation-error').is(':visible'));
+    assert.equal($('.validated-input-error-dialog').length, 2);
+    assert.ok(page.requestValidationErrorVisible);
+    assert.notOk(page.requesterValidationErrorVisible);
+    assert.ok(page.locationValidationErrorVisible);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.ticket.location'));
     assert.ok(find('.t-category-validation-error').is(':visible'));
   });
   people_xhr = xhr(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
@@ -111,7 +121,10 @@ test('validation works and when hit save, we do same post', (assert) => {
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), TICKET_NEW_URL);
-    assert.ok(find('.t-location-validation-error').is(':visible'));
+    assert.equal($('.validated-input-error-dialog').length, 2);
+    assert.notOk(page.requesterValidationErrorVisible);
+    assert.ok(page.locationValidationErrorVisible);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.ticket.location'));
     assert.ok(find('.t-category-validation-error').is(':visible'));
   });
   page.locationClickDropdown();
@@ -119,6 +132,10 @@ test('validation works and when hit save, we do same post', (assert) => {
   page.locationClickOptionTwo();
   andThen(() => {
     assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.ok(page.requestValidationErrorVisible);
+    assert.notOk(page.requesterValidationErrorVisible);
+    assert.notOk(page.locationValidationErrorVisible);
     assert.ok(find('.t-category-validation-error').is(':visible'));
   });
   let top_level_categories_endpoint = `${CATEGORIES_URL}parents/`;
@@ -127,6 +144,10 @@ test('validation works and when hit save, we do same post', (assert) => {
   page.categoryOneClickOptionOne();
   andThen(() => {
     assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.ok(page.requestValidationErrorVisible);
+    assert.notOk(page.requesterValidationErrorVisible);
+    assert.notOk(page.locationValidationErrorVisible);
     assert.equal(find('.t-category-validation-error').length, 1);
     assert.ok(find('.t-category-validation-error').is(':visible'));
   });
@@ -136,6 +157,10 @@ test('validation works and when hit save, we do same post', (assert) => {
   page.categoryTwoClickOptionOne();
   andThen(() => {
     assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.notOk(page.requesterValidationErrorVisible);
+    assert.ok(page.requestValidationErrorVisible);
+    assert.notOk(page.locationValidationErrorVisible);
     assert.equal(find('.t-category-validation-error').length, 1);
     assert.ok(find('.t-category-validation-error').is(':visible'));
   });
@@ -144,9 +169,22 @@ test('validation works and when hit save, we do same post', (assert) => {
   page.categoryThreeClickOptionOne();
   andThen(() => {
     assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.notOk(page.requesterValidationErrorVisible);
+    assert.ok(page.requestValidationErrorVisible);
+    assert.notOk(page.locationValidationErrorVisible);
     assert.ok(find('.t-category-validation-error').is(':hidden'));
   });
   fillIn('.t-ticket-request', TD.requestOne);
+  triggerEvent('.t-ticket-request', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.notOk(page.requesterValidationErrorVisible);
+    assert.notOk(page.requestValidationErrorVisible);
+    assert.notOk(page.locationValidationErrorVisible);
+    assert.ok(find('.t-category-validation-error').is(':hidden'));
+  });
   generalPage.save();
   xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
   andThen(() => {

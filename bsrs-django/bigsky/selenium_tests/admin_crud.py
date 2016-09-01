@@ -215,7 +215,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         role_page.find_new_link().click()
         # New Role Data
         name = rand_chars()
-        role = InputHelper(role_name=name)
+        role = InputHelper(name=name)
         self.wait_for_xhr_request("t-role-name")
         self._fill_in(role)
         role_category = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-role-category-select ')]/div")
@@ -240,7 +240,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # Go to the first Role's Detail view
         role_page.find_wait_and_assert_elem("t-role-name", name)
         role_name = rand_chars()
-        role = InputHelper(role_name=role_name)
+        role = InputHelper(name=role_name)
         self._fill_in(role, clear=True)
         self.gen_elem_page.click_save_btn()
         # check name change

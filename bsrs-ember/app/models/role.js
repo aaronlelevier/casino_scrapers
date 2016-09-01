@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
@@ -7,10 +8,20 @@ import NewMixin from 'bsrs-ember/mixins/model/new';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import { many_to_many } from 'bsrs-components/attr/many-to-many';
 import OptConf from 'bsrs-ember/mixins/optconfigure/role';
+import { validator, buildValidations } from 'ember-cp-validations';
 
-const { run } = Ember;
+const Validations = buildValidations({
+  name: validator('presence', {
+    presence: true,
+    message: 'errors.role.name'
+  }),
+  location_level: validator('presence', {
+    presence: true,
+    message: 'errors.role.location_level'
+  }),
+});
 
-var RoleModel = Model.extend(NewMixin, OptConf, {
+var RoleModel = Model.extend(OptConf, NewMixin, Validations, {
   init() {
     belongs_to.bind(this)('location_level', 'role', {bootstrapped:true, rollback:false});
     many_to_many.bind(this)('category', 'role', {plural:true});

@@ -1,0 +1,47 @@
+<aside class="side-panel">
+  <header>
+    <h1></h1>
+  </header>
+  <menu class="t-side-menu">
+    {{tickets/ticket-new/side-section 
+      model=model 
+      didValidate=didValidate
+      personRepo=personRepo
+      locationRepo=locationRepo
+      priorities=priorities
+      statuses=statuses
+    }}
+  </menu>
+</aside>
+
+
+<article class="main">
+  <div class="form">
+    <header>
+      {{base-component
+        model=model
+        save="save"
+        cancel="cancel"
+      }}
+    </header>
+
+    <section class="docSection container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <section style="padding-bottom: 0">
+            <div class="row card-title">
+              <h1 class="col-md-12">{{model.top_level_category.name}} <small>{{model.number}}</small></h1>
+            </div>
+          </section>
+        </div>
+        <div class="col-md-12">
+          {{tickets/ticket-new/detail-section 
+            model=model
+            didValidate=didValidate
+            submitted=submitted
+          }}
+        </div>
+      </div>
+    </section>
+  </div>
+</article>

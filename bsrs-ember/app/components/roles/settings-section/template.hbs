@@ -1,0 +1,34 @@
+<section>
+  <div class="row card-title">
+    <h2 class="col-md-12">{{t "admin.role.label.settings"}}</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      {{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
+      {{input-currency
+        model=model
+        field="auth_amount"
+        currencyField="auth_currency"
+      }}
+      {{/form-group}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      {{#form-group title="admin.setting.dashboard_text" for="dashboard_text"}}
+        <p class="inherited-msg t-inherited-msg-dashboard_text">
+          {{#link-to "admin.settings" model.inherited.dashboard_text.inherits_from_id class="t-inherited-msg-dashboard_text-link"}}
+            {{t 'crud.inherited_from' from="general"}}
+          {{/link-to}}
+        </p>
+        {{textarea 
+          autoresize=true 
+          placeholder=(t 'crud.default_value' value=otherXhrs.[0].settings.dashboard_text) 
+          value=model.dashboard_text 
+          class="form-control t-settings-dashboard_text" 
+          id="dashboard_text"
+        }}
+      {{/form-group}}
+    </div>
+  </div>
+</section>

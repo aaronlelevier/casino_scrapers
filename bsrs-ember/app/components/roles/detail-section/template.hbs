@@ -1,0 +1,52 @@
+<section>
+  <div class="row">
+    <div class="col-md-12">
+      {{#form-group title="admin.role.label.name" for="name"}}
+        {{validated-input
+          model=model
+          valuePath="name"
+          didValidate=didValidate
+          className="form-control t-role-name"
+          placeholder=(t "admin.role.label.name")
+          class="t-role-name-validator"
+        }}
+      {{/form-group}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      {{#form-group title="admin.role.label.role_type" for="role_type"}}
+        {{roles/role-type-select 
+          role=model 
+          all_role_types=all_role_types
+          labelText=(t "admin.role.label.role_type")
+        }}
+      {{/form-group}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      {{#form-group title="admin.location.label.location_level" for="role_location_level_select"}}
+        {{power-select-foreign-key 
+          mainModel=model 
+          model=model 
+          selected=model.location_level 
+          change_method="change_location_level" 
+          relatedModels=all_location_levels 
+          relatedModelName="location-level" 
+          notTranslated=true
+          labelText=(t "admin.location.label.location_level")
+          valuePath="location_level"
+          didValidate=didValidate
+        }}
+      {{/form-group}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      {{#form-group title="admin.role.label.category" for="category"}}
+      {{roles/role-category-select role=model options=categories_children}}
+      {{/form-group}}
+    </div>
+  </div>
+</section>

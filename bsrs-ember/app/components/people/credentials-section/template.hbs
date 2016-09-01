@@ -4,7 +4,13 @@
       <div class="row">
         <div class="col-md-4">
           {{#form-group title="admin.person.label.status" for="status"}}
-          {{power-select-foreign-key mainModel=model selected=model.status change_method="change_status" relatedModels=statuses relatedModelName="status"}}
+          {{power-select-foreign-key
+            mainModel=model 
+            selected=model.status 
+            change_method="change_status" 
+            relatedModels=statuses 
+            relatedModelName="status"
+          }}
           {{/form-group}}
         </div>
         <div class="col-md-4">

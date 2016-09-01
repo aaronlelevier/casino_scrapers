@@ -1,0 +1,13 @@
+{{#power-select-mobile
+  class=(concat relatedModelName '-select' ' t-' relatedModelName '-select')
+  tagName="div"
+  selected=selected
+  allowClear=clear
+  onchange=(action "selected")
+  searchEnabled=false
+  options=relatedModels
+  labelText=(t "")
+  as |optionModel|
+}}
+  {{unless notTranslated (t (get optionModel displayName)) (get optionModel displayName)}}
+{{/power-select-mobile}}

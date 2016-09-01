@@ -5,7 +5,7 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
-let { text, visitable, fillable, clickable, count, value } = PageObject;
+let { text, visitable, fillable, clickable, count, value, hasClass } = PageObject;
 const ROLETYPE = '.t-role-role-type .ember-basic-dropdown-trigger';
 const ROLETYPE_DROPDOWN = options;
 const LOCATIONLEVEL = '.t-location-level-select .ember-basic-dropdown-trigger';
@@ -37,8 +37,8 @@ export default PageObject.create({
 
   nameFill: fillable('.t-role-name'),
   nameValue: value('.t-role-name'),
-  nameValidationErrorHidden: () => Ember.$('.t-name-validation-error').is(':hidden'),
-  nameValidationErrorVisible: () => Ember.$('.t-name-validation-error').is(':visible'),
+  nameValidationErrorHidden: () => Ember.$('.t-role-name-validator').is(':hidden'),
+  nameValidationErrorVisible: hasClass('invalid', '.t-role-name-validator'),
 
   roleTypeInput: text(ROLETYPE),
   roleTypeClickDropdown: clickable(ROLETYPE),

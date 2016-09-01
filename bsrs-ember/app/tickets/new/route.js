@@ -3,10 +3,9 @@ import inject from 'bsrs-ember/utilities/inject';
 import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 
 var TicketNewRoute = TabNewRoute.extend({
+  i18n: Ember.inject.service(),
   repository: inject('ticket'),
   statusRepository: inject('ticket-status'),
-  categoryRepository: inject('category'),
-  locationRepo: inject('location'),
   priorityRepository: inject('ticket-priority'),
   redirectRoute: 'tickets.index',
   module: 'ticket',
@@ -29,11 +28,16 @@ var TicketNewRoute = TabNewRoute.extend({
     if(!model){
       model = repository.create(new_pk);
     }
+    const hashComponents = [
+      {'title': this.get('i18n').t('ticket.section.request'), 'component': 'tickets/ticket-new/detail-section', active: 'active'},
+      {'title': this.get('i18n').t('ticket.section.details'), 'component': 'tickets/ticket-new/side-section', active: ''},
+    ];
     return Ember.RSVP.hash({
       model: model,
       statuses: statuses,
       priorities: priorities,
-      repository: repository
+      repository: repository,
+      hashComponents: hashComponents
     });
   },
   setupController: function(controller, hash) {

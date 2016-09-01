@@ -22,70 +22,21 @@
       </section>
     </div>
     <div class="col-md-12">
-      <section>
-        <div class="row">
-          <div class="col-md-12">
-            {{#form-group title="admin.role.label.name" for="name"}}
-            {{input type="text" placeholder=(t "admin.role.label.name") value=model.name class="form-control t-role-name" id="role_name"}}
-            {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.role.label.name"}}{{/validation-error-field}}
-            {{/form-group}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            {{#form-group title="admin.role.label.role_type" for="role_type"}}
-            {{roles/role-type-select role=model all_role_types=all_role_types}}
-            {{/form-group}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            {{#form-group title="admin.location.label.location_level" for="role_location_level_select"}}
-            {{power-select-foreign-key mainModel=model selected=model.location_level change_method='change_location_level' relatedModels=all_location_levels relatedModelName='location-level' notTranslated=true}}
-            {{#validation-error-field submitted=submitted field="location_level" className="validation validation-under t-location-level-validation-error" model=model validation=locationLevelValidation}}{{t "validation.invalid"}} {{t "admin.role.label.location_level"}}{{/validation-error-field}}
-            {{/form-group}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            {{#form-group title="admin.role.label.category" for="category"}}
-            {{roles/role-category-select role=model options=categories_children}}
-            {{/form-group}}
-          </div>
-        </div>
-      </section>
+      {{roles/detail-section 
+        model=model 
+        all_role_types=all_role_types 
+        all_location_levels=all_location_levels
+        categories_children=categories_children
+        didValidate=didValidate
+      }}
     </div>
   </div>
   <div class="row">
     <div class="col-md-12">
-      <section>
-        <div class="row card-title">
-          <h2 class="col-md-12">{{t "admin.role.label.settings"}}</h2>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            {{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
-            {{input-currency
-              model=model
-              field="auth_amount"
-              currencyField="auth_currency"
-            }}
-            {{/form-group}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            {{#form-group title="admin.setting.dashboard_text" for="dashboard_text"}}
-            <p class="inherited-msg t-inherited-msg-dashboard_text">
-              {{#link-to "admin.settings" model.inherited.dashboard_text.inherits_from_id class="t-inherited-msg-dashboard_text-link"}}
-              {{t 'crud.inherited_from' from="general"}}
-              {{/link-to}}
-            </p>
-            {{textarea autoresize=true placeholder=(t 'crud.default_value' value=otherXhrs.[0].settings.dashboard_text) value=model.dashboard_text class="form-control t-settings-dashboard_text" id="dashboard_text"}}
-            {{/form-group}}
-          </div>
-        </div>
-      </section>
+      {{roles/settings-section
+        model=model
+        otherXhrs=otherXhrs
+      }}
     </div>
   </div>
 </section>

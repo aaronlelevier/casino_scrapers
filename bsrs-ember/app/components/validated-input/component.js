@@ -4,6 +4,14 @@ import { task, timeout } from 'ember-concurrency';
 
 /*
 * didValidate - trigger showMessage and can show mwwage if
+* API
+* - 'model' 
+* - 'count' if multiple so can have many ids
+* - 'maxlength' for html5 validation
+* - 'valuePath'
+* - 'placeholder'
+* - 'didValidate'
+* - 'className'
 */
 export default Ember.Component.extend({
   type: 'text',

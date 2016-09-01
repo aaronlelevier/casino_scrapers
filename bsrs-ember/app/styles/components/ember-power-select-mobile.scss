@@ -1,0 +1,46 @@
+.power-select-mobile__dropdown {
+  .ps__mobile__head {
+    @include nav-box-shadow;
+    .ps__mobile__head__btn {
+      height: 36px;
+      margin: 12px;
+      font-size: 2rem;
+      padding: 0;
+      min-width: 40px;
+      &.chevron:before {
+        border: none;
+        height: auto;
+        width: auto;
+        left: auto;
+        top: auto;
+        font-size: 2rem;
+        margin: 0;
+        content: "\f104";
+        font-family: FontAwesome;
+        -webkit-transform: rotate(0);
+        transform: rotate(0);
+      }
+    }
+    .ps__mobile__head__title {
+      font-size: 2.2rem;
+      font-weight: normal;
+    }
+  }
+  .ps__mobile__search {
+    @include nav-box-shadow;
+  }
+
+  .ember-power-select-option {
+    @include generalPadding;
+    border-bottom: $borderStyle;
+    &[aria-selected="true"] {
+      background: $white;
+      &:after {
+        content: "\f00c";
+        font-family: FontAwesome;
+        float: right;
+        color: $activeColor;
+      }
+    }
+  }
+}

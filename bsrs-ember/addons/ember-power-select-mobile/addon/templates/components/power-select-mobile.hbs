@@ -1,0 +1,102 @@
+{{#if mobileFallback}}
+  <!-- wrapper class to encapsulate nav, trigger, and dropdown components -->
+  <div class="power-select-mobile-wrapper">
+    <!-- trigger and dropdown -->
+    {{#component powerSelectComponentName
+      ariaDescribedBy=ariaDescribedBy
+      ariaInvalid=ariaInvalid
+      ariaLabel=ariaLabel
+      ariaLabelledBy=ariaLabelledBy
+      options=options
+      selected=selected
+      onchange=onchange
+      onkeydown=onkeydown
+      onfocus=onfocus
+      onopen=onopen
+      onclose=onclose
+      search=search
+      disabled=disabled
+      placeholder=placeholder
+      searchEnabled=searchEnabled
+      searchPlaceholder=searchPlaceholder
+      searchField=searchField
+      matcher=matcher
+      loadingMessage=loadingMessage
+      noMatchesMessage=noMatchesMessage
+      searchMessage=searchMessage
+      selectedItemComponent=selectedItemComponent
+      afterOptionsComponent=afterOptionsComponent
+      beforeOptionsComponent=(component "mobile-before-options" multiple=multiple countSelected=selected.length labelText=labelText buttonText=buttonText)
+      optionsComponent=optionsComponent
+      renderInPlace=false
+      closeOnSelect=(if multiple false)
+      allowClear=allowClear
+      verticalPosition=verticalPosition
+      horizontalPosition=horizontalPosition
+      class=(concat className " ps-mobile-dropdown-wrapper")
+      tagName="div"
+      triggerClass=(concat triggerClass "power-select-mobile__trigger")
+      dropdownClass=(concat dropdownClass "power-select-mobile__dropdown")
+      extra=extra
+      initiallyOpened=initiallyOpened
+      matchTriggerWidth=matchTriggerWidth
+      destination=destination
+      tabindex=tabindex
+      dir=dir
+      as |option term|
+    }}
+      {{yield option term}}
+    {{/component}}
+  </div>
+{{else}}
+  <!-- else render normal ember-power-select component -->
+  {{#component powerSelectComponentName
+    afterOptionsComponent=afterOptionsComponent
+    allowClear=allowClear
+    ariaDescribedBy=ariaDescribedBy
+    ariaInvalid=ariaInvalid
+    ariaLabel=ariaLabel
+    ariaLabelledBy=ariaLabelledBy
+    beforeOptionsComponent=beforeOptionsComponent
+    buildSelection=buildSelection
+    class=class
+    closeOnSelect=closeOnSelect
+    destination=destination
+    dir=dir
+    disabled=disabled
+    dropdownClass=dropdownClass
+    extra=extra
+    horizontalPosition=horizontalPosition
+    initiallyOpened=initiallyOpened
+    loadingMessage=loadingMessage
+    matcher=matcher
+    matchTriggerWidth=matchTriggerWidth
+    noMatchesMessage=noMatchesMessage
+    onchange=onchange
+    onclose=onclose
+    onfocus=onfocus
+    oninput=oninput
+    onkeydown=onkeydown
+    onopen=onopen
+    options=options
+    optionsComponent=optionsComponent
+    placeholder=placeholder
+    registerAPI=(readonly registerAPI)
+    renderInPlace=renderInPlace
+    required=required
+    search=search
+    searchEnabled=searchEnabled
+    searchField=searchField
+    searchMessage=searchMessage
+    searchPlaceholder=searchPlaceholder
+    selected=selected
+    selectedItemComponent=selectedItemComponent
+    tabindex=tabindex
+    triggerClass=concatenatedTriggerClass
+    triggerComponent=triggerComponent
+    verticalPosition=verticalPosition
+    as |option term|
+  }}
+    {{yield option term}}
+  {{/component}}
+{{/if}}

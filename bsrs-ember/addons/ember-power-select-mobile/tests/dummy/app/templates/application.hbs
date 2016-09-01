@@ -1,0 +1,56 @@
+<h1>Big Sky Technologies - San Diego, CA</h1>
+
+<h3>Single</h3>
+<!-- single / nav component provided -->
+
+{{#power-select-mobile
+  labelText="Single"
+  buttonText="Done1"
+  options=numbers
+  selected=number
+  className="t-single"
+  searchEnabled=false
+  onchange=(action (mut number)) as |num|
+}}
+  {{num}}
+{{/power-select-mobile}}
+
+<h3>Single with Search</h3>
+<!-- single / nav component provided -->
+{{#power-select-mobile
+  labelText="Single"
+  buttonText="Done1"
+  options=numbers
+  selected=number2
+  className="t-single-search"
+  onchange=(action (mut number2)) as |num|}}
+  {{num}}
+{{/power-select-mobile}}
+
+<h3>Multiple</h3>
+<!-- multiple / no nav component provided -->
+{{#power-select-mobile
+  labelText="Multiple"
+  buttonText="Done1"
+  multiple=true
+  options=numbers
+  selected=numbero
+  className="t-multi"
+  searchEnabled=false
+  onchange=(action (mut numbero)) as |num|}}
+  {{num}}
+{{/power-select-mobile}}
+
+
+<h3>Multiple with Search</h3>
+<!-- multiple / no nav component provided -->
+{{#power-select-mobile
+  labelText="Multiple"
+  buttonText="Done1"
+  multiple=true
+  options=numbers
+  selected=numbero2
+  className="t-multi-search"
+  onchange=(action (mut numbero2)) as |num|}}
+  {{num}}
+{{/power-select-mobile}}

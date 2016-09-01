@@ -9,6 +9,7 @@ var RoleRoute = TabRoute.extend(FindById, {
   redirectRoute: 'admin.roles.index',
   module: 'role',
   templateModelField: 'name',
+  i18n: Ember.inject.service(),
   model(params, transition) {
     const store = this.get('simpleStore');
     const pk = params.role_id;
@@ -19,7 +20,13 @@ var RoleRoute = TabRoute.extend(FindById, {
     /* otherXhrs - array of additional promises to be returned from model hook. Must pass override to work */
     const otherXhrs = [repository.getRouteData()];
     const override = true;
-    return this.findByIdScenario(role, pk, {repository:repository, all_role_types:all_role_types, all_location_levels:all_location_levels}, override, otherXhrs);
+    const hashComponents = [
+      {'title': this.get('i18n').t('admin.role.section.details'), 'component': 'roles/detail-section', active: 'active'},
+      {'title': this.get('i18n').t('admin.role.section.settings'), 'component': 'roles/settings-section', active: ''},
+    ];
+    return this.findByIdScenario(role, pk, { hashComponents:hashComponents, repository:repository, 
+                                 all_role_types:all_role_types, all_location_levels:all_location_levels }, 
+                                 override, otherXhrs);
   },
   setupController: function(controller, hash) {
     controller.setProperties(hash);

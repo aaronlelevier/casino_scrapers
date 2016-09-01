@@ -1,4 +1,4 @@
-{{#power-select
+{{#power-select-mobile
   class="t-location-select"
   tagName="div"
   options=options
@@ -7,7 +7,8 @@
   onchange=(action "change_location")
   search=(perform searchRepo)
   searchField="name"
+  labelText=labelText
   as |location|
 }}
   {{location.name}}
-{{/power-select}}
+{{/power-select-mobile}}

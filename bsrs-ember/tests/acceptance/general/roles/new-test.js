@@ -72,7 +72,7 @@ test('visiting role/new', (assert) => {
     assert.equal(store.find('role-type').get('length'), 2);
     assert.equal(page.roleTypeInput, t(RD.t_roleTypeGeneral));
     assert.equal(store.find('location-level').get('length'), 8);
-    assert.equal(page.categorySelectText, '');
+    assert.equal(page.categorySelectText, t('power.select.select'));
     assert.equal(find('.t-amount').get(0)['placeholder'], 'Amount: 0.00');
     assert.equal(inputCurrencyPage.authAmountValue, '');
     assert.equal(inputCurrencyPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
@@ -117,32 +117,34 @@ test('validation works and when hit save, we do same post', (assert) => {
   visit(ROLE_URL);
   click('.t-add-new');
   andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':hidden'));
-    assert.ok(find('.t-location-level-validation-error').is(':hidden'));
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.notOk(page.nameValidationErrorVisible);
   });
   generalPage.save();
   andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':visible'));
-    assert.ok(find('.t-location-level-validation-error').is(':visible'));
+    assert.equal($('.validated-input-error-dialog').length, 2);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.role.name'));
+    assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), t('errors.role.location_level'));
+    assert.ok(page.nameValidationErrorVisible);
   });
   fillIn('.t-role-name', RD.nameOne);
+  triggerEvent('.t-role-name', 'keyup', {keyCode: 65});
   generalPage.save();
   andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':hidden'));
-    assert.ok(find('.t-location-level-validation-error').is(':visible'));
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.role.location_level'));
+    assert.notOk(page.nameValidationErrorVisible);
   });
   page.locationLevelClickDropdown();
   page.locationLevelClickOptionOne();
   andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':hidden'));
-    assert.ok(find('.t-location-level-validation-error').is(':hidden'));
+    assert.equal($('.validated-input-error-dialog').length, 0);
   });
   ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
   page.categoryClickDropdown();
   page.categoryClickOptionOneEq();
   andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':hidden'));
-    assert.ok(find('.t-location-level-validation-error').is(':hidden'));
+    assert.equal($('.validated-input-error-dialog').length, 0);
   });
   xhr(url, 'POST', JSON.stringify(payload), {}, 201, {});
   generalPage.save();

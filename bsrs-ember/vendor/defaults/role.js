@@ -31,6 +31,7 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
       unusedId: 'af34ee9b-833c-4f3e-a584-b6851d1e04b3',
       dashboard_text: 'Hi',
       dashboard_textTwo: 'Bueno',
+      auth_amount: this.currency.authAmountOne,
       auth_currency: this.currency.id,
       inherited: {
         dashboard_text: {

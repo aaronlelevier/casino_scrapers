@@ -1,38 +1,36 @@
-.ember-basic-dropdown{
-  .ember-power-select-trigger{
-    min-height: 34px;
-    min-width: 120px;
-    background-image: none;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    border-radius: $borderRadius;
-    .ember-power-select-status-icon {
-      right: 10px;
-      border-width: 5px 4px 0 4px;
-      border-color: $darkGray transparent transparent transparent;
-    }
+.ember-power-select-trigger{
+  min-height: 34px;
+  min-width: 120px;
+  background-image: none;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  border-radius: $borderRadius;
+  .ember-power-select-status-icon {
+    right: 10px;
+    border-width: 5px 4px 0 4px;
+    border-color: $darkGray transparent transparent transparent;
   }
-  .ember-power-select-trigger[aria-expanded=true]{
-    border-color: $activeColor;
-    outline: 0;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    border-radius: $borderRadiusTop;
-    background-image: none !important;
-    position: relative;
-    z-index: 1;
-    input[type="search"] {
-      display: block;
-      margin: 4px 0 0;
-      padding: 0 3px;
-    }
+}
+.ember-power-select-trigger[aria-expanded=true]{
+  border-color: $activeColor;
+  outline: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: $borderRadiusTop;
+  background-image: none !important;
+  position: relative;
+  z-index: 1;
+  input[type="search"] {
+    display: block;
+    margin: 4px 0 0;
+    padding: 0 3px;
   }
-  .ember-power-select-trigger{
-    input[type="search"] {
-      display: block;
-      margin: 4px 0 0;
-      padding: 0 3px;
-    }
+}
+.ember-power-select-trigger{
+  input[type="search"] {
+    display: block;
+    margin: 4px 0 0;
+    padding: 0 3px;
   }
 }
 

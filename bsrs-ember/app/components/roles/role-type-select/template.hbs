@@ -1,11 +1,12 @@
-{{#power-select
+{{#power-select-mobile
   class="t-role-role-type"
   tagName="div"
   options=all_role_types
   selected=selected
   onchange=(action "selected")
   searchEnabled=false
+  labelText=labelText
   as |role_type|
 }}
   {{t role_type.name}}
-{{/power-select}}
+{{/power-select-mobile}}

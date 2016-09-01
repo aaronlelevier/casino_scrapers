@@ -152,20 +152,15 @@ test('validation works for assignee if ticket status is not draft', async assert
   detail_data.assignee = null;
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
-  assert.ok(page.assigneeErrorHidden);
+  assert.notOk(page.locationValidationErrorVisible);
+  assert.notOk(page.assigneeValidationErrorVisible);
+  selectChoose('.t-ticket-status-select', t('ticket.status.complete'));
   await generalPage.save();
-  assert.ok(page.assigneeErrorVisible);
-  assert.equal(currentURL(), DETAIL_URL);
-  assert.equal(page.assigneeErrorText, t('error.ticket.assignee'));
-  xhr(`${PEOPLE_URL}person__icontains=Boy1/`, 'GET', null, {}, 200, PF.search_power_select());
-  await page.assigneeClickDropdown();
-  fillIn(`${SEARCH}`, 'Boy1');
-  await page.assigneeClickOptionOne();
-  assert.ok(page.assigneeErrorHidden);
-  assert.equal(currentURL(), DETAIL_URL);
-  const ticket = store.find('ticket', TD.idOne);
-  assert.equal(ticket.get('assignee_fk'), undefined);
-  assert.equal(ticket.get('assignee.id'), PD.idBoy);
+  assert.ok(page.assigneeValidationErrorVisible);
+  assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.ticket.assignee'));
+  await selectChoose('.t-ticket-status-select', t('ticket.status.new'));
+  assert.notOk(page.assigneeValidationErrorVisible);
+  assert.equal($('.validated-input-error-dialog').text().trim(), t(''));
 });
 
 test('validation does not show if ticket status is draft', async assert => {

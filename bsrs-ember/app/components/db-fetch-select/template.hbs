@@ -1,16 +1,27 @@
+<span id={{valuePath}}></span>
 {{#power-select
   selected=selectedAttr
   class=className
   tagName="div"
   search=(perform searchRepo)
   onchange=(action "selected")
+  triggerClass=(if showMessage "invalid")
   as |optionModel|
 }}
   {{get optionModel displayName}}
 {{/power-select}}
 
 {{#if showMessage}}
-<div class={{errorClass}}>
-  {{t (v-get model valuePath 'message')}}
-</div>
+  {{#tether-dialog
+    container-class="tether-dialog-reset"
+    target=(concat "#" valuePath)
+    hasOverlay=false
+    attachment="bottom left"
+    targetAttachment="top left"
+    offset="5px 0"
+  }}
+  <div class="validated-input-error-dialog animated flipInX error">
+    {{t (v-get model valuePath "message")}}
+  </div>
+  {{/tether-dialog}}
 {{/if}}
