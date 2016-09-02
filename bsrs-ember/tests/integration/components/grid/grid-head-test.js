@@ -20,4 +20,5 @@ test('if no exportGrid, doesnt show exportGrid btn', function(assert) {
   this.set('exportGrid', true);
   this.render(hbs`{{grid/helpers/grid-head exportGrid=exportGrid}}`);
   assert.equal(this.$('[data-test-id=grid-export-btn]').length, 1);
+  assert.equal(this.$('[data-test-id=grid-export-btn] i').length, 1);
 });
