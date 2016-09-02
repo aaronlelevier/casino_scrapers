@@ -34,6 +34,7 @@ var GeneralPage = PageObject.create({
   modalTitleValue: () => Ember.$('.t-modal-title').text().trim(),
 
   //Admin Routes
+  clickDashboard: clickable('.t-nav-dashboard'),
   clickDTD: clickable('.t-nav-admin-dtd'),
   clickAssignments: clickable('.t-nav-admin-assignment-profiles'),
   clickCategories: clickable('.t-nav-admin-category'),

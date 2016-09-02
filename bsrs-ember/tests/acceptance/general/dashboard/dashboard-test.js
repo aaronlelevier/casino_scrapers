@@ -9,6 +9,7 @@ import TD from 'bsrs-ember/vendor/defaults/tenant';
 import TicketD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 var application, store;
 
@@ -70,5 +71,20 @@ test('clicking draft tickets will send off xhr for person currents tickets as an
     assert.equal(currentURL(), DASHBOARD_URL + '/draft');
     assert.equal(find('.t-grid-title').text(), 'Draft Tickets');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+  });
+});
+
+test('the site logo on top left is clickable and redirects to the dashboard', assert => {
+  visit(DASHBOARD_URL);
+  andThen(() => {
+    assert.equal(currentURL(), DASHBOARD_URL);
+  });
+  generalPage.visitAdmin();
+  andThen(() => {
+    assert.equal(currentURL(), BASEURLS.base_admin_url);
+  });
+  generalPage.clickDashboard();
+  andThen(() => {
+    assert.equal(currentURL(), DASHBOARD_URL);
   });
 });
