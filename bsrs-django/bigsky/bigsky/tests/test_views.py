@@ -223,19 +223,6 @@ class BootstrappedDataTests(TestCase):
         obj = AddressType.objects.get(id=data[0]['id'])
         self.assertEqual(obj.name, data[0]['name'])
 
-    def test_states_us(self):
-        data = json.loads(self.response.context['states_us'])
-
-        obj = State.objects.get(id=data[0]['id'])
-        self.assertEqual(obj.name, data[0]['name'])
-        self.assertEqual(obj.state_code, data[0]['state_code'])
-
-    def test_countries(self):
-        data = json.loads(self.response.context['countries'])
-
-        obj = Country.objects.get(id=data[0]['id'])
-        self.assertEqual(obj.common_name, data[0]['common_name'])
-
     def test_roles(self):
         configuration = json.loads(self.response.context['role_config'])
         self.assertTrue(len(configuration) > 0)

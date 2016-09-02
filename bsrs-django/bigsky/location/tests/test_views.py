@@ -371,6 +371,8 @@ class LocationDetailTests(APITestCase):
     def setUp(self):
         create_locations()
         self.location = Location.objects.get(name='ca')
+        address = mommy.make(Address, object_id=self.location.id, content_object=self.location,
+                             _fill_optional=['type', 'state', 'country'])
         self.location_level = self.location.location_level
         self.role = create_role(location_level=self.location_level)
         self.person = create_single_person(role=self.role, location=self.location)
@@ -393,9 +395,26 @@ class LocationDetailTests(APITestCase):
         self.assertEqual(self.data['name'], self.location.name)
         self.assertEqual(self.data['number'], self.location.number)
         self.assertEqual(self.data['status_fk'], str(self.location.status.id))
-        self.assertIsNotNone(self.data['emails'][0]['id'])
-        self.assertIsNotNone(self.data['phone_numbers'][0]['id'])
-        self.assertIsNotNone(self.data['addresses'][0]['id'])
+        email = Email.objects.get(id=self.data['emails'][0]['id'])
+        self.assertEqual(self.data['emails'][0]['type'], str(email.type.id))
+        self.assertEqual(self.data['emails'][0]['email'], email.email)
+        ph = PhoneNumber.objects.get(id=self.data['phone_numbers'][0]['id'])
+        self.assertEqual(self.data['phone_numbers'][0]['type'], str(ph.type.id))
+        self.assertEqual(self.data['phone_numbers'][0]['number'], ph.number)
+        address = Address.objects.get(id=self.data['addresses'][0]['id'])
+        self.assertEqual(self.data['addresses'][0]['address'], address.address)
+        self.assertEqual(self.data['addresses'][0]['city'], address.city)
+        self.assertEqual(self.data['addresses'][0]['postal_code'], address.postal_code)
+        # type
+        self.assertEqual(self.data['addresses'][0]['type']['id'], str(address.type.id))
+        self.assertEqual(self.data['addresses'][0]['type']['name'], address.type.name)
+        # state
+        self.assertEqual(self.data['addresses'][0]['state']['id'], str(address.state.id))
+        self.assertEqual(self.data['addresses'][0]['state']['name'], address.state.name)
+        # country
+        self.assertEqual(self.data['addresses'][0]['country']['id'], str(address.country.id))
+        self.assertEqual(self.data['addresses'][0]['country']['name'], address.country.common_name)
+
 
     def test_data__people(self):
         self.assertIsInstance(self.data['people'], list)

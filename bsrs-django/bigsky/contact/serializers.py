@@ -71,6 +71,10 @@ class AddressTypeSerializer(serializers.ModelSerializer):
 
 class AddressSerializer(BaseCreateSerializer):
     
+    type = AddressTypeSerializer()
+    state = StateIdNameSerializer()
+    country = CountryIdNameSerializer()
+
     class Meta:
         model = Address
         fields = ('id', 'type', 'address', 'city', 'state',

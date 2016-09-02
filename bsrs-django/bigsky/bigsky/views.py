@@ -50,8 +50,6 @@ class IndexView(TemplateView):
             'email_types_config': model_to_json(EmailType),
             'phone_number_types_config': model_to_json(PhoneNumberType),
             'address_types': model_to_json(AddressType),
-            'states_us': queryset_to_json(State.objects.tenant(tenant)),
-            'countries': queryset_to_json(tenant.countries.all()),
             'role_config': model_to_json_select_related(Role, 'location_level'),
             'role_types_config': json.dumps(ROLE_TYPES),
             'person_status_config': model_to_json(PersonStatus),
