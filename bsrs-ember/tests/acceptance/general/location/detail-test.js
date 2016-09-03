@@ -154,6 +154,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
   });
   generalPage.cancel();
   andThen(() => {
+    let location = store.find('location', LD.idOne);
     assert.equal(currentURL(), LOCATION_URL);
   });
 });
@@ -482,7 +483,7 @@ test('when you change a related address type it will be persisted correctly', (a
   var addresses = AF.put({id: AD.idOne, type: ATD.shippingId});
   var payload = LF.put({id: LD.idOne, addresses: addresses});
   xhr(url,'PUT',JSON.stringify(payload),{},200);
-  fillIn('.t-address-type:eq(0)', ATD.shippingId);
+  selectChoose('.t-address-type-select:eq(0)', ATD.shippingNameText);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(),LOCATION_URL);
@@ -533,7 +534,10 @@ test('when user changes an attribute on email and clicks cancel we prompt them w
 
 test('when user changes an attribute on address and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
   page.visitDetail();
-  fillIn('.t-address-type:eq(0)', ATD.shippingId);
+  selectChoose('.t-address-type-select:eq(0)', ATD.shippingNameText);
+  andThen(() => {
+    assert.equal(page.addressTypeSelectedOne, ATD.shippingNameText);
+  });
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
@@ -545,9 +549,7 @@ test('when user changes an attribute on address and clicks cancel we prompt them
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
-      var location = store.find('location', LD.idOne);
-      var addresses = store.find('address', LD.idOne);
-      assert.equal(addresses._source[0].get('type'), ATD.officeId);
+      assert.equal(store.find('location', LD.idOne).get('addresses').objectAt(0).get('address_type.id'), ATD.idOne);
     });
   });
 });
@@ -596,6 +598,9 @@ test('when user removes a email clicks cancel we prompt them with a modal and th
 
 test('when user removes an address clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
   page.visitDetail();
+  andThen(() => {
+    assert.equal(store.find('location', LD.idOne).get('addresses').get('length'), 2);
+  });
   click('.t-del-address-btn:eq(0)');
   generalPage.cancel();
   andThen(() => {
@@ -608,9 +613,7 @@ test('when user removes an address clicks cancel we prompt them with a modal and
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
-      var location = store.find('location', LD.idOne);
-      var addresses = store.find('address', LD.idOne);
-      assert.equal(addresses._source[0].get('type'), ATD.officeId);
+      assert.equal(store.find('location', LD.idOne).get('addresses').get('length'), 2);
     });
   });
 });
@@ -752,23 +755,27 @@ test('when you deep link to the location detail view you can change the email ty
 test('when you deep link to the location detail view you can change the address type and can add new address with default type', (assert) => {
   random.uuid = function() { return UUID.value; };
   page.visitDetail();
-  fillIn('.t-input-multi-address .t-address-group:eq(0) select:eq(0)', ATD.shippingId);
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
   click('.t-add-address-btn:eq(0)');
+  selectChoose('.t-address-type-select:eq(2)', ATD.officeNameText);
   fillIn('.t-address-address:eq(2)', AD.streetThree);
-  var addresses = AF.put();
-  addresses[0].type = ATD.shippingId;
+  andThen(() => {
+    assert.equal(page.addressTypeSelectedThree, ATD.officeNameText);
+  });
+  var addresses = AF.put({id: AD.idOne, type: ATD.idOne});
   var response = LF.detail(LD.idOne);
   run(function() {
     addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree});
   });
-  var payload = LF.put({id: LD.idOne, addresses: addresses});
+  var payload = LF.put({id: LD.idOne, status: LD.status, addresses: addresses});
   xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(),LOCATION_URL);
     var location = store.find('location', LD.idOne);
     assert.ok(location.get('isNotDirty'));
-    assert.equal(location.get('addresses').objectAt(0).get('type'), ATD.shippingId);
     assert.equal(location.get('addresses').objectAt(2).get('type'), ATD.officeId);
     assert.ok(location.get('addresses').objectAt(0).get('isNotDirty'));
   });
@@ -1217,7 +1224,6 @@ test('clicking and typing into power select for location will not filter if spac
   });
 });
 
-// TODO: failing b/c need to setup relationship b/t Location and Country
 test('fill out an address for a Person including Country and State', assert => {
   page.visitDetail();
   andThen(() => {

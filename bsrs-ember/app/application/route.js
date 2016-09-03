@@ -28,14 +28,6 @@ var ApplicationRoute = Ember.Route.extend({
     address_types.forEach((model) => {
       store.push('address-type', model);
     });
-    const countries = Ember.$('[data-preload-countries]').data('configuration');
-    countries.forEach((model) => {
-      store.push('country', model);
-    });
-    const state_list = Ember.$('[data-preload-states_us]').data('configuration');
-    state_list.forEach((model) => {
-      store.push('state', model);
-    });
     const status_list = Ember.$('[data-preload-person-statuses]').data('configuration');
     status_list.forEach((model) => {
       store.push('status', model);

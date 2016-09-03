@@ -194,8 +194,10 @@ test('address.change_address_type', assert => {
     address_type = store.push('address-type', {id: ATD.idOne, addresses: [AD.idOne]});
   });
   assert.equal(address.get('address_type').get('id'), ATD.idOne);
+  assert.ok(address.get('isNotDirtyOrRelatedNotDirty'));
   address.change_address_type({id: ATD.idTwo});
   assert.equal(address.get('address_type').get('id'), ATD.idTwo);
+  assert.ok(address.get('isDirtyOrRelatedDirty'));
 });
 
 test('address_type - isDirty and related dirty tests', assert => {

@@ -26,10 +26,11 @@ var AddressMixin = Ember.Mixin.create({
         this.cleanupAddresses();
         let addresses = this.get('addresses');
         addresses.forEach((address) => {
+            address.saveRelated();
             address.save();
         });
     },
-    addressesIsDirty: Ember.computed('addresses.@each.{isDirty,address,city,state,postal_code,country,type}', function() {
+    addressesIsDirty: Ember.computed('addresses.@each.{isDirty,address,address_type,city,state,postal_code,country}', function() {
         let address_dirty = false;
         let addresses = this.get('addresses');
         let address_fks = this.get('address_fks');
@@ -45,7 +46,7 @@ var AddressMixin = Ember.Mixin.create({
             });
         }
         addresses.forEach((address) => {
-            if (address.get('isDirty')) {
+            if (address.get('isDirty') || address.get('isDirtyOrRelatedDirty')) {
                 address_dirty = true;
             }
             if (address.get('invalid_address') && filtered_address_fks.length !== filtered_addresses.length) {

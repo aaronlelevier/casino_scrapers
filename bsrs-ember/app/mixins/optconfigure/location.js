@@ -29,7 +29,7 @@ export default Ember.Mixin.create({
     },
     state: {
       collection: 'locations',
-      property: 'state',
+      property: 'state'
     },
     address_type: {
       collection: 'locations',

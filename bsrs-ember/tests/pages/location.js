@@ -32,6 +32,7 @@ const PARENTS_DROPDOWN = `.ember-basic-dropdown-content > ${options}`;
 
 const COUNTRIES = '.t-address-country .ember-basic-dropdown-trigger';
 const STATES = '.t-address-state .ember-basic-dropdown-trigger';
+const ADDRESS_TYPES = '.t-address-type-select .ember-basic-dropdown-trigger';
 
 
 export default PageObject.create({
@@ -98,4 +99,6 @@ export default PageObject.create({
 
   countrySelectedOne: text(`${COUNTRIES}:eq(0)`),
   stateSelectedOne: text(`${STATES}:eq(0)`),
+  addressTypeSelectedOne: text(`${ADDRESS_TYPES}:eq(0)`),
+  addressTypeSelectedThree: text(`${ADDRESS_TYPES}:eq(0)`),
 });

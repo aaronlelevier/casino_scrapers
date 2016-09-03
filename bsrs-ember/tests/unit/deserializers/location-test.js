@@ -277,6 +277,12 @@ test('deserialize location and address with its related models: type, state, and
   // address-type
   assert.equal(address.get('address_type').get('id'), ATD.idOne);
   assert.equal(address.get('address_type').get('name'), ATD.officeName);
+  // dirty checking
+  assert.ok(address.get('addressTypeIsNotDirty'));
+  assert.ok(address.get('stateIsNotDirty'));
+  assert.ok(address.get('countryIsNotDirty'));
+  assert.ok(address.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 /*PARENT AND CHILDREN M2M*/

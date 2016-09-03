@@ -501,7 +501,7 @@ test('when you change a related address type it will be persisted correctly', (a
   click('.t-add-address-btn:eq(0)');
   fillIn('.t-address-address:eq(0)', '34 2nd St');
   xhr(LOCATIONS_URL,'POST',JSON.stringify(address_put_payload),{},201);
-  fillIn('.t-address-type:eq(0)', ATD.shippingId);
+  selectChoose('.t-address-type-select:eq(0)', ATD.shippingNameText);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(),LOCATION_URL);

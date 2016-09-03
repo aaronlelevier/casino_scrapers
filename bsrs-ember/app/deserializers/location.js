@@ -160,6 +160,9 @@ var LocationDeserializer = Ember.Object.extend(OptConf, {
       delete a.type;
       // main model
       a.model_fk = response.id;
+      a.state_fk = state ? state.id : undefined;
+      a.country_fk = country ? country.id : undefined;
+      a.address_type_fk = type ? type.id : undefined;
       a.detail = true;
       const address = store.push('address', a);
       // setup related models

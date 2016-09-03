@@ -15,7 +15,7 @@ var MultiAddressComponent = ChildValidationComponent.extend(ValidationMixin, Cus
   countryDbFetch: injectRepo('country-db-fetch'),
   stateDbFetch: injectRepo('state-db-fetch'),
   address_types: Ember.computed(function() {
-    return this.get('simpleStore').find('address-types');
+    return this.get('simpleStore').find('address-type');
   }),
   tagName: 'div',
   classNames: ['input-multi-address t-input-multi-address'],

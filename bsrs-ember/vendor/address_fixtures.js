@@ -46,24 +46,24 @@ var BSRS_ADDRESS_FACTORY = (function() {
   factory.prototype.get_with_related_ids = function() {
     return [{
       id: this.address.idOne,
+      type: this.addressType.idOne,
       address: this.address.streetOne,
       city: this.address.cityOne,
+      state: this.state.id,
       postal_code: this.address.zipOne,
       country: this.country.id,
-      state: this.state.id,
-      type: this.addressType.idOne,
     }, {
       id: this.address.idTwo,
+      type: this.addressType.idTwo,
       address: this.address.streetTwo,
       city: this.address.cityTwo,
+      state: this.state.idTwo,
       postal_code: this.address.zipTwo,
       country: this.country.idTwo,
-      state: this.state.idTwo,
-      type: this.addressType.idTwo,
     }];
   };
   factory.prototype.put = function(address) {
-    var addresses = this.get();
+    var addresses = this.get_with_related_ids();
     if (!address) {
       return addresses;
     }

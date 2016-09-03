@@ -5,9 +5,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/status';
 import STORE_STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/location-status';
-import STATE_DEFAULTS from 'bsrs-ember/vendor/defaults/state';
 import CD from 'bsrs-ember/vendor/defaults/category';
-import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
 import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import PND from 'bsrs-ember/vendor/defaults/phone-number-type';
 import ED from 'bsrs-ember/vendor/defaults/email-type';
@@ -71,27 +69,6 @@ test('on boot we should fetch and load the address configuration', assert => {
     assert.equal(store.find('address-type').objectAt(0).get('name'), ATD.officeName);
     assert.equal(store.find('address-type').objectAt(1).get('id'), ATD.shippingId);
     assert.equal(store.find('address-type').objectAt(1).get('name'), ATD.shippingName);
-  });
-});
-
-test('on boot we should fetch and load the country configuration', assert => {
-  visit(HOME_URL);
-  andThen(() => {
-    assert.equal(store.find('country').get('length'), 2);
-    assert.equal(store.find('country').objectAt(0).get('id'), COUNTRY_DEFAULTS.id);
-    assert.equal(store.find('country').objectAt(0).get('name'), COUNTRY_DEFAULTS.name);
-    assert.equal(store.find('country').objectAt(1).get('id'), COUNTRY_DEFAULTS.idTwo);
-    assert.equal(store.find('country').objectAt(1).get('name'), COUNTRY_DEFAULTS.nameTwo);
-  });
-});
-
-test('on boot we should fetch and load the state configuration', assert => {
-  visit(HOME_URL);
-  andThen(() => {
-    assert.equal(store.find('state').get('length'), 51);
-    assert.equal(store.find('state').objectAt(4).get('id'), STATE_DEFAULTS.idFive);
-    assert.equal(store.find('state').objectAt(4).get('name'), STATE_DEFAULTS.name);
-    assert.equal(store.find('state').objectAt(4).get('abbr'), STATE_DEFAULTS.abbr);
   });
 });
 
