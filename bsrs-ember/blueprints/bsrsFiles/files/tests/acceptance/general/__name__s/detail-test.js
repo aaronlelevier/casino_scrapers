@@ -8,7 +8,7 @@ import config from 'bsrs-ember/config/environment';
 import <%= FirstCharacterModuleName %>D from 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>';
 import <%= FirstCharacterModuleName %>F from 'bsrs-ember/vendor/<%= dasherizedModuleName %>_fixtures';
 import <%= SecondModelSingleCharacter %>F from 'bsrs-ember/vendor/<%= secondModel %>_fixtures';
-import <%= SecondModelSingleCharacter %>D from 'bsrs-ember/vendor/<%= secondModel %>';
+import <%= SecondModelSingleCharacter %>D from 'bsrs-ember/vendor/defaults/<%= secondModel %>';
 import page from 'bsrs-ember/tests/pages/<%= dasherizedModuleName %>';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { <%= CapitalizeModule %>_URL, <%= CapitalizeModule %>_LIST_URL, <%= secondModelPluralCaps %>_URL } from 'bsrs-ember/utilities/urls';

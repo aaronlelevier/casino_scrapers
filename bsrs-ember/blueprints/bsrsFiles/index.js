@@ -44,7 +44,7 @@ module.exports = {
       //All properties called by snake name to enfore this. Can't name it foo-bar
       thirdPropertySnake: snake(options.third),
 
-      // profile-join-filter
+      // profile-join-pfilter
       thirdJoinModel: options.thirdJoinModel,
       thirdJoinModelTitle: title(options.thirdJoinModel),
       thirdJoinModelCaps: allCaps(title(options.thirdJoinModel)),
@@ -95,7 +95,7 @@ var camel = function(str) {
   return str;
 };
 
-/* assignee -> Assignee or location_level -> LocationLevel, profile-join-filter -> ProfileJoinFilter */
+/* assignee -> Assignee or location_level -> LocationLevel, profile-join-pfilter -> ProfileJoinFilter */
 var title = function(str) {
   if (str.includes('_')) {
     return replaceWithChar(str, '_');
