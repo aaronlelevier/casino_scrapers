@@ -13,7 +13,7 @@ import <%= camelizedModuleName %>page from 'bsrs-ember/tests/pages/<%= dasherize
 import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import pageDrawer from 'bsrs-ember/tests/pages/nav-drawer';
-import BASEURLS, { <%= CapitalizeModule %>_URL, <%= CapitalizeModule %>_LIST_URL,, <%= secondModelPluralCaps %>_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { <%= CapitalizeModule %>_URL, <%= CapitalizeModule %>_LIST_URL, <%= secondModelPluralCaps %>_URL } from 'bsrs-ember/utilities/urls';
 
 var store;
 

@@ -23,7 +23,7 @@ module.exports = {
       secondPropertyCaps: allCaps(options.second),
       //All properties called by snake name to enfore this. Can't name it foo-bar
       secondPropertySnake: snake(options.second),
-      SecondModelSingleCharacter: first(options.entity.name),
+      SecondModelSingleCharacter: first(options.secondModel),
 
       secondModel: options.secondModel,
       secondModelCamel: camel(options.secondModel),

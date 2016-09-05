@@ -71,7 +71,7 @@ if (typeof window === 'undefined') {
   var <%= secondModelCamel %> = require('./defaults/<%= secondModel %>');
   var config = require('../config/environment');
   objectAssign(BSRS_<%= camelizedModuleName %>_FACTORY.prototype, mixin.prototype);
-  module.exports = new BSRS_<%= CapitalizeModule %>_FACTORY(<%= camelizedModuleName %>, <%= secondModelCame %>, config);
+  module.exports = new BSRS_<%= CapitalizeModule %>_FACTORY(<%= camelizedModuleName %>, <%= secondModelCamel %>, config);
 }
 else {
   define('bsrs-ember/vendor/<%= dasherizedModuleName %>_fixtures', ['exports', 'bsrs-ember/vendor/defaults/<%= dasherizedModuleName %>', 'bsrs-ember/vendor/defaults/<%= secondModel %>', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
