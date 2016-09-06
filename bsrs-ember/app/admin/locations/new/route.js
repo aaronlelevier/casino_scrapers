@@ -27,8 +27,6 @@ var LocationNewRoute = TabRoute.extend(ContactRouteMixin, {
       default_phone_number_type: this.phone_number_type_repo.get_default(),
       address_types: this.address_type_repo.find(),
       default_address_type: this.address_type_repo.get_default(),
-      countries: this.country_repo.find(),
-      state_list: this.state_repo.find(),
       repository: repository
     });
   },

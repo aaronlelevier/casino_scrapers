@@ -19,7 +19,7 @@ var store, person, default_type, run = Ember.run;
 
 var STATE_LIST = [StateSingle.create({ id: STATE_DEFAULTS.idTwo, name: STATE_DEFAULTS.nameTwo }), StateSingle.create({ id: STATE_DEFAULTS.id, name: STATE_DEFAULTS.name })];
 var COUNTRIES = [Country.create({ id: COUNTRY_DEFAULTS.id, name: COUNTRY_DEFAULTS.name }), Country.create({ id: COUNTRY_DEFAULTS.idTwo, name: COUNTRY_DEFAULTS.nameTwo })];
-moduleForComponent('input-multi-address', 'aaron integration: input-multi-address test', {
+moduleForComponent('input-multi-address', 'integration: input-multi-address test', {
   integration: true,
   setup() {
     translation.initialize(this);

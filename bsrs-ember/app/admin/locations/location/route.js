@@ -21,13 +21,11 @@ var LocationRoute = TabRoute.extend(FindById, ContactRouteMixin, {
     const default_phone_number_type = this.phone_number_type_repo.get_default();
     const address_types = this.address_type_repo.find();
     const default_address_type = this.address_type_repo.get_default();
-    const countries = this.country_repo.find();
-    const state_list = this.state_repo.find();
     return this.findByIdScenario(location, pk, {all_statuses:all_statuses, all_location_levels:all_location_levels,
                                  email_types:email_types, default_email_type:default_email_type,
                                  phone_number_types:phone_number_types,default_phone_number_type:default_phone_number_type,
                                  address_types:address_types, default_address_type:default_address_type,
-                                 state_list:state_list, countries:countries, repository:repository});
+                                 repository:repository});
 
   },
   setupController: function(controller, hash) {
