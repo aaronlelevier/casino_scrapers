@@ -46,7 +46,7 @@ var AddressMixin = Ember.Mixin.create({
             });
         }
         addresses.forEach((address) => {
-            if (address.get('isDirty') || address.get('isDirtyOrRelatedDirty')) {
+            if (address.get('isDirtyOrRelatedDirty')) {
                 address_dirty = true;
             }
             if (address.get('invalid_address') && filtered_address_fks.length !== filtered_addresses.length) {

@@ -23,9 +23,6 @@ var AddressModel = Model.extend(OptConf, {
     return this.get('isDirty') || this.get('countryIsDirty') || this.get('stateIsDirty') || this.get('addressTypeIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-  changeCountry(item) {
-    this.set('country', item);
-  },
   saveRelated() {
     this.saveCountry();
     this.saveState();

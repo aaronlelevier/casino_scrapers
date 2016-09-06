@@ -108,9 +108,9 @@ var LocationDeserializer = Ember.Object.extend(OptConf, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('status', 'location', 'location');
-    belongs_to.bind(this)('country', 'location', 'location');
-    belongs_to.bind(this)('state', 'location', 'location');
-    belongs_to.bind(this)('address_type', 'location', 'location');
+    belongs_to.bind(this)('country');
+    belongs_to.bind(this)('state');
+    belongs_to.bind(this)('address_type');
   },
   deserialize(response, id) {
     if (id) {
@@ -158,18 +158,16 @@ var LocationDeserializer = Ember.Object.extend(OptConf, {
       delete a.state;
       const type = a.type;
       delete a.type;
-      // main model
-      a.model_fk = response.id;
-      a.state_fk = state ? state.id : undefined;
-      a.country_fk = country ? country.id : undefined;
-      a.address_type_fk = type ? type.id : undefined;
+      a.model_fk = response.id; // main model - this is b/c using old attrs, not related attrs
+      a.state_fk = state.id;
+      a.country_fk = country.id;
+      a.address_type_fk = type.id;
       a.detail = true;
       const address = store.push('address', a);
       // setup related models
       this.setup_country(country, address);
       this.setup_state(state, address);
       this.setup_address_type(type, address);
-
     });
     delete response.addresses;
     return address_fks;

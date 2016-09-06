@@ -21,6 +21,8 @@ var MultiAddressComponent = ChildValidationComponent.extend(ValidationMixin, Cus
   classNames: ['input-multi-address t-input-multi-address'],
   addressFormat: validateEach('address', addressNameValidation),
   postal_codeFormat: validateEach('postal_code', postalCodeValidation),
+  // TODO: swap out this validation for ember-cp-validators
+  // and then, work on State, Country, AddressType power-select validation
   actions: {
     changed(address, val) {
       address.set('type', val);

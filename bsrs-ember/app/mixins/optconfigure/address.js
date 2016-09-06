@@ -5,17 +5,14 @@ export default Ember.Mixin.create({
     country: {
       collection: 'addresses',
       property: 'country',
-      related_model: 'country',
     },
     state: {
       collection: 'addresses',
       property: 'state',
-      related_model: 'state',
     },
     address_type: {
       collection: 'addresses',
       property: 'address-type',
-      related_model: 'address_type',
     }
   }
 });

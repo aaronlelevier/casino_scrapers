@@ -2,6 +2,8 @@
 
 echo "sandbox sandbox STARTED!"#!/bin/bash -lx
 
+BRANCH = if [ -n "$1" ] then "$1"; else master; fi
+
 wait
 echo "UWSGI - START/RELOAD"
 sudo kill -INT `cat /var/run/nginx-sandbox.pid`
@@ -31,7 +33,7 @@ TEST=$?; if [ "$TEST" == 1 ]; then echo "rm failed"; exit $TEST; fi
 
 wait
 echo "GIT - CLONE REPO"
-git clone -b state-country git@github.com:bigskytech/bsrs.git
+git clone -b $BRANCH git@github.com:bigskytech/bsrs.git
 TEST=$?; if [ "$TEST" == 1 ]; then echo "git clone failed"; exit $TEST; fi
 
 echo "DJANGO"
