@@ -2,7 +2,7 @@
 
 echo "sandbox sandbox STARTED!"#!/bin/bash -lx
 
-BRANCH = if [ -n "$1" ] then "$1"; else master; fi
+BRANCH="$1"
 
 wait
 echo "UWSGI - START/RELOAD"
