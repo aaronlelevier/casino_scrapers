@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
 from category.models import Category
-from contact.serializers import (PhoneNumberSerializer, EmailSerializer, AddressSerializer)
+from contact.serializers import (PhoneNumberSerializer, EmailSerializer, AddressSerializer,
+    AddressUpdateSerializer)
 from third_party.models import ThirdParty, ThirdPartyStatus
 from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin
 
@@ -42,7 +43,7 @@ class ThirdPartyUpdateSerializer(NestedContactSerializerMixin, serializers.Model
         queryset=Category.objects.all(), many=True, required=False)
     emails = EmailSerializer(required=False, many=True)
     phone_numbers = PhoneNumberSerializer(required=False, many=True)
-    addresses = AddressSerializer(required=False, many=True)
+    addresses = AddressUpdateSerializer(required=False, many=True)
 
     class Meta:
         model = ThirdParty

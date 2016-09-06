@@ -81,6 +81,14 @@ class AddressSerializer(BaseCreateSerializer):
             'country', 'postal_code',)
 
 
+class AddressUpdateSerializer(BaseCreateSerializer):
+
+    class Meta:
+        model = Address
+        fields = ('id', 'type', 'address', 'city', 'state',
+            'country', 'postal_code',)
+
+
 ### EMAIL ###
 
 class EmailTypeSerializer(serializers.ModelSerializer):

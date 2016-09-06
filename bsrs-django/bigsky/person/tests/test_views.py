@@ -476,16 +476,27 @@ class PersonDetailTests(TestCase):
         self.assertEqual(phone_data['number'], phone.number)
 
     def test_data_addresses(self):
-        self.assertTrue(self.data['addresses'])
-        address = Address.objects.get(id=self.data['addresses'][0]['id'])
+        # Address
+        self.person.addresses.clear()
+        address = mommy.make(Address, object_id=self.person.id, content_object=self.person,
+                             _fill_optional=['type', 'state', 'country'])
+        self.person.addresses.add(address)
 
-        address_data = self.data['addresses'][0]
+        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['addresses']), 1)
+        address = Address.objects.get(id=data['addresses'][0]['id'])
+        address_data = data['addresses'][0]
         self.assertEqual(address_data['id'], str(address.id))
-        self.assertEqual(address_data['type'], str(address.type.id))
+        self.assertEqual(address_data['type']['id'], str(address.type.id))
+        self.assertEqual(address_data['type']['name'], address.type.name)
         self.assertEqual(address_data['address'], address.address)
         self.assertEqual(address_data['city'], address.city)
-        self.assertEqual(address_data['state'], address.state)
-        self.assertEqual(address_data['country'], address.country)
+        self.assertEqual(address_data['state']['id'], str(address.state.id))
+        self.assertEqual(address_data['state']['name'], address.state.name)
+        self.assertEqual(address_data['country']['id'], str(address.country.id))
+        self.assertEqual(address_data['country']['name'], address.country.common_name)
         self.assertEqual(address_data['postal_code'], address.postal_code)
 
     def test_person_fk(self):
