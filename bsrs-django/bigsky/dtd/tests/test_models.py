@@ -42,7 +42,7 @@ class TreeDataTests(TestCase):
         create_tree_data()
 
     def test_export_fields(self):
-        export_fields = ['id', 'key', 'description']
+        export_fields = [ 'key', 'description']
 
         self.assertEqual(TreeData.EXPORT_FIELDS, export_fields)
 

@@ -117,7 +117,7 @@ class LocationLevelTests(TestCase):
         self.location = create_location()
 
     def test_export_fields(self):
-        export_fields = ['id', 'name']
+        export_fields = ['name']
 
         self.assertEqual(LocationLevel.EXPORT_FIELDS, export_fields)
 
@@ -387,7 +387,7 @@ class LocationTests(TestCase):
         self.office = create_address_type('admin.address_type.office')
 
     def test_export_fields(self):
-        export_fields = ['id', 'status_name', 'name', 'number', 'location_level_name']
+        export_fields = ['status_name', 'name', 'number', 'location_level_name']
 
         self.assertEqual(Location.EXPORT_FIELDS, export_fields)
 

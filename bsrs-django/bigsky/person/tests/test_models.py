@@ -68,7 +68,7 @@ class RoleTests(TestCase):
         self.role = create_role()
 
     def test_export_fields(self):
-        export_fields = ['id', 'name', 'role_type', 'location_level_name']
+        export_fields = ['name', 'role_type', 'location_level_name']
 
         self.assertEqual(Role.EXPORT_FIELDS, export_fields)
 
@@ -301,7 +301,7 @@ class PersonTests(TestCase):
         self.assertIsInstance(self.person, AbstractUser)
 
     def test_export_fields(self):
-        export_fields = ['id', 'status_name', 'fullname', 'username',
+        export_fields = ['status_name', 'fullname', 'username',
                          'title', 'role_name']
 
         self.assertEqual(Person.EXPORT_FIELDS, export_fields)

@@ -50,7 +50,7 @@ class RoleManager(BaseManager):
 
 
 class Role(BaseModel):
-    EXPORT_FIELDS = ['id', 'name', 'role_type', 'location_level_name']
+    EXPORT_FIELDS = ['name', 'role_type', 'location_level_name']
 
     # keys
     tenant = models.ForeignKey(Tenant, related_name="roles", null=True)
@@ -311,10 +311,9 @@ class Person(BaseModel, AbstractUser):
     :pw: password
     :ooto: out-of-the-office
     '''
-
-    # Static list of fields to export via the Ember GridView
     MODEL_FIELDS = ['id', 'username']
-    EXPORT_FIELDS = ['id', 'status_name', 'fullname', 'username',
+    # Static list of fields to export via the Ember GridView
+    EXPORT_FIELDS = ['status_name', 'fullname', 'username',
                      'title', 'role_name']
     # Keys
     role = models.ForeignKey(Role)

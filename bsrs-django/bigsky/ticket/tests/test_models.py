@@ -241,7 +241,7 @@ class TicketTests(TestCase):
         self.status_draft = TicketStatus.objects.get(name=TICKET_STATUS_DRAFT)
 
     def test_export_fields(self):
-        export_fields = ['id', 'priority_name', 'status_name', 'number', 'created',
+        export_fields = ['priority_name', 'status_name', 'number', 'created',
                          'location_name', 'assignee_name', 'request', 'category']
 
         self.assertEqual(Ticket.EXPORT_FIELDS, export_fields)

@@ -25,7 +25,7 @@ class BaseManagerTests(TestCase):
 
     def test_filter_export_data(self):
         query_params = {'username': self.person.username}
-        fields = Person.EXPORT_FIELDS # ['id', 'username']
+        fields = Person.EXPORT_FIELDS
 
         ret = Person.objects.filter_export_data(query_params)
 
@@ -120,7 +120,7 @@ class BaseModelTests(TestCase):
     def test_export_fields__explicit(self):
         self.assertEqual(
             Person.EXPORT_FIELDS,
-            ['id', 'status_name', 'fullname', 'username', 'title', 'role_name']
+            ['status_name', 'fullname', 'username', 'title', 'role_name']
         )
 
         self.assertEqual(Person.export_fields, Person.EXPORT_FIELDS)

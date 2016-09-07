@@ -108,7 +108,7 @@ class CategoryManagerTests(TestCase):
 class CategoryTests(CategorySetupMixin, TestCase):
 
     def test_export_fields(self):
-        export_fields = ['id', 'name', 'description', 'label', 'cost_amount', 'cost_code']
+        export_fields = ['name', 'description', 'label', 'cost_amount', 'cost_code']
 
         self.assertEqual(Category.EXPORT_FIELDS, export_fields)
 

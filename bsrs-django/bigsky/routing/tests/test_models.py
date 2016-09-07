@@ -204,7 +204,7 @@ class AssignmentTests(SetupMixin, TestCase):
         self.ticket.categories.add(category)
 
     def test_export_fields(self):
-        export_fields = ['id', 'description', 'assignee_name']
+        export_fields = ['description', 'assignee_name']
 
         self.assertEqual(Assignment.EXPORT_FIELDS, export_fields)
 

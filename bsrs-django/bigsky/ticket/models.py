@@ -133,9 +133,7 @@ class TicketManager(BaseManager):
 
 class Ticket(BaseModel):
 
-    MODEL_FIELDS = ['id',  'number', 'created', 'request']
-
-    EXPORT_FIELDS = ['id', 'priority_name', 'status_name', 'number', 'created',
+    EXPORT_FIELDS = ['priority_name', 'status_name', 'number', 'created',
                      'location_name', 'assignee_name', 'request', 'category']
 
     def next_number():

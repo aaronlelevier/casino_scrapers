@@ -156,7 +156,7 @@ class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
     '''
     LocationLevel records must be unique by: name, role_type
     '''
-    EXPORT_FIELDS = ['id', 'name']
+    EXPORT_FIELDS = ['name']
 
     tenant = models.ForeignKey(Tenant, related_name="location_levels", null=True)
     contact = models.BooleanField(blank=True, default=True,
@@ -343,7 +343,7 @@ class Location(SelfRefrencingBaseModel, BaseModel):
         At the *Region* ``LocationLevel`` there is a
         *East* ``Location``.
     '''
-    EXPORT_FIELDS = ['id', 'status_name', 'name', 'number', 'location_level_name']
+    EXPORT_FIELDS = ['status_name', 'name', 'number', 'location_level_name']
     # keys
     location_level = models.ForeignKey(LocationLevel, related_name='locations')
     status = models.ForeignKey(LocationStatus, related_name='locations', blank=True, null=True)

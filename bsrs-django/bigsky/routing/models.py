@@ -67,7 +67,7 @@ class AssignmentManager(BaseManager):
 
 
 class Assignment(BaseModel):
-    EXPORT_FIELDS = ['id', 'description', 'assignee_name']
+    EXPORT_FIELDS = ['description', 'assignee_name']
     # keys
     tenant = models.ForeignKey(Tenant, null=True)
     order = models.IntegerField(null=True)
