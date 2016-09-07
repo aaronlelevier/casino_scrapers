@@ -34,7 +34,7 @@ const FILTER_PRIORITY = '.t-filter-priority-translated-name';
 
 var application, store, endpoint, list_xhr;
 
-moduleForAcceptance('aaron Acceptance | ticket grid test', {
+moduleForAcceptance('Acceptance | ticket grid test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';

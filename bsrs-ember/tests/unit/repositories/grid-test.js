@@ -55,7 +55,7 @@ test('modifyEndpoint - no page argument - search', assert => {
     undefined, // id_in
     undefined, // page_size
     undefined, // sort
-    undefined, // special_url
+    undefined // special_url
   );
   assert.equal(endpoint, `/api/tickets/?search=${args}`);
 });
@@ -74,7 +74,7 @@ test('modifyEndpoint - no page argument - find', assert => {
     undefined, // id_in
     undefined, // page_size
     undefined, // sort
-    undefined, // special_url
+    undefined // special_url
   );
   assert.equal(endpoint, `/api/tickets/?${key}=${value}`);
 });
@@ -91,7 +91,7 @@ test('modifyEndpoint - no page argument - id_in', assert => {
     `priority:${priority_id}`, // id_in
     undefined, // page_size
     undefined, // sort
-    undefined, // special_url
+    undefined // special_url
   );
   assert.equal(endpoint, `/api/tickets/?priority__id__in=${priority_id}`);
 });
@@ -108,7 +108,7 @@ test('modifyEndpoint - no page argument - page_size', assert => {
     undefined, // id_in
     args, // page_size
     undefined, // sort
-    undefined, // special_url
+    undefined // special_url
   );
   assert.equal(endpoint, `/api/tickets/?page_size=${args}`);
 });
@@ -125,7 +125,7 @@ test('modifyEndpoint - no page argument - sort', assert => {
     undefined, // id_in
     undefined, // page_size
     args, // sort
-    undefined, // special_url
+    undefined // special_url
   );
   assert.equal(endpoint, `/api/tickets/?ordering=${args}`);
 });
@@ -143,7 +143,7 @@ test('modifyEndpoint - no page argument - sort translated_name', assert => {
     undefined, // id_in
     undefined, // page_size
     args, // sort
-    undefined, // special_url
+    undefined // special_url
   );
   assert.equal(endpoint, `/api/tickets/?ordering=${value}`);
 });
@@ -160,7 +160,7 @@ test('modifyEndpoint - no page argument - special_url', assert => {
     undefined, // id_in
     undefined, // page_size
     undefined, // sort
-    args, // special_url
+    args // special_url
   );
   assert.equal(endpoint, `/api/tickets/?${args}`);
 });
@@ -183,7 +183,7 @@ test('modifyEndpoint - no page argument - multiple filters', assert => {
     undefined, // id_in
     undefined, // page_size
     sort, // sort
-    undefined, // special_url
+    undefined // special_url
   );
   assert.equal(endpoint, `/api/tickets/?ordering=${sort}&search=${search}&${findKey}=${findValue}`);
 });
