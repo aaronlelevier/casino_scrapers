@@ -276,7 +276,7 @@ class ExportDataTests(APITestCase):
         response = self.client.get("/api/export-data/{}/".format(model_name))
 
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(
+        self.assertEqual(
             response.content.decode('utf-8'),
             raw_content
         )
@@ -306,7 +306,7 @@ class ExportDataTests(APITestCase):
                                    .format(model_name, self.person.username))
 
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(
+        self.assertEqual(
             response.content.decode('utf8'),
             raw_content
         )
@@ -372,3 +372,10 @@ class ExportDataTests(APITestCase):
     def test_set_model__raises_validation_error_for_invalid_model_name(self):
         with self.assertRaises(ValidationError):
             ExportData()._set_model('foo')
+
+    def test_search__order__filter(self):
+        model_name = "ticket"
+
+        response = self.client.get("/api/export-data/{}/?ordering=number&search=a&status__name__icontains=b".format(model_name))
+
+        self.assertEqual(response.status_code, 200)

@@ -16,6 +16,7 @@ import {isFocused} from 'bsrs-ember/tests/helpers/input';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
 // import timemachine from 'vendor/timemachine';
 import moment from 'moment';
+import page from 'bsrs-ember/tests/pages/tickets';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -33,7 +34,7 @@ const FILTER_PRIORITY = '.t-filter-priority-translated-name';
 
 var application, store, endpoint, list_xhr;
 
-moduleForAcceptance('Acceptance | ticket grid test', {
+moduleForAcceptance('aaron Acceptance | ticket grid test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';
@@ -870,6 +871,33 @@ test('export csv button shows in grid header', (assert) => {
     assert.equal(find('[data-test-id="grid-export-btn"]').text().trim(), t('grid.export'));
   });
   xhr(`${EXPORT_DATA_URL}ticket/`, 'GET', null, {}, 200, undefined);
+  click('[data-test-id="grid-export-btn"]');
+});
+
+test('export data - sort', assert => {
+  visit(TICKET_LIST_URL);
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_LIST_URL);
+  });
+  // sort on column
+  xhr(`${PREFIX}${BASE_URL}/?page=1&ordering=number` ,'GET', null, {}, 200, TF.sorted('number'));
+  page.sortGridByNumber();
+  // export data
+  xhr(`${EXPORT_DATA_URL}ticket/?ordering=number`, 'GET', null, {}, 200, undefined);
+  click('[data-test-id="grid-export-btn"]');
+});
+
+test('export data - search', assert => {
+  visit(TICKET_LIST_URL);
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_LIST_URL);
+  });
+  const keyword = 'a';
+  xhr(`${PREFIX}${BASE_URL}/?page=1&search=${keyword}` , 'GET', null, {}, 200, TF.searched(keyword));
+  fillIn('.t-grid-search-input', keyword);
+  triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FIVE);
+  // export data
+  xhr(`${EXPORT_DATA_URL}ticket/?search=${keyword}`, 'GET', null, {}, 200, undefined);
   click('[data-test-id="grid-export-btn"]');
 });
 

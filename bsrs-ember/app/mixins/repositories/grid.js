@@ -22,19 +22,23 @@ var GridRepositoryMixin = Ember.Mixin.create({
   modifyEndpoint(url, page, search, find, id_in, page_size, sort, special_url) {
     let endpoint = url + (page ? '?page='+page : '');
 
+    let appendParamOperator = (endpoint) => {
+      return endpoint.includes('/?') ? '&' : '?';
+    };
+
     if(sort && sort !== 'id' && sort.indexOf('.') < 0){
-      endpoint = endpoint + '&ordering=' + sort;
+      endpoint = endpoint + appendParamOperator(endpoint) + 'ordering=' + sort;
     }else if(sort && sort !== 'id'){
-      endpoint = endpoint + '&ordering=' + sort.replace(/\./g, '__').replace(/translated_name/g, 'name');
+      endpoint = endpoint + appendParamOperator(endpoint) + 'ordering=' + sort.replace(/\./g, '__').replace(/translated_name/g, 'name');
     }
     if(search && search !== ''){
-      endpoint = endpoint + '&search=' + encodeURIComponent(search);
+      endpoint = endpoint + appendParamOperator(endpoint) + 'search=' + encodeURIComponent(search);
     }
-    if(page_size) { //&& page_size !== ''){
-      endpoint = endpoint + '&page_size=' + page_size;
+    if(page_size) {
+      endpoint = endpoint + appendParamOperator(endpoint) + 'page_size=' + page_size;
     }
     if(special_url) {
-      endpoint = endpoint + `&${special_url}`;
+      endpoint = endpoint + appendParamOperator(endpoint) + `${special_url}`;
     }
     if(find && find !== ''){
       let finds = find.split(',');
@@ -43,7 +47,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
         const key = params[0] || '';
         const value = params[1];
         const field = key.replace('-', '_').replace('.', '__').replace('translated_name', 'name').replace('[', '__').replace(']', '');
-        endpoint = endpoint + '&' + field + '__icontains=' + encodeURIComponent(value);
+        endpoint = endpoint + appendParamOperator(endpoint) + field + '__icontains=' + encodeURIComponent(value);
       });
     }
     /* id__in can contain multiple id's for one field; however, assigning multiple ids to a field is done @ component level */
@@ -53,7 +57,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
         /* key='location' value='143ad-adie32,30843d-adc342,121ae-..., key='priority' value='123adbd-3' */
         const [key, value] = key_value.split(':');
         if(value) {
-          endpoint = endpoint + '&' + key + '__id__in=' + value.replace(/,+$/g, '');
+          endpoint = endpoint + appendParamOperator(endpoint) + key + '__id__in=' + value.replace(/,+$/g, '');
         }
       });
     }
@@ -76,7 +80,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
         return Ember.run(null, resolve, {});
       };
       options.error = (xhr, errorThrown) => {
-        return Ember.run(null, reject, this.didError(xhr, xhr.status, xhr.responseJSON));
+        return Ember.run(null, reject, 'error');
       };
       Ember.$.ajax(options);
     });
