@@ -5,11 +5,12 @@
         <div class="col-md-12">
           {{#form-group title="admin.person.label.phone_number.other"}}
           {{input-multi-phone
-            placeholder=(t "admin.person.label.phone_number.one")
-            model=model.phone_numbers
+            placeholder=(t "admin.location.label.phone_number.one")
+            numbers=model.phonenumbers
+            model=model
             types=phone_number_types
             default_type=default_phone_number_type
-            related_pk=model.id
+            didValidate=didValidate
           }}
           {{/form-group}}
         </div>
@@ -18,11 +19,12 @@
         <div class="col-md-12">
           {{#form-group title="admin.person.label.email"}}
           {{input-multi-email
-            placeholder=(t "admin.person.label.email.one")
-            model=model.emails
+            placeholder=(t "admin.location.label.email.one")
+            emails=model.emails
+            model=model
             types=email_types
             default_type=default_email_type
-            related_pk=model.id
+            didValidate=didValidate
           }}
           {{/form-group}}
         </div>

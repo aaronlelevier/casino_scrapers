@@ -2,8 +2,14 @@ import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import OptConf from 'bsrs-ember/mixins/optconfigure/address';
+import { validator, buildValidations } from 'ember-cp-validations';
 
-var AddressModel = Model.extend(OptConf, {
+const Validations = buildValidations({
+  address: validator('address-street'),
+  postal_code: validator('address-postal'),
+});
+
+var AddressModel = Model.extend(Validations, OptConf, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('country', 'address');
@@ -14,6 +20,7 @@ var AddressModel = Model.extend(OptConf, {
   address: attr(''),
   city: attr(''),
   postal_code: attr(''),
+  address_type_fk: undefined,
   person_fk: undefined,
   invalid_address: Ember.computed('address', function() {
     let address = this.get('address');

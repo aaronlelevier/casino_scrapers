@@ -9,7 +9,7 @@ var belongs_to_extract = function(type, store, parent_model, type_string, parent
     // LIST: belongs_to_extract(status_json, store, ticket, 'status', 'ticket', 'tickets');
     if (parent_model.get('detail') && parent_model.get(`${type_string}.id`) !== type) {
         parent_model[`change_${type_string}`](type);
-    }else{
+    } else if (typeof type === 'object') {
         const type_list = store.find(`${parent_string}-${type_string}-list`, type.id);
         const type_arr = type_list.get(`${multiple}`) || [];
         const updated_type_arr = type_arr.concat(parent_model.get('id')).uniq();

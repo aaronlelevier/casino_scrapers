@@ -28,7 +28,7 @@ class ModelContactPage(ModelPage):
         assert child_one in text
 
     def find_ph_new_entry_send_keys(self, phone_num):
-        first_phone_number_input = self.driver.find_element_by_class_name("t-new-entry")
+        first_phone_number_input = self.driver.find_element_by_class_name("t-phonenumber-number0")
         first_phone_number_input.send_keys(phone_num)
 
     def find_all_ph_new_entries(self):
@@ -46,11 +46,14 @@ class ModelContactPage(ModelPage):
         assert second_phone_input.get_attribute("value") == phone_two
 
     def find_address_new_entry_send_keys(self, index, street, city, zip_code):
-        first_street_input = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-address-group ')])[%s]/div/following-sibling::*[1]/textarea" % index)
+        first_street_input = self.driver.find_element_by_class_name("t-address-address%s" % index)
+        # first_street_input = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-address-group ')])[%s]/div/following-sibling::*[1]/textarea" % index)
         first_street_input.send_keys(street)
-        first_city_input = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-address-group ')])[%s]/div/following-sibling::*[1]/following-sibling::*[1]/input" % index)
+        first_city_input = self.driver.find_element_by_class_name("t-address-city%s" % index)
+        # first_city_input = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-address-group ')])[%s]/div/following-sibling::*[1]/following-sibling::*[1]/input" % index)
         first_city_input.send_keys(city)
-        first_zip_input = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-address-group ')])[%s]/div/following-sibling::*[1]/following-sibling::*[1]/following-sibling::*[1]/following-sibling::*[1]/input" % index)
+        first_zip_input = self.driver.find_element_by_class_name("t-address-postal-code%s" % index)
+        # first_zip_input = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-address-group ')])[%s]/div/following-sibling::*[1]/following-sibling::*[1]/following-sibling::*[1]/following-sibling::*[1]/input" % index)
         first_zip_input.send_keys(zip_code)
 
     def assert_address_inputs(self, index, new_street, new_city, new_zip):
@@ -62,12 +65,16 @@ class ModelContactPage(ModelPage):
         assert zip_input.get_attribute("value") == new_zip
 
     def find_email_new_entry_send_keys(self, email):
-        first_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
+        first_email_input = self.driver.find_element_by_class_name("t-email-email0")
         first_email_input.send_keys(email)
+        # first_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
+        # first_email_input.send_keys(email)
 
     def find_second_email_new_entry_send_keys(self, email):
-        second_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/following-sibling::*[1]/input")
+        second_email_input = self.driver.find_element_by_class_name("t-email-email1")
         second_email_input.send_keys(email)
+        # second_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/following-sibling::*[1]/input")
+        # second_email_input.send_keys(email)
 
     def assert_email_inputs(self, email_one, email_two):
         first_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")

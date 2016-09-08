@@ -6,7 +6,7 @@ class GeneralElementsPage(object):
         self.driver = driver
 
     def find_add_btn(self):
-        return self.driver.find_element_by_class_name("t-btn-add")
+        return self.driver.find_element_by_class_name("t-add-phone-number-btn")
 
     def find_add_address_btn(self):
         return self.driver.find_element_by_class_name("t-add-address-btn")

@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LF from 'bsrs-ember/vendor/location_fixtures';
@@ -7,9 +8,14 @@ import LPD from 'bsrs-ember/vendor/defaults/location-parents';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LDS from 'bsrs-ember/vendor/defaults/location-status';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
+import LPHD from 'bsrs-ember/vendor/defaults/location-join-phonenumber';
+import LEMD from 'bsrs-ember/vendor/defaults/location-join-email';
+import LADD from 'bsrs-ember/vendor/defaults/location-join-address';
 import ED from 'bsrs-ember/vendor/defaults/email';
+import ETD from 'bsrs-ember/vendor/defaults/email-type';
 import EF from 'bsrs-ember/vendor/email_fixtures';
 import PND from 'bsrs-ember/vendor/defaults/phone-number';
+import PNTD from 'bsrs-ember/vendor/defaults/phone-number-type';
 import PNF from 'bsrs-ember/vendor/phone_number_fixtures';
 import AND from 'bsrs-ember/vendor/defaults/address';
 import ANF from 'bsrs-ember/vendor/address_fixtures';
@@ -20,11 +26,11 @@ import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import LocationDeserializer from 'bsrs-ember/deserializers/location';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 
-var store, location_unused, location_level_deserializer, subject, location_status, location_status_two, location_level, run = Ember.run;
+var store, location_unused, location_level_deserializer, subject, location_status, location_status_two, location_level;
 
 module('unit: location deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:location', 'model:location-list', 'model:location-status-list', 'model:location-level', 'model:location-status', 'model:location-children', 'model:location-parents', 'model:address', 'model:phonenumber', 'model:email', 'model:country', 'model:state', 'model:address-type', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:location', 'model:location-list', 'model:location-status-list', 'model:location-level', 'model:location-status', 'model:location-children', 'model:location-parents', 'model:address', 'model:location-join-phonenumber', 'model:location-join-email', 'model:location-join-address', 'model:phonenumber', 'model:phone-number-type', 'model:email', 'model:email-type', 'model:country', 'model:state', 'model:address-type', 'service:i18n']);
     location_level_deserializer = LocationLevelDeserializer.create({simpleStore: store});
     subject = LocationDeserializer.create({simpleStore: store, LocationLevelDeserializer: location_level_deserializer});
     run(function() {
@@ -157,102 +163,245 @@ test('can push in location with location level as an id', (assert) => {
   assert.equal(location.get('location_level').get('id'), LLD.idOne);
 });
 
-/* PH and ADDRESSES and Emails*/
-test('location will setup the correct relationship with emails when _deserializeSingle is invoked with no relationship in place', (assert) => {
-  let location, email;
-  location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
-  email = store.push('email', {id: ED.idOne, email: ED.emailOne});
-  let response = LF.generate(LD.idOne);
-  response.emails = EF.get();
+/* PH and ADDRESSES and EMAILS */
+// test('location will setup the correct relationship with emails with no relationship in place', (assert) => {
+//   let location, email;
+//   location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
+//   email = store.push('email', {id: ED.idOne, email: ED.emailOne});
+//   let response = LF.generate(LD.idOne);
+//   response.emails = EF.get();
+//   run(() => {
+//     subject.deserialize(response, LD.idOne);
+//   });
+//   let location_pk = email.get('model_fk');
+//   assert.ok(location_pk);
+//   assert.deepEqual(location.get('email_fks'), [ED.idOne, ED.idTwo]);
+//   assert.ok(location.get('isNotDirty'));
+//   assert.equal(email.get('model_fk'), LD.idOne);
+// });
+
+// test('location will setup the correct relationship with emails when with existing phone number relationship', (assert) => {
+//   let location, email;
+//   location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId, email_fks: [ED.idOne]});
+//   email = store.push('email', {id: ED.idOne, number: ED.emailOne});
+//   let response = LF.generate(LD.idOne);
+//   response.emails = EF.get();
+//   run(() => {
+//     subject.deserialize(response, LD.idOne);
+//   });
+//   let location_pk = email.get('model_fk');
+//   assert.ok(location_pk);
+//   assert.deepEqual(location.get('email_fks'), [ED.idOne, ED.idTwo]);
+//   assert.ok(location.get('isNotDirty'));
+//   assert.equal(email.get('model_fk'), LD.idOne);
+// });
+
+// test('location will setup the correct relationship with addresses when _deserializeSingle is invoked with no relationship in place', (assert) => {
+//   let location, address;
+//   location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
+//   address = store.push('address', {id: AND.idOne, address: AND.streetOne});
+//   let response = LF.generate(LD.idOne);
+//   response.addresses = ANF.get();
+//   run(() => {
+//     subject.deserialize(response, LD.idOne);
+//   });
+//   let location_pk = address.get('model_fk');
+//   assert.ok(location_pk);
+//   assert.deepEqual(location.get('address_fks'), [AND.idOne, AND.idTwo]);
+//   assert.ok(location.get('isNotDirty'));
+//   assert.equal(address.get('model_fk'), LD.idOne);
+//   assert.equal(location.get('addresses').objectAt(0).get('id'), AND.idOne);
+// });
+
+// test('location will setup the correct relationship with address when _deserializeSingle is invoked with location setup with address relationship', (assert) => {
+//   let location, address;
+//   location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId, address_fks: [AND.idOne]});
+//   address = store.push('address', {id: AND.idOne, address: AND.streetOne});
+//   let response = LF.generate(LD.idOne);
+//   response.addresses = ANF.get();
+//   run(() => {
+//     subject.deserialize(response, LD.idOne);
+//   });
+//   let location_pk = address.get('model_fk');
+//   assert.ok(location_pk);
+//   assert.deepEqual(location.get('address_fks'), [AND.idOne, AND.idTwo]);
+//   assert.ok(location.get('isNotDirty'));
+//   assert.equal(address.get('model_fk'), LD.idOne);
+// });
+
+test('deserialize - address, address_type - no existing relationship', assert => {
+  let response = LF.detail(LD.idOne);
   run(() => {
     subject.deserialize(response, LD.idOne);
   });
-  let location_pk = email.get('model_fk');
-  assert.ok(location_pk);
-  assert.deepEqual(location.get('email_fks'), [ED.idOne, ED.idTwo]);
-  assert.ok(location.get('isNotDirty'));
-  assert.equal(email.get('model_fk'), LD.idOne);
+  assert.equal(store.find('location', LD.idOne).get('id'), LD.idOne);
+  let location = store.find('location', LD.idOne);
+  assert.equal(location.get('name'), LD.baseStoreName);
+  // addresses
+  assert.equal(location.get('addresses').get('length'), 2);
+  let address_one = location.get('addresses').objectAt(1);
+  let address_two = location.get('addresses').objectAt(0);
+  assert.equal(address_one.get('id'), AND.idTwo);
+  assert.equal(address_two.get('id'), AND.idOne);
+  // address-type
+  assert.equal(address_one.get('address_type').get('id'), ATD.idTwo);
+  assert.equal(address_one.get('address_type').get('name'), ATD.shippingName);
+  assert.equal(address_two.get('address_type').get('id'), ATD.idOne);
+  assert.equal(address_two.get('address_type').get('name'), ATD.officeName);
+  // dirty checking
+  assert.ok(address_one.get('addressTypeIsNotDirty'));
+  assert.ok(address_one.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('location will setup the correct relationship with emails when _deserializeSingle is invoked with location setup with phone number relationship', (assert) => {
-  let location, email;
-  location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId, email_fks: [ED.idOne]});
-  email = store.push('email', {id: ED.idOne, number: ED.emailOne});
-  let response = LF.generate(LD.idOne);
-  response.emails = EF.get();
+test('deserialize - address, address_type - existing relationship', assert => {
+  let response = LF.detail(LD.idOne);
+  run(() => {
+    store.push('location', {id: LD.idOne, location_addresses_fks: [LADD.idOne]});
+    store.push('address', {id: AND.idOne, address: AND.streetOne, city: AND.cityOne, state: AND.stateOne, country: AND.countryOne, postal_code: AND.zipOne, address_type_fk: ATD.officeId});
+    store.push('address-type', {id: ATD.officeId, name: ATD.officeName, addresses: [AND.idOne]});
+    store.push('location-join-address', {id: LADD.idOne, address_pk: AND.idOne, location_pk: LD.idOne});
+  });
+  let location = store.find('location', LD.idOne);
+  let address_two = location.get('addresses').objectAt(0);
+  assert.equal(address_two.get('id'), AND.idOne);
+  assert.equal(address_two.get('isDirtyOrRelatedDirty'), false);
+  assert.equal(address_two.get('isDirty'), false);
+  assert.equal(address_two.get('address'), AND.streetOne);
   run(() => {
     subject.deserialize(response, LD.idOne);
   });
-  let location_pk = email.get('model_fk');
-  assert.ok(location_pk);
-  assert.deepEqual(location.get('email_fks'), [ED.idOne, ED.idTwo]);
-  assert.ok(location.get('isNotDirty'));
-  assert.equal(email.get('model_fk'), LD.idOne);
+  assert.equal(location.get('name'), LD.baseStoreName);
+  // addresses
+  assert.equal(location.get('addresses').get('length'), 2);
+  let address_one = location.get('addresses').objectAt(1);
+  assert.equal(address_one.get('id'), AND.idTwo);
+  assert.equal(address_one.get('isDirtyOrRelatedDirty'), false);
+  assert.equal(address_two.get('id'), AND.idOne);
+  assert.equal(address_two.get('address'), AND.streetOne);
+  assert.equal(address_two.get('isDirtyOrRelatedDirty'), false);
+  assert.equal(address_two.get('isDirty'), false);
+  // address-type
+  assert.equal(address_one.get('address_type').get('id'), ATD.idTwo);
+  assert.equal(address_one.get('address_type').get('name'), ATD.shippingName);
+  assert.equal(address_two.get('address_type').get('id'), ATD.idOne);
+  assert.equal(address_two.get('address_type').get('name'), ATD.officeName);
+  // dirty checking
+  assert.ok(address_one.get('addressTypeIsNotDirty'));
+  assert.ok(address_one.get('isNotDirtyOrRelatedNotDirty'));
+  assert.notOk(location.get('addressesIsDirtyContainer'));
+  assert.ok(location.get('addressesIsNotDirty'));
+  assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('location will setup the correct relationship with phone numbers when _deserializeSingle is invoked with no relationship in place', (assert) => {
-  let location, phonenumber;
-  location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
-  phonenumber = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne});
-  let response = LF.generate(LD.idOne);
-  response.phone_numbers = PNF.get();
+test('deserialize - email, email_type - no existing relationship', assert => {
+  let response = LF.detail(LD.idOne);
   run(() => {
     subject.deserialize(response, LD.idOne);
   });
-  let location_pk = phonenumber.get('model_fk');
-  assert.ok(location_pk);
-  assert.deepEqual(location.get('phone_number_fks'), [PND.idOne, PND.idTwo]);
-  assert.ok(location.get('isNotDirty'));
-  assert.equal(phonenumber.get('model_fk'), LD.idOne);
+  assert.equal(store.find('location', LD.idOne).get('id'), LD.idOne);
+  let location = store.find('location', LD.idOne);
+  assert.equal(location.get('name'), LD.baseStoreName);
+  // emails
+  assert.equal(location.get('emails').get('length'), 2);
+  let email_one = location.get('emails').objectAt(1);
+  let email_two = location.get('emails').objectAt(0);
+  assert.equal(email_one.get('id'), ED.idTwo);
+  assert.equal(email_two.get('id'), ED.idOne);
+  // email-type
+  assert.equal(email_one.get('email_type').get('id'), ETD.idTwo);
+  assert.equal(email_one.get('email_type').get('name'), ETD.personalEmail);
+  assert.equal(email_two.get('email_type').get('id'), ETD.idOne);
+  assert.equal(email_two.get('email_type').get('name'), ETD.workEmail);
+  // dirty checking
+  assert.ok(email_one.get('emailTypeIsNotDirty'));
+  assert.ok(email_one.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('location will setup the correct relationship with phone numbers when _deserializeSingle is invoked with location setup with phone number relationship', (assert) => {
-  let location, phonenumber;
-  location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId, phone_number_fks: [PND.idOne]});
-  phonenumber = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne});
-  let response = LF.generate(LD.idOne);
-  response.phone_numbers = PNF.get();
+test('deserialize - email, email_type - existing relationship', assert => {
+  let response = LF.detail(LD.idOne);
+  run(() => {
+    store.push('location', {id: LD.idOne, location_emails_fks: [LEMD.idOne]});
+    store.push('email', {id: ED.idOne, email: ED.emailOne, email_type_fk: ETD.personalId});
+    store.push('email-type', {id: ETD.personalId, name: ETD.workEmail, emails: [ED.idOne]});
+    store.push('location-join-email', {id: LEMD.idOne, email_pk: ED.idOne, location_pk: LD.idOne});
+  });
   run(() => {
     subject.deserialize(response, LD.idOne);
   });
-  let location_pk = phonenumber.get('model_fk');
-  assert.ok(location_pk);
-  assert.deepEqual(location.get('phone_number_fks'), [PND.idOne, PND.idTwo]);
-  assert.ok(location.get('isNotDirty'));
-  assert.equal(phonenumber.get('model_fk'), LD.idOne);
+  let location = store.find('location', LD.idOne);
+  assert.equal(location.get('name'), LD.baseStoreName);
+  // emails
+  assert.equal(location.get('emails').get('length'), 2);
+  let email_one = location.get('emails').objectAt(1);
+  let email_two = location.get('emails').objectAt(0);
+  assert.equal(email_one.get('id'), ED.idTwo);
+  assert.equal(email_two.get('id'), ED.idOne);
+  // email-type
+  assert.equal(email_one.get('email_type').get('id'), ETD.idTwo);
+  assert.equal(email_one.get('email_type').get('name'), ETD.personalEmail);
+  assert.equal(email_two.get('email_type').get('id'), ETD.idOne);
+  assert.equal(email_two.get('email_type').get('name'), ETD.workEmail);
+  // dirty checking
+  assert.ok(email_one.get('emailTypeIsNotDirty'));
+  assert.ok(email_one.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('location will setup the correct relationship with addresses when _deserializeSingle is invoked with no relationship in place', (assert) => {
-  let location, address;
-  location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
-  address = store.push('address', {id: AND.idOne, address: AND.streetOne});
-  let response = LF.generate(LD.idOne);
-  response.addresses = ANF.get();
+test('deserialize - phonenumber, phonenumber_type - no existing relationship', assert => {
+  let response = LF.detail(LD.idOne);
   run(() => {
     subject.deserialize(response, LD.idOne);
   });
-  let location_pk = address.get('model_fk');
-  assert.ok(location_pk);
-  assert.deepEqual(location.get('address_fks'), [AND.idOne, AND.idTwo]);
-  assert.ok(location.get('isNotDirty'));
-  assert.equal(address.get('model_fk'), LD.idOne);
-  assert.equal(location.get('addresses').objectAt(0).get('id'), AND.idOne);
+  assert.equal(store.find('location', LD.idOne).get('id'), LD.idOne);
+  let location = store.find('location', LD.idOne);
+  assert.equal(location.get('name'), LD.baseStoreName);
+  // phonenumbers
+  assert.equal(location.get('phonenumbers').get('length'), 2);
+  let phonenumber_one = location.get('phonenumbers').objectAt(1);
+  let phonenumber_two = location.get('phonenumbers').objectAt(0);
+  assert.equal(phonenumber_one.get('id'), PND.idTwo);
+  assert.equal(phonenumber_two.get('id'), PND.idOne);
+  // phonenumber-type
+  assert.equal(phonenumber_one.get('phone_number_type').get('id'), PNTD.idTwo);
+  assert.equal(phonenumber_one.get('phone_number_type').get('name'), PNTD.mobileName);
+  assert.equal(phonenumber_two.get('phone_number_type').get('id'), PNTD.idOne);
+  assert.equal(phonenumber_two.get('phone_number_type').get('name'), PNTD.officeName);
+  // dirty checking
+  assert.ok(phonenumber_one.get('phoneNumber_typeIsNotDirty'));
+  assert.ok(phonenumber_one.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('location will setup the correct relationship with address when _deserializeSingle is invoked with location setup with address relationship', (assert) => {
-  let location, address;
-  location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId, address_fks: [AND.idOne]});
-  address = store.push('address', {id: AND.idOne, address: AND.streetOne});
-  let response = LF.generate(LD.idOne);
-  response.addresses = ANF.get();
+test('deserialize - phonenumber, phonenumber_type - existing relationship', assert => {
+  let response = LF.detail(LD.idOne);
+  run(() => {
+    store.push('location', {id: LD.idOne, location_phonenumbers_fks: [LPHD.idOne]});
+    store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, phone_number_type_fk: PNTD.officeId});
+    store.push('phone-number-type', {id: PNTD.officeId, name: PNTD.officeName, phonenumbers: [PND.idOne]});
+    store.push('location-join-phonenumber', {id: LPHD.idOne, phonenumber_pk: PND.idOne, location_pk: LD.idOne});
+  });
   run(() => {
     subject.deserialize(response, LD.idOne);
   });
-  let location_pk = address.get('model_fk');
-  assert.ok(location_pk);
-  assert.deepEqual(location.get('address_fks'), [AND.idOne, AND.idTwo]);
-  assert.ok(location.get('isNotDirty'));
-  assert.equal(address.get('model_fk'), LD.idOne);
+  let location = store.find('location', LD.idOne);
+  assert.equal(location.get('name'), LD.baseStoreName);
+  // phonenumbers
+  assert.equal(location.get('phonenumbers').get('length'), 2);
+  let phonenumber_one = location.get('phonenumbers').objectAt(1);
+  let phonenumber_two = location.get('phonenumbers').objectAt(0);
+  assert.equal(phonenumber_one.get('id'), PND.idTwo);
+  assert.equal(phonenumber_two.get('id'), PND.idOne);
+  // phonenumber-type
+  assert.equal(phonenumber_one.get('phone_number_type').get('id'), PNTD.idTwo);
+  assert.equal(phonenumber_one.get('phone_number_type').get('name'), PNTD.mobileName);
+  assert.equal(phonenumber_two.get('phone_number_type').get('id'), PNTD.idOne);
+  assert.equal(phonenumber_two.get('phone_number_type').get('name'), PNTD.officeName);
+  // dirty checking
+  assert.ok(phonenumber_one.get('phoneNumber_typeIsNotDirty'));
+  assert.ok(phonenumber_one.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('deserialize location and address with its related models: type, state, and country', assert => {

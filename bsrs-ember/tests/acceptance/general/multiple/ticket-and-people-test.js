@@ -10,9 +10,11 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import ETD from 'bsrs-ember/vendor/defaults/email-type';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import locationPage from 'bsrs-ember/tests/pages/location';
 import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, PEOPLE_URL, PEOPLE_LIST_URL, CATEGORIES_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -119,8 +121,20 @@ test('filter tickets by their location matching the logged in Persons location',
     const person = store.find('person', PD.idDonald);
     assert.equal(person.get('locations').get('length'), 0);
   });
+  // remove contacts
+  locationPage.clickDeleteEmail();
+  locationPage.clickDeleteEmail();
+  locationPage.clickDeletePhoneNumber();
+  locationPage.clickDeletePhoneNumber();
+  andThen(() => {
+    assert.equal(find('.t-del-email-btn').length, 0);
+    assert.equal(find('.t-del-phone-number-btn').length, 0);
+  });
+  // PUT
   let payload = PF.put({id: PD.idDonald});
   payload.locations = [];
+  payload.emails = [];
+  payload.phone_numbers = [];
   ajax(`${PREFIX}${BASEURLS.base_people_url}/${PD.idDonald}/`, 'PUT', JSON.stringify(payload), {}, 200, {});
   ajax(`${PREFIX}${BASEURLS.base_people_url}/?page=1`, 'GET', null, {}, 200, PF.list());
   click('.t-save-btn');

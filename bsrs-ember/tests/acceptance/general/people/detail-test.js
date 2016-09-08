@@ -32,6 +32,7 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 // import AD from 'bsrs-ember/vendor/defaults/address';
 // import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import locationPage from 'bsrs-ember/tests/pages/location';
 import page from 'bsrs-ember/tests/pages/person';
 import inputCurrencyPage from 'bsrs-ember/tests/pages/input-currency';
 import random from 'bsrs-ember/models/random';
@@ -111,20 +112,20 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     assert.equal(find('.t-person-last-name').val(), PD.last_name);
     assert.equal(find('.t-person-title').val(), PD.title);
     assert.equal(find('.t-person-employee_id').val(), PD.employee_id);
-    assert.equal(find('.t-input-multi-email').find('select:eq(0)').val(), ETD.workId);
-    assert.equal(find('.t-input-multi-email').find('select:eq(1)').val(), ETD.personalId);
-    assert.equal(find('.t-input-multi-email').find('select:eq(0) option:selected').text(), t(ETD.workEmail));
-    assert.equal(find('.t-input-multi-email').find('select:eq(1) option:selected').text(), t(ETD.personalEmail));
+
+    // email
+    assert.equal(find('.t-email-type-select:eq(0)').text().trim(), t(ETD.personalName));
+    assert.equal(find('.t-email-type-select:eq(1)').text().trim(), t(ETD.workName));
     assert.equal(find('.t-input-multi-email').find('input').length, 2);
     assert.equal(find('.t-input-multi-email').find('input:eq(0)').val(), ED.emailOne);
     assert.equal(find('.t-input-multi-email').find('input:eq(1)').val(), ED.emailTwo);
-    assert.equal(find('.t-input-multi-phone').find('select:eq(0)').val(), PNTD.officeId);
-    assert.equal(find('.t-input-multi-phone').find('select:eq(1)').val(), PNTD.mobileId);
-    assert.equal(find('.t-input-multi-phone').find('select:eq(0) option:selected').text(), t(PNTD.officeName));
-    assert.equal(find('.t-input-multi-phone').find('select:eq(1) option:selected').text(), t(PNTD.mobileName));
+    // phone
+    assert.equal(find('.t-phone-number-type-select:eq(0)').text().trim(), t(PNTD.officeName));
+    assert.equal(find('.t-phone-number-type-select:eq(1)').text().trim(), t(PNTD.mobileName));
     assert.equal(find('.t-input-multi-phone').find('input').length, 2);
     assert.equal(find('.t-input-multi-phone').find('input:eq(0)').val(), PND.numberOne);
     assert.equal(find('.t-input-multi-phone').find('input:eq(1)').val(), PND.numberTwo);
+
     // assert.equal(find('.t-input-multi-address').find('.t-address-group').length, 2);
     // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type').val(), ATD.officeId);
     // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type option:selected').text(), t(ATD.officeName));
@@ -148,37 +149,50 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     assert.equal(page.roleInput, RD.nameOne);
     assert.equal(find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol);
   });
+  const username_response = {
+    'count': 0,
+    'next': null,
+    'previous': null,
+    'results': []
+  };
+  xhr(`${PEOPLE_URL}?username=${PD_PUT.username}`, 'get', null, {}, 200, username_response);
+  fillIn('.t-person-username', PD_PUT.username);
+  fillIn('.t-person-first-name', PD_PUT.first_name);
+  fillIn('.t-person-middle-initial', PD_PUT.middle_initial);
+  fillIn('.t-person-last-name', PD_PUT.last_name);
+  fillIn('.t-person-title', PD_PUT.title);
+  fillIn('.t-person-employee_id', PD_PUT.employee_id);
+  fillIn('.t-amount', PD_PUT.auth_amount);
+  andThen(() => {
+    $('.t-amount').focusout();
+  });
+  andThen(() => {
+    var person = store.find('person', PD.idOne);
+    assert.ok(person.get('isDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    assert.ok(person.get('emailsIsNotDirty'));
+  });
   var response = PF.detail(PD.idOne);
-  var payload = PF.put({id: PD.id, username: PD_PUT.username, first_name: PD_PUT.first_name,
-                       middle_initial: PD_PUT.middle_initial, last_name: PD_PUT.last_name, title: PD_PUT.title,
-                       employee_id: PD_PUT.employee_id, auth_amount: PD_PUT.auth_amount, locale: PD.locale_id });
-                       const username_response = {'count':0,'next':null,'previous':null,'results': []};
-                       xhr(`${PEOPLE_URL}?username=${PD_PUT.username}`, 'get', null, {}, 200, username_response);
-                       fillIn('.t-person-username', PD_PUT.username);
-                       fillIn('.t-person-first-name', PD_PUT.first_name);
-                       fillIn('.t-person-middle-initial', PD_PUT.middle_initial);
-                       fillIn('.t-person-last-name', PD_PUT.last_name);
-                       fillIn('.t-person-title', PD_PUT.title);
-                       fillIn('.t-person-employee_id', PD_PUT.employee_id);
-                       fillIn('.t-amount', PD_PUT.auth_amount);
-                       andThen(() => {
-                         $('.t-amount').focusout();
-                       });
-                       andThen(() => {
-                         var person = store.find('person', PD.idOne);
-                         assert.ok(person.get('isDirty'));
-                         assert.ok(person.get('isDirtyOrRelatedDirty'));
-                         assert.ok(person.get('emailsIsNotDirty'));
-                       });
-                       xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-                       generalPage.save();
-                       andThen(() => {
-                         assert.equal(currentURL(), PEOPLE_INDEX_URL);
-                         var person = store.find('person', PD.idOne);
-                         assert.ok(person.get('isNotDirty'));
-                         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-                         assert.ok(person.get('emailsIsNotDirty'));
-                       });
+  var payload = PF.put({
+    id: PD.id,
+    username: PD_PUT.username,
+    first_name: PD_PUT.first_name,
+    middle_initial: PD_PUT.middle_initial,
+    last_name: PD_PUT.last_name,
+    title: PD_PUT.title,
+    employee_id: PD_PUT.employee_id,
+    auth_amount: PD_PUT.auth_amount,
+    locale: PD.locale_id
+  });
+  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    var person = store.find('person', PD.idOne);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(person.get('emailsIsNotDirty'));
+  });
 });
 
 test('when changing password to invalid, it checks for validation', (assert) => {
@@ -349,46 +363,183 @@ test('when click delete, and click no modal disappears', async assert => {
 });
 /* jshint ignore:end */
 
-/* PHONE NUMBER AND ADDRESS AND EMAIL*/
-test('newly added email without a valid name are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-  visit(DETAIL_URL);
-  click('.t-add-email-btn:eq(0)');
-  andThen(() => {
-    assert.equal(store.find('email').get('length'), 3);
-    let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 0);
-  });
-  fillIn('.t-new-entry:eq(4)', '34');
-  andThen(() => {
-    let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
-  });
-  fillIn('.t-new-entry:eq(4)', '');
-  generalPage.cancel();
-  andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
-    assert.equal(store.find('email').get('length'), 2);
-  });
-});
+
+/* PHONE NUMBER AND EMAILS*/
 
 test('newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
   page.visitDetail();
-  click('.t-btn-add:eq(0)');
   andThen(() => {
-    assert.equal(store.find('phonenumber').get('length'), 3);
-    let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 0);
+    assert.equal($('.validated-input-error-dialog').length, 0);
   });
-  fillIn('.t-new-entry:eq(2)', '34');
+  generalPage.clickAddPhoneNumber();
   andThen(() => {
-    let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.notOk(generalPage.phonenumberZeroValidationErrorVisible);
+    assert.notOk(generalPage.phonenumberOneValidationErrorVisible);
+    assert.notOk(generalPage.phonenumberTwoValidationErrorVisible);
   });
-  fillIn('.t-new-entry:eq(2)', '');
+  generalPage.phonenumberThirdFillIn('34');
+  triggerEvent('.t-phonenumber-number2', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    // TODO: rely on emberi18ncpvalidations or roll our own
+    // assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.phone'));
+    assert.notOk(generalPage.phonenumberZeroValidationErrorVisible);
+    assert.notOk(generalPage.phonenumberOneValidationErrorVisible);
+    assert.ok(generalPage.phonenumberTwoValidationErrorVisible);
+  });
+  generalPage.phonenumberThirdFillIn('');
+  triggerEvent('.t-phonenumber-number2', 'keyup', {keyCode: 65});
   generalPage.cancel();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_INDEX_URL);
-    assert.equal(store.find('phonenumber').get('length'), 2);
+    assert.equal(store.find('phonenumber').get('length'), 3);
+  });
+});
+
+test('newly added emails without a valid email are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 0);
+  });
+  generalPage.clickAddEmail();
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.notOk(generalPage.emailZeroValidationErrorVisible);
+    assert.notOk(generalPage.emailOneValidationErrorVisible);
+    assert.notOk(generalPage.emailTwoValidationErrorVisible);
+  });
+  generalPage.emailThirdFillIn('wat');
+  triggerEvent('.t-email-email2', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    // TODO: rely on emberi18ncpvalidations or roll our own
+    // assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.email'));
+    assert.notOk(generalPage.emailZeroValidationErrorVisible);
+    assert.notOk(generalPage.emailOneValidationErrorVisible);
+    assert.ok(generalPage.emailTwoValidationErrorVisible);
+  });
+  generalPage.emailThirdFillIn('');
+  triggerEvent('.t-email-email2', 'keyup', {keyCode: 65});
+  generalPage.cancel();
+  andThen(() => {
+    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(store.find('email').get('length'), 3);
+  });
+});
+
+test('invalid phone numbers prevent save and must click delete to navigate away', (assert) => {
+  page.visitDetail();
+  generalPage.clickAddPhoneNumber();
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 0);
+  });
+  generalPage.phonenumberThirdFillIn('34');
+  triggerEvent('.t-phonenumber-number2', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.notOk(generalPage.phonenumberZeroValidationErrorVisible);
+    assert.notOk(generalPage.phonenumberOneValidationErrorVisible);
+    assert.ok(generalPage.phonenumberTwoValidationErrorVisible);
+  });
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.notOk(generalPage.phonenumberZeroValidationErrorVisible);
+    assert.notOk(generalPage.phonenumberOneValidationErrorVisible);
+    assert.ok(generalPage.phonenumberTwoValidationErrorVisible);
+  });
+  generalPage.phonenumberThirdFillIn('');
+  triggerEvent('.t-phonenumber-number2', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.notOk(generalPage.phonenumberZeroValidationErrorVisible);
+    assert.notOk(generalPage.phonenumberOneValidationErrorVisible);
+    assert.ok(generalPage.phonenumberTwoValidationErrorVisible);
+  });
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.notOk(generalPage.phonenumberZeroValidationErrorVisible);
+    assert.notOk(generalPage.phonenumberOneValidationErrorVisible);
+    assert.ok(generalPage.phonenumberTwoValidationErrorVisible);
+  });
+  click('.t-del-phone-number-btn:eq(2)');
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.notOk(generalPage.phonenumberZeroValidationErrorVisible);
+    assert.notOk(generalPage.phonenumberOneValidationErrorVisible);
+  });
+  var payload = PF.put({id: PD.idOne});
+  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    const person = store.find('person', PD.idOne);
+    const fks = person.get('person_phonenumbers_fks');
+    const ids = person.get('person_phonenumbers_ids');
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.deepEqual(fks, ids);
+  });
+});
+
+test('invalid emails prevent save and must click delete to navigate away', (assert) => {
+  page.visitDetail();
+  generalPage.clickAddEmail();
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 0);
+  });
+  generalPage.emailThirdFillIn('34');
+  triggerEvent('.t-email-email2', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.notOk(generalPage.emailZeroValidationErrorVisible);
+    assert.notOk(generalPage.emailOneValidationErrorVisible);
+    assert.ok(generalPage.emailTwoValidationErrorVisible);
+  });
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.notOk(generalPage.emailZeroValidationErrorVisible);
+    assert.notOk(generalPage.emailOneValidationErrorVisible);
+    assert.ok(generalPage.emailTwoValidationErrorVisible);
+  });
+  generalPage.emailThirdFillIn('');
+  triggerEvent('.t-email-email2', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.notOk(generalPage.emailZeroValidationErrorVisible);
+    assert.notOk(generalPage.emailOneValidationErrorVisible);
+    assert.ok(generalPage.emailTwoValidationErrorVisible);
+  });
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.notOk(generalPage.emailZeroValidationErrorVisible);
+    assert.notOk(generalPage.emailOneValidationErrorVisible);
+    assert.ok(generalPage.emailTwoValidationErrorVisible);
+  });
+  click('.t-del-email-btn:eq(2)');
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.notOk(generalPage.emailZeroValidationErrorVisible);
+    assert.notOk(generalPage.emailOneValidationErrorVisible);
+  });
+  var response = PF.detail(PD.idOne);
+  var payload = PF.put({id: PD.idOne});
+  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    const person = store.find('person', PD.idOne);
+    const fks = person.get('person_emails_fks');
+    const ids = person.get('person_emails_ids');
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.deepEqual(fks, ids);
   });
 });
 
@@ -413,124 +564,11 @@ test('newly added phone numbers without a valid number are ignored and removed w
 //   });
 // });
 
-test('emails without a valid name are ignored and removed on save', (assert) => {
-  page.visitDetail();
-  click('.t-add-email-btn:eq(0)');
-  andThen(() => {
-    let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 0);
-  });
-  fillIn('.t-new-entry:eq(4)', '34');
-  andThen(() => {
-    let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
-    assert.equal(find('.t-input-multi-email-validation-format-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_email);
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
-    assert.equal(store.find('email').get('length'), 3);
-  });
-  fillIn('.t-new-entry:eq(4)', '');
-  var response = PF.detail(PD.idOne);
-  var payload = PF.put({id: PD.id});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
-    assert.equal(store.find('email').get('length'), 2);
-  });
-});
-
-test('phone numbers without a valid number are ignored and removed on save', (assert) => {
-  page.visitDetail();
-  click('.t-btn-add:eq(0)');
-  andThen(() => {
-    let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 0);
-  });
-  fillIn('.t-new-entry:eq(2)', '34');
-  andThen(() => {
-    let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
-    assert.equal(find('.t-input-multi-phone-validation-format-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_ph);
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
-    assert.equal(store.find('phonenumber').get('length'), 3);
-  });
-  fillIn('.t-new-entry:eq(2)', '');
-  var response = PF.detail(PD.idOne);
-  var payload = PF.put({id: PD.id});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
-    assert.equal(store.find('phonenumber').get('length'), 2);
-  });
-});
-
-// test('address without a valid address or zip code are ignored and removed on save', (assert) => {
-//   page.visitDetail();
-//   click('.t-add-address-btn:eq(0)');
-//   andThen(() => {
-//     let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-//     let visible_zip_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
-//     assert.equal(visible_errors.length, 0);
-//     assert.equal(visible_zip_errors.length, 0);
-//   });
-//   fillIn('.t-address-address:eq(2)', '34');
-//   andThen(() => {
-//     let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-//     assert.equal(visible_errors.length, 1);
-//     assert.equal(find('.t-input-multi-address-validation-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_street);
-//   });
-//   generalPage.save();
-//   andThen(() => {
-//     assert.equal(currentURL(), DETAIL_URL);
-//     let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-//     let visible_zip_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
-//     assert.equal(visible_errors.length, 1);
-//     assert.equal(visible_zip_errors.length, 0);
-//     assert.equal(store.find('address').get('length'), 3);
-//   });
-//   fillIn('.t-address-address:eq(2)', '');
-//   fillIn('.t-address-postal-code:eq(2)', '34');
-//   andThen(() => {
-//     let visible_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
-//     assert.equal(visible_errors.length, 1);
-//     assert.equal(find('.t-input-multi-address-zip-validation-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_zip);
-//   });
-//   generalPage.save();
-//   andThen(() => {
-//     assert.equal(currentURL(), DETAIL_URL);
-//     let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-//     let visible_zip_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
-//     assert.equal(visible_errors.length, 1);
-//     assert.equal(visible_zip_errors.length, 1);
-//     assert.equal(store.find('address').get('length'), 3);
-//   });
-//   fillIn('.t-address-postal-code:eq(2)', '');
-//   var response = PF.detail(PD.idOne);
-//   var payload = PF.put({id: PD.id});
-//   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-//   generalPage.save();
-//   andThen(() => {
-//     assert.equal(currentURL(), PEOPLE_INDEX_URL);
-//     assert.equal(store.find('address').get('length'), 2);
-//   });
-// });
-
 test('when you change a related email numbers type it will be persisted correctly', (assert) => {
   page.visitDetail();
+  selectChoose('.t-email-type-select', ETD.personalName);
   var emails = EF.put({id: ED.idOne, type: ETD.personalId});
   var payload = PF.put({id: PD.id, emails: emails});
-  fillIn('.t-multi-email-type:eq(0)', ETD.personalId);
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
@@ -540,9 +578,9 @@ test('when you change a related email numbers type it will be persisted correctl
 
 test('when you change a related phone numbers type it will be persisted correctly', (assert) => {
   page.visitDetail();
+  selectChoose('.t-phone-number-type-select', PNTD.mobileNameValue);
   var phone_numbers = PNF.put({id: PND.idOne, type: PNTD.mobileId});
   var payload = PF.put({id: PD.id, phone_numbers: phone_numbers});
-  fillIn('.t-multi-phone-type:eq(0)', PNTD.mobileId);
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
@@ -564,7 +602,7 @@ test('when you change a related phone numbers type it will be persisted correctl
 
 test('when user changes an attribute on email and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
   page.visitDetail();
-  fillIn('.t-multi-email-type:eq(0)', ETD.personalId);
+  selectChoose('.t-email-type-select:eq(0)', ETD.workName);
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
@@ -576,16 +614,15 @@ test('when user changes an attribute on email and clicks cancel we prompt them w
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_INDEX_URL);
-      var person = store.find('person', PD.idOne);
-      var emails = store.find('email', PD.idOne);
-      assert.equal(emails._source[0].get('type'), ETD.workId);
+      const person = store.find('person', PD.idOne);
+      assert.equal(person.get('emails').objectAt(0).get('email_type').get('id'), ETD.personalId);
     });
   });
 });
 
 test('when user changes an attribute on phonenumber and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
   page.visitDetail();
-  fillIn('.t-multi-phone-type:eq(0)', PNTD.mobileId);
+  selectChoose('.t-phone-number-type-select:eq(0)', PNTD.mobileNameValue);
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
@@ -597,9 +634,8 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_INDEX_URL);
-      var person = store.find('person', PD.idOne);
-      var phone_numbers = store.find('phonenumber', PD.idOne);
-      assert.equal(phone_numbers._source[0].get('type'), PNTD.officeId);
+      const person = store.find('person', PD.idOne);
+      assert.equal(person.get('phonenumbers').objectAt(0).get('phone_number_type').get('id'), PNTD.officeId);
     });
   });
 });
@@ -625,7 +661,7 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
 //   });
 // });
 
-test('when user removes a phone number clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+test('when user removes an email clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
   page.visitDetail();
   click('.t-del-email-btn:eq(0)');
   generalPage.cancel();
@@ -633,36 +669,38 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
+      const person = store.find('person', PD.idOne);
+      assert.equal(person.get('emails').get('length'), 1);
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_INDEX_URL);
-      var person = store.find('person', PD.idOne);
-      var emails = store.find('email', PD.idOne);
-      assert.equal(emails._source[0].get('type'), ETD.workId);
+      const person = store.find('person', PD.idOne);
+      assert.equal(person.get('emails').get('length'), 2);
     });
   });
 });
 
 test('when user removes a phone number clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
   page.visitDetail();
-  click('.t-del-btn:eq(0)');
+  click('.t-del-phone-number-btn:eq(0)');
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
+      const person = store.find('person', PD.idOne);
+      assert.equal(person.get('phonenumbers').get('length'), 1);
     });
   });
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_INDEX_URL);
-      var person = store.find('person', PD.idOne);
-      var phone_numbers = store.find('phonenumber', PD.idOne);
-      assert.equal(phone_numbers._source[0].get('type'), PNTD.officeId);
+      const person = store.find('person', PD.idOne);
+      assert.equal(person.get('phonenumbers').get('length'), 2);
     });
   });
 });
@@ -696,16 +734,19 @@ test('when you deep link to the person detail view you can remove a new phone nu
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(find('.t-input-multi-phone').find('input').length, 2);
   });
-  click('.t-del-btn:eq(0)');
+  locationPage.clickDeletePhoneNumber();
+  locationPage.clickDeletePhoneNumber();
+  locationPage.clickDeleteEmail();
+  locationPage.clickDeleteEmail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-input-multi-phone').find('input').length, 1);
+    assert.equal(find('.t-input-multi-phone').find('input').length, 0);
     var person = store.find('person', PD.idOne);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
   });
-  var phone_numbers = PNF.put();
   var response = PF.detail(PD.idOne);
-  var payload = PF.put({id: PD.id, phone_numbers: [phone_numbers[1]]});
+  var payload = PF.put({id: PD.idOne});
+  payload.phone_numbers = payload.emails = [];
   xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
   generalPage.save();
   andThen(() => {
@@ -754,8 +795,8 @@ test('when you deep link to the person detail view you can add and remove a new 
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(find('.t-input-multi-phone').find('input').length, 2);
   });
-  click('.t-btn-add:eq(0)');
-  click('.t-del-btn:eq(2)');
+  click('.t-add-phone-number-btn:eq(0)');
+  click('.t-del-phone-number-btn:eq(2)');
   andThen(() => {
     var person = store.find('person', PD.idOne);
     assert.ok(person.get('isNotDirty'));
@@ -781,30 +822,30 @@ test('when you deep link to the person detail view you can add and remove a new 
 //   });
 // });
 
-test('when you deep link to the person detail view you can change the phone number type and add a new phone number', (assert) => {
-  random.uuid = function() { return UUID.value; };
-  page.visitDetail();
-  fillIn('.t-input-multi-phone select:eq(0)', PNTD.mobileId);
-  click('.t-btn-add:eq(0)');
-  fillIn('.t-new-entry:eq(2)', PND.numberThree);
-  var phone_numbers = PNF.put();
-  phone_numbers[0].type = PNTD.mobileId;
-  var response = PF.detail(PD.idOne);
-  run(function() {
-    phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PNTD.officeId});
-  });
-  var payload = PF.put({id: PD.id, phone_numbers: phone_numbers});
-  xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
-    var person = store.find('person', PD.idOne);
-    assert.ok(person.get('isNotDirty'));
-    assert.equal(person.get('phone_numbers').objectAt(0).get('type'), PNTD.mobileId);
-    assert.equal(person.get('phone_numbers').objectAt(2).get('type'), PNTD.officeId);
-    assert.ok(person.get('phone_numbers').objectAt(0).get('isNotDirty'));
-  });
-});
+// test('when you deep link to the person detail view you can change the phone number type and add a new phone number', (assert) => {
+//   random.uuid = function() { return UUID.value; };
+//   page.visitDetail();
+//   fillIn('.t-input-multi-phone select:eq(0)', PNTD.mobileId);
+//   click('.t-btn-add:eq(0)');
+//   fillIn('.t-new-entry:eq(2)', PND.numberThree);
+//   var phone_numbers = PNF.put();
+//   phone_numbers[0].type = PNTD.mobileId;
+//   var response = PF.detail(PD.idOne);
+//   run(function() {
+//     phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PNTD.officeId});
+//   });
+//   var payload = PF.put({id: PD.id, phone_numbers: phone_numbers});
+//   xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+//   generalPage.save();
+//   andThen(() => {
+//     assert.equal(currentURL(), PEOPLE_INDEX_URL);
+//     var person = store.find('person', PD.idOne);
+//     assert.ok(person.get('isNotDirty'));
+//     assert.equal(person.get('phone_numbers').objectAt(0).get('type'), PNTD.mobileId);
+//     assert.equal(person.get('phone_numbers').objectAt(2).get('type'), PNTD.officeId);
+//     assert.ok(person.get('phone_numbers').objectAt(0).get('isNotDirty'));
+//   });
+// });
 
 // test('when you deep link to the person detail view you can change the address type and can add new address with default type', (assert) => {
 //   random.uuid = function() { return UUID.value; };
@@ -870,7 +911,7 @@ test('when you change a related role it will be persisted correctly', (assert) =
     assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
   });
   page.firstNameFill(PD.first_name);
-  page.middleInitial(PD.middle_initial);
+  page.middleInitialFill(PD.middle_initial);
   page.lastNameFill(PD.last_name);
   var role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
   var payload = PF.put({id: PD.id, first_name: PD.first_name, middle_initial: PD.middle_initial, last_name: PD.last_name, role: role.id});
@@ -957,7 +998,7 @@ test('when you deep link to the person detail view you can alter the role and ch
       let people_detail_data_three = PF.detail(PD.idOne);
       people_detail_data_three.role = RD.idOne;
       page.firstNameFill(PD.first_name);
-      page.middleInitial(PD.middle_initial);
+      page.middleInitialFill(PD.middle_initial);
       page.lastNameFill(PD.last_name);
       xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_three);
       page.roleClickDropdown();

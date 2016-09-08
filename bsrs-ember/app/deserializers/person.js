@@ -2,7 +2,9 @@ import Ember from 'ember';
 const { run } = Ember;
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 import { belongs_to, belongs_to_extract, belongs_to_extract_contacts } from 'bsrs-components/repository/belongs-to';
+import { many_to_many } from 'bsrs-components/repository/many-to-many';
 import copySettingsToFirstLevel from 'bsrs-ember/utilities/copy-settings-to-first-level';
+import ContactDeserializerMixin from 'bsrs-ember/mixins/deserializer/contact';
 import OptConf from 'bsrs-ember/mixins/optconfigure/person';
 
 
@@ -81,10 +83,14 @@ var extract_locale = (model, store) => {
   delete model.locale;
 };
 
-var PersonDeserializer = Ember.Object.extend(OptConf, {
+var PersonDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('status', 'person', 'person');
+    belongs_to.bind(this)('phone_number_type');
+    belongs_to.bind(this)('email_type');
+    many_to_many.bind(this)('phonenumbers', 'person');
+    many_to_many.bind(this)('emails', 'person');
   },
   LocationDeserializer: injectDeserializer('location'),
   deserialize(response, options) {
@@ -94,28 +100,6 @@ var PersonDeserializer = Ember.Object.extend(OptConf, {
     } else {
       return this._deserializeSingle(response, options, location_deserializer);
     }
-  },
-  _deserializeSingle(model, id, location_deserializer) {
-    let store = this.get('simpleStore');
-    const existing = store.find('person', id);
-    let location_level_fk;
-    let person = existing;
-    if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
-      model.email_fks = belongs_to_extract_contacts(model, store, 'email', 'emails');
-      model.phone_number_fks = belongs_to_extract_contacts(model, store, 'phonenumber', 'phone_numbers');
-      model.address_fks = belongs_to_extract_contacts(model, store, 'address', 'addresses');
-      [model.role_fk, location_level_fk] = extract_role(model, store);
-      extract_person_location(model, store, location_level_fk, location_deserializer);
-      extract_locale(model, store);
-      model.detail = true;
-      model = copySettingsToFirstLevel(model);
-      run(() => {
-        person = store.push('person', model);
-        belongs_to_extract(model.status_fk, store, person, 'status', 'person', 'people');
-        person.save();
-      });
-    }
-    return person;
   },
   _deserializeList(response) {
     const store = this.get('simpleStore');
@@ -127,6 +111,39 @@ var PersonDeserializer = Ember.Object.extend(OptConf, {
       this.setup_status(status_json, person);
       // belongs_to_extract(status_json, store, person, 'status', 'person', 'people');
     });
+  },
+  // TODO: refactor w/o id and response
+  _deserializeSingle(model, id, location_deserializer) {
+    let store = this.get('simpleStore');
+    const existing = store.find('person', id);
+    let location_level_fk;
+    let person = existing;
+    if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
+      const phonenumber_json = model.phone_numbers;
+      const email_json = model.emails;
+      this.extract_emails(model);
+      this.extract_phonenumbers(model);
+      // model.email_fks = this.extract_emails(model);
+      // model.phone_number_fks = this.extract_phonenumbers(model);
+      // model.address_fks = belongs_to_extract_contacts(model, store, 'address', 'addresses');
+      [model.role_fk, location_level_fk] = extract_role(model, store);
+      extract_person_location(model, store, location_level_fk, location_deserializer);
+      extract_locale(model, store);
+      model.detail = true;
+      model = copySettingsToFirstLevel(model);
+      run(() => {
+        person = store.push('person', model);
+        belongs_to_extract(model.status_fk, store, person, 'status', 'person', 'people');
+        if (phonenumber_json) {
+          this.setup_phonenumbers(phonenumber_json, person);
+        }
+        if (email_json) {
+          this.setup_emails(email_json, person);
+        }
+        person.save();
+      });
+    }
+    return person;
   }
 });
 

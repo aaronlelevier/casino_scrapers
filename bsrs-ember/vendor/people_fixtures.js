@@ -71,7 +71,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
       locations: [],
       emails: [],
       phone_numbers: [],
-      phone_numbers: [],
       // addresses: [],
       locale: this.locale_defaults.idOne
     }

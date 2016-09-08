@@ -19,7 +19,7 @@ var new_put_payload = {
     addresses: []
 };
 
-var addresses = {id: UUID.value, type: ATD.shippingId, address: '34 2nd St' };
+var addresses = {id: UUID.value, type: ATD.shippingId, address: '34 2nd St', postal_code: '12345' };
 var address_put_payload = {
     id: UUID.value, 
     name: LD.storeName, 

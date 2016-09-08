@@ -1,44 +1,34 @@
 import Ember from 'ember';
-import ParentValidationComponent from 'bsrs-ember/mixins/validation/parent';
-import { validate } from 'ember-cli-simple-validation/mixins/validate';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
-import RelaxedMixin from 'bsrs-ember/mixins/validation/relaxed';
 import { task } from 'ember-concurrency';
 
-function validatePassword() {
-  if (this.changingPassword && (this.get('model.password').length > 0 || this.get('model.password') === '')) {
-    return true;
-  } else if (!this.changingPassword) {
-    return true;
-  }
-}
+// function validatePassword() {
+//   if (this.changingPassword && (this.get('model.password').length > 0 || this.get('model.password') === '')) {
+//     return true;
+//   } else if (!this.changingPassword) {
+//     return true;
+//   }
+// }
 
-var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, {
+var PersonSingle = Ember.Component.extend(TabMixin, {
   init() {
     this._super(...arguments);
     this.didValidate = false;
   },
   simpleStore: Ember.inject.service(),
-  child_components: ['input-multi-phone', 'input-multi-address', 'input-multi-email'],
   classNames: ['wrapper', 'form'],
-  passwordValidation: validate('model.password', validatePassword),
+  // passwordValidation: validate('model.password', validatePassword),
   saveTask: task(function * () {
-    this.set('submitted', true);
-    if (this.all_components_valid()) {
-      if (this.get('model.validations.isValid')) {
-        const tab = this.tab();
-        yield this.get('save')(tab);
-      }
-      this.set('didValidate', true);
+    if (this.get('model.validations.isValid')) {
+      const tab = this.tab();
+      yield this.get('save')(tab);
     }
+    this.set('didValidate', true);
   }),
   actions: {
     save() {
       this.get('saveTask').perform();
     },
-    // localeChanged(locale) {
-    //   this.sendAction('localeChanged', locale);
-    // },
     changeBool(key) {
       // closure action to credentials section
       const store = this.get('simpleStore');

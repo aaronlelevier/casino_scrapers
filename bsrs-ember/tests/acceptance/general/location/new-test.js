@@ -103,49 +103,63 @@ test('validation works and when hit save, we do same post', (assert) => {
   page.visit();
   click('.t-add-new');
   andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':hidden'));
-    assert.ok(find('.t-number-validation-error').is(':hidden'));
-    assert.ok(find('.t-location-level-validation-error').is(':hidden'));
-    assert.ok(find('.t-status-validation-error').is(':hidden'));
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.notOk(page.nameValidationErrorVisible);
+    assert.notOk(page.numberValidationErrorVisible);
+    assert.notOk(page.llevelValidationErrorVisible);
+    assert.notOk(page.statusValidationErrorVisible);
   });
   generalPage.save();
   andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':visible'));
-    assert.ok(find('.t-number-validation-error').is(':visible'));
-    assert.ok(find('.t-location-level-validation-error').is(':visible'));
-    assert.ok(find('.t-status-validation-error').is(':visible'));
+    assert.equal($('.validated-input-error-dialog').length, 4);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.location.name'));
+    assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), t('errors.location.number'));
+    assert.equal($('.validated-input-error-dialog:eq(2)').text().trim(), t('errors.location.location_level'));
+    assert.equal($('.validated-input-error-dialog:eq(3)').text().trim(), t('errors.location.status'));
+    assert.ok(page.nameValidationErrorVisible);
+    assert.ok(page.numberValidationErrorVisible);
+    assert.ok(page.llevelValidationErrorVisible);
+    assert.ok(page.statusValidationErrorVisible);
   });
   fillIn('.t-location-name', LD.storeName);
-  generalPage.save();
+  triggerEvent('.t-location-name', 'keyup', {keyCode: 65});
   andThen(() => {
-    assert.equal(currentURL(), LOCATION_NEW_URL);
-    assert.ok(find('.t-name-validation-error').is(':hidden'));
-    assert.ok(find('.t-number-validation-error').is(':visible'));
-    assert.ok(find('.t-location-level-validation-error').is(':visible'));
-    assert.ok(find('.t-status-validation-error').is(':visible'));
+    assert.equal($('.validated-input-error-dialog').length, 3);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.location.number'));
+    assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), t('errors.location.location_level'));
+    assert.equal($('.validated-input-error-dialog:eq(2)').text().trim(), t('errors.location.status'));
+    assert.notOk(page.nameValidationErrorVisible);
+    assert.ok(page.numberValidationErrorVisible);
+    assert.ok(page.llevelValidationErrorVisible);
+    assert.ok(page.statusValidationErrorVisible);
   });
   fillIn('.t-location-number', LD.storeNumber);
+  triggerEvent('.t-location-number', 'keyup', {keyCode: 65});
   andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':hidden'));
-    assert.ok(find('.t-number-validation-error').is(':hidden'));
-    assert.ok(find('.t-location-level-validation-error').is(':visible'));
-    assert.ok(find('.t-status-validation-error').is(':visible'));
+    assert.equal($('.validated-input-error-dialog').length, 2);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.location.location_level'));
+    assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), t('errors.location.status'));
+    assert.notOk(page.nameValidationErrorVisible);
+    assert.notOk(page.numberValidationErrorVisible);
+    assert.ok(page.llevelValidationErrorVisible);
+    assert.ok(page.statusValidationErrorVisible);
   });
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
+  selectChoose('.t-location-level-select', 'Company');
   andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':hidden'));
-    assert.ok(find('.t-number-validation-error').is(':hidden'));
-    assert.ok(find('.t-location-level-validation-error').is(':hidden'));
-    assert.ok(find('.t-status-validation-error').is(':visible'));
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.location.status'));
+    assert.notOk(page.nameValidationErrorVisible);
+    assert.notOk(page.numberValidationErrorVisible);
+    assert.notOk(page.llevelValidationErrorVisible);
+    assert.ok(page.statusValidationErrorVisible);
   });
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
+  selectChoose('.t-status-select', 'Open');
   andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':hidden'));
-    assert.ok(find('.t-number-validation-error').is(':hidden'));
-    assert.ok(find('.t-location-level-validation-error').is(':hidden'));
-    assert.ok(find('.t-status-validation-error').is(':hidden'));
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.notOk(page.nameValidationErrorVisible);
+    assert.notOk(page.numberValidationErrorVisible);
+    assert.notOk(page.llevelValidationErrorVisible);
+    assert.notOk(page.statusValidationErrorVisible);
   });
   let response = Ember.$.extend(true, {}, payload);
   xhr(LOCATIONS_URL, 'POST', JSON.stringify(payload), {}, 201, response);
@@ -244,217 +258,6 @@ test('adding a new location should allow for another new location to be created 
   });
 });
 
-/* PHONE NUMBER AND ADDRESS */
-test('newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-  page.visitNew();
-  click('.t-btn-add:eq(0)');
-  andThen(() => {
-    assert.equal(store.find('phonenumber').get('length'), 1);
-    let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 0);
-  });
-  fillIn('.t-new-entry:eq(0)', '34');
-  andThen(() => {
-    let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
-  });
-  fillIn('.t-new-entry:eq(0)', '');
-  generalPage.cancel();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_URL);
-    assert.equal(store.find('phonenumber').get('length'), 0);
-  });
-});
-
-test('newly added email without a valid email are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-  page.visitNew();
-  click('.t-add-email-btn:eq(0)');
-  andThen(() => {
-    assert.equal(store.find('email').get('length'), 1);
-    let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 0);
-  });
-  fillIn('.t-new-entry:eq(0)', '34');
-  andThen(() => {
-    let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
-  });
-  fillIn('.t-new-entry:eq(0)', '');
-  generalPage.cancel();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_URL);
-    assert.equal(store.find('email').get('length'), 0);
-  });
-});
-
-test('newly added addresses without a valid name are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-  page.visitNew();
-  click('.t-add-address-btn:eq(0)');
-  andThen(() => {
-    assert.equal(store.find('address').get('length'), 1);
-    let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-    assert.equal(visible_errors.length, 0);
-  });
-  fillIn('.t-address-address:eq(0)', '34');
-  andThen(() => {
-    let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
-  });
-  fillIn('.t-address-address:eq(0)', '');
-  generalPage.cancel();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_URL);
-    assert.equal(store.find('address').get('length'), 0);
-  });
-});
-
-test('phone numbers without a valid number are ignored and removed on save', (assert) => {
-  page.visitNew();
-  fillIn('.t-location-name', LD.storeName);
-  fillIn('.t-location-number', LD.storeNumber);
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
-  click('.t-btn-add:eq(0)');
-  andThen(() => {
-    let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 0);
-  });
-  fillIn('.t-new-entry:eq(0)', '34');
-  andThen(() => {
-    let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
-    assert.equal(find('.t-input-multi-phone-validation-format-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_ph);
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_NEW_URL);
-    let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
-    assert.equal(store.find('phonenumber').get('length'), 1);
-  });
-  fillIn('.t-new-entry:eq(0)', '');
-  var response = LF.detail(LD.idOne);
-  xhr(LOCATIONS_URL, 'POST', JSON.stringify(new_put_payload), {}, 201, response);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_URL);
-    assert.equal(store.find('phonenumber').get('length'), 0);
-  });
-});
-
-test('emails without a valid email are ignored and removed on save', (assert) => {
-  page.visitNew();
-  fillIn('.t-location-name', LD.storeName);
-  fillIn('.t-location-number', LD.storeNumber);
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
-  click('.t-add-email-btn:eq(0)');
-  andThen(() => {
-    let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 0);
-  });
-  fillIn('.t-new-entry:eq(0)', '34');
-  andThen(() => {
-    let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
-    assert.equal(find('.t-input-multi-email-validation-format-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_email);
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_NEW_URL);
-    let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
-    assert.equal(store.find('email').get('length'), 1);
-  });
-  fillIn('.t-new-entry:eq(0)', '');
-  xhr(LOCATIONS_URL, 'POST', JSON.stringify(new_put_payload), {}, 201, {});
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_URL);
-    assert.equal(store.find('email').get('length'), 0);
-  });
-});
-
-test('newly added addresses without a valid name are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-  page.visitNew();
-  click('.t-add-address-btn:eq(0)');
-  andThen(() => {
-    assert.equal(store.find('address').get('length'), 1);
-    let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-    assert.equal(visible_errors.length, 0);
-  });
-  fillIn('.t-address-address:eq(0)', '34');
-  andThen(() => {
-    let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
-  });
-  fillIn('.t-address-address:eq(0)', '');
-  generalPage.cancel();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_URL);
-    assert.equal(store.find('address').get('length'), 0);
-  });
-});
-
-test('address without a valid address or zip code are ignored and removed on save', (assert) => {
-  page.visitNew();
-  fillIn('.t-location-name', LD.storeName);
-  fillIn('.t-location-number', LD.storeNumber);
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
-  click('.t-add-address-btn:eq(0)');
-  andThen(() => {
-    let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-    let visible_zip_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
-    assert.equal(visible_errors.length, 0);
-    assert.equal(visible_zip_errors.length, 0);
-  });
-  fillIn('.t-address-address:eq(0)', '34');
-  andThen(() => {
-    let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
-    assert.equal(find('.t-input-multi-address-validation-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_street);
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_NEW_URL);
-    let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-    let visible_zip_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
-    assert.equal(visible_zip_errors.length, 0);
-    assert.equal(store.find('address').get('length'), 1);
-  });
-  fillIn('.t-address-address:eq(0)', '');
-  fillIn('.t-address-postal-code:eq(0)', '34');
-  andThen(() => {
-    let visible_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
-    assert.equal(find('.t-input-multi-address-zip-validation-error:not(:hidden):eq(0)').text().trim(), GLOBALMSG.invalid_zip);
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_NEW_URL);
-    let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-    let visible_zip_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
-    assert.equal(visible_errors.length, 1);
-    assert.equal(visible_zip_errors.length, 1);
-    assert.equal(store.find('address').get('length'), 1);
-  });
-  fillIn('.t-address-postal-code:eq(0)', '');
-  xhr(LOCATIONS_URL, 'POST', JSON.stringify(new_put_payload), {}, 201, {});
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_URL);
-    assert.equal(store.find('address').get('length'), 0);
-  });
-});
-
 test('when you change a related phone numbers type it will be persisted correctly', (assert) => {
   page.visitNew();
   fillIn('.t-location-name', LD.storeName);
@@ -463,9 +266,13 @@ test('when you change a related phone numbers type it will be persisted correctl
   page.locationLevelClickOptionOne();
   page.statusClickDropdown();
   page.statusClickOptionOne();
+  generalPage.clickAddPhoneNumber();
+  andThen(() => {
+    assert.equal(find('.t-add-phone-number-btn').length, 1);
+  });
+  selectChoose('.t-phone-number-type-select', PNTD.officeNameValue);
   var phone_numbers = PNF.put({id: PND.idOne, type: PNTD.officeId});
-  click('.t-btn-add:eq(0)');
-  fillIn('.t-new-entry:eq(0)', PND.numberOne);
+  page.phonenumberFillIn(PND.numberOne);
   xhr(LOCATIONS_URL, 'POST', JSON.stringify(phone_number_payload), {}, 201);
   generalPage.save();
   andThen(() => {
@@ -481,8 +288,12 @@ test('when you change a related emails type it will be persisted correctly', (as
   page.locationLevelClickOptionOne();
   page.statusClickDropdown();
   page.statusClickOptionOne();
-  click('.t-add-email-btn:eq(0)');
-  fillIn('.t-new-entry:eq(0)', ED.emailOne);
+  page.clickAddEmail();
+  andThen(() => {
+    assert.equal(find('.t-add-email-btn').length, 1);
+  });
+  selectChoose('.t-email-type-select', ETD.workName);
+  page.emailFillIn(ED.emailOne);
   xhr(LOCATIONS_URL, 'POST', JSON.stringify(email_payload), {}, 201);
   generalPage.save();
   andThen(() => {
@@ -498,8 +309,9 @@ test('when you change a related address type it will be persisted correctly', (a
   page.locationLevelClickOptionOne();
   page.statusClickDropdown();
   page.statusClickOptionOne();
-  click('.t-add-address-btn:eq(0)');
-  fillIn('.t-address-address:eq(0)', '34 2nd St');
+  page.clickAddAddress();
+  page.addressFillIn('34 2nd St');
+  page.addressPostalCodeFillIn('12345');
   xhr(LOCATIONS_URL,'POST',JSON.stringify(address_put_payload),{},201);
   selectChoose('.t-address-type-select:eq(0)', ATD.shippingNameText);
   generalPage.save();
@@ -773,18 +585,8 @@ test('clicking and typing into power select for location will not filter if spac
 test('status options are populated and validation works correctly', (assert) => {
   clearxhr(list_xhr);
   page.visitNew();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_NEW_URL);
-    assert.ok(find('.t-status-validation-error').is(':hidden'));
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_NEW_URL);
-    assert.ok(find('.t-status-validation-error').is(':visible'));
-  });
   page.statusClickDropdown();
   andThen(() => {
     assert.equal(page.statusOptionLength, 3);
   });
-  page.statusClickOptionOne();
 });

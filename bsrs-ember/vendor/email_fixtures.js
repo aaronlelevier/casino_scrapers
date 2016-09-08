@@ -1,44 +1,62 @@
 var BSRS_EMAIL_FACTORY = (function() {
-    var factory = function(email_defaults, email_type_defaults) {
-        this.email_type_defaults = email_type_defaults;
-        this.email_defaults = email_defaults;
-    };
-    factory.prototype.get = function() {
-        return [{
-            'id':this.email_defaults.idOne,
-            'email':this.email_defaults.emailOne,
-            'type': this.email_type_defaults.workId,
-        },
-        {
-            'id':this.email_defaults.idTwo,
-            'email':this.email_defaults.emailTwo,
-            'type': this.email_type_defaults.personalId,
-        }];
-    };
-    factory.prototype.put = function(email) {
-        var emails = this.get();
-        if(!email) {
-            return emails;
+  var factory = function(email, email_type) {
+    this.email_type = email_type;
+    this.email = email;
+  };
+  factory.prototype.get = function() {
+    return [{
+      id: this.email.idOne,
+      email: this.email.emailOne,
+      type: {
+        id: this.email_type.idOne,
+        name: this.email_type.workEmail
+      }
+    }, {
+      id: this.email.idTwo,
+      email: this.email.emailTwo,
+      type: {
+        id: this.email_type.idTwo,
+        name: this.email_type.personalEmail
+      },
+    }];
+  };
+  factory.prototype.get_with_related_ids = function() {
+    return [{
+      id: this.email.idOne,
+      email: this.email.emailOne,
+      type: this.email_type.idOne
+    }, {
+      id: this.email.idTwo,
+      email: this.email.emailTwo,
+      type: this.email_type.idTwo
+    }];
+  };
+  factory.prototype.put = function(email) {
+    var emails = this.get_with_related_ids();
+    if (!email) {
+      return emails;
+    }
+    emails.forEach(function(model) {
+      if (model.id === email.id) {
+        for (var attr in email) {
+          model[attr] = email[attr];
         }
-        emails.forEach(function(model) {
-            if(model.id === email.id) {
-                for (var attr in email) {
-                    model[attr] = email[attr];
-                }
-            }
-        });
-        return emails;
-    };
-    return factory;
+      }
+    });
+    return emails;
+  };
+  return factory;
 })();
 
 if (typeof window === 'undefined') {
-    var email_defaults = require('./defaults/email');
-    var email_type_defaults = require('./defaults/email-type');
-    module.exports = new BSRS_EMAIL_FACTORY(email_defaults, email_type_defaults);
-} else {
-    define('bsrs-ember/vendor/email_fixtures', ['exports', 'bsrs-ember/vendor/defaults/email', 'bsrs-ember/vendor/defaults/email-type'], function (exports, email_defaults, email_type_defaults) {
-        'use strict';
-        return new BSRS_EMAIL_FACTORY(email_defaults, email_type_defaults);
+  var email = require('./defaults/email');
+  var email_type = require('./defaults/email-type');
+  module.exports = new BSRS_EMAIL_FACTORY(email, email_type);
+}
+else {
+  define('bsrs-ember/vendor/email_fixtures', ['exports', 'bsrs-ember/vendor/defaults/email', 'bsrs-ember/vendor/defaults/email-type'],
+    function(exports, email, email_type) {
+      'use strict';
+      return new BSRS_EMAIL_FACTORY(email, email_type);
     });
 }

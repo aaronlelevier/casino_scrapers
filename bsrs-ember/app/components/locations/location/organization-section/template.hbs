@@ -1,0 +1,50 @@
+<div class="col-md-12">
+  <section>
+    <div class="row card-title">
+      <h2 class="col-md-12">{{t "admin.location.label.parents-name"}}</h2>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        {{#form-group title="admin.location.label.parents-name" for="location_parents"}}
+        {{db-fetch-multi-select 
+          model=model 
+          isDisabled=isDisabled 
+          multiAttr="parents" 
+          multiAttrIds="parents_ids" 
+          selectedAttr=model.parents 
+          className="t-location-parent-select" 
+          displayName="name" 
+          add_func="add_parent" 
+          remove_func="remove_parent" 
+          repository=repository 
+          searchMethod="findLocationParents" 
+          extra_params=extra_params
+        }}
+        {{/form-group}}
+      </div>
+    </div>
+    <div class="row card-title">
+      <h2 class="col-md-12">{{t "admin.location.label.children-name"}}</h2>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        {{#form-group title="admin.location.label.children-name" for="location_children"}}
+        {{db-fetch-multi-select 
+          model=model 
+          isDisabled=isDisabled 
+          multiAttr="children" 
+          multiAttrIds="children_ids" 
+          selectedAttr=model.children 
+          className="t-location-children-select" 
+          displayName="name" 
+          add_func="add_child" 
+          remove_func="remove_children" 
+          repository=repository 
+          searchMethod="findLocationChildren" 
+          extra_params=extra_params
+        }}
+        {{/form-group}}
+      </div>
+    </div>
+  </section>
+</div>

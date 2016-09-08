@@ -1,39 +1,34 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/uuid';
-import ChildValidationComponent from 'bsrs-ember/mixins/validation/child';
-import CustomValidMixin from 'bsrs-ember/mixins/validation/custom';
-import {ValidationMixin, validateEach} from 'ember-cli-simple-validation/mixins/validate';
-import { phoneIsAllowedRegion, phoneIsValidFormat } from 'bsrs-ember/validation/phone';
-
 const { run } = Ember;
+import inject from 'bsrs-ember/utilities/uuid';
 
-var InputMultiPhone = ChildValidationComponent.extend(ValidationMixin, CustomValidMixin, {
-    uuid: inject('uuid'),
-    tagName: 'div',
-    classNames: ['input-multi t-input-multi-phone'],
-    fieldNames: 'number',
-    numberFormat: validateEach('number', phoneIsValidFormat),
-    numberRegion: validateEach('number', phoneIsAllowedRegion),
-    actions: {
-        changed(phonenumber, val) {
-            phonenumber.set('type', val);
-        },
-        append() {
-            const id = this.get('uuid').v4();
-            const type = this.get('default_type').get('id');
-            const related_pk = this.get('related_pk');
-            var model = {id: id, type: type};
-            model['model_fk'] = related_pk;
-            run(() => {
-                this.get('model').push(model);
-            });
-        },
-        delete(entry) {
-            run(() => {
-                this.get('model').push({id: entry.get('id'), removed: true});
-            });
-        }
+var InputMultiPhone = Ember.Component.extend({
+  uuid: inject('uuid'),
+  simpleStore: Ember.inject.service(),
+  tagName: 'div',
+  classNames: ['input-multi t-input-multi-phone'],
+  fieldNames: 'number',
+  phone_number_types: Ember.computed(function() {
+    return this.get('simpleStore').find('phone-number-type');
+  }),
+  actions: {
+    append() {
+      const id = this.get('uuid').v4();
+      const default_type = this.get('default_type');
+      const type_id = default_type.get('id');
+      var model = {id: id, phone_number_type_fk: type_id};
+      run(() => {
+        this.get('model').add_phonenumber(model);
+      });
+      const new_phonenumber = this.get('simpleStore').find('phonenumber', id);
+      new_phonenumber.change_phone_number_type({ id: default_type.get('id') });
+    },
+    delete(entry) {
+      run(() => {
+        this.get('model').remove_phonenumber(entry.get('id'));
+      });
     }
+  }
 });
 
 export default InputMultiPhone;

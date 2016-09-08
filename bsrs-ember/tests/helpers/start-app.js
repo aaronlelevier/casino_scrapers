@@ -152,8 +152,7 @@ Ember.Test.registerAsyncHelper('patchRandomAsync', patchRandomAsync);
 export default function startApp(attrs) {
   let application;
 
-  let attributes = Ember.merge({}, config.APP);
-  attributes = Ember.merge(attributes, attrs); // use defaults, but you can override;
+  let attributes = Ember.assign({}, config.APP, attrs);
 
   // Mock english translations
   var request = { url: '/api/translations/?locale=en&timezone=America/Los_Angeles' , method: 'GET' };

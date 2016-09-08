@@ -18,7 +18,7 @@ var EmailMixin = Ember.Mixin.create({
     email_ids: Ember.computed('emails.[]', function() {
         return this.get('emails').mapBy('id');
     }),
-    emailsIsDirty: Ember.computed('emails.[]', 'emails.@each.{isDirty,email,type}', function() {
+    emailsIsDirty: Ember.computed('emails.[]', 'emails.@each.{isDirty,email,email_type}', function() {
         let email_dirty = false;
         const emails = this.get('emails');
         const email_fks = this.get('email_fks');
@@ -36,7 +36,7 @@ var EmailMixin = Ember.Mixin.create({
         }
         emails.forEach((email) => {
             //if dirty
-            if (email.get('isDirty')) {
+            if (email.get('isDirtyOrRelatedDirty')) {
                 email_dirty = true;
             }
             //get rid of invalid emails and provide updated array for dirty check; only if off by one.  If same length, then don't want to filter out.
@@ -61,6 +61,7 @@ var EmailMixin = Ember.Mixin.create({
         const emails = this.get('emails');
         emails.forEach((email) => {
             email.save();
+            email.saveRelated();
         });
     },
     rollbackEmails() {

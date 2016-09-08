@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
@@ -11,17 +12,20 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import GLOBAL from 'bsrs-ember/vendor/defaults/global-message';
 import CD from 'bsrs-ember/vendor/defaults/currencies';
 import page from 'bsrs-ember/tests/pages/person';
+import general from 'bsrs-ember/tests/pages/general';
 
-var store, role, email_types, default_email_type, phone_number_types, default_phone_number_type, trans, run = Ember.run;
+var store, role, email_types, default_email_type, phone_number_types, default_phone_number_type, trans;
+const ERR_TEXT = '.validated-input-error-dialog';
 
 moduleForComponent('person-single', 'integration: person-single test', {
   integration: true,
   beforeEach() {
     page.setContext(this);
+    general.setContext(this);
     store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency']);
     translation.initialize(this);
     trans = this.container.lookup('service:i18n');
-    var json = translations.generate('en');
+    const json = translations.generate('en');
     loadTranslations(trans, json);
     run(function() {
       store.push('person-current', {id: PD.idOne});
@@ -45,8 +49,7 @@ moduleForComponent('person-single', 'integration: person-single test', {
     //   });
     //   address_types = store.find('phone-number-type');
     //   default_address_type = address_types.objectAt(0);
-    let em_types = [{ 'id': ETD.personalId, 'name': ETD.personalEmail },
-    { 'id': ETD.workId, 'name': ETD.workEmail }];
+    let em_types = [{ 'id': ETD.personalId, 'name': ETD.personalEmail }, { 'id': ETD.workId, 'name': ETD.workEmail }];
     run(() => {
       em_types.forEach(function(emt) {
         store.push('email-type', emt);
@@ -62,6 +65,7 @@ moduleForComponent('person-single', 'integration: person-single test', {
   },
   afterEach() {
     page.removeContext(this);
+    general.removeContext(this);
   }
 });
 
@@ -105,127 +109,107 @@ test('if save isRunning, btn is disabled', function(assert) {
   assert.equal(this.$('.t-save-btn').attr('disabled'), 'disabled', 'Button is disabled if xhr save is outstanding');
 });
 
-test('filling in invalid email reveal validation messages', function(assert) {
+test('filling in invalid phone number reveal validation messages', function(assert) {
+  var done = assert.async();
   run(() => {
-    this.model = store.push('person', {id: PD.idOne});
+    this.model = store.push('person', {});
+  });
+  this.phone_number_types = phone_number_types;
+  this.default_phone_number_type = default_phone_number_type;
+  this.render(hbs`{{people/person-single model=model phone_number_types=phone_number_types default_phone_number_type=default_phone_number_type}}`);
+  general.clickAddPhoneNumber();
+  let $err = this.$('.invalid');
+  assert.equal($err.text().trim(), '');
+  this.$('.t-phonenumber-number0').val('').keyup();
+  Ember.run.later(() => {
+    let $err = this.$('.invalid');
+    assert.ok($err.is(':visible'));
+    assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.phonenumber.number'));
+    this.$('.t-phonenumber-number0').val('444-455-4332').keyup();
+    Ember.run.later(() => {
+      // valid input
+      $err = this.$('.invalid');
+      assert.notOk($err.is(':visible'));
+      assert.equal($(ERR_TEXT).text().trim(), trans.t(''));
+      done();
+    }, 300);
+  }, 1900);
+});
+
+test('filling in invalid emails reveal validation messages', function(assert) {
+  var done = assert.async();
+  run(() => {
+      this.model = store.push('person', {});
   });
   this.email_types = email_types;
   this.default_email_type = default_email_type;
   this.render(hbs`{{people/person-single model=model email_types=email_types default_email_type=default_email_type}}`);
-  var $component = this.$('.t-input-multi-email-validation-format-error');
-  assert.equal($component.length, 0);
-  this.$('.t-add-email-btn:eq(0)').click();
-  $component = this.$('.t-input-multi-email-validation-format-error');
-  assert.ok($component.is(':hidden'));
-  assert.equal($component.length, 1);
-  this.$('.t-new-entry').val('a').trigger('change');
-  $component = this.$('.t-input-multi-email-validation-format-error');
-  assert.ok($component.is(':visible'));
-  assert.equal($component.text(), GLOBAL.invalid_email);
-  assert.equal($component.length, 1);
-  this.$('.t-new-entry').val('snewcomer@gmail.com').trigger('change');
-  $component = this.$('.t-input-multi-email-validation-format-error');
-  assert.ok($component.is(':hidden'));
+  general.clickAddEmail();
+  let $err = this.$('.invalid');
+  assert.equal($err.text().trim(), '');
+  this.$('.t-email-email0').val('').keyup();
+  Ember.run.later(() => {
+    let $err = this.$('.invalid');
+    assert.ok($err.is(':visible'));
+    assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.email.email'));
+    this.$('.t-email-email0').val('abbay@gmail.com').keyup();
+    Ember.run.later(() => {
+      // valid input
+      $err = this.$('.invalid');
+      assert.notOk($err.is(':visible'));
+      assert.equal($(ERR_TEXT).text().trim(), trans.t(''));
+      done();
+    }, 300);
+  }, 1900);
 });
 
-test('filling in invalid phone number reveal validation messages', function(assert) {
+test('clicking save will reveal all validation msgs', function(assert) {
+  // no phone/email
   run(() => {
     this.model = store.push('person', {id: PD.idOne});
   });
   this.phone_number_types = phone_number_types;
   this.default_phone_number_type = default_phone_number_type;
   this.render(hbs`{{people/person-single model=model phone_number_types=phone_number_types default_phone_number_type=default_phone_number_type}}`);
-  var $component = this.$('.t-input-multi-phone-validation-format-error');
-  assert.equal($component.length, 0);
-  this.$('.t-btn-add:eq(0)').click();
-  $component = this.$('.t-input-multi-phone-validation-format-error');
-  assert.ok($component.is(':hidden'));
-  assert.equal($component.length, 1);
-  this.$('.t-new-entry').val('a').trigger('change');
-  $component = this.$('.t-input-multi-phone-validation-format-error');
-  assert.ok($component.is(':visible'));
-  assert.equal($component.length, 1);
-  this.$('.t-new-entry').val('515-222-3333').trigger('change');
-  $component = this.$('.t-input-multi-phone-validation-format-error');
-  assert.ok($component.is(':hidden'));
-  assert.equal($component.text(), GLOBAL.invalid_ph);
+  assert.equal($('.validated-input-error-dialog').length, 0);
+  assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+  assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), '');
+  assert.notOk(page.firstNameValidationErrorVisible);
+  assert.notOk(page.lastNameValidationErrorVisible);
+  const save_btn = this.$('.t-save-btn');
+  save_btn.trigger('click').trigger('change');
+  assert.equal($('.validated-input-error-dialog').length, 2);
+  assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.person.first_name'));
+  assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.person.last_name'));
+  assert.ok(page.firstNameValidationErrorVisible);
+  assert.ok(page.lastNameValidationErrorVisible);
 });
-
-// test('filling in invalid address reveals validation messages', function(assert) {
-//   run(() => {
-//     this.model = store.push('person', {id: PD.idOne});
-//   });
-//   this.address_types = address_types;
-//   this.default_address_type = default_address_type;
-//   this.render(hbs`{{people/person-single model=model address_types=address_types default_address_type=default_address_type}}`);
-//   //street
-//   var $component = this.$('.t-input-multi-address-validation-error');
-//   assert.equal($component.length, 0);
-//   this.$('.t-add-address-btn:eq(0)').click();
-//   $component = this.$('.t-input-multi-address-validation-error');
-//   assert.ok($component.is(':hidden'));
-//   assert.equal($component.length, 1);
-//   this.$('.t-address-address').val('a').trigger('change');
-//   $component = this.$('.t-input-multi-address-validation-error');
-//   assert.ok($component.is(':visible'));
-//   assert.equal($component.text(), GLOBAL.invalid_street);
-//   assert.equal($component.length, 1);
-//   this.$('.t-address-address').val('925 Sky Park').trigger('change');
-//   $component = this.$('.t-input-multi-address-validation-error');
-//   assert.ok($component.is(':hidden'));
-//   //zip
-//   $component = this.$('.t-input-multi-address-zip-validation-error');
-//   assert.ok($component.is(':hidden'));
-//   assert.equal($component.length, 1);
-//   this.$('.t-address-postal-code').val('a').trigger('change');
-//   $component = this.$('.t-input-multi-address-zip-validation-error');
-//   assert.ok($component.is(':visible'));
-//   assert.equal($component.text(), GLOBAL.invalid_zip);
-//   assert.equal($component.length, 1);
-//   this.$('.t-address-postal-code').val('97255').trigger('change');
-//   $component = this.$('.t-input-multi-address-zip-validation-error');
-//   assert.ok($component.is(':hidden'));
-//   assert.equal($component.length, 1);
-// });
 
 test('can remove a new phone number', function(assert) {
   run(() => {
-    this.model = store.push('person', {id: PD.idOne});
+    this.model = store.push('person', {});
   });
   this.phone_number_types = phone_number_types;
   this.default_phone_number_type = default_phone_number_type;
   this.render(hbs`{{people/person-single model=model phone_number_types=phone_number_types default_phone_number_type=default_phone_number_type}}`);
-  this.$('.t-btn-add:eq(0)').click();
-  assert.equal(this.$('.t-new-entry').length, 1);
-  this.$('.t-del-btn:eq(0)').click();
-  assert.equal(this.$('.t-new-entry').length, 0);
+  general.clickAddPhoneNumber();
+  assert.equal(this.$('.t-phonenumber-number0').length, 1);
+  general.clickDeletePhoneNumber();
+  assert.equal(this.$('.t-phonenumber-number0').length, 0);
 });
 
 test('can add and remove new email', function(assert) {
   run(() => {
-    this.model = store.push('person', {id: PD.idOne});
+    this.model = store.push('person', {});
   });
   this.email_types = email_types;
   this.default_email_type = default_email_type;
   this.render(hbs`{{people/person-single model=model email_types=email_types default_email_type=default_email_type}}`);
-  this.$('.t-add-email-btn:eq(0)').click();
-  assert.equal(this.$('.t-new-entry').length, 1);
-  this.$('.t-del-email-btn:eq(0)').click();
-  assert.equal(this.$('.t-new-entry').length, 0);
+  general.clickAddEmail();
+  assert.equal(this.$('.t-email-email0').length, 1);
+  general.clickDeleteEmail();
+  assert.equal(this.$('.t-email-email0').length, 0);
 });
-
-// test('can add and remove new address', function(assert) {
-//   run(() => {
-//     this.model = store.push('person', {id: PD.idOne});
-//   });
-//   this.address_types = address_types;
-//   this.default_address_type = default_address_type;
-//   this.render(hbs`{{people/person-single model=model address_types=address_types default_address_type=default_address_type}}`);
-//   this.$('.t-add-address-btn:eq(0)').click();
-//   assert.equal(this.$('.t-address-address').length, 1);
-//   this.$('.t-del-address-btn:eq(0)').click();
-//   assert.equal(this.$('.t-address-address').length, 0);
-// });
 
 test('header populates with username and role name', function(assert) {
   let model;

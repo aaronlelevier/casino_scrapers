@@ -1,168 +1,76 @@
 import Ember from 'ember';
+const { run } = Ember;
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import loadTranslations from 'bsrs-ember/tests/helpers/translations';
-import translation from 'bsrs-ember/instance-initializers/ember-i18n';
-import translations from 'bsrs-ember/vendor/translation_fixtures';
-import Person from 'bsrs-ember/models/person';
-import Email from 'bsrs-ember/models/email';
-import EmailType from 'bsrs-ember/models/email-type';
 import ED from 'bsrs-ember/vendor/defaults/email';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import LED from 'bsrs-ember/vendor/defaults/location-join-email';
+import LD from 'bsrs-ember/vendor/defaults/location';
 
-var store, default_type, trans, email_types, run = Ember.run;
+var store, default_type, email_types, emails;
 
 moduleForComponent('input-multi-email', 'integration: input-multi-email test', {
-    integration: true,
-    setup() {
-        translation.initialize(this);
-        default_type = EmailType.create({id: ETD.personalId, name: ETD.personalEmail});
-        store = module_registry(this.container, this.registry, ['model:person', 'model:email']);
-        trans = this.container.lookup('service:i18n');
-        var json = translations.generate('en');
-        loadTranslations(trans, json);
-        email_types = [EmailType.create({id: ETD.personalId, name: ETD.personalEmail }), EmailType.create({ id: ETD.workId, name: ETD.workEmail})];
-    }
+  integration: true,
+  setup() {
+    // translation.initialize(this);
+    store = module_registry(this.container, this.registry, ['model:location', 'model:email', 'model:location-join-email', 'model:email-type']);
+    const location = store.push('location', { id: LD.idOne, location_emails_fks: [LED.idOne] });
+    store.push('location-join-email', {id: LED.idOne, email_pk: ED.idOne, location_pk: LD.idOne});
+    store.push('email', {id: ED.idOne, street: ED.emailOne, email_type_fk: ETD.idOne});
+    store.push('email-type', {id: ETD.idOne, emails: [ED.idOne]});
+    emails = store.find('email');
+    default_type = store.push('email-type', {id: ETD.personalId, name: ETD.personalName});
+    store.push('email-type', {id: ETD.shippingId, name: ETD.shippingName});
+    email_types = store.find('email-type');
+    this.set('model', location);
+    this.set('emails', emails);
+    this.set('email_types', email_types);
+    this.set('default_type', default_type);
+    this.render(hbs `{{input-multi-email emails=emails model=model types=email_types default_type=default_type}}`);
+    // var service = this.container.lookup('service:i18n');
+    // var json = translations.generate('en');
+    // loadTranslations(service, json);
+  }
 });
 
-test('defaults to use email model with field name of email', function(assert) {
-    var person;
-    run(() => {
-        person = store.push('person', {id: PD.idOne});
-    });
-    var model = store.find('email', {model_fk: PD.idOne});
-    this.set('model', model);
-    this.set('related_pk', PD.idOne);
-    this.set('related_field', 'model_fk');
-    this.set('default_type', default_type);
-    this.render(hbs`{{input-multi-email model=model related_pk=related_pk related_field=related_field default_type=default_type}}`);
-    assert.equal(model.get('content.length'), 0);
-    var $component = this.$('.t-input-multi-email');
-    assert.equal(this.$('.t-new-entry').length, 0);
-    var $first_btn = $component.find('.t-add-email-btn:eq(0)');
-    $first_btn.trigger('click').trigger('change');
-    assert.equal(this.$('.t-new-entry').length, 1);
-    assert.equal(store.find('email').get('length'), 1);
-    assert.equal(model.get('content.length'), 1);
-    assert.equal(model.objectAt(0).get('model_fk'), PD.idOne);
-    assert.equal(model.objectAt(0).get('type'), ETD.personalId);
-    assert.equal(model.objectAt(0).get('email'), undefined);
-    assert.ok(model.objectAt(0).get('isNotDirty'));
-    this.$('.t-new-entry').val('snew@gmail.com').trigger('change');
-    assert.equal(model.objectAt(0).get('email'), 'snew@gmail.com');
+test('renders a single button', function(assert) {
+  this.render(hbs `{{input-multi-email}}`);
+  var $component = this.$('.t-input-multi-email');
+  assert.equal($component.find('.t-add-email-btn').length, 1);
+});
+
+test('click add btn will append blank entry to list of entries and binds value to model', function(assert) {
+  var $component = this.$('.t-input-multi-email');
+  var $first_btn = $component.find('.t-add-email-btn');
+  assert.equal(emails.get('length'), 1);
+  assert.equal(emails.objectAt(0).get('email_type_fk'), ETD.idOne);
+  assert.equal(emails.objectAt(0).get('email_type').get('id'), ETD.idOne);
+  $first_btn.trigger('click').trigger('change');
+  assert.equal(emails.objectAt(1).get('email_type_fk'), ETD.personalId);
+  assert.equal(emails.objectAt(1).get('email_type').get('id'), ETD.personalId);
+  assert.equal(emails.objectAt(1).get('email'), undefined);
+  this.$('.t-email-email1').val(ED.emailOne).trigger('change');
+  assert.equal(emails.objectAt(1).get('email'), ED.emailOne);
+  // leaving out other fields b/c possiblity using GOOGLE API for this stuff
 });
 
 test('once added a button for email type appears with a button to delete it', function(assert) {
-    var model = store.find('email', {model_fk: PD.idOne});
-    var email_types = [EmailType.create({id: ETD.personalId, name: ETD.personalEmail }), EmailType.create({ id: ETD.workId, name: ETD.workEmail})];
-    this.set('model', model);
-    this.set('related_pk', PD.idOne);
-    this.set('related_field', 'model_fk');
-    this.set('email_types', email_types);
-    this.set('default_type', default_type);
-    this.render(hbs`{{input-multi-email model=model types=email_types related_pk=related_pk related_field=related_field default_type=default_type}}`);
-    var $component = this.$('.t-input-multi-email');
-    var $first_btn = $component.find('.t-add-email-btn:eq(0)');
-    var $first_type_select = $component.find('.t-multi-email-type');
-    var $first_del = $component.find('.t-del-email-btn:eq(0)');
-    assert.equal($first_type_select.length, 0);
-    assert.equal($first_del.length, 0);
-    $first_btn.trigger('click');
-    $first_del = $component.find('.t-del-email-btn:eq(0)');
-    $first_type_select = $component.find('.t-multi-email-type');
-    assert.equal($first_del.length, 1);
-    assert.equal($first_type_select.length, 1);
-    assert.equal($first_type_select.find('option').length, 2);
-    assert.equal($first_type_select.find('option:eq(0)').text(), trans.t(ETD.personalEmail));
-    assert.equal($first_type_select.find('option:eq(1)').text(), trans.t(ETD.workEmail));
-    assert.equal(model.objectAt(0).get('type'), ETD.personalId);
-});
-
-test('changing the email type will alter the bound value', function(assert) {
-    var email_types = [EmailType.create({ id: ETD.personalId, name: ETD.personalEmail }), EmailType.create({ id: ETD.workId, name: ETD.workEmail })];
-    var model = store.find('email', {model_fk: PD.idOne});
-    this.set('model', model);
-    this.set('related_pk', PD.idOne);
-    this.set('related_field', 'model_fk');
-    this.set('email_types', email_types);
-    this.set('default_type', default_type);
-    this.render(hbs`{{input-multi-email model=model types=email_types related_pk=related_pk related_field=related_field default_type=default_type}}`);
-    var $component = this.$('.t-input-multi-email');
-    var $first_btn = $component.find('.t-add-email-btn:eq(0)');
-    var $first_type_select = $component.find('.t-multi-email-type');
-    assert.equal($first_type_select.length, 0);
-    $first_btn.trigger('click');
-    $first_type_select = $component.find('.t-multi-email-type');
-    assert.equal(model.objectAt(0).get('type'), ETD.personalId);
-    $first_type_select.val(ETD.workId).trigger('change');
-    assert.equal(model.objectAt(0).get('type'), ETD.workId);
-    assert.equal($first_type_select.val(), ETD.workId);
-});
-
-test('changing existing email type will alter the model regardless of the primary key value', function(assert) {
-    run(() => {
-        store.push('email', {id: ED.idOne, email: ED.emailOne, type: ETD.personalId, model_fk: PD.idOne});
-        store.push('email', {id: ED.idTwo, email: ED.emailTwo, type: ETD.workId, model_fk: PD.idOne});
-    });
-    var model = store.find('email', {model_fk: PD.idOne});
-    this.set('model', model);
-    this.set('related_pk', PD.idOne);
-    this.set('related_field', 'model_fk');
-    this.set('default_type', default_type);
-    this.set('email_types', email_types);
-    this.render(hbs`{{input-multi-email model=model types=email_types related_pk=related_pk related_field=related_field default_type=default_type}}`);
-    var $component = this.$('.t-input-multi-email');
-    var $first_type_select = $component.find('.t-multi-email-type');
-    assert.equal($first_type_select.length, 2);
-    $first_type_select = $component.find('.t-multi-email-type');
-    assert.equal(model.objectAt(0).get('type'), ETD.personalId);
-    $first_type_select.val(ETD.workId).trigger('change');
-    assert.equal(model.objectAt(0).get('type'), ETD.workId);
-    assert.equal($first_type_select.val(), ETD.workId);
-});
-
-test('click delete btn will remove input', function(assert) {
-    var person;
-    run(() => {
-        person = store.push('person', {id: PD.id, email_fks: [ED.idOne, ED.idTwo]});
-        store.push('email', {id: ED.idOne, email: ED.emailOne, type: ETD.personalId, model_fk: PD.idOne});
-        store.push('email', {id: ED.idTwo, email: ED.emailTwo, type: ETD.workId, model_fk: PD.idOne});
-    });
-    var model = store.find('email', {model_fk: PD.idOne});
-    this.set('model', model);
-    this.set('related_pk', PD.idOne);
-    this.set('related_field', 'model_fk');
-    this.set('email_types', email_types);
-    this.set('default_type', default_type);
-    this.render(hbs`{{input-multi-email model=model types=email_types related_pk=related_pk related_field=related_field default_type=default_type}}`);
-    var $component = this.$('.t-input-multi-email');
-    assert.equal(this.$('.t-new-entry').length, 2);
-    var $first_del_btn = $component.find('.t-del-email-btn:eq(0)');
-    assert.equal($first_del_btn.length, 1);
-    $first_del_btn.trigger('click');
-    var emails = store.find('email');
-    assert.equal(emails.get('length'), 2);
-    assert.equal(emails.objectAt(0).get('removed'), true);
-});
-
-test('filling in invalid email reveals validation message', function(assert) {
-    var model = store.find('email', {model_fk: PD.idOne});
-    this.set('model', model);
-    this.set('related_pk', PD.idOne);
-    this.set('related_field', 'model_fk');
-    this.set('email_types', email_types);
-    this.set('default_type', default_type);
-    this.render(hbs`{{input-multi-email model=model types=email_types related_pk=related_pk related_field=related_field default_type=default_type}}`);
-    var $first_btn = this.$('.t-add-email-btn:eq(0)');
-    var $first_type_select = this.$('.t-multi-email-type');
-    assert.equal($first_type_select.length, 0);
-    $first_btn.trigger('click').trigger('change');
-    var $component_format = this.$('.t-input-multi-email-validation-format-error');
-    assert.ok($component_format.is(':hidden'));
-    this.$('.t-new-entry').val('snew').trigger('change');
-    assert.ok($component_format.is(':visible'));
-    this.$('.t-new-entry').val('snewcomer@gmail.com').trigger('change');
-    assert.ok($component_format.is(':hidden'));
+  let $component = this.$('.t-input-multi-email');
+  let $first_btn = $component.find('.t-add-email-btn');
+  let $del = $component.find('.t-del-email-btn');
+  let $select = $component.find('.t-email-type-select');
+  assert.equal($del.length, 1);
+  assert.equal($select.length, 1);
+  $first_btn.trigger('click').trigger('change');
+  $del = $component.find('.t-del-email-btn');
+  $select = $component.find('.t-email-type-select');
+  assert.equal($del.length, 2);
+  assert.equal($select.length, 2);
+  // const $last_del_btn = $component.find('.t-del-email-btn:eq(1)');
+  // $last_del_btn.trigger('click').trigger('change');
+  // $del = $component.find('.t-del-email-btn');
+  // $select = $component.find('.t-email-type-select');
+  // assert.equal($del.length, 1);
+  // assert.equal($select.length, 1);
 });

@@ -1,7 +1,5 @@
-import Ember from 'ember';
+import { Model } from 'ember-cli-simple-store/model';
 
-var PhoneNumberType = Ember.Object.extend({
+export default Model.extend({
   name: ''
 });
-
-export default PhoneNumberType;

@@ -1,5 +1,7 @@
 import Ember from 'ember';
 import { belongs_to, belongs_to_extract, belongs_to_extract_contacts } from 'bsrs-components/repository/belongs-to';
+import { many_to_many } from 'bsrs-components/repository/many-to-many';
+import ContactDeserializerMixin from 'bsrs-ember/mixins/deserializer/contact';
 import OptConf from 'bsrs-ember/mixins/optconfigure/location';
 
 const { run } = Ember;
@@ -104,13 +106,18 @@ var extract_children = function(model, store) {
   return server_sum;
 };
 
-var LocationDeserializer = Ember.Object.extend(OptConf, {
+var LocationDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('status', 'location', 'location');
     belongs_to.bind(this)('country');
     belongs_to.bind(this)('state');
+    belongs_to.bind(this)('phone_number_type');
+    belongs_to.bind(this)('email_type');
     belongs_to.bind(this)('address_type');
+    many_to_many.bind(this)('phonenumbers', 'location');
+    many_to_many.bind(this)('emails', 'location');
+    many_to_many.bind(this)('addresses', 'location');
   },
   deserialize(response, id) {
     if (id) {
@@ -121,9 +128,12 @@ var LocationDeserializer = Ember.Object.extend(OptConf, {
   },
   _deserializeSingle(response) {
     const store = this.get('simpleStore');
-    response.email_fks = belongs_to_extract_contacts(response, store, 'email', 'emails');
-    response.phone_number_fks = belongs_to_extract_contacts(response, store, 'phonenumber', 'phone_numbers');
-    response.address_fks = this.extract_addresses(response); // belongs_to_extract_contacts(response, store, 'address', 'addresses');
+    const phonenumber_json = response.phone_numbers;
+    const email_json = response.emails;
+    const address_json = response.addresses;
+    this.extract_emails(response);
+    this.extract_phonenumbers(response);
+    this.extract_addresses(response);
     response.location_level_fk = extract_location_level(response, store);
     response.location_children_fks = extract_children(response, store);
     response.location_parents_fks = extract_parents(response, store);
@@ -131,6 +141,16 @@ var LocationDeserializer = Ember.Object.extend(OptConf, {
     // TODO: Does it come back w/ a status?
     delete response.status;
     let location = store.push('location', response);
+    if (phonenumber_json) {
+      this.setup_phonenumbers(phonenumber_json, location);
+    }
+    if (email_json) {
+      this.setup_emails(email_json, location);
+    }
+    if (address_json) {
+      this.setup_addresses(address_json, location);
+    }
+
     location.save();
     belongs_to_extract(response.status_fk, store, location, 'status', 'location', 'locations');
     return location;
@@ -144,33 +164,6 @@ var LocationDeserializer = Ember.Object.extend(OptConf, {
       const location = store.push('location-list', model);
       this.setup_status(status_json, location);
     });
-  },
-  extract_addresses(response) {
-    const store = this.get('simpleStore');
-    let address_fks = [];
-    let addresses = response.addresses || [];
-    addresses.forEach((a) => {
-      address_fks.push(a.id);
-      // related models
-      const country = a.country;
-      delete a.country;
-      const state = a.state;
-      delete a.state;
-      const type = a.type;
-      delete a.type;
-      a.model_fk = response.id; // main model - this is b/c using old attrs, not related attrs
-      a.state_fk = state.id;
-      a.country_fk = country.id;
-      a.address_type_fk = type.id;
-      a.detail = true;
-      const address = store.push('address', a);
-      // setup related models
-      this.setup_country(country, address);
-      this.setup_state(state, address);
-      this.setup_address_type(type, address);
-    });
-    delete response.addresses;
-    return address_fks;
   }
 });
 

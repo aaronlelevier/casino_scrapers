@@ -1,7 +1,9 @@
 import Ember from 'ember';
 import PageObject from 'bsrs-ember/tests/page-object';
-let { visitable, clickable, text, hasClass } = PageObject;
+let { visitable, clickable, text, hasClass, fillable } = PageObject;
 import BASEURLS from 'bsrs-ember/utilities/urls';
+
+const EMAIL_TYPES = '.t-email-type-select .ember-basic-dropdown-trigger';
 
 var GeneralPage = PageObject.create({
   visitAdmin: visitable('/admin'),
@@ -44,6 +46,29 @@ var GeneralPage = PageObject.create({
   clickRoles: clickable('.t-nav-admin-role'),
   clickGeneralSettingsLink: clickable('.t-nav-general-settings'),
   clickTickets: clickable('.t-nav-tickets'),
+
+  // validation
+  clickAddEmail: clickable('.t-add-email-btn'),
+  clickDeleteEmail: clickable('.t-del-email-btn:eq(0)'),
+  emailTypeSelectedOne: text(`${EMAIL_TYPES}:eq(0)`),
+
+  clickAddPhoneNumber: clickable('.t-add-phone-number-btn'),
+  clickDeletePhoneNumber: clickable('.t-del-phone-number-btn:eq(0)'),
+
+  clickAddAddress: clickable('.t-add-address-btn'),
+  clickDeleteAddress: clickable('.t-del-address-btn:eq(0)'),
+
+  phonenumberFillIn: fillable('.t-phonenumber-number0'),
+  phonenumberThirdFillIn: fillable('.t-phonenumber-number2'),
+  emailFillIn: fillable('.t-email-email0'),
+  emailThirdFillIn: fillable('.t-email-email2'),
+
+  phonenumberZeroValidationErrorVisible: hasClass('invalid', '.t-phonenumber-number-validator0'),
+  phonenumberOneValidationErrorVisible: hasClass('invalid', '.t-phonenumber-number-validator1'),
+  phonenumberTwoValidationErrorVisible: hasClass('invalid', '.t-phonenumber-number-validator2'),
+  emailZeroValidationErrorVisible: hasClass('invalid', '.t-email-email-validator0'),
+  emailOneValidationErrorVisible: hasClass('invalid', '.t-email-email-validator1'),
+  emailTwoValidationErrorVisible: hasClass('invalid', '.t-email-email-validator2'),
 });
 
 export default GeneralPage;

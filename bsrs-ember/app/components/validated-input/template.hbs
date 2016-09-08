@@ -6,8 +6,8 @@
     value=value
     class=className
     id=(if count (concat valuePath count) valuePath)
-    focus-out="focusedOut"
-    key-up="keyedUp"
+    focus-out=(action "focusedOut")
+    key-up=(action "keyedUp")
   }}
   {{#if showMessage}}
       {{#if (v-get model valuePath "message")}}

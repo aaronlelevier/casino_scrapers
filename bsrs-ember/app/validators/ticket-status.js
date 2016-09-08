@@ -1,7 +1,7 @@
 import BaseValidator from 'ember-cp-validations/validators/base';
 
 export default BaseValidator.extend({
-  /* @method validate
+  /* @method validate - ticket-status
    * @param {string} attribute - field on ticket model
    * want to prevent user from saving a ticket if the status is draft or new, let them save the form
   */

@@ -1,19 +1,29 @@
-{{#each model as |phonenumber index|}}
-<div class="input-group">
-  <span class="input-group-btn">
-    <button class="t-del-btn btn btn-default btn-sm delete" type="button" {{action 'delete' phonenumber}}>{{fa-icon "minus"}}</button>
-  </span>
-  <span class="input-group-btn">
-    <select class="t-multi-phone-type form-control phonenumber-type" onchange={{action (action "changed" phonenumber) value="target.value"}}>
-      {{#each types as |phoneNumberType|}}
-      <option value={{phoneNumberType.id}} selected={{is-equal phonenumber.type phoneNumberType.id}}>{{t phoneNumberType.name}}</option>
-      {{/each}}
-    </select>
-  </span>
-
-  {{input-dynamic obj=phonenumber prop=fieldNames placeholder=placeholder}}
-  {{#validation-error-field field="number" class="t-input-multi-phone-validation-format-error" submitted=submitted model=phonenumber index=index validation="numberFormat"}}{{t 'validation.invalid'}} {{t 'admin.person.label.phone_number.one'}}{{/validation-error-field}}
-  {{#validation-error-field field="number" class="t-input-multi-phone-validation-region-error" submitted=submitted model=phonenumber index=index validation="numberRegion"}}{{t 'validatoin.invalid'}} {{t 'admin.person.label.phone_number_region'}}{{/validation-error-field}}
+{{#each numbers as |phonenumber index|}}
+  <div class="input-group-vertical t-address-group">
+    <div class="input-group">
+      <span class="input-group-btn">
+        <button class="t-del-phone-number-btn btn btn-default btn-sm delete" type="button" {{action "delete" phonenumber}}>{{fa-icon "minus"}}</button>
+      </span>
+      {{power-select-foreign-key
+        mainModel=phonenumber
+        selected=phonenumber.phone_number_type
+        change_method="change_phone_number_type"
+        relatedModels=phone_number_types
+        relatedModelName="phone-number-type"
+      }}
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon address-label">{{t "admin.person.label.phone_number.one"}}</span>
+        {{validated-input-multi
+          model=phonenumber
+          valuePath="number"
+          count=index
+          className=(concat "form-control t-phonenumber-number" index)
+          placeholder=placeholder
+          class=(concat "t-phonenumber-number-validator" index)
+          didValidate=didValidate
+        }}
+    </div>
 </div>
 {{/each}}
-<button class="t-btn-add btn-add btn btn-default btn-sm" type="button" {{action 'append'}}><span class="btn-label">{{fa-icon "plus"}} {{t "admin.phone.add"}}</span></button>
+<button class="t-add-phone-number-btn btn-add btn btn-default btn-sm" type="button" {{action "append"}}><span class="btn-label">{{fa-icon "plus"}} {{t "admin.phone.add"}}</span></button>

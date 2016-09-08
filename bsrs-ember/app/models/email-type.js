@@ -1,7 +1,4 @@
-import Ember from 'ember';
+import { Model } from 'ember-cli-simple-store/model';
 
-var EmailType = Ember.Object.extend({
-  // name: ''
+export default Model.extend({
 });
-
-export default EmailType;

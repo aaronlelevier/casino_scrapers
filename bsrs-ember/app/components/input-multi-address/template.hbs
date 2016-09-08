@@ -1,4 +1,4 @@
-{{#each model as |address index|}}
+{{#each addresses as |address index|}}
 <div class="input-group-vertical t-address-group">
   <div class="input-group">
     <span class="input-group-btn">
@@ -14,12 +14,19 @@
   </div>
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.address"}}</span>
-    {{textarea value=address.address class="form-control t-address-address"}}
-    {{#validation-error-field className="t-input-multi-address-validation-error" submitted=submitted field="address" model=address index=index validation="addressFormat"}}{{t "validation.invalid"}} {{t "admin.address.address"}}{{/validation-error-field}}
+      {{validated-input-multi
+        model=address
+        valuePath="address"
+        count=index
+        className=(concat "form-control t-address-address" index)
+        placeholder=placeholder
+        class=(concat "t-address-address-validator" index)
+        didValidate=didValidate
+      }}
   </div>
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.city"}}</span>
-    {{input type="text" value=address.city class="form-control t-address-city"}}
+    {{input type="text" value=address.city class=(concat "form-control t-address-city" index)}}
   </div>
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.state.one"}}</span>
@@ -36,8 +43,15 @@
   </div>
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.postal_code"}}</span>
-    {{input type="text" value=address.postal_code class="form-control t-address-postal-code"}}
-    {{#validation-error-field className="t-input-multi-address-zip-validation-error" submitted=submitted field="postal_code" model=address index=index validation="postal_codeFormat"}}{{t "validation.invalid"}} {{t "admin.address.postal_code"}}{{/validation-error-field}}
+      {{validated-input-multi
+        model=address
+        valuePath="postal_code"
+        count=index
+        className=(concat "form-control t-address-postal-code" index)
+        placeholder=placeholder
+        class=(concat "t-address-postal-code-validator" index)
+        didValidate=didValidate
+      }}
   </div>
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.country.one"}}</span>

@@ -31,6 +31,27 @@ export default Ember.Mixin.create({
       collection: 'locations',
       property: 'state'
     },
+    phone_number_type: {
+      collection: 'locations',
+      property: 'phone-number-type',
+      related_model: 'phone_number_type',
+    },
+    phonenumbers: {
+      associated_model: 'phonenumber',
+      join_model: 'location-join-phonenumber'
+    },
+    emails: {
+      associated_model: 'email',
+      join_model: 'location-join-email'
+    },
+    addresses: {
+      associated_model: 'address',
+      join_model: 'location-join-address'
+    },
+    email_type: {
+      collection: 'locations',
+      property: 'email-type',
+    },
     address_type: {
       collection: 'locations',
       property: 'address-type',

@@ -72,6 +72,9 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/locale.js');
       app.import('vendor/defaults/locale-translation.js');
       app.import('vendor/defaults/location.js');
+      app.import('vendor/defaults/location-join-address.js');
+      app.import('vendor/defaults/location-join-email.js');
+      app.import('vendor/defaults/location-join-phonenumber.js');
       app.import('vendor/defaults/location-children.js');
       app.import('vendor/defaults/location-parents.js');
       app.import('vendor/defaults/location-level.js');
@@ -83,6 +86,8 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/person-put.js');
       app.import('vendor/defaults/phone-number.js');
       app.import('vendor/defaults/phone-number-type.js');
+      app.import('vendor/defaults/person-join-email.js');
+      app.import('vendor/defaults/person-join-phonenumber.js');
       app.import('vendor/defaults/pfilter.js');
       app.import('vendor/defaults/role.js');
       app.import('vendor/defaults/role-category.js');

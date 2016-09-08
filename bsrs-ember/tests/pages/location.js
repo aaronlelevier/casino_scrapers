@@ -5,7 +5,7 @@ import LDS from 'bsrs-ember/vendor/defaults/location-status';
 import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BASEURLS, { LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
-let { visitable, clickable, text, count, fillable, value } = PageObject;
+let { visitable, clickable, text, count, fillable, value, hasClass } = PageObject;
 
 const BASE_URL = BASEURLS.base_locations_url;
 const DETAIL_URL = `${BASE_URL}/${LD.idOne}`;
@@ -33,7 +33,8 @@ const PARENTS_DROPDOWN = `.ember-basic-dropdown-content > ${options}`;
 const COUNTRIES = '.t-address-country .ember-basic-dropdown-trigger';
 const STATES = '.t-address-state .ember-basic-dropdown-trigger';
 const ADDRESS_TYPES = '.t-address-type-select .ember-basic-dropdown-trigger';
-
+const EMAIL_TYPES = '.t-email-type-select .ember-basic-dropdown-trigger';
+const PHONE_NUMBER_TYPES = '.t-phone-number-type-select .ember-basic-dropdown-trigger';
 
 export default PageObject.create({
   visit: visitable(BASE_URL + '/index'),
@@ -89,16 +90,52 @@ export default PageObject.create({
   parentsOptionLength: count(`${PARENTS_DROPDOWN} > li`),
   // parentssSelected: count(PARENTSS),
 
-  addressAddressFill: fillable('.t-address-address'),
-  addressCityFill: fillable('.t-address-city'),
-  addressPostalCodeFill: fillable('.t-address-postal-code'),
+  phonenumberFillIn: fillable('.t-phonenumber-number0'),
+  phonenumberThirdFillIn: fillable('.t-phonenumber-number2'),
+  emailFillIn: fillable('.t-email-email0'),
+  emailThirdFillIn: fillable('.t-email-email2'),
+  addressThirdFillIn: fillable('.t-address-address2'),
+  addressFillIn: fillable('.t-address-address0'),
+  addressCityFill: fillable('.t-address-city0'),
+  addressPostalCodeFillIn: fillable('.t-address-postal-code0'),
+  addressPostalCodeThirdFillIn: fillable('.t-address-postal-code2'),
 
-  addressAddressValue: value('.t-address-address'),
-  addressCityValue: value('.t-address-city'),
-  addressPostalCodeValue: value('.t-address-postal-code'),
+  addressAddressValue: value('.t-address-address0'),
+  addressCityValue: value('.t-address-city0'),
+  addressPostalCodeValue: value('.t-address-postal-code0'),
 
   countrySelectedOne: text(`${COUNTRIES}:eq(0)`),
   stateSelectedOne: text(`${STATES}:eq(0)`),
   addressTypeSelectedOne: text(`${ADDRESS_TYPES}:eq(0)`),
   addressTypeSelectedThree: text(`${ADDRESS_TYPES}:eq(0)`),
+
+  clickAddEmail: clickable('.t-add-email-btn'),
+  clickDeleteEmail: clickable('.t-del-email-btn'),
+  emailTypeSelectedOne: text(`${EMAIL_TYPES}:eq(0)`),
+
+  clickAddPhoneNumber: clickable('.t-add-phone-number-btn'),
+  clickDeletePhoneNumber: clickable('.t-del-phone-number-btn'),
+  phonenumberTypeSelectedOne: text(`${PHONE_NUMBER_TYPES}:eq(0)`),
+
+  clickAddAddress: clickable('.t-add-address-btn'),
+  clickDeleteAddress: clickable('.t-del-address-btn'),
+
+  // Validation
+  nameValidationErrorVisible: hasClass('invalid', '.t-location-name-validator'),
+  numberValidationErrorVisible: hasClass('invalid', '.t-location-number-validator'),
+  statusValidationErrorVisible: hasClass('invalid', '.t-status-select'),
+  llevelValidationErrorVisible: hasClass('invalid', '.t-location-level-select'),
+  phonenumberZeroValidationErrorVisible: hasClass('invalid', '.t-phonenumber-number-validator0'),
+  phonenumberOneValidationErrorVisible: hasClass('invalid', '.t-phonenumber-number-validator1'),
+  phonenumberTwoValidationErrorVisible: hasClass('invalid', '.t-phonenumber-number-validator2'),
+  emailZeroValidationErrorVisible: hasClass('invalid', '.t-location-email-validator0'),
+  emailOneValidationErrorVisible: hasClass('invalid', '.t-location-email-validator1'),
+  emailTwoValidationErrorVisible: hasClass('invalid', '.t-location-email-validator2'),
+  addressZeroValidationErrorVisible: hasClass('invalid', '.t-address-address-validator0'),
+  addressOneValidationErrorVisible: hasClass('invalid', '.t-address-address-validator1'),
+  addressTwoValidationErrorVisible: hasClass('invalid', '.t-address-address-validator2'),
+  postalCodeZeroValidationErrorVisible: hasClass('invalid', '.t-address-postal-code-validator0'),
+  postalCodeOneValidationErrorVisible: hasClass('invalid', '.t-address-postal-code-validator1'),
+  postalCodeTwoValidationErrorVisible: hasClass('invalid', '.t-address-postal-code-validator2'),
+
 });

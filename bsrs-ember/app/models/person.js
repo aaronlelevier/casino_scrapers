@@ -4,8 +4,8 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectRepo from 'bsrs-ember/utilities/inject';
 import CopyMixin from 'bsrs-ember/mixins/model/copy';
-import EmailMixin from 'bsrs-ember/mixins/model/email';
-import PhoneNumberMixin from 'bsrs-ember/mixins/model/phone_number';
+// import EmailMixin from 'bsrs-ember/mixins/model/email';
+// import PhoneNumberMixin from 'bsrs-ember/mixins/model/phone_number';
 // import AddressMixin from 'bsrs-ember/mixins/model/address';
 import RoleMixin from 'bsrs-ember/mixins/model/person/role';
 import LocationMixin from 'bsrs-ember/mixins/model/person/location';
@@ -13,7 +13,7 @@ import LocaleMixin from 'bsrs-ember/mixins/model/person/locale';
 import config from 'bsrs-ember/config/environment';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
-import { many_to_many } from 'bsrs-components/attr/many-to-many';
+import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/person';
 
@@ -74,15 +74,19 @@ const Validations = buildValidations({
       message: 'errors.person.last_name.length'
     }),
   ],
+  phonenumbers: validator('has-many'),
+  emails: validator('has-many'),
 });
 
-var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, LocationMixin, NewMixin, OptConf, RoleMixin, LocaleMixin, {
+var Person = Model.extend(Validations, CopyMixin, LocationMixin, NewMixin, OptConf, RoleMixin, LocaleMixin, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('status', 'person', {bootstrapped:true});
     belongs_to.bind(this)('role', 'person', {bootstrapped:true, change_func:false, rollback: false});
     belongs_to.bind(this)('locale', 'person', {bootstrapped:true, change_func:false});
     many_to_many.bind(this)('location', 'person', {plural:true, add_func: false, rollback:false, save:false});
+    many_to_many.bind(this)('phonenumber', 'person', {plural:true, dirty:false});
+    many_to_many.bind(this)('email', 'person', {plural:true, dirty:false});
   },
   type: 'person',
   simpleStore: Ember.inject.service(),
@@ -90,6 +94,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
   locale_repo: injectRepo('locale'),
   username: attr(''),
   usernameIsDirty() {
+    // NOTES: why do this?
     return this.get('_dirty')['username'];
   },
   password: attr(''),
@@ -104,9 +109,11 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
   locale_fk: undefined,
   role_fk: undefined,
   status_fk: undefined,
-  phone_number_fks: [],
+  // phone_number_fks: [],
   // address_fks: [],
-  email_fks: [],
+  // email_fks: [],
+  person_phonenumbers_fks: [],
+  person_emails_fks: [],
   person_locations_fks: [],
   changingPassword: false,
   //models are leaf nodes and should be given a set of data and encapsulate and work on that data
@@ -129,16 +136,96 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
     const { first_name, last_name } = this.getProperties('first_name', 'last_name');
     return first_name + ' ' + last_name;
   }),
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'emailsIsDirty', 'phoneNumbersIsDirty', 'roleIsDirty', 'locationsIsDirty', 'statusIsDirty', 'localeIsDirty', function() {
-    return ( this.get('detail') || this.get('new') ) && ( this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty') || this.get('statusIsDirty') || this.get('emailsIsDirty') || this.get('localeIsDirty') );
+  // PH
+  phonenumbersIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('person_phonenumbers'),
+  phonenumbersIsDirty: Ember.computed('phonenumbers.@each.{isDirtyOrRelatedDirty}', 'phonenumbersIsDirtyContainer', function() {
+    const phonenumbers = this.get('phonenumbers');
+    return phonenumbers.isAny('isDirtyOrRelatedDirty') || this.get('phonenumbersIsDirtyContainer');
+  }),
+  phonenumbersIsNotDirty: Ember.computed.not('phonenumbersIsDirty'),
+  rollbackPhonenumbersContainer() {
+    const phonenumbers = this.get('phonenumbers');
+    phonenumbers.forEach((model) => {
+      model.rollback();
+    });
+  },
+  savePhonenumbersContainer() {
+    const phonenumbers = this.get('phonenumbers');
+    phonenumbers.forEach((phonenumber) => {
+      // remove non valid phone numbers
+      if (phonenumber.get('invalid_number')) {
+        this.removePhonenumber(phonenumber);
+      } else {
+        phonenumber.saveRelated();
+        phonenumber.save();
+      }
+    });
+  },
+  removePhonenumber(phonenumber) {
+    const remove_joins = [];
+    this.get('person_phonenumbers').forEach((join_model) => {
+      if (join_model.get('phonenumber_pk') === phonenumber.get('id')) {
+        remove_joins.push(join_model.get('id'));
+      } 
+    });
+    run(() => {
+      remove_joins.forEach((join_model_pk) => {
+        this.get('simpleStore').push('person-join-phonenumber', {id: join_model_pk, removed: true}) ;
+        this.set('person_phonenumbers_fks', this.get('person_phonenumbers_fks').filter(fk => fk === join_model_pk));
+      });
+    });
+  },
+  // EMAIL
+  emailsIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('person_emails'),
+  emailsIsDirty: Ember.computed('emails.@each.{isDirtyOrRelatedDirty}', 'emailsIsDirtyContainer', function() {
+    const emails = this.get('emails');
+    return emails.isAny('isDirtyOrRelatedDirty') || this.get('emailsIsDirtyContainer');
+  }),
+  emailsIsNotDirty: Ember.computed.not('emailsIsDirty'),
+  rollbackEmailsContainer() {
+    const emails = this.get('emails');
+    emails.forEach((model) => {
+      model.rollback();
+    });
+  },
+  saveEmailsContainer() {
+    const emails = this.get('emails');
+    emails.forEach((email) => {
+      // remove non valid phone numbers
+      if (email.get('invalid_email')) {
+        this.removeEmail(email);
+      } else {
+        email.saveRelated();
+        email.save();
+      }
+    });
+  },
+  removeEmail(email) {
+    const remove_joins = [];
+    this.get('person_emails').forEach((join_model) => {
+      if (join_model.get('email_pk') === email.get('id')) {
+        remove_joins.push(join_model.get('id'));
+      } 
+    });
+    run(() => {
+      remove_joins.forEach((join_model_pk) => {
+        this.get('simpleStore').push('person-join-email', {id: join_model_pk, removed: true}) ;
+        this.set('person_emails_fks', this.get('person_emails_fks').filter(fk => fk === join_model_pk));
+      });
+    });
+  },
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'emailsIsDirty', 'phonenumbersIsDirty', 'roleIsDirty', 'locationsIsDirty', 'statusIsDirty', 'localeIsDirty', function() {
+    return ( this.get('detail') || this.get('new') ) && ( this.get('isDirty') || this.get('phonenumbersIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty') || this.get('statusIsDirty') || this.get('emailsIsDirty') || this.get('localeIsDirty') );
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   clearPassword() {
     this.set('password', '');
   },
   saveRelated() {
+    this.saveEmailsContainer();
     this.saveEmails();
-    this.savePhoneNumbers();
+    this.savePhonenumbersContainer();
+    this.savePhonenumbers();
     // this.saveAddresses();
     this.saveRole();
     this.saveLocations();
@@ -148,8 +235,10 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
   },
   rollback() {
     this.changeLocale();
+    this.rollbackEmailsContainer();
     this.rollbackEmails();
-    this.rollbackPhoneNumbers();
+    this.rollbackPhonenumbersContainer();
+    this.rollbackPhonenumbers();
     // this.rollbackAddresses();
     this.rollbackRole();
     this.rollbackLocations();
@@ -180,7 +269,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
     }).map((email) => {
       return email.serialize();
     });
-    const phone_numbers = this.get('phone_numbers').filter(function(num) {
+    const phonenumbers = this.get('phonenumbers').filter(function(num) {
       if(num.get('invalid_number')) {
         return;
       }
@@ -211,7 +300,7 @@ var Person = Model.extend(Validations, CopyMixin, EmailMixin, PhoneNumberMixin, 
       role: this.get('role').get('id'),
       locations: this.get('locations_ids'),
       emails: emails,
-      phone_numbers: phone_numbers,
+      phone_numbers: phonenumbers,
       // addresses: addresses,
       locale: this.get('locale.id'),
       password: this.get('password')

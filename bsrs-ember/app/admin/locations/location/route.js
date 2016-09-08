@@ -9,6 +9,7 @@ var LocationRoute = TabRoute.extend(FindById, ContactRouteMixin, {
   redirectRoute: 'admin.locations.index',
   module: 'location',
   templateModelField: Ember.computed(function() { return 'name'; }),
+  i18n: Ember.inject.service(),
   model(params) {
     const pk = params.location_id;
     const repository = this.get('repository');
@@ -21,12 +22,16 @@ var LocationRoute = TabRoute.extend(FindById, ContactRouteMixin, {
     const default_phone_number_type = this.phone_number_type_repo.get_default();
     const address_types = this.address_type_repo.find();
     const default_address_type = this.address_type_repo.get_default();
+    const hashComponents = [
+      {'title': this.get('i18n').t('admin.location.section.details'), 'component': 'locations/location/detail-section', active: 'active'},
+      {'title': this.get('i18n').t('admin.location.section.contact'), 'component': 'locations/location/contact-section', active: ''},
+      {'title': this.get('i18n').t('admin.location.section.organization'), 'component': 'locations/location/organization-section', active: ''},
+    ];
     return this.findByIdScenario(location, pk, {all_statuses:all_statuses, all_location_levels:all_location_levels,
                                  email_types:email_types, default_email_type:default_email_type,
                                  phone_number_types:phone_number_types,default_phone_number_type:default_phone_number_type,
                                  address_types:address_types, default_address_type:default_address_type,
-                                 repository:repository});
-
+                                 repository:repository, hashComponents:hashComponents});
   },
   setupController: function(controller, hash) {
     controller.setProperties(hash);

@@ -1,0 +1,65 @@
+<div class="col-md-8">
+  <section>
+    <div class="row">
+      <div class="col-md-12">
+        {{#form-group title="admin.location.label.name" for="name"}}
+          {{validated-input
+            model=model
+            valuePath="name"
+            didValidate=didValidate
+            className="form-control t-location-name"
+            placeholder=(t "admin.location.label.name")
+            class="t-location-name-validator"
+          }}
+        {{/form-group}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        {{#form-group title="admin.location.label.number" for="number"}}
+          {{validated-input
+            model=model
+            valuePath="number"
+            didValidate=didValidate
+            className="form-control t-location-number"
+            placeholder=(t "admin.location.label.number")
+            class="t-location-number-validator"
+          }}
+        {{/form-group}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        {{#form-group title="admin.location.label.location_level" for="location_location_level_select"}}
+          {{power-select-foreign-key 
+            mainModel=model 
+            model=model 
+            selected=model.location_level 
+            change_method="change_location_level" 
+            relatedModels=all_location_levels 
+            relatedModelName="location-level" 
+            notTranslated=true
+            valuePath="location_level"
+            didValidate=didValidate
+          }}
+        {{/form-group}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        {{#form-group title="admin.location.label.status-name" for="location_status"}}
+          {{power-select-foreign-key 
+            mainModel=model 
+            model=model 
+            selected=model.status 
+            change_method="change_status" 
+            relatedModels=all_statuses 
+            relatedModelName="status"
+            valuePath="status"
+            didValidate=didValidate
+          }}
+        {{/form-group}}
+      </div>
+    </div>
+  </section>
+</div>

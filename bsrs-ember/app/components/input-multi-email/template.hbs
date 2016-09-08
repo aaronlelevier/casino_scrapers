@@ -1,18 +1,31 @@
-{{#each model as |email index|}}
-<div class="input-group">
-  <span class="input-group-btn">
-    <button class="t-del-email-btn btn btn-default btn-sm delete" type="button" {{action 'delete' email}}>{{fa-icon "minus"}}</button>
-  </span>
-  <span class="input-group-btn">
-    <select class="t-multi-email-type form-control email-type" onchange={{action (action "changed" email) value="target.value"}}>
-      {{#each types as |emailType|}}
-      <option value={{emailType.id}} selected={{is-equal email.type emailType.id}}>{{t emailType.name}}</option>
-      {{/each}}
-    </select>
-  </span>
-
-  {{input-dynamic obj=email prop=fieldNames placeholder=placeholder}}
-  {{#validation-error-field field="email" class="t-input-multi-email-validation-format-error" submitted=submitted model=email index=index validation="emailFormat"}}{{t "validation.invalid"}} {{t "admin.person.label.email"}}{{/validation-error-field}}
-</div>
+{{#each emails as |email index|}}
+  <div class="input-group-vertical t-address-group">
+    <div class="input-group">
+      <span class="input-group-btn">
+        <button class="t-del-email-btn btn btn-default btn-sm delete" type="button" {{action 'delete' email}}>{{fa-icon "minus"}}</button>
+      </span>
+      {{power-select-foreign-key
+        mainModel=email
+        selected=email.email_type
+        change_method='change_email_type'
+        relatedModels=email_types
+        relatedModelName='email-type'
+      }}
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon address-label">{{t "admin.person.label.email"}}</span>
+        {{validated-input-multi
+          model=email
+          valuePath="email"
+          count=index
+          className=(concat "form-control t-email-email" index)
+          placeholder=placeholder
+          class=(concat "t-email-email-validator" index)
+          didValidate=didValidate
+        }}
+    </div>
+  </div>
 {{/each}}
-<button class="t-add-email-btn btn-add btn btn-default btn-sm" type="button" {{action 'append'}}><span class="btn-label">{{fa-icon "plus"}} {{t "admin.email.add"}}</span></button>
+<button class="t-add-email-btn btn-add btn btn-default btn-sm" type="button" {{action 'append'}}>
+  <span class="btn-label">{{fa-icon "plus"}} {{t "admin.email.add"}}</span>
+</button>

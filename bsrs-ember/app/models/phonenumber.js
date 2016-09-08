@@ -1,17 +1,47 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
+import { belongs_to } from 'bsrs-components/attr/belongs-to';
+import OptConf from 'bsrs-ember/mixins/optconfigure/phonenumber';
+import { validator, buildValidations } from 'ember-cp-validations';
 
-var PhoneNumberModel =  Model.extend({
-    type: attr(),
-    number: attr(''),
-    model_fk: undefined,
-    invalid_number: Ember.computed('number', function() {
-        let number = this.get('number');
-        return typeof number === 'undefined' || number.trim() === '';
-    }),
-    serialize() {
-        return {id: this.get('id'), number: this.get('number'), type: this.get('type')};
-    }
+const Validations = buildValidations({
+  number: validator('format', { 
+    type: 'phone',
+    message: 'errors.phonenumber.number'
+  }),
+});
+
+var PhoneNumberModel = Model.extend(Validations, OptConf, {
+  init() {
+    this._super(...arguments);
+    belongs_to.bind(this)('phone_number_type', 'phonenumber');
+  },
+  simpleStore: Ember.inject.service(),
+  number: attr(''),
+  phone_number_type_fk: undefined,
+  // model_fk: undefined,
+  invalid_number: Ember.computed('number', function() {
+    let number = this.get('number');
+    return typeof number === 'undefined' || number.trim() === '';
+  }),
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumber_typeIsDirty', function() {
+    return this.get('isDirty') || this.get('phoneNumber_typeIsDirty');
+  }),
+  isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+  saveRelated() {
+    this.savePhoneNumber_type();
+  },
+  rollback() {
+    this.rollbackPhoneNumber_type();
+    this._super(...arguments);
+  },
+  serialize() {
+    return {
+      id: this.get('id'),
+      number: this.get('number'),
+      type: this.get('phone_number_type.id')
+    };
+  }
 });
 
 export default PhoneNumberModel;

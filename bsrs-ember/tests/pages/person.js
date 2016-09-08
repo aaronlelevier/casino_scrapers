@@ -8,7 +8,7 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
-let { visitable, text, clickable, count, fillable, value } = PageObject;
+let { visitable, text, clickable, count, fillable, value, hasClass } = PageObject;
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
@@ -64,13 +64,16 @@ export default PageObject.create({
   middleInitialFill: fillable('.t-person-middle-initial'),
   lastNameFill: fillable('.t-person-last-name'),
 
-  middleInitial: fillable('.t-person-middle-initial'),
   usernameFillIn: fillable('.t-person-username'),
   username: value('.t-person-username'),
+
+  firstNameValidationErrorVisible: hasClass('invalid', '.t-first-name-validator'),
+  lastNameValidationErrorVisible: hasClass('invalid', '.t-last-name-validator'),
 
   clickChangePassword: clickable('.t-person-change-password'),
   passwordFillIn: fillable('.t-person-password'),
   passwordOneTimeChecked: () => Ember.$('.t-person-password_one_time').is(':checked'),
   passwordOneTimeClick: clickable('.t-person-password_one_time-label'),
   passwordOneTimeLabelText: text('.t-person-password_one_time-label'),
+
 });

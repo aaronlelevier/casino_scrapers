@@ -1,38 +1,34 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/uuid';
-import ChildValidationComponent from 'bsrs-ember/mixins/validation/child';
-import CustomValidMixin from 'bsrs-ember/mixins/validation/custom';
-import {ValidationMixin, validateEach} from 'ember-cli-simple-validation/mixins/validate';
-import { emailIsValidFormat } from 'bsrs-ember/validation/email';
-
 const { run } = Ember;
+import inject from 'bsrs-ember/utilities/uuid';
 
-var InputMultiEmail = ChildValidationComponent.extend(ValidationMixin, CustomValidMixin, {
-    uuid: inject('uuid'),
-    tagName: 'div',
-    classNames: ['input-multi t-input-multi-email'],
-    fieldNames: 'email',
-    emailFormat: validateEach('email', emailIsValidFormat),
-    actions: {
-        changed(email, val) {
-            email.set('type', val);
-        },
-        append() {
-            const id = this.get('uuid').v4();
-            const type = this.get('default_type').get('id');
-            const related_pk = this.get('related_pk');
-            var model = {id: id, type: type};
-            model['model_fk'] = related_pk;
-            run(() => {
-                this.get('model').push(model);
-            });
-        },
-        delete(entry) {
-            run(() => {
-                this.get('model').push({id: entry.get('id'), removed: true});
-            });
-        }
+var InputMultiEmail = Ember.Component.extend({
+  uuid: inject('uuid'),
+  simpleStore: Ember.inject.service(),
+  tagName: 'div',
+  classNames: ['input-multi t-input-multi-email'],
+  fieldNames: 'email',
+  email_types: Ember.computed(function() {
+    return this.get('simpleStore').find('email-type');
+  }),
+  actions: {
+    append() {
+      const id = this.get('uuid').v4();
+      const default_type = this.get('default_type');
+      const type_id = default_type.get('id');
+      var model = {id: id, email_type_fk: type_id};
+      run(() => {
+        this.get('model').add_email(model);
+      });
+      const new_email = this.get('simpleStore').find('email', id);
+      new_email.change_email_type({ id: default_type.get('id') });
+    },
+    delete(entry) {
+      run(() => {
+        this.get('model').remove_email(entry.get('id'));
+      });
     }
+  }
 });
 
 export default InputMultiEmail;

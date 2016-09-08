@@ -22,7 +22,7 @@ var PhoneNumberMixin = Ember.Mixin.create({
     phone_number_ids: Ember.computed('phone_numbers.[]', function() {
         return this.get('phone_numbers').mapBy('id');
     }),
-    phoneNumbersIsDirty: Ember.computed('phone_numbers.[]', 'phone_numbers.@each.{isDirty,number,type}', function() {
+    phoneNumbersIsDirty: Ember.computed('phone_numbers.[]', 'phone_numbers.@each.{isDirty,number,phone_number_type}', function() {
         let phone_number_dirty = false;
         let phone_numbers = this.get('phone_numbers');
         let phone_fks = this.get('phone_number_fks');
@@ -39,7 +39,7 @@ var PhoneNumberMixin = Ember.Mixin.create({
             });
         }
         phone_numbers.forEach((num) => {
-            if (num.get('isDirty')) {
+            if (num.get('isDirtyOrRelatedDirty')) {
                 phone_number_dirty = true;
             }
             //get rid of invalid numbers and provide updated array for dirty check; only if off by one.  If same length, then don't want to filter out.
@@ -64,6 +64,7 @@ var PhoneNumberMixin = Ember.Mixin.create({
         let phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {
             num.save();
+            num.saveRelated();
         });
     },
     rollbackPhoneNumbers() {
