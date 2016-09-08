@@ -1,7 +1,7 @@
 import random
 
 from ticket.models import (TicketStatus, TicketPriority, TICKET_STATUSES,
-        TICKET_PRIORITIES, TICKET_STATUS_NEW, TICKET_PRIORITY_DEFAULT)
+        TICKET_PRIORITIES,)
 from utils.helpers import generate_uuid
 
 

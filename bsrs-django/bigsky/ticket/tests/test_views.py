@@ -14,7 +14,7 @@ from generic.models import Attachment
 from generic.tests.factory import create_file_attachment
 from person.tests.factory import PASSWORD, create_single_person, DistrictManager
 from routing.tests.factory import create_assignment, create_auto_assign_filter
-from ticket.models import Ticket, TicketStatus, TicketActivity, TicketActivityType, TICKET_STATUS_NEW
+from ticket.models import Ticket, TicketStatus, TicketActivity, TicketActivityType
 from ticket.serializers import TicketCreateSerializer
 from ticket.tests.factory_related import create_ticket_priority, create_ticket_status
 from ticket.tests.factory import (create_ticket, create_ticket_activity,

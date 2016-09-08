@@ -12,14 +12,17 @@ from django.http.request import QueryDict
 from django.utils.timezone import localtime, now
 
 from model_mommy import mommy
+from pretend import stub
 from rest_framework.exceptions import ValidationError
 from rest_framework.test import APITestCase
 
 from generic.models import SavedSearch, Attachment
 from generic.serializers import SavedSearchSerializer
 from generic.views import ExportData
-from person.models import Person
 from person.tests.factory import PASSWORD, create_single_person, create_person
+from ticket.models import Ticket
+from ticket.tests.factory import create_ticket
+from translation.tests.factory import create_translation_keys_for_fixtures
 from utils.tests.helpers import remove_attachment_test_files
 
 
@@ -379,3 +382,19 @@ class ExportDataTests(APITestCase):
         response = self.client.get("/api/export-data/{}/?ordering=number&search=a&status__name__icontains=b".format(model_name))
 
         self.assertEqual(response.status_code, 200)
+
+    def test_get_values_to_write(self):
+        create_translation_keys_for_fixtures()
+        export_data = ExportData()
+        export_data.model = Ticket
+        export_data.request = stub(user=create_single_person())
+        t = create_ticket()
+        t = Ticket.objects.filter_export_data({'id': t.id}).first()
+
+        ret = export_data._get_values_to_write(t)
+
+        self.assertEqual(
+            ret,
+            [t.priority.get_i18n_value('name'), t.status.get_i18n_value('name'),
+             t.number, t.created, t.location.name, t.assignee.fullname, t.request, t.category]
+        )

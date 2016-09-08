@@ -11,9 +11,11 @@ from contact.models import Country
 from location.models import LocationType
 from person.models import Person, PersonQuerySet
 from person.tests.factory import create_single_person, create_role
+from translation.tests.factory import create_translation_keys_for_fixtures
+from ticket.models import TicketStatus, TICKET_STATUS_DEFAULT
 from utils import create
-from utils.exceptions import QuerySetClassNotDefined
-from utils.models import Tester, TesterManager
+from utils.helpers import create_default
+from utils.models import Tester
 from utils.permissions import perms_map
 
 
@@ -52,7 +54,7 @@ class BaseManagerTests(TestCase):
 
     def test_filter_export_data__ordering(self):
         self.assertTrue(self.person_two.username < self.person.username)
-        query_params = {'ordering': ['username']}
+        query_params = {'ordering': 'username'}
 
         ret = Person.objects.filter_export_data(query_params)
 
@@ -134,6 +136,39 @@ class BaseModelTests(TestCase):
             Tester.export_fields,
             [x.name for x in Tester._meta.get_fields()]
         )
+
+    def test_get_i18n_value(self):
+        create_translation_keys_for_fixtures()
+        status = create_default(TicketStatus)
+
+        ret = status.get_i18n_value('name')
+
+        self.assertEqual(ret, TICKET_STATUS_DEFAULT.split('.')[-1])
+
+    def test_get_i18n_value__locale_arg(self):
+        locale = 'es'
+        create_translation_keys_for_fixtures(locale)
+        status = create_default(TicketStatus)
+
+        ret = status.get_i18n_value('name', locale)
+
+        self.assertEqual(ret, TICKET_STATUS_DEFAULT.split('.')[-1])
+
+    def test_get_i18n_value__not_a_field(self):
+        create_translation_keys_for_fixtures()
+        status = create_default(TicketStatus)
+
+        ret = status.get_i18n_value('foo')
+
+        self.assertEqual(ret, '')
+
+    def test_get_i18n_value__not_i18n_key(self):
+        create_translation_keys_for_fixtures()
+        status = mommy.make(TicketStatus, name='foo')
+
+        ret = status.get_i18n_value('name')
+
+        self.assertEqual(ret, status.name)
 
 
 class BaseNameModelTests(TestCase):

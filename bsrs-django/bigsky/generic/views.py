@@ -117,8 +117,19 @@ class ExportData(APIView):
         with open(filepath, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
             writer.writerow(self.model.export_fields)
-            for d in self._filter_with_fields(query_params):
-                writer.writerow([getattr(d, f) for f in self.model.export_fields])
+
+            for obj in self._filter_with_fields(query_params):
+                values = self._get_values_to_write(obj)
+                writer.writerow(values)
 
     def _filter_with_fields(self, query_params):
         return self.model.objects.filter_export_data(query_params)
+
+    def _get_values_to_write(self, obj):
+        values = []
+        for f in self.model.export_fields:
+            if hasattr(obj, 'I18N_FIELDS') and f in self.model.I18N_FIELDS:
+                values.append(obj.get_i18n_value(f, self.request.user.locale.locale))
+            else:
+                values.append(getattr(obj, f))
+        return values

@@ -1,5 +1,6 @@
 from django.test import TestCase
 
+from ticket.models import TICKET_STATUS_MAP, TICKET_PRIORITY_MAP
 from translation.models import Locale, Translation
 from translation.tests import factory
 
@@ -34,3 +35,25 @@ class FactoryTests(TestCase):
     def test_create_translations(self):
         factory.create_translations()
         self.assertEqual(Translation.objects.count(), 4)
+
+    def test_create_translation_keys_for_fixtures(self):
+        ret = factory.create_translation_keys_for_fixtures()
+
+        self.assertIsInstance(ret, Translation)
+        for k,v in ret.values.items():
+            keys = [x for x in TICKET_STATUS_MAP.values()]
+            keys += [x for x in TICKET_PRIORITY_MAP.values()]
+
+            self.assertIn(k, keys,
+                             "{} != {}".format(k, keys))
+
+            values = [x.split('.')[-1] for x in keys]
+            self.assertIn(v, values,
+                             "{} != {}".format(v, values))
+
+    def test_create_translation_keys_for_fixtures__locale_arg(self):
+        locale = 'es'
+
+        ret = factory.create_translation_keys_for_fixtures(locale)
+
+        self.assertEqual(ret.locale.locale, locale)

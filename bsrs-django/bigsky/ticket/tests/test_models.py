@@ -246,6 +246,9 @@ class TicketTests(TestCase):
 
         self.assertEqual(Ticket.EXPORT_FIELDS, export_fields)
 
+    def test_i18n_fields(self):
+        self.assertEqual(Ticket.I18N_FIELDS, ['priority_name', 'status_name'])
+
     def test_filter_export_data__queryset_matches_export_fields(self):
         ticket = Ticket.objects.filter_export_data().first()
         for f in Ticket.EXPORT_FIELDS:

@@ -6,6 +6,7 @@ import copy
 import decimal
 import uuid
 
+from django.contrib.auth.models import ContentType
 from django.db import models
 from django.utils import timezone
 
@@ -138,6 +139,20 @@ timestamp of when the record was deleted.""")
             return cls.EXPORT_FIELDS
         except AttributeError:
             return [x.name for x in cls._meta.get_fields()]
+
+    def get_i18n_value(self, field, locale='en'):
+        model = (ContentType.objects.get(model="translation")
+                                    .model_class())
+        try:
+            value = model.objects.get(locale__locale=locale).values[getattr(self, field)]
+        except AttributeError:
+            # 'field' isn't a valid model field
+            return ''
+        except KeyError:
+            # no i18n key exists, so just return raw value
+            return getattr(self, field)
+
+        return value
 
 
 class TesterQuerySet(BaseQuerySet):

@@ -1,7 +1,6 @@
 import uuid
 
 from django.apps import apps
-from django.dispatch import receiver
 from django.db import models
 from django.db.models import F, Q, Max
 from django.conf import settings
@@ -135,6 +134,7 @@ class Ticket(BaseModel):
 
     EXPORT_FIELDS = ['priority_name', 'status_name', 'number', 'created',
                      'location_name', 'assignee_name', 'request', 'category']
+    I18N_FIELDS = ['priority_name', 'status_name']
 
     def next_number():
         return Ticket.objects.next_number()
