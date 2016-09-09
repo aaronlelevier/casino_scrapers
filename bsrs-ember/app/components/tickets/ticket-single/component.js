@@ -7,11 +7,13 @@ import ParentValidationComponent from 'bsrs-ember/mixins/validation/parent';
 import { task } from 'ember-concurrency';
 
 var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMixin, {
-  didValidate: false,
+  init() {
+    this._super(...arguments);
+    this.didValidate = false;
+  },
   personRepo: inject('person'),
   locationRepo: inject('location'),
   child_components: ['parent-model-category-select'],
-  repository: inject('ticket'),
   activityRepository: inject('activity'),
   classNameBindings: ['mobile:mobile-meta-data'],
   continueDTId: Ember.computed(function() {

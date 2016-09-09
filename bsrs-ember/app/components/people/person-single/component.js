@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/inject';
 import ParentValidationComponent from 'bsrs-ember/mixins/validation/parent';
 import { validate } from 'ember-cli-simple-validation/mixins/validate';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
@@ -15,10 +14,11 @@ function validatePassword() {
 }
 
 var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, {
-  didValidate: false,
+  init() {
+    this._super(...arguments);
+    this.didValidate = false;
+  },
   simpleStore: Ember.inject.service(),
-  // currency: Ember.inject.service(),
-  repository: inject('person'),
   child_components: ['input-multi-phone', 'input-multi-address', 'input-multi-email'],
   classNames: ['wrapper', 'form'],
   passwordValidation: validate('model.password', validatePassword),

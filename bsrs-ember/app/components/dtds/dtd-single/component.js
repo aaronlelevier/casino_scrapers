@@ -5,7 +5,10 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 import injectStore from 'bsrs-ember/utilities/store';
 
 export default Ember.Component.extend(TabMixin, {
-  didValidate: false,
+  init() {
+    this._super(...arguments);
+    this.didValidate = false;
+  },
   simpleStore: Ember.inject.service(),
   error: Ember.inject.service(),
   repository: inject('dtd'),
