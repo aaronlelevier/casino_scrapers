@@ -23,6 +23,7 @@ from person.tests.factory import PASSWORD, create_single_person, create_person
 from ticket.models import Ticket
 from ticket.tests.factory import create_ticket
 from translation.tests.factory import create_translation_keys_for_fixtures
+from utils.helpers import local_strftime
 from utils.tests.helpers import remove_attachment_test_files
 
 
@@ -391,7 +392,7 @@ class ExportDataTests(APITestCase):
         # export
         export_data = ExportData()
         export_data.model = Ticket
-        export_data.request = stub(user=self.person)
+        export_data.request = stub(user=self.person, GET={'timezone': 'America/Los_Angeles'})
         t = create_ticket()
         t = Ticket.objects.filter_export_data({'id': t.id}).first()
 
@@ -400,5 +401,6 @@ class ExportDataTests(APITestCase):
         self.assertEqual(
             ret,
             [t.priority.get_i18n_value('name'), t.status.get_i18n_value('name'),
-             t.number, t.created, t.location.name, t.assignee.fullname, t.request, t.category]
+             t.number, local_strftime(t.created, 'America/Los_Angeles'), t.location.name,
+             t.assignee.fullname, t.request, t.category]
         )

@@ -1,4 +1,5 @@
 import csv
+import datetime
 import os
 
 from django.conf import settings
@@ -16,6 +17,7 @@ from rest_framework.views import APIView
 from generic.models import SavedSearch, Attachment
 from generic.serializers import SavedSearchSerializer, AttachmentSerializer
 from translation.models import Translation
+from utils.helpers import local_strftime
 from utils.views import BaseModelViewSet
 
 
@@ -134,5 +136,13 @@ class ExportData(APIView):
             if hasattr(obj, 'I18N_FIELDS') and f in self.model.I18N_FIELDS:
                 values.append(Translation.resolve_i18n_value(translation_values, obj, f))
             else:
-                values.append(getattr(obj, f))
+                v = getattr(obj, f)
+                if isinstance(v, datetime.datetime):
+                    args = [v]
+                    tzname = self.request.GET.get('timezone', None)
+                    if tzname:
+                        args.append(tzname)
+                    values.append(local_strftime(*args))
+                else:
+                    values.append(v)
         return values

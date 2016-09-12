@@ -66,7 +66,7 @@ def create_default(klass):
     return obj
 
 
-def local_strftime(d, tzname='America/Los_Angeles'):
+def local_strftime(d, tzname=settings.TIME_ZONE):
     """ :d: datetime instance """
     tzinfo = pytz.timezone(tzname)
     dt = datetime.datetime(d.year, d.month, d.day, d.hour, d.minute,

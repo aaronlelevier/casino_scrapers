@@ -137,6 +137,6 @@ class MiscTestHelperTests(TestCase):
         raw_ret = datetime.datetime.strftime(tzinfo.normalize(dt + dt.utcoffset()),
                                              "%Y-%m-%d %H:%M:%S")
 
-        ret = local_strftime(obj.created)
+        ret = local_strftime(obj.created, tzname)
 
         self.assertEqual(ret, raw_ret)
