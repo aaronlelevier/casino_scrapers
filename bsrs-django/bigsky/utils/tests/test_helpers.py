@@ -1,9 +1,12 @@
+import datetime
 import json
+import pytz
 import uuid
 
 from django.conf import settings
 from django.contrib.auth.models import ContentType
 from django.test import TestCase
+from django.utils import timezone
 
 from location.models import LocationLevel
 from person import config
@@ -11,7 +14,7 @@ from person.models import Role, PersonStatus
 from person.tests.factory import create_role
 from utils.helpers import (BASE_UUID, model_to_json, model_to_json_select_related,
     model_to_json_prefetch_related, generate_uuid, get_content_type_number, media_path,
-    create_default)
+    create_default, local_strftime)
 
 
 class ModelToJsonTests(TestCase):
@@ -122,3 +125,18 @@ class MiscTestHelperTests(TestCase):
         self.assertIsInstance(ret, PersonStatus)
         self.assertEqual(ret.name, PersonStatus.default)
         self.assertEqual(ret.name, config.PERSON_STATUSES[0])
+
+    def test_local_strftime(self):
+        obj = create_role()
+        d = obj.created
+        # raw
+        tzname = 'America/Los_Angeles'
+        tzinfo = pytz.timezone(tzname)
+        dt = datetime.datetime(d.year, d.month, d.day, d.hour, d.minute,
+                               d.second, tzinfo=tzinfo)
+        raw_ret = datetime.datetime.strftime(tzinfo.normalize(dt + dt.utcoffset()),
+                                             "%Y-%m-%d %H:%M:%S")
+
+        ret = local_strftime(obj.created)
+
+        self.assertEqual(ret, raw_ret)

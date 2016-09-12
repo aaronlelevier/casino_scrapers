@@ -1,4 +1,6 @@
+import datetime
 import json
+import pytz
 import uuid
 
 from django.conf import settings
@@ -62,3 +64,12 @@ def media_path(path, prefix=settings.MEDIA_URL):
 def create_default(klass):
     obj, created = klass.objects.get_or_create(name=klass.default)
     return obj
+
+
+def local_strftime(d, tzname='America/Los_Angeles'):
+    """ :d: datetime instance """
+    tzinfo = pytz.timezone(tzname)
+    dt = datetime.datetime(d.year, d.month, d.day, d.hour, d.minute,
+                           d.second, tzinfo=tzinfo)
+    return datetime.datetime.strftime(tzinfo.normalize(dt + dt.utcoffset()),
+                                      "%Y-%m-%d %H:%M:%S")
