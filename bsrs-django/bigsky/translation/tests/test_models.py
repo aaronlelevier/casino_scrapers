@@ -6,10 +6,12 @@ from django.conf import settings
 
 from model_mommy import mommy
 
+from ticket.models import TicketStatus
 from translation.models import Locale, Translation, TranslationManager, TranslationQuerySet
 from translation.tests import factory
 from utils import ListObject
 from utils.create import _generate_chars
+from utils.helpers import create_default
 
 
 class LocaleSetupMixin(object):
@@ -166,8 +168,7 @@ class TranslationManagerTests(TestCase):
 class TranslationTests(TestCase):
 
     def setUp(self):
-        factory.create_translations()
-        self.definition = Translation.objects.first()
+        self.translation = factory.create_translation_keys_for_fixtures()
 
     def test_manager(self):
         self.assertIsInstance(Translation.objects, TranslationManager)
@@ -175,20 +176,57 @@ class TranslationTests(TestCase):
     def test_add(self):
         k = _generate_chars()
         v = _generate_chars()
-        self.definition.values[k] = v
-        self.definition.save()
-        self.assertEqual(Translation.objects.get(id=self.definition.id).values[k], v)
+        self.translation.values[k] = v
+        self.translation.save()
+        self.assertEqual(Translation.objects.get(id=self.translation.id).values[k], v)
 
     def test_update(self):
-        k = list(self.definition.values.keys())[0]
+        k = list(self.translation.values.keys())[0]
         v = _generate_chars()
-        self.definition.values[k] = v
-        self.definition.save()
-        self.assertEqual(Translation.objects.get(id=self.definition.id).values[k], v)
+        self.translation.values[k] = v
+        self.translation.save()
+        self.assertEqual(Translation.objects.get(id=self.translation.id).values[k], v)
 
     def test_delete(self):
-        k = list(self.definition.values.keys())[0]
-        self.definition.values.pop(k, None)
-        self.definition.save()
+        k = list(self.translation.values.keys())[0]
+        self.translation.values.pop(k, None)
+        self.translation.save()
         with self.assertRaises(KeyError):
-            Translation.objects.get(id=self.definition.id).values[k]
+            Translation.objects.get(id=self.translation.id).values[k]
+
+    # resolve_i18n_value
+
+    def test_resolve_i18n_value(self):
+        values = self.translation.values
+        obj = create_default(TicketStatus)
+        field = 'name'
+        raw_ret = values[getattr(obj, field)]
+        self.assertIsInstance(raw_ret, str)
+
+        ret = Translation.resolve_i18n_value(values, obj, field)
+
+        self.assertEqual(ret, raw_ret)
+
+    def test_resolve_i18n_value__not_a_field_on_obj(self):
+        values = self.translation.values
+        obj = create_default(TicketStatus)
+        field = 'foo'
+        with self.assertRaises(AttributeError):
+            raw_ret = values[getattr(obj, field)]
+
+        ret = Translation.resolve_i18n_value(values, obj, field)
+
+        self.assertEqual(ret, '')
+
+    def test_resolve_i18n_value__not_i18n_key(self):
+        values = self.translation.values
+        obj = mommy.make(TicketStatus, name='foo')
+        field = 'name'
+        with self.assertRaises(KeyError):
+            values[getattr(obj, field)]
+
+        ret = Translation.resolve_i18n_value(values, obj, field)
+
+        # here, the 'name' property on the obj is a translation key, and
+        # since it couldn't be found, return the raw translation key
+        self.assertEqual(ret, obj.name)

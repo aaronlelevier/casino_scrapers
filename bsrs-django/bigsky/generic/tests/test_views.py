@@ -384,14 +384,18 @@ class ExportDataTests(APITestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_get_values_to_write(self):
-        create_translation_keys_for_fixtures()
+        translation = create_translation_keys_for_fixtures()
+        self.person.locale = translation.locale
+        self.person.save()
+        self.assertEqual(self.person.translation_values, translation.values)
+        # export
         export_data = ExportData()
         export_data.model = Ticket
-        export_data.request = stub(user=create_single_person())
+        export_data.request = stub(user=self.person)
         t = create_ticket()
         t = Ticket.objects.filter_export_data({'id': t.id}).first()
 
-        ret = export_data._get_values_to_write(t)
+        ret = export_data._get_values_to_write(self.person.translation_values, t)
 
         self.assertEqual(
             ret,

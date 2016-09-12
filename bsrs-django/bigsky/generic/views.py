@@ -15,6 +15,7 @@ from rest_framework.views import APIView
 
 from generic.models import SavedSearch, Attachment
 from generic.serializers import SavedSearchSerializer, AttachmentSerializer
+from translation.models import Translation
 from utils.views import BaseModelViewSet
 
 
@@ -118,18 +119,20 @@ class ExportData(APIView):
             writer = csv.writer(csvfile, delimiter=',')
             writer.writerow(self.model.export_fields)
 
+            translation_values = self.request.user.translation_values
+
             for obj in self._filter_with_fields(query_params):
-                values = self._get_values_to_write(obj)
+                values = self._get_values_to_write(translation_values, obj)
                 writer.writerow(values)
 
     def _filter_with_fields(self, query_params):
         return self.model.objects.filter_export_data(query_params)
 
-    def _get_values_to_write(self, obj):
+    def _get_values_to_write(self, translation_values, obj):
         values = []
         for f in self.model.export_fields:
             if hasattr(obj, 'I18N_FIELDS') and f in self.model.I18N_FIELDS:
-                values.append(obj.get_i18n_value(f, self.request.user.locale.locale))
+                values.append(Translation.resolve_i18n_value(translation_values, obj, f))
             else:
                 values.append(getattr(obj, f))
         return values

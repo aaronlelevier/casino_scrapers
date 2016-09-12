@@ -20,7 +20,7 @@ from location.tests.factory import create_locations
 from person.models import Person, PersonQuerySet, PersonStatus, Role, RoleManager, RoleQuerySet
 from person.tests.factory import (PASSWORD, create_person, create_role, create_single_person,
     get_or_create_tenant)
-from translation.models import Locale
+from translation.models import Locale, Translation
 from utils import create
 from utils.models import DefaultNameManager
 from utils.tests.test_helpers import create_default
@@ -468,15 +468,33 @@ class PersonTests(TestCase):
 
     def test_get_locale_accept_language_header(self):
         self.assertIn(
-                self.person._get_locale('en;q=0.9,zh,zh-ch;q=.3'),
-                [str(x) for x in Locale.objects.values_list('id', flat=True)]
-                )
+            self.person._get_locale('en;q=0.9,zh,zh-ch;q=.3'),
+            [str(x) for x in Locale.objects.values_list('id', flat=True)]
+        )
 
     def test_get_locale_unrecognized_accept_language_header(self):
         self.assertIn(
-                self.person._get_locale('zzzz;q=0.9'),
-                [str(x) for x in Locale.objects.values_list('id', flat=True)]
-                )
+            self.person._get_locale('zzzz;q=0.9'),
+            [str(x) for x in Locale.objects.values_list('id', flat=True)]
+        )
+
+    def test_translation_values(self):
+        self.assertIsInstance(self.person.locale, Locale)
+        translation = mommy.make(Translation, locale=self.person.locale)
+        self.assertIsInstance(
+            Translation.objects.get(locale=self.person.locale), Translation)
+
+        self.assertEqual(
+            self.person.translation_values,
+            Translation.objects.get(locale=self.person.locale).values
+        )
+
+    def test_translation_values__does_not_exist(self):
+        self.assertIsInstance(self.person.locale, Locale)
+        with self.assertRaises(Translation.DoesNotExist):
+            Translation.objects.get(locale=self.person.locale)
+
+        self.assertEqual(self.person.translation_values, {})
 
     def test_to_dict_location(self):
         dict_person = self.person.to_dict(None)

@@ -239,3 +239,19 @@ class Translation(BaseModel):
 
     def __str__(self):
         return "{}: {}".format(self.locale, self.id)
+
+    @classmethod
+    def resolve_i18n_value(cls, values, obj, field):
+        """
+        :values: Translation instance's i18n values
+        :obj: Model instance
+        :field: String name of Model instance property
+        """
+        try:
+            return values[getattr(obj, field)]
+        except AttributeError:
+            # 'field' isn't a valid model field
+            return ''
+        except KeyError:
+            # no i18n key exists, so just return raw value
+            return getattr(obj, field)

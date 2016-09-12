@@ -19,7 +19,7 @@ from contact.models import PhoneNumber, Address, Email
 from location.models import LocationLevel, Location, LOCATION_COMPANY
 from person import config, helpers
 from tenant.models import Tenant
-from translation.models import Locale
+from translation.models import Locale, Translation
 from utils.fields import InheritedValueField
 from utils.models import (BaseModel, BaseManager, BaseManagerMixin, BaseQuerySet,
     BaseNameModel, DefaultNameManager)
@@ -440,6 +440,13 @@ class Person(BaseModel, AbstractUser):
             pass
 
         return str(Locale.objects.system_default().id)
+
+    @property
+    def translation_values(self):
+        try:
+            return Translation.objects.get(locale=self.locale).values
+        except Translation.DoesNotExist:
+            return {}
 
     @property
     def _password_expire_date(self):
