@@ -31,7 +31,7 @@ TEST=$?; if [ "$TEST" == 1 ]; then echo "rm failed"; exit $TEST; fi
 
 wait
 echo "GIT - CLONE REPO"
-git clone -b mobile-ps git@github.com:bigskytech/bsrs.git
+git clone -b state-country git@github.com:bigskytech/bsrs.git
 TEST=$?; if [ "$TEST" == 1 ]; then echo "git clone failed"; exit $TEST; fi
 
 echo "DJANGO"
