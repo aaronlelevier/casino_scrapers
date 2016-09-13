@@ -63,15 +63,16 @@ class BaseContactModel(BaseModel):
     """
     GenericForeignKey fields that will be used for all Contact models.
     """
-    content_type = models.ForeignKey(ContentType)
-    object_id = models.UUIDField()
+    content_type = models.ForeignKey(ContentType, null=True)
+    object_id = models.UUIDField(null=True)
     content_object = MyGenericForeignKey('content_type', 'object_id')
 
     class Meta:
         abstract = True
 
     def save(self, *args, **kwargs):
-        self.object_id = self.content_object.id
+        if self.content_object:
+            self.object_id = self.content_object.id
         return super(BaseContactModel, self).save(*args, **kwargs)
 
 

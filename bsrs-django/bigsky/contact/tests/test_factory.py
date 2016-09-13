@@ -34,46 +34,37 @@ class FactoryTests(TestCase):
 
         factory.create_contacts(person)
 
-        # phone_number
-        self.assertEqual(PhoneNumber.objects.count(), 1)
-        phone_number = PhoneNumber.objects.first()
-        self.assertEqual(str(phone_number.content_object.id), str(person.id))
-        # address
-        self.assertEqual(Address.objects.count(), 1)
-        address = Address.objects.first()
-        self.assertEqual(str(address.content_object.id), str(person.id))
-        # email
-        self.assertEqual(Email.objects.count(), 1)
-        email = Email.objects.first()
-        self.assertEqual(str(email.content_object.id), str(person.id))
+        self.assertEqual(person.phone_numbers.count(), 1)
+        self.assertEqual(person.addresses.count(), 1)
+        self.assertEqual(person.emails.count(), 1)
 
     def test_create_phone_number(self):
-        self.assertEqual(PhoneNumber.objects.count(), 0)
         person = create_person()
+        init_count = PhoneNumber.objects.count()
 
         ret = factory.create_contact(PhoneNumber, person)
 
-        self.assertEqual(PhoneNumber.objects.count(), 1)
+        self.assertEqual(PhoneNumber.objects.count(), init_count+1)
         self.assertIsInstance(ret, PhoneNumber)
         self.assertEqual(ret.content_object, person)
 
     def test_create_address(self):
-        self.assertEqual(Address.objects.count(), 0)
         person = create_person()
+        init_count = Address.objects.count()
 
         ret = factory.create_contact(Address, person)
 
-        self.assertEqual(Address.objects.count(), 1)
+        self.assertEqual(Address.objects.count(), init_count+1)
         self.assertIsInstance(ret, Address)
         self.assertEqual(ret.content_object, person)
 
     def test_create_email(self):
-        self.assertEqual(Email.objects.count(), 0)
         person = create_person()
+        init_count = Email.objects.count()
 
         ret = factory.create_contact(Email, person)
 
-        self.assertEqual(Email.objects.count(), 1)
+        self.assertEqual(Email.objects.count(), init_count+1)
         self.assertIsInstance(ret, Email)
         self.assertEqual(ret.content_object, person)
 

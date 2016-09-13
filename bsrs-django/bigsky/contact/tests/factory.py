@@ -13,7 +13,15 @@ STATE_CODE_TWO = "NV"
 COUNTRY_COMMON_NAME = "United States"
 
 
-def create_contact(model, content_object, type=None):
+def create_contacts(content_object):
+    """
+    :content_object: object to create foreign key for. i.e. ``person`` instance
+    """
+    for model in [PhoneNumber, Address, Email]:
+        create_contact(model, content_object)
+
+
+def create_contact(model, instance, type=None):
     """
     `object_id` is a UUID, which `model_mommy` doesn't know how to make,
     so it must be specified.
@@ -21,30 +29,14 @@ def create_contact(model, content_object, type=None):
     :model: ``contact`` app model class. i.e. ``Email``
     :content_object: object to create foreign key for. i.e. ``person`` instance
     """
-    create_method = load_create_contact(model)
-    instance = create_method(content_object)
+    incr = model.objects.count()
+    id = generate_uuid(model)
+    contact = mommy.make(model, id=id, content_object=instance,
+                      object_id=instance.id, _fill_optional=['type'])
     if type:
-        instance.type = type
-        instance.save()
-    return instance
-
-
-def create_contacts(content_object):
-    """
-    :content_object: object to create foreign key for. i.e. ``person`` instance
-    """
-    for model in [PhoneNumber, Address, Email]:
-        create_method = load_create_contact(model)
-        create_method(content_object)
-
-
-def load_create_contact(model):
-    def create_contact_instance(instance):
-        incr = model.objects.count()
-        id = generate_uuid(model)
-        return mommy.make(model, id=id, content_object=instance,
-                          object_id=instance.id, _fill_optional=['type'])
-    return create_contact_instance
+        contact.type = type
+        contact.save()
+    return contact
 
 
 def create_phone_number_type(name=None):
