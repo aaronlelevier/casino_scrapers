@@ -1,15 +1,21 @@
 from django.test import TestCase
 
-from model_mommy import mommy
-
 from accounting.models import Currency
 from tenant.models import Tenant
-
+from tenant.tests.factory import get_or_create_tenant
 
 class TenantTests(TestCase):
 
+    def test_sc_fields(self):
+        self.assertEqual(
+            Tenant.SC_FIELDS,
+            ['company_code', 'company_name', 'billing_contact', 'billing_address',
+             'billing_email', 'billing_phone_number', 'implementation_contact_initial',
+             'implementation_email']
+        )
+
     def test_defaults(self):
-        tenant = mommy.make(Tenant)
+        tenant = get_or_create_tenant()
         usd = Currency.objects.default()
 
         self.assertTrue(tenant.company_code)
@@ -17,4 +23,4 @@ class TenantTests(TestCase):
         self.assertEqual(tenant.dashboard_text, "Welcome")
         self.assertIsNone(tenant.dt_start)
         self.assertEqual(tenant.default_currency, usd)
-        self.assertTrue(tenant.test_mode)
+        self.assertFalse(tenant.test_mode)

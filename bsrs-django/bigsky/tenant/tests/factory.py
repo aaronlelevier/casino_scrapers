@@ -2,6 +2,7 @@ from django.conf import settings
 
 from model_mommy import mommy
 
+from contact.models import Email, Address, PhoneNumber
 from contact.tests.factory import create_contact_country
 from dtd.models import TreeData
 from tenant.models import Tenant
@@ -9,21 +10,26 @@ from utils.create import _generate_chars
 from utils.helpers import generate_uuid
 
 
-def get_or_create_tenant(company_name=settings.DEFAULT_TENANT_COMPANY_NAME):
+def get_or_create_tenant(company_name=settings.DEFAULT_TENANT_COMPANY_NAME, **kwargs):
     try:
         tenant = Tenant.objects.get(company_name=company_name)
     except Tenant.DoesNotExist:
-        kwargs = {
+        defaults = {
             'id': generate_uuid(Tenant),
             'company_name': company_name,
-            'company_code': _generate_chars()
+            'company_code': _generate_chars(),
+            'implementation_email': mommy.make(Email, _fill_optional=['type']),
+            'billing_email': mommy.make(Email, _fill_optional=['type']),
+            'billing_phone_number': mommy.make(PhoneNumber, _fill_optional=['type']),
+            'billing_address': mommy.make(Address, _fill_optional=['type', 'state', 'country'])
         }
 
-        tenant = mommy.make(Tenant, **kwargs)
+        tenant = mommy.make(Tenant, **defaults)
 
         tenant.countries.add(create_contact_country())
     finally:
-        tenant.dt_start = TreeData.objects.get_start()
-        tenant.save()
-        return tenant
+        kwargs.update({'dt_start': TreeData.objects.get_start()})
+        tenant, _ = Tenant.objects.update_or_create(id=tenant.id, defaults=kwargs)
+
+    return tenant
 

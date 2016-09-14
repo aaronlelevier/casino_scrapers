@@ -17,7 +17,10 @@ def create_locales():
     ]
     ret = []
     for l in locales:
-        obj, _ = Locale.objects.get_or_create(locale=l, name=l)
+        try:
+            obj = Locale.objects.get(locale=l)
+        except Locale.DoesNotExist:
+            obj = Locale.objects.create(locale=l, name=l)
         ret.append(obj)
     return ret
 

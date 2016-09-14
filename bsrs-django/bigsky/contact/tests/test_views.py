@@ -30,7 +30,7 @@ class CountryViewSetTests(StateCountryViewTestSetupMixin, APITestCase):
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 2)
+        self.assertEqual(data['count'], 3)
         country_data = data['results'][0]
         self.assertIn('id', country_data)
         self.assertIn('common_name', country_data)

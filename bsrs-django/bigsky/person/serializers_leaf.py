@@ -6,16 +6,19 @@ forth between modules.
 from rest_framework import serializers
 
 from person.models import Person
+from utils.serializers import BaseCreateSerializer
 
 
-class PersonSimpleSerializer(serializers.ModelSerializer):
+class PersonSimpleSerializer(BaseCreateSerializer):
+
+    id = serializers.UUIDField(required=False)
 
     class Meta:
         model = Person
         fields = ('id', 'fullname',)
 
 
-class PersonIdUsernameSerializer(serializers.ModelSerializer):
+class PersonIdUsernameSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Person
