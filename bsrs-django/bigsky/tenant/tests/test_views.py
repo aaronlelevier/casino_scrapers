@@ -269,6 +269,75 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['billing_address']['country'], str(self.tenant.billing_address.country.id))
         self.assertEqual(data['billing_address']['postal_code'], self.tenant.billing_address.postal_code)
 
+    def test_update_related_models(self):
+        dtd = mommy.make(TreeData)
+        serializer = TenantDetailSerializer(self.tenant)
+        country = mommy.make(Country, common_name='foo')
+        # contacts
+        implementation_email = mommy.make(Email, _fill_optional=['type'])
+        billing_email = mommy.make(Email, _fill_optional='type')
+        billing_phone_number = mommy.make(PhoneNumber, _fill_optional=['type'])
+        billing_address = mommy.make(Address, _fill_optional=['type', 'state', 'country'])
+        # data
+        updated_data = serializer.data
+        updated_data.update({
+            'dt_start': {
+                'id': str(dtd.id),
+                'key': dtd.key
+            },
+            'implementation_contact': {
+                'id': str(self.person.id),
+                'fullname': self.person.fullname
+            },
+            'implementation_email': {
+                'id': str(implementation_email.id),
+                'type': str(implementation_email.type.id),
+                'email': implementation_email.email
+            },
+            'billing_email': {
+                'id': str(billing_email.id),
+                'type': str(billing_email.type.id),
+                'email': billing_email.email
+            },
+            'billing_phone_number': {
+                'id': str(billing_phone_number.id),
+                'type': str(billing_phone_number.type.id),
+                'number': billing_phone_number.number
+            },
+            'billing_address': {
+                'id': str(billing_address.id),
+                'type': str(billing_address.type.id),
+                'address': billing_address.address,
+                'city': billing_address.city,
+                'state': str(billing_address.state.id),
+                'country': str(billing_address.country.id),
+                'postal_code': billing_address.postal_code
+            },
+            'countries': [{
+                'id': str(country.id),
+                'name': country.common_name
+            }]
+        })
+
+        response = self.client.put('/api/admin/tenant/{}/'.format(self.tenant.id), updated_data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['id'], str(self.tenant.id))
+        self.assertEqual(data['dt_start_id'], updated_data['dt_start']['id'])
+        self.assertEqual(data['dt_start']['id'], updated_data['dt_start']['id'])
+        self.assertEqual(data['dt_start']['key'], updated_data['dt_start']['key'])
+        # counties
+        self.assertEqual(len(data['countries']), 1)
+        self.assertEqual(data['countries'][0]['id'], str(country.id))
+        self.assertEqual(data['countries'][0]['name'], country.common_name)
+        # contacts
+        self.assertEqual(data['implementation_contact'], updated_data['implementation_contact'])
+        self.assertEqual(data['implementation_email'], updated_data['implementation_email'])
+        self.assertEqual(data['billing_email'], updated_data['billing_email'])
+        self.assertEqual(data['billing_phone_number'], updated_data['billing_phone_number'])
+        self.assertEqual(data['billing_address'], updated_data['billing_address'])
+
     def test_remove_related_models(self):
         serializer = TenantDetailSerializer(self.tenant)
         updated_data = serializer.data
