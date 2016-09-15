@@ -1,4 +1,5 @@
 import json
+from mock import patch
 import uuid
 
 from django.conf import settings
@@ -12,6 +13,7 @@ from contact.serializers import EmailSerializer, AddressSerializer, PhoneNumberS
 from dtd.models import TreeData, DTD_START_KEY
 from person.models import Person
 from person.tests.factory import PASSWORD, create_single_person
+from tenant.oauth import BsOAuthSession, SANDBOX_SC_SUBSCRIBER_POST_URL
 from tenant.models import Tenant
 from tenant.serializers import TenantCreateSerializer, TenantDetailSerializer
 
@@ -97,6 +99,13 @@ class TenantDetailTests(TenantSetUpMixin, APITestCase):
 
 class TenantCreateTests(TenantSetUpMixin, APITestCase):
 
+    def setUp(self):
+        super(TenantCreateTests, self).setUp()
+        # mockey patch, so SC POST isn't called
+        def _sc_create(self, *args, **kwargs):
+            pass
+        TenantCreateSerializer._sc_create = _sc_create
+
     def test_data(self):
         new_id = str(uuid.uuid4())
         new_company_code = 'foo'
@@ -181,6 +190,51 @@ class TenantCreateTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['billing_email']['id'], init_data['billing_email']['id'])
         self.assertEqual(data['billing_address']['id'], init_data['billing_address']['id'])
         self.assertEqual(data['billing_phone_number']['id'], init_data['billing_phone_number']['id'])
+
+
+class TenantCreateEmailAndRemoteCallsTests(TenantSetUpMixin, APITestCase):
+
+    def setUp(self):
+        super(TenantCreateEmailAndRemoteCallsTests, self).setUp()
+        new_id = str(uuid.uuid4())
+        new_company_code = 'foo'
+        serializer = TenantCreateSerializer(self.tenant)
+        self.init_data = serializer.data
+        self.init_data.update({
+            'id': new_id,
+            'company_code': new_company_code,
+        })
+
+    @patch("tenant.serializers.TenantCreateSerializer._send_mail")
+    @patch("tenant.serializers.TenantCreateSerializer._sc_create")
+    def test_send_email_and_sc_create(self, mock_sc_create, mock_send_mail):
+        response = self.client.post('/api/admin/tenant/', self.init_data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 201)
+        tenant = Tenant.objects.get(id=data['id'])
+        # mocks
+        self.assertEqual(mock_send_mail.call_args[0][0], tenant.implementation_email.email)
+        self.assertIsInstance(mock_sc_create.call_args[0][0], Tenant)
+
+    @patch("tenant.serializers.BsOAuthSession.post")
+    def test_sc_to_post_api(self, mock_post):
+        response = self.client.post('/api/admin/tenant/', self.init_data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 201)
+        tenant = Tenant.objects.get(id=data['id'])
+        # mocks
+        self.assertEqual(mock_post.call_args[0][0], SANDBOX_SC_SUBSCRIBER_POST_URL)
+        session = BsOAuthSession()
+        post_data = tenant.sc_post_data
+        post_data.update({
+            "PrimaryUser": session.username,
+            "Password": session.password,
+            "ClientName": session.client_id,
+            "IsActive": True
+        })
+        self.assertEqual(mock_post.call_args_list[0][1]['data'], post_data)
 
 
 class TenantUpdateTests(TenantSetUpMixin, APITestCase):

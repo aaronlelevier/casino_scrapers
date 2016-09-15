@@ -95,7 +95,7 @@ class PhoneNumber(BaseContactModel):
     https://github.com/daviddrysdale/python-phonenumbers
     """
     type = models.ForeignKey(PhoneNumberType, blank=True, null=True)
-    number = models.TextField(blank=True, null=True)
+    number = models.CharField(max_length=100)
 
     class Meta:
         ordering = ('number',)
@@ -172,7 +172,7 @@ class EmailType(BaseNameOrderModel):
 
 class Email(BaseContactModel):
     type = models.ForeignKey(EmailType, blank=True, null=True)
-    email = models.TextField(blank=True, null=True)
+    email = models.EmailField()
 
     class Meta:
         ordering = ('email',)

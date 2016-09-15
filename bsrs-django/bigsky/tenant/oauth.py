@@ -58,6 +58,8 @@ class BsOAuthSession(object):
         self.oauth = OAuth2Session(client=self.client)
         self._token = None
 
+        self.fetch_token()
+
     @property
     def token(self):
         return self._token

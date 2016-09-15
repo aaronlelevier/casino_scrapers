@@ -1,3 +1,5 @@
+from django.core.mail import send_mail
+
 from rest_framework import serializers
 
 from contact.models import Email, Address, PhoneNumber
@@ -8,6 +10,7 @@ from dtd.serializers import TreeDataLeafNodeSerializer
 from person.models import Person
 from person.serializers_leaf import PersonSimpleSerializer
 from tenant.models import Tenant
+from tenant.oauth import BsOAuthSession, SANDBOX_SC_SUBSCRIBER_POST_URL
 from utils import create
 from utils.serializers import BaseCreateSerializer
 
@@ -63,7 +66,31 @@ class TenantCreateSerializer(TenantContactsMixin, BaseCreateSerializer):
 
     def create(self, validated_data):
         validated_data = self.update_or_create_nested_contacts(validated_data)
-        return super(TenantCreateSerializer, self).create(validated_data)
+        instance = super(TenantCreateSerializer, self).create(validated_data)
+        self._send_mail(instance.implementation_email.email)
+        self._sc_create(instance)
+        return instance
+
+    # TODO: update this w/ email template when ready
+    def _send_mail(self, email):
+        send_mail(
+            'Subject here',
+            'Here is the message.',
+            'test@email.com',
+            [email],
+            fail_silently=False,
+        )
+
+    def _sc_create(self, instance):
+        session = BsOAuthSession()
+        data = instance.sc_post_data
+        data.update({
+            "PrimaryUser": session.username,
+            "Password": session.password,
+            "ClientName": session.client_id,
+            "IsActive": True
+        })
+        session.post(SANDBOX_SC_SUBSCRIBER_POST_URL, data=data)
 
     def to_representation(self, instance):
         data = super(TenantCreateSerializer, self).to_representation(instance)

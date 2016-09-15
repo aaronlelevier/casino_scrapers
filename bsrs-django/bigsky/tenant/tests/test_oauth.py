@@ -27,8 +27,17 @@ class BsOAuthSessionDev1Tests(TestCase):
 
     def setUp(self):
         self.session = oauth.BsOAuthSession()
-        self.token = self.session.fetch_token()
+        self.token = self.session.token
         self.subscriber_post_url = oauth.DEV_SC_SUBSCRIBER_POST_URL
+
+    @patch("tenant.oauth.BsOAuthSession.fetch_token")
+    def test_session_init__fetch_token(self, mock_func):
+        oauth.BsOAuthSession()
+        self.assertTrue(mock_func.called)
+
+    def test_session_init__token_stored(self):
+        session = oauth.BsOAuthSession()
+        self.assertTrue(session.token)
 
     def test_client(self):
         self.assertIsInstance(self.session.client, LegacyApplicationClient)
