@@ -64,3 +64,24 @@ class BsOAuthSessionTests(TestCase):
     def test_oauth_get(self, mock_func):
         self.session.get(oauth.DEV_SC_SUBSCRIBER_POST_URL)
         self.assertTrue(mock_func.called)
+
+    def test_post(self):
+        data = {
+            "PrimaryUser": "foo",
+            "Password": "bar",
+            "ClientName": "biz",
+            "Address1": "9246 Lightwave Ave.",
+            "Address2": "",
+            "Country": "United States",
+            "City": "San Diego",
+            "Zip": "92123",
+            "Email": "test@email.com",
+            "Phone": "858-715-5000",
+            "Fax": "858-715-5001",
+            "ContactName": "Bob",
+            "IsActive": True
+        }
+
+        ret = self.session.post(oauth.DEV_SC_SUBSCRIBER_POST_URL, data=data)
+
+        self.assertEqual(ret.status_code, 201)

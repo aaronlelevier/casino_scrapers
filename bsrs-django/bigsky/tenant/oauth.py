@@ -13,7 +13,9 @@ SC_GRANT_TYPE = 'password'
 
 DEV_SC_BASE_URL = "https://dev1login.servicechannel.com"
 DEV_SC_TOKEN_URL = DEV_SC_BASE_URL+"/oauth/token"
-DEV_SC_SUBSCRIBER_POST_URL = DEV_SC_BASE_URL+"/subscribers/v100/Subscriber"
+
+DEV_SC_API_URL = "https://dev1api.servicechannel.com:443"
+DEV_SC_SUBSCRIBER_POST_URL = DEV_SC_API_URL+"/subscribers/v100/Subscriber"
 
 
 def request_token():
@@ -61,9 +63,12 @@ class BsOAuthSession(object):
 
     def get_with_retry(self, url):
         try:
-            self.get(url)
+            return self.get(url)
         except TokenExpiredError:
             self.refresh_token()
 
     def get(self, url):
-       self.oauth.get(url)
+       return self.oauth.get(url)
+
+    def post(self, url, data):
+        return self.oauth.post(url, data=data)
