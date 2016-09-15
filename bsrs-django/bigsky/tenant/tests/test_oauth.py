@@ -61,6 +61,13 @@ class BsOAuthSessionDev1Tests(TestCase):
         self.session.get_with_retry(self.subscriber_post_url)
         self.assertNotEqual(self.token['access_token'], self.session.token['access_token'])
 
+    @patch("tenant.oauth.BsOAuthSession.retry_get")
+    @patch("tenant.oauth.BsOAuthSession.get")
+    def test_get_with_retry__assert_retry_get_is_called(self, mock_get, mock_retry_get):
+        mock_get.side_effect = TokenExpiredError()
+        self.session.get_with_retry(self.subscriber_post_url)
+        self.assertTrue(mock_retry_get.called)
+
     @patch("tenant.oauth.OAuth2Session.get")
     def test_oauth_get(self, mock_func):
         self.session.get(self.subscriber_post_url)

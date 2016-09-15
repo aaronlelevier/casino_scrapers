@@ -88,8 +88,12 @@ class BsOAuthSession(object):
             return self.get(url)
         except TokenExpiredError:
             self.refresh_token()
+            self.retry_get(url)
 
     def get(self, url):
+       return self.oauth.get(url)
+
+    def retry_get(self, url):
        return self.oauth.get(url)
 
     def post(self, url, data):
