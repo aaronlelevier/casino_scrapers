@@ -9,6 +9,7 @@ from django.dispatch import receiver
 
 from tenant.models import Tenant
 from ticket.models import Ticket
+from utils import classproperty
 from utils.fields import MyGenericForeignKey
 from utils.models import BaseQuerySet, BaseManager, BaseModel
 
@@ -67,7 +68,20 @@ class AssignmentManager(BaseManager):
 
 
 class Assignment(BaseModel):
-    EXPORT_FIELDS = ['description', 'assignee_name']
+
+    _RAW_EXPORT_FIELDS_AND_HEADERS = [
+        ('description', 'admin.assignment.description'),
+        ('assignee_name', 'admin.assignment.assignee')
+    ]
+
+    @classproperty
+    def EXPORT_FIELDS(cls):
+        return [x[0] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
+
+    @classproperty
+    def I18N_HEADER_FIELDS(cls):
+        return [x[1] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
+
     # keys
     tenant = models.ForeignKey(Tenant, null=True)
     order = models.IntegerField(null=True)

@@ -20,6 +20,7 @@ from location.models import LocationLevel, Location, LOCATION_COMPANY
 from person import config, helpers
 from tenant.models import Tenant
 from translation.models import Locale, Translation
+from utils import classproperty
 from utils.fields import InheritedValueField
 from utils.models import (BaseModel, BaseManager, BaseManagerMixin, BaseQuerySet,
     BaseNameModel, DefaultNameManager)
@@ -312,9 +313,23 @@ class Person(BaseModel, AbstractUser):
     :ooto: out-of-the-office
     '''
     MODEL_FIELDS = ['id', 'username']
-    # Static list of fields to export via the Ember GridView
-    EXPORT_FIELDS = ['status_name', 'fullname', 'username',
-                     'title', 'role_name']
+
+    _RAW_EXPORT_FIELDS_AND_HEADERS = [
+        ('status_name', 'admin.person.label.status'),
+        ('fullname', 'admin.person.label.fullname'),
+        ('username', 'admin.person.label.username'),
+        ('title', 'admin.person.label.title'),
+        ('role_name', 'admin.person.label.role-name')
+    ]
+
+    @classproperty
+    def EXPORT_FIELDS(cls):
+        return [x[0] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
+
+    @classproperty
+    def I18N_HEADER_FIELDS(cls):
+        return [x[1] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
+
     # Keys
     role = models.ForeignKey(Role)
     status = models.ForeignKey(PersonStatus, blank=True, null=True)

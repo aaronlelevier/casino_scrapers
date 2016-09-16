@@ -5,6 +5,7 @@ from django.db.models import Q
 from accounting.models import Currency
 from location.models import SelfReferencingQuerySet, SelfReferencingManager
 from tenant.models import Tenant
+from utils import classproperty
 from utils.models import BaseModel, BaseNameModel, DefaultNameManager
 
 
@@ -85,7 +86,21 @@ class Category(BaseModel):
     - Parent or Label is required to create a Category.
     - If the ``parent`` FK is null, then it is a Top Level Category.
     """
-    EXPORT_FIELDS = ['name', 'description', 'label', 'cost_amount', 'cost_code']
+    _RAW_EXPORT_FIELDS_AND_HEADERS = [
+        ('name', 'admin.category.label.name'),
+        ('description', 'admin.category.label.description'),
+        ('label', 'admin.category.label.label'),
+        ('cost_amount', 'admin.category.label.cost_amount'),
+        ('cost_code', 'admin.category.label.cost_code')
+    ]
+
+    @classproperty
+    def EXPORT_FIELDS(cls):
+        return [x[0] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
+
+    @classproperty
+    def I18N_HEADER_FIELDS(cls):
+        return [x[1] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
 
     tenant = models.ForeignKey(Tenant, related_name="categories", null=True)
     name = models.CharField(max_length=100)

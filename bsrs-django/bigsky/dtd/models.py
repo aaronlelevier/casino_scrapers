@@ -6,6 +6,7 @@ from dtd.model_choices import LINK_TYPES, NOTE_TYPES, FIELD_TYPES
 from category.models import Category
 from generic.models import Attachment
 from ticket.models import TicketStatus, TicketPriority
+from utils import classproperty
 from utils.models import BaseModel, BaseQuerySet, BaseManager
 
 
@@ -37,7 +38,22 @@ class TreeDataManager(BaseManager):
 
 
 class TreeData(BaseModel):
-    EXPORT_FIELDS = ['key', 'description']
+
+    _RAW_EXPORT_FIELDS_AND_HEADERS = [
+        ('key', 'admin.dtd.label.key'),
+        ('description', 'admin.dtd.label.description')
+    ]
+
+    @classproperty
+    def EXPORT_FIELDS(cls):
+        return [x[0] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
+
+    @classproperty
+    def I18N_HEADER_FIELDS(cls):
+        return [x[1] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
+
+    def next_number():
+        return Ticket.objects.next_number()
 
     key = models.CharField(unique=True, max_length=254)
     description = models.TextField()

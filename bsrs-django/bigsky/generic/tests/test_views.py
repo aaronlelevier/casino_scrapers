@@ -338,16 +338,6 @@ class ExportDataTests(APITestCase):
         self.assertEqual(mock_func.call_args[0][0]['username'], self.person.username)
         self.assertEqual(mock_func.call_args[0][0]['first_name__icontains'], 'a')
 
-    @patch("generic.views.ExportData._filter_with_fields")
-    def test_fields__no_query_params(self, mock_func):
-        # confirm that the fields to export isn't explicitly set on the model
-        with self.assertRaises(AttributeError):
-            SavedSearch.EXPORT_FIELDS
-
-        response = self.client.get("/api/export-data/{}/".format("savedsearch"))
-
-        mock_func.assert_called_with({})
-
     def test_invalid_model(self):
         model_name = "foo"
 
@@ -402,5 +392,5 @@ class ExportDataTests(APITestCase):
             ret,
             [t.priority.get_i18n_value('name'), t.status.get_i18n_value('name'),
              t.number, local_strftime(t.created, 'America/Los_Angeles'), t.location.name,
-             t.assignee.fullname, t.request, t.category]
+             t.assignee.fullname, t.category, t.request]
         )

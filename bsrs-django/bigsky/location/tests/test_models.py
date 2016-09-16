@@ -121,6 +121,15 @@ class LocationLevelTests(TestCase):
 
         self.assertEqual(LocationLevel.EXPORT_FIELDS, export_fields)
 
+    def test_i18n_header_fields(self):
+        raw_headers = [
+            ('name', 'admin.location.label.name')
+        ]
+
+        ret = LocationLevel.I18N_HEADER_FIELDS
+
+        self.assertEqual(ret, [x[1] for x in raw_headers])
+
     def test_filter_export_data__queryset_matches_export_fields(self):
         location_level = LocationLevel.objects.filter_export_data().first()
         for f in LocationLevel.EXPORT_FIELDS:
@@ -390,6 +399,18 @@ class LocationTests(TestCase):
         export_fields = ['status_name', 'name', 'number', 'location_level_name']
 
         self.assertEqual(Location.EXPORT_FIELDS, export_fields)
+
+    def test_i18n_header_fields(self):
+        raw_headers = [
+            ('status_name', 'admin.location.label.status-name'),
+            ('name', 'admin.location.label.name'),
+            ('number', 'admin.location.label.number'),
+            ('location_level_name', 'admin.location.label.location_level')
+        ]
+
+        ret = Location.I18N_HEADER_FIELDS
+
+        self.assertEqual(ret, [x[1] for x in raw_headers])
 
     def test_filter_export_data__queryset_matches_export_fields(self):
         location = Location.objects.filter_export_data().first()

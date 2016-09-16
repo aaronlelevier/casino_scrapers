@@ -11,7 +11,7 @@ from category.models import Category
 from generic.models import Attachment
 from location.models import Location
 from person.models import Person
-# from routing.tasks import process_ticket
+from utils import classproperty
 from utils.models import (BaseModel, BaseQuerySet, BaseManager, BaseNameModel,
     DefaultToDictMixin)
 
@@ -132,9 +132,26 @@ class TicketManager(BaseManager):
 
 class Ticket(BaseModel):
 
-    EXPORT_FIELDS = ['priority_name', 'status_name', 'number', 'created',
-                     'location_name', 'assignee_name', 'request', 'category']
     I18N_FIELDS = ['priority_name', 'status_name']
+
+    _RAW_EXPORT_FIELDS_AND_HEADERS = [
+        ('priority_name', 'ticket.label.priority-name'),
+        ('status_name', 'ticket.label.status-name'),
+        ('number', 'ticket.label.numberSymbol'),
+        ('created', 'ticket.label.created'),
+        ('location_name', 'ticket.label.location-name'),
+        ('assignee_name', 'ticket.label.assignee-fullname'),
+        ('category', 'ticket.label.category-name'),
+        ('request', 'ticket.label.request')
+    ]
+
+    @classproperty
+    def EXPORT_FIELDS(cls):
+        return [x[0] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
+
+    @classproperty
+    def I18N_HEADER_FIELDS(cls):
+        return [x[1] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
 
     def next_number():
         return Ticket.objects.next_number()

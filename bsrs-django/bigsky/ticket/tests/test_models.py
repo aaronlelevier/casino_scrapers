@@ -242,9 +242,25 @@ class TicketTests(TestCase):
 
     def test_export_fields(self):
         export_fields = ['priority_name', 'status_name', 'number', 'created',
-                         'location_name', 'assignee_name', 'request', 'category']
+                         'location_name', 'assignee_name', 'category', 'request']
 
         self.assertEqual(Ticket.EXPORT_FIELDS, export_fields)
+
+    def test_i18n_header_fields(self):
+        raw_headers = [
+            ('priority_name', 'ticket.label.priority-name'),
+            ('status_name', 'ticket.label.status-name'),
+            ('number', 'ticket.label.numberSymbol'),
+            ('created', 'ticket.label.created'),
+            ('location_name', 'ticket.label.location-name'),
+            ('assignee_name', 'ticket.label.assignee-fullname'),
+            ('category', 'ticket.label.category-name'),
+            ('request', 'ticket.label.request')
+        ]
+
+        ret = Ticket.I18N_HEADER_FIELDS
+
+        self.assertEqual(ret, [x[1] for x in raw_headers])
 
     def test_i18n_fields(self):
         self.assertEqual(Ticket.I18N_FIELDS, ['priority_name', 'status_name'])
@@ -252,7 +268,7 @@ class TicketTests(TestCase):
     def test_filter_export_data__queryset_matches_export_fields(self):
         ticket = Ticket.objects.filter_export_data().first()
         for f in Ticket.EXPORT_FIELDS:
-            self.assertTrue(hasattr(ticket, f))
+            self.assertTrue(hasattr(ticket, f), "%s not present on Ticket" % f)
 
     def test_number(self):
         one = Ticket.objects.get(number=1)

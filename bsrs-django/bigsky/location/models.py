@@ -8,6 +8,7 @@ from django.db.models import F, Q
 
 from contact.models import PhoneNumber, Address, Email
 from tenant.models import Tenant
+from utils import classproperty
 from utils.models import (BaseModel, BaseManager, BaseQuerySet, BaseNameModel,
     DefaultNameManager, DefaultToDictMixin)
 
@@ -156,7 +157,17 @@ class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
     '''
     LocationLevel records must be unique by: name, role_type
     '''
-    EXPORT_FIELDS = ['name']
+    _RAW_EXPORT_FIELDS_AND_HEADERS = [
+        ('name', 'admin.location.label.name')
+    ]
+
+    @classproperty
+    def EXPORT_FIELDS(cls):
+        return [x[0] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
+
+    @classproperty
+    def I18N_HEADER_FIELDS(cls):
+        return [x[1] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
 
     tenant = models.ForeignKey(Tenant, related_name="location_levels", null=True)
     contact = models.BooleanField(blank=True, default=True,
@@ -343,7 +354,21 @@ class Location(SelfRefrencingBaseModel, BaseModel):
         At the *Region* ``LocationLevel`` there is a
         *East* ``Location``.
     '''
-    EXPORT_FIELDS = ['status_name', 'name', 'number', 'location_level_name']
+    _RAW_EXPORT_FIELDS_AND_HEADERS = [
+        ('status_name', 'admin.location.label.status-name'),
+        ('name', 'admin.location.label.name'),
+        ('number', 'admin.location.label.number'),
+        ('location_level_name', 'admin.location.label.location_level')
+    ]
+
+    @classproperty
+    def EXPORT_FIELDS(cls):
+        return [x[0] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
+
+    @classproperty
+    def I18N_HEADER_FIELDS(cls):
+        return [x[1] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
+
     # keys
     location_level = models.ForeignKey(LocationLevel, related_name='locations')
     status = models.ForeignKey(LocationStatus, related_name='locations', blank=True, null=True)
