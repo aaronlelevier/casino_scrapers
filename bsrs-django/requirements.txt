@@ -32,6 +32,9 @@ WebOb>=1.4.1
 WebTest>=2.0.18
 wheel>=0.29.0
 pretend>=1.0.8
+oauth2>=1.9.0.post1
+oauthlib>=2.0.0
+requests-oauthlib>=0.6.2
 
 # google sheets
 httplib2>=0.9.2
