@@ -7,6 +7,7 @@ from oauthlib.oauth2 import LegacyApplicationClient, TokenExpiredError
 from requests_oauthlib import OAuth2Session
 
 from tenant import oauth
+from tenant.tests.factory import SC_SUBSCRIBER_POST_DATA
 
 
 class RequestsOAuthTests(TestCase):
@@ -83,24 +84,7 @@ class BsOAuthSessionDev1Tests(TestCase):
         self.assertTrue(mock_func.called)
 
     def test_post(self):
-        data = {
-            "PrimaryUser": "foo",
-            "Password": "bar",
-            "ClientName": "biz",
-            "Address1": "9246 Lightwave Ave.",
-            "Address2": "",
-            "Country": "United States",
-            "City": "San Diego",
-            "Zip": "92123",
-            "Email": "test@email.com",
-            "Phone": "858-715-5000",
-            "Fax": "858-715-5001",
-            "ContactName": "Bob",
-            "IsActive": True
-        }
-
-        ret = self.session.post(self.subscriber_post_url, data=data)
-
+        ret = self.session.post(self.subscriber_post_url, data=SC_SUBSCRIBER_POST_DATA)
         self.assertEqual(ret.status_code, 201)
 
 

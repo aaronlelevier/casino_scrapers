@@ -12,6 +12,8 @@ class Tenant(BaseModel):
                  'billing_email', 'billing_phone_number', 'implementation_contact_initial',
                  'implementation_email']
 
+    scid = models.UUIDField(null=True,
+        help_text="id of SC primary key record of the subscriber. Will be null on initial BS create")
     company_code = models.CharField(max_length=100, unique=True,
         help_text="Short code used to identify customer")
     company_name = models.CharField(max_length=100,

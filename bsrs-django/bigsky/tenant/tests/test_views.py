@@ -16,6 +16,7 @@ from person.tests.factory import PASSWORD, create_single_person
 from tenant.oauth import BsOAuthSession, SANDBOX_SC_SUBSCRIBER_POST_URL
 from tenant.models import Tenant
 from tenant.serializers import TenantCreateSerializer, TenantDetailSerializer
+from tenant.tests.factory import SC_SUBSCRIBER_POST_DATA
 
 
 class TenantSetUpMixin(object):
@@ -235,6 +236,26 @@ class TenantCreateEmailAndRemoteCallsTests(TenantSetUpMixin, APITestCase):
             "IsActive": True
         })
         self.assertEqual(mock_post.call_args_list[0][1]['data'], post_data)
+        # didn't mock the return value of 'sc post' so tenant has no scid
+        self.assertIsNone(tenant.scid)
+
+    @patch("tenant.serializers.BsOAuthSession.post")
+    def test_sc_to_post_api__use_response_to_set_scid(self, mock_post):
+        sc_response = {
+            'status_code': 201,
+            'content': SC_SUBSCRIBER_POST_DATA
+        }
+        sc_response['content']['ServiceAutomationID'] = str(uuid.uuid4())
+        mock_post.return_value = sc_response
+
+        response = self.client.post('/api/admin/tenant/', self.init_data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 201)
+        tenant = Tenant.objects.get(id=data['id'])
+        # mocks
+        self.assertTrue(mock_post.called)
+        self.assertEqual(str(tenant.scid), sc_response['content']['ServiceAutomationID'])
 
 
 class TenantUpdateTests(TenantSetUpMixin, APITestCase):

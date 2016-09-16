@@ -18,6 +18,7 @@ class TenantTests(TestCase):
 
         ret = factory.get_or_create_tenant()
 
+        self.assertIsNone(ret.scid)
         self.assertIsInstance(ret, Tenant)
         self.assertIsInstance(ret.dt_start, TreeData)
         self.assertEqual(ret.company_name, settings.DEFAULT_TENANT_COMPANY_NAME)
@@ -59,3 +60,22 @@ class TenantTests(TestCase):
         ret = factory.get_or_create_tenant(implementation_contact=person)
 
         self.assertEqual(ret.implementation_contact, person)
+
+    def test_sc_subscriber_post_data(self):
+        raw_sc_subscriber_post_data = {
+            "PrimaryUser": "foo",
+            "Password": "bar",
+            "ClientName": "biz",
+            "Address1": "9246 Lightwave Ave.",
+            "Address2": "",
+            "Country": "United States",
+            "City": "San Diego",
+            "Zip": "92123",
+            "Email": "test@email.com",
+            "Phone": "858-715-5000",
+            "Fax": "858-715-5001",
+            "ContactName": "Bob",
+            "IsActive": True
+        }
+
+        self.assertEqual(factory.SC_SUBSCRIBER_POST_DATA, raw_sc_subscriber_post_data)
