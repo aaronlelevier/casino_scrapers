@@ -27,7 +27,7 @@ moduleForAcceptance('Acceptance | person current test', {
     var people_list_data = PF.list();
     var current_person_data = PF.detail(PCD.id);
     var locale_data_es = translations.generate('es');
-    var locale_endpoint_es = '/api/translations/?locale=es';
+    var locale_endpoint_es = '/api/translations/?locale=es&timezone=America/Los_Angeles';
     xhr(locale_endpoint_es, 'GET', null, {}, 200, locale_data_es);
     list_xhr = xhr(PEOPLE_URL + '?page=1', 'GET', null, {}, 200, people_list_data);
     xhr(PEOPLE_URL + PCD.id + '/', 'GET', null, {}, 200, current_person_data);

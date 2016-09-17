@@ -382,7 +382,7 @@ class ExportDataTests(APITestCase):
         # export
         export_data = ExportData()
         export_data.model = Ticket
-        export_data.request = stub(user=self.person, GET={'timezone': 'America/Los_Angeles'})
+        export_data.request = stub(user=self.person, session={'timezone': 'America/Los_Angeles'})
         t = create_ticket()
         t = Ticket.objects.filter_export_data({'id': t.id}).first()
 

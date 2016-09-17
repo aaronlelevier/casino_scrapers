@@ -93,6 +93,19 @@ class TranslationBootstrapTests(APITestCase):
         response = self.client.get('/api/translations/?locale=123')
         self.assertEqual(response.status_code, 404)
 
+    def test_timezone(self):
+        locale = 'en'
+        timezone = 'UTC'
+        self.assertIsNone(self.client.session.get('timezone'))
+        response = self.client.get('/api/translations/?locale={}&timezone={}'.format(locale, timezone))
+        self.assertEqual(self.client.session.get('timezone'), timezone)
+
+    def test_timezone__not_sent_so_session_unaffected(self):
+        locale = 'en'
+        self.assertIsNone(self.client.session.get('timezone'))
+        response = self.client.get('/api/translations/?locale={}'.format(locale))
+        self.assertIsNone(self.client.session.get('timezone'))
+
 
 class TranslationReadTests(APITestCase):
 

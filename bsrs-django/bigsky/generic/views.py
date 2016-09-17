@@ -139,7 +139,7 @@ class ExportData(APIView):
                 v = getattr(obj, f)
                 if isinstance(v, datetime.datetime):
                     args = [v]
-                    tzname = self.request.GET.get('timezone', None)
+                    tzname = self.request.session.get('timezone', None)
                     if tzname:
                         args.append(tzname)
                     values.append(local_strftime(*args))

@@ -50,6 +50,7 @@ class TranslationBootstrapViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Translation.objects.all().select_related('locale')
+
         locale = self.request.query_params.get('locale', None)
         if locale is not None:
             queryset = queryset.filter(
@@ -57,6 +58,11 @@ class TranslationBootstrapViewSet(viewsets.ModelViewSet):
                 ).extra(
                 where=["CHAR_LENGTH(locale) <= {}".format(len(locale))]
                 )
+
+        tzname = self.request.query_params.get('timezone', None)
+        if tzname:
+            self.request.session['timezone'] = tzname
+
         return queryset
 
 

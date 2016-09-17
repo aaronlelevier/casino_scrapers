@@ -242,6 +242,7 @@ test('on boot we should fetch and load the person-current, logged in Person, con
     assert.equal(person_current.get('status.id'), PERSON_CURRENT.status);
     assert.equal(person_current.get('role.id'), store.find('person', PERSON_CURRENT.id).get('role').get('id'));
     assert.equal(person_current.get('locale.id'), PERSON_CURRENT.locale);
+    assert.equal(person_current.get('timezone'), PERSON_CURRENT.timezone);
     assert.deepEqual(person_current.get('inherited'), PERSON_CURRENT.inherited);
   });
 });

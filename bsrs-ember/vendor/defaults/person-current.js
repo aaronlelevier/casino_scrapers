@@ -21,6 +21,7 @@ var BSRS_PERSON_CURRENT_DEFAULTS_OBJECT = (function() {
             employee_id: '1',
             title: 'Wanker Extrodinare',
             locale: 'a7ae2835-ee7c-4604-92f7-045f3994936e',
+            timezone: 'America/Los_Angeles',
             all_locations_and_children: [{
                 id: this.location_defaults.idOne,
                 name: this.location_defaults.storeName,

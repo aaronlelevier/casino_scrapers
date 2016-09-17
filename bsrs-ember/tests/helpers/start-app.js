@@ -156,7 +156,7 @@ export default function startApp(attrs) {
   attributes = Ember.merge(attributes, attrs); // use defaults, but you can override;
 
   // Mock english translations
-  var request = { url: '/api/translations/?locale=en' , method: 'GET' };
+  var request = { url: '/api/translations/?locale=en&timezone=America/Los_Angeles' , method: 'GET' };
   var response = translations.generate('en');
   Ember.$.fauxjax.new({
     request: request,

@@ -3,11 +3,13 @@ import config from 'bsrs-ember/config/environment';
 import injectStore from 'bsrs-ember/utilities/store';
 import injectRepo from 'bsrs-ember/utilities/inject';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
+import moment from 'moment';
 const { Route, inject } = Ember;
 
 var ApplicationRoute = Ember.Route.extend({
   RoleDeserializer: injectDeserializer('role'),
   PersonDeserializer: injectDeserializer('person'),
+  personCurrent: inject.service(),
   translationsFetcher: inject.service(),
   i18n: inject.service(),
   moment: inject.service(),
@@ -96,21 +98,24 @@ var ApplicationRoute = Ember.Route.extend({
     const person_current = Ember.$.extend(true, [], Ember.$('[data-preload-person-current]').data('configuration'));
     let current_locale = store.find('locale', person_current.locale);
     config.i18n.currentLocale = current_locale.get('locale');
+
+    // Set timezone and store in person-current
+    let zone = moment.tz.guess();
+    if(!zone){
+      zone = 'America/Los_Angeles';
+    }
+    this.get('moment').changeTimeZone(zone);
+    //TODO: Add preferred timezone to the bootstrap data for timezone override
+    if(!person_current.timezone){
+      person_current.timezone = zone;
+      this.get('personCurrent').set('timezone', zone);
+    }
+
     //Sets current user
     store.push('person-current', person_current);
     var person_deserializer = this.get('PersonDeserializer');
     // push in 'logged in' Person
     person_deserializer.deserialize(person_current, person_current.id);
-    // Set the current user's time zone
-    // TODO: use moment.tz.guess() when it becomes available - https://github.com/moment/moment-timezone/pull/220
-    // TODO: allow timezone to be overridden at the system/role/user level
-    let zone = '';
-    if(!window.Intl){
-      zone = 'America/Los_Angeles';
-    }else{
-      zone = window.Intl.DateTimeFormat().resolvedOptions().timeZone;
-    }
-    this.get('moment').changeTimeZone(zone);
 
     return this.get('translationsFetcher').fetch();
 
